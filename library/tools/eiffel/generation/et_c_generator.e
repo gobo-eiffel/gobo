@@ -2522,14 +2522,11 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			a_feature_is_builtin: a_feature.is_builtin
 			valid_feature: current_feature.static_feature = a_feature
 			a_character_type_not_void: a_character_type /= Void
-		local
-			l_builtin_class: INTEGER
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_character_set_item then
 				fill_call_formal_arguments (a_feature)
-				l_builtin_class := a_feature.builtin_code // builtin_capacity
-				print_builtin_sized_character_set_item_call (current_feature, current_type, False, a_character_type, l_builtin_class)
+				print_builtin_sized_character_set_item_call (current_feature, current_type, False, a_character_type)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -2548,14 +2545,11 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			a_feature_is_builtin: a_feature.is_builtin
 			valid_feature: current_feature.static_feature = a_feature
 			an_integer_type_not_void: an_integer_type /= Void
-		local
-			l_builtin_class: INTEGER
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_integer_set_item then
 				fill_call_formal_arguments (a_feature)
-				l_builtin_class := a_feature.builtin_code // builtin_capacity
-				print_builtin_sized_integer_set_item_call (current_feature, current_type, False, an_integer_type, l_builtin_class)
+				print_builtin_sized_integer_set_item_call (current_feature, current_type, False, an_integer_type)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -2574,14 +2568,11 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			a_feature_is_builtin: a_feature.is_builtin
 			valid_feature: current_feature.static_feature = a_feature
 			a_real_type_not_void: a_real_type /= Void
-		local
-			l_builtin_class: INTEGER
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_real_set_item then
 				fill_call_formal_arguments (a_feature)
-				l_builtin_class := a_feature.builtin_code // builtin_capacity
-				print_builtin_sized_real_set_item_call (current_feature, current_type, False, a_real_type, l_builtin_class)
+				print_builtin_sized_real_set_item_call (current_feature, current_type, False, a_real_type)
 				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
@@ -5965,13 +5956,10 @@ feature {NONE} -- Procedure call generation
 			a_target_type_not_void: a_target_type /= Void
 			a_character_type_not_void: a_character_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_builtin_class: INTEGER
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_character_set_item then
-				l_builtin_class := a_feature.builtin_code // builtin_capacity
-				print_builtin_sized_character_set_item_call (a_feature, a_target_type, a_check_void_target, a_character_type, l_builtin_class)
+				print_builtin_sized_character_set_item_call (a_feature, a_target_type, a_check_void_target, a_character_type)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -5989,13 +5977,10 @@ feature {NONE} -- Procedure call generation
 			a_target_type_not_void: a_target_type /= Void
 			an_integer_type_not_void: an_integer_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_builtin_class: INTEGER
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_integer_set_item then
-				l_builtin_class := a_feature.builtin_code // builtin_capacity
-				print_builtin_sized_integer_set_item_call (a_feature, a_target_type, a_check_void_target, an_integer_type, l_builtin_class)
+				print_builtin_sized_integer_set_item_call (a_feature, a_target_type, a_check_void_target, an_integer_type)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -6014,13 +5999,10 @@ feature {NONE} -- Procedure call generation
 			a_target_type_not_void: a_target_type /= Void
 			a_real_type_not_void: a_real_type /= Void
 			call_operands_not_empty: not call_operands.is_empty
-		local
-			l_builtin_class: INTEGER
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_real_set_item then
-				l_builtin_class := a_feature.builtin_code // builtin_capacity
-				print_builtin_sized_real_set_item_call (a_feature, a_target_type, a_check_void_target, a_real_type, l_builtin_class)
+				print_builtin_sized_real_set_item_call (a_feature, a_target_type, a_check_void_target, a_real_type)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -6432,6 +6414,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 	print_boxed_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print access to `an_attribute' applied to `a_target' of type the boxed version of `a_target_type'.
 			-- The static type (i.e. declared type) of `a_target' is assumed to be of reference type.
+			-- There is no assumption about `a_target_type': it may be reference or expanded.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
 			-- if it already contains its type-id, or a wrapper otherwise.)
@@ -6466,7 +6449,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			-- if it already contains its type-id, or a wrapper otherwise.)
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
 		require
+			a_target_not_void: a_target /= Void
 			a_target_type_not_void: a_target_type /= Void
+			a_target_type_expanded: a_target_type.is_expanded
 		do
 			current_file.put_character ('(')
 			print_boxed_type_cast (a_target_type, current_file)
@@ -6481,6 +6466,7 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 	print_boxed_attribute_type_id_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print access to 'type_id' pseudo attribute applied to `a_target' of type the boxed version of `a_target_type'.
 			-- The static type (i.e. declared type) of `a_target' is assumed to be of reference type.
+			-- There is no assumption about `a_target_type': it may be reference or expanded.
 			-- (The boxed version of a type makes sure that each object
 			-- of that type contains its type-id. It can be the type itself
 			-- if it already contains its type-id, or a wrapper otherwise.)
@@ -8818,6 +8804,38 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				end
 			else
 				current_file.put_string (c_eif_true)
+			end
+		end
+
+	print_unboxed_expression (an_expression: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE; a_check_void: BOOLEAN) is
+			-- Print to `current_file' unboxed version of `an_expression' of type `a_type'.
+			-- There is no assumption about static type (i.e. declared type) of
+			-- `an_expression' or about `a_type': they may be reference or expanded.
+			-- (The boxed version of a type makes sure that each object
+			-- of that type contains its type-id. It can be the type itself
+			-- if it already contains its type-id, or a wrapper otherwise.)
+			-- `a_check_void' means that we need to check whether the expression is Void or not.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_static_type: ET_DYNAMIC_TYPE
+		do
+			if a_type.is_expanded then
+				l_static_type := dynamic_type_set (an_expression).static_type
+				if l_static_type.is_expanded then
+					print_expression (an_expression)
+				elseif a_type.is_generic then
+					current_file.put_character ('*')
+					current_file.put_character ('(')
+					print_expression (an_expression)
+					current_file.put_character (')')
+				else
+						-- We need to unbox the object.
+					print_boxed_attribute_item_access (an_expression, a_type, a_check_void)
+				end
+			else
+				print_expression (an_expression)
 			end
 		end
 
@@ -13455,14 +13473,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					print_type_cast (current_system.boolean_type, current_file)
 					current_file.put_character ('(')
 					current_file.put_character ('(')
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (')')
 					current_file.put_character ('=')
 					current_file.put_character ('=')
@@ -13538,7 +13549,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		local
 			l_target: ET_EXPRESSION
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
@@ -13623,14 +13633,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_new_line
 				elseif a_target_type.is_expanded then
 					print_indentation
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
@@ -14073,8 +14076,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -14093,19 +14094,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('&')
 				current_file.put_character ('&')
@@ -14128,8 +14121,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -14148,19 +14139,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('&')
 				current_file.put_character ('&')
@@ -14183,8 +14166,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -14203,21 +14184,13 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
 				current_file.put_character ('!')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character ('|')
@@ -14241,20 +14214,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			l_target := call_operands.first
 			if a_target_type = current_system.boolean_type then
-				l_target_type_set := dynamic_type_set (l_target)
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
 				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
@@ -14273,8 +14236,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= current_system.boolean_type then
 					-- Internal error: given its signature (containing 'like Current') and
@@ -14286,19 +14247,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('!')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -14316,8 +14269,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -14336,19 +14287,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('|')
 				current_file.put_character ('|')
@@ -14371,8 +14314,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -14391,19 +14332,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('|')
 				current_file.put_character ('|')
@@ -14426,8 +14359,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -14443,18 +14374,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				if a_target_type = current_system.boolean_type then
 					print_indentation
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
@@ -14508,8 +14431,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -14528,19 +14449,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('^')
 				current_file.put_character ('(')
@@ -14855,11 +14768,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			l_target := call_operands.first
-			l_target_type_set := dynamic_type_set (l_target)
 			if a_target_type /= current_system.pointer_type then
 -- TODO: it should be able to compute the 'hash_code' in descendants of POINTER.
 -- We should use 'item' for that.
@@ -14872,14 +14782,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('(')
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('&')
 				print_type_cast (current_system.integer_type, current_file)
@@ -14902,20 +14805,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			l_target := call_operands.first
 			if a_target_type = current_system.pointer_type then
-				l_target_type_set := dynamic_type_set (l_target)
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
 				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
@@ -14966,8 +14859,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -14985,7 +14876,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.pointer_type, current_file)
 				current_file.put_character ('(')
@@ -14995,14 +14885,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character ('*')
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 				current_file.put_character ('+')
@@ -15025,8 +14908,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -15042,18 +14923,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				if a_target_type = current_system.pointer_type then
 					print_indentation
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
@@ -15107,8 +14980,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= current_system.pointer_type then
 -- TODO: this feature should work in descendants of POINTER.
@@ -15119,17 +14990,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15446,8 +15309,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
@@ -15456,17 +15317,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15485,20 +15338,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			l_target := call_operands.first
 			if a_target_type = a_character_type then
-				l_target_type_set := dynamic_type_set (l_target)
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
 				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
@@ -15519,8 +15362,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
@@ -15529,29 +15370,19 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_32_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
 
-	print_builtin_sized_character_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN; a_character_type: ET_DYNAMIC_TYPE; a_builtin_class_code: INTEGER) is
+	print_builtin_sized_character_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN; a_character_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'CHARACTER_xx_REF.set_item'
 			-- from sized character type `a_character_type'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-			-- `a_builtin_class_code' is the built-in code of the
-			-- base class of `a_character_type'.
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -15561,7 +15392,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 		local
 			l_target: ET_EXPRESSION
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -15581,14 +15411,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_argument_type_set := dynamic_type_set (l_argument)
 				if a_target_type = a_character_type then
 					print_indentation
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
@@ -15598,7 +15421,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (';')
 					current_file.put_new_line
 				else
-					l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_character_item)
+					l_builtin_item_code := builtin_feature (a_feature.builtin_code // builtin_capacity, builtin_character_item)
 					l_queries := a_target_type.queries
 					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
@@ -15644,8 +15467,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
@@ -15654,17 +15475,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_8_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15683,8 +15496,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_character_type then
 					-- Internal error: this built-in feature is only
@@ -15693,17 +15504,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_32_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15722,8 +15525,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -15732,17 +15533,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_8_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15761,8 +15554,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -15771,17 +15562,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_16_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15800,8 +15583,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -15810,17 +15591,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15839,8 +15612,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -15849,17 +15620,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_64_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15878,8 +15641,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -15888,17 +15649,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_8_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15917,8 +15670,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -15927,17 +15678,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_16_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15956,8 +15699,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -15966,17 +15707,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_32_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -15995,8 +15728,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -16005,17 +15736,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.natural_64_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -16034,8 +15757,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16051,19 +15772,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('&')
 				current_file.put_character ('(')
@@ -16087,8 +15800,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -16097,19 +15808,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('~')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -16129,8 +15832,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16146,19 +15847,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('|')
 				current_file.put_character ('(')
@@ -16182,8 +15875,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16199,19 +15890,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('<')
 				current_file.put_character ('<')
@@ -16236,8 +15919,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16253,19 +15934,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('>')
 				current_file.put_character ('>')
@@ -16290,8 +15963,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16307,19 +15978,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('^')
 				current_file.put_character ('(')
@@ -16343,8 +16006,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16360,19 +16021,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('/')
 				current_file.put_character ('(')
@@ -16396,8 +16049,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16413,7 +16064,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
@@ -16421,14 +16071,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_double)
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('/')
 				current_file.put_character ('(')
@@ -16455,8 +16098,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -16465,17 +16106,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -16494,20 +16127,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			l_target := call_operands.first
 			if a_target_type = an_integer_type then
-				l_target_type_set := dynamic_type_set (l_target)
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
 				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
@@ -16528,8 +16151,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16545,19 +16166,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('<')
 				current_file.put_character ('(')
@@ -16581,8 +16194,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16598,19 +16209,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('-')
 				current_file.put_character ('(')
@@ -16634,8 +16237,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16651,19 +16252,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('%%')
 				current_file.put_character ('(')
@@ -16687,8 +16280,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -16697,19 +16288,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('-')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -16729,8 +16312,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16746,19 +16327,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('+')
 				current_file.put_character ('(')
@@ -16782,8 +16355,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16799,7 +16370,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				include_runtime_header_file ("ge_integer.h", False, header_file)
 				print_type_cast (current_system.double_type, current_file)
@@ -16809,14 +16379,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_double)
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (',')
 				current_file.put_character (' ')
@@ -16830,14 +16393,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_integer_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN; an_integer_type: ET_DYNAMIC_TYPE; a_builtin_class_code: INTEGER) is
+	print_builtin_sized_integer_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN; an_integer_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call (static file) to `a_feature'
 			-- corresponding to built-in feature 'INTEGER_REF.set_item'
 			-- from sized integer type `an_integer_type'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-			-- `a_builtin_class_code' is the built-in code of the
-			-- base class of `an_integer_type'.
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -16846,8 +16407,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -16863,18 +16422,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				if a_target_type = an_integer_type then
 					print_indentation
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
@@ -16884,7 +16435,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (';')
 					current_file.put_new_line
 				else
-					l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_integer_item)
+					l_builtin_item_code := builtin_feature (a_feature.builtin_code // builtin_capacity, builtin_integer_item)
 					l_queries := a_target_type.queries
 					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
@@ -16930,8 +16481,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -16947,19 +16496,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (an_integer_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('*')
 				current_file.put_character ('(')
@@ -16983,8 +16524,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -16993,17 +16532,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_8_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -17022,8 +16553,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -17032,17 +16561,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.character_32_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -17061,8 +16582,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -17071,17 +16590,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -17100,8 +16611,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -17110,17 +16619,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.real_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -17139,8 +16640,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -17149,17 +16648,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.real_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -17178,8 +16669,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= an_integer_type then
 					-- Internal error: this built-in feature is only
@@ -17188,17 +16677,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -17217,8 +16698,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -17227,7 +16706,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_string (c_ge_ceiling)
@@ -17236,14 +16714,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_double)
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -17263,8 +16734,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -17273,7 +16742,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
 				current_file.put_string (c_ge_ceiling)
@@ -17282,14 +16750,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_double)
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -17309,8 +16770,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -17326,19 +16785,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('/')
 				current_file.put_character ('(')
@@ -17362,8 +16813,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -17372,7 +16821,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_string (c_ge_floor)
@@ -17381,14 +16829,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_double)
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -17408,8 +16849,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -17418,7 +16857,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.real_64_type, current_file)
 				current_file.put_string (c_ge_floor)
@@ -17427,14 +16865,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_double)
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -17454,8 +16885,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -17464,17 +16893,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -17493,20 +16914,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			l_target := call_operands.first
 			if a_target_type = a_real_type then
-				l_target_type_set := dynamic_type_set (l_target)
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 			else
 					-- Internal attribute.
 				print_attribute_access (a_feature, l_target, a_target_type, a_check_void_target)
@@ -17527,8 +16938,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -17544,19 +16953,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (current_system.boolean_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('<')
 				current_file.put_character ('(')
@@ -17580,8 +16981,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -17597,19 +16996,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('-')
 				current_file.put_character ('(')
@@ -17633,8 +17024,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -17643,19 +17032,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('-')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -17710,8 +17091,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -17727,19 +17106,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('+')
 				current_file.put_character ('(')
@@ -17763,8 +17134,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -17780,7 +17149,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				include_runtime_header_file ("ge_real.h", False, header_file)
 				print_type_cast (current_system.double_type, current_file)
@@ -17790,14 +17158,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_string (c_double)
 				current_file.put_character (')')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character (',')
 				current_file.put_character (' ')
@@ -17811,14 +17172,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
-	print_builtin_sized_real_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN; a_real_type: ET_DYNAMIC_TYPE; a_builtin_class_code: INTEGER) is
+	print_builtin_sized_real_set_item_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN; a_real_type: ET_DYNAMIC_TYPE) is
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'REAL_xx_REF.set_item'
 			-- from sized real type `a_real_type'.
 			-- `a_target_type' is the dynamic type of the target.
 			-- `a_check_void_target' means that we need to check whether the target is Void or not.
-			-- `a_builtin_class_code' is the built-in code of the
-			-- base class of `a_real_type'.
 			-- Operands can be found in `call_operands'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -17827,8 +17186,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_queries: ET_DYNAMIC_FEATURE_LIST
@@ -17844,18 +17201,10 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				if a_target_type = a_real_type then
 					print_indentation
-					l_target_static_type := l_target_type_set.static_type
-					if l_target_static_type.is_expanded then
-							-- Current value.
-						print_expression (l_target)
-					else
-							-- We need to unbox the object.
-						print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-					end
+					print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
@@ -17865,7 +17214,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					current_file.put_character (';')
 					current_file.put_new_line
 				else
-					l_builtin_item_code := builtin_feature (a_builtin_class_code, builtin_real_item)
+					l_builtin_item_code := builtin_feature (a_feature.builtin_code // builtin_capacity, builtin_real_item)
 					l_queries := a_target_type.queries
 					nb := a_target_type.attribute_count
 					from i := 1 until i > nb loop
@@ -17911,8 +17260,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 			l_argument: ET_EXPRESSION
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -17928,19 +17275,11 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			else
 				l_target := call_operands.first
 				l_argument := call_operands.item (2)
-				l_target_type_set := dynamic_type_set (l_target)
 				l_argument_type_set := dynamic_type_set (l_argument)
 				print_type_cast (a_real_type, current_file)
 				current_file.put_character ('(')
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 				current_file.put_character ('*')
 				current_file.put_character ('(')
@@ -17964,8 +17303,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -17974,17 +17311,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.double_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -18003,8 +17332,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -18013,17 +17340,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -18042,8 +17361,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -18052,17 +17369,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.integer_64_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -18081,8 +17390,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		local
 			l_target: ET_EXPRESSION
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_static_type: ET_DYNAMIC_TYPE
 		do
 			if a_target_type /= a_real_type then
 					-- Internal error: this built-in feature is only
@@ -18091,17 +17398,9 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				error_handler.report_giaaa_error
 			else
 				l_target := call_operands.first
-				l_target_type_set := dynamic_type_set (l_target)
 				print_type_cast (current_system.real_32_type, current_file)
 				current_file.put_character ('(')
-				l_target_static_type := l_target_type_set.static_type
-				if l_target_static_type.is_expanded then
-						-- Current value.
-					print_expression (l_target)
-				else
-						-- We need to unbox the object.
-					print_boxed_attribute_item_access (l_target, a_target_type, a_check_void_target)
-				end
+				print_unboxed_expression (l_target, a_target_type, a_check_void_target)
 				current_file.put_character (')')
 			end
 		end
@@ -20046,6 +19345,7 @@ feature {NONE} -- C function generation
 			-- if it already contains its type-id, or a wrapper otherwise.)
 		require
 			a_type_not_void: a_type /= Void
+			a_type_expanded: a_type.is_expanded
 		do
 				-- Print signature to `header_file' and `current_file'.
 			header_file.put_string (c_extern)
