@@ -95,15 +95,9 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
 			l_cursor: like new_cursor
---			t: TUPLE [K]
 		do
---			create t
 			l_cursor := new_cursor
 			from l_cursor.start until l_cursor.after loop
---				t.put (l_cursor.item, 1)
---				an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				an_action.call ([l_cursor.item])
 				l_cursor.forth
 			end
@@ -116,17 +110,10 @@ feature -- Iteration
 		local
 			l_cursor: like new_cursor
 			i: INTEGER
---			t: TUPLE [K, INTEGER]
 		do
---			create t
 			l_cursor := new_cursor
 			from l_cursor.start until l_cursor.after loop
 				i := i + 1
---				t.put (l_cursor.item, 1)
---				t.put (i, 2)
---				an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				an_action.call ([l_cursor.item, i])
 				l_cursor.forth
 			end
@@ -137,17 +124,10 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
 			l_cursor: like new_cursor
---			t: TUPLE [K]
 			l_item: K
 		do
---			create t
 			l_cursor := new_cursor
 			from l_cursor.start until l_cursor.after loop
---				t.put (l_cursor.item, 1)
---				if a_test.item (t) then
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				l_item := l_cursor.item
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -163,19 +143,11 @@ feature -- Iteration
 		local
 			l_cursor: like new_cursor
 			i: INTEGER
---			t: TUPLE [K, INTEGER]
 			l_item: K
 		do
---			create t
 			l_cursor := new_cursor
 			from l_cursor.start until l_cursor.after loop
 				i := i + 1
---				t.put (l_cursor.item, 1)
---				t.put (i, 2)
---				if a_test.item (t) then
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				l_item := l_cursor.item
 				if a_test.item ([l_item, i]) then
 					an_action.call ([l_item, i])
@@ -189,15 +161,9 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
 			l_cursor: like new_cursor
---			t: TUPLE [K]
 		do
---			create t
 			l_cursor := new_cursor
 			from l_cursor.start until l_cursor.after loop
---				t.put (l_cursor.item, 1)
---				if a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				if a_test.item ([l_cursor.item]) then
 					Result := True
 					l_cursor.go_after -- Jump out of the loop.
@@ -212,16 +178,10 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
 			l_cursor: like new_cursor
---			t: TUPLE [K]
 		do
---			create t
 			Result := True
 			l_cursor := new_cursor
 			from l_cursor.start until l_cursor.after loop
---				t.put (l_cursor.item, 1)
---				if not a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				if not a_test.item ([l_cursor.item]) then
 					Result := False
 					l_cursor.go_after -- Jump out of the loop.

@@ -290,14 +290,8 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 		local
 			i: INTEGER
---			t: TUPLE [G]
 		do
---			create t
 			from i := 1 until i > count loop
---				t.put (item (i), 1)
---				an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				an_action.call ([item (i)])
 				i := i + 1
 			end
@@ -311,15 +305,8 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 		local
 			i: INTEGER
---			t: TUPLE [G, INTEGER]
 		do
---			create t
 			from i := 1 until i > count loop
---				t.put (item (i), 1)
---				t.put (i, 2)
---				an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				an_action.call ([item (i), i])
 				i := i + 1
 			end
@@ -333,16 +320,9 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
---			t: TUPLE [G]
 			l_item: G
 		do
---			create t
 			from i := 1 until i > count loop
---				t.put (item (i), 1)
---				if a_test.item (t) then
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				l_item := item (i)
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -360,17 +340,9 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
---			t: TUPLE [G, INTEGER]
 			l_item: G
 		do
---			create t
 			from i := 1 until i > count loop
---				t.put (item (i), 1)
---				t.put (i, 2)
---				if a_test.item (t) then
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				l_item := item (i)
 				if a_test.item ([l_item, i]) then
 					an_action.call ([l_item, i])
@@ -386,14 +358,8 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
---			t: TUPLE [G]
 		do
---			create t
 			from i := 1 until i > count loop
---				t.put (item (i), 1)
---				if a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				if a_test.item ([item (i)]) then
 					Result := True
 					i := count + 1 -- Jump out of the loop.
@@ -410,15 +376,9 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
---			t: TUPLE [G]
 		do
---			create t
 			Result := True
 			from i := 1 until i > count loop
---				t.put (item (i), 1)
---				if not a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				if not a_test.item ([item (i)]) then
 					Result := False
 					i := count + 1 -- Jump out of the loop.

@@ -192,15 +192,9 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
 			i: INTEGER
---			t: TUPLE [G]
 		do
---			create t
 			from i := 1 until i > last_position loop
 				if clashes_item (i) > Free_watermark then
---					t.put (item_storage_item (i), 1)
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 					an_action.call ([item_storage_item (i)])
 				end
 				i := i + 1
@@ -213,17 +207,10 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
 			i, j: INTEGER
---			t: TUPLE [G, INTEGER]
 		do
---			create t
 			from i := 1 until i > last_position loop
 				if clashes_item (i) > Free_watermark then
 					j := j + 1
---					t.put (item_storage_item (i), 1)
---					t.put (j, 2)
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 					an_action.call ([item_storage_item (i), j])
 				end
 				i := i + 1
@@ -235,17 +222,10 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
 			i: INTEGER
---			t: TUPLE [G]
 			l_item: G
 		do
---			create t
 			from i := 1 until i > last_position loop
 				if clashes_item (i) > Free_watermark then
---					t.put (item_storage_item (i), 1)
---					if a_test.item (t) then
---						an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 					l_item := item_storage_item (i)
 					if a_test.item ([l_item]) then
 						an_action.call ([l_item])
@@ -261,19 +241,11 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
 			i, j: INTEGER
---			t: TUPLE [G, INTEGER]
 			l_item: G
 		do
---			create t
 			from i := 1 until i > last_position loop
 				if clashes_item (i) > Free_watermark then
 					j := j + 1
---					t.put (item_storage_item (i), 1)
---					t.put (j, 2)
---					if a_test.item (t) then
---						an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 					l_item := item_storage_item (i)
 					if a_test.item ([l_item, j]) then
 						an_action.call ([l_item, j])
@@ -288,15 +260,9 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
 			i: INTEGER
---			t: TUPLE [G]
 		do
---			create t
 			from i := 1 until i > last_position loop
 				if clashes_item (i) > Free_watermark then
---					t.put (item_storage_item (i), 1)
---					if a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 					if a_test.item ([item_storage_item (i)]) then
 						Result := True
 						i := last_position + 1 -- Jump out of the loop.
@@ -311,16 +277,10 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
 			i: INTEGER
---			t: TUPLE [G]
 		do
---			create t
 			Result := True
 			from i := 1 until i > last_position loop
 				if clashes_item (i) > Free_watermark then
---					t.put (item_storage_item (i), 1)
---					if not a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 					if not a_test.item ([item_storage_item (i)]) then
 						Result := False
 						i := last_position + 1 -- Jump out of the loop.

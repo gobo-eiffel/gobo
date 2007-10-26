@@ -253,15 +253,9 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
 		local
 			a_cell: like first_cell
---			t: TUPLE [G]
 		do
---			create t
 			a_cell := first_cell
 			from until (a_cell = Void) loop
---				t.put (a_cell.item, 1)
---				an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				an_action.call ([a_cell.item])
 				a_cell := a_cell.right
 			end
@@ -274,17 +268,10 @@ feature -- Iteration
 		local
 			a_cell: like first_cell
 			i: INTEGER
---			t: TUPLE [G, INTEGER]
 		do
---			create t
 			a_cell := first_cell
 			from until (a_cell = Void) loop
 				i := i + 1
---				t.put (a_cell.item, 1)
---				t.put (i, 2)
---				an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				an_action.call ([a_cell.item, i])
 				a_cell := a_cell.right
 			end
@@ -295,17 +282,10 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
 		local
 			a_cell: like first_cell
---			t: TUPLE [G]
 			l_item: G
 		do
---			create t
 			a_cell := first_cell
 			from until (a_cell = Void) loop
---				t.put (a_cell.item, 1)
---				if a_test.item (t) then
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				l_item := a_cell.item
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -321,19 +301,11 @@ feature -- Iteration
 		local
 			a_cell: like first_cell
 			i: INTEGER
---			t: TUPLE [G, INTEGER]
 			l_item: G
 		do
---			create t
 			a_cell := first_cell
 			from until (a_cell = Void) loop
 				i := i + 1
---				t.put (a_cell.item, 1)
---				t.put (i, 2)
---				if a_test.item (t) then
---					an_action.call (t)
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				l_item := a_cell.item
 				if a_test.item ([l_item, i]) then
 					an_action.call ([l_item, i])
@@ -347,15 +319,9 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
 			a_cell: like first_cell
---			t: TUPLE [G]
 		do
---			create t
 			a_cell := first_cell
 			from until (a_cell = Void) loop
---				t.put (a_cell.item, 1)
---				if a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				if a_test.item ([a_cell.item]) then
 					Result := True
 					a_cell := Void -- Jump out of the loop.
@@ -370,16 +336,10 @@ feature -- Iteration
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
 		local
 			a_cell: like first_cell
---			t: TUPLE [G]
 		do
---			create t
 			a_cell := first_cell
 			Result := True
 			from until (a_cell = Void) loop
---				t.put (a_cell.item, 1)
---				if not a_test.item (t) then
--- SmartEiffel 1.2r7 requires that manifest tuples be used when
--- calling `call' and `item'.
 				if not a_test.item ([a_cell.item]) then
 					Result := False
 					a_cell := Void -- Jump out of the loop.
