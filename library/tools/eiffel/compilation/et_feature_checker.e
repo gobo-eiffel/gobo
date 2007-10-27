@@ -135,6 +135,7 @@ feature {NONE} -- Initialization
 			create best_overloaded_features.make (10)
 			create unused_contexts.make (20)
 			current_context := new_context (current_type)
+			current_target_type := a_universe.any_type
 			free_context (current_context)
 		end
 
@@ -1857,7 +1858,7 @@ feature {NONE} -- Instruction validity
 					-- been computed correctly. We will consider that it is of
 					-- type 'ANY' when checking the validity of the source.
 				check has_fatal_error: has_fatal_error end
-				check_expression_validity (l_source, l_source_context, l_call_context)
+				check_expression_validity (l_source, l_source_context, any_type)
 				has_fatal_error := True
 			else
 					-- After this, `l_source_context' will represent the type of the source.
@@ -11300,5 +11301,6 @@ invariant
 	current_context_not_void: current_context /= Void
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has (Void)
+	current_target_type_not_void: current_target_type /= Void
 
 end
