@@ -262,16 +262,15 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
-			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_homogeneous_checker: XM_XPATH_HOMOGENEOUS_ITEM_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_node_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_mapped: XM_XPATH_MAPPED_PATH_EXPRESSION
 		do
 			mark_unreplaced
 			if analysis_state < Type_checked_state then
 				analysis_state := Type_checked_state
-				create a_type_checker
+				create l_type_checker
 				start.check_static_type (a_context, a_context_item_type)
 				if start.was_expression_replaced then
 					set_start (start.replacement_expression)
@@ -289,13 +288,13 @@ feature -- Optimization
 						
 						-- Start must be of type node()*
 						
-						create a_role.make (Binary_expression_role, "/", 1, Xpath_errors_uri, "XPTY0019")
-						create a_node_sequence.make_node_sequence
-						a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
-						if a_type_checker.is_static_type_check_error then
-							set_last_error (a_type_checker.static_type_check_error)
+						create l_role.make (Binary_expression_role, "/", 1, Xpath_errors_uri, "XPTY0019")
+						create l_node_sequence.make_node_sequence
+						l_type_checker.static_type_check (a_context, start, l_node_sequence, False, l_role)
+						if l_type_checker.is_static_type_check_error then
+							set_last_error (l_type_checker.static_type_check_error)
 						else
-							set_start (a_type_checker.checked_expression)
+							set_start (l_type_checker.checked_expression)
 							
 							-- We distinguish three cases for the step:
 							--  either it is known statically to deliver nodes only (a 1.0 path expression),
@@ -304,18 +303,13 @@ feature -- Optimization
 							if is_node_sequence then
 								simplify_sorting (a_context, a_context_item_type)							
 							elseif is_atomic_item_type (step.item_type) then
-								create another_role.make (Binary_expression_role, "/", 2, Xpath_errors_uri, "XPTY0018")
-								create an_atomic_sequence.make_atomic_sequence
-								a_type_checker.static_type_check (a_context, step, an_atomic_sequence, False, another_role)
-								if a_type_checker.is_static_type_check_error then
-									set_last_error (a_type_checker.static_type_check_error)
-								else
-									set_step (a_type_checker.checked_expression)
-								end
+								create l_mapped.make (start, step, False)
+								l_mapped.set_parent (parent)
+								set_replacement (l_mapped)
 							else
-								create another_role.make (Binary_expression_role, "/", 2, Xpath_errors_uri, "XPTY0018")
-								create a_homogeneous_checker.make (step, another_role)
-								set_step (a_homogeneous_checker)
+								create l_mapped.make (start, step, True)
+								l_mapped.set_parent (parent)
+								set_replacement (l_mapped)
 							end
 						end
 					end

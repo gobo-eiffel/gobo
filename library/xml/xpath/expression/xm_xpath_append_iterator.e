@@ -34,15 +34,12 @@ feature {NONE} -- Initialization
 				set_last_error (base_iterator.error_value)
 			elseif second_iterator.is_error then
 				set_last_error (second_iterator.error_value)
-			else
-				second_iterator.start
 			end
 			context := a_context
 			current_iterator := base_iterator
 			if current_iterator.is_error then
 				set_last_error (current_iterator.error_value)
 			end
-			initialized := True
 		ensure
 			base_set: base_iterator = a_base_iterator
 			second_iterator_set: second_iterator = a_second_iterator
@@ -64,7 +61,7 @@ feature -- Status report
 		do
 			Result := not current_iterator.before and then current_iterator.after
 			if Result and then current_iterator = base_iterator then
-				Result := second_iterator.after
+				Result := not second_iterator.before and then second_iterator.after
 			end
 		end
 
@@ -76,16 +73,20 @@ feature -- Cursor movement
 			index := index + 1
 			if current_iterator.before then
 				current_iterator.start
+			elseif current_iterator.after then
+				if second_iterator.before then
+					second_iterator.start
+					current_iterator := second_iterator
+				end
 			else
 				current_iterator.forth
 			end
 			if current_iterator.is_error then
 				set_last_error (current_iterator.error_value)
-			elseif current_iterator = base_iterator and then current_iterator.after then
-				current_iterator := second_iterator -- already started
-				if current_iterator.is_error then
-					set_last_error (current_iterator.error_value)
-				end
+			end
+			if base_iterator.after and then second_iterator.before then
+				current_iterator := second_iterator
+				current_iterator.start
 			end
 		end
 
@@ -98,9 +99,6 @@ feature -- Duplication
 		end
 
 feature {NONE} -- Implementation
-
-	initialized: BOOLEAN
-			-- Has creation procedure completed?
 
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- The underlying iterator
@@ -117,7 +115,7 @@ feature {NONE} -- Implementation
 invariant
 
 	base_iterator_not_void: base_iterator /= Void
-	second_iterator_not_before: initialized and then second_iterator /= Void and then not second_iterator.is_error implies not second_iterator.before
+	second_iterator_not_void: second_iterator /= Void
 	current_iterator_not_void: current_iterator /= Void
 
 end

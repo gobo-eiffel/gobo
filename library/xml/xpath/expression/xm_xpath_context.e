@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			utc_system_clock.set_date_time_to_now (a_date_time)
 			create a_time_zone.make (implicit_timezone.fixed_offset)
 			create internal_date_time.make (a_date_time, a_time_zone)
-			cached_last := -1
+			clear_last_cache
 			if a_context_item.is_node then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} current_iterator.make (a_context_item.as_node)
 			else
@@ -151,19 +151,23 @@ feature -- Access
 		require
 			context_position_set: is_context_position_set
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			if cached_last = -1 then
-				cached_last := 0
 				if not current_iterator.is_error then
-					an_iterator := current_iterator.another
-					from
-						an_iterator.start
-					until
-						an_iterator.is_error or else an_iterator.after
-					loop
-						an_iterator.forth
-						cached_last := cached_last + 1
+					if current_iterator.is_last_position_finder then
+						cached_last := current_iterator.last_position
+					else
+						l_iterator := current_iterator.another
+						from
+							cached_last := 0
+							l_iterator.start
+						until
+							l_iterator.is_error or else l_iterator.after
+						loop
+							cached_last := cached_last + 1
+							l_iterator.forth
+						end
 					end
 				end
 			end
@@ -330,7 +334,7 @@ feature 	-- Element change
 			-- Set `current_iterator'.
 		do
 			current_iterator := an_iterator
-			cached_last := -1
+			clear_last_cache
 		ensure
 			set: current_iterator = an_iterator
 		end
@@ -438,6 +442,14 @@ feature {XM_XPATH_CONTEXT} -- Local
 	cached_last: INTEGER
 			-- Used by `last'
 
+	clear_last_cache is
+			-- Clear caching of `last'.
+		do
+			cached_last := -1
+		ensure
+			last_cached: cached_last = -1
+		end
+			
 feature {NONE} -- Implementation
 
 	internal_date_time: like current_date_time

@@ -66,33 +66,33 @@ feature -- Access
 			-- Not 100% pure - may put `Current' into error.
 			-- N.B. Limited to INTEGER_32 (and hence XPath sequences) by `{DS_ARRAYED_LIST}.count'
 		local
-			a_saved_iterator, an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_saved_iterator, l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			a_saved_iterator := last_iterator -- to avoid state change
-			create_iterator (Void); an_iterator := last_iterator
-			if an_iterator.is_error then
+			l_saved_iterator := last_iterator -- to avoid state change
+			create_iterator (Void); l_iterator := last_iterator
+			if l_iterator.is_error then
 				Result := 0
-				set_last_error (an_iterator.error_value)
-			elseif an_iterator.is_last_position_finder then
-				Result := an_iterator.as_last_position_finder.last_position
-				if an_iterator.as_last_position_finder.is_error then
-					set_last_error (an_iterator.as_last_position_finder.error_value)
+				set_last_error (l_iterator.error_value)
+			elseif l_iterator.is_last_position_finder then
+				Result := l_iterator.last_position
+				if l_iterator.is_error then
+					set_last_error (l_iterator.error_value)
 				end
 			else
 				from
-					an_iterator.start
+					l_iterator.start
 				until
-					an_iterator.is_error or else an_iterator.after
+					l_iterator.is_error or else l_iterator.after
 				loop
 					Result := Result + 1
-					an_iterator.forth
+					l_iterator.forth
 				end
 			end
-			if an_iterator.is_error then
+			if l_iterator.is_error then
 				Result := 0
-				set_last_error (an_iterator.error_value)
+				set_last_error (l_iterator.error_value)
 			end
-			last_iterator := a_saved_iterator
+			last_iterator := l_saved_iterator
 		ensure
 			positive_result: Result >= 0
 		end

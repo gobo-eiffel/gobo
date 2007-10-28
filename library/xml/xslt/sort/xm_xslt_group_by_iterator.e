@@ -15,6 +15,9 @@ class	XM_XSLT_GROUP_BY_ITERATOR
 inherit
 
 	XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+		redefine
+			is_last_position_finder, last_position
+		end
 
 	XM_XPATH_SHARED_COMPARISON_KEY_TESTER
 		export {NONE} all end
@@ -78,8 +81,20 @@ feature -- Access
 		do
 			Result := group_keys.item (index)
 		end
+
+	last_position: INTEGER is
+			-- Last position (= number of items in sequence)
+		do
+			Result := groups.count
+		end
 	
 feature -- Status report
+
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := True
+		end
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?

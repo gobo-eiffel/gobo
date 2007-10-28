@@ -412,8 +412,8 @@ feature {NONE} -- Implementation
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			another_expression: XM_XPATH_APPEND_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
+			l_append_expression: XM_XPATH_APPEND_EXPRESSION
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_expression%N")
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			parse_single_expression
 			if not is_parse_error then
 				from
-					an_expression := internal_last_parsed_expression
+					l_expression := internal_last_parsed_expression
 				until
 					is_parse_error or else tokenizer.last_token /= Comma_token
 				loop
@@ -429,14 +429,14 @@ feature {NONE} -- Implementation
 					if tokenizer.is_lexical_error then
 						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 					else
-						parse_expression
+						parse_single_expression
 						if not is_parse_error then
-							create another_expression.make (an_expression, Comma_token, internal_last_parsed_expression)
-							an_expression := another_expression
+							create l_append_expression.make (l_expression, Comma_token, internal_last_parsed_expression)
+							l_expression := l_append_expression
 						end
 					end
 				end
-				if not is_parse_error then internal_last_parsed_expression := an_expression end
+				if not is_parse_error then internal_last_parsed_expression := l_expression end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void

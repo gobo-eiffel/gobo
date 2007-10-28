@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			transformer_not_void: a_transformer /= Void
 		do
 			transformer := a_transformer
-			cached_last := -1
+			clear_last_cache
 			collation_map := transformer.executable.collation_map
 			is_minor := True
 			configuration := transformer.configuration
@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 		do
 			configuration := a_configuration
 			is_restricted := True
+			clear_last_cache
 			static_context := a_static_context
 			collation_map := a_collation_map
 			create internal_implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
@@ -312,10 +313,10 @@ feature -- Creation
 		do
 			create Result.make_minor (transformer)
 			Result.set_caller (Current)
-			Result.set_last (cached_last)
 			Result.set_current_iterator (current_iterator)
 			Result.set_current_receiver (current_receiver)
 			Result.set_temporary_destination (is_temporary_destination)
+			Result.set_last (cached_last)
 		end
 
 	new_clean_context: like Current is

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		redefine
-			before, start
+			before, start, is_last_position_finder, last_position
 		end
 
 create
@@ -49,7 +49,20 @@ feature -- Access
 			Result := base_iterator.item
 		end
 
+	last_position: INTEGER is
+			-- Last position (= number of items in sequence)
+		do
+			Result := base_iterator.last_position.min (maximum)
+			Result := (Result - minimum + 1).max (0)
+		end
+
 feature -- Status report
+
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := base_iterator.is_last_position_finder
+		end
 
 	before: BOOLEAN is
 			-- Are there any more items in the sequence?

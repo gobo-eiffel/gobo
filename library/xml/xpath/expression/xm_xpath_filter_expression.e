@@ -33,6 +33,9 @@ inherit
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
+	MA_DECIMAL_CONSTANTS
+		export {NONE} all end
+
 create
 
 	make
@@ -250,9 +253,9 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_position_range: XM_XPATH_POSITION_RANGE
-			a_min, a_max: INTEGER
+			l_expression: XM_XPATH_EXPRESSION
+			l_position_range: XM_XPATH_POSITION_RANGE
+			l_min, l_max: INTEGER
 		do
 			mark_unreplaced
 			base_expression.check_static_type (a_context, a_context_item_type)
@@ -277,29 +280,33 @@ feature -- Optimization
 						set_filter (filter.replacement_expression)
 					end
 
-					-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
-					-- and treat them specially.
+					-- Treat head expressions (E[1]) as a special case
 					
-					if filter.is_machine_integer_value and then filter.as_machine_integer_value.is_platform_integer
-						and then filter.as_machine_integer_value.value = 1 then
-						create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
-						set_replacement (an_expression)
+					if is_constant_one (filter) then
+						create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
+						set_replacement (l_expression)
 					else
+						-- TODO: can check for other literals
+
+					-- Treat other numeric predicates and tail expressions as a special case
+
 						if filter.is_position_range then
-							a_position_range := filter.as_position_range
-							a_min := a_position_range.minimum_position
-							a_max := a_position_range.maximum_position
-							if a_min = 1 and then a_max = 1 then
-								create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
-								set_replacement (an_expression)
-							elseif a_max = Platform.Maximum_integer then
-								create {XM_XPATH_TAIL_EXPRESSION} an_expression.make (base_expression, a_min)
-								set_replacement (an_expression)
+							l_position_range := filter.as_position_range
+							l_min := l_position_range.minimum_position
+							l_max := l_position_range.maximum_position
+							if l_min = 1 and then l_max = 1 then
+								create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
+								set_replacement (l_expression)
+							elseif l_max = Platform.Maximum_integer then
+								create {XM_XPATH_TAIL_EXPRESSION} l_expression.make (base_expression, l_min)
+								set_replacement (l_expression)
 							end
 						end
 					end
 					if not was_expression_replaced then
 						filter_is_positional := is_positional_filter (filter)
+						is_singleton_boolean_filter := filter.cardinality_exactly_one and filter.item_type.is_same_type (type_factory.boolean_type)
+						reset_static_properties
 					end
 				end
 			end
@@ -308,9 +315,9 @@ feature -- Optimization
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_position_range: XM_XPATH_POSITION_RANGE
-			a_min, a_max: INTEGER
+			l_expression: XM_XPATH_EXPRESSION
+			l_position_range: XM_XPATH_POSITION_RANGE
+			l_min, l_max: INTEGER
 		do
 			mark_unreplaced
 			base_expression.optimize (a_context, a_context_item_type)
@@ -338,21 +345,20 @@ feature -- Optimization
 					-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 					-- and treat them specially.
 					
-					if filter.is_machine_integer_value and then filter.as_machine_integer_value.is_platform_integer
-						and then filter.as_machine_integer_value.value = 1 then
-						create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
-						set_replacement (an_expression)
+					if is_constant_one (filter) then
+						create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
+						set_replacement (l_expression)
 					else
 						if filter.is_position_range then
-							a_position_range := filter.as_position_range
-							a_min := a_position_range.minimum_position
-							a_max := a_position_range.maximum_position
-							if a_min = 1 and then a_max = 1 then
-								create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
-								set_replacement (an_expression)
-							elseif a_max = Platform.Maximum_integer then
-								create {XM_XPATH_TAIL_EXPRESSION} an_expression.make (base_expression, a_min)
-								set_replacement (an_expression)
+							l_position_range := filter.as_position_range
+							l_min := l_position_range.minimum_position
+							l_max := l_position_range.maximum_position
+							if l_min = 1 and then l_max = 1 then
+								create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
+								set_replacement (l_expression)
+							elseif l_max = Platform.Maximum_integer then
+								create {XM_XPATH_TAIL_EXPRESSION} l_expression.make (base_expression, l_min)
+								set_replacement (l_expression)
 							end
 						end
 					end
@@ -404,8 +410,10 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over the values of a sequence
 		local
-			a_position_range: XM_XPATH_POSITION_RANGE
-			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_position_range: XM_XPATH_POSITION_RANGE
+			l_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_filter_iterator: XM_XPATH_FILTER_ITERATOR
+			l_node_filter_iterator: XM_XPATH_NODE_FILTER_ITERATOR
 		do
 			last_iterator := Void
 			start_expression := base_expression
@@ -415,35 +423,39 @@ feature -- Evaluation
 				-- Get an iterator over the base nodes
 
 				start_expression.create_iterator (a_context)
-				a_base_iterator := start_expression.last_iterator
+				l_base_iterator := start_expression.last_iterator
 
 				-- Quick exit for an empty sequence
 
-				if  a_base_iterator.is_error then
-					last_iterator := a_base_iterator
+				if  l_base_iterator.is_error then
+					last_iterator := l_base_iterator
 				else
-					if a_base_iterator.is_empty_iterator then
-						last_iterator := a_base_iterator.as_empty_iterator
+					if l_base_iterator.is_empty_iterator then
+						last_iterator := l_base_iterator.as_empty_iterator
 					else
 						
 						-- Test whether the filter is a position range, e.g. [position()>$x]
 						-- TODO: handle all such cases with a TailExpression
 						
 						if filter.is_position_range then
-							a_position_range := filter.as_position_range
-							last_iterator := expression_factory.created_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+							l_position_range := filter.as_position_range
+							last_iterator := expression_factory.created_position_iterator (l_base_iterator, l_position_range.minimum_position, l_position_range.maximum_position)
 						else
 							if filter_is_positional then
-								if a_base_iterator.is_node_iterator then
-									create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make (a_base_iterator.as_node_iterator, filter, a_context)
+								if l_base_iterator.is_node_iterator then
+									create l_node_filter_iterator.make (l_base_iterator.as_node_iterator, filter, a_context, is_singleton_boolean_filter)
+									last_iterator := l_node_filter_iterator
 								else
-									create {XM_XPATH_FILTER_ITERATOR} last_iterator.make (a_base_iterator, filter, a_context)
+									create l_filter_iterator.make (l_base_iterator, filter, a_context, is_singleton_boolean_filter)
+									last_iterator := l_filter_iterator
 								end
 							else
-								if a_base_iterator.is_node_iterator then
-									create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make_non_numeric (a_base_iterator.as_node_iterator, filter, a_context)
+								if l_base_iterator.is_node_iterator then
+									create l_node_filter_iterator.make_non_numeric (l_base_iterator.as_node_iterator, filter, a_context)
+									last_iterator := l_node_filter_iterator
 								else
-									create {XM_XPATH_FILTER_ITERATOR} last_iterator.make_non_numeric (a_base_iterator, filter, a_context)
+									create l_filter_iterator.make_non_numeric (l_base_iterator, filter, a_context)
+									last_iterator := l_filter_iterator
 								end			
 							end
 						end
@@ -455,8 +467,8 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		local
-			a_position_range: XM_XPATH_POSITION_RANGE
-			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_position_range: XM_XPATH_POSITION_RANGE
+			l_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			last_node_iterator := Void
 			start_expression := base_expression
@@ -464,28 +476,28 @@ feature -- Evaluation
 			-- Get an iterator over the base nodes
 
 			start_expression.create_node_iterator (a_context)
-			a_base_iterator := start_expression.last_node_iterator
+			l_base_iterator := start_expression.last_node_iterator
 
 			-- Quick exit for an empty sequence
 
-			if  a_base_iterator.is_error then
-				last_node_iterator := a_base_iterator
+			if  l_base_iterator.is_error then
+				last_node_iterator := l_base_iterator
 			else
-				if a_base_iterator.is_empty_iterator then
-					last_node_iterator := a_base_iterator.as_empty_iterator
+				if l_base_iterator.is_empty_iterator then
+					last_node_iterator := l_base_iterator.as_empty_iterator
 				else
 						
 					-- Test whether the filter is a position range, e.g. [position()>$x]
 					-- TODO: handle all such cases with a TailExpression
 						
 					if filter.is_position_range then
-						a_position_range := filter.as_position_range
-						last_node_iterator := expression_factory.created_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position).as_node_iterator
+						l_position_range := filter.as_position_range
+						last_node_iterator := expression_factory.created_position_iterator (l_base_iterator, l_position_range.minimum_position, l_position_range.maximum_position).as_node_iterator
 					else
 						if filter_is_positional then
-							create {XM_XPATH_NODE_FILTER_ITERATOR} last_node_iterator.make (a_base_iterator.as_node_iterator, filter, a_context)
+							create {XM_XPATH_NODE_FILTER_ITERATOR} last_node_iterator.make (l_base_iterator.as_node_iterator, filter, a_context, is_singleton_boolean_filter)
 						else
-							create {XM_XPATH_NODE_FILTER_ITERATOR} last_node_iterator.make_non_numeric (a_base_iterator.as_node_iterator, filter, a_context)
+							create {XM_XPATH_NODE_FILTER_ITERATOR} last_node_iterator.make_non_numeric (l_base_iterator.as_node_iterator, filter, a_context)
 						end
 					end
 				end
@@ -528,16 +540,17 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		local
-			a_position_range: XM_XPATH_POSITION_RANGE
+			l_position_range: XM_XPATH_POSITION_RANGE
 		do
+			-- TODO: we can actually do a slightly wider test:
 			if filter.is_numeric_value then
 				set_cardinality_optional
 			elseif not base_expression.cardinality_allows_many then
 				set_cardinality_optional
 			else
 				if filter.is_position_range then
-					a_position_range := filter.as_position_range
-					if a_position_range.minimum_position = a_position_range.maximum_position then
+					l_position_range := filter.as_position_range
+					if l_position_range.minimum_position = l_position_range.maximum_position then
 						set_cardinality_optional
 					end
 				end
@@ -557,6 +570,9 @@ feature {NONE} -- Implementation
 
 	filter_is_positional: BOOLEAN
 			-- `True' if the value of the filter might depend on the context position
+
+	is_singleton_boolean_filter: BOOLEAN
+			-- `True' if `filter' returns exactly one boolean
 
 	filter_dependencies: ARRAY [BOOLEAN]
 			-- Dependencies of the original (but simplifed) filter
@@ -656,7 +672,8 @@ feature {NONE} -- Implementation
 			a_boolean_filter: XM_XPATH_BOOLEAN_EXPRESSION
 		do
 			filter_is_positional := is_positional_filter (filter)
-
+			is_singleton_boolean_filter := filter.cardinality_exactly_one and filter.item_type.is_same_type (type_factory.boolean_type)
+			
 			-- If the filter is positional, try changing f[a and b] to f[a][b] to increase
 			-- the chances of finishing early.
 
@@ -811,6 +828,20 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+			end
+		end
+
+	is_constant_one (a_expression: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Does `a_expression' represent the constant 1?
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			if a_expression.is_machine_integer_value and then a_expression.as_machine_integer_value.is_platform_integer
+				and then a_expression.as_machine_integer_value.value = 1 then
+				Result := True
+			elseif a_expression.is_integer_value and then a_expression.as_integer_value.is_platform_integer
+				and then a_expression.as_integer_value.value.is_equal (one) then
+				Result := True
 			end
 		end
 

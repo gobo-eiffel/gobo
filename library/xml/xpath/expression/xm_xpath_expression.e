@@ -390,6 +390,12 @@ feature -- Status report
 			Result := False
 		end
 
+	is_mapped_path_expression: BOOLEAN is
+			-- Is `Current' a mapped path expression?
+		do
+			Result := False
+		end
+
 	is_user_function_call: BOOLEAN is
 			-- Is `Current' a user function call?
 		do
@@ -1819,6 +1825,15 @@ feature -- Conversion
 			-- `Current' seen as an XPath function call
 		require
 			function_call: is_function_call
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_mapped_path_expression: XM_XPATH_MAPPED_PATH_EXPRESSION is
+			-- `Current' seen as a mapped path expression
+		require
+			mapped_path_expression: is_mapped_path_expression
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)

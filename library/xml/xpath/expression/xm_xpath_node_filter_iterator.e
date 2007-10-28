@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_is_single_boolean: BOOLEAN) is
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -43,11 +43,17 @@ feature {NONE} -- Initialization
 		do
 			base_iterator := a_base_iterator
 			filter := a_filter
-			filter_context := a_context.new_context
+			if a_context.has_push_processing then
+				filter_context := a_context.new_minor_context
+			else
+				filter_context := a_context.new_context
+			end
 			filter_context.set_current_iterator (base_iterator)
+			is_singleton_boolean_filter := a_is_single_boolean
 		ensure
 			base_iterator_set: base_iterator = a_base_iterator
 			filter_set: filter = a_filter
+			is_singleton_boolean_filter_set: is_singleton_boolean_filter = a_is_single_boolean
 		end
 
 	make_non_numeric (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
@@ -58,11 +64,19 @@ feature {NONE} -- Initialization
 			context_not_void: a_context /= Void
 		do
 			non_numeric := True
-			make (a_base_iterator, a_filter, a_context)
+			make (a_base_iterator, a_filter, a_context, False)
+		ensure
+			non_numeric_filter: non_numeric
+			base_iterator_set: base_iterator = a_base_iterator
+			filter_set: filter = a_filter
+			is_not_singleton_boolean_filter: not is_singleton_boolean_filter
 		end
 		
 feature -- Access
-	
+
+	is_singleton_boolean_filter: BOOLEAN
+			-- `True' if `filter' returns exactly one boolean
+
 	item: XM_XPATH_NODE is
 			-- Node at the current position
 		do
@@ -103,8 +117,8 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			if non_numeric then
-				create Result.make (base_iterator.another, filter, filter_context)
+			if not non_numeric then
+				create Result.make (base_iterator.another, filter, filter_context, is_singleton_boolean_filter)
 			else
 				create Result.make_non_numeric (base_iterator.another, filter, filter_context)
 			end
@@ -170,7 +184,7 @@ feature {NONE} -- Implementation
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 		do
 			last_match_test := False
-			if non_numeric then
+			if non_numeric or is_singleton_boolean_filter then
 				filter.calculate_effective_boolean_value (filter_context)
 				l_boolean_value := filter.last_boolean_value
 				if l_boolean_value.is_error then

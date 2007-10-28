@@ -76,18 +76,18 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			elseif an_iterator.is_reversible_iterator then
-				last_iterator := an_iterator.as_reversible_iterator.reverse_iterator
+			l_iterator := base_expression.last_iterator
+			if l_iterator.is_error then
+				last_iterator := l_iterator
+			elseif l_iterator.is_reversible_iterator then
+				last_iterator := l_iterator.reverse_iterator
 			else
-				create a_sequence_extent.make (an_iterator)
-				last_iterator := a_sequence_extent.reverse_iterator
+				create l_sequence_extent.make (l_iterator)
+				last_iterator := l_sequence_extent.reverse_iterator
 			end
 		end
 
@@ -102,7 +102,7 @@ feature -- Evaluation
 			if l_iterator.is_error then
 				last_node_iterator := l_iterator
 			elseif l_iterator.is_reversible_iterator then
-				last_node_iterator := l_iterator.as_reversible_iterator.reverse_iterator
+				last_node_iterator := l_iterator.reverse_iterator
 			else
 				create l_sequence_extent.make (l_iterator)
 				last_node_iterator := l_sequence_extent.reverse_iterator.as_node_iterator

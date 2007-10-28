@@ -16,12 +16,11 @@ inherit
 
 	XM_XSLT_GROUP_ITERATOR [XM_XPATH_NODE]
 		undefine
-			is_realizable_iterator, as_realizable_iterator,
+			is_realizable_iterator, realize,
 			is_axis_iterator, as_axis_iterator,
 			is_node_iterator, as_node_iterator,
-			is_reversible_iterator, as_reversible_iterator,
+			is_reversible_iterator,
 			is_singleton_iterator, as_singleton_iterator,
-			is_last_position_finder, as_last_position_finder,
 			is_array_iterator, as_array_iterator,			
 			is_empty_iterator, as_empty_iterator
 		redefine
@@ -37,7 +36,7 @@ inherit
 			is_error as is_node_sequence_error
 		undefine
 			set_last_error, is_invulnerable,
-			before, off, start
+			before, off, start, is_last_position_finder, last_position
 		redefine
 			is_node_iterator, as_node_iterator
 		end

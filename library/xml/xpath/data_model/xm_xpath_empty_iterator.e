@@ -16,30 +16,10 @@ inherit
 
 
 	XM_XPATH_AXIS_ITERATOR [G]
-		undefine
-			is_last_position_finder, as_last_position_finder,
-			is_reversible_iterator, as_reversible_iterator
 		redefine
 			is_node_iterator, as_node_iterator, is_empty_iterator, as_empty_iterator,
-			is_invulnerable, after, item
-		end
-
-	XM_XPATH_REVERSIBLE_ITERATOR [G]
-		undefine
-			is_last_position_finder, as_last_position_finder,
-			is_axis_iterator, as_axis_iterator
-		redefine
-			is_node_iterator, as_node_iterator, is_empty_iterator, as_empty_iterator,
-			is_invulnerable
-		end
-
-	XM_XPATH_LAST_POSITION_FINDER [G]
-		undefine
-			is_reversible_iterator, as_reversible_iterator,
-			is_axis_iterator, as_axis_iterator
-		redefine
-			is_node_iterator, as_node_iterator, is_empty_iterator, as_empty_iterator,
-			is_invulnerable
+			is_invulnerable, after, item, is_last_position_finder, last_position,
+			is_reversible_iterator, reverse_iterator
 		end
 
 create
@@ -79,6 +59,47 @@ feature -- Status report
 			Result := True
 		end
 
+	
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := True
+		end
+	
+	is_node_iterator: BOOLEAN is
+			-- Does `Current' yield a node_sequence?
+		do
+			Result := True
+		end
+
+	is_reversible_iterator: BOOLEAN is
+			-- Does `Current' yield a reversible_sequence?
+		do
+			Result := True
+		end
+
+	is_invulnerable: BOOLEAN is
+			-- Is `Current' guarenteed free of implicit errors?
+		do
+			Result := True
+		end
+
+	after: BOOLEAN is
+			-- Are there any more items in the sequence?
+		do
+			Result := True
+		end
+
+feature -- Cursor movement
+
+	forth is
+			-- Move to next position
+		do
+			index := index + 1
+		end
+
+feature -- Conversion
+
 	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as an empty iterator
 		local
@@ -105,12 +126,6 @@ feature -- Status report
 			end
 		end
 
-	is_node_iterator: BOOLEAN is
-			-- Does `Current' yield a node_sequence?
-		do
-			Result := True
-		end
-
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as a node iterator
 		local
@@ -135,26 +150,6 @@ feature -- Status report
 			else
 				Result ?= a
 			end
-		end
-
-	is_invulnerable: BOOLEAN is
-			-- Is `Current' guarenteed free of implicit errors?
-		do
-			Result := True
-		end
-
-	after: BOOLEAN is
-			-- Are there any more items in the sequence?
-		do
-			Result := True
-		end
-
-feature -- Cursor movement
-
-	forth is
-			-- Move to next position
-		do
-			index := index + 1
 		end
 
 feature -- Duplication

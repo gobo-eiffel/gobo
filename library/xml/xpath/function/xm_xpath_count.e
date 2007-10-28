@@ -84,7 +84,7 @@ feature -- Evaluation
 			if l_iterator.is_error then
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 			elseif l_iterator.is_last_position_finder then
-				create l_integer_value.make (l_iterator.as_last_position_finder.last_position)
+				create l_integer_value.make (l_iterator.last_position)
 				if l_iterator.is_error then
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 				else

@@ -39,6 +39,28 @@ feature -- Access
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Last error
 
+	last_realized_value: XM_XPATH_VALUE
+			-- Result from calling `realize'
+
+	last_position: INTEGER is
+			-- Last position (= number of items in sequence)
+		require
+			last_position_finder: is_last_position_finder
+		do
+		ensure
+			positive_result: Result >= 0
+		end
+
+
+	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [G] is
+			-- Iterator over same sequence as `Current', but in reverse order
+		require
+			reversible_iterator: is_reversible_iterator			
+		do
+		ensure
+			reverse_iterator_not_void: Result /= Void
+		end
+	
 feature -- Status report
 
 	before: BOOLEAN is
@@ -182,15 +204,6 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_realizable_iterator: XM_XPATH_REALIZABLE_ITERATOR [G] is
-			-- `Current' seen as a realizable iterator
-		require
-			realizable_iterator: is_realizable_iterator
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as a node iterator
 		require
@@ -227,24 +240,6 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_reversible_iterator: XM_XPATH_REVERSIBLE_ITERATOR [G] is
-			-- `Current' seen as a reversible iterator
-		require
-			reversible_iterator: is_reversible_iterator
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	as_last_position_finder: XM_XPATH_LAST_POSITION_FINDER [G] is
-			-- `Current' seen as a node iterator
-		require
-			last_position_finder: is_last_position_finder
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
 feature -- Duplication
 
 	another: like Current is
@@ -254,8 +249,22 @@ feature -- Duplication
 			not_in_error: not is_error
 		deferred
 		ensure
-			result_not_in_error: Result /= Void and then not Result.is_error
+			another_not_void: Result /= Void
+			another_not_in_error: not Result.is_error
+			another_before: Result.before
 			invulnerable: is_invulnerable implies Result.is_invulnerable
+		end
+
+feature -- Evaluation
+
+	realize is
+			-- Realize the sequence as a value.
+		require
+			realizable_iterator: is_realizable_iterator
+		do
+		ensure
+			realized_value_not_void: last_realized_value /= Void
+			not_a_closure: not last_realized_value.is_closure
 		end
 
 invariant

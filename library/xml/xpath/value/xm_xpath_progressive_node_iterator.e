@@ -15,9 +15,9 @@ class XM_XPATH_PROGRESSIVE_NODE_ITERATOR
 
 inherit
 	
-	XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_NODE]
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		redefine
-			is_node_iterator, as_node_iterator
+			is_node_iterator, as_node_iterator, is_realizable_iterator, realize
 		end
 
 create
@@ -50,20 +50,19 @@ feature -- Access
 			Result := reservoir.item (index)
 		end
 
+feature -- Status report
+
 	is_node_iterator: BOOLEAN is
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
 		end
 
-	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- `Current' seen as a node iterator
+	is_realizable_iterator: BOOLEAN is
+			-- Is `Current' a realizable iterator?
 		do
-			Result ?= ANY_.to_any (Current)
+			Result := True
 		end
-
-feature -- Status report
-
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
@@ -116,6 +115,14 @@ feature -- Evaluation
 				fill_reservoir
 				realize
 			end
+		end
+
+feature -- Conversion
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		do
+			Result ?= ANY_.to_any (Current)
 		end
 
 feature -- Duplication

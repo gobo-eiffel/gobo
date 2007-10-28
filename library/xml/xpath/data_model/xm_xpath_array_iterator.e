@@ -14,28 +14,11 @@ class XM_XPATH_ARRAY_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
-	XM_XPATH_REVERSIBLE_ITERATOR [G]
-		undefine
-			is_last_position_finder, as_last_position_finder,
-			is_realizable_iterator, as_realizable_iterator
+	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
-			before, is_array_iterator, as_array_iterator,
-			is_invulnerable
-		end
-
-	XM_XPATH_LAST_POSITION_FINDER [G]
-		undefine
-			before, is_reversible_iterator, as_reversible_iterator,
-			is_array_iterator, as_array_iterator,
-			is_realizable_iterator, as_realizable_iterator,
-			is_invulnerable
-		end
-
-	XM_XPATH_REALIZABLE_ITERATOR [G]
-		undefine
-			before, is_reversible_iterator, as_reversible_iterator,
-			is_array_iterator, as_array_iterator, is_last_position_finder, as_last_position_finder,
-			is_invulnerable
+			before, is_reversible_iterator, reverse_iterator,
+			is_array_iterator, as_array_iterator, is_last_position_finder,
+			is_invulnerable, last_position, is_realizable_iterator, realize
 		end
 
 	KL_SHARED_STANDARD_FILES
@@ -51,17 +34,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_array: ARRAY [G]; a_start, an_end: INTEGER) is
+	make (a_array: ARRAY [G]; a_start, an_end: INTEGER) is
 		require
-			array_not_void: an_array /= Void
-			first_item: a_start >= 1 and then a_start <= an_array.count
-			last_item: an_end >= a_start and then an_end <= an_array.count
+			array_not_void: a_array /= Void
+			no_void_element: not a_array.has (Void)
+			first_item: a_start >= 1 and then a_start <= a_array.count
+			last_item: an_end >= a_start and then an_end <= a_array.count
 		do
-			items := an_array
+			items := a_array
 			first_item := a_start
 			last_item := an_end
 		ensure
-			array_set: items = an_array
+			array_set: items = a_array
 			first_item_set: first_item = a_start
 			last_item_set: last_item = an_end
 		end
@@ -73,18 +57,6 @@ feature -- Access
 
 	last_item: INTEGER
 			-- Last item in slice
-
-	is_array_iterator: BOOLEAN is
-			-- Is `Current' an iterator over an array?
-		do
-			Result := True
-		end
-
-	as_array_iterator: XM_XPATH_ARRAY_ITERATOR [G] is
-			-- `Current' seen as a array iterator
-		do
-			Result := Current
-		end
 
 	item: G is
 			-- Value or node at the current position
@@ -105,6 +77,30 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_array_iterator: BOOLEAN is
+			-- Is `Current' an iterator over an array?
+		do
+			Result := True
+		end
+
+	is_reversible_iterator: BOOLEAN is
+			-- Does `Current' yield a reversible_sequence?
+		do
+			Result := True
+		end
+
+	is_realizable_iterator: BOOLEAN is
+			-- Is `Current' a realizable iterator?
+		do
+			Result := True
+		end
+
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := True
+		end
 
 	is_invulnerable: BOOLEAN is
 			-- Is `Current' guarenteed free of implicit errors?
@@ -156,6 +152,13 @@ feature -- Evaluation
 			create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (a_list)
 		end
 
+feature -- Conversion
+
+	as_array_iterator: XM_XPATH_ARRAY_ITERATOR [G] is
+			-- `Current' seen as a array iterator
+		do
+			Result := Current
+		end
 
 feature -- Duplication
 
@@ -184,7 +187,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	array_not_void: items /= Void
+	items_not_void: items /= Void
+	no_void_item: not items.has (Void)
 	first_item: first_item >= 1 and then first_item <= items.count
 	last_item: last_item >= first_item and then last_item <= items.count
 	

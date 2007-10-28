@@ -14,29 +14,12 @@ class XM_XPATH_SINGLETON_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
-	XM_XPATH_REVERSIBLE_ITERATOR [G]
-		undefine
-			is_last_position_finder, as_last_position_finder,
-			is_singleton_iterator, as_singleton_iterator,
-			is_realizable_iterator, as_realizable_iterator,
-			is_invulnerable
-		end
-
-	XM_XPATH_LAST_POSITION_FINDER [G]
-		undefine
-			is_reversible_iterator, as_reversible_iterator,
-			is_realizable_iterator, as_realizable_iterator,
-			is_invulnerable
+	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
-			is_singleton_iterator, as_singleton_iterator
-		end
-
-	XM_XPATH_REALIZABLE_ITERATOR [G]
-		undefine
-			is_reversible_iterator, as_reversible_iterator,
+			is_reversible_iterator, reverse_iterator, 
 			is_singleton_iterator, as_singleton_iterator,
-			is_last_position_finder, as_last_position_finder,
-			is_invulnerable
+			is_last_position_finder, is_invulnerable, last_position,
+			is_realizable_iterator, realize
 		end
 
 create
@@ -56,18 +39,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	is_singleton_iterator: BOOLEAN is
-			-- Is `Current' a singleton iterator?
-		do
-			Result := True
-		end
-
-	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G] is
-			-- `Current' seen as a singleton iterator
-		do
-			Result := Current
-		end
 
 	item: G is
 			-- Value or node at the current position
@@ -93,7 +64,31 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
+	is_singleton_iterator: BOOLEAN is
+			-- Is `Current' a singleton iterator?
+		do
+			Result := True
+		end
+
+	is_realizable_iterator: BOOLEAN is
+			-- Is `Current' a realizable iterator?
+		do
+			Result := True
+		end
+
+	is_reversible_iterator: BOOLEAN is
+			-- Does `Current' yield a reversible_sequence?
+		do
+			Result := True
+		end
+
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := True
+		end
+
 	is_invulnerable: BOOLEAN is
 			-- Is `Current' guarenteed free of implicit errors?
 		do
@@ -130,6 +125,14 @@ feature -- Evaluation
 				end
 				create {XM_XPATH_SINGLETON_NODE} last_realized_value.make (item.as_node)
 			end
+		end
+
+feature -- Conversion
+
+	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G] is
+			-- `Current' seen as a singleton iterator
+		do
+			Result := Current
 		end
 
 feature -- Duplication

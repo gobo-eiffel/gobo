@@ -14,7 +14,10 @@ class	XM_XSLT_SORTED_NODE_ITERATOR
 
 inherit
 
-	XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_NODE]
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		redefine
+			is_last_position_finder, last_position
+		end
 
 	KL_COMPARATOR [XM_XSLT_NODE_SORT_RECORD]
 
@@ -79,7 +82,9 @@ feature -- Access
 	last_position: INTEGER is
 			-- Last position (= number of items in sequence)
 		do
-			if not count_determined then perform_sorting end
+			if not count_determined then
+				perform_sorting
+			end
 			Result := count
 		ensure then
 			not is_error implies count_determined
@@ -94,6 +99,12 @@ feature -- Status report
 
 	count_determined: BOOLEAN
 			-- Has `count' been determined yet?
+
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := True
+		end
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?

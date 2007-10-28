@@ -14,7 +14,10 @@ class XM_XPATH_RANGE_ITERATOR
 
 inherit
 
-	XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		redefine
+			is_last_position_finder, last_position, is_realizable_iterator, realize
+		end
 
 create
 
@@ -42,7 +45,25 @@ feature -- Access
 			create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (index + minimum - 1)
 		end
 
+	last_position: INTEGER is
+			-- Last position (= number of items in sequence)
+		do
+			Result := maximum - minimum + 1
+		end
+
 feature -- Status report
+
+	is_realizable_iterator: BOOLEAN is
+			-- Is `Current' a realizable iterator?
+		do
+			Result := True
+		end
+
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := True
+		end
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?

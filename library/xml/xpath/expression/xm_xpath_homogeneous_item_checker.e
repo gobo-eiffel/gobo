@@ -13,76 +13,43 @@ class XM_XPATH_HOMOGENEOUS_ITEM_CHECKER
 
 inherit
 
-	XM_XPATH_ITEM_CHECKER
-		rename
-			make as make_checker
-		redefine
-			test_conformance
-		end
+	XM_XPATH_ITEM_MAPPING_FUNCTION
 
-create
+	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
+
+	XM_XPATH_ERROR_TYPES
+		export {NONE} all end
+
+create {XM_XPATH_MAPPED_PATH_EXPRESSION}
 
 	make
 
-		-- All items in the sequence must either be nodes, or atomic values.
-		-- Which rule is determined only when we have seen the first item.
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	make is
 			-- Establish invariant.
-		require
-			underlying_expression_not_void: a_sequence /= Void
-			role_locator_not_void: a_role_locator /= Void
 		do
-			error_code := "XPTY0018"
-			make_unary (a_sequence)
-			role_locator := a_role_locator
-			required_item_type := any_item
-			compute_static_properties
-		ensure
-			base_expression_set: base_expression = a_sequence
-			role_locator_set: role_locator = a_role_locator
-			item_type_set: required_item_type = any_item
-			static_properties_computed: are_static_properties_computed
+			-- nothing to do
 		end
 
-feature {NONE} -- Implementation
+feature -- Access
 
-	first_item_seen: BOOLEAN
-			-- Has the first item in the sequence been seen yet?
-
-	test_conformance (an_item: XM_XPATH_ITEM) is
-			-- Test conformance to `required_item_type'.
-			-- Marks `an_item' as in error if check fails.
+	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
+			-- `a_item' mapped to zero or one items
 		local
-			a_type: XM_XPATH_ITEM_TYPE
-			a_message: STRING
+			l_message: STRING
 		do
-			a_type := an_item.item_type
-			if not first_item_seen then
-				if is_sub_type (a_type, type_factory.any_atomic_type) then
-					required_item_type := type_factory.any_atomic_type
-				else
-					check
-						node: is_sub_type (a_type, any_node_test)
-						-- Items are nodes or atomic values
-					end
-					required_item_type := any_node_test
-				end
-				first_item_seen := True
-			else
-				if not is_sub_type (a_type, required_item_type) then
-					a_message := STRING_.appended_string ("Required type of ", role_locator.message)
-					a_message := STRING_.appended_string (a_message, " is a homogeneous sequence of ")
-					a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
-					a_message := STRING_.appended_string (a_message, "; supplied value for this item is ")
-					a_message := STRING_.appended_string (a_message, a_type.conventional_name)
-					an_item.set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0018", Type_error)
-				end
+			check
+				a_item_not_void: a_item /= Void
+				-- Only used by XM_XPATH_MAPPED_PATH_EXPRESSION which checks for this
 			end
-		ensure then
-			first_item_seen: first_item_seen
+			if not a_item.is_atomic_value then
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Path expressions may not mix atomic values and nodes", Xpath_errors_uri, "XPTY0018", Type_error)
+			else
+				Result := a_item				
+			end
 		end
 
 end

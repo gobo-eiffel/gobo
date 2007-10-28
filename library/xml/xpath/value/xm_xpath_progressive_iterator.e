@@ -15,7 +15,10 @@ class XM_XPATH_PROGRESSIVE_ITERATOR
 
 inherit
 	
-	XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		redefine
+			is_realizable_iterator, realize
+		end
 
 create
 
@@ -49,6 +52,12 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	is_realizable_iterator: BOOLEAN is
+			-- Is `Current' a realizable iterator?
+		do
+			Result := True
+		end
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?

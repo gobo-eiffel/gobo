@@ -17,9 +17,9 @@ inherit
 	XM_XSLT_GROUP_NODE_ITERATOR
 		undefine
 			is_array_iterator, as_array_iterator, 
-			is_last_position_finder, as_last_position_finder,
-			is_realizable_iterator, as_realizable_iterator,
-			is_reversible_iterator, as_reversible_iterator,
+			is_last_position_finder, last_position,
+			is_realizable_iterator,
+			is_reversible_iterator,
 			is_singleton_iterator, as_singleton_iterator
 		redefine
 			current_group_iterator

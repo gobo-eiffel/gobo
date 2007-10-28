@@ -466,54 +466,58 @@ feature {NONE} -- Implementation
 	optimize_position (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Optimise position() < n etc.
 		local
-			an_integer: INTEGER
-			an_expression: XM_XPATH_EXPRESSION
+			l_integer: INTEGER
+			l_expression: XM_XPATH_EXPRESSION
 		do
 			if first_operand.is_position_function and then second_operand.is_machine_integer_value then
-				an_integer := second_operand.as_machine_integer_value.value.to_integer
-				if an_integer < 0 then an_integer := 0 end
-				if an_integer <= Platform.Maximum_integer then
+				l_integer := second_operand.as_machine_integer_value.value.to_integer
+				if l_integer < 0 then l_integer := 0 end
+				if l_integer <= Platform.Maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, an_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (l_integer, l_integer)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (l_integer, Platform.Maximum_integer)
 					when Fortran_not_equal_token then
-						if an_integer.to_integer = 1 then
-							create {XM_XPATH_POSITION_RANGE} an_expression.make (2, Platform.Maximum_integer)
+						if l_integer.to_integer = 1 then
+							create {XM_XPATH_POSITION_RANGE} l_expression.make (2, Platform.Maximum_integer)
 						end
 					when Fortran_less_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer - 1)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (1, l_integer - 1)
 					when Fortran_greater_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer + 1, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (l_integer + 1, Platform.Maximum_integer)
 					when Fortran_less_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (1, l_integer)
 					end
-					set_replacement (an_expression)
+					if l_expression /= Void then
+						set_replacement (l_expression)
+					end
 				end
 			elseif second_operand.is_position_function and then first_operand.is_machine_integer_value then
-				an_integer := first_operand.as_machine_integer_value.value.to_integer
-				if an_integer < 0 then an_integer := 0 end
-				if an_integer <= Platform.Maximum_integer then
+				l_integer := first_operand.as_machine_integer_value.value.to_integer
+				if l_integer < 0 then l_integer := 0 end
+				if l_integer <= Platform.Maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, an_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (l_integer, l_integer)
 					when Fortran_less_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (l_integer, Platform.Maximum_integer)
 					when Fortran_not_equal_token then
-						if an_integer.to_integer = 1 then
-							create {XM_XPATH_POSITION_RANGE} an_expression.make (2, Platform.Maximum_integer)
+						if l_integer.to_integer = 1 then
+							create {XM_XPATH_POSITION_RANGE} l_expression.make (2, Platform.Maximum_integer)
 						end
 					when Fortran_greater_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer - 1)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (1, l_integer - 1)
 					when Fortran_less_than_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer + 1, Platform.Maximum_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (l_integer + 1, Platform.Maximum_integer)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_POSITION_RANGE} an_expression.make (1, an_integer)
+						create {XM_XPATH_POSITION_RANGE} l_expression.make (1, l_integer)
 					end
-					set_replacement (an_expression)
+					if l_expression /= Void then
+						set_replacement (l_expression)
+					end
 				end
 			end
 		end
@@ -521,7 +525,7 @@ feature {NONE} -- Implementation
 	optimize_last (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Optimize position()=last(), last()=position(), etc.
 		local
-			an_expression: XM_XPATH_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
 		do
 			if first_operand.is_position_function and then second_operand.is_last_function then
 
@@ -530,15 +534,15 @@ feature {NONE} -- Implementation
 				inspect
 					operator
 				when Fortran_equal_token, Fortran_greater_equal_token then
-					create {XM_XPATH_IS_LAST_EXPRESSION} an_expression.make (True)
+					create {XM_XPATH_IS_LAST_EXPRESSION} l_expression.make (True)
 				when Fortran_not_equal_token, Fortran_less_than_token then
-					create {XM_XPATH_IS_LAST_EXPRESSION} an_expression.make (False)
+					create {XM_XPATH_IS_LAST_EXPRESSION} l_expression.make (False)
 				when Fortran_greater_than_token then
-					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
+					create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (False)
 				when Fortran_less_equal_token then
-					create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
+					create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (True)
 				end
-				set_replacement (an_expression)
+				set_replacement (l_expression)
 			end
 
 			if not was_expression_replaced then
@@ -549,15 +553,15 @@ feature {NONE} -- Implementation
 					inspect
 						operator
 					when Fortran_equal_token, Fortran_less_equal_token then
-						create {XM_XPATH_IS_LAST_EXPRESSION} an_expression.make (True)
+						create {XM_XPATH_IS_LAST_EXPRESSION} l_expression.make (True)
 					when Fortran_not_equal_token, Fortran_greater_than_token then
-						create {XM_XPATH_IS_LAST_EXPRESSION} an_expression.make (False)
+						create {XM_XPATH_IS_LAST_EXPRESSION} l_expression.make (False)
 					when Fortran_less_than_token then
-						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (False)
+						create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (False)
 					when Fortran_greater_equal_token then
-						create {XM_XPATH_BOOLEAN_VALUE} an_expression.make (True)
+						create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (True)
 					end
-					set_replacement (an_expression)
+					set_replacement (l_expression)
 				end
 			end
 		end

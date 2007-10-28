@@ -14,9 +14,9 @@ class XM_XPATH_ARRAY_LIST_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
-	XM_XPATH_REALIZABLE_ITERATOR [G]
+	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
-			start, is_invulnerable
+			start, is_invulnerable, is_realizable_iterator, realize
 		end
 
 create
@@ -47,6 +47,12 @@ feature -- Status report
 
 	is_invulnerable: BOOLEAN is
 			-- Is `Current' guarenteed free of implicit errors?
+		do
+			Result := True
+		end
+
+	is_realizable_iterator: BOOLEAN is
+			-- Is `Current' a realizable iterator?
 		do
 			Result := True
 		end

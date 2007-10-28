@@ -77,7 +77,7 @@ feature -- Cursor movement
 				until
 					base_sequence.is_error or else base_sequence.after or else item /= Void
 				loop
-					last_position := last_position + 1
+					last_position_index := last_position_index + 1
 					an_item := base_sequence.item
 					if an_item.is_error then
 						item := an_item
@@ -90,7 +90,7 @@ feature -- Cursor movement
 						if not atomic_comparer.are_comparable (an_atomic_value, search_value) then
 							create {XM_XPATH_INVALID_ITEM} item.make_from_string ("Items are not comparable", Xpath_errors_uri, "FOTY0012", Dynamic_error)
 						elseif atomic_comparer.three_way_comparison (an_atomic_value, search_value) = 0 then
-							create {XM_XPATH_MACHINE_INTEGER_VALUE} item.make (last_position)
+							create {XM_XPATH_MACHINE_INTEGER_VALUE} item.make (last_position_index)
 						else
 							if not base_sequence.after then
 								base_sequence.forth
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Atomic comparer
 
-	last_position: INTEGER
+	last_position_index: INTEGER
 			-- Position within `base_sequence' of currently matched value
 
 invariant

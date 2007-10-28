@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
 		undefine
-			is_last_position_finder, as_last_position_finder
+			is_last_position_finder, last_position
 		end
 
 	XM_XSLT_SORTED_ITERATOR

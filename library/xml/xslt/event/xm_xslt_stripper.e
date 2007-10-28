@@ -84,7 +84,7 @@ feature -- Access
 		require
 			valid_name_code: a_name_code > 0
 		local
-			a_rule: XM_XSLT_RULE_VALUE
+			l_rule: XM_XSLT_RULE
 		do
 			if preserve_all then
 				found_space_preserving_mode := Always_preserve
@@ -93,16 +93,16 @@ feature -- Access
 			else
 				orphan.set_name_code (a_name_code)
 				stripper_mode.match_rule (orphan, context)
-				a_rule := stripper_mode.last_matched_rule.handler
+				l_rule := stripper_mode.last_matched_rule
 				if context.transformer.is_error then
 					found_space_preserving_mode := Strip_default
-				elseif a_rule = Void then
+				elseif l_rule = Void then
 					found_space_preserving_mode := Always_preserve
 				else
 					check
-						boolean_rule: a_rule.is_boolean
+						boolean_rule: l_rule.handler.is_boolean
 					end
-					if a_rule.as_boolean then
+					if l_rule.handler.as_boolean then
 						found_space_preserving_mode := Always_preserve
 					else
 						found_space_preserving_mode := Strip_default

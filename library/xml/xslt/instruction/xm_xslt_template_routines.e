@@ -40,7 +40,7 @@ feature -- Evaluation
 			until l_finished loop
 				-- process any tail calls returned from previous nodes, before changing context
 				if l_tail_call /= Void then
-					if l_lookahead and then a_iterator.as_last_position_finder.after then
+					if l_lookahead and then a_iterator.after then
 						l_finished := True
 					else
 						from  until l_transformer.is_error or else l_tail_call = Void loop

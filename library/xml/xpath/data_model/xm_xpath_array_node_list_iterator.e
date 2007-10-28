@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
 		undefine
-			start, after, is_realizable_iterator, as_realizable_iterator,
+			start, after, is_realizable_iterator, realize,
 			item, is_node_iterator, as_node_iterator
 		end
 

@@ -170,19 +170,16 @@ feature -- Creation
 			last_created_closure_not_void: last_created_closure /= Void
 		end
 
-	create_sequence_extent (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	create_sequence_extent (a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Create an extensional value.
 		require
-			iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
-		local
-			a_realizable_iterator: XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
+			iterator_before: a_iterator /= Void and then not a_iterator.is_error and then a_iterator.before
 		do
-			if an_iterator.is_realizable_iterator then
-				a_realizable_iterator := an_iterator.as_realizable_iterator
-				a_realizable_iterator.realize
-				last_created_closure := a_realizable_iterator.last_realized_value
+			if a_iterator.is_realizable_iterator then
+				a_iterator.realize
+				last_created_closure := a_iterator.last_realized_value
 			else
-				create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make (an_iterator)
+				create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make (a_iterator)
 			end
 		ensure
 			last_created_closure_not_void: last_created_closure /= Void
