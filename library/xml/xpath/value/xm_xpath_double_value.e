@@ -110,7 +110,7 @@ feature -- Access
 					Result := "-INF"
 				else
 					Result := "INF"
-				end			
+				end
 			elseif is_nan then
 				Result := "NaN"
 			elseif value.abs >= 1.0e-6 or value.abs < 1.0e6 then
@@ -181,14 +181,11 @@ feature -- Status report
 
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
-		local
-			l_value: DOUBLE
 		do
 			if is_infinite then
 				Result := False
 			else
-				l_value := value
-				Result := value /= l_value
+				Result := DOUBLE_.is_nan (value)
 				if not Result then
 					if internal_is_nan or else not is_zero and then value = 2.0 * value then
 						Result := True
@@ -212,7 +209,7 @@ feature -- Status report
 	is_infinite: BOOLEAN is
 			-- Is value infinite?
 		do
-			Result := value = DOUBLE_.plus_infinity or else value = DOUBLE_.minus_infinity
+			Result := DOUBLE_.is_plus_infinity (value) or else DOUBLE_.is_minus_infinity (value)
 		end
 
 feature -- Conversion
