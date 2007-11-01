@@ -378,7 +378,6 @@ feature {NONE} -- Implementation
 			l_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			Precursor
-			initialize_special_properties
 
 			if not are_cardinalities_computed then compute_cardinality end
 			if not start.are_special_properties_computed then
