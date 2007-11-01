@@ -149,6 +149,7 @@ feature {NONE} -- Initialization
 			current_type := a_system.unknown_type
 			current_feature := dummy_feature
 			create internal_dynamic_type_sets.make_with_capacity (1000)
+			create extra_dynamic_type_sets.make_with_capacity (50)
 			current_dynamic_type_sets := internal_dynamic_type_sets
 			create l_buffer.make (1024)
 			create current_function_header_buffer.make (l_buffer)
@@ -7250,29 +7251,14 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		require
 			a_constant_not_void: a_constant /= Void
 		local
-			l_literal: STRING
 			l_temp: ET_IDENTIFIER
+			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
 			if in_operand then
 				if in_target then
 					in_operand := False
-					l_literal := a_constant.literal
-					inspect l_literal.count
-					when 4 then
-							-- 0[xX][a-fA-F0-9]{2}
-						l_temp := new_temp_variable (current_system.integer_8_type)
-					when 6 then
-							-- 0[xX][a-fA-F0-9]{4}
-						l_temp := new_temp_variable (current_system.integer_16_type)
-					when 10 then
-							-- 0[xX][a-fA-F0-9]{8}
-						l_temp := new_temp_variable (current_system.integer_type)
-					when 18 then
-							-- 0[xX][a-fA-F0-9]{16}
-						l_temp := new_temp_variable (current_system.integer_64_type)
-					else
-						l_temp := new_temp_variable (current_system.integer_type)
-					end
+					l_dynamic_type := dynamic_type_set (a_constant).static_type
+					l_temp := new_temp_variable (l_dynamic_type)
 					print_indentation
 					print_temp_name (l_temp, current_file)
 					current_file.put_character (' ')
@@ -7288,35 +7274,32 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				l_literal := a_constant.literal
-				inspect l_literal.count
-				when 4 then
-						-- 0[xX][a-fA-F0-9]{2}
-					print_type_cast (current_system.integer_8_type, current_file)
-					current_file.put_character ('(')
+				l_dynamic_type := dynamic_type_set (a_constant).static_type
+				print_type_cast (l_dynamic_type, current_file)
+				current_file.put_character ('(')
+				if l_dynamic_type = current_system.integer_8_type then
 					current_file.put_string (c_ge_int8)
-				when 6 then
-						-- 0[xX][a-fA-F0-9]{4}
-					print_type_cast (current_system.integer_16_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_16_type then
 					current_file.put_string (c_ge_int16)
-				when 10 then
-						-- 0[xX][a-fA-F0-9]{8}
-					print_type_cast (current_system.integer_32_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_32_type then
 					current_file.put_string (c_ge_int32)
-				when 18 then
-						-- 0[xX][a-fA-F0-9]{16}
-					print_type_cast (current_system.integer_64_type, current_file)
-					current_file.put_character ('(')
+				elseif l_dynamic_type = current_system.integer_64_type then
 					current_file.put_string (c_ge_int64)
+				elseif l_dynamic_type = current_system.natural_8_type then
+					current_file.put_string (c_ge_nat8)
+				elseif l_dynamic_type = current_system.natural_16_type then
+					current_file.put_string (c_ge_nat16)
+				elseif l_dynamic_type = current_system.natural_32_type then
+					current_file.put_string (c_ge_nat32)
+				elseif l_dynamic_type = current_system.natural_64_type then
+					current_file.put_string (c_ge_nat64)
+				elseif l_dynamic_type = current_system.natural_type then
+					current_file.put_string (c_ge_nat32)
 				else
-					print_type_cast (current_system.integer_type, current_file)
-					current_file.put_character ('(')
 					current_file.put_string (c_ge_int32)
 				end
 				current_file.put_character ('(')
-				current_file.put_string (l_literal)
+				current_file.put_string (a_constant.literal)
 				current_file.put_character (')')
 				current_file.put_character (')')
 			end
@@ -8203,20 +8186,13 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_negative: BOOLEAN
 			l_buffer: STRING
 			l_temp: ET_IDENTIFIER
-			l_type: ET_CLASS_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_any: ET_CLASS
 		do
-			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					l_type := a_constant.type
-					if l_type /= Void then
-						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
-					else
-						l_temp := new_temp_variable (current_system.integer_type)
-					end
+					l_dynamic_type := dynamic_type_set (a_constant).static_type
+					l_temp := new_temp_variable (l_dynamic_type)
 					print_indentation
 					print_temp_name (l_temp, current_file)
 					current_file.put_character (' ')
@@ -8232,12 +8208,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				l_type := a_constant.type
-				if l_type /= Void then
-					l_dynamic_type := current_system.dynamic_type (l_type, l_any)
-				else
-					l_dynamic_type := current_system.integer_type
-				end
+				l_dynamic_type := dynamic_type_set (a_constant).static_type
 				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
 				if l_dynamic_type = current_system.integer_8_type then
@@ -8335,19 +8306,13 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			a_constant_not_void: a_constant /= Void
 		local
 			l_temp: ET_IDENTIFIER
-			l_type: ET_CLASS_TYPE
-			l_any: ET_CLASS
+			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
-			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					l_type := a_constant.type
-					if l_type /= Void then
-						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
-					else
-						l_temp := new_temp_variable (current_system.double_type)
-					end
+					l_dynamic_type := dynamic_type_set (a_constant).static_type
+					l_temp := new_temp_variable (l_dynamic_type)
 					print_indentation
 					print_temp_name (l_temp, current_file)
 					current_file.put_character (' ')
@@ -8363,12 +8328,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				l_type := a_constant.type
-				if l_type /= Void then
-					print_type_cast (current_system.dynamic_type (l_type, l_any), current_file)
-				else
-					print_type_cast (current_system.real_64_type, current_file)
-				end
+				l_dynamic_type := dynamic_type_set (a_constant).static_type
+				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
 				if a_constant.is_negative then
 					current_file.put_character ('-')
@@ -8552,6 +8513,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			l_comma: BOOLEAN
 			had_error: BOOLEAN
+			old_index: INTEGER
+			l_constant: ET_CONSTANT
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -8611,7 +8574,11 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						print_expression (l_constant_attribute.constant)
+						l_constant := l_constant_attribute.constant
+						old_index := l_constant.index
+						l_constant.set_index (an_expression.index)
+						print_expression (l_constant)
+						l_constant.set_index (old_index)
 					end
 				elseif l_query.is_unique_attribute then
 					print_type_cast (current_system.integer_type, current_file)
@@ -8849,20 +8816,13 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			l_negative: BOOLEAN
 			l_buffer: STRING
 			l_temp: ET_IDENTIFIER
-			l_type: ET_CLASS_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_any: ET_CLASS
 		do
-			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					l_type := a_constant.type
-					if l_type /= Void then
-						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
-					else
-						l_temp := new_temp_variable (current_system.integer_type)
-					end
+					l_dynamic_type := dynamic_type_set (a_constant).static_type
+					l_temp := new_temp_variable (l_dynamic_type)
 					print_indentation
 					print_temp_name (l_temp, current_file)
 					current_file.put_character (' ')
@@ -8878,12 +8838,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				l_type := a_constant.type
-				if l_type /= Void then
-					l_dynamic_type := current_system.dynamic_type (l_type, l_any)
-				else
-					l_dynamic_type := current_system.integer_type
-				end
+				l_dynamic_type := dynamic_type_set (a_constant).static_type
 				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
 				if l_dynamic_type = current_system.integer_8_type then
@@ -8966,19 +8921,13 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			i, nb: INTEGER
 			l_literal: STRING
 			l_temp: ET_IDENTIFIER
-			l_type: ET_CLASS_TYPE
-			l_any: ET_CLASS
+			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
-			l_any := universe.any_class
 			if in_operand then
 				if in_target then
 					in_operand := False
-					l_type := a_constant.type
-					if l_type /= Void then
-						l_temp := new_temp_variable (current_system.dynamic_type (l_type, l_any))
-					else
-						l_temp := new_temp_variable (current_system.double_type)
-					end
+					l_dynamic_type := dynamic_type_set (a_constant).static_type
+					l_temp := new_temp_variable (l_dynamic_type)
 					print_indentation
 					print_temp_name (l_temp, current_file)
 					current_file.put_character (' ')
@@ -8994,12 +8943,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 					operand_stack.force (a_constant)
 				end
 			else
-				l_type := a_constant.type
-				if l_type /= Void then
-					print_type_cast (current_system.dynamic_type (l_type, l_any), current_file)
-				else
-					print_type_cast (current_system.real_64_type, current_file)
-				end
+				l_dynamic_type := dynamic_type_set (a_constant).static_type
+				print_type_cast (l_dynamic_type, current_file)
 				current_file.put_character ('(')
 				if a_constant.is_negative then
 					current_file.put_character ('-')
@@ -9038,6 +8983,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			l_manifest_tuple_operand: ET_MANIFEST_TUPLE
 			l_target_operand: ET_EXPRESSION
 			l_seed: INTEGER
+			old_index: INTEGER
+			l_constant: ET_CONSTANT
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -9137,7 +9084,11 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 								constant_features.force_last (l_string_constant, l_once_feature)
 								print_once_value_name (l_once_feature, current_file)
 							else
-								print_expression (l_constant_attribute.constant)
+								l_constant := l_constant_attribute.constant
+								old_index := l_constant.index
+								l_constant.set_index (a_call.index)
+								print_expression (l_constant)
+								l_constant.set_index (old_index)
 							end
 						end
 					end
@@ -9251,6 +9202,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			l_string_constant: ET_MANIFEST_STRING
 			l_once_feature: ET_FEATURE
 			l_old_call_target: ET_EXPRESSION
+			old_index: INTEGER
+			l_constant: ET_CONSTANT
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -9350,7 +9303,11 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 								constant_features.force_last (l_string_constant, l_once_feature)
 								print_once_value_name (l_once_feature, current_file)
 							else
-								print_expression (l_constant_attribute.constant)
+								l_constant := l_constant_attribute.constant
+								old_index := l_constant.index
+								l_constant.set_index (an_identifier.index)
+								print_expression (l_constant)
+								l_constant.set_index (old_index)
 							end
 						end
 					end
@@ -9563,6 +9520,8 @@ feature {NONE} -- Query call generation
 			l_attribute: ET_ATTRIBUTE
 			l_target: ET_EXPRESSION
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			old_index: INTEGER
+			l_constant: ET_CONSTANT
 		do
 			l_static_query := a_feature.static_feature
 			l_constant_attribute ?= l_static_query
@@ -9574,7 +9533,13 @@ feature {NONE} -- Query call generation
 					constant_features.force_last (l_string_constant, l_once_feature)
 					print_once_value_name (l_once_feature, current_file)
 				else
-					print_expression (l_constant_attribute.constant)
+					l_constant := l_constant_attribute.constant
+					old_index := l_constant.index
+					extra_dynamic_type_sets.force_last (a_feature.result_type_set)
+					l_constant.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+					print_expression (l_constant)
+					l_constant.set_index (old_index)
+					extra_dynamic_type_sets.remove_last
 				end
 			else
 				l_unique_attribute ?= l_static_query
@@ -10894,24 +10859,29 @@ feature {NONE} -- Agent generation
 			print_agent_creation_name (i, current_feature, current_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
-			from j := 1 until j > nb_closed_operands loop
-				if j /= 1 then
-					header_file.put_character (',')
+			if nb_closed_operands = 0 then
+				header_file.put_string (c_void)
+				current_file.put_string (c_void)
+			else
+				from j := 1 until j > nb_closed_operands loop
+					if j /= 1 then
+						header_file.put_character (',')
+						header_file.put_character (' ')
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					end
+					l_dynamic_type_set := dynamic_type_set (agent_closed_operands.item (j))
+					l_type := l_dynamic_type_set.static_type
+					print_type_declaration (l_type, header_file)
+					print_type_declaration (l_type, current_file)
 					header_file.put_character (' ')
-					current_file.put_character (',')
 					current_file.put_character (' ')
+					header_file.put_character ('a')
+					current_file.put_character ('a')
+					header_file.put_integer (j)
+					current_file.put_integer (j)
+					j := j + 1
 				end
-				l_dynamic_type_set := dynamic_type_set (agent_closed_operands.item (j))
-				l_type := l_dynamic_type_set.static_type
-				print_type_declaration (l_type, header_file)
-				print_type_declaration (l_type, current_file)
-				header_file.put_character (' ')
-				current_file.put_character (' ')
-				header_file.put_character ('a')
-				current_file.put_character ('a')
-				header_file.put_integer (j)
-				current_file.put_integer (j)
-				j := j + 1
 			end
 			header_file.put_character (')')
 			current_file.put_character (')')
@@ -11756,9 +11726,27 @@ feature {NONE} -- Polymorphic call functions generation
 					else
 						set_polymorphic_call_argument_type_sets (l_argument_type_sets, a_first_call, a_last_call, l_dynamic_type)
 						print_named_procedure_call (l_static_call.name, l_dynamic_type, False)
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
 					end
 					dedent
 					l_target_dynamic_types.forth
+				end
+				if l_result_type /= Void then
+					print_indentation
+					current_file.put_string (c_default)
+					current_file.put_character (':')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					print_default_entity_value (l_result_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
 				end
 				print_indentation
 				current_file.put_character ('}')
@@ -11777,14 +11765,6 @@ feature {NONE} -- Polymorphic call functions generation
 				current_file.put_new_line
 					-- Use binary search.
 				print_binary_search_polymorphic_calls (a_first_call, a_last_call, l_result_type, 1, l_target_dynamic_type_ids.count, l_target_dynamic_type_ids, l_target_dynamic_types)
-			end
-			if l_result_type /= Void then
-				print_indentation
-				current_file.put_string (c_return)
-				current_file.put_character (' ')
-				print_default_entity_value (l_result_type, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
 			end
 			dedent
 			current_file.put_character ('}')
@@ -22082,6 +22062,7 @@ feature {NONE} -- String generation
 						l_splitted := True
 						indent
 					end
+					current_file.put_new_line
 					print_indentation
 					current_file.put_character ('%"')
 				end
@@ -23179,19 +23160,24 @@ feature {NONE} -- Dynamic type sets
 		require
 			an_operand_not_void: an_operand /= Void
 		local
-			i: INTEGER
+			i, j: INTEGER
 		do
 			if an_operand = tokens.current_keyword then
 				Result := current_type
 			else
 				i := an_operand.index
-				if i >= 1 and i <= current_dynamic_type_sets.count then
+				if current_dynamic_type_sets.valid_index (i) then
 					Result := current_dynamic_type_sets.item (i)
 				else
-						-- Internal error: dynamic type set not known.
-					set_fatal_error
-					error_handler.report_giaaa_error
-					Result := current_system.unknown_type
+					j := i - current_dynamic_type_sets.count
+					if extra_dynamic_type_sets.valid_index (j) then
+						Result := extra_dynamic_type_sets.item (j)
+					else
+							-- Internal error: dynamic type set not known.
+						set_fatal_error
+						error_handler.report_giaaa_error
+						Result := current_system.unknown_type
+					end
 				end
 			end
 		ensure
@@ -23223,14 +23209,21 @@ feature {NONE} -- Dynamic type sets
 	argument_type_set (i: INTEGER): ET_DYNAMIC_TYPE_SET is
 			-- Dynamic type set of `i'-th argument of feature being printed;
 			-- Report a fatal error if not known
+		local
+			j: INTEGER
 		do
-			if i >= 1 and i <= current_dynamic_type_sets.count then
+			if current_dynamic_type_sets.valid_index (i) then
 				Result := current_dynamic_type_sets.item (i)
 			else
-					-- Internal error: dynamic type set not known.
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := current_system.unknown_type
+				j := i - current_dynamic_type_sets.count
+				if extra_dynamic_type_sets.valid_index (j) then
+					Result := extra_dynamic_type_sets.item (j)
+				else
+						-- Internal error: dynamic type set not known.
+					set_fatal_error
+					error_handler.report_giaaa_error
+					Result := current_system.unknown_type
+				end
 			end
 		ensure
 			argument_type_set_not_void: Result /= Void
@@ -23258,6 +23251,9 @@ feature {NONE} -- Dynamic type sets
 
 	internal_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets used internally when needed
+
+	extra_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			-- Extra dynamic type sets used internally when needed
 
 	conforming_type_set: ET_DYNAMIC_STANDALONE_TYPE_SET
 			-- Set of types conforming to the target of the current assignment attempt or
@@ -23549,7 +23545,7 @@ feature {NONE} -- Temporary variables (Implementation)
 			-- not currently used
 
 	frozen_temp_variables: DS_ARRAYED_LIST [INTEGER]
-			-- Temporay variables currently marked as frozen (which means
+			-- Temporary variables currently marked as frozen (which means
 			-- that we need to keep them in their current used/free state);
 			-- 0 means not frozen, N means that it was been frozen N times.
 
@@ -24128,6 +24124,7 @@ invariant
 	no_void_dynamic_type_id_set_name: not dynamic_type_id_set_names.has_item (Void)
 	no_void_dynamic_type_id_set: not dynamic_type_id_set_names.has (Void)
 	current_dynamic_type_sets_not_void: current_dynamic_type_sets /= Void
+	extra_dynamic_type_sets_not_void: extra_dynamic_type_sets /= Void
 	internal_dynamic_type_sets_not_void: internal_dynamic_type_sets /= Void
 	agent_tuple_item_expressions_not_void: agent_tuple_item_expressions /= Void
 	agent_manifest_tuple_not_void: agent_manifest_tuple /= Void

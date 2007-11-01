@@ -1,9 +1,9 @@
 indexing
-	
+
 	description:
-		
+
 		"Element nodes in an XSLT stylesheet"
-	
+
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			error_listener_set: error_listener = an_error_listener
 			configuration_set: configuration = a_configuration
 			name_code_set: name_code = a_name_code
-		end			
+		end
 
 feature {XM_XSLT_NODE_FACTORY} -- Validation
 
@@ -86,7 +86,7 @@ feature {XM_XSLT_NODE_FACTORY} -- Validation
 		end
 
 feature -- Access
-	
+
 	construct_type: INTEGER is
 			-- Type of construct being traced
 		do
@@ -110,7 +110,7 @@ feature -- Access
 				Result.force_last (shared_name_pool.expanded_name_from_name_code (an_attribute.fingerprint))
 				an_iterator.forth
 			end
-		end			
+		end
 
 	trace_property (an_expanded_name: STRING): STRING is
 			-- Value of trace-property
@@ -150,7 +150,7 @@ feature -- Access
 				end
 			else
 				a_style_element ?= parent
-				if a_style_element /= Void then					
+				if a_style_element /= Void then
 					Result := a_style_element.default_collation_name
 				else
 					Result := Unicode_codepoint_collation_uri
@@ -192,7 +192,7 @@ feature -- Access
 		do
 			-- pre-condition cannot be met
 		end
-	
+
 	default_xpath_namespace_code: INTEGER is
 			-- Namespace code of default XPath namespace
 		local
@@ -203,7 +203,7 @@ feature -- Access
 			from
 				l_style_element := Current
 			until
-				finished or else l_style_element = Void or else l_namespace /= Void	
+				finished or else l_style_element = Void or else l_namespace /= Void
 			loop
 				l_namespace := l_style_element.default_xpath_namespace
 				if l_namespace = Void then
@@ -229,7 +229,7 @@ feature -- Access
 
 	containing_stylesheet: XM_XSLT_STYLESHEET is
 			-- Containing stylesheet;
-			-- N.B. This may not be the principal stylersheet, it may be 
+			-- N.B. This may not be the principal stylersheet, it may be
 			--  an included or imported module.
 		require
 			-- commented out - see post-condition comments
@@ -379,7 +379,7 @@ feature -- Access
 					Result := Void
 				end
 				a_child_iterator.forth
-			end		
+			end
 		end
 
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
@@ -581,7 +581,7 @@ feature -- Status_report
 	name_code_error_value: XM_XPATH_ERROR_VALUE
 			-- Error value created by `generate_name_code'
 
-		
+
 	frozen is_computed_expression: BOOLEAN is
 			-- Is `Current' a computed expression?
 		do
@@ -795,37 +795,37 @@ feature -- Status_report
 		do
 			Result := False
 		end
-	
+
 	is_fallback: BOOLEAN is
 			-- Is `Current' an xsl:fallback?
 		do
 			Result := False
 		end
-	
+
 	is_matching_substring: BOOLEAN is
 			-- Is `Current' an xsl:matching-substring?
 		do
 			Result := False
 		end
-	
+
 	is_non_matching_substring: BOOLEAN is
 			-- Is `Current' an xsl:non-matching-substring?
 		do
 			Result := False
 		end
-	
+
 	is_decimal_format: BOOLEAN is
 			-- Is `Current' an xsl:decimal_format?
 		do
 			Result := False
 		end
-	
+
 	is_gexslt_document: BOOLEAN is
 			-- Is `Current' a gexslt:document?
 		do
 			Result := False
 		end
-	
+
 	is_gexslt_collection: BOOLEAN is
 			-- Is `Current' a gexslt:collection?
 		do
@@ -898,7 +898,7 @@ feature -- Status setting
 			an_explain_value: STRING
 		do
 			an_attribute_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
-			an_element_uri := uri	
+			an_element_uri := uri
 			a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
 
 			if STRING_.same_string (an_attribute_uri, Gexslt_eiffel_type_uri) and then
@@ -1165,7 +1165,7 @@ feature -- Status setting
 
 	check_within_template is
 			-- Check `Current' is within a template.
-		local	
+		local
 			an_error: XM_XPATH_ERROR_VALUE
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
@@ -1205,7 +1205,7 @@ feature -- Status setting
 					end
 					sort_found := True
 				elseif a_node.node_type = Text_node then
-					
+
 					-- with xml:space=preserve, white space nodes may still be there
 
 					if	not is_all_whitespace (a_node.string_value) then
@@ -1278,7 +1278,7 @@ feature -- Creation
 			if a_trace_wrapper /= Void then
 
 				-- this can happen, for example, after optimizing a compile-time xsl:if
-				
+
 				Result := a_trace_wrapper
 			else
 				create {XM_XSLT_TRACE_INSTRUCTION} Result.make (a_child, an_executable, some_details)
@@ -1336,7 +1336,7 @@ feature -- Creation
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_uri, l_message: STRING
-			l_uri_code: INTEGER			
+			l_uri_code: INTEGER
 		do
 			last_generated_name_code := -1
 			create l_parser.make (a_qname)
@@ -1501,7 +1501,7 @@ feature -- Element change
 					a_style_element.fixup_references
 				end
 				a_child_iterator.forth
-			end				
+			end
 		end
 
 	style_element_allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
@@ -1527,7 +1527,7 @@ feature -- Element change
 		ensure
 			no_fewer_slots_allocated: a_slot_manager.number_of_variables >= old a_slot_manager.number_of_variables
 		end
-	
+
 	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 		require
@@ -1566,7 +1566,7 @@ feature -- Element change
 		ensure
 			attributes_prepared: attributes_prepared
 		end
-	
+
 	process_all_attributes is
 			-- Process the attributes of this element and all its children
 		require
@@ -1598,7 +1598,7 @@ feature -- Element change
 		end
 
 	process_use_when_attribute (an_attribute_name: STRING) is
-			--	Process the [xsl:]use-when attribute. 
+			--	Process the [xsl:]use-when attribute.
 		require
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
@@ -1648,7 +1648,7 @@ feature -- Element change
 		end
 
 	process_default_xpath_namespace_attribute (an_attribute_name: STRING) is
-			--	Process the [xsl:]default-xpath-namespace attribute. 
+			--	Process the [xsl:]default-xpath-namespace attribute.
 		require
 			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
@@ -1666,7 +1666,7 @@ feature -- Element change
 		end
 
 	process_version_attribute (an_attribute_name: STRING; a_condition: INTEGER) is
-			--	Process the [xsl:]version attribute. 
+			--	Process the [xsl:]version attribute.
 		require
 			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
@@ -1725,7 +1725,7 @@ feature -- Element change
 		end
 
 	process_default_collation_attribute (an_attribute_name: STRING) is
-			--	Process the [xsl:]default-collation attribute. 
+			--	Process the [xsl:]default-collation attribute.
 		require
 			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
@@ -1739,7 +1739,7 @@ feature -- Element change
 		end
 
 	process_extension_element_attribute (an_attribute_name: STRING) is
-			--	Process the [xsl:]extension-element-prefixes attribute. 
+			--	Process the [xsl:]extension-element-prefixes attribute.
 		require
 			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
@@ -1853,7 +1853,7 @@ feature -- Element change
 								l_cursor.forth
 							end
 						end
-					end					
+					end
 				end
 			end
 		end
@@ -2065,9 +2065,9 @@ feature -- Element change
 			a_variable.compile (an_executable)
 			if not is_error and then not any_compile_errors then
 				if a_variable.last_generated_expression = Void then
-					
+
 					-- i.e. a redundant variable, so compile everything after it:
-					
+
 					compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
 				else
 					a_local_variable ?= a_variable.last_generated_expression
@@ -2098,7 +2098,7 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 	fallback_processing (a_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT) is
 			-- Perform fallback processing.
 		require
@@ -2244,7 +2244,7 @@ feature -- Element change
 		end
 
 feature -- Conversion
-	
+
 	as_template: XM_XSLT_TEMPLATE is
 			-- `Current' seen as an xsl:template
 		require
@@ -2253,7 +2253,7 @@ feature -- Conversion
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
-	
+
 	as_param: XM_XSLT_PARAM is
 			-- `Current' seen as an xsl:param
 		require
@@ -2464,7 +2464,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 				end
 			end
 		end
-	
+
 	is_global_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent a global variable?
 		require
@@ -2482,7 +2482,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 		end
 
 feature {XM_XSLT_NODE_FACTORY} -- Status setting
-	
+
 	flag_as_instruction is
 			-- Flag `Current' as an XSLT instruction.
 		do
@@ -2502,7 +2502,7 @@ feature {NONE} -- Implementation
 	extension_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace URI codes of extension elements
 
-	
+
 	exclude_namespace (a_namespace_code, a_index: INTEGER) is
 			-- Mark `a_namespace_code' as excluded.
 		require
@@ -2510,7 +2510,7 @@ feature {NONE} -- Implementation
 			a_index_strictly_positive: a_index > 0
 			a_index_small_enough: a_index <= excluded_namespaces.count
 		do
-			excluded_namespaces.replace (INTEGER_.bit_and (a_namespace_code, 0xffff), a_index)
+			excluded_namespaces.replace (INTEGER_.bit_and (a_namespace_code, 0x0000ffff), a_index)
 		end
 
 	common_child_item_type: XM_XPATH_ITEM_TYPE is
@@ -2546,7 +2546,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			common_child_item_type_not_void: Result /= Void	
+			common_child_item_type_not_void: Result /= Void
 		end
 
 	decimal_two: MA_DECIMAL is
@@ -2567,7 +2567,7 @@ feature {NONE} -- Implementation
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
 			finished, finished_inner: BOOLEAN
-		do			
+		do
 			from
 				a_previous_node := Current
 				a_preceding_iterator := new_axis_iterator (Preceding_sibling_axis)
@@ -2640,7 +2640,7 @@ feature {NONE} -- Implementation
 				a_style_element.compile (an_executable)
 				if not any_compile_errors then
 					a_child := a_style_element.last_generated_expression
-					if a_child /= Void and then a_child.is_computed_expression then 
+					if a_child /= Void and then a_child.is_computed_expression then
 						a_child.as_computed_expression.set_source_location (principal_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
 					end
 					if a_child /= Void and then configuration.is_tracing and then (include_parameters or else not a_style_element.is_param) then
