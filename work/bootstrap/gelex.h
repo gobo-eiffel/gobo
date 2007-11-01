@@ -18,7 +18,8 @@
 #endif
 #if !defined(WIN32) && \
 	(defined(WINVER) || defined(_WIN32_WINNT) || defined(_WIN32) || \
-	defined(__WIN32__) || defined(__TOS_WIN__) || defined(_MSC_VER))
+	defined(__WIN32__) || defined(__TOS_WIN__) || defined(_MSC_VER) || \
+	defined(__MINGW32__))
 #define WIN32 1
 #endif
 #ifdef WIN32
