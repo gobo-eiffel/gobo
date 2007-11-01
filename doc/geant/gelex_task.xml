@@ -73,7 +73,7 @@
 					<para><emphasis>Domain: </emphasis>Integer</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>3000</para>
+					<para><emphasis>Default: </emphasis>1000</para>
 				</listitem>
 			</varlistentry>
 

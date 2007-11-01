@@ -53,7 +53,7 @@ feature -- Status report
 feature -- Access
 
 	size: STRING
-			-- -a option, default: 3000
+			-- -a option, default: 1000
 
 	backup: BOOLEAN
 			-- -b option, default: false

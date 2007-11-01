@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			build_yytypes1
 			build_yytypes2
 			build_action_tables
-			array_size := 3000
+			array_size := 1000
 			line_pragma := True
 			input_filename := Default_input_filename
 		ensure

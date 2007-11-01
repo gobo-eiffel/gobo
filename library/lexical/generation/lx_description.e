@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
 			characters_count := 256
-			array_size := 3000
+			array_size := 1000
 			line_pragma := True
 			create rules.make (Initial_max_rules)
 			create eof_rules.make (Initial_max_start_conditions)
@@ -44,7 +44,7 @@ feature -- Initialization
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
 			characters_count := 256
-			array_size := 3000
+			array_size := 1000
 			rules.wipe_out
 			eof_rules.wipe_out
 			eiffel_header.wipe_out
