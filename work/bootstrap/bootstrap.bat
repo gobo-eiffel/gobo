@@ -75,6 +75,7 @@ cd %BIN_DIR%
 
 if .%CC%. == .. goto usage
 if .%CC%. == .-help. goto usage
+if .%CC%. == .--help. goto usage
 if .%CC%. == .-h. goto usage
 if .%CC%. == .-?. goto usage
 if .%CC%. == ./h. goto usage
@@ -260,9 +261,9 @@ goto exit
 	goto exit
 
 :usage
-	echo "usage: bootstrap.bat [-v][--delivery] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | cc | icc | tcc | no_c"
-	echo "   eiffel_compiler:  ge | ise | se"
+	echo usage: bootstrap.bat [-v][--delivery] ^<c_compiler^> ^<eiffel_compiler^>
+	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| cc ^| icc ^| tcc ^| no_c
+	echo    eiffel_compiler:  ge ^| ise ^| se
 	goto exit
 
 :exit

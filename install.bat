@@ -51,6 +51,7 @@ cd %BIN_DIR%
 
 if .%CC%. == .. goto usage
 if .%CC%. == .-help. goto usage
+if .%CC%. == .--help. goto usage
 if .%CC%. == .-h. goto usage
 if .%CC%. == .-?. goto usage
 if .%CC%. == ./h. goto usage
@@ -191,8 +192,8 @@ goto exit
 	goto exit
 
 :usage
-	echo "usage: install.bat [-v] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | cc | icc | tcc | no_c"
+	echo usage: install.bat [-v] ^<c_compiler^>
+	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 
 :exit
