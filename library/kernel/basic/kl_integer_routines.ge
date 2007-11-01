@@ -29,10 +29,10 @@ feature -- Conversion
 #ifdef VE
 			Result.from_integer (an_int)
 #endif
-#ifdef (ISE && ISE_5_6) || SE
+#ifdef SE
 			Result := an_int.to_character
 #endif
-#ifdef (ISE && !ISE_5_6)
+#ifdef ISE
 			Result := an_int.to_character_8
 #endif
 		ensure

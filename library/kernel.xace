@@ -55,17 +55,7 @@
 			<option name="public_key_token" value="b77a5c561934e089"/>
 			<option name="prefix" value="XML_"/>
 		</cluster>
-		<cluster name="eiffelsoftware_runtime_5_6" if="${ISE_5_6}">
-			<option name="abstract" value="true"/>
-			<cluster name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll" if="${GOBO_DOTNET}">
-				<option name="abstract" value="true"/>
-				<option name="assembly" value="EiffelSoftware.Runtime"/>
-				<option name="version" value="1.0.5000.0"/>
-				<option name="culture" value="neutral"/>
-				<option name="public_key_token" value="b77a5c561934e089"/>
-			</cluster>
-		</cluster>
-		<cluster name="eiffelsoftware_runtime_5_7" unless="${ISE_5_6}">
+		<cluster name="eiffelsoftware_runtime">
 			<option name="abstract" value="true"/>
 			<cluster name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll" if="${GOBO_DOTNET}">
 				<option name="abstract" value="true"/>

@@ -27,7 +27,6 @@
 		<echo message="   geant compile_debug_ise"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
-		<echo message="   geant bootstrap"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -110,7 +109,6 @@
 		<ise ace="compile_ise.ace" system="${system}" finalize="${finalize}" finish_freezing="true"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
-			<!-- ISE 5.7 -->
 		<available resource="EIFGENs/${system}/${codedir}/${system}${exe}" variable="file_available"/>
 		<move file="EIFGENs/${system}/${codedir}/${system}${exe}" to_directory="." if="${file_available}=true"/>
 		<available resource="EIFGENs/${system}/${codedir}/lib${system}.dll" variable="file_available"/>
@@ -124,23 +122,6 @@
 		</copy>
 		<copy to_directory=".">
 			<fileset include="EIFGENs/${system}/${codedir}/Assemblies/*.@(dll|exe)">
-				<map type="flat"/>
-			</fileset>
-		</copy>
-			<!-- ISE 5.6 -->
-		<available resource="EIFGEN/${codedir}/${system}${exe}" variable="file_available"/>
-		<move file="EIFGEN/${codedir}/${system}${exe}" to_directory="." if="${file_available}=true"/>
-		<available resource="EIFGEN/${codedir}/lib${system}.dll" variable="file_available"/>
-		<copy file="EIFGEN/${codedir}/lib${system}.dll" to_directory="." if="${file_available}=true"/>
-		<available resource="EIFGEN/${codedir}/${system}.melted" variable="file_available"/>
-		<copy file="EIFGEN/${codedir}/${system}.melted" to_directory="." if="${file_available}=true"/>
-		<copy to_directory=".">
-			<fileset include="EIFGEN/${codedir}/?(${system}_)module_*.dll">
-				<map type="flat"/>
-			</fileset>
-		</copy>
-		<copy to_directory=".">
-			<fileset include="EIFGEN/${codedir}/Assemblies/*.@(dll|exe)">
 				<map type="flat"/>
 			</fileset>
 		</copy>
@@ -232,17 +213,6 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="bootstrap" depend="init">
-		<description>
-			Compile '${system}' with Gobo Eiffel in bootstrap mode.
-		</description>
-
-		<set name="eiffel" value="ge"/>
-		<set name="bootstrap" value="true"/>
-		<set name="no_split" value="true"/>
-		<geant target="compile"/>
-	</target>
-
 	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
@@ -298,26 +268,22 @@
 			Build Ace file or ESD file for Eiffel compiler ${a_compiler}.
 			Generate file in ${a_output} if specified.
 			Pass $DEBUG option to 'gexace' if ${debug} is defined.
-			Pass $BOOTSTRAP option to 'gexace' if ${bootstrap} is defined.
 			Pass $GOBO_EIFFEL value to 'gexace'.
 			Pass $GOBO_OS value to 'gexace'.
 			Pass $GOBO_CC value to 'gexace' if defined.
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
-			Pass $ISE_5_6 option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
 		</description>
 
 		<gexace system="${a_compiler}" output="${a_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
-			<define name="BOOTSTRAP" value="${bootstrap}" if="${bootstrap}"/>
 			<define name="GOBO_EIFFEL" value="${eiffel}"/>
 			<define name="GOBO_OS" value="${GOBO_OS}"/>
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
-			<define name="ISE_5_6" value="true" if="${ISE_5_6}"/>
 		</gexace>
 	</target>
 

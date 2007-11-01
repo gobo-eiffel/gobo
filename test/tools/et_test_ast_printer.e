@@ -58,7 +58,6 @@ feature -- Test
 			a_prefixed_name: STRING
 			a_full_test: BOOLEAN
 			ve_os: STRING
-			ise_5_6: STRING
 			ise_version: UT_VERSION
 			ecma_version: UT_VERSION
 		do
@@ -89,12 +88,8 @@ feature -- Test
 			assert ("xace_parsed", not an_xace_error_handler.has_error)
 			a_universe := an_xace_parser.last_universe
 			assert ("universe_not_void", a_universe /= Void)
-			ise_version := ise_5_6_latest
 			if eiffel_compiler.is_ise then
-				ise_5_6 := Execution_environment.variable_value ("ISE_5_6")
-				if ise_5_6 = Void or else ise_5_6.count = 0 then
-					ise_version := ise_5_7_latest
-				end
+				ise_version := ise_5_7_latest
 			elseif eiffel_compiler.is_ge then
 				ise_version := ise_5_7_latest
 			end

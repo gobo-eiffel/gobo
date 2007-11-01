@@ -29,13 +29,11 @@
 
 <para>
 The classes provided in the <projectname>Gobo Eiffel</projectname> package should 
-compile and work without any change on the three currently maintained Eiffel 
-compilers: <ulink url="http://www.eiffel.com">ISE Eiffel</ulink>, 
-<ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> and 
-<ulink url="http://www.object-tools.com/products/VisualEiffel.html">Visual Eiffel</ulink>. 
+compile and work without any change on the currently maintained Eiffel 
+compilers (see Readme.txt and Release_notes.txt).
 In order to make things easier, only the latest public release of each compiler 
 will be supported. This latest release can be a beta version provided that it is 
-deemed stable enough, as it is often the case for SmartEiffel for example.
+deemed stable enough.
 </para>
 
 <para>
@@ -44,15 +42,9 @@ The currently supported Eiffel compilers are:
 
 <para>
 <itemizedlist>
-    <listitem><para>
-    	<ulink url="http://www.eiffel.com/downloads/index.html#studio">ISE Eiffel 5.5/5.6</ulink>
-    </para></listitem>
-    <listitem><para>
-    	<ulink url="http://smarteiffel.loria.fr/general/download.html">SmartEiffel 1.0/2.2b1</ulink>
-    </para></listitem>    
-    <listitem><para>
-    	<ulink url="http://www.object-tools.com/products/VisualEiffel.html">VisualEiffel 5.0b</ulink>
-    </para></listitem> 
+	<listitem><para>
+		See Readme.txt and Release_notes.txt.
+	</para></listitem>
 </itemizedlist>
 </para>
 

@@ -113,7 +113,6 @@ feature {NONE} -- Precompilation
 		local
 			define_option: STRING
 			dotnet: STRING
-			ise_5_6: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
@@ -134,14 +133,6 @@ feature {NONE} -- Precompilation
 					define_option.append_string ("--define=%"GOBO_DOTNET")
 				else
 					define_option.append_string (" GOBO_DOTNET")
-				end
-			end
-			ise_5_6 := Execution_environment.variable_value ("ISE_5_6")
-			if ise_5_6 /= Void and then ise_5_6.count > 0 then
-				if define_option.count = 0 then
-					define_option.append_string ("--define=%"ISE_5_6")
-				else
-					define_option.append_string (" ISE_5_6")
 				end
 			end
 			if define_option.count > 0 then

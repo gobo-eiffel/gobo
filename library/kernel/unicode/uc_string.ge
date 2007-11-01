@@ -83,13 +83,9 @@ inherit
 			{UC_STRING_HANDLER} storage, compare;
 #endif
 #ifdef ISE
-#ifdef ISE_5_6
-			{STRING} share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal;
-#else
 			{STRING}
 				share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal,
 				valid_code, to_string_32;
-#endif
 #endif
 			{NONE} all
 		undefine
@@ -127,9 +123,7 @@ inherit
 			old_left_adjust,
 			old_right_adjust,
 			old_wipe_out,
-#ifndef ISE_5_6
 			code, append_code, put_code, has_code, index_of_code,
-#endif
 #else
 			wipe_out,
 #endif
@@ -190,9 +184,7 @@ inherit
 			old_clear_all,
 			old_left_adjust,
 			old_right_adjust,
-#ifndef ISE_5_6
 			code, append_code, put_code, has_code, index_of_code,
-#endif
 			infix "+",
 			copy, infix "@"
 		end
@@ -3454,7 +3446,6 @@ feature {UC_STRING} -- Inapplicable
 			keep_head (nb)
 		end
 
-#ifndef ISE_5_6
 	code (i: INTEGER): NATURAL_32 is
 			-- Code at position `i'
 		do
@@ -3486,7 +3477,6 @@ feature {UC_STRING} -- Inapplicable
 			Result := has_item_code (c.as_integer_32)
 		end
 
-#endif
 #endif
 #endif
 invariant
