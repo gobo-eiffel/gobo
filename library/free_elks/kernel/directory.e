@@ -10,9 +10,6 @@ class DIRECTORY
 
 inherit
 	DISPOSABLE
-		export
-			{DIRECTORY} all
-		end
 
 create
 	make, make_open_read

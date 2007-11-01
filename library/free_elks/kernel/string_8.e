@@ -644,6 +644,66 @@ feature -- Status report
 				(Result = substring (2, count).has_substring (other))
 		end
 
+	starts_with (s: STRING_8): BOOLEAN is
+			-- Does string begin with `s'?
+		require
+			argument_not_void: s /= Void
+		local
+			i: INTEGER
+			l_area, l_s_area: like area
+		do
+			if Current = s then
+				Result := True
+			else
+				i := s.count
+				if i <= count then
+					from
+						l_area := area
+						l_s_area := s.area
+						Result := True
+					until
+						i = 0 or not Result
+					loop
+						i := i - 1
+						Result := l_area.item (i) = l_s_area.item (i)
+					end
+				end
+			end
+		ensure
+			definition: Result = s.same_string (substring (1, s.count))
+		end
+
+	ends_with (s: STRING_8): BOOLEAN is
+			-- Does string finish with `s'?
+		require
+			argument_not_void: s /= Void
+		local
+			i, j: INTEGER
+			l_area, l_s_area: like area
+		do
+			if Current = s then
+				Result := True
+			else
+				i := s.count
+				j := count
+				if i <= j then
+					from
+						l_area := area
+						l_s_area := s.area
+						Result := True
+					until
+						i = 0 or not Result
+					loop
+						i := i - 1
+						j := j - 1
+						Result := l_area.item (j) = l_s_area.item (i)
+					end
+				end
+			end
+		ensure
+			definition: Result = s.same_string (substring (count - s.count + 1, count))
+		end
+
 	extendible: BOOLEAN is True
 			-- May new items be added? (Answer: yes.)
 

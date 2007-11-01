@@ -1,16 +1,14 @@
 indexing
-
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
-	license: "MIT License"
+	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class IDENTIFIED
 
 inherit
-
 	DISPOSABLE
 		redefine
 			is_equal, copy
@@ -27,24 +25,21 @@ feature -- Access
 
 	frozen object_id: INTEGER is
 			-- Unique for current object in any given session
-			--| The C implementation cannot be called directly
-			--| as the Eiffel object needs to keep track of
-			--| the returned value. On the other hand, the address
-			--| of `object_id' can be passed to C if it's more
-			--| convenient to call it from C instead of Eiffel
 		do
 			if internal_id = 0 then
 				internal_id := eif_object_id (Current)
 			end
 			Result := internal_id
 		ensure
-			valid_id: id_object (Result) = Current
+			valid_id: Result > 0 implies id_object (Result) = Current
 		end
 
 	frozen id_object (an_id: INTEGER): IDENTIFIED is
 			-- Object associated with `an_id' (void if no such object)
 		do
-			Result ?= eif_id_object (an_id)
+			if an_id > 0 then
+				Result ?= eif_id_object (an_id)
+			end
 		ensure
 			consistent: Result = Void or else Result.object_id = an_id
 		end
@@ -53,6 +48,7 @@ feature -- Status report
 
 	frozen id_freed: BOOLEAN is
 			-- Has `Current' been removed from the table?
+			--| It could also mean that it was not yet added to the table.
 		do
 			Result := id_object (internal_id) = Void
 		end
@@ -60,12 +56,17 @@ feature -- Status report
 feature -- Removal
 
 	frozen free_id is
-			-- Free the entry associated with `object_id' if any
-			--| the `object_id' is not reset because of uniqueness:
-			--| another call shouldn't give a new id
+			-- Free the entry associated with `object_id' if any.
+			--| The `object_id' is reset to -1 to prevent reassigning
+			--| a new id to the same object.
 		do
-			if internal_id /= 0 then
+			if internal_id > 0 then
 				eif_object_id_free (internal_id)
+					-- Seting to `-1' also help debugging by showing that
+					-- the object has been freed but is still alive.
+					-- Also if we were not doing that, calling `object_id'
+					-- would fail its postcondition.
+				internal_id := -1
 			end
 		ensure
 			object_freed: id_freed
