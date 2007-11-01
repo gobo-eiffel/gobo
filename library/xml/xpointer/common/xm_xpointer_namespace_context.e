@@ -25,7 +25,7 @@ inherit
 
 create make
 
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is there a binding for `an_xml_prefix'?
 		require
@@ -49,7 +49,7 @@ feature -- Access
 				Result := bindings.has (an_xml_prefix)
 			end
 		end
-	
+
 	is_prefix_proscribed (an_xml_prefix: STRING): BOOLEAN is
 			-- Is it forbidden to create a binding for `an_xml_prefix'?
 		require
