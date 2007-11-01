@@ -62,14 +62,16 @@ goto no_verbose
 	set MV=rename
 	set RM=del
 	set BIN_DIR=%GOBO%\bin
+	set BOOTSTRAP_DIR=%GOBO%\work\bootstrap
 	set OBJ=.obj
 	set EXE=.exe
-	goto c_compilation
+	goto c_compiler
 
-:c_compilation
+:c_compiler
 
 set BIN_DIR=%GOBO%\bin
-cd %GOBO%\work\bootstrap
+set BOOTSTRAP_DIR=%GOBO%\work\bootstrap
+cd %BIN_DIR%
 
 if .%CC%. == .. goto usage
 if .%CC%. == .-help. goto usage
@@ -81,6 +83,8 @@ if .%EIF%. == .. goto usage
 
 if .%CC%. == .msc. goto msc
 if .%CC%. == .cl. goto msc
+if .%CC%. == .lcc-win32. goto lcc-win32
+if .%CC%. == .lcc. goto lcc-win32
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
@@ -96,215 +100,116 @@ goto exit
 	set LD=link
 	set CFLAGS=-O2 -nologo -wd4049
 	set LFLAGS=-nologo -subsystem:console
-	%CC% %CFLAGS% -c gec13.c
-	%CC% %CFLAGS% -c gec12.c
-	%CC% %CFLAGS% -c gec11.c
-	%CC% %CFLAGS% -c gec10.c
-	%CC% %CFLAGS% -c gec9.c
-	%CC% %CFLAGS% -c gec8.c
-	%CC% %CFLAGS% -c gec7.c
-	%CC% %CFLAGS% -c gec6.c
-	%CC% %CFLAGS% -c gec5.c
-	%CC% %CFLAGS% -c gec4.c
-	%CC% %CFLAGS% -c gec3.c
-	%CC% %CFLAGS% -c gec2.c
-	%CC% %CFLAGS% -c gec1.c
-	%LD% %LFLAGS% -out:%BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	rem set LFLAGS=-subsystem:console
-	%CC% %CFLAGS% -o%BIN_DIR%\gexace%EXE% gexace.c -link %LFLAGS%
-	%RM% gexace%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\geant%EXE% geant.c -link %LFLAGS%
-	%RM% geant%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\gelex%EXE% gelex.c -link %LFLAGS%
-	%RM% gelex%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\geyacc%EXE% geyacc.c -link %LFLAGS%
-	%RM% geyacc%OBJ%
-	%CC% %CFLAGS% -o%BIN_DIR%\gepp%EXE% gepp.c -link %LFLAGS%
-	%RM% gepp%OBJ%
+	set LFLAG_OUT=-out:
 	echo msc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :bcc32
 	set CC=bcc32
 	set LD=bcc32
 	set CFLAGS=-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2
 	set LFLAGS=-5 -q 
-	%CC% %CFLAGS% -c gec13.c
-	%CC% %CFLAGS% -c gec12.c
-	%CC% %CFLAGS% -c gec11.c
-	%CC% %CFLAGS% -c gec10.c
-	%CC% %CFLAGS% -c gec9.c
-	%CC% %CFLAGS% -c gec8.c
-	%CC% %CFLAGS% -c gec7.c
-	%CC% %CFLAGS% -c gec6.c
-	%CC% %CFLAGS% -c gec5.c
-	%CC% %CFLAGS% -c gec4.c
-	%CC% %CFLAGS% -c gec3.c
-	%CC% %CFLAGS% -c gec2.c
-	%CC% %CFLAGS% -c gec1.c
-	%LD% %LFLAGS% -egec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%CP% gec%EXE% %BIN_DIR%
-	%RM% gec%EXE% gec.tds
-	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%CC% %CFLAGS% -ogexace%EXE% gexace.c
-	%CP% gexace%EXE% %BIN_DIR%
-	%RM% gexace%EXE% gexace.tds
-	%CC% %CFLAGS% -ogeant%EXE% geant.c
-	%CP% geant%EXE% %BIN_DIR%
-	%RM% geant%EXE% geant.tds
-	%CC% %CFLAGS% -ogelex%EXE% gelex.c
-	%CP% gelex%EXE% %BIN_DIR%
-	%RM% gelex%EXE% gelex.tds
-	%CC% %CFLAGS% -ogeyacc%EXE% geyacc.c
-	%CP% geyacc%EXE% %BIN_DIR%
-	%RM% geyacc%EXE% geyacc.tds
-	%CC% %CFLAGS% -ogepp%EXE% gepp.c
-	%CP% gepp%EXE% %BIN_DIR%
-	%RM% gepp%EXE% gepp.tds
+	set LFLAG_OUT=-e
 	echo bcc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
-:lcc
+:lcc-win32
 	set CC=lcc
-	set CFLAGS=-O
-	set LNK=lcclnk
-	set LNKFLAGS=-s
-	%CC% %CFLAGS% gec.c
-	%LNK% %LNKFLAGS% -o %BIN_DIR%\gec%EXE% gec%OBJ%
-	%RM% gec%OBJ%
-	%CC% %CFLAGS% gexace.c
-	%LNK% %LNKFLAGS% -o %BIN_DIR%\gexace%EXE% gexace%OBJ%
-	%RM% gexace%OBJ%
-	%CC% %CFLAGS% geant.c
-	%LNK% %LNKFLAGS% -o %BIN_DIR%\geant%EXE% geant%OBJ%
-	%RM% geant%OBJ%
-	%CC% %CFLAGS% gelex.c
-	%LNK% %LNKFLAGS% -o %BIN_DIR%\gelex%EXE% gelex%OBJ%
-	%RM% gelex%OBJ%
-	%CC% %CFLAGS% geyacc.c
-	%LNK% %LNKFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc%OBJ%
-	%RM% geyacc%OBJ%
-	%CC% %CFLAGS% gepp.c
-	%LNK% %LNKFLAGS% -o %BIN_DIR%\gepp%EXE% gepp%OBJ%
-	%RM% gepp%OBJ%
-	echo lcc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	rem set CFLAGS=-O   -- Problem when gec is compiled with the -O option.
+	set CFLAGS=
+	set LD=lcclnk
+	set LFLAGS=-s -subsystem Console
+	set LFLAG_OUT=-o 
+	echo lcc-win32 > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
 
 :gcc
 	set CC=gcc
 	set LD=gcc
 	set CFLAGS=-O2
 	set LFLAGS=-lm
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -c gec13.c
-	%CC% %CFLAGS% -c gec12.c
-	%CC% %CFLAGS% -c gec11.c
-	%CC% %CFLAGS% -c gec10.c
-	%CC% %CFLAGS% -c gec9.c
-	%CC% %CFLAGS% -c gec8.c
-	%CC% %CFLAGS% -c gec7.c
-	%CC% %CFLAGS% -c gec6.c
-	%CC% %CFLAGS% -c gec5.c
-	%CC% %CFLAGS% -c gec4.c
-	%CC% %CFLAGS% -c gec3.c
-	%CC% %CFLAGS% -c gec2.c
-	%CC% %CFLAGS% -c gec1.c
-	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
 	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :cc
 	set CC=cc
 	set LD=cc
 	set CFLAGS='-fast'
 	set LFLAGS='-lm'
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -c gec13.c
-	%CC% %CFLAGS% -c gec12.c
-	%CC% %CFLAGS% -c gec11.c
-	%CC% %CFLAGS% -c gec10.c
-	%CC% %CFLAGS% -c gec9.c
-	%CC% %CFLAGS% -c gec8.c
-	%CC% %CFLAGS% -c gec7.c
-	%CC% %CFLAGS% -c gec6.c
-	%CC% %CFLAGS% -c gec5.c
-	%CC% %CFLAGS% -c gec4.c
-	%CC% %CFLAGS% -c gec3.c
-	%CC% %CFLAGS% -c gec2.c
-	%CC% %CFLAGS% -c gec1.c
-	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
 	echo cc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :icc
 	set CC=icc
 	set LD=icc
 	set CFLAGS=-O2
 	set LFLAGS=
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -c gec13.c
-	%CC% %CFLAGS% -c gec12.c
-	%CC% %CFLAGS% -c gec11.c
-	%CC% %CFLAGS% -c gec10.c
-	%CC% %CFLAGS% -c gec9.c
-	%CC% %CFLAGS% -c gec8.c
-	%CC% %CFLAGS% -c gec7.c
-	%CC% %CFLAGS% -c gec6.c
-	%CC% %CFLAGS% -c gec5.c
-	%CC% %CFLAGS% -c gec4.c
-	%CC% %CFLAGS% -c gec3.c
-	%CC% %CFLAGS% -c gec2.c
-	%CC% %CFLAGS% -c gec1.c
-	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
 	echo icc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :tcc
 	set CC=tcc
 	set LD=tcc
 	set CFLAGS=-O2
 	set LFLAGS=-lm
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -c gec13.c
-	%CC% %CFLAGS% -c gec12.c
-	%CC% %CFLAGS% -c gec11.c
-	%CC% %CFLAGS% -c gec10.c
-	%CC% %CFLAGS% -c gec9.c
-	%CC% %CFLAGS% -c gec8.c
-	%CC% %CFLAGS% -c gec7.c
-	%CC% %CFLAGS% -c gec6.c
-	%CC% %CFLAGS% -c gec5.c
-	%CC% %CFLAGS% -c gec4.c
-	%CC% %CFLAGS% -c gec3.c
-	%CC% %CFLAGS% -c gec2.c
-	%CC% %CFLAGS% -c gec1.c
-	%LD% %LFLAGS% -o %BIN_DIR%\gec%EXE% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%RM% gec1%OBJ% gec2%OBJ% gec3%OBJ% gec4%OBJ% gec5%OBJ% gec6%OBJ% gec7%OBJ% gec8%OBJ% gec9%OBJ% gec10%OBJ% gec11%OBJ% gec12%OBJ% gec13%OBJ%
-	%CC% %CFLAGS% -o %BIN_DIR%\gexace%EXE% gexace.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geant%EXE% geant.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gelex%EXE% gelex.c
-	%CC% %CFLAGS% -o %BIN_DIR%\geyacc%EXE% geyacc.c
-	%CC% %CFLAGS% -o %BIN_DIR%\gepp%EXE% gepp.c
 	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
+
+:c_compilation
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec13.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec12.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec11.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec10.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec5.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec4.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec3.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec2.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec1.c
+	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ%
+	%RM% gec*%OBJ%
+
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace4.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace3.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace2.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gexace1.c
+	%LD% %LFLAGS% %LFLAG_OUT%gexace%EXE% gexace*%OBJ%
+	%RM% gexace*%OBJ%
+
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant4.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant3.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant2.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant1.c
+	%LD% %LFLAGS% %LFLAG_OUT%geant%EXE% geant*%OBJ%
+	%RM% geant*%OBJ%
+
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gelex2.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gelex1.c
+	%LD% %LFLAGS% %LFLAG_OUT%gelex%EXE% gelex*%OBJ%
+	%RM% gelex*%OBJ%
+
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geyacc2.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geyacc1.c
+	%LD% %LFLAGS% %LFLAG_OUT%%BIN_DIR%\geyacc%EXE% geyacc*%OBJ%
+	%RM% geyacc*%OBJ%
+
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gepp1.c
+	%LD% %LFLAGS% %LFLAG_OUT%gepp%EXE% gepp*%OBJ%
+	%RM% gepp*%OBJ%
+
+	if .%CC%. == .bcc32. %RM% *.tds
+
 	goto install
 
 :install
@@ -324,10 +229,6 @@ goto exit
 
 :se
 	set GOBO_EIFFEL=se
-	goto bootstrap
-
-:ve
-	set GOBO_EIFFEL=ve
 	goto bootstrap
 
 :bootstrap
@@ -360,7 +261,7 @@ goto exit
 
 :usage
 	echo "usage: bootstrap.bat [-v][--delivery] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | bcc | gcc | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | cc | icc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se"
 	goto exit
 

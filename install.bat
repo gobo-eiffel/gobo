@@ -38,6 +38,7 @@ goto no_verbose
 	set MV=rename
 	set RM=del
 	set BIN_DIR=%GOBO%\bin
+	set BOOTSTRAP_DIR=%GOBO%\bin
 	set OBJ=.obj
 	set EXE=.exe
 	goto c_compilation
@@ -45,6 +46,7 @@ goto no_verbose
 :c_compilation
 
 set BIN_DIR=%GOBO%\bin
+set BOOTSTRAP_DIR=%GOBO%\bin
 cd %BIN_DIR%
 
 if .%CC%. == .. goto usage
@@ -57,6 +59,8 @@ if .%EIF%. == .. goto usage
 
 if .%CC%. == .msc. goto msc
 if .%CC%. == .cl. goto msc
+if .%CC%. == .lcc-win32. goto lcc-win32
+if .%CC%. == .lcc. goto lcc-win32
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
@@ -69,62 +73,89 @@ goto exit
 
 :msc
 	set CC=cl
+	set LD=link
 	set CFLAGS=-O2 -nologo -wd4049
-	%CC% %CFLAGS% -o%BIN_DIR%\gec%EXE% gec.c
-	%RM% gec%OBJ%
+	set LFLAGS=-nologo -subsystem:console
+	set LFLAG_OUT=-out:
 	echo msc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :bcc32
 	set CC=bcc32
+	set LD=bcc32
 	set CFLAGS=-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2
-	%CC% %CFLAGS% -ogec%EXE% gec.c
-	%CP% gec%EXE% %BIN_DIR%
-	%RM% gec%EXE% gec.tds
+	set LFLAGS=-5 -q 
+	set LFLAG_OUT=-e
 	echo bcc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
-:lcc
+:lcc-win32
 	set CC=lcc
-	set CFLAGS=-O
-	set LNK=lcclnk
-	set LNKFLAGS=-s
-	%CC% %CFLAGS% gec.c
-	%LNK% %LNKFLAGS% -o %BIN_DIR%\gec%EXE% gec%OBJ%
-	%RM% gec%OBJ%
-	echo lcc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	rem set CFLAGS=-O   -- Problem when gec is compiled with the -O option.
+	set CFLAGS=
+	set LD=lcclnk
+	set LFLAGS=-s -subsystem Console
+	set LFLAG_OUT=-o 
+	echo lcc-win32 > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
 
 :gcc
 	set CC=gcc
+	set LD=gcc
 	set CFLAGS=-O2
+	set LFLAGS=-lm
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
 	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :cc
 	set CC=cc
-	set CFLAGS=-fast
+	set LD=cc
+	set CFLAGS='-fast'
+	set LFLAGS='-lm'
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
 	echo cc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :icc
 	set CC=icc
+	set LD=icc
 	set CFLAGS=-O2
+	set LFLAGS=
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
 	echo icc > %GOBO%\tool\gec\config\c\default.cfg
-	goto install
+	goto c_compilation
 
 :tcc
 	set CC=tcc
+	set LD=tcc
 	set CFLAGS=-O2
+	set LFLAGS=-lm
+	set LFLAG_OUT=-o 
 	set OBJ=.o
-	%CC% %CFLAGS% -o %BIN_DIR%\gec%EXE% gec.c
 	echo tcc > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
+
+:c_compilation
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec13.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec12.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec11.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec10.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec5.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec4.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec3.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec2.c
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec1.c
+	%LD% %LFLAGS% %LFLAG_OUT%gec%EXE% gec*%OBJ%
+	%RM% gec*%OBJ%
+	if .%CC%. == .bcc32. %RM% gec.tds
 	goto install
 
 :install
@@ -161,7 +192,7 @@ goto exit
 
 :usage
 	echo "usage: install.bat [-v] <c_compiler>"
-	echo "   c_compiler:  msc | bcc | gcc | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | cc | icc | tcc | no_c"
 	goto exit
 
 :exit

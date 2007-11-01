@@ -137,8 +137,12 @@
 		<geant file="../src/getest/build.eant" target="clobber" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="clobber" dir="bin"/>
 		<geant file="../src/gexslt/build.eant" target="clobber" dir="bin"/>
-		<copy file="work/bootstrap/gec.c" to_directory="bin"/>
 		<copy file="work/bootstrap/gec.h" to_directory="bin"/>
+		<copy to_directory="bin">
+			<fileset include="work/bootstrap/gec*.c">
+				<map type="flat"/>
+			</fileset>
+		</copy>
 		<delete>
 			<directoryset directory="." include="@(**/.svn)"/>
 		</delete>
