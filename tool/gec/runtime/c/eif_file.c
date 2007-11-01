@@ -21,6 +21,7 @@
 #include <utime.h>
 #else
 #include <sys/utime.h>
+extern int utime(const char *, struct utimbuf *); /* Needed for lcc-win32 */
 #endif
 #include <io.h> /* for access, chmod */
 #include <direct.h> /* for (ch|mk|rm)dir */
@@ -667,7 +668,7 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
     switch (op) {
 	case 0: /* Is file readable */
 #ifdef WIN32
-	return ((mode && S_IREAD) ? EIF_TRUE : EIF_FALSE);
+		return ((mode && S_IREAD) ? EIF_TRUE : EIF_FALSE);
 #else
 		euid = geteuid();
 		egid = getegid();
@@ -679,11 +680,11 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 		else if (gid == egid)
 			return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 		else
-#endif
 			return ((mode & S_IROTH) ? EIF_TRUE : EIF_FALSE);
+#endif
 	case 1: /* Is file writable */
 #ifdef WIN32
-	return ((mode & S_IWRITE) ? EIF_TRUE : EIF_FALSE);
+		return ((mode & S_IWRITE) ? EIF_TRUE : EIF_FALSE);
 #else
 		euid = geteuid();
 		egid = getegid();
@@ -695,11 +696,11 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 		else if (gid == egid)
 			return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 		else
-#endif
 			return ((mode & S_IWOTH) ? EIF_TRUE : EIF_FALSE);
+#endif
 	case 2: /* Is file executable */
 #ifdef WIN32
-	return EIF_TRUE;
+		return EIF_TRUE;
 #else
 		euid = geteuid();
 		egid = getegid();
@@ -711,8 +712,8 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 		else if (gid == egid)
 			return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 		else
-#endif
 			return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);
+#endif
 	case 3: /* Is file setuid */
 #ifdef WIN32
 		return EIF_FALSE;

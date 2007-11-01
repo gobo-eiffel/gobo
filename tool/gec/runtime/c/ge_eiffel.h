@@ -20,9 +20,9 @@
 	(defined(WINVER) || defined(_WIN32_WINNT) || defined(_WIN32) || \
 	defined(__WIN32__) || defined(__TOS_WIN__) || defined(_MSC_VER))
 #define WIN32 1
-#define EIF_WINDOWS 1
 #endif
 #ifdef WIN32
+#define EIF_WINDOWS 1
 #include <windows.h>
 #endif
 

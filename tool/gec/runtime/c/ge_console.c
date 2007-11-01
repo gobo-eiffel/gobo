@@ -41,6 +41,7 @@ void GE_show_console(void)
 		int hCrt;
 #ifndef EIF_BORLAND
 		FILE *hf;
+extern FILE * _fdopen(int, const char *); /* Needed for lcc-win32 */
 #endif
 
 		bSuccess = AllocConsole();
@@ -49,11 +50,11 @@ void GE_show_console(void)
 		if (hconout == INVALID_HANDLE_VALUE) {
 			GE_raise(24);
 		}
-		hconerr = GetStdHandle (STD_ERROR_HANDLE);
+		hconerr = GetStdHandle(STD_ERROR_HANDLE);
 		if (hconerr == INVALID_HANDLE_VALUE) {
 			GE_raise(24);
 		}
-		hconin = GetStdHandle (STD_INPUT_HANDLE);
+		hconin = GetStdHandle(STD_INPUT_HANDLE);
 		if (hconin == INVALID_HANDLE_VALUE) {
 			GE_raise(24);
 		}
@@ -70,27 +71,27 @@ void GE_show_console(void)
 					duplicate the handle, unfortunately the solution does not work
 					with Microsoft which explains the ifdef statement.
 				*/
-			hCrt = _open_osfhandle ((intptr_t) hconout, _O_TEXT);
+			hCrt = _open_osfhandle((intptr_t) hconout, _O_TEXT);
 #ifdef EIF_BORLAND
-			dup2 (hCrt, _fileno(stdout));
+			dup2(hCrt, _fileno(stdout));
 #else
 			hf = _fdopen (hCrt, "w");
 			*stdout = *hf;
 #endif
 			setvbuf(stdout, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle ((intptr_t) hconerr, _O_TEXT);
+			hCrt = _open_osfhandle((intptr_t) hconerr, _O_TEXT);
 #ifdef EIF_BORLAND
-			dup2 (hCrt, _fileno(stderr));
+			dup2(hCrt, _fileno(stderr));
 #else
-			hf = _fdopen (hCrt, "w");
+			hf = _fdopen(hCrt, "w");
 			*stderr = *hf;
 #endif
 			setvbuf(stderr, NULL, _IONBF, 0);
-			hCrt = _open_osfhandle ((intptr_t) hconin, _O_TEXT | _O_RDONLY);
+			hCrt = _open_osfhandle((intptr_t) hconin, _O_TEXT | _O_RDONLY);
 #ifdef EIF_BORLAND
-			dup2 (hCrt, _fileno(stdin));
+			dup2(hCrt, _fileno(stdin));
 #else
-			hf = _fdopen (hCrt, "r");
+			hf = _fdopen(hCrt, "r");
 			*stdin = *hf;
 #endif
 		}

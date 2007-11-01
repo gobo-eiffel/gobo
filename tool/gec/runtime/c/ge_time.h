@@ -34,6 +34,7 @@
 #define GE_timebtime(p) ((struct timeval*)(p))->tv_sec
 #else
 #include <sys/timeb.h>
+extern void ftime(struct timeb *); /* Needed for lcc-win32 */
 #define GE_ftime(p) ftime((struct timeb*)(p))
 #define GE_timebsz sizeof(struct timeb)
 #define GE_timebmillitm(p) ((struct timeb*)(p))->millitm
