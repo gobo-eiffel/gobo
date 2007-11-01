@@ -57,7 +57,7 @@ feature -- Events
 			current_element := a_name_code
 			Precursor (a_name_code, a_type_code, a_properties)
 		end
-	
+
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
 			-- Notify an attribute.
 		do
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (37)
 			Result.set_equality_tester (string_equality_tester)
-			
+
 		end
 
 	unescaped_html_characters: DS_HASH_SET [CHARACTER] is
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			l_url: STRING
 		do
 			l_url := normalizer.normalized_string (a_url)
-			
+
 			-- NULs are added to prevent further escaping
 
 			Result := STRING_.concat ("%U", escape_custom (utf8.to_utf8 (l_url), unescaped_html_characters, False))
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			l_attribute: STRING
 		do
 			if STRING_.same_string (shared_name_pool.namespace_uri_from_name_code (a_attribute), Null_uri) then
-				if STRING_.same_string (shared_name_pool.namespace_uri_from_name_code (current_element), Html_uri) then
+				if STRING_.same_string (shared_name_pool.namespace_uri_from_name_code (current_element), html_uri) then
 					l_attribute := shared_name_pool.local_name_from_name_code (a_attribute)
 					if url_attributes_set.has (l_attribute) then
 						Result := url_combinations_set.has (shared_name_pool.local_name_from_name_code (current_element) + "+" + l_attribute)
