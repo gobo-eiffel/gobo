@@ -38,8 +38,6 @@ feature -- Access
 
 	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
 			-- `a_item' mapped to zero or one items
-		local
-			l_message: STRING
 		do
 			check
 				a_item_not_void: a_item /= Void
@@ -48,7 +46,7 @@ feature -- Access
 			if not a_item.is_atomic_value then
 				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Path expressions may not mix atomic values and nodes", Xpath_errors_uri, "XPTY0018", Type_error)
 			else
-				Result := a_item				
+				Result := a_item
 			end
 		end
 
