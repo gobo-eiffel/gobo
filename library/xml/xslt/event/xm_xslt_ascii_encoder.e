@@ -74,8 +74,10 @@ feature -- Element change
 				outputter.output (a_character_string)
 			end
 		rescue
-			is_error := True
-			retry
+			if not is_error then
+				is_error := True
+				retry
+			end
 		end
 
 	output_ignoring_error (a_character_string: STRING) is
@@ -87,8 +89,10 @@ feature -- Element change
 				outputter.output (a_character_string)
 			end
 		rescue
-			is_error := True
-			retry
+			if not is_error then
+				is_error := True
+				retry
+			end
 		end
 
 end
