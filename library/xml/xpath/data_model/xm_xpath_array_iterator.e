@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	make (a_array: ARRAY [G]; a_start, an_end: INTEGER) is
 		require
 			array_not_void: a_array /= Void
-			no_void_element: not a_array.has (Void)
+			no_void_element: True -- not a_array.has (Void)
 			first_item: a_start >= 1 and then a_start <= a_array.count
 			last_item: an_end >= a_start and then an_end <= a_array.count
 		do
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 invariant
 
 	items_not_void: items /= Void
-	no_void_item: not items.has (Void)
+	no_void_item: True -- not items.has (Void)
 	first_item: first_item >= 1 and then first_item <= items.count
 	last_item: last_item >= first_item and then last_item <= items.count
 	

@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 				children ?= starting_node.new_axis_iterator (Child_axis)
 				if not is_forwards then
 					if children.is_reversible_iterator then
-						children ?= children.as_reversible_iterator.reverse_iterator
+						children ?= children.reverse_iterator
 					else
 						an_iterator ?= children
 						create an_extent.make (an_iterator)
