@@ -84,7 +84,7 @@
 		<geant file="build.eant" target="compile" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
 		<move file="src/gec/gec${exe}" to_directory="bin" if="${GOBO_EIFFEL}=ge"/>
 		<geant file="build.eant" target="clean" dir="src/gec" if="${GOBO_EIFFEL}=ge"/>
-			<!-- Compile gec only once with Eiffel compilers -->
+			<!-- Compile gec only once with other Eiffel compilers -->
 		<geant file="../src/gec/build.eant" target="compile" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
 		<geant file="../src/gec/build.eant" target="clean" dir="bin" unless="${GOBO_EIFFEL}=ge"/>
 			<!-- Compile geant -->

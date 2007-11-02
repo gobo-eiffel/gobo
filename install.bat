@@ -174,7 +174,7 @@ goto exit
 	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gepp\ge.ace
 	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\getest\ge.ace
 	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gelint\ge.ace
-	%BIN_DIR%\gec%EXE% %GOBO%\src\gexslt\ge.ace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gexslt\ge.ace
 	goto clean
 
 :clean

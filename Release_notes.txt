@@ -1,14 +1,4 @@
-ISE 5.7/6.0 (ISE Eiffel)
-
-	* The Ace files for ISE Eiffel provided in this package are for
-	  Eiffel classic. In order to get Ace files configured for Eiffel
-	  for .NET, you will need to set the environment variable
-	  $GOBO_DOTNET, and then run the following commands:
-
-	    set GOBO_DOTNET=true
-	    cd %GOBO%
-	    geant clobber
-	    geant install
+ISE 5.7/6.0/6.1 (ISE Eiffel)
 
 	* The Ace files for ISE Eiffel provided in this package are for
 	  Eiffel classic. In order to get Ace files configured for Eiffel

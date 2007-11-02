@@ -1,4 +1,4 @@
-Version 3.7 - ?
+Version 3.7 - 5 November 2007
 
 	gec:
 
@@ -11,6 +11,7 @@ Version 3.7 - ?
 	* Improved interoperability with ISE's compiler.
 	* Support 'external "C++"' routines.
 	* Implemented feature `deep_twin'.
+	* Added support for lcc-win32 and MinGW as back-end C compilers.
 
 	gelint:
 
