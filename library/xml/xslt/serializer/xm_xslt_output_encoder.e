@@ -23,11 +23,11 @@ feature -- Access
 
 	outputter: XM_OUTPUT
 			-- Raw outputter
-	
+
 	byte_order_mark: STRING is
 			-- XML BOM
 		require
-			byte_order_mark_permitted: byte_order_mark_permitted 
+			byte_order_mark_permitted: byte_order_mark_permitted
 		deferred
 		ensure
 			byte_order_mark_not_void: Result /= Void
@@ -53,7 +53,7 @@ feature -- Status report
 	is_bad_character_code (a_code: INTEGER): BOOLEAN is
 		-- Is `a_code' not representable in `encoding'?
 		require
-		valid_character_code: is_char (a_code)
+			valid_character_code: is_char (a_code)
 		deferred
 		end
 
@@ -76,7 +76,7 @@ feature -- Status report
 					end
 					an_index := an_index + 1
 				end
-				
+
 			end
 		end
 
@@ -102,4 +102,4 @@ invariant
 	encoding_not_void: encoding /= Void and then encoding.count > 0
 
 end
-	
+
