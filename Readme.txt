@@ -96,7 +96,7 @@ Note that if you downloaded this package from SVN on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
-5.7.64493, 6.0.6.9618 and 6.1.7.0907 (Classic and .NET), SmartEiffel 1.2r7,
+5.7.64493, 6.0.6.9618 and 6.1.7.1007 (Classic and .NET), SmartEiffel 1.2r7,
 and Gobo Eiffel Compiler (gec) 3.7. For more details about the supported
 Eiffel compilers, please see the file "Release_notes.txt". This software
 might work with other Eiffel compilers and/or other compiler versions,
