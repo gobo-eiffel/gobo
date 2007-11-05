@@ -334,16 +334,16 @@ feature -- Validity checks
 			if all_valid_short_and_long_form (options) then
 				Result := True
 				from alternative_options_lists.start until (not Result) or alternative_options_lists.after loop
-					aol := alternative_options_lists.item_for_iteration	
+					aol := alternative_options_lists.item_for_iteration
 					if not all_valid_short_and_long_form (aol) then
 						Result := False
 					else
 						if aol.introduction_option.has_short_form then
 							Result := not has_short_option (aol.introduction_option.short_form)
 						end
-						if aol.introduction_option.has_short_form and Result then
+						if aol.introduction_option.has_long_form and Result then
 							Result := not has_long_option (aol.introduction_option.long_form)
-						end						 
+						end
 					end
 					alternative_options_lists.forth
 				end
