@@ -42,13 +42,12 @@ This document is structured as follows:
 			<ulink url="introduction.html">Introduction</ulink>
 		</term>
 		<listitem><para>
-			
+
 			A short guide into the argument
 			library and an example with explanations.
-			
+
 		</para></listitem>
 	</varlistentry>
-	
 	<varlistentry>
 		<term>
 			<ulink url="parser.html">Parser</ulink>
@@ -70,7 +69,7 @@ This document is structured as follows:
 
 			An overview of available options and a guide
 			on how to create own option types.
-		  
+ 
 		</para></listitem>
 	</varlistentry>
 

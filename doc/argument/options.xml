@@ -43,7 +43,7 @@
 </para>
 
 <section id="available">
-	
+
 	<title>Available option types</title>
 
 	<para>
@@ -74,7 +74,7 @@
 				<classname>AP_BOOLEAN_OPTION</classname>
 			</term>
 			<listitem><para>
-				
+
 				The flag needs to be supplied by a
 				boolean value. The strings
 				'yes','y','1','true' and 't' are
@@ -130,7 +130,7 @@
 </section>
 
 <section id="ownoptions">
-	
+
 	<title>Defining own option types</title>
 
 	<para>

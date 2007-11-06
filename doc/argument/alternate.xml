@@ -45,7 +45,7 @@
 </para>
 
 <section id="usage">
-	
+
 	<title>Usage</title>
 
 	<para>
@@ -75,14 +75,14 @@
 	</para>
 
 	<para>
-		
+
 		The same option can be added to the default options
 		list in <classname>AP_PARSER</classname> as well as to
 		an arbitrary set of
 		<classname>ALTERNATIVE_OPTIONS_LIST</classname> at the
 		same time. This makes it possible to offer the same
 		option in different modes.
-		
+
 	</para>
 
 </section>
@@ -131,7 +131,7 @@ feature -- Main
 
          create decompress_flag.make ('d',"decompress")
          decompress_flag.set_description ("Decompress file")
-         
+
          create strength_option.make ('s',"strength")
          strength_option.set_description ("Compression strength (1..9)")
 
@@ -144,13 +144,13 @@ feature -- Main
 
          parser.options.force_last (strength_option)
          parser.options.force_last (output_option)
-         
+
          create alternative_list.make (decompress_flag)
          alternative_list.force_last (check_flag)
          alternative_list.force_last (output_option)
          alternative_list.set_parameters_description ("compressed_file")
          parser.alternative_options_lists.force_first (alternative_list)
-         
+
          parser.parse_arguments
       end
 

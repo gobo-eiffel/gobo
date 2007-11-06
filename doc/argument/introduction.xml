@@ -47,15 +47,15 @@
 		editor or the URL that a web-browser should open on
 		startup.
 	</para>
-	
+
 	<programlisting>myprog parameter1 parameter2 ... parameterX</programlisting>
-	
+
 	<para>
 		Options - on the other hand - are normally not mandatory for
 		the proper operation of the application. They are introduced
 		with the - (minus) character.
 	</para>
-	
+
 	<para>
 		There are short options and there are long
 		options. <emphasis>Short options</emphasis> are
@@ -72,7 +72,7 @@
 		<emphasis>flags</emphasis> to the program. Flags are
 		options that do not take any argument. The option
 		--bar is an option that takes an argument, in this
-		case the string HALLO.  
+		case the string HALLO.
 	</para>
 
 	<para>
@@ -114,7 +114,7 @@
 		the command line as there are developers writing
 		applications. Often you have difficulties to use a
 		tool because you wrote the command line arguments
-		wrong, as the tool required them in a very specific form. 
+		wrong, as the tool required them in a very specific form.
 		If also a useful help text message is missing,
 		the user wastes unnecessary time browsing through
 		man pages and application documentation, or just uses
@@ -171,12 +171,12 @@
 <section id="features">
 
 	<title>Feature overview</title>
-	
+
 	<para>
 		To get the buzz-words right, here is a short overview
 		of what you get when you are using the library.
 	</para>
-	
+
 	<itemizedlist>
 		<listitem><para>
 			Different types of options: flags, strings, integers, booleans ...
@@ -209,7 +209,7 @@
 		</para></listitem>
 		<listitem><para>
 			No special 'option description language' is required. It is all just
-			plain Eiffel code.	
+			plain Eiffel code.
 		</para></listitem>
 	</itemizedlist>
 
@@ -231,19 +231,19 @@
 		</para></listitem>
 		<listitem><para>
 			Create instances of options types, that is of the classes that
-			inherit from <classname>AP_OPTION</classname>. Configure these instances 
+			inherit from <classname>AP_OPTION</classname>. Configure these instances
 			(for example with a help text for this option). Register these options
 			at the parser.
 		</para></listitem>
 		<listitem><para>
-			Parse the command line, most of the time by just calling 
+			Parse the command line, most of the time by just calling
 			<featurename>parse_arguments</featurename> on the parser.
 		</para></listitem>
 		<listitem><para>
 			See if options were found by calling <featurename>was_found</featurename>
 			in its instances. Get the parameters (non-option arguments) from the parser
 			itself by querying it for <featurename>parameters</featurename>.
-		</para></listitem>		
+		</para></listitem>
 	</orderedlist>
 
 </section>
@@ -268,7 +268,7 @@
 
 <programlisting>
 feature -- Options and Flags
-   
+
    allmost_all_flag: AP_FLAG
    long_format_flag: AP_FLAG
    color_option: AP_ENUMERATION_OPTION
@@ -282,40 +282,40 @@ feature -- Main
          parser: AP_PARSER
       do
             -- STEP 1: Creation and configuration of the parser
-   
+
          create parser.make
          parser.set_application_description
             ("List information about the FILEs (the current directory by default).")
          parser.set_parameters_description ("[file] ...")
-   
+
             -- STEP 2: Creation and configuration of the flags
-   
+
          create allmost_all_flag.make ('A',"allmost-all")
          allmost_all_flag.set_description ("do not list implied . and ..")
          parser.options.force_last (allmost_all_flag)
-   
+
          create long_format_flag.make_with_short_form ('l')
          long_format_flag.set_description ("use a long listing format")
          parser.options.force_last (long_format_flag)
-   
+
          create color_option.make_with_long_form ("color")
          color_option.set_description ("control whether color is used to distinguish file types.")
          color_option.extend ("never")
          color_option.extend ("always")
          color_option.extend ("auto")
          parser.options.force_last (color_option)
-   
+
          create ignore_option.make ('I',"ignore")
          ignore_option.set_description ("do not list implied entries matching shell PATTERN")
          ignore_option.set_parameter_description ("PATTERN")
          parser.options.force_last (ignore_option)
-   
+
             -- STEP 3: Parse the arguments
-   
+
          parser.parse_arguments
-   
+
             -- STEP 4: Read results
-   
+
          if allmost_all_flag.was_found then
             print ("list allmost all%N")
          end
@@ -325,7 +325,7 @@ feature -- Main
          if color_option.was_found then
             print ("use coloring "+color_option.parameter+"%N")
          end
-         
+
          if ignore_option.was_found then
             from
                ignore_option.parameters.start
@@ -370,7 +370,7 @@ $ ./my_ls -h
 usage: ls_example [-A] [-l] [--color=never|always|auto] [-I PATTERN] [file] ...
        ls_example --help
 
-List information about the FILEs (the current directory by default). 
+List information about the FILEs (the current directory by default).
 
 Options:
 -A, --allmost-all             do not list implied . and ..
