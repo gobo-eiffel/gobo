@@ -1,0 +1,162 @@
+system
+
+	"gelint"
+
+root
+
+	GELINT: execute
+
+default
+
+	assertion (boost)
+	debug (no)
+	collect (no)
+	high_memory_compiler (no)
+	manifest_string_trace (no)
+	trace (no)
+	verbose (no)
+	no_style_warning (yes)
+	no_warning (yes)
+
+cluster
+
+	gelint: "${GOBO}/src/gelint"
+	lx_automaton: "${GOBO}/library/lexical\automaton"
+	lx_error: "${GOBO}/library/lexical\error"
+	lx_generation: "${GOBO}/library/lexical\generation"
+	lx_lex: "${GOBO}/library/lexical\lex"
+	lx_regexp: "${GOBO}/library/lexical\regexp"
+	lx_scanner: "${GOBO}/library/lexical\scanner"
+	lx_skeleton: "${GOBO}/library/lexical\skeleton"
+	lx_support: "${GOBO}/library/lexical\support"
+	pr_error: "${GOBO}/library/parse\error"
+	pr_fsm: "${GOBO}/library/parse\fsm"
+	pr_generation: "${GOBO}/library/parse\generation"
+	pr_grammar: "${GOBO}/library/parse\grammar"
+	pr_parser: "${GOBO}/library/parse\parser"
+	pr_skeleton: "${GOBO}/library/parse\skeleton"
+	pr_support: "${GOBO}/library/parse\support"
+	pr_yacc: "${GOBO}/library/parse\yacc"
+	ut_error: "${GOBO}/library/utility\error"
+	ut_formatter: "${GOBO}/library/utility\formatter"
+	ut_command: "${GOBO}/library/utility\command"
+	ut_config: "${GOBO}/library/utility\config"
+	ut_support: "${GOBO}/library/utility\support"
+	ut_transcoder: "${GOBO}/library/utility\transcoder"
+	ut_uri: "${GOBO}/library/utility\uri"
+	kl_basic: "${GOBO}/library/kernel\basic"
+	kl_elks: "${GOBO}/library/kernel\elks"
+	kl_io: "${GOBO}/library/kernel\io"
+	kl_misc: "${GOBO}/library/kernel\misc"
+	kl_unicode: "${GOBO}/library/kernel\unicode"
+	kl_support: "${GOBO}/library/kernel\support"
+	kl_spec_se: "${GOBO}/library/kernel\spec\se"
+	ds_container: "${GOBO}/library/structure\container"
+	ds_dispenser: "${GOBO}/library/structure\dispenser"
+	ds_list: "${GOBO}/library/structure\list"
+	ds_set: "${GOBO}/library/structure\set"
+	ds_sort: "${GOBO}/library/structure\sort"
+	ds_support: "${GOBO}/library/structure\support"
+	ds_table: "${GOBO}/library/structure\table"
+	et_eiffel_agent: "${GOBO}/library/tools\eiffel\ast\agent"
+	et_eiffel_assertion: "${GOBO}/library/tools\eiffel\ast\assertion"
+	et_eiffel_class: "${GOBO}/library/tools\eiffel\ast\class"
+	et_eiffel_cluster: "${GOBO}/library/tools\eiffel\ast\cluster"
+	et_eiffel_constant: "${GOBO}/library/tools\eiffel\ast\constant"
+	et_eiffel_expression: "${GOBO}/library/tools\eiffel\ast\expression"
+	et_eiffel_feature: "${GOBO}/library/tools\eiffel\ast\feature"
+	et_eiffel_instruction: "${GOBO}/library/tools\eiffel\ast\instruction"
+	et_eiffel_misc: "${GOBO}/library/tools\eiffel\ast\misc"
+	et_eiffel_name: "${GOBO}/library/tools\eiffel\ast\name"
+	et_eiffel_type: "${GOBO}/library/tools\eiffel\ast\type"
+	et_eiffel_compilation: "${GOBO}/library/tools\eiffel\compilation"
+	et_eiffel_dynamic: "${GOBO}/library/tools\eiffel\dynamic"
+	et_eiffel_error: "${GOBO}/library/tools\eiffel\error"
+	et_eiffel_generation: "${GOBO}/library/tools\eiffel\generation"
+	et_eiffel_parser: "${GOBO}/library/tools\eiffel\parser"
+	et_eiffel_processor: "${GOBO}/library/tools\eiffel\processor"
+	et_lace_ast: "${GOBO}/library/tools\lace\ast"
+	et_lace_error: "${GOBO}/library/tools\lace\error"
+	et_lace_parser: "${GOBO}/library/tools\lace\parser"
+	et_ecf_ast: "${GOBO}/library/tools\ecf\ast"
+	et_ecf_error: "${GOBO}/library/tools\ecf\error"
+	et_xace_ast: "${GOBO}/library/tools\xace\ast"
+	et_xace_error: "${GOBO}/library/tools\xace\error"
+	et_xace_generator: "${GOBO}/library/tools\xace\generator"
+	et_xace_parser: "${GOBO}/library/tools\xace\parser"
+	et_xace_support: "${GOBO}/library/tools\xace\support"
+	et_xace_universe: "${GOBO}/library/tools\xace\universe"
+	dp_bridge: "${GOBO}/library/pattern\bridge"
+	dp_command: "${GOBO}/library/pattern\command"
+	st_collation: "${GOBO}/library/string\collation"
+	st_unicode: "${GOBO}/library/string\unicode"
+	st_support: "${GOBO}/library/string\support"
+	st_general: "${GOBO}/library/string\formatter\general"
+	st_parameter: "${GOBO}/library/string\formatter\parameter"
+	ma_decimal: "${GOBO}/library/math\decimal"
+	dt_clock: "${GOBO}/library/time\clock"
+	dt_date: "${GOBO}/library/time\date"
+	dt_format: "${GOBO}/library/time\format"
+	dt_time_zone: "${GOBO}/library/time\time_zone"
+	base: "${SmartEiffelDirectory}/lib\base"
+	io: "${SmartEiffelDirectory}/lib\io"
+	iterator: "${SmartEiffelDirectory}/lib\iterator"
+	kernel: "${SmartEiffelDirectory}/lib\kernel"
+	misc: "${SmartEiffelDirectory}/lib\misc"
+	number: "${SmartEiffelDirectory}/lib\number"
+	random: "${SmartEiffelDirectory}/lib\random"
+	sorting: "${SmartEiffelDirectory}/lib\sorting"
+	time: "${SmartEiffelDirectory}/lib\time"
+	rx_interface: "${GOBO}/library/regexp\interface"
+	rx_pcre: "${GOBO}/library/regexp\pcre"
+	rx_support: "${GOBO}/library/regexp\support"
+	xm_position: "${GOBO}/library/xml\position"
+	xm_source: "${GOBO}/library/xml\source"
+	xm_general: "${GOBO}/library/xml\general"
+	xm_event: "${GOBO}/library/xml\event"
+	xm_tree: "${GOBO}/library/xml\tree"
+	xm_formatter: "${GOBO}/library/xml\formatter"
+	xm_resolver_interface: "${GOBO}/library/xml\resolver\interface"
+	xm_catalog: "${GOBO}/library/xml\resolver\catalog"
+	xm_simple: "${GOBO}/library/xml\resolver\simple"
+	xm_uri: "${GOBO}/library/xml\resolver\uri"
+	xm_interface: "${GOBO}/library/xml\parser\interface"
+	xm_eiffel: "${GOBO}/library/xml\parser\eiffel"
+	xm_no_expat: "${GOBO}/library/xml\parser\no_expat"
+	xm_xpointer_common: "${GOBO}/library/xml/xpointer\common"
+	xm_xpointer_event: "${GOBO}/library/xml/xpointer\event"
+	xm_pattern: "${GOBO}/library/xml/xslt\pattern"
+	xm_xslt_function: "${GOBO}/library/xml/xslt\function"
+	xm_instruction: "${GOBO}/library/xml/xslt\instruction"
+	xm_style: "${GOBO}/library/xml/xslt\style"
+	xm_tracing: "${GOBO}/library/xml/xslt\tracing"
+	xm_number: "${GOBO}/library/xml/xslt\number"
+	xm_xslt_sort: "${GOBO}/library/xml/xslt\sort"
+	xm_xslt_event: "${GOBO}/library/xml/xslt\event"
+	xm_runtime: "${GOBO}/library/xml/xslt\runtime"
+	xm_xslt_core: "${GOBO}/library/xml/xslt\core"
+	xm_xslt_serializer: "${GOBO}/library/xml/xslt\serializer"
+	xm_data_model: "${GOBO}/library/xml/xpath\data_model"
+	xm_tinytree: "${GOBO}/library/xml/xpath\tinytree"
+	xm_xpath_tree: "${GOBO}/library/xml/xpath\tree"
+	xm_value: "${GOBO}/library/xml/xpath\value"
+	xm_expression: "${GOBO}/library/xml/xpath\expression"
+	xm_xpath_event: "${GOBO}/library/xml/xpath\event"
+	xm_function: "${GOBO}/library/xml/xpath\function"
+	xm_sort: "${GOBO}/library/xml/xpath\sort"
+	xm_stand_alone: "${GOBO}/library/xml/xpath\stand_alone"
+	xm_node_test: "${GOBO}/library/xml/xpath\node_test"
+	xm_type: "${GOBO}/library/xml/xpath\type"
+	xm_xpath_xpointer: "${GOBO}/library/xml/xpath\xpointer"
+	xm_core: "${GOBO}/library/xml/xpath\core"
+
+generate
+
+	clean (no)
+	gc_info (no)
+	no_split (yes)
+	no_strip (no)
+	no_main (no)
+	wedit (no)
+
+end

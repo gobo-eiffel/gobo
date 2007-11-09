@@ -1,0 +1,137 @@
+system
+
+	"gexslt"
+
+root
+
+	GEXSLT: execute
+
+default
+
+	assertion (boost)
+	debug (no)
+	collect (yes)
+	high_memory_compiler (no)
+	manifest_string_trace (no)
+	trace (no)
+	verbose (no)
+	no_style_warning (yes)
+	no_warning (yes)
+
+cluster
+
+	gexslt: "${GOBO}/src/gexslt"
+	ma_decimal: "${GOBO}/library/math\decimal"
+	st_collation: "${GOBO}/library/string\collation"
+	st_unicode: "${GOBO}/library/string\unicode"
+	st_support: "${GOBO}/library/string\support"
+	st_general: "${GOBO}/library/string\formatter\general"
+	st_parameter: "${GOBO}/library/string\formatter\parameter"
+	lx_automaton: "${GOBO}/library/lexical\automaton"
+	lx_error: "${GOBO}/library/lexical\error"
+	lx_generation: "${GOBO}/library/lexical\generation"
+	lx_lex: "${GOBO}/library/lexical\lex"
+	lx_regexp: "${GOBO}/library/lexical\regexp"
+	lx_scanner: "${GOBO}/library/lexical\scanner"
+	lx_skeleton: "${GOBO}/library/lexical\skeleton"
+	lx_support: "${GOBO}/library/lexical\support"
+	pr_error: "${GOBO}/library/parse\error"
+	pr_fsm: "${GOBO}/library/parse\fsm"
+	pr_generation: "${GOBO}/library/parse\generation"
+	pr_grammar: "${GOBO}/library/parse\grammar"
+	pr_parser: "${GOBO}/library/parse\parser"
+	pr_skeleton: "${GOBO}/library/parse\skeleton"
+	pr_support: "${GOBO}/library/parse\support"
+	pr_yacc: "${GOBO}/library/parse\yacc"
+	ut_error: "${GOBO}/library/utility\error"
+	ut_formatter: "${GOBO}/library/utility\formatter"
+	ut_command: "${GOBO}/library/utility\command"
+	ut_config: "${GOBO}/library/utility\config"
+	ut_support: "${GOBO}/library/utility\support"
+	ut_transcoder: "${GOBO}/library/utility\transcoder"
+	ut_uri: "${GOBO}/library/utility\uri"
+	dt_clock: "${GOBO}/library/time\clock"
+	dt_date: "${GOBO}/library/time\date"
+	dt_format: "${GOBO}/library/time\format"
+	dt_time_zone: "${GOBO}/library/time\time_zone"
+	kl_basic: "${GOBO}/library/kernel\basic"
+	kl_elks: "${GOBO}/library/kernel\elks"
+	kl_io: "${GOBO}/library/kernel\io"
+	kl_misc: "${GOBO}/library/kernel\misc"
+	kl_unicode: "${GOBO}/library/kernel\unicode"
+	kl_support: "${GOBO}/library/kernel\support"
+	kl_spec_se: "${GOBO}/library/kernel\spec\se"
+	ds_container: "${GOBO}/library/structure\container"
+	ds_dispenser: "${GOBO}/library/structure\dispenser"
+	ds_list: "${GOBO}/library/structure\list"
+	ds_set: "${GOBO}/library/structure\set"
+	ds_sort: "${GOBO}/library/structure\sort"
+	ds_support: "${GOBO}/library/structure\support"
+	ds_table: "${GOBO}/library/structure\table"
+	base: "${SmartEiffelDirectory}/lib\base"
+	io: "${SmartEiffelDirectory}/lib\io"
+	iterator: "${SmartEiffelDirectory}/lib\iterator"
+	kernel: "${SmartEiffelDirectory}/lib\kernel"
+	misc: "${SmartEiffelDirectory}/lib\misc"
+	number: "${SmartEiffelDirectory}/lib\number"
+	random: "${SmartEiffelDirectory}/lib\random"
+	sorting: "${SmartEiffelDirectory}/lib\sorting"
+	time: "${SmartEiffelDirectory}/lib\time"
+	xm_position: "${GOBO}/library/xml\position"
+	xm_source: "${GOBO}/library/xml\source"
+	xm_general: "${GOBO}/library/xml\general"
+	xm_event: "${GOBO}/library/xml\event"
+	xm_tree: "${GOBO}/library/xml\tree"
+	xm_formatter: "${GOBO}/library/xml\formatter"
+	xm_resolver_interface: "${GOBO}/library/xml\resolver\interface"
+	xm_catalog: "${GOBO}/library/xml\resolver\catalog"
+	xm_simple: "${GOBO}/library/xml\resolver\simple"
+	xm_uri: "${GOBO}/library/xml\resolver\uri"
+	xm_interface: "${GOBO}/library/xml\parser\interface"
+	xm_eiffel: "${GOBO}/library/xml\parser\eiffel"
+	xm_no_expat: "${GOBO}/library/xml\parser\no_expat"
+	xm_xpointer_common: "${GOBO}/library/xml/xpointer\common"
+	xm_xpointer_event: "${GOBO}/library/xml/xpointer\event"
+	xm_pattern: "${GOBO}/library/xml/xslt\pattern"
+	xm_xslt_function: "${GOBO}/library/xml/xslt\function"
+	xm_instruction: "${GOBO}/library/xml/xslt\instruction"
+	xm_style: "${GOBO}/library/xml/xslt\style"
+	xm_tracing: "${GOBO}/library/xml/xslt\tracing"
+	xm_number: "${GOBO}/library/xml/xslt\number"
+	xm_xslt_sort: "${GOBO}/library/xml/xslt\sort"
+	xm_xslt_event: "${GOBO}/library/xml/xslt\event"
+	xm_runtime: "${GOBO}/library/xml/xslt\runtime"
+	xm_xslt_core: "${GOBO}/library/xml/xslt\core"
+	xm_xslt_serializer: "${GOBO}/library/xml/xslt\serializer"
+	xm_data_model: "${GOBO}/library/xml/xpath\data_model"
+	xm_tinytree: "${GOBO}/library/xml/xpath\tinytree"
+	xm_xpath_tree: "${GOBO}/library/xml/xpath\tree"
+	xm_value: "${GOBO}/library/xml/xpath\value"
+	xm_expression: "${GOBO}/library/xml/xpath\expression"
+	xm_xpath_event: "${GOBO}/library/xml/xpath\event"
+	xm_function: "${GOBO}/library/xml/xpath\function"
+	xm_sort: "${GOBO}/library/xml/xpath\sort"
+	xm_stand_alone: "${GOBO}/library/xml/xpath\stand_alone"
+	xm_node_test: "${GOBO}/library/xml/xpath\node_test"
+	xm_type: "${GOBO}/library/xml/xpath\type"
+	xm_xpath_xpointer: "${GOBO}/library/xml/xpath\xpointer"
+	xm_core: "${GOBO}/library/xml/xpath\core"
+	rx_interface: "${GOBO}/library/regexp\interface"
+	rx_pcre: "${GOBO}/library/regexp\pcre"
+	rx_support: "${GOBO}/library/regexp\support"
+
+external
+
+
+generate
+
+	clean (no)
+	gc_info (no)
+	no_split (yes)
+	no_strip (no)
+	no_main (no)
+	wedit (no)
+	c_compiler_options:
+		"-Od"
+
+end

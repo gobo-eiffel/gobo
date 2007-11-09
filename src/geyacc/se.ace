@@ -1,0 +1,85 @@
+system
+
+	"geyacc"
+
+root
+
+	GEYACC: execute
+
+default
+
+	assertion (boost)
+	debug (no)
+	collect (no)
+	high_memory_compiler (no)
+	manifest_string_trace (no)
+	trace (no)
+	verbose (no)
+	no_style_warning (yes)
+	no_warning (yes)
+
+cluster
+
+	geyacc: "${GOBO}/src/geyacc"
+	lx_automaton: "${GOBO}/library/lexical\automaton"
+	lx_error: "${GOBO}/library/lexical\error"
+	lx_generation: "${GOBO}/library/lexical\generation"
+	lx_lex: "${GOBO}/library/lexical\lex"
+	lx_regexp: "${GOBO}/library/lexical\regexp"
+	lx_scanner: "${GOBO}/library/lexical\scanner"
+	lx_skeleton: "${GOBO}/library/lexical\skeleton"
+	lx_support: "${GOBO}/library/lexical\support"
+	pr_error: "${GOBO}/library/parse\error"
+	pr_fsm: "${GOBO}/library/parse\fsm"
+	pr_generation: "${GOBO}/library/parse\generation"
+	pr_grammar: "${GOBO}/library/parse\grammar"
+	pr_parser: "${GOBO}/library/parse\parser"
+	pr_skeleton: "${GOBO}/library/parse\skeleton"
+	pr_support: "${GOBO}/library/parse\support"
+	pr_yacc: "${GOBO}/library/parse\yacc"
+	ut_error: "${GOBO}/library/utility\error"
+	ut_formatter: "${GOBO}/library/utility\formatter"
+	ut_command: "${GOBO}/library/utility\command"
+	ut_config: "${GOBO}/library/utility\config"
+	ut_support: "${GOBO}/library/utility\support"
+	ut_transcoder: "${GOBO}/library/utility\transcoder"
+	ut_uri: "${GOBO}/library/utility\uri"
+	dp_bridge: "${GOBO}/library/pattern\bridge"
+	dp_command: "${GOBO}/library/pattern\command"
+	kl_basic: "${GOBO}/library/kernel\basic"
+	kl_elks: "${GOBO}/library/kernel\elks"
+	kl_io: "${GOBO}/library/kernel\io"
+	kl_misc: "${GOBO}/library/kernel\misc"
+	kl_unicode: "${GOBO}/library/kernel\unicode"
+	kl_support: "${GOBO}/library/kernel\support"
+	kl_spec_se: "${GOBO}/library/kernel\spec\se"
+	ds_container: "${GOBO}/library/structure\container"
+	ds_dispenser: "${GOBO}/library/structure\dispenser"
+	ds_list: "${GOBO}/library/structure\list"
+	ds_set: "${GOBO}/library/structure\set"
+	ds_sort: "${GOBO}/library/structure\sort"
+	ds_support: "${GOBO}/library/structure\support"
+	ds_table: "${GOBO}/library/structure\table"
+	base: "${SmartEiffelDirectory}/lib\base"
+	io: "${SmartEiffelDirectory}/lib\io"
+	iterator: "${SmartEiffelDirectory}/lib\iterator"
+	kernel: "${SmartEiffelDirectory}/lib\kernel"
+	misc: "${SmartEiffelDirectory}/lib\misc"
+	number: "${SmartEiffelDirectory}/lib\number"
+	random: "${SmartEiffelDirectory}/lib\random"
+	sorting: "${SmartEiffelDirectory}/lib\sorting"
+	time: "${SmartEiffelDirectory}/lib\time"
+	rx_interface: "${GOBO}/library/regexp\interface"
+	rx_pcre: "${GOBO}/library/regexp\pcre"
+	rx_support: "${GOBO}/library/regexp\support"
+
+generate
+
+	clean (no)
+	gc_info (no)
+	no_split (yes)
+	no_strip (no)
+	no_main (no)
+	wedit (no)
+
+end

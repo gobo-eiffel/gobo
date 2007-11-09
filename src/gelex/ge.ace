@@ -1,0 +1,114 @@
+system
+
+	gelex
+
+root
+
+	GELEX: execute
+
+default
+
+	address_expression (no)
+	array_optimization (no)
+	assertion (no)
+	check_vape (yes)
+	cls_compliant (yes)
+	console_application (yes)
+	dead_code_removal (yes)
+	debug (no)
+	dotnet_naming_convention (no)
+	dynamic_runtime (no)
+	exception_trace (no)
+	il_verifiable (yes)
+	inlining (no)
+	inlining_size ("4")
+	line_generation (no)
+	msil_generation (no)
+	multithreaded (no)
+	profile (no)
+	msil_generation_type ("exe")
+	trace (no)
+
+cluster
+
+	gelex: "${GOBO}/src/gelex"
+	ap_argument: "${GOBO}/library/argument"
+	st_string: "${GOBO}/library/string"
+	st_collation (st_string): "$/collation"
+	st_unicode (st_string): "$/unicode"
+	st_support (st_string): "$/support"
+	st_formatter (st_string): "$/formatter"
+	st_general (st_formatter): "$/general"
+	st_parameter (st_formatter): "$/parameter"
+	lx_lexical: "${GOBO}/library/lexical"
+	lx_automaton (lx_lexical): "$/automaton"
+	lx_error (lx_lexical): "$/error"
+	lx_generation (lx_lexical): "$/generation"
+	lx_lex (lx_lexical): "$/lex"
+	lx_regexp (lx_lexical): "$/regexp"
+	lx_scanner (lx_lexical): "$/scanner"
+	lx_skeleton (lx_lexical): "$/skeleton"
+	lx_support (lx_lexical): "$/support"
+	pr_parse: "${GOBO}/library/parse"
+	pr_error (pr_parse): "$/error"
+	pr_fsm (pr_parse): "$/fsm"
+	pr_generation (pr_parse): "$/generation"
+	pr_grammar (pr_parse): "$/grammar"
+	pr_parser (pr_parse): "$/parser"
+	pr_skeleton (pr_parse): "$/skeleton"
+	pr_support (pr_parse): "$/support"
+	pr_yacc (pr_parse): "$/yacc"
+	ut_utility: "${GOBO}/library/utility"
+	ut_error (ut_utility): "$/error"
+	ut_formatter (ut_utility): "$/formatter"
+	ut_command (ut_utility): "$/command"
+	ut_config (ut_utility): "$/config"
+	ut_support (ut_utility): "$/support"
+	ut_transcoder (ut_utility): "$/transcoder"
+	ut_uri (ut_utility): "$/uri"
+	dp_pattern: "${GOBO}/library/pattern"
+	dp_bridge (dp_pattern): "$/bridge"
+	dp_command (dp_pattern): "$/command"
+	kl_kernel: "${GOBO}/library/kernel"
+	kl_basic (kl_kernel): "$/basic"
+	kl_elks (kl_kernel): "$/elks"
+	kl_io (kl_kernel): "$/io"
+	kl_misc (kl_kernel): "$/misc"
+	kl_unicode (kl_kernel): "$/unicode"
+	kl_support (kl_kernel): "$/support"
+	kl_spec (kl_kernel): "$/spec"
+	kl_spec_ge (kl_spec): "$/ge"
+	ds_structure: "${GOBO}/library/structure"
+	ds_container (ds_structure): "$/container"
+	ds_dispenser (ds_structure): "$/dispenser"
+	ds_list (ds_structure): "$/list"
+	ds_set (ds_structure): "$/set"
+	ds_sort (ds_structure): "$/sort"
+	ds_support (ds_structure): "$/support"
+	ds_table (ds_structure): "$/table"
+	ge: "${GOBO}/library"
+	rx_regexp: "${GOBO}/library/regexp"
+	rx_interface (rx_regexp): "$/interface"
+	rx_pcre (rx_regexp): "$/pcre"
+	rx_support (rx_regexp): "$/support"
+	fe_free_elks: "${GOBO}/library/free_elks"
+	fe_fake (fe_free_elks): "$/fake"
+	fe_kernel (fe_free_elks): "$/kernel"
+	fe_refactoring (fe_free_elks): "$/refactoring"
+	fe_structures (fe_free_elks): "$/structures"
+	fe_access (fe_structures): "$/access"
+	fe_cursor_tree (fe_structures): "$/cursor_tree"
+	fe_cursors (fe_structures): "$/cursors"
+	fe_dispenser (fe_structures): "$/dispenser"
+	fe_iteration (fe_structures): "$/iteration"
+	fe_list (fe_structures): "$/list"
+	fe_set (fe_structures): "$/set"
+	fe_strategies (fe_set): "$/strategies"
+	fe_sort (fe_structures): "$/sort"
+	fe_storage (fe_structures): "$/storage"
+	fe_table (fe_structures): "$/table"
+	fe_traversing (fe_structures): "$/traversing"
+	fe_tree (fe_structures): "$/tree"
+	fe_support (fe_free_elks): "$/support"
+
+end
