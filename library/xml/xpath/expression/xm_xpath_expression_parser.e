@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			no_previous_parse_error: not is_parse_error
 		local
 			l_expression: XM_XPATH_EXPRESSION
-			l_append_expression: XM_XPATH_APPEND_EXPRESSION
+			l_append_expression: XM_XPATH_SEQUENCE_EXPRESSION
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_expression%N")
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 					else
 						parse_single_expression
 						if not is_parse_error then
-							create l_append_expression.make (l_expression, Comma_token, internal_last_parsed_expression)
+							create l_append_expression.make (l_expression, internal_last_parsed_expression)
 							l_expression := l_append_expression
 						end
 					end

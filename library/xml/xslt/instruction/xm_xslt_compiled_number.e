@@ -827,7 +827,7 @@ feature {NONE} -- Implementation
 				from
 					a_target := a_node
 				until known_to_match or else finished loop
-					a_count.match (a_target, a_context)
+					a_count.match (a_target, a_context.new_pattern_context)
 					if transformer.is_error then
 						finished := True
 					elseif a_count.last_match_result then
@@ -842,7 +842,7 @@ feature {NONE} -- Implementation
 				end
 				if not finished then
 					if a_from_pattern /= Void then
-						a_from_pattern.match (a_target, a_context)
+						a_from_pattern.match (a_target, a_context.new_pattern_context)
 						if not transformer.is_error and a_from_pattern.last_match_result then
 							last_single_number := 0
 						end
@@ -859,7 +859,7 @@ feature {NONE} -- Implementation
 							if already_checked then
 								i := i + 1
 							else
-								a_count.match (an_iterator.item, a_context)
+								a_count.match (an_iterator.item, a_context.new_pattern_context)
 								if not transformer.is_error and a_count.last_match_result then
 									i := i + 1
 								end
@@ -899,7 +899,7 @@ feature {NONE} -- Implementation
 				l_count := 1
 			else
 				l_count_pattern := a_count
-				l_count_pattern.match (a_node, a_context)
+				l_count_pattern.match (a_node, a_context.new_pattern_context)
 				if not transformer.is_error and l_count_pattern.last_match_result then
 					l_count := 1
 				end
@@ -919,7 +919,7 @@ feature {NONE} -- Implementation
 				l_iterator.start
 			until l_finished or l_iterator.after or transformer.is_error loop
 				l_node := l_iterator.item
-				l_count_pattern.match (l_node, a_context)
+				l_count_pattern.match (l_node, a_context.new_pattern_context)
 				if not transformer.is_error and l_count_pattern.last_match_result then
 					if l_memoize and l_count = 1 then
 						l_memo := transformer.remembered_number (l_node, Current)
@@ -934,7 +934,7 @@ feature {NONE} -- Implementation
 				end
 				if not l_finished then
 					if from_pattern /= Void then
-						from_pattern.match (l_iterator.item, a_context)
+						from_pattern.match (l_iterator.item, a_context.new_pattern_context)
 						if not transformer.is_error and from_pattern.last_match_result then
 							last_single_number := l_count
 							l_finished := True
@@ -979,7 +979,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			from a_current_node := a_node	until finished loop
-				count_pattern.match (a_current_node, a_context)
+				count_pattern.match (a_current_node, a_context.new_pattern_context)
 				if transformer.is_error then
 					finished := True
 				elseif count_pattern.last_match_result then
@@ -995,7 +995,7 @@ feature {NONE} -- Implementation
 				if a_current_node = Void then
 					finished := True
 				elseif from_pattern /= Void then
-					from_pattern.match (a_current_node, a_context)
+					from_pattern.match (a_current_node, a_context.new_pattern_context)
 					if transformer.is_error or from_pattern.last_match_result then
 						finished := True
 					end

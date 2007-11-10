@@ -144,7 +144,10 @@ feature -- Comparison
 		end
 
 feature -- Status report
-	
+
+	initialized: BOOLEAN
+			-- Has creation procedure completed?
+
 	frozen is_user_function: BOOLEAN is
 			-- Is `Current' a compiled user function?
 		do
@@ -689,9 +692,6 @@ feature {NONE} -- Implementation
 	
 	parent: XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
-
-	initialized: BOOLEAN
-			-- Has creation procedure completed?
 
 	cached_slots_used: DS_ARRAYED_LIST [INTEGER]
 			-- Cached result of `slots_used'

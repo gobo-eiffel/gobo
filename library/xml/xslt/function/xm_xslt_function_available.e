@@ -148,7 +148,7 @@ feature -- Evaluation
 			l_arity := -1
 			if arguments.count = 2 then
 				create l_item.make (Void)
-				arguments.item (2).evaluate_item (l_item, Void)
+				arguments.item (2).evaluate_item (l_item, a_context.new_compile_time_context)
 				if l_item.item.is_error then
 					set_last_error (l_item.item.error_value)
 				else

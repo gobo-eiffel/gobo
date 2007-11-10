@@ -68,10 +68,6 @@ feature -- Access
 			-- Data type of the expression, when known
 		do
 			Result := common_super_type (first_operand.item_type, second_operand.item_type)
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
 		end
 
 feature -- Optimization
@@ -388,7 +384,7 @@ feature {NONE} -- Implementation
 			a_path_expression, another_path_expression: XM_XPATH_PATH_EXPRESSION
 			a_venn_expression: XM_XPATH_VENN_EXPRESSION
 		do
-			if first_operand.is_path_expression and second_operand.is_path_expression then
+			if first_operand.is_path_expression and second_operand.is_path_expression and operator = Union_token then
 				a_path_expression := first_operand.as_path_expression
 				another_path_expression := second_operand.as_path_expression
 				if a_path_expression.first_step.same_expression (another_path_expression.first_step) then
@@ -419,7 +415,8 @@ feature {NONE} -- Implementation
 			if first_operand.is_filter_expression and second_operand.is_filter_expression then
 				a_filter_expression := first_operand.as_filter_expression
 				another_filter_expression := second_operand.as_filter_expression
-				if not a_filter_expression.is_positional and not another_filter_expression.is_positional then
+				if not a_filter_expression.is_positional and not another_filter_expression.is_positional and
+					a_filter_expression.base_expression.same_expression (another_filter_expression.base_expression) then
 					inspect
 						operator
 					when Union_token then

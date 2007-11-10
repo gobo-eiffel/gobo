@@ -123,8 +123,7 @@ feature -- Optimization
 				-- If operand is a value, pre-evaluate the expression
 
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-					-- TODO - need an early evaluation context
-					create_iterator (Void)
+					create_iterator (a_context.new_compile_time_context)
 					expression_factory.create_sequence_extent (last_iterator)
 					
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
@@ -158,8 +157,7 @@ feature -- Optimization
 				-- If  operand value is, pre-evaluate the expression
 				
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-					-- TODO - need an early evaluation context
-					create_iterator (Void)
+					create_iterator (a_context.new_compile_time_context)
 					expression_factory.create_sequence_extent (last_iterator)
 					
 					-- if early evaluation fails, suppress the error: the value might not be needed at run-time

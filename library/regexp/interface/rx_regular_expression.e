@@ -150,7 +150,7 @@ feature -- Replacement
 			a_replacement_not_void: a_replacement /= Void
 			same_type: ANY_.same_types (a_replacement, subject)
 		do
-			Result := STRING_.new_empty_string (subject, subject_end - subject_start)
+			Result := STRING_.new_empty_string (subject, subject_end - subject_start + 1)
 			append_replace_all_to_string (Result, a_replacement)
 		ensure
 			all_matched: not has_matched

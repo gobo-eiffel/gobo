@@ -102,7 +102,7 @@ feature -- Optimization
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			Precursor (a_context, a_context_item_type)
-			if is_error and then error_value.code.is_equal (new_unicode_string ("XPDY0002")) and then error_value.namespace_uri.is_equal (new_unicode_string (Xpath_errors_uri)) then
+			if is_error and then STRING_.same_string (error_value.code, new_unicode_string ("XPDY0002")) and then STRING_.same_string (error_value.namespace_uri, new_unicode_string (Xpath_errors_uri)) then
 				error_value.set_code ("XTDE1270")
 			end
 		end

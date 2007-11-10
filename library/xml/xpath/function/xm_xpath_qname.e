@@ -19,6 +19,8 @@ inherit
 			evaluate_item
 		end
 
+	-- TODO: pre-evaluate
+
 create
 
 	make

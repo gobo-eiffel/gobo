@@ -153,25 +153,37 @@ feature -- Element change
 				end
 				a_child_iterator.forth
 			end
-			if not any_compile_errors then validate_stage_2 end
+			if non_matching_substring = Void and matching_substring = Void then
+				report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("At least one xsl:matching-substring or xsl:non-matching-substring element must be present",
+					Xpath_errors_uri, "XTSE1130", Static_error))
+			end
+			if not any_compile_errors then
+				validate_stage_2
+			end
 			validated := True
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_matching_block, a_non_matching_block: XM_XPATH_EXPRESSION
+			l_matching_block, l_non_matching_block: XM_XPATH_EXPRESSION
 		do
 			if matching_substring /= Void then
 				matching_substring.compile_sequence_constructor (an_executable, matching_substring.new_axis_iterator (Child_axis), False)
 				if matching_substring.last_generated_expression /= Void then
-					a_matching_block := matching_substring.last_generated_expression
+					l_matching_block := matching_substring.last_generated_expression
+				else
+					-- better is to ensure non-void results - check consequences first
+					create {XM_XPATH_EMPTY_SEQUENCE} l_matching_block.make
 				end
 			end
 			if non_matching_substring /= Void then
 				non_matching_substring.compile_sequence_constructor (an_executable, non_matching_substring.new_axis_iterator (Child_axis), False)
 				if non_matching_substring.last_generated_expression /= Void then
-					a_non_matching_block := non_matching_substring.last_generated_expression
+					l_non_matching_block := non_matching_substring.last_generated_expression
+				else
+					-- see above
+					create {XM_XPATH_EMPTY_SEQUENCE} l_non_matching_block.make
 				end
 			end
 			create {XM_XSLT_COMPILED_ANALYZE_STRING} last_generated_expression.make (an_executable,
@@ -179,8 +191,8 @@ feature -- Element change
 																											 regex_expression,
 																											 flags_expression,
 																											 regexp_cache_entry,
-																											 a_matching_block,
-																											 a_non_matching_block)
+																											 l_matching_block,
+																											 l_non_matching_block)
 			last_generated_expression.simplify
 			if last_generated_expression.was_expression_replaced then
 				last_generated_expression := last_generated_expression.replacement_expression
@@ -213,37 +225,42 @@ feature {NONE} -- Implementation
 			regex_expression_is_string: regex_expression /= Void and then regex_expression.is_string_value
 			flags_expression_is_string: flags_expression /= Void and then flags_expression.is_string_value
 		local
-			some_flags, a_key: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_flags, l_flags_string, l_key: STRING
+			l_error: XM_XPATH_ERROR_VALUE
 		do
-			some_flags := normalized_flags_string (flags_expression.as_string_value.string_value)
-			if not are_normalized_flags (some_flags) then
-				create an_error.make_from_string (STRING_.concat ("Invalid value for flags attribute: ", some_flags), Xpath_errors_uri, "XTDE1145", Static_error)
+			l_flags_string := flags_expression.as_string_value.string_value
+			l_flags := normalized_flags_string (l_flags_string)
+			if l_flags = Void then
+				create l_error.make_from_string (STRING_.concat ("Invalid value for flags attribute: ", l_flags_string), Xpath_errors_uri, "XTDE1145", Static_error)
 			else
-				a_key := composed_key (utf8.to_utf8 (regex_expression.as_string_value.string_value), some_flags)
-				regexp_cache_entry :=  shared_regexp_cache.item (a_key)
-				if regexp_cache_entry = Void then
-					create regexp_cache_entry.make (utf8.to_utf8 (regex_expression.as_string_value.string_value), some_flags)
-					if regexp_cache_entry.is_error then
-						regexp_cache_entry := Void
-					else
-						shared_regexp_cache.put (regexp_cache_entry, a_key)
+				if not are_normalized_flags (l_flags) then
+					create l_error.make_from_string (STRING_.concat ("Invalid value for flags attribute: ", l_flags_string), Xpath_errors_uri, "XTDE1145", Static_error)
+				else
+					l_key := composed_key (utf8.to_utf8 (regex_expression.as_string_value.string_value), l_flags)
+					regexp_cache_entry :=  shared_regexp_cache.item (l_key)
+					if regexp_cache_entry = Void then
+						create regexp_cache_entry.make (utf8.to_utf8 (regex_expression.as_string_value.string_value), l_flags)
+						if regexp_cache_entry.is_error then
+							regexp_cache_entry := Void
+						else
+							shared_regexp_cache.put (regexp_cache_entry, l_key)
+						end
 					end
-				end
-				if regexp_cache_entry /= Void then
-					if regexp_cache_entry.regexp.matches ("") then
-						create an_error.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "XTDE1150", Static_error)
+					if regexp_cache_entry /= Void then
+						if regexp_cache_entry.regexp.matches ("") then
+							create l_error.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "XTDE1150", Static_error)
+						end
 					end
 				end
 			end
-			if an_error /= Void then
+			if l_error /= Void then
 				if is_forwards_compatible_processing_enabled then
-
+					
 					-- Defer error until evaluation time
 	
 					regexp_cache_entry := Void
 				else
-					report_compile_error (an_error)
+					report_compile_error (l_error)
 				end
 			end
 		end

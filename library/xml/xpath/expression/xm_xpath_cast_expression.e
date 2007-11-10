@@ -144,7 +144,7 @@ feature -- Optimization
 					else
 						if l_expression.is_atomic_value then
 							create l_result.make (Void)
-							evaluate_item (l_result, Void)
+							evaluate_item (l_result, a_context.new_compile_time_context)
 							if l_result.item = Void then
 								create l_empty_sequence.make
 								set_replacement (l_empty_sequence)

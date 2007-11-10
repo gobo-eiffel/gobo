@@ -340,7 +340,6 @@ feature {NONE} -- Implementation
 		require
 			a_context_not_void: a_context /= Void
 		local
-			l_block: XM_XSLT_BLOCK
 			l_children: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_component: XM_XPATH_EXPRESSION
 			l_value_of: XM_XSLT_COMPILED_VALUE_OF
@@ -348,9 +347,8 @@ feature {NONE} -- Implementation
 			l_mask: INTEGER
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			if content.is_block then
-				l_block ?= content
-				l_children := l_block.children.new_cursor
+			if content.is_sequence_expression then
+				l_children := content.as_sequence_expression.children.new_cursor
 				from
 					l_children.start
 				until

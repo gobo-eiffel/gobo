@@ -93,6 +93,7 @@ feature -- Evaluation
 			arguments.item (1).evaluate_item (a_result, a_context)
 			if a_result.item = Void then
 				l_input_string := ""
+				a_result.put (Void)
 			elseif a_result.item.is_error then
 				-- nothing to do
 			else
@@ -238,7 +239,7 @@ feature {NONE} -- Implementation
 				end
 				l_index := l_index + 1
 			end
-			if a_result.item = Void and then any_captures then
+			if a_result.item = Void and any_captures then
 				perform_replacement_string_substitution
 			end
 		end

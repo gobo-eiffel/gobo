@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			population := a_population
 			key_pattern := a_key
 			base_context := a_context
-			running_context := a_context.new_minor_context
+			running_context := a_context.new_pattern_context
 			running_context.set_current_iterator (population)
 			locator := a_locator
 		ensure
@@ -100,7 +100,7 @@ feature -- Cursor movement
 				loop
 					population.forth
 					if not population.after then
-						key_pattern.match (next_candidate.as_node , running_context)
+						key_pattern.match (next_candidate.as_node, running_context)
 						if key_pattern.is_error then
 							set_last_error (key_pattern.error_value)
 						elseif key_pattern.last_match_result then

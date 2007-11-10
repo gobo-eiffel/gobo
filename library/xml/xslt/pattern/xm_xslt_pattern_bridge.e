@@ -132,7 +132,7 @@ feature -- Evaluation
 			l_context_item := a_context.context_item
 			if l_context_item /= Void and then l_context_item.is_node  then
 				l_evaluation_context ?= a_context
-				pattern.match (l_context_item.as_node, l_evaluation_context)
+				pattern.match (l_context_item.as_node, l_evaluation_context.new_pattern_context)
 				if pattern.is_error then
 					set_last_error (pattern.error_value)
 				else
@@ -164,9 +164,12 @@ feature -- Evaluation
 			-- Create an iterator over the values of a sequence
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]
+			l_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			create l_item.make (Void)
-			evaluate_item (l_item, a_context)
+			l_context ?= a_context
+			l_context := l_context.new_pattern_context
+			evaluate_item (l_item, l_context)
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_item.item)
 		end
 

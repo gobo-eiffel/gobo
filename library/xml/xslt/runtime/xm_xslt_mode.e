@@ -113,7 +113,7 @@ feature -- Access
 						(l_rule.precedence = l_specific_precedence and then l_rule.priority_rank < l_specific_priority)) then
 							l_finished := True
 					else
-						l_rule.pattern.match (a_node, l_new_context)
+						l_rule.pattern.match (a_node, l_new_context.new_pattern_context)
 						if l_rule.pattern.is_error then
 							a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 						elseif l_rule.pattern.last_match_result then
@@ -167,7 +167,7 @@ feature -- Access
 					l_finished or else l_rule = Void
 				loop
 					if l_rule.precedence >= a_minimum_precedence and then l_rule.precedence <= a_maximum_precedence then
-						l_rule.pattern.match (a_node, a_context)
+						l_rule.pattern.match (a_node, a_context.new_pattern_context)
 						if l_rule.pattern.is_error then
 							a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 							l_finished := True
@@ -196,7 +196,7 @@ feature -- Access
 					l_finished or else l_rule = Void
 				loop
 					if l_rule.precedence >= a_minimum_precedence and then l_rule.precedence <= a_maximum_precedence then
-						l_rule.pattern.match (a_node, a_context)
+						l_rule.pattern.match (a_node, a_context.new_pattern_context)
 						if l_rule.pattern.is_error then
 							a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 							l_finished := True
@@ -275,7 +275,7 @@ feature -- Access
 								end
 							end
 							if not l_finished then
-								l_rule.pattern.match (a_node, a_context)
+								l_rule.pattern.match (a_node, a_context.new_pattern_context)
 								if l_rule.pattern.is_error then
 									a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 									l_finished := True
@@ -323,7 +323,7 @@ feature -- Access
 							l_finished := True
 						end
 						if not l_finished then
-							l_rule.pattern.match (a_node, a_context)
+							l_rule.pattern.match (a_node, a_context.new_pattern_context)
 							if l_rule.pattern.is_error then
 								a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 								l_finished := True
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 
 					l_finished := True
 				else
-					l_rule.pattern.match (a_node, a_context)
+					l_rule.pattern.match (a_node, a_context.new_pattern_context)
 					if l_rule.pattern.is_error then
 						a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 						l_finished := True

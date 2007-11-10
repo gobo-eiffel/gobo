@@ -24,6 +24,8 @@ inherit
 	XM_UNICODE_CHARACTERS_1_1
 		export {NONE} all end
 
+	-- TODO: pre-evaluate
+
 create
 
 	make

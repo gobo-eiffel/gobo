@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XPATH_CONFIGURATION) is
+	make (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XSLT_CONFIGURATION) is
 			-- Establish invariant.
 		require
 			style_element_not_void:	a_style_element /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_restricted: not is_restricted
 		end
 
-	make_restricted (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XPATH_CONFIGURATION) is
+	make_restricted (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XSLT_CONFIGURATION) is
 			-- Create a restricted context for [xsl:]use-when processing..
 		require
 			style_element_not_void:	a_style_element /= Void
@@ -257,6 +257,22 @@ feature -- Status report
 			end
 			Result := l_node_factory.is_element_available (l_uri, l_parser.local_name)
 		end
+
+feature -- Creation
+
+	new_compile_time_context: XM_XPATH_CONTEXT
+			-- Restricted dynamic context
+		local
+			l_configuration: XM_XSLT_CONFIGURATION
+		do
+			l_configuration ?= configuration
+			check
+				l_configuration_not_void: l_configuration /= Void
+				-- this is XSLT
+			end
+			create {XM_XSLT_EVALUATION_CONTEXT} Result.make_restricted (Current, known_collations, l_configuration)
+		end
+
 
 feature -- Element change
 

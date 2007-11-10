@@ -188,11 +188,12 @@ feature -- Matching
 		end
 
 	match (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Attempt to match `Current' againast `a_node'.
+			-- Attempt to match `Current' against `a_node'.
 			-- Sets `last_match_result' and possibly `error_value'.
 		require
 			valid_node: a_node /= Void
 			context_not_void: a_context /= Void
+			pattern_context: a_context.is_pattern
 		deferred
 		end
 
@@ -230,6 +231,7 @@ feature {XM_XSLT_PATTERN} -- Local
 		require
 			valid_node: a_node /= Void
 			context_not_void: a_context /= Void
+			pattern_context: a_context.is_pattern
 			no_error: not is_error
 		do
 			match (a_node, a_context)

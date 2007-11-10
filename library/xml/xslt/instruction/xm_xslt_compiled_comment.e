@@ -70,7 +70,7 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		do
-			-- do nothing
+			-- TODO: early evaluation when content known statically
 		end
 
 feature -- Evaluation

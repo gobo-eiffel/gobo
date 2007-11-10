@@ -15,7 +15,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, promote_instruction,
-			item_type, compute_dependencies
+			item_type, compute_dependencies, create_iterator
 		end
 
 	XM_XPATH_REGEXP_CACHE_ROUTINES
@@ -299,30 +299,52 @@ feature -- Optimization
 
 feature -- Evaluation
 
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterate over the values of a sequence.
+		local
+			l_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
+			l_context, l_new_context: XM_XSLT_EVALUATION_CONTEXT
+		do
+			l_context ?= a_context
+			check
+				l_context_not_void: l_context /= Void
+				-- this is XSLT
+			end
+			l_regexp_iterator := regexp_iterator (l_context)
+			if l_context.transformer.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_context.transformer.last_error)
+			else
+				l_new_context := l_context.new_context
+				l_new_context.set_current_iterator (l_regexp_iterator)
+				l_new_context.set_current_regexp_iterator (l_regexp_iterator)
+				create {XM_XPATH_CONTEXT_MAPPING_ITERATOR} last_iterator.make (create {XM_XSLT_ANALYZE_MAPPING_FUNCTION}.make (l_regexp_iterator, l_new_context, matching_block, non_matching_block), l_new_context)
+			end
+		end
+		
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			a_regexp_iterator := regexp_iterator (a_context)
+			l_regexp_iterator := regexp_iterator (a_context)
 			if not a_context.transformer.is_error then
-				a_new_context := a_context.new_context
-				a_new_context.set_current_iterator (a_regexp_iterator)
-				a_new_context.set_current_regexp_iterator (a_regexp_iterator)
-				from a_regexp_iterator.start until is_error or else a_regexp_iterator.after loop
-					if a_regexp_iterator.is_error then
-						a_context.transformer.report_fatal_error (a_regexp_iterator.error_value)
-					elseif a_regexp_iterator.is_matching then
+				l_new_context := a_context.new_context
+				l_new_context.set_current_iterator (l_regexp_iterator)
+				l_new_context.set_current_regexp_iterator (l_regexp_iterator)
+				from l_regexp_iterator.start until is_error or else l_regexp_iterator.after loop
+					if l_regexp_iterator.is_error then
+						a_context.transformer.report_fatal_error (l_regexp_iterator.error_value)
+					elseif l_regexp_iterator.is_matching then
 						if matching_block /= Void then
-							matching_block.generate_events (a_new_context)
+							matching_block.generate_events (l_new_context)
 						end
-						a_regexp_iterator.forth
+						l_regexp_iterator.forth
 					else
 						if non_matching_block /= Void then
-							non_matching_block.generate_events (a_new_context)
+							non_matching_block.generate_events (l_new_context)
 						end
-						a_regexp_iterator.forth
+						l_regexp_iterator.forth
 					end
 				end
 			end

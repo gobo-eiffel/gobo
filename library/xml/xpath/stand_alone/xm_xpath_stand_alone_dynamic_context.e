@@ -25,7 +25,7 @@ inherit
 
 create
 
-	make
+	make, make_restricted
 
 feature {NONE} -- Initialization
 
@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			context_item_not_void: a_context_item /= Void
 			document_pool_not_void: a_document_pool /= Void
 		local
-			a_file_resolver: XM_FILE_URI_RESOLVER
-			a_collator: ST_COLLATOR
+			l_file_resolver: XM_FILE_URI_RESOLVER
+			l_collator: ST_COLLATOR
 		do
 			create configuration.make_configuration
 			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
@@ -45,16 +45,49 @@ feature {NONE} -- Initialization
 			available_functions := a_function_library
 			create {XM_XPATH_DEFAULT_SECURITY_MANAGER} security_manager
 			create uri_resolver.make
-			create a_file_resolver.make
-			uri_resolver.register_scheme (a_file_resolver)
+			create l_file_resolver.make
+			uri_resolver.register_scheme (l_file_resolver)
 			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
-			create a_collator
-			collation_map.put (a_collator, Unicode_codepoint_collation_uri)
+			create l_collator
+			collation_map.put (l_collator, Unicode_codepoint_collation_uri)
 		ensure
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
 			available_documents_set: available_documents = a_document_pool
 			available_functions_set: available_functions = a_function_library
 		end
+
+	make_restricted (a_function_library: like available_functions) is
+			-- Initialize `Current' as restricted (compile-time) context.
+		local
+			l_date_time: DT_DATE_TIME
+			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			l_file_resolver: XM_FILE_URI_RESOLVER
+			l_collator: ST_COLLATOR
+		do
+			is_restricted := True
+			create configuration.make_configuration
+			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+			create l_date_time.make_from_epoch (0)
+			utc_system_clock.set_date_time_to_now (l_date_time)
+			create l_time_zone.make (implicit_timezone.fixed_offset)
+			create internal_date_time.make (l_date_time, l_time_zone)
+			clear_last_cache
+			current_iterator := Void
+			available_documents := Void
+			available_functions := a_function_library
+			create {XM_XPATH_DEFAULT_SECURITY_MANAGER} security_manager
+			create uri_resolver.make
+			create l_file_resolver.make
+			uri_resolver.register_scheme (l_file_resolver)
+			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
+			create l_collator
+			collation_map.put (l_collator, Unicode_codepoint_collation_uri)
+		ensure
+			restricted_context: is_restricted
+			no_available_documents: available_documents = Void
+			available_functions_set: available_functions = a_function_library
+		end
+
 
 feature -- Access
 
@@ -221,7 +254,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	not_restricted: not is_restricted
 	no_push_processing: not has_push_processing
 
 end

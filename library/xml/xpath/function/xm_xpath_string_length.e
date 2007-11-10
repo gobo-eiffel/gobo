@@ -19,6 +19,8 @@ inherit
 			simplify, evaluate_item, is_string_length_function, as_string_length_function
 		end
 
+	-- TODO: pre-evaluate
+
 create
 
 	make
@@ -110,7 +112,7 @@ feature -- Evaluation
 			else
 				l_atomic_value := a_result.item.as_atomic_value
 			end
-			if not a_result.item.is_error then
+			if a_result.item = Void or else not a_result.item.is_error then
 				l_string := l_atomic_value.string_value
 				if is_test_for_zero then
 					if l_string.count = 0 then

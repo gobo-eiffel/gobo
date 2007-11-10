@@ -120,7 +120,7 @@ feature -- Optimization
 			else
 				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 					create l_result.make (Void)
-					evaluate_item (l_result, Void)
+					evaluate_item (l_result, a_context.new_compile_time_context)
 					if l_result.item /= Void then
 						set_replacement (l_result.item.as_atomic_value)
 					end

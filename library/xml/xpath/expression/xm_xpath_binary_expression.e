@@ -185,9 +185,8 @@ feature -- Optimization
 					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
 						and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
 						and not cardinality_allows_many then
-						-- TODO: need an early evaluation context
 						create l_result.make (Void)
-						evaluate_item (l_result, Void)
+						evaluate_item (l_result, a_context.new_compile_time_context)
 						if l_result.item = Void or else not l_result.item.is_error then
 							if l_result.item.is_node then
 								set_replacement (create {XM_XPATH_SINGLETON_NODE}.make (l_result.item.as_node))
@@ -229,9 +228,8 @@ feature -- Optimization
 					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone
 						and second_operand.is_value and not second_operand.depends_upon_implicit_timezone
 						and not cardinality_allows_many then
-						-- TODO: need an early evaluation context
 						create l_result.make (Void)
-						evaluate_item (l_result, Void)
+						evaluate_item (l_result, a_context.new_compile_time_context)
 						if l_result.item /= Void and then not l_result.item.is_error then
 							-- the value might not be needed at runtime
 							if l_result.item.is_node then

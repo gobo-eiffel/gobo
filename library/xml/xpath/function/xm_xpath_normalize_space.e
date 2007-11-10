@@ -19,6 +19,8 @@ inherit
 			simplify, evaluate_item
 		end
 
+	-- TODO: pre-evaluate
+
 create
 
 	make

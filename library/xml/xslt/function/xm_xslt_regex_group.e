@@ -80,15 +80,22 @@ feature -- Evaluation
 					integer: a_result.item.is_machine_integer_value
 					-- Static typing
 				end
+				l_integer_value := a_result.item.as_machine_integer_value
+				a_result.put (Void)
 				l_evaluation_context ?= a_context
 				l_regex_iterator := l_evaluation_context.current_regexp_iterator
 				if l_regex_iterator /= Void then
-					l_integer_value := a_result.item.as_machine_integer_value
 					if l_integer_value.is_platform_integer then
-						a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_regex_iterator.regex_group (l_integer_value.as_integer)))
+						if not l_regex_iterator.is_matching then
+							a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+						else
+							a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_regex_iterator.regex_group (l_integer_value.as_integer)))
+						end
 					else
 						a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 					end
+				else
+					a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 				end
 			end
 		end

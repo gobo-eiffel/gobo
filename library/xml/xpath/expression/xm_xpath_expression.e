@@ -342,12 +342,6 @@ feature -- Status report
 			Result := False
 		end
 
-	is_block: BOOLEAN is
-			-- Is `Current' an `XM_XSLT_BLOCK'?
-		do
-			Result := False
-		end
-
 	is_value_of: BOOLEAN is
 			-- Is `Current' an `XM_XSLT_COMPILED_VALUE_OF'?
 		do
@@ -672,6 +666,12 @@ feature -- Status report
 			Result := False
 		end
 
+	is_sequence_expression: BOOLEAN is
+			-- Is `Current' a sequence expression [e.g. (,,,)]?
+		do
+			Result := False
+		end
+
 	is_sequence_value: BOOLEAN is
 			-- Is `Current' a sequence value?
 		do
@@ -770,12 +770,6 @@ feature -- Status report
 	
 	is_let_expression: BOOLEAN is
 			-- Is `Current' a let expression?
-		do
-			Result := False
-		end
-
-	is_append_expression: BOOLEAN is
-			-- Is `Current' a append expression?
 		do
 			Result := False
 		end
@@ -968,6 +962,7 @@ feature -- Status setting
 				else
 					a_let_expression.set_action (Current)
 				end
+				mark_unreplaced
 				set_replacement (a_let_expression)
 			end
 		ensure
@@ -1048,6 +1043,8 @@ feature -- Optimization
 		end
 
 feature -- Evaluation
+
+		-- TODO: make a_context be non-Void in all these
 
 	evaluate (a_result: DS_CELL [XM_XPATH_VALUE]; a_mode, a_reference_count: INTEGER; a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' according to `a_mode'.
@@ -1493,15 +1490,6 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 	
-	as_append_expression: XM_XPATH_APPEND_EXPRESSION is
-			-- `Current' seen as a append expression
-		require
-			append_expression: is_append_expression
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-	
 	as_lazy_expression: XM_XPATH_LAZY_EXPRESSION is
 			-- `Current' seen as a lazy expression
 		require
@@ -1623,6 +1611,15 @@ feature -- Conversion
 			-- `Current' seen as a sequence extent
 		require
 			sequence_extent: is_sequence_extent
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_sequence_expression: XM_XPATH_SEQUENCE_EXPRESSION is
+			-- `Current' seen as a sequence expression
+		require
+			sequence_expression: is_sequence_expression
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)

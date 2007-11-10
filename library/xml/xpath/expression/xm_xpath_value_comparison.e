@@ -165,7 +165,7 @@ feature -- Optimization
 				end
 			end
 			if not was_expression_replaced and then not is_error then
-				evaluate_now
+				evaluate_now (a_context)
 			end
 		end
 
@@ -566,8 +566,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_now is
+	evaluate_now (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Evaluate the expression now if both arguments are constant.
+		require
+			a_context_not_void: a_context /= Void
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
 			l_invalid_value: XM_XPATH_INVALID_VALUE
@@ -575,7 +577,7 @@ feature {NONE} -- Implementation
 			if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 				and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 				create l_result.make (Void)
-				evaluate_item (l_result, Void)
+				evaluate_item (l_result, a_context.new_compile_time_context)
 				check
 					empty_sequence_not_possible: l_result.item /= Void
 					-- boolean comparison

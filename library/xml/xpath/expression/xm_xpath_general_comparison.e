@@ -196,7 +196,7 @@ feature -- Evaluation
 								finished := True
 							else
 								from
-									a_value.create_iterator (Void)
+									a_value.create_iterator (a_context)
 									a_third_iterator := a_value.last_iterator
 									if not a_third_iterator.is_error then a_third_iterator.start end
 								until
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 										type_check_inequalities (a_context, l_type, l_other_type, a_context_item_type)
 								end
 								if not was_expression_replaced then
-									evaluate_two_constants
+									evaluate_two_constants (a_context)
 								end
 							end
 						end
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			elseif first_operand.is_integer_range and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
 				optimize_n_to_m_equals_i_two (a_context, first_operand.as_integer_range)
 			elseif not was_expression_replaced then
-				evaluate_two_constants
+				evaluate_two_constants (a_context)
 			end
 		end
 
@@ -651,15 +651,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_two_constants is
+	evaluate_two_constants (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Evaluate the expression now if both arguments are constant
+		require
+			a_context_not_void: a_context /= Void
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 				and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 				create l_result.make (Void)
-				evaluate_item (l_result, Void)
+				evaluate_item (l_result, a_context.new_compile_time_context)
 				check
 					boolean_value: l_result.item.is_boolean_value
 					-- We are guarenteed a boolean value

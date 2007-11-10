@@ -85,7 +85,7 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			elseif base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-				create_iterator (Void)
+				create_iterator (a_context.new_compile_time_context)
 				if last_iterator.is_error then
 					set_last_error (last_iterator.error_value)
 				else

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			population := a_population
 			key_pattern := a_key
 			base_context := a_context
-			running_context := a_context.new_minor_context
+			running_context := a_context.new_pattern_context
 			running_context.set_current_iterator (population)
 			locator := a_locator
 		ensure

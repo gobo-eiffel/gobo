@@ -1607,39 +1607,39 @@ feature -- Element change
 						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
 							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		local
-			a_static_context: XM_XSLT_EXPRESSION_CONTEXT
-			a_use_when_attribute: STRING
-			an_expression: XM_XPATH_EXPRESSION
-			a_dynamic_context: XM_XSLT_EVALUATION_CONTEXT
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_static_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_use_when_attribute: STRING
+			l_expression: XM_XPATH_EXPRESSION
+			l_dynamic_context: XM_XSLT_EVALUATION_CONTEXT
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			a_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
-			if a_use_when_attribute /= Void then
-				STRING_.left_adjust (a_use_when_attribute)
-				STRING_.right_adjust (a_use_when_attribute)
-				create a_static_context.make_restricted (Current, configuration)
-				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token, line_number, system_id)
+			l_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
+			if l_use_when_attribute /= Void then
+				STRING_.left_adjust (l_use_when_attribute)
+				STRING_.right_adjust (l_use_when_attribute)
+				create l_static_context.make_restricted (Current, configuration)
+				expression_factory.make_expression (l_use_when_attribute, l_static_context, 1, Eof_token, line_number, system_id)
 				if expression_factory.is_parse_error then
 					report_compile_error (expression_factory.parsed_error_value)
 				else
-					an_expression := expression_factory.parsed_expression
-					an_expression.check_static_type (a_static_context, any_item)
-					if an_expression.is_error then
-						report_compile_error (an_expression.error_value)
+					l_expression := expression_factory.parsed_expression
+					l_expression.check_static_type (l_static_context, any_item)
+					if l_expression.is_error then
+						report_compile_error (l_expression.error_value)
 					else
-						if an_expression.was_expression_replaced then
-							an_expression := an_expression.replacement_expression
+						if l_expression.was_expression_replaced then
+							l_expression := l_expression.replacement_expression
 						end
-						if an_expression.is_error then
-							report_compile_error (an_expression.error_value)
+						if l_expression.is_error then
+							report_compile_error (l_expression.error_value)
 						else
-							create a_dynamic_context.make_restricted (a_static_context, principal_stylesheet.collation_map, configuration)
-							an_expression.calculate_effective_boolean_value (a_dynamic_context)
-							a_boolean_value := an_expression.last_boolean_value
-							if a_boolean_value.is_error then
-								report_compile_error (a_boolean_value.error_value)
+							l_dynamic_context ?= l_static_context.new_compile_time_context
+							l_expression.calculate_effective_boolean_value (l_dynamic_context)
+							l_boolean_value := l_expression.last_boolean_value
+							if l_boolean_value.is_error then
+								report_compile_error (l_boolean_value.error_value)
 							else
-								is_excluded := not a_boolean_value.value
+								is_excluded := not l_boolean_value.value
 							end
 						end
 					end

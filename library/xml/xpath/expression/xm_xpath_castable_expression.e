@@ -25,6 +25,8 @@ inherit
 
 	XM_XPATH_ROLE
 
+			-- TODO: per-evaluate atomic values
+
 create
 
 	make

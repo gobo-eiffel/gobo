@@ -99,14 +99,14 @@ feature -- Evaluation
 				l_input_string := a_result.item.string_value
 				a_result.put (Void)
 				l_input_string := utf8.to_utf8 (l_input_string)
-				if regexp_cache_entry = Void then
-					compile_regexp (a_result, a_context)
-				else
-					regexp := regexp_cache_entry.regexp
-				end
-				if a_result.item = Void then
-					a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (regexp.matches (l_input_string)))
-				end
+			end
+			if regexp_cache_entry = Void then
+				compile_regexp (a_result, a_context)
+			else
+				regexp := regexp_cache_entry.regexp
+			end
+			if a_result.item = Void then
+				a_result.put (create {XM_XPATH_BOOLEAN_VALUE}.make (regexp.matches (l_input_string)))
 			end
 		end
 

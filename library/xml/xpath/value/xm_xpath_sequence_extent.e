@@ -79,13 +79,7 @@ feature {NONE} -- Initialization
 				put (a_value.item (another_counter), another_counter)
 				another_counter := another_counter + 1
 			end
-			if count = 0 then
-				set_cardinality_empty
-			elseif count = 1 then
-				set_cardinality_exactly_one
-			else
-				set_cardinality_one_or_more
-			end
+			set_cardinality_from_count
 		end
 
 	make_as_view (an_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
@@ -99,6 +93,7 @@ feature {NONE} -- Initialization
 			if a_length < count then
 				keep_first (a_length)
 			end
+			set_cardinality_from_count
 		end
 
 	make_from_list (a_list: DS_LIST [XM_XPATH_ITEM]) is
@@ -108,6 +103,7 @@ feature {NONE} -- Initialization
 		do
 			make_value
 			make_from_linear (a_list)
+			set_cardinality_from_count
 		end
 
 	make_default is
@@ -115,6 +111,19 @@ feature {NONE} -- Initialization
 		do
 			make_value
 			make_array_default
+			set_cardinality_from_count
+		end
+
+	set_cardinality_from_count is
+			-- Set cardinality from `count'
+		do
+			if count = 0 then
+				set_cardinality_empty
+			elseif count = 1 then
+				set_cardinality_exactly_one
+			else
+				set_cardinality_one_or_more
+			end
 		end
 
 feature -- Access

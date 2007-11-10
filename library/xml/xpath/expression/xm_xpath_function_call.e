@@ -300,8 +300,7 @@ feature -- Evaluation
 			no_error: not is_error
 			context_not_void: a_context /= Void
 		do
-			-- TODO - need an early evaluation context)
-			create_iterator (Void)
+			create_iterator (a_context.new_compile_time_context)
 			if last_iterator.is_error then
 				if not is_error then
 					set_last_error (last_iterator.error_value)

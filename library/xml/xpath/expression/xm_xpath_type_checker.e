@@ -95,7 +95,7 @@ feature -- Optimization
 			a_supplied_expression.mark_unreplaced
 			initialize (a_supplied_expression, a_required_type)
 			handle_xpath_one_compatibility (backwards_compatible)
-			if not item_type_ok then handle_xpath_two_rules (a_role_locator) end
+			if not item_type_ok then handle_xpath_two_rules (a_context, a_role_locator) end
 			
 			-- If both the cardinality and item type are statically OK, return now.
 			
@@ -378,9 +378,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_xpath_two_rules (a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+	handle_xpath_two_rules (a_context: XM_XPATH_STATIC_CONTEXT; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Apply conversions needed in 2.0 mode.
 		require
+			a_context_not_void: a_context /= Void
 			role_not_void: a_role_locator /= Void
 		local
 			a_required_item_type_fingerprint: INTEGER
@@ -394,7 +395,7 @@ feature {NONE} -- Implementation
 
 				-- Rule 2: convert untypedAtomic to the required type
 
-				conditionally_add_untyped_converter (a_role_locator)
+				conditionally_add_untyped_converter (a_context, a_role_locator)
 
 				-- Rule 3: numeric promotion decimal -> float -> double
 
@@ -457,9 +458,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	conditionally_add_untyped_converter (a_role_locator: XM_XPATH_ROLE_LOCATOR) is	
+	conditionally_add_untyped_converter (a_context: XM_XPATH_STATIC_CONTEXT; a_role_locator: XM_XPATH_ROLE_LOCATOR) is	
 			--  Conditionally add an Untyped Atomic Converter
 		require
+			a_context_not_void: a_context /= Void
 			role_not_void: a_role_locator /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -481,7 +483,7 @@ feature {NONE} -- Implementation
 				end
 				checked_expression := l_converter
 				if an_expression.is_value and then not an_expression.depends_upon_implicit_timezone then
-					checked_expression.create_iterator (Void)
+					checked_expression.create_iterator (a_context.new_compile_time_context)
 					an_iterator := checked_expression.last_iterator
 					if an_iterator.is_error then
 						checked_expression.set_last_error (an_iterator.error_value)

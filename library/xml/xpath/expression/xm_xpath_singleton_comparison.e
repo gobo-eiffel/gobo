@@ -84,7 +84,7 @@ feature -- Evaluation
 				l_item := l_result.item
 				create l_result.make (Void)
 				second_operand.evaluate_item (l_result, a_context)
-				if l_result.item.is_error then
+				if l_result.item /= Void and then l_result.item.is_error then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (l_result.item.error_value)
 				elseif l_result.item = Void or else not l_result.item.is_atomic_value then

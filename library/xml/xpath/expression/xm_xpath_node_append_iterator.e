@@ -67,7 +67,7 @@ feature -- Status report
 		do
 			Result := not current_iterator.before and then current_iterator.after
 			if Result and then current_iterator = base_iterator then
-				Result := second_iterator.after
+				Result := not second_iterator.before and then second_iterator.after
 			end
 		end
 
@@ -85,16 +85,20 @@ feature -- Cursor movement
 			index := index + 1
 			if current_iterator.before then
 				current_iterator.start
+			elseif current_iterator.after then
+				if second_iterator.before then
+					second_iterator.start
+					current_iterator := second_iterator
+				end				
 			else
 				current_iterator.forth
 			end
 			if current_iterator.is_error then
 				set_last_error (current_iterator.error_value)
-			elseif current_iterator = base_iterator and then current_iterator.after then
-				current_iterator := second_iterator -- already started
-				if current_iterator.is_error then
-					set_last_error (current_iterator.error_value)
-				end
+			end
+			if base_iterator.after and then second_iterator.before then
+				current_iterator := second_iterator
+				current_iterator.start
 			end
 		end
 

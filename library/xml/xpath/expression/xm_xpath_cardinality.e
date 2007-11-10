@@ -39,17 +39,20 @@ feature -- Access
 		end
 
 	add_cardinality (c1, c2: INTEGER): INTEGER is
-			-- Add two cardinalities
+			-- Addition of two cardinalities
+		require
+			valid_c1: is_valid_required_cardinality (c1)
+			valid_c2: is_valid_required_cardinality (c2)
 		local
-			allows_zero: BOOLEAN
+			l_allows_zero: BOOLEAN
 		do
 			if c1 = Required_cardinality_empty then
 				Result := c2
 			elseif c2 = Required_cardinality_empty then
 				Result := c1
 			else
-				allows_zero := is_cardinality_allows_zero (c1) and then is_cardinality_allows_zero (c2)
-				if allows_zero then
+				l_allows_zero := is_cardinality_allows_zero (c1) and then is_cardinality_allows_zero (c2)
+				if l_allows_zero then
 					Result := Required_cardinality_zero_or_more
 				else
 					Result := Required_cardinality_one_or_more
@@ -65,22 +68,22 @@ feature -- Status report
 			-- Is `a_request' a valid cardinality requirement?
 		do
 			Result := a_request = Required_cardinality_empty
-				or else a_request = Required_cardinality_optional
-				or else a_request = Required_cardinality_exactly_one
-				or else a_request = Required_cardinality_one_or_more
-				or else a_request = Required_cardinality_zero_or_more
+				or a_request = Required_cardinality_optional
+				or a_request = Required_cardinality_exactly_one
+				or a_request = Required_cardinality_one_or_more
+				or a_request = Required_cardinality_zero_or_more
 		end
 
 	is_cardinality_allows_many (a_request: INTEGER): BOOLEAN is
 			-- Does `a_request' subsume allows many?
 		do
-			Result := a_request = Required_cardinality_one_or_more or else a_request = Required_cardinality_zero_or_more
+			Result := a_request = Required_cardinality_one_or_more or a_request = Required_cardinality_zero_or_more
 		end
 
 	is_cardinality_allows_zero (a_request: INTEGER): BOOLEAN is
 			-- Does `a_request' subsume allow zero?
 		do
-			Result := a_request = Required_cardinality_empty or else a_request = Required_cardinality_optional or else a_request = Required_cardinality_zero_or_more
+			Result := a_request = Required_cardinality_empty or a_request = Required_cardinality_optional or a_request = Required_cardinality_zero_or_more
 		end
 
 feature -- Conversion

@@ -57,7 +57,9 @@ feature -- Access
 		require
 			currently_matching: is_matching
 		do
-			if a_group < 0 or else a_group >= regexp.match_count then
+			if not is_matching then
+				Result := ""
+			elseif a_group < 0 or else a_group >= regexp.match_count then
 				Result := ""
 			else
 				Result := regexp.captured_substring (a_group)

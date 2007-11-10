@@ -34,6 +34,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_SHARED_EXCEPTIONS
+		export {NONE} all end
+
 create
 
 	make, make_upon_node
@@ -199,6 +202,14 @@ feature -- Status report
 			-- It is not called for host languages supported directly
 			--  by this library.
 			
+		end
+
+feature -- Creation
+
+	new_compile_time_context: XM_XPATH_CONTEXT is
+			-- Restricted dynamic context
+		do
+			create {XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT} Result.make_restricted (available_functions)
 		end
 
 feature -- Element change

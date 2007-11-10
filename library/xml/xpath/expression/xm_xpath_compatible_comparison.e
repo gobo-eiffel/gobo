@@ -143,7 +143,7 @@ feature -- Optimization
 					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 						create  l_result.make (Void)
-						evaluate_item (l_result, Void)
+						evaluate_item (l_result, a_context.new_compile_time_context)
 						check
 							boolean_value: l_result.item.is_boolean_value
 							-- We are guarenteed a boolean value

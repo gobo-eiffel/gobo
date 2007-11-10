@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 		ensure
 			transformer_set: transformer = a_transformer
 			not_restricted: not is_restricted
+			not_pattern: not is_pattern
 		end
 
 	make_minor (a_transformer: XM_XSLT_TRANSFORMER) is
@@ -54,6 +55,7 @@ feature {NONE} -- Initialization
 		ensure
 			transformer_set: transformer = a_transformer
 			not_restricted: not is_restricted
+			not_pattern: not is_pattern
 		end
 
 	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_collation_map: like collation_map; a_configuration: like configuration) is
@@ -81,6 +83,7 @@ feature {NONE} -- Initialization
 			restricted: is_restricted
 			static_context_set: static_context = a_static_context
 			collation_map_set: collation_map = a_collation_map
+			not_pattern: not is_pattern
 		end
 
 feature -- Access
@@ -137,11 +140,15 @@ feature -- Access
 	current_regexp_iterator:  XM_XSLT_REGEXP_ITERATOR is
 			-- Current regexp iterator
 		do
-			if is_minor then
+			if is_pattern then
+				Result := Void
+			elseif is_minor then
 				Result := caller.current_regexp_iterator
 			else
 				Result := internal_current_regexp_iterator
 			end
+		ensure then
+			current_regexp_iterator_void_for_patterns: is_pattern implies Result = Void
 		end
 	
 	tunnel_parameters:  XM_XSLT_PARAMETER_SET is
@@ -253,6 +260,9 @@ feature -- Status report
 	is_minor: BOOLEAN
 			-- Is `Current' limited in what it may change?
 
+	is_pattern: BOOLEAN
+			-- Is `Current' used for pattern evaluation?
+
 	has_push_processing: BOOLEAN is
 			-- Is push-processing to a receiver implemented?
 		do
@@ -269,6 +279,16 @@ feature -- Status report
 			-- Has `a_uri' been written to yet?
 		do
 			Result := STRING_.same_string (a_uri, transformer.principal_result_uri) or else Precursor (a_uri)
+		end
+
+feature -- Status setting
+
+	set_pattern is
+			-- Set `is_pattern' to `Trye'.
+		do
+			is_pattern := True
+		ensure
+			pattern_set: is_pattern
 		end
 
 feature -- Creation
@@ -317,6 +337,21 @@ feature -- Creation
 			Result.set_current_receiver (current_receiver)
 			Result.set_temporary_destination (is_temporary_destination)
 			Result.set_last (cached_last)
+			if is_pattern then
+				Result.set_pattern
+			end
+		ensure then
+			pattern_status_preserved: Result.is_pattern = is_pattern
+		end
+
+	new_pattern_context: XM_XSLT_EVALUATION_CONTEXT is
+			-- Create a minor copy of `Current'
+		do
+			Result := new_minor_context
+			Result.set_pattern
+		ensure
+			new_pattern_context_not_void: Result /= Void
+			pattern_context: Result.is_pattern
 		end
 
 	new_clean_context: like Current is
@@ -677,6 +712,7 @@ invariant
 	mode: is_minor implies internal_current_mode = Void
 	template: is_minor implies internal_current_template = Void
 	regexp: is_minor implies internal_current_regexp_iterator = Void
+	pattern_context_implies_minor: is_pattern implies is_minor
 	configuration_not_void: configuration /= Void
 	
 end

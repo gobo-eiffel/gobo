@@ -78,6 +78,7 @@ feature -- Optimization
 				set_base_expression (base_expression.replacement_expression)
 			end
 			if base_expression.is_value then
+				-- TODO: possible BUG - no static context available to get compile-time dynamic context
 				create_iterator (Void)
 				if last_iterator.is_error then
 					set_last_error (last_iterator.error_value)

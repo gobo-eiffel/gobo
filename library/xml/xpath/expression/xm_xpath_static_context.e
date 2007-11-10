@@ -180,6 +180,16 @@ feature -- Status report
 			no_schema_types_when_restricted: is_restricted implies True -- TODO for schema-awareness
 		end
 
+feature -- Creation
+
+	new_compile_time_context: XM_XPATH_CONTEXT
+			-- Restricted dynamic context
+		deferred
+		ensure
+			new_compile_time_context_not_void: Result /= Void
+			restricted_context: Result.is_restricted
+		end
+
 feature -- Element change
 	
 	bind_variable (a_fingerprint: INTEGER) is
