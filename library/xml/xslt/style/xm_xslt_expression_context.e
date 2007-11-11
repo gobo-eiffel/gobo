@@ -260,7 +260,7 @@ feature -- Status report
 
 feature -- Creation
 
-	new_compile_time_context: XM_XPATH_CONTEXT
+	new_compile_time_context: XM_XPATH_CONTEXT is
 			-- Restricted dynamic context
 		local
 			l_configuration: XM_XSLT_CONFIGURATION
