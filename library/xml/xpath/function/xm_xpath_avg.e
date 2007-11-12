@@ -123,7 +123,7 @@ feature -- Evaluation
 								Xpath_errors_uri, "FORG0006", Dynamic_error))
 						end
 						if a_result.item = Void then -- no error yet
-							if l_atomic_value.is_numeric_value then
+							if l_numeric_value /= Void then
 								if l_numeric_value.is_nan then
 									a_result.put (l_numeric_value)
 								else

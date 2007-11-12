@@ -112,7 +112,12 @@ feature -- Access
 								Result.set_import_precedence (a_precedence)
 								Result.set_importer (an_importer)
 								Result.splice_includes
-								a_stylesheet.merge_input_type_annotations (Result.input_type_annotations)
+--								set_input_type_annotations
+--								if not any_compile_errors then
+--									Result.set_input_type_annotations
+--								end
+--								if not any_compile_errors then
+--								a_stylesheet.merge_input_type_annotations (Result.input_type_annotations)
 							end
 						end
 					end

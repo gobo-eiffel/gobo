@@ -60,10 +60,6 @@ feature -- Access
 			else
 				Result := a_base_type
 			end
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
 		end
 
 feature -- Status report
@@ -186,12 +182,12 @@ feature {NONE} -- Implementation
 					l_finished := True
 				elseif l_item.is_untyped_atomic then
 					l_sum := l_item.as_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
-				elseif l_item.as_atomic_value.is_convertible (type_factory.double_type) then
-					l_sum := l_item.as_atomic_value.convert_to_type (type_factory.double_type).as_numeric_value
-				else
+				elseif not l_item.as_atomic_value.is_numeric_value then
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to sum() contains a mix of numeric and non-numeric values",
 						"", "FORG0006", Dynamic_error))
 					l_finished := True
+				else
+					l_sum := l_item.as_atomic_value.as_numeric_value
 				end
 				if not l_finished then
 					if l_sum.is_nan then
@@ -200,7 +196,7 @@ feature {NONE} -- Implementation
 					else
 						l_numeric_value := l_numeric_value.arithmetic (Plus_token, l_sum)
 						if l_numeric_value.is_nan then
-							a_result.put (l_sum)
+							a_result.put (l_numeric_value)
 							l_finished := True
 						end
 					end
@@ -211,11 +207,7 @@ feature {NONE} -- Implementation
 			if a_iterator.is_error then
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (a_iterator.error_value))
 			elseif a_result.item = Void then
-				if not l_numeric_value.item_type.is_same_type (item_type) then
-					a_result.put (l_numeric_value.convert_to_type (item_type))
-				else
-					a_result.put (l_numeric_value)
-				end
+				a_result.put (l_numeric_value)
 			end
 		end
 

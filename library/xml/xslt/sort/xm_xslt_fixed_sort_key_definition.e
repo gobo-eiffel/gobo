@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 					a_comparer := case_order_comparer (a_base_collator, a_context)
 					if not is_error then
 						if data_type.count = 0 then
-							create a_role.make (Instruction_role, "xsl:sort/sort-key", 1, Xpath_errors_uri, "XPTY0004")
+							create a_role.make (Instruction_role, "xsl:sort/sort-key", 1, Xpath_errors_uri, "XTTE1020")
 							sort_key := expression_factory.created_cardinality_checker (sort_key, Required_cardinality_zero_or_more, a_role)
 							create {XM_XPATH_ATOMIC_SORT_COMPARER} a_comparer.make (a_base_collator)
 						else

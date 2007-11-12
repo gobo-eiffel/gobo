@@ -432,42 +432,50 @@ feature -- Access
 			result_list_not_void: Result /= Void
 		end
 
-	sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION] is
+	sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			-- List of sort keys
+
+	assemble_sort_keys is
+			-- Create and assemble sort keys
+		require
+			no_previous_error: not any_compile_errors
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_sort: XM_XSLT_SORT
-			sort_key_count: INTEGER
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_sort: XM_XSLT_SORT
+			l_sort_key_count: INTEGER
 		do
 			from
-				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+				l_iterator := new_axis_iterator (Child_axis); l_iterator.start
 			until
-				an_iterator.after
+				l_iterator.after or any_compile_errors
 			loop
-				a_sort ?= an_iterator.item
-				if a_sort /= Void then
-					sort_key_count := sort_key_count + 1
-				end
-				an_iterator.forth
-			end
-			if sort_key_count > 0 then
-				from
-					an_iterator := new_axis_iterator (Child_axis); an_iterator.start
-					create Result.make (sort_key_count)
-				until
-					an_iterator.after
-				loop
-					a_sort ?= an_iterator.item
-					if a_sort /= Void then
-						Result.put_last (a_sort.sort_key_definition)
+				l_sort ?= l_iterator.item
+				if l_sort /= Void then
+					if l_sort_key_count /= 0 and l_sort.stable_attribute_value /= Void then
+						report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("stable attribute may appear only on the first xsl:sort element", Xpath_errors_uri, "XTSE1017", Static_error))
 					end
-					an_iterator.forth
+					l_sort_key_count := l_sort_key_count + 1
+				end
+				l_iterator.forth
+			end
+			if not any_compile_errors and l_sort_key_count > 0 then
+				from
+					l_iterator := new_axis_iterator (Child_axis); l_iterator.start
+					create sort_keys.make (l_sort_key_count)
+				until
+					l_iterator.after or any_compile_errors
+				loop
+					l_sort ?= l_iterator.item
+					if l_sort /= Void then
+						sort_keys.put_last (l_sort.sort_key_definition)
+					end
+					l_iterator.forth
 				end
 			else
-				create Result.make (0)
+				create sort_keys.make (0)
 			end
 		ensure
-			sort_key_list_not_void: Result /= Void
+			sort_key_list_not_void: sort_keys /= Void
 		end
 
 	stylesheet_function (a_fingerprint, an_arity: INTEGER): XM_XSLT_FUNCTION is
@@ -1153,7 +1161,7 @@ feature -- Status setting
 					end
 					create l_required_type.make_single_item
 					create l_range_variable.make ("gexslt_system_usage:current_function", l_name_code, l_required_type)
-					create l_sequence_expression.make
+					create l_sequence_expression.make_current
 					create l_let_expression.make (l_range_variable, l_sequence_expression, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 					create l_offer.make (Replace_current, Void, l_let_expression, False, False)
 					a_pattern.as_location_pattern.resolve_current (l_let_expression, l_offer)
@@ -1184,19 +1192,19 @@ feature -- Status setting
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 			a_message: STRING
-			a_sort: XM_XSLT_SORT
+			l_sort: XM_XSLT_SORT
 			non_sort_found, sort_found: BOOLEAN
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_node: XM_XPATH_NODE
 		do
 			from
-				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+				l_iterator := new_axis_iterator (Child_axis); l_iterator.start
 			until
-				any_compile_errors or else an_iterator.after
+				any_compile_errors or else l_iterator.after
 			loop
-				a_node := an_iterator.item
-				a_sort ?= a_node
-				if a_sort /= Void then
+				a_node := l_iterator.item
+				l_sort ?= a_node
+				if l_sort /= Void then
 					if non_sort_found then
 						a_message := STRING_.concat ("Within ", node_name)
 						a_message := STRING_.appended_string (a_message, ", xsl:sort elements must come before all other elements")
@@ -1214,7 +1222,7 @@ feature -- Status setting
 				else
 					non_sort_found := True
 				end
-				an_iterator.forth
+				l_iterator.forth
 			end
 			if sort_required and then not sort_found then
 				create an_error.make_from_string (STRING_.concat (node_name, " must have at least one xsl:sort child"), Xpath_errors_uri, "XTSE0010", Static_error)

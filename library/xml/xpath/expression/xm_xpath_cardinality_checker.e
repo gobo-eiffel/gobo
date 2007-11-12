@@ -21,13 +21,13 @@ inherit
 			create_node_iterator, optimize
 		end
 
-create {XM_XPATH_EXPRESSION_FACTORY}
+create
 
 	make
 
 feature {NONE} -- Initialization
 
-	-- TODO - possible sigleton atomizer
+	-- TODO - possible singleton atomizer
 
 	make (a_sequence: XM_XPATH_EXPRESSION; a_request: INTEGER; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Establish invariant.

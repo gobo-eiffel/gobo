@@ -104,6 +104,9 @@ feature -- Evaluation
 						l_integer_value := l_result.item.as_machine_integer_value
 						if l_integer_value.is_platform_integer then
 							l_insert_position := l_integer_value.value.to_integer
+							if l_insert_position < 1 then
+								l_insert_position := 1
+							end
 							create {XM_XPATH_INSERT_ITERATOR} last_iterator.make (l_base_iterator, l_insertion_iterator, l_insert_position)
 						else
 							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)

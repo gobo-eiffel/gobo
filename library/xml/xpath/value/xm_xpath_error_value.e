@@ -122,8 +122,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	namespace_uri, code: STRING
-			-- Error code (as an expanded URI)
+	namespace_uri: STRING
+			-- Namespace URI of error code
+
+	code: STRING
+			-- Local part of error code
 
 	description: STRING
 			-- Description

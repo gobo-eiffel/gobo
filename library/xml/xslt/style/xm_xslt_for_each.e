@@ -99,19 +99,22 @@ feature -- Element change
 			a_content: XM_XPATH_EXPRESSION
 		do
 			a_sorted_sequence := select_expression
-			a_sort_key_list := sort_keys
-			if a_sort_key_list.count > 0 then
-				create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
-				a_sorted_sequence.check_static_type (static_context, any_item)
-				if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
-				a_sorted_sequence.optimize (static_context, any_item)
-				if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
+			assemble_sort_keys
+			if not any_compile_errors then
+				a_sort_key_list := sort_keys
+				if a_sort_key_list.count > 0 then
+					create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
+					a_sorted_sequence.check_static_type (static_context, any_item)
+					if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
+					a_sorted_sequence.optimize (static_context, any_item)
+					if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
+				end
+				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				a_content := last_generated_expression
+				if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
+				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
+				create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, a_sorted_sequence, a_content)
 			end
-			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-			a_content := last_generated_expression
-			if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
-			if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
-			create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, a_sorted_sequence, a_content)
 		end
 
 feature -- Conversion

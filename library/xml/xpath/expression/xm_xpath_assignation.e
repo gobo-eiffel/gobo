@@ -91,7 +91,7 @@ feature -- Optimization
 					if sequence.was_expression_replaced then
 						set_sequence (sequence.replacement_expression)
 					end
-					action_expression.simplify
+					action.simplify
 					if action_expression.is_error then
 						set_last_error (action_expression.error_value)
 					elseif action_expression.was_expression_replaced then

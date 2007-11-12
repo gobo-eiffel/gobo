@@ -272,6 +272,7 @@ feature -- Optimization
 					end
 				end
 			end
+			sort_keys.do_all_with_index (agent check_sort_key (?, ?, a_context, a_context_item_type))
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -577,7 +578,10 @@ feature {NONE} -- Implementation
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			l_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_definition: XM_XSLT_SORT_KEY_DEFINITION
+			l_transformer: XM_XSLT_TRANSFORMER
 		do
+			l_transformer := a_context.transformer
 			create l_reduced_sort_keys.make (sort_keys.count)
 			l_new_context := a_context.new_minor_context
 			from
@@ -587,14 +591,22 @@ feature {NONE} -- Implementation
 			until
 				l_cursor.after
 			loop
-				l_cursor.item.evaluate_expressions (l_new_context)
-				l_fixed_sort_key:= l_cursor.item.reduced_definition (l_new_context)
-				l_reduced_sort_keys.put_last (l_fixed_sort_key)
-				l_cursor.forth
+				l_definition := l_cursor.item
+				l_definition.evaluate_expressions (l_new_context)
+				if l_definition.collation_name = Void or else l_new_context.is_known_collation (l_definition.collation_name) then
+					l_fixed_sort_key:= l_definition.reduced_definition (l_new_context)
+					l_reduced_sort_keys.put_last (l_fixed_sort_key)
+					l_cursor.forth
+				else
+					report_unknown_collator (l_definition.collation_name, l_transformer)
+					l_cursor.go_after
+				end
 			end
-			create Result.make (l_new_context, a_group_iterator, l_reduced_sort_keys)
+			if not l_transformer.is_error then
+				create Result.make (l_new_context, a_group_iterator, l_reduced_sort_keys)
+			end
 		ensure
-			new_sorted_group_iterator_not_void: Result /= Void
+			new_sorted_group_iterator_not_void: not a_context.transformer.is_error implies Result /= Void
 		end
 
 	new_sorted_group_node_iterator (a_group_iterator: XM_XSLT_GROUP_NODE_ITERATOR; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_SORTED_GROUP_NODE_ITERATOR is
@@ -607,7 +619,10 @@ feature {NONE} -- Implementation
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			l_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_definition: XM_XSLT_SORT_KEY_DEFINITION
+			l_transformer: XM_XSLT_TRANSFORMER
 		do
+			l_transformer := a_context.transformer
 			create l_reduced_sort_keys.make (sort_keys.count)
 			l_new_context := a_context.new_minor_context
 			from
@@ -617,14 +632,22 @@ feature {NONE} -- Implementation
 			until
 				l_cursor.after
 			loop
-				l_cursor.item.evaluate_expressions (l_new_context)
-				l_fixed_sort_key:= l_cursor.item.reduced_definition (l_new_context)
-				l_reduced_sort_keys.put_last (l_fixed_sort_key)
-				l_cursor.forth
+				l_definition := l_cursor.item
+				l_definition.evaluate_expressions (l_new_context)
+				if l_definition.collation_name = Void or else l_new_context.is_known_collation (l_definition.collation_name) then
+					l_fixed_sort_key:= l_definition.reduced_definition (l_new_context)
+					l_reduced_sort_keys.put_last (l_fixed_sort_key)
+					l_cursor.forth
+				else
+					report_unknown_collator (l_definition.collation_name, l_transformer)
+					l_cursor.go_after
+				end
 			end
-			create Result.make (l_new_context, a_group_iterator, l_reduced_sort_keys)
+			if not l_transformer.is_error then
+				create Result.make (l_new_context, a_group_iterator, l_reduced_sort_keys)
+			end
 		ensure
-			new_sorted_group_iterator_not_void: Result /= Void
+			new_sorted_group_iterator_not_void: not a_context.transformer.is_error implies  Result /= Void
 		end
 
 	new_group_iterator (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM] is
@@ -682,6 +705,39 @@ feature {NONE} -- Implementation
 		ensure
 			new_group_iterator_not_void: Result /= Void
 			node_iterator: a_population.is_node_iterator implies Result.is_group_node_iterator
+		end
+
+	-- TODO: identical code in XM_XSLT_SORT_EXPRESSION
+
+	check_sort_key (a_key: XM_XSLT_SORT_KEY_DEFINITION; a_index: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Check `a_key' for more than one item.
+			-- TODO: also perform early evaluation of comparators.
+		require
+			a_key_not_void: a_key /= Void
+			a_index_large_enough: a_index > 0
+			a_index_small_enough: a_index <= sort_keys.count
+			a_context_not_void: a_context /= Void
+			context_item_may_not_be_set: True
+		local
+			l_expression: XM_XPATH_EXPRESSION
+			l_role: XM_XPATH_ROLE_LOCATOR
+		do
+			l_expression := a_key.sort_key
+			l_expression.check_static_type (a_context, a_context_item_type)
+			if l_expression.is_error then
+				set_last_error (l_expression.error_value)
+			else
+				if l_expression.was_expression_replaced then
+					l_expression := l_expression.replacement_expression
+				end
+				if a_context.is_backwards_compatible_mode then
+					create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (l_expression)
+				else
+					create l_role.make (Instruction_role, "xsl:sort select", 1, Xpath_errors_uri, "XTTE1020")
+					create {XM_XPATH_CARDINALITY_CHECKER} l_expression.make (l_expression, Required_cardinality_optional, l_role)
+				end
+				a_key.set_sort_key (l_expression)
+			end
 		end
 
 invariant

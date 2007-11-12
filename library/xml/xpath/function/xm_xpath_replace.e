@@ -135,14 +135,14 @@ feature -- Evaluation
 								end
 								l_flags_string := normalized_flags_string (a_result.item.as_atomic_value.string_value)
 							end
-							if l_flags_string = Void then
-								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error))
-							else
-								a_result.put (Void)
-								fetch_regular_expression (a_result, l_pattern_string, l_flags_string)
-								if a_result.item = Void then
-									fetch_replacement_string (a_result, a_context)
-								end
+						end
+						if l_flags_string = Void then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error))
+						else
+							a_result.put (Void)
+							fetch_regular_expression (a_result, l_pattern_string, l_flags_string)
+							if a_result.item = Void then
+								fetch_replacement_string (a_result, a_context)
 							end
 						end
 					end
@@ -224,11 +224,11 @@ feature {NONE} -- Implementation
 						-- escaped \
 					elseif l_index < replacement_string.count and then replacement_string.item_code (l_index + 1) = 36 then
 						-- \$
-					elseif l_index < replacement_string.count and then replacement_string.item_code (l_index + 1) = 36 then
+					elseif l_index < replacement_string.count and then replacement_string.item_code (l_index + 1) = 92 then
 						-- escaped \
 					else
 						if l_index < replacement_string.count then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): $ sign must be followed by \ or $",
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): \ must be followed by \ or $",
 								Xpath_errors_uri, "FORX0004", Dynamic_error))
 						else
 							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Invalid replacement string in fn:replace(): single \ sign at end of string",

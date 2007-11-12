@@ -128,7 +128,7 @@ feature -- Access
 			l_coefficient, l_pad: STRING
 			l_index, l_count: INTEGER
 		do
-			l_value := value.normalize
+			l_value := value
 			create Result.make (0)
 			if is_negative then
 				Result.append_string ("-")

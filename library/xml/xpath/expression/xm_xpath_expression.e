@@ -953,7 +953,7 @@ feature -- Status setting
 					end
 				end
 				create a_range_variable.make ("gexslt_system_usage:current_function", a_name_code, a_required_type)
-				create a_sequence_expression.make
+				create a_sequence_expression.make_current
 				create a_let_expression.make (a_range_variable, a_sequence_expression, Current)
 				create an_offer.make (Replace_current, Void, a_let_expression, False, False)
 				promote (an_offer)

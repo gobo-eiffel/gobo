@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
-			use_current_mode, use_tail_recusrion: BOOLEAN; a_mode: XM_XSLT_MODE) is
+			use_current_mode, use_tail_recusrion: BOOLEAN; a_mode: XM_XSLT_MODE; a_defaulted: BOOLEAN) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			current_mode: not use_current_mode implies a_mode /= Void
 		do
 			executable := an_executable
+			is_select_defaulted := a_defaulted
 			select_expression := a_select_expression
 			mode := a_mode
 			is_current_mode_used := use_current_mode
@@ -51,6 +52,7 @@ feature {NONE} -- Initialization
 			initialized := True
 		ensure
 			executable_set: executable = an_executable
+			is_select_defaulted_set: is_select_defaulted = a_defaulted
 			select_expression_set: select_expression = a_select_expression
 			mode_set: mode = a_mode
 			current_mode_set: is_current_mode_used = use_current_mode
@@ -60,7 +62,10 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
+	is_select_defaulted: BOOLEAN
+			-- `True' if select attribute was omitted
+
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -140,12 +145,25 @@ feature -- Optimization
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_code: STRING
 		do
 			check_with_params (actual_parameters, a_context, a_context_item_type)
 			check_with_params (tunnel_parameters, a_context, a_context_item_type)
 			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
-			if select_expression.is_empty_sequence or select_expression.is_error then
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+			if select_expression.is_error then
+				if select_expression.error_value.namespace_uri.same_string (Xpath_errors_uri) and is_select_defaulted then
+					l_code := select_expression.error_value.code
+					if l_code.same_string ("XPTY0020") or l_code.same_string ("XPDY0002") then
+						select_expression.error_value.set_code ("XTTE0510")
+					end
+				end
+				set_replacement (select_expression)
+			elseif select_expression.is_empty_sequence then
 				set_replacement (select_expression)
 			end
 		end

@@ -30,6 +30,9 @@ feature -- Access
 	sort_key_definition: XM_XSLT_SORT_KEY_DEFINITION
 			-- Sort key
 
+	stable_attribute_value: STRING
+			-- Optional value of stable attribute
+
 	may_contain_sequence_constructor: BOOLEAN is
 			-- Is `Current' allowed to contain a sequence constructor?
 		do
@@ -41,77 +44,79 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute, an_order_attribute, a_lang_attribute,
-			a_data_type_attribute, a_case_order_attribute, a_collation_attribute: STRING
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_name_code: INTEGER
+			l_expanded_name, l_select_attribute, l_order_attribute, l_lang_attribute,
+			l_data_type_attribute, l_case_order_attribute, l_collation_attribute, l_stable_attribute: STRING
 		do
 			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
+				l_cursor := attribute_collection.name_code_cursor
+				l_cursor.start
 			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				attribute_collection.number_of_attributes + 1 - l_cursor.index				
 			until
-				a_cursor.after or any_compile_errors
+				l_cursor.after or any_compile_errors
 			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_select_attribute)
-					STRING_.right_adjust (a_select_attribute)
-				elseif STRING_.same_string (an_expanded_name, Order_attribute) then
-					an_order_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (an_order_attribute)
-					STRING_.right_adjust (an_order_attribute)
-				elseif STRING_.same_string (an_expanded_name, Data_type_attribute) then
-					a_data_type_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_data_type_attribute)
-					STRING_.right_adjust (a_data_type_attribute	)
-				elseif STRING_.same_string (an_expanded_name, Case_order_attribute) then
-					a_case_order_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_case_order_attribute)
-					STRING_.right_adjust (a_case_order_attribute	)
-				elseif STRING_.same_string (an_expanded_name, Lang_attribute) then
-					a_lang_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_lang_attribute)
-					STRING_.right_adjust (a_lang_attribute	)
-				elseif STRING_.same_string (an_expanded_name, Collation_attribute) then
-					a_collation_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_collation_attribute)
-					STRING_.right_adjust (a_collation_attribute)
-				elseif STRING_.same_string (an_expanded_name, Stable_attribute) then
-					-- Ignored - default is yes
-					-- TODO: take advantage of stable="no"
+				l_name_code := l_cursor.item
+				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+				if STRING_.same_string (l_expanded_name, Select_attribute) then
+					l_select_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_select_attribute)
+					STRING_.right_adjust (l_select_attribute)
+				elseif STRING_.same_string (l_expanded_name, Order_attribute) then
+					l_order_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_order_attribute)
+					STRING_.right_adjust (l_order_attribute)
+				elseif STRING_.same_string (l_expanded_name, Data_type_attribute) then
+					l_data_type_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_data_type_attribute)
+					STRING_.right_adjust (l_data_type_attribute	)
+				elseif STRING_.same_string (l_expanded_name, Case_order_attribute) then
+					l_case_order_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_case_order_attribute)
+					STRING_.right_adjust (l_case_order_attribute	)
+				elseif STRING_.same_string (l_expanded_name, Lang_attribute) then
+					l_lang_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_lang_attribute)
+					STRING_.right_adjust (l_lang_attribute	)
+				elseif STRING_.same_string (l_expanded_name, Collation_attribute) then
+					l_collation_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_collation_attribute)
+					STRING_.right_adjust (l_collation_attribute)
+				elseif STRING_.same_string (l_expanded_name, Stable_attribute) then
+					l_stable_attribute := attribute_value_by_index (l_cursor.index)
+					STRING_.left_adjust (l_stable_attribute)
+					STRING_.right_adjust (l_stable_attribute)
 				else
-					check_unknown_attribute (a_name_code)
+					check_unknown_attribute (l_name_code)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
-			prepare_attributes_2 (a_select_attribute, an_order_attribute, a_case_order_attribute,
-										 a_data_type_attribute,	a_lang_attribute, a_collation_attribute)
+			prepare_attributes_2 (l_select_attribute, l_order_attribute, l_case_order_attribute,
+										 l_data_type_attribute,	l_lang_attribute, l_collation_attribute, l_stable_attribute)
 			attributes_prepared := True
 		end
 
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_style_element: XM_XSLT_STYLE_ELEMENT
-			an_error: XM_XPATH_ERROR_VALUE
+			l_style_element: XM_XSLT_STYLE_ELEMENT
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
-					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", Xpath_errors_uri, "XTSE0015", Static_error)
+					create l_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", Xpath_errors_uri, "XTSE1015", Static_error)
+					report_compile_error (l_error)
 				else
-					a_style_element ?= parent
-					if a_style_element = Void or else
-						(not a_style_element.is_for_each and then
-						 not a_style_element.is_for_each_group and then
-						 not a_style_element.is_perform_sort and then
-						 not a_style_element.is_apply_templates)
+					l_style_element ?= parent
+					if l_style_element = Void or else
+						(not l_style_element.is_for_each and then
+						 not l_style_element.is_for_each_group and then
+						 not l_style_element.is_perform_sort and then
+						 not l_style_element.is_apply_templates)
 					 then
-						create an_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", Xpath_errors_uri, "XTSE0010", Static_error)
-						report_compile_error (an_error)
+						create l_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", Xpath_errors_uri, "XTSE0010", Static_error)
+						report_compile_error (l_error)
 					end
 				end
 			else
@@ -173,9 +178,10 @@ feature {NONE} -- Implementation
 	collation_name: XM_XPATH_EXPRESSION
 			-- Name of collation
 
-	prepare_attributes_2 (a_select_attribute, an_order_attribute, a_case_order_attribute,
-								 a_data_type_attribute,	a_lang_attribute, a_collation_attribute: STRING) is
+	prepare_attributes_2 (a_select_attribute, a_order_attribute, a_case_order_attribute,
+		a_data_type_attribute,	a_lang_attribute, a_collation_attribute, a_stable_attribute: STRING) is
 			-- Prepare attributes some more.
+			-- TODO: take advantage of stable="no"
 		do
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
@@ -184,8 +190,8 @@ feature {NONE} -- Implementation
 					report_compile_error (select_expression.error_value)
 				end
 			end
-			if an_order_attribute /= Void then
-				generate_attribute_value_template (an_order_attribute, static_context)
+			if a_order_attribute /= Void then
+				generate_attribute_value_template (a_order_attribute, static_context)
 				order := last_generated_expression
 				if order.is_error then
 					report_compile_error (order.error_value)
@@ -225,6 +231,15 @@ feature {NONE} -- Implementation
 				collation_name := last_generated_expression
 				if collation_name.is_error then
 					report_compile_error (collation_name.error_value)
+				end
+			end
+			if a_stable_attribute /= Void then
+				if STRING_.same_string (a_stable_attribute, "yes") then
+					stable_attribute_value := a_stable_attribute
+				elseif STRING_.same_string (a_stable_attribute, "no") then
+					stable_attribute_value := a_stable_attribute
+				else
+					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("'stable' attribute may only take values of 'yes' and 'no'", Xpath_errors_uri, "XTSE0020", Static_error))
 				end
 			end
 		end

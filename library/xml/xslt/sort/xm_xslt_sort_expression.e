@@ -20,6 +20,9 @@ inherit
 			sub_expressions, create_node_iterator -- TODO promote
 		end
 
+	XM_XPATH_ROLE
+		export {NONE} all end
+
 create
 
 	make
@@ -177,6 +180,7 @@ feature -- Optimization
 			if select_expression.is_error then
 				set_last_error (select_expression.error_value)
 			end
+			sort_key_list.do_all_with_index (agent check_sort_key (?, ?, a_context, a_context_item_type))
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -198,46 +202,56 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
-			a_sort_key: XM_XSLT_SORT_KEY_DEFINITION
+			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+			l_sort_key: XM_XSLT_SORT_KEY_DEFINITION
+			l_reduced: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 		do
+			last_iterator := Void
 			select_expression.create_iterator (a_context)
-			a_sequence_iterator := select_expression.last_iterator
-			if a_sequence_iterator.is_error then
-				last_iterator := a_sequence_iterator
+			l_sequence_iterator := select_expression.last_iterator
+			if l_sequence_iterator.is_error then
+				last_iterator := l_sequence_iterator
 			else
-				an_evaluation_context ?= a_context.new_context
+				l_evaluation_context ?= a_context.new_context
 				check
-					evaluation_context_not_void: an_evaluation_context /= Void
+					evaluation_context_not_void: l_evaluation_context /= Void
 					-- as this is XSLT
 				end
 				
 				if fixed_sort_key_list /= Void then
-					reduced_sort_keys := fixed_sort_key_list
+					l_reduced_sort_keys := fixed_sort_key_list
 				else
 					from
-						create reduced_sort_keys.make (sort_key_list.count)
-						a_cursor := sort_key_list.new_cursor; a_cursor.start
+						create l_reduced_sort_keys.make (sort_key_list.count)
+						l_cursor := sort_key_list.new_cursor; l_cursor.start
 					variant
-						sort_key_list.count + 1 - a_cursor.index
+						sort_key_list.count + 1 - l_cursor.index
 					until
-						a_cursor.after
+						l_cursor.after
 					loop
-						a_sort_key := a_cursor.item
-						if not a_sort_key.is_reducible then
-							a_sort_key.evaluate_expressions (an_evaluation_context)
+						l_sort_key := l_cursor.item
+						if not l_sort_key.is_reducible then
+							l_sort_key.evaluate_expressions (l_evaluation_context)
 						end
-						reduced_sort_keys.put_last (a_sort_key.reduced_definition (an_evaluation_context))
-						a_cursor.forth
+						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
+							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
+							l_reduced_sort_keys.put_last (l_reduced)
+							l_cursor.forth
+						else
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
+							l_cursor.go_after
+						end
 					end
 				end
-				if a_sequence_iterator.is_node_iterator then
-					create {XM_XSLT_SORTED_NODE_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator.as_node_iterator, reduced_sort_keys)
+				if last_iterator /= Void then
+					-- error
+				elseif l_sequence_iterator.is_node_iterator then
+					create {XM_XSLT_SORTED_NODE_ITERATOR} last_iterator.make (l_evaluation_context, l_sequence_iterator.as_node_iterator, l_reduced_sort_keys)
 				else
-					create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
+					create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (l_evaluation_context, l_sequence_iterator, l_reduced_sort_keys)
 				end
 			end
 		end
@@ -245,43 +259,53 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the nodes of a sequence
 		local
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
-			a_sort_key: XM_XSLT_SORT_KEY_DEFINITION
+			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+			l_sort_key: XM_XSLT_SORT_KEY_DEFINITION
+			l_reduced: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 		do
+			last_node_iterator := Void
 			select_expression.create_node_iterator (a_context)
-			a_sequence_iterator := select_expression.last_node_iterator
-			if a_sequence_iterator.is_error then
-				last_node_iterator := a_sequence_iterator
+			l_sequence_iterator := select_expression.last_node_iterator
+			if l_sequence_iterator.is_error then
+				last_node_iterator := l_sequence_iterator
 			else
-				an_evaluation_context ?= a_context.new_context
+				l_evaluation_context ?= a_context.new_context
 				check
-					evaluation_context_not_void: an_evaluation_context /= Void
+					evaluation_context_not_void: l_evaluation_context /= Void
 					-- as this is XSLT
 				end
 				
 				if fixed_sort_key_list /= Void then
-					reduced_sort_keys := fixed_sort_key_list
+					l_reduced_sort_keys := fixed_sort_key_list
 				else
 					from
-						create reduced_sort_keys.make (sort_key_list.count)
-						a_cursor := sort_key_list.new_cursor; a_cursor.start
+						create l_reduced_sort_keys.make (sort_key_list.count)
+						l_cursor := sort_key_list.new_cursor; l_cursor.start
 					variant
-						sort_key_list.count + 1 - a_cursor.index
+						sort_key_list.count + 1 - l_cursor.index
 					until
-						a_cursor.after
+						l_cursor.after
 					loop
-						a_sort_key := a_cursor.item
-						if not a_sort_key.is_reducible then
-							a_sort_key.evaluate_expressions (an_evaluation_context)
+						l_sort_key := l_cursor.item
+						if not l_sort_key.is_reducible then
+							l_sort_key.evaluate_expressions (l_evaluation_context)
 						end
-						reduced_sort_keys.put_last (a_sort_key.reduced_definition (an_evaluation_context))
-						a_cursor.forth
+						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
+							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
+							l_reduced_sort_keys.put_last (l_reduced)
+							l_cursor.forth
+						else
+							create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
+							l_cursor.go_after
+						end
 					end
 				end
-				create {XM_XSLT_SORTED_NODE_ITERATOR} last_node_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
+				if last_node_iterator /= Void then
+					create {XM_XSLT_SORTED_NODE_ITERATOR} last_node_iterator.make (l_evaluation_context, l_sequence_iterator, l_reduced_sort_keys)
+				end
 			end
 		end
 
@@ -333,6 +357,37 @@ feature {NONE} -- Implementation
 
 	fixed_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			-- Fixed sort keys
+
+	check_sort_key (a_key: XM_XSLT_SORT_KEY_DEFINITION; a_index: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Check `a_key' for more than one item.
+			-- TODO: also perform early evaluation of comparators.
+		require
+			a_key_not_void: a_key /= Void
+			a_index_large_enough: a_index > 0
+			a_index_small_enough: a_index <= sort_key_list.count
+			a_context_not_void: a_context /= Void
+			context_item_may_not_be_set: True
+		local
+			l_expression: XM_XPATH_EXPRESSION
+			l_role: XM_XPATH_ROLE_LOCATOR
+		do
+			l_expression := a_key.sort_key
+			l_expression.check_static_type (a_context, a_context_item_type)
+			if l_expression.is_error then
+				set_last_error (l_expression.error_value)
+			else
+				if l_expression.was_expression_replaced then
+					l_expression := l_expression.replacement_expression
+				end
+				if a_context.is_backwards_compatible_mode then
+					create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (l_expression)
+				else
+					create l_role.make (Instruction_role, "xsl:sort select", 1, Xpath_errors_uri, "XTTE1020")
+					create {XM_XPATH_CARDINALITY_CHECKER} l_expression.make (l_expression, Required_cardinality_optional, l_role)
+				end
+				a_key.set_sort_key (l_expression)
+			end
+		end
 
 invariant
 

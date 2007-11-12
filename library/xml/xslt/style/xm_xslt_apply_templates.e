@@ -83,6 +83,8 @@ feature -- Element change
 			if l_select_attribute /= Void then
 				generate_expression (l_select_attribute)
 				select_expression := last_generated_expression
+			else
+				is_select_defaulted := True
 			end
 			if l_mode_attribute /= Void then
 				if STRING_.same_string (l_mode_attribute, "#current") then
@@ -161,18 +163,20 @@ feature -- Element change
 				create {XM_XPATH_AXIS_EXPRESSION} select_expression.make (Child_axis, Void)
 			end
 			type_check_expression ("select", select_expression)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-			end
-			create a_type_checker
-			create a_role.make (Instruction_role, "xsl:apply-templates/select", 1,
-									  Xpath_errors_uri, "XTTE0520")
-			create a_node_sequence.make_node_sequence
-			a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
-			if a_type_checker.is_static_type_check_error	then
-				report_compile_error (a_type_checker.static_type_check_error)
-			else
-				select_expression := a_type_checker.checked_expression
+			if not any_compile_errors then
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression
+				end
+				create a_type_checker
+				create a_role.make (Instruction_role, "xsl:apply-templates/select", 1,
+					Xpath_errors_uri, "XTTE0520")
+				create a_node_sequence.make_node_sequence
+				a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
+				if a_type_checker.is_static_type_check_error	then
+					report_compile_error (a_type_checker.static_type_check_error)
+				else
+					select_expression := a_type_checker.checked_expression
+				end
 			end
 			validated := True
 		end
@@ -184,15 +188,18 @@ feature -- Element change
 			a_sorted_sequence: XM_XPATH_EXPRESSION
 		do
 			a_sorted_sequence := select_expression
-			a_sort_key_list := sort_keys
-			if a_sort_key_list.count > 0 then
-				use_tail_recursion := False
-				create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
+			assemble_sort_keys
+			if not any_compile_errors then
+				a_sort_key_list := sort_keys
+				if a_sort_key_list.count > 0 then
+					use_tail_recursion := False
+					create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
+				end
+				create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_expression.make (an_executable, a_sorted_sequence,
+					with_param_instructions (an_executable, False),
+					with_param_instructions (an_executable, True),
+					use_current_mode, use_tail_recursion, mode, is_select_defaulted)
 			end
-			create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_expression.make (an_executable, a_sorted_sequence,
-																											  with_param_instructions (an_executable, False),
-																											  with_param_instructions (an_executable, True),
-																											  use_current_mode, use_tail_recursion, mode)
 		end
 
 feature -- Conversion
@@ -219,6 +226,9 @@ feature {NONE} -- Implementation
 
 	select_expression: XM_XPATH_EXPRESSION
 			-- Value of 'select' attribute
+
+	is_select_defaulted: BOOLEAN
+			-- `True' if select attribute was omitted
 
 invariant
 

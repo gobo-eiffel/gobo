@@ -341,7 +341,7 @@ feature -- Basic operations
 						if a_other.is_zero then
 							create {XM_XPATH_FLOAT_VALUE} Result.make_nan
 						else
-							create {XM_XPATH_FLOAT_VALUE} Result.make (value / a_other.as_float_value.value)
+							create {XM_XPATH_FLOAT_VALUE} Result.make (value / a_other.as_double)
 						end
 					elseif is_infinite and a_other.is_infinite then
 						create {XM_XPATH_FLOAT_VALUE} Result.make_nan
@@ -352,7 +352,7 @@ feature -- Basic operations
 							create {XM_XPATH_FLOAT_VALUE} Result.make_from_string ("INF")
 						end
 					else
-						create {XM_XPATH_FLOAT_VALUE} Result.make (value / a_other.as_float_value.value)
+						create {XM_XPATH_FLOAT_VALUE} Result.make (value / a_other.as_double)
 					end
 				when Integer_division_token then
 					create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / a_other.as_double))

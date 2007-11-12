@@ -131,20 +131,23 @@ feature -- Element change
 			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			l_content: XM_XPATH_EXPRESSION
 		do
-			l_sort_key_list := sort_keys
-			if select_expression /= Void then
-				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (select_expression, l_sort_key_list)
-			else
-				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
-				l_content := last_generated_expression
-				if l_content = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+			assemble_sort_keys
+			if not any_compile_errors then
+				l_sort_key_list := sort_keys
+				if select_expression /= Void then
+					create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (select_expression, l_sort_key_list)
+				else
+					compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
+					l_content := last_generated_expression
+					if l_content = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+					end
+					l_content.simplify
+					if l_content.was_expression_replaced then
+						l_content := l_content.replacement_expression
+					end
+					create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (l_content, l_sort_key_list)
 				end
-				l_content.simplify
-				if l_content.was_expression_replaced then
-					l_content := l_content.replacement_expression
-				end
-				create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (l_content, l_sort_key_list)
 			end
 		end
 

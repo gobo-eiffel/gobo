@@ -93,10 +93,13 @@ feature -- Access
 		require
 			context_not_void: a_context /= Void
 			reducible: is_reducible
+			known_collation: collation_name /= Void implies a_context.is_known_collation (collation_name)
 		local
 			a_collator: ST_COLLATOR
 		do
-			if collation_name /= Void then a_collator := a_context.collator (collation_name) end
+			if collation_name /= Void then
+				a_collator := a_context.collator (collation_name)
+			end
 			create Result.make (sort_key, order, data_type, case_order, language, a_collator, a_context)
 		ensure
 			reduced_definition_not_void: Result /= Void
@@ -114,6 +117,16 @@ feature -- Status_report
 		end
 
 feature -- Element change
+
+	set_sort_key (a_key: like sort_key) is
+			-- Set `sort_key' to `a_key'.
+		require
+			a_key_not_void: a_key /= Void
+		do
+			sort_key := a_key
+		ensure
+			sort_key_set: sort_key = a_key
+		end
 
 	evaluate_expressions (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Evaluate all AVTs

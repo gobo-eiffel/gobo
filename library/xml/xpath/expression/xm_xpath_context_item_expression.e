@@ -22,17 +22,29 @@ inherit
 
 create
 
-	make
+	make, make_current
 
 feature {NONE} -- Initialization
 
 	make is
+			-- Initialize `Current' as a normal context item expression.
 		do
 			compute_static_properties
 			item_type := any_item
 			initialized := True
 		ensure
-			static_properties_computed: are_static_properties_computed			
+			static_properties_computed: are_static_properties_computed
+			not_current_replacement: not is_current_replacement
+		end
+
+	make_current is
+			-- Initialize `Current' as a replacement for fn:current().
+		do
+			make
+			is_current_replacement := True
+		ensure
+			static_properties_computed: are_static_properties_computed
+			current_replacement: is_current_replacement
 		end
 
 feature -- Access
@@ -62,6 +74,9 @@ feature -- Comparison
 	
 feature -- Status report
 
+	is_current_replacement: BOOLEAN
+			-- Is `Current' a replacement for fn:current()?
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -87,7 +102,11 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			if a_context_item_type = Void then
-				set_last_error_from_string ("The context item is undefined at this point", Xpath_errors_uri, "XPDY0002", Type_error)
+				if is_current_replacement then
+					set_last_error_from_string ("The context item is undefined at this point", Xpath_errors_uri, "XTDE1360", Type_error)
+				else
+					set_last_error_from_string ("The context item is undefined at this point", Xpath_errors_uri, "XPDY0002", Type_error)
+				end
 			else
 				item_type := a_context_item_type
 			end

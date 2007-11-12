@@ -58,7 +58,7 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			if insertion_iterator.after then
+			if not insertion_iterator.before and then insertion_iterator.after then
 				is_inserting := False
 			end
 			if is_inserting then
@@ -70,9 +70,9 @@ feature -- Cursor movement
 				if insertion_iterator.is_error then
 					set_last_error (insertion_iterator.error_value)
 					item := Void
-				elseif insertion_iterator.after then
+				elseif not insertion_iterator.before and then insertion_iterator.after then
 					is_inserting := False
-					if base_iterator.after then
+					if not base_iterator.before and then base_iterator.after then
 						item := Void
 					else
 						base_iterator.start
@@ -89,31 +89,62 @@ feature -- Cursor movement
 					item := insertion_iterator.item
 				end
 			else
-				if base_iterator.before then
-					base_iterator.start
-				else
-					base_iterator.forth
-				end
-				if base_iterator.is_error then
-					set_last_error (base_iterator.error_value)
-					item := Void
-				elseif base_iterator.after then
-					if insertion_iterator.after then
-						item := Void
-					else
-						is_inserting := True
+				if index = insert_position then
+					if insertion_iterator.before then
 						insertion_iterator.start
-						if insertion_iterator.is_error then
-							set_last_error (insertion_iterator.error_value)
+					else
+						insertion_iterator.forth
+					end
+					if insertion_iterator.is_error then
+						set_last_error (insertion_iterator.error_value)
+						item := Void
+					elseif not insertion_iterator.before and then insertion_iterator.after then
+						if base_iterator.before then
+							base_iterator.start
+						else
+							base_iterator.forth
+						end
+						if base_iterator.is_error then
+							set_last_error (base_iterator.error_value)
 							item := Void
-						elseif insertion_iterator.after then
+						elseif base_iterator.after then
 							item := Void
 						else
-							item := insertion_iterator.item
+							item := base_iterator.item
 						end
-					end						
+					else
+						item := insertion_iterator.item
+					end
 				else
-					item := base_iterator.item
+					if base_iterator.before then
+						base_iterator.start
+					else
+						base_iterator.forth
+					end
+					if base_iterator.is_error then
+						set_last_error (base_iterator.error_value)
+						item := Void
+					elseif base_iterator.after then
+						item := Void
+						if index < insert_position then
+							is_inserting := True
+							if insertion_iterator.before then
+								insertion_iterator.start
+							else
+								insertion_iterator.forth
+							end
+							if insertion_iterator.is_error then
+								set_last_error (insertion_iterator.error_value)
+								item := Void
+							elseif not insertion_iterator.before and then insertion_iterator.after then
+								item := Void
+							else
+								item := insertion_iterator.item
+							end
+						end
+					else
+						item := base_iterator.item
+					end
 				end
 			end
 		end
