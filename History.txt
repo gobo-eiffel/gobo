@@ -1,5 +1,10 @@
 Version 3.8 - ?
 
+	gec:
+
+	* Generate prototypes for external routines when no header file
+	  has been specified.
+
 Version 3.7 - 5 November 2007
 
 	gec:
