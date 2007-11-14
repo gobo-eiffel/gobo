@@ -1016,6 +1016,7 @@ feature {NONE} -- Feature generation
 			l_cpp_class_type: STRING
 			l_dll_file: STRING
 			old_call_info: STRING
+			l_has_include_files: BOOLEAN
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -1236,6 +1237,7 @@ feature {NONE} -- Feature generation
 					-- \11: signature result
 					-- \18: include files
 				if external_c_regexp.match_count > 18 and then external_c_regexp.captured_substring_count (18) > 0 then
+					l_has_include_files := True
 					print_external_c_includes (external_c_regexp.captured_substring (18))
 				end
 				if external_c_regexp.match_count > 5 and then external_c_regexp.captured_substring_count (5) > 0 then
@@ -1243,6 +1245,10 @@ feature {NONE} -- Feature generation
 				end
 				if external_c_regexp.match_count > 11 and then external_c_regexp.captured_substring_count (11) > 0 then
 					l_signature_result := external_c_regexp.captured_substring (11)
+				end
+				if not l_has_include_files then
+						-- We need to generate a prototype for this external routine.
+					print_external_c_prototype (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 				end
 				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, False)
 			elseif external_c_macro_regexp.recognizes (l_language_string) then
@@ -1279,6 +1285,7 @@ feature {NONE} -- Feature generation
 					-- \4: signature result
 					-- \6: include files
 				if old_external_c_regexp.match_count > 6 and then old_external_c_regexp.captured_substring_count (6) > 0 then
+					l_has_include_files := True
 					print_external_c_includes (old_external_c_regexp.captured_substring (6))
 				end
 				if old_external_c_regexp.match_count > 1 and then old_external_c_regexp.captured_substring_count (1) > 0 then
@@ -1286,6 +1293,10 @@ feature {NONE} -- Feature generation
 					if old_external_c_regexp.match_count > 4 and then old_external_c_regexp.captured_substring_count (4) > 0 then
 						l_signature_result := old_external_c_regexp.captured_substring (4)
 					end
+				end
+				if not l_has_include_files then
+						-- We need to generate a prototype for this external routine.
+					print_external_c_prototype (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 				end
 				print_external_c_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause, False)
 			elseif old_external_c_macro_regexp.recognizes (l_language_string) then
@@ -1342,6 +1353,7 @@ feature {NONE} -- Feature generation
 					-- \18: include files
 				l_is_cpp := True
 				if external_cpp_regexp.match_count > 18 and then external_cpp_regexp.captured_substring_count (18) > 0 then
+					l_has_include_files := True
 					print_external_c_includes (external_cpp_regexp.captured_substring (18))
 				end
 				l_cpp_class_type := external_cpp_regexp.captured_substring (2)
@@ -1350,6 +1362,10 @@ feature {NONE} -- Feature generation
 				end
 				if external_cpp_regexp.match_count > 11 and then external_cpp_regexp.captured_substring_count (11) > 0 then
 					l_signature_result := external_cpp_regexp.captured_substring (11)
+				end
+				if not l_has_include_files then
+						-- We need to generate a prototype for this external routine.
+					print_external_c_prototype (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 				end
 				print_external_cpp_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_cpp_class_type, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 			elseif external_dllwin_regexp.recognizes (l_language_string) then
@@ -2659,6 +2675,61 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			end
+		end
+
+	print_external_c_prototype (a_feature_name: ET_FEATURE_NAME;
+		a_arguments: ET_FORMAL_ARGUMENT_LIST; a_result_type_set: ET_DYNAMIC_TYPE_SET;
+		a_signature_arguments, a_signature_result: STRING;
+		a_alias: ET_EXTERNAL_ALIAS) is
+			-- Print to `header_file' a prototype for the external C function.
+			-- If `a_feature_name' is Void then the name of the C function will be found in the alias.
+			-- `a_signature_arguments' and `a_signature_result', if not Void,
+			-- are the signature types declared in the Language part.
+			-- `a_result_type_set' is not Void if the external feature is a query.
+		require
+			name_not_void: a_feature_name /= Void or else a_alias /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+			l_alias_value: ET_MANIFEST_STRING
+			i, nb_args: INTEGER
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
+			l_argument_type: ET_DYNAMIC_TYPE
+		do
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			if a_signature_result /= Void then
+				header_file.put_string (a_signature_result)
+			elseif a_result_type_set /= Void then
+				l_result_type := a_result_type_set.static_type
+				print_type_declaration (l_result_type, header_file)
+			else
+				header_file.put_string (c_void)
+			end
+			header_file.put_character (' ')
+			if a_alias /= Void then
+				l_alias_value := a_alias.manifest_string
+				header_file.put_string (l_alias_value.value)
+			else
+				header_file.put_string (a_feature_name.lower_name)
+			end
+			header_file.put_character ('(')
+			if a_signature_arguments /= Void then
+				header_file.put_string (a_signature_arguments)
+			elseif a_arguments /= Void and then not a_arguments.is_empty then
+				nb_args := a_arguments.count
+				from i := 1 until i > nb_args loop
+					if i /= 1 then
+						header_file.put_character (',')
+					end
+					l_argument_type_set := argument_type_set (i)
+					l_argument_type := l_argument_type_set.static_type
+					print_type_declaration (l_argument_type, header_file)
+					i := i + 1
+				end
+			end
+			header_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
 		end
 
 	print_external_c_body (a_feature_name: ET_FEATURE_NAME;
