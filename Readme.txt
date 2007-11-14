@@ -59,7 +59,7 @@ from SVN).
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows XP and Linux Ubuntu 7.04. Since
+has only been tested under Windows XP and Linux Ubuntu. Since
 most Eiffel compilers use the notation $NAME for environment variables
 in their Ace files (or equivalent), this convention has been used instead
 of the Windowish %NAME%. Likewise, the directory separator used through
@@ -70,7 +70,7 @@ To install this package, please follow the instructions below:
 
 Under Windows:
 
-    . download the package gobo37.zip
+    . download the package gobo37-src.zip
     . copy the files to a directory of your choice on your disk and
       set the environment variable %GOBO% to that directory, known as
       the distribution directory. Also put the directory %GOBO%\bin
@@ -82,7 +82,7 @@ Under Windows:
 
 Under Unix/Linux:
 
-    . download the package gobo37.tar.gz
+    . download the package gobo37-src.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
@@ -95,9 +95,9 @@ Under Unix/Linux:
 Note that if you downloaded this package from SVN on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
-The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
-5.7.64493, 6.0.6.9618 and 6.1.7.1007 (Classic and .NET), SmartEiffel 1.2r7,
-and Gobo Eiffel Compiler (gec) 3.7. For more details about the supported
+The supported Eiffel compilers, in alphabetical order, are: Gobo Eiffel
+Compiler (gec) 3.7, ISE Eiffel 5.7.64493, 6.0.6.9618 and 6.1.7.1007 (Classic
+and .NET), and SmartEiffel 1.2r7. For more details about the supported
 Eiffel compilers, please see the file "Release_notes.txt". This software
 might work with other Eiffel compilers and/or other compiler versions,
 however no test has been done. To have a better understanding of the way
@@ -192,9 +192,9 @@ for discussions about the features under development in the SVN version
 is hosted at SourceForge.
 
 Although the license allows you to do pretty much whatever you want with
-this software, I would be grateful to get your feedbacks, bug reports
+this software, We would be grateful to get your feedbacks, bug reports
 and/or bug fixes, improvements, etc. so that others could benefit from
-your work and ideas as well. I would also be interested in hearing about
+your work and ideas as well. We would also be interested in hearing about
 your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 

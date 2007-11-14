@@ -15,7 +15,7 @@ content="text/html; charset=iso-8859-1">
         <td><font size="6"><strong>Downloading Instructions</strong></font></td>
         <td align="right"><a href="index.html"><img
         src="image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="known_bugs.html"><img
+        width="40" height="40"></a><a href="license.html"><img
         src="image/next.gif" alt="Next" border="0" width="40"
         height="40"></a></td>
     </tr>
@@ -30,12 +30,10 @@ Eiffel tools and libraries. You might want to read the following
 files before downloading the latest version of <em>Gobo Eiffel</em>:</p>
 
 <blockquote>
-    <p><a href="http://www.gobosoft.com/eiffel/gobo/Readme.txt"><tt>Readme.txt</tt></a><font
+    <p><a href="../Readme.txt"><tt>Readme.txt</tt></a><font
     face="Times New Roman"><br>
-    </font><a
-    href="http://www.gobosoft.com/eiffel/gobo/Release_notes.txt"><tt>Release_notes.txt</tt></a><tt><br>
-    </tt><a
-    href="http://www.gobosoft.com/eiffel/gobo/History.txt"><tt>History.txt</tt></a></p>
+    </font><a href="../Release_notes.txt"><tt>Release_notes.txt</tt></a><tt><br>
+    </tt><a href="../History.txt"><tt>History.txt</tt></a></p>
 </blockquote>
 
 <h2><a name="License">License Agreement</a></h2>
@@ -89,29 +87,57 @@ Free Software License</a>.</p>
 
 <p><em>Gobo Eiffel </em>version 3.7 and older versions can be
 downloaded from <a
-href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">SourceForge</a>:</p>
+href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">SourceForge</a>.
+The package has been split into two parts. The source code is
+available in files of the form:</p>
 
 <blockquote>
     <ul>
         <li>Windows: <a
-            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo37.zip</a></li>
+            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo37-src.zip</a></li>
         <li>Unix/Linux: <a
-            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo37.tar.gz</a></li>
+            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo37-src.tar.gz</a></li>
     </ul>
 </blockquote>
 
-<p>Please contact <a href="mailto:ericb@gobosoft.com">me</a> to
-get the latest information.</p>
+<p>They contain everything except the binary files of tools (e.g.
+<em>gec</em>, <em>geant</em>, <em>geyacc</em>). You can either
+built them from the source code using one of the following
+commands:</p>
+
+<blockquote>
+    <ul>
+        <li>Windows: <font face="Courier New">%GOBO%\install.bat <em>&lt;c_compiler&gt;</em></font></li>
+        <li>Unix/Linux: <font size="3" face="Courier New">$GOBO/install.sh
+            </font><font face="Courier New"><em>&lt;c_compiler&gt;</em></font></li>
+    </ul>
+</blockquote>
+
+<p>where <em>&lt;c_compiler&gt;</em> is a C compiler installed on
+your computer (for example use <em>msc</em> for Microsoft C
+compiler or <em>gcc</em> for GNU C compiler). You can also
+download the file of the form:</p>
+
+<blockquote>
+    <ul>
+        <li><a
+            href="https://sourceforge.net/project/showfiles.php?group_id=24591&amp;package_id=57904">gobo37-bin-<em>&lt;platform&gt;</em>.<em>&lt;extension&gt;</em></a></li>
+    </ul>
+</blockquote>
+
+<p>corresponding to your platform if it is already available. In
+such a case you just have to copy the binary files into the
+directory <em>$GOBO/bin</em>.</p>
 
 <h2>Known Bugs</h2>
 
-<p>A list of the <a href="known_bugs.html">known defects</a>
-along with eventual bug fixes or workarounds is also available.
-If you find a bug which does not appear in this list yet, please
-report the bug in the <a
-href="https://sourceforge.net/tracker/?group_id=24591">bug
-tracker</a> on SourceForge. We will add the description of this
-bug here and try to provide a bug fix as soon as possible
+<p>A list of the known defects along with eventual bug fixes or
+workarounds is available in the <a
+href="https://sourceforge.net/tracker/?atid=381937&amp;group_id=24591&amp;func=browse">bug
+tracker</a> on SourceForge. If you find a bug which does not
+appear in this list yet, please <a
+href="https://sourceforge.net/tracker/?func=add&amp;group_id=24591&amp;atid=381937">report
+it</a>. We will try to provide a bug fix as soon as possible
 (usually within one or two days).</p>
 
 <p>You can also subscribe to the <em>Gobo Eiffel</em> <a
@@ -154,8 +180,8 @@ $Revision$"
         border="0" width="40" height="40"></a><a
         href="index.html"><img src="image/previous.gif"
         alt="Previous" border="0" width="40" height="40"></a><a
-        href="known_bugs.html"><img src="image/next.gif"
-        alt="Next" border="0" width="40" height="40"></a></td>
+        href="license.html"><img src="image/next.gif" alt="Next"
+        border="0" width="40" height="40"></a></td>
     </tr>
 </table>
 </body>
