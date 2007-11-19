@@ -61,6 +61,12 @@ feature -- Static report
 			end
 		end
 
+	is_tuple_label: BOOLEAN is
+			-- Is current call a call to a Tuple label?
+		do
+			Result := static_call.is_tuple_label
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -75,8 +81,8 @@ feature -- Element change
 			l_dynamic_feature: like seeded_dynamic_feature
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
-			if not static_call.name.is_tuple_label then
-				l_dynamic_feature := seeded_dynamic_feature (static_call.name.seed, a_type, a_system)
+			if not is_tuple_label then
+				l_dynamic_feature := seeded_dynamic_feature (a_type, a_system)
 				if l_dynamic_feature = Void then
 					if a_type.conforms_to_type (target_type_set.static_type, a_system) then
 							-- Internal error: there should be a feature with that seed
@@ -134,9 +140,9 @@ feature -- Element change
 			l_dynamic_feature: like seeded_dynamic_feature
 			l_system: ET_SYSTEM
 		do
-			if not static_call.name.is_tuple_label then
+			if not is_tuple_label then
 				l_system := a_builder.current_system
-				l_dynamic_feature := seeded_dynamic_feature (static_call.name.seed, a_type, l_system)
+				l_dynamic_feature := seeded_dynamic_feature (a_type, l_system)
 				if l_dynamic_feature = Void then
 					if a_type.conforms_to_type (target_type_set.static_type, l_system) then
 							-- Internal error: there should be a feature with that seed
@@ -154,10 +160,11 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_seed: INTEGER; a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
-			-- Run-time feature in `a_type' corresponding to current call with seed `a_seed';
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time feature in `a_type' corresponding to current call;
 			-- Void if no such feature
 		require
+			not_tuple_label: not is_tuple_label
 			a_type_not_void: a_type /= Void
 			a_system_not_void: a_system /= Void
 		deferred

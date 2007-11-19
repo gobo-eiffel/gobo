@@ -22,6 +22,9 @@ feature -- Test
 			-- Run all tests.
 		do
 			test_labels
+			test_polymorphic_labels
+			test_label_setters
+			test_polymorphic_label_setters
 			test_count
 			test_boolean_item
 			test_character_8_item
@@ -54,6 +57,84 @@ feature -- Test
 			assert ("t1_not_void", t1 /= Void)
 			assert_integers_equal ("l1", 5, t1.l1)
 			assert_same ("l2", s1, t1.l2)
+		end
+
+	test_polymorphic_labels is
+			-- Test polymorphic labeled tuples.
+		local
+			t1: TUPLE [l1: ANY]
+			s1: STRING
+			a1: ARRAY [CHARACTER]
+			a2: ARRAY [STRING]
+			l_expected: ANY
+			i: INTEGER
+		do
+			from i := 1 until i > 3 loop
+				inspect i
+				when 1 then
+					s1 := "gobo"
+					t1 := [s1]
+					l_expected := s1
+				when 2 then
+					create a1.make (1, 1)
+					t1 := [a1]
+					l_expected := a1
+				else
+					create a2.make (1, 1)
+					t1 := [a2]
+					l_expected := a2
+				end
+				assert ("t1_not_void", t1 /= Void)
+				assert_same ("l1", l_expected, t1.l1)
+				i := i + 1
+			end
+		end
+
+	test_label_setters is
+			-- Test labeled tuple setters.
+		local
+			t1: TUPLE [l1: INTEGER; l2: STRING]
+			s1, s2: STRING
+		do
+			s1 := "gobo"
+			t1 := [5, s1]
+			assert ("t1_not_void", t1 /= Void)
+			assert_integers_equal ("l1a", 5, t1.l1)
+			assert_same ("l2a", s1, t1.l2)
+			t1.l1 := 6
+			assert_integers_equal ("l1b", 6, t1.l1)
+			s2 := "foo"
+			t1.l2 := s2
+			assert_same ("l2b", s2, t1.l2)
+		end
+
+	test_polymorphic_label_setters is
+			-- Test polymorphic labeled tuple setters.
+		local
+			t1: TUPLE [l1: ANY; l2: CHARACTER]
+			s1: STRING
+			a1: ARRAY [CHARACTER]
+			a2: ARRAY [STRING]
+			i: INTEGER
+		do
+			from i := 1 until i > 3 loop
+				inspect i
+				when 1 then
+					s1 := "gobo"
+					t1 := [s1, 'a']
+				when 2 then
+					create a1.make (1, 1)
+					t1 := [a1, 'a']
+				else
+					create a2.make (1, 1)
+					t1 := ['z', 'a']
+				end
+				assert ("t1_not_void", t1 /= Void)
+				assert_characters_equal ("l2a", 'a', t1.l2)
+				t1.l2 := 'b'
+				assert_characters_equal ("l2b", 'b', t1.l2)
+				i := i + 1
+			end
 		end
 
 	test_count is

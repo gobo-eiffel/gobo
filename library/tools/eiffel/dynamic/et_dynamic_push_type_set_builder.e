@@ -22,12 +22,8 @@ inherit
 			build_tuple_put,
 			build_agent_call,
 			report_catcall_error,
-			report_agent_qualified_procedure_call,
-			report_agent_qualified_query_call,
 			report_manifest_array,
 			report_manifest_tuple,
-			report_qualified_call_expression,
-			report_qualified_call_instruction,
 			report_string_constant,
 			propagate_argument_dynamic_types,
 			propagate_argument_operand_dynamic_types,
@@ -40,7 +36,8 @@ inherit
 			propagate_creation_dynamic_type,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_like_argument_dynamic_types,
-			propagate_tuple_label_setter_dynamic_types
+			propagate_tuple_label_setter_dynamic_types,
+			propagate_qualified_call_target_dynamic_types
 		end
 
 create
@@ -290,28 +287,6 @@ feature {NONE} -- CAT-calls
 
 feature {NONE} -- Event handling
 
-	report_agent_qualified_procedure_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
-			-- Report the agent `an_expression' makes a qualified procedure call
-			-- on `a_target_type_set'.
-		local
-			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
-		do
-			create l_dynamic_procedure_call.make (an_expression, a_target_type_set, current_dynamic_feature, current_dynamic_type)
-			a_target_type_set.put_target (l_dynamic_procedure_call, current_system)
-			a_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
-		end
-
-	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
-			-- Report the agent `an_expression' makes a qualified query call
-			-- on `a_target_type_set' and returns `a_result_type_set'.
-		local
-			l_dynamic_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
-		do
-			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
-			a_target_type_set.put_target (l_dynamic_query_call, current_system)
-			a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
-		end
-
 	report_manifest_array (an_expression: ET_MANIFEST_ARRAY; a_type: ET_TYPE) is
 			-- Report that a manifest array of type `a_type' in context
 			-- of `current_type' has been processed.
@@ -414,85 +389,6 @@ feature {NONE} -- Event handling
 							i := i + 1
 						end
 					end
-				end
-			end
-		end
-
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
-			-- Report that a qualified call expression has been processed.
-		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
-			l_target: ET_EXPRESSION
-			l_type: ET_TYPE
-			l_like: ET_LIKE_FEATURE
-			l_actuals: ET_ACTUAL_ARGUMENTS
-			l_actual_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_TYPE
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_target := an_expression.target
-				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type sets of the
-						-- target should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_type := a_query.type
--- TODO: like argument (the following is just a workaround
--- which works only in a limited number of cases, in particular
--- for ANY.clone).
-					l_like ?= l_type
-					if l_like /= Void and then l_like.is_like_argument then
-						l_actuals := an_expression.arguments
-						if l_actuals /= Void and then l_actuals.count = 1 then
-							l_actual_type_set := dynamic_type_set (l_actuals.actual_argument (1))
-							if l_actual_type_set = Void then
-									-- Internal error: the dynamic type sets of the
-									-- arguments should be known at this stage.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								l_dynamic_type := l_actual_type_set.static_type
-							end
-						end
-					end
-					if l_dynamic_type = Void then
-						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
-					end
-					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
-						-- Unless proven otherwise after possible attachments,
-						-- the result is assumed to be never Void.
-					l_result_type_set.set_never_void
-					set_dynamic_type_set (l_result_type_set, an_expression)
-					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-					l_target_type_set.static_type.put_query_call (l_dynamic_call)
-					l_target_type_set.put_target (l_dynamic_call, current_system)
-				end
-			end
-		end
-
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
-			-- Report that a qualified call instruction has been processed.
-		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
-			l_target: ET_EXPRESSION
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_target := an_instruction.target
-				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type sets of the
-						-- target should be known at this stage.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					create l_dynamic_call.make (an_instruction, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
-					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end
 		end
@@ -772,6 +668,12 @@ feature {NONE} -- Implementation
 			else
 				l_source_type_set.put_target (a_target_type_set, current_system)
 			end
+		end
+
+	propagate_qualified_call_target_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+			-- Propagate the dynamic types of the target of `a_call' to the call itself.
+		do
+			a_call.target_type_set.put_target (a_call, current_system)
 		end
 
 end

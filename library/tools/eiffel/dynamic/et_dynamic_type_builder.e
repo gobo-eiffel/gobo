@@ -356,14 +356,10 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			-- Propagate `a_type' from target type set `a_call'.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_static_call: ET_CALL_COMPONENT
-			l_seed: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_static_call := a_call.static_call
-			if not l_static_call.name.is_tuple_label then
-				l_seed := l_static_call.name.seed
-				l_dynamic_feature := a_call.seeded_dynamic_feature (l_seed, a_type, current_system)
+			if not a_call.is_tuple_label then
+				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_system)
 				if l_dynamic_feature = Void then
 					l_target_type_set := a_call.target_type_set
 					if a_type.conforms_to_type (l_target_type_set.static_type, current_system) then
@@ -552,7 +548,6 @@ feature {NONE} -- CAT-calls
 			a_type_not_void: a_type /= Void
 			a_call_not_void: a_call /= Void
 		local
-			l_seed: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_actuals: ET_ARGUMENT_OPERANDS
 			l_current_feature: ET_DYNAMIC_FEATURE
@@ -563,47 +558,54 @@ feature {NONE} -- CAT-calls
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
 		do
-			l_seed := a_call.static_call.name.seed
-			l_dynamic_feature := a_call.seeded_dynamic_feature (l_seed, a_type, current_system)
-			if l_dynamic_feature = Void then
-					-- Internal error: there should be a feature with seed
-					-- `l_seed' in all descendants of `a_call.target_type_set.static_type'.
-				set_fatal_error
-				error_handler.report_giaaa_error
+			if a_call.is_tuple_label then
+-- TODO: check the case of Tuple label setter. For example:
+--   t1: TUPLE [l: ANY]
+--   t2: TUPLE [l: STRING]
+--   t1 := t2
+--   t1.l := 3
 			else
-				l_actuals := a_call.static_call.arguments
-				if l_actuals /= Void then
-					nb := l_actuals.count
-					if nb > 0 then
-						l_current_feature := a_call.current_feature
-						from i := 1 until i > nb loop
-							l_target_type_set := l_dynamic_feature.argument_type_set (i)
-							if l_target_type_set = Void then
-									-- Internal error: it has already been checked somewhere else
-									-- that there was the same number of formal arguments in
-									-- feature redeclaration.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								l_target_type := l_target_type_set.static_type
-								l_source_type_set := l_current_feature.dynamic_type_set (l_actuals.actual_argument (i))
-								if l_source_type_set = Void then
-										-- Internal error: the dynamic type sets of the actual
-										-- arguments should be known at this stage.
+				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_system)
+				if l_dynamic_feature = Void then
+						-- Internal error: there should be a feature in all
+						-- descendants of `a_call.target_type_set.static_type'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_actuals := a_call.static_call.arguments
+					if l_actuals /= Void then
+						nb := l_actuals.count
+						if nb > 0 then
+							l_current_feature := a_call.current_feature
+							from i := 1 until i > nb loop
+								l_target_type_set := l_dynamic_feature.argument_type_set (i)
+								if l_target_type_set = Void then
+										-- Internal error: it has already been checked somewhere else
+										-- that there was the same number of formal arguments in
+										-- feature redeclaration.
 									set_fatal_error
 									error_handler.report_giaaa_error
 								else
-									nb2 := l_source_type_set.count
-									from j := 1 until j > nb2 loop
-										l_source_type := l_source_type_set.dynamic_type (j)
-										if not l_source_type.conforms_to_type (l_target_type, current_system) then
-											report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
+									l_target_type := l_target_type_set.static_type
+									l_source_type_set := l_current_feature.dynamic_type_set (l_actuals.actual_argument (i))
+									if l_source_type_set = Void then
+											-- Internal error: the dynamic type sets of the actual
+											-- arguments should be known at this stage.
+										set_fatal_error
+										error_handler.report_giaaa_error
+									else
+										nb2 := l_source_type_set.count
+										from j := 1 until j > nb2 loop
+											l_source_type := l_source_type_set.dynamic_type (j)
+											if not l_source_type.conforms_to_type (l_target_type, current_system) then
+												report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
+											end
+											j := j + 1
 										end
-										j := j + 1
 									end
 								end
+								i := i + 1
 							end
-							i := i + 1
 						end
 					end
 				end
@@ -2498,6 +2500,7 @@ feature {NONE} -- Event handling
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.static_type.put_query_call (l_dynamic_call)
+					propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 				end
 			end
 		end
@@ -2505,21 +2508,22 @@ feature {NONE} -- Event handling
 	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
 			-- Report that a qualified call instruction has been processed.
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			l_target: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_target := an_instruction.target
-				l_dynamic_type_set := dynamic_type_set (l_target)
-				if l_dynamic_type_set = Void then
+				l_target_type_set := dynamic_type_set (l_target)
+				if l_target_type_set = Void then
 						-- Internal error: the dynamic type sets of the
 						-- target should be known at this stage.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					create l_dynamic_call.make (an_instruction, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
-					l_dynamic_type_set.static_type.put_procedure_call (l_dynamic_call)
+					create l_dynamic_call.make (an_instruction, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+					l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
+					propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 				end
 			end
 		end
@@ -2541,6 +2545,7 @@ feature {NONE} -- Event handling
 			l_actual: ET_AGENT_ARGUMENT_OPERAND
 			l_actual_expression: ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
@@ -2608,7 +2613,9 @@ feature {NONE} -- Event handling
 								end
 							end
 						end
-						report_agent_qualified_procedure_call (an_expression, l_target_type_set)
+						create l_dynamic_procedure_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+						l_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
+						propagate_qualified_call_target_dynamic_types (l_dynamic_procedure_call)
 					end
 				end
 			end
@@ -2712,21 +2719,6 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_agent_qualified_procedure_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
-			-- Report the agent `an_expression' makes a qualified procedure call
-			-- on `a_target_type_set'.
-		require
-			an_expression_not_void: an_expression /= Void
-			qualified_call_agent: an_expression.is_qualified_call
-			procedure_call: an_expression.is_procedure
-			a_target_type_set_not_void: a_target_type_set /= Void
-		local
-			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
-		do
-			create l_dynamic_procedure_call.make (an_expression, a_target_type_set, current_dynamic_feature, current_dynamic_type)
-			a_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
-		end
-
 	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
 			-- Report the agent `an_expression' makes a qualified query call
 			-- on `a_target_type_set' and returns `a_result_type_set'.
@@ -2741,6 +2733,7 @@ feature {NONE} -- Event handling
 		do
 			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
 			a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
+			propagate_qualified_call_target_dynamic_types (l_dynamic_query_call)
 		end
 
 	report_query_inline_agent (an_expression: ET_QUERY_INLINE_AGENT; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
@@ -2992,6 +2985,7 @@ feature {NONE} -- Event handling
 						error_handler.report_giaaa_error
 					else
 						set_dynamic_type_set (l_result_type_set, an_expression.implicit_result)
+						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
 					end
 				end
 			end
@@ -3006,6 +3000,7 @@ feature {NONE} -- Event handling
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_target := an_expression.target
@@ -3032,6 +3027,9 @@ feature {NONE} -- Event handling
 						else
 							l_dynamic_type_set := l_item_type_sets.item (l_index)
 							set_dynamic_type_set (l_dynamic_type_set, an_expression)
+							create l_dynamic_call.make (an_expression, l_target_type_set, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
+							l_tuple_type.put_query_call (l_dynamic_call)
+							propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 						end
 					end
 				end
@@ -3048,6 +3046,7 @@ feature {NONE} -- Event handling
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
 			l_label_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_call := an_assigner.call
@@ -3076,6 +3075,8 @@ feature {NONE} -- Event handling
 							l_label_type_set := l_item_type_sets.item (l_index)
 							set_dynamic_type_set (l_label_type_set, l_call)
 							propagate_tuple_label_setter_dynamic_types (an_assigner, l_label_type_set)
+							create l_dynamic_call.make (an_assigner, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+							l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
 						end
 					end
 				end
@@ -5716,6 +5717,14 @@ feature {NONE} -- Implementation
 			an_assigner_not_void: an_assigner /= Void
 			tuple_label: an_assigner.call.name.is_tuple_label
 			a_target_type_set_not_void: a_target_type_set /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_qualified_call_target_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+			-- Propagate the dynamic types of the target of `a_call' to the call itself.
+		require
+				a_call_not_void: a_call /= Void
 		do
 			-- Do nothing.
 		end

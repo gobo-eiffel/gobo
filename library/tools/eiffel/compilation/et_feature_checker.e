@@ -1948,6 +1948,7 @@ feature {NONE} -- Instruction validity
 					-- Check whether the query has an associated assigner procedure.
 				if l_name.is_tuple_label then
 					if not has_fatal_error then
+						an_instruction.set_name (l_name)
 						report_tuple_label_setter (an_instruction, l_target_context)
 					end
 				elseif l_query /= Void then

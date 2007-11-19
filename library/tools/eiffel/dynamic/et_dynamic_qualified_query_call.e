@@ -67,11 +67,11 @@ feature -- Access
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_seed: INTEGER; a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
-			-- Run-time query in `a_type' corresponding to current call with seed `a_seed';
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time query in `a_type' corresponding to current call;
 			-- Void if no such query
 		do
-			Result := a_type.seeded_dynamic_query (a_seed, a_system)
+			Result := a_type.seeded_dynamic_query (static_call.name.seed, a_system)
 		end
 
 feature {NONE} -- Implementation

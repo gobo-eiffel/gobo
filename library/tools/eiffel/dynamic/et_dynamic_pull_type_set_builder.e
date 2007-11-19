@@ -410,7 +410,6 @@ feature {NONE} -- CAT-calls
 	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Check whether target type `a_type' introduces CAT-calls in `a_call'.
 		local
-			l_seed: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_actuals: ET_ARGUMENT_OPERANDS
@@ -423,58 +422,65 @@ feature {NONE} -- CAT-calls
 			l_target_type: ET_DYNAMIC_TYPE
 			l_source: ET_DYNAMIC_ATTACHMENT
 		do
-			l_seed := a_call.static_call.name.seed
-			l_dynamic_feature := a_call.seeded_dynamic_feature (l_seed, a_type, current_system)
-			if l_dynamic_feature = Void then
-					-- Internal error: there should be a feature with seed
-					-- `l_seed' in all descendants of `target_type.static_type'.
-				set_fatal_error
-				error_handler.report_giaaa_error
+			if a_call.is_tuple_label then
+-- TODO: check the case of Tuple label setter. For example:
+--   t1: TUPLE [l: ANY]
+--   t2: TUPLE [l: STRING]
+--   t1 := t2
+--   t1.l := 3
 			else
-				l_actuals := a_call.static_call.arguments
-				if l_actuals /= Void then
-					nb := l_actuals.count
-					if nb > 0 then
-							-- Dynamic type sets for arguments are stored first
-							-- in `dynamic_type_sets'.
-						l_target_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-						if l_target_argument_type_sets.count < nb then
-								-- Internal error: it has already been checked somewhere else
-								-- that there was the same number of formal arguments in
-								-- feature redeclaration.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_current_feature := a_call.current_feature
-							from i := 1 until i > nb loop
-								l_target_type_set := l_target_argument_type_sets.item (i)
-								l_target_type := l_target_type_set.static_type
-								l_source_type_set := l_current_feature.dynamic_type_set (l_actuals.actual_argument (i))
-								if l_source_type_set = Void then
-										-- Internal error: the dynamic type sets of the actual
-										-- arguments should be known at this stage.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								else
-									nb2 := l_source_type_set.count
-									from j := 1 until j > nb2 loop
-										l_source_type := l_source_type_set.dynamic_type (j)
-										if not l_source_type.conforms_to_type (l_target_type, current_system) then
-											from
-												l_source := l_target_type_set.sources
-											until
-												l_source = Void
-											loop
-												if l_source.source_type_set = l_source_type_set then
-													report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_call)
+				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_system)
+				if l_dynamic_feature = Void then
+						-- Internal error: there should be a feature in all
+						-- descendants of `target_type.static_type'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_actuals := a_call.static_call.arguments
+					if l_actuals /= Void then
+						nb := l_actuals.count
+						if nb > 0 then
+								-- Dynamic type sets for arguments are stored first
+								-- in `dynamic_type_sets'.
+							l_target_argument_type_sets := l_dynamic_feature.dynamic_type_sets
+							if l_target_argument_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of formal arguments in
+									-- feature redeclaration.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_current_feature := a_call.current_feature
+								from i := 1 until i > nb loop
+									l_target_type_set := l_target_argument_type_sets.item (i)
+									l_target_type := l_target_type_set.static_type
+									l_source_type_set := l_current_feature.dynamic_type_set (l_actuals.actual_argument (i))
+									if l_source_type_set = Void then
+											-- Internal error: the dynamic type sets of the actual
+											-- arguments should be known at this stage.
+										set_fatal_error
+										error_handler.report_giaaa_error
+									else
+										nb2 := l_source_type_set.count
+										from j := 1 until j > nb2 loop
+											l_source_type := l_source_type_set.dynamic_type (j)
+											if not l_source_type.conforms_to_type (l_target_type, current_system) then
+												from
+													l_source := l_target_type_set.sources
+												until
+													l_source = Void
+												loop
+													if l_source.source_type_set = l_source_type_set then
+														report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_call)
+													end
+													l_source := l_source.next_attachment
 												end
-												l_source := l_source.next_attachment
 											end
+											j := j + 1
 										end
-										j := j + 1
 									end
+									i := i + 1
 								end
-								i := i + 1
 							end
 						end
 					end

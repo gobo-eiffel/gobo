@@ -62,7 +62,6 @@ feature {NONE} -- Initialization
 				end
 				i := i + 1
 			end
-			create agent_tuple_item_calls.make (nb)
 		ensure
 			base_type_set: base_type = a_type
 			base_class_set: base_class = a_class
@@ -73,12 +72,6 @@ feature -- Access
 
 	item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Type sets of items
-
-	agent_tuple_item_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_QUERY_CALL]
-			-- Calls to query the items of the tuple arguments passed to agent routines.
-			-- Current type as static type of these tuple arguments.
-			-- The calls are indexed by the index of the item in the tuple.
-			-- If there is not such call for a given index, then the entry in Void.
 
 feature -- Features
 
@@ -156,7 +149,5 @@ feature {NONE} -- Implementation
 invariant
 
 	item_type_sets_not_void: item_type_sets /= Void
-	agent_tuple_item_calls_not_void: agent_tuple_item_calls /= Void
-	agent_tuple_item_calls_count: agent_tuple_item_calls.count = item_type_sets.count
 
 end

@@ -148,9 +148,8 @@ feature {NONE} -- Initialization
 			header_file := null_output_stream
 			current_type := a_system.unknown_type
 			current_feature := dummy_feature
-			create internal_dynamic_type_sets.make_with_capacity (1000)
 			create extra_dynamic_type_sets.make_with_capacity (50)
-			current_dynamic_type_sets := internal_dynamic_type_sets
+			current_dynamic_type_sets := extra_dynamic_type_sets
 			create l_buffer.make (1024)
 			create current_function_header_buffer.make (l_buffer)
 			create l_buffer.make (100000)
@@ -612,6 +611,11 @@ feature {NONE} -- C code Generation
 				current_file.put_new_line
 				flush_to_c_file
 					-- Print polymorphic call functions.
+					-- We need to print polymorphic call functions now, because they
+					-- will populate `called_features' before we start traversing it.
+					-- Polymorphic calls to Tuple label functions are printed later
+					-- before some of them may be added when processing Agent calls
+					-- (see `print_builtin_routine_call_call').
 				print_polymorphic_query_call_functions
 				print_polymorphic_procedure_call_functions
 					-- Print Eiffel feature functions.
@@ -625,7 +629,7 @@ feature {NONE} -- C code Generation
 						print_feature (l_dynamic_feature)
 					end
 				end
-					-- Print polymorphic call to Tuple label functions.
+					-- Print polymorphic calls to Tuple label functions.
 				print_polymorphic_tuple_label_call_functions
 					-- Print features which build manifest arrays.
 				from manifest_array_types.start until manifest_array_types.after loop
@@ -703,7 +707,7 @@ feature {NONE} -- C code Generation
 				current_file := old_file
 				current_type := current_system.unknown_type
 				current_feature := dummy_feature
-				current_dynamic_type_sets := internal_dynamic_type_sets
+				current_dynamic_type_sets := extra_dynamic_type_sets
 			end
 			system_name := old_system_name
 		end
@@ -4237,7 +4241,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
 			l_name: ET_FEATURE_NAME
-			old_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_result: ET_RESULT
 			old_call_info: STRING
 		do
@@ -4363,16 +4366,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				--
 			current_file := current_function_body_buffer
 				-- Prepare dynamic type sets of wrapper feature.
-			old_dynamic_type_sets := current_dynamic_type_sets
-			internal_dynamic_type_sets.put_last (l_result_type_set)
-			current_dynamic_type_sets := internal_dynamic_type_sets
+			extra_dynamic_type_sets.force_last (l_result_type_set)
 				-- Prepare call expression to attribute feature.
 			l_name := a_feature.name
 			l_name.set_seed (a_feature.first_seed)
 			wrapper_expression.set_target (Void)
 			wrapper_expression.set_name (l_name)
 			wrapper_expression.set_arguments (Void)
-			wrapper_expression.set_index (1)
+			wrapper_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
 				-- Print assignment of call expression to result entity.
 			l_result := tokens.result_keyword
 			assignment_target := l_result
@@ -4391,8 +4392,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			end
 				-- Clean up.
 			call_operands.wipe_out
-			current_dynamic_type_sets := old_dynamic_type_sets
-			internal_dynamic_type_sets.wipe_out
+			extra_dynamic_type_sets.remove_last
 				-- Return attribute value.
 			print_indentation
 			current_file.put_string (c_return)
@@ -4423,69 +4423,8 @@ feature {NONE} -- Instruction generation
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
-		local
-			l_call: ET_FEATURE_CALL_EXPRESSION
-			l_tuple_expression: ET_EXPRESSION
-			l_tuple_type_set: ET_DYNAMIC_TYPE_SET
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
-			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_source: ET_EXPRESSION
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_seed: INTEGER
 		do
-			l_call := an_instruction.call
-			if l_call.name.is_tuple_label then
-				l_tuple_expression := l_call.target
-				l_tuple_type_set := dynamic_type_set (l_tuple_expression)
-				l_tuple_type ?= l_tuple_type_set.static_type
-				if l_tuple_type = Void then
-						-- Internal error: the type of `l_tuple_expression' should be
-						-- a Tuple type.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_item_type_sets := l_tuple_type.item_type_sets
-					l_seed := l_call.name.seed
-					if l_seed < 1 or l_seed > l_item_type_sets.count then
-							-- Internal error: invalid Tuple label.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_target_type_set := l_item_type_sets.item (l_seed)
-						l_source := an_instruction.source
-						l_source_type_set := dynamic_type_set (l_source)
-						print_operand (l_tuple_expression)
-						print_operand (l_source)
-							-- When printing the access to the Tuple item (the left-hand side of
-							-- the assignment), it is likely that `call_operands' will be used and
-							-- then wiped out (see `print_qualified_call_expression' which will be
-							-- called indirectly from `print_attribute_tuple_item_access').
-							-- Therefore, keep track of the source operand and put `call_operands'
-							-- in a clean state beforehand to avoid any problem.
-						fill_call_operands (1)
-						l_source := call_operands.first
-						call_operands.wipe_out
-							-- Process the tuple expression operand.
-						fill_call_operands (1)
-						print_indentation
-						print_attribute_tuple_item_access (l_seed, call_operands.first, l_tuple_type, True)
-						call_operands.wipe_out
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('(')
-							-- Process the saved copy of source operand now.
-						print_attachment_expression (l_source, l_source_type_set, l_target_type_set.static_type)
-						current_file.put_character (')')
-						current_file.put_character (';')
-						current_file.put_new_line
-						call_operands.wipe_out
-					end
-				end
-			else
-				print_qualified_call_instruction (an_instruction)
-			end
+			print_qualified_call_instruction (an_instruction)
 		end
 
 	print_assignment (an_instruction: ET_ASSIGNMENT) is
@@ -5411,6 +5350,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_target_dynamic_type: ET_DYNAMIC_TYPE
 			nb2: INTEGER
 			l_switch: BOOLEAN
+			l_printed: BOOLEAN
 		do
 			l_target := a_call.target
 			l_name := a_call.name
@@ -5482,7 +5422,19 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				print_named_procedure_call (a_call.name, l_target_dynamic_type, True)
 			else
 					-- Dynamic binding.
-				if nb2 > 2 then
+				if l_name.is_tuple_label then
+-- TODO: fields in Tuples are not necessarily aligned, and some need (un)boxing,
+-- for example:
+--    t1: TUPLE [a: ANY; b: INTEGER]
+--    t2: TUPLE [a: INTEGER_64; b: INTEGER]
+--    t1 := t2
+--    t1.a := {INTEGER_64} 3
+--    t1.b := 1
+-- But when there are aligned with no (un)boxing, we should avoid having polymorphic calls.
+				end
+				if l_printed then
+					-- Do nothing.
+				elseif nb2 > 2 then
 					print_indentation
 					print_call_name (a_call, current_feature, l_target_static_type, current_file)
 					current_file.put_character ('(')
@@ -5775,14 +5727,74 @@ feature {NONE} -- Procedure call generation
 			l_seed: INTEGER
 		do
 			l_seed := a_name.seed
-			l_dynamic_feature := a_target_type.seeded_dynamic_procedure (l_seed, current_system)
-			if l_dynamic_feature = Void then
-					-- Internal error: there should be a procedure with `l_seed'.
-					-- It has been computed in ET_FEATURE_CHECKER.
+			if a_name.is_tuple_label then
+				print_tuple_label_setter_call (a_name, a_target_type, a_check_void_target)
+			else
+				l_dynamic_feature := a_target_type.seeded_dynamic_procedure (l_seed, current_system)
+				if l_dynamic_feature = Void then
+						-- Internal error: there should be a procedure with `l_seed'.
+						-- It has been computed in ET_FEATURE_CHECKER.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					print_procedure_call (l_dynamic_feature, a_target_type, a_check_void_target)
+				end
+			end
+		end
+
+	print_tuple_label_setter_call (a_name: ET_CALL_NAME; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call to a Tuple label setter (static binding).
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_name_not_void: a_name /= Void
+			tuple_label: a_name.is_tuple_label
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_tuple_expression: ET_EXPRESSION
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
+			l_source: ET_EXPRESSION
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_seed: INTEGER
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: the Tuple label setter should have one argument.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				print_procedure_call (l_dynamic_feature, a_target_type, a_check_void_target)
+				l_tuple_type ?= a_target_type
+				if l_tuple_type = Void then
+						-- Internal error: the type of the target should be a Tuple type.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_seed := a_name.seed
+					l_item_type_sets := l_tuple_type.item_type_sets
+					if l_seed < 1 or l_seed > l_item_type_sets.count then
+							-- Internal error: invalid Tuple label.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						print_indentation
+						l_tuple_expression := call_operands.first
+						print_attribute_tuple_item_access (l_seed, l_tuple_expression, a_target_type, a_check_void_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						l_source := call_operands.item (2)
+						l_source_type_set := dynamic_type_set (l_source)
+						l_item_type_set := l_item_type_sets.item (l_seed)
+						print_attachment_expression (l_source, l_source_type_set, l_item_type_set.static_type)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
+				end
 			end
 		end
 
@@ -8160,7 +8172,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 --    t1 := t2
 --    any := t1.a
 --    int := t1.b
--- But when there are aligned with no (un)boxing, we should avoid having polymorphic call.s
+-- But when there are aligned with no (un)boxing, we should avoid having polymorphic calls.
 					else
 						l_query := l_target_static_type.base_class.seeded_query (l_seed)
 						if l_query = Void then
@@ -8181,51 +8193,51 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 							end
 						end
 					end
-					if not l_printed then
-						if nb2 = 2 then
-								-- First type.
-							l_target_dynamic_type := l_target_type_set.dynamic_type (1)
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
-							current_file.put_character ('=')
-							current_file.put_character ('=')
-							current_file.put_integer (l_target_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_character ('?')
-							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-							current_file.put_character (':')
-								-- Second type.
-							l_target_dynamic_type := l_target_type_set.dynamic_type (2)
-							print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
-							current_file.put_character (')')
-						else
-							print_call_name (a_call, current_feature, l_target_static_type, current_file)
-							current_file.put_character ('(')
-							if exception_trace_mode then
-								current_file.put_string (current_call_info)
+					if l_printed then
+						-- Do nothing.
+					elseif nb2 = 2 then
+							-- First type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (1)
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						print_attribute_type_id_access (call_operands.first, l_target_static_type, True)
+						current_file.put_character ('=')
+						current_file.put_character ('=')
+						current_file.put_integer (l_target_dynamic_type.id)
+						current_file.put_character (')')
+						current_file.put_character ('?')
+						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+						current_file.put_character (':')
+							-- Second type.
+						l_target_dynamic_type := l_target_type_set.dynamic_type (2)
+						print_adapted_named_query_call (l_name, l_target_dynamic_type, l_call_type, False)
+						current_file.put_character (')')
+					else
+						print_call_name (a_call, current_feature, l_target_static_type, current_file)
+						current_file.put_character ('(')
+						if exception_trace_mode then
+							current_file.put_string (current_call_info)
+							current_file.put_character (',')
+							current_file.put_character (' ')
+						end
+						print_target_expression (call_operands.first, l_target_static_type, True)
+						if l_manifest_tuple_operand /= Void then
+							nb := l_manifest_tuple_operand.count
+							from i := 1 until i > nb loop
 								current_file.put_character (',')
 								current_file.put_character (' ')
+								print_expression (l_manifest_tuple_operand.expression (i))
+								i := i + 1
 							end
-							print_target_expression (call_operands.first, l_target_static_type, True)
-							if l_manifest_tuple_operand /= Void then
-								nb := l_manifest_tuple_operand.count
-								from i := 1 until i > nb loop
-									current_file.put_character (',')
-									current_file.put_character (' ')
-									print_expression (l_manifest_tuple_operand.expression (i))
-									i := i + 1
-								end
-							else
-								from i := 2 until i > nb loop
-									current_file.put_character (',')
-									current_file.put_character (' ')
-									print_expression (call_operands.item (i))
-									i := i + 1
-								end
+						else
+							from i := 2 until i > nb loop
+								current_file.put_character (',')
+								current_file.put_character (' ')
+								print_expression (call_operands.item (i))
+								i := i + 1
 							end
-							current_file.put_character (')')
 						end
+						current_file.put_character (')')
 					end
 				end
 				if in_operand then
@@ -11370,7 +11382,6 @@ feature {NONE} -- Polymorphic call functions generation
 			l_first_call, l_last_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_call, l_previous_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_seed: INTEGER
-			l_is_tuple_label: BOOLEAN
 			i, nb: INTEGER
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_call: ET_CALL_COMPONENT
@@ -11390,13 +11401,12 @@ feature {NONE} -- Polymorphic call functions generation
 							-- are handled differently.
 							-- (See `print_qualified_call_expression'.)
 						l_first_call := l_first_call.next
-					elseif l_first_call.static_call.name.is_tuple_label then
+					elseif l_first_call.is_tuple_label then
 							-- Polymorphic calls to Tuple labels are handled differently.
 						l_first_call := l_first_call.next
 					else
 						l_static_call := l_first_call.static_call
 						l_seed := l_static_call.name.seed
-						l_is_tuple_label := l_static_call.name.is_tuple_label
 						from
 							l_last_call := l_first_call
 							l_previous_call := l_first_call
@@ -11405,7 +11415,7 @@ feature {NONE} -- Polymorphic call functions generation
 							l_call = Void
 						loop
 							l_target_type_set := l_call.target_type_set
-							if (l_call.static_call.name.seed = l_seed and l_call.static_call.name.is_tuple_label = l_is_tuple_label) and then l_target_type_set.count > 2 and then same_declared_signature (l_call, l_first_call) then
+							if (l_call.static_call.name.seed = l_seed and not l_call.is_tuple_label) and then l_target_type_set.count > 2 and then same_declared_signature (l_call, l_first_call) then
 								if l_call /= l_last_call.next then
 									l_previous_call.set_next (l_call.next)
 									l_call.set_next (l_last_call.next)
@@ -11448,7 +11458,7 @@ feature {NONE} -- Polymorphic call functions generation
 						l_first_call = Void
 					loop
 						l_target_type_set := l_first_call.target_type_set
-						if not l_first_call.static_call.name.is_tuple_label then
+						if not l_first_call.is_tuple_label then
 								-- Skip calls that are not to a Tuple label.
 							l_first_call := l_first_call.next
 						elseif l_target_type_set.count <= 2 then
@@ -11467,7 +11477,7 @@ feature {NONE} -- Polymorphic call functions generation
 								l_call = Void
 							loop
 								l_target_type_set := l_call.target_type_set
-								if (l_call.static_call.name.seed = l_seed and l_call.static_call.name.is_tuple_label) and then l_target_type_set.count > 2 and then same_declared_signature (l_call, l_first_call) then
+								if (l_call.static_call.name.seed = l_seed and l_call.is_tuple_label) and then l_target_type_set.count > 2 and then same_declared_signature (l_call, l_first_call) then
 									if l_call /= l_last_call.next then
 										l_previous_call.set_next (l_call.next)
 										l_call.set_next (l_last_call.next)
@@ -11499,6 +11509,7 @@ feature {NONE} -- Polymorphic call functions generation
 			i, nb: INTEGER
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_static_call: ET_CALL_COMPONENT
+			l_is_tuple_label: BOOLEAN
 		do
 			l_dynamic_types := current_system.dynamic_types
 			nb := l_dynamic_types.count
@@ -11518,6 +11529,7 @@ feature {NONE} -- Polymorphic call functions generation
 					else
 						l_static_call := l_first_call.static_call
 						l_seed := l_static_call.name.seed
+						l_is_tuple_label := l_static_call.is_tuple_label
 						from
 							l_last_call := l_first_call
 							l_previous_call := l_first_call
@@ -11526,7 +11538,7 @@ feature {NONE} -- Polymorphic call functions generation
 							l_call = Void
 						loop
 							l_target_type_set := l_call.target_type_set
-							if l_call.static_call.name.seed = l_seed and then l_target_type_set.count > 2 and then same_declared_signature (l_call, l_first_call) then
+							if (l_call.static_call.name.seed = l_seed and l_call.is_tuple_label = l_is_tuple_label) and then l_target_type_set.count > 2 and then same_declared_signature (l_call, l_first_call) then
 								if l_call /= l_last_call.next then
 									l_previous_call.set_next (l_call.next)
 									l_call.set_next (l_last_call.next)
@@ -11593,7 +11605,7 @@ feature {NONE} -- Polymorphic call functions generation
 			l_static_call := a_first_call.static_call
 			l_caller := a_first_call.current_feature
 			l_actual_arguments := l_static_call.arguments
-			if l_static_call.name.is_tuple_label then
+			if l_static_call.is_tuple_label then
 				call_operands.wipe_out
 				call_operands.force_last (tokens.current_keyword)
 				l_index := l_static_call.name.seed
@@ -11606,7 +11618,12 @@ feature {NONE} -- Polymorphic call functions generation
 						-- Internal error: invalid Tuple label.
 					set_fatal_error
 					error_handler.report_giaaa_error
+				elseif l_actual_arguments /= Void and then not l_actual_arguments.is_empty then
+						-- This is a Tuple label setter.
+					l_formal_arguments_count := 1
+					call_operands.force_last (formal_argument (1))
 				else
+						-- This is a Tuple label getter.
 					l_result_type := l_tuple_type.item_type_sets.item (l_index).static_type
 				end
 			else
@@ -11748,7 +11765,11 @@ feature {NONE} -- Polymorphic call functions generation
 						print_type_declaration (l_argument_type, current_file)
 						header_file.put_character (' ')
 						current_file.put_character (' ')
-						l_name := l_formal_arguments.formal_argument (i).name
+						if l_formal_arguments /= Void then
+							l_name := l_formal_arguments.formal_argument (i).name
+						else
+							l_name := formal_argument (i)
+						end
 						print_argument_name (l_name, header_file)
 						print_argument_name (l_name, current_file)
 						i := i + 1
@@ -11987,7 +12008,7 @@ feature {NONE} -- Polymorphic call functions generation
 			a_call2_not_void: a_call2 /= Void
 			same_target_type: a_call1.target_type_set.static_type = a_call2.target_type_set.static_type
 			same_seed: a_call1.static_call.name.seed = a_call2.static_call.name.seed
-			same_kind: a_call1.static_call.name.is_tuple_label = a_call2.static_call.name.is_tuple_label
+			same_kind: a_call1.is_tuple_label = a_call2.is_tuple_label
 		local
 			l_args1, l_args2: ET_ARGUMENT_OPERANDS
 			l_feature1, l_feature2: ET_DYNAMIC_FEATURE
@@ -12017,7 +12038,7 @@ feature {NONE} -- Polymorphic call functions generation
 						l_type_set2 := dynamic_type_set_in_feature (l_args2.actual_argument (i), l_feature2)
 						if nb = 1 then
 							l_seed := a_call1.static_call.name.seed
-							if not a_call1.static_call.name.is_tuple_label and then (l_seed = universe.routine_call_seed or l_seed = universe.function_item_seed) then
+							if not a_call1.is_tuple_label and then (l_seed = universe.routine_call_seed or l_seed = universe.function_item_seed) then
 								l_manifest_tuple1 ?= l_args1.actual_argument (1)
 								l_manifest_tuple2 ?= l_args2.actual_argument (1)
 							end
@@ -12071,7 +12092,7 @@ feature {NONE} -- Polymorphic call functions generation
 				nb := nb_args
 				if nb_args = 1 then
 					l_seed := a_first_call.static_call.name.seed
-					if not a_first_call.static_call.name.is_tuple_label and then (l_seed = universe.routine_call_seed or l_seed = universe.function_item_seed) then
+					if not a_first_call.is_tuple_label and then (l_seed = universe.routine_call_seed or l_seed = universe.function_item_seed) then
 						l_manifest_tuple ?= l_actual_arguments.actual_argument (1)
 						if l_manifest_tuple /= Void then
 							nb := l_manifest_tuple.count + 1
@@ -15086,8 +15107,6 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_conforming_types: ET_DYNAMIC_TYPE_LIST
 			l_has_non_conforming_types: BOOLEAN
 			i, nb: INTEGER
-			old_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			old_tuple_index: INTEGER
 			l_tuple_item_expression: ET_CALL_EXPRESSION
 			old_target: ET_EXPRESSION
@@ -15241,22 +15260,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				nb := l_open_operand_type_sets.count
 				if nb > 0 then
 						-- Prepare dynamic type sets.
-					old_dynamic_type_sets := current_dynamic_type_sets
-					l_dynamic_type_sets := internal_dynamic_type_sets
-					current_dynamic_type_sets := l_dynamic_type_sets
-					l_dynamic_type_sets.resize (old_dynamic_type_sets.count + 2)
-					if l_dynamic_type_sets /= old_dynamic_type_sets then
-							-- When we were already using the `internal_dynamic_type_sets'
-							-- as `current_dynamic_type_sets', then there is no need to
-							-- copy the dynamic type sets from one list to the other.
-						l_dynamic_type_sets.append_last (old_dynamic_type_sets)
-					end
 						-- Temporarily change the dynamic type set of the
 						-- tuple so that it is only made up of conforming
 						-- type, without any remaining CAT-call problems.
-					l_dynamic_type_sets.put_last (l_tuple_conforming_type_set)
+					extra_dynamic_type_sets.force_last (l_tuple_conforming_type_set)
 					old_tuple_index := l_tuple.index
-					l_tuple.set_index (l_dynamic_type_sets.count)
+					l_tuple.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
 						-- Mark the temporary variable representing the tuple and the
 						-- routine object as frozen so that they are not reused in any
 						-- way when printing the tuple item extract expressions.
@@ -15273,41 +15282,29 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character (',')
 						current_file.put_character (' ')
 							-- Prepare the expression to extract the tuple item.
-						l_dynamic_type_sets.put_last (l_open_operand_type_sets.item (i))
+						extra_dynamic_type_sets.force_last (l_open_operand_type_sets.item (i))
 						l_tuple_item_expression := new_agent_tuple_item_expression (i)
 						old_target := l_tuple_item_expression.target
 						l_tuple_item_expression.set_target (l_tuple)
-						l_tuple_item_expression.set_index (l_dynamic_type_sets.count)
+						l_tuple_item_expression.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
 							-- Register the call to extract the tuple item so that
 							-- it is handled correctly in case of polymorphism.
-						l_query_call := l_tuple_target_type.agent_tuple_item_calls.item (i)
-						if l_query_call = Void then
+							-- The special treatment for polymorphism only occurs
+							-- when the target has more than 2 possible dynamic types.
+						if l_tuple_conforming_type_set.count > 2 then
 							create l_query_target_type_set.make (l_tuple_target_type)
 							if l_tuple_conforming_type_set.is_never_void then
 								l_query_target_type_set.set_never_void
 							end
 							l_query_target_type_set.put_types (l_tuple_conforming_type_set)
 							create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_tuple_target_type.item_type_sets.item (i), current_feature, current_type)
-							l_tuple_target_type.agent_tuple_item_calls.replace (l_query_call, i)
 							l_tuple_target_type.put_query_call (l_query_call)
-						else
-							l_query_target_type_set ?= l_query_call.target_type_set
-							if l_query_target_type_set /= Void then
-								l_query_target_type_set.put_types (l_tuple_conforming_type_set)
-								if not l_tuple_conforming_type_set.is_never_void then
-									l_query_target_type_set.propagate_can_be_void (l_tuple_conforming_type_set)
-								end
-							else
-									-- Internal error: we expected to have a standalone dynamic type set here.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							end
 						end
 							-- Print the actual call to extract the tuple item.
 						print_attachment_expression (l_tuple_item_expression, l_open_operand_type_sets.item (i), l_open_operand_type_sets.item (i).static_type)
 							-- Clean up.
 						l_tuple_item_expression.set_target (old_target)
-						l_dynamic_type_sets.remove_last
+						extra_dynamic_type_sets.remove_last
 							-- No need to check for the void-ness of the tuple when accessing
 							-- each of its items. The first time is enough.
 						l_tuple_conforming_type_set.set_never_void
@@ -15315,16 +15312,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					end
 						-- Clean up.
 					l_tuple.set_index (old_tuple_index)
-					current_dynamic_type_sets := old_dynamic_type_sets
-					if l_dynamic_type_sets /= old_dynamic_type_sets then
-						l_dynamic_type_sets.wipe_out
-					else
-							-- We were already using `internal_dynamic_type_sets' as
-							-- `current_dynamic_type_sets'. We just have to remove the
-							-- dynamic type set that have been inserted here, and
-							-- leave all the others as they were before.
-						l_dynamic_type_sets.remove_last
-					end
+					extra_dynamic_type_sets.remove_last
 						-- Put back the operands of current call onto `call_operands'.
 					call_operands.put_last (l_routine_object)
 					call_operands.put_last (l_tuple)
@@ -21783,7 +21771,7 @@ feature {NONE} -- Feature name generation
 				l_arguments := a_call.arguments
 				print_type_name (a_target_type, a_file)
 				a_file.put_character ('x')
-				if a_call.name.is_tuple_label then
+				if a_call.is_tuple_label then
 					a_file.put_character ('t')
 				elseif l_seed = universe.routine_call_seed or l_seed = universe.function_item_seed then
 					if l_arguments /= Void and then l_arguments.count = 1 then
@@ -22086,7 +22074,7 @@ feature {NONE} -- Feature name generation
 			a_file.put_character ('.')
 			a_file.put_string (STRING_.replaced_all_substrings (a_call.name.lower_name, "*/", "star/"))
 			l_seed := a_call.name.seed
-			if a_call.name.is_tuple_label then
+			if a_call.is_tuple_label then
 				a_file.put_string (once " (label on item #")
 				a_file.put_integer (l_seed)
 				a_file.put_character (')')
@@ -23320,9 +23308,6 @@ feature {NONE} -- Dynamic type sets
 	current_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within feature being printed
 
-	internal_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			-- Dynamic type sets used internally when needed
-
 	extra_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Extra dynamic type sets used internally when needed
 
@@ -23640,7 +23625,7 @@ feature {NONE} -- Formal arguments
 
 	formal_argument (i: INTEGER): ET_IDENTIFIER is
 			-- Formal argument at index `i'
-			-- Note: to be used only functions that are not the direct
+			-- Note: to be used only in functions that are not the direct
 			-- translation of an Eiffel feature. Otherwise we should use
 			-- the corresponding formal argument in that Eiffel feature
 			-- (e.g. 'a_feature.arguments.formal_argument (i).name').
@@ -24196,7 +24181,6 @@ invariant
 	no_void_dynamic_type_id_set: not dynamic_type_id_set_names.has (Void)
 	current_dynamic_type_sets_not_void: current_dynamic_type_sets /= Void
 	extra_dynamic_type_sets_not_void: extra_dynamic_type_sets /= Void
-	internal_dynamic_type_sets_not_void: internal_dynamic_type_sets /= Void
 	agent_tuple_item_expressions_not_void: agent_tuple_item_expressions /= Void
 	agent_manifest_tuple_not_void: agent_manifest_tuple /= Void
 	formal_arguments_not_void: formal_arguments /= Void
