@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date:"
-	revision: "$Revision: "
+	date: "$Date$"
+	revision: "$Revision$"
 
 class XM_XPATH_INVALID_ITEM
 
@@ -61,7 +61,7 @@ feature -- Access
 		do
 			-- pre-condition cannot be met
 		end
-	
+
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		do
@@ -78,7 +78,7 @@ feature -- Status report
 
 	is_error: BOOLEAN
 			-- Has item failed evaluation?
-	
+
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
 
@@ -104,4 +104,4 @@ invariant
 	item_in_error: is_error
 
 end
-	
+
