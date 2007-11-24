@@ -92,4 +92,9 @@ feature -- Basic operations
 		deferred
 		end
 
+feature {ROUTINE} -- Implementation
+
+	frozen closed_operands: TUPLE
+			-- All closed arguments provided at creation time
+
 end

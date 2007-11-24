@@ -30,6 +30,8 @@ feature -- Test
 			test_call_unqualified1
 			test_valid_operands
 			test_boxed_operands
+			test_twin
+			test_deep_twin
 		end
 
 	test_call_qualified1 is
@@ -455,6 +457,38 @@ feature -- Test
 			t := [s, 1]
 			p2.call (t)
 			assert_same ("call5", s, a.item (1))
+		end
+
+	test_twin is
+			-- Test feature 'twin'.
+		local
+			a: ARRAY [CHARACTER]
+			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
+		do
+				-- Test that 'twin' does not twin the closed operands.
+				-- Here the array has not been twined.
+			create a.make (1, 1)
+			p1 := agent f (a, ?, 1)
+			p1.call (['g'])
+			assert_characters_equal ("item1a", 'g', a.item (1))
+			p1 := p1.twin
+			p1.call (['f'])
+			assert_characters_equal ("item1b", 'f', a.item (1))
+		end
+
+	test_deep_twin is
+			-- Test feature 'deep_twin'.
+		local
+			a: ARRAY [CHARACTER]
+			p1: PROCEDURE [ANY, TUPLE [CHARACTER]]
+		do
+			create a.make (1, 1)
+			p1 := agent f (a, ?, 1)
+			p1.call (['g'])
+			assert_characters_equal ("item1a", 'g', a.item (1))
+			p1 := p1.deep_twin
+			p1.call (['f'])
+			assert_characters_equal ("item1b", 'g', a.item (1))
 		end
 
 feature {NONE} -- Implementation

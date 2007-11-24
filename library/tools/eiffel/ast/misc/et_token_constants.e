@@ -774,6 +774,14 @@ feature -- Feature names
 			character_bytes_feature_name_not_void: Result /= Void
 		end
 
+	closed_operands_feature_name: ET_FEATURE_NAME is
+			-- 'closed_operands' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (closed_operands_name)
+		ensure
+			closed_operands_feature_name_not_void: Result /= Void
+		end
+
 	code_feature_name: ET_FEATURE_NAME is
 			-- 'code' feature name
 		once
@@ -2609,6 +2617,9 @@ feature -- Keyword and symbol names
 
 	character_bytes_name: STRING is "character_bytes"
 		-- Name of Eiffel feature 'character_bytes'
+
+	closed_operands_name: STRING is "closed_operands"
+		-- Name of Eiffel feature 'closed_operands'
 
 	code_name: STRING is "code"
 		-- Name of Eiffel feature 'code'

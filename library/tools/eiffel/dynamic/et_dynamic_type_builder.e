@@ -1990,6 +1990,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
+				propagate_agent_closed_operands_dynamic_types (an_expression, l_agent_type)
 			end
 		end
 
@@ -2227,7 +2228,7 @@ feature {NONE} -- Event handling
 						l_area_type_set.static_type.set_alive
 					end
 				end
-					-- Make sure that type INTEGER (used in attributess 'lower' and 'upper') is marked as alive.
+					-- Make sure that type INTEGER (used in attributes 'lower' and 'upper') is marked as alive.
 				current_system.integer_type.set_alive
 			end
 		end
@@ -2531,103 +2532,27 @@ feature {NONE} -- Event handling
 	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that a qualified procedure call (to `a_procedure') agent
 			-- of type `an_agent_type' in `a_context' has been processed.
-		local
-			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_agent_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_target: ET_AGENT_TARGET
-			l_target_expression: ET_EXPRESSION
-			i, nb: INTEGER
-			j, nb2: INTEGER
-			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
-			l_actual: ET_AGENT_ARGUMENT_OPERAND
-			l_actual_expression: ET_EXPRESSION
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
-				l_dynamic_type.set_alive
-				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_dynamic_agent_type ?= l_dynamic_type
-				if l_dynamic_agent_type = Void then
-						-- Internal error: the dynamic type of an agent should be an agent type.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
-					nb2 := l_open_operand_type_sets.count
-					l_target := an_expression.target
-					l_target_expression ?= l_target
-					if l_target_expression /= Void then
-						l_target_type_set := dynamic_type_set (l_target_expression)
-					else
-							-- The agent is of the form:   agent {TYPE}.f
-							-- The dynamic type set of the target is the first of open operand dynamic type sets.
-						j := 1
-						if not l_open_operand_type_sets.is_empty then
-							l_target_type_set := l_open_operand_type_sets.item (1)
-							set_dynamic_type_set (l_target_type_set, l_target)
-						end
-					end
-					if l_target_type_set = Void then
-							-- Internal error: the dynamic type sets of the
-							-- target should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_dynamic_feature := l_target_type_set.static_type.dynamic_procedure (a_procedure, current_system)
-						l_dynamic_feature.set_regular (True)
-							-- Set dynamic type sets of open operands.
-						l_actuals := an_expression.arguments
-						if l_actuals /= Void then
-							nb := l_actuals.count
-							if nb = 0 then
-								-- Do nothing.
-							else
-								from i := 1 until i > nb loop
-									l_actual := l_actuals.actual_argument (i)
-									l_actual_expression ?= l_actual
-									if l_actual_expression /= Void then
-										-- Do nothing.
-									else
-											-- Open operand.
-										j := j + 1
-										if j > nb2 then
-												-- Internal error: missing open operands.
-											set_fatal_error
-											error_handler.report_giaaa_error
-										else
-											l_dynamic_type_set := l_open_operand_type_sets.item (j)
-											set_dynamic_type_set (l_dynamic_type_set, l_actual)
-										end
-									end
-									i := i + 1
-								end
-								if j < nb2 then
-										-- Internal error: too many open operands.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								end
-							end
-						end
-						create l_dynamic_procedure_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-						l_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
-						propagate_qualified_call_target_dynamic_types (l_dynamic_procedure_call)
-					end
-				end
+				report_qualified_call_agent (an_expression, a_procedure, an_agent_type, a_context)
 			end
 		end
 
 	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that a qualified query call (to `a_query') agent
 			-- of type `an_agent_type' in `a_context' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+				report_qualified_call_agent (an_expression, a_query, an_agent_type, a_context)
+			end
+		end
+
+	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; an_agent_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a qualified  call (to `a_feature') agent
+			-- of type `an_agent_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_agent_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_AGENT_TARGET
@@ -2639,83 +2564,82 @@ feature {NONE} -- Event handling
 			l_actual_expression: ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
-			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
-				l_dynamic_type.set_alive
-				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_dynamic_agent_type ?= l_dynamic_type
-				if l_dynamic_agent_type = Void then
-						-- Internal error: the dynamic type of an agent should be an agent type.
+			l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
+			l_dynamic_type.set_alive
+			set_dynamic_type_set (l_dynamic_type, an_expression)
+			l_dynamic_agent_type ?= l_dynamic_type
+			if l_dynamic_agent_type = Void then
+					-- Internal error: the dynamic type of an agent should be an agent type.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
+				nb2 := l_open_operand_type_sets.count
+				l_target := an_expression.target
+				l_target_expression ?= l_target
+				if l_target_expression /= Void then
+					l_target_type_set := dynamic_type_set (l_target_expression)
+				else
+						-- The agent is of the form:   agent {TYPE}.f
+						-- The dynamic type set of the target is the first of open operand dynamic type sets.
+					j := 1
+					if not l_open_operand_type_sets.is_empty then
+						l_target_type_set := l_open_operand_type_sets.item (1)
+						set_dynamic_type_set (l_target_type_set, l_target)
+					end
+				end
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- target should be known at this stage.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_open_operand_type_sets := l_dynamic_agent_type.open_operand_type_sets
-					nb2 := l_open_operand_type_sets.count
-					l_target := an_expression.target
-					l_target_expression ?= l_target
-					if l_target_expression /= Void then
-						l_target_type_set := dynamic_type_set (l_target_expression)
-					else
-							-- The agent is of the form:   agent {TYPE}.f
-							-- The dynamic type set of the target is the first of open operand dynamic type sets.
-						j := 1
-						if not l_open_operand_type_sets.is_empty then
-							l_target_type_set := l_open_operand_type_sets.item (1)
-							set_dynamic_type_set (l_target_type_set, l_target)
+						-- Set dynamic type sets of open operands.
+					l_actuals := an_expression.arguments
+					if l_actuals /= Void then
+						nb := l_actuals.count
+						if nb = 0 then
+							-- Do nothing.
+						else
+							from i := 1 until i > nb loop
+								l_actual := l_actuals.actual_argument (i)
+								l_actual_expression ?= l_actual
+								if l_actual_expression /= Void then
+									-- Do nothing.
+								else
+										-- Open operand.
+									j := j + 1
+									if j > nb2 then
+											-- Internal error: missing open operands.
+										set_fatal_error
+										error_handler.report_giaaa_error
+									else
+										l_dynamic_type_set := l_open_operand_type_sets.item (j)
+										set_dynamic_type_set (l_dynamic_type_set, l_actual)
+									end
+								end
+								i := i + 1
+							end
+							if j < nb2 then
+									-- Internal error: too many open operands.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							end
 						end
 					end
 					l_result_type_set := l_dynamic_agent_type.result_type_set
-					if l_target_type_set = Void then
-							-- Internal error: the dynamic type sets of the
-							-- target should be known at this stage.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					elseif l_result_type_set = Void then
-							-- Internal error: if the corresponding feature is a query
-							-- then the result type set should not be Void.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_dynamic_feature := l_target_type_set.static_type.dynamic_query (a_query, current_system)
-						l_dynamic_feature.set_regular (True)
-							-- Set dynamic type sets of open operands.
-						l_actuals := an_expression.arguments
-						if l_actuals /= Void then
-							nb := l_actuals.count
-							if nb = 0 then
-								-- Do nothing.
-							else
-								from i := 1 until i > nb loop
-									l_actual := l_actuals.actual_argument (i)
-									l_actual_expression ?= l_actual
-									if l_actual_expression /= Void then
-										-- Do nothing.
-									else
-											-- Open operand.
-										j := j + 1
-										if j > nb2 then
-												-- Internal error: missing open operands.
-											set_fatal_error
-											error_handler.report_giaaa_error
-										else
-											l_dynamic_type_set := l_open_operand_type_sets.item (j)
-											set_dynamic_type_set (l_dynamic_type_set, l_actual)
-										end
-									end
-									i := i + 1
-								end
-								if j < nb2 then
-										-- Internal error: too many open operands.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								end
-							end
-						end
+					if l_result_type_set /= Void then
 						set_dynamic_type_set (l_result_type_set, an_expression.implicit_result)
 						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
+					else
+						create l_dynamic_procedure_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+						l_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
+						propagate_qualified_call_target_dynamic_types (l_dynamic_procedure_call)
 					end
 				end
+				propagate_agent_closed_operands_dynamic_types (an_expression, l_dynamic_agent_type)
 			end
 		end
 
@@ -3407,6 +3331,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
+				propagate_agent_closed_operands_dynamic_types (an_expression, l_agent_type)
 			end
 		end
 
@@ -5591,6 +5516,16 @@ feature {ET_FEATURE_CHECKER} -- Access
 			-- Index of dynamic type set of string expressions in `dynamic_type_sets'
 
 feature {NONE} -- Implementation
+
+	propagate_agent_closed_operands_dynamic_types (an_agent: ET_AGENT; an_agent_type: ET_DYNAMIC_ROUTINE_TYPE) is
+			-- Propagate dynamic types of closed operands of `an_agent' to the
+			-- dynamic type set of the attribute 'closed_operands' of `an_agent_type'.
+		require
+			an_agent_not_void: an_agent /= Void
+			an_agent_type_not_void: an_agent_type /= Void
+		do
+			-- Do nothing.
+		end
 
 	propagate_argument_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal_type_set: ET_DYNAMIC_TYPE_SET) is
 			-- Propagate dynamic types of actual argument `an_actual'

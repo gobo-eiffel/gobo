@@ -25,6 +25,7 @@ inherit
 			report_manifest_array,
 			report_manifest_tuple,
 			report_string_constant,
+			propagate_agent_closed_operands_dynamic_types,
 			propagate_argument_dynamic_types,
 			propagate_argument_operand_dynamic_types,
 			propagate_assignment_dynamic_types,
@@ -438,6 +439,113 @@ feature {NONE} -- Event handling
 		end
 
 feature {NONE} -- Implementation
+
+	propagate_agent_closed_operands_dynamic_types (an_agent: ET_AGENT; an_agent_type: ET_DYNAMIC_ROUTINE_TYPE) is
+			-- Propagate dynamic types of closed operands of `an_agent' to the
+			-- dynamic type set of the attribute 'closed_operands' of `an_agent_type'.
+		local
+			l_operand: ET_OPERAND
+			l_arguments: ET_AGENT_ARGUMENT_OPERANDS
+			i, nb_args: INTEGER
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_tuple_type: ET_TUPLE_TYPE
+			l_dynamic_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			j, nb_items: INTEGER
+		do
+			l_arguments := an_agent.arguments
+			if l_arguments /= Void then
+				nb_args := l_arguments.count
+			end
+			create l_parameters.make_with_capacity (nb_args + 1)
+			from i := nb_args until i < 1 loop
+				l_operand := l_arguments.actual_argument (i)
+				if not l_operand.is_open_operand then
+					l_dynamic_type_set := dynamic_type_set (l_operand)
+					if l_dynamic_type_set = Void then
+							-- Internal error: the dynamic type set of the closed
+							-- operand should be known at this stage.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
+					end
+				end
+				i := i - 1
+			end
+			l_operand := an_agent.target
+			if not l_operand.is_open_operand then
+				l_dynamic_type_set := dynamic_type_set (l_operand)
+				if l_dynamic_type_set = Void then
+						-- Internal error: the dynamic type set of the closed
+						-- operand should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
+				end
+			end
+			create l_tuple_type.make (l_parameters)
+			l_dynamic_tuple_type ?= current_system.dynamic_type (l_tuple_type, universe.any_type)
+			if l_dynamic_tuple_type = Void then
+					-- Internal error: the dynamic type of a Tuple type
+					-- should be a dynamic tuple type.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_dynamic_tuple_type.set_alive
+				if an_agent_type.attribute_count = 0 then
+						-- Internal error: missing feature 'closed_operands' in the Agent type,
+						-- already reported in ET_SYSTEM.compile_kernel.
+					set_fatal_error
+				else
+					l_dynamic_tuple_type.put_target (an_agent_type.queries.item (1).result_type_set, current_system)
+					l_item_type_sets := l_dynamic_tuple_type.item_type_sets
+					j := 1
+					nb_items := l_item_type_sets.count
+					l_operand := an_agent.target
+					if not l_operand.is_open_operand then
+						l_dynamic_type_set := dynamic_type_set (l_operand)
+						if l_dynamic_type_set = Void then
+								-- Internal error: the dynamic type set of the closed
+								-- operand should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif j > nb_items then
+								-- Internal error: there is a mismatch between the number of closed
+								-- operands and the size of the corresponding Tuple.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_system)
+							j := j + 1
+						end
+					end
+					from i := 1 until i > nb_args loop
+						l_operand := l_arguments.actual_argument (i)
+						if not l_operand.is_open_operand then
+							l_dynamic_type_set := dynamic_type_set (l_operand)
+							if l_dynamic_type_set = Void then
+									-- Internal error: the dynamic type set of the closed
+									-- operand should be known at this stage.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							elseif j > nb_items then
+									-- Internal error: there is a mismatch between the number of closed
+									-- operands and the size of the corresponding Tuple.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_system)
+								j := j + 1
+							end
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
 
 	propagate_argument_dynamic_types (an_actual: ET_ARGUMENT_OPERAND; a_formal_type_set: ET_DYNAMIC_TYPE_SET) is
 			-- Propagate dynamic types of actual argument `an_actual'

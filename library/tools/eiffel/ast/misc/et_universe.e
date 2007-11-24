@@ -999,7 +999,7 @@ feature -- Basic classes
 			-- instead of say "REAL_64" if it is mapped this way.)
 
 	tuple_type: ET_TUPLE_TYPE
-			-- Class type "TUPLE"
+			-- Type "TUPLE"
 
 	array_any_type: ET_GENERIC_CLASS_TYPE
 			-- Class type "ARRAY [ANY]"

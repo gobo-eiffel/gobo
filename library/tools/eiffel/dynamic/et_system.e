@@ -453,7 +453,7 @@ feature {NONE} -- Types
 			l_base_class := universe.array_class
 			create Result.make (a_base_type, l_base_class)
 				-- Make features 'area', and 'lower' and 'upper' alive at the
-				-- first three positions in the feature list of the ARRAY type.
+				-- first three positions in the feature list of the "ARRAY" type.
 			if array_area_feature /= Void then
 				l_dynamic_feature := Result.dynamic_query (array_area_feature, Current)
 			end
@@ -480,7 +480,7 @@ feature {NONE} -- Types
 			l_base_class := universe.typed_pointer_class
 			create Result.make (a_base_type, l_base_class)
 				-- Make feature 'to_pointer' alive at the first position
-				-- in the feature list of the TYPED_POINTER type.
+				-- in the feature list of the "TYPED_POINTER" type.
 			if typed_pointer_to_pointer_feature /= Void then
 				l_dynamic_feature := Result.dynamic_query (typed_pointer_to_pointer_feature, Current)
 			end
@@ -526,6 +526,7 @@ feature {NONE} -- Types
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
 			l_any: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			l_any := universe.any_class
 			l_base_class := universe.procedure_class
@@ -553,6 +554,11 @@ feature {NONE} -- Types
 					l_item_type_sets := empty_dynamic_type_sets
 				end
 				create {ET_DYNAMIC_PROCEDURE_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets)
+					-- Make feature 'closed_operands' alive at the first position
+					-- in the feature list of the "PROCEDURE" type.
+				if routine_closed_operands_feature /= Void then
+					l_dynamic_feature := Result.seeded_dynamic_query (routine_closed_operands_feature.first_seed, Current)
+				end
 			else
 				create Result.make (a_base_type, l_base_class)
 			end
@@ -576,6 +582,7 @@ feature {NONE} -- Types
 			l_return_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_any: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			l_any := universe.any_class
 			l_base_class := universe.function_class
@@ -608,6 +615,11 @@ feature {NONE} -- Types
 					l_item_type_sets := empty_dynamic_type_sets
 				end
 				create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets, l_return_type_set)
+					-- Make feature 'closed_operands' alive at the first position
+					-- in the feature list of the "FUNCTION" type.
+				if routine_closed_operands_feature /= Void then
+					l_dynamic_feature := Result.seeded_dynamic_query (routine_closed_operands_feature.first_seed, Current)
+				end
 			else
 				create Result.make (a_base_type, l_base_class)
 			end
@@ -631,6 +643,7 @@ feature {NONE} -- Types
 			l_return_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_any: ET_CLASS
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			l_any := universe.any_class
 			l_base_class := universe.predicate_class
@@ -657,6 +670,11 @@ feature {NONE} -- Types
 					l_item_type_sets := empty_dynamic_type_sets
 				end
 				create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (a_base_type, l_base_class, l_item_type_sets, l_return_type_set)
+					-- Make feature 'closed_operands' alive at the first position
+					-- in the feature list of the "PREDICATE" type.
+				if routine_closed_operands_feature /= Void then
+					l_dynamic_feature := Result.seeded_dynamic_query (routine_closed_operands_feature.first_seed, Current)
+				end
 			else
 				create Result.make (a_base_type, l_base_class)
 			end
@@ -1108,7 +1126,7 @@ feature {NONE} -- Compilation
 					l_procedure := l_class.named_procedure (tokens.area_feature_name)
 					if l_procedure /= Void then
 						set_fatal_error
-						error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+						error_handler.report_gvkfe2a_error (l_class, l_procedure)
 					else
 						set_fatal_error
 						error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
@@ -1133,7 +1151,7 @@ feature {NONE} -- Compilation
 					l_procedure := l_class.named_procedure (tokens.count_feature_name)
 					if l_procedure /= Void then
 						set_fatal_error
-						error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+						error_handler.report_gvkfe2a_error (l_class, l_procedure)
 					else
 						set_fatal_error
 						error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
@@ -1172,7 +1190,7 @@ feature {NONE} -- Compilation
 					l_procedure := l_class.named_procedure (tokens.area_feature_name)
 					if l_procedure /= Void then
 						set_fatal_error
-						error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+						error_handler.report_gvkfe2a_error (l_class, l_procedure)
 					else
 						set_fatal_error
 						error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
@@ -1197,7 +1215,7 @@ feature {NONE} -- Compilation
 					l_procedure := l_class.named_procedure (tokens.count_feature_name)
 					if l_procedure /= Void then
 						set_fatal_error
-						error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+						error_handler.report_gvkfe2a_error (l_class, l_procedure)
 					else
 						set_fatal_error
 						error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
@@ -1241,7 +1259,7 @@ feature {NONE} -- Compilation
 						l_procedure := l_class.named_procedure (tokens.area_feature_name)
 						if l_procedure /= Void then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
 						else
 							set_fatal_error
 							error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
@@ -1266,7 +1284,7 @@ feature {NONE} -- Compilation
 						l_procedure := l_class.named_procedure (tokens.count_feature_name)
 						if l_procedure /= Void then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
 						else
 							set_fatal_error
 							error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
@@ -1303,13 +1321,13 @@ feature {NONE} -- Compilation
 						-- processing on `l_class'.
 					set_fatal_error
 				else
-						-- Check features `area', and `lower' and `upper' of class ARRAY.
+						-- Check features 'area', and 'lower' and 'upper' of class ARRAY.
 					array_area_feature := l_class.named_query (tokens.area_feature_name)
 					if array_area_feature = Void then
 						l_procedure := l_class.named_procedure (tokens.area_feature_name)
 						if l_procedure /= Void then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, array_area_feature)
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
 						else
 							set_fatal_error
 							error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
@@ -1328,7 +1346,7 @@ feature {NONE} -- Compilation
 						l_procedure := l_class.named_procedure (tokens.lower_feature_name)
 						if l_procedure /= Void then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, array_lower_feature)
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
 						else
 							set_fatal_error
 							error_handler.report_gvkfe1a_error (l_class, tokens.lower_feature_name)
@@ -1347,7 +1365,7 @@ feature {NONE} -- Compilation
 						l_procedure := l_class.named_procedure (tokens.upper_feature_name)
 						if l_procedure /= Void then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, array_upper_feature)
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
 						else
 							set_fatal_error
 							error_handler.report_gvkfe1a_error (l_class, tokens.upper_feature_name)
@@ -1363,7 +1381,7 @@ feature {NONE} -- Compilation
 					end
 				end
 			end
-				-- Class TYPED_POINTER.
+				-- Class "TYPED_POINTER".
 			typed_pointer_to_pointer_feature := Void
 			l_class := universe.typed_pointer_class
 			if not l_class.is_preparsed then
@@ -1376,7 +1394,7 @@ feature {NONE} -- Compilation
 						-- processing on `l_class'.
 					set_fatal_error
 				else
-						-- Check feature 'to_pointer' of class TYPED_POINTER.
+						-- Check feature 'to_pointer' of class "TYPED_POINTER".
 					if universe.is_ise and then universe.ise_version < ise_6_0_6_7057 then
 						typed_pointer_to_pointer_feature := l_class.named_query (tokens.pointer_item_feature_name)
 					else
@@ -1386,7 +1404,7 @@ feature {NONE} -- Compilation
 						l_procedure := l_class.named_procedure (tokens.to_pointer_feature_name)
 						if l_procedure /= Void then
 							set_fatal_error
-							error_handler.report_gvkfe2a_error (l_class, typed_pointer_to_pointer_feature)
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
 						else
 							set_fatal_error
 							error_handler.report_gvkfe1a_error (l_class, tokens.to_pointer_feature_name)
@@ -1402,6 +1420,41 @@ feature {NONE} -- Compilation
 							error_handler.report_gvkfe2a_error (l_class, typed_pointer_to_pointer_feature)
 							typed_pointer_to_pointer_feature := Void
 						end
+					end
+				end
+			end
+				-- Class "ROUTINE".
+			routine_closed_operands_feature := Void
+			l_class := universe.routine_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			else
+				l_class.process (universe.interface_checker)
+				if not l_class.interface_checked or else l_class.has_interface_error then
+						-- Error already reported by the previous
+						-- processing on `l_class'.
+					set_fatal_error
+				else
+						-- Check feature 'closed_operands' of class "ROUTINE".
+					routine_closed_operands_feature := l_class.named_query (tokens.closed_operands_feature_name)
+					if routine_closed_operands_feature = Void then
+						l_procedure := l_class.named_procedure (tokens.closed_operands_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.closed_operands_feature_name)
+						end
+					elseif not routine_closed_operands_feature.is_attribute then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, routine_closed_operands_feature)
+						routine_closed_operands_feature := Void
+					elseif not routine_closed_operands_feature.type.same_named_type (universe.tuple_type, l_class, l_class, universe) then
+						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, routine_closed_operands_feature, universe.tuple_type)
+						routine_closed_operands_feature := Void
 					end
 				end
 			end
@@ -1478,16 +1531,19 @@ feature -- Processors
 feature {NONE} -- Features
 
 	array_area_feature: ET_QUERY
-			-- Expected attribute 'area' in class ARRAY
+			-- Expected attribute 'area' in class "ARRAY"
 
 	array_lower_feature: ET_QUERY
-			-- Expected attribute 'lower' in class ARRAY
+			-- Expected attribute 'lower' in class "ARRAY"
 
 	array_upper_feature: ET_QUERY
-			-- Expected attribute 'upper' in class ARRAY
+			-- Expected attribute 'upper' in class "ARRAY"
 
 	typed_pointer_to_pointer_feature: ET_QUERY
-			-- Expected attributes in class TYPED_POINTER
+			-- Expected attribute 'to_pointer' in class "TYPED_POINTER"
+
+	routine_closed_operands_feature: ET_QUERY
+			-- Expected attribute 'closed_operands' in class "ROUTINE"
 
 feature {NONE} -- Implementation
 

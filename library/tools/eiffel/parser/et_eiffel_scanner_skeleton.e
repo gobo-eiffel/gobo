@@ -809,6 +809,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.character_8_item_name)
 			Result.force_new (-1, tokens.character_32_item_name)
 			Result.force_new (-1, tokens.character_bytes_name)
+			Result.force_new (-1, tokens.closed_operands_name)
 			Result.force_new (-1, tokens.code_name)
 			Result.force_new (-1, tokens.conforms_to_name)
 			Result.force_new (-1, tokens.copy_name)
