@@ -160,7 +160,6 @@ feature -- Creation
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
 			an_xml_prefix, a_uri, a_local_name, a_message: STRING
-			a_uri_code: INTEGER
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Making name code for name ")
@@ -176,19 +175,15 @@ feature -- Creation
 				an_xml_prefix := ""
 				a_local_name := a_parser.local_name
 				if use_default_namespace then
-					a_uri_code := environment.default_element_namespace
-				end
-				if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name) then
-					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_local_name)
+					a_uri := environment.default_element_namespace
 				else
-					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_local_name) then
-						shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
-						last_generated_name_code := shared_name_pool.last_name_code
-					else
-						a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_qname)
-						report_parse_error (a_message, "FODC0002,")
-						last_generated_name_code := -2
-					end
+					a_uri := ""
+				end
+				if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+				else
+					shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+					last_generated_name_code := shared_name_pool.last_name_code
 				end
 			else
 				an_xml_prefix := a_parser.optional_prefix
@@ -272,7 +267,7 @@ feature {NONE} -- Implementation
 			a_primary_type: XM_XPATH_ITEM_TYPE
 			a_message, a_local_name, a_uri: STRING
 			a_parser: XM_XPATH_QNAME_PARSER
-			a_fingerprint, a_uri_code: INTEGER
+			a_fingerprint: INTEGER
 			is_empty_sequence: BOOLEAN
 		do
 			a_primary_type := any_item
@@ -285,8 +280,7 @@ feature {NONE} -- Implementation
 						end
 					a_local_name := a_parser.local_name
 						if not a_parser.is_prefix_present then
-							a_uri_code := environment.default_element_namespace
-							a_uri := shared_name_pool.uri_from_uri_code (a_uri_code)
+							a_uri := environment.default_element_namespace
 					elseif environment.is_prefix_declared (a_parser.optional_prefix) then
 						a_uri := environment.uri_for_prefix (a_parser.optional_prefix)
 					else
@@ -2743,7 +2737,6 @@ feature {NONE} -- Implementation
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_uri, a_local_name, a_message: STRING
-			a_uri_code: INTEGER
 			an_item_type: XM_XPATH_ITEM_TYPE
 		do
 			create a_parser.make (tokenizer.last_token_value)
@@ -2752,8 +2745,7 @@ feature {NONE} -- Implementation
 				elseif not a_parser.is_valid then
 					report_parse_error ("Expecting a QName, found ''", "XPST0003")
 				elseif not a_parser.is_prefix_present then
-					a_uri_code := environment.default_element_namespace
-					a_uri := shared_name_pool.uri_from_uri_code (a_uri_code)
+					a_uri := environment.default_element_namespace
 					a_local_name := a_parser.local_name
 				else
 					if environment.is_prefix_declared (a_parser.optional_prefix) then

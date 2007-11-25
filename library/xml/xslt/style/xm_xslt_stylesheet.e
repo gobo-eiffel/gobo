@@ -195,7 +195,7 @@ feature -- Access
 			until
 				Result.is_error or l_cursor.before
 			loop
-				if l_cursor.item.is_output and then not l_cursor.item.as_output.is_excluded and then l_cursor.item.as_output.output_fingerprint = a_fingerprint then
+				if l_cursor.item.is_output and then l_cursor.item.as_output.output_fingerprint = a_fingerprint then
 					l_found := True
 					l_cursor.item.as_output.gather_output_properties (Result)
 				end
@@ -517,59 +517,60 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_name_code: INTEGER
-			an_expanded_name, an_input_type_annotations_attribute: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_name_code: INTEGER
+			l_expanded_name, l_input_type_annotations_attribute: STRING
+			l_error: XM_XPATH_ERROR_VALUE
+			l_version_found: BOOLEAN
 		do
 			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
+				l_cursor := attribute_collection.name_code_cursor
+				l_cursor.start
 			until
-				a_cursor.after or any_compile_errors
+				l_cursor.after or any_compile_errors
 			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Version_attribute) then
+				l_name_code := l_cursor.item
+				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+				if STRING_.same_string (l_expanded_name, Version_attribute) then
+					l_version_found := True
+				elseif STRING_.same_string (l_expanded_name, Extension_element_prefixes_attribute) then
 					-- do nothing
-				elseif STRING_.same_string (an_expanded_name, Extension_element_prefixes_attribute) then
+				elseif STRING_.same_string (l_expanded_name, Exclude_result_prefixes_attribute) then
 					-- do nothing
-				elseif STRING_.same_string (an_expanded_name, Exclude_result_prefixes_attribute) then
+				elseif STRING_.same_string (l_expanded_name, Id_attribute) then
 					-- do nothing
-				elseif STRING_.same_string (an_expanded_name, Id_attribute) then
-					-- do nothing
-				elseif STRING_.same_string (an_expanded_name, Default_validation_attribute) then
-					default_validation := validation_code (attribute_value_by_index (a_cursor.index))
+				elseif STRING_.same_string (l_expanded_name, Default_validation_attribute) then
+					default_validation := validation_code (attribute_value_by_index (l_cursor.index))
 					if default_validation /= Validation_preserve and then  default_validation /= Validation_strip then
-						create an_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (preserve, strip)", Xpath_errors_uri, "XTSE0020", Static_error)
-						report_compile_error (an_error)
+						create l_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (preserve, strip)", Xpath_errors_uri, "XTSE0020", Static_error)
+						report_compile_error (l_error)
 					elseif conformance.basic_xslt_processor and then default_validation /= Validation_strip then
-						create an_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", Xpath_errors_uri, "XTSE1660", Static_error)
-						report_compile_error (an_error)
+						create l_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", Xpath_errors_uri, "XTSE1660", Static_error)
+						report_compile_error (l_error)
 					end
-				elseif STRING_.same_string (an_expanded_name, Input_type_annotations_attribute) then
-					an_input_type_annotations_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Gexslt_explain_attribute) then
-					is_all_explaining := STRING_.same_string (attribute_value_by_index (a_cursor.index), "all")
+				elseif STRING_.same_string (l_expanded_name, Input_type_annotations_attribute) then
+					l_input_type_annotations_attribute := attribute_value_by_index (l_cursor.index)
+				elseif STRING_.same_string (l_expanded_name, Gexslt_explain_attribute) then
+					is_all_explaining := STRING_.same_string (attribute_value_by_index (l_cursor.index), "all")
 				else
-					check_unknown_attribute (a_name_code)
+					check_unknown_attribute (l_name_code)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
-			if version = Void then
+			if version = Void or not l_version_found then
 				report_absence ("version")
 			end
-			if an_input_type_annotations_attribute /= Void then
-				if STRING_.same_string (an_input_type_annotations_attribute, "strip") then
+			if l_input_type_annotations_attribute /= Void then
+				if STRING_.same_string (l_input_type_annotations_attribute, "strip") then
 					input_type_annotations := Strip_annotations
-				elseif STRING_.same_string (an_input_type_annotations_attribute, "preserve") then
+				elseif STRING_.same_string (l_input_type_annotations_attribute, "preserve") then
 					input_type_annotations := Preserve_annotations
-				elseif STRING_.same_string (an_input_type_annotations_attribute, "unspecified") then
+				elseif STRING_.same_string (l_input_type_annotations_attribute, "unspecified") then
 					-- nothing to do
 				else
-					create an_error.make_from_string ("Invalid value for input-type-annotations attribute. Permitted values are (strip, preserve, unspecified)",
+					create l_error.make_from_string ("Invalid value for input-type-annotations attribute. Permitted values are (strip, preserve, unspecified)",
 					Xpath_errors_uri, "XTSE0020", Static_error)
-					report_compile_error (an_error)
+					report_compile_error (l_error)
 				end
 			end
 			attributes_prepared := True
@@ -655,9 +656,7 @@ feature -- Element change
 					a_cursor.after
 				loop
 					a_style_element := a_cursor.item
-					if not a_style_element.is_excluded then
-						a_style_element.fixup_references
-					end
+					a_style_element.fixup_references
 					a_cursor.forth
 				end
 			end
@@ -675,9 +674,7 @@ feature -- Element change
 					any_compile_errors or else a_cursor.after
 				loop
 					a_style_element := a_cursor.item
-					if not a_style_element.is_excluded then
-						a_style_element.validate_subtree
-					end
+					a_style_element.validate_subtree
 					a_cursor.forth
 				end
 				post_validated := True
@@ -700,7 +697,6 @@ feature -- Element change
 			l_included_stylesheet: XM_XSLT_STYLESHEET
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			prune_children
 			create top_level_elements.make
 			minimum_import_precedence := import_precedence
 			l_previous_style_element := Current
@@ -748,7 +744,6 @@ feature -- Element change
 									if l_included_stylesheet.any_compile_errors then
 										set_compile_errors
 									else
-										l_included_stylesheet.prune_children
 										
 										-- After processing the imported stylesheet and any others it brought in,
 										--  adjust the import precedence of this stylesheet if necessary.
@@ -794,9 +789,7 @@ feature -- Element change
 					a_cursor.after
 				loop
 					a_style_element := a_cursor.item
-					if not a_style_element.is_excluded then
-						a_style_element.process_all_attributes
-					end
+					a_style_element.process_all_attributes
 					a_cursor.forth
 				end
 			else
@@ -812,13 +805,13 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		local
-			an_error: XM_XPATH_ERROR_VALUE
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if validation_error /= Void then
 				report_compile_error (validation_error)
 			elseif not parent.is_document then
-				create an_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), Xpath_errors_uri, "XTSE0010", Static_error)
-				report_compile_error (an_error)
+				create l_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), Xpath_errors_uri, "XTSE0010", Static_error)
+				report_compile_error (l_error)
 			end
 			validated := True
 		end
@@ -861,32 +854,30 @@ feature -- Element change
 			until
 				any_compile_errors or else a_cursor.after
 			loop
-				if not a_cursor.item.is_excluded then
-					a_system_id := a_cursor.item.system_id
-					if not is_module_registered (a_system_id) then register_module (a_system_id) end
-					a_cursor.item.compile (executable)
-					if a_cursor.item.last_generated_expression /= Void and then a_cursor.item.last_generated_expression.is_computed_expression then
-						a_cursor.item.last_generated_expression.as_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
-					end
-					if explaining and then a_cursor.item.last_generated_expression /= Void then
-						if a_cursor.item.is_xslt_function then
-							a_level := 2
-							std.error.put_string ("xsl:function name=")
-							std.error.put_string (a_cursor.item.as_xslt_function.function_name)
-							if a_cursor.item.as_xslt_function.arity > 0 then
-								std.error.put_string (" taking ")
-								std.error.put_string (a_cursor.item.as_xslt_function.arity.out)
-								std.error.put_string (" parameter")
-								if a_cursor.item.as_xslt_function.arity > 1 then
-									std.error.put_string ("s")
-								end
+				a_system_id := a_cursor.item.system_id
+				if not is_module_registered (a_system_id) then register_module (a_system_id) end
+				a_cursor.item.compile (executable)
+				if a_cursor.item.last_generated_expression /= Void and then a_cursor.item.last_generated_expression.is_computed_expression then
+					a_cursor.item.last_generated_expression.as_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
+				end
+				if explaining and then a_cursor.item.last_generated_expression /= Void then
+					if a_cursor.item.is_xslt_function then
+						a_level := 2
+						std.error.put_string ("xsl:function name=")
+						std.error.put_string (a_cursor.item.as_xslt_function.function_name)
+						if a_cursor.item.as_xslt_function.arity > 0 then
+							std.error.put_string (" taking ")
+							std.error.put_string (a_cursor.item.as_xslt_function.arity.out)
+							std.error.put_string (" parameter")
+							if a_cursor.item.as_xslt_function.arity > 1 then
+								std.error.put_string ("s")
 							end
-							std.error.put_string ("%N")
-						else
-							a_level := 1
 						end
-						a_cursor.item.last_generated_expression.display (a_level)
+						std.error.put_string ("%N")
+					else
+						a_level := 1
 					end
+					a_cursor.item.last_generated_expression.display (a_level)
 				end
 				a_cursor.forth
 			end
@@ -930,7 +921,7 @@ feature -- Element change
 				until
 					a_cursor.after
 				loop
-					if a_cursor.item.is_character_map and then not a_cursor.item.as_character_map.is_excluded and then not a_cursor.item.as_character_map.is_redundant then
+					if a_cursor.item.is_character_map and then not a_cursor.item.as_character_map.is_redundant then
 						a_fingerprint := a_cursor.item.as_character_map.character_map_fingerprint
 						create a_character_code_map.make_with_equality_testers (10, string_equality_tester, Void)
 						a_cursor.item.as_character_map.assemble (a_character_code_map)
@@ -968,7 +959,7 @@ feature -- Element change
 				until
 					a_cursor.after
 				loop
-					if a_cursor.item.is_xslt_function and then not a_cursor.item.as_xslt_function.is_excluded then
+					if a_cursor.item.is_xslt_function then
 						if a_cursor.item.as_xslt_function.is_overriding then
 							overriding_runtime_library.add_function (a_cursor.item.as_xslt_function)
 						else
@@ -1065,7 +1056,7 @@ feature {NONE} -- Implementation
 			until
 				a_cursor.before
 			loop
-				if a_cursor.item.is_template and then not a_cursor.item.as_template.is_excluded then
+				if a_cursor.item.is_template then
 					index_named_template (a_cursor.item.as_template)
 				elseif a_cursor.item.is_xslt_variable_declaration then
 						index_variable_declaration (a_cursor.item.as_xslt_variable_declaration)
@@ -1323,7 +1314,7 @@ feature {NONE} -- Implementation
 			until
 				any_compile_errors or else a_cursor.before
 			loop
-				if a_cursor.item.is_output and then not a_cursor.item.as_output.is_excluded then
+				if a_cursor.item.is_output then
 					a_fingerprint := a_cursor.item.as_output.output_fingerprint
 					if a_fingerprint /= -1 then a_set.force (a_fingerprint) end
 				end

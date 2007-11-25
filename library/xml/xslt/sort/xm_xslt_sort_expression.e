@@ -42,7 +42,8 @@ feature {NONE} -- Initialization
 			sort_key_list := a_sort_key_list
 			from
 				fixed := True
-				a_cursor := sort_key_list.new_cursor; a_cursor.start
+				a_cursor := sort_key_list.new_cursor
+				a_cursor.start
 			variant
 				sort_key_list.count + 1 - a_cursor.index
 			until
@@ -58,7 +59,8 @@ feature {NONE} -- Initialization
 			if fixed then
 				from
 					create fixed_sort_key_list.make (sort_key_list.count)
-					a_cursor := sort_key_list.new_cursor; a_cursor.start
+					a_cursor := sort_key_list.new_cursor
+					a_cursor.start
 				variant
 					sort_key_list.count + 1 - a_cursor.index
 				until

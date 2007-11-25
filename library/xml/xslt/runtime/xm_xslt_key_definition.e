@@ -64,6 +64,19 @@ feature -- Access
 	collation_uri: STRING
 			-- Name of `collator'
 
+	is_backwards_compatible_mode: BOOLEAN
+			-- Wss XPath 1.0 compatibility in force for this definition?
+
+feature -- Setting
+
+	set_backwards_compatible is
+			-- Set `is_backwards_compatible_mode' to `True'.
+		do
+			is_backwards_compatible_mode := True
+		ensure
+			set: is_backwards_compatible_mode
+		end
+				
 feature -- Element change
 	
 	allocate_slots is

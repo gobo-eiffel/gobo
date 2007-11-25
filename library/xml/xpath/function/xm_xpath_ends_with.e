@@ -87,6 +87,7 @@ feature -- Evaluation
 					else
 						l_atomic_value := a_result.item.as_atomic_value
 					end
+					a_result.put (Void)
 					arguments.item (2).evaluate_item (a_result, a_context)
 					if a_result.item /= Void and then a_result.item.is_error then
 						-- nothing more to do

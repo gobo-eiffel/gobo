@@ -36,6 +36,9 @@ feature -- Access
 	document: XM_XPATH_TREE_DOCUMENT
 			-- Document that owns this node
 
+	is_non_white_following_sibling: BOOLEAN
+			-- Is `Current' such that an immediate preceding-sibling all-whitspace text node should be stripped in xslt stylesheets?
+
 	is_tree_node: BOOLEAN is
 			-- Is `Current' a tree node?
 		do
@@ -351,6 +354,14 @@ feature -- Element change
 		ensure
 			child_index_set: child_index = an_index
 			parent_set: parent_node = a_parent
+		end
+
+	reduce_child_index (a_reduction: INTEGER) is
+			-- Reduce `child_index' by `a_reduction'.
+		do
+			child_index := child_index - a_reduction
+		ensure
+			reduced: child_index = old child_index - a_reduction
 		end
 
 feature {XM_XPATH_TREE_COMPOSITE_NODE} -- Element change

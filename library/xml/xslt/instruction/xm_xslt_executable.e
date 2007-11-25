@@ -19,6 +19,9 @@ inherit
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
+	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
+
 create
 
 	make
@@ -49,6 +52,7 @@ feature {NONE} -- Initialization
 			create global_slot_manager.make
 			create output_properties_map.make_default
 			create attribute_set_manager.make
+			create required_parameters.make_default
 			isolation_level := Serializable
 			name_pool := a_name_pool
 		ensure
@@ -158,6 +162,31 @@ feature -- Status report
 			Result := output_properties_map.has (a_fingerprint)
 		end
 
+	missing_required_global_parameters (a_parameters: XM_XSLT_PARAMETER_SET): DS_LINKED_LIST [STRING] is
+			-- Required global parameters not supplied
+		require
+			a_parameters_not_void: a_parameters /= Void
+		local
+			l_cursor: DS_HASH_SET_CURSOR [INTEGER]
+			l_fingerprint: INTEGER
+		do
+			create Result.make
+			from
+				l_cursor := required_parameters.new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				l_fingerprint := l_cursor.item
+				if not a_parameters.has (l_fingerprint) then
+					Result.force_last (shared_name_pool.display_name_from_name_code (l_fingerprint))
+				end
+				l_cursor.forth
+			end
+		ensure
+			missing_required_global_parameters_not_void: Result /= Void
+		end
+
 feature -- Status setting
 
 	set_whitespace_stripping (a_status: BOOLEAN) is
@@ -184,6 +213,9 @@ feature -- Creation
 			transformer_not_void: a_transformer /= Void
 			builder_not_void: a_builder /= Void
 		do
+			if stripper_rules /= Void then
+				rule_manager.rank_mode (stripper_rules)
+			end
 			create Result.make (a_transformer, stripper_rules, a_builder)
 		ensure
 			stripper_not_void: Result /= Void
@@ -286,6 +318,14 @@ feature -- Element change
 			isolation_level_set: isolation_level = an_isolation_level
 		end
 
+	add_required_parameter (a_fingerprint: INTEGER) is
+			-- Add `a_fingerprint' to `required_parameters'.
+		do
+			required_parameters.force (a_fingerprint)
+		ensure
+			added_parameter: required_parameters.has (a_fingerprint)
+		end
+
 feature {XM_XSLT_EVALUATION_CONTEXT} -- Access
 
 	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
@@ -302,6 +342,9 @@ feature {NONE} -- Implementation
 	output_properties_map: DS_HASH_TABLE [XM_XSLT_OUTPUT_PROPERTIES, INTEGER]
 			-- Output property sets indexed by fingerprint
 
+	required_parameters: DS_HASH_SET [INTEGER]
+			-- Required global parameters
+
 invariant
 
 	name_pool_not_void: name_pool /= Void
@@ -315,6 +358,7 @@ invariant
 	isolation_level_small_enough: isolation_level <= Serializable
 	isolation_level_large_enough: isolation_level >= Read_uncommitted
 	attribute_set_manager_not_void: attribute_set_manager /= Void
+	required_parameters_not_void: required_parameters /= Void
 
 end
 	

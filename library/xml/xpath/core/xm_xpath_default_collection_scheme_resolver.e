@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant.
 		do
+			-- the following is only a placeholder. We ignore it for determining the URI to be resolved:
 			scheme := Default_collection_scheme
 		end
 
@@ -54,7 +55,8 @@ feature -- Element change
 		do
 			a_directory_name := file_system.current_working_directory
 			create a_directory.make (a_directory_name)
-			resolve_directory (a_uri, current_directory_base, a_context, a_directory)
+			-- We ignore `a_uri' (it should be empty, except it has been resolved to `scheme')
+			resolve_directory (current_directory_base, current_directory_base, a_context, a_directory)
 		end
 
 feature {NONE} -- Implementation

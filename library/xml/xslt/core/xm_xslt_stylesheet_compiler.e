@@ -73,7 +73,7 @@ feature -- Access
 feature -- Status report
 
 	load_stylesheet_module_failed: BOOLEAN
-			-- did last call to `load_(principal_)stylesheet_module' fail?
+			-- Did last call to `load_(principal_)stylesheet_module' fail?
 
 	load_stylesheet_module_error: STRING
 			-- Error reported by last call to `load_(principal_)stylesheet_module'
@@ -151,6 +151,8 @@ feature -- Compilation
 			l_tree_builder: XM_XPATH_TREE_BUILDER
 			l_parser: XM_EIFFEL_PARSER
 			l_locator: XM_XPATH_RESOLVER_LOCATOR
+			l_buffer: XM_XSLT_START_TAG_BUFFER
+			l_use_when: XM_XSLT_USE_WHEN_FILTER
 		do
 			last_loaded_module := Void
 			create l_parser.make
@@ -160,7 +162,11 @@ feature -- Compilation
 			create l_locator.make (l_parser)
 			l_tree_builder.set_document_locator (l_locator)
 			l_tree_builder.set_line_numbering (configuration.is_line_numbering)
-			create l_stylesheet_stripper.make (l_tree_builder)
+			create l_use_when.make (l_tree_builder, configuration, node_factory)
+			create l_buffer.make (l_use_when)
+			l_use_when.set_tag_buffer (l_buffer)
+			l_use_when.set_document_locator (l_locator)
+			create l_stylesheet_stripper.make (l_buffer)
 			create l_comment_stripper.make (l_stylesheet_stripper)
 			a_source.send_from_stream (a_stream, a_system_id, l_parser, l_comment_stripper, True)
 			if l_tree_builder.has_xpath_error then
@@ -170,6 +176,7 @@ feature -- Compilation
 				report_fatal_error (l_tree_builder.last_error, a_error_code)
 			else
 				last_loaded_module := l_tree_builder.tree_document
+				last_loaded_module.strip_whitespace_nodes
 			end
 			configuration.reset_entity_resolver
 		ensure
@@ -184,31 +191,38 @@ feature -- Compilation
 			stylesheet_not_yet_compiled: executable = Void
 			absolute_base_uri: a_uri /= Void and then a_uri.is_absolute
 		local
-			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
-			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
-			a_tree_builder: XM_XPATH_TREE_BUILDER
-			a_parser: XM_EIFFEL_PARSER
-			a_locator: XM_XPATH_RESOLVER_LOCATOR
+			l_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
+			l_comment_stripper: XM_XSLT_COMMENT_STRIPPER
+			l_tree_builder: XM_XPATH_TREE_BUILDER
+			l_parser: XM_EIFFEL_PARSER
+			l_buffer: XM_XSLT_START_TAG_BUFFER
+			l_use_when: XM_XSLT_USE_WHEN_FILTER
+			l_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			load_stylesheet_module_error := Void
 			last_loaded_module := Void
-			create a_parser.make
-			a_parser.set_resolver (configuration.entity_resolver)
-			a_parser.copy_string_mode (configuration)
-			create a_tree_builder.make (node_factory, a_uri.full_reference, a_uri)
-			create a_locator.make (a_parser)
-			a_tree_builder.set_document_locator (a_locator)
-			a_tree_builder.set_line_numbering (configuration.is_line_numbering)
-			create a_stylesheet_stripper.make (a_tree_builder)
-			create a_comment_stripper.make (a_stylesheet_stripper)
-			a_source.send (a_parser, a_comment_stripper, a_uri, True)
-			if a_tree_builder.has_xpath_error then
-				error_listener.fatal_error (a_tree_builder.last_xpath_error)
-				report_error (a_tree_builder.last_xpath_error.error_message)
-			elseif a_tree_builder.has_error then
-				report_error (a_tree_builder.last_error)
+			create l_parser.make
+			l_parser.set_resolver (configuration.entity_resolver)
+			l_parser.copy_string_mode (configuration)
+			create l_tree_builder.make (node_factory, a_uri.full_reference, a_uri)
+			create l_locator.make (l_parser)
+			l_tree_builder.set_document_locator (l_locator)
+			l_tree_builder.set_line_numbering (configuration.is_line_numbering)
+			create l_use_when.make (l_tree_builder, configuration, node_factory)
+			create l_buffer.make (l_use_when)
+			l_use_when.set_tag_buffer (l_buffer)
+			l_use_when.set_document_locator (l_locator)
+			create l_stylesheet_stripper.make (l_buffer)
+			create l_comment_stripper.make (l_stylesheet_stripper)
+			a_source.send (l_parser, l_comment_stripper, a_uri, True)
+			if l_tree_builder.has_xpath_error then
+				error_listener.fatal_error (l_tree_builder.last_xpath_error)
+				report_error (l_tree_builder.last_xpath_error.error_message)
+			elseif l_tree_builder.has_error then
+				report_fatal_error (l_tree_builder.last_error, "GEXSLT_PRINICIPAL_STYLESHEET_ERROR")
 			else
-				last_loaded_module := a_tree_builder.tree_document
+				last_loaded_module := l_tree_builder.tree_document
+				last_loaded_module.strip_whitespace_nodes
 			end
 			configuration.reset_entity_resolver
 		ensure
@@ -252,7 +266,7 @@ feature -- Compilation
 					
 					-- Compile the stylesheet, retaining the resulting  executable
 					
-					if not a_stylesheet.any_compile_errors then
+					if not a_stylesheet.any_compile_errors and a_stylesheet.post_validated then
 						if configuration.is_explaining then
 							a_stylesheet.force_explaining
 						end

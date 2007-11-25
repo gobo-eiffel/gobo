@@ -22,9 +22,11 @@ feature -- Creation
 			strictly_positive_sequence_number: a_sequence_number > 0
 		do
 			create Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-			if a_parent /= Void then a_parent.add_child (Result) end
+			if a_parent /= Void then
+				a_parent.add_child (Result)
+			end
 		ensure
-			new_element_may_be_in_error: Result /= Void
+			new_element_may_be_void_or_in_error: True
 		end
 		
 end

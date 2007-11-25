@@ -70,11 +70,11 @@ feature -- Access
 			variable_not_void: Result /= Void
 		end
 		
-	default_element_namespace: INTEGER is
-			-- Default XPath namespace, as a namespace code that can be looked up in `shared_name_pool'
+	default_element_namespace: STRING is
+			-- Default XPath namespace URI
 		deferred
 		ensure
-			positive_namespace_code: Result >= 0
+			default_element_namespace_not_void: Result /= Void
 		end
 
 	default_function_namespace_uri: STRING is
@@ -178,6 +178,13 @@ feature -- Status report
 		deferred
 		ensure
 			no_schema_types_when_restricted: is_restricted implies True -- TODO for schema-awareness
+		end
+
+	is_element_available (a_qname: STRING): BOOLEAN is
+			-- Is element name `a_qname' available?
+		require
+			valid_qname: is_qname (a_qname)
+		deferred
 		end
 
 feature -- Creation

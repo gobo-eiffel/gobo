@@ -1022,7 +1022,7 @@ feature -- Element change
 		end
 
 	allocate_namespace_code_for_name_code (a_name_code: INTEGER) is
-			-- Allocate a namesapce code for a given name code.
+			-- Allocate a namespace code for a given name code.
 		require
 			namespace_code_not_allocated: not is_namespace_code_allocated_for_name_code (a_name_code)
 		local

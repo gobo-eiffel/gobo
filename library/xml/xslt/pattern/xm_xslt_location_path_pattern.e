@@ -383,7 +383,11 @@ feature -- Matching
 				create l_item.make (Void)
 				variable_binding.evaluate_item (l_item, a_context)
 			end
-			internal_match (a_node, a_context)
+			if is_error then
+				internal_last_match_result := False
+			else
+				internal_match (a_node, a_context)
+			end
 		end
 
 feature -- Element change

@@ -26,7 +26,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_node_type: INTEGER; a_string_value: STRING) is
-			-- Establsh invariant.
+			-- Establish invariant.
 		require
 			valid_node_kind: a_node_type = Element_node or else
 				a_node_type = Attribute_node or else

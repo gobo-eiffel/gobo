@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			not_pattern: not is_pattern
 		end
 
-	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_collation_map: like collation_map; a_configuration: like configuration) is
+	make_restricted (a_static_context: like static_context; a_collation_map: like collation_map; a_configuration: like configuration) is
 			-- Create a restricted context for [xsl:]use-when.
 		require
 			static_context_not_void: a_static_context /= Void
@@ -188,7 +188,7 @@ feature -- Access
 			end
 		end
 
-	static_context: XM_XSLT_EXPRESSION_CONTEXT
+	static_context: XM_XPATH_STATIC_CONTEXT
 			-- Static context
 
 	last_parsed_document: XM_XPATH_DOCUMENT

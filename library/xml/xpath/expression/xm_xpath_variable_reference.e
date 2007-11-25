@@ -37,10 +37,15 @@ feature {NONE} -- Initialization
 			--  stylesheet to be locked in memory.
 		require
 			declaration_not_void: a_declaration /= Void
+		local
+			l_name: STRING
 		do
 			display_name := "" -- to preserve the invariant
 			a_declaration.register_reference (Current)
-			display_name := a_declaration.variable_name
+			l_name := a_declaration.variable_name
+			if l_name /= Void then
+				display_name := l_name
+			end
 			if not are_static_properties_computed then compute_static_properties end
 			initialized := True
 		end
@@ -116,7 +121,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			if display_name = Void then
+			if display_name.is_empty then
 				a_string := STRING_.appended_string (indentation (a_level), "$(unbound variable)")
 				std.error.put_string (a_string)
 				std.error.put_new_line

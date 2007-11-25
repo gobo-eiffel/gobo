@@ -137,17 +137,17 @@ feature -- Events
 			is_written := True
 		end
 
-	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
+	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
 			-- Notify an attribute.
 		do
 			if not has_error then
-				if is_output_escaping_disabled (properties) then
+				if is_output_escaping_disabled (a_properties) then
 					on_error ("Cannot disable output escaping when writing to a tree")
 				else
 					if pending_attributes = Void then
 						create pending_attributes.make
 					end
-					pending_attributes.add_attribute (a_name_code, a_type_code, a_value)
+					pending_attributes.add_attribute (a_name_code, a_type_code, a_value, a_properties)
 				end
 			end
 			is_written := True
@@ -156,15 +156,18 @@ feature -- Events
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
-			an_element: XM_XPATH_TREE_ELEMENT
+			l_element: XM_XPATH_TREE_ELEMENT
 		do
 			if not has_error then
-				an_element := node_factory.new_element_node (tree_document, current_composite_node, pending_attributes, pending_namespaces,
-																			pending_element_name_code, next_node_number)
-				if an_element.is_error then
+				l_element := node_factory.new_element_node (tree_document, current_composite_node, pending_attributes, pending_namespaces,
+					pending_element_name_code, next_node_number)
+				if l_element = Void then
+					saved_current_composite_node := current_composite_node
+					current_composite_node := Void
+				elseif l_element.is_error then
 					has_error := True
-					last_error := an_element.error_value.error_message
-					last_xpath_error := an_element.error_value
+					last_error := l_element.error_value.error_message
+					last_xpath_error := l_element.error_value
 				else
 					if not locator.system_id.is_empty then
 						tree_document.set_system_id_for_node (next_node_number, locator.system_id)
@@ -175,9 +178,9 @@ feature -- Events
 					next_node_number := next_node_number + 1
 					current_depth := current_depth + 1
 					if current_composite_node = tree_document then
-						tree_document.set_document_element (an_element)
+						tree_document.set_document_element (l_element)
 					end
-					current_composite_node := an_element
+					current_composite_node := l_element
 				end
 			end
 			pending_namespaces := Void
@@ -190,10 +193,14 @@ feature -- Events
 		do
 			if not has_error then
 				current_depth := current_depth - 1
-				if is_line_numbering then
+				if is_line_numbering and current_composite_node /= Void then
 					tree_document.set_closing_line_number_for_node (current_composite_node.sequence_number_high_word, locator.line_number)
 				end
-				current_composite_node := current_composite_node.parent
+				if current_composite_node /= Void then
+					current_composite_node := current_composite_node.parent
+				else
+					current_composite_node := saved_current_composite_node
+				end
 			end
 			is_written := True
 		end
@@ -214,7 +221,9 @@ feature -- Events
 							std.error.put_new_line
 						end
 						create a_text_node.make (tree_document, a_character_string)
-						current_composite_node.add_child (a_text_node)
+						if current_composite_node /= Void then
+							current_composite_node.add_child (a_text_node)
+						end
 					end
 				end
 			end
@@ -238,8 +247,9 @@ feature -- Events
 					a_name_code := shared_name_pool.name_code ("", "", a_target) 
 				end
 				create a_processing_instruction.make (tree_document, a_name_code, a_data_string)
-				current_composite_node.add_child (a_processing_instruction)
-
+				if current_composite_node /= Void then
+					current_composite_node.add_child (a_processing_instruction)
+				end
 				a_processing_instruction.set_location (locator.system_id, locator.line_number)
 			end
 			is_written := True
@@ -252,7 +262,9 @@ feature -- Events
 		do
 			if not has_error then
 				create a_comment.make (tree_document, a_content_string)
-				current_composite_node.add_child (a_comment)
+				if current_composite_node /= Void then
+					current_composite_node.add_child (a_comment)
+				end
 			end
 			is_written := True
 		end
@@ -276,12 +288,14 @@ feature -- Events
 
 feature {XM_XPATH_TREE_ELEMENT} -- Element change (actually only used by XM_XSLT_LITERAL_RESULT_ELEMENT)
 
-	graft_element (an_element: XM_XPATH_TREE_ELEMENT) is
-			-- Graft `an_element' into the tree (dangerous).
+	graft_element (a_element: XM_XPATH_TREE_ELEMENT) is
+			-- Graft `a_element' into the tree (dangerous).
 		require
-			element_not_void: an_element /= Void
+			a_element_not_void: a_element /= Void
 		do
-			current_composite_node.add_child (an_element)
+			if current_composite_node /= Void then
+				current_composite_node.add_child (a_element)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -297,6 +311,9 @@ feature {NONE} -- Implementation
 
 	current_composite_node: XM_XPATH_TREE_COMPOSITE_NODE
 			-- Current document or element node
+
+	saved_current_composite_node: XM_XPATH_TREE_COMPOSITE_NODE
+			-- Saved value of `current_composite_node'
 
 	pending_namespaces: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes of namespaces defined on the current element

@@ -738,6 +738,9 @@ feature {NONE} -- Implementation
 					end
 				end
 				l_sequence_iterator.forth
+				if is_backwards_compatible then
+					l_finished := True
+				end
 			end
 			if l_sequence_iterator.is_error then
 				l_sequence_iterator.error_value.set_location (system_id, line_number)

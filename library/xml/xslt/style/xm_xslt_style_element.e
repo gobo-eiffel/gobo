@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 			configuration := a_configuration
 			reporting_circumstances := Report_always
 			error_listener := an_error_listener
+			create version.make_zero
 			make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		ensure
 			error_listener_set: error_listener = an_error_listener
@@ -164,7 +165,7 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
-	default_xpath_namespace: STRING
+	local_default_xpath_namespace: STRING
 			-- Default XPath namespace
 
 	version: MA_DECIMAL
@@ -193,31 +194,28 @@ feature -- Access
 			-- pre-condition cannot be met
 		end
 
-	default_xpath_namespace_code: INTEGER is
-			-- Namespace code of default XPath namespace
+	default_xpath_namespace: STRING is
+			-- Namespace URI of default XPath namespace
 		local
 			l_style_element: XM_XSLT_STYLE_ELEMENT
 			l_namespace: STRING
-			finished: BOOLEAN
+			l_finished: BOOLEAN
 		do
 			from
 				l_style_element := Current
 			until
-				finished or else l_style_element = Void or else l_namespace /= Void
+				l_finished or l_style_element = Void or l_namespace /= Void
 			loop
-				l_namespace := l_style_element.default_xpath_namespace
+				l_namespace := l_style_element.local_default_xpath_namespace
 				if l_namespace = Void then
 					l_style_element ?= l_style_element.parent_node
 				else
-					if not shared_name_pool.is_code_for_uri_allocated (l_namespace) then
-						shared_name_pool.allocate_code_for_uri (l_namespace)
-					end
-					Result := shared_name_pool.code_for_uri (l_namespace)
-					finished := True
+					Result := l_namespace
+					l_finished := True
 				end
 			end
-			if not finished then
-				Result := Default_uri_code
+			if not l_finished then
+				Result := Null_uri
 			end
 		end
 
@@ -540,9 +538,6 @@ feature -- Access
 
 feature -- Status_report
 
-	is_excluded: BOOLEAN
-			-- Is `Current' excluded by "use-when" processing?
-
 	any_compile_errors: BOOLEAN is
 			-- Have any compile errors been reported?
 		local
@@ -594,6 +589,12 @@ feature -- Status_report
 			-- Is `Current' a computed expression?
 		do
 			-- `False'
+		end
+
+	is_absent_extension_element: BOOLEAN is
+			-- Is `Current' and `XM_XSLT_ABSENT_EXTENSION_ELEMENT'?
+		do
+			Result := False
 		end
 
 	is_user_function: BOOLEAN is
@@ -876,12 +877,17 @@ feature -- Status setting
 			-- Report a compile error.
 		require
 			validation_message_not_void: a_error /= Void
+		local
+			l_stylesheet: XM_XSLT_STYLESHEET
 		do
 			if not system_id.is_empty and then not a_error.is_location_known then a_error.set_location (system_id, line_number) end
 			error_listener.fatal_error (a_error)
-			principal_stylesheet.set_compile_errors
+			l_stylesheet := principal_stylesheet
+			if l_stylesheet /= Void then
+				l_stylesheet.set_compile_errors
+			end
 		ensure
-			compile_errors: any_compile_errors
+			compile_errors: principal_stylesheet /= Void implies any_compile_errors
 		end
 
 	report_compile_warning (a_message: STRING) is
@@ -1000,7 +1006,7 @@ feature -- Status setting
 						a_child_iterator.forth
 					end
 				end
-				if not finished then
+				if finished then
 					create an_error.make_from_string (STRING_.concat (node_name, " must be empty."), Xpath_errors_uri, "XTSE0260", Static_error)
 					report_compile_error (an_error)
 				end
@@ -1403,9 +1409,6 @@ feature -- Creation
 		do
 			expression_factory.make_expression (an_expression, static_context, 1, Eof_token, line_number, system_id)
 			if expression_factory.is_parse_error then
-				if not is_forwards_compatible_processing_enabled then
-					report_compile_error (expression_factory.parsed_error_value)
-				end
 				create a_deferred_error.make (expression_factory.parsed_error_value, "Xpath dynamic error")
 				last_generated_expression := a_deferred_error
 				a_deferred_error.set_parent (Current)
@@ -1516,7 +1519,6 @@ feature -- Element change
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 			-- This version can be called by XM_XSLT_TEMPLATE, even though it redefines `allocate_slots'.
 		require
-			not_excluded: not is_excluded
 			expression_not_in_error: a_expression /= Void and then not a_expression.is_error
 			expression_not_replaced: not a_expression.was_expression_replaced
 			slot_manager_not_void: a_slot_manager /= Void
@@ -1539,7 +1541,6 @@ feature -- Element change
 	allocate_slots (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slots in the stack frame for local variables contained in `an_expression'.
 		require
-			not_excluded: not is_excluded
 			expression_not_in_error: a_expression /= Void and then not a_expression.is_error
 			slot_manager_not_void: a_slot_manager /= Void
 		do
@@ -1549,7 +1550,6 @@ feature -- Element change
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		require
-			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			static_context_not_void: static_context /= Void
 		deferred
@@ -1560,7 +1560,6 @@ feature -- Element change
 	process_attributes is
 			-- Process the attribute list for the element.
 		require
-			not_excluded: not is_excluded
 			--attributes_not_prepared: not attributes_prepared
 			static_context_not_void: static_context /= Void
 		do
@@ -1576,9 +1575,8 @@ feature -- Element change
 		end
 
 	process_all_attributes is
-			-- Process the attributes of this element and all its children
+			-- Process the attributes of this element and all its children.
 		require
-			not_excluded: not is_excluded
 			--attributes_not_prepared: not attributes_prepared		
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -1593,7 +1591,7 @@ feature -- Element change
 				a_child_iterator.after
 			loop
 				a_style_element ?= a_child_iterator.item
-				if a_style_element /= Void and then not a_style_element.is_excluded then
+				if a_style_element /= Void then
 					a_style_element.process_all_attributes
 					if a_style_element.is_explaining then
 						is_explaining := True
@@ -1605,60 +1603,9 @@ feature -- Element change
 			attributes_prepared: attributes_prepared
 		end
 
-	process_use_when_attribute (an_attribute_name: STRING) is
-			--	Process the [xsl:]use-when attribute.
-		require
-			attributes_not_prepared: not attributes_prepared
-			valid_attribute_name: an_attribute_name /= Void
-				and then	is_valid_expanded_name (an_attribute_name)
-					and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Use_when_attribute)
-						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
-							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
-		local
-			l_static_context: XM_XSLT_EXPRESSION_CONTEXT
-			l_use_when_attribute: STRING
-			l_expression: XM_XPATH_EXPRESSION
-			l_dynamic_context: XM_XSLT_EVALUATION_CONTEXT
-			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
-		do
-			l_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
-			if l_use_when_attribute /= Void then
-				STRING_.left_adjust (l_use_when_attribute)
-				STRING_.right_adjust (l_use_when_attribute)
-				create l_static_context.make_restricted (Current, configuration)
-				expression_factory.make_expression (l_use_when_attribute, l_static_context, 1, Eof_token, line_number, system_id)
-				if expression_factory.is_parse_error then
-					report_compile_error (expression_factory.parsed_error_value)
-				else
-					l_expression := expression_factory.parsed_expression
-					l_expression.check_static_type (l_static_context, any_item)
-					if l_expression.is_error then
-						report_compile_error (l_expression.error_value)
-					else
-						if l_expression.was_expression_replaced then
-							l_expression := l_expression.replacement_expression
-						end
-						if l_expression.is_error then
-							report_compile_error (l_expression.error_value)
-						else
-							l_dynamic_context ?= l_static_context.new_compile_time_context
-							l_expression.calculate_effective_boolean_value (l_dynamic_context)
-							l_boolean_value := l_expression.last_boolean_value
-							if l_boolean_value.is_error then
-								report_compile_error (l_boolean_value.error_value)
-							else
-								is_excluded := not l_boolean_value.value
-							end
-						end
-					end
-				end
-			end
-		end
-
 	process_default_xpath_namespace_attribute (an_attribute_name: STRING) is
 			--	Process the [xsl:]default-xpath-namespace attribute.
 		require
-			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
@@ -1666,17 +1613,16 @@ feature -- Element change
 						and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
 							or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
 		do
-			default_xpath_namespace := attribute_value_by_expanded_name (an_attribute_name)
-			if default_xpath_namespace /= Void then
-				STRING_.left_adjust (default_xpath_namespace)
-				STRING_.right_adjust (default_xpath_namespace)
+			local_default_xpath_namespace := attribute_value_by_expanded_name (an_attribute_name)
+			if local_default_xpath_namespace /= Void then
+				STRING_.left_adjust (local_default_xpath_namespace)
+				STRING_.right_adjust (local_default_xpath_namespace)
 			end
 		end
 
 	process_version_attribute (an_attribute_name: STRING; a_condition: INTEGER) is
 			--	Process the [xsl:]version attribute.
 		require
-			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			version_attribute_not_processed: not version_attribute_processed
 			validation_reporting: Report_always <= a_condition and then a_condition <= Report_if_instantiated
@@ -1735,7 +1681,6 @@ feature -- Element change
 	process_default_collation_attribute (an_attribute_name: STRING) is
 			--	Process the [xsl:]default-collation attribute.
 		require
-			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
@@ -1749,7 +1694,6 @@ feature -- Element change
 	process_extension_element_attribute (an_attribute_name: STRING) is
 			--	Process the [xsl:]extension-element-prefixes attribute.
 		require
-			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: an_attribute_name /= Void
 				and then	is_valid_expanded_name (an_attribute_name)
@@ -1799,7 +1743,6 @@ feature -- Element change
 	process_excluded_namespaces_attribute (a_attribute_name: STRING) is
 			--	Process the  [xsl:]exclude-result-prefixes attribute.
 		require
-			not_excluded: not is_excluded
 			attributes_not_prepared: not attributes_prepared
 			valid_attribute_name: a_attribute_name /= Void
 				and then	is_valid_expanded_name (a_attribute_name)
@@ -1866,43 +1809,11 @@ feature -- Element change
 			end
 		end
 
-	prune_children is
-			-- Remove all child elements excluded by [xsl:]use-when processing.
-		local
-			l_style_element: XM_XSLT_STYLE_ELEMENT
-			l_child_iterator: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]
-			l_pruned: BOOLEAN
-		do
-			from
-				l_child_iterator := children.new_cursor
-				l_child_iterator.start
-			until
-				l_child_iterator.after
-			loop
-				l_style_element ?= l_child_iterator.item
-				if l_style_element /= Void then
-					if l_style_element.is_excluded then
-						l_child_iterator.remove
-						l_pruned := True
-					else
-						l_style_element.prune_children
-						l_child_iterator.forth
-					end
-				else
-					l_child_iterator.forth
-				end
-			end
-			if l_pruned then
-				update_indices
-			end
-		end
-
 	validate is
 			-- Check that the stylesheet element is valid.
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		require
-			not_excluded: not is_excluded
 			attributes_prepared: attributes_prepared
 			not_validated: not validated
 		do
@@ -1913,7 +1824,6 @@ feature -- Element change
 			-- Hook to allow additional validation of a parent element
 			--  immediately after its children have been validated.
 		require
-			not_excluded: not is_excluded
 			children_validated: children_validated
 			post_validate_not_run: not post_validated
 		do
@@ -1923,7 +1833,6 @@ feature -- Element change
 	validate_subtree is
 			-- Recursively walk through the stylesheet to validate all nodes.
 		require
-			not_excluded: not is_excluded
 			not_validated: not validated
 		do
 			if validation_error /= Void then
@@ -1947,7 +1856,6 @@ feature -- Element change
 	validate_children is
 			-- Validate the children of this node, recursively.
 		require
-			not_excluded: not is_excluded
 			validated: validated
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -1972,7 +1880,7 @@ feature -- Element change
 						a_message := STRING_.appended_string (a_message, " element.")
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
-					elseif not a_style_element.is_excluded then
+					else
 						a_style_element.validate_subtree
 						a_last_child := a_style_element
 					end
@@ -1990,7 +1898,6 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an expression.
 		require
-			not_excluded: not is_excluded
 			not_in_error: not is_error
 			no_previous_error: not any_compile_errors
 			validated: validated
@@ -2004,7 +1911,6 @@ feature -- Element change
 	compile_sequence_constructor (an_executable: XM_XSLT_EXECUTABLE; an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN) is
 			-- Compile any sequence constructor child nodes to an expression.
 		require
-			not_excluded: not is_excluded
 			not_in_error: not is_error
 			no_previous_error: not any_compile_errors
 			validation_complete: post_validated
@@ -2044,7 +1950,7 @@ feature -- Element change
 				elseif not is_error and then not any_compile_errors then
 					if a_style_element /= Void and then a_style_element.is_xslt_variable then
 						compile_variable (an_executable, a_style_element.as_xslt_variable, an_axis_iterator, include_parameters)
-					elseif a_style_element /= Void and not a_style_element.is_excluded then
+					elseif a_style_element /= Void then
 						compile_style_element (an_executable, a_style_element, an_axis_iterator, include_parameters)
 					end
 				end
@@ -2056,7 +1962,6 @@ feature -- Element change
 	compile_variable (an_executable: XM_XSLT_EXECUTABLE; a_variable: XM_XSLT_VARIABLE; an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN) is
 			-- Compile `a_variable'.
 		require
-			not_excluded: not is_excluded
 			not_in_error: not is_error
 			no_previous_error: not any_compile_errors
 			validation_complete: post_validated
@@ -2110,7 +2015,6 @@ feature -- Element change
 	fallback_processing (a_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT) is
 			-- Perform fallback processing.
 		require
-			not_excluded: not is_excluded
 			executable_not_void: a_executable /= Void
 			style_element_not_void: a_style_element /= Void and then a_style_element.validation_error /= Void
 		local
@@ -2164,7 +2068,6 @@ feature -- Element change
 	accumulate_attribute_sets (a_sets: STRING; a_usage_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]) is
 			-- Accumulate attribute sets associated with `Current'
 		require
-			not_excluded: not is_excluded
 			used_attribute_sets_not_void: a_sets /= Void
 		local
 			l_list: DS_ARRAYED_LIST [XM_XSLT_ATTRIBUTE_SET]
@@ -2419,56 +2322,62 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 		require
 			positive_fingerprint: a_fingerprint >= 0
 		local
-			a_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_node, a_previous_node: XM_XPATH_NODE
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
-			finished, finished_inner: BOOLEAN
+			l_preceding_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_node, l_previous_node: XM_XPATH_NODE
+			l_stylesheet: XM_XSLT_STYLESHEET
+			l_fallback: XM_XSLT_FALLBACK
+			l_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
+			l_finished, l_finished_inner: BOOLEAN
 		do
 			if not is_top_level then
 				from
-					a_previous_node := Current
-					a_preceding_iterator := new_axis_iterator (Preceding_sibling_axis)
-					a_preceding_iterator.start
+					l_previous_node := Current
+					l_preceding_iterator := new_axis_iterator (Preceding_sibling_axis)
+					l_preceding_iterator.start
 				until
-					finished
+					l_finished
 				loop
-					if a_preceding_iterator.after then
+					if l_preceding_iterator.after then
 						from
-							finished_inner := False
-							a_node := Void
+							l_finished_inner := False
+							l_node := Void
 						until
-							finished_inner or else a_node /= Void
+							l_finished_inner or else l_node /= Void
 						loop
-							a_node := a_previous_node.parent
-							a_previous_node := a_node
-							a_stylesheet ?= a_node.parent
-							if a_stylesheet /= Void then
-								finished_inner := True
+							l_node := l_previous_node.parent
+							l_fallback ?= l_node
+							if l_fallback /= Void then
+								-- Siblings of xsl:fallback are ignored
+								l_node := l_node.parent
+							end
+							l_previous_node := l_node
+							l_stylesheet ?= l_node.parent
+							if l_stylesheet /= Void then
+								l_finished_inner := True
 							else
-								a_preceding_iterator := a_node.new_axis_iterator (Preceding_sibling_axis)
-								a_preceding_iterator.start
-								if not a_preceding_iterator.after then
-									a_node := a_preceding_iterator.item
+								l_preceding_iterator := l_node.new_axis_iterator (Preceding_sibling_axis)
+								l_preceding_iterator.start
+								if not l_preceding_iterator.after then
+									l_node := l_preceding_iterator.item
 								else
-									a_node := Void
+									l_node := Void
 								end
 							end
 						end
 					else
-						a_node := a_preceding_iterator.item
+						l_node := l_preceding_iterator.item
 					end
-					a_stylesheet ?= a_node.parent
-					if a_stylesheet /= Void then
-						finished := True
+					l_stylesheet ?= l_node.parent
+					if l_stylesheet /= Void then
+						l_finished := True
 					else
-						a_variable_declaration ?= a_node
-						if a_variable_declaration /= Void then
-							Result := a_variable_declaration.variable_fingerprint = a_fingerprint
-							if Result then finished := True end
+						l_variable_declaration ?= l_node
+						if l_variable_declaration /= Void then
+							Result := l_variable_declaration.variable_fingerprint = a_fingerprint
+							if Result then l_finished := True end
 						end
 					end
-					if not finished and then not a_preceding_iterator.after then a_preceding_iterator.forth end
+					if not l_finished and then not l_preceding_iterator.after then l_preceding_iterator.forth end
 				end
 			end
 		end
@@ -2629,7 +2538,6 @@ feature {NONE} -- Implementation
 	compile_style_element (an_executable: XM_XSLT_EXECUTABLE; a_style_element: XM_XSLT_STYLE_ELEMENT;  an_axis_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; include_parameters: BOOLEAN) is
 			-- Compile a child style element.
 		require
-			not_excluded: not is_excluded
 			not_in_error: not is_error
 			no_previous_error: not any_compile_errors
 			validation_complete: post_validated
@@ -2642,9 +2550,9 @@ feature {NONE} -- Implementation
 			a_system_id: STRING
 			a_line_number: INTEGER
 		do
-			if a_style_element.validation_error /= Void then
+			if a_style_element.validation_error /= Void and not a_style_element.is_absent_extension_element then
 				fallback_processing (an_executable, a_style_element)
-			elseif not a_style_element.is_excluded then
+			else
 				a_style_element.compile (an_executable)
 				if not any_compile_errors then
 					a_child := a_style_element.last_generated_expression
@@ -2680,5 +2588,6 @@ invariant
 	validation_reporting: Report_always <= reporting_circumstances and then reporting_circumstances <= Report_if_instantiated
 	error_listener_not_void: error_listener /= Void
 	default_collation_name_not_void: default_collation_name /= Void
+	version_not_void: version /= Void
 
 end

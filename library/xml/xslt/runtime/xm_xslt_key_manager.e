@@ -77,50 +77,55 @@ feature -- Access
 			key_value_not_void: a_key_value /= Void
 			context_not_void: a_context /= Void
 		local
-			an_item_type: INTEGER
-			a_value: XM_XPATH_ATOMIC_VALUE
-			an_index: XM_XSLT_KEY_INDEX
+			l_item_type: INTEGER
+			l_value: XM_XPATH_ATOMIC_VALUE
+			l_index: XM_XSLT_KEY_INDEX
+			l_key_set: XM_XSLT_KEY_SET
 			--a_key_definition: XM_XSLT_KEY_DEFINITION
-			a_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
+			l_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			--a_collator: ST_COLLATOR
-			an_error: XM_XPATH_ERROR_VALUE
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			last_key_sequence := Void 
-			an_item_type := a_key_value.item_type.primitive_type
-			if an_item_type = Integer_type_code or else
-				an_item_type = Decimal_type_code or else
-				an_item_type = Float_type_code then
-				an_item_type := Double_type_code
-				a_value := a_key_value.convert_to_type (type_factory.schema_type (an_item_type))
+			l_item_type := a_key_value.item_type.primitive_type
+			l_key_set := key_definitions (a_key_fingerprint)
+			if l_key_set.is_backwards_compatible then
+				l_value := a_key_value.convert_to_type (type_factory.string_type)
+				l_item_type := String_type_code
+			elseif l_item_type = Integer_type_code or else
+				l_item_type = Decimal_type_code or else
+				l_item_type = Float_type_code then
+				l_item_type := Double_type_code
+				l_value := a_key_value.convert_to_type (type_factory.schema_type (l_item_type))
 			else
-				a_value := a_key_value
+				l_value := a_key_value
 			end
-			if does_index_exist (a_document, a_key_fingerprint, an_item_type) then
-				an_index := index (a_document, a_key_fingerprint, an_item_type)
-				if an_index.is_under_construction then
-					create an_error.make_from_string ("Key definition is circular", Xpath_errors_uri, "XTDE0640", Dynamic_error)
-					a_context.transformer.report_fatal_error (an_error)
+			if does_index_exist (a_document, a_key_fingerprint, l_item_type) then
+				l_index := index (a_document, a_key_fingerprint, l_item_type)
+				if l_index.is_under_construction then
+					create l_error.make_from_string ("Key definition is circular", Xpath_errors_uri, "XTDE0640", Dynamic_error)
+					a_context.transformer.report_fatal_error (l_error)
 				end
 			else
-				create an_index.make_under_construction
-				put_index (a_document, a_key_fingerprint, an_item_type, an_index)
-				build_index (a_key_fingerprint, an_item_type, a_document, a_context)
+				create l_index.make_under_construction
+				put_index (a_document, a_key_fingerprint, l_item_type, l_index)
+				build_index (a_key_fingerprint, l_item_type, a_document, a_context)
 				if not a_context.transformer.is_error then
-					an_index := last_built_index
-					put_index (a_document, a_key_fingerprint, an_item_type, an_index)
+					l_index := last_built_index
+					put_index (a_document, a_key_fingerprint, l_item_type, l_index)
 				end
 			end
 			if not a_context.transformer.is_error then
 				--  TODO - collation keys
 				--a_key_definition := key_definitions (a_key_fingerprint).item (1)
 				-- a_collator := a_key_definition.collator
-				if an_item_type = Untyped_atomic_type_code then
+				if l_item_type = Untyped_atomic_type_code then
 					--  TODO - collation keys
-					a_value := a_value.convert_to_type (type_factory.string_type)
+					l_value := l_value.convert_to_type (type_factory.string_type)
 				end
-				if an_index.has (a_key_value) then
-					a_list := an_index.map.item (a_key_value)
-					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_key_sequence.make (a_list)
+				if l_index.has (l_value) then
+					l_list := l_index.map.item (l_value)
+					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_key_sequence.make (l_list)
 				else
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make
 				end
@@ -140,14 +145,14 @@ feature -- Access
 			collation_uri_not_void: Result /= Void
 		end
 
-	key_definitions (a_key_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION] is
-			-- List of key definitions mataching `a_key_fingerprint:'
+	key_definitions (a_key_fingerprint: INTEGER): XM_XSLT_KEY_SET is
+			-- List of key definitions matching `a_key_fingerprint:'
 		require
 			key_defined: has_key (a_key_fingerprint)
 		do
 			Result := key_map.item (a_key_fingerprint)
 		ensure
-			key_definitions_list_not_void: Result /= Void
+			key_definitions_set_not_void: Result /= Void
 		end
 	
 feature -- Status report
@@ -178,23 +183,20 @@ feature -- Element change
 			key_definition_not_void: a_key_definition /= Void
 			same_collation: is_same_collation (a_key_definition, a_key_fingerprint)
 		local
-			a_key_list: DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION]
+			l_key_list: XM_XSLT_KEY_SET
 		do
 			if key_map.has (a_key_fingerprint) then
-				a_key_list := key_map.item (a_key_fingerprint)
+				l_key_list := key_map.item (a_key_fingerprint)
 				check
 					collation_map_entry: collation_map.has (a_key_fingerprint)
 					-- as this routine ensures it
 				end
 			else
-				create a_key_list.make (3)
-				key_map.force (a_key_list, a_key_fingerprint)
+				create l_key_list.make (a_key_fingerprint)
+				key_map.force (l_key_list, a_key_fingerprint)
 				collation_map.force (a_key_definition.collation_uri, a_key_fingerprint)
 			end
-			if not a_key_list.extendible (1) then
-				a_key_list.resize (2 * a_key_list.count)
-			end
-			a_key_list.put_last (a_key_definition)
+			l_key_list.add_definition (a_key_definition)
 		ensure
 			has_key: has_key (a_key_fingerprint)
 			key_definition_added: True -- TODO
@@ -203,11 +205,17 @@ feature -- Element change
 	allocate_slots is
 			-- Allocate stack-frame slots in bodies of all key definitions.
 		local
-			l_table_cursor: DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION], INTEGER]
+			l_table_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_KEY_SET, INTEGER]
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_KEY_DEFINITION]
 		do
-			from l_table_cursor := key_map.new_cursor; l_table_cursor.start until l_table_cursor.after loop
-				from l_cursor := l_table_cursor.item.new_cursor; l_cursor.start until l_cursor.after loop
+			from
+				l_table_cursor := key_map.new_cursor
+				l_table_cursor.start
+			until
+				l_table_cursor.after
+			loop
+				from l_cursor := l_table_cursor.item.key_definitions.new_cursor
+				l_cursor.start until l_cursor.after loop
 					l_cursor.item.allocate_slots
 					l_cursor.forth
 				end
@@ -218,8 +226,8 @@ feature -- Element change
 			
 feature {NONE} -- Implementation
 
-	key_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION], INTEGER]
-			-- Map of fingerprints to keys
+	key_map: DS_HASH_TABLE [XM_XSLT_KEY_SET, INTEGER]
+			-- Map of fingerprints to key sets
 
 	collation_map: DS_HASH_TABLE [STRING, INTEGER]
 			-- Map of fingerprints to collation_names
@@ -230,42 +238,39 @@ feature {NONE} -- Implementation
 	last_built_index: XM_XSLT_KEY_INDEX
 			-- Result from `build_index'
 
-	build_index (a_key_fingerprint, an_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT) is 
+	build_index (a_key_fingerprint, a_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT) is 
 			-- Build index for `a_document' for a named key.
 		require
 			document_not_void: a_document /= Void
 			context_not_void: a_context /= Void
 			transformer_not_in_error: a_context.transformer /= Void and then not a_context.transformer.is_error
 		local
-			some_key_definitions: DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_KEY_DEFINITION]
-			a_message: STRING
-			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE]
-			an_error: XM_XPATH_ERROR_VALUE
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_KEY_DEFINITION]
+			l_message: STRING
+			l_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE]
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			debug ("XSLT key manager")
 				std.error.put_string ("Ready to build an index%N")
 			end
 			last_built_index := Void
-			some_key_definitions := key_definitions (a_key_fingerprint)
-			if some_key_definitions /= Void then
-				create a_map.make_with_equality_testers (10, Void, atomic_value_tester)
+			if has_key (a_key_fingerprint) then
+				create l_map.make_with_equality_testers (10, Void, atomic_value_tester)
 				from
-					a_cursor := some_key_definitions.new_cursor; a_cursor.start
-				variant
-					some_key_definitions.count + 1 - a_cursor.index
+					l_cursor := key_definitions (a_key_fingerprint).key_definitions.new_cursor
+					l_cursor.start
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					construct_index (a_document, a_map, a_cursor.item, an_item_type, a_context, a_cursor.index = 1)
-					a_cursor.forth
+					construct_index (a_document, l_map, l_cursor.item, a_item_type, a_context, l_cursor.index = 1)
+					l_cursor.forth
 				end
-				if not a_context.transformer.is_error then create last_built_index.make (a_map) end
+				if not a_context.transformer.is_error then create last_built_index.make (l_map) end
 			else
-				a_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
-				a_message := STRING_.appended_string (a_message, " has not been defined")
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
-				a_context.transformer.report_fatal_error (an_error)
+				l_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
+				l_message := STRING_.appended_string (l_message, " has not been defined")
+				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
+				a_context.transformer.report_fatal_error (l_error)
 			end
 		ensure
 			error_or_index_built: not a_context.transformer.is_error implies last_built_index /= Void

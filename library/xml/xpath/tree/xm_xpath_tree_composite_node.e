@@ -167,6 +167,44 @@ feature -- Element change
 			a_child.set_parent (Current, a_index)
 		end
 
+feature -- Removal
+
+	strip_whitespace_nodes is
+			-- Strip all whitespace-only text nodes whose immediate following sibling is xsl:param or xsl:sort.
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]
+			l_previous_all_white: BOOLEAN
+			l_index_reduction: INTEGER
+		do
+			from
+				l_cursor := children.new_cursor
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
+				if l_previous_all_white and l_cursor.item.is_non_white_following_sibling then
+					l_previous_all_white := False
+					l_cursor.remove_left
+					l_index_reduction := l_index_reduction + 1
+					l_cursor.item.reduce_child_index (l_index_reduction)
+					l_cursor.item.as_tree_element.strip_whitespace_nodes
+				elseif l_cursor.item.is_tree_text and then l_cursor.item.as_tree_text.is_all_whitespace then
+					if l_index_reduction > 0 then
+						l_cursor.item.reduce_child_index (l_index_reduction)
+					end
+					l_previous_all_white := True
+				else
+					if l_index_reduction > 0 then
+						l_cursor.item.reduce_child_index (l_index_reduction)
+					end
+					l_previous_all_white := False
+					if l_cursor.item.is_tree_element then
+						l_cursor.item.as_tree_element.strip_whitespace_nodes
+					end
+				end
+				l_cursor.forth
+			end
+		end
 
 feature {XM_XPATH_TREE_BUILDER} -- Restricted
 	

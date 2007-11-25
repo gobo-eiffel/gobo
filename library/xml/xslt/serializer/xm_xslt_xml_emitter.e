@@ -663,9 +663,8 @@ feature {NONE} -- Implementation
 						elseif l_code = 9 then
 							output ("&#9;")
 						else
-							check
-								error_in_escaping_logic: False
-							end
+							-- C0 control code
+							output_character_reference (l_code)
 						end
 					end
 				end

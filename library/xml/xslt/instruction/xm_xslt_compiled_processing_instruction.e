@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 		do
 			evaluate_name (a_context)
 			if not is_error then
-				if shared_name_pool.is_name_code_allocated ("", "", evaluated_name) then
+				if not shared_name_pool.is_name_code_allocated ("", "", evaluated_name) then
 					shared_name_pool.allocate_name ("", "", evaluated_name)
 					last_name_code := shared_name_pool.last_name_code
 				else

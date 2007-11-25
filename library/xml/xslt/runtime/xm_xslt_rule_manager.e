@@ -270,7 +270,9 @@ feature -- Element change
 			l_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
 		do
 			rank_mode (mode_for_default_mode)
-			if omni_mode /= Void then rank_mode (omni_mode) end
+			if omni_mode /= Void then
+				rank_mode (omni_mode)
+			end
 			from
 				l_cursor := mode_map.new_cursor; l_cursor.start
 			until
@@ -282,54 +284,42 @@ feature -- Element change
 		end
 
 	rank_mode (a_mode: XM_XSLT_MODE) is
-			-- Set `priority_rank' for every rule in `a_mode'
+			-- Set `priority_rank' for every rule in `a_mode'.
 		require
 			mode_not_void: a_mode /= Void
 		local
-			an_index: INTEGER
-			a_rule: XM_XSLT_RULE
-			a_priority: MA_DECIMAL
+			l_index: INTEGER
+			l_rule: XM_XSLT_RULE
+			l_priority: MA_DECIMAL
 		do
 			from
-				an_index := a_mode.rule_dictionary.lower
+				l_index := a_mode.rule_dictionary.lower
 			variant
-				a_mode.rule_dictionary.count + 1 - an_index
+				a_mode.rule_dictionary.count + 1 - l_index
 			until
-				an_index > a_mode.rule_dictionary.upper
+				l_index > a_mode.rule_dictionary.upper
 			loop
-				a_rule := a_mode.rule_dictionary.item (an_index)
+				l_rule := a_mode.rule_dictionary.item (l_index)
 				from
 				until
-					a_rule = Void
+					l_rule = Void
 				loop
-					a_priority := a_rule.priority
+					l_priority := l_rule.priority
 					priority_ranks.start
-					priority_ranks.search_forth (a_priority)
+					priority_ranks.search_forth (l_priority)
 					check
 						priority_found: not priority_ranks.off
-						-- `set_handler' always calls `rank_priority' to guarantee this
+							-- `set_handler' always calls `rank_priority' to guarantee this
 					end
-					a_rule.set_priority_rank (priority_ranks.index)
-					a_rule := a_rule.next_rule
+					-- to avoid re-ranking - is this sound? - XM_XSLT_TEST_INFOSET caused this change
+					if l_rule.priority_rank = -1 then
+						l_rule.set_priority_rank (priority_ranks.index)
+					end
+					l_rule := l_rule.next_rule
 				end
-				an_index := an_index + 1
+				l_index := l_index + 1
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	mode_for_default_mode: XM_XSLT_MODE
-			-- Mode for node handlers with default mode
-
-	omni_mode: XM_XSLT_MODE
-			-- Mode for node handlers that specify mode="all"
-
-	mode_map: DS_HASH_TABLE [XM_XSLT_MODE, INTEGER]
-			-- Map of fingerprints to non-default modes
-
-	priority_ranks: DS_LINKED_LIST [MA_DECIMAL]
-			-- Rule priorities sorted in increasing order;
-			-- Hence, a rule's priority_rank is the position of it's priority within this list
 
 	rank_priority (a_priority: MA_DECIMAL) is
 			-- Rank `a_priority' by inserting it into `priority_ranks' maintaining an ascending order.
@@ -362,6 +352,21 @@ feature {NONE} -- Implementation
 		ensure
 			priority_present: priority_ranks.has (a_priority)
 		end
+
+feature {NONE} -- Implementation
+
+	mode_for_default_mode: XM_XSLT_MODE
+			-- Mode for node handlers with default mode
+
+	omni_mode: XM_XSLT_MODE
+			-- Mode for node handlers that specify mode="all"
+
+	mode_map: DS_HASH_TABLE [XM_XSLT_MODE, INTEGER]
+			-- Map of fingerprints to non-default modes
+
+	priority_ranks: DS_LINKED_LIST [MA_DECIMAL]
+			-- Rule priorities sorted in increasing order;
+			-- Hence, a rule's priority_rank is the position of it's priority within this list
 
 invariant
 

@@ -209,8 +209,8 @@ feature -- Evaluation
 										finished := True
 									else
 										create a_comparison_checker
-										a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_operator,
-																											  atomic_comparer, a_third_iterator.item.as_atomic_value, False)
+										a_comparison_checker.check_correct_general_relation_xpath2 (an_iterator.item.as_atomic_value, singleton_operator,
+																											  atomic_comparer, a_third_iterator.item.as_atomic_value)
 										if a_comparison_checker.is_comparison_type_error then
 											create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
 											finished := True
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 						finished := True
 					else
 						create a_comparison_checker
-						a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_operator, atomic_comparer, an_item.as_atomic_value, False)
+						a_comparison_checker.check_correct_general_relation_xpath2 (an_iterator.item.as_atomic_value, singleton_operator, atomic_comparer, an_item.as_atomic_value)
 						if a_comparison_checker.is_comparison_type_error then
 							create last_boolean_value.make (False)
 							last_boolean_value.set_last_error (a_comparison_checker.last_type_error)

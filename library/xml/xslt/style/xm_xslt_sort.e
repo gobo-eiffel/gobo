@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, may_contain_sequence_constructor, is_sort
+			validate, may_contain_sequence_constructor, is_sort, make_style_element
 		end
 
 	XM_XPATH_ROLE
@@ -24,6 +24,17 @@ inherit
 create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
+
+feature {NONE} -- Initialization
+	
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
+			-- Establish invariant.
+		do
+			is_non_white_following_sibling := True
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
+		end
 
 feature -- Access
 
@@ -130,21 +141,23 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_content: XM_XPATH_EXPRESSION
+			l_content: XM_XPATH_EXPRESSION
 		do
 			if select_expression = Void then
-				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
+				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 				if last_generated_expression = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
 				else
-					a_content := last_generated_expression
+					l_content := last_generated_expression
 				end
-				a_content.simplify
-				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
-				create sort_key_definition.make (a_content, order, case_order, language, data_type, collation_name)
+				l_content.simplify
+				if l_content.was_expression_replaced then
+					l_content := l_content.replacement_expression
+				end
+				sort_key_definition.set_sort_key (l_content)
 			end
 			-- TODO: simplify sort key definition
 			last_generated_expression := Void
@@ -206,7 +219,7 @@ feature {NONE} -- Implementation
 					report_compile_error (case_order.error_value)
 				end				
 			else
-				create {XM_XPATH_STRING_VALUE} case_order.make ("#default") -- TODO - check this out - what about validating?  ditto order
+				create {XM_XPATH_STRING_VALUE} case_order.make ("#default")
 			end			
 			if a_data_type_attribute /= Void then
 				generate_attribute_value_template (a_data_type_attribute, static_context)
@@ -292,6 +305,8 @@ feature {NONE} -- Implementation
 					select_expression := a_type_checker.checked_expression
 					create sort_key_definition.make (select_expression, order, case_order, language, data_type, collation_name)
 				end
+			else
+				create sort_key_definition.make (create {XM_XPATH_EMPTY_SEQUENCE}.make, order, case_order, language, data_type, collation_name)
 			end
 		end
 

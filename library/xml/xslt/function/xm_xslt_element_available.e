@@ -109,7 +109,6 @@ feature -- Evaluation
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_boolean: BOOLEAN
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			check
 				fixed_string: arguments.item (1).is_string_value
@@ -120,8 +119,7 @@ feature -- Evaluation
 				set_last_error_from_string ("Argument to 'element-available' is not a lexical QName",
 													 Xpath_errors_uri, "XTDE1440", Static_error)
 			else
-				l_expression_context ?= a_context
-				l_boolean := l_expression_context.is_element_available (arguments.item (1).as_string_value.string_value)
+				l_boolean := a_context.is_element_available (arguments.item (1).as_string_value.string_value)
 				create l_boolean_value.make (l_boolean)
 				set_replacement (l_boolean_value)
 			end

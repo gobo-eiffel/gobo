@@ -1146,6 +1146,7 @@ feature -- Evaluation
 				if last_iterator.is_error then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (last_iterator.error_value)
+					set_last_error (last_iterator.error_value)
 				elseif not last_iterator.after then
 					l_item := last_iterator.item
 					if l_item.is_node then
@@ -1156,6 +1157,7 @@ feature -- Evaluation
 							if last_iterator.is_error then
 								create last_boolean_value.make (False)
 								last_boolean_value.set_last_error (last_iterator.error_value)
+								set_last_error (last_iterator.error_value)
 							elseif last_iterator.after then
 								create last_boolean_value.make (l_item.as_boolean_value.value)
 							else
@@ -1167,6 +1169,7 @@ feature -- Evaluation
 								if last_iterator.is_error then
 									create last_boolean_value.make (False)
 									last_boolean_value.set_last_error (last_iterator.error_value)
+									set_last_error (last_boolean_value.error_value)
 								elseif last_iterator.after then
 									create last_boolean_value.make (l_item.string_value.count /= 0)
 								else
@@ -1178,6 +1181,7 @@ feature -- Evaluation
 									if last_iterator.is_error then
 										create last_boolean_value.make (False)
 										last_boolean_value.set_last_error (last_iterator.error_value)
+										set_last_error (last_boolean_value.error_value)
 									elseif last_iterator.after then
 										l_item.as_numeric_value.calculate_effective_boolean_value (a_context)
 										last_boolean_value := l_item.as_numeric_value.last_boolean_value
@@ -1195,6 +1199,7 @@ feature -- Evaluation
 			else
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (last_iterator.error_value)
+				set_last_error (last_boolean_value.error_value)
 			end
 		ensure
 			value_not_void_but_may_be_in_error: last_boolean_value /= Void
@@ -2061,6 +2066,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 		do
 			create Result.make (False)
 			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Xpath_errors_uri, "FORG0006", Type_error)
+			set_last_error (Result.error_value)
 		end
 
 feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation

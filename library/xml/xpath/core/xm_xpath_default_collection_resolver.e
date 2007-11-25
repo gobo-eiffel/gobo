@@ -65,7 +65,9 @@ feature -- Element change
 		local
 			a_resolver: XM_XPATH_COLLECTION_SCHEME_RESOLVER
 		do
-			if schemes.has (a_uri.scheme) then
+			if a_context.available_documents.is_collection_mapped (a_uri.full_reference) then
+				last_collection := a_context.available_documents.collection (a_uri.full_reference)
+			elseif schemes.has (a_uri.scheme) then
 				a_resolver := schemes.item (a_uri.scheme)
 				a_resolver.resolve (a_uri, a_context)
 				if a_resolver.was_error then
@@ -74,7 +76,7 @@ feature -- Element change
 					last_collection := a_resolver.last_collection
 				end
 			else
-				create last_error.make_from_string ("Unknown collection URI", Xpath_errors_uri, "FODC0004", Dynamic_error)
+				create last_error.make_from_string ("Unsupported collection URI scheme", Xpath_errors_uri, "FODC0004", Dynamic_error)
 			end
 		end
 

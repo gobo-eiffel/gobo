@@ -513,6 +513,8 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Gexslt_isolation_level_type_code, "isolation-level")
 			bind_gexslt_name (Gexslt_transformation_function_type_code, "transformation")
 			bind_gexslt_name (Gexslt_memo_function_type_code, "function")
+			bind_gexslt_name (Gexslt_file_element_type_code, "file")
+			bind_gexslt_name (Gexslt_directory_element_type_code, "directory")
 		end
 	
 	bind_fn_names is

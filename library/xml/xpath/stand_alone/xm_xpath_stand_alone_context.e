@@ -105,13 +105,12 @@ feature -- Access
 	line_number: INTEGER
 			-- Line number
 
-	default_element_namespace: INTEGER is
-			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
+	default_element_namespace: STRING is
+			-- Default XPath namespace uri
 		do
-			Result := namespace_index_to_uri_code (Null_prefix_index)
+			Result := ""
 		end
 
-	
 	default_function_namespace_uri: STRING is
 			-- Namespace for non-prefixed XPath functions
 		do
@@ -202,6 +201,12 @@ feature -- Status report
 			-- It is not called for host languages supported directly
 			--  by this library.
 			
+		end
+
+	is_element_available (a_qname: STRING): BOOLEAN is
+			-- Is element name `a_qname' available?
+		do
+			Result := False
 		end
 
 feature -- Creation

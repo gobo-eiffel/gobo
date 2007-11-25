@@ -71,25 +71,37 @@ feature -- Evaluation
 			l_uri: STRING
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_string_value: XM_XPATH_STRING_VALUE
+			l_argument: XM_XPATH_EXPRESSION
 		do
 			product_name := a_context.configuration.product_name
-			check
-				string_value: arguments.item (1).is_string_value
-				-- from static typing, and `pre_evaluate' is only called for fixed values
-			end
-			create l_parser.make (arguments.item (1).as_string_value.string_value)
-			if not l_parser.is_valid then
-				set_last_error_from_string ("Argument to 'system-property' is not a QName",
-					Xpath_errors_uri, "XTDE1390", Static_error)
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+			l_argument := arguments.item (1)
+			l_argument.evaluate_item (a_result, a_context)
+			if l_argument.is_error then
+				set_last_error (l_argument.error_value)
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_argument.error_value))
 			else
-				if not l_parser.is_prefix_present then
-					l_uri := ""
+				create l_parser.make (a_result.item.string_value)
+				a_result.put (Void)
+				if not l_parser.is_valid then
+					set_last_error_from_string ("Argument to 'system-property' is not a QName",
+						Xpath_errors_uri, "XTDE1390", Static_error)
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
 				else
-					l_uri := namespace_context.uri_for_defaulted_prefix (l_parser.optional_prefix, False)
+					if not l_parser.is_prefix_present then
+						l_uri := ""
+					else
+						l_uri := namespace_context.uri_for_defaulted_prefix (l_parser.optional_prefix, False)
+						if l_uri = Void then
+							set_last_error_from_string ("Prefix to argument to 'system-property' is not declared",
+								Xpath_errors_uri, "XTDE1390", Static_error)
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
+						end
+					end
+					if a_result.item = Void then
+						create l_string_value.make (system_property (l_uri, l_parser.local_name))
+						a_result.put (l_string_value)
+					end
 				end
-				create l_string_value.make (system_property (l_uri, l_parser.local_name))
-				a_result.put (l_string_value)
 			end
 		end
 
@@ -114,10 +126,17 @@ feature -- Evaluation
 				if not l_parser.is_prefix_present then
 					l_uri := ""
 				else
-					l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
+					if a_context.is_prefix_declared (l_parser.optional_prefix) then
+						l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
+					else
+						set_last_error_from_string ("Prefix to argument to 'system-property' is not declared",
+							Xpath_errors_uri, "XTDE1390", Static_error)
+					end
 				end
-				create l_string_value.make (system_property (l_uri, l_parser.local_name))
-				set_replacement (l_string_value)
+				if not is_error then
+					create l_string_value.make (system_property (l_uri, l_parser.local_name))
+					set_replacement (l_string_value)
+				end
 			end
 		end
 

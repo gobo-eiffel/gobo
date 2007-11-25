@@ -58,12 +58,12 @@ feature {NONE} -- Initialization
 		require
 			style_element_not_void:	a_style_element /= Void
 			configuration_not_void: a_configuration /= Void
-			known_collation: a_style_element.principal_stylesheet.collation_map.has (a_style_element.default_collation_name)
 		do
 			configuration := a_configuration
 			style_element := a_style_element
-			known_collations := a_style_element.principal_stylesheet.collation_map
-			default_collation_name := a_style_element.default_collation_name
+			create known_collations.make_with_equality_testers (1, Void, string_equality_tester)
+			default_collation_name := Unicode_codepoint_collation_uri
+			declare_collation (create {ST_COLLATOR}, default_collation_name)
 			create base_uri.make (style_element.base_uri)
 			is_restricted := True
 		ensure
@@ -131,10 +131,10 @@ feature -- Access
 	base_uri: UT_URI
 			-- Base URI
 	
-	default_element_namespace: INTEGER is
-			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
+	default_element_namespace: STRING is
+			-- Default XPath namespace uri
 		do
-			Result := style_element.default_xpath_namespace_code
+			Result := style_element.default_xpath_namespace
 		end
 
 	
@@ -211,9 +211,7 @@ feature -- Status report
 	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent a variable declared in the static context?
 		do
-			if not style_element.is_excluded then
-				Result := style_element.is_variable_declared (a_fingerprint)
-			end
+			Result := style_element.is_variable_declared (a_fingerprint)
 		end
 	
 	is_data_type_valid (a_fingerprint: INTEGER): BOOLEAN is
@@ -229,8 +227,6 @@ feature -- Status report
 
 	is_element_available (a_qname: STRING): BOOLEAN is
 			-- Is element name `a_qname' available?
-		require
-			valid_qname: is_qname (a_qname)
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_uri: STRING

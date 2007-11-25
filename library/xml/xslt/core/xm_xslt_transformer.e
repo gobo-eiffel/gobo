@@ -756,16 +756,18 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 					trace_listener.stop_tracing
 				end
 			end
-			if principal_receiver /= Void and then (not principal_receiver.is_document_started and principal_receiver.is_written) then
-				report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", principal_result_uri),
-					Xpath_errors_uri, "XTDE1490", Dynamic_error))
-			elseif principal_receiver /= Void and then principal_receiver.is_document_started then
-				principal_receiver.end_document
-				principal_receiver.close
-				principal_result.flush
-			end
-			if l_transformation_result.error_message /= Void then
-				report_warning (l_transformation_result.error_message, Void)
+			if not is_error then
+				if principal_receiver /= Void and then (not principal_receiver.is_document_started and principal_receiver.is_written) then
+					report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", principal_result_uri),
+						Xpath_errors_uri, "XTDE1490", Dynamic_error))
+				elseif principal_receiver /= Void and then principal_receiver.is_document_started then
+					principal_receiver.end_document
+					principal_receiver.close
+					principal_result.flush
+				end
+				if l_transformation_result.error_message /= Void then
+					report_warning (l_transformation_result.error_message, Void)
+				end
 			end
 		end
 
@@ -913,7 +915,8 @@ feature -- Implementation
 	initialize_transformer (a_start_node: XM_XPATH_NODE) is
 			-- Initialize in preparation for a transformation.
 		local
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			l_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			l_missing: DS_LIST [STRING]
 		do
 			trace_listener := configuration.trace_listener
 			if is_tracing then
@@ -927,8 +930,8 @@ feature -- Implementation
 			initial_context := new_xpath_context
 			if a_start_node /= Void then
 				principal_source_document := a_start_node.document_root
-				create a_singleton_iterator.make (principal_source_document)
-				initial_context.set_current_iterator (a_singleton_iterator)
+				create l_singleton_iterator.make (principal_source_document)
+				initial_context.set_current_iterator (l_singleton_iterator)
 				initial_context.current_iterator.start
 			end
 
@@ -943,8 +946,16 @@ feature -- Implementation
 
 			-- If parameters were supplied, set them up
 
-			if parameters /= Void and then not is_error then
-				bindery.define_global_parameters (parameters)
+			if not is_error then
+				if parameters = Void then
+					create parameters.make_empty
+				end
+				l_missing := executable.missing_required_global_parameters (parameters)
+				if not l_missing.is_empty then
+					report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (missing_parameters_message (l_missing), Xpath_errors_uri, "XTDE0050", Dynamic_error))
+				else
+					bindery.define_global_parameters (parameters)
+				end
 			end
 		end
 
@@ -1043,6 +1054,30 @@ feature -- Implementation
 			end
 		ensure
 			error_or_not_void: not is_error implies Result /= Void
+		end
+
+	missing_parameters_message (a_missing: DS_LIST [STRING]): STRING is
+			-- Text of message for error XTDE0050
+		require
+			a_missing_not_void: a_missing /= Void
+			a_missing_not_empty: not a_missing.is_empty
+		local
+			l_cursor: DS_LIST_CURSOR [STRING]
+		do
+			from
+				l_cursor := a_missing.new_cursor
+				l_cursor.start
+				Result := STRING_.concat ("The following required global parameters were not supplied: ", l_cursor.item)
+			until
+				l_cursor.after
+			loop
+				Result := STRING_.appended_string (Result, " ")
+				Result := STRING_.appended_string (Result, l_cursor.item)
+				l_cursor.forth
+			end
+		ensure
+			missing_parameters_message_not_void: Result /= Void
+			missing_parameters_message_not_empty: not Result.is_empty
 		end
 
 invariant

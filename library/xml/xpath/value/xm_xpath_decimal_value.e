@@ -128,37 +128,41 @@ feature -- Access
 			l_coefficient, l_pad: STRING
 			l_index, l_count: INTEGER
 		do
-			l_value := value
-			create Result.make (0)
-			if is_negative then
-				Result.append_string ("-")
-			end
-			create l_coefficient.make (l_value.count)
-			from
-				l_index := l_value.count - 1
-			until
-				l_index < 0
-			loop
-				l_coefficient.append_character (INTEGER_.to_character (('0').code + l_value.coefficient.item (l_index)))
-				l_index := l_index - 1
-			end
-			if l_value.exponent < 0 then
-				l_count := l_value.exponent.abs
-				if l_count > l_coefficient.count then
-					create l_pad.make_filled ('0', l_count - l_coefficient.count)
-					Result.append_string ("0.")
-					Result.append_string (l_pad)
-					Result.append_string (l_coefficient)
-				elseif l_count = l_coefficient.count then
-					Result.append_string ("0.")
-					Result.append_string (l_coefficient)
-				else
-					Result.append_string (l_coefficient.substring (1, l_coefficient.count - l_count))
-					Result.append_string (".")
-					Result.append_string (l_coefficient.substring (l_coefficient.count - l_count + 1, l_coefficient.count))
-				end
+			if is_whole_number then
+				Result := as_integer.out
 			else
-				Result.append_string (l_coefficient)
+				l_value := value
+				create Result.make (0)
+				if is_negative then
+					Result.append_string ("-")
+				end
+				create l_coefficient.make (l_value.count)
+				from
+					l_index := l_value.count - 1
+				until
+					l_index < 0
+				loop
+					l_coefficient.append_character (INTEGER_.to_character (('0').code + l_value.coefficient.item (l_index)))
+					l_index := l_index - 1
+				end
+				if l_value.exponent < 0 then
+					l_count := l_value.exponent.abs
+					if l_count > l_coefficient.count then
+						create l_pad.make_filled ('0', l_count - l_coefficient.count)
+						Result.append_string ("0.")
+						Result.append_string (l_pad)
+						Result.append_string (l_coefficient)
+					elseif l_count = l_coefficient.count then
+						Result.append_string ("0.")
+						Result.append_string (l_coefficient)
+					else
+						Result.append_string (l_coefficient.substring (1, l_coefficient.count - l_count))
+						Result.append_string (".")
+						Result.append_string (l_coefficient.substring (l_coefficient.count - l_count + 1, l_coefficient.count))
+					end
+				else
+					Result.append_string (l_coefficient)
+				end
 			end
 		end
 

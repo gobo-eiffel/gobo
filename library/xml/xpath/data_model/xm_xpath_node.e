@@ -198,15 +198,13 @@ feature -- Access
 	fingerprint: INTEGER is
 			-- Fingerprint of this node - used in matching names
 		local
-			a_name_code, top_bits: INTEGER
+			l_name_code: INTEGER
 		do
-			a_name_code := name_code
-			if a_name_code = -1 then
+			l_name_code := name_code
+			if l_name_code = -1 then
 				Result := -1
 			else
-				-- mask a_name_code with 0xfffff
-				top_bits := (a_name_code // bits_20) * bits_20
-				Result := a_name_code - top_bits
+				Result := fingerprint_from_name_code (l_name_code)
 			end
 		end
 	

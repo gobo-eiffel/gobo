@@ -501,9 +501,12 @@ feature {NONE} -- Implementation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 
-			-- Don't report an error if the conflict is between two branches of the same.union pattern
+			-- Don't report an error if the conflict is between two branches of the same.union pattern,
+			--  or two strip-space or two preserve-space rules.
 
-			if a_rule.handler /= another_rule.handler then
+			if is_stripper and a_rule.handler.as_boolean = another_rule.handler.as_boolean then
+				-- no ambiguity - either rule will do
+			elseif a_rule.handler /= another_rule.handler then
 				a_pattern := a_rule.pattern
 				another_pattern := another_rule.pattern
 				if is_stripper then

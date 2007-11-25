@@ -227,7 +227,7 @@ feature {XM_XSLT_PATTERN} -- Local
 			-- Determine whether this Pattern matches the given Node;
 			-- This is an internal interface used for matching sub-patterns;
 			--  it does not alter current().
-			-- The default implementation is identical to matches().
+			-- The default implementation is identical to match().
 		require
 			valid_node: a_node /= Void
 			context_not_void: a_context /= Void

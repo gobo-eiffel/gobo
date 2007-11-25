@@ -388,7 +388,7 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Error", l_transformer.is_error)
-			assert ("XPTY0004", l_error_listener.has (xpty0004))
+			assert ("XTTE0590", l_error_listener.has (xtte0590))
 		end
 
 	test_duplicate_parameter_names is
@@ -485,7 +485,7 @@ feature -- Test
 			create l_result.make (l_output, "string:")
 			l_transformer.transform (l_second_uri_source, l_result)
 			assert ("Error", l_transformer.is_error)
-			assert ("XPTY0004", l_error_listener.has (xpty0004))
+			assert ("XTTE0590", l_error_listener.has (xtte0590))
 		end
 
 	test_variable_with_missing_typed_value is
@@ -854,12 +854,12 @@ feature {NONE} -- Implementation
 			xtde0700_not_void: Result /= Void
 		end
 
-	xpty0004: STRING is
-			-- Error XPTY0004
+	xtte0590: STRING is
+			-- Error XTTE0590
 		once
-			Result := Xpath_errors_uri + "#" + "XPTY0004"
+			Result := Xpath_errors_uri + "#" + "XTTE0590"
 		ensure
-			xpty0004_not_void: Result /= Void
+			xtte0590_not_void: Result /= Void
 		end
 
 	xtde0050: STRING is

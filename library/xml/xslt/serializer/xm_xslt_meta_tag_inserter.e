@@ -104,7 +104,7 @@ feature -- Events
 			-- Notify an attribute.
 		do
 			if in_meta_tag then
-				attributes.add_attribute (a_name_code, a_type_code, a_value)
+				attributes.add_attribute (a_name_code, a_type_code, a_value, a_properties)
 			else
 				Precursor (a_name_code, a_type_code, a_value, a_properties)
 			end

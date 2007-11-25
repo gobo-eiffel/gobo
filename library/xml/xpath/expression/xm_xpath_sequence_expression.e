@@ -397,12 +397,14 @@ feature {NONE} -- Agents
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
 		do
-			a_child.optimize (a_context, a_context_item_type)
-			if a_child.is_error then
-				set_last_error (a_child.error_value)
-			elseif a_child.was_expression_replaced then
-				children.replace (a_child.replacement_expression, a_index)
-			end			
+			if not is_error then
+				a_child.optimize (a_context, a_context_item_type)
+				if a_child.is_error then
+					set_last_error (a_child.error_value)
+				elseif a_child.was_expression_replaced then
+					children.replace (a_child.replacement_expression, a_index)
+				end			
+			end
 		end
 
 	promote_child (a_offer: XM_XPATH_PROMOTION_OFFER; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is

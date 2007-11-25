@@ -163,81 +163,46 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
-			an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			l_iterator, l_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator_cell, l_other_iterator_cell: DS_CELL [XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]]
 		do
 			last_boolean_value := Void
 			atomic_comparer.set_dynamic_context (a_context)
+			create l_iterator_cell.make (Void)
+			create l_other_iterator_cell.make (Void)
 			if	maybe_first_operand_boolean then
-				first_operand.create_iterator (a_context)
-				an_iterator := first_operand.last_iterator
-				if not an_iterator.is_error then
-					an_iterator.start
-				end
-				if an_iterator.is_error then
-					create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (last_boolean_value.error_value)
-				elseif not an_iterator.after then
-					if an_iterator.item.is_boolean_value then
-						second_operand.calculate_effective_boolean_value (a_context)
-						if second_operand.is_error then
-							create last_boolean_value.make (False); last_boolean_value.set_last_error (second_operand.error_value); set_last_error (last_boolean_value.error_value)
-						else
-							create a_comparison_checker
-							a_comparison_checker.check_correct_general_relation (an_iterator.item.as_boolean_value, singleton_operator,
-																								  atomic_comparer, second_operand.last_boolean_value, True)
-							if a_comparison_checker.is_comparison_type_error then
-								create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
-							elseif a_comparison_checker.last_check_result then
-								create last_boolean_value.make (True)
-							end
-						end
-					end
-				elseif not maybe_second_operand_boolean then
-					create last_boolean_value.make (False)
-				end
+				evaluate_possible_first_boolean_value  (l_iterator_cell, a_context)
 			end
 			if last_boolean_value = Void and then maybe_second_operand_boolean then
-				second_operand.create_iterator (a_context)
-				another_iterator := second_operand.last_iterator
-				if not another_iterator.is_error then
-					another_iterator.start
+				evaluate_possible_second_boolean_value  (l_other_iterator_cell, a_context)
+			end
+			if last_boolean_value = Void then
+				if l_iterator_cell.item = Void then
+					first_operand.create_iterator (a_context)
+					l_iterator := first_operand.last_iterator
+				else
+					l_iterator := l_iterator_cell.item.another
 				end
-				if another_iterator.is_error then
-					create last_boolean_value.make (False); last_boolean_value.set_last_error (another_iterator.error_value); set_last_error (last_boolean_value.error_value)
-				elseif not another_iterator.after then
-					if another_iterator.item.is_boolean_value then
-						first_operand.calculate_effective_boolean_value (a_context)
-						if first_operand.is_error then
-							create last_boolean_value.make (False); last_boolean_value.set_last_error (first_operand.error_value); set_last_error (last_boolean_value.error_value)
-						else
-							create a_comparison_checker
-							a_comparison_checker.check_correct_general_relation (first_operand.last_boolean_value, singleton_operator,
-																								  atomic_comparer, another_iterator.item.as_boolean_value, True)
-							if a_comparison_checker.is_comparison_type_error then
-								create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
-							elseif a_comparison_checker.last_check_result then
-								create last_boolean_value.make (True)
-							end
-						end
-					end
-				elseif not maybe_first_operand_boolean then
+				if l_other_iterator_cell.item = Void then
+					second_operand.create_iterator (a_context)
+					l_other_iterator := second_operand.last_iterator
+				else
+					l_other_iterator := l_other_iterator_cell.item.another
+				end
+				atomic_comparer.set_dynamic_context (a_context)
+				if l_iterator.is_error then
 					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (l_iterator.error_value)
+					set_last_error (last_boolean_value.error_value)
+				end
+				if l_other_iterator.is_error then
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (l_other_iterator.error_value)
+					set_last_error (last_boolean_value.error_value)
 				end
 			end
 			if last_boolean_value = Void then
-				if an_iterator = Void then
-					first_operand.create_iterator (a_context)
-					an_iterator := first_operand.last_iterator
-				else
-					an_iterator := an_iterator.another
-				end
-				if another_iterator = Void then
-					second_operand.create_iterator (a_context)
-					another_iterator := second_operand.last_iterator
-				else
-					another_iterator := another_iterator.another
-				end
-				calculate_effective_boolean_value_not_booleans (a_context, an_iterator, another_iterator)
+				calculate_effective_boolean_value_not_booleans (a_context, l_iterator, l_other_iterator)
 			end
 		end
 
@@ -366,126 +331,212 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_effective_boolean_value_not_booleans (a_context: XM_XPATH_CONTEXT; an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	calculate_effective_boolean_value_not_booleans (a_context: XM_XPATH_CONTEXT; a_iterator, a_other_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Effective boolean value when neither operand is a boolean value.
 		require
-			first_iterator_before: an_iterator /= Void and then an_iterator.is_error or else an_iterator.before
-			second_iterator_before: another_iterator /= Void and then another_iterator.is_error or else another_iterator.before
+			first_iterator_before: a_iterator /= Void and then a_iterator.is_error or else a_iterator.before
+			second_iterator_before: a_other_iterator /= Void and then a_other_iterator.is_error or else a_other_iterator.before
 		local
-			a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_ATOMIC_VALUE]
-			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
-			a_sequence, another_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_ATOMIC_VALUE]
+			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			l_sequence, l_other_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			last_boolean_value := Void
-			atomic_comparer.set_dynamic_context (a_context)
-			if an_iterator.is_error then
-				create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (last_boolean_value.error_value)
+			if atomize_first_operand then
+				l_sequence := shared_atomizing_function.new_atomizing_iterator (a_iterator)
+			else
+				l_sequence := a_iterator
 			end
-			if another_iterator.is_error then
-				create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (last_boolean_value.error_value)
+			if atomize_second_operand then
+				l_other_sequence := shared_atomizing_function.new_atomizing_iterator (a_other_iterator)
+			else
+				l_other_sequence := a_other_iterator
 			end
-			if last_boolean_value = Void then
-				if atomize_first_operand then
-					a_sequence := shared_atomizing_function.new_atomizing_iterator (an_iterator)
+			
+			-- If the operator is one of <, >, <=, >=, then convert both operands to sequences of xs:double
+			--  using the number() function
+			
+			if operator = Less_than_token or else operator = Less_equal_token or else
+				operator = Greater_than_token or else operator = Greater_equal_token then
+				create {XM_XPATH_ITEM_MAPPING_ITERATOR} l_sequence.make (l_sequence, Current)
+				create {XM_XPATH_ITEM_MAPPING_ITERATOR} l_other_sequence.make (l_other_sequence, Current)
+			end
+			
+			-- Compare all pairs of atomic values in the two atomized sequences
+			
+			from
+				create l_list.make_default
+				l_sequence.start
+			until
+				last_boolean_value /= Void or l_sequence.after
+			loop
+				if l_sequence.is_error then
+					create last_boolean_value.make (False); last_boolean_value.set_last_error (l_sequence.error_value); set_last_error (last_boolean_value.error_value)
 				else
-					a_sequence := an_iterator
-				end
-				if atomize_second_operand then
-					another_sequence := shared_atomizing_function.new_atomizing_iterator (another_iterator)
-				else
-					another_sequence := another_iterator
-				end
-
-				-- If the operator is one of <, >, <=, >=, then convert both operands to sequences of xs:double
-				--  using the number() function
-
-				if operator = Less_than_token or else operator = Less_equal_token or else
-					operator = Greater_than_token or else operator = Greater_equal_token then
-					create {XM_XPATH_ITEM_MAPPING_ITERATOR} a_sequence.make (a_sequence, Current)
-					create {XM_XPATH_ITEM_MAPPING_ITERATOR} another_sequence.make (another_sequence, Current)
-				end
-
-				-- Compare all pairs of atomic values in the two atomized sequences
-
-				from
-					create a_list.make_default; a_sequence.start
-				until
-					last_boolean_value /= Void or else a_sequence.after
-				loop
-					if a_sequence.is_error then
-						create last_boolean_value.make (False); last_boolean_value.set_last_error (a_sequence.error_value); set_last_error (last_boolean_value.error_value)
-					else
-						an_atomic_value := a_sequence.item.as_atomic_value
-						if an_atomic_value.is_error then
-							create last_boolean_value.make (False); last_boolean_value.set_last_error (an_atomic_value.error_value); set_last_error (last_boolean_value.error_value)
-						elseif not another_sequence.before and then another_sequence.after then
-							from
-								create a_comparison_checker
-								a_cursor := a_list.new_cursor; a_cursor.start
-							variant
-								a_list.count + 1 - a_cursor.index
-							until
-								a_cursor.after
-							loop
-								a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_operator, atomic_comparer, a_cursor.item, True)
-								if a_comparison_checker.is_comparison_type_error then
-									create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
-									a_cursor.go_after
-								elseif a_comparison_checker.last_check_result then
-									create last_boolean_value.make (True); a_cursor.go_after
-								else
-									a_cursor.forth
-								end
+					l_atomic_value := l_sequence.item.as_atomic_value
+					if l_atomic_value.is_error then
+						create last_boolean_value.make (False); last_boolean_value.set_last_error (l_atomic_value.error_value); set_last_error (last_boolean_value.error_value)
+					elseif not l_other_sequence.before and then l_other_sequence.after then
+						from
+							create l_comparison_checker
+							l_cursor := l_list.new_cursor; l_cursor.start
+						variant
+							l_list.count + 1 - l_cursor.index
+						until
+							l_cursor.after
+						loop
+							l_comparison_checker.check_correct_general_relation_xpath1 (l_atomic_value, singleton_operator, atomic_comparer, l_cursor.item)
+							if l_comparison_checker.is_comparison_type_error then
+								create last_boolean_value.make (False); last_boolean_value.set_last_error (l_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
+								l_cursor.go_after
+							elseif l_comparison_checker.last_check_result then
+								create last_boolean_value.make (True); l_cursor.go_after
+							else
+								l_cursor.forth
 							end
-						else
-							compare_value_with_sequence (an_atomic_value, another_sequence, a_list)
 						end
+					else
+						compare_value_with_sequence (l_atomic_value, l_other_sequence, l_list)
 					end
-					if last_boolean_value = Void and then not a_sequence.is_error and then not a_sequence.after then a_sequence.forth end
 				end
-				if last_boolean_value = Void then create last_boolean_value.make (False) end
+				if last_boolean_value = Void and then not l_sequence.is_error and then not l_sequence.after then l_sequence.forth end
 			end
+			if last_boolean_value = Void then create last_boolean_value.make (False) end
 		ensure
 			value_not_void_but_may_be_in_error: last_boolean_value /= Void
 		end
 
-	compare_value_with_sequence (an_atomic_value: XM_XPATH_ATOMIC_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]) is
-			-- Compare `an_atomic_value' with all of `an_iterator'.
+	compare_value_with_sequence (a_atomic_value: XM_XPATH_ATOMIC_VALUE; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]) is
+			-- Compare `a_atomic_value' with all of `a_iterator'.
 		require
 			last_boolean_value_not_set: last_boolean_value = Void
-			atomic_value_not_in_error: an_atomic_value /= Void and then not an_atomic_value.is_error
-			sequence_not_after: an_iterator /= Void and then not an_iterator.is_error and then (an_iterator.before or else not an_iterator.after)
+			atomic_value_not_in_error: a_atomic_value /= Void and then not a_atomic_value.is_error
+			sequence_not_after: a_iterator /= Void and then not a_iterator.is_error and then (a_iterator.before or else not a_iterator.after)
 			list_not_void: a_list /= Void
 		local
-			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
-			another_atomic_value: XM_XPATH_ATOMIC_VALUE
+			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			l_other_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			from
-				create a_comparison_checker
-				if an_iterator.before then
-					an_iterator.start
+				create l_comparison_checker
+				if a_iterator.before then
+					a_iterator.start
 				else
-					an_iterator.forth
+					a_iterator.forth
 				end
 			until
-				last_boolean_value /= Void or else an_iterator.after
+				last_boolean_value /= Void or else a_iterator.after
 			loop
-				another_atomic_value := an_iterator.item.as_atomic_value
-				a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_operator, atomic_comparer, another_atomic_value, True)
-				if a_comparison_checker.is_comparison_type_error then
-					create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
-				elseif a_comparison_checker.last_check_result then
+				l_other_atomic_value := a_iterator.item.as_atomic_value
+				l_comparison_checker.check_correct_general_relation_xpath1 (a_atomic_value, singleton_operator, atomic_comparer, l_other_atomic_value)
+				if l_comparison_checker.is_comparison_type_error then
+					create last_boolean_value.make (False); last_boolean_value.set_last_error (l_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
+				elseif l_comparison_checker.last_check_result then
 					create last_boolean_value.make (True)
 				else
 
 					-- cache the atomic value to avoid re-creating the iterator
 
-					a_list.force_last (another_atomic_value)
+					a_list.force_last (l_other_atomic_value)
 				end
-				if not an_iterator.after then an_iterator.forth end
+				if not a_iterator.after then a_iterator.forth end
 			end
+		end
+
+	evaluate_possible_first_boolean_value  (a_cell: DS_CELL [XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `first_operand' as a boolean value.
+		require
+			a_cell_not_void: a_cell /= Void
+			a_cell_empty: a_cell.item = Void
+			a_context_not_void: a_context /= Void
+			first_operand_maybe_boolean: maybe_first_operand_boolean
+		local
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER			
+		do
+			first_operand.create_iterator (a_context)
+			l_iterator := first_operand.last_iterator
+			if not l_iterator.is_error then
+				l_iterator.start
+			end
+			if l_iterator.is_error then
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (l_iterator.error_value)
+				set_last_error (last_boolean_value.error_value)
+			elseif not l_iterator.after then
+				if l_iterator.item.is_boolean_value then
+					second_operand.calculate_effective_boolean_value (a_context)
+					if second_operand.is_error then
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error (second_operand.error_value)
+						set_last_error (last_boolean_value.error_value)
+					else
+						create l_comparison_checker
+						l_comparison_checker.check_correct_general_relation_xpath1 (l_iterator.item.as_boolean_value, singleton_operator, atomic_comparer, second_operand.last_boolean_value)
+						if l_comparison_checker.is_comparison_type_error then
+							create last_boolean_value.make (False)
+							last_boolean_value.set_last_error (l_comparison_checker.last_type_error)
+							set_last_error (last_boolean_value.error_value)
+						elseif l_comparison_checker.last_check_result then
+							create last_boolean_value.make (True)
+						else
+							create last_boolean_value.make (False)
+						end
+					end
+				end
+			elseif not maybe_second_operand_boolean then
+				create last_boolean_value.make (False)
+			end
+			a_cell.put (l_iterator)
+		end
+
+
+	evaluate_possible_second_boolean_value  (a_cell: DS_CELL [XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]]; a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `second_operand' as a boolean value.
+		require
+			a_cell_not_void: a_cell /= Void
+			a_cell_empty: a_cell.item = Void
+			a_context_not_void: a_context /= Void
+			second_operand_maybe_boolean: maybe_second_operand_boolean
+		local
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER			
+		do
+			second_operand.create_iterator (a_context)
+			l_iterator := second_operand.last_iterator
+			if not l_iterator.is_error then
+				l_iterator.start
+			end
+			if l_iterator.is_error then
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (l_iterator.error_value)
+				set_last_error (last_boolean_value.error_value)
+			elseif not l_iterator.after then
+				if l_iterator.item.is_boolean_value then
+					first_operand.calculate_effective_boolean_value (a_context)
+					if first_operand.is_error then
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error (first_operand.error_value)
+						set_last_error (last_boolean_value.error_value)
+					else
+						create l_comparison_checker
+						l_comparison_checker.check_correct_general_relation_xpath1 (first_operand.last_boolean_value, singleton_operator, atomic_comparer, l_iterator.item.as_boolean_value)
+						if l_comparison_checker.is_comparison_type_error then
+							create last_boolean_value.make (False)
+							last_boolean_value.set_last_error (l_comparison_checker.last_type_error)
+							set_last_error (last_boolean_value.error_value)
+						elseif l_comparison_checker.last_check_result then
+							create last_boolean_value.make (True)
+						else
+							create last_boolean_value.make (False)
+						end
+					end
+				end
+			elseif not maybe_first_operand_boolean then
+				create last_boolean_value.make (False)
+			end
+			a_cell.put (l_iterator)
 		end
 
 invariant

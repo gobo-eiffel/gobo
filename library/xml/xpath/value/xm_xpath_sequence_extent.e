@@ -41,43 +41,44 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+	make (a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Create from an iterator.
 		require
-			iterator_before: an_iterator /= Void and then an_iterator.before and then not an_iterator.is_error
+			iterator_before: a_iterator /= Void and then a_iterator.before and then not a_iterator.is_error
 		local
-			counter, another_counter: INTEGER
-			a_value: DS_ARRAYED_LIST [XM_XPATH_ITEM]
-			an_invalid_item: XM_XPATH_INVALID_ITEM
+			l_counter, l_other_counter: INTEGER
+			l_value: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			l_invalid_item: XM_XPATH_INVALID_ITEM
 		do
 			make_value
-			create a_value.make (Estimated_item_count)
+			create l_value.make (Estimated_item_count)
 			from
-				counter := 1
-				an_iterator.start
+				l_counter := 1
+				a_iterator.start
 			until
-				an_iterator.is_error or else an_iterator.after
+				a_iterator.is_error or else a_iterator.after
 			loop
-				a_value.force_last (an_iterator.item)
+				l_value.force_last (a_iterator.item)
 
-				counter := counter + 1
-				an_iterator.forth
+				l_counter := l_counter + 1
+				a_iterator.forth
 			end
-			if an_iterator.is_error then
-				create an_invalid_item.make (an_iterator.error_value)
-				a_value.force_last (an_invalid_item)
+			if a_iterator.is_error then
+				create l_invalid_item.make (a_iterator.error_value)
+				l_value.force_last (l_invalid_item)
+				set_last_error (a_iterator.error_value)
 			end
 
 			-- Drop all trailing `Void' entries to preserve semantics of item_at and iterator
 
-			make_array (counter - 1)
+			make_array (l_counter - 1)
 			from
-				another_counter := 1
+				l_other_counter := 1
 			until
-				another_counter = counter 
+				l_other_counter = l_counter 
 			loop
-				put (a_value.item (another_counter), another_counter)
-				another_counter := another_counter + 1
+				put (l_value.item (l_other_counter), l_other_counter)
+				l_other_counter := l_other_counter + 1
 			end
 			set_cardinality_from_count
 		end
@@ -143,7 +144,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression
 		local
-			counter: INTEGER
+			l_counter: INTEGER
 		do
 			if cached_item_type = Void then
 				if count <= 1 then
@@ -151,17 +152,17 @@ feature -- Access
 				else
 					cached_item_type := item (1).item_type
 					from
-						counter := 2
+						l_counter := 2
 					variant
-						count + 1 - counter
+						count + 1 - l_counter
 					until
-						counter > count
+						l_counter > count
 					loop
 						if cached_item_type = any_item then
-							counter := count + 1 -- make a quick exit
+							l_counter := count + 1 -- make a quick exit
 						else
-							cached_item_type := common_super_type (cached_item_type, item (counter).item_type)
-							counter := counter + 1
+							cached_item_type := common_super_type (cached_item_type, item (l_counter).item_type)
+							l_counter := l_counter + 1
 						end
 					end
 				end
@@ -187,7 +188,7 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 		local
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			counter: INTEGER
+			l_counter: INTEGER
 			an_item, another_item: XM_XPATH_ITEM
 		do
 			if other.is_sequence_extent then
@@ -195,15 +196,15 @@ feature -- Comparison
 				if count = a_sequence_extent.count then
 					from
 						Result := True
-						counter := 1
+						l_counter := 1
 					variant
-						count + 1 - counter
+						count + 1 - l_counter
 					until
-						Result = False or else counter > count
+						Result = False or else l_counter > count
 					loop
-						an_item := item_at (counter)
+						an_item := item_at (l_counter)
 						if an_item.is_node then
-							another_item := a_sequence_extent.item_at (counter)
+							another_item := a_sequence_extent.item_at (l_counter)
 							if not another_item.is_node then
 								Result := False
 							else
@@ -213,14 +214,14 @@ feature -- Comparison
 							check
 								item_is_atomic_value: an_item.is_atomic_value
 							end
-							if not a_sequence_extent.item_at (counter).is_atomic_value then
+							if not a_sequence_extent.item_at (l_counter).is_atomic_value then
 								Result := False
 							else
-								Result := an_item.as_atomic_value.same_expression (a_sequence_extent.item_at (counter).as_atomic_value)
+								Result := an_item.as_atomic_value.same_expression (a_sequence_extent.item_at (l_counter).as_atomic_value)
 							end
 						end
 
-						counter := counter + 1
+						l_counter := l_counter + 1
 					end
 				end
 			end

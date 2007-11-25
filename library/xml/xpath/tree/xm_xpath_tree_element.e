@@ -310,13 +310,13 @@ feature -- Element change
 			namespace_added: namespace_code_list.has (a_namespace_code)
 		end
 
-	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING) is
+	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
 			-- Add an attribute.
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
 		do
-			attribute_collection.add_attribute (a_name_code, a_type_code, a_value)
+			attribute_collection.add_attribute (a_name_code, a_type_code, a_value, a_properties)
 		end
 
 	set_attribute_collection (an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION) is

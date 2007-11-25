@@ -64,12 +64,13 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		do
+			check_empty
 			check_top_level (Void)
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
-			-- Compile `Current' to an excutable instruction.
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
+			-- Compile `Current' to a excutable instruction.
 		local
 			is_preserving: BOOLEAN
 			stripper_rules: XM_XSLT_MODE
@@ -94,7 +95,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_token := a_cursor.item
-				compile_stripper_rules (a_token, is_preserving, stripper_rules)
+				compile_stripper_rules (a_executable, a_token, is_preserving, stripper_rules)
 				a_cursor.forth
 			end
 			last_generated_expression := Void
@@ -117,9 +118,10 @@ feature {NONE} -- Implementation
 			create Result.make_from_string ("-0.25")
 		end
 
-	compile_stripper_rules (a_token: STRING; is_preserving: BOOLEAN; stripper_rules: XM_XSLT_MODE) is
+	compile_stripper_rules (a_executable: XM_XSLT_EXECUTABLE; a_token: STRING; is_preserving: BOOLEAN; stripper_rules: XM_XSLT_MODE) is
 			-- Compile a stripper rule for `a_token'.
 		require
+		a_executable_not_void: a_executable /= Void
 			token_has_characters: a_token /= Void and then a_token.count > 0
 			stripper_rules_not_void: stripper_rules /= Void
 		local
@@ -134,6 +136,7 @@ feature {NONE} -- Implementation
 			if STRING_.same_string (a_token, "*") then
 				a_pattern := any_xslt_node_test
 				stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_half)
+				a_executable.rule_manager.rank_priority (minus_one_half)
 			elseif a_token.count > 1 and then a_token.substring_index (":*", a_token.count - 1) = a_token.count - 1 then
 				if a_token.count = 2 then
 					create an_error.make_from_string ("No prefix before ':*'", Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
@@ -145,6 +148,7 @@ feature {NONE} -- Implementation
 					end
 					create {XM_XSLT_NAMESPACE_TEST} a_pattern.make (static_context, Element_node, a_uri, a_token)
 					stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_quarter)
+					a_executable.rule_manager.rank_priority (minus_one_quarter)
 				end
 			elseif a_token.count > 1 and then a_token.substring_index ("*:", 1) = 1 then
 				if a_token.count = 2 then
@@ -156,12 +160,13 @@ feature {NONE} -- Implementation
 					end
 					create {XM_XSLT_LOCAL_NAME_TEST} a_pattern.make (static_context, Element_node, a_token.substring (3, a_token.count), a_token)
 					stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_quarter)
+					a_executable.rule_manager.rank_priority (minus_one_quarter)
 				end
 			else
 				create a_parser.make (a_token)
 				if a_parser.is_valid then
 					if a_parser.optional_prefix.is_empty then
-						a_uri := shared_name_pool.uri_from_uri_code (default_xpath_namespace_code)
+						a_uri := default_xpath_namespace
 					else
 						a_uri := uri_for_prefix (a_parser.optional_prefix, False)
 					end
@@ -180,6 +185,7 @@ feature {NONE} -- Implementation
 						end
 						create {XM_XSLT_NAME_TEST} a_pattern.make (static_context, Element_node, a_name_code, a_token)
 						stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, decimal.zero)
+						a_executable.rule_manager.rank_priority (decimal.zero)
 					end
 				else
 					a_message := STRING_.concat ("Element name ", a_token)

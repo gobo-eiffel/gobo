@@ -337,7 +337,7 @@ feature -- Element change
 				an_id_list.put (a_public_id, 2)
 			end
 		end
-		
+
 feature -- Duplication
 
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is

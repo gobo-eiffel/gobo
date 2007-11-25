@@ -78,6 +78,7 @@ feature -- Evaluation
 			elseif l_result.item /= Void and then l_result.item.is_error then
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (l_result.item.error_value)
+				set_last_error (l_result.item.error_value)
 			elseif not l_result.item.is_atomic_value then
 				create last_boolean_value.make (False)
 			else
@@ -87,13 +88,14 @@ feature -- Evaluation
 				if l_result.item /= Void and then l_result.item.is_error then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (l_result.item.error_value)
+					set_last_error (l_result.item.error_value)
 				elseif l_result.item = Void or else not l_result.item.is_atomic_value then
 					create last_boolean_value.make (False)
 				else
 					create l_comparison_checker
-					l_comparison_checker.check_correct_general_relation (l_item.as_atomic_value,
+					l_comparison_checker.check_correct_general_relation_xpath2 (l_item.as_atomic_value,
 																						  singleton_value_operator (operator), atomic_comparer,
-																						  l_result.item.as_atomic_value, False)
+																						  l_result.item.as_atomic_value)
 					if l_comparison_checker.is_comparison_type_error then
 						set_last_error (l_comparison_checker.last_type_error)
 						create last_boolean_value.make (False)

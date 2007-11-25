@@ -59,6 +59,28 @@ feature -- Access
 			Result := Current
 		end
 
+feature -- Status report
+	
+	is_all_whitespace: BOOLEAN is
+			-- Does `string_value' consist only of XML white-space characters?
+		local
+			l_counter: INTEGER
+		do
+			from
+				l_counter := 1
+				Result := True
+			variant
+				string_value.count + 1 - l_counter
+			until
+				Result = False or else l_counter > string_value.count
+			loop
+				if not is_space (string_value.item_code (l_counter)) then
+					Result := False
+				end
+				l_counter := l_counter + 1
+			end
+		end
+
 feature -- Duplication
 
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is

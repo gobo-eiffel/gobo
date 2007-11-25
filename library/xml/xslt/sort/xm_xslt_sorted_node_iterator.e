@@ -318,8 +318,10 @@ feature {NONE} -- Implementation
 							if l_item.item.is_error then
 								context.transformer.report_fatal_error (l_item.item.error_value)
 							else
-								check
-									sort_key_is_atomic: l_item.item.is_atomic_value
+								if l_item.item.is_atomic_value then
+									a_sort_key := l_item.item.as_atomic_value
+								else
+									create {XM_XPATH_STRING_VALUE} a_sort_key.make (l_item.item.as_node.string_value)
 								end
 								a_sort_key := l_item.item.as_atomic_value
 							end

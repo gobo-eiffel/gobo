@@ -47,18 +47,14 @@ feature -- Access
 	allows_tunnel: BOOLEAN 
 			-- Is the "tunnel" attribute allowed to be "yes"?
 
-	variable_name: STRING is
+	variable_name: STRING
 			-- Name of variable;
 			-- For use in diagnostics - lexically, a QName
-		do
-			Result := attribute_value_by_name ("", Name_attribute)
-		end
-	
+
 	variable_fingerprint: INTEGER is
-			-- Fingerprint of the variable name;
-			-- WARNING: This is NOT a pure function. It is implemented as a memo function.
+			-- Fingerprint of the variable name
 		local
-			a_name: STRING
+			l_name: STRING
 		do
 
 			-- If an expression has a forwards reference to this variable, `variable_fingerprint' can be
@@ -69,18 +65,20 @@ feature -- Access
 			-- TODO: this won't establish the required type in time to optimize an expression containing
 			--  a forwards reference to the variable
 
-			if cached_variable_fingerprint = -1 then
-				a_name := attribute_value_by_name ("", Name_attribute)
-				if a_name = Void then
-					Result := -1 -- We will report the error later
-				else
-					STRING_.left_adjust (a_name)
-					STRING_.right_adjust (a_name)
-					generate_name_code (a_name)
-					cached_variable_fingerprint := last_generated_name_code \\ bits_20
+			if variable_name = Void then
+				Result := -1 -- not yet known
+				l_name := attribute_value_by_name ("", Name_attribute)
+				if l_name /= Void and then is_qname (l_name) then
+					STRING_.left_adjust (l_name)
+					STRING_.right_adjust (l_name)
+					-- TODO: whilst this is probably referentially transparent (last_generated_name_code is really only a tempory)
+					--  it would be better to pass a DS_CELL
+					generate_name_code (l_name)
+					Result := fingerprint_from_name_code (last_generated_name_code)
 				end
+			else
+				Result := cached_variable_fingerprint
 			end
-			Result := cached_variable_fingerprint
 		ensure
 			variable_fingerprint_nearly_positive: Result > -2	
 		end
@@ -129,7 +127,7 @@ feature -- Status setting
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_name_attribute, a_select_attribute, an_as_attribute, a_required_attribute, a_tunnel_attribute: STRING
+			an_expanded_name, a_select_attribute, an_as_attribute, a_required_attribute, a_tunnel_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
@@ -143,9 +141,9 @@ feature -- Status setting
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
-					a_name_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_name_attribute)
-					STRING_.right_adjust (a_name_attribute)
+					variable_name := attribute_value_by_index (a_cursor.index)
+					STRING_.left_adjust (variable_name)
+					STRING_.right_adjust (variable_name)
 				elseif STRING_.same_string (an_expanded_name, Select_attribute) then
 					a_select_attribute := attribute_value_by_index (a_cursor.index)					
 				elseif STRING_.same_string (an_expanded_name, As_attribute) then
@@ -164,12 +162,18 @@ feature -- Status setting
 				a_cursor.forth
 			end
 
-			if a_name_attribute = Void then
+			if variable_name = Void then
 				report_absence ("name")
-			elseif not is_qname (a_name_attribute) then
+			elseif not is_qname (variable_name) then
 				create an_error.make_from_string ("Name attribute must be a valid QName", Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
+			else
+				STRING_.left_adjust (variable_name)
+				STRING_.right_adjust (variable_name)
+				generate_name_code (variable_name)
+				cached_variable_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 			end
+
 			if a_select_attribute /= Void then
 				if not allows_value then
 					create an_error.make_from_string ("Function parameters cannot have a default value", Xpath_errors_uri, "XTSE0760", Static_error)
@@ -302,6 +306,7 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 feature {NONE} -- Implementation
 
 	cached_variable_fingerprint: INTEGER
+			-- Cache for `variable_fingerprint'
 
 	is_text_only: BOOLEAN
 			-- Is the value of `Current' computed solely from text nodes?
@@ -441,5 +446,5 @@ feature {NONE} -- Implementation
 				as_type := last_generated_sequence_type
 			end
 		end
-
+	
 end

@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			create attribute_name_codes.make (5)
 			create attribute_type_codes.make (5)
 			create attribute_values.make (5)
+			create internal_attribute_properties.make (5)
 		end
 
 feature -- Access
@@ -84,6 +85,16 @@ feature -- Access
 			Result := attribute_type_codes.item (an_attribute_index)
 		end
 
+	attribute_properties (a_attribute_index: INTEGER): INTEGER is
+		-- Event properties associated with attribute
+		require
+			valid_attribute_index: is_attribute_index_valid (a_attribute_index)
+		do
+			Result := internal_attribute_properties.item (a_attribute_index)
+		ensure
+			definition: Result = internal_attribute_properties.item (a_attribute_index)
+		end
+
 	is_id (an_attribute_index: INTEGER): BOOLEAN is
 		-- Is the is-id property set?
 		require
@@ -125,7 +136,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING) is
+	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
 			-- Add an attribute.
 		require
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
@@ -134,30 +145,22 @@ feature -- Element change
 			l_splitter: ST_SPLITTER
 			l_idrefs: DS_LIST [STRING]
 			l_cursor: DS_LIST_CURSOR [STRING]
-			i, l_new_size: INTEGER
+			i: INTEGER
 			l_type_code: like a_type_code
 			l_all_idrefs: BOOLEAN
 			l_value: STRING
 		do
 			l_type_code := Untyped_atomic_type_code
-			if not attribute_name_codes.extendible (1) then
-				l_new_size := 2* attribute_name_codes.count
-				attribute_name_codes.resize (l_new_size)
-				attribute_type_codes.resize (l_new_size)
-				attribute_values.resize (l_new_size)
-				if attribute_ids /= Void then
-					attribute_ids.resize (l_new_size)
-				end
-			end
-			attribute_name_codes.put_last (a_name_code)
-			attribute_type_codes.put_last (l_type_code)
-			attribute_values.put_last (a_value)
+			attribute_name_codes.force_last (a_name_code)
+			attribute_type_codes.force_last (l_type_code)
+			attribute_values.force_last (a_value)
+			internal_attribute_properties.force_last (a_properties)
 			if a_type_code = Id_type_code or else a_type_code = Idref_type_code
 				or else a_type_code = Idrefs_type_code then
 				if attribute_ids = Void then
 					create attribute_ids.make (attribute_name_codes.capacity)
 					from i:= 1 until i = attribute_name_codes.count loop
-						attribute_ids.put_last (No_dtd_property)
+						attribute_ids.force_last (No_dtd_property)
 						i := i + 1
 					end
 				end
@@ -175,15 +178,15 @@ feature -- Element change
 					a_type_code
 				when Id_type_code then
 					if is_ncname (l_value) then
-						attribute_ids.put_last (Id_property)
+						attribute_ids.force_last (Id_property)
 					else
-						attribute_ids.put_last (No_dtd_property)
+						attribute_ids.force_last (No_dtd_property)
 					end
 				when Idref_type_code then
 					if is_ncname (l_value) then
-						attribute_ids.put_last (Idrefs_property)
+						attribute_ids.force_last (Idrefs_property)
 					else
-						attribute_ids.put_last (No_dtd_property)
+						attribute_ids.force_last (No_dtd_property)
 					end
 				when Idrefs_type_code then
 					create l_splitter.make
@@ -198,17 +201,31 @@ feature -- Element change
 						l_cursor.forth
 					end
 					if l_all_idrefs then
-						attribute_ids.put_last (Idrefs_property)
+						attribute_ids.force_last (Idrefs_property)
 					else
-						attribute_ids.put_last (No_dtd_property)
+						attribute_ids.force_last (No_dtd_property)
 					end
 				end
 			elseif attribute_ids /= Void then
-				attribute_ids.put_last (No_dtd_property)
+				attribute_ids.force_last (No_dtd_property)
 			end
 		ensure
 			attribute_name_code_added: attribute_name_codes.has (a_name_code)
 			attribute_value_added: attribute_values.has (a_value)
+		end
+
+feature -- Removal
+
+	wipe_out is
+			-- Clear all arrayed lists.
+		do
+			attribute_values.wipe_out
+			attribute_name_codes.wipe_out
+			attribute_type_codes.wipe_out
+			internal_attribute_properties.wipe_out
+			if attribute_ids /= Void then
+				attribute_ids.wipe_out
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -217,7 +234,7 @@ feature {NONE} -- Implementation
 	Id_property: INTEGER is 1
 	Idrefs_property: INTEGER is 2
 
-	-- The next four lists are quaruples - i.e. item number n in all three lists forms a triple
+	-- The next five lists are quintuples - i.e. item number n in all four lists forms a quintuple
 
 	attribute_ids: DS_ARRAYED_LIST [INTEGER]
 			-- Are these ID, IDREF or IDREFS attributes?
@@ -230,6 +247,9 @@ feature {NONE} -- Implementation
 
 	attribute_values: DS_ARRAYED_LIST [STRING]
 			-- Values of attributes
+
+	internal_attribute_properties: DS_ARRAYED_LIST [INTEGER]
+			-- Event properties associated with attribute
 
 	attribute_index (a_fingerprint: INTEGER): INTEGER is
 			-- Index number of attribute with fingerprint `a_fingerprint'
@@ -261,7 +281,10 @@ invariant
 	attribute_name_codes_not_void: attribute_name_codes /= Void
 	attribute_type_codes_not_void: attribute_type_codes /= Void
 	attribute_values_not_void: attribute_values /= Void
-	same_length: attribute_name_codes.count = attribute_type_codes.count and attribute_name_codes.count = attribute_values.count
+	internal_attribute_properties_not_void: internal_attribute_properties /= Void
+	same_length: attribute_name_codes.count = attribute_type_codes.count
+		and attribute_name_codes.count = attribute_values.count
+		and internal_attribute_properties.count = attribute_values.count
 	ids: attribute_ids /= Void implies attribute_name_codes.count = attribute_ids.count
 
 end

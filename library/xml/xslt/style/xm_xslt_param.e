@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
+			is_non_white_following_sibling := True
 			cached_variable_fingerprint := -1
 			create references.make (5)
 			allows_tunnel := True
@@ -145,22 +146,22 @@ feature -- Element change
 			validated := True
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_function: XM_XSLT_FUNCTION
-			a_slot_number: INTEGER
-			a_conversion: XM_XPATH_EXPRESSION
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_supplied_parameter_reference: XM_XSLT_SUPPLIED_PARAMETER_REFERENCE
-			a_param: XM_XSLT_COMPILED_GENERAL_VARIABLE
-			a_global_param: XM_XSLT_GLOBAL_PARAM
-			a_local_param: XM_XSLT_LOCAL_PARAM
+			l_function: XM_XSLT_FUNCTION
+			l_slot_number: INTEGER
+			l_conversion: XM_XPATH_EXPRESSION
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_supplied_parameter_reference: XM_XSLT_SUPPLIED_PARAMETER_REFERENCE
+			l_param: XM_XSLT_COMPILED_GENERAL_VARIABLE
+			l_global_param: XM_XSLT_GLOBAL_PARAM
+			l_local_param: XM_XSLT_LOCAL_PARAM
 		do
 			last_generated_expression := Void
-			a_function ?= parent
-			if a_function /= Void then
+			l_function ?= parent
+			if l_function /= Void then
 				
 				-- For Function arguments, the XM_XSLT_USER_FUNCTION_PARAMETER is more efficient than
 				--  the general-purpose XM_XSLT_COMPILED_PARAM object, and these are compiled
@@ -171,35 +172,38 @@ feature -- Element change
 				check
 					strictly_positive_slot_number: slot_number > 0
 				end
-				a_slot_number := slot_number
+				l_slot_number := slot_number
 				if as_type /= Void then
-					create a_type_checker
-					create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XPTY0004")
-					create a_supplied_parameter_reference.make (a_slot_number)
-					a_type_checker.static_type_check (static_context, a_supplied_parameter_reference, as_type, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						report_compile_error (a_type_checker.static_type_check_error)
+					create l_type_checker
+					create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0590")
+					create l_supplied_parameter_reference.make (l_slot_number)
+					l_type_checker.static_type_check (static_context, l_supplied_parameter_reference, as_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						report_compile_error (l_type_checker.static_type_check_error)
 					else
-						a_conversion := a_type_checker.checked_expression
+						l_conversion := l_type_checker.checked_expression
 					end
 				end
 				if is_error then
 					report_compile_error (error_value)
 				else
 					if is_global_variable then
-						create a_global_param.make_global_variable (an_executable, variable_name, a_slot_number, slot_manager)
-						a_global_param.set_static_context (static_context)
-						if select_expression /= Void and then select_expression.is_computed_expression then select_expression.as_computed_expression.set_parent (a_global_param) end
-						a_param := a_global_param
+						create l_global_param.make_global_variable (a_executable, variable_name, l_slot_number, slot_manager)
+						l_global_param.set_static_context (static_context)
+						if is_required_parameter then
+							a_executable.add_required_parameter (variable_fingerprint)
+						end
+						if select_expression /= Void and then select_expression.is_computed_expression then select_expression.as_computed_expression.set_parent (l_global_param) end
+						l_param := l_global_param
 					else
-						create a_local_param.make (an_executable, variable_name, a_slot_number)
-						a_local_param.set_conversion (a_conversion)
-						a_param := a_local_param
+						create l_local_param.make (a_executable, variable_name, l_slot_number)
+						l_local_param.set_conversion (l_conversion)
+						l_param := l_local_param
 					end
-					initialize_instruction (an_executable, a_param)
-					a_param.set_required_type (required_type)
-					fixup_binding (a_param)
-					last_generated_expression := a_param
+					initialize_instruction (a_executable, l_param)
+					l_param.set_required_type (required_type)
+					fixup_binding (l_param)
+					last_generated_expression := l_param
 				end
 			end
 		end

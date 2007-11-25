@@ -175,6 +175,7 @@ feature -- Element change
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
+			l_primitive_type: INTEGER
 		do
 			if not principal_stylesheet.is_collator_defined (collation_uri) then
 				a_message := STRING_.concat ("The collation named '", collation_uri)
@@ -203,11 +204,20 @@ feature -- Element change
 					else
 						use := a_type_checker.checked_expression
 					end
+					if is_backwards_compatible_processing_enabled then
+						l_primitive_type := use.item_type.primitive_type
+						if not (l_primitive_type = Untyped_atomic_type_code or l_primitive_type = String_type_code) then
+							create {XM_XPATH_ATOMIC_SEQUENCE_CONVERTER} use.make (use, type_factory.string_type)
+						end
+					end
 				end
 			end
 			if not any_compile_errors then
 				a_key_manager := principal_stylesheet.key_manager
 				create a_key_definition.make (an_executable, match, use, a_collator, collation_uri, line_number, system_id, slot_manager)
+				if is_backwards_compatible_processing_enabled then
+					a_key_definition.set_backwards_compatible
+				end
 				a_key_manager.add_key_definition (a_key_definition, key_fingerprint)
 			end
 			last_generated_expression := Void
