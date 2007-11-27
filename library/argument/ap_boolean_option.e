@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Constants
 
-	false_strings: DS_LIST [STRING] is 
+	false_strings: DS_LIST [STRING] is
 			-- Values that describe `false'
 		once
 			create {DS_ARRAYED_LIST [STRING]} Result.make (5)
@@ -54,7 +54,7 @@ feature -- Constants
 			no_void_false_string: not Result.has (Void)
 		end
 
-	true_strings: DS_LIST [STRING] is 
+	true_strings: DS_LIST [STRING] is
 			-- Values that describe `true'
 		once
 			create {DS_ARRAYED_LIST [STRING]} Result.make (5)
@@ -89,7 +89,7 @@ feature -- Access
 feature -- Status report
 
 	needs_parameter: BOOLEAN is
-			-- Does this option need a parameter ?
+			-- Does this option need a parameter?
 		do
 			Result := True
 		end
