@@ -15076,21 +15076,37 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_tuple_target_type ?= l_tuple_target_type_set.static_type
+				l_routine_object := call_operands.first
+				l_tuple := call_operands.item (2)
+				l_tuple_source_type_set := dynamic_type_set (l_tuple)
+				if universe.is_ise then
+						-- ISE Eiffel does not type-check the tuple operand of Agent calls even at
+						-- execution time. It only checks whether the tuple has enough items and
+						-- these items are of the expected types, regardless of the type of the tuple
+						-- itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent which expects
+						-- a "TUPLE [STRING]" provided that the dynamic type of the item of this tuple
+				 		-- conforms to type STRING.
+					nb := l_routine_type.open_operand_type_sets.count
+					l_tuple_target_type ?= l_tuple_source_type_set.static_type
+					if l_tuple_target_type = Void or else l_tuple_target_type.item_type_sets.count < nb then
+							-- There is not enough items in the tuple. Keep the real tuple target
+							-- type so that a proper CAT-call error is emitted.
+						l_tuple_target_type ?= l_tuple_target_type_set.static_type
+					end
+				else
+					l_tuple_target_type ?= l_tuple_target_type_set.static_type
+				end
 				if l_tuple_target_type = Void then
 						-- Internal error: The formal argument of this built-in
 						-- routine should be a Tuple type.
 					set_fatal_error
 					error_handler.report_giaaa_error
 				end
-				l_routine_object := call_operands.first
-				l_tuple := call_operands.item (2)
-				l_manifest_tuple ?= l_tuple
-				l_tuple_source_type_set := dynamic_type_set (l_tuple)
 			end
 			if a_feature.is_procedure then
 				print_indentation
 			end
+			l_manifest_tuple ?= l_tuple
 			if l_tuple_target_type = Void then
 				-- Error already reported.
 			elseif l_tuple_source_type_set = Void then
@@ -15261,8 +15277,8 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 								l_query_target_type_set.set_never_void
 							end
 							l_query_target_type_set.put_types (l_tuple_conforming_type_set)
-							create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_tuple_target_type.item_type_sets.item (i), current_feature, current_type)
-							l_tuple_target_type.put_query_call (l_query_call)
+							create l_query_call.make (l_tuple_item_expression, l_query_target_type_set, l_open_operand_type_sets.item (i), current_feature, current_type)
+							l_tuple_conforming_type_set.static_type.put_query_call (l_query_call)
 						end
 							-- Print the actual call to extract the tuple item.
 						print_attachment_expression (l_tuple_item_expression, l_open_operand_type_sets.item (i), l_open_operand_type_sets.item (i).static_type)
