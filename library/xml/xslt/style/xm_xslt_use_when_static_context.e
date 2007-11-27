@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			line_number := a_line_number
 			is_backwards_compatible_mode := a_backwards
 			default_element_namespace := a_default_namespace
-			default_collation_name := Unicode_codepoint_collation_uri			
+			default_collation_name := Unicode_codepoint_collation_uri
 			create known_collations.make_with_equality_testers (1, Void, string_equality_tester)
 			declare_collation (create {ST_COLLATOR}, default_collation_name)
 		ensure
@@ -70,7 +70,7 @@ feature -- Access
 	base_uri: UT_URI
 			-- Base URI
 
-	system_id: STRING 
+	system_id: STRING
 			-- SYSTEM-id;
 			-- This may differ from `base_uri', as it reports
 			--  the system-id of the containing entity, which
@@ -116,7 +116,7 @@ feature -- Access
 			Result := cached_function_manager
 		end
 
-	is_backwards_compatible_mode: BOOLEAN 
+	is_backwards_compatible_mode: BOOLEAN
 			-- Is XPath 1.0 Backwards Compatible Mode used?
 
 	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
@@ -148,9 +148,6 @@ feature -- Access
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_uri: STRING
-			l_node_factory: XM_XSLT_NODE_FACTORY
-			l_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			l_configuration: XM_XSLT_CONFIGURATION
 		do
 			create l_parser.make (a_qname)
 			check
@@ -184,7 +181,7 @@ feature -- Creation
 		end
 
 feature -- Element change
-	
+
 	bind_variable (a_fingerprint: INTEGER) is
 			-- Bind variable to it's declaration.
 		do
