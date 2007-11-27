@@ -16,6 +16,9 @@ class GEANT_EXIT_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			is_exit_command
+		end
 
 create
 
@@ -30,6 +33,9 @@ feature -- Status report
 		ensure then
 			always_executable: Result
 		end
+
+	is_exit_command: BOOLEAN is True
+			-- Is current command the exit command?
 
 feature -- Access
 

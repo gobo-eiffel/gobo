@@ -53,6 +53,12 @@ feature -- Status report
 			Result := command.exit_code
 		end
 
+	is_exit_command: BOOLEAN is
+			-- Is associated command the exit command?
+		do
+			Result := command.is_exit_command
+		end
+
 feature -- Setting
 
 	set_command (a_command: like command) is

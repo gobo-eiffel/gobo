@@ -643,7 +643,7 @@ feature -- Processing
 			end
 			if a_task.is_enabled then
 				a_task.execute
-				if a_task.exit_code /= 0 then
+				if a_task.is_exit_command or a_task.exit_code /= 0 then
 					exit_application (a_task.exit_code, Void)
 				end
 			else

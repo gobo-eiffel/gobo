@@ -21,7 +21,7 @@ inherit
 
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
-	
+
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
@@ -46,6 +46,12 @@ feature -- Status report
 
 	exit_code: INTEGER
 			-- Exit code of last execution
+
+	is_exit_command: BOOLEAN is
+			-- Is current command the exit command?
+		do
+			Result := False
+		end
 
 feature -- Access
 
