@@ -20,7 +20,7 @@ inherit
 		rename
 			item as actual_argument
 		undefine
-			is_empty
+			is_empty, valid_index
 		end
 
 create

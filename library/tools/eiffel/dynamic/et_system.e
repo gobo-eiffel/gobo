@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			nb: INTEGER
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
+			catcall_error_mode := True
 			universe := a_universe
 			nb := a_universe.classes.capacity
 			create null_dynamic_type_set_builder.make (Current)
@@ -132,17 +133,28 @@ feature -- Access
 
 feature -- Status report
 
-	catcall_mode: BOOLEAN
+	catcall_error_mode: BOOLEAN
 			-- Are CAT-call errors considered as fatal errors?
+
+	catcall_warning_mode: BOOLEAN
+			-- Are CAT-call errors considered just as warnings?
 
 feature -- Status setting
 
-	set_catcall_mode (b: BOOLEAN) is
-			-- Set `catcall_mode' to `b'.
+	set_catcall_error_mode (b: BOOLEAN) is
+			-- Set `catcall_error_mode' to `b'.
 		do
-			catcall_mode := b
+			catcall_error_mode := b
 		ensure
-			catcall_mode_set: catcall_mode = b
+			catcall_error_mode_set: catcall_error_mode = b
+		end
+
+	set_catcall_warning_mode (b: BOOLEAN) is
+			-- Set `catcall_warning_mode' to `b'.
+		do
+			catcall_warning_mode := b
+		ensure
+			catcall_warning_mode_set: catcall_warning_mode = b
 		end
 
 	set_string_type_alive is
@@ -1472,7 +1484,8 @@ feature {NONE} -- Compilation
 			l_builder := dynamic_type_set_builder
 			l_builder.set_no_debug (True)
 			l_builder.set_no_assertion (True)
-			l_builder.set_catcall_mode (catcall_mode)
+			l_builder.set_catcall_error_mode (catcall_error_mode)
+			l_builder.set_catcall_warning_mode (catcall_warning_mode)
 			l_builder.build_dynamic_type_sets
 			if l_builder.has_fatal_error then
 				set_fatal_error
@@ -1513,7 +1526,8 @@ feature -- Processors
 		do
 			if dynamic_type_set_builder = null_dynamic_type_set_builder then
 				create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
-				dynamic_type_set_builder.set_catcall_mode (catcall_mode)
+				dynamic_type_set_builder.set_catcall_error_mode (catcall_error_mode)
+				dynamic_type_set_builder.set_catcall_warning_mode (catcall_warning_mode)
 			end
 		end
 
@@ -1523,7 +1537,8 @@ feature -- Processors
 			a_builder_not_void: a_builder /= Void
 		do
 			dynamic_type_set_builder := a_builder
-			dynamic_type_set_builder.set_catcall_mode (catcall_mode)
+			dynamic_type_set_builder.set_catcall_error_mode (catcall_error_mode)
+			dynamic_type_set_builder.set_catcall_warning_mode (catcall_warning_mode)
 		ensure
 			dynamic_type_set_builder_set: dynamic_type_set_builder = a_builder
 		end

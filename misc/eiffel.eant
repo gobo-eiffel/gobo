@@ -82,7 +82,7 @@
 		<set name="finalize" value="false" if="${debug}"/>
 		<set name="split" value="true"/>
 		<set name="split" value="false" if="${no_split}"/>
-		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="false" cat="true" split="${split}"/>
+		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="false" catcall="error" split="${split}"/>
 		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>

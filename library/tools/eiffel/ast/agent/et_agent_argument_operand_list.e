@@ -20,7 +20,7 @@ inherit
 
 	ET_HEAD_LIST [ET_AGENT_ARGUMENT_OPERAND_ITEM]
 		undefine
-			is_empty
+			is_empty, valid_index
 		redefine
 			make, make_with_capacity
 		end

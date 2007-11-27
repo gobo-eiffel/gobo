@@ -25,8 +25,11 @@ feature -- Status report
 			-- Has a fatal error occurred when building
 			-- dynamic type sets?
 
-	catcall_mode: BOOLEAN
+	catcall_error_mode: BOOLEAN
 			-- Are CAT-call errors considered as fatal errors?
+
+	catcall_warning_mode: BOOLEAN
+			-- Are CAT-call errors considered just as warnings?
 
 	no_debug: BOOLEAN
 			-- Should debug instructions be ignored?
@@ -44,12 +47,20 @@ feature -- Status setting
 			has_fatal_error: has_fatal_error
 		end
 
-	set_catcall_mode (b: BOOLEAN) is
-			-- Set `catcall_mode' to `b'.
+	set_catcall_error_mode (b: BOOLEAN) is
+			-- Set `catcall_error_mode' to `b'.
 		do
-			catcall_mode := b
+			catcall_error_mode := b
 		ensure
-			catcall_mode_set: catcall_mode = b
+			catcall_error_mode_set: catcall_error_mode = b
+		end
+
+	set_catcall_warning_mode (b: BOOLEAN) is
+			-- Set `catcall_warning_mode' to `b'.
+		do
+			catcall_warning_mode := b
+		ensure
+			catcall_warning_mode_set: catcall_warning_mode = b
 		end
 
 	set_no_debug (b: BOOLEAN) is

@@ -142,6 +142,7 @@ feature {NONE} -- Initialization
 			create pointer_index.make (0)
 			create none_index.make (0)
 			create string_index.make (0)
+			catcall_error_mode := True
 		ensure
 			current_system_set: current_system = a_system
 		end
@@ -497,27 +498,29 @@ feature {NONE} -- CAT-calls
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_type: ET_DYNAMIC_TYPE
 		do
-			l_dynamic_types := current_system.dynamic_types
-			nb := l_dynamic_types.count
-			from i := 1 until i > nb loop
-				l_type := l_dynamic_types.item (i)
-				from
-					l_call := l_type.query_calls
-				until
-					l_call = Void
-				loop
-					check_catcall_call_validity (l_call)
-					l_call := l_call.next
+			if catcall_error_mode or catcall_warning_mode then
+				l_dynamic_types := current_system.dynamic_types
+				nb := l_dynamic_types.count
+				from i := 1 until i > nb loop
+					l_type := l_dynamic_types.item (i)
+					from
+						l_call := l_type.query_calls
+					until
+						l_call = Void
+					loop
+						check_catcall_call_validity (l_call)
+						l_call := l_call.next
+					end
+					from
+						l_call := l_type.procedure_calls
+					until
+						l_call = Void
+					loop
+						check_catcall_call_validity (l_call)
+						l_call := l_call.next
+					end
+					i := i + 1
 				end
-				from
-					l_call := l_type.procedure_calls
-				until
-					l_call = Void
-				loop
-					check_catcall_call_validity (l_call)
-					l_call := l_call.next
-				end
-				i := i + 1
 			end
 		end
 
@@ -557,13 +560,54 @@ feature {NONE} -- CAT-calls
 			j, nb2: INTEGER
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
+			l_tuple_dynamic_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_seed: INTEGER
 		do
 			if a_call.is_tuple_label then
--- TODO: check the case of Tuple label setter. For example:
---   t1: TUPLE [l: ANY]
---   t2: TUPLE [l: STRING]
---   t1 := t2
---   t1.l := 3
+					-- Check the case of Tuple label setter. For example:
+					--   t1: TUPLE [l: ANY]
+					--   t2: TUPLE [l: STRING]
+					--   t1 := t2
+					--   t1.l := 3
+				l_actuals := a_call.static_call.arguments
+				if l_actuals /= Void and then l_actuals.count = 1 then
+					l_current_feature := a_call.current_feature
+					l_tuple_dynamic_type ?= a_type
+					if l_tuple_dynamic_type = Void then
+							-- Internal error: the target of the call is a Tuple.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_item_type_sets := l_tuple_dynamic_type.item_type_sets
+						l_seed := a_call.static_call.name.seed
+						if not l_item_type_sets.valid_index (l_seed) then
+								-- Internal error: invalid Tuple label.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_target_type_set := l_item_type_sets.item (l_seed)
+							l_target_type := l_target_type_set.static_type
+							l_current_feature := a_call.current_feature
+							l_source_type_set := l_current_feature.dynamic_type_set (l_actuals.actual_argument (1))
+							if l_source_type_set = Void then
+									-- Internal error: the dynamic type sets of the actual
+									-- argument should be known at this stage.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								nb2 := l_source_type_set.count
+								from j := 1 until j > nb2 loop
+									l_source_type := l_source_type_set.dynamic_type (j)
+									if not l_source_type.conforms_to_type (l_target_type, current_system) then
+										report_catcall_error (a_type, Void, 1, l_target_type, l_target_type_set, l_source_type, l_source_type_set, a_call)
+									end
+									j := j + 1
+								end
+							end
+						end
+					end
+				end
 			else
 				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_system)
 				if l_dynamic_feature = Void then
@@ -598,7 +642,7 @@ feature {NONE} -- CAT-calls
 										from j := 1 until j > nb2 loop
 											l_source_type := l_source_type_set.dynamic_type (j)
 											if not l_source_type.conforms_to_type (l_target_type, current_system) then
-												report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, a_call)
+												report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_target_type_set, l_source_type, l_source_type_set, a_call)
 											end
 											j := j + 1
 										end
@@ -613,56 +657,93 @@ feature {NONE} -- CAT-calls
 		end
 
 	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
-		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
+		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
-			-- try to pass to the corresponding feature `a_dynamic_feature' an actual
-			-- argument of type `an_actual_type' which does not conform to the type of
-			-- the `arg'-th corresponding formal argument `a_formal_type'.
+			-- try to pass to the corresponding feature `a_dynamic_feature' an actual argument of
+			-- type `an_actual_type' (which is one of the types of `an_actual_type_set') which
+			-- does not conform to the type of the `arg'-th corresponding formal argument
+			-- `a_formal_type' (which is one of the types of `a_formal_type_set').
+			-- When `a_dynamic_feature' is Void, then the call is assumed to be a Tuple label setter.
 		require
 			a_target_type_not_void: a_target_type /= Void
-			a_dynamic_feature_not_void: a_dynamic_feature /= Void
-			a_formal_type_not_void: a_formal_type /= Void
-			an_actual_type_not_void: an_actual_type /= Void
 			a_call_not_void: a_call /= Void
+			a_dynamic_feature_not_void_or_tuple_label_setter: a_call.is_tuple_label xor a_dynamic_feature /= Void
+			a_formal_type_not_void: a_formal_type /= Void
+			a_formal_type_set_not_void: a_formal_type_set /= Void
+			an_actual_type_not_void: an_actual_type /= Void
+			an_actual_type_set_not_void: an_actual_type_set /= Void
+			valid_arg: a_call.static_call.arguments /= Void and then a_call.static_call.arguments.valid_index (arg)
 		local
 			l_message: STRING
-			l_class_impl: ET_CLASS
-			l_position: ET_POSITION
 		do
-			if False then
 -- TODO: better error message reporting.
 			l_message := shared_error_message
 			STRING_.wipe_out (l_message)
-			l_message.append_string ("[CATCALL] class ")
-			l_message.append_string (a_call.current_type.base_type.to_text)
-			l_message.append_string (" (")
-			l_class_impl := a_call.current_feature.static_feature.implementation_class
-			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-				l_message.append_string (l_class_impl.upper_name)
-				l_message.append_character (',')
-			end
-			l_position := a_call.position
-			l_message.append_string (l_position.line.out)
-			l_message.append_character (',')
-			l_message.append_string (l_position.column.out)
-			l_message.append_string ("): type '")
-			l_message.append_string (an_actual_type.base_type.to_text)
-			l_message.append_string ("' of actual argument #")
-			l_message.append_string (arg.out)
-			l_message.append_string (" does not conform to type '")
-			l_message.append_string (a_formal_type.base_type.to_text)
-			l_message.append_string ("' of formal argument in feature `")
-			l_message.append_string (a_dynamic_feature.static_feature.name.name)
-			l_message.append_string ("' in class '")
-			l_message.append_string (a_target_type.base_type.to_text)
-			l_message.append_string ("%'")
-			if catcall_mode then
+			append_catcall_error_message (l_message, a_target_type, a_dynamic_feature, arg, a_formal_type, a_formal_type_set, an_actual_type, an_actual_type_set, a_call)
+			if catcall_error_mode then
 					-- CAT-calls are considered as fatal errors.
 				set_fatal_error
 			end
 			error_handler.report_catcall_error (l_message)
 			STRING_.wipe_out (l_message)
+		end
+
+	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
+		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
+			-- When the target is of type `a_target_type', we try to pass to the corresponding
+			-- feature `a_dynamic_feature' an actual argument of type `an_actual_type' (which
+			-- is one of the types of `an_actual_type_set') which does not conform to the type
+			-- of the `arg'-th corresponding formal argument `a_formal_type' (which is one of
+			-- the types of `a_formal_type_set').
+			-- When `a_dynamic_feature' is Void, then the call is assumed to be a Tuple label setter.
+		require
+			a_message_not_void: a_message /= Void
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_dynamic_feature_not_void_or_tuple_label_setter: a_call.is_tuple_label xor a_dynamic_feature /= Void
+			a_formal_type_not_void: a_formal_type /= Void
+			a_formal_type_set_not_void: a_formal_type_set /= Void
+			an_actual_type_not_void: an_actual_type /= Void
+			an_actual_type_set_not_void: an_actual_type_set /= Void
+			valid_arg: a_call.static_call.arguments /= Void and then a_call.static_call.arguments.valid_index (arg)
+		local
+			l_class_impl: ET_CLASS
+			l_position: ET_POSITION
+		do
+			a_message.append_string ("[CATCALL] class ")
+			a_message.append_string (a_call.current_type.base_type.to_text)
+			a_message.append_string (" (")
+			l_class_impl := a_call.current_feature.static_feature.implementation_class
+			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
+				a_message.append_string (l_class_impl.upper_name)
+				a_message.append_character (',')
 			end
+			l_position := a_call.position
+			a_message.append_string (l_position.line.out)
+			a_message.append_character (',')
+			a_message.append_string (l_position.column.out)
+			a_message.append_string ("): type '")
+			a_message.append_string (an_actual_type.base_type.to_text)
+			if a_dynamic_feature /= Void then
+				a_message.append_string ("' of actual argument #")
+				a_message.append_string (arg.out)
+				a_message.append_string (" does not conform to type '")
+				a_message.append_string (a_formal_type.base_type.to_text)
+				a_message.append_string ("' of formal argument in feature `")
+				a_message.append_string (a_dynamic_feature.static_feature.name.name)
+				a_message.append_string ("' in class '")
+			else
+				a_message.append_string ("' of source of Tuple label assigner does not conform to type '")
+				a_message.append_string (a_formal_type.base_type.to_text)
+				a_message.append_string ("' of Tuple item #")
+				a_message.append_string (a_call.static_call.name.seed.out)
+				a_message.append_string (" in type '")
+			end
+			a_message.append_string (a_target_type.base_type.to_text)
+			a_message.append_string ("%'")
 		end
 
 	shared_error_message: STRING is

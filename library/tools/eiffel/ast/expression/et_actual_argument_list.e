@@ -20,7 +20,7 @@ inherit
 		rename
 			expression as actual_argument
 		undefine
-			is_empty
+			is_empty, valid_index
 		redefine
 			reset, make, make_with_capacity
 		end

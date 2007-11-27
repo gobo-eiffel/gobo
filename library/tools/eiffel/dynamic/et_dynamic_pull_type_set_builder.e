@@ -15,8 +15,6 @@ class ET_DYNAMIC_PULL_TYPE_SET_BUILDER
 inherit
 
 	ET_DYNAMIC_TYPE_BUILDER
-		rename
-			report_catcall_error as old_report_catcall_error
 		redefine
 			new_dynamic_type_set,
 			build_dynamic_type_sets,
@@ -24,7 +22,7 @@ inherit
 			build_tuple_put,
 			build_agent_call,
 			propagate_call_type,
-			check_catcall_target_validity,
+			append_catcall_error_message,
 			report_agent_qualified_query_call,
 			report_manifest_array,
 			report_manifest_tuple,
@@ -408,104 +406,17 @@ feature {NONE} -- Generation
 
 feature {NONE} -- CAT-calls
 
-	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
-			-- Check whether target type `a_type' introduces CAT-calls in `a_call'.
+	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
+		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
+			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
+			-- When the target is of type `a_target_type', we try to pass to the corresponding
+			-- feature `a_dynamic_feature' an actual argument of type `an_actual_type' (which
+			-- is one of the types of `an_actual_type_set') which does not conform to the type
+			-- of the `arg'-th corresponding formal argument `a_formal_type' (which is one of
+			-- the types of `a_formal_type_set').
+			-- When `a_dynamic_feature' is Void, then the call is assumed to be a Tuple label setter.
 		local
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_actuals: ET_ARGUMENT_OPERANDS
-			l_current_feature: ET_DYNAMIC_FEATURE
-			i, nb: INTEGER
-			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			j, nb2: INTEGER
-			l_source_type: ET_DYNAMIC_TYPE
-			l_target_type: ET_DYNAMIC_TYPE
-			l_source: ET_DYNAMIC_ATTACHMENT
-		do
-			if a_call.is_tuple_label then
--- TODO: check the case of Tuple label setter. For example:
---   t1: TUPLE [l: ANY]
---   t2: TUPLE [l: STRING]
---   t1 := t2
---   t1.l := 3
-			else
-				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_system)
-				if l_dynamic_feature = Void then
-						-- Internal error: there should be a feature in all
-						-- descendants of `target_type.static_type'.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_actuals := a_call.static_call.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb > 0 then
-								-- Dynamic type sets for arguments are stored first
-								-- in `dynamic_type_sets'.
-							l_target_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-							if l_target_argument_type_sets.count < nb then
-									-- Internal error: it has already been checked somewhere else
-									-- that there was the same number of formal arguments in
-									-- feature redeclaration.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								l_current_feature := a_call.current_feature
-								from i := 1 until i > nb loop
-									l_target_type_set := l_target_argument_type_sets.item (i)
-									l_target_type := l_target_type_set.static_type
-									l_source_type_set := l_current_feature.dynamic_type_set (l_actuals.actual_argument (i))
-									if l_source_type_set = Void then
-											-- Internal error: the dynamic type sets of the actual
-											-- arguments should be known at this stage.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									else
-										nb2 := l_source_type_set.count
-										from j := 1 until j > nb2 loop
-											l_source_type := l_source_type_set.dynamic_type (j)
-											if not l_source_type.conforms_to_type (l_target_type, current_system) then
-												from
-													l_source := l_target_type_set.sources
-												until
-													l_source = Void
-												loop
-													if l_source.source_type_set = l_source_type_set then
-														report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source, a_call)
-													end
-													l_source := l_source.next_attachment
-												end
-											end
-											j := j + 1
-										end
-									end
-									i := i + 1
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-
-	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: ET_DYNAMIC_FEATURE;
-		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_TYPE;
-		an_actual_source: ET_DYNAMIC_ATTACHMENT; a_call: ET_DYNAMIC_QUALIFIED_CALL) is
-			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
-			-- try to pass to the corresponding feature `a_dynamic_feature' an actual
-			-- argument of type `an_actual_type' (coming from `an_actual_source')
-			-- which does not conform to the type of the `arg'-th corresponding formal
-			-- argument `a_formal_type'.
-		require
-			a_target_type_not_void: a_target_type /= Void
-			a_dynamic_feature_not_void: a_dynamic_feature /= Void
-			a_formal_type_not_void: a_formal_type /= Void
-			an_actual_type_not_void: an_actual_type /= Void
-			an_actual_source_not_void: an_actual_source /= Void
-			a_call_not_void: a_call /= Void
-		local
-			l_message: STRING
 			l_class_impl: ET_CLASS
 			l_source: ET_DYNAMIC_ATTACHMENT
 			l_type_set: ET_DYNAMIC_TYPE_SET
@@ -513,90 +424,69 @@ feature {NONE} -- CAT-calls
 			l_source_stack: DS_ARRAYED_STACK [ET_DYNAMIC_ATTACHMENT]
 			l_target: ET_TARGET_OPERAND
 			l_position: ET_POSITION
+			l_argument: ET_ARGUMENT_OPERAND
+			l_implicit_open_argument: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			i, j, nb: INTEGER
 		do
 -- TODO: better error message reporting.
-			l_message := shared_error_message
-			STRING_.wipe_out (l_message)
-			l_message.append_string ("[CATCALL] class ")
-			l_message.append_string (a_call.current_type.base_type.to_text)
-			l_message.append_string (" (")
-			l_class_impl := a_call.current_feature.static_feature.implementation_class
-			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-				l_message.append_string (l_class_impl.upper_name)
-				l_message.append_character (',')
-			end
-			l_position := a_call.position
-			l_message.append_string (l_position.line.out)
-			l_message.append_character (',')
-			l_message.append_string (l_position.column.out)
-			l_message.append_string ("): type '")
-			l_message.append_string (an_actual_type.base_type.to_text)
-			l_message.append_string ("' of actual argument #")
-			l_message.append_string (arg.out)
-			l_message.append_string (" does not conform to type '")
-			l_message.append_string (a_formal_type.base_type.to_text)
-			l_message.append_string ("' of formal argument in feature `")
-			l_message.append_string (a_dynamic_feature.static_feature.name.name)
-			l_message.append_string ("' in class '")
-			l_message.append_string (a_target_type.base_type.to_text)
-			l_message.append_string ("':%N")
+			precursor (a_message, a_target_type, a_dynamic_feature, arg, a_formal_type, a_formal_type_set, an_actual_type, an_actual_type_set, a_call)
+			a_message.append_string (":%N")
 			l_visited_sources := shared_visited_sources
 			l_visited_sources.wipe_out
 			l_source_stack := shared_source_stack
 			l_source_stack.wipe_out
 			from
-				l_message.append_string ("%TTarget type: '")
-				l_message.append_string (a_target_type.base_type.to_text)
-				l_message.append_string ("'%N")
+				a_message.append_string ("%TTarget type: '")
+				a_message.append_string (a_target_type.base_type.to_text)
+				a_message.append_string ("'%N")
 				l_type_set := a_call.target_type_set
 			until
 				l_type_set = Void
 			loop
 				if l_type_set = a_target_type then
 					j := j + 1
-					l_message.append_string ("%T%TAttachment stack #")
-					l_message.append_string (j.out)
-					l_message.append_character ('%N')
-					l_message.append_string ("%T%T%Tclass ")
-					l_message.append_string (a_call.current_type.base_type.to_text)
-					l_message.append_string (" (")
+					a_message.append_string ("%T%TAttachment stack #")
+					a_message.append_string (j.out)
+					a_message.append_character ('%N')
+					a_message.append_string ("%T%T%Tclass ")
+					a_message.append_string (a_call.current_type.base_type.to_text)
+					a_message.append_string (" (")
 					l_class_impl := a_call.current_feature.static_feature.implementation_class
 					if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-						l_message.append_string (l_class_impl.upper_name)
-						l_message.append_character (',')
+						a_message.append_string (l_class_impl.upper_name)
+						a_message.append_character (',')
 					end
 					l_target := a_call.static_call.target
 					l_position := l_target.position
-					l_message.append_string (l_position.line.out)
-					l_message.append_character (',')
-					l_message.append_string (l_position.column.out)
+					a_message.append_string (l_position.line.out)
+					a_message.append_character (',')
+					a_message.append_string (l_position.column.out)
 					if l_target.is_open_operand then
-						l_message.append_string ("): open target%N")
+						a_message.append_string ("): open target%N")
 					else
-						l_message.append_string ("): target%N")
+						a_message.append_string ("): target%N")
 					end
 					nb := l_source_stack.count
 					from i := 1 until i > nb loop
 						l_source := l_source_stack.i_th (i)
 						if not l_source.is_null_attachment then
-							l_message.append_string ("%T%T%Tclass ")
-							l_message.append_string (l_source.current_type.base_type.to_text)
-							l_message.append_string (" (")
+							a_message.append_string ("%T%T%Tclass ")
+							a_message.append_string (l_source.current_type.base_type.to_text)
+							a_message.append_string (" (")
 							l_class_impl := l_source.current_feature.static_feature.implementation_class
 							if l_source.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-								l_message.append_string (l_class_impl.upper_name)
-								l_message.append_character (',')
+								a_message.append_string (l_class_impl.upper_name)
+								a_message.append_character (',')
 							end
 							l_position := l_source.position
-							l_message.append_string (l_position.line.out)
-							l_message.append_character (',')
-							l_message.append_string (l_position.column.out)
-							l_message.append_character (')')
-							l_message.append_character (':')
-							l_message.append_character (' ')
-							l_message.append_string (l_source.description)
-							l_message.append_character ('%N')
+							a_message.append_string (l_position.line.out)
+							a_message.append_character (',')
+							a_message.append_string (l_position.column.out)
+							a_message.append_character (')')
+							a_message.append_character (':')
+							a_message.append_character (' ')
+							a_message.append_string (l_source.description)
+							a_message.append_character ('%N')
 						end
 						i := i + 1
 					end
@@ -645,7 +535,7 @@ feature {NONE} -- CAT-calls
 				end
 				if j >= 10 then
 						-- Report no more than 10 entries in the
-						-- attachment stack, otherwise `l_message'
+						-- attachment stack, otherwise `a_message'
 						-- gets too big and we run out of memory.
 					l_type_set := Void
 				end
@@ -659,46 +549,64 @@ feature {NONE} -- CAT-calls
 			l_source_stack.wipe_out
 			j := 0
 			from
-				l_message.append_string ("%TArgument type: '")
-				l_message.append_string (an_actual_type.base_type.to_text)
-				l_message.append_string ("'%N")
-				l_source := an_actual_source
-				l_source.set_visited (True)
-				l_visited_sources.force_last (l_source)
-				l_type_set := l_source.source_type_set
+				a_message.append_string ("%TArgument type: '")
+				a_message.append_string (an_actual_type.base_type.to_text)
+				a_message.append_string ("'%N")
+				l_type_set := an_actual_type_set
 			until
 				l_type_set = Void
 			loop
 				if l_type_set = an_actual_type then
 					j := j + 1
-					l_message.append_string ("%T%TAttachment stack #")
-					l_message.append_string (j.out)
-					l_message.append_character ('%N')
-					nb := l_source_stack.count
-					from i := 0 until i > nb loop
-						if i = 0 then
-							l_source := an_actual_source
+					a_message.append_string ("%T%TAttachment stack #")
+					a_message.append_string (j.out)
+					a_message.append_character ('%N')
+					a_message.append_string ("%T%T%Tclass ")
+					a_message.append_string (a_call.current_type.base_type.to_text)
+					a_message.append_string (" (")
+					l_class_impl := a_call.current_feature.static_feature.implementation_class
+					if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
+						a_message.append_string (l_class_impl.upper_name)
+						a_message.append_character (',')
+					end
+					l_argument := a_call.static_call.arguments.actual_argument (arg)
+					l_position := l_argument.position
+					a_message.append_string (l_position.line.out)
+					a_message.append_character (',')
+					a_message.append_string (l_position.column.out)
+					if l_argument.is_open_operand then
+						l_implicit_open_argument ?= l_argument
+						if l_implicit_open_argument /= Void then
+							a_message.append_string ("): implicit open argument #")
+							a_message.append_string (l_implicit_open_argument.argument_index.out)
+							a_message.append_character ('%N')
 						else
-							l_source := l_source_stack.i_th (i)
+							a_message.append_string ("): open argument%N")
 						end
+					else
+						a_message.append_string ("): argument%N")
+					end
+					nb := l_source_stack.count
+					from i := 1 until i > nb loop
+						l_source := l_source_stack.i_th (i)
 						if not l_source.is_null_attachment then
-							l_message.append_string ("%T%T%Tclass ")
-							l_message.append_string (l_source.current_type.base_type.to_text)
-							l_message.append_string (" (")
+							a_message.append_string ("%T%T%Tclass ")
+							a_message.append_string (l_source.current_type.base_type.to_text)
+							a_message.append_string (" (")
 							l_class_impl := l_source.current_feature.static_feature.implementation_class
 							if l_source.current_type.base_type.direct_base_class (universe) /= l_class_impl then
-								l_message.append_string (l_class_impl.upper_name)
-								l_message.append_character (',')
+								a_message.append_string (l_class_impl.upper_name)
+								a_message.append_character (',')
 							end
 							l_position := l_source.position
-							l_message.append_string (l_position.line.out)
-							l_message.append_character (',')
-							l_message.append_string (l_position.column.out)
-							l_message.append_character (')')
-							l_message.append_character (':')
-							l_message.append_character (' ')
-							l_message.append_string (l_source.description)
-							l_message.append_character ('%N')
+							a_message.append_string (l_position.line.out)
+							a_message.append_character (',')
+							a_message.append_string (l_position.column.out)
+							a_message.append_character (')')
+							a_message.append_character (':')
+							a_message.append_character (' ')
+							a_message.append_string (l_source.description)
+							a_message.append_character ('%N')
 						end
 						i := i + 1
 					end
@@ -747,7 +655,7 @@ feature {NONE} -- CAT-calls
 				end
 				if j >= 10 then
 						-- Report no more than 10 entries in the
-						-- attachment stack, otherwise `l_message'
+						-- attachment stack, otherwise `a_message'
 						-- gets too big and we run out of memory.
 					l_type_set := Void
 				end
@@ -759,12 +667,6 @@ feature {NONE} -- CAT-calls
 			end
 			l_visited_sources.wipe_out
 			l_source_stack.wipe_out
-			if catcall_mode then
-					-- CAT-calls are considered as fatal errors.
-				set_fatal_error
-			end
-			error_handler.report_catcall_error (l_message)
-			STRING_.wipe_out (l_message)
 		end
 
 	shared_visited_sources: DS_ARRAYED_LIST [ET_DYNAMIC_ATTACHMENT] is

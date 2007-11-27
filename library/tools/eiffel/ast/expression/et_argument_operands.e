@@ -30,6 +30,14 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' a valid index?
+		do
+			Result := i >= 1 and i <= count
+		ensure
+			definition: Result = (i >= 1 and i <= count)
+		end
+
 feature -- Access
 
 	actual_argument (i: INTEGER): ET_ARGUMENT_OPERAND is

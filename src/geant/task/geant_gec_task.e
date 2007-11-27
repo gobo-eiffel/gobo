@@ -57,8 +57,11 @@ feature {NONE} -- Initialization
 				command.set_finalize (boolean_value (Finalize_attribute_name))
 			end
 				-- cat.
-			if has_attribute (Cat_attribute_name) then
-				command.set_cat_mode (boolean_value (Cat_attribute_name))
+			if has_attribute (Catcall_attribute_name) then
+				a_value := attribute_value (Catcall_attribute_name)
+				if a_value /= Void and then not a_value.is_empty then
+					command.set_catcall_mode (a_value)
+				end
 			end
 				-- split.
 			if has_attribute (Split_attribute_name) then
@@ -113,10 +116,10 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Cat_attribute_name: STRING is
-			-- Name of xml attribute for "cat"
+	Catcall_attribute_name: STRING is
+			-- Name of xml attribute for "catcall"
 		once
-			Result := "cat"
+			Result := "catcall"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

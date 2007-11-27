@@ -77,8 +77,8 @@ feature -- Access
 	finalize: BOOLEAN
 			-- Should system be compiled in finalized mode?
 
-	cat_mode: BOOLEAN
-			-- Should CAT-calls be considered as fatal errors?
+	catcall_mode: STRING
+			-- Should CAT-calls be considered as fatal errors, as warnings or just ignored?
 
 	split_mode: BOOLEAN
 			-- Should C code be generated into several files?
@@ -124,12 +124,12 @@ feature -- Setting
 			finalize_set: finalize = b
 		end
 
-	set_cat_mode (b: BOOLEAN) is
-			-- Set `cat_mode' to `b'.
+	set_catcall_mode (a_mode: STRING) is
+			-- Set `catcall_mode' to `a_mode'.
 		do
-			cat_mode := b
+			catcall_mode := a_mode
 		ensure
-			cat_mode_set: cat_mode = b
+			catcall_mode_set: catcall_mode = a_mode
 		end
 
 	set_split_mode (b: BOOLEAN) is
@@ -325,8 +325,10 @@ feature -- Command-line
 			if not c_compile then
 				Result.append_string ("--cc=no ")
 			end
-			if cat_mode then
-				Result.append_string ("--cat ")
+			if catcall_mode /= Void and then not catcall_mode.is_empty then
+				Result.append_string ("--catcall=")
+				Result.append_string (catcall_mode)
+				Result.append_character (' ')
 			end
 			if not split_mode then
 				Result.append_string ("--split=no ")

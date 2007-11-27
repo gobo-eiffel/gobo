@@ -196,7 +196,8 @@ feature {NONE} -- Processing
 -- TODO.
 			end
 			create l_system.make (a_universe)
-			l_system.set_catcall_mode (is_cat)
+			l_system.set_catcall_error_mode (catcall_error_mode)
+			l_system.set_catcall_warning_mode (catcall_warning_mode)
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile
@@ -277,10 +278,16 @@ feature -- Status report
 			Result := finalize_flag.was_found
 		end
 
-	is_cat: BOOLEAN is
-			-- Should CAT-call errors be considered as fatal errors?
+	catcall_error_mode: BOOLEAN is
+			-- Are CAT-call errors considered as fatal errors?
 		do
-			Result := cat_flag.was_found
+			Result := catcall_option.was_found and then STRING_.same_string (catcall_option.parameter, "error")
+		end
+
+	catcall_warning_mode: BOOLEAN is
+			-- Are CAT-call errors considered just as warnings?
+		do
+			Result := not catcall_option.was_found or else STRING_.same_string (catcall_option.parameter, "warning")
 		end
 
 	no_c_compile: BOOLEAN is
@@ -321,8 +328,8 @@ feature -- Argument parsing
 	ace_filename: STRING
 			-- Name of the ace file
 
-	cat_flag: AP_FLAG
-			-- Flag for '--cat'
+	catcall_option: AP_ENUMERATION_OPTION
+			-- Option for '--catcall=<no|error|warning>'
 
 	finalize_flag: AP_FLAG
 			-- Flag for '--finalize'
@@ -362,10 +369,14 @@ feature -- Argument parsing
 			create finalize_flag.make_with_long_form ("finalize")
 			finalize_flag.set_description ("Compile with optimizations turned on.")
 			a_parser.options.force_last (finalize_flag)
-				-- cat
-			create cat_flag.make_with_long_form ("cat")
-			cat_flag.set_description ("CAT-call errors should be considered as fatal errors.")
-			a_parser.options.force_last (cat_flag)
+				-- catcall
+			create catcall_option.make_with_long_form ("catcall")
+			catcall_option.set_description ("Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? (default: warning)")
+			catcall_option.extend ("no")
+			catcall_option.extend ("error")
+			catcall_option.extend ("warning")
+			catcall_option.set_parameter_description ("no|error|warning")
+			a_parser.options.force_last (catcall_option)
 				-- cc
 			create c_compile_option.make_with_long_form ("cc")
 			c_compile_option.set_description ("Should the back-end C compiler be invoked on the generated C code? (default: yes)")
@@ -423,7 +434,7 @@ feature -- Argument parsing
 			end
 		ensure
 			ace_filename_not_void: ace_filename /= Void
-			cat_flag_not_void: cat_flag /= Void
+			catcall_option_not_void: catcall_option /= Void
 			finalize_flag_not_void: finalize_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
@@ -437,7 +448,7 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	ace_filename_not_void: ace_filename /= Void
-	cat_flag_not_void: cat_flag /= Void
+	catcall_option_not_void: catcall_option /= Void
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void

@@ -65,8 +65,8 @@ feature -- Execution
 					is_flat := True
 				elseif arg.is_equal ("--noflatdbc") then
 					is_flat_dbc := False
-				elseif arg.is_equal ("--cat") then
-					is_cat := True
+				elseif arg.is_equal ("--catcall") then
+					is_catcall := True
 				elseif arg.is_equal ("--silent") then
 					is_silent := True
 				elseif arg.is_equal ("--void") then
@@ -151,7 +151,7 @@ feature -- Status report
 	is_verbose: BOOLEAN
 	is_flat: BOOLEAN
 	is_flat_dbc: BOOLEAN
-	is_cat: BOOLEAN
+	is_catcall: BOOLEAN
 	ecma_version: UT_VERSION
 	ise_version: UT_VERSION
 	is_silent: BOOLEAN
@@ -279,9 +279,9 @@ feature {NONE} -- Processing
 			end
 			a_universe.set_flat_mode (is_flat)
 			a_universe.set_flat_dbc_mode (is_flat_dbc)
-			if is_cat then
+			if is_catcall then
 				create a_system.make (a_universe)
-				a_system.set_catcall_mode (True)
+				a_system.set_catcall_error_mode (True)
 				create {ET_DYNAMIC_PULL_TYPE_SET_BUILDER} a_builder.make (a_system)
 				a_system.set_dynamic_type_set_builder (a_builder)
 				a_system.compile
@@ -325,7 +325,7 @@ feature -- Error handling
 			-- Gelint usage message.
 		once
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
-				%%T[--flat][--noflatdbc][--cat][--void][--silent][--verbose] ace_filename")
+				%%T[--flat][--noflatdbc][--catcall][--void][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

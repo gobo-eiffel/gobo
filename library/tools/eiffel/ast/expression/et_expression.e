@@ -34,7 +34,8 @@ inherit
 	ET_ACTUAL_ARGUMENTS
 		rename
 			count as actual_argument_count,
-			is_empty as is_empty_actual_argument
+			is_empty as is_empty_actual_argument,
+			valid_index as valid_index_actual_argument
 		end
 
 	ET_ARGUMENT_OPERAND
