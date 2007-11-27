@@ -4,6 +4,17 @@ Version 3.8 - ?
 
 	* Generate prototypes for external routines when no header file
 	  has been specified.
+	* Changed the generated C code for Agent objects so that `twin'
+	  and `deep_twin' work correctly.
+	* Improved CAT-call error reporting, in particular in case of
+	  Tuple label assigners.
+	* Relaxed the CAT-call rule when calling Agents to be compliant with ISE.
+	  ISE Eiffel does not type-check the tuple operand of Agent calls even at
+	  execution time. It only checks whether the tuple has enough items and
+	  these items are of the expected types, regardless of the type of the
+	  tuple itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent
+	  which expects a "TUPLE [STRING]" provided that the dynamic type of the
+	  item of this tuple conforms to type STRING.
 
 Version 3.7 - 5 November 2007
 
