@@ -84,6 +84,26 @@ feature -- Element change
 						end
 					end
 				end
+			elseif a_system.universe.is_ise and then not has_type (a_type) then
+					-- ISE Eiffel does not type-check the tuple operand of Agent calls even at
+					-- execution time. It only checks whether the tuple has enough items and
+					-- these items are of the expected types, regardless of the type of the tuple
+					-- itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent which expects
+					-- a "TUPLE [STRING]" provided that the dynamic type of the item of this tuple
+				 	-- conforms to type STRING.
+				l_tuple_type ?= a_type
+				if l_tuple_type /= Void then
+					l_item_type_sets := l_tuple_type.item_type_sets
+					l_open_operand_type_sets := agent_type.open_operand_type_sets
+					nb := l_open_operand_type_sets.count
+					if l_item_type_sets.count >= nb then
+						from i := 1 until i > nb loop
+							create l_attachment.make (l_item_type_sets.item (i), agent_type, an_attachment.attachment, i, an_attachment.current_feature, an_attachment.current_type)
+							l_open_operand_type_sets.item (i).put_source (l_attachment, a_system)
+							i := i + 1
+						end
+					end
+				end
 			end
 		end
 
