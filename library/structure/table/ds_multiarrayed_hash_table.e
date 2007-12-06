@@ -38,15 +38,22 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	hash_position (k: K): INTEGER is
-			-- Hash position of `k' in `slots';
-			-- Use `k.hash_code' as hashing function.
+	initialize_hash_function is
+			-- Initialize `hash_function'.
 		do
-			if k /= Void then
-				Result := k.hash_code \\ modulus
-			else
-				Result := modulus
-			end
+-- Not accepted by ISE 6.1.
+--			set_hash_function (agent {K}.hash_code)
+			set_hash_function (agent hash_code)
+		end
+
+	hash_code (k: K): INTEGER is
+			-- Hash code of `k'
+		require
+			k_not_void: k /= Void
+		do
+			Result := k.hash_code
+		ensure
+			hash_code_not_negative: Result >= 0
 		end
 
 end

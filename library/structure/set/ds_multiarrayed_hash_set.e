@@ -36,15 +36,22 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	hash_position (v: G): INTEGER is
-			-- Hash position of `v' in `slots';
-			-- Use `v.hash_code' as hashing function.
+	initialize_hash_function is
+			-- Initialize `hash_function'.
 		do
-			if v /= Void then
-				Result := v.hash_code \\ modulus
-			else
-				Result := modulus
-			end
+-- Not accepted by ISE 6.1.
+--			set_hash_function (agent {G}.hash_code)
+			set_hash_function (agent hash_code)
+		end
+
+	hash_code (v: G): INTEGER is
+			-- Hash code of `v'
+		require
+			v_not_void: v /= Void
+		do
+			Result := v.hash_code
+		ensure
+			hash_code_not_negative: Result >= 0
 		end
 
 end
