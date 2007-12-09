@@ -25,19 +25,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error: XM_XPATH_ERROR_VALUE; an_instruction_name: STRING) is
+	make (a_error: XM_XPATH_ERROR_VALUE; a_instruction_name: STRING) is
 			-- Establish invariant.
 		require
-			error_not_void: an_error /= Void
-			instruction_name_not_void: an_instruction_name /= Void
+			error_not_void: a_error /= Void
+			instruction_name_not_void: a_instruction_name /= Void
 		do
-			error := an_error
-			instruction_name := an_instruction_name
+			error := a_error
+			instruction_name := a_instruction_name
 			compute_static_properties
 			initialized := True
 		ensure
-			error_set: error = an_error
-			name_set: instruction_name = an_instruction_name
+			error_set: error = a_error
+			name_set: instruction_name = a_instruction_name
 		end
 
 feature -- Access
@@ -120,6 +120,6 @@ feature {NONE} -- Implementation
 invariant
 
 	error_not_void: initialized implies error /= Void
-
+	
 end
 	

@@ -173,6 +173,8 @@ feature -- Optimization
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_sort_item_type: XM_XPATH_ITEM_TYPE
 		do
 			mark_unreplaced
 			select_expression.check_static_type (a_context, a_context_item_type)
@@ -182,7 +184,8 @@ feature -- Optimization
 			if select_expression.is_error then
 				set_last_error (select_expression.error_value)
 			end
-			sort_key_list.do_all_with_index (agent check_sort_key (?, ?, a_context, a_context_item_type))
+			l_sort_item_type := select_expression.item_type
+			sort_key_list.do_all_with_index (agent check_sort_key (?, ?, a_context, l_sort_item_type))
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is

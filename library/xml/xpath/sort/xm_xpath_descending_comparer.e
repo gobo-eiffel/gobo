@@ -31,7 +31,11 @@ feature {NONE} -- Initialization
 		ensure
 			base_comparer_set: base_comparer = a_base_comparer
 		end
-			
+
+feature -- Access
+
+	base_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+
 feature -- Comparison
 
 	less_than (u, v: XM_XPATH_ITEM): BOOLEAN is
@@ -39,10 +43,6 @@ feature -- Comparison
 		do
 			Result := base_comparer.less_than (v, u)
 		end
-
-feature {NONE} -- Implementation
-
-	base_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
 
 invariant
 

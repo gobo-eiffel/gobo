@@ -106,10 +106,12 @@ feature {NONE} -- Initialization
 		require
 			h_large_enough: h > -Hours_in_day
 			h_small_enough: h < Hours_in_day
-			m_large_enough_positive: h >= 0 implies m >= 0
-			m_small_enough_positive: h >= 0 implies m < Minutes_in_hour
-			m_large_enough_negative: h <= 0 implies m > -Minutes_in_hour
-			m_small_enough_positive: h <= 0 implies m <= 0
+			m_large_enough_positive: h > 0 implies m >= 0
+			m_small_enough_positive: h > 0 implies m < Minutes_in_hour
+			m_large_enough_negative: h < 0 implies m > -Minutes_in_hour
+			m_small_enough_negative: h < 0 implies m <= 0
+			m_large_enough_null: h = 0 implies m > -Minutes_in_hour
+			m_small_enough_null: h = 0 implies m < Minutes_in_hour
 		do
 			make_hours_minutes_seconds (h, m, 0)
 		end
@@ -119,10 +121,12 @@ feature {NONE} -- Initialization
 		require
 			h_large_enough: h > -Hours_in_day
 			h_small_enough: h < Hours_in_day
-			m_large_enough_positive: h >= 0 implies m >= 0
-			m_small_enough_positive: h >= 0 implies m < Minutes_in_hour
-			m_large_enough_negative: h <= 0 implies m > -Minutes_in_hour
-			m_small_enough_positive: h <= 0 implies m <= 0
+			m_large_enough_positive: h > 0 implies m >= 0
+			m_small_enough_positive: h > 0 implies m < Minutes_in_hour
+			m_large_enough_negative: h < 0 implies m > -Minutes_in_hour
+			m_small_enough_positive: h < 0 implies m <= 0
+			m_large_enough_null: h = 0 implies m > -Minutes_in_hour
+			m_small_enough_null: h = 0 implies m < Minutes_in_hour
 			s_large_enough_positive: (h >= 0 and m >= 0) implies s >= 0
 			s_small_enough_positive: (h >= 0 and m >= 0) implies s < Seconds_in_minute
 			s_large_enough_negative: (h <= 0 and m <= 0) implies s > -Seconds_in_minute
@@ -154,12 +158,13 @@ feature {NONE} -- Initialization
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
-			h_large_enough: h > -Hours_in_day
 			h_small_enough: h < Hours_in_day
-			m_large_enough_positive: h >= 0 implies m >= 0
-			m_small_enough_positive: h >= 0 implies m < Minutes_in_hour
-			m_large_enough_negative: h <= 0 implies m > -Minutes_in_hour
-			m_small_enough_positive: h <= 0 implies m <= 0
+			m_large_enough_positive: h > 0 implies m >= 0
+			m_small_enough_positive: h > 0 implies m < Minutes_in_hour
+			m_large_enough_negative: h < 0 implies m > -Minutes_in_hour
+			m_small_enough_negative: h < 0 implies m <= 0
+			m_large_enough_null: h = 0 implies m > -Minutes_in_hour
+			m_small_enough_null: h = 0 implies m < Minutes_in_hour	
 		do
 			make_named_hours_minutes_seconds (a_name, h, m, 0)
 		ensure
@@ -173,10 +178,10 @@ feature {NONE} -- Initialization
 			a_name_not_empty: a_name.count > 0
 			h_large_enough: h > -Hours_in_day
 			h_small_enough: h < Hours_in_day
-			m_large_enough_positive: h >= 0 implies m >= 0
-			m_small_enough_positive: h >= 0 implies m < Minutes_in_hour
-			m_large_enough_negative: h <= 0 implies m > -Minutes_in_hour
-			m_small_enough_positive: h <= 0 implies m <= 0
+			m_large_enough_positive: h > 0 implies m >= 0
+			m_small_enough_positive: h > 0 implies m < Minutes_in_hour
+			m_large_enough_negative: h < 0 implies m > -Minutes_in_hour
+			m_small_enough_positive: h < 0 implies m <= 0
 			s_large_enough_positive: (h >= 0 and m >= 0) implies s >= 0
 			s_small_enough_positive: (h >= 0 and m >= 0) implies s < Seconds_in_minute
 			s_large_enough_negative: (h <= 0 and m <= 0) implies s > -Seconds_in_minute

@@ -123,6 +123,7 @@ feature -- Status report
 			l_comparison: INTEGER
 			l_comparator: KL_COMPARATOR [XM_XPATH_ITEM]
 			l_atomic: XM_XPATH_ATOMIC_COMPARER
+			l_descending: XM_XPATH_DESCENDING_COMPARER
 		do
 			from
 				l_index := 1
@@ -133,6 +134,14 @@ feature -- Status report
 				l_atomic ?= l_comparator
 				if l_atomic /= Void then
 					l_atomic.set_dynamic_context (context)
+				else
+					l_descending ?= l_comparator
+					if l_descending /= Void then
+						l_atomic ?= l_descending.base_comparer
+						if l_atomic /= Void then
+							l_atomic.set_dynamic_context (context)
+						end
+					end
 				end
 				l_sort_key := u.key_list.item (l_index)
 				l_other_sort_key := v.key_list.item (l_index)
@@ -323,7 +332,6 @@ feature {NONE} -- Implementation
 								else
 									create {XM_XPATH_STRING_VALUE} a_sort_key.make (l_item.item.as_node.string_value)
 								end
-								a_sort_key := l_item.item.as_atomic_value
 							end
 						else
 							a_sort_key := Void  -- = () - an empty sequence

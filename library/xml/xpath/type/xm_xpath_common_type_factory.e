@@ -235,12 +235,6 @@ feature -- Access
 			create Result.make (Xml_schema_uri, "base64Binary", any_atomic_type, Base64_binary_type_code)
 		end
 
-	object_type: XM_XPATH_SIMPLE_TYPE is
-			-- Extension functions - gexslt:object
-		do
-			-- TODO
-		end
-
 feature {NONE} -- Implementation
 
 	type_map: DS_HASH_TABLE [XM_XPATH_SCHEMA_TYPE, INTEGER] is
@@ -280,7 +274,6 @@ feature {NONE} -- Implementation
 
 			-- Conditionally add optional types
 
-			if object_type /= Void then Result.put (object_type, Object_type_code) end
 			if notation_type /= Void then Result.put (notation_type, Notation_type_code) end
 			if non_positive_integer_type /= Void then Result.put (non_positive_integer_type, Non_positive_integer_type_code) end
 			if negative_integer_type /= Void then Result.put (negative_integer_type, Negative_integer_type_code) end

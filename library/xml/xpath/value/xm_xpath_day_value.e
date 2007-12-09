@@ -51,16 +51,24 @@ feature {NONE} -- Initialization
 			-- Create from date object.
 		do
 			Precursor (a_date)
-			local_date.set_year (1)
-			local_date.set_month (1)
+			if local_date.day = 29 and local_date.month = 2 then
+				local_date.set_year_month_day (1, 1, 29)
+			else
+				local_date.set_year (1)
+				local_date.set_month (1)
+			end
 		end
 
 	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
 			-- Create from date object.
 		do
 			Precursor (a_date)
-			zoned_date.date.set_year (1)
-			zoned_date.date.set_month (1)
+			if zoned_date.date.day = 29 and zoned_date.date.month = 2 then
+				zoned_date.date.set_year_month_day (1, 1, 29)
+			else
+				zoned_date.date.set_year (1)
+				zoned_date.date.set_month (1)
+			end
 		end
 
 feature -- Access

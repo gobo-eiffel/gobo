@@ -27,8 +27,9 @@ feature -- Element change
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			create an_error.make_from_string ("Xsl:import-schema is not allowed with a Basic XSLT processor", Xpath_errors_uri, "XTSE16500", Static_error)
+			create an_error.make_from_string ("Xsl:import-schema is not allowed with a Basic XSLT processor", Xpath_errors_uri, "XTSE1650", Static_error)
 			report_compile_error (an_error)
+			attributes_prepared := True
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is

@@ -255,7 +255,7 @@ feature -- Access
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		do
-			if parent /= void then
+			if parent /= Void then
 				Result := parent.document_root
 			end
 		end

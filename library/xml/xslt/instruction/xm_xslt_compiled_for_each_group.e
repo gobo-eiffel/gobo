@@ -247,55 +247,57 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_item_type: XM_XPATH_ITEM_TYPE
 		do
 			mark_unreplaced
 			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 			end
-			an_empty_sequence ?= select_expression
-			if an_empty_sequence /= Void then
-				set_replacement (an_empty_sequence) -- NOP
+			l_item_type := select_expression.item_type
+			l_empty_sequence ?= select_expression
+			if l_empty_sequence /= Void then
+				set_replacement (l_empty_sequence) -- NOP
 			else
-				action.check_static_type (a_context, select_expression.item_type)
+				action.check_static_type (a_context, l_item_type)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
 				end
-				an_empty_sequence ?= action
-				if an_empty_sequence /= Void then
-					set_replacement (an_empty_sequence) -- NOP
+				l_empty_sequence ?= action
+				if l_empty_sequence /= Void then
+					set_replacement (l_empty_sequence) -- NOP
 				else
-					key_expression.check_static_type (a_context, select_expression.item_type)
+					key_expression.check_static_type (a_context, l_item_type)
 					if key_expression.was_expression_replaced then
 						key_expression := key_expression.replacement_expression
 					end
 				end
 			end
-			sort_keys.do_all_with_index (agent check_sort_key (?, ?, a_context, a_context_item_type))
+			sort_keys.do_all_with_index (agent check_sort_key (?, ?, a_context, l_item_type))
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
 			select_expression.optimize (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 			end
-			an_empty_sequence ?= select_expression
-			if an_empty_sequence /= Void then
-				set_replacement (an_empty_sequence) -- NOP
+			l_empty_sequence ?= select_expression
+			if l_empty_sequence /= Void then
+				set_replacement (l_empty_sequence) -- NOP
 			else
 				action.optimize (a_context, select_expression.item_type)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
 				end
-				an_empty_sequence ?= action
-				if an_empty_sequence /= Void then
-					set_replacement (an_empty_sequence) -- NOP
+				l_empty_sequence ?= action
+				if l_empty_sequence /= Void then
+					set_replacement (l_empty_sequence) -- NOP
 				else
 					key_expression.optimize (a_context, select_expression.item_type)
 					if key_expression.was_expression_replaced then
@@ -338,43 +340,45 @@ feature -- Evaluation
 	generate_tail_call (a_tail: DS_CELL [XM_XPATH_TAIL_CALL]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
-			a_new_context: XM_XSLT_EVALUATION_CONTEXT
-			a_trace_listener: XM_XSLT_TRACE_LISTENER
+			l_transformer: XM_XSLT_TRANSFORMER
+			l_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_trace_listener: XM_XSLT_TRACE_LISTENER
+			l_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]
 		do
-			a_transformer := a_context.transformer
-			create_group_iterator (a_context)
-			a_group_iterator := last_group_iterator
-			if a_group_iterator = Void then
-				-- error already reported
-			elseif a_group_iterator.is_error then
-				a_group_iterator.error_value.set_location (system_id, line_number)
-				a_transformer.report_fatal_error (a_group_iterator.error_value)
+			l_transformer := a_context.transformer
+			create l_result.make (Void, Void)
+			create_group_iterator (l_result, a_context)
+			l_group_iterator := l_result.first
+			if l_group_iterator = Void then
+				l_transformer.report_fatal_error (l_result.second)
+			elseif l_group_iterator.is_error then
+				l_group_iterator.error_value.set_location (system_id, line_number)
+				l_transformer.report_fatal_error (l_group_iterator.error_value)
 			else
-				a_new_context := a_context.new_context
-				a_new_context.set_current_template (Void)
-				a_new_context.set_current_iterator (a_group_iterator)
-				a_new_context.set_current_group_iterator (a_group_iterator)
-				if a_transformer.is_tracing then
-					a_trace_listener := a_transformer.trace_listener
+				l_new_context := a_context.new_context
+				l_new_context.set_current_template (Void)
+				l_new_context.set_current_iterator (l_group_iterator)
+				l_new_context.set_current_group_iterator (l_group_iterator)
+				if l_transformer.is_tracing then
+					l_trace_listener := l_transformer.trace_listener
 				end
 				from
-					a_group_iterator.start
+					l_group_iterator.start
 				until
-					a_transformer.is_error or else a_group_iterator.after
+					l_transformer.is_error or else l_group_iterator.after
 				loop
-					if a_transformer.is_tracing then
-						a_trace_listener.trace_current_item_start (a_group_iterator.item)
+					if l_transformer.is_tracing then
+						l_trace_listener.trace_current_item_start (l_group_iterator.item)
 					end
-					action.generate_events (a_new_context)
-					if a_transformer.is_tracing then
-						a_trace_listener.trace_current_item_finish (a_group_iterator.item)
+					action.generate_events (l_new_context)
+					if l_transformer.is_tracing then
+						l_trace_listener.trace_current_item_finish (l_group_iterator.item)
 					end
-					a_group_iterator.forth
-					if a_group_iterator.is_error then
-						a_group_iterator.error_value.set_location (system_id, line_number)
-						a_transformer.report_fatal_error (a_group_iterator.error_value)
+					l_group_iterator.forth
+					if l_group_iterator.is_error then
+						l_group_iterator.error_value.set_location (system_id, line_number)
+						l_transformer.report_fatal_error (l_group_iterator.error_value)
 					end
 				end
 			end
@@ -383,25 +387,32 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
-			a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
-			a_new_context, an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+			l_new_context, l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				an_evaluation_context /= Void
+				l_evaluation_context /= Void
 				-- This is XSLT
 			end
-			create_group_iterator (an_evaluation_context)
-			a_group_iterator := last_group_iterator
-			a_new_context := an_evaluation_context.new_context
-			a_new_context.set_current_template (Void)
-			a_new_context.set_current_iterator (a_group_iterator)
-			a_new_context.set_current_group_iterator (a_group_iterator)
-			if a_group_iterator.is_error then
-				a_group_iterator.error_value.set_location (system_id, line_number)
-				an_evaluation_context.transformer.report_fatal_error (a_group_iterator.error_value)
+			create l_result.make (Void, Void)
+			create_group_iterator (l_result, l_evaluation_context)
+			if l_result.second = Void then
+				l_group_iterator := l_result.first
+				l_new_context := l_evaluation_context.new_context
+				l_new_context.set_current_template (Void)
+				l_new_context.set_current_iterator (l_group_iterator)
+				l_new_context.set_current_group_iterator (l_group_iterator)
+				if l_group_iterator.is_error then
+					l_group_iterator.error_value.set_location (system_id, line_number)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_group_iterator.error_value)
+				else
+					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (l_group_iterator, Current, l_new_context)
+				end
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context)
+				l_result.second.set_location (system_id, line_number)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.second)
 			end
 		end
 
@@ -410,23 +421,29 @@ feature -- Evaluation
 		local
 			l_group_iterator: XM_XSLT_GROUP_NODE_ITERATOR
 			l_new_context, l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]
 		do
 			l_evaluation_context ?= a_context
 			check
 				l_evaluation_context /= Void
 				-- This is XSLT
 			end
-			create_group_node_iterator (l_evaluation_context)
-			l_group_iterator := last_group_node_iterator
-			l_new_context := l_evaluation_context.new_context
-			l_new_context.set_current_template (Void)
-			l_new_context.set_current_iterator (l_group_iterator)
-			l_new_context.set_current_group_iterator (l_group_iterator)
-			if l_group_iterator.is_error then
-				l_group_iterator.error_value.set_location (system_id, line_number)
-				l_evaluation_context.transformer.report_fatal_error (l_group_iterator.error_value)
+			create l_result.make (Void, Void)
+			create_group_node_iterator (l_result, l_evaluation_context)
+			l_group_iterator := l_result.first
+			if l_group_iterator /= Void then
+				l_new_context := l_evaluation_context.new_context
+				l_new_context.set_current_template (Void)
+				l_new_context.set_current_iterator (l_group_iterator)
+				l_new_context.set_current_group_iterator (l_group_iterator)
+				if l_group_iterator.is_error then
+					l_group_iterator.error_value.set_location (system_id, line_number)
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_group_iterator.error_value)
+				else
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_group_iterator.as_node_iterator, Current, l_new_context)
+				end
 			else
-				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_group_iterator.as_node_iterator, Current, l_new_context)
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.second)
 			end
 		end
 
@@ -467,110 +484,93 @@ feature {NONE} -- Implementation
 	collation_name: XM_XPATH_EXPRESSION
 			-- Collation name
 
-	cached_collator: ST_COLLATOR
-			-- Caced result from `collator'
-
-	last_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
-			-- Result from `create_group_iterator'
-
-	last_group_node_iterator: XM_XSLT_GROUP_NODE_ITERATOR
-			-- Result from `create_group_node_iterator'
-
-	collator (a_context: XM_XSLT_EVALUATION_CONTEXT): ST_COLLATOR is
-			-- Collator (memo function)
+	fetch_collator (a_collator: DS_PAIR [ST_COLLATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Set `a_collator' from `collation_name'.
 		require
-			context_not_void: a_context /= Void
+			a_collator_not_void: a_collator /= Void
+			a_collator_empty: a_collator.first = Void and a_collator.second = Void
+			a_context_not_void: a_context /= Void
 		local
 			l_collation_name: STRING
 			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
-			if cached_collator /= Void then
-				Result := cached_collator
-			else
-				if collation_name /= Void then
-					create l_item.make (Void)
-					collation_name.evaluate_item (l_item, a_context)
-					l_collation_name := l_item.item.string_value
-					if a_context.is_known_collation (l_collation_name) then
-						Result := a_context.collator (l_collation_name)
-					else
-						Result := Void
-						report_unknown_collator (l_collation_name, a_context.transformer)
-					end
+			if collation_name /= Void then
+				create l_item.make (Void)
+				collation_name.evaluate_item (l_item, a_context)
+				l_collation_name := l_item.item.string_value
+				if a_context.is_known_collation (l_collation_name) then
+					a_collator.put_first (a_context.collator (l_collation_name))
 				else
-					Result := a_context.collator (default_collation_name)
+					a_collator.put_second (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (l_collation_name, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error))
 				end
+			else
+				a_collator.put_first (a_context.collator (default_collation_name))
 			end
-			cached_collator := Result
 		ensure
-			error_or_collator_not_void: not a_context.transformer.is_error implies Result /= Void
+			error_or_collator_not_void: a_collator.first /= Void xor a_collator.second /= Void
 		end
 
-	report_unknown_collator (a_collation_name: STRING; a_transformer: XM_XSLT_TRANSFORMER) is
-			-- Report `collation_name' is unknown to implementation.
+	create_group_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Create group iterator in `a_result'.
 		require
-			collation_name_not_void: a_collation_name /= Void
-			a_transformer_not_void: a_transformer /= Void
-		local
-			l_error: XM_XPATH_ERROR_VALUE
-		do
-			create l_error.make_from_string (STRING_.concat (a_collation_name, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error)
-			a_transformer.report_fatal_error (l_error)
-		end
-
-	create_group_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Group iterator
-		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.first = Void and a_result.second = Void
 			a_context_not_void: a_context /= Void
 		local
 			l_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]
+			l_result: DS_PAIR [XM_XSLT_SORTED_GROUP_ITERATOR, XM_XPATH_ERROR_VALUE]
 		do
 			select_expression.create_iterator (a_context)
 			l_population := select_expression.last_iterator
 			if l_population.is_error then
 				l_population.error_value.set_location (system_id, line_number)
-				a_context.transformer.report_fatal_error (l_population.error_value)
+				a_result.put_second (l_population.error_value)
 			else
-				l_group_iterator := new_group_iterator (l_population, a_context)
-				if sort_keys.count > 0 then
-					last_group_iterator := new_sorted_group_iterator (l_group_iterator, a_context)
-				else
-					last_group_iterator := l_group_iterator
+				create_new_group_iterator (a_result, l_population, a_context)
+				if a_result.second = Void then
+					if sort_keys.count > 0 then
+						create l_result.make (Void, Void)
+						create_new_sorted_group_iterator (l_result, a_result.first, a_context)
+						a_result.put_first (l_result.first)
+						a_result.put_second (l_result.second)
+					end
 				end
 			end
 		ensure
-			result_not_void: not a_context.transformer.is_error implies last_group_iterator /= Void
+			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	create_group_node_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Group iterator over a node sequence
+	create_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Create group iterator over a node sequence.
 		require
 			a_context_not_void: a_context /= Void
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.first = Void and a_result.second = Void
 		local
 			l_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			l_group_iterator: XM_XSLT_GROUP_NODE_ITERATOR
 		do
 			select_expression.create_node_iterator (a_context)
 			l_population := select_expression.last_node_iterator
 			if l_population.is_error then
 				l_population.error_value.set_location (system_id, line_number)
-				a_context.transformer.report_fatal_error (l_population.error_value)
+				a_result.put_second (l_population.error_value)
 			else
-				l_group_iterator := new_group_iterator (l_population, a_context).as_group_node_iterator
-				if sort_keys.count > 0 then
-					last_group_node_iterator := new_sorted_group_node_iterator (l_group_iterator, a_context)
-				else
-					last_group_node_iterator := l_group_iterator
+				create_new_group_node_iterator (a_result, l_population, a_context)
+				if a_result.second = Void then
+					if sort_keys.count > 0 then
+						create_new_sorted_group_node_iterator (a_result, a_context)
+					end
 				end
 			end
 		ensure
-			result_not_void: not a_context.transformer.is_error implies last_group_node_iterator /= Void
+			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	new_sorted_group_iterator (a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_SORTED_GROUP_ITERATOR is
-			-- Sorted version of `a_group_iterator'
+	create_new_sorted_group_iterator (a_result: DS_PAIR [XM_XSLT_SORTED_GROUP_ITERATOR, XM_XPATH_ERROR_VALUE]; a_group_iterator: XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Create sorted version of `a_result.first'
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.first = Void and a_result.second = Void
 			a_group_iterator_not_void: a_group_iterator /= Void
 			a_context_not_void: a_context /= Void
 		local
@@ -579,9 +579,7 @@ feature {NONE} -- Implementation
 			l_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_definition: XM_XSLT_SORT_KEY_DEFINITION
-			l_transformer: XM_XSLT_TRANSFORMER
 		do
-			l_transformer := a_context.transformer
 			create l_reduced_sort_keys.make (sort_keys.count)
 			l_new_context := a_context.new_minor_context
 			from
@@ -598,21 +596,23 @@ feature {NONE} -- Implementation
 					l_reduced_sort_keys.put_last (l_fixed_sort_key)
 					l_cursor.forth
 				else
-					report_unknown_collator (l_definition.collation_name, l_transformer)
+					a_result.put_first (Void)
+					a_result.put_second (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (l_definition.collation_name, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error))
 					l_cursor.go_after
 				end
 			end
-			if not l_transformer.is_error then
-				create Result.make (l_new_context, a_group_iterator, l_reduced_sort_keys)
+			if a_result.second = Void then
+				a_result.put_first (create {XM_XSLT_SORTED_GROUP_ITERATOR}.make (l_new_context, a_group_iterator, l_reduced_sort_keys))
 			end
 		ensure
-			new_sorted_group_iterator_not_void: not a_context.transformer.is_error implies Result /= Void
+			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	new_sorted_group_node_iterator (a_group_iterator: XM_XSLT_GROUP_NODE_ITERATOR; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_SORTED_GROUP_NODE_ITERATOR is
-			-- Sorted version of `a_group_iterator'
+	create_new_sorted_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Create sorted version of `a_result.first'
 		require
-			a_group_iterator_not_void: a_group_iterator /= Void
+			a_result_not_void: a_result /= Void
+			a_result_without_error: a_result.first /= Void and a_result.second = Void
 			a_context_not_void: a_context /= Void
 		local
 			l_reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
@@ -620,9 +620,7 @@ feature {NONE} -- Implementation
 			l_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
 			l_definition: XM_XSLT_SORT_KEY_DEFINITION
-			l_transformer: XM_XSLT_TRANSFORMER
 		do
-			l_transformer := a_context.transformer
 			create l_reduced_sort_keys.make (sort_keys.count)
 			l_new_context := a_context.new_minor_context
 			from
@@ -639,72 +637,104 @@ feature {NONE} -- Implementation
 					l_reduced_sort_keys.put_last (l_fixed_sort_key)
 					l_cursor.forth
 				else
-					report_unknown_collator (l_definition.collation_name, l_transformer)
+					a_result.put_first (Void)
+					a_result.put_second (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (l_definition.collation_name, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error))
 					l_cursor.go_after
 				end
 			end
-			if not l_transformer.is_error then
-				create Result.make (l_new_context, a_group_iterator, l_reduced_sort_keys)
+			if a_result.second = Void then
+				a_result.put_first (create {XM_XSLT_SORTED_GROUP_NODE_ITERATOR}.make (l_new_context, a_result.first, l_reduced_sort_keys))
 			end
 		ensure
-			new_sorted_group_iterator_not_void: not a_context.transformer.is_error implies  Result /= Void
+			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
-	new_group_iterator (a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM] is
-			-- Iterator over groups of `a_population' in order of first appearance
+	create_new_group_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_ITERATOR [XM_XPATH_ITEM], XM_XPATH_ERROR_VALUE]; a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Create iterator over groups of `a_population' in order of first appearance.
 		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.first = Void and a_result.second = Void
 			a_context_not_void: a_context /= Void
 			a_population_not_void: a_population /= Void
 			no_error: not a_context.transformer.is_error
 		local
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
-			l_collator: ST_COLLATOR
 			l_pattern: XM_XSLT_PATTERN_BRIDGE
+			l_collator: DS_PAIR [ST_COLLATOR, XM_XPATH_ERROR_VALUE]
 		do
 			inspect
 				algorithm
 			when Group_by_algorithm then
 				l_new_context := a_context.new_minor_context
 				l_new_context.set_current_iterator (a_population)
-				l_collator := collator (a_context)
-				check
-					l_collator_not_void: l_collator /= Void
-					-- from precondition "no_error" and postcondition of `collator'.
-				end
-				if a_population.is_node_iterator then
-					create {XM_XSLT_GROUP_BY_NODE_ITERATOR} Result.make (a_population.as_node_iterator, key_expression, l_new_context, l_collator)
+				create l_collator.make (Void, Void)
+				fetch_collator (l_collator, a_context)
+				if l_collator.first /= Void then
+					a_result.put_first (create {XM_XSLT_GROUP_BY_ITERATOR}.make (a_population, key_expression, l_new_context, l_collator.first))
 				else
-					create {XM_XSLT_GROUP_BY_ITERATOR} Result.make (a_population, key_expression, l_new_context, l_collator)
+					a_result.put_second (l_collator.second)
 				end
 			when Group_adjacent_algorithm then
-				l_collator := collator (a_context)
-				check
-					l_collator_not_void: l_collator /= Void
-					-- from precondition "no_error" and postcondition of `collator'.
-				end
-				if a_population.is_node_iterator then
-					create {XM_XSLT_GROUP_ADJACENT_NODE_ITERATOR} Result.make (a_population.as_node_iterator, key_expression, a_context, l_collator)
+				create l_collator.make (Void, Void)
+				fetch_collator (l_collator, a_context)
+				if l_collator.first /= Void then
+					a_result.put_first (create {XM_XSLT_GROUP_ADJACENT_ITERATOR}.make (a_population, key_expression, a_context, l_collator.first))
 				else
-					create {XM_XSLT_GROUP_ADJACENT_ITERATOR} Result.make (a_population, key_expression, a_context, l_collator)
+					a_result.put_second (l_collator.second)
+				end
+			when Group_starting_with_algorithm then
+				l_pattern ?= key_expression
+				a_result.put_first (create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR}.make (a_population, l_pattern.pattern, a_context, Current))
+			when Group_ending_with_algorithm then
+				l_pattern ?= key_expression
+				a_result.put_first (create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR}.make (a_population, l_pattern.pattern, a_context, Current))
+			end
+		ensure
+			result_or_error: a_result.first = Void xor a_result.second = Void
+		end
+
+	create_new_group_node_iterator (a_result: DS_PAIR [XM_XSLT_GROUP_NODE_ITERATOR, XM_XPATH_ERROR_VALUE]; a_population: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Create iterator over groups of `a_population' in order of first appearance.
+		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.first = Void and a_result.second = Void
+			a_context_not_void: a_context /= Void
+			a_population_not_void: a_population /= Void
+			no_error: not a_context.transformer.is_error
+		local
+			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_pattern: XM_XSLT_PATTERN_BRIDGE
+			l_collator: DS_PAIR [ST_COLLATOR, XM_XPATH_ERROR_VALUE]
+		do
+			inspect
+				algorithm
+			when Group_by_algorithm then
+				l_new_context := a_context.new_minor_context
+				l_new_context.set_current_iterator (a_population)
+				create l_collator.make (Void, Void)
+				fetch_collator (l_collator, a_context)
+				if l_collator.first /= Void then
+					a_result.put_first (create {XM_XSLT_GROUP_BY_NODE_ITERATOR}.make (a_population.as_node_iterator, key_expression, l_new_context, l_collator.first))
+				else
+					a_result.put_second (l_collator.second)
+				end
+			when Group_adjacent_algorithm then
+				create l_collator.make (Void, Void)
+				fetch_collator (l_collator, a_context)
+				if l_collator.first /= Void then
+					a_result.put_first (create {XM_XSLT_GROUP_ADJACENT_NODE_ITERATOR}.make (a_population.as_node_iterator, key_expression, a_context, l_collator.first))
+				else
+					a_result.put_second (l_collator.second)
 				end
 			when Group_starting_with_algorithm then
 					l_pattern ?= key_expression
-				if a_population.is_node_iterator then
-					create {XM_XSLT_GROUP_STARTING_WITH_NODE_ITERATOR} Result.make (a_population.as_node_iterator, l_pattern.pattern, a_context, Current)
-				else
-					create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} Result.make (a_population, l_pattern.pattern, a_context, Current)
-				end
+					a_result.put_first (create {XM_XSLT_GROUP_STARTING_WITH_NODE_ITERATOR}.make (a_population.as_node_iterator, l_pattern.pattern, a_context, Current))
 			when Group_ending_with_algorithm then
 					l_pattern ?= key_expression
-				if a_population.is_node_iterator then
-					create {XM_XSLT_GROUP_ENDING_WITH_NODE_ITERATOR} Result.make (a_population.as_node_iterator, l_pattern.pattern, a_context, Current)
-				else
-					create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} Result.make (a_population, l_pattern.pattern, a_context, Current)
-				end
+					a_result.put_first (create {XM_XSLT_GROUP_ENDING_WITH_NODE_ITERATOR}.make (a_population.as_node_iterator, l_pattern.pattern, a_context, Current))
 			end
 		ensure
-			new_group_iterator_not_void: Result /= Void
-			node_iterator: a_population.is_node_iterator implies Result.is_group_node_iterator
+			result_or_error: a_result.first = Void xor a_result.second = Void
 		end
 
 	-- TODO: identical code in XM_XSLT_SORT_EXPRESSION

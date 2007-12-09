@@ -640,9 +640,9 @@ feature {NONE} -- Implementation
 		local
 			l_message: STRING
 		do
-			if a_atomic_value.is_numeric_value and then a_other_value.as_numeric_value.is_nan then
+			if a_atomic_value.is_numeric_value and then a_atomic_value.as_numeric_value.is_nan then
 				last_check_result := (a_operator = Fortran_not_equal_token)
-			elseif a_other_value.is_numeric_value and then a_atomic_value.as_numeric_value.is_nan then
+			elseif a_other_value.is_numeric_value and then a_other_value.as_numeric_value.is_nan then
 				last_check_result := (a_operator = Fortran_not_equal_token)
 			elseif a_atomic_comparer.are_comparable (a_atomic_value, a_other_value) then
 				inspect

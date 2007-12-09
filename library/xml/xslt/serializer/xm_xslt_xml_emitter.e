@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 				if l_version.same_string ("1.0") or l_version.same_string ("1.1") then
 					-- ok
 				else
-					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version must be 1.0 or 1.1", Xpath_errors_uri, "SEUS0006", Dynamic_error))
+					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("XML version must be 1.0 or 1.1", Xpath_errors_uri, "SEUS0013", Dynamic_error))
 				end
 				if not serializer.is_error then
 					output ("<?xml version=%"" + l_version + "%" " + "encoding=%"" + encoding + "%"")
@@ -758,21 +758,19 @@ feature {NONE} -- Implementation
 				
 				if STRING_.same_string (output_properties.version, "1.1") then
 					allow_undeclare_prefixes := output_properties.undeclare_prefixes
-				elseif not STRING_.same_string (output_properties.version, "1.0") then
-					serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Only versions 1.0 and 1.1 of XML and XHTML are supported", Xpath_errors_uri, "SESU0013", Dynamic_error))
-					is_error := True
 				end
 			end
 			if not is_error then
 				if not is_declaration_written then
 					write_declaration
 				end
-
-				l_character_representation := output_properties.character_representation
-				if STRING_.same_string (l_character_representation, "hex") then
-					is_hex_preferred := True
-				elseif STRING_.same_string (l_character_representation, "decimal") then
-					on_error ("Illegal value for gexslt:character-representation: " + l_character_representation)
+				if not is_error then
+					l_character_representation := output_properties.character_representation
+					if STRING_.same_string (l_character_representation, "hex") then
+						is_hex_preferred := True
+					elseif STRING_.same_string (l_character_representation, "decimal") then
+						on_error ("Illegal value for gexslt:character-representation: " + l_character_representation)
+					end
 				end
 			end
 		ensure

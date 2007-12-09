@@ -131,7 +131,7 @@ feature -- Optimization
 				set_replacement (base_expression)
 			else
 				a_relation := type_relationship (required_item_type, base_expression.item_type)
-				if a_relation = Same_item_type or else a_relation = Subsumed_type then
+				if a_relation = Same_item_type or else a_relation = Subsuming_type then
 					set_replacement (base_expression)
 				elseif a_relation = Disjoint_types then
 					if base_expression.cardinality_allows_zero then

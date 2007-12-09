@@ -170,10 +170,10 @@ feature -- Access
 			Result := cached_item_type
 		end
 
-	item_at (an_index: INTEGER): XM_XPATH_ITEM is
-			-- Item at `an_index'
+	item_at (a_index: INTEGER): XM_XPATH_ITEM is
+			-- Item at `a_index'
 		do
-			Result := item (an_index)
+			Result := item (a_index)
 		end
 
 feature -- Comparison
@@ -292,9 +292,25 @@ feature -- Evaluation
 
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
+		local
+			l_item: XM_XPATH_ITEM
 		do
-			-- TODO
-			todo ("effective-boolean-value" ,False)
+			if count = 0 then
+				create {XM_XPATH_BOOLEAN_VALUE} last_boolean_value.make (False)
+			else
+				l_item := item (1)
+				if l_item.is_node then
+					create {XM_XPATH_BOOLEAN_VALUE} last_boolean_value.make (True)
+				elseif count > 1 then
+					last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+				else
+					l_item.as_atomic_value.calculate_effective_boolean_value (a_context)
+					if l_item.is_error then
+						set_last_error (l_item.error_value)
+					end
+					last_boolean_value := l_item.as_atomic_value.last_boolean_value
+				end
+			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is

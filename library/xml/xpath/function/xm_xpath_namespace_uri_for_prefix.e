@@ -81,6 +81,7 @@ feature -- Evaluation
 					arguments.item (1).evaluate_item (a_result, a_context)
 					if not a_result.item.is_error then
 						l_xml_prefix := a_result.item.string_value
+						a_result.put (Void)
 						l_uri_code := l_element.uri_code_for_prefix (l_xml_prefix)
 						if shared_name_pool.is_valid_uri_code (l_uri_code) then
 							a_result.put (create {XM_XPATH_STRING_VALUE}.make (shared_name_pool.uri_from_uri_code (l_uri_code)))

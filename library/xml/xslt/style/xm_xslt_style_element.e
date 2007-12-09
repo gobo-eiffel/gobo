@@ -986,29 +986,29 @@ feature -- Status setting
 	check_empty is
 			-- Check `Current' has no children (except permitted fallbacks)
 		local
-			an_error: XM_XPATH_ERROR_VALUE
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_fallback: XM_XSLT_FALLBACK
-			finished: BOOLEAN
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_fallback: XM_XSLT_FALLBACK
+			l_error_found: BOOLEAN
 		do
 			if has_child_nodes then
 				if may_contain_fallback then
 					from
-						a_child_iterator := new_axis_iterator (Child_axis)
-						a_child_iterator.start
+						l_child_iterator := new_axis_iterator (Child_axis)
+						l_child_iterator.start
 					until
-						finished or else a_child_iterator.after
+						l_error_found or else l_child_iterator.after
 					loop
-						a_fallback ?= a_child_iterator.item
-						if a_fallback = Void then
-							finished := True
+						l_fallback ?= l_child_iterator.item
+						if l_fallback = Void then
+							l_error_found := True
 						end
-						a_child_iterator.forth
+						l_child_iterator.forth
 					end
+				else
+					l_error_found := True
 				end
-				if finished then
-					create an_error.make_from_string (STRING_.concat (node_name, " must be empty."), Xpath_errors_uri, "XTSE0260", Static_error)
-					report_compile_error (an_error)
+				if l_error_found then
+					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (node_name, " must be empty."), Xpath_errors_uri, "XTSE0260", Static_error))
 				end
 			end
 		end
@@ -1398,29 +1398,35 @@ feature -- Creation
 			possible_error: last_generated_name_code = -1 implies name_code_error_value /= Void
 		end
 
-	generate_expression (an_expression: STRING) is
+	generate_expression (a_expression: STRING) is
 			-- Create an expression.
 		require
-			expression_text_not_void: an_expression /= Void
+			expression_text_not_void: a_expression /= Void
 			static_context_not_void: static_context /= Void
 		local
-			a_deferred_error: XM_XSLT_DEFERRED_ERROR
-			a_module_number: INTEGER
+			l_deferred_error: XM_XSLT_DEFERRED_ERROR
+			l_module_number: INTEGER
 		do
-			expression_factory.make_expression (an_expression, static_context, 1, Eof_token, line_number, system_id)
+			expression_factory.make_expression (a_expression, static_context, 1, Eof_token, line_number, system_id)
 			if expression_factory.is_parse_error then
-				create a_deferred_error.make (expression_factory.parsed_error_value, "Xpath dynamic error")
-				last_generated_expression := a_deferred_error
-				a_deferred_error.set_parent (Current)
+				create l_deferred_error.make (expression_factory.parsed_error_value, "Xpath dynamic error")
+				if principal_stylesheet.is_module_registered (system_id) then
+					l_module_number := principal_stylesheet.module_number (system_id)
+				else
+					l_module_number := 0
+				end
+				l_deferred_error.set_source_location (l_module_number, line_number)
+				last_generated_expression := l_deferred_error
+				l_deferred_error.set_parent (Current)
 			else
 				last_generated_expression := expression_factory.parsed_expression
 				if last_generated_expression.is_computed_expression then
 					if principal_stylesheet.is_module_registered (system_id) then
-						a_module_number := principal_stylesheet.module_number (system_id)
+						l_module_number := principal_stylesheet.module_number (system_id)
 					else
-						a_module_number := 0
+						l_module_number := 0
 					end
-					last_generated_expression.as_computed_expression.set_source_location (a_module_number, line_number)
+					last_generated_expression.as_computed_expression.set_source_location (l_module_number, line_number)
 				end
 			end
 		ensure
@@ -2024,6 +2030,7 @@ feature -- Element change
 			l_deferred_error: XM_XSLT_DEFERRED_ERROR
 			l_stylesheet: XM_XSLT_STYLESHEET
 			l_fallback_expression, l_expression: XM_XPATH_EXPRESSION
+			l_module_number: INTEGER
 		do
 
 			-- Process any xsl:fallback children; if there are none,
@@ -2057,6 +2064,13 @@ feature -- Element change
 			if not l_found_fallback then
 				create l_deferred_error.make (a_style_element.validation_error, a_style_element.node_name)
 				if not system_id.is_empty and then not a_style_element.validation_error.is_location_known then
+					if principal_stylesheet.is_module_registered (system_id) then
+						l_module_number := principal_stylesheet.module_number (system_id)
+					else
+						l_module_number := 0
+					end
+					l_deferred_error.set_source_location (l_module_number, line_number)
+					l_deferred_error.set_parent (Current)
 					a_style_element.validation_error.set_location (system_id, line_number)
 				end
 				last_generated_expression := l_deferred_error

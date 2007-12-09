@@ -131,8 +131,8 @@ feature -- Events
 	end_document is
 			-- Notify the end of the document
 		do
-			base_receiver.end_document
 			is_document_started := False
+			base_receiver.end_document
 		end
 
 	close is

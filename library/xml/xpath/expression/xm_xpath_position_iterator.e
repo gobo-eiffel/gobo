@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			valid_minimum: a_min > 0
-			valid_maximum: a_max >= minimum
+			valid_maximum: a_max >= a_min
 		do
 			base_iterator := a_base_iterator
 			minimum := a_min

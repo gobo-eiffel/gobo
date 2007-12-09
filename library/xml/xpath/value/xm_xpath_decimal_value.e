@@ -243,7 +243,7 @@ feature -- Status report
 	is_whole_number: BOOLEAN is
 			-- Is value integral?
 		do
-			Result := value.is_integer
+			Result := is_platform_integer
 		end
 
 	is_platform_integer: BOOLEAN is

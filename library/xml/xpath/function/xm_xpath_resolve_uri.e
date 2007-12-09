@@ -103,6 +103,9 @@ feature -- Evaluation
 					elseif Url_encoding.has_excluded_characters (l_string) then
 						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() has invalid characters", Xpath_errors_uri,
 							"FORG0002", Dynamic_error))
+					elseif l_string.occurrences ('#') > 1 then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Second argument to fn:resolve-uri() has more than 1 #", Xpath_errors_uri,
+								"FORG0002", Dynamic_error))
 					else
 						create base_uri.make (l_string)
 						if not base_uri.is_absolute then
@@ -124,7 +127,10 @@ feature -- Evaluation
 						if l_string.is_empty then
 							l_uri := base_uri
 						elseif Url_encoding.has_excluded_characters (l_string) then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("first argument to fn:resolve-uri() has invalid characters", Xpath_errors_uri,
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to fn:resolve-uri() has invalid characters", Xpath_errors_uri,
+								"FORG0002", Dynamic_error))
+						elseif l_string.occurrences ('#') > 1 then
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("First argument to fn:resolve-uri() has more than 1 #", Xpath_errors_uri,
 								"FORG0002", Dynamic_error))
 						else
 							create l_uri.make_resolve (base_uri, l_string)

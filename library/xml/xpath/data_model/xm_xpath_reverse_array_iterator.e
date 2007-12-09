@@ -2,22 +2,22 @@ indexing
 
 	description:
 
-		"Objects that iterate over a slice of an array of items"
+		"Objects that iterate over a ARRAY in reverse order"
 
-	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2003, Colin Adams and others"
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_ARRAY_ITERATOR [G -> XM_XPATH_ITEM]
+class XM_XPATH_REVERSE_ARRAY_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
 			before, is_reversible_iterator, reverse_iterator,
-			is_array_iterator, as_array_iterator, is_last_position_finder,
+			is_last_position_finder,
 			is_invulnerable, last_position, is_realizable_iterator, realize
 		end
 
@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 		require
 			array_not_void: a_array /= Void
 			no_void_element: True -- not a_array.has (Void)
-			first_item: a_start >= 1 and a_start <= a_array.count
-			last_item: a_end >= a_start and a_end <= a_array.count
+			last_item: a_end >= 1 and a_end <= a_array.count
+			first_item: a_start >= a_end and a_start <= a_array.count
 		do
 			items := a_array
 			first_item := a_start
@@ -61,27 +61,21 @@ feature -- Access
 	item: G is
 			-- Value or node at the current position
 		do
-			Result := items.item (index)
+			Result := items.item (first_item + 1 - index )
 		end
 
 	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [G] is
 		do
-			create {XM_XPATH_REVERSE_ARRAY_ITERATOR [G]} Result.make (items, last_item, first_item)
+			create {XM_XPATH_ARRAY_ITERATOR [G]} Result.make (items, last_item, first_item)
 		end
 
 	last_position: INTEGER is
 			-- Last position (= number of items in sequence)
 		do
-			Result := last_item
+			Result := first_item - 1
 		end
 
 feature -- Status report
-
-	is_array_iterator: BOOLEAN is
-			-- Is `Current' an iterator over an array?
-		do
-			Result := True
-		end
 
 	is_reversible_iterator: BOOLEAN is
 			-- Does `Current' yield a reversible_sequence?
@@ -109,13 +103,13 @@ feature -- Status report
 
 	before: BOOLEAN is
 		do
-			Result := index < first_item
+			Result := index < 1
 		end
 
 	after: BOOLEAN is
 			-- Are there no more items in the sequence?
 		do
-			Result := index > last_item
+			Result := index > (first_item - last_item + 1)
 		end
 
 feature -- Cursor movement
@@ -123,11 +117,7 @@ feature -- Cursor movement
 	forth is
 			-- Move to next position
 		do
-			if index = 0 then
-				index := first_item
-			else
-				index := index + 1
-			end
+			index := index + 1
 		end
 
 feature -- Evaluation
@@ -145,18 +135,10 @@ feature -- Evaluation
 			until
 				an_index > items.count
 			loop
-				a_list.put_last (items.item (an_index))
+				a_list.put_last (items.item (first_item + 1 - index ))
 				an_index := an_index + 1
 			end
 			create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (a_list)
-		end
-
-feature -- Conversion
-
-	as_array_iterator: XM_XPATH_ARRAY_ITERATOR [G] is
-			-- `Current' seen as a array iterator
-		do
-			Result := Current
 		end
 
 feature -- Duplication
@@ -168,16 +150,6 @@ feature -- Duplication
 			create Result.make (items, first_item, last_item)
 		end
 
-	new_slice_iterator (a_min, a_max: INTEGER): XM_XPATH_ARRAY_ITERATOR [G] is
-			-- A new ArrayIterator over the same items, with a different start point and end point
-		require
-			valid_minimum: a_min >= first_item and then a_min <= last_item
-			valid_maximum: a_max >= a_min and then a_min <= last_item
-		do
-			create Result.make (items, a_min, a_max)
-		ensure
-			result_not_void: Result /= Void
-		end
 
 feature {NONE} -- Implementation
 
@@ -188,8 +160,8 @@ invariant
 
 	items_not_void: items /= Void
 	no_void_item: True -- not items.has (Void)
-	first_item: first_item >= 1 and first_item <= items.count
-	last_item: last_item >= first_item and last_item <= items.count
+	last_item: last_item >= 1 and last_item <= items.count
+	first_item: first_item >= last_item and first_item <= items.count
 	
 end
 	

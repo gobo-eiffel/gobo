@@ -104,7 +104,8 @@ feature -- Evaluation
 			l_function: like containing_function
 			l_finished: BOOLEAN
 			l_context: XM_XSLT_EVALUATION_CONTEXT
-			l_value: DS_CELL [XM_XPATH_VALUE]	
+			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_closure: XM_XPATH_VALUE
 		do
 			l_context ?= a_context
 			check
@@ -128,8 +129,13 @@ feature -- Evaluation
 					l_context.clear_tail_call_function
 					if l_function = Void then
 						l_finished := True
-						expression_factory.last_created_closure.create_iterator (l_context)
-						last_iterator := expression_factory.last_created_closure.last_iterator
+						l_closure := expression_factory.last_created_closure
+						if l_closure.is_error then
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_closure.error_value)
+						else
+							l_closure.create_iterator (l_context)
+							last_iterator := expression_factory.last_created_closure.last_iterator
+						end
 					elseif l_function /= containing_function then
 						l_context.reset_stack_frame_map (l_function.slot_manager, l_function.parameter_definitions.count)
 						create l_value.make (Void)
@@ -154,7 +160,8 @@ feature -- Evaluation
 			l_function: like containing_function
 			l_finished: BOOLEAN
 			l_context: XM_XSLT_EVALUATION_CONTEXT
-			l_value: DS_CELL [XM_XPATH_VALUE]	
+			l_value: DS_CELL [XM_XPATH_VALUE]
+			l_closure: XM_XPATH_VALUE
 		do
 			l_context ?= a_context
 			check
@@ -178,8 +185,13 @@ feature -- Evaluation
 					l_context.clear_tail_call_function
 					if l_function = Void then
 						l_finished := True
-						expression_factory.last_created_closure.create_node_iterator (l_context)
-						last_node_iterator := expression_factory.last_created_closure.last_node_iterator
+						l_closure := expression_factory.last_created_closure
+						if l_closure.is_error then
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_closure.error_value)
+						else
+							l_closure.create_node_iterator (l_context)
+							last_node_iterator := l_closure.last_node_iterator
+						end
 					elseif l_function /= containing_function then
 						l_context.reset_stack_frame_map (l_function.slot_manager, l_function.parameter_definitions.count)
 						create l_value.make (Void)

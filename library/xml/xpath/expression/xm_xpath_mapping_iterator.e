@@ -108,17 +108,17 @@ feature {NONE} -- Implementation
 	advance is
 			-- Move to the next matching node
 		local
-			finished: BOOLEAN
-			next_source: like item
-			a_mapped_item: XM_XPATH_MAPPED_ITEM
+			l_finished: BOOLEAN
+			l_next_source: like item
+			l_mapped_item: XM_XPATH_MAPPED_ITEM
 		do
 			from
 			until
-				finished
+				l_finished
 			loop
 				if results /= Void then
 					if results.is_error then
-						finished := True
+						l_finished := True
 						create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
 						set_last_error (results.error_value)
 					elseif results.before then
@@ -126,26 +126,26 @@ feature {NONE} -- Implementation
 					elseif not results.after then
 						results.forth
 					end
-					if not finished and results.is_error then
-						finished := True
+					if not l_finished and results.is_error then
+						l_finished := True
 						create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
 						set_last_error (results.error_value)
 					end
 					if not results.is_error then
 						if not results.after then
 							item := results.item
-							finished := True
+							l_finished := True
 						else
 							results := Void
 						end
 					end
 				end
-				if not finished then
+				if not l_finished then
 						check
 							no_results_yet: results = Void
 						end
 					if base_iterator.is_error then
-						finished := True
+						l_finished := True
 						create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
 						set_last_error (base_iterator.error_value)
 					elseif base_iterator.before then
@@ -156,26 +156,27 @@ feature {NONE} -- Implementation
 					if base_iterator.is_error then
 						create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
 						set_last_error (base_iterator.error_value)
+						l_finished := True
 					elseif not base_iterator.after then
-						next_source := base_iterator.item
+						l_next_source := base_iterator.item
 
 						-- Call the supplied mapping function
 
-						mapping_function.map (next_source, context)
-						a_mapped_item := mapping_function.last_mapped_item
+						mapping_function.map (l_next_source, context)
+						l_mapped_item := mapping_function.last_mapped_item
 
-						if a_mapped_item /= Void then
-							if not a_mapped_item.is_sequence then
+						if l_mapped_item /= Void then
+							if not l_mapped_item.is_sequence then
 								results := Void
-								finished := True
-								item := a_mapped_item.item
+								l_finished := True
+								item := l_mapped_item.item
 								if item.is_error then
 									set_last_error (item.error_value)
 								end
 							else
-								results := a_mapped_item.sequence
+								results := l_mapped_item.sequence
 								if results.is_error then
-									finished := True
+									l_finished := True
 									create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
 									set_last_error (results.error_value)
 								elseif results.before then
@@ -185,14 +186,14 @@ feature {NONE} -- Implementation
 								end
 								if not results.is_error and then not results.after then
 									item := results.item
-									finished := True
+									l_finished := True
 								end
 							end
 						end
 					else
 						results := Void
 						item := Void
-						finished := True
+						l_finished := True
 					end
 				end
 			end

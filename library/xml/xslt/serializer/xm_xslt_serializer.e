@@ -28,7 +28,7 @@ inherit
 feature -- Access
 
 	last_error: XM_XPATH_ERROR_VALUE
-		-- Last reported fatal error
+		-- Last reported fatal or non-recovered error
 
 	error_listener: XM_XSLT_ERROR_LISTENER is
 			-- Destination for error messages and warnings
@@ -69,6 +69,7 @@ feature -- Basic operations
 				error_listener.error (a_error)
 				if not error_listener.recovered then
 					is_error := True
+					last_error := a_error
 				end
 			else
 				report_fatal_error (a_error)
@@ -93,6 +94,9 @@ feature -- Basic operations
 			last_error_not_void: last_error /= Void
 		end
 
-		
+invariant
+
+	is_error_implies_error_value: is_error implies last_error /= Void
+
 end
 	

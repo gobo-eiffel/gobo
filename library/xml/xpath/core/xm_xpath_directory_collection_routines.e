@@ -28,6 +28,9 @@ inherit
 	UT_SHARED_URL_ENCODING
 		export {NONE} all end
 
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
 	XM_XPATH_TYPE
 		export {NONE} all end
 
@@ -84,6 +87,8 @@ feature {NONE} -- Implementation
 		local
 			l_builder: XM_XPATH_TINY_BUILDER
 			l_uri: UT_URI
+			l_file: RAW_FILE
+			l_info: UNIX_FILE_INFO
 		do
 			create l_builder.make (a_base_uri.full_uri, a_base_uri)
 			l_builder.open
@@ -91,6 +96,20 @@ feature {NONE} -- Implementation
 			l_builder.start_element (Gexslt_file_element_type_code, Untyped_type_code, 0)
 			create l_uri.make_resolve (a_base_uri, a_filename)
 			l_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, l_uri.full_uri, 0)
+			create l_file.make (File_uri.uri_to_filename (l_uri))
+			l_info := l_file.file_info
+--			ensure_protection_code
+--			l_builder.notify_attribute (protection_code, Untyped_atomic_type_code, l_info.protection.out, 0)
+--			ensure_type_code
+--			l_builder.notify_attribute (type_code, Untyped_atomic_type_code, l_info.type.out, 0)			
+--			ensure_inode_code
+--			l_builder.notify_attribute (inode_code, Untyped_atomic_type_code, l_info.inode.out, 0)
+--			ensure_size_code
+--			l_builder.notify_attribute (size_code, Untyped_atomic_type_code, l_info.size.out, 0)
+--			ensure_user_code
+--			l_builder.notify_attribute (user_code, Untyped_atomic_type_code, l_info.user_id.out, 0)						
+--			ensure_group_code
+--			l_builder.notify_attribute (group_code, Untyped_atomic_type_code, l_info.group_id.out, 0)						
 			l_builder.start_content
 			l_builder.notify_characters (a_filename, 0)
 			l_builder.end_element

@@ -89,9 +89,16 @@ feature -- Access
 		end
 
 	Default_language: STRING is "en"
+			-- Language used if user does not supply one
+
 	Default_calendar: STRING is "CE"
+			-- Calendar used if user does not supply one
+
 	Default_country:  STRING is "US"
-			-- Implementation-defined defaults
+			-- Country used if user does not supply one
+
+	Iso_calendar: STRING is "ISO"
+			-- Calendar of ISO 8601
 
 	Ad_calendar: STRING is "AD"
 			-- Anno Domini (Christian Era);
@@ -144,14 +151,18 @@ feature -- Evaluation
 						elseif not a_result.item.is_error then
 							l_language := a_result.item.string_value
 							a_result.put (Void)
+						end
+						if a_result.item = Void then -- no error yet
 							arguments.item (4).evaluate_item (a_result, a_context)
 							if a_result.item = Void then
 								l_calendar := Default_calendar
 							elseif not a_result.item.is_error then
 								l_calendar := a_result.item.string_value
 								-- TODO: check for lexical QName when bug 2319 is resolved by WG
+								a_result.put (Void)
 							end
-							a_result.put (Void)
+						end
+						if a_result.item = Void then -- no error yet
 							arguments.item (5).evaluate_item (a_result, a_context)
 							if a_result.item = Void then
 								l_country := Default_country
@@ -1410,11 +1421,13 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 		do
-
-			-- For now, assuming Sunday =1, Saturday = 7, for all calendars and countries
-			-- TODO: correct this
-
-			Result := week_days_from_monday.week_day_from_code (a_day).as_week_day_from_sunday.code
+			if STRING_.same_string (a_calendar, Iso_calendar) then
+				Result := a_day
+			else
+				-- For now, assuming Sunday =1, Saturday = 7, for all calendars and countries
+				-- TODO: correct this
+				Result := week_days_from_monday.week_day_from_code (a_day).as_week_day_from_sunday.code
+			end
 		end
 
 	is_name_modifier: BOOLEAN is
@@ -1494,7 +1507,7 @@ feature {NONE} -- Implementation
 						Result := "BC"
 					end
 				end
-			else
+			else			
 				Result := "Unknown"
 			end
 		ensure

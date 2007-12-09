@@ -114,10 +114,10 @@ feature -- Events
 	end_document is
 			-- Notify the end of the document
 		do
+			is_document_started := False
 			if nesting_depth = 1 then
 				nesting_depth := nesting_depth - 1
 				base_receiver.end_document
-				is_document_started := False
 			end
 		end
 

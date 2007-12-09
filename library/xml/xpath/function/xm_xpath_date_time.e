@@ -78,6 +78,7 @@ feature -- Evaluation
 				-- nothing to do
 			else
 				l_date_value := a_result.item.as_atomic_value.as_date_value
+				a_result.put (Void)
 				arguments.item (2).evaluate_item (a_result, a_context)
 				if a_result.item.is_error then
 					-- nothing to do
@@ -97,6 +98,7 @@ feature -- Evaluation
 						create l_zoned_date_time.make (l_date_time, l_date_value.zoned_date.time_zone)
 						a_result.put (create {XM_XPATH_DATE_TIME_VALUE}.make_from_zoned_date_time (l_zoned_date_time))
 					else
+						a_result.put (Void)
 						evaluate_both_zoned (a_result, l_date_value, l_time_value, a_context)
 					end
 				end

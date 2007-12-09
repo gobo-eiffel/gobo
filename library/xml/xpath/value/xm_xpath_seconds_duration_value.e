@@ -68,49 +68,6 @@ feature -- Access
 			end
 		end
 
--- commented out 2007/02/25 by CPA as ancestor version looks better. So Delete it before April
---	string_value: STRING is
---			--Value of the item as a string
---		local
---			a_string: STRING
---			a_millisecond_count, a_second_count, a_minute_count,
---			an_hour_count, a_day_count: INTEGER
---		do
---			a_millisecond_count := milliseconds
---			if a_millisecond_count = 0 then
---					Result := "PT0S"
---				else
---					if a_millisecond_count < 0 then a_millisecond_count := 0 - a_millisecond_count end
---					a_second_count := a_millisecond_count // 1000; a_millisecond_count := a_millisecond_count \\ 1000
---					a_minute_count := a_second_count // 60; a_second_count := a_second_count \\ 60
---					an_hour_count := a_minute_count // 60; a_minute_count := a_minute_count \\ 60
---					a_day_count := an_hour_count // 24; an_hour_count := an_hour_count \\ 24
---					if is_negative then Result := "-P" else Result := "P" end
---					if a_day_count /= 0 then Result := Result + a_day_count.out + "D" end
---					if an_hour_count /= 0 or else a_minute_count /= 0
---						or else a_second_count /= 0 or else a_millisecond_count /= 0 then
---						Result := Result + "T"
---					end
---					if an_hour_count /= 0 then Result := Result + an_hour_count.out + "H" end
---					if a_minute_count /= 0 then Result := Result + a_minute_count.out + "M" end
---					if a_second_count /= 0 or else a_millisecond_count /= 0 then
---						Result := Result + a_second_count.out
---						if a_millisecond_count /= 0 then
---							Result := Result + "."
---							a_string := a_millisecond_count.out
---							from  until a_string.count = 3 loop
---								a_string.insert_character ('0', 1)
---							end
---							from  until a_string.item (a_string.count) /= '0' loop
---								a_string.remove_tail (1)
---							end
---							Result := Result + a_string
---						end
---						Result := Result + "S"
---					end
---				end
---			end
-
 	milliseconds: MA_DECIMAL is
 			-- Length in milliseconds
 		local

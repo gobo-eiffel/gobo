@@ -262,7 +262,9 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence.
 		do
-			if is_node_item_type (item_type) then
+			if children.is_empty then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+			elseif is_node_item_type (item_type) then
 				create {XM_XPATH_BLOCK_NODE_ITERATOR} last_iterator.make (children, a_context)
 			else
 				create {XM_XPATH_BLOCK_ITERATOR} last_iterator.make (children, a_context)
@@ -272,7 +274,11 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the nodees of a sequence.
 		do
-			create {XM_XPATH_BLOCK_NODE_ITERATOR} last_node_iterator.make (children, a_context)
+			if children.is_empty then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+			else
+				create {XM_XPATH_BLOCK_NODE_ITERATOR} last_node_iterator.make (children, a_context)
+			end
 		end
 
 feature -- Conversion
@@ -295,8 +301,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			else
 				create l_cardinality.make (Required_cardinality_empty)
 				children.do_all (agent compute_child_cardinality (l_cardinality, ?))
+				set_cardinality (l_cardinality.item)
 			end
-			set_cardinality (l_cardinality.item)
 		end
 
 feature {NONE} -- Agents

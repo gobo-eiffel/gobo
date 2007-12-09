@@ -76,7 +76,9 @@ feature -- Optimization
 			elseif replacement_expression.is_unordered_function then
 				replacement_expression.as_unordered_function.arguments.item (1).set_unsorted (True)
 			end
-			set_replacement (arguments.item (1))
+			if not was_expression_replaced then
+				set_replacement (arguments.item (1))
+			end
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -92,7 +94,9 @@ feature -- Optimization
 			elseif replacement_expression.is_unordered_function then
 				replacement_expression.as_unordered_function.arguments.item (1).set_unsorted (True)
 			end
-			set_replacement (arguments.item (1))
+			if not was_expression_replaced then
+				set_replacement (arguments.item (1))
+			end
 		end
 
 feature -- Evaluation

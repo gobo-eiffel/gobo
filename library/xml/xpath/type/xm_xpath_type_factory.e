@@ -464,13 +464,6 @@ feature -- Access
 		ensure
 			untyped_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
-
-	object_type: XM_XPATH_SIMPLE_TYPE is
-			-- Extension functions
-			deferred
-		ensure
-			-- object_type_not_void: Result /= Void
-		end
 	
 feature -- Status report
 

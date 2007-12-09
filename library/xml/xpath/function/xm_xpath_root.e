@@ -66,7 +66,7 @@ feature -- Optimization
 			-- Perform context-independent static optimizations
 		do
 			Precursor
-			add_context_document_argument (0, "root+")
+			use_context_item_as_default
 		end
 
 feature -- Evaluation

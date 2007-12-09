@@ -67,7 +67,10 @@ feature -- Cursor movement
 				else
 					base_iterator.forth
 				end
-				if base_iterator.after then
+				if base_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
+					set_last_error (item.error_value)
+				elseif base_iterator.after then
 					item := Void
 				else
 					item := mapping_function.mapped_item (base_iterator.item)

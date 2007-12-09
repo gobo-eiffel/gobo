@@ -761,7 +761,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	parse_return_satisfies (an_operator: INTEGER; a_clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]) is
 			-- process the action ("return"/"satisfies" expression)
 		require
@@ -798,54 +797,60 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fix_up_references (an_operator: INTEGER; a_clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]) is
+	fix_up_references (a_operator: INTEGER; a_clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]) is
 			-- Work backwards through the list of range variables, fixing up all references to the variables in the inner expression.
 		local
-			an_action: XM_XPATH_EXPRESSION
-			a_clause: XM_XPATH_FOR_CLAUSE
-			an_index: INTEGER
-			a_sequence: XM_XPATH_SEQUENCE_TYPE
-			an_assignment: XM_XPATH_ASSIGNATION
+			l_action: XM_XPATH_EXPRESSION
+			l_clause: XM_XPATH_FOR_CLAUSE
+			l_index: INTEGER
+			l_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_assignment: XM_XPATH_ASSIGNATION
 		do
-			an_action := internal_last_parsed_expression
+			l_action := internal_last_parsed_expression
 			from
-				an_index := a_clause_list.count
+				l_index := a_clause_list.count
 			until
-				an_index = 0
+				l_index = 0
 			loop
-				a_clause := a_clause_list.item (an_index)
+				l_clause := a_clause_list.item (l_index)
 
 				-- Attempt to give the range variable a more precise type, based on analysis of
-				-- `an_action'. This will often be approximate, because variables and function
+				-- `l_action'. This will often be approximate, because variables and function
 				-- calls in the action expression have not yet been resolved. We rely on the ability
 				-- of all expressions to return some kind of type information even if this is imprecise.
 
-				create a_sequence.make (a_clause.sequence.item_type, Required_cardinality_exactly_one)
-				a_clause.range_variable.set_required_type (a_sequence)
+				create l_sequence.make (l_clause.sequence.item_type, Required_cardinality_exactly_one)
+				l_clause.range_variable.set_required_type (l_sequence)
 
-				if an_operator = For_token then
+				if a_operator = For_token then
 					debug ("XPath Expression Parser")
 						std.error.put_string ("Creating for expression%N")
 					end
-					create {XM_XPATH_FOR_EXPRESSION} an_assignment.make (a_clause.range_variable, a_clause.sequence, an_action)
+					create {XM_XPATH_FOR_EXPRESSION} l_assignment.make (l_clause.range_variable, l_clause.sequence, l_action)
 				else
 					debug ("XPath Expression Parser")
 						std.error.put_string ("Creating quantified expression%N")
 					end
-					create {XM_XPATH_QUANTIFIED_EXPRESSION} an_assignment.make (an_operator, a_clause.range_variable, a_clause.sequence, an_action)
+					create {XM_XPATH_QUANTIFIED_EXPRESSION} l_assignment.make (a_operator, l_clause.range_variable, l_clause.sequence, l_action)
 				end
 
 				-- for the next outermost "for" clause, the "action" is this ForExpression
-				an_action := an_assignment
+				l_action := l_assignment
 
-				an_index := an_index - 1
+				l_index := l_index - 1
 			end
 
-			-- undeclare all the range variables
+			-- undeclare all the range variables declared at this level only
 
-			range_variable_stack.wipe_out
-
-			internal_last_parsed_expression := an_action
+			from
+				l_index := a_clause_list.count
+			until
+				l_index = 0
+			loop
+				range_variable_stack.remove_last
+				l_index := l_index - 1
+			end
+			internal_last_parsed_expression := l_action
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Returned action%N")
 			end
@@ -2766,7 +2771,7 @@ feature {NONE} -- Implementation
 							if not an_item_type.is_atomic_type then
 								a_message := STRING_.concat ("The type ", a_qname)
 								a_message := STRING_.appended_string (a_message, " is not atomic.")
-								report_parse_error (a_message, "XPST0003")
+								report_parse_error (a_message, "XPST0051")
 							else
 								Result := an_item_type.as_atomic_type
 							end

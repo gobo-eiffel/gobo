@@ -174,7 +174,9 @@ feature -- Evaluation
 		do
 			create l_result.make (Void)
 			first_operand.evaluate_item (l_result, a_context)
-			if l_result.item.is_error then
+			if l_result.item = Void then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+			elseif l_result.item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 			else
 				if not (l_result.item.is_machine_integer_value or l_result.item.is_integer_value) then
@@ -183,7 +185,9 @@ feature -- Evaluation
 					l_item := l_result.item
 					create l_result.make (Void)
 					second_operand.evaluate_item (l_result, a_context)
-					if l_result.item /= Void and then l_result.item.is_error then
+					if l_result.item = Void then
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+					elseif l_result.item /= Void and then l_result.item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 					else
 						if not (l_result.item.is_machine_integer_value or l_result.item.is_integer_value) then
