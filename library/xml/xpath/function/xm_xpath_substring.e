@@ -22,6 +22,9 @@ inherit
 	KL_IMPORTED_DOUBLE_ROUTINES
 		export {NONE} all end
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create
 
 	make
@@ -72,6 +75,7 @@ feature -- Evaluation
 			l_string: STRING
 			l_double_value: XM_XPATH_DOUBLE_VALUE
 			l_starting_position, l_ending_position, l_count: INTEGER
+			l_starts_negative_infinity: BOOLEAN
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)
 			if a_result.item = Void then
@@ -88,8 +92,15 @@ feature -- Evaluation
 						-- static typing
 					end
 					l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
-					if l_double_value.is_platform_integer then
-						l_starting_position := DOUBLE_.truncated_to_integer (l_double_value.value)
+					if l_double_value.is_nan then
+						a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+					elseif l_double_value.is_platform_integer or l_double_value.value = DOUBLE_.minus_infinity then
+						if l_double_value.value = DOUBLE_.minus_infinity then
+							l_starts_negative_infinity := True
+							l_starting_position := Platform.minimum_integer
+						else
+							l_starting_position := DOUBLE_.truncated_to_integer (l_double_value.value)
+						end
 						a_result.put (Void)
 						if arguments.count = 3 then
 							arguments.item (3).evaluate_item (a_result, a_context)
@@ -101,7 +112,9 @@ feature -- Evaluation
 									-- static typing
 								end
 								l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
-								if l_double_value.is_platform_integer then
+								if l_double_value.is_nan then
+									a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+								elseif l_double_value.is_platform_integer then
 									l_count := DOUBLE_.truncated_to_integer (l_double_value.value)
 									if l_count < 1 then
 										l_count := 0
@@ -111,6 +124,13 @@ feature -- Evaluation
 										l_ending_position := l_string.count
 									end
 									a_result.put (Void)
+								elseif l_double_value.value = DOUBLE_.plus_infinity then
+									if l_starts_negative_infinity then
+										a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
+									else
+										l_ending_position := l_string.count
+										a_result.put (Void)
+									end
 								else
 									a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 								end
