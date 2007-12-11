@@ -41,7 +41,7 @@ feature -- Access
 	sort_key_definition: XM_XSLT_SORT_KEY_DEFINITION
 			-- Sort key
 
-	stable_attribute_value: STRING
+	stable_attribute_value: XM_XPATH_EXPRESSION
 			-- Optional value of stable attribute
 
 	may_contain_sequence_constructor: BOOLEAN is
@@ -248,11 +248,15 @@ feature {NONE} -- Implementation
 			end
 			if a_stable_attribute /= Void then
 				if STRING_.same_string (a_stable_attribute, "yes") then
-					stable_attribute_value := a_stable_attribute
+					create {XM_XPATH_STRING_VALUE} stable_attribute_value.make ("yes")
 				elseif STRING_.same_string (a_stable_attribute, "no") then
-					stable_attribute_value := a_stable_attribute
+					create {XM_XPATH_STRING_VALUE} stable_attribute_value.make ("no")
 				else
-					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("'stable' attribute may only take values of 'yes' and 'no'", Xpath_errors_uri, "XTSE0020", Static_error))
+					generate_attribute_value_template (a_stable_attribute, static_context)
+					stable_attribute_value := last_generated_expression
+					if stable_attribute_value.is_error then
+						report_compile_error (stable_attribute_value.error_value)
+					end
 				end
 			end
 		end
@@ -266,34 +270,60 @@ feature {NONE} -- Implementation
 		do
 			if select_expression /= Void then
 				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
+				if select_expression.is_error then
+					report_compile_error (select_expression.error_value)
+				elseif select_expression.was_expression_replaced then
 					select_expression := select_expression.replacement_expression
 				end
 			end
 			if order /= Void then
 				type_check_expression ("order", order)
-				if order.was_expression_replaced then
+				if order.is_error then
+					report_compile_error (order.error_value)
+				elseif order.was_expression_replaced then
 					order := order.replacement_expression
 				end
 			end
 			if case_order /= Void then
 				type_check_expression ("case-order", case_order)
-				if case_order.was_expression_replaced then
+				if case_order.is_error then
+					report_compile_error (case_order.error_value)
+				elseif case_order.was_expression_replaced then
 					case_order := case_order.replacement_expression
 				end
 			end
 			if language /= Void then
 				type_check_expression ("lang", language)
-				if language.was_expression_replaced then
+				if language.is_error then
+					report_compile_error (language.error_value)
+				elseif language.was_expression_replaced then
 					language := language.replacement_expression
 				end
 			end
 			if data_type /= Void then
 				type_check_expression ("data-type", data_type)
-				if data_type.was_expression_replaced then
+				if data_type.is_error then
+					report_compile_error (data_type.error_value)
+				elseif data_type.was_expression_replaced then
 					data_type := data_type.replacement_expression
 				end
 			end
+			if collation_name /= Void then
+				type_check_expression ("collation", collation_name)
+				if collation_name.is_error then
+					report_compile_error (collation_name.error_value)
+				elseif collation_name.was_expression_replaced then
+					collation_name := collation_name.replacement_expression
+				end
+			end
+			if stable_attribute_value /= Void then
+				type_check_expression ("stable", stable_attribute_value)
+				if stable_attribute_value.is_error then
+					report_compile_error (stable_attribute_value.error_value)
+				elseif stable_attribute_value.was_expression_replaced then
+					stable_attribute_value := stable_attribute_value.replacement_expression
+				end
+			end			
 			if select_expression /= Void then
 				create a_role.make (Instruction_role, "xsl:sort/select", 1, Xpath_errors_uri, "XPTY0004")
 				create a_type_checker
