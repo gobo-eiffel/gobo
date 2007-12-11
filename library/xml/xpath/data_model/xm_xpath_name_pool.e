@@ -1330,18 +1330,14 @@ feature -- Conversion
 			a_prefix_index: INTEGER
 		do
 			a_fingerprint := fingerprint_from_name_code (a_name_code)
-			if type_factory.is_built_in_fingerprint (a_fingerprint) then
-				Result := type_factory.standard_prefix (a_fingerprint)
-			else
-				a_uri_code := uri_code_from_name_code (a_name_code)
-				a_prefix_index := name_code_to_prefix_index (a_name_code)
-				debug ("XPath name pool")
-					std.error.put_string ("prefix_from_name_code: Calculated prefix index is ")
-					std.error.put_string (a_prefix_index.out)
-					std.error.put_new_line
-				end
-				Result := prefix_with_index (a_uri_code, a_prefix_index)
+			a_uri_code := uri_code_from_name_code (a_name_code)
+			a_prefix_index := name_code_to_prefix_index (a_name_code)
+			debug ("XPath name pool")
+				std.error.put_string ("prefix_from_name_code: Calculated prefix index is ")
+				std.error.put_string (a_prefix_index.out)
+				std.error.put_new_line
 			end
+			Result := prefix_with_index (a_uri_code, a_prefix_index)
 		ensure
 			result_may_be_void: True
 		end
@@ -1351,27 +1347,30 @@ feature -- Conversion
 		require
 			valid_name_code: is_valid_name_code (a_name_code)
 		local
-			an_entry: XM_XPATH_NAME_ENTRY
-			a_prefix_index: INTEGER
-			a_fingerprint: INTEGER
+			l_entry: XM_XPATH_NAME_ENTRY
+			l_prefix_index: INTEGER
+			l_fingerprint, l_uri_code: INTEGER
 		do
-			a_fingerprint := fingerprint_from_name_code (a_name_code)
-			if type_factory.is_built_in_fingerprint (a_fingerprint) then
-				Result := type_factory.display_name (a_fingerprint)
-			else
-				an_entry := name_entry (a_name_code)
-					check
-						entry_not_void: an_entry /= Void
-						-- because of pre-condition
-					end
-				a_prefix_index := name_code_to_prefix_index (a_name_code)
-				if a_prefix_index = 0 then
-					Result := an_entry.local_name
-				else
-					Result := prefix_with_index (an_entry.uri_code, a_prefix_index)
-					Result := STRING_.appended_string (Result, ":")
-					Result := STRING_.appended_string (Result, an_entry.local_name)
+			l_fingerprint := fingerprint_from_name_code (a_name_code)
+			l_prefix_index := name_code_to_prefix_index (a_name_code)
+			l_uri_code := uri_code_from_name_code (a_name_code)
+			if not type_factory.is_built_in_fingerprint (l_fingerprint) then
+				l_entry := name_entry (a_name_code)
+				check
+					entry_not_void: l_entry /= Void
+					-- because of pre-condition
 				end
+				if l_prefix_index = 0 then
+					Result := l_entry.local_name
+				else
+					Result := prefix_with_index (l_entry.uri_code, l_prefix_index)
+					Result := STRING_.appended_string (Result, ":")
+					Result := STRING_.appended_string (Result, l_entry.local_name)
+				end
+			else
+				Result := prefix_with_index (l_uri_code, l_prefix_index)
+				Result := STRING_.appended_string (Result, ":")
+				Result := STRING_.appended_string (Result, type_factory.standard_local_name (l_fingerprint))
 			end
 		ensure
 			result_not_void: Result /= Void

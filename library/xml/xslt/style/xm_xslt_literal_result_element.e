@@ -520,7 +520,10 @@ feature {NONE} -- Implementation
 				an_alias := a_cursor.item
 				a_uri_code := shared_name_pool.uri_code_from_name_code (an_alias)
 				if a_uri_code /= 0 then -- attribute has a namespace prefix
-					a_namespace_code := a_stylesheet.namespace_alias (a_uri_code)
+					a_namespace_code := -1
+					if a_stylesheet.has_namespace_aliases then
+						a_namespace_code := a_stylesheet.namespace_alias (a_uri_code)
+					end
 					another_uri_code := uri_code_from_namespace_code (a_namespace_code)
 					if a_namespace_code /= -1 and then another_uri_code /= a_uri_code then
 						a_uri_code := another_uri_code

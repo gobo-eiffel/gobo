@@ -121,28 +121,27 @@ feature -- Access
 	namespace_alias (a_uri_code: INTEGER): INTEGER is
 			-- Declared namespace alias for a given namespace URI code if there is one.
 			-- If there is more than one, we get the last.
+		require
+			namespaces_aliases_present: has_namespace_aliases
 		local
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			Result := -1
-			if has_namespace_aliases then
+			-- if there are several matches, the last in stylesheet takes priority;
+			-- but the list is in reverse stylesheet order
 			
-				-- if there are several matches, the last in stylesheet takes priority;
-				-- but the list is in reverse stylesheet order
-				
-				from
-					an_index := 1
-				variant
-					namespace_alias_uri_codes.count + 1 - an_index
-				until
-					an_index > namespace_alias_uri_codes.count
-				loop
-					if a_uri_code = namespace_alias_uri_codes.item (an_index) then
-						Result := namespace_alias_namespace_codes.item (an_index)
-						an_index := namespace_alias_uri_codes.count + 1
-					else
-						an_index := an_index + 1
-					end
+			from
+				l_index := 1
+			variant
+				namespace_alias_uri_codes.count + 1 - l_index
+			until
+				l_index > namespace_alias_uri_codes.count
+			loop
+				if a_uri_code = namespace_alias_uri_codes.item (l_index) then
+					Result := namespace_alias_namespace_codes.item (l_index)
+					l_index := namespace_alias_uri_codes.count + 1
+				else
+					l_index := l_index + 1
 				end
 			end
 		end
