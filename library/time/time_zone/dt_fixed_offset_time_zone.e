@@ -127,10 +127,12 @@ feature {NONE} -- Initialization
 			m_small_enough_positive: h < 0 implies m <= 0
 			m_large_enough_null: h = 0 implies m > -Minutes_in_hour
 			m_small_enough_null: h = 0 implies m < Minutes_in_hour
-			s_large_enough_positive: (h >= 0 and m >= 0) implies s >= 0
-			s_small_enough_positive: (h >= 0 and m >= 0) implies s < Seconds_in_minute
-			s_large_enough_negative: (h <= 0 and m <= 0) implies s > -Seconds_in_minute
-			s_small_enough_negative: (h <= 0 and m <= 0) implies s <= 0
+			s_large_enough_positive: (h > 0 or m > 0) implies s >= 0
+			s_small_enough_positive: (h > 0 or m > 0) implies s < Seconds_in_minute
+			s_large_enough_negative: (h < 0 or m < 0) implies s > -Seconds_in_minute
+			s_small_enough_negative: (h < 0 or m < 0) implies s <= 0
+			s_large_enough_null: (h = 0 and m = 0) implies s > -Seconds_in_minute
+			s_small_enough_null: (h = 0 and m = 0) implies s < Seconds_in_minute
 		local
 			l_offset: like fixed_offset
 		do
@@ -164,7 +166,7 @@ feature {NONE} -- Initialization
 			m_large_enough_negative: h < 0 implies m > -Minutes_in_hour
 			m_small_enough_negative: h < 0 implies m <= 0
 			m_large_enough_null: h = 0 implies m > -Minutes_in_hour
-			m_small_enough_null: h = 0 implies m < Minutes_in_hour	
+			m_small_enough_null: h = 0 implies m < Minutes_in_hour
 		do
 			make_named_hours_minutes_seconds (a_name, h, m, 0)
 		ensure
@@ -181,11 +183,15 @@ feature {NONE} -- Initialization
 			m_large_enough_positive: h > 0 implies m >= 0
 			m_small_enough_positive: h > 0 implies m < Minutes_in_hour
 			m_large_enough_negative: h < 0 implies m > -Minutes_in_hour
-			m_small_enough_positive: h < 0 implies m <= 0
-			s_large_enough_positive: (h >= 0 and m >= 0) implies s >= 0
-			s_small_enough_positive: (h >= 0 and m >= 0) implies s < Seconds_in_minute
-			s_large_enough_negative: (h <= 0 and m <= 0) implies s > -Seconds_in_minute
-			s_small_enough_negative: (h <= 0 and m <= 0) implies s <= 0
+			m_small_enough_negative: h < 0 implies m <= 0
+			m_large_enough_null: h = 0 implies m > -Minutes_in_hour
+			m_small_enough_null: h = 0 implies m < Minutes_in_hour
+			s_large_enough_positive: (h > 0 or m > 0) implies s >= 0
+			s_small_enough_positive: (h > 0 or m > 0) implies s < Seconds_in_minute
+			s_large_enough_negative: (h < 0 or m < 0) implies s > -Seconds_in_minute
+			s_small_enough_negative: (h < 0 or m < 0) implies s <= 0
+			s_large_enough_null: (h = 0 and m = 0) implies s > -Seconds_in_minute
+			s_small_enough_null: (h = 0 and m = 0) implies s < Seconds_in_minute
 		local
 			l_offset: like fixed_offset
 		do
