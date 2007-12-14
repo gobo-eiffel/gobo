@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel redeclared features"
+		"Eiffel redeclared features being processed through the feature flattener"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel inherited features"
+		"Eiffel inherited features being processed through the feature flattener"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
