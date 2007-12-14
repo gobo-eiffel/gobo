@@ -149,6 +149,34 @@ void set_windows_exception_filter() {
 }
 #endif
 
+/*
+ * Raise an Eiffel exception of the given code with no associated tag.
+ */
+void xraise(int code) {
+	eraise(NULL, (long)code);
+}
+
+/*
+ * Raise 'Operating system error' exception.
+ */
+void esys(void) {
+	if (errno == 0) {
+			/* External event */
+		xraise(EN_EXT);
+	} else {
+			/* Operating system error */
+		xraise(EN_SYS);
+	}
+}
+
+/*
+ * As a special case, an I/O error is raised when a system call which is
+ * I/O bound fails.
+ */
+void eise_io(char *tag) {
+	eraise(tag, EN_ISE_IO);		/* I/O error */
+}
+
 #ifdef __cplusplus
 }
 #endif

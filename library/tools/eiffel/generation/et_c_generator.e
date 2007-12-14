@@ -22332,11 +22332,13 @@ feature {NONE} -- Include files
 					include_runtime_header_file ("eif_file.h", False, a_file)
 					included_runtime_c_files.force ("eif_console.c")
 				elseif a_filename.same_string ("eif_dir.h") then
+					include_runtime_header_file ("eif_except.h", False, a_file)
 					included_runtime_c_files.force ("eif_dir.c")
 				elseif a_filename.same_string ("eif_except.h") then
 					include_runtime_header_file ("ge_exception.h", False, a_file)
 					included_runtime_c_files.force ("eif_except.c")
 				elseif a_filename.same_string ("eif_file.h") then
+					include_runtime_header_file ("eif_except.h", False, a_file)
 					included_runtime_c_files.force ("eif_file.c")
 				elseif a_filename.same_string ("eif_main.h") then
 					included_runtime_c_files.force ("eif_main.c")
