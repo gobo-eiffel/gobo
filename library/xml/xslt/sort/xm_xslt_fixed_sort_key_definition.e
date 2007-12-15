@@ -115,72 +115,68 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void			
 		local
-			a_message: STRING
-			a_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
-			a_base_collator: ST_COLLATOR
-			a_role: XM_XPATH_ROLE_LOCATOR
-			an_error: XM_XPATH_ERROR_VALUE
+			l_message: STRING
+			l_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+			l_base_collator: ST_COLLATOR
+			l_role: XM_XPATH_ROLE_LOCATOR
 		do
 			if collator /= Void then
-				create {XM_XSLT_TEXT_COMPARER} a_comparer.make_from_collator (collator)
+				l_base_collator := collator
 			else
 				if language.count = 0 or else STRING_.same_string (language, "en") then
-					create a_base_collator
+					create l_base_collator
 				else
-					a_message := STRING_.concat ("Language '", language)
-					a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")
-					create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "UNSUPPORTED_LANGUAGE_FOR_SORT", Static_error)
-					a_context.transformer.report_fatal_error (an_error)
+					l_message := STRING_.concat ("Language '", language)
+					l_message := STRING_.appended_string (l_message, "' is not supported by this implementation.")
+					a_context.transformer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (l_message, Gexslt_eiffel_type_uri, "UNSUPPORTED_LANGUAGE_FOR_SORT", Static_error))
 					is_error := True
-				end
-				if not is_error then
-					a_comparer := case_order_comparer (a_base_collator, a_context)
-					if not is_error then
-						if data_type.count = 0 then
-							create a_role.make (Instruction_role, "xsl:sort/sort-key", 1, Xpath_errors_uri, "XTTE1020")
-							sort_key := expression_factory.created_cardinality_checker (sort_key, Required_cardinality_zero_or_more, a_role)
-							create {XM_XPATH_ATOMIC_SORT_COMPARER} a_comparer.make (a_base_collator)
-						else
-							if STRING_.same_string (data_type, "text") then
-								create {XM_XSLT_TEXT_COMPARER} a_comparer.make (a_comparer)
-							elseif  STRING_.same_string (data_type, "number") then
-								create {XM_XSLT_NUMERIC_COMPARER} a_comparer
-							elseif is_qname (data_type) then
-								a_message := STRING_.concat ("QName '", data_type)
-								a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")
-								create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE0030", Static_error)
-								a_context.transformer.report_fatal_error (an_error)
-								is_error := True
-							else
-								create an_error.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName",
-																			 Xpath_errors_uri, "XTDE0290", Static_error)
-								a_context.transformer.report_fatal_error (an_error)
-								is_error := True
-							end
-						end
-					end
 				end
 			end
 			if not is_error then
-				comparer := ordered_comparer (a_comparer, a_context)
+				if data_type.count = 0 then
+					create l_role.make (Instruction_role, "xsl:sort/sort-key", 1, Xpath_errors_uri, "XTTE1020")
+					sort_key := expression_factory.created_cardinality_checker (sort_key, Required_cardinality_zero_or_more, l_role)
+					create {XM_XPATH_ATOMIC_SORT_COMPARER} l_comparer.make (l_base_collator)
+				else
+					if STRING_.same_string (data_type, "text") then
+						create {XM_XSLT_TEXT_COMPARER} l_comparer.make_from_collator (l_base_collator)
+					elseif  STRING_.same_string (data_type, "number") then
+						create {XM_XSLT_NUMERIC_COMPARER} l_comparer
+					elseif is_qname (data_type) then
+						l_message := STRING_.concat ("QName '", data_type)
+						l_message := STRING_.appended_string (l_message, "' is not supported by this implementation.")
+						a_context.transformer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (l_message, Xpath_errors_uri, "XTDE0030", Static_error))
+						is_error := True
+					else
+						a_context.transformer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName",
+							Xpath_errors_uri, "XTDE0290", Static_error))
+						is_error := True
+					end
+				end
+			end
+			if collator = Void and not is_error then
+				l_comparer := case_order_comparer (l_comparer, a_context)
+			end
+			if not is_error then
+				comparer := ordered_comparer (l_comparer, a_context)
 			end
 		end
 
-	case_order_comparer (a_base_collator: ST_COLLATOR; a_context: XM_XSLT_EVALUATION_CONTEXT): KL_COMPARATOR [XM_XPATH_ITEM] is
+	case_order_comparer (a_base_comparer: KL_COMPARATOR [XM_XPATH_ITEM];  a_context: XM_XSLT_EVALUATION_CONTEXT): KL_COMPARATOR [XM_XPATH_ITEM] is
 			-- Comparer that implements `case_order'
 		require
-			base_collator_not_void: a_base_collator /= Void
+			base_comparer_not_void: a_base_comparer /= Void
 			no_previous_error: not is_error
 			context_not_void: a_context /= Void
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if STRING_.same_string (case_order, "#default") then
-				create {XM_XSLT_TEXT_COMPARER} Result.make_from_collator (a_base_collator)
+				Result := a_base_comparer
 			elseif STRING_.same_string (case_order, "lower-first") then
-				todo ("case_order_comparer (ST_COLLATOR support needed)", True)
+				create {XM_XSLT_CASE_ORDER_COMPARER} Result.make (a_base_comparer, False)
 			elseif STRING_.same_string (case_order, "upper-first") then
-				todo ("case_order_comparer (ST_COLLATOR support needed)", True)
+				create {XM_XSLT_CASE_ORDER_COMPARER} Result.make (a_base_comparer, True)
 			else
 				create an_error.make_from_string ("case-order must be 'lower-first' or 'upper-first'", Gexslt_eiffel_type_uri, "INVALID_CASE_ORDER", Static_error)
 				a_context.transformer.report_fatal_error (an_error)

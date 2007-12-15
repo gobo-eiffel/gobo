@@ -14,6 +14,6 @@ class UC_CTYPE
 
 inherit
 
-	UC_V410_CTYPE
+	UC_V500_CTYPE
 
 end

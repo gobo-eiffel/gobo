@@ -855,19 +855,20 @@ feature {NONE} -- Implementation
 						mark_unreplaced
 						set_replacement (l_expression)
 					end
-				elseif not is_error and then not was_expression_replaced then
+				end
+			end
+			if not is_error and not was_expression_replaced then
 					
-					-- Decide whether the result needs to be wrapped in a sorting
-					-- expression to deliver the results in document order
-					
-					if not ordered_nodeset then
-						if reverse_document_order then
-							create {XM_XPATH_REVERSER} l_expression.make (Current)
-							set_replacement (l_expression)
-						else
-							create {XM_XPATH_DOCUMENT_SORTER} l_expression.make (Current)
-							set_replacement (l_expression)
-						end
+				-- Decide whether the result needs to be wrapped in a sorting
+				-- expression to deliver the results in document order
+				
+				if not ordered_nodeset then
+					if reverse_document_order then
+						create {XM_XPATH_REVERSER} l_expression.make (Current)
+						set_replacement (l_expression)
+					else
+						create {XM_XPATH_DOCUMENT_SORTER} l_expression.make (Current)
+						set_replacement (l_expression)
 					end
 				end
 			end

@@ -88,7 +88,7 @@ feature -- Element change
 			a_match_record: XM_XPATH_REGEXP_MATCH_RECORD
 		do
 			create a_match_record.make (some_tokens)
-			match_records.put (a_match_record, an_input_string)
+			match_records.force (a_match_record, an_input_string)
 		ensure
 			match_added: has_match_record (an_input_string)
 			correct_match: match_record (an_input_string).tokens = some_tokens

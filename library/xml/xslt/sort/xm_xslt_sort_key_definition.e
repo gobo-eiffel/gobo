@@ -12,10 +12,11 @@ indexing
 
 class XM_XSLT_SORT_KEY_DEFINITION
 
-	-- Note that most attributes defining the sort key can be attribute value templates,
-	-- and can therefore vary from one invocation to another. We hold them as expressions. As
-	-- soon as they are all known (which in general is only at run-time), the XM_XSLT_SORT_KEY_DEFINITION
-	-- is replaced by a XM_XSLT_FIXED_SORT_KEY_DEFINITION in which all these values are fixed.
+		-- Note that most attributes defining the sort key can be attribute value templates,
+		-- and can therefore vary from one invocation to another. We hold them as expressions. As
+		-- soon as they are all known (which in general is only at run-time), the XM_XSLT_SORT_KEY_DEFINITION
+		-- is replaced by a XM_XSLT_FIXED_SORT_KEY_DEFINITION in which all these values are fixed (this doesn't work,
+		-- in the case of AVTs using local parameters, so now the reduction is performed repeatedly - TODO: optimize this).
 
 	-- TODO - optimizations
 
@@ -110,9 +111,9 @@ feature -- Status_report
 	is_reducible: BOOLEAN is
 			-- May `reduced_definition' be called?
 		do
-			Result := order /= Void and then
-			case_order /= Void and then
-			language /= Void and then
+			Result := order /= Void and
+			case_order /= Void and
+			language /= Void and
 			data_type /= Void			
 		end
 
@@ -132,7 +133,6 @@ feature -- Element change
 			-- Evaluate all AVTs
 		require
 			context_not_void: a_context /= Void
-			-- commented out 6/5/2007 as it was violated, and I cannot see a reason for it: not_already_reduced: not is_reducible
 		do
 			evaluate_order (a_context)
 			evaluate_case_order (a_context)

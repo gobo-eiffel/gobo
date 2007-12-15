@@ -35,44 +35,45 @@ feature {NONE} -- Initialization
 			select_expression_not_void: a_select_expression /= Void
 			sort_key_list_not_void: a_sort_key_list /= Void
 		local
-			fixed: BOOLEAN
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+--			fixed: BOOLEAN
+--			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 		do
 			set_select_expression (a_select_expression)
 			sort_key_list := a_sort_key_list
-			from
-				fixed := True
-				a_cursor := sort_key_list.new_cursor
-				a_cursor.start
-			variant
-				sort_key_list.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				if not a_cursor.item.is_fixed_sort_key then
-					fixed := False
-					a_cursor.go_after
-				else
-					a_cursor.forth
-				end
-			end
-			if fixed then
-				from
-					create fixed_sort_key_list.make (sort_key_list.count)
-					a_cursor := sort_key_list.new_cursor
-					a_cursor.start
-				variant
-					sort_key_list.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					check
-						fixed_sort_key: a_cursor.item.is_fixed_sort_key
-					end
-					fixed_sort_key_list.put_last (a_cursor.item.as_fixed_sort_key)
-					a_cursor.forth
-				end
-			end
+-- removed, due to local variables in AVT - needs optimization			
+-- 			from
+-- 				fixed := True
+-- 				a_cursor := sort_key_list.new_cursor
+-- 				a_cursor.start
+-- 			variant
+-- 				sort_key_list.count + 1 - a_cursor.index
+-- 			until
+-- 				a_cursor.after
+-- 			loop
+-- 				if not a_cursor.item.is_fixed_sort_key then
+-- 					fixed := False
+-- 					a_cursor.go_after
+-- 				else
+-- 					a_cursor.forth
+-- 				end
+-- 			end
+-- 			if fixed then
+-- 				from
+-- 					create fixed_sort_key_list.make (sort_key_list.count)
+-- 					a_cursor := sort_key_list.new_cursor
+-- 					a_cursor.start
+-- 				variant
+-- 					sort_key_list.count + 1 - a_cursor.index
+-- 				until
+-- 					a_cursor.after
+-- 				loop
+-- 					check
+-- 						fixed_sort_key: a_cursor.item.is_fixed_sort_key
+-- 					end
+-- 					fixed_sort_key_list.put_last (a_cursor.item.as_fixed_sort_key)
+-- 					a_cursor.forth
+-- 				end
+-- 			end
 			compute_static_properties
 			initialized := True
 		ensure
@@ -226,9 +227,9 @@ feature -- Evaluation
 					-- as this is XSLT
 				end
 				
-				if fixed_sort_key_list /= Void then
-					l_reduced_sort_keys := fixed_sort_key_list
-				else
+				-- See creation procedure: if fixed_sort_key_list /= Void then
+				--	l_reduced_sort_keys := fixed_sort_key_list
+				--else
 					from
 						create l_reduced_sort_keys.make (sort_key_list.count)
 						l_cursor := sort_key_list.new_cursor; l_cursor.start
@@ -238,9 +239,9 @@ feature -- Evaluation
 						l_cursor.after
 					loop
 						l_sort_key := l_cursor.item
-						if not l_sort_key.is_reducible then
+						-- ditto: if not l_sort_key.is_reducible then
 							l_sort_key.evaluate_expressions (l_evaluation_context)
-						end
+						--end
 						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
 							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
 							l_reduced_sort_keys.put_last (l_reduced)
@@ -250,7 +251,7 @@ feature -- Evaluation
 							l_cursor.go_after
 						end
 					end
-				end
+				--end
 				if last_iterator /= Void then
 					-- error
 				elseif l_sequence_iterator.is_node_iterator then
@@ -283,9 +284,9 @@ feature -- Evaluation
 					-- as this is XSLT
 				end
 				
-				if fixed_sort_key_list /= Void then
-					l_reduced_sort_keys := fixed_sort_key_list
-				else
+				-- See creation procedure:if fixed_sort_key_list /= Void then
+				--	l_reduced_sort_keys := fixed_sort_key_list
+				--else
 					from
 						create l_reduced_sort_keys.make (sort_key_list.count)
 						l_cursor := sort_key_list.new_cursor; l_cursor.start
@@ -295,9 +296,9 @@ feature -- Evaluation
 						l_cursor.after
 					loop
 						l_sort_key := l_cursor.item
-						if not l_sort_key.is_reducible then
+						--if not l_sort_key.is_reducible then
 							l_sort_key.evaluate_expressions (l_evaluation_context)
-						end
+						--end
 						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
 							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
 							l_reduced_sort_keys.put_last (l_reduced)
@@ -307,7 +308,7 @@ feature -- Evaluation
 							l_cursor.go_after
 						end
 					end
-				end
+				--end
 				if last_node_iterator /= Void then
 					create {XM_XSLT_SORTED_NODE_ITERATOR} last_node_iterator.make (l_evaluation_context, l_sequence_iterator, l_reduced_sort_keys)
 				end
@@ -360,7 +361,7 @@ feature {NONE} -- Implementation
 	sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			-- Sort keys
 
-	fixed_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
+			--	Commented out 20071215 - see comment for creation procedure: fixed_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			-- Fixed sort keys
 
 	check_sort_key (a_key: XM_XSLT_SORT_KEY_DEFINITION; a_index: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is

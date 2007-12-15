@@ -16,8 +16,6 @@ inherit
 	
 	KL_COMPARATOR [XM_XPATH_ITEM]
 
-	XM_XPATH_DEBUGGING_ROUTINES
-		export {NONE} all end
 
 create
 
