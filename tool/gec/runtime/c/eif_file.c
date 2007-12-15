@@ -87,6 +87,8 @@ extern int utime(const char *, struct utimbuf *); /* Needed for lcc-win32 */
 #else
 #include <utime.h>
 #include <unistd.h>
+#include <pwd.h>
+#include <grp.h>
 #endif
 
 #ifndef NAME_MAX
@@ -1164,27 +1166,30 @@ EIF_INTEGER stat_size(void) {
  * Does the list of groups the user belongs to include `gid'?
  */
 static EIF_BOOLEAN eif_group_in_list(int gid) {
-	Groups_t dummy_group_list[1];
 	Groups_t *group_list;
 	int i, nb_groups, nb_groups_max;
 
-	nb_groups_max = getgroups(0, dummy_group_list);
-	group_list = (Groups_t *)malloc(nb_groups_max * sizeof(Groups_t));
-	if (group_list == (Groups_t *)0) {
-		xraise(EN_IO);
-		return EIF_FALSE;
-	} else if ((nb_groups = getgroups(nb_groups_max, group_list)) == -1) {
-		free(group_list);
-		xraise(EN_IO);
+	nb_groups_max = getgroups(0, (Groups_t *)0);
+	if (nb_groups_max <= 0) {
 		return EIF_FALSE;
 	} else {
-		for (i=0; i< nb_groups; i++)
-			if (group_list[i] == gid) {
-				free(group_list);
-				return EIF_TRUE;
-			}
-		free(group_list);
-		return EIF_FALSE;
+		group_list = (Groups_t *)malloc(nb_groups_max * sizeof(Groups_t));
+		if (group_list == (Groups_t *)0) {
+			xraise(EN_IO);
+			return EIF_FALSE;
+		} else if ((nb_groups = getgroups(nb_groups_max, group_list)) == -1) {
+			free(group_list);
+			xraise(EN_IO);
+			return EIF_FALSE;
+		} else {
+			for (i=0; i< nb_groups; i++)
+				if (group_list[i] == gid) {
+					free(group_list);
+					return EIF_TRUE;
+				}
+			free(group_list);
+			return EIF_FALSE;
+		}
 	}
 }
 #endif
