@@ -391,7 +391,6 @@ feature {NONE} -- Implementation
 			l_builder.start_document
 			l_builder.start_element (Gexslt_file_element_type_code, Untyped_type_code, 0)
 			create l_uri.make_resolve (a_base_uri, a_filename)
-			l_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, l_uri.full_uri, 0)
 			write_attributes (l_uri, l_builder)
 			l_builder.start_content
 			l_builder.notify_characters (a_filename, 0)
@@ -419,7 +418,6 @@ feature {NONE} -- Implementation
 			l_builder.start_document
 			l_builder.start_element (Gexslt_directory_element_type_code, Untyped_type_code, 0)
 			create l_uri.make_resolve (a_base_uri, STRING_.concat (a_directory, "/"))
-			l_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, l_uri.full_uri, 0)
 			write_attributes (l_uri, l_builder)
 			l_builder.start_content
 			l_builder.notify_characters (a_directory, 0)
@@ -440,6 +438,7 @@ feature {NONE} -- Implementation
 			l_file: RAW_FILE
 			l_info: UNIX_FILE_INFO
 		do
+			a_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, a_uri.full_uri, 0)
 			create l_file.make (File_uri.uri_to_filename (a_uri))
 			l_info := l_file.file_info
 			ensure_protection_code

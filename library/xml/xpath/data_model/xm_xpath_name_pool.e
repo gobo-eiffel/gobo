@@ -1352,8 +1352,8 @@ feature -- Conversion
 			l_fingerprint, l_uri_code: INTEGER
 		do
 			l_fingerprint := fingerprint_from_name_code (a_name_code)
-			l_prefix_index := name_code_to_prefix_index (a_name_code)
 			l_uri_code := uri_code_from_name_code (a_name_code)
+			l_prefix_index := name_code_to_prefix_index (a_name_code)
 			if not type_factory.is_built_in_fingerprint (l_fingerprint) then
 				l_entry := name_entry (a_name_code)
 				check
@@ -1368,7 +1368,11 @@ feature -- Conversion
 					Result := STRING_.appended_string (Result, l_entry.local_name)
 				end
 			else
-				Result := prefix_with_index (l_uri_code, l_prefix_index)
+				if l_prefix_index = 0 then
+					Result := type_factory.standard_prefix (l_fingerprint)
+				else
+					Result := prefix_with_index (l_uri_code, l_prefix_index)
+				end
 				Result := STRING_.appended_string (Result, ":")
 				Result := STRING_.appended_string (Result, type_factory.standard_local_name (l_fingerprint))
 			end
