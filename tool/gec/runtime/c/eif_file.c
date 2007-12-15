@@ -1164,17 +1164,28 @@ EIF_INTEGER stat_size(void) {
  * Does the list of groups the user belongs to include `gid'?
  */
 static EIF_BOOLEAN eif_group_in_list(int gid) {
-	Groups_t group_list[NGROUPS_MAX];
-	int i, nb_groups;
+	Groups_t dummy_group_list[1];
+	Groups_t *group_list;
+	int i, nb_groups, nb_groups_max;
 
-	if ((nb_groups = getgroups(NGROUPS_MAX, group_list)) == -1)
+	nb_groups_max = getgroups(0, dummy_group_list);
+	group_list = (Groups_t *)malloc(nb_groups_max * sizeof(Groups_t));
+	if (group_list == (Groups_t *)0) {
 		xraise(EN_IO);
-
-	for (i=0; i< nb_groups; i++)
-		if (group_list[i] == gid)
-			return EIF_TRUE;
-
-	return EIF_FALSE;
+		return EIF_FALSE;
+	} else if ((nb_groups = getgroups(nb_groups_max, group_list)) == -1) {
+		free(group_list);
+		xraise(EN_IO);
+		return EIF_FALSE;
+	} else {
+		for (i=0; i< nb_groups; i++)
+			if (group_list[i] == gid) {
+				free(group_list);
+				return EIF_TRUE;
+			}
+		free(group_list);
+		return EIF_FALSE;
+	}
 }
 #endif
 
