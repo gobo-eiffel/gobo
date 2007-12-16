@@ -76,9 +76,8 @@ feature -- Evaluation
 			product_name := a_context.configuration.product_name
 			l_argument := arguments.item (1)
 			l_argument.evaluate_item (a_result, a_context)
-			if l_argument.is_error then
-				set_last_error (l_argument.error_value)
-				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_argument.error_value))
+			if a_result.item.is_error then
+				set_last_error (a_result.item.error_value)
 			else
 				create l_parser.make (a_result.item.string_value)
 				a_result.put (Void)
@@ -98,7 +97,7 @@ feature -- Evaluation
 						end
 					end
 					if a_result.item = Void then
-						create l_string_value.make (system_property (l_uri, l_parser.local_name))
+						create l_string_value.make (system_property (l_uri, l_parser.local_name, a_context.configuration))
 						a_result.put (l_string_value)
 					end
 				end
@@ -134,7 +133,7 @@ feature -- Evaluation
 					end
 				end
 				if not is_error then
-					create l_string_value.make (system_property (l_uri, l_parser.local_name))
+					create l_string_value.make (system_property (l_uri, l_parser.local_name, a_context.configuration))
 					set_replacement (l_string_value)
 				end
 			end
@@ -183,12 +182,15 @@ feature {NONE} -- Implementation
 	product_name: STRING
 			-- Product name ("Gexslt" or "Gestalt")
 
-	system_property (a_namespace_uri, a_local_name: STRING): STRING is
+	system_property (a_namespace_uri, a_local_name: STRING; a_configuration: XM_XPATH_CONFIGURATION): STRING is
 			-- Value of system-property named by {`a_namespace_uri'}`a_local_name'
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
 			local_name_not_void: a_local_name /= Void
 			product_name_not_void: product_name /= Void
+		local
+			l_tables: DS_HASH_TABLE [DS_HASH_TABLE [STRING, STRING], STRING]
+			l_table: DS_HASH_TABLE [STRING, STRING]
 		do
 			if STRING_.same_string (a_namespace_uri, Xslt_uri) then
 				if STRING_.same_string (a_local_name, "version") then
@@ -206,15 +208,29 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_local_name, "supports-serialization") then
 					Result := "yes"
 				elseif STRING_.same_string (a_local_name, "supports-backwards-compatibility") then
-					Result := "yes"					
+					Result := "yes"
+				elseif STRING_.same_string (a_local_name, "supports-namespace-axis") then
+					Result := "no"
 				else
 					Result := ""
 				end
 			elseif STRING_.same_string (a_namespace_uri, Exslt_environment_uri) then
 				Result := Execution_environment.variable_value (a_local_name)
-				if Result = Void then Result := "" end
+				if Result = Void then
+					Result := ""
+				end
 			else
-				Result := ""
+				l_tables := a_configuration.system_properties
+				if l_tables.has (a_namespace_uri) then
+					l_table := l_tables.item (a_namespace_uri)
+					if l_table.has (a_local_name) then
+						Result := l_table.item (a_local_name)
+					else
+						Result := ""
+					end
+				else
+					Result := ""
+				end
 			end
 		end
 

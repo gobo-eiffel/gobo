@@ -29,6 +29,7 @@
 		<set name="previous" value="invoking"/>
 		<set name="current" value="invoking"/>
 		<set name="input_wrapper" value=""/>
+		<geant target="xslt_and_shift" arguments="collection"/>
 		<geant target="xslt_and_shift" arguments="evaluation_process"/>
 		<geant target="xslt_and_shift" arguments="implemented_functions"/>
 		<geant target="xslt_and_shift" arguments="xpointer"/>
@@ -51,6 +52,7 @@
 			Remove all generated files.
 		</description>
 
+		<delete file="collection.html"/>
 		<delete file="invoking.html"/>
 		<delete file="evaluation_process.html"/>
 		<delete file="implemented_functions.html"/>

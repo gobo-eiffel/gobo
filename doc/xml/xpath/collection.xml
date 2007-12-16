@@ -1,0 +1,119 @@
+<!--
+	description:
+	
+		"Implementation of XPath fn:collection()"
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="collection">
+ <chapterinfo>
+  <copyright>
+   <year>2007</year>
+   <holder>Colin Adams and others</holder>
+  </copyright>
+  <author>
+   <firstname>Colin</firstname>
+   <surname>Adams</surname>
+  </author>
+  <email>colin@colina.demon.co.uk</email>
+  <date>Sunday, December 16th, 2007</date>
+ </chapterinfo>
+ <title>Implementation of XPath fn:collection()</title>
+ <section>
+  <para>
+   URIs to be passed as the argument to <xpath>fn:collection()</xpath> are implementation-defined. This library provides a fully
+   customizable interface, along with an extensible default implementation.
+  </para>
+  <para>
+   In order to provide your own implementation, you must call <featurename>set_collection_resolver</featurename> from <classname>XM_XPATH_CONFIGURATION</classname>.
+  </para>
+ </section>
+ <section>
+  <title>Default implementation</title>
+  <para>
+   The default implementation provided by the library is implemented in class <classname>XM_XPATH_DEFAULT_COLLECTION_RESOLVER</classname>, along with
+   class <classname>XM_XPATH_COLLECTION_FILE_SCHEME_RESOLVER</classname>,
+   and in class <classname>XM_XPATH_DEFAULT_COLLECTION_SCHEME_RESOLVER</classname> for the
+   default collection (equivalent to passing a <uri>file:</uri> URI pointing to the current working directory).
+  </para>
+  <para>
+   Class <classname>XM_XPATH_COLLECTION_FILE_SCHEME_RESOLVER</classname> resolves URIs in the <uri>file</uri> scheme. The URI must point to 
+   a directory on the local disk, and it must end in a /. The resulting collection of nodes consists of document nodes, each containing a single
+   element in the namespace <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>. The local name of the element is either <xpath>directory</xpath>
+   or <xpath>file</xpath>. The element has no child element and a single text node naming the file or directory - all the additional information is expressed as attributes.
+  </para>
+  <para>
+   The following attributes are present (integer values are as in the POSIX stat system call):
+   <variablelist>
+    <varlistentry>
+     <term>xml:base</term>
+     <listitem>
+      <para>Base URI for the element</para>
+      <para>In the case of a file element, this is suitable for passing to the <xpath>fn:doc()</xpath> function.</para>
+      <para>
+       In the case of a directory element, this is suitable for passing to the <xpath>fn:collection()</xpath> function. In
+       this way, recursive directory listings are possible.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>protection</term>
+     <listitem><para>Integer value denoting the access rights (decode as 12 bits)</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>inode</term>
+     <listitem><para>Inode number</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>size</term>
+     <listitem><para>File size in bytes</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>user</term>
+     <listitem><para>UID</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>group</term>
+     <listitem><para>GID</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>date</term>
+     <listitem><para>Last modification date</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>access-date</term>
+     <listitem><para>Last access date</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>change-date</term>
+     <listitem><para>Last change date</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>device</term>
+     <listitem><para>Device number on which inode resides</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>device-type</term>
+     <listitem><para>Device type on which inode resides</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>links</term>
+     <listitem><para>Number of links</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>owner-name</term>
+     <listitem><para>Name of file owner from /etc/passwd, or UID if not available</para></listitem>
+    </varlistentry>
+    <varlistentry>
+     <term>group-name</term>
+     <listitem><para>Name of file's owning group from /etc/group, or GID if not available</para></listitem>
+    </varlistentry>
+   </variablelist>
+  </para>
+ </section>
+</chapter>

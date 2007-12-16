@@ -28,7 +28,7 @@
   <title>Invoking the stand-alone XPath evaluator</title>
   <para>
    <warning>
-    All the following is out-of-date, almost certtainly wrong, and not supported.
+    All the following is out-of-date, almost certainly wrong, and not supported.
    </warning>
    To evaluate an XPath expression in a stand-alone environment 
    (or equivalently, from a host language of your own devising), follow the following steps:

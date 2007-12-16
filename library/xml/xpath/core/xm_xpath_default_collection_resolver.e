@@ -31,8 +31,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Establish invariant
+	make (a_configuration: XM_XPATH_CONFIGURATION) is
+			-- Establish invariant.
+		require
+			a_configuration_not_void: a_configuration /= Void
 		local
 			a_file_resolver: XM_XPATH_COLLECTION_FILE_SCHEME_RESOLVER
 			a_default_resolver: XM_XPATH_DEFAULT_COLLECTION_SCHEME_RESOLVER
@@ -40,7 +42,7 @@ feature {NONE} -- Initialization
 			create schemes.make_with_equality_testers (5, Void, string_equality_tester)
 			create a_default_resolver.make
 			register_scheme (a_default_resolver)
-			create a_file_resolver.make
+			create a_file_resolver.make (a_configuration)
 			register_scheme (a_file_resolver)
 		end
 		

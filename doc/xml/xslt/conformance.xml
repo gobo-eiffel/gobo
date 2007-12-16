@@ -48,6 +48,10 @@
 	<classname>XM_XSLT_TRANSFORMATION_RESULT</classname>, and this is set by whichever creation procedure
 	you use to create the object. See <link linkend="transformation_result">Transformation Result</link>.
        </para>
+       <para>
+	The command-line processor, by default, sets it to <uri>stdout:</uri>. This URI scheme (defined by the library), has only
+	the one lexical value, so relative URIs are not possible with this default.
+       </para>
       </listitem>
      </varlistentry>
      <varlistentry>
@@ -77,14 +81,6 @@
       </listitem>
      </varlistentry>
      <varlistentry>
-      <term>Serialization Errors</term>
-      <listitem>
-       <para>
-	To be defined upon the resolution of <ulink url="http://www.w3.org/Bugs/Public/show_bug.cgi?id=2540">[Bug 2540] [XSLT2.0] Circular references to serialization errors</ulink>.
-       </para>
-      </listitem>
-     </varlistentry>   
-     <varlistentry>
       <term>Extension Namespaces</term>
       <listitem>
        <para>
@@ -97,6 +93,14 @@
       <listitem>
        <para>
 	See <ulink url="../../gexslt/extension/index.html">Extensions</ulink>.
+       </para>
+      </listitem>
+     </varlistentry> 
+     <varlistentry>
+      <term>Collection URIs</term>
+      <listitem>
+       <para>
+	See <ulink url="../xpath/collection.html">Collections</ulink>.
        </para>
       </listitem>
      </varlistentry> 
@@ -241,7 +245,6 @@
 	The algorithm currently used by <xslt>xsl:sort</xslt> for select a collation, given a <xslt>lang</xslt> and <xslt>case-order</xslt>
 	attribute, is
 	to use the Unicode Code-point collation for English, and to raise an error for any other language.
-	<warning>TODO: the <xslt>case-order</xslt> attribute is not currently implemented.</warning>
        </para>
       </listitem>
      </varlistentry>
@@ -288,10 +291,10 @@
 	 <varlistentry>
 	  <term>xsl:product-name</term>
 	  <listitem>
-	   <para>gexslt</para>
+	   <para>Gexslt</para>
 	   <para>
 	    This is actually configurable, by calling <featurename>set_product_name</featurename> from
-	    <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is gestalt.
+	    <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is Gestalt.
 	   </para>
 	  </listitem>
 	 </varlistentry>
@@ -311,11 +314,48 @@
 	  <term>xsl:supports-backwards-compatibility</term>
 	  <listitem><para>yes</para></listitem>
 	 </varlistentry>
+	 <varlistentry>
+	  <term>xsl:supports-namespace-axis</term>
+	  <listitem><para>no</para></listitem>
+	 </varlistentry>
 	</variablelist>
 	</para>
 	<para>
-	 Also, any property in the namespace http://exslt.org/environment-variables is treated as the name
+	 Also, any property in the namespace http://exslt.org/system/environment is treated as the name
 	 of an environment variable. If that environemnt variable is set, then it's value is returned.
+	</para>
+	<para>
+	 Additional system properties in other namespaces may be registered. The standard implementation
+	 provides the following properties in the namespace <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>:
+	 <variablelist>
+	  <varlistentry>
+	   <term>gexslt:standard-file-collection</term>
+	   <listitem>
+	    <para>
+	     A value of yes indicates collection URIs in the <uri>file</uri> scheme are supported as documented in 
+	     <ulink url="../xpath/collection.html">Collections</ulink>.
+	    </para>
+	   </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	   <term>gexslt:standard-ftp-collection</term>
+	   <listitem>
+	    <para>
+	     A value of yes indicates collection URIs in the <uri>ftp</uri> scheme are supported as documented in 
+	     <ulink url="../xpath/collection.html">Collections</ulink>.
+	    </para>
+	   </listitem>
+	  </varlistentry>
+	  <varlistentry>
+	   <term>gexslt:standard-http-collection</term>
+	   <listitem>
+	    <para>
+	     A value of yes indicates collection URIs in the <uri>http</uri> scheme are supported as documented in 
+	     <ulink url="../xpath/collection.html">Collections</ulink>.
+	    </para>
+	   </listitem>
+	  </varlistentry>
+	 </variablelist>
 	</para>
       </listitem>
     </varlistentry>
@@ -332,7 +372,7 @@
       <listitem>
        <para>
 	Extension functions are required to raise an error if they attempt to
-	return a string that contains invalid XML instructions. Since any extension
+	return a string that contains invalid XML characters. Since any extension
 	functions must be linked into the executable, this effectively means that there will
 	be a different implementation.
        </para>

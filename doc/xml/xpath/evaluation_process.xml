@@ -26,6 +26,7 @@
     <date>Thursday, April 15th, 2004</date>
   </chapterinfo>
   <title>A description of the evaluation process</title>
+  <warning>This is all out-dated - ignore it!</warning>
   <para>This chapter describes the process by which the evaluator turns a
   text string representing an XPath expression, into a sequence of items. This description should act
   as a guide for anyone interested in examining the code, and that includes the author (I'm writing it right now

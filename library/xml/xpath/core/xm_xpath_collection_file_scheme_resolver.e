@@ -33,10 +33,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Establish invariant.
+	make (a_configuration: XM_XPATH_CONFIGURATION) is
+			-- Initialize `scheme' and register system property.
+		require
+			a_configuration_not_void: a_configuration /= Void
+		local
+			l_table: DS_HASH_TABLE [STRING, STRING]
 		do
 			scheme := "file"
+			l_table := a_configuration.system_properties.item (Gexslt_eiffel_type_uri)
+			l_table.force ("yes", a_configuration.Standard_file_collection)
 		end
 
 feature -- Status report

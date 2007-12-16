@@ -16,6 +16,14 @@ Version 3.8 - ?
 	  which expects a "TUPLE [STRING]" provided that the dynamic type of the
 	  item of this tuple conforms to type STRING.
 
+	Gobo Eiffel XML Library
+
+	* Re-implemented XPath fn:collection() for file URIs (incompatibly,
+          but as the previous implementation was not documented, it
+          almost certainly is not used). Wrote documentation.
+	* Added additional XSLT system-properties, and the ability to
+          register additional system properties. Documented this.
+
 Version 3.7 - 5 November 2007
 
 	gec:

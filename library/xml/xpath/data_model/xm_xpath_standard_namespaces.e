@@ -113,7 +113,7 @@ feature -- Access
 	Exslt_date_uri: STRING is "http://exslt.org/dates-and-times"
 			-- EXSLT dates
 
-	Exslt_environment_uri: STRING is "http://exslt.org/environment-variables"
+	Exslt_environment_uri: STRING is "http://exslt.org/system/environment"
 			-- EXSLT environment variables
 	
 	Xmlns_uri: STRING is "http://www.w3.org/2000/xmlns/"
