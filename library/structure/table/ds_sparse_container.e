@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			free_slot := No_position
 			position := No_position
 			unset_found_item
-			initialize_hash_function
 			internal_cursor := new_cursor
 		ensure
 			empty: is_empty
@@ -455,24 +454,6 @@ feature -- Optimization
 			not_reszied: capacity = old capacity
 		end
 
-feature -- Hasing
-
-	hash_function: FUNCTION [ANY, TUPLE [K], INTEGER]
-			-- Hash function to compute position in the container
-
-	set_hash_function (a_hash_function: like hash_function) is
-			-- Set `hash_function' to `a_hash_function'.
-		require
-			empty: is_empty
-			a_hash_function_not_void: a_hash_function /= Void
-			-- arg_not_void: a_hash_function can have a precondition which states that the argument is not Void
-			-- not_negative: a_hash_function has a postcondition which says that Result >= 0
-		do
-			hash_function := a_hash_function
-		ensure
-			hash_function_set: hash_function = a_hash_function
-		end
-
 feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 
 	last_position: INTEGER
@@ -530,13 +511,6 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	initialize_hash_function is
-			-- Initialize `hash_function'.
-		deferred
-		ensure
-			hash_function_not_void: hash_function /= Void
-		end
 
 	search_position (k: K) is
 			-- Search for position where key is equal to `k'.
@@ -632,12 +606,7 @@ feature {NONE} -- Implementation
 
 	hash_position (k: K): INTEGER is
 			-- Hash position of `k' in `slots'
-		do
-			if k /= Void then
-				Result := hash_function.item ([k]) \\ modulus
-			else
-				Result := modulus
-			end
+		deferred
 		ensure
 			valid_position: Result >= 0 and Result <= modulus
 			void_position: (k = Void) = (Result = modulus)
@@ -1281,6 +1250,5 @@ invariant
 
 	valid_position: position = No_position or else valid_position (position)
 	capacity_constraint: capacity < modulus
-	hash_function_not_void: hash_function /= Void
 
 end

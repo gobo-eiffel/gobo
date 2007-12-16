@@ -33,7 +33,7 @@ feature -- Access
 			Result := an_any.generating_type.hash_code
 #endif
 		ensure
-			hash_value_positive: Result >= 0
+			hash_value_not_negative: Result >= 0
 		end
 
 end

@@ -3,10 +3,10 @@ indexing
 	description:
 
 		"Sets implemented with multi-arrays. Items are hashed %
-		%using `hash_code' from HASHABLE."
+		%using `hash_code' from HASHABLE by default."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,24 +34,37 @@ feature -- Access
 			create Result.make (Current)
 		end
 
-feature {NONE} -- Implementation
+feature -- Hashing
 
-	initialize_hash_function is
-			-- Initialize `hash_function'.
+	hash_function: KL_HASH_FUNCTION [G]
+			-- Hash function to compute position in the container
+
+	set_hash_function (a_hash_function: like hash_function) is
+			-- Set `hash_function' to `a_hash_function'.
+		require
+			empty: is_empty
 		do
--- Not accepted by ISE 6.1.
---			set_hash_function (agent {G}.hash_code)
-			set_hash_function (agent hash_code)
+			hash_function := a_hash_function
+		ensure
+			hash_function_set: hash_function = a_hash_function
 		end
 
-	hash_code (v: G): INTEGER is
-			-- Hash code of `v'
-		require
-			v_not_void: v /= Void
+feature {NONE} -- Implementation
+
+	hash_position (v: G): INTEGER is
+			-- Hash position of `v' in `slots';
+			-- Use `hash_function' as hashing function
+			-- if not Void, `v.hash_code' otherwise.
 		do
-			Result := v.hash_code
-		ensure
-			hash_code_not_negative: Result >= 0
+			if v /= Void then
+				if hash_function /= Void then
+					Result := hash_function.hash_code (v) \\ modulus
+				else
+					Result := v.hash_code \\ modulus
+				end
+			else
+				Result := modulus
+			end
 		end
 
 end
