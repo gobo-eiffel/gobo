@@ -19,10 +19,10 @@ Version 3.8 - ?
 	Gobo Eiffel XML Library
 
 	* Re-implemented XPath fn:collection() for file URIs (incompatibly,
-          but as the previous implementation was not documented, it
-          almost certainly is not used). Wrote documentation.
+	  but as the previous implementation was not documented, it
+	  almost certainly is not used). Wrote documentation.
 	* Added additional XSLT system-properties, and the ability to
-          register additional system properties. Documented this.
+	  register additional system properties. Documented this.
 
 Version 3.7 - 5 November 2007
 
