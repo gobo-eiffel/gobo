@@ -42,7 +42,9 @@ feature {NONE} -- Initialization
 			register_property_namespace_table (l_property_table, Gexslt_eiffel_type_uri)
 			create {XM_XPATH_DEFAULT_COLLECTION_RESOLVER} collection_resolver.make (Current)
 			shared_decimal_context.set_digits (18)
+			initialized := True
 		ensure
+			initialized: initialized
 			gexslt_properties_table_registered: system_properties.has (Gexslt_eiffel_type_uri)
 		end
 
@@ -69,6 +71,9 @@ feature -- Access
 			-- Value is tables of values keyed by local name.
 
 feature -- Status report
+
+	initialized: BOOLEAN
+			-- Has initialization completed?
 
 	is_tracing: BOOLEAN is
 			-- Is tracing active?
@@ -183,9 +188,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	collection_resolver_not_void: collection_resolver /= Void
-	product_name_not_void: product_name /= Void
-	system_properties_not_void: system_properties /= Void
-	no_void_namespace: not system_properties.has (Void)
+	collection_resolver_not_void: initialized implies collection_resolver /= Void
+	product_name_not_void: initialized implies product_name /= Void
+	system_properties_not_void: initialized implies system_properties /= Void
+	no_void_namespace: initialized implies not system_properties.has (Void)
 
 end

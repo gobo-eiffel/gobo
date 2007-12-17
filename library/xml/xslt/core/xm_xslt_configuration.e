@@ -435,15 +435,15 @@ feature {NONE} -- Implementation
 
 invariant
 
-	entity_resolver_not_void: entity_resolver /= Void
-	output_resolver_not_void: output_resolver /= Void
-	error_listener_not_void: error_listener /= Void
-	error_reporter_not_void: error_reporter /= Void
-	encoder_factory_not_void: encoder_factory /= Void
-	extension_functions_not_void: extension_functions /= Void
-	final_execution_phase_in_range: final_execution_phase <= Run_to_completion and then final_execution_phase >= Stop_after_principal_source
-	media_type_map_not_void: media_type_map /= Void
-	default_action: not (default_action_suppressed and then warns_on_default_action)
-	message_emitter_factory_not_void: message_emitter_factory /= Void
+	entity_resolver_not_void: initialized implies entity_resolver /= Void
+	output_resolver_not_void: initialized implies output_resolver /= Void
+	error_listener_not_void: initialized implies error_listener /= Void
+	error_reporter_not_void: initialized implies error_reporter /= Void
+	encoder_factory_not_void: initialized implies encoder_factory /= Void
+	extension_functions_not_void: initialized implies extension_functions /= Void
+	final_execution_phase_in_range: initialized implies final_execution_phase <= Run_to_completion and then final_execution_phase >= Stop_after_principal_source
+	media_type_map_not_void: initialized implies media_type_map /= Void
+	default_action: initialized implies not (default_action_suppressed and then warns_on_default_action)
+	message_emitter_factory_not_void: initialized implies message_emitter_factory /= Void
 
 end
