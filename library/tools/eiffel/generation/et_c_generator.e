@@ -20742,6 +20742,7 @@ feature {NONE} -- Type generation
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
+			l_empty_struct: BOOLEAN
 		do
 			if
 				a_type.base_class /= universe.type_class and
@@ -20761,6 +20762,7 @@ feature {NONE} -- Type generation
 				a_type /= current_system.real_64_type and
 				a_type /= current_system.pointer_type))
 			then
+				l_empty_struct := True
 				a_file.put_character ('/')
 				a_file.put_character ('*')
 				a_file.put_character (' ')
@@ -20783,6 +20785,7 @@ feature {NONE} -- Type generation
 					print_attribute_type_id_name (a_type, a_file)
 					a_file.put_character (';')
 					a_file.put_new_line
+					l_empty_struct := False
 				end
 				l_queries := a_type.queries
 				nb := a_type.attribute_count
@@ -20802,6 +20805,7 @@ feature {NONE} -- Type generation
 					a_file.put_character ('*')
 					a_file.put_character ('/')
 					a_file.put_new_line
+					l_empty_struct := False
 					i := i + 1
 				end
 				l_special_type ?= a_type
@@ -20853,6 +20857,7 @@ feature {NONE} -- Type generation
 					a_file.put_character ('*')
 					a_file.put_character ('/')
 					a_file.put_new_line
+					l_empty_struct := False
 				else
 					l_tuple_type ?= a_type
 					if l_tuple_type /= Void then
@@ -20865,6 +20870,7 @@ feature {NONE} -- Type generation
 							print_attribute_tuple_item_name (i, l_tuple_type, a_file)
 							a_file.put_character (';')
 							a_file.put_new_line
+							l_empty_struct := False
 							i := i + 1
 						end
 					else
@@ -20897,6 +20903,7 @@ feature {NONE} -- Type generation
 							a_file.put_character (')')
 							a_file.put_character (';')
 							a_file.put_new_line
+							l_empty_struct := False
 						else
 							l_procedure_type ?= a_type
 							if l_procedure_type /= Void then
@@ -20927,9 +20934,19 @@ feature {NONE} -- Type generation
 								a_file.put_character (')')
 								a_file.put_character (';')
 								a_file.put_new_line
+								l_empty_struct := False
 							end
 						end
 					end
+				end
+				if l_empty_struct then
+						-- Add a dummy field so that the struct is not empty (not allowed in C99).
+					a_file.put_character ('%T')
+					a_file.put_string (c_char)
+					a_file.put_character (' ')
+					a_file.put_string ("dummy")
+					a_file.put_character (';')
+					a_file.put_new_line
 				end
 				a_file.put_character ('}')
 				a_file.put_character (';')
@@ -21358,7 +21375,7 @@ feature {NONE} -- Default initialization values generation
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_query: ET_DYNAMIC_FEATURE
-			l_comma_needed: BOOLEAN
+			l_empty_struct: BOOLEAN
 		do
 			if
 				not a_type.is_expanded or else
@@ -21377,71 +21394,76 @@ feature {NONE} -- Default initialization values generation
 				a_type /= current_system.real_64_type and
 				a_type /= current_system.pointer_type)
 			then
+				l_empty_struct := True
 				a_file.put_character ('{')
 				if not a_type.is_expanded or else a_type.is_generic then
 						-- Type id.
 					a_file.put_integer (a_type.id)
-					l_comma_needed := True
+					l_empty_struct := False
 				end
 					-- Attributes.
 				l_queries := a_type.queries
 				nb := a_type.attribute_count
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
-					if l_comma_needed then
+					if not l_empty_struct then
 						a_file.put_character (',')
 					end
-					l_comma_needed := True
 					print_default_attribute_value (l_query.result_type_set.static_type, a_file)
+					l_empty_struct := False
 					i := i + 1
 				end
 				l_special_type ?= a_type
 				if l_special_type /= Void then
 						-- Count.
-					if l_comma_needed then
+					if not l_empty_struct then
 						a_file.put_character (',')
 					end
-					l_comma_needed := True
 					a_file.put_character ('0')
 						-- Items.
 					a_file.put_character (',')
 					a_file.put_character ('{')
 					print_default_attribute_value (l_special_type.item_type_set.static_type, a_file)
 					a_file.put_character ('}')
+					l_empty_struct := False
 				else
 					l_tuple_type ?= a_type
 					if l_tuple_type /= Void then
 						l_item_type_sets := l_tuple_type.item_type_sets
 						nb := l_item_type_sets.count
 						from i := 1 until i > nb loop
-							if l_comma_needed then
+							if not l_empty_struct then
 								a_file.put_character (',')
 							end
-							l_comma_needed := True
 							print_default_attribute_value (l_item_type_sets.item (i).static_type, a_file)
+							l_empty_struct := False
 							i := i + 1
 						end
 					else
 						l_function_type ?= a_type
 						if l_function_type /= Void then
 								-- Function pointer.
-							if l_comma_needed then
+							if not l_empty_struct then
 								a_file.put_character (',')
 							end
-							l_comma_needed := True
 							a_file.put_character ('0')
+							l_empty_struct := False
 						else
 							l_procedure_type ?= a_type
 							if l_procedure_type /= Void then
 									-- Function pointer.
-								if l_comma_needed then
+								if not l_empty_struct then
 									a_file.put_character (',')
 								end
-								l_comma_needed := True
 								a_file.put_character ('0')
+								l_empty_struct := False
 							end
 						end
 					end
+				end
+				if l_empty_struct then
+						-- Add a dummy field so that the struct is not empty (not allowed in C99).
+					a_file.put_character ('0')
 				end
 				a_file.put_character ('}')
 			else
