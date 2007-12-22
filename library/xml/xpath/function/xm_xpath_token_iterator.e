@@ -34,15 +34,15 @@ feature {NONE} -- Initialization
 			a_match_record: XM_XPATH_REGEXP_MATCH_RECORD
 		do
 			input := an_input
-			regexp := a_regexp_cache_entry.regexp
-			a_match_record := a_regexp_cache_entry.match_record (input)
+			regexp_cache_entry := a_regexp_cache_entry
+			a_match_record := regexp_cache_entry.match_record (input)
 			if a_match_record /= Void and then a_match_record.has_split then
 				tokens := a_match_record.tokens
 			else
-				regexp.match (input)
-				tokens := regexp.split
+				regexp_cache_entry.regexp.match (input)
+				tokens := regexp_cache_entry.regexp.split
 				if a_match_record = Void then
-					a_regexp_cache_entry.add_splitting_match (input, tokens)
+					regexp_cache_entry.add_splitting_match (input, tokens)
 				else
 					a_match_record.add_split (tokens)
 				end
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			input_string_set: input = an_input
-			regular_expression_set: regexp = a_regexp_cache_entry.regexp
+			regular_expression_set: regexp_cache_entry = a_regexp_cache_entry
 		end
 	
 feature -- Access
@@ -93,8 +93,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			todo ("another", False)
-			-- create Result.make (input, regexp)
+			create Result.make (input, regexp_cache_entry)
 		end
 	
 feature {NONE} -- Implementation
@@ -102,7 +101,7 @@ feature {NONE} -- Implementation
 	input: STRING
 			-- input string to be tokenized
 
-	regexp: RX_PCRE_REGULAR_EXPRESSION
+	regexp_cache_entry: XM_XPATH_REGEXP_CACHE_ENTRY
 			-- Tokenizing regular expression
 
 	tokens: ARRAY [STRING]
@@ -114,7 +113,6 @@ feature {NONE} -- Implementation
 invariant
 
 	input_string: input /= Void
-	regular_expression_not_void: regexp /= Void
-
+	regular_expression_not_in_error: regexp_cache_entry /= Void and then not regexp_cache_entry.is_error
 end
 	
