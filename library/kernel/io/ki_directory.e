@@ -109,7 +109,7 @@ feature -- Basic operations
 			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
 			-- if it already existed or `name' is a nested directory
-			-- name and its parent directory does not exist and 
+			-- name and its parent directory does not exist and
 			-- could not be created.
 		require
 			is_closed: is_closed
@@ -136,6 +136,45 @@ feature -- Basic operations
 		require
 			new_name_not_void: new_name /= Void
 			is_closed: is_closed
+		deferred
+		end
+
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]]) is
+			-- Apply `an_action' to every entry in the directory.
+			-- Do nothing if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		require
+			an_action_not_void: an_action /= Void
+		deferred
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
+			-- Apply `an_action' to every entry in the directory that satisfies `a_test'.
+			-- Do nothing if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		deferred
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one entry in the directory?
+			-- False if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		require
+			a_test_not_void: a_test /= Void
+		deferred
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all entries in the directory?
+			-- False if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		require
+			a_test_not_void: a_test /= Void
 		deferred
 		end
 

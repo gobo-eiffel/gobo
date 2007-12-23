@@ -531,6 +531,127 @@ feature -- Basic operations
 			end
 		end
 
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [STRING]]) is
+			-- Apply `an_action' to every entry in the directory.
+			-- Do nothing if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		local
+			a_name: STRING
+		do
+			if is_closed then
+				open_read
+				if is_open_read then
+					from read_entry until end_of_input loop
+						a_name := last_entry
+						if
+							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+							not STRING_.same_string (a_name, file_system.relative_parent_directory)
+						then
+							an_action.call ([a_name])
+						end
+						read_entry
+					end
+					close
+				end
+			else
+				tmp_directory.reset (string_name)
+				tmp_directory.do_all (an_action)
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [STRING]]; a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
+			-- Apply `an_action' to every entry in the directory that satisfies `a_test'.
+			-- Do nothing if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		local
+			a_name: STRING
+		do
+			if is_closed then
+				open_read
+				if is_open_read then
+					from read_entry until end_of_input loop
+						a_name := last_entry
+						if
+							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+							not STRING_.same_string (a_name, file_system.relative_parent_directory)
+						then
+							if a_test.item ([a_name]) then
+								an_action.call ([a_name])
+							end
+						end
+						read_entry
+					end
+					close
+				end
+			else
+				tmp_directory.reset (string_name)
+				tmp_directory.do_if (an_action, a_test)
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one entry in the directory?
+			-- False if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		local
+			a_name: STRING
+		do
+			if is_closed then
+				open_read
+				if is_open_read then
+					from read_entry until Result or end_of_input loop
+						a_name := last_entry
+						if
+							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+							not STRING_.same_string (a_name, file_system.relative_parent_directory)
+						then
+							if a_test.item ([a_name]) then
+								Result := True
+							end
+						end
+						read_entry
+					end
+					close
+				end
+			else
+				tmp_directory.reset (string_name)
+				Result := tmp_directory.there_exists (a_test)
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all entries in the directory?
+			-- False if current directory could not be searched.
+			-- (Semantics not guaranteed if `an_action' changes the contents of the directory.)
+		local
+			a_name: STRING
+		do
+			if is_closed then
+				open_read
+				if is_open_read then
+					Result := True
+					from read_entry until not Result or end_of_input loop
+						a_name := last_entry
+						if
+							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
+							not STRING_.same_string (a_name, file_system.relative_parent_directory)
+						then
+							if not a_test.item ([a_name]) then
+								Result := False
+							end
+						end
+						read_entry
+					end
+					close
+				end
+			else
+				tmp_directory.reset (string_name)
+				Result := tmp_directory.for_all (a_test)
+			end
+		end
+
 feature -- Input
 
 	read_entry is
