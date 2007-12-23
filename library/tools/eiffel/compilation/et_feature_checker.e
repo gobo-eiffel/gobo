@@ -1854,7 +1854,7 @@ feature {NONE} -- Instruction validity
 			l_source := an_instruction.source
 			l_source_context := new_context (current_type)
 			if l_type = Void then
-					-- The call is not valid. As a consequence its type was not
+					-- The call is not valid. As a consequence its type has not
 					-- been computed correctly. We will consider that it is of
 					-- type 'ANY' when checking the validity of the source.
 				check has_fatal_error: has_fatal_error end
