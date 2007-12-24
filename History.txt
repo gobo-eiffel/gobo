@@ -15,6 +15,12 @@ Version 3.8 - ?
 	  tuple itself. For example it is OK to pass a "TUPLE [ANY]" to an Agent
 	  which expects a "TUPLE [STRING]" provided that the dynamic type of the
 	  item of this tuple conforms to type STRING.
+	* Made sure that no-more-memory exceptions are raised when needed.
+
+	Gobo Eiffel Kernel Library:
+
+	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')
+	  in class KL_DIRECTORY.
 
 	Gobo Eiffel XML Library
 
