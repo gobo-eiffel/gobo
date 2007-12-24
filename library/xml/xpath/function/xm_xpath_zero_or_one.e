@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluate_item, create_iterator
+			evaluate_item, create_iterator, create_node_iterator
 		end
 
 create

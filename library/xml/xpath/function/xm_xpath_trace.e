@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluate_item, create_iterator, pre_evaluate, compute_special_properties
+			evaluate_item, create_iterator, create_node_iterator, pre_evaluate, compute_special_properties
 		end
 
 	XM_XPATH_TRACE_ROUTINES
@@ -99,7 +99,7 @@ feature -- Evaluation
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- An iterator over the values of a sequence
+			-- Create iterator over the values of a sequence
 		local
 			a_string_value: XM_XPATH_STRING_VALUE
 			an_item: XM_XPATH_ITEM
@@ -132,9 +132,36 @@ feature -- Evaluation
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Create an iterator over a node sequence
+			-- Create iterator over the nodes of a sequence
+		local
+			a_string_value: XM_XPATH_STRING_VALUE
+			an_item: XM_XPATH_ITEM
+			a_label: STRING
 		do
-			todo ("create_node_iterator", False)
+			arguments.item (1).create_node_iterator (a_context)
+			last_node_iterator := arguments.item (1).last_node_iterator
+			if not a_context.configuration.is_tracing_suppressed then
+				if not last_node_iterator.is_error then
+					arguments.item (2).evaluate_as_string (a_context)
+					a_string_value := arguments.item (2).last_evaluated_string
+					if not a_string_value.is_error then
+						a_label := a_string_value.string_value
+					else
+						a_label := ""
+					end
+					create {XM_XPATH_TRACING_NODE_ITERATOR} last_node_iterator.make (last_node_iterator, a_label, a_context)
+				else
+					arguments.item (2).evaluate_as_string (a_context)
+					a_string_value := arguments.item (2).last_evaluated_string
+					if not a_string_value.is_error then
+						a_label := a_string_value.string_value
+					else
+						a_label := ""
+					end
+					create {XM_XPATH_INVALID_ITEM} an_item.make (last_node_iterator.error_value)
+					trace_item (a_label, an_item, a_context)
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

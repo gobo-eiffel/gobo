@@ -72,12 +72,6 @@ feature -- Evaluation
 				evaluate_qname (a_result, arguments.item (1).last_evaluated_string.string_value)
 			end
 		end
-	
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Create an iterator over a node sequence
-		do
-			-- pre-condition is never met
-		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 

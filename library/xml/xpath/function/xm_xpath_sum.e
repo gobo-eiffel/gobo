@@ -130,12 +130,6 @@ feature -- Evaluation
 			end
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Create an iterator over a node sequence
-		do
-			-- pre-condition is never met
-		end
-
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is

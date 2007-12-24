@@ -15,8 +15,6 @@ deferred class XM_XPATH_FUNCTION_CALL
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
-		undefine
-			create_node_iterator
 		redefine
 			simplify, promote, sub_expressions, is_function_call, as_function_call
 		end

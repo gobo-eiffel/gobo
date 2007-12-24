@@ -120,12 +120,6 @@ feature -- Evaluation
 			--	do_nothing
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Unused routine to satisfy interface.
-		do
-			-- Pre-condition will not be met.
-		end
-
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is

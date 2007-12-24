@@ -67,6 +67,7 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			from
+				item := Void
 			until
 				item /= Void or (not base_iterator.before and then base_iterator.after)
 			loop
@@ -75,7 +76,9 @@ feature -- Cursor movement
 				else
 					base_iterator.forth
 				end
-				item := mapping_function.mapped_node (base_iterator.item)
+				if not base_iterator.after then
+					item := mapping_function.mapped_node (base_iterator.item)
+				end
 			end
 		end
 

@@ -228,15 +228,53 @@ feature {NONE} -- Implementation
 			-- Normalize `duration'
 		local
 			l_day, l_hour: INTEGER
-			l_minute, l_second, l_millisecond: INTEGER
+			l_minute, l_second, l_seconds, l_millisecond, l_milliseconds: INTEGER
 			l_total_hours, l_total_minutes: INTEGER
+			l_time_sign, l_day_sign: BOOLEAN
 		do
 			duration.set_time_canonical
-			l_second := INTEGER_.mod (duration.second_count, 60)
-			l_millisecond := INTEGER_.mod (duration.millisecond_count, 1000)
 			l_total_minutes := INTEGER_.div (duration.second_count, 60)
+			l_milliseconds := duration.millisecond_count
+			l_day := duration.day * 24
+			if l_day > 0 and l_total_minutes < 0 then
+				from
+				until
+					not (l_day > 0 and l_total_minutes < 0)
+				loop
+					l_day := l_day - 1
+					l_total_minutes := l_total_minutes + 1440
+				end
+			elseif l_day < 0 and l_total_minutes > 0 then
+				from
+				until
+					not (l_day < 0 and l_total_minutes > 0)
+				loop
+					l_day := l_day + 1
+					l_total_minutes := l_total_minutes - 1440
+				end
+			end
+			if l_total_minutes > 0 and l_milliseconds < 0 then
+				from
+				until
+					not (l_total_minutes > 0 and l_milliseconds < 0)
+				loop
+					l_second := l_second - 1
+					l_milliseconds := 1000 + l_milliseconds
+				end
+			elseif l_total_minutes < 0 and l_milliseconds > 0  then
+				from
+				until
+					not (l_total_minutes < 0 and l_milliseconds > 0)
+				loop
+					l_second := l_second + 1
+					l_milliseconds := l_milliseconds - 1000
+				end
+			end
+			l_seconds := INTEGER_.div (l_milliseconds, 1000)
+			l_millisecond := INTEGER_.mod (l_milliseconds, 1000)
+			l_second := INTEGER_.mod (l_seconds, 60)
 			l_minute := INTEGER_.mod (l_total_minutes, 60)
-			l_total_hours := INTEGER_.div (l_total_minutes, 60) + duration.day * 24
+			l_total_hours := INTEGER_.div (l_total_minutes, 60) + l_day
 			l_hour := INTEGER_.mod (l_total_hours, 24)
 			l_day := INTEGER_.div (l_total_hours, 24)
 			create duration.make_precise (0, 0, l_day, l_hour, l_minute, l_second, l_millisecond)

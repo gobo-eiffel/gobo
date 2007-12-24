@@ -483,6 +483,8 @@ feature {NONE} -- Implementation
 						serializer.report_fatal_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("Characters between x7F and x9F inclusive are not allowed in HTML", Xpath_errors_uri, "SERE0014", Dynamic_error))
 						is_error := True
 					elseif a_code >= 55296 and then a_code <= 56319 then
+						-- this can't happen, unless we were to use UTF-16 internally.
+						-- Never in a million aeons!
 						todo ("output_escape (surrogates)", True)
 					else
 						if not outputter.is_bad_character_code (a_code) then

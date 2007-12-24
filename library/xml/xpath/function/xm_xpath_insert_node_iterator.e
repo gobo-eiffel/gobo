@@ -2,19 +2,19 @@ indexing
 
 	description:
 
-		"Objects that insert a subsequence"
+		"Objects that insert a subsequence of nodes"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_INSERT_ITERATOR
+class XM_XPATH_INSERT_NODE_ITERATOR
 
 inherit
 
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 
 create
 
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator, an_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; an_insert_position: INTEGER) is
+	make (a_base_iterator, an_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; an_insert_position: INTEGER) is
 			-- Establish invariant.
 		require
 			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	item: XM_XPATH_ITEM
-			-- Value or node at the current position
+	item: XM_XPATH_NODE
+			-- Node at the current position
 
 feature -- Status report
 
@@ -159,10 +159,10 @@ feature -- Duplication
 	
 feature {NONE} -- Implementation
 
-	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Target sequence
 
-	insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Sequence to insert into target
 
 	insert_position: INTEGER

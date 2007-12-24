@@ -77,12 +77,6 @@ feature -- Evaluation
 			good_result: a_result.item /= Void and then not a_result.item.is_error
 		end
 
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Create an iterator over a node sequence
-		do
-			-- pre-condition is never met
-		end
-
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do

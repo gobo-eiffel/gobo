@@ -60,7 +60,8 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			todo ("display", False)
+			std.error.put_string (STRING_.concat (indentation (a_level), "error"))
+			std.error.put_new_line
 		end
 
 	is_deferred_error: BOOLEAN is

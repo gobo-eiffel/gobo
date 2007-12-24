@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, create_iterator
+			pre_evaluate, evaluate_item, create_iterator, create_node_iterator
 		end
 
 feature -- Evaluation

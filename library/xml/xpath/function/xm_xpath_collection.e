@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, check_arguments, create_iterator
+			pre_evaluate, check_arguments, create_iterator, create_node_iterator
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -69,7 +69,7 @@ feature -- Status report
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- An iterator over the values of a sequence
+			-- Create iterator over the values of a sequence.
 		local
 			l_uri: UT_URI
 			l_reference: STRING
@@ -111,16 +111,53 @@ feature -- Evaluation
 			end
 		end
 
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create iterator over a node sequence.
+		local
+			l_uri: UT_URI
+			l_reference: STRING
+			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_resolver: XM_XPATH_COLLECTION_RESOLVER
+		do
+			last_node_iterator := Void
+			if arguments.count = 0 then
+				create l_uri.make (Default_collection_scheme + ":")
+			else
+				create l_result.make (Void)
+				arguments.item (1).evaluate_item (l_result, a_context)
+				if l_result.item = Void then
+					create l_uri.make (Default_collection_scheme + ":")
+				elseif l_result.item.is_error then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.item.error_value)
+				else
+					l_reference := l_result.item.string_value
+					if Url_encoding.has_excluded_characters (l_reference) then
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("Argument to fn:collection() contains invalid characters",
+							Xpath_errors_uri, "FODC0002", Dynamic_error)
+					else
+						create l_uri.make_resolve (base_uri, l_reference)
+					end
+				end
+			end
+			if last_node_iterator = Void then -- no error yet
+				if a_context.available_documents.is_collection_mapped (l_uri.full_reference) then
+					last_node_iterator := a_context.available_documents.collection (l_uri.full_reference)
+				else
+					l_resolver := a_context.configuration.collection_resolver
+					l_resolver.resolve (l_uri, a_context)
+					if l_resolver.was_error then
+						create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_resolver.last_error)
+					else
+						last_node_iterator := l_resolver.last_collection
+					end
+				end
+			end
+		end
+
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
 			-- Suppress compile-time evaluation
-		end
-
-	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Create an iterator over a node sequence
-		do
-			todo ("create_node_iterator", False)
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local

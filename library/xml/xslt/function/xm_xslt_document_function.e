@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			check_arguments, compute_special_properties, pre_evaluate, create_iterator
+			check_arguments, compute_special_properties, pre_evaluate, create_iterator, create_node_iterator
 		end
 
 	XM_UNICODE_CHARACTERS_1_1

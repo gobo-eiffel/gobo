@@ -146,7 +146,8 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			todo ("display", False)
+			std.error.put_string (STRING_.concat (indentation (a_level), "xsl:result-document"))
+			std.error.put_new_line
 		end
 
 feature -- Optimization

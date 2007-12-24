@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
 			simplify, pre_evaluate, check_arguments,
-			compute_special_properties, create_iterator
+			compute_special_properties, create_iterator, create_node_iterator
 		end
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
@@ -153,7 +153,6 @@ feature -- Evaluation
 		do
 			-- Suppress compile-time evaluation
 		end
-
 	
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence

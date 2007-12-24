@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			create_iterator, simplify
+			create_iterator, create_node_iterator, simplify
 		end
 
 create
@@ -87,13 +87,14 @@ feature -- Optimization
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- An iterator over the values of a sequence
+			-- Create iterator over the values of a sequence.
 		local
 			l_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
 			l_count: INTEGER
 			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
+			last_iterator := Void
 			arguments.item (1).create_iterator (a_context)
 			l_sequence := arguments.item (1).last_iterator
 			if l_sequence.is_error then
@@ -126,7 +127,8 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		do
-			todo ("create_node_iterator", False)
+			create_iterator (a_context)
+			last_node_iterator := last_iterator.as_node_iterator
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

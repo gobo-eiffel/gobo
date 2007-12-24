@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, create_iterator
+			simplify, create_iterator, create_node_iterator
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -82,7 +82,7 @@ feature -- Optimization
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- An iterator over the values of a sequence
+			-- Create iterator over the values of a sequence.
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
@@ -90,6 +90,7 @@ feature -- Evaluation
 			l_starting_location, l_final_position, l_length: INTEGER
 			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
+			last_iterator := Void
 			arguments.item (1).create_iterator (a_context)
 			l_iterator := arguments.item (1).last_iterator
 			if l_iterator.is_error then
@@ -171,8 +172,89 @@ feature -- Evaluation
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
+		local
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_item: XM_XPATH_ITEM
+			l_double_value: XM_XPATH_DOUBLE_VALUE
+			l_starting_location, l_final_position, l_length: INTEGER
+			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
-			todo ("create_node_iterator", False)
+			last_node_iterator := Void
+			arguments.item (1).create_node_iterator (a_context)
+			l_iterator := arguments.item (1).last_node_iterator
+			if l_iterator.is_error then
+				last_node_iterator := l_iterator
+			elseif l_iterator.is_empty_iterator then
+				last_node_iterator := l_iterator
+			else
+				create l_result.make (Void)
+				arguments.item (2).evaluate_item (l_result, a_context)
+				l_item := l_result.item
+				if l_item = Void then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("() is not allowed as the second argument for subsequence()",	Xpath_errors_uri, "XPTY0004", Type_error)
+				elseif l_item.is_error then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_item.error_value)
+				else
+					check
+						starting_location_is_double: l_item.is_double_value
+						-- Static typing
+					end
+					l_double_value := l_item.as_double_value.rounded_value
+					if l_double_value.is_platform_integer then
+						l_starting_location := l_double_value.as_integer
+					else
+						if l_double_value.value > Platform.maximum_integer then
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+						elseif l_double_value.value <= 0 then
+							l_starting_location := 1
+						end
+					end
+					if last_node_iterator = Void then
+						if arguments.count = 2 then
+							if l_starting_location <= 1 then
+								last_node_iterator := l_iterator
+							else
+								create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (l_iterator, l_starting_location)
+							end
+						else
+							create l_result.make (Void)
+							arguments.item (3).evaluate_item (l_result, a_context)
+							l_item := l_result.item
+							if l_item = Void then
+								create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string ("() is not allowed as the third argument for subsequence()", Xpath_errors_uri, "XPTY0004", Type_error)
+							elseif l_item.is_error then
+								create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_item.error_value)
+							else
+								check
+									length_is_double: l_item.is_double_value
+									-- Static typing
+								end
+								l_double_value := l_item.as_double_value.rounded_value
+								if l_double_value.is_platform_integer then
+									l_length := l_double_value.as_integer
+									l_final_position := l_length + l_starting_location - 1
+								else
+									if l_double_value.value > Platform.maximum_integer then
+										l_final_position := Platform.maximum_integer
+									else
+										create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+									end
+								end
+								if last_node_iterator = Void then
+									if l_starting_location <= 1 then
+										l_starting_location := 1
+									end
+									if l_final_position < l_starting_location then
+										create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+									else
+										last_node_iterator := expression_factory.created_position_iterator (l_iterator, l_starting_location, l_final_position).as_node_iterator
+									end
+								end
+							end
+						end
+					end
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
