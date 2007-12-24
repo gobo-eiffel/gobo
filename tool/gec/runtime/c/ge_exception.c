@@ -106,6 +106,30 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 	return (obj);
 }
 
+/*
+	Check whether 'ptr' is a null pointer.
+	If it is, then raise a no-more-memory exception.
+	Return 'ptr'
+*/
+void* GE_check_null(void* ptr)
+{
+	if (!ptr) {
+#ifdef EIF_WINDOWS
+		GE_show_console();
+#endif
+		fprintf(stderr, "No more memory!\n");
+#ifdef EIF_DEBUG
+		{
+			char c;
+			fprintf(stderr, "Press Enter...\n");
+			scanf("%c", &c);
+		}
+#endif
+		GE_raise(2);
+	}
+	return (ptr);
+}
+
 #ifdef __cplusplus
 }
 #endif

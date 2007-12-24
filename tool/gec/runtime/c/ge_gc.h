@@ -32,8 +32,8 @@
 /*
 	Memory allocation.
 */
-#define GE_alloc(x) GC_MALLOC(x)
-#define GE_alloc_atomic(x) GC_MALLOC_ATOMIC(x)
+#define GE_alloc(x) GE_null(GC_MALLOC(x))
+#define GE_alloc_atomic(x) GE_null(GC_MALLOC_ATOMIC(x))
 
 #else
 
@@ -49,8 +49,8 @@
 /*
 	Memory allocation.
 */
-#define GE_alloc(x) calloc((x),1)
-#define GE_alloc_atomic(x) calloc((x),1)
+#define GE_alloc(x) GE_null(calloc((x),1))
+#define GE_alloc_atomic(x) GE_null(calloc((x),1))
 
 #endif
 
