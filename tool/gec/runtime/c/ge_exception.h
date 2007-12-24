@@ -89,7 +89,7 @@ extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 	If it is, then raise a no-more-memory exception.
 	Return 'ptr'
 */
-#define GE_null(ptr) (!(ptr)?GE_check_null(ptr):(ptr))
+#define GE_null(ptr) GE_check_null(ptr)
 extern void* GE_check_null(void* ptr);
 
 #ifdef __cplusplus
