@@ -17,6 +17,9 @@ inherit
 
 	XM_URI_RESOLVER
 
+	UT_SHARED_URL_ENCODING
+		export {NONE} all end
+
 create
 
 	make
@@ -35,17 +38,38 @@ feature -- Operation(s)
 	resolve (a_uri: UT_URI) is
 			-- Resolve URI to stream.
 		local
-			a_string_stream: KL_STRING_INPUT_STREAM
+			l_string_stream: KL_STRING_INPUT_STREAM
+			l_data: STRING
+			l_utf8: BOOLEAN
 		do
 			has_error := False
 			if a_uri.is_opaque and then STRING_.same_string (a_uri.scheme, scheme) then
 				parse_components (a_uri)
 				if not has_error then
-					create a_string_stream.make (data)
 					if is_base_64 then
-						create {UT_BASE64_DECODING_INPUT_STREAM} last_stream.make (a_string_stream)
+						create l_string_stream.make (data)
+						create {UT_BASE64_DECODING_INPUT_STREAM} last_stream.make (l_string_stream)
 					else
-						last_stream := a_string_stream
+						if last_media_type.has_parameter (Charset_parameter) then
+							if STRING_.same_string (last_media_type.parameter (Charset_parameter), "utf-8") then
+								l_utf8 := True
+							elseif STRING_.same_string (last_media_type.parameter (Charset_parameter), "us-ascii") then
+								-- OK
+							elseif STRING_.same_string (last_media_type.parameter (Charset_parameter), "iso-8859-1") then
+								-- OK
+							else
+								set_last_error (STRING_.concat (last_media_type.parameter (Charset_parameter), " is not supported. Only US-ASCII, ISO-8859-1 and UTF-8 are supported"))
+							end
+						end
+						if not has_error then
+							if l_utf8 then
+								l_data := Url_encoding.unescape_utf8 (data)
+							else
+								l_data := Url_encoding.unescape_string (data)
+							end
+							create l_string_stream.make (l_data)
+							last_stream := l_string_stream
+						end
 					end
 				end
 			else
@@ -83,6 +107,9 @@ feature {NONE} -- Implementation
 
 	is_base_64: BOOLEAN
 			-- Is `data' base-64 encoded?
+
+	Charset_parameter: STRING is "charset"
+			-- Name of content-type character-set parameter
 
 	set_last_error (a_message: STRING) is
 			-- Set `last_eeror' to `a_message'.
