@@ -27,6 +27,13 @@ extern "C" {
 #define eif_thr_mutex_unlock(a_mutex_pointer)
 #define eif_thr_mutex_trylock(a_mutex_pointer) EIF_FALSE
 #define eif_thr_mutex_destroy(a_mutex_pointer)
+#define eif_thr_cond_create() NULL
+#define eif_thr_cond_broadcast(a_cond_ptr)
+#define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
+#define eif_thr_thread_id() NULL
+#define eif_thr_last_thread() NULL
+#define eif_thr_default_priority() 0
+#define eif_thr_create_with_args(current_obj, init_func, priority, policy, detach)
 
 #endif
 
