@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			fingerprint, matches_item, node_kind, is_document_node_test, as_document_node_test
+			fingerprint, matches_item, node_kind, is_document_node_test, as_document_node_test, constraining_node_names
 		end
 
 	XM_XPATH_AXIS
@@ -113,6 +113,13 @@ feature -- Access
 					Result := l_found
 				end
 			end
+		end
+
+	constraining_node_names: DS_SET [INTEGER] is
+			-- Set of fingerprints of node names allowed
+		do
+			create {DS_HASH_SET [INTEGER]} Result.make (1)
+			Result.put (fingerprint)
 		end
 
 feature -- Status report

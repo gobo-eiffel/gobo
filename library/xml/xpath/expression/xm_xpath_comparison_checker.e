@@ -159,7 +159,9 @@ feature -- Comparison
 			l_message: STRING
 		do
 			is_comparison_type_error := False
-			if a_atomic_comparer.are_comparable (a_atomic_value, a_other_atomic_value) then
+			if a_atomic_value.is_duration_value and a_other_atomic_value.is_duration_value and a_operator = Fortran_equal_token then
+				last_check_result := a_atomic_value.as_duration_value.equal_duration (a_other_atomic_value.as_duration_value)
+			elseif a_atomic_comparer.are_comparable (a_atomic_value, a_other_atomic_value) then
 				inspect
 					a_operator
 				when Fortran_equal_token then

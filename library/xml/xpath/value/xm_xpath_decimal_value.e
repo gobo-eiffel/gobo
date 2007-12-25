@@ -154,11 +154,22 @@ feature -- Access
 						Result.append_string (l_coefficient)
 					elseif l_count = l_coefficient.count then
 						Result.append_string ("0.")
+						if l_coefficient.is_empty then
+							l_coefficient := "0"
+						else
+							l_coefficient.prune_all_trailing ('0')
+						end
 						Result.append_string (l_coefficient)
 					else
 						Result.append_string (l_coefficient.substring (1, l_coefficient.count - l_count))
 						Result.append_string (".")
-						Result.append_string (l_coefficient.substring (l_coefficient.count - l_count + 1, l_coefficient.count))
+						l_coefficient := l_coefficient.substring (l_coefficient.count - l_count + 1, l_coefficient.count)
+						if l_coefficient.is_empty then
+							l_coefficient := "0"
+						else
+							l_coefficient.prune_all_trailing ('0')
+						end
+						Result.append_string (l_coefficient)
 					end
 				else
 					Result.append_string (l_coefficient)

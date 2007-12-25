@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			date_not_void: a_date /= Void
 		do
 			make_atomic_value
-			local_date := a_date
+			local_date := a_date.twin
 			set_depends_upon_implicit_timezone
 		end
 
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			date_not_void: a_date /= Void
 		do
 			make_atomic_value
-			zoned_date := a_date
+			zoned_date := a_date.twin
 			zoned := True
 		end
 

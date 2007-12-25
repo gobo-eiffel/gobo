@@ -148,7 +148,7 @@ feature -- Status report
 				a_required_type = type_factory.double_type then
 					Result := True
 			elseif a_required_type = type_factory.integer_type then
-				Result := is_whole_number
+				Result := not (is_nan or is_infinite)
 			elseif a_required_type = type_factory.decimal_type then
 				Result := not is_nan
 			elseif a_required_type = type_factory.float_type then

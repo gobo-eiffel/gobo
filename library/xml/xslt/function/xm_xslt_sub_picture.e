@@ -126,7 +126,7 @@ feature -- Access
 				else
 					check
 						decimal: a_number.is_decimal_value
-						-- This will fail when we introduce float, and other integer types
+						-- TODO: This will fail when we introduce float, and other integer types
 					end
 					Result := formatted_decimal (a_number.as_decimal_value)
 				end
@@ -382,7 +382,11 @@ feature {NONE} -- Implementation
 			a_decimal_value := a_value.rounded_half_even (maximum_fractional_part_size)
 			Result := a_decimal_value.string_value
 			a_point := Result.index_of ('.', 1)
-			a_zero_count := minimum_integral_part_size - a_point + 1
+			if a_point = 0 then
+				a_zero_count := minimum_integral_part_size - Result.count
+			else
+				a_zero_count := minimum_integral_part_size - a_point + 1
+			end
 			if a_zero_count > 0 then
 				create zeros.make_filled ('0', a_zero_count)
 				Result := zeros + Result
@@ -414,7 +418,7 @@ feature {NONE} -- Implementation
 			a_zero_count := minimum_integral_part_size - Result.count
 			if a_zero_count > 0 then
 				create zeros.make_filled ('0', a_zero_count)
-				Result := Result + zeros
+				Result := zeros + Result
 			end
 			create zeros.make_filled ('0', minimum_fractional_part_size)
 			Result := Result + "." + zeros
@@ -427,27 +431,33 @@ feature {NONE} -- Implementation
 		require
 			value_is_finite: True
 		local
-			a_decimal: MA_DECIMAL
-			a_zero_count, a_point: INTEGER
-			zeros: STRING
+			l_decimal: MA_DECIMAL
+			l_decimal_value: XM_XPATH_DECIMAL_VALUE
+			l_zero_count, l_point: INTEGER
+			l_zeros: STRING
 		do
-			create a_decimal.make_from_string (a_value.out)
-			Result := a_decimal.rescale (0 - maximum_fractional_part_size, shared_half_even_context).to_scientific_string
-			a_point := Result.index_of ('.', 1)
-			a_zero_count := minimum_integral_part_size - Result.count - a_point
-			if a_zero_count > 0 then
-				create zeros.make_filled ('0', a_zero_count)
-				Result := Result + zeros
+			create l_decimal.make_from_string (a_value.out)
+			create l_decimal_value.make (l_decimal.rescale (0 - maximum_fractional_part_size, shared_half_even_context))
+			Result := l_decimal_value.string_value
+			l_point := Result.index_of ('.', 1)
+			if l_point = 0 then
+				l_zero_count := minimum_integral_part_size - Result.count
+			else
+				l_zero_count := minimum_integral_part_size - l_point + 1
 			end
-			if a_point > 0 then
-				a_zero_count := minimum_fractional_part_size - Result.count + a_point
+			if l_zero_count > 0 then
+				create l_zeros.make_filled ('0', l_zero_count)
+				Result := Result + l_zeros
+			end
+			if l_point > 0 then
+				l_zero_count := minimum_fractional_part_size - Result.count + l_point
 			else
 				Result := Result + "."
-				a_zero_count := minimum_fractional_part_size
+				l_zero_count := minimum_fractional_part_size
 			end
-			if a_zero_count > 0 then
-				create zeros.make_filled ('0', a_zero_count)
-				Result := Result + zeros
+			if l_zero_count > 0 then
+				create l_zeros.make_filled ('0', l_zero_count)
+				Result := Result + l_zeros
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -494,6 +504,9 @@ feature {NONE} -- Implementation
 					l_index := l_index + 1
 				end
 				Result := a_string
+			end
+			if Result.item (Result.count) = a_decimal_format.decimal_separator.item (1) then
+				Result.remove_tail (1)
 			end
 		ensure
 			result_not_void: Result /= Void

@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			time_not_void: a_time /= Void
 		do
 			make_atomic_value
-			local_time := a_time
+			local_time := a_time.twin
 			set_depends_upon_implicit_timezone
 		end
 
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			time_not_void: a_time /= Void
 		do
 			make_atomic_value
-			zoned_time := a_time
+			zoned_time := a_time.twin
 			zoned := True
 		end
 
