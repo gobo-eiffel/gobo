@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 	make_from_duration (a_duration: like duration) is
 			-- Create from duration.
 		require
-			zero_years_and_months: a_duration.year = 0 and then a_duration.month = 0 
+			zero_years_and_months: a_duration.year = 0 and then a_duration.month = 0
 		do
 			make_atomic_value
 			duration := a_duration
@@ -133,7 +133,7 @@ feature -- Status report
 		do
 			Result := other.is_seconds_duration
 		end
-	
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -153,7 +153,7 @@ feature -- Conversions
 		do
 			Result := Current
 		end
-	
+
 feature -- Basic operations
 
 	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
@@ -175,7 +175,7 @@ feature -- Basic operations
 				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration subtraction", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
 			end
 		end
-		
+
 	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
 			-- Multiplication of `Current' by `a_scalar'
 		local
@@ -196,13 +196,13 @@ feature -- Basic operations
 				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Arithmetic overflow in duration multiplication", Xpath_errors_uri, "FODT0002", Dynamic_error)
 			end
 		end
-		
+
 	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
 			-- Division of `Current' by `a_scalar'
 		do
 			Result := multiply (1.0 / a_scalar)
 		end
-		
+
 	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
 			-- Division of `other' into `Current'
 		local
@@ -221,7 +221,7 @@ feature -- Basic operations
 				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration division", Xpath_errors_uri, "XPTY0004", Dynamic_error)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	normalize is
@@ -230,7 +230,6 @@ feature {NONE} -- Implementation
 			l_day, l_hour: INTEGER
 			l_minute, l_second, l_seconds, l_millisecond, l_milliseconds: INTEGER
 			l_total_hours, l_total_minutes: INTEGER
-			l_time_sign, l_day_sign: BOOLEAN
 		do
 			duration.set_time_canonical
 			l_total_minutes := INTEGER_.div (duration.second_count, 60)
