@@ -286,7 +286,23 @@ feature -- Types
 				if l_type.base_class /= l_base_class then
 					-- Wrong index.
 				elseif not l_base_class.is_generic and l_base_class /= universe.tuple_class then
-					Result := l_type
+					if a_type.is_type_expanded (a_context, universe) = l_type.is_expanded then
+						Result := l_type
+					elseif l_type.next_type = Void then
+						Result := new_dynamic_type (a_type, a_context)
+						dynamic_types.force_last (Result)
+							-- `dynamic_type' is re-entrant (`new_dynamic_type' is
+							-- calling it). So at this stage 'l_type.next_type' is
+							-- not necessarily Void anymore. We have to take that
+							-- possibility into account.
+						Result.set_next_type (l_type.next_type)
+						l_type.set_next_type (Result)
+					else
+						check
+							same_expandedness: a_type.is_type_expanded (a_context, universe) = l_type.next_type.is_expanded
+						end
+						Result := l_type.next_type
+					end
 				else
 						-- Traverse all dynamic types with the same base class.
 						-- If not found then add this new dynamic type.
