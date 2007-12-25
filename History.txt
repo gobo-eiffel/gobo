@@ -16,13 +16,20 @@ Version 3.8 - ?
 	  which expects a "TUPLE [STRING]" provided that the dynamic type of the
 	  item of this tuple conforms to type STRING.
 	* Made sure that no-more-memory exceptions are raised when needed.
+	* Made sure that expanded items are initialized when creating objects
+	  of type SPECIAL.
+	* Fixed bug (read/write to non-allocated memory) in implementation of
+	  `deep_twin' when traversing objects of type SPECIAL.
+	* Fixed bug when both the expanded and reference versions of a non-generic
+	  type were used in the system. The generated C code considered that they
+	  were either both expanded or both reference.
 
 	Gobo Eiffel Kernel Library:
 
 	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')
 	  in class KL_DIRECTORY.
 
-	Gobo Eiffel XML Library
+	Gobo Eiffel XML Library:
 
 	* Re-implemented XPath fn:collection() for file URIs (incompatibly,
 	  but as the previous implementation was not documented, it
@@ -65,7 +72,7 @@ Version 3.7 - 5 November 2007
 	  use `is_equal' directly, but a protected version of it which is preceded
 	  by a call to `same_type'.
 
-	Gobo Eiffel XML Library
+	Gobo Eiffel XML Library:
 
 	* Made the XSLT serializer a reusable component for any XML programs.
 	* Added an example of using the XSLT serializer.
