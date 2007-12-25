@@ -12451,6 +12451,10 @@ feature {NONE} -- Deep features generation
 								current_file.put_character ('=')
 								current_file.put_character (' ')
 								print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+								current_file.put_character (' ')
+								current_file.put_character ('-')
+								current_file.put_character (' ')
+								current_file.put_character ('1')
 								current_file.put_character (';')
 								current_file.put_character (' ')
 								print_temp_name (l_temp, current_file)
@@ -12488,6 +12492,10 @@ feature {NONE} -- Deep features generation
 							current_file.put_character ('=')
 							current_file.put_character (' ')
 							print_attribute_special_count_access (tokens.current_keyword, l_special_type, False)
+							current_file.put_character (' ')
+							current_file.put_character ('-')
+							current_file.put_character (' ')
+							current_file.put_character ('1')
 							current_file.put_character (';')
 							current_file.put_character (' ')
 							print_temp_name (l_temp, current_file)
@@ -19573,14 +19581,16 @@ feature {NONE} -- Malloc
 
 	print_malloc_current (a_feature: ET_FEATURE) is
 			-- Print memory allocation of 'Current' with `a_feature' as creation procedure.
+			-- Do not call the creation procedure.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_temp: ET_IDENTIFIER
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_name: ET_IDENTIFIER
+			l_argument_name: ET_IDENTIFIER
 			old_file: KI_TEXT_OUTPUT_STREAM
+			l_item_type: ET_DYNAMIC_TYPE
 		do
 			if current_type.is_expanded then
 					-- Variable declarations.
@@ -19641,20 +19651,22 @@ feature {NONE} -- Malloc
 				current_file.put_character (')')
 				l_special_type ?= current_type
 				if l_special_type /= Void then
+					l_item_type := l_special_type.item_type_set.static_type
 					l_arguments := a_feature.arguments
 					if l_arguments = Void or else l_arguments.count /= 1 then
 							-- Internal error: the creation procedure of class SPECIAL
 							-- should have one argument of type INTEGER.
 						set_fatal_error
 						error_handler.report_giaaa_error
+						l_argument_name := formal_argument (1)
 					else
-						l_name := l_arguments.formal_argument (1).name
+						l_argument_name := l_arguments.formal_argument (1).name
 						current_file.put_character ('+')
-						print_argument_name (l_name, current_file)
+						print_argument_name (l_argument_name, current_file)
 						current_file.put_character ('*')
 						current_file.put_string (c_sizeof)
 						current_file.put_character ('(')
-						print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+						print_type_declaration (l_item_type, current_file)
 						current_file.put_character (')')
 					end
 				end
@@ -19678,10 +19690,62 @@ feature {NONE} -- Malloc
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
-					print_argument_name (l_name, current_file)
+					print_argument_name (l_argument_name, current_file)
 					current_file.put_character (';')
 					current_file.put_new_line
--- TODO: initialize items when expanded.
+						-- Initialize items when expanded.
+					if not l_item_type.is_expanded then
+						-- Do nothing.
+					elseif l_item_type.is_generic or else l_item_type.has_generic_expanded_attributes then
+						l_temp := new_temp_variable (current_system.integer_type)
+						print_indentation
+						current_file.put_string (c_for)
+						current_file.put_character (' ')
+						current_file.put_character ('(')
+						print_temp_name (l_temp, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_argument_name (l_argument_name, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('-')
+						current_file.put_character (' ')
+						current_file.put_character ('1')
+						current_file.put_character (';')
+						current_file.put_character (' ')
+						print_temp_name (l_temp, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('>')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_character ('0')
+						current_file.put_character (';')
+						current_file.put_character (' ')
+						print_temp_name (l_temp, current_file)
+						current_file.put_character ('-')
+						current_file.put_character ('-')
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_character ('{')
+						current_file.put_new_line
+						indent
+						print_indentation
+						print_attribute_special_item_access (tokens.current_keyword, l_special_type, False)
+						current_file.put_character ('[')
+						print_temp_name (l_temp, current_file)
+						current_file.put_character (']')
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_default_name (l_item_type, current_file)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+						print_indentation
+						current_file.put_character ('}')
+						current_file.put_new_line
+						mark_temp_variable_free (l_temp)
+					end
 				end
 			end
 		end
