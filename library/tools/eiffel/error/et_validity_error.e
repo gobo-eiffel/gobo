@@ -12397,6 +12397,7 @@ feature {NONE} -- Implementation
 invariant
 
 	current_class_not_void: current_class /= Void
+	class_impl_not_void: class_impl /= Void
 	class_impl_preparsed: class_impl.is_preparsed
 
 end

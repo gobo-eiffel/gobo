@@ -25,8 +25,6 @@ feature -- Access
 			-- Class where current error was written
 		do
 			Result := current_class
-		ensure
-			class_impl_not_void: class_impl /= Void
 		end
 
 	position: ET_POSITION
