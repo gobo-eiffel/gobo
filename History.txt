@@ -37,6 +37,10 @@ Version 3.8 - ?
 	* Added additional XSLT system-properties, and the ability to
 	  register additional system properties. Documented this.
 
+	Gobo String library
+
+	* Added full Unicode case-mapping routines.
+
 Version 3.7 - 5 November 2007
 
 	gec:
