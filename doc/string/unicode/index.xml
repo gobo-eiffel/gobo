@@ -43,6 +43,16 @@ This documentation is structured as follows:
 		</para></listitem>
 	</varlistentry>
 
+ 
+	<varlistentry>
+		<term>
+			<link linkend="case">Case mapping</link>
+		</term>
+		<listitem><para>
+			Routines for performing case mapping
+		</para></listitem>
+	</varlistentry>
+
 	<varlistentry>
 		<term>
 			<link linkend="about">About Unicode normalization</link>

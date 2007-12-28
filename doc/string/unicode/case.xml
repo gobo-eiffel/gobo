@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Unicode full case mappings"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/unicode/case">
+
+<chapterinfo>
+	<copyright>
+		<year>2007</year>
+		<holder>Colin Adams</holder>
+	</copyright>
+	<author>
+		<firstname>Colin</firstname><surname>Adams</surname>
+	</author>
+	<email>colin-adams@users.sourceforge.net</email>
+	<date>4 November 2007</date>
+</chapterinfo>
+
+<title>Unicode full case mappings</title>
+
+<section>
+<title>About full case mappings</title>
+
+<para>
+	Traditionally, <classname>STRING</classname> provides <featurename>as_lower</featurename> and <featurename>as_upper</featurename>
+	for casing Latin-1 strings. The Gobo kernel library adds full Unicode versions in class <classname>UC_TYPE</classname> (and additionally
+	a routine for providing a title-cased string. Title casing differs from upper casing the first character and lower-casing the rest, as some Unicode
+	characters have a different form for title casing than for upper casing). However all these routines assume that strings don't change length
+	under case mappings. This is not always true. For example, the german word &quot;e&#xdf;en&quot; (to eat) traditionally upper cases to &quot;ESSEN&quot;.
+	The upper cased version is one character longer than the lower cased version.
+</para>
+	Except in legacy applications which expect strings not to change length, the traditional casing routines should not be used. Instead the full case mapping
+	routines provided in this library should be used to get correct behaviour. Note that these casings are default mappings. The Unicode database provides additional
+	locale-dependent and contextual forms (an example of the latter is final Greek sigma). These additional forms will be provided in the future on demand.
+<para>
+</para>
+
+</section>
+
+<section>
+<title>How to access the full case mapping routines provided by the library</title>
+
+<para>
+	The full case mapping routines provided by the library are defined in the deferred class 
+	<classname>ST_UNICODE_CASE_MAPPING_INTERFACE</classname>. In order to gain access to these routines
+	you can either inherit from <classname>ST_UNICODE_FULL_CASE_MAPPING</classname>, which
+	provides information from the latest available version of unicode. Or you can inherit from a class
+	for a particular version of Unicode (e.g. <classname>ST_UNICODE_V5000_FULL_CASE_MAPPING</classname> for Unicode version 5.0.0).
+</para>
+
+</section>
+
+</chapter>
