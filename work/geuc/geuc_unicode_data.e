@@ -155,6 +155,42 @@ feature -- Access
 	decomposition_mapping: DS_ARRAYED_LIST [INTEGER]
 			-- Decomposition mapping;
 
+	lower_mapping: DS_ARRAYED_LIST [INTEGER] is
+			-- Full mapping to lower case
+		do
+			Result := optional_lower_mapping
+			if Result = Void then
+				if lower_code /= -1 then
+					create Result.make (1)
+					Result.put (lower_code, 1)
+				end
+			end
+		end
+
+	title_mapping: DS_ARRAYED_LIST [INTEGER] is
+			-- Full mapping to title case
+		do
+			Result := optional_title_mapping
+			if Result = Void then
+				if title_code /= -1 then
+					create Result.make (1)
+					Result.put (title_code, 1)
+				end
+			end
+		end
+
+	upper_mapping: DS_ARRAYED_LIST [INTEGER] is
+			-- Full mapping to upper case
+		do
+			Result := optional_upper_mapping
+			if Result = Void then
+				if upper_code /= -1 then
+					create Result.make (1)
+					Result.put (upper_code, 1)
+				end
+			end
+		end
+
 	decimal_digit_value: INTEGER_8 is
 			-- Value of `Current' as a decimal digit
 		require
@@ -367,6 +403,84 @@ feature -- Status report
 			end
 		end
 
+feature -- Setting
+
+	set_special_case_mappings (a_lower, a_title, a_upper: STRING) is
+			-- Set `lower_mapping', `title_mapping' and `upper_mapping' from `a_lower', `a_title' and `a_upper' respectively.
+		require
+			a_lower_not_void: a_lower /= Void
+			a_title_not_void: a_title /= Void
+			a_upper_not_void: a_upper /= Void
+		local
+			l_result: DS_CELL [DS_ARRAYED_LIST [INTEGER]]
+		do
+			create l_result.make (Void)
+			create_special_casing_codes (l_result, a_lower)
+			optional_lower_mapping := l_result.item
+			create l_result.make (Void)
+			create_special_casing_codes (l_result, a_title)
+			optional_title_mapping := l_result.item
+			create l_result.make (Void)
+			create_special_casing_codes (l_result, a_upper)
+			optional_upper_mapping := l_result.item
+		ensure
+			optional_lower_mapping_not_void: optional_lower_mapping /= Void
+			optional_title_mapping_not_void: optional_title_mapping /= Void
+			optional_upper_mapping_not_void: optional_upper_mapping /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	optional_lower_mapping: DS_ARRAYED_LIST [INTEGER]
+			-- Optional special mapping to lower case
+
+	optional_title_mapping: DS_ARRAYED_LIST [INTEGER]
+			-- Optional special mapping to title case
+
+	optional_upper_mapping: DS_ARRAYED_LIST [INTEGER]
+			-- Optional special mapping to upper case
+
+	create_special_casing_codes (a_result: DS_CELL [DS_ARRAYED_LIST [INTEGER]]; a_string: STRING) is
+			-- Create sequence of code-points decoded from `a_string' and place in `a_result'.
+		require
+			a_result_not_void: a_result /= Void
+			a_result_empty: a_result.item = Void
+			a_string_not_void: a_string /= Void
+			a_string_not_empty: not a_string.is_empty
+		local
+			l_splitter: ST_SPLITTER
+			l_fields: DS_LIST [STRING]
+			l_result: DS_ARRAYED_LIST [INTEGER]
+		do
+			create l_splitter.make
+			l_fields := l_splitter.split (a_string)
+			if l_fields.is_empty then
+				is_valid := False
+			else
+				create l_result.make (l_fields.count)
+				l_fields.do_all (agent append_code_point (l_result, ?))
+				a_result.put (l_result)
+			end
+		ensure
+			special_casing_codes_created: a_result.item /= Void
+		end
+
+	append_code_point (a_result: DS_ARRAYED_LIST [INTEGER]; a_field: STRING) is
+			-- Decode and append `a_field' onto `a_result'.
+			-- Set `is_valid' to `False' if decoding fails.
+		require
+			a_result_not_void: a_result /= Void
+			a_field_not_void: a_field /= Void
+		do
+			if STRING_.is_hexadecimal (a_field) then
+				a_result.force_last (STRING_.hexadecimal_to_integer (a_field))
+			else
+				is_valid := False
+			end
+		ensure
+			one_more_or_invalid: (a_result.count = old a_result.count + 1) or not is_valid
+		end
+	
 invariant
 
 	code_large_enough: code >= 0

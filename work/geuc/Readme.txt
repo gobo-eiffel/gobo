@@ -65,7 +65,7 @@ The following files need to be imported:
  ftp://www.unicode.org/Public/UNIDATA/UnicodeData.txt
  ftp://www.unicode.org/Public/UNIDATA/DerivedCoreProperties.txt
  ftp://www.unicode.org/Public/UNIDATA/DerivedNormalizationProps.txt
- ftp://www.unicode.org/Public/UNIDATA/CaseFolding.txt
+ ftp://www.unicode.org/Public/UNIDATA/SpecialCasing.txt
 
 Do NOT add these files to SVN.
 
@@ -116,6 +116,9 @@ E.g. ST_UNICODE_CHARACTER_CLASS_ROUTINES has a corresponding shared access
 class ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES, and
 ST_UNICODE_V410_CHARACTER_CLASS_ROUTINES has
 ST_IMPORTED_UNICODE_V410_CHARACTER_CLASS_ROUTINES 
+
+Also, create a UC_Vnnn_CTYPE class (use an existing one as a model) and
+if it is the latest version, change UC_CTYPE to inherit from it.
 
 7) Fetch the file:
 
