@@ -322,7 +322,7 @@ feature {NONE} -- Feature validity
 				if suppliers_enabled then
 					universe.set_supplier_handler (old_supplier_handler)
 				end
-			elseif not flat_dbc_mode then
+			elseif flat_dbc_mode then
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
 					check_assertions_validity (l_query, l_query, a_flat_only, an_error_in_parent)
