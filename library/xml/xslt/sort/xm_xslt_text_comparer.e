@@ -14,7 +14,7 @@ class XM_XSLT_TEXT_COMPARER
 
 inherit
 	
-	KL_COMPARATOR [XM_XPATH_ITEM]
+	KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 
 create
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialiaztion
 
-	make (a_comparer: KL_COMPARATOR [XM_XPATH_ITEM]) is
+	make (a_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]) is
 			-- Establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 	collator: ST_COLLATOR
 			-- Collator used to perform string comparisons
 
-	comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+	comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			-- Comparator used to perform string comparisons
 
 invariant

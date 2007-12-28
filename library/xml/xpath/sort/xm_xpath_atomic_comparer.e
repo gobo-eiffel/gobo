@@ -14,7 +14,7 @@ class XM_XPATH_ATOMIC_COMPARER
 
 inherit
 
-	KL_COMPARATOR  [XM_XPATH_ATOMIC_VALUE]
+	KL_PART_COMPARATOR  [XM_XPATH_ATOMIC_VALUE]
 
 	XM_XPATH_EXCEPTION_ROUTINES
 		export {NONE} all end
@@ -98,19 +98,7 @@ feature -- Status report
 			first_value_not_void: an_atomic_value /= Void
 			second_value_not: another_atomic_value /= Void
 		do
-			if an_atomic_value.is_untyped_atomic then
-				Result := an_atomic_value.as_untyped_atomic.is_comparable (another_atomic_value)
-			else
-				if an_atomic_value.is_numeric_value then
-					Result := an_atomic_value.as_numeric_value.is_comparable (another_atomic_value)
-				else
-					if an_atomic_value.is_string_value then
-						Result := an_atomic_value.as_string_value.is_comparable (another_atomic_value)
-					else
-						Result := an_atomic_value.is_comparable (another_atomic_value)
-					end
-				end
-			end
+			Result := an_atomic_value.is_comparable (another_atomic_value)
 		end
 
 feature -- Element change

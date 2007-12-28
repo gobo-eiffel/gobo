@@ -14,7 +14,7 @@ deferred class	XM_XPATH_NODE_ORDER_COMPARER
 
 inherit
 
-	DS_COMPARATOR [XM_XPATH_NODE]
+	KL_PART_COMPARATOR [XM_XPATH_NODE]
 
 feature -- Comparison
 

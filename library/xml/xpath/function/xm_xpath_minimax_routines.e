@@ -125,7 +125,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {NONE} -- Implementation
 
-	local_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+	local_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 	atomic_value, second_atomic_value: XM_XPATH_ATOMIC_VALUE
 	primitive_type, second_primitive_type: INTEGER
 	already_finished: BOOLEAN
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not already_finished then
-						if local_comparer.less_equal (second_atomic_value, atomic_value) then
+						if not local_comparer.less_than (atomic_value, second_atomic_value) then
 							atomic_value := second_atomic_value
 						end
 					end

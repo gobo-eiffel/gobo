@@ -19,6 +19,9 @@ inherit
 			evaluate_item
 		end
 
+	ST_UNICODE_FULL_CASE_MAPPING
+		export {NONE} all end
+
 create
 
 	make
@@ -66,7 +69,7 @@ feature -- Evaluation
 			if a_result.item = Void or else not a_result.item.is_atomic_value then
 				a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 			else
-				a_result.put (create {XM_XPATH_STRING_VALUE}.make (a_result.item.as_atomic_value.string_value.as_lower))
+				a_result.put (create {XM_XPATH_STRING_VALUE}.make (lower_utf8_string (a_result.item.as_atomic_value.string_value)))
 			end
 		end
 

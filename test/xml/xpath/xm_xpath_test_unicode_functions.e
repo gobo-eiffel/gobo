@@ -39,6 +39,42 @@ inherit
 		
 feature -- Tests
 
+	test_upper_case is
+			-- Test fn:upper-case().
+		local
+			l_evaluator: XM_XPATH_EVALUATOR
+			l_evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			l_function: STRING
+		do
+			create l_evaluator.make (18, False)
+			l_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
+			assert ("Build successfull", not l_evaluator.was_build_error)
+			l_function := STRING_.concat ("upper-case('", Lower_essen)
+			l_evaluator.evaluate (STRING_.appended_string (l_function, "')"))
+			assert ("No evaluation error", not l_evaluator.is_error)
+			l_evaluated_items := l_evaluator.evaluated_items
+			assert ("One evaluated item", l_evaluated_items /= Void and then l_evaluated_items.count = 1)
+			assert ("String value", l_evaluated_items.item (1).is_string_value)
+			assert ("Correct result", STRING_.same_string (Upper_essen, l_evaluated_items.item (1).as_string_value.string_value))
+		end
+
+	test_lower_case is
+			-- Test fn:lower-case().
+		local
+			l_evaluator: XM_XPATH_EVALUATOR
+			l_evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create l_evaluator.make (18, False)
+			l_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
+			assert ("Build successfull", not l_evaluator.was_build_error)
+			l_evaluator.evaluate ("lower-case('ESSEN')")
+			assert ("No evaluation error", not l_evaluator.is_error)
+			l_evaluated_items := l_evaluator.evaluated_items
+			assert ("One evaluated item", l_evaluated_items /= Void and then l_evaluated_items.count = 1)
+			assert ("String value", l_evaluated_items.item (1).is_string_value)
+			assert ("Correct result", STRING_.same_string (Unorthodox_essen, l_evaluated_items.item (1).as_string_value.string_value))
+		end
+	
 	test_codepoints_to_string is
 			-- Test fn:codepoints-to-string((2309, 2358, 2378, 2325)).
 		local
@@ -255,6 +291,15 @@ feature {NONE} -- Implementation
 		ensure
 			four_characters: Result /= Void and then Result.count = 4
 		end
+
+	Lower_essen: STRING is "e%/223/en"
+			-- German verb meaning 'to eat'
+
+	Upper_essen: STRING is "ESSEN"
+			-- German verb meaning 'to eat'
+
+	Unorthodox_essen: STRING is "essen"
+			-- German verb meaning 'to eat' with unorthodox spelling
 
 end
 

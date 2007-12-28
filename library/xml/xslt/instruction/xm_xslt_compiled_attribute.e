@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 					set_last_error (namespace.last_evaluated_string.error_value)
 				else
 					l_uri := namespace.last_evaluated_string.string_value
-					if Url_encoding.has_excluded_characters (l_uri) then
+					if Url_encoding.has_excluded_characters (l_uri) or l_uri.occurrences ('#') > 1 then
 						create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
 						set_last_error (l_error)
 					else

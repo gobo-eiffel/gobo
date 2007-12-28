@@ -14,7 +14,7 @@ class XM_XSLT_CASE_ORDER_COMPARER
 
 inherit
 
-	KL_COMPARATOR [XM_XPATH_ITEM]
+	KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 	ST_UNICODE_CHARACTER_CLASS_ROUTINES
 		export {NONE} all end
@@ -99,7 +99,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+	comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			-- Base comparer for when there
 
 invariant

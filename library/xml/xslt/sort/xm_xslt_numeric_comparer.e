@@ -14,7 +14,7 @@ class XM_XSLT_NUMERIC_COMPARER
 
 inherit
 	
-	KL_COMPARATOR [XM_XPATH_ITEM]
+	KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 feature -- Comparison
 

@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
+			create imports.make_default
+			imports.set_equality_tester (string_equality_tester)
 			create named_templates_index.make_map (5)
 			create variables_index.make_map (5)
 			create namespace_alias_list.make (5)
@@ -67,6 +69,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	imports: DS_HASH_SET [STRING]
+			-- Href attribute values of all included and imported stylesheet modules (if `Current' is the principal stylesheet module)
 
 	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
 			-- Map of collation names to collators
@@ -1337,6 +1342,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	imports_not_void: imports /= Void
 	named_templates_index_not_void: named_templates_index /= Void
 	variables_index_not_void: variables_index /= Void
 	positive_largest_stack_frame: largest_pattern_stack_frame >= 0

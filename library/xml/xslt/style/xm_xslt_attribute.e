@@ -182,25 +182,27 @@ feature -- Element change
 						compile_fixed_attribute (an_executable, a_name_code)
 					elseif namespace.is_string_value then
 						namespace_uri := namespace.as_string_value.string_value
-						if Url_encoding.has_excluded_characters (namespace_uri) then
+						if Url_encoding.has_excluded_characters (namespace_uri) or namespace_uri.occurrences ('#') > 1 then
 							create l_error.make_from_string ("Namespace does not conform to xs:anyURI", Xpath_errors_uri, "XTDE0865", Dynamic_error)
-							set_last_error (l_error)
+							report_compile_error (l_error)
 						elseif namespace_uri.count > 0 then
 							create l_uri.make (namespace_uri)
 							-- TODO: - need validation checking in UT_URI
 						end
-						if namespace_uri.count = 0 then
-							qname_prefix := ""
-						elseif qname_prefix.count = 0 then
-							choose_arbitrary_qname_prefix
+						if not any_compile_errors then
+							if namespace_uri.count = 0 then
+								qname_prefix := ""
+							elseif qname_prefix.count = 0 then
+								choose_arbitrary_qname_prefix
+							end
+							if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
+								a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
+							else
+								shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
+								a_name_code := shared_name_pool.last_name_code
+							end
+							compile_fixed_attribute (an_executable, a_name_code)
 						end
-						if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
-							a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
-						else
-							shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
-							a_name_code := shared_name_pool.last_name_code
-						end
-						compile_fixed_attribute (an_executable, a_name_code)
 					end
 				end
 			end

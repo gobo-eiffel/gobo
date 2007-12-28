@@ -78,7 +78,7 @@ feature -- Access
 	collator: ST_COLLATOR
 			-- Collator
 
-	comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+	comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			-- Object that performs comparisons
 
 	reduced_definition (a_context: XM_XSLT_EVALUATION_CONTEXT):  XM_XSLT_FIXED_SORT_KEY_DEFINITION is
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void			
 		local
 			l_message: STRING
-			l_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+			l_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			l_base_collator: ST_COLLATOR
 			l_role: XM_XPATH_ROLE_LOCATOR
 		do
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	case_order_comparer (a_base_comparer: KL_COMPARATOR [XM_XPATH_ITEM];  a_context: XM_XSLT_EVALUATION_CONTEXT): KL_COMPARATOR [XM_XPATH_ITEM] is
+	case_order_comparer (a_base_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM];  a_context: XM_XSLT_EVALUATION_CONTEXT): KL_PART_COMPARATOR [XM_XPATH_ITEM] is
 			-- Comparer that implements `case_order'
 		require
 			base_comparer_not_void: a_base_comparer /= Void
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			comparer_not_void: not is_error implies Result /= Void
 		end
 
-	ordered_comparer (a_base_comparer: KL_COMPARATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT): KL_COMPARATOR [XM_XPATH_ITEM] is
+	ordered_comparer (a_base_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]; a_context: XM_XSLT_EVALUATION_CONTEXT): KL_PART_COMPARATOR [XM_XPATH_ITEM] is
 			-- Comparer that implements `order'
 		require
 			base_comparer_not_void: a_base_comparer /= Void

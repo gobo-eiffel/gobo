@@ -14,7 +14,7 @@ class XM_XPATH_DESCENDING_COMPARER
 
 inherit
 	
-	KL_COMPARATOR [XM_XPATH_ITEM]
+	KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 create
 
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_comparer: KL_COMPARATOR [XM_XPATH_ITEM]) is
+	make (a_base_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]) is
 			-- Establish invariant.
 		require
 			base_comparer_not_void: a_base_comparer /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	base_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+	base_comparer: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 
 feature -- Comparison
 

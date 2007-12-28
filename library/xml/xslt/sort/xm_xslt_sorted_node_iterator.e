@@ -19,7 +19,7 @@ inherit
 			is_last_position_finder, last_position
 		end
 
-	KL_COMPARATOR [XM_XSLT_NODE_SORT_RECORD]
+	KL_PART_COMPARATOR [XM_XSLT_NODE_SORT_RECORD]
 
 	XM_XPATH_EXCEPTION_ROUTINES
 		export {NONE} all end
@@ -121,7 +121,7 @@ feature -- Status report
 			l_index: INTEGER
 			l_finished: BOOLEAN
 			l_comparison: INTEGER
-			l_comparator: KL_COMPARATOR [XM_XPATH_ITEM]
+			l_comparator: KL_PART_COMPARATOR [XM_XPATH_ITEM]
 			l_atomic: XM_XPATH_ATOMIC_COMPARER
 			l_descending: XM_XPATH_DESCENDING_COMPARER
 		do
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 	context: XM_XSLT_EVALUATION_CONTEXT
 			-- Evaluation context
 
-	key_comparers: DS_ARRAYED_LIST [KL_COMPARATOR [XM_XPATH_ITEM]]
+	key_comparers: DS_ARRAYED_LIST [KL_PART_COMPARATOR [XM_XPATH_ITEM]]
 			-- Comparers
 
 	node_keys: DS_ARRAYED_LIST [XM_XSLT_NODE_SORT_RECORD]
