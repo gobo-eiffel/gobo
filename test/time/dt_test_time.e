@@ -148,4 +148,19 @@ feature -- Test
 			assert_equal ("set_millisecond_count", t2, t1)
 		end
 
+	text_xslt_formatting is
+			-- Test feature `xslt_formatted' of class DT_TIME.
+		local
+			l_time: DT_TIME
+			l_result: DT_FORMAT_DATE_TIME_RESULT
+		do
+
+			create l_time.make (4, 23, 56)
+			l_result := l_time.xslt_formatted (Void, "[h]:[m] [P,2-2]", Void, Void, Void)
+			assert ("Result not void", l_result /= Void)
+			assert ("No error", not l_result.is_error)
+			assert ("Non-void value", l_result.value /= Void)
+			assert_strings_equal ("Correct result", "4:23 AM", l_result.value)
+		end
+
 end

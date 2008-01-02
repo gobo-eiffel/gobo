@@ -12,7 +12,7 @@ class XM_XSLT_NUMBER_FORMATTER
 
 inherit
 
-	XM_XSLT_STRING_ROUTINES
+	DT_STRING_ROUTINES
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
@@ -93,7 +93,7 @@ feature -- Access
 
 	formatted_string (a_numbers: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE];
 							a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING;
-							a_numberer: XM_XSLT_NUMBERER): STRING is
+							a_numberer: DT_XSLT_NUMBERER): STRING is
 			-- Formatted string
 		require
 			a_numbers_not_void: a_numbers /= Void

@@ -18,8 +18,6 @@ inherit
 	
 	MA_DECIMAL_CONTEXT_CONSTANTS
 
-	MA_SHARED_DECIMAL_CONSTANTS
-
 feature -- Access
 
 	shared_integer_context: MA_DECIMAL_CONTEXT is

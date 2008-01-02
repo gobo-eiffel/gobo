@@ -19,7 +19,7 @@ inherit
 			make_style_element, validate, allows_required, allows_value, is_param, as_param
 		end
 
-	XM_XSLT_STRING_ROUTINES
+	DT_STRING_ROUTINES
 
 	XM_XPATH_ROLE
 

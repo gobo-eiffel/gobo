@@ -508,6 +508,50 @@ feature -- Output
 			end
 		end
 
+	xslt_formatted (a_zone: DT_FIXED_OFFSET_TIME_ZONE; a_picture, a_language, a_calendar, a_country: STRING): DT_FORMAT_DATE_TIME_RESULT is
+			-- `Current' formatted according to XSLT's format-time() function;
+			-- See http://www.w3.org/TR/xslt20/#format-date for a detailed description.
+			-- Passing `Void' for `a_language' defaults to "en".
+			-- Passing `Void' for `a_calendar' defaults to "CE".
+			-- Passing `Void' for `a_country' defaults to "US".
+		require
+			a_picture_not_void: a_picture /= Void
+		local
+			l_value: DT_XPATH_TIME_VALUE
+			l_zone: DT_FIXED_OFFSET_ZONED_TIME
+			l_language, l_calendar, l_country: STRING
+			l_formatter: DT_XSLT_FORMAT_DATE_TIME
+			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+		do
+			if a_zone = Void then
+				create l_value.make_from_time (Current)
+			else
+				create l_zone.make (Current, a_zone)
+				create l_value.make_from_zoned_time (l_zone)
+			end
+			create l_formatter
+			if a_language = Void then
+				l_language := l_formatter.Default_language
+			else
+				l_language := a_language
+			end
+			if a_calendar = Void then
+				l_calendar := l_formatter.Default_calendar
+			else
+				l_calendar := a_calendar
+			end
+			if a_country = Void then
+				l_country := l_formatter.Default_country
+			else
+				l_country := a_country
+			end
+			create l_result.make (Void)
+			l_formatter.format_date_time (l_result, l_value, a_picture, l_language, l_calendar, l_country)
+			Result := l_result.item
+		ensure
+			xslt_formatted_not_void: Result /= Void
+		end
+
 feature {DT_TIME_HANDLER} -- Implementation
 
 	storage: INTEGER

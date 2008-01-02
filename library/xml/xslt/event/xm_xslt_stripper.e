@@ -28,7 +28,7 @@ inherit
 	XM_XPATH_TYPE
 		export {NONE} all end
 
-	XM_XSLT_STRING_ROUTINES
+	DT_STRING_ROUTINES
 		export {NONE} all end
 
 create

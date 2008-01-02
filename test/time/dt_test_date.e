@@ -380,4 +380,19 @@ feature -- Test
 			assert_integers_equal ("week_2006_1_3", 1, a_date.week)
 		end
 
+	text_xslt_formatting is
+			-- Test feature `xslt_formatted' of class DT_DATE.
+		local
+			l_date: DT_DATE
+			l_result: DT_FORMAT_DATE_TIME_RESULT
+		do
+			-- Saturday 1 January 2005.
+			create l_date.make (2005, 1, 1)
+			l_result := l_date.xslt_formatted (Void, "[FNn] [Do] of [MNn], [Y]", Void, Void, Void)
+			assert ("Result not void", l_result /= Void)
+			assert ("No error", not l_result.is_error)
+			assert ("Non-void value", l_result.value /= Void)
+			assert_strings_equal ("Correct result", "Saturday 1st of January, 2005", l_result.value)
+		end
+
 end

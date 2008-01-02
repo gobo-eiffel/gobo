@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Support rountines for xsl:number"
+		"Support routines for xsl:number"
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_NUMBER_ROUTINES
+class DT_XSLT_NUMBER_ROUTINES
 
 inherit
 
@@ -33,7 +33,7 @@ feature -- Access
 	Simple_numbering: INTEGER is 4
 			-- Level-numbering values from xsl:number
 
-	selected_numberer (a_language: STRING): XM_XSLT_NUMBERER is
+	selected_numberer (a_language: STRING): DT_XSLT_NUMBERER is
 			-- Numberer corresponding to `a_language'
 		require
 			language_not_void: a_language /= Void
@@ -47,7 +47,7 @@ feature -- Access
 
 
 			if a_language.count > 1 and then STRING_.same_string (a_language.substring (1, 2), "en") then
-				create {XM_XSLT_NUMBERER_EN} Result
+				create {DT_XSLT_NUMBERER_EN} Result
 			end
 		end
 

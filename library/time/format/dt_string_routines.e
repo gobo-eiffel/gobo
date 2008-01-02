@@ -4,22 +4,19 @@ indexing
 
 		"Routines on strings and characters."
 
-	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_STRING_ROUTINES
+class	DT_STRING_ROUTINES
 
 inherit
 
-	XM_UNICODE_CHARACTERS_1_1
+	ANY
 
 	ST_IMPORTED_UNICODE_CHARACTER_CLASS_ROUTINES
-		export {NONE} all end
-
-	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
 feature -- Status report
@@ -37,7 +34,7 @@ feature -- Status report
 			until
 				Result = False or else counter > chars.count
 			loop
-				if not is_space (chars.item_code (counter)) then
+				if not is_xml_space (chars.item_code (counter)) then
 					Result := False
 				end
 				counter := counter + 1
@@ -54,6 +51,11 @@ feature -- Status report
 							 or else unicode_character_class.is_number (a_character_code))
 		end
 
+	is_xml_space (a_code: INTEGER): BOOLEAN is
+			-- Does `a_code' represent an XML space?
+		do
+			Result := a_code = 32 or a_code = 9 or a_code = 10 or a_code = 13
+		end
 
 end
 	

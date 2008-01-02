@@ -15,8 +15,15 @@ class XM_XPATH_TIME_VALUE
 inherit
 
 	XM_XPATH_CALENDAR_VALUE
+		undefine
+			is_xpath_time, as_xpath_time
 		redefine
 			is_time_value, as_time_value, hash_code
+		end
+
+	DT_XPATH_TIME_VALUE
+		redefine
+			make, make_from_time, make_from_zoned_time
 		end
 
 create
@@ -27,40 +34,27 @@ feature {NONE} -- Initialization
 
 	make (a_lexical_time: STRING) is
 			-- Create from lexical time.
-		require
-			lexical_time: a_lexical_time /= Void and then is_time (a_lexical_time)
-		local
-			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
 		do
 			make_atomic_value
-			create a_date_time_parser.make_1_1
-			if a_date_time_parser.is_zoned_time (a_lexical_time) then
-				zoned := True
-				zoned_time := a_date_time_parser.string_to_zoned_time (a_lexical_time)
-			else
-				local_time := a_date_time_parser.string_to_time (a_lexical_time)
+			Precursor (a_lexical_time)
+			if not zoned then
+				set_depends_upon_implicit_timezone
 			end
-			if not zoned then set_depends_upon_implicit_timezone end
 		end
 
 	make_from_time (a_time: DT_TIME) is
 			-- Create from time object.
-		require
-			time_not_void: a_time /= Void
 		do
 			make_atomic_value
-			local_time := a_time.twin
+			Precursor (a_time)
 			set_depends_upon_implicit_timezone
 		end
 
 	make_from_zoned_time (a_time: DT_FIXED_OFFSET_ZONED_TIME) is
 			-- Create from time object.
-		require
-			time_not_void: a_time /= Void
 		do
 			make_atomic_value
-			zoned_time := a_time.twin
-			zoned := True
+			Precursor (a_time)
 		end
 
 feature -- Access
@@ -120,24 +114,6 @@ feature -- Access
 				a_time := a_zone.date_time_from (a_dt, zoned_time.time_zone).time
 				create a_zoned_dt.make (a_time, a_zone)
 				create Result.make_from_zoned_time (a_zoned_dt)
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	zoned_time: DT_FIXED_OFFSET_ZONED_TIME
-			-- Zoned time value
-
-	local_time: DT_TIME
-			-- Time value without zone
-
-	time: DT_TIME is
-			-- Time components
-		do
-			if zoned then
-				Result := zoned_time.time
-			else
-				Result := local_time
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -253,18 +229,6 @@ feature -- Status report
 			-- Is `Current' a time value?
 		do
 			Result := True
-		end
-
-	is_time (a_lexical_time: STRING): BOOLEAN is
-			-- Is `a_lexical_time' a valid time?
-		require
-			lexical_time_not_void: a_lexical_time /= Void
-		local
-			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
-		do
-			create a_date_time_parser.make_1_1
-			Result := a_date_time_parser.is_zoned_time (a_lexical_time)
-				or else a_date_time_parser.is_time (a_lexical_time)
 		end
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is

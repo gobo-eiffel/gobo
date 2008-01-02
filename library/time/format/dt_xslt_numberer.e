@@ -2,17 +2,17 @@ indexing
 
 	description: "Objects that support number formatting."
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_NUMBERER
+deferred class DT_XSLT_NUMBERER
 
 inherit
 
-	XM_XSLT_NUMBER_ROUTINES
+	DT_XSLT_NUMBER_ROUTINES
 
 feature -- Access
 

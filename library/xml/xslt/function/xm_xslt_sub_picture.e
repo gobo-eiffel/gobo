@@ -168,19 +168,6 @@ feature -- Status report
 	
 feature -- Status setting
 
-	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
-			-- Set `error_value'.
-		require
-			not_in_error: not is_error		
-			error_value_not_void: an_error_value /= Void
-		do
-			error_value := an_error_value
-			is_error := True
-		ensure
-			set: error_value = an_error_value
-			in_error: is_error
-		end
-	
 	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
 			-- Set `error_value'.
 		require

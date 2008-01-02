@@ -15,8 +15,15 @@ class XM_XPATH_DATE_VALUE
 inherit
 
 	XM_XPATH_CALENDAR_VALUE
+		undefine
+			is_xpath_date, as_xpath_date
 		redefine
 			is_date_value, as_date_value, hash_code
+		end
+
+	DT_XPATH_DATE_VALUE
+		redefine
+			make, make_from_date, make_from_zoned_date
 		end
 
 create
@@ -27,40 +34,27 @@ feature {NONE} -- Initialization
 
 	make (a_lexical_date: STRING) is
 			-- Create from lexical date.
-		require
-			lexical_date: a_lexical_date /= Void and then is_date (a_lexical_date)
-		local
-			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
 		do
 			make_atomic_value
-			create a_date_time_parser.make_1_1
-			if a_date_time_parser.is_zoned_date (a_lexical_date) then
-				zoned := True
-				zoned_date := a_date_time_parser.string_to_zoned_date (a_lexical_date)
-			else
-				local_date := a_date_time_parser.string_to_date (a_lexical_date)
+			Precursor (a_lexical_date)
+			if not zoned then
+				set_depends_upon_implicit_timezone
 			end
-			if not zoned then set_depends_upon_implicit_timezone end
 		end
 
 	make_from_date (a_date: DT_DATE) is
 			-- Create from date object.
-		require
-			date_not_void: a_date /= Void
 		do
 			make_atomic_value
-			local_date := a_date.twin
+			Precursor (a_date)
 			set_depends_upon_implicit_timezone
 		end
 
 	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
 			-- Create from date object.
-		require
-			date_not_void: a_date /= Void
 		do
 			make_atomic_value
-			zoned_date := a_date.twin
-			zoned := True
+			Precursor (a_date)
 		end
 
 feature -- Access
@@ -121,22 +115,6 @@ feature -- Access
 			end
 		ensure
 			result_not_void: Result /= Void
-		end
-
-	zoned_date: DT_FIXED_OFFSET_ZONED_DATE
-			-- Zoned date value
-
-	local_date: DT_DATE
-			-- Date value without zone
-
-	date: DT_DATE is
-			-- Date component
-		do
-			if zoned then
-				Result := zoned_date.date
-			else
-				Result := local_date
-			end
 		end
 
 	hash_code: INTEGER is
@@ -245,18 +223,6 @@ feature -- Status report
 			-- Is `Current' a date value?
 		do
 			Result := True
-		end
-
-	is_date (a_lexical_date: STRING): BOOLEAN is
-			-- Is `a_lexical_date' a valid date?
-		require
-			lexical_date_not_void: a_lexical_date /= Void
-		local
-			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
-		do
-			create a_date_time_parser.make_1_1
-			Result := a_date_time_parser.is_zoned_date (a_lexical_date)
-				or else a_date_time_parser.is_date (a_lexical_date)
 		end
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is

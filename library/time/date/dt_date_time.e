@@ -24,7 +24,7 @@ inherit
 			storage as date_storage,
 			set_storage as set_date_storage
 		undefine
-			out, append_to_string
+			out, append_to_string, xslt_formatted
 		redefine
 			add_duration, duration,
 			infix "<", hash_code
@@ -42,7 +42,7 @@ inherit
 		undefine
 			append_to_string, append_precise_to_string,
 			infix "<", hash_code, out, precise_out,
-			canonical_duration
+			canonical_duration, xslt_formatted
 		redefine
 			add_hours, add_minutes, add_seconds,
 			add_milliseconds, add_duration, duration
@@ -336,6 +336,48 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			Result := date_storage = other.date_storage and time_storage = other.time_storage
+		end
+
+feature -- Output
+
+	xslt_formatted (a_zone: DT_FIXED_OFFSET_TIME_ZONE; a_picture, a_language, a_calendar, a_country: STRING): DT_FORMAT_DATE_TIME_RESULT is
+			-- `Current' formatted according to XSLT's format-date-time() function;
+			-- See http://www.w3.org/TR/xslt20/#format-date for a detailed description.
+			-- Passing `Void' for `a_language' defaults to "en".
+			-- Passing `Void' for `a_calendar' defaults to "CE".
+			-- Passing `Void' for `a_country' defaults to "US".
+		local
+			l_value: DT_XPATH_DATE_TIME_VALUE
+			l_zone: DT_FIXED_OFFSET_ZONED_DATE_TIME
+			l_language, l_calendar, l_country: STRING
+			l_formatter: DT_XSLT_FORMAT_DATE_TIME
+			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+		do
+			if a_zone = Void then
+				create l_value.make_from_date_time (Current)
+			else
+				create l_zone.make (Current, a_zone)
+				create l_value.make_from_zoned_date_time (l_zone)
+			end
+			create l_formatter
+			if a_language = Void then
+				l_language := l_formatter.Default_language
+			else
+				l_language := a_language
+			end
+			if a_calendar = Void then
+				l_calendar := l_formatter.Default_calendar
+			else
+				l_calendar := a_calendar
+			end
+			if a_country = Void then
+				l_country := l_formatter.Default_country
+			else
+				l_country := a_country
+			end
+			create l_result.make (Void)
+			l_formatter.format_date_time (l_result, l_value, a_picture, l_language, l_calendar, l_country)
+			 Result := l_result.item
 		end
 
 end

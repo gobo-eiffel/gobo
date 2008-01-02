@@ -2,19 +2,19 @@ indexing
 
 	description: "Objects that support number formatting for language en."
 
-	library: "Gobo Eiffel XSLT Library"
+	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_NUMBERER_EN
+class DT_XSLT_NUMBERER_EN
 
 inherit
 
-	XM_XSLT_NUMBERER
+	DT_XSLT_NUMBERER
 
-	XM_XSLT_STRING_ROUTINES
+	DT_STRING_ROUTINES
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -26,9 +26,6 @@ inherit
 		export {NONE} all end
 
 	UC_UNICODE_FACTORY
-		export {NONE} all end
-
-	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
 feature -- Access

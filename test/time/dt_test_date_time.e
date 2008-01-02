@@ -45,4 +45,19 @@ feature -- Test
 			assert_equal ("time_duration2", td1, dt1.time_duration (dt2))
 		end
 
+	text_xslt_formatting is
+			-- Test feature `xslt_formatted' of class DT_DATE_TIME.
+		local
+			l_date_time: DT_DATE_TIME
+			l_result: DT_FORMAT_DATE_TIME_RESULT
+		do
+			-- Saturday 1 January 2005, 21:45:15.
+			create l_date_time.make (2005, 1, 1, 21, 45, 15)
+			l_result := l_date_time.xslt_formatted (Void, "[h]:[m] [P] on [FNn] [Do] of [MNn], [Y]", Void, Void, Void)
+			assert ("Result not void", l_result /= Void)
+			assert ("No error", not l_result.is_error)
+			assert ("Non-void value", l_result.value /= Void)
+			assert_strings_equal ("Correct result", "9:45 P.M. on Saturday 1st of January, 2005", l_result.value)
+		end
+
 end
