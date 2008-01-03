@@ -255,18 +255,13 @@ feature {NONE} -- Processing
 		require
 			a_universe_not_void: a_universe /= Void
 		local
-			a_null_error_handler: ET_NULL_ERROR_HANDLER
 			a_system: ET_SYSTEM
 			a_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
-			if is_silent then
-				create a_null_error_handler.make_standard
-				a_universe.set_error_handler (a_null_error_handler)
-			end
 --			a_universe.error_handler.set_compilers
 			a_universe.error_handler.set_ise
 			a_universe.error_handler.set_verbose (is_verbose)
-			a_universe.error_handler.set_benchmark_shown (True)
+			a_universe.error_handler.set_benchmark_shown (not is_silent or is_verbose)
 			if ise_version = Void then
 				ise_version := ise_latest
 			end

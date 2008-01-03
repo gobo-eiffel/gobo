@@ -69,6 +69,7 @@
 			<attribute name="default_test" value="true" if="${default_test}=true"/>
 			<define name="debug" value="true" if="${debug}"/>
 			<define name="full_test" value="true" if="${full_test}"/>
+			<define name="test" value="${test}" if="${test}"/>
 		</getest>
 	</target>
 

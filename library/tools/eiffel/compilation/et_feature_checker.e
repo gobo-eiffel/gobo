@@ -3268,6 +3268,9 @@ feature {NONE} -- Instruction validity
 										check_actual_arguments_validity (l_actuals, l_actual_context, l_precursor_keyword, l_procedure, l_class)
 										if not has_fatal_error then
 											report_precursor_instruction (an_instruction, l_parent_type, l_procedure)
+											if precursor_procedures /= Void then
+												precursor_procedures.force_last (l_procedure)
+											end
 										end
 									end
 									free_context (l_actual_context)
@@ -6034,6 +6037,9 @@ feature {NONE} -- Expression validity
 -- TODO: like argument and get the type as it was in the parent.
 											a_context.force_last (current_feature.type)
 											report_precursor_expression (an_expression, l_parent_type, l_query)
+											if precursor_queries /= Void then
+												precursor_queries.force_last (l_query)
+											end
 										end
 									end
 									free_context (l_actual_context)
@@ -10907,7 +10913,7 @@ feature {NONE} -- Access
 	current_target_type: ET_TYPE_CONTEXT
 			-- Type of the target of expression being processed
 
-feature {ET_FEATURE_CHECKER} -- Status report
+feature {NONE} -- Status report
 
 	in_rescue: BOOLEAN
 			-- Are we processing a rescue clause?
@@ -10926,6 +10932,32 @@ feature {ET_FEATURE_CHECKER} -- Status report
 
 	in_precursor: BOOLEAN
 			-- Are we processing a precursor feature?
+
+feature -- Precursors
+
+	precursor_queries: DS_HASH_SET [ET_QUERY]
+			-- Queries associated with precursor expressions succesfully processed
+			-- will be added to this set when not Void
+
+	precursor_procedures: DS_HASH_SET [ET_PROCEDURE]
+			-- Procedures associated with precursor instructions succesfully processed
+			-- will be added to this set when not Void
+
+	set_precursor_queries (a_query_set: like precursor_queries) is
+			-- Set `precursor_queries' to `a_query_set'.
+		do
+			precursor_queries := a_query_set
+		ensure
+			precursor_queries_set: precursor_queries = a_query_set
+		end
+
+	set_precursor_procedures (a_procedure_set: like precursor_procedures) is
+			-- Set `precursor_procedures' to `a_procedure_set'.
+		do
+			precursor_procedures := a_procedure_set
+		ensure
+			precursor_procedures_set: precursor_procedures = a_procedure_set
+		end
 
 feature {NONE} -- Overloading (useful in .NET)
 

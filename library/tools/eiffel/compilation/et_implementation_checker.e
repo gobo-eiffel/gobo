@@ -5,7 +5,7 @@ indexing
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 		do
 			make_class_processor (a_universe)
 			create feature_checker.make (a_universe)
+			create precursor_procedures.make (10)
+			create precursor_queries.make (10)
 			create l_suppliers.make (10000)
 			create supplier_builder.make (a_universe)
 			supplier_builder.set (current_class, l_suppliers)
@@ -56,6 +58,8 @@ feature {NONE} -- Initialization
 		do
 			make_class_processor (a_universe)
 			feature_checker := a_feature_checker
+			create precursor_procedures.make (10)
+			create precursor_queries.make (10)
 			create l_suppliers.make (10000)
 			create supplier_builder.make (a_universe)
 			supplier_builder.set (current_class, l_suppliers)
@@ -312,11 +316,7 @@ feature {NONE} -- Feature validity
 					l_query := l_queries.item (i)
 					l_query.reset_implementation_checked
 					l_query.reset_assertions_checked
-					feature_checker.check_feature_validity (l_query, current_class)
-					if feature_checker.has_fatal_error then
-						set_fatal_error (current_class)
-					end
-					check_assertions_validity (l_query, l_query, a_flat_only, an_error_in_parent)
+					check_query_validity (l_query, a_flat_only, an_error_in_parent)
 					i := i + 1
 				end
 				if suppliers_enabled then
@@ -334,15 +334,7 @@ feature {NONE} -- Feature validity
 				nb := l_queries.count
 				from until i > nb loop
 					l_query := l_queries.item (i)
-					feature_checker.check_feature_validity (l_query, current_class)
-					if feature_checker.has_fatal_error then
-						if a_flat_only then
-							set_flat_fatal_error (current_class)
-						else
-							set_fatal_error (current_class)
-						end
-					end
-					check_assertions_validity (l_query, l_query, a_flat_only, an_error_in_parent)
+					check_query_validity (l_query, a_flat_only, an_error_in_parent)
 					i := i + 1
 				end
 			end
@@ -357,11 +349,7 @@ feature {NONE} -- Feature validity
 					l_procedure := l_procedures.item (i)
 					l_procedure.reset_implementation_checked
 					l_procedure.reset_assertions_checked
-					feature_checker.check_feature_validity (l_procedure, current_class)
-					if feature_checker.has_fatal_error then
-						set_fatal_error (current_class)
-					end
-					check_assertions_validity (l_procedure, l_procedure, a_flat_only, an_error_in_parent)
+					check_procedure_validity (l_procedure, a_flat_only, an_error_in_parent)
 					i := i + 1
 				end
 				if suppliers_enabled then
@@ -379,22 +367,128 @@ feature {NONE} -- Feature validity
 				nb := l_procedures.count
 				from until i > nb loop
 					l_procedure := l_procedures.item (i)
-					feature_checker.check_feature_validity (l_procedure, current_class)
-					if feature_checker.has_fatal_error then
-						if a_flat_only then
-							set_flat_fatal_error (current_class)
-						else
-							set_fatal_error (current_class)
-						end
-					end
-					check_assertions_validity (l_procedure, l_procedure, a_flat_only, an_error_in_parent)
+					check_procedure_validity (l_procedure, a_flat_only, an_error_in_parent)
 					i := i + 1
 				end
 			end
 		end
 
+	check_query_validity (a_query: ET_QUERY; a_flat_only, an_error_in_parent: BOOLEAN) is
+			-- Check validity of `a_query' and, if in flat mode (unless
+			-- `an_error_in_parent' is True), recusively of the queries
+			-- associated with its precursor expressions if any.
+		require
+			a_query_not_void: a_query /= Void
+		do
+			if flat_mode and not an_error_in_parent then
+				feature_checker.set_precursor_queries (precursor_queries)
+			end
+			feature_checker.check_feature_validity (a_query, current_class)
+			feature_checker.set_precursor_queries (Void)
+			if feature_checker.has_fatal_error then
+				if a_flat_only then
+					set_flat_fatal_error (current_class)
+				else
+					set_fatal_error (current_class)
+				end
+			end
+			check_assertions_validity (a_query, a_query, a_flat_only, an_error_in_parent)
+			if flat_mode and not an_error_in_parent then
+				from precursor_queries.start until precursor_queries.after loop
+					check_precursor_query_validity (precursor_queries.item_for_iteration, a_flat_only, an_error_in_parent)
+					precursor_queries.forth
+				end
+				precursor_queries.wipe_out
+			end
+		end
+
+	check_procedure_validity (a_procedure: ET_PROCEDURE; a_flat_only, an_error_in_parent: BOOLEAN) is
+			-- Check validity of `a_procedure' and, if in flat mode (unless
+			-- `an_error_in_parent' is True), recusively of the procedures
+			-- associated with its precursor instructions if any.
+		require
+			a_procedure_not_void: a_procedure /= Void
+		do
+			if flat_mode and not an_error_in_parent then
+				feature_checker.set_precursor_procedures (precursor_procedures)
+			end
+			feature_checker.check_feature_validity (a_procedure, current_class)
+			feature_checker.set_precursor_procedures (Void)
+			if feature_checker.has_fatal_error then
+				if a_flat_only then
+					set_flat_fatal_error (current_class)
+				else
+					set_fatal_error (current_class)
+				end
+			end
+			check_assertions_validity (a_procedure, a_procedure, a_flat_only, an_error_in_parent)
+			if flat_mode and not an_error_in_parent then
+				from precursor_procedures.start until precursor_procedures.after loop
+					check_precursor_procedure_validity (precursor_procedures.item_for_iteration, a_flat_only, an_error_in_parent)
+					precursor_procedures.forth
+				end
+				precursor_procedures.wipe_out
+			end
+		end
+
 	feature_checker: ET_FEATURE_CHECKER
 			-- Feature checker
+
+feature {NONE} -- Precursor validity
+
+	check_precursor_query_validity (a_query: ET_QUERY; a_flat_only, an_error_in_parent: BOOLEAN) is
+			-- Check validity of `a_query' when associated with a precursor
+			-- expression appearing in a query of `current_class'.
+		require
+			a_query_not_void: a_query /= Void
+		do
+			if flat_mode and not an_error_in_parent then
+				feature_checker.set_precursor_queries (precursor_queries)
+			end
+			feature_checker.check_precursor_feature_validity (a_query, current_class)
+			feature_checker.set_precursor_queries (Void)
+			if feature_checker.has_fatal_error then
+				if a_flat_only then
+					set_flat_fatal_error (current_class)
+				else
+					set_fatal_error (current_class)
+				end
+			end
+				-- No need to check assertions, this has already been done
+				-- when checking the inherited assertions of the query where
+				-- the precursor expression appeared.
+		end
+
+	check_precursor_procedure_validity (a_procedure: ET_PROCEDURE; a_flat_only, an_error_in_parent: BOOLEAN) is
+			-- Check validity of `a_procedure' when associated with a precursor
+			-- instruction appearing in a procedure of `current_class'.
+		require
+			a_procedure_not_void: a_procedure /= Void
+		do
+			if flat_mode and not an_error_in_parent then
+				feature_checker.set_precursor_procedures (precursor_procedures)
+			end
+			feature_checker.check_precursor_feature_validity (a_procedure, current_class)
+			feature_checker.set_precursor_procedures (Void)
+			if feature_checker.has_fatal_error then
+				if a_flat_only then
+					set_flat_fatal_error (current_class)
+				else
+					set_fatal_error (current_class)
+				end
+			end
+				-- No need to check assertions, this has already been done
+				-- when checking the inherited assertions of the procedure
+				-- where the precursor instruction appeared.
+		end
+
+	precursor_procedures: DS_HASH_SET [ET_PROCEDURE]
+			-- Procedures associated with precursor instructions that appear
+			-- in the last feature processed
+
+	precursor_queries: DS_HASH_SET [ET_QUERY]
+			-- Queries associated with precursor expressions that appear
+			-- in the last feature processed
 
 feature {NONE} -- Assertion validity
 
@@ -525,5 +619,9 @@ invariant
 	supplier_builder_not_void: supplier_builder /= Void
 	no_suppliers_not_void: no_suppliers /= Void
 	no_suppliers_empty: no_suppliers.is_empty
+	precursor_procedures_not_void: precursor_procedures /= Void
+	no_void_precursor_procedure: not precursor_procedures.has (Void)
+	precursor_queries_not_void: precursor_queries /= Void
+	no_void_precursor_query: not precursor_queries.has (Void)
 
 end

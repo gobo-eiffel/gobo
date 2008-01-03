@@ -4,7 +4,7 @@ indexing
 
 		"Gelint test cases"
 
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,30 +37,22 @@ feature {NONE} -- Test
 		local
 			tested_eiffel_tool: STRING
 		do
-			tested_eiffel_tool := eiffel_compiler.vendor
-			if tested_eiffel_tool.is_equal ("se") then
-				compile_and_test_se (a_test_name)
-			elseif tested_eiffel_tool.is_equal ("ise") then
+			if variables.has ("test") then
+				tested_eiffel_tool := variables.value ("test")
+			else
+				tested_eiffel_tool := eiffel_compiler.vendor
+			end
+			if tested_eiffel_tool.same_string ("ise") then
 				compile_and_test_ise (a_test_name)
-			elseif tested_eiffel_tool.is_equal ("ve") then
-				compile_and_test_ve (a_test_name)
-			elseif tested_eiffel_tool.is_equal ("gelint") then
+			elseif tested_eiffel_tool.same_string ("ge") then
+				compile_and_test_gec (a_test_name)
+			elseif tested_eiffel_tool.same_string ("gec") then
+				compile_and_test_gec (a_test_name)
+			elseif tested_eiffel_tool.same_string ("gelint") then
 				compile_and_test_gelint (a_test_name)
 			else
 				assert ("unknown eiffel tool: " + tested_eiffel_tool, False)
 			end
-		end
-
-	execute_shell (a_shell_command: STRING) is
-			-- Execute `a_shell_command'.
-		require
-			a_shell_command_not_void: a_shell_command /= Void
-			a_shell_command_not_empty: a_shell_command.count > 0
-		local
-			a_command: DP_SHELL_COMMAND
-		do
-			create a_command.make (a_shell_command)
-			a_command.execute
 		end
 
 	are_output_files_equal (a_filename1, a_filename2: STRING): BOOLEAN is
@@ -76,19 +68,17 @@ feature {NONE} -- Test
 			Result := file_system.same_text_files (Execution_environment.interpreted_string (a_filename1), Execution_environment.interpreted_string (a_filename2))
 		end
 
-feature {NONE} -- Test SmartEiffel
+feature {NONE} -- Test Gobo Eiffel Compiler
 
-	compile_and_test_se (a_test_name: STRING) is
-			-- Compile and test `a_test_name' with SmartEiffel.
+	compile_and_test_gec (a_test_name: STRING) is
+			-- Compile and test `a_test_name' with gec.
 		require
 			a_test_not_void: a_test_name /= Void
 			a_test_not_empty: a_test_name.count > 0
 		local
 			a_debug: STRING
 			a_geant_filename: STRING
-			a_filename: STRING
-			successful, done: BOOLEAN
-			i: INTEGER
+			l_directory: KL_DIRECTORY
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
@@ -97,119 +87,178 @@ feature {NONE} -- Test SmartEiffel
 			end
 			a_geant_filename := geant_filename (a_test_name)
 				-- Compile program.
-			execute_shell ("geant -b " + a_geant_filename + " compile_" + a_debug + "se" + output1_log)
-			concat_output1_se
+			execute_shell ("geant -b " + a_geant_filename + " compile_" + a_debug + "ge" + output1_log)
+			concat_output1 (agent filter_output_gec)
 				-- Execute program.
 			if file_system.file_exists (program_exe) then
 				execute_shell (program_exe + output2_log)
-				concat_output2_se
+				concat_output2
 			end
 				-- Clean.
 			execute_shell ("geant -b " + a_geant_filename + " clobber" + output3_log)
-			concat_output3_se
+			concat_output3
 				-- Test.
-			from
-				i := 1
-			until
-				done
-			loop
-				a_filename := file_system.nested_pathname (rule_dirname, <<a_test_name, "output" + i.out + ".se">>)
-				if file_system.file_exists (a_filename) then
-					if are_output_files_equal (output_log_filename, a_filename) then
-						done := True
-						successful := True
-						assert ("test successful", True)
-					else
-						i := i + 1
-					end
-				else
-					done := True
-				end
-			end
-			if not successful then
-				assert ("unknown test result", False)
+			create l_directory.make (program_dirname (a_test_name))
+			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("gec"), output_log_filename)) then
+				assert ("test_passed", True)
+			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("gec"), output_log_filename)) then
+				assert ("test_failed", False)
+			else
+				assert ("unknown_test_result", False)
 			end
 		end
 
-	concat_output1_se is
-			-- Concat the logs of the compilation to 'output.log'.
+	filter_output_gec (an_input_filename, an_output_filename: STRING) is
+			-- Filter text from file `an_input_filename' and append it to the end of file `an_output_filename'.
+		require
+			an_input_filename_not_void: an_input_filename /= Void
+			an_output_filename_not_void: an_output_filename /= Void
 		local
 			out_file: KL_TEXT_OUTPUT_FILE
 			in_file: KL_TEXT_INPUT_FILE
-			in_filename: STRING
 			a_line: STRING
-			a_pattern1, a_pattern2: STRING
-			a_regexp1, a_regexp2: RX_PCRE_REGULAR_EXPRESSION
-			done: BOOLEAN
+			a_pattern1: STRING
+			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			l_empty_line: BOOLEAN
 		do
-				-- Compile regexps.
-			a_pattern1 := "\((.*[^a-zA-Z0-9_])?([a-zA-Z0-9_]+\.e)\)"
+				-- Compile regexp.
+			a_pattern1 := "BUILD FAILED!"
 			create a_regexp1.make
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
-			a_pattern2 := "File %"[^%"\n]+%" not found. Error\(s\) during `compile_to_c'\."
-			create a_regexp2.make
-			a_regexp2.compile (a_pattern2)
-			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
-			a_regexp2.optimize
 				-- Copy files.
-			create out_file.make (output_log_filename)
-			out_file.open_write
+			create out_file.make (an_output_filename)
+			out_file.open_append
 			if out_file.is_open_write then
-				from
-					in_filename := output1_log_filename
-				until
-					in_filename = Void
-				loop
-					create in_file.make (in_filename)
-					in_file.open_read
-					if in_file.is_open_read then
-						from
-							done := False
-							in_file.read_line
-						until
-							done or
-							in_file.end_of_file
-						loop
-							a_line := in_file.last_string
-							if a_regexp2.recognizes (a_line) then
-								done := True
-							else
-								a_regexp1.match (a_line)
-								a_line := a_regexp1.replace_all ("(\2\)")
-								out_file.put_line (a_line)
-								in_file.read_line
+				create in_file.make (an_input_filename)
+				in_file.open_read
+				if in_file.is_open_read then
+					from
+						in_file.read_line
+					until
+						in_file.end_of_file
+					loop
+						a_line := in_file.last_string
+						if a_regexp1.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
+						elseif a_line.is_empty then
+							l_empty_line := True
+						else
+							if l_empty_line then
+								out_file.put_new_line
+								l_empty_line := False
 							end
+							out_file.put_line (a_line)
 						end
-						in_file.close
-					else
-						assert ("cannot open file '" + in_filename + "'", False)
+						a_regexp1.wipe_out
+						in_file.read_line
 					end
-					if in_filename = output1_log_filename then
-						in_filename := error1_log_filename
-					else
-						in_filename := Void
+					in_file.close
+					if l_empty_line then
+						out_file.put_new_line
+						l_empty_line := False
 					end
+				else
+					assert ("cannot open file '" + an_input_filename + "'", False)
 				end
 				out_file.close
 			else
-				assert ("cannot open file '" + output_log_filename + "'", False)
+				assert ("cannot open file '" + an_output_filename + "'", False)
 			end
 		end
 
-	concat_output2_se is
-			-- Concat the logs of the execution to 'output.log'.
+feature {NONE} -- Test gelint
+
+	compile_and_test_gelint (a_test_name: STRING) is
+			-- Compile and test `a_test_name' with gelint.
+		require
+			a_test_not_void: a_test_name /= Void
+			a_test_not_empty: a_test_name.count > 0
+		local
+			a_debug: STRING
+			an_xace_filename: STRING
+			l_directory: KL_DIRECTORY
 		do
-			file_system.concat_files (output_log_filename, output2_log_filename)
-			file_system.concat_files (output_log_filename, error2_log_filename)
+			if variables.has ("debug") then
+				a_debug := "debug_"
+			else
+				a_debug := ""
+			end
+			an_xace_filename := xace_filename (a_test_name)
+			execute_shell ("gelint --define=GOBO_EIFFEL=ge --flat --silent " + an_xace_filename + output1_log)
+			concat_output1 (agent filter_output_gelint)
+				-- Test.
+			create l_directory.make (program_dirname (a_test_name))
+			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("gelint"), output_log_filename)) then
+				assert ("test_passed", True)
+			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("gelint"), output_log_filename)) then
+				assert ("test_failed", False)
+			else
+				assert ("unknown_test_result", False)
+			end
 		end
 
-	concat_output3_se is
-			-- Concat the logs of the cleaning to 'output.log'.
+	filter_output_gelint (an_input_filename, an_output_filename: STRING) is
+			-- Filter text from file `an_input_filename' and append it to the end of file `an_output_filename'.
+		require
+			an_input_filename_not_void: an_input_filename /= Void
+			an_output_filename_not_void: an_output_filename /= Void
+		local
+			out_file: KL_TEXT_OUTPUT_FILE
+			in_file: KL_TEXT_INPUT_FILE
+			a_line: STRING
+			a_pattern1: STRING
+			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			l_empty_line: BOOLEAN
 		do
-			file_system.concat_files (output_log_filename, output3_log_filename)
-			file_system.concat_files (output_log_filename, error3_log_filename)
+				-- Compile regexps.
+			a_pattern1 := "BUILD FAILED!"
+			create a_regexp1.make
+			a_regexp1.compile (a_pattern1)
+			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
+			a_regexp1.optimize
+				-- Copy files.
+			create out_file.make (an_output_filename)
+			out_file.open_append
+			if out_file.is_open_write then
+				create in_file.make (an_input_filename)
+				in_file.open_read
+				if in_file.is_open_read then
+					from
+						in_file.read_line
+					until
+						in_file.end_of_file
+					loop
+						a_line := in_file.last_string
+						if a_regexp1.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
+						elseif a_line.is_empty then
+							l_empty_line := True
+						else
+							if l_empty_line then
+								out_file.put_new_line
+								l_empty_line := False
+							end
+							out_file.put_line (a_line)
+						end
+						a_regexp1.wipe_out
+						in_file.read_line
+					end
+					in_file.close
+					if l_empty_line then
+						out_file.put_new_line
+						l_empty_line := False
+					end
+				else
+					assert ("cannot open file '" + an_input_filename + "'", False)
+				end
+				out_file.close
+			else
+				assert ("cannot open file '" + an_output_filename + "'", False)
+			end
 		end
 
 feature {NONE} -- Test ISE Eiffel
@@ -222,9 +271,7 @@ feature {NONE} -- Test ISE Eiffel
 		local
 			a_debug: STRING
 			a_geant_filename: STRING
-			a_filename: STRING
-			successful, done: BOOLEAN
-			i: INTEGER
+			l_directory: KL_DIRECTORY
 		do
 			if variables.has ("debug") then
 				a_debug := "debug_"
@@ -234,36 +281,138 @@ feature {NONE} -- Test ISE Eiffel
 			a_geant_filename := geant_filename (a_test_name)
 				-- Compile program.
 			execute_shell ("geant -b " + a_geant_filename + " compile_" + a_debug + "ise" + output1_log)
-			concat_output1_ise
+			concat_output1 (agent filter_output_ise)
 				-- Execute program.
 			if file_system.file_exists (program_exe) then
 				execute_shell (program_exe + output2_log)
-				concat_output2_ise
+				concat_output2
 			end
 				-- Clean.
 			execute_shell ("geant -b " + a_geant_filename + " clobber" + output3_log)
-			concat_output3_ise
+			concat_output3
 				-- Test.
-			from
-				i := 1
-			until
-				done
-			loop
-				a_filename := file_system.nested_pathname (rule_dirname, <<a_test_name, "output" + i.out + ".ise">>)
-				if file_system.file_exists (a_filename) then
-					if are_output_files_equal (output_log_filename, a_filename) then
-						done := True
-						successful := True
-						assert ("test successful", True)
-					else
-						i := i + 1
+			create l_directory.make (program_dirname (a_test_name))
+			if l_directory.there_exists (agent output_recognized (?, l_directory, passed_filename_regexp ("ise"), output_log_filename)) then
+				assert ("test_passed", True)
+			elseif l_directory.there_exists (agent output_recognized (?, l_directory, failed_filename_regexp ("ise"), output_log_filename)) then
+				assert ("test_failed", False)
+			else
+				assert ("unknown_test_result", False)
+			end
+		end
+
+	filter_output_ise (an_input_filename, an_output_filename: STRING) is
+			-- Filter text from file `an_input_filename' and append it to the end of file `an_output_filename'.
+		require
+			an_input_filename_not_void: an_input_filename /= Void
+			an_output_filename_not_void: an_output_filename /= Void
+		local
+			out_file: KL_TEXT_OUTPUT_FILE
+			in_file: KL_TEXT_INPUT_FILE
+			a_line: STRING
+			a_pattern1, a_pattern2, a_pattern3, a_pattern4, a_pattern5, a_pattern6, a_pattern7: STRING
+			a_regexp1, a_regexp2, a_regexp3, a_regexp4, a_regexp5, a_regexp6, a_regexp7: RX_PCRE_REGULAR_EXPRESSION
+			l_empty_line: BOOLEAN
+		do
+				-- Compile regexps.
+			a_pattern1 := "BUILD FAILED!"
+			create a_regexp1.make
+			a_regexp1.compile (a_pattern1)
+			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
+			a_regexp1.optimize
+			a_pattern2 := "(\[ *[0-9]+%% - *[0-9]+\] (Degree -?[0-9]+|Generating Auxiliary Files))|(Features done: [0-9]+\sFeatures to go: [0-9]+)"
+			create a_regexp2.make
+			a_regexp2.compile (a_pattern2)
+			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
+			a_regexp2.optimize
+			a_pattern3 := "(Eiffel Compilation Manager)|(Freezing System Changes)|(System Recompiled\.)|(C compilation completed)|(Preparing C compilation\.\.\.)|(Removing Dead Code)|(\s*\(version .*\))|(\s*1 file\(s\) copied\.)"
+			create a_regexp3.make
+			a_regexp3.compile (a_pattern3)
+			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
+			a_regexp3.optimize
+			a_pattern4 := "[a-zA-Z0-9_]+\.c"
+			create a_regexp4.make
+			a_regexp4.compile (a_pattern4)
+			assert ("cannot compile regexp '" + a_pattern4 + "'", a_regexp4.is_compiled)
+			a_regexp4.optimize
+			a_pattern5 := "Batch/Stop mode: saving new configuration format as"
+			create a_regexp5.make
+			a_regexp5.compile (a_pattern5)
+			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
+			a_regexp5.optimize
+			a_pattern6 := "(Eiffel C/C\+\+ Compilation Tool - Version:)|(Copyright Eiffel Software)|(Microsoft \(R\) Incremental Linker Version)|(Copyright \(C\) Microsoft Corporation)|(You must now run \%"finish_freezing.exe\%" in:)|(Ttest[0-9]+[\\/]\.[\\/]EIFGENs[\\/]aa[\\/][WF]_code)"
+			create a_regexp6.make
+			a_regexp6.compile (a_pattern6)
+			assert ("cannot compile regexp '" + a_pattern6 + "'", a_regexp6.is_compiled)
+			a_regexp6.optimize
+			a_pattern7 := "(-STACK:5000000)|(-NODEFAULTLIB:libc)|(-SUBSYSTEM:CONSOLE)|(-OUT:aa\.exe)|(e1\\emain\.obj)|(E1\\estructure\.h)|(wkbench\.lib)|(finalized\.lib)|(USER32\.lib)|(WSOCK32\.lib)|(WSOCK32\.dll)|(ADVAPI32\.lib)|(GDI32\.lib)|(SHELL32\.lib)|(MSIMG32\.lib)|(COMDLG32\.lib)|(UUID\.lib)|(OLE32\.lib)|(OLEAUT32\.lib)|(COMCTL32\.lib)|(MPR\.LIB)|(aa\.res)|(E[0-9]+\\[A-Za-z0-9_]+\.obj)|(E[0-9]+\\[A-Za-z0-9_]+\.lib)|(C[0-9]+\\Cobj[0-9]+\.lib)"
+			create a_regexp7.make
+			a_regexp7.compile (a_pattern7)
+			assert ("cannot compile regexp '" + a_pattern7 + "'", a_regexp7.is_compiled)
+			a_regexp7.optimize
+				-- Copy files.
+			create out_file.make (an_output_filename)
+			out_file.open_append
+			if out_file.is_open_write then
+				create in_file.make (an_input_filename)
+				in_file.open_read
+				if in_file.is_open_read then
+					from
+						in_file.read_line
+					until
+						in_file.end_of_file
+					loop
+						a_line := in_file.last_string
+						if a_line.is_empty then
+							l_empty_line := True
+						elseif a_regexp1.recognizes (a_line) then
+								-- Skip this line and the previous empty line.
+							l_empty_line := False
+						elseif a_regexp2.matches (a_line) then
+								-- Skip this line.
+							l_empty_line := False
+						elseif a_regexp3.recognizes (a_line) then
+								-- Skip this line.
+							l_empty_line := False
+						elseif a_regexp4.recognizes (a_line) then
+								-- Skip this line.
+							l_empty_line := False
+						elseif a_regexp5.matches (a_line) then
+								-- Skip this line.
+							l_empty_line := False
+						elseif a_regexp6.matches (a_line) then
+								-- Skip this line.
+							l_empty_line := False
+						elseif a_regexp7.matches (a_line) then
+								-- Skip this line.
+							l_empty_line := False
+						else
+							if l_empty_line then
+								out_file.put_new_line
+								l_empty_line := False
+							end
+							out_file.put_line (a_line)
+						end
+						a_regexp1.wipe_out
+						a_regexp2.wipe_out
+						a_regexp3.wipe_out
+						a_regexp4.wipe_out
+						a_regexp5.wipe_out
+						a_regexp6.wipe_out
+						a_regexp7.wipe_out
+						in_file.read_line
+					end
+					in_file.close
+					if l_empty_line then
+						out_file.put_new_line
+						l_empty_line := False
 					end
 				else
-					done := True
+					assert ("cannot open file '" + an_input_filename + "'", False)
 				end
-			end
-			if not successful then
-				assert ("unknown test result", False)
+				out_file.close
+			else
+				assert ("cannot open file '" + an_output_filename + "'", False)
 			end
 		end
 
@@ -358,149 +507,6 @@ feature {NONE} -- Test ISE Eiffel
 			end
 		end
 
-	concat_output2_ise is
-			-- Concat the logs of the execution to 'output.log'.
-		do
-			file_system.concat_files (output_log_filename, output2_log_filename)
-			file_system.concat_files (output_log_filename, error2_log_filename)
-		end
-
-	concat_output3_ise is
-			-- Concat the logs of the cleaning to 'output.log'.
-		do
-			file_system.concat_files (output_log_filename, output3_log_filename)
-			file_system.concat_files (output_log_filename, error3_log_filename)
-		end
-
-feature {NONE} -- Test Visual Eiffel
-
-	compile_and_test_ve (a_test_name: STRING) is
-			-- Compile and test `a_test_name' with Visual Eiffel.
-		require
-			a_test_not_void: a_test_name /= Void
-			a_test_not_empty: a_test_name.count > 0
-		local
-			a_debug: STRING
-			a_geant_filename: STRING
-			a_filename: STRING
-			successful, done: BOOLEAN
-			i: INTEGER
-		do
-			if variables.has ("debug") then
-				a_debug := "debug_"
-			else
-				a_debug := ""
-			end
-			a_geant_filename := geant_filename (a_test_name)
-				-- Compile program.
-			execute_shell ("geant -b " + a_geant_filename + " compile_" + a_debug + "ve" + output1_log)
-			concat_output1_ve
-				-- Execute program.
-			if file_system.file_exists (program_exe) then
-				execute_shell (program_exe + output2_log)
-				concat_output2_ve
-			end
-				-- Clean.
-			execute_shell ("geant -b " + a_geant_filename + " clobber" + output3_log)
-			concat_output3_ve
-				-- Test.
-			from
-				i := 1
-			until
-				done
-			loop
-				a_filename := file_system.nested_pathname (rule_dirname, <<a_test_name, "output" + i.out + ".ve">>)
-				if file_system.file_exists (a_filename) then
-					if are_output_files_equal (output_log_filename, a_filename) then
-						done := True
-						successful := True
-						assert ("test successful", True)
-					else
-						i := i + 1
-					end
-				else
-					done := True
-				end
-			end
-			if not successful then
-				assert ("unknown test result", False)
-			end
-		end
-
-	concat_output1_ve is
-			-- Concat the logs of the compilation to 'output.log'.
-		do
-			file_system.concat_files (output_log_filename, output1_log_filename)
-			file_system.concat_files (output_log_filename, error1_log_filename)
-		end
-
-	concat_output2_ve is
-			-- Concat the logs of the execution to 'output.log'.
-		do
-			file_system.concat_files (output_log_filename, output2_log_filename)
-			file_system.concat_files (output_log_filename, error2_log_filename)
-		end
-
-	concat_output3_ve is
-			-- Concat the logs of the cleaning to 'output.log'.
-		do
-			file_system.concat_files (output_log_filename, output3_log_filename)
-			file_system.concat_files (output_log_filename, error3_log_filename)
-		end
-
-feature {NONE} -- Test gelint
-
-	compile_and_test_gelint (a_test_name: STRING) is
-			-- Compile and test `a_test_name' with gelint.
-		require
-			a_test_not_void: a_test_name /= Void
-			a_test_not_empty: a_test_name.count > 0
-		local
-			a_debug: STRING
-			an_xace_filename: STRING
-			a_filename: STRING
-			successful, done: BOOLEAN
-			i: INTEGER
-		do
-			if variables.has ("debug") then
-				a_debug := "debug_"
-			else
-				a_debug := ""
-			end
-			an_xace_filename := xace_filename (a_test_name)
-			execute_shell ("gelint " + an_xace_filename + output1_log)
-			concat_output1_gelint
-				-- Test.
-			from
-				i := 1
-			until
-				done
-			loop
-				a_filename := file_system.nested_pathname (rule_dirname, <<a_test_name, "output" + i.out + ".gelint">>)
-				if file_system.file_exists (a_filename) then
-					if are_output_files_equal (output_log_filename, a_filename) then
-						done := True
-						successful := True
-						assert ("test successful", True)
-					else
-						i := i + 1
-					end
-				else
-					done := True
-				end
-			end
-			if not successful then
-				assert ("unknown test result", False)
-			end
-		end
-
-	concat_output1_gelint is
-			-- Concat the logs of gelint to 'output.log'.
-		do
-			file_system.concat_files (output_log_filename, output1_log_filename)
-			file_system.concat_files (output_log_filename, error1_log_filename)
-		end
-
 feature -- Execution
 
 	set_up is
@@ -529,7 +535,7 @@ feature -- Execution
 	old_cwd: STRING
 			-- Initial current working directory
 
-feature {NONE} -- Implementation
+feature {NONE} -- Directory and file names
 
 	program_name: STRING is
 			-- Program name
@@ -595,12 +601,13 @@ feature {NONE} -- Implementation
 
 	testdir: STRING is
 			-- Name of temporary directory where to run the test
-		do
-			Result := "Tgelint"
+		deferred
 		ensure
 			testdir_not_void: Result /= Void
 			testdir_not_empty: Result.count > 0
 		end
+
+feature {NONE} -- Output logs
 
 	output_log_filename: STRING is "output.log"
 			-- Test output log filename
@@ -648,6 +655,148 @@ feature {NONE} -- Implementation
 		ensure
 			output3_log_not_void: Result /= Void
 			output3_log_not_empty: Result.count > 0
+		end
+
+	concat_output1 (a_filter: PROCEDURE [ANY, TUPLE [STRING, STRING]]) is
+			-- Concat the logs of the compilation to 'output.log'.
+		require
+			a_filter_not_void: a_filter /= Void
+		do
+			file_system.delete_file (output_log_filename)
+			a_filter.call ([output1_log_filename, output_log_filename])
+			a_filter.call ([error1_log_filename, output_log_filename])
+		end
+
+	concat_output2 is
+			-- Concat the logs of the execution to 'output.log'.
+		local
+			out_file: KL_TEXT_OUTPUT_FILE
+			in_file: KL_TEXT_INPUT_FILE
+			a_line: STRING
+			a_pattern1: STRING
+			a_regexp1: RX_PCRE_REGULAR_EXPRESSION
+			l_input_filename: STRING
+		do
+				-- Compile regexp.
+			a_pattern1 := "<[0-9]{16}>(.*)"
+			create a_regexp1.make
+			a_regexp1.compile (a_pattern1)
+			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
+			a_regexp1.optimize
+				-- Copy files.
+			create out_file.make (output_log_filename)
+			out_file.open_append
+			if out_file.is_open_write then
+				from
+					l_input_filename := output2_log_filename
+				until
+					l_input_filename = Void
+				loop
+					create in_file.make (l_input_filename)
+					in_file.open_read
+					if in_file.is_open_read then
+						from
+							in_file.read_line
+						until
+							in_file.end_of_file
+						loop
+							a_line := in_file.last_string
+							if a_regexp1.recognizes (a_line) then
+									-- These are object addresses in exception traces.
+								out_file.put_string ("<XXXXXXXXXXXXXXXX>")
+								out_file.put_line (a_regexp1.captured_substring (1))
+							else
+								out_file.put_line (a_line)
+							end
+							a_regexp1.wipe_out
+							in_file.read_line
+						end
+						in_file.close
+					else
+						assert ("cannot open file '" + l_input_filename + "'", False)
+					end
+					if l_input_filename = output2_log_filename then
+						l_input_filename := error2_log_filename
+					else
+						l_input_filename := Void
+					end
+				end
+				out_file.close
+			else
+				assert ("cannot open file '" + output_log_filename + "'", False)
+			end
+		end
+
+	concat_output3 is
+			-- Concat the logs of the cleaning to 'output.log'.
+		do
+			file_system.concat_files (output_log_filename, output3_log_filename)
+			file_system.concat_files (output_log_filename, error3_log_filename)
+		end
+
+	output_recognized (a_filename1: STRING; a_directory1: KL_DIRECTORY; a_regexp1: RX_REGULAR_EXPRESSION; a_filename2: STRING): BOOLEAN is
+			-- Is `a_filename1' of the form expected by `a_regexp1' in `a_directory1',
+			-- and then is there no difference between the contents of files named
+			-- `a_filename1' and `a_filename2'?
+		require
+			a_filename1_not_void: a_filename1 /= Void
+			a_filename1_not_empty: a_filename1.count > 0
+			a_directory1_not_void: a_directory1 /= Void
+			a_regexp1_not_void: a_regexp1 /= Void
+			a_regexp1_compied: a_regexp1.is_compiled
+			a_filename2_not_void: a_filename2 /= Void
+			a_filename2_not_empty: a_filename2.count > 0
+		local
+			l_full_filename1: STRING
+		do
+			if a_regexp1.recognizes (a_filename1) then
+				l_full_filename1 := file_system.pathname (a_directory1.name, a_filename1)
+				Result := file_system.same_text_files (l_full_filename1, a_filename2)
+			end
+		end
+
+feature {NONE} -- Execution
+
+	execute_shell (a_shell_command: STRING) is
+			-- Execute `a_shell_command'.
+		require
+			a_shell_command_not_void: a_shell_command /= Void
+			a_shell_command_not_empty: a_shell_command.count > 0
+		local
+			a_command: DP_SHELL_COMMAND
+		do
+			create a_command.make (a_shell_command)
+			a_command.execute
+		end
+
+feature {NONE} -- Regular expressions
+
+	passed_filename_regexp (a_file_extension: STRING): RX_PCRE_REGULAR_EXPRESSION is
+			-- Regular expression corresponding to names of files containing possible passed output logs
+			-- `a_file_extension' is the expected file extension, without the leading dot.
+		require
+			a_file_extension_not_void: a_file_extension /= Void
+			a_file_extension_not_empty: not a_file_extension.is_empty
+		do
+			create Result.make
+			Result.compile (".*passed.*\." + a_file_extension)
+		ensure
+			passed_regexp_gec_not_void: Result /= Void
+			passed_regexp_gec_compiled: Result.is_compiled
+		end
+
+	failed_filename_regexp (a_file_extension: STRING): RX_PCRE_REGULAR_EXPRESSION is
+			-- Regular expression corresponding to names of files containing possible failed output logs;
+			-- `a_file_extension' is the expected file extension, without the leading dot.
+		require
+			a_file_extension_not_void: a_file_extension /= Void
+			a_file_extension_not_empty: not a_file_extension.is_empty
+		do
+			create Result.make
+			Result.compile (".*failed.*\." + a_file_extension)
+		ensure
+			failed_regexp_gec_not_void: Result /= Void
+			failed_regexp_gec_compiled: Result.is_compiled
 		end
 
 end
