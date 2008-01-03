@@ -58,6 +58,17 @@
 	for a particular version of Unicode (e.g. <classname>ST_UNICODE_V5000_FULL_CASE_MAPPING</classname> for Unicode version 5.0.0).
 </para>
 
+<para>
+	Alternatively, you can access these classes as clients, by inheriting from <classname>ST_IMPORTED_UNICODE_FULL_CASE_MAPPING</classname> 
+	or <classname>ST_IMPORTED_UNICODE_V500_FULL_CASE_MAPPING</classname>, which provide the routines
+	<featurename>case_mapping</featurename> and <featurename>case_mapping_v500</featurename> respectively.
+</para>
+
+<para>
+	The latter method is necessary if you want to be able to use full case mappings from two different versions of Unicode within
+	the same class.
+</para>
+
 </section>
 
 </chapter>

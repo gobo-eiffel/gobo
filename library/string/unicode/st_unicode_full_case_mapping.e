@@ -4,6 +4,8 @@ indexing
 
 		"Routines for performing full case mapping on Unicode strings"
 
+	remark:
+
 		"These routines will not work on UTF-16 strings - they will %
 		%need a few modifications to account of surrogates."
 
