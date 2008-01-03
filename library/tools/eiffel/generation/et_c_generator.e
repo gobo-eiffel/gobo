@@ -4057,6 +4057,21 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('%'')
 				current_file.put_character (';')
 				current_file.put_new_line
+				if l_result_type /= Void then
+						-- The following is to make sure that if a once-function is called
+						-- recursively, the semantics specified by ECMA will be satisfied.
+						-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+						-- to the once-function should return the value of 'Result' as it
+						-- was when the recursive calls occurred.
+					print_indentation
+					print_once_value_name (l_once_feature, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_result_name (current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 				dedent
 				print_indentation
 				current_file.put_character ('}')
@@ -4116,16 +4131,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_new_line
 			end
 			if l_result_type /= Void then
-				if l_once_feature /= Void then
-					print_indentation
-					print_once_value_name (l_once_feature, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_result_name (current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
@@ -4471,6 +4476,21 @@ feature {NONE} -- Instruction generation
 				current_file.put_new_line
 			end
 			call_operands.wipe_out
+				-- The following is to make sure that if a once-function is called
+				-- recursively, the semantics specified by ECMA will be satisfied.
+				-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+				-- to the once-function should return the value of 'Result' as it
+				-- was when the recursive calls occurred.
+			if l_target.is_result and current_feature.is_once then
+				print_indentation
+				print_once_value_name (current_feature.static_feature.implementation_feature, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 		end
 
 	print_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
@@ -4742,6 +4762,21 @@ feature {NONE} -- Instruction generation
 			l_conforming_types.wipe_out
 			l_non_conforming_types.wipe_out
 			call_operands.wipe_out
+				-- The following is to make sure that if a once-function is called
+				-- recursively, the semantics specified by ECMA will be satisfied.
+				-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+				-- to the once-function should return the value of 'Result' as it
+				-- was when the recursive calls occurred.
+			if l_target.is_result and current_feature.is_once then
+				print_indentation
+				print_once_value_name (current_feature.static_feature.implementation_feature, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
 		end
 
 	print_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
@@ -4882,6 +4917,21 @@ feature {NONE} -- Instruction generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				call_operands.wipe_out
+			end
+				-- The following is to make sure that if a once-function is called
+				-- recursively, the semantics specified by ECMA will be satisfied.
+				-- ECMA 367-2 section 8.23.22 page 124 says that the recursive calls
+				-- to the once-function should return the value of 'Result' as it
+				-- was when the recursive calls occurred.
+			if l_target.is_result and current_feature.is_once then
+				print_indentation
+				print_once_value_name (current_feature.static_feature.implementation_feature, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 

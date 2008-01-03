@@ -17,13 +17,15 @@ inherit
 	ET_WRITABLE
 		undefine
 			first_position, last_position
+		redefine
+			is_result
 		end
 
 	ET_KEYWORD
 		rename
 			make_result as make
 		undefine
-			is_current
+			is_current, is_result
 		redefine
 			process
 		end
@@ -31,6 +33,11 @@ inherit
 create
 
 	make
+
+feature -- Status report
+
+	is_result: BOOLEAN is True
+			-- Is current expression the 'Result' entity?
 
 feature -- Processing
 

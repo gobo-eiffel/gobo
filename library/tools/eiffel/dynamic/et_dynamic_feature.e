@@ -336,6 +336,14 @@ feature -- Status report
 			definition: Result = (result_type_set = Void)
 		end
 
+	is_once: BOOLEAN is
+			-- Is current feature a once-routine?
+		do
+			Result := static_feature.is_once
+		ensure
+			definition: Result = static_feature.is_once
+		end
+
 	is_tilde_feature (a_system: ET_SYSTEM): BOOLEAN is
 			-- Is current feature supposed to simulate the forthcoming
 			-- '~' operator introduced in ECMA Eiffel 367?

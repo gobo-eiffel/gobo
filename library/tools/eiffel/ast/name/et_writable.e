@@ -16,4 +16,12 @@ inherit
 
 	ET_EXPRESSION
 
+feature -- Status report
+
+	is_result: BOOLEAN is
+			-- Is current expression the 'Result' entity?
+		do
+			-- Result := False
+		end
+
 end
