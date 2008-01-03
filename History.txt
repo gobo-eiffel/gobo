@@ -23,11 +23,29 @@ Version 3.8 - ?
 	* Fixed bug when both the expanded and reference versions of a non-generic
 	  type were used in the system. The generated C code considered that they
 	  were either both expanded or both reference.
+	* Fixed bug in recursive once-functions. The second call was returning
+	  the default value of the result type instead of the value of 'Result'
+	  as it was when the recursive call occurred, as specified in ECMA Eiffel.
+
+	gelint:
+
+	* Fixed bug in the flat Degree 3 mode where the precursor features 
+	  corresponding to precursor expressions or instructions were not checked.
 
 	Gobo Eiffel Kernel Library:
 
 	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')
 	  in class KL_DIRECTORY.
+
+	Gobo Eiffel String Library:
+
+	* Added full Unicode case-mapping routines.
+
+	Gobo Eiffel Time Library:
+
+	* Added support for formatting dates and times according
+	  using the picture strings from the XSLT functions
+	  format-date(), format-time() and format-date-time().
 
 	Gobo Eiffel XML Library:
 
@@ -36,16 +54,6 @@ Version 3.8 - ?
 	  almost certainly is not used). Wrote documentation.
 	* Added additional XSLT system-properties, and the ability to
 	  register additional system properties. Documented this.
-
-	Gobo Eiffel String Library
-
-	* Added full Unicode case-mapping routines.
-
-        Gobo Eiffel Time Library
-
-	* Added support for formatting dates and times according
-	  using the picture strings from the XSLT functions
-	  format-date(), format-time() and format-date-time().
 
 Version 3.7 - 5 November 2007
 
