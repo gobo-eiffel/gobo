@@ -96,9 +96,5 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-invariant
-
-	time_or_date_or_date_time: BOOLEAN_.nxor (<<is_time_value, is_date_value, is_date_time_value>>)
-
 end
 
