@@ -194,25 +194,25 @@ feature {NONE} -- Implementation
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 		local
-			l_matcher: RX_PCRE_REGULAR_EXPRESSION -- TODO - use Unicode regular expression engine
 			l_specifier: CHARACTER
 			l_modifiers: STRING
-			l_match_count, l_count: INTEGER
+			l_count: INTEGER
+			l_invalid: BOOLEAN
 		do
-			l_matcher := pattern_matcher (a_marker)
-			if not l_matcher.has_matched then
-				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker), "XTDE1340"))
+			if a_marker.is_empty then
+				l_invalid := True
+			elseif not is_valid_specifier (a_marker.item (1)) then
+				l_invalid := True
 			else
-				l_match_count := l_matcher.match_count
-				if l_match_count = 1 then l_count := 0 else l_count := 1 end
-				l_specifier := l_matcher.captured_substring (l_count).item (1)
-				if l_match_count = 1 then
-					l_modifiers := ""
-				else
-					l_modifiers := l_matcher.captured_substring (l_match_count - 1)
-				end
-				parse_and_format_marker (a_result, a_result_string, a_calendar_value, l_specifier, l_modifiers, a_language, a_calendar, a_country)
+				l_specifier := a_marker.item (1)
+				l_modifiers := a_marker.substring (2, a_marker.count)
+				STRING_.left_adjust (l_modifiers)
+				STRING_.right_adjust (l_modifiers)
 			end
+			if l_invalid then
+				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker), "XTDE1340"))
+			end
+			parse_and_format_marker (a_result, a_result_string, a_calendar_value, l_specifier, l_modifiers, a_language, a_calendar, a_country)
 		end
 
 	parse_and_format_marker (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
@@ -1178,20 +1178,6 @@ feature {NONE} -- Implementation
 			else
 				Result := False
 			end
-		end
-
-	pattern_matcher (a_marker: STRING): RX_PCRE_REGULAR_EXPRESSION is -- TODO: use Unicode regular expression engine
-			-- Pattern matcher for `a_marker'
-		require
-			marker_not_void: a_marker /= Void
-		do
-			create Result.make
-			Result.compile ("([YMDdWwFHhmsfZzPCE])\s*(.*)")
-			Result.match (a_marker)
-		ensure
-			result_not_void: Result /= Void
-			pattern_compiled: Result.is_compiled
-			subject_exists: Result.is_matching
 		end
 
 	is_language_supported (a_requested_language: STRING): BOOLEAN is
