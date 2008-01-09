@@ -5926,6 +5926,7 @@ feature {NONE} -- Expression validity
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_function_impl: ET_FUNCTION
 			l_feature_impl: ET_FEATURE
+			l_type: ET_TYPE
 		do
 			l_feature_impl ?= current_feature_impl
 			if l_feature_impl = Void then
@@ -5992,7 +5993,7 @@ feature {NONE} -- Expression validity
 							if l_parent_type = Void then
 									-- Internal error: the Precursor construct should
 									-- already have been resolved when flattening the
-									-- features of `l_class_impl'.
+									-- features of `current_class_impl'.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
@@ -6002,7 +6003,7 @@ feature {NONE} -- Expression validity
 								if l_query = Void then
 										-- Internal error: the Precursor construct should
 										-- already have been resolved when flattening the
-										-- features of `l_class_impl'.
+										-- features of `current_class_impl'.
 									set_fatal_error
 									error_handler.report_giaaa_error
 								else
@@ -6020,7 +6021,7 @@ feature {NONE} -- Expression validity
 											l_ancestor := current_class.ancestor (l_parent_type, universe)
 											if l_ancestor = Void then
 													-- Internal error: `l_parent_type' is an ancestor
-													-- of `l_class_impl', and hence of `current_class'.
+													-- of `current_class_impl', and hence of `current_class'.
 												set_fatal_error
 												error_handler.report_giaaa_error
 											else
@@ -6034,11 +6035,14 @@ feature {NONE} -- Expression validity
 										l_actuals := an_expression.arguments
 										check_actual_arguments_validity (l_actuals, l_actual_context, l_precursor_keyword, l_query, l_class)
 										if not has_fatal_error then
--- TODO: like argument and get the type as it was in the parent.
-											a_context.force_last (current_feature.type)
-											report_precursor_expression (an_expression, l_parent_type, l_query)
-											if precursor_queries /= Void then
-												precursor_queries.force_last (l_query)
+-- TODO: like argument.
+											l_type := resolved_formal_parameters (l_query.type, l_class, current_type)
+											if not has_fatal_error then
+												a_context.force_last (l_type)
+												report_precursor_expression (an_expression, l_parent_type, l_query)
+												if precursor_queries /= Void then
+													precursor_queries.force_last (l_query)
+												end
 											end
 										end
 									end
