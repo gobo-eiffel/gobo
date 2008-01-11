@@ -51,11 +51,11 @@ feature -- Operation(s)
 						create {UT_BASE64_DECODING_INPUT_STREAM} last_stream.make (l_string_stream)
 					else
 						if last_media_type.has_parameter (Charset_parameter) then
-							if STRING_.same_string (last_media_type.parameter (Charset_parameter), "utf-8") then
+							if STRING_.same_case_insensitive (last_media_type.parameter (Charset_parameter), "utf-8") then
 								l_utf8 := True
-							elseif STRING_.same_string (last_media_type.parameter (Charset_parameter), "us-ascii") then
+							elseif STRING_.same_case_insensitive (last_media_type.parameter (Charset_parameter), "us-ascii") then
 								-- OK
-							elseif STRING_.same_string (last_media_type.parameter (Charset_parameter), "iso-8859-1") then
+							elseif STRING_.same_case_insensitive (last_media_type.parameter (Charset_parameter), "iso-8859-1") then
 								-- OK
 							else
 								set_last_error (STRING_.concat (last_media_type.parameter (Charset_parameter), " is not supported. Only US-ASCII, ISO-8859-1 and UTF-8 are supported"))
