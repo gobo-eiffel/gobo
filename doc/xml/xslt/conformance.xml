@@ -125,6 +125,7 @@
 	The following additional URI schemes are supported by <ulink url="http://gestalt.sourceforge.net">Gestalt</ulink>:
 	<itemizedlist>
 	 <listitem><para>http</para></listitem>
+	 <listitem><para>https</para></listitem>
 	 <listitem><para>ftp</para></listitem>
 	</itemizedlist>
        </para>
@@ -205,8 +206,7 @@
       <term>Upper bounds on numbering sequences with xsl:number</term>
       <listitem>
        <para>
-	When using Roman Numerals, the maximum number is 3,999. Other sequences are limited 
-	to the maximum positive number that can be expressed as a 32-bit signed integer.
+	When using Roman Numerals, the maximum number is 3,999.
        </para>
       </listitem>
      </varlistentry>

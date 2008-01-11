@@ -80,6 +80,8 @@ feature -- Evaluation
 						l_function.body.evaluate (l_value, l_function.evaluation_mode, 1, l_context)
 						if l_function.body.is_error then
 							a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_function.body.error_value))
+						elseif l_value.item.is_singleton_node then
+							a_result.put (l_value.item.as_singleton_node.node)
 						else
 							check
 								item: l_value.item.is_atomic_value

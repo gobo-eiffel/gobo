@@ -189,6 +189,13 @@ feature -- Status report
 			Result := False
 		end
 
+	is_strictly_positive: BOOLEAN is
+			-- Is `Current' strictly greater than zero?
+		do
+			Result := not is_negative and not is_zero
+		ensure
+			definition: Result = not is_negative and not is_zero
+		end
 
 feature -- Conversion
 

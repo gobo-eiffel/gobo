@@ -216,8 +216,6 @@ feature -- Conversion
 
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
-			-- TODO - need to virtualize the pre-condition so that
-			-- only sub-types of Integer_type are valid
 		local
 			l_decimal: MA_DECIMAL
 		do
@@ -228,6 +226,7 @@ feature -- Conversion
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
+				-- TODO: need tests for INTEGER_64
 				if value >= Platform.Minimum_integer and value <= Platform.Maximum_integer and then value = DOUBLE_.truncated_to_integer (value) then
 					create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (DOUBLE_.truncated_to_integer (value).to_integer_64)
 				else

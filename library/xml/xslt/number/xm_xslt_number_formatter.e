@@ -97,6 +97,7 @@ feature -- Access
 			-- Formatted string
 		require
 			a_numbers_not_void: a_numbers /= Void
+			a_numbers_all_strings_or_all_positive_integers: True
 			positive_group_size: a_group_size >= 0
 			group_separator_not_void: a_group_separator /= Void
 			letter_not_void: a_letter /= Void

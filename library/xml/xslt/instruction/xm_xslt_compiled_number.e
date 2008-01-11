@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 		end
 
 	calculate_vector (a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Calculate `vector'.
+			-- Calculate `atomic_vector' or `value'.
 		require
 			context_not_void: a_context /= Void
 			transformer_not_void: transformer /= Void
@@ -610,6 +610,7 @@ feature {NONE} -- Implementation
 			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			value := -1
+			atomic_vector := Void
 			if value_expression /= Void then
 				calculate_value (a_context)
 			else
@@ -661,6 +662,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		ensure
+			error_or_value_or_atomic_vector: not transformer.is_error implies (value > 0 or atomic_vector /= Void)
 		end
 
 	calculate_value (a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -1005,7 +1008,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			result_not_void: multi_level_number /= Void
+			multi_level_number_not_void: multi_level_number /= Void
 		end
 
 invariant
