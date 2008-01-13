@@ -15,7 +15,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			sub_expressions, promote_instruction,
-			item_type, compute_dependencies, create_iterator
+			item_type, compute_dependencies, create_iterator, create_node_iterator
 		end
 
 	XM_XPATH_REGEXP_CACHE_ROUTINES
@@ -319,6 +319,28 @@ feature -- Evaluation
 				l_new_context.set_current_iterator (l_regexp_iterator)
 				l_new_context.set_current_regexp_iterator (l_regexp_iterator)
 				create {XM_XPATH_CONTEXT_MAPPING_ITERATOR} last_iterator.make (create {XM_XSLT_ANALYZE_MAPPING_FUNCTION}.make (l_regexp_iterator, l_new_context, matching_block, non_matching_block), l_new_context)
+			end
+		end
+		
+	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterate over the nodes of a sequence.
+		local
+			l_regexp_iterator: XM_XSLT_REGEXP_ITERATOR
+			l_context, l_new_context: XM_XSLT_EVALUATION_CONTEXT
+		do
+			l_context ?= a_context
+			check
+				l_context_not_void: l_context /= Void
+				-- this is XSLT
+			end
+			l_regexp_iterator := regexp_iterator (l_context)
+			if l_context.transformer.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_context.transformer.last_error)
+			else
+				l_new_context := l_context.new_context
+				l_new_context.set_current_iterator (l_regexp_iterator)
+				l_new_context.set_current_regexp_iterator (l_regexp_iterator)
+				create {XM_XPATH_NODE_MAPPING_ITERATOR} last_node_iterator.make (l_regexp_iterator, create {XM_XSLT_ANALYZE_NODE_MAPPING_FUNCTION}.make (l_regexp_iterator, l_new_context, matching_block, non_matching_block), l_new_context)
 			end
 		end
 		

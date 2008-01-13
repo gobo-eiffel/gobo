@@ -94,8 +94,8 @@ feature -- Cursor movement
 						(child_iterator /= Void and then child_iterator.is_error or else not child_iterator.after) or else child_index = child_list.count
 					loop
 						child_index := child_index + 1
-						child_list.item (child_index).create_iterator (context)
-						child_iterator := child_list.item (child_index).last_iterator.as_node_iterator
+						child_list.item (child_index).create_node_iterator (context)
+						child_iterator := child_list.item (child_index).last_node_iterator
 						if not child_iterator.is_error then child_iterator.start end
 					end
 				end
