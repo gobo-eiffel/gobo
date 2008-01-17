@@ -167,8 +167,7 @@ feature -- Events
 				if a_uri_code = Xhtml_uri_code and then STRING_.same_string (a_name, "html") then
 					switch_to_xhtml
 				else
-					a_name.to_lower
-					if a_uri_code = Default_uri_code and then STRING_.same_string (a_name, "html") then
+					if a_uri_code = Default_uri_code and then STRING_.same_case_insensitive (a_name, "html") then
 						switch_to_html
 					else
 						switch_to_xml
