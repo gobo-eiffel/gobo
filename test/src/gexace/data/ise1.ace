@@ -20,14 +20,16 @@ default
 	dynamic_runtime (no)
 	exception_trace (no)
 	il_verifiable (yes)
-	inlining (no)
-	inlining_size ("4")
+	inlining (yes)
+	inlining_size ("0")
 	line_generation (no)
 	msil_generation (no)
 	multithreaded (no)
 	profile (no)
 	msil_generation_type ("exe")
 	trace (no)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 
 cluster
 

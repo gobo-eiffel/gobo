@@ -5,12 +5,12 @@ indexing
 		"Ace file generators for SmartEiffel"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2005, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_SE_GENERATOR
+class ET_XACE_ACE_SE_GENERATOR
 
 inherit
 
@@ -28,11 +28,14 @@ feature -- Access
 	default_system_output_filename: STRING is
 			-- Name of generated Ace file
 		once
-			Result := "se.ace"
+			Result := compiler + ".ace"
 		end
 
-	default_library_output_filename: STRING is "loadpath.se"
-			-- Name of generated loadpath file
+	default_library_output_filename: STRING is
+			-- Name of generated Ace file
+		once
+			Result := compiler + ".ace"
+		end
 
 	cecil_filename: STRING is "cecil.se"
 			-- Name of generated cecil file
@@ -47,13 +50,8 @@ feature -- Output
 
 	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_library'.
-		local
-			a_clusters: ET_XACE_CLUSTERS
 		do
-			a_clusters := a_library.clusters
-			if a_clusters /= Void then
-				print_loadpath_clusters (a_clusters, a_file)
-			end
+			print_precompile_ace_file (a_library, a_file)
 		end
 
 feature {NONE} -- Output
@@ -112,6 +110,81 @@ feature {NONE} -- Output
 			a_system.merge_externals (an_external)
 			create an_exported_features.make
 			a_system.merge_exported_features (an_exported_features)
+			if not an_external.is_empty or not an_exported_features.is_empty then
+				a_file.put_line ("external")
+				a_file.put_new_line
+				if not an_exported_features.is_empty then
+					generate_cecil_file (an_exported_features)
+					print_indentation (1, a_file)
+					a_file.put_string ("cecil (%"")
+					a_file.put_string (cecil_filename)
+					a_file.put_string ("%")")
+					a_file.put_new_line
+				end
+				print_include_directories (an_external.include_directories, a_file)
+				print_link_libraries (an_external.link_libraries, a_file)
+				a_file.put_new_line
+			end
+			if an_option /= Void or not an_external.c_compiler_options.is_empty then
+				a_file.put_line ("generate")
+				a_file.put_new_line
+				if an_option /= Void then
+					print_generate (an_option, 1, a_file)
+				end
+				print_c_compiler_options (an_external.c_compiler_options, a_file)
+				a_file.put_new_line
+			end
+			a_file.put_line ("end")
+		end
+
+	print_precompile_ace_file (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print precompilation Ace file to `a_file'.
+		require
+			a_library_not_void: a_library /= Void
+			a_library_name_not_void: a_library.name /= Void
+			a_library_name_not_empty: a_library.name.count > 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_option: ET_XACE_OPTIONS
+			a_clusters: ET_XACE_CLUSTERS
+			an_external: ET_XACE_EXTERNALS
+			an_exported_features: DS_LINKED_LIST [ET_XACE_EXPORTED_FEATURE]
+		do
+			a_file.put_string ("system")
+			a_file.put_new_line
+			a_file.put_new_line
+			print_indentation (1, a_file)
+			a_file.put_character ('%"')
+			a_file.put_string (a_library.name)
+			a_file.put_character ('%"')
+			a_file.put_new_line
+			a_file.put_new_line
+			a_file.put_string ("root")
+			a_file.put_new_line
+			a_file.put_new_line
+			print_indentation (1, a_file)
+			print_escaped_name ("NONE", a_file)
+			a_file.put_new_line
+			a_file.put_new_line
+			an_option := a_library.options
+			if an_option /= Void then
+				a_file.put_line ("default")
+				a_file.put_new_line
+				print_options (an_option, 1, a_file)
+				a_file.put_new_line
+			end
+			a_file.put_line ("cluster")
+			a_file.put_new_line
+			a_clusters := a_library.clusters
+			if a_clusters /= Void then
+				print_clusters (a_clusters, a_file)
+				a_file.put_new_line
+			end
+			create an_external.make
+			a_library.merge_externals (an_external)
+			create an_exported_features.make
+			a_library.merge_exported_features (an_exported_features)
 			if not an_external.is_empty or not an_exported_features.is_empty then
 				a_file.put_line ("external")
 				a_file.put_new_line

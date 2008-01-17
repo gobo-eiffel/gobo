@@ -188,6 +188,7 @@ goto exit
 	%LD% %LFLAGS% %LFLAG_OUT%gexace%EXE% gexace*%OBJ%
 	%RM% gexace*%OBJ%
 
+	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant5.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant4.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant3.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\geant2.c

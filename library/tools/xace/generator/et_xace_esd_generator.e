@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Ace file generators for Visual Eiffel up to 4.1"
+		"ESD file generators from Xace files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_VE41_GENERATOR
+class ET_XACE_ESD_GENERATOR
 
 inherit
 
@@ -29,11 +29,17 @@ create
 
 feature -- Access
 
-	default_system_output_filename: STRING is "ve.esd"
-			-- Name of generated Ace file
+	default_system_output_filename: STRING is
+			-- Name of generated ESD file
+		once
+			Result := compiler + ".esd"
+		end
 
-	default_library_output_filename: STRING is "ve.eld"
-			-- Name of generated library Ace file
+	default_library_output_filename: STRING is
+			-- Name of generated library ESD file
+		once
+			Result := compiler + ".eld"
+		end
 
 feature -- Output
 
@@ -44,7 +50,7 @@ feature -- Output
 		end
 
 	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Generate a new Ace file from `a_library'.
+			-- Generate a new ESD file from `a_library'.
 		do
 			print_eld_file (a_library, a_file)
 		end

@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Ace file generators for ISE Eiffel"
+		"Ace file generators from Xace files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_ISE_GENERATOR
+class ET_XACE_ACE_GENERATOR
 
 inherit
 
@@ -33,13 +33,13 @@ feature -- Access
 	default_system_output_filename: STRING is
 			-- Name of generated Ace file
 		once
-			Result := "ise.ace"
+			Result := compiler + ".ace"
 		end
 
 	default_library_output_filename: STRING is
 			-- Name of generated library Ace file
 		once
-			Result := "ise.ace"
+			Result := compiler + ".ace"
 		end
 
 feature -- Output
@@ -500,6 +500,10 @@ feature {NONE} -- Output
 					print_indentation (indent, a_file)
 					a_file.put_line ("use_cluster_name_as_namespace (no)")
 				end
+			else
+					-- Xace's default is true.
+				print_indentation (indent, a_file)
+				a_file.put_line ("use_cluster_name_as_namespace (yes)")
 			end
 			if an_option.is_use_full_cluster_name_as_namespace_declared then
 				if an_option.use_full_cluster_name_as_namespace then
@@ -509,6 +513,10 @@ feature {NONE} -- Output
 					print_indentation (indent, a_file)
 					a_file.put_line ("use_all_cluster_name_as_namespace (no)")
 				end
+			else
+					-- Xace's default is true.
+				print_indentation (indent, a_file)
+				a_file.put_line ("use_all_cluster_name_as_namespace (yes)")
 			end
 		end
 
@@ -553,7 +561,7 @@ feature {NONE} -- Output
 				an_option := a_cluster.options
 				print_indentation (1, a_file)
 				if a_cluster.is_recursive then
-					if an_option.read_only then
+					if a_cluster.is_read_only then
 						a_file.put_string ("library ")
 					else
 						a_file.put_string ("all ")

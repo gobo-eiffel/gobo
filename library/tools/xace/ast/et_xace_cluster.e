@@ -102,6 +102,36 @@ feature -- Status report
 	is_mounted: BOOLEAN
 			-- Has cluster been mounted?
 
+	is_fully_ecf_abstract: BOOLEAN is
+			-- Are current cluster and recursively all its subclusters either abstract,
+			-- override, or the root of a library otherwise described by an ECF file?
+			-- Useful when generating ECF files out of Xace because this kind of cluster
+			-- should not appear as a cluster in the generated ECF file.
+		local
+			i, nb: INTEGER
+			a_cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
+		do
+			if is_override then
+				Result := True
+			elseif options /= Void and then options.is_ecf_library_declared then
+				Result := True
+			elseif is_abstract then
+				Result := True
+				if subclusters /= Void then
+					a_cluster_list := subclusters.clusters
+					nb := a_cluster_list.count
+					from i := 1 until i > nb loop
+						if not a_cluster_list.item (i).is_fully_ecf_abstract then
+							Result := False
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					end
+				end
+			end
+		end
+
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN is
 			-- Is `a_filename' an Eiffel filename which has
 			-- not been excluded?
@@ -354,6 +384,41 @@ feature -- Basic operations
 			end
 		ensure
 			no_void_assembly: not an_assemblies.has (Void)
+		end
+
+	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+			-- Add current cluster to `an_override_clusters' if it is an
+			-- override cluster. Otherwise add top level override clusters
+			-- found recursively in its subclusters.
+		require
+			an_override_clusters_not_void: an_override_clusters /= Void
+			no_void_override_cluster: not an_override_clusters.has (Void)
+		do
+			if is_override then
+				an_override_clusters.force_last (Current)
+			elseif subclusters /= Void then
+				subclusters.merge_override_clusters (an_override_clusters)
+			end
+		ensure
+			no_void_override_cluster: not an_override_clusters.has (Void)
+		end
+
+	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+			-- Add current cluster and any of its subclusters to
+			-- `an_ecf_clusters' if they are the root of a library
+			-- that is otherwise described by the ECF file.
+		require
+			an_ecf_clusters_not_void: an_ecf_clusters /= Void
+			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
+		do
+			if options /= Void and then options.is_ecf_library_declared then
+				an_ecf_clusters.force_last (Current)
+			end
+			if subclusters /= Void then
+				subclusters.merge_ecf_clusters (an_ecf_clusters)
+			end
+		ensure
+			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
 		end
 
 feature {NONE} -- Implementation

@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel compilation"
-		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -40,10 +40,16 @@
 			<argument name="a_compiler" value="ge"/>
 			<argument name="a_output" value=""/>
 		</geant>
-		<geant target="xace">
+		<geant target="xace" unless="${ISE_5_7}">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value=""/>
 		</geant>
+		<set name="xace_format" value="ace" if="${ISE_5_7}"/>
+		<geant target="xace" if="${ISE_5_7}">
+			<argument name="a_compiler" value="ise"/>
+			<argument name="a_output" value=""/>
+		</geant>
+		<unset name="xace_format" if="${ISE_5_7}"/>
 		<geant target="xace">
 			<argument name="a_compiler" value="se"/>
 			<argument name="a_output" value=""/>
@@ -75,14 +81,14 @@
 		<set name="eiffel" value="ge"/>
 		<geant target="xace">
 			<argument name="a_compiler" value="ge"/>
-			<argument name="a_output" value="compile_ge.ace"/>
+			<argument name="a_output" value="compile_ge.xace"/>
 		</geant>
 		<delete file="${system}${exe}"/>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
 		<set name="split" value="true"/>
 		<set name="split" value="false" if="${no_split}"/>
-		<gec ace="compile_ge.ace" finalize="${finalize}" c_compile="false" catcall="error" split="${split}"/>
+		<gec ace="compile_ge.xace" finalize="${finalize}" c_compile="false" catcall="error" split="${split}"/>
 		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
@@ -94,10 +100,16 @@
 		</description>
 
 		<set name="eiffel" value="ise"/>
-		<geant target="xace">
+		<geant target="xace" unless="${ISE_5_7}">
+			<argument name="a_compiler" value="ise"/>
+			<argument name="a_output" value="compile_ise.ecf"/>
+		</geant>
+		<set name="xace_format" value="ace" if="${ISE_5_7}"/>
+		<geant target="xace" if="${ISE_5_7}">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value="compile_ise.ace"/>
 		</geant>
+		<unset name="xace_format" if="${ISE_5_7}"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
@@ -106,7 +118,8 @@
 		</delete>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
-		<ise ace="compile_ise.ace" system="${system}" finalize="${finalize}" finish_freezing="true"/>
+		<ise ace="compile_ise.ace" system="${system}" finalize="${finalize}" finish_freezing="true" if="${ISE_5_7}"/>
+		<ise ace="compile_ise.ecf" system="${system}" finalize="${finalize}" finish_freezing="true" unless="${ISE_5_7}"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<available resource="EIFGENs/${system}/${codedir}/${system}${exe}" variable="file_available"/>
@@ -223,6 +236,7 @@
 		<se clean="${system}"/>
 		<ve clean="${system}" recursive="true"/>
 		<delete file="compile_ge.ace"/>
+		<delete file="compile_ge.xace"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
 		<delete file="compile_se.ace"/>
@@ -243,7 +257,9 @@
 
 		<geant target="clean"/>
 		<delete file="ge.ace"/>
+		<delete file="ge.xace"/>
 		<delete file="ise.ace"/>
+		<delete file="ise.ecf"/>
 		<delete file="se.ace"/>
 		<delete file="ve.esd"/>
 		<delete file="ve.xace"/>
@@ -277,7 +293,9 @@
 			necessary.
 		</description>
 
-		<gexace system="${a_compiler}" output="${a_output}" xace="${system_dir}/system.xace">
+		<set name="a_format" value="${xace_format}" if="${xace_format}"/>
+		<set name="a_format" value="" unless="${xace_format}"/>
+		<gexace system="${a_compiler}" output="${a_output}" format="${a_format}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 			<define name="GOBO_EIFFEL" value="${eiffel}"/>
 			<define name="GOBO_OS" value="${GOBO_OS}"/>

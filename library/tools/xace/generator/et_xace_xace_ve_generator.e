@@ -2,22 +2,20 @@ indexing
 
 	description:
 
-		"Ace file generators for Visual Eiffel 5.0 and greater"
+		"Xaace file generators for Visual Eiffel 5.0 and greater"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_VE_GENERATOR
+class ET_XACE_XACE_VE_GENERATOR
 
 inherit
 
-	ET_XACE_XML_GENERATOR
+	ET_XACE_XACE_GENERATOR
 		redefine
-			default_system_output_filename,
-			default_library_output_filename,
 			print_console_application_option,
 			print_mounted_libraries
 		end
@@ -25,14 +23,6 @@ inherit
 create
 
 	make
-
-feature -- Access
-
-	default_system_output_filename: STRING is "ve.xace"
-			-- Name of generated Ace file
-
-	default_library_output_filename: STRING is "ve.xace"
-			-- Name of generated library Ace file
 
 feature {NONE} -- Output
 

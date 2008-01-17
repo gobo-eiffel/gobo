@@ -19,12 +19,24 @@ inherit
 feature -- Access
 
 	generators: DS_LINKED_LIST [ET_XACE_GENERATOR]
-			-- Ace file generators
+			-- Eiffel config file generators
+
+	format: STRING
+			-- Name of Eiffel config file format
+			-- (e.g. ace, ecf, ...)
 
 	output_filename: STRING
 			-- Output filename
 
 feature -- Setting
+
+	set_format (a_format: like format) is
+			-- Set `format' to `a_format'.
+		do
+			format := a_format
+		ensure
+			format_set: format = a_format
+		end
 
 	set_output_filename (a_filename: like output_filename) is
 			-- Set `output_filename' to `a_filename'.

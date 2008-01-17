@@ -17,6 +17,7 @@
 	<cluster name="ise" location="${ISE_EIFFEL}/library" if="${GOBO_EIFFEL}=ise">
 		<option name="abstract" value="true"/>
 		<cluster name="base">
+			<option name="ecf_library" value="${ISE_EIFFEL}/library/base/base.ecf"/>
 			<option name="recursive" value="true"/>
 			<option name="read_only" value="true"/>
 			<option name="exclude" value="table_eiffel3"/>
@@ -66,6 +67,7 @@
 			</cluster>
 		</cluster>
 		<cluster name="time" unless="${GOBO_EIFFELBASE}">
+			<option name="ecf_library" value="${ISE_EIFFEL}/library/time/time.ecf"/>
 			<option name="recursive" value="true"/>
 			<option name="read_only" value="true"/>
 			<option name="exclude" value="french"/>

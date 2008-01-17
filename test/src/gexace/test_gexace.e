@@ -35,7 +35,7 @@ feature -- Test
 				-- and <option name="read_only" value="true"/>.
 			xace_filename := file_system.pathname (sample_dirname, "system1.xace")
 			ace_filename := file_system.pathname (sample_dirname, "ise1.ace")
-			assert_execute (gexace_exe + " --system=ise " + xace_filename + output_log)
+			assert_execute (gexace_exe + " --system=ise --format=ace " + xace_filename + output_log)
 			if file_system.file_count (output_log_filename) = 0 then
 				assert ("no_output_log1a", True)
 			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
@@ -50,7 +50,7 @@ feature -- Test
 			xace_filename := file_system.pathname (sample_dirname, "system2.xace")
 				-- Generate ELD file.
 			ace_filename := file_system.pathname (sample_dirname, "ve2.esd")
-			assert_execute (gexace_exe + " --system=ve41 " + xace_filename + output_log)
+			assert_execute (gexace_exe + " --system=ve --format=esd " + xace_filename + output_log)
 			if file_system.file_count (output_log_filename) = 0 then
 				assert ("no_output_log2a", True)
 			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then

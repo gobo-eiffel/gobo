@@ -5,7 +5,7 @@ indexing
 		"Gexace commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -92,6 +92,10 @@ feature -- Access
 	validate_command: BOOLEAN
 			-- Validate command
 
+	format: STRING
+			-- Eiffel config file format
+			-- (e.g. ace, ecf, ...)
+
 	xace_filename: STRING
 			-- xace filename
 
@@ -139,6 +143,17 @@ feature -- Setting
 			library_command := a_command
 		ensure
 			library_command_set: library_command = a_command
+		end
+
+	set_format (a_format: like format) is
+			-- Set `format' to `a_format'.
+		require
+			a_format_not_void: a_format /= Void
+			a_format_not_empty: a_format.count > 0
+		do
+			format := a_format
+		ensure
+			format_set: format = a_format
 		end
 
 	set_xace_filename (a_filename: like xace_filename) is
@@ -202,6 +217,11 @@ feature -- Execution
 				elseif is_library_executable then
 					cmd.append_string (" --library=%"")
 					cmd := STRING_.appended_string (cmd, library_command)
+					cmd.append_string ("%"")
+				end
+				if format /= Void and then not format.is_empty then
+					cmd.append_string (" --format=%"")
+					cmd := STRING_.appended_string (cmd, format)
 					cmd.append_string ("%"")
 				end
 				if output_filename /= Void then

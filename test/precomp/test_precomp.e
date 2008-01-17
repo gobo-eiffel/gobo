@@ -104,7 +104,7 @@ feature {NONE} -- Precompilation
 				-- Generate Ace file.
 			assert_execute ("gexace --library=ge " + xace_filename + output_log)
 				-- Gobo Eiffel Lint.
-			assert_execute ("gelint --flat ge.ace" + output_log)
+			assert_execute ("gelint --flat ge.xace" + output_log)
 		end
 
 	precomp_ise (base: BOOLEAN) is

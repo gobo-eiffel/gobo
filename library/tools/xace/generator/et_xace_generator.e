@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Ace file generators from Xace systems"
+		"Eiffel config file generators from Xace files"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2007, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,20 +21,27 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
+	make (a_compiler: like compiler; a_variables: like variables; an_error_handler: like error_handler) is
 			-- Create a new generator.
 		require
+			a_compiler_not_void: a_compiler /= Void
 			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
+			compiler := a_compiler
 			variables := a_variables
 			error_handler := an_error_handler
 		ensure
+			compiler_set: compiler = a_compiler
 			variables_set: variables = a_variables
 			error_handler_set: error_handler = an_error_handler
 		end
 
 feature -- Access
+
+	compiler: STRING
+			-- Name of compiler for which the Eiffel config file is generated
+			-- (e.g. ise, ge, ...)
 
 	default_system_output_filename: STRING is
 			-- Default system output filename
@@ -56,10 +63,29 @@ feature -- Access
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
+feature -- Status report
+
+	is_shallow: BOOLEAN
+			-- Does current generator generate Eiffel config files
+			-- which do not follow mounted libraries?
+			-- Note that this option only make sense when the Eiffel config
+			-- file format support the notion of mounted libraries. Otherwise
+			-- this option is ignored.
+
+feature -- Status setting
+
+	set_shallow (b: BOOLEAN) is
+			-- set `is_shallow' to `b'.
+		do
+			is_shallow := b
+		ensure
+			shallow_set: is_shallow = b
+		end
+
 feature -- Output
 
 	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Generate a new Ace file from `a_system'.
+			-- Generate a new Eiffel config file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
 			system_name_not_void: a_system.system_name /= Void
@@ -74,7 +100,7 @@ feature -- Output
 		end
 
 	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Generate a new Ace file from `a_library'.
+			-- Generate a new Eiffel config file from `a_library'.
 		require
 			a_library_not_void: a_library /= Void
 			a_library_name_not_void: a_library.name /= Void
@@ -114,7 +140,7 @@ feature {NONE} -- Output
 feature {NONE} -- Implementation
 
 	is_windows: BOOLEAN is
-			-- Is current generator generating an Ace file
+			-- Is current generator generating an Eiffel config file
 			-- to be used under Windows?
 		local
 			gobo_os_variable: STRING
@@ -140,5 +166,6 @@ invariant
 
 	variables_not_void: variables /= Void
 	error_handler_not_void: error_handler /= Void
+	compiler_not_void: compiler /= Void
 
 end

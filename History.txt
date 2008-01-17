@@ -32,6 +32,35 @@ Version 3.8 - ?
 	* Fixed bug in the flat Degree 3 mode where the precursor features 
 	  corresponding to precursor expressions or instructions were not checked.
 
+	gexace:
+
+	* The option '--system=ise' now generates ECF directly instead of going
+	  through Ace which is then converted to ECF by EiffelStudio. This
+	  allow Xace to support options that have been introduced in ECF. In
+	  order to generate Ace files for ISE, use the new command-line option
+	  '--format=ace'.
+
+	* The option '--system=ge' now generates an Xace file instead of an
+	  Ace file. This makes if possible for example for 'gec' to determine
+	  whether the Boehm GC should be used trhough the Xace option
+	  'garbage_collector'. Otherwise, with Ace files, this information has
+	  to be passed to 'gec' through the command-line option '--gc=boehm'.
+	  In order to generate Ace files for 'gec', use the new command-line
+	  option '--format=ace'.
+
+	* These ECF options have been added to Xace: supplier_precondition,
+	  automatic_backup, check_generic_creation_constraint, ecf_library,
+	  enforce_unique_class_names, external_runtime, force_32bits,
+	  full_class_checking, msil_classes_per_module, msil_culture,
+	  msil_key_file_name, msil_use_optimized_precompile, namespace,
+	  old_verbatim_strings. See $GOBO/doc/gexace/options.txt for more
+	  details.
+
+	* The default value of these Xace options has been changed to follow
+	  the default value in ECF: inlining, inlining_size,
+	  use_cluster_name_as_namespace, use_full_cluster_name_as_namespace.
+	  See $GOBO/doc/gexace/options.txt for more details.
+
 	Gobo Eiffel Kernel Library:
 
 	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')

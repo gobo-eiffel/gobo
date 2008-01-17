@@ -5,7 +5,7 @@ indexing
 		"Gobo Eiffel Xace"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001-2005, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -123,8 +123,6 @@ feature {NONE} -- Command-line processing
 		do
 			if match_long_option ("system") then
 				process_system
-			elseif match_long_option ("cluster") then
-				process_cluster
 			elseif match_long_option ("library") then
 				process_library
 			elseif match_long_option ("validate") then
@@ -150,30 +148,7 @@ feature {NONE} -- Command-line processing
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
 				consume_option
-				process_compilers (a_command, a_compiler)
-				process_output (a_command)
-				process_xace_file (a_command)
-			else
-					-- No compiler specified.
-				report_usage_error
-				Exceptions.die (1)
-			end
-		end
-
-	process_cluster is
-			-- Process 'cluster' command.
-		require
-			is_cluster: match_long_option ("cluster")
-		local
-			a_command: GEXACE_LIBRARY_COMMAND
-			a_compiler: STRING
-		do
-			create a_command.make (variables, error_handler)
-			a_command.set_shallow (is_shallow)
-			commands.force_last (a_command)
-			if is_next_option_long_option and then has_next_option_value then
-				a_compiler := next_option_value
-				consume_option
+				process_format (a_command)
 				process_compilers (a_command, a_compiler)
 				process_output (a_command)
 				process_xace_file (a_command)
@@ -198,6 +173,7 @@ feature {NONE} -- Command-line processing
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
 				consume_option
+				process_format (a_command)
 				process_compilers (a_command, a_compiler)
 				process_output (a_command)
 				process_xace_file (a_command)
@@ -224,46 +200,107 @@ feature {NONE} -- Command-line processing
 
 	process_compilers (a_command: GEXACE_BUILD_COMMAND; a_compiler: STRING) is
 			-- Process compiler name.
-			-- Possible values are: "ge", "ise", "se", "ve" (and "ve41") or "xml".
-			-- The variable GOBO_EIFFEL will automatically be defined
-			-- for the four first cases.
+			-- Possible values are: "ge", "ise", "se", "ve".
+			-- The variable GOBO_EIFFEL will automatically be defined.
 		require
 			a_command_not_void: a_command /= Void
 			a_compiler_not_void: a_compiler /= Void
 		local
 			g: ET_XACE_GENERATOR
-			l_xml_generator: ET_XACE_XML_GENERATOR
+			l_format: STRING
+			l_library_command: GEXACE_LIBRARY_COMMAND
 		do
-			if a_compiler.is_equal ("ge") then
-				variables.force_last ("ge", "GOBO_EIFFEL")
-				create {ET_XACE_GE_GENERATOR} g.make (variables, error_handler)
-				a_command.generators.force_last (g)
-			elseif a_compiler.is_equal ("se") then
-				variables.force_last ("se", "GOBO_EIFFEL")
-				create {ET_XACE_SE_GENERATOR} g.make (variables, error_handler)
-				a_command.generators.force_last (g)
+			variables.force_last (a_compiler, "GOBO_EIFFEL")
+			l_format := a_command.format
+			if a_compiler.same_string ("ge") then
+				if l_format = Void then
+					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("xace") then
+					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ace") then
+					create {ET_XACE_ACE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ecf") then
+					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("esd") then
+					create {ET_XACE_ESD_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("loadpath") then
+					create {ET_XACE_LOADPATH_GENERATOR} g.make (a_compiler, variables, error_handler)
+				end
 			elseif a_compiler.is_equal ("ise") then
-				variables.force_last ("ise", "GOBO_EIFFEL")
-				create {ET_XACE_ISE_GENERATOR} g.make (variables, error_handler)
-				a_command.generators.force_last (g)
-			elseif a_compiler.is_equal ("ve") then
-				variables.force_last ("ve", "GOBO_EIFFEL")
-				create {ET_XACE_VE_GENERATOR} g.make (variables, error_handler)
-				a_command.generators.force_last (g)
+				if l_format = Void then
+					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("xace") then
+					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ace") then
+					create {ET_XACE_ACE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ecf") then
+					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("esd") then
+					create {ET_XACE_ESD_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("loadpath") then
+					create {ET_XACE_LOADPATH_GENERATOR} g.make (a_compiler, variables, error_handler)
+				end
+			elseif a_compiler.is_equal ("se") then
+				if l_format = Void then
+					l_library_command ?= a_command
+					if l_library_command /= Void then
+						create {ET_XACE_LOADPATH_GENERATOR} g.make (a_compiler, variables, error_handler)
+					else
+						create {ET_XACE_ACE_SE_GENERATOR} g.make (a_compiler, variables, error_handler)
+					end
+				elseif l_format.same_string ("xace") then
+					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ace") then
+					create {ET_XACE_ACE_SE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ecf") then
+					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("esd") then
+					create {ET_XACE_ESD_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("loadpath") then
+					create {ET_XACE_LOADPATH_GENERATOR} g.make (a_compiler, variables, error_handler)
+				end
+			elseif a_compiler.same_string ("ve") then
+				if l_format = Void then
+					create {ET_XACE_XACE_VE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("xace") then
+					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ace") then
+					create {ET_XACE_XACE_VE_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("ecf") then
+					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("esd") then
+					create {ET_XACE_ESD_GENERATOR} g.make (a_compiler, variables, error_handler)
+				elseif l_format.same_string ("loadpath") then
+					create {ET_XACE_LOADPATH_GENERATOR} g.make (a_compiler, variables, error_handler)
+				end
 				a_command.set_ve (True)
-			elseif a_compiler.is_equal ("ve41") then
-				variables.force_last ("ve", "GOBO_EIFFEL")
-				create {ET_XACE_VE41_GENERATOR} g.make (variables, error_handler)
+			end
+			if g /= Void then
+				g.set_shallow (is_shallow)
 				a_command.generators.force_last (g)
-			elseif a_compiler.is_equal ("xml") then
-				create l_xml_generator.make (variables, error_handler)
-				l_xml_generator.set_shallow (is_shallow)
-				a_command.generators.force_last (l_xml_generator)
 			end
 			if a_command.generators.is_empty then
 					-- Invalid compiler has been specified.
 				report_usage_error
 				Exceptions.die (1)
+			end
+		end
+
+	process_format (a_command: GEXACE_BUILD_COMMAND) is
+			-- Process format option
+			-- ('--format=<a_format>).
+		require
+			a_command_not_void: a_command /= Void
+		do
+			if match_long_option ("format") then
+				if is_next_option_long_option and then has_next_option_value then
+					a_command.set_format (next_option_value)
+					consume_option
+				else
+						-- No filename specified.
+					report_usage_error
+					Exceptions.die (1)
+				end
 			end
 		end
 
@@ -341,8 +378,8 @@ feature {NONE} -- Usage message
 			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose|--shallow%N%
-				%%Tcommand:  --system=(ge|se|ise|ve|ve41|xml) [--output=<filename>]%N%
-				%%Tcommand:  --library=(ge|se|ise|ve|ve41|xml) [--output=<filename>]%N%
+				%%Tcommand:  --system=(ge|se|ise|ve) [--format=(ace|ecf|xace|esd|loadpath)][--output=<filename>]%N%
+				%%Tcommand:  --library=(ge|se|ise|ve) [--format=(ace|ecf|xace|esd|loadpath)][--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void

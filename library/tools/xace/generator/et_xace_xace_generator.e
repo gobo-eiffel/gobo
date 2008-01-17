@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Ace file generators to XML files"
+		"Xace file generators from Xace files. Useful to strip if/unless clauses."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_XML_GENERATOR
+class ET_XACE_XACE_GENERATOR
 
 inherit
 
@@ -26,51 +26,35 @@ create
 feature -- Access
 
 	default_system_output_filename: STRING is
-			-- Name of generated XML file
+			-- Name of generated Xace file
 		once
-			Result := "xace.xml"
+			Result := compiler + ".xace"
 		end
 
 	default_library_output_filename: STRING is
-			-- Name of generated library XML file
+			-- Name of generated library Xace file
 		once
-			Result := "xace.xml"
-		end
-
-feature -- Status report
-
-	is_shallow: BOOLEAN
-			-- Does current generator generate Xace files
-			-- which do follow mounted libraries?
-
-feature -- Status setting
-
-	set_shallow (b: BOOLEAN) is
-			-- set `is_shallow' to `b'.
-		do
-			is_shallow := b
-		ensure
-			shallow_set: is_shallow = b
+			Result := compiler + ".xace"
 		end
 
 feature -- Output
 
 	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Generate a new XML file from `a_system'.
+			-- Generate a new Xace file from `a_system'.
 		do
-			print_xml_system_file (a_system, a_file)
+			print_xace_system_file (a_system, a_file)
 		end
 
 	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Generate a new Ace file from `a_library'.
+			-- Generate a new Xace file from `a_library'.
 		do
-			print_xml_library_file (a_library, a_file)
+			print_xace_library_file (a_library, a_file)
 		end
 
 feature {NONE} -- Output
 
-	print_xml_system_file (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print XML version of `a_system' to `a_file'.
+	print_xace_system_file (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print Xace version of `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
 			system_name_not_void: a_system.system_name /= Void
@@ -113,8 +97,8 @@ feature {NONE} -- Output
 			a_file.put_line ("</system>")
 		end
 
-	print_xml_library_file (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print XML version of `a_library' to `a_file'.
+	print_xace_library_file (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print Xace version of `a_library' to `a_file'.
 		require
 			a_library_not_void: a_library /= Void
 			a_library_name_not_void: a_library.name /= Void
@@ -368,16 +352,6 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
-			if an_option.is_include_declared then
-				a_cursor := an_option.include.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent, a_file)
-					a_file.put_string ("<option name=%"include%" value=%"")
-					print_quote_escaped_string (a_cursor.item, a_file)
-					a_file.put_line ("%"/>")
-					a_cursor.forth
-				end
-			end
 			if an_option.is_export_option_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"export%" value=%"")
@@ -458,6 +432,16 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"il_verifiable%" value=%"true%"/>")
 				else
 					a_file.put_line ("<option name=%"il_verifiable%" value=%"false%"/>")
+				end
+			end
+			if an_option.is_include_declared then
+				a_cursor := an_option.include.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent, a_file)
+					a_file.put_string ("<option name=%"include%" value=%"")
+					print_quote_escaped_string (a_cursor.item, a_file)
+					a_file.put_line ("%"/>")
+					a_cursor.forth
 				end
 			end
 			if an_option.is_inlining_declared then
@@ -554,6 +538,24 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"map%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_metadata_cache_path_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"metadata_cache_path%" value=%"")
+				print_quote_escaped_string (an_option.metadata_cache_path, a_file)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_msil_assembly_compatibility_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"msil_assembly_compatibility%" value=%"")
+				print_quote_escaped_string (an_option.msil_assembly_compatibility, a_file)
+				a_file.put_line ("%"/>")
+			end
+			if an_option.is_msil_clr_version_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"msil_clr_version%" value=%"")
+				print_quote_escaped_string (an_option.msil_clr_version, a_file)
+				a_file.put_line ("%"/>")
+			end
 			if an_option.is_msil_generation_declared then
 				print_indentation (indent, a_file)
 				if an_option.msil_generation then
@@ -562,6 +564,12 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"msil_generation%" value=%"false%"/>")
 				end
 			end
+			if an_option.is_msil_generation_version_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"msil_generation_version%" value=%"")
+				print_quote_escaped_string (an_option.msil_generation_version, a_file)
+				a_file.put_line ("%"/>")
+			end
 			if an_option.is_multithreaded_declared then
 				print_indentation (indent, a_file)
 				if an_option.multithreaded then
@@ -569,6 +577,12 @@ feature {NONE} -- Output
 				else
 					a_file.put_line ("<option name=%"multithreaded%" value=%"false%"/>")
 				end
+			end
+			if an_option.is_namespace_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"namespace%" value=%"")
+				print_quote_escaped_string (an_option.namespace, a_file)
+				a_file.put_line ("%"/>")
 			end
 			if an_option.is_no_default_lib_declared then
 				print_indentation (indent, a_file)
@@ -662,6 +676,14 @@ feature {NONE} -- Output
 				a_file.put_integer (an_option.stack_size)
 				a_file.put_line ("%"/>")
 			end
+			if an_option.is_storable_declared then
+				print_indentation (indent, a_file)
+				if an_option.storable then
+					a_file.put_line ("<option name=%"storable%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"storable%" value=%"false%"/>")
+				end
+			end
 			if an_option.is_storable_filename_declared then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<option name=%"storable_filename%" value=%"")
@@ -688,6 +710,20 @@ feature {NONE} -- Output
 					a_file.put_line ("<option name=%"trace%" value=%"true%"/>")
 				else
 					a_file.put_line ("<option name=%"trace%" value=%"false%"/>")
+				end
+			end
+			if an_option.is_use_cluster_name_as_namespace_declared then
+				if an_option.use_cluster_name_as_namespace then
+					a_file.put_line ("<option name=%"use_cluster_name_as_namespace%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"use_cluster_name_as_namespace%" value=%"false%"/>")
+				end
+			end
+			if an_option.is_use_full_cluster_name_as_namespace_declared then
+				if an_option.use_full_cluster_name_as_namespace then
+					a_file.put_line ("<option name=%"use_all_cluster_name_as_namespace%" value=%"true%"/>")
+				else
+					a_file.put_line ("<option name=%"use_all_cluster_name_as_namespace%" value=%"false%"/>")
 				end
 			end
 			if an_option.is_verbose_declared then

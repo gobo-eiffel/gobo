@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			declared_fst_expansion_factor := -1
 			declared_heap_size := -1
 			declared_inlining_size := -1
+			declared_msil_classes_per_module := -1
 			declared_stack_size := -1
 		end
 
@@ -83,6 +84,14 @@ feature -- Status report
 			definition: Result = (declared_assertion /= Void and then not declared_assertion.is_empty)
 		end
 
+	is_automatic_backup_declared: BOOLEAN is
+			-- Has 'automatic_backup' option been declared?
+		do
+			Result := declared_automatic_backup /= Void and then not declared_automatic_backup.is_undefined
+		ensure
+			definition: Result = (declared_automatic_backup /= Void and then not declared_automatic_backup.is_undefined)
+		end
+
 	is_callback_declared: BOOLEAN is
 			-- Has 'callback' option been declared?
 		do
@@ -97,6 +106,14 @@ feature -- Status report
 			Result := declared_case_insensitive /= Void and then not declared_case_insensitive.is_undefined
 		ensure
 			definition: Result = (declared_case_insensitive /= Void and then not declared_case_insensitive.is_undefined)
+		end
+
+	is_check_generic_creation_constraint_declared: BOOLEAN is
+			-- Has 'check_generic_creation_constraint' option been declared?
+		do
+			Result := declared_check_generic_creation_constraint /= Void and then not declared_check_generic_creation_constraint.is_undefined
+		ensure
+			definition: Result = (declared_check_generic_creation_constraint /= Void and then not declared_check_generic_creation_constraint.is_undefined)
 		end
 
 	is_check_vape_declared: BOOLEAN is
@@ -219,6 +236,22 @@ feature -- Status report
 			definition: Result = (declared_dynamic_runtime /= Void and then not declared_dynamic_runtime.is_undefined)
 		end
 
+	is_ecf_library_declared: BOOLEAN is
+			-- Has 'ecf_library' option been declared?
+		do
+			Result := declared_ecf_library /= Void
+		ensure
+			definition: Result = (declared_ecf_library /= Void)
+		end
+
+	is_enforce_unique_class_names_declared: BOOLEAN is
+			-- Has 'enforce_unique_class_names' option been declared?
+		do
+			Result := declared_enforce_unique_class_names /= Void and then not declared_enforce_unique_class_names.is_undefined
+		ensure
+			definition: Result = (declared_enforce_unique_class_names /= Void and then not declared_enforce_unique_class_names.is_undefined)
+		end
+
 	is_exception_trace_declared: BOOLEAN is
 			-- Has 'exception_trace' option been declared?
 		do
@@ -243,6 +276,14 @@ feature -- Status report
 			definition: Result = (declared_export_option /= Void)
 		end
 
+	is_external_runtime_declared: BOOLEAN is
+			-- Has 'external_runtime' option been declared?
+		do
+			Result := declared_external_runtime /= Void
+		ensure
+			definition: Result = (declared_external_runtime /= Void)
+		end
+
 	is_finalize_option_declared: BOOLEAN is
 			-- Has 'finalize' option been declared?
 		do
@@ -259,6 +300,14 @@ feature -- Status report
 			definition: Result = (declared_flat_fst_optimization /= Void and then not declared_flat_fst_optimization.is_undefined)
 		end
 
+	is_force_32bits_declared: BOOLEAN is
+			-- Has 'force_32bits' option been declared?
+		do
+			Result := declared_force_32bits /= Void and then not declared_force_32bits.is_undefined
+		ensure
+			definition: Result = (declared_force_32bits /= Void and then not declared_force_32bits.is_undefined)
+		end
+
 	is_fst_expansion_factor_declared: BOOLEAN is
 			-- Has 'fst_expansion_factor' option been declared?
 		do
@@ -273,6 +322,14 @@ feature -- Status report
 			Result := declared_fst_optimization /= Void and then not declared_fst_optimization.is_undefined
 		ensure
 			definition: Result = (declared_fst_optimization /= Void and then not declared_fst_optimization.is_undefined)
+		end
+
+	is_full_class_checking_declared: BOOLEAN is
+			-- Has 'full_class_checking' option been declared?
+		do
+			Result := declared_full_class_checking /= Void and then not declared_full_class_checking.is_undefined
+		ensure
+			definition: Result = (declared_full_class_checking /= Void and then not declared_full_class_checking.is_undefined)
 		end
 
 	is_garbage_collector_declared: BOOLEAN is
@@ -443,12 +500,28 @@ feature -- Status report
 			definition: Result = (declared_msil_assembly_compatibility /= Void)
 		end
 
+	is_msil_classes_per_module_declared: BOOLEAN is
+			-- Has 'msil_classes_per_module' option been declared?
+		do
+			Result := declared_msil_classes_per_module > 0
+		ensure
+			definition: Result = (declared_msil_classes_per_module > 0)
+		end
+
 	is_msil_clr_version_declared: BOOLEAN is
 			-- Has 'msil_clr_version' option been declared?
 		do
 			Result := declared_msil_clr_version /= Void
 		ensure
 			definition: Result = (declared_msil_clr_version /= Void)
+		end
+
+	is_msil_culture_declared: BOOLEAN is
+			-- Has 'msil_culture' option been declared?
+		do
+			Result := declared_msil_culture /= Void
+		ensure
+			definition: Result = (declared_msil_culture /= Void)
 		end
 
 	is_msil_generation_declared: BOOLEAN is
@@ -465,6 +538,22 @@ feature -- Status report
 			Result := declared_msil_generation_version /= Void
 		ensure
 			definition: Result = (declared_msil_generation_version /= Void)
+		end
+
+	is_msil_key_file_name_declared: BOOLEAN is
+			-- Has 'msil_key_file_name' option been declared?
+		do
+			Result := declared_msil_key_file_name /= Void
+		ensure
+			definition: Result = (declared_msil_key_file_name /= Void)
+		end
+
+	is_msil_use_optimized_precompile_declared: BOOLEAN is
+			-- Has 'msil_use_optimized_precompile' option been declared?
+		do
+			Result := declared_msil_use_optimized_precompile /= Void and then not declared_msil_use_optimized_precompile.is_undefined
+		ensure
+			definition: Result = (declared_msil_use_optimized_precompile /= Void and then not declared_msil_use_optimized_precompile.is_undefined)
 		end
 
 	is_multithreaded_declared: BOOLEAN is
@@ -489,6 +578,14 @@ feature -- Status report
 			Result := declared_no_default_lib /= Void and then not declared_no_default_lib.is_undefined
 		ensure
 			definition: Result = (declared_no_default_lib /= Void and then not declared_no_default_lib.is_undefined)
+		end
+
+	is_old_verbatim_strings_declared: BOOLEAN is
+			-- Has 'old_verbatim_strings' option been declared?
+		do
+			Result := declared_old_verbatim_strings /= Void and then not declared_old_verbatim_strings.is_undefined
+		ensure
+			definition: Result = (declared_old_verbatim_strings /= Void and then not declared_old_verbatim_strings.is_undefined)
 		end
 
 	is_override_cluster_declared: BOOLEAN is
@@ -751,6 +848,16 @@ feature -- Option values
 			-- valid_value: forall v in Result, valid_assertion.has (v)
 		end
 
+	automatic_backup: BOOLEAN is
+			-- Is 'automatic_backup' option enabled?
+		do
+			if is_automatic_backup_declared then
+				Result := declared_automatic_backup.is_true
+			else
+				Result := default_automatic_backup
+			end
+		end
+
 	callback: STRING is
 			-- 'callback' option
 		do
@@ -770,6 +877,16 @@ feature -- Option values
 				Result := declared_case_insensitive.is_true
 			else
 				Result := default_case_insensitive
+			end
+		end
+
+	check_generic_creation_constraint: BOOLEAN is
+			-- 'check_generic_creation_constraint' option
+		do
+			if is_check_generic_creation_constraint_declared then
+				Result := declared_check_generic_creation_constraint.is_true
+			else
+				Result := default_check_generic_creation_constraint
 			end
 		end
 
@@ -932,6 +1049,26 @@ feature -- Option values
 			end
 		end
 
+	ecf_library: STRING is
+			-- 'ecf_library' option
+		do
+			if is_ecf_library_declared then
+				Result := declared_ecf_library
+			else
+				Result := default_ecf_library
+			end
+		end
+
+	enforce_unique_class_names: BOOLEAN is
+			-- 'enforce_unique_class_names' option
+		do
+			if is_enforce_unique_class_names_declared then
+				Result := declared_enforce_unique_class_names.is_true
+			else
+				Result := default_enforce_unique_class_names
+			end
+		end
+
 	exception_trace: BOOLEAN is
 			-- 'exception_trace' option
 		do
@@ -965,6 +1102,16 @@ feature -- Option values
 			end
 		end
 
+	external_runtime: STRING is
+			-- 'external_runtime' option
+		do
+			if is_external_runtime_declared then
+				Result := declared_external_runtime
+			else
+				Result := default_external_runtime
+			end
+		end
+
 	finalize_option: BOOLEAN is
 			-- 'finalize' option
 		do
@@ -982,6 +1129,16 @@ feature -- Option values
 				Result := declared_flat_fst_optimization.is_true
 			else
 				Result := default_flat_fst_optimization
+			end
+		end
+
+	force_32bits: BOOLEAN is
+			-- 'force_32bits' option
+		do
+			if is_force_32bits_declared then
+				Result := declared_force_32bits.is_true
+			else
+				Result := default_force_32bits
 			end
 		end
 
@@ -1004,6 +1161,16 @@ feature -- Option values
 				Result := declared_fst_optimization.is_true
 			else
 				Result := default_fst_optimization
+			end
+		end
+
+	full_class_checking: BOOLEAN is
+			-- 'full_class_checking' option
+		do
+			if is_full_class_checking_declared then
+				Result := declared_full_class_checking.is_true
+			else
+				Result := default_full_class_checking
 			end
 		end
 
@@ -1238,6 +1405,18 @@ feature -- Option values
 			end
 		end
 
+	msil_classes_per_module: INTEGER is
+			-- 'msil_classes_per_module' option
+		do
+			if is_msil_classes_per_module_declared then
+				Result := declared_msil_classes_per_module
+			else
+				Result := default_msil_classes_per_module
+			end
+		ensure
+			msil_classes_per_module_positive: Result > 0
+		end
+
 	msil_clr_version: STRING is
 			-- 'msil_clr_version' option
 		do
@@ -1245,6 +1424,16 @@ feature -- Option values
 				Result := declared_msil_clr_version
 			else
 				Result := default_msil_clr_version
+			end
+		end
+
+	msil_culture: STRING is
+			-- 'msil_culture' option
+		do
+			if is_msil_culture_declared then
+				Result := declared_msil_culture
+			else
+				Result := default_msil_culture
 			end
 		end
 
@@ -1265,6 +1454,26 @@ feature -- Option values
 				Result := declared_msil_generation_version
 			else
 				Result := default_msil_generation_version
+			end
+		end
+
+	msil_key_file_name: STRING is
+			-- 'msil_key_file_name' option
+		do
+			if is_msil_key_file_name_declared then
+				Result := declared_msil_key_file_name
+			else
+				Result := default_msil_key_file_name
+			end
+		end
+
+	msil_use_optimized_precompile: BOOLEAN is
+			-- 'msil_use_optimized_precompile' option
+		do
+			if is_msil_use_optimized_precompile_declared then
+				Result := declared_msil_use_optimized_precompile.is_true
+			else
+				Result := default_msil_use_optimized_precompile
 			end
 		end
 
@@ -1295,6 +1504,16 @@ feature -- Option values
 				Result := declared_no_default_lib.is_true
 			else
 				Result := default_no_default_lib
+			end
+		end
+
+	old_verbatim_strings: BOOLEAN is
+			-- 'old_verbatim_strings' option
+		do
+			if is_old_verbatim_strings_declared then
+				Result := declared_old_verbatim_strings.is_true
+			else
+				Result := default_old_verbatim_strings
 			end
 		end
 
@@ -1633,6 +1852,22 @@ feature -- Modification
 			assertion_set: assertion.has (a_value)
 		end
 
+	set_automatic_backup (b: BOOLEAN) is
+			-- Set `automatic_backup' to `b'.
+		do
+			if declared_automatic_backup = Void then
+				create declared_automatic_backup.make_undefined
+			end
+			if b then
+				declared_automatic_backup.set_true
+			else
+				declared_automatic_backup.set_false
+			end
+		ensure
+			automatic_backup_declared: is_automatic_backup_declared
+			automatic_backup_set: automatic_backup = b
+		end
+
 	set_callback (a_value: STRING) is
 			-- Set `callback' to `a_value'.
 		require
@@ -1659,6 +1894,22 @@ feature -- Modification
 		ensure
 			case_insensitive_declared: is_case_insensitive_declared
 			case_insensitive_set: case_insensitive = b
+		end
+
+	set_check_generic_creation_constraint (b: BOOLEAN) is
+			-- Set `check_generic_creation_constraint' to `b'.
+		do
+			if declared_check_generic_creation_constraint = Void then
+				create declared_check_generic_creation_constraint.make_undefined
+			end
+			if b then
+				declared_check_generic_creation_constraint.set_true
+			else
+				declared_check_generic_creation_constraint.set_false
+			end
+		ensure
+			check_generic_creation_constraint_declared: is_check_generic_creation_constraint_declared
+			check_generic_creation_constraint_set: check_generic_creation_constraint = b
 		end
 
 	set_check_vape (b: BOOLEAN) is
@@ -1884,6 +2135,33 @@ feature -- Modification
 			dynamic_runtime_set: dynamic_runtime = b
 		end
 
+	set_ecf_library (a_value: STRING) is
+			-- Set `ecf_library' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_ecf_library := a_value
+		ensure
+			ecf_library_declared: is_ecf_library_declared
+			ecf_library_set: ecf_library = a_value
+		end
+
+	set_enforce_unique_class_names (b: BOOLEAN) is
+			-- Set `enforce_unique_class_names' to `b'.
+		do
+			if declared_enforce_unique_class_names = Void then
+				create declared_enforce_unique_class_names.make_undefined
+			end
+			if b then
+				declared_enforce_unique_class_names.set_true
+			else
+				declared_enforce_unique_class_names.set_false
+			end
+		ensure
+			enforce_unique_class_names_declared: is_enforce_unique_class_names_declared
+			enforce_unique_class_names_set: enforce_unique_class_names = b
+		end
+
 	set_exception_trace (b: BOOLEAN) is
 			-- Set `exception_trace' to `b'.
 		do
@@ -1926,6 +2204,17 @@ feature -- Modification
 			export_option_set: export_option = a_value
 		end
 
+	set_external_runtime (a_value: STRING) is
+			-- Set `external_runtime' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_external_runtime := a_value
+		ensure
+			external_runtime_declared: is_external_runtime_declared
+			external_runtime_set: external_runtime = a_value
+		end
+
 	set_finalize_option (b: BOOLEAN) is
 			-- Set `finalize_option' to `b'.
 		do
@@ -1958,6 +2247,22 @@ feature -- Modification
 			flat_fst_optimization_set: flat_fst_optimization = b
 		end
 
+	set_force_32bits (b: BOOLEAN) is
+			-- Set `force_32bits' to `b'.
+		do
+			if declared_force_32bits = Void then
+				create declared_force_32bits.make_undefined
+			end
+			if b then
+				declared_force_32bits.set_true
+			else
+				declared_force_32bits.set_false
+			end
+		ensure
+			force_32bits_declared: is_force_32bits_declared
+			force_32bits_set: force_32bits = b
+		end
+
 	set_fst_expansion_factor (v: INTEGER) is
 			-- Set `fst_expansion_factor' to `v'.
 		require
@@ -1983,6 +2288,22 @@ feature -- Modification
 		ensure
 			fst_optimization_declared: is_fst_optimization_declared
 			fst_optimization_set: fst_optimization = b
+		end
+
+	set_full_class_checking (b: BOOLEAN) is
+			-- Set `full_class_checking' to `b'.
+		do
+			if declared_full_class_checking = Void then
+				create declared_full_class_checking.make_undefined
+			end
+			if b then
+				declared_full_class_checking.set_true
+			else
+				declared_full_class_checking.set_false
+			end
+		ensure
+			full_class_checking_declared: is_full_class_checking_declared
+			full_class_checking_set: full_class_checking = b
 		end
 
 	set_garbage_collector (a_value: STRING) is
@@ -2282,6 +2603,17 @@ feature -- Modification
 			msil_assembly_compatibility_set: msil_assembly_compatibility = a_value
 		end
 
+	set_msil_classes_per_module (v: INTEGER) is
+			-- Set `msil_classes_per_module' to `v'.
+		require
+			v_positive: v > 0
+		do
+			declared_msil_classes_per_module := v
+		ensure
+			msil_classes_per_module_declared: is_msil_classes_per_module_declared
+			msil_classes_per_module_set: msil_classes_per_module = v
+		end
+
 	set_msil_clr_version (a_value: STRING) is
 			-- Set `msil_clr_version' to `a_value'.
 		require
@@ -2291,6 +2623,17 @@ feature -- Modification
 		ensure
 			msil_clr_version_declared: is_msil_clr_version_declared
 			msil_clr_version_set: msil_clr_version = a_value
+		end
+
+	set_msil_culture (a_value: STRING) is
+			-- Set `msil_culture' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_msil_culture := a_value
+		ensure
+			msil_culture_declared: is_msil_culture_declared
+			msil_culture_set: msil_culture = a_value
 		end
 
 	set_msil_generation (b: BOOLEAN) is
@@ -2318,6 +2661,33 @@ feature -- Modification
 		ensure
 			msil_generation_version_declared: is_msil_generation_version_declared
 			msil_generation_version_set: msil_generation_version = a_value
+		end
+
+	set_msil_key_file_name (a_value: STRING) is
+			-- Set `msil_key_file_name' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_msil_key_file_name := a_value
+		ensure
+			msil_key_file_name_declared: is_msil_key_file_name_declared
+			msil_key_file_name_set: msil_key_file_name = a_value
+		end
+
+	set_msil_use_optimized_precompile (b: BOOLEAN) is
+			-- Set `msil_use_optimized_precompile' to `b'.
+		do
+			if declared_msil_use_optimized_precompile = Void then
+				create declared_msil_use_optimized_precompile.make_undefined
+			end
+			if b then
+				declared_msil_use_optimized_precompile.set_true
+			else
+				declared_msil_use_optimized_precompile.set_false
+			end
+		ensure
+			msil_use_optimized_precompile_declared: is_msil_use_optimized_precompile_declared
+			msil_use_optimized_precompile_set: msil_use_optimized_precompile = b
 		end
 
 	set_multithreaded (b: BOOLEAN) is
@@ -2361,6 +2731,22 @@ feature -- Modification
 		ensure
 			no_default_lib_declared: is_no_default_lib_declared
 			no_default_lib_set: no_default_lib = b
+		end
+
+	set_old_verbatim_strings (b: BOOLEAN) is
+			-- Set `old_verbatim_strings' to `b'.
+		do
+			if declared_old_verbatim_strings = Void then
+				create declared_old_verbatim_strings.make_undefined
+			end
+			if b then
+				declared_old_verbatim_strings.set_true
+			else
+				declared_old_verbatim_strings.set_false
+			end
+		ensure
+			old_verbatim_strings_declared: is_old_verbatim_strings_declared
+			old_verbatim_strings_set: old_verbatim_strings = b
 		end
 
 	set_override_cluster (a_value: STRING) is
@@ -2742,6 +3128,14 @@ feature -- Status setting
 			assertion_not_declared: not is_assertion_declared
 		end
 
+	unset_automatic_backup is
+			-- Unset `automatic_backup'.
+		do
+			declared_automatic_backup := Void
+		ensure
+			automatic_backup_not_declared: not is_automatic_backup_declared
+		end
+
 	unset_callback is
 			-- Unset `callback'.
 		do
@@ -2756,6 +3150,14 @@ feature -- Status setting
 			declared_case_insensitive := Void
 		ensure
 			case_insensitive_not_declared: not is_case_insensitive_declared
+		end
+
+	unset_check_generic_creation_constraint is
+			-- Unset `check_generic_creation_constraint'.
+		do
+			declared_check_generic_creation_constraint := Void
+		ensure
+			check_generic_creation_constraint_not_declared: not is_check_generic_creation_constraint_declared
 		end
 
 	unset_check_vape is
@@ -2878,6 +3280,22 @@ feature -- Status setting
 			dynamic_runtime_not_declared: not is_dynamic_runtime_declared
 		end
 
+	unset_ecf_library is
+			-- Unset `ecf_library'.
+		do
+			declared_ecf_library := Void
+		ensure
+			ecf_library_not_declared: not is_ecf_library_declared
+		end
+
+	unset_enforce_unique_class_names is
+			-- Unset `enforce_unique_class_names'.
+		do
+			declared_enforce_unique_class_names := Void
+		ensure
+			enforce_unique_class_names_not_declared: not is_enforce_unique_class_names_declared
+		end
+
 	unset_exception_trace is
 			-- Unset `exception_trace'.
 		do
@@ -2902,6 +3320,14 @@ feature -- Status setting
 			export_option_not_declared: not is_export_option_declared
 		end
 
+	unset_external_runtime is
+			-- Unset `external_runtime'.
+		do
+			declared_external_runtime := Void
+		ensure
+			external_runtime_not_declared: not is_external_runtime_declared
+		end
+
 	unset_finalize_option is
 			-- Unset `finalize_option'.
 		do
@@ -2918,6 +3344,14 @@ feature -- Status setting
 			flat_fst_optimization_not_declared: not is_flat_fst_optimization_declared
 		end
 
+	unset_force_32bits is
+			-- Unset `force_32bits'.
+		do
+			declared_force_32bits := Void
+		ensure
+			force_32bits_not_declared: not is_force_32bits_declared
+		end
+
 	unset_fst_expansion_factor is
 			-- Unset `fst_expansion_factor'.
 		do
@@ -2932,6 +3366,14 @@ feature -- Status setting
 			declared_fst_optimization := Void
 		ensure
 			fst_optimization_not_declared: not is_fst_optimization_declared
+		end
+
+	unset_full_class_checking is
+			-- Unset `full_class_checking'.
+		do
+			declared_full_class_checking := Void
+		ensure
+			full_class_checking_not_declared: not is_full_class_checking_declared
 		end
 
 	unset_garbage_collector is
@@ -3102,12 +3544,28 @@ feature -- Status setting
 			msil_assembly_compatibility_not_declared: not is_msil_assembly_compatibility_declared
 		end
 
+	unset_msil_classes_per_module is
+			-- Unset `msil_classes_per_module'.
+		do
+			declared_msil_classes_per_module := -1
+		ensure
+			msil_classes_per_module_not_declared: not is_msil_classes_per_module_declared
+		end
+
 	unset_msil_clr_version is
 			-- Unset `msil_clr_version'.
 		do
 			declared_msil_clr_version := Void
 		ensure
 			msil_clr_version_not_declared: not is_msil_clr_version_declared
+		end
+
+	unset_msil_culture is
+			-- Unset `msil_culture'.
+		do
+			declared_msil_culture := Void
+		ensure
+			msil_culture_not_declared: not is_msil_culture_declared
 		end
 
 	unset_msil_generation is
@@ -3124,6 +3582,22 @@ feature -- Status setting
 			declared_msil_generation_version := Void
 		ensure
 			msil_generation_version_not_declared: not is_msil_generation_version_declared
+		end
+
+	unset_msil_key_file_name is
+			-- Unset `msil_key_file_name'.
+		do
+			declared_msil_key_file_name := Void
+		ensure
+			msil_key_file_name_not_declared: not is_msil_key_file_name_declared
+		end
+
+	unset_msil_use_optimized_precompile is
+			-- Unset `msil_use_optimized_precompile'.
+		do
+			declared_msil_use_optimized_precompile := Void
+		ensure
+			msil_use_optimized_precompile_not_declared: not is_msil_use_optimized_precompile_declared
 		end
 
 	unset_multithreaded is
@@ -3148,6 +3622,14 @@ feature -- Status setting
 			declared_no_default_lib := Void
 		ensure
 			no_default_lib_not_declared: not is_no_default_lib_declared
+		end
+
+	unset_old_verbatim_strings is
+			-- Unset `old_verbatim_strings'.
+		do
+			declared_old_verbatim_strings := Void
+		ensure
+			old_verbatim_strings_not_declared: not is_old_verbatim_strings_declared
 		end
 
 	unset_override_cluster is
@@ -3347,11 +3829,12 @@ feature -- Valid values
 	valid_assertion: DS_HASH_SET [STRING] is
 			-- Valid values for 'assertion' option
 		once
-			create Result.make (9)
+			create Result.make (10)
 			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.generate_value)
 			Result.put_last (options.require_value)
+			Result.put_last (options.supplier_precondition_value)
 			Result.put_last (options.ensure_value)
 			Result.put_last (options.invariant_value)
 			Result.put_last (options.loop_invariant_value)
@@ -3521,11 +4004,17 @@ feature -- Declared values
 	declared_assertion: DS_HASH_SET [STRING]
 			-- Declared values for 'assertion' option
 
+	declared_automatic_backup: UT_TRISTATE
+			-- Declared value for 'automatic_backup' option
+
 	declared_callback: STRING
 			-- Declared value for 'callback' option
 
 	declared_case_insensitive: UT_TRISTATE
 			-- Declared value for 'case_insensitive' option
+
+	declared_check_generic_creation_constraint: UT_TRISTATE
+			-- Declared value for 'check_generic_creation_constraint' option
 
 	declared_check_vape: UT_TRISTATE
 			-- Declared value for 'check_vape' option
@@ -3572,6 +4061,12 @@ feature -- Declared values
 	declared_dynamic_runtime: UT_TRISTATE
 			-- Declared value for 'dynamic_runtime' option
 
+	declared_ecf_library: STRING
+			-- Declared value for 'ecf_library' option
+
+	declared_enforce_unique_class_names: UT_TRISTATE
+			-- Declared value for 'enforce_unique_class_names' option
+
 	declared_exception_trace: UT_TRISTATE
 			-- Declared value for 'exception_trace' option
 
@@ -3581,17 +4076,26 @@ feature -- Declared values
 	declared_export_option: STRING
 			-- Declared value for 'export' option
 
+	declared_external_runtime: STRING
+			-- Declared value for 'external_runtime' option
+
 	declared_finalize_option: UT_TRISTATE
 			-- Declared value for 'finalize' option
 
 	declared_flat_fst_optimization: UT_TRISTATE
 			-- Declared value for 'flat_fst_optimization' option
 
+	declared_force_32bits: UT_TRISTATE
+			-- Declared value for 'force_32bits' option
+
 	declared_fst_expansion_factor: INTEGER
 			-- Declared value for 'fst_expansion_factor' option
 
 	declared_fst_optimization: UT_TRISTATE
 			-- Declared value for 'fst_optimization' option
+
+	declared_full_class_checking: UT_TRISTATE
+			-- Declared value for 'full_class_checking' option
 
 	declared_garbage_collector: STRING
 			-- Declared value for 'garbage_collector' option
@@ -3656,14 +4160,26 @@ feature -- Declared values
 	declared_msil_assembly_compatibility: STRING
 			-- Declared value for 'msil_assembly_compatibility' option
 
+	declared_msil_classes_per_module: INTEGER
+			-- Declared value for 'msil_classes_per_module' option
+
 	declared_msil_clr_version: STRING
 			-- Declared value for 'msil_clr_version' option
+
+	declared_msil_culture: STRING
+			-- Declared value for 'msil_culture' option
 
 	declared_msil_generation: UT_TRISTATE
 			-- Declared value for 'msil_generation' option
 
 	declared_msil_generation_version: STRING
 			-- Declared value for 'msil_generation_version' option
+
+	declared_msil_key_file_name: STRING
+			-- Declared value for 'msil_key_file_name' option
+
+	declared_msil_use_optimized_precompile: UT_TRISTATE
+			-- Declared value for 'msil_use_optimized_precompile' option
 
 	declared_multithreaded: UT_TRISTATE
 			-- Declared value for 'multithreaded' option
@@ -3673,6 +4189,9 @@ feature -- Declared values
 
 	declared_no_default_lib: UT_TRISTATE
 			-- Declared value for 'no_default_lib' option
+
+	declared_old_verbatim_strings: UT_TRISTATE
+			-- Declared value for 'old_verbatim_strings' option
 
 	declared_override_cluster: STRING
 			-- Declared value for 'override_cluster' option
@@ -3784,6 +4303,9 @@ feature -- Default values
 			-- valid_value: forall v in Result, valid_assertion.has (v)
 		end
 
+	default_automatic_backup: BOOLEAN is False
+			-- Default value for 'automatic_backup' option
+
 	default_callback: STRING is
 			-- Default value for 'callback' option
 		once
@@ -3794,6 +4316,9 @@ feature -- Default values
 
 	default_case_insensitive: BOOLEAN is True
 			-- Default value for 'case_insensitive' option
+
+	default_check_generic_creation_constraint: BOOLEAN is True
+			-- Default value for 'check_generic_creation_constraint' option
 
 	default_check_vape: BOOLEAN is True
 			-- Default value for 'check_vape' option
@@ -3871,6 +4396,15 @@ feature -- Default values
 	default_dynamic_runtime: BOOLEAN is False
 			-- Default value for 'dynamic_runtime' option
 
+	default_ecf_library: STRING is
+			-- Default value for 'ecf_library' option
+		once
+			Result := Void
+		end
+
+	default_enforce_unique_class_names: BOOLEAN is False
+			-- Default value for 'enforce_unique_class_names' option
+
 	default_exception_trace: BOOLEAN is False
 			-- Default value for 'exception_trace' option
 
@@ -3890,17 +4424,29 @@ feature -- Default values
 			Result := Void
 		end
 
+	default_external_runtime: STRING is
+			-- Default value for 'external_runtime' option
+		once
+			Result := Void
+		end
+
 	default_finalize_option: BOOLEAN is False
 			-- Default value for 'finalize' option
 
 	default_flat_fst_optimization: BOOLEAN is False
 			-- Default value for 'flat_fst_optimization' option
 
+	default_force_32bits: BOOLEAN is False
+			-- Default value for 'force_32bits' option
+
 	default_fst_expansion_factor: INTEGER is 2
 			-- Default value for 'fst_expansion_factor' option
 
 	default_fst_optimization: BOOLEAN is False
 			-- Default value for 'fst_optimization' option
+
+	default_full_class_checking: BOOLEAN is False
+			-- Default value for 'full_class_checking' option
 
 	default_garbage_collector: STRING is
 			-- Default value for 'garbage_collector' option
@@ -3947,13 +4493,13 @@ feature -- Default values
 		once
 			create Result.make (1)
 			Result.set_equality_tester (string_equality_tester)
-			Result.put_new (options.none_value)
+			Result.put_new (options.all_value)
 		ensure
 			default_inlining_not_void: Result /= Void
 			-- valid_value: forall v in Result, valid_inlining.has (v)
 		end
 
-	default_inlining_size: INTEGER is 4
+	default_inlining_size: INTEGER is 0
 			-- Default value for 'inlining_size' option
 
 	default_jumps_optimization: BOOLEAN is False
@@ -4015,8 +4561,17 @@ feature -- Default values
 			Result := Void
 		end
 
+	default_msil_classes_per_module: INTEGER is 5
+			-- Default value for 'msil_classes_per_module' option
+
 	default_msil_clr_version: STRING is
 			-- Default value for 'msil_clr_version' option
+		once
+			Result := Void
+		end
+
+	default_msil_culture: STRING is
+			-- Default value for 'msil_culture' option
 		once
 			Result := Void
 		end
@@ -4030,6 +4585,15 @@ feature -- Default values
 			Result := Void
 		end
 
+	default_msil_key_file_name: STRING is
+			-- Default value for 'msil_key_file_name' option
+		once
+			Result := Void
+		end
+
+	default_msil_use_optimized_precompile: BOOLEAN is False
+			-- Default value for 'msil_use_optimized_precompile' option
+
 	default_multithreaded: BOOLEAN is False
 			-- Default value for 'multithreaded' option
 
@@ -4041,6 +4605,9 @@ feature -- Default values
 
 	default_no_default_lib: BOOLEAN is False
 			-- Default value for 'no_default_lib' option
+
+	default_old_verbatim_strings: BOOLEAN is False
+			-- Default value for 'old_verbatim_strings' option
 
 	default_override_cluster: STRING is
 			-- Default value for 'override_cluster' option

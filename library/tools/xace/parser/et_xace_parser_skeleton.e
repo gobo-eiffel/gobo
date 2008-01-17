@@ -785,6 +785,14 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_assertion, a_position_table.item (an_element))
 									end
+								when automatic_backup_code then
+									if is_true (a_value) then
+										an_option.set_automatic_backup (True)
+									elseif is_false (a_value) then
+										an_option.set_automatic_backup (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when callback_code then
 									if an_option.valid_callback.has (a_value) then
 										an_option.set_callback (a_value)
@@ -796,6 +804,14 @@ feature {NONE} -- Element change
 										an_option.set_case_insensitive (True)
 									elseif is_false (a_value) then
 										an_option.set_case_insensitive (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when check_generic_creation_constraint_code then
+									if is_true (a_value) then
+										an_option.set_check_vape (True)
+									elseif is_false (a_value) then
+										an_option.set_check_vape (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
@@ -891,6 +907,16 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when ecf_library_code then
+									an_option.set_ecf_library (a_value)
+								when enforce_unique_class_names_code then
+									if is_true (a_value) then
+										an_option.set_enforce_unique_class_names (True)
+									elseif is_false (a_value) then
+										an_option.set_enforce_unique_class_names (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when exception_trace_code then
 									if is_true (a_value) then
 										an_option.set_exception_trace (True)
@@ -903,6 +929,8 @@ feature {NONE} -- Element change
 									an_option.set_exclude (a_value)
 								when export_option_code then
 									an_option.set_export_option (a_value)
+								when external_runtime_code then
+									an_option.set_external_runtime (a_value)
 								when finalize_option_code then
 									if is_true (a_value) then
 										an_option.set_finalize_option (True)
@@ -916,6 +944,14 @@ feature {NONE} -- Element change
 										an_option.set_flat_fst_optimization (True)
 									elseif is_false (a_value) then
 										an_option.set_flat_fst_optimization (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when force_32bits_code then
+									if is_true (a_value) then
+										an_option.set_force_32bits (True)
+									elseif is_false (a_value) then
+										an_option.set_force_32bits (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
@@ -935,6 +971,14 @@ feature {NONE} -- Element change
 										an_option.set_fst_optimization (True)
 									elseif is_false (a_value) then
 										an_option.set_fst_optimization (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when full_class_checking_code then
+									if is_true (a_value) then
+										an_option.set_full_class_checking (True)
+									elseif is_false (a_value) then
+										an_option.set_full_class_checking (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
@@ -1074,8 +1118,21 @@ feature {NONE} -- Element change
 									an_option.set_metadata_cache_path (a_value)
 								when msil_assembly_compatibility_code then
 									an_option.set_msil_assembly_compatibility (a_value)
+								when msil_classes_per_module_code then
+									if a_value.is_integer then
+										an_int := a_value.to_integer
+										if an_int > 0 then
+											an_option.set_msil_classes_per_module (an_int)
+										else
+											error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+										end
+									else
+										error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when msil_clr_version_code then
 									an_option.set_msil_clr_version (a_value)
+								when msil_culture_code then
+									an_option.set_msil_culture (a_value)
 								when msil_generation_code then
 									if is_true (a_value) then
 										an_option.set_msil_generation (True)
@@ -1086,6 +1143,16 @@ feature {NONE} -- Element change
 									end
 								when msil_generation_version_code then
 									an_option.set_msil_generation_version (a_value)
+								when msil_key_file_name_code then
+									an_option.set_msil_key_file_name (a_value)
+								when msil_use_optimized_precompile_code then
+									if is_true (a_value) then
+										an_option.set_msil_use_optimized_precompile (True)
+									elseif is_false (a_value) then
+										an_option.set_msil_use_optimized_precompile (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
 								when multithreaded_code then
 									if is_true (a_value) then
 										an_option.set_multithreaded (True)
@@ -1101,6 +1168,14 @@ feature {NONE} -- Element change
 										an_option.set_no_default_lib (True)
 									elseif is_false (a_value) then
 										an_option.set_no_default_lib (False)
+									else
+										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when old_verbatim_strings_code then
+									if is_true (a_value) then
+										an_option.set_old_verbatim_strings (True)
+									elseif is_false (a_value) then
+										an_option.set_old_verbatim_strings (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end

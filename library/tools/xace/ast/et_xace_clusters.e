@@ -168,4 +168,41 @@ feature -- Basic operations
 			no_void_assembly: not an_assemblies.has (Void)
 		end
 
+	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+			-- Add current clusters and any of their subclusters to
+			-- `an_override_clusters' if they are top level override clusters.
+		require
+			an_override_clusters_not_void: an_override_clusters /= Void
+			no_void_override_cluster: not an_override_clusters.has (Void)
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).merge_override_clusters (an_override_clusters)
+				i := i + 1
+			end
+		ensure
+			no_void_override_cluster: not an_override_clusters.has (Void)
+		end
+
+	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER]) is
+			-- Add current clusters and any of their subclusters to
+			-- `an_ecf_clusters' if they are the root of a library
+			-- that is otherwise described by the ECF file.
+		require
+			an_ecf_clusters_not_void: an_ecf_clusters /= Void
+			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).merge_ecf_clusters (an_ecf_clusters)
+				i := i + 1
+			end
+		ensure
+			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
+		end
+
 end

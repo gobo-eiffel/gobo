@@ -33,9 +33,9 @@ option
 	optimize flat_fst off
 	FST_expansion_factor 2
 	optimize FST off
-	optimize inline off
-	optimize constants off
-	optimize once off
+	optimize inline on
+	optimize constants on
+	optimize once on
 	optimize jumps off
 	optimize layout off
 	optimize leaves off

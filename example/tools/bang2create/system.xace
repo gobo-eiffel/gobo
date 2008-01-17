@@ -43,7 +43,6 @@
 	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/time/library.xace"/>
 	<mount location="${GOBO}/library/regexp/library.xace"/>
-	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

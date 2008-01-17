@@ -5,7 +5,7 @@ indexing
 		"Gexace tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,23 +53,18 @@ feature {NONE} -- Initialization
 					command.set_system_command (a_value)
 				end
 			end
-				-- cluster (obsolete, use library):
-				-- Note: this attribute will be removed in Gobo 3.0 + 2 releases
-			if has_attribute (Cluster_attribute_name) then
-				project.trace (<<"Project '", project.name,
-					"': WARNING: Obsolete attribute 'cluster' found for task 'gexace'.%N",
-					"Use attribute 'library' instead.">>)
-
-				a_value := attribute_value (Library_attribute_name)
-				if a_value.count > 0 then
-					command.set_library_command (a_value)
-				end
-			end
 				-- library:
 			if has_attribute (Library_attribute_name) then
 				a_value := attribute_value (Library_attribute_name)
 				if a_value.count > 0 then
 					command.set_library_command (a_value)
+				end
+			end
+				-- format:
+			if has_attribute (Format_attribute_name) then
+				a_value := attribute_value (Format_attribute_name)
+				if a_value.count > 0 then
+					command.set_format (a_value)
 				end
 			end
 				-- xace_filename:
@@ -140,20 +135,19 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Cluster_attribute_name: STRING is
-			-- Name of xml attribute for 'cluster'
-			-- TODO: remove after obsolete period (Gobo 3.0 + 2 releases)
+	Library_attribute_name: STRING is
+			-- Name of xml attribute for 'library'
 		once
-			Result := "cluster"
+			Result := "library"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
 		end
 
-	Library_attribute_name: STRING is
-			-- Name of xml attribute for 'library'
+	Format_attribute_name: STRING is
+			-- Name of xml attribute for 'format'
 		once
-			Result := "library"
+			Result := "format"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
