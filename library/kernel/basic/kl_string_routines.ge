@@ -1718,6 +1718,30 @@ feature -- Removal
 			wiped_out: a_string.count = 0
 		end
 
+	prune_all_trailing (a_string: STRING; c: CHARACTER) is
+			-- Remove all trailing occurrences of `c' in `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+#ifdef ISE
+		do
+			a_string.prune_all_trailing (c)
+#else
+		local
+			n: INTEGER
+		do
+			from
+				n := a_string.count
+			until
+				n = 0 or else a_string.item (n) /= c
+			loop
+				a_string.remove (n)
+				n := n - 1
+			end
+#endif
+		ensure
+			no_more_trailing: a_string.is_empty or else a_string.item (a_string.count) /= c
+		end
+
 feature -- Resizing
 
 	resize_buffer (a_string: STRING; n: INTEGER) is

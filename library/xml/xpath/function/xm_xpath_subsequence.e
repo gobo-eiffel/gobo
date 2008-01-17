@@ -114,7 +114,7 @@ feature -- Evaluation
 					if l_double_value.is_platform_integer then
 						l_starting_location := l_double_value.as_integer
 					else
-						if l_double_value.value > Platform.maximum_integer then
+						if l_double_value.value > Platform.Maximum_integer then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						elseif l_double_value.value <= 0 then
 							l_starting_location := 1
@@ -147,8 +147,8 @@ feature -- Evaluation
 									l_length := l_double_value.as_integer
 									l_final_position := l_length + l_starting_location - 1
 								else
-									if l_double_value.value > Platform.maximum_integer then
-										l_final_position := Platform.maximum_integer
+									if l_double_value.value > Platform.Maximum_integer then
+										l_final_position := Platform.Maximum_integer
 									else
 										create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 									end
@@ -203,7 +203,7 @@ feature -- Evaluation
 					if l_double_value.is_platform_integer then
 						l_starting_location := l_double_value.as_integer
 					else
-						if l_double_value.value > Platform.maximum_integer then
+						if l_double_value.value > Platform.Maximum_integer then
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 						elseif l_double_value.value <= 0 then
 							l_starting_location := 1
@@ -234,8 +234,8 @@ feature -- Evaluation
 									l_length := l_double_value.as_integer
 									l_final_position := l_length + l_starting_location - 1
 								else
-									if l_double_value.value > Platform.maximum_integer then
-										l_final_position := Platform.maximum_integer
+									if l_double_value.value > Platform.Maximum_integer then
+										l_final_position := Platform.Maximum_integer
 									else
 										create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 									end
@@ -264,6 +264,6 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			set_cardinality_zero_or_more
 		end
-	
+
 end
-	
+

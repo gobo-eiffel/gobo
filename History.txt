@@ -66,6 +66,8 @@ Version 3.8 - ?
 	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')
 	  in class KL_DIRECTORY.
 
+	* Added feature `prune_all_trailing' to KL_STRING_ROUTINES.
+
 	Gobo Eiffel String Library:
 
 	* Added full Unicode case-mapping routines.

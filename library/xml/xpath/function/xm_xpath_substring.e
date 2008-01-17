@@ -88,7 +88,7 @@ feature -- Evaluation
 					-- nothing to do
 				else
 					check
-						second_argument_convertible_to_double: a_result.item.is_atomic_value and then	a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
+						second_argument_convertible_to_double: a_result.item.is_atomic_value and then a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
 						-- static typing
 					end
 					l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
@@ -97,7 +97,7 @@ feature -- Evaluation
 					elseif l_double_value.is_platform_integer or l_double_value.value = DOUBLE_.minus_infinity then
 						if l_double_value.value = DOUBLE_.minus_infinity then
 							l_starts_negative_infinity := True
-							l_starting_position := Platform.minimum_integer
+							l_starting_position := Platform.Minimum_integer
 						else
 							l_starting_position := DOUBLE_.truncated_to_integer (l_double_value.value)
 						end
@@ -108,7 +108,7 @@ feature -- Evaluation
 								-- nothing to do
 							else
 								check
-									third_argument_convertible_to_double: a_result.item.is_atomic_value and then	a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
+									third_argument_convertible_to_double: a_result.item.is_atomic_value and then a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
 									-- static typing
 								end
 								l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
@@ -162,4 +162,4 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	
+

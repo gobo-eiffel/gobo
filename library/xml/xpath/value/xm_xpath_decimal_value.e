@@ -72,12 +72,12 @@ feature {NONE} -- Initialization
 		do
 			set_last_error_from_string (a_string, a_namespace_uri, an_error_code, an_error_type)
 		end
-	
+
 feature -- Access
 
 	value: MA_DECIMAL
 
-	
+
 	is_decimal_value: BOOLEAN is
 			-- Is `Current' a decimal value?
 		do
@@ -157,7 +157,7 @@ feature -- Access
 						if l_coefficient.is_empty then
 							l_coefficient := "0"
 						else
-							l_coefficient.prune_all_trailing ('0')
+							STRING_.prune_all_trailing (l_coefficient, '0')
 						end
 						Result.append_string (l_coefficient)
 					else
@@ -167,7 +167,7 @@ feature -- Access
 						if l_coefficient.is_empty then
 							l_coefficient := "0"
 						else
-							l_coefficient.prune_all_trailing ('0')
+							STRING_.prune_all_trailing (l_coefficient, '0')
 						end
 						Result.append_string (l_coefficient)
 					end
@@ -178,7 +178,7 @@ feature -- Access
 		end
 
 feature -- Comparison
-	
+
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		local
@@ -219,7 +219,7 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
-		
+
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
@@ -302,9 +302,9 @@ feature -- Status report
 				-- because xs:decimal cannot become infinite
 			end
 		end
-	
+
 feature -- Conversion
-	
+
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
 			-- TODO - need to virtualize the pre-condition so that
@@ -394,7 +394,7 @@ feature -- Conversion
 		do
 			create Result.make (-value)
 		end
-	
+
 feature -- Basic operations
 
 	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
