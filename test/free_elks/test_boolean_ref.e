@@ -97,9 +97,9 @@ feature -- Test
 			bref: BOOLEAN_REF
 		do
 			bref := True
-			assert ("hashable", bref.is_hashable)
+			assert ("true_hashable", bref.is_hashable)
 			bref := False
-			assert ("not_hashable", not bref.is_hashable)
+			assert ("false_hashable", bref.is_hashable)
 		end
 
 	test_hash_code is

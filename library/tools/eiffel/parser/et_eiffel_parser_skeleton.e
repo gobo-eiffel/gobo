@@ -2432,13 +2432,16 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_not))
 				l_formals := a_feature.arguments
 				if l_formals /= Void and then l_formals.count /= 0 then
-						-- The signature should be 'prefix "not": like Current'.
+						-- The signature should be 'prefix "not": BOOLEAN'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, tokens.like_current)
-				elseif not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
-						-- The signature should be 'prefix "not": like Current'.
-					set_fatal_error (a_class)
-					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, tokens.like_current)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'prefix "not": BOOLEAN'.
+					if not a_feature.type.same_syntactical_type (tokens.like_current, a_class, a_class, universe) then
+							-- The signature 'prefix "not": like Current' is accepted during a transition period.
+						set_fatal_error (a_class)
+						error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
+					end
 				end
 			elseif a_feature.name.same_feature_name (tokens.infix_implies_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_boolean_feature (tokens.builtin_boolean_implies))

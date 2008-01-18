@@ -14162,7 +14162,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- considering that no type other than itself conforms to non-generic
 					-- expanded types, this routine would have to be redefined (to a
 					-- non-built-in feature) in descendants of BOOLEAN. Therefore this
-					-- built-in feature can only defined for objects of type BOOLEAN.
+					-- built-in feature can only be defined for objects of type BOOLEAN.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
@@ -14207,7 +14207,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- considering that no type other than itself conforms to non-generic
 					-- expanded types, this routine would have to be redefined (to a
 					-- non-built-in feature) in descendants of BOOLEAN. Therefore this
-					-- built-in feature can only defined for objects of type BOOLEAN.
+					-- built-in feature can only be defined for objects of type BOOLEAN.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
@@ -14252,7 +14252,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- considering that no type other than itself conforms to non-generic
 					-- expanded types, this routine would have to be redefined (to a
 					-- non-built-in feature) in descendants of BOOLEAN. Therefore this
-					-- built-in feature can only defined for objects of type BOOLEAN.
+					-- built-in feature can only be defined for objects of type BOOLEAN.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
@@ -14316,11 +14316,12 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_target: ET_EXPRESSION
 		do
 			if a_target_type /= current_system.boolean_type then
-					-- Internal error: given its signature (containing 'like Current') and
-					-- considering that no type other than itself conforms to non-generic
-					-- expanded types, this routine would have to be redefined (to a
-					-- non-built-in feature) in descendants of BOOLEAN. Therefore this
-					-- built-in feature can only defined for objects of type BOOLEAN.
+-- TODO: this feature should work in descendants of BOOLEAN.
+-- We should use 'item' for that.
+					-- Internal error: this built-in feature is only
+					-- defined for objects of type BOOLEAN.
+				set_fatal_error
+				error_handler.report_giaaa_error
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
@@ -14355,7 +14356,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- considering that no type other than itself conforms to non-generic
 					-- expanded types, this routine would have to be redefined (to a
 					-- non-built-in feature) in descendants of BOOLEAN. Therefore this
-					-- built-in feature can only defined for objects of type BOOLEAN.
+					-- built-in feature can only be defined for objects of type BOOLEAN.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
@@ -14400,7 +14401,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- considering that no type other than itself conforms to non-generic
 					-- expanded types, this routine would have to be redefined (to a
 					-- non-built-in feature) in descendants of BOOLEAN. Therefore this
-					-- built-in feature can only defined for objects of type BOOLEAN.
+					-- built-in feature can only be defined for objects of type BOOLEAN.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then
@@ -14517,7 +14518,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 					-- considering that no type other than itself conforms to non-generic
 					-- expanded types, this routine would have to be redefined (to a
 					-- non-built-in feature) in descendants of BOOLEAN. Therefore this
-					-- built-in feature can only defined for objects of type BOOLEAN.
+					-- built-in feature can only be defined for objects of type BOOLEAN.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif call_operands.count /= 2 then

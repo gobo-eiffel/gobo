@@ -109,7 +109,13 @@ feature -- Access
 	Runtime_check_exception: INTEGER is 29
 			-- Exception code for runtime check being violated.
 
-	number_of_codes: INTEGER is 29
+	old_exception: INTEGER is 30
+			-- Old exception code.
+
+	serialization_exception: INTEGER is 31
+			-- Serialization exception code.
+
+	number_of_codes: INTEGER is 31
 			-- How many codes are there to represent exceptions?
 
 	valid_code (c: INTEGER): BOOLEAN is

@@ -1,5 +1,5 @@
 indexing
-	description: "Files viewed as persistent sequences of ASCII characters" 
+	description: "Files viewed as persistent sequences of ASCII characters"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -40,7 +40,7 @@ feature -- Output
 		do
 			put_string (i.out)
 		end
-		
+
 	put_integer_64 (i: INTEGER_64) is
 			-- Write ASCII value of `i' at current position.
 		do
@@ -51,37 +51,37 @@ feature -- Output
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
-		end	
-		
+		end
+
 	put_integer_8 (i: INTEGER_8) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_natural_64 (i: NATURAL_64) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-		
+
 	put_natural, put_natural_32 (i: NATURAL_32) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
-				
+
 	put_natural_16 (i: NATURAL_16) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
-		end	
-		
+		end
+
 	put_natural_8 (i: NATURAL_8) is
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
-		end			
+		end
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' at current position.
@@ -110,22 +110,22 @@ feature -- Output
 		end
 
 feature -- Input
-		
+
 	read_integer_64 is
-			-- 
+			--
 		do
 			read_integer_with_no_type
 			last_integer_64 := ctoi_convertor.parsed_integer_64
 		end
-		
+
 	read_integer, readint, read_integer_32 is
 			-- Read the ASCII representation of a new 32-bit integer
 			-- from file. Make result available in `last_integer'.
 		do
 			read_integer_with_no_type
-			last_integer := ctoi_convertor.parsed_integer_32		
+			last_integer := ctoi_convertor.parsed_integer_32
 		end
-		
+
 	read_integer_16 is
 			-- Read the ASCII representation of a new 16-bit integer
 			-- from file. Make result available in `last_integer_16'.
@@ -133,15 +133,15 @@ feature -- Input
 			read_integer_with_no_type
 			last_integer_16 := ctoi_convertor.parsed_integer_16
 		end
-		
+
 	read_integer_8 is
 			-- Read the ASCII representation of a new 8-bit integer
-			-- from file. Make result available in `last_integer_8'. 
+			-- from file. Make result available in `last_integer_8'.
 		do
 			read_integer_with_no_type
 			last_integer_8 := ctoi_convertor.parsed_integer_8
 		end
-		
+
 	read_natural_64 is
 			-- Read the ASCII representation of a new 64-bit natural
 			-- from file. Make result available in `last_natural_64'.
@@ -150,7 +150,7 @@ feature -- Input
 			last_natural_64 := ctoi_convertor.parsed_natural_64
 
 		end
-		
+
 	read_natural, read_natural_32 is
 			-- Read the ASCII representation of a new 32-bit natural
 			-- from file. Make result available in `last_natural'.
@@ -158,7 +158,7 @@ feature -- Input
 			read_integer_with_no_type
 			last_natural := ctoi_convertor.parsed_natural_32
 		end
-		
+
 	read_natural_16 is
 			-- Read the ASCII representation of a new 16-bit natural
 			-- from file. Make result available in `last_natural_16'.
@@ -166,14 +166,14 @@ feature -- Input
 			read_integer_with_no_type
 			last_natural_16 := ctoi_convertor.parsed_natural_16
 		end
-		
+
 	read_natural_8 is
 			-- Read the ASCII representation of a new 8-bit natural
 			-- from file. Make result available in `last_natural_8'.
 		do
 			read_integer_with_no_type
 			last_natural_8 := ctoi_convertor.parsed_natural_8
-		end					
+		end
 
 	read_real, readreal is
 			-- Read the ASCII representation of a new real
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			Result.set_leading_separators_acceptable (True)
 			Result.set_trailing_separators_acceptable (False)
 		end
-					
+
 	internal_leading_separators: STRING is " %N%R%T"
 			-- Characters that are considered as leading separators
 
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			-- Set `is_sequence_an_expected_numeric' with True if it is valid.
 		do
 			convertor.reset (conversion_type)
-			from			
+			from
 				is_sequence_an_expected_numeric := True
 			until
 				end_of_file or else not is_sequence_an_expected_numeric
@@ -224,18 +224,18 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
 		do
 			read_number_sequence (ctoi_convertor, {NUMERIC_INFORMATION}.type_no_limitation)
 				-- Return character(s) if necessary.
-			if not is_sequence_an_expected_numeric then	
-				return_characters	
-			end				
+			if not is_sequence_an_expected_numeric then
+				return_characters
+			end
 		end
-		
+
 	return_characters is
 			-- Return character(s)
 		do

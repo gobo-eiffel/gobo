@@ -50,7 +50,7 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	prefix "not": like Current is
+	prefix "not": BOOLEAN is
 			-- Negation
 		external
 			"built_in"

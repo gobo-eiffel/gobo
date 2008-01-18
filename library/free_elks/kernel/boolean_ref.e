@@ -15,30 +15,28 @@ class BOOLEAN_REF inherit
 
 feature -- Access
 
-	item: BOOLEAN is
+	item: BOOLEAN
 			-- Boolean value
 		external
 			"built_in"
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
-			Result := 1
+			if item then
+				Result := 1
+			end
 		end
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN = True
 			-- May current object be hashed?
-			-- (True if it is not its type's default.)
-		do
-			Result := item
-		end
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: BOOLEAN_REF) is
+	make_from_reference (v: BOOLEAN_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -50,16 +48,17 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: BOOLEAN_REF is
+	to_reference: BOOLEAN_REF
 			-- Associated reference of Current
 		do
 			create Result
 			Result.set_item (item)
 		ensure
 			to_reference_not_void: Result /= Void
+			same_item: Result.item = item
 		end
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- 1 if `True'
 			-- 0 if `False'
 		do
@@ -67,13 +66,13 @@ feature -- Conversion
 				Result := 1
 			end
 		ensure
-			zero_or_one: Result = 0 or Result = 1
+			not_item_implies_zero: not item implies Result = 0
 			item_implies_one: item implies Result = 1
 		end
 
 feature -- Element change
 
-	set_item (b: BOOLEAN) is
+	set_item (b: BOOLEAN)
 			-- Make `b' the `item' value.
 		external
 			"built_in"
@@ -81,7 +80,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "and" (other: like Current): BOOLEAN is
+	infix "and" (other: like Current): BOOLEAN
 			-- Boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -93,7 +92,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current and then other)
 		end
 
-	infix "and then" (other: like Current): BOOLEAN is
+	infix "and then" (other: like Current): BOOLEAN
 			-- Boolean semi-strict conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -103,7 +102,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current or else not other)
 		end
 
-	infix "implies" (other: like Current): BOOLEAN is
+	infix "implies" (other: like Current): BOOLEAN
 			-- Boolean implication of `other'
 			-- (semi-strict)
 		require
@@ -114,14 +113,13 @@ feature -- Basic operations
 			definition: Result = (not Current or else other)
 		end
 
-	prefix "not": like Current is
+	prefix "not": BOOLEAN
 			-- Negation
 		do
-			create Result
-			Result.set_item (not item)
+			Result := not item
 		end
 
-	infix "or" (other: like Current): BOOLEAN is
+	infix "or" (other: like Current): BOOLEAN
 			-- Boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -133,7 +131,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current or else other)
 		end
 
-	infix "or else" (other: like Current): BOOLEAN is
+	infix "or else" (other: like Current): BOOLEAN
 			-- Boolean semi-strict disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -143,7 +141,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current and then not other)
 		end
 
-	infix "xor" (other: like Current): BOOLEAN is
+	infix "xor" (other: like Current): BOOLEAN
 			-- Boolean exclusive or with `other'
 		require
 			other_exists: other /= Void
@@ -155,7 +153,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of boolean
 		do
 			if item then
@@ -169,6 +167,6 @@ invariant
 
 	involutive_negation: is_equal (not (not Current))
 	non_contradiction: not (Current and (not Current))
-	completeness: Current or else (not Current)
+	completeness: Current or (not Current)
 
 end

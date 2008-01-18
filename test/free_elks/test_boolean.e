@@ -109,9 +109,9 @@ feature -- Test
 			b: BOOLEAN
 		do
 			b := True
-			assert ("hashable", b.is_hashable)
+			assert ("true_hashable", b.is_hashable)
 			b := False
-			assert ("not_hashable", not b.is_hashable)
+			assert ("false_hashable", b.is_hashable)
 		end
 
 	test_hash_code is
