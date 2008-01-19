@@ -77,6 +77,7 @@ feature -- Execution
 			error_handler := configuration.error_reporter
 			error_listener := configuration.error_listener
 			Arguments.set_program_name (program_name)
+			configure_system_properties
 			nb := Arguments.argument_count
 			if nb = 0 then
 				report_usage_message
@@ -1071,6 +1072,12 @@ feature {NONE} -- Implementation
 			network_protocols_not_suppressed: not suppress_network_protocols
 			uri_list_valid: uris /= Void
 				and then (uris.count = 2 or else uris.count = 1)
+		do
+		end
+
+	configure_system_properties is
+			-- Set additional system properties in the configuration.
+			-- Descendants are encouraged to redefine this routine.
 		do
 		end
 

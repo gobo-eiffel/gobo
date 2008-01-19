@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 		local
 			l_property_table: DS_HASH_TABLE [STRING, STRING]
 		do
-			product_name := "Gexslt"
 			create system_properties.make_with_equality_testers (3, Void, string_equality_tester)
 			create l_property_table.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
 			register_property_namespace_table (l_property_table, Gexslt_eiffel_type_uri)
@@ -63,7 +62,16 @@ feature -- Access
 			-- URI resolver for fn:collection()
 
 	product_name: STRING
-			-- Product name ("Gexslt" or "Gestalt")
+			-- Product name (e.g. "Gexslt" or "Gestalt")
+
+	product_version: STRING
+			-- Product version number (e.g. Gobo version number or Gestalt version number)
+
+	vendor_name: STRING
+			-- Name of organization or individual responsible for this configuration (e.g. "Gobo" or "Colin Adams")
+
+	vendor_url: STRING
+			-- Web page for `vendor_name'
 
 	system_properties: DS_HASH_TABLE [DS_HASH_TABLE [STRING, STRING], STRING]
 			-- Tables of additional system properties;
@@ -130,6 +138,36 @@ feature -- Setting
 			name_set: product_name = a_name
 		end
 
+	set_product_version (a_version: STRING) is
+			-- Set `product_version'.
+		require
+			version_not_void: a_version /= Void
+		do
+			product_version := a_version
+		ensure
+			version_set: product_version = a_version
+		end
+
+	set_vendor_name (a_name: STRING) is
+			-- Set `vendor_name'.
+		require
+			name_not_void: a_name /= Void
+		do
+			vendor_name := a_name
+		ensure
+			name_set: vendor_name = a_name
+		end
+
+	set_vendor_url (a_url: STRING) is
+			-- Set `vendor_url'.
+		require
+			url_not_void: a_url /= Void
+		do
+			vendor_url := a_url
+		ensure
+			url_set: vendor_url = a_url
+		end
+
 	set_digits (digits: INTEGER) is
 			-- Set the preceision for decimal and integer arithmetic.
 		require
@@ -189,7 +227,6 @@ feature {NONE} -- Implementation
 invariant
 
 	collection_resolver_not_void: initialized implies collection_resolver /= Void
-	product_name_not_void: initialized implies product_name /= Void
 	system_properties_not_void: initialized implies system_properties /= Void
 	no_void_namespace: initialized implies not system_properties.has (Void)
 

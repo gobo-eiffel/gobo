@@ -34,7 +34,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "system-property"; namespace_uri := Xpath_standard_functions_uri
+			name := "system-property"
+			namespace_uri := Xpath_standard_functions_uri
 			fingerprint := System_property_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
@@ -72,8 +73,10 @@ feature -- Evaluation
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_string_value: XM_XPATH_STRING_VALUE
 			l_argument: XM_XPATH_EXPRESSION
+			l_configuration: XM_XPATH_CONFIGURATION
 		do
-			product_name := a_context.configuration.product_name
+			l_configuration := a_context.configuration
+			read_configuration (l_configuration)
 			l_argument := arguments.item (1)
 			l_argument.evaluate_item (a_result, a_context)
 			if a_result.item.is_error then
@@ -111,8 +114,10 @@ feature -- Evaluation
 			l_uri: STRING
 			l_parser: XM_XPATH_QNAME_PARSER
 			l_string_value: XM_XPATH_STRING_VALUE
+			l_configuration: XM_XPATH_CONFIGURATION
 		do
-			product_name := a_context.configuration.product_name
+			l_configuration := a_context.configuration
+			read_configuration (l_configuration)
 			check
 				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
@@ -174,14 +179,33 @@ feature {NONE} -- Implementation
 			-- Saved namespace context
 
 	product_name: STRING
-			-- Product name ("Gexslt" or "Gestalt")
+			-- Product name (e.g. "Gexslt" or "Gestalt")
+
+	product_version: STRING
+			-- Product version number (e.g. Gobo version number or Gestalt version number)
+
+	vendor_name: STRING
+			-- Name of organization or individual responsible for this configuration (e.g. "Gobo" or "Colin Adams")
+
+	vendor_url: STRING
+			-- Web page for `vendor_name'
+
+	read_configuration (a_configuration: XM_XPATH_CONFIGURATION) is
+			-- Read configuration to get values for `product_name' etc.
+		require
+			a_configuration_not_void: a_configuration /= Void
+		do
+			product_name := a_configuration.product_name
+			product_version := a_configuration.product_version
+			vendor_name := a_configuration.vendor_name
+			vendor_url := a_configuration.vendor_url
+		end
 
 	system_property (a_namespace_uri, a_local_name: STRING; a_configuration: XM_XPATH_CONFIGURATION): STRING is
 			-- Value of system-property named by {`a_namespace_uri'}`a_local_name'
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
 			local_name_not_void: a_local_name /= Void
-			product_name_not_void: product_name /= Void
 		local
 			l_tables: DS_HASH_TABLE [DS_HASH_TABLE [STRING, STRING], STRING]
 			l_table: DS_HASH_TABLE [STRING, STRING]
@@ -190,13 +214,29 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_name, "version") then
 					Result := "2.0"
 				elseif STRING_.same_string (a_local_name, "vendor") then
-					Result := "Gobo"
+					if vendor_name /= Void then
+						Result := vendor_name
+					else
+						Result := "Gobo"
+					end
 				elseif STRING_.same_string (a_local_name, "vendor-url") then
-					Result := "http://www.gobosoft.com/"
+					if vendor_url /= Void then
+						Result := vendor_url
+					else
+						Result := "http://www.gobosoft.com/"
+					end
 				elseif STRING_.same_string (a_local_name, "product-name") then
-					Result := product_name
+					if product_name /= Void then
+						Result := product_name
+					else
+						Result :=  "Gexslt"
+					end
 				elseif STRING_.same_string (a_local_name, "product-version") then
-					Result := Version_number
+					if product_version /= Void then
+						Result := product_version
+					else
+						Result := Version_number
+					end
 				elseif STRING_.same_string (a_local_name, "is-schema-aware") then
 					Result := "no"
 				elseif STRING_.same_string (a_local_name, "supports-serialization") then
