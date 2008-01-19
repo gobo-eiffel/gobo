@@ -60,21 +60,22 @@ feature -- Status report
 	is_valid_string (a_character_string: STRING): BOOLEAN is
 			-- Is `a_character_string' valid for output prior to encoding?
 		local
-			an_index: INTEGER
+			l_index, l_code: INTEGER
 		do
 			if a_character_string /= Void then
 				Result := True
 				from
-					an_index := 1
+					l_index := 1
 				variant
-					a_character_string.count + 1 - an_index
+					a_character_string.count + 1 - l_index
 				until
-					Result = False or else an_index > a_character_string.count
+					Result = False or else l_index > a_character_string.count
 				loop
-					if is_bad_character_code (a_character_string.item_code (an_index)) then
+					l_code := a_character_string.item_code (l_index)
+					if not is_char (l_code) or else is_bad_character_code (l_code) then
 						Result := False
 					end
-					an_index := an_index + 1
+					l_index := l_index + 1
 				end
 
 			end

@@ -60,9 +60,12 @@ feature -- Events
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
 			-- Notify an attribute.
+		local
+			l_properties: INTEGER
 		do
 			if not is_output_escaping_disabled (a_properties) and is_url_attribute (a_name_code) then
-				Precursor (a_name_code, a_type_code, escaped_url (a_value), INTEGER_.bit_or (a_properties, Disable_escaping))
+				l_properties := INTEGER_.bit_and (a_properties, INTEGER_.bit_not (No_special_characters))
+				Precursor (a_name_code, a_type_code, escaped_url (a_value), INTEGER_.bit_or (l_properties, Disable_escaping))
 			else
 				Precursor (a_name_code, a_type_code, a_value, a_properties)
 			end

@@ -97,16 +97,18 @@ feature -- Events
 			mark_as_written
 		end
 
-	notify_characters (chars: STRING; properties: INTEGER) is
+	notify_characters (a_chars: STRING; a_properties: INTEGER) is
 			-- Notify character data.
 		local
-			options: INTEGER
+			l_options: INTEGER
 		do
-			options := properties
-			if in_script > 0 and then not is_output_escaping_disabled (properties) then
-				options := options + Disable_escaping -- <script> and <style> contents must not be escaped
+			if in_script > 0 and then not is_output_escaping_disabled (a_properties) then
+				l_options := INTEGER_.bit_and (a_properties, INTEGER_.bit_not (No_special_characters))
+				l_options := l_options + Disable_escaping -- <script> and <style> contents must not be escaped
+			else
+				l_options := a_properties
 			end
-			Precursor (chars, options)
+			Precursor (a_chars, l_options)
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
