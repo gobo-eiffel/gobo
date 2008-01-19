@@ -5833,18 +5833,21 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_type := an_expression.type
-			if not l_type.is_base_type then
-					-- The type of the manifest type contains formal generic parameters
-					-- or anchored types whose resolved value may vary in various
-					-- descendant classes/types.
-				report_current_type_needed
+			check_type_validity (l_type)
+			if not has_fatal_error then
+				if not l_type.is_base_type then
+						-- The type of the manifest type contains formal generic parameters
+						-- or anchored types whose resolved value may vary in various
+						-- descendant classes/types.
+					report_current_type_needed
+				end
+				l_type_class := universe.type_class
+				create l_actuals.make_with_capacity (1)
+				l_actuals.put_first (l_type)
+				create l_type_type.make (Void, l_type_class.name, l_actuals, l_type_class)
+				report_manifest_type (an_expression, l_type_type, a_context)
+				a_context.force_last (l_type_type)
 			end
-			l_type_class := universe.type_class
-			create l_actuals.make_with_capacity (1)
-			l_actuals.put_first (l_type)
-			create l_type_type.make (Void, l_type_class.name, l_actuals, l_type_class)
-			report_manifest_type (an_expression, l_type_type, a_context)
-			a_context.force_last (l_type_type)
 		end
 
 	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is

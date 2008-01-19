@@ -31,6 +31,9 @@ Version 3.8 - ?
 
 	* Fixed bug in the flat Degree 3 mode where the precursor features 
 	  corresponding to precursor expressions or instructions were not checked.
+	* Fixed bug when the type in a manifest type is based on an unknown class.
+	  Instead of reporting a VTCT error, gelint/gec were reporting another
+	  subsequent error, as shown in bug#1875262.
 
 	gexace:
 
