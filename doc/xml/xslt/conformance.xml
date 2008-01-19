@@ -282,11 +282,23 @@
 	 </varlistentry>
 	 <varlistentry>
 	  <term>xsl:vendor</term>
-	  <listitem><para>Gobo</para></listitem>
+	  <listitem>
+	  <para>Gobo</para>
+	  <para>
+	   This is actually configurable, by calling <featurename>set_vendor_name</featurename> from
+	   <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is Colin Adams.
+	  </para>
+	  </listitem>
 	 </varlistentry>
 	 <varlistentry>
 	  <term>xsl:vendor-url</term>
-	  <listitem><para>http://www.gobosoft.com/</para></listitem>
+	  <listitem>
+	  <para>http://www.gobosoft.com/</para>
+	  <para>
+	   This is actually configurable, by calling <featurename>set_vendor_url</featurename> from
+	   <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is http://gestalt.sourceforge.net/.
+	  </para>
+	  </listitem>
 	 </varlistentry>
 	 <varlistentry>
 	  <term>xsl:product-name</term>
@@ -300,7 +312,13 @@
 	 </varlistentry>
 	 <varlistentry>
 	  <term>xsl:product-version</term>
-	  <listitem><para>This is equal to the version of the Gobo library. See <ulink url="http://www.gobosoft.com/whatsnew/index.html">Gobo news</ulink></para></listitem>
+	  <listitem>
+	   <para>This is equal to the version of the Gobo library. See <ulink url="http://www.gobosoft.com/whatsnew/index.html">Gobo news</ulink></para>
+	  <para>
+	   This is actually configurable, by calling <featurename>set_product_version</featurename> from
+	   <classname>XM_XPATH_CONFIGURATION</classname>. For Gestalt, the value is the version of Gestalt.
+	  </para>
+	  </listitem>
 	 </varlistentry>
 	 <varlistentry>
 	  <term>xsl:is-schema-aware</term>
