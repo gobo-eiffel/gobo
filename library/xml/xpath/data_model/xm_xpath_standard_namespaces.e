@@ -239,6 +239,8 @@ feature -- Access
 	Gexslt_memo_function_type_code: INTEGER is 1036
 	Gexslt_file_element_type_code: INTEGER is 1037
 	Gexslt_directory_element_type_code: INTEGER is 1038
+	Gexslt_method_type_code: INTEGER is 1039
+	Gexslt_response_body_function_type_code: INTEGER is 1040
 
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 256 + 0..n)
 
@@ -585,6 +587,11 @@ feature -- Access
 	Gexslt_memo_function_attribute: STRING is
 		once
 			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, "memo-function")
+		end
+
+	Gexslt_method_attribute: STRING is
+		once
+			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, "method")
 		end
 
 	Gexslt_explain_name: STRING is "explain"

@@ -104,6 +104,10 @@ feature -- Access
 	system_id: STRING
 			-- System id
 
+	response_stream: KI_CHARACTER_INPUT_STREAM
+			-- Body of response, if any;
+			-- Principally expected from HTTP POST requests
+
 feature -- Status report
 
 	is_emitter: BOOLEAN

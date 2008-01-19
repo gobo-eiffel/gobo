@@ -17,11 +17,27 @@ feature -- Status report
 	error_message: STRING
 			-- Error message from `resolve'
 
+	http_method: STRING
+			-- Value of gexslt:method extension attribute;
+			-- Intended principally for http protocol, but value is unchecked here.
+
 	is_correct_scheme (a_scheme: STRING): BOOLEAN is
 			-- does `Current' handle URIs for `a_scheme'?
 		require
 			scheme_not_void: a_scheme /= Void
 		deferred
+		end
+
+feature -- Setting
+
+	set_http_method (a_method: like http_method) is
+			-- Set `http_method' to `a_method'.
+		require
+			a_method_may_be_void: True
+		do
+			http_method := a_method
+		ensure
+			http_method_set: http_method = a_method
 		end
 
 feature -- Action
@@ -41,6 +57,5 @@ feature -- Result
 	last_result: XM_XSLT_TRANSFORMATION_RESULT
 			-- Result object from last call to `resolve'
 
-	
 end
 	

@@ -126,6 +126,16 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<varlistentry>
+	  <term><exmlsyntax>method</exmlsyntax></term>
+	  <listitem>
+	   <para>
+	    This is only allowed on <xslt>xsl:result-document</xslt>, and it specifies the method used
+	    to store the resource. For HTTP, only PUT and POST are permitted. PUT is the default. Other schemes
+	    allow any value and ignore it.
+	   </para>
+	  </listitem>
+	</varlistentry>
       </variablelist>
       </section>
     </para>
@@ -279,6 +289,19 @@
      </para>
      <para>
       Result documents can be serialized using the <xslt>gexslt:serialize</xslt> extension instruction (if I ever write it).
+     </para>
+    </section>
+    <section>
+     <title>gexslt:response-body</title>
+     <para>
+      This function returns any available response data, as a single string, as a result
+      of storing an <xslt>xsl:result-document</xslt>. It takes a single string argument (required), whose
+      value must be the same as the (resolved) value of the <xslt>href</xslt> attribute on the <xslt>xsl:result-document</xslt>.
+      If no such response data is available then the error return value will be NO_RESPONSE in the gexslt namespace.
+     </para>
+     <para>
+      This is principally intended for use with <uri>http</uri> URIs, but any scheme that supports responses to store requests
+      can use it. Database requests spring to mind.
      </para>
     </section>
  </section>

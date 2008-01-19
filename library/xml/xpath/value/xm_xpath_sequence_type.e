@@ -37,7 +37,7 @@ create
 	make_numeric_sequence, make_atomic_sequence, make_string_sequence, make_empty, make_single_number, make_optional_number,
 	make_single_qname, make_optional_qname, make_qname_sequence, make_single_boolean, make_non_empty_sequence, make_integer_sequence,
 	make_optional_date_time, make_optional_day_time_duration, make_optional_year_month_duration, make_optional_duration,
-	make_single_date, make_single_time, make_optional_date, make_optional_time
+	make_single_date, make_single_time, make_optional_date, make_optional_time, make_single_any_uri
 
 feature	{NONE} -- Initialization
 
@@ -142,6 +142,13 @@ feature	{NONE} -- Initialization
 			set_cardinality_optional
 		end
 
+	make_single_any_uri is
+			-- Create a sequence of a single anyURI
+		do
+			primary_type := type_factory.any_uri_type
+			set_cardinality_exactly_one
+		end
+
 	make_single_integer is
 			-- Create a sequence that allows exactly one integer
 		do
@@ -155,7 +162,6 @@ feature	{NONE} -- Initialization
 			primary_type := type_factory.integer_type
 			set_cardinality_optional
 		end
-
 
 	make_integer_sequence is
 			-- Create a sequence that allows zero or more integers.

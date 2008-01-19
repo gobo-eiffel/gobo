@@ -87,6 +87,7 @@ feature {NONE} -- Initialization
 			create l_time_zone.make (implicit_timezone.fixed_offset)
 			create current_date_time.make (l_date_time, l_time_zone)
 			create remembered_numbers.make_default
+			create response_streams.make_with_equality_testers (7, Void, string_equality_tester)
 		ensure
 			configuration_set: configuration = a_configuration
 			executable_set: executable = a_executable
@@ -153,6 +154,20 @@ feature -- Access
 	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
 			-- Implicit time zone for comparing unzoned times and dates
 
+	response_stream (a_uri: STRING): KI_CHARACTER_INPUT_STREAM is
+			-- Response body from `a_uri';
+			-- Caller must not close the stream, but instead call `discard_response'.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_uri_not_empty: not a_uri.is_empty
+			a_uri_available: has_response_from (a_uri)
+		do
+			Result := response_streams.item (a_uri)
+		ensure
+			response_stream_not_void: Result /= Void
+			response_stream_readable: Result.is_open_read
+		end
+
 	remembered_number (a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER): DS_CELL [INTEGER_64] is
 			-- Number of a node if it is the last remembered one for `a_instruction'
 		require
@@ -208,7 +223,16 @@ feature -- Status report
 			Result := trace_listener /= Void
 		end
 
-feature -- Status setting
+	has_response_from (a_uri: STRING): BOOLEAN is
+			-- Is a response body avaialble as a result of an xsl:result-document call to `a_uri'?
+		require
+			a_uri_not_void: a_uri /= Void
+			a_uri_not_empty: not a_uri.is_empty
+		do
+			Result := response_streams.has (a_uri)
+		end
+
+feature -- Setting
 
 	set_remembered_number (a_number: INTEGER_64; a_node: XM_XPATH_NODE; a_instruction: XM_XSLT_COMPILED_NUMBER) is
 			-- Set remembered number.
@@ -224,6 +248,20 @@ feature -- Status setting
 			a_instruction_has_remembered_number: remembered_numbers.has (a_instruction)
 			correct_node: remembered_numbers.item (a_instruction).first = a_node
 			correct_number: remembered_numbers.item (a_instruction).second = a_number
+		end
+
+	set_response_stream (a_response: KI_CHARACTER_INPUT_STREAM; a_uri: STRING) is
+			-- Save `a_response' indexed by `a_uri'.
+		require
+			a_response_not_void: a_response /= Void
+			a_response_readable: a_response.is_open_read
+			a_uri_not_void: a_uri /= Void
+			a_uri_not_empty: not a_uri.is_empty
+			a_uri_not_yet_available: not has_response_from (a_uri)
+		do
+			response_streams.force_new (a_response, a_uri)
+		ensure
+			a_uri_available: has_response_from (a_uri)
 		end
 
 feature -- Creation
@@ -645,6 +683,23 @@ feature -- Transformation
 			configuration.reset_entity_resolver
 		end
 
+feature -- Removal
+	
+	discard_response (a_uri: STRING) is
+			-- Close and discard response from `a_uri'.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_uri_not_empty: not a_uri.is_empty
+			a_uri_available: has_response_from (a_uri)
+		do
+			if response_streams.item (a_uri).is_closable then
+				response_streams.item (a_uri).close
+			end
+			response_streams.remove (a_uri)
+		ensure
+			a_uri_not_available: not has_response_from (a_uri)
+		end
+
 feature {NONE} -- Implementation
 
 	last_context_node: XM_XPATH_NODE
@@ -849,6 +904,9 @@ feature -- Implementation
 
 	remembered_numbers: DS_HASH_TABLE [DS_PAIR [XM_XPATH_NODE, INTEGER_64], XM_XSLT_COMPILED_NUMBER]
 			-- Cache of last numbers for a node by xsl:number instructon
+
+	response_streams: DS_HASH_TABLE [KI_CHARACTER_INPUT_STREAM, STRING]
+			-- HTTP POST (for example) response bodies indexed by URI
 
 	static_context: XM_XSLT_EXPRESSION_CONTEXT is
 			-- Static context from `executable'
@@ -1097,6 +1155,7 @@ invariant
 	output_resolver_not_void: output_resolver /= Void
 	initial_context_expression_not_empty: initial_context_expression /= Void implies not initial_context_expression.is_empty
 	remembered_numbers_not_void: remembered_numbers /= Void
-
+	response_streams_not_void: response_streams /= Void
+	
 end
 

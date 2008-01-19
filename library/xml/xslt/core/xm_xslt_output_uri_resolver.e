@@ -23,13 +23,27 @@ feature -- Access
 
 	output_destinations: DS_HASH_TABLE [XM_XSLT_TRANSFORMATION_RESULT, STRING]
 			-- Allocated output destinations indexed by absolute URI
-	
+
+	http_method: STRING
+			-- Value of gexslt:method extension attribute;
+			-- Intended principally for http protocol, but interpretation depends upon descendants.
+
 feature -- Status report
 
 	error_message: STRING
 			-- Error message from `resolve'
 
-feature -- Element change
+feature -- Setting
+
+	set_http_method (a_method: like http_method) is
+			-- Set `http_method' to `a_method'.
+		require
+			a_method_not_void: a_method /= Void
+		do
+			http_method := a_method
+		ensure
+			http_method_set: http_method = a_method
+		end
 
 	set_security_manager (a_security_manager: like security_manager) is
 			-- Set `security_manager'.

@@ -50,6 +50,10 @@ feature -- Access
 			Result := True
 		end
 
+	http_method: STRING
+			-- Value of gexslt:method extension attribute;
+			-- Intended principally for http protocol, but value is unchecked here.
+
 feature -- Element change
 
 	prepare_attributes is
@@ -82,6 +86,10 @@ feature -- Element change
 					a_validation_attribute := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, Type_attribute) then
 					a_type_attribute := attribute_value_by_index (a_cursor.index)
+				elseif STRING_.same_string (an_expanded_name, Gexslt_method_attribute) then
+					http_method := attribute_value_by_index (a_cursor.index)
+					STRING_.left_adjust (http_method)
+					STRING_.right_adjust (http_method)
 				elseif formatting_attribute_names.has (an_expanded_name) or else
 					(an_expanded_name.substring_index ("#", 1) /= 0
 					 and then an_expanded_name.substring_index (Gexslt_eiffel_type_uri, 1) /= 1
@@ -188,48 +196,53 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_global_property_set, a_local_property_set: XM_XSLT_OUTPUT_PROPERTIES
-			a_stylesheet: XM_XSLT_STYLESHEET
-			a_message: STRING
-			an_error: XM_XPATH_ERROR_VALUE
-			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
-			a_content: XM_XPATH_EXPRESSION
+			l_global_property_set, l_local_property_set: XM_XSLT_OUTPUT_PROPERTIES
+			l_stylesheet: XM_XSLT_STYLESHEET
+			l_message: STRING
+			l_error: XM_XPATH_ERROR_VALUE
+			l_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
+			l_content: XM_XPATH_EXPRESSION
+			l_result: XM_XSLT_COMPILED_RESULT_DOCUMENT
 		do
 			last_generated_expression := Void
-			a_stylesheet := principal_stylesheet
+			l_stylesheet := principal_stylesheet
 			if format_expression /= Void then
-				create a_global_property_set.make (Platform.Minimum_integer)
-				a_stylesheet.set_needs_dynamic_output_properties
-			elseif output_fingerprint = -1 or a_stylesheet.is_named_output_property_defined (output_fingerprint) then
-				a_global_property_set := a_stylesheet.gathered_output_properties (output_fingerprint)
-				if a_global_property_set.is_error then
-					a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", a_global_property_set.duplicate_attribute_name)
-					a_message := STRING_.appended_string (a_message, "', in the output definition named '")
-					a_message := STRING_.appended_string (a_message, shared_name_pool.display_name_from_name_code (output_fingerprint))
-					a_message := STRING_.appended_string (a_message, "'.")
-					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1560", Static_error)
-					report_compile_error (an_error)
+				create l_global_property_set.make (Platform.Minimum_integer)
+				l_stylesheet.set_needs_dynamic_output_properties
+			elseif output_fingerprint = -1 or l_stylesheet.is_named_output_property_defined (output_fingerprint) then
+				l_global_property_set := l_stylesheet.gathered_output_properties (output_fingerprint)
+				if l_global_property_set.is_error then
+					l_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", l_global_property_set.duplicate_attribute_name)
+					l_message := STRING_.appended_string (l_message, "', in the output definition named '")
+					l_message := STRING_.appended_string (l_message, shared_name_pool.display_name_from_name_code (output_fingerprint))
+					l_message := STRING_.appended_string (l_message, "'.")
+					create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE1560", Static_error)
+					report_compile_error (l_error)
 				end
 			else
-				a_message := STRING_.concat ("Output definition named '", shared_name_pool.display_name_from_name_code (output_fingerprint))
-				a_message := STRING_.appended_string (a_message, "' by the format attribute of xsl:result-document has not been defined.")
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1460", Static_error)
-				report_compile_error (an_error)
+				l_message := STRING_.concat ("Output definition named '", shared_name_pool.display_name_from_name_code (output_fingerprint))
+				l_message := STRING_.appended_string (l_message, "' by the format attribute of xsl:result-document has not been defined.")
+				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTDE1460", Static_error)
+				report_compile_error (l_error)
 			end
 
 			if not any_compile_errors then
 				-- TODO: we can optimize by determining method now, in some cases
-				create a_local_property_set.make (Platform.Minimum_integer)
-				build_local_properties (a_local_property_set)
+				create l_local_property_set.make (Platform.Minimum_integer)
+				build_local_properties (l_local_property_set)
 				if not any_compile_errors then
-					a_namespace_resolver := static_context.namespace_resolver
+					l_namespace_resolver := static_context.namespace_resolver
 					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-					a_content := last_generated_expression
-					if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
+					l_content := last_generated_expression
+					if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
 					
-					create {XM_XSLT_COMPILED_RESULT_DOCUMENT} last_generated_expression.make (an_executable, a_global_property_set, a_local_property_set, href,
-																													  format_expression, base_uri, validation_action,
-																													  Void, formatting_attributes, a_namespace_resolver, a_content)				
+					create l_result.make (an_executable, l_global_property_set, l_local_property_set, href,
+						format_expression, base_uri, validation_action,
+						Void, formatting_attributes, l_namespace_resolver, l_content)
+					if http_method /= Void then
+						l_result.set_http_method (http_method)
+					end
+					last_generated_expression := l_result
 				end
 			end
 		end

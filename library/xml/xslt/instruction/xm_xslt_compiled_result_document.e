@@ -100,6 +100,10 @@ feature -- Access
 	base_uri: STRING
 			-- Base URI
 
+	http_method: STRING
+			-- Value of gexslt:method extension attribute;
+			-- Intended principally for http protocol, but value is unchecked here.
+
 	validation_action: INTEGER
 			-- Validation_action
 
@@ -148,6 +152,18 @@ feature -- Status report
 		do
 			std.error.put_string (STRING_.concat (indentation (a_level), "xsl:result-document"))
 			std.error.put_new_line
+		end
+
+feature -- Setting
+
+	set_http_method (a_method: like http_method) is
+			-- Set `http_method' to `a_method'.
+		require
+			a_method_not_void: a_method /= Void
+		do
+			http_method := a_method
+		ensure
+			http_method_set: http_method = a_method
 		end
 
 feature -- Optimization
@@ -303,9 +319,10 @@ feature -- Evaluation
 			l_output_resolver: XM_XSLT_OUTPUT_URI_RESOLVER
 			l_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			l_uri: UT_URI
-			an_iri_reference,	l_uri_to_use: STRING
+			l_iri_reference,	l_uri_to_use: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
+			l_response: KI_CHARACTER_INPUT_STREAM
 		do
 			l_transformer := a_context.transformer
 			l_new_context := a_context.new_minor_context
@@ -316,6 +333,9 @@ feature -- Evaluation
 				l_transformer.report_fatal_error (l_error)
 			else
 				l_output_resolver := l_transformer.output_resolver
+				if http_method /= Void then
+					l_output_resolver.set_http_method (http_method)
+				end
 				if href = Void then
 					l_result := l_transformer.principal_result
 					if l_result.is_document_started then
@@ -333,10 +353,9 @@ feature -- Evaluation
 						href.last_evaluated_string.error_value.set_location (system_id, line_number)
 						l_transformer.report_fatal_error (href.last_evaluated_string.error_value)
 					else
-						l_output_resolver := l_transformer.output_resolver
 						create l_uri.make (l_transformer.principal_result_uri)
-						an_iri_reference := escaped_uri (href.last_evaluated_string.string_value)
-						create l_uri.make_resolve (l_uri, an_iri_reference)
+						l_iri_reference := escaped_uri (href.last_evaluated_string.string_value)
+						create l_uri.make_resolve (l_uri, l_iri_reference)
 						l_uri_to_use := l_uri.full_reference
 						if a_context.available_documents.is_document_mapped (l_uri.full_uri) then
 							create l_error.make_from_string (STRING_.concat ("Attempt to write to a URI that has already been read: ", l_uri_to_use),
@@ -376,6 +395,11 @@ feature -- Evaluation
 				l_output_resolver.close (l_result, computed_property_set)
 				if l_result.error_message /= Void then
 					l_transformer.report_warning (l_result.error_message, Void)
+				elseif l_result.response_stream /= Void and l_uri /= Void then
+					l_response := l_result.response_stream
+					if l_response.is_open_read then
+						l_transformer.set_response_stream (l_response, l_uri.full_reference)
+					end
 				end
 			end
 		end

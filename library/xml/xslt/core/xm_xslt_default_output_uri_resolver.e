@@ -65,28 +65,29 @@ feature -- Action
 	resolve (a_uri: UT_URI) is
 			-- Resolve `a_uri' relative to `a_base_uri'.
 		local
-			a_scheme, a_uri_to_use: STRING
-			a_resolver: XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER
+			l_scheme, l_uri_to_use: STRING
+			l_resolver: XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER
 		do
 			last_result := Void
 			error_message := Void
-			a_uri_to_use := a_uri.full_reference
+			l_uri_to_use := a_uri.full_reference
 			if security_manager.is_output_uri_permitted (a_uri) then
-				a_scheme := a_uri.scheme
-				if scheme_resolvers.has (a_scheme) then
-					a_resolver := scheme_resolvers.item (a_scheme)
-					a_resolver.resolve (a_uri)
-					last_result := a_resolver.last_result
-					error_message := a_resolver.error_message
+				l_scheme := a_uri.scheme
+				if scheme_resolvers.has (l_scheme) then
+					l_resolver := scheme_resolvers.item (l_scheme)
+					l_resolver.set_http_method (http_method)
+					l_resolver.resolve (a_uri)
+					last_result := l_resolver.last_result
+					error_message := l_resolver.error_message
 					if last_result /= Void then
-						output_destinations.put (last_result, a_uri_to_use)
+						output_destinations.put (last_result, l_uri_to_use)
 					end
 				else
-					error_message := STRING_.concat ("Writing output to URI scheme ", a_scheme)
+					error_message := STRING_.concat ("Writing output to URI scheme ", l_scheme)
 					error_message := STRING_.appended_string (error_message, " is not supported.")
 				end
 			else
-				error_message := STRING_.concat ("Security manager refused permission to write to ", a_uri_to_use)
+				error_message := STRING_.concat ("Security manager refused permission to write to ", l_uri_to_use)
 			end
 		end
 
