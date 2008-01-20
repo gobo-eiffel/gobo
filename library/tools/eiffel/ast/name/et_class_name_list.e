@@ -18,7 +18,7 @@ inherit
 		export
 			{ET_CLASS_NAME_LIST} storage
 		end
-		
+
 	ET_SHARED_TOKEN_CONSTANTS
 
 create
@@ -108,7 +108,7 @@ feature -- Status report
 					a_universe.preparse
 				end
 				if not a_class.is_preparsed then
-					Result := has_class (a_class)
+					Result := has_class (a_class) or else has_any
 				else
 					a_class.process (a_universe.ancestor_builder)
 					if a_class.ancestors_built and then not a_class.has_ancestors_error then
@@ -126,6 +126,8 @@ feature -- Status report
 								i := i + 1
 							end
 						end
+					else
+						Result := has_class (a_class) or else has_any
 					end
 				end
 			end
