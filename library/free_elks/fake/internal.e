@@ -17,6 +17,18 @@ feature
 			print ("TODO: INTERNAL.new_instance_of%N")
 		end
 
+	type_of (object: ANY): TYPE [ANY]
+			-- Type object for `object'
+		do
+			if object /= Void then
+				Result := object.generating_type
+			else
+				Result := {NONE}
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+
 	field (i: INTEGER; object: ANY): ANY is
 		do
 			print ("TODO: INTERNAL.field%N")
