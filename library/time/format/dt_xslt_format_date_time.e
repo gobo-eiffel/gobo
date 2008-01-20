@@ -45,7 +45,7 @@ inherit
 
 feature -- Access
 
-	
+
 	Default_language: STRING is "en"
 			-- Language used if user does not supply one
 
@@ -196,7 +196,6 @@ feature {NONE} -- Implementation
 		local
 			l_specifier: CHARACTER
 			l_modifiers: STRING
-			l_count: INTEGER
 			l_invalid: BOOLEAN
 		do
 			if a_marker.is_empty then
@@ -524,7 +523,7 @@ feature {NONE} -- Implementation
 					end
 					if not ANY_.same_types (a_result_string, l_string) then
 						l_string := new_unicode_string (l_string)
-					end					
+					end
 					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
 			end
@@ -567,11 +566,11 @@ feature {NONE} -- Implementation
 				end
 				if not ANY_.same_types (a_result_string, l_string) then
 					l_string := new_unicode_string (l_string)
-				end				
+				end
 				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
-	
+
 	format_week_in_month (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-month from `a_calendar_value'.
 		require
@@ -961,7 +960,7 @@ feature {NONE} -- Implementation
 				end
 				if not ANY_.same_types (a_result_string, l_string) then
 					l_string := new_unicode_string (l_string)
-				end				
+				end
 				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
@@ -1009,7 +1008,7 @@ feature {NONE} -- Implementation
 			Result := is_zeros_plus_one (primary_modifier) or
 				(primary_modifier.count = 1 and then is_one (primary_modifier.item_code (1)))
 		end
-	
+
 	check_modifiers (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
 			-- Check `some_modifiers' for syntax errors.
 		require
@@ -1073,7 +1072,7 @@ feature {NONE} -- Implementation
 							a_message := STRING_.appended_string (a_message, "'")
 							a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
 						end
-					end					
+					end
 				end
 				if a_result.item = Void then
 					if is_traditional or else is_ordinal then
@@ -1195,7 +1194,7 @@ feature {NONE} -- Implementation
 			-- Language to be used for output
 		require
 			requested_language_not_void: a_requested_language /= Void
-			requested_language_not_supported: not is_language_supported (a_requested_language) 
+			requested_language_not_supported: not is_language_supported (a_requested_language)
 		do
 			Result := Default_language
 		ensure
@@ -1206,7 +1205,7 @@ feature {NONE} -- Implementation
 			-- Language prefix to be emitted
 		require
 			requested_language_not_void: a_requested_language /= Void
-			requested_language_not_supported: not is_language_supported (a_requested_language) 
+			requested_language_not_supported: not is_language_supported (a_requested_language)
 		do
 			Result := "[Language: en]"
 		ensure
@@ -1229,7 +1228,7 @@ feature {NONE} -- Implementation
 			-- Calendar to be used for output
 		require
 			requested_calendar_not_void: a_requested_calendar /= Void
-			requested_calendar_not_supported: not is_calendar_supported (a_requested_calendar) 
+			requested_calendar_not_supported: not is_calendar_supported (a_requested_calendar)
 		do
 			Result := Default_calendar
 		ensure
@@ -1242,7 +1241,7 @@ feature {NONE} -- Implementation
 			requested_calendar_not_void: a_requested_calendar /= Void
 			requested_calendar_not_supported: not is_calendar_supported (a_requested_calendar)
 			language_not_void: a_language /= Void
-			language_is_supported: is_language_supported (a_language) 
+			language_is_supported: is_language_supported (a_language)
 		do
 
 			-- TODO: change when additional languages are supported
@@ -1252,7 +1251,7 @@ feature {NONE} -- Implementation
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
 
-	
+
 	calendar_name (a_calendar: STRING): STRING is
 			-- Full name for `a_calendar'
 		require
@@ -1304,7 +1303,7 @@ feature {NONE} -- Implementation
 		do
 
 			-- TODO: correct this for Unicode captialization
-	
+
 			if STRING_.same_string (primary_modifier, "n") then
 				Result := a_name.as_lower
 			elseif STRING_.same_string (primary_modifier, "N") then
@@ -1361,7 +1360,7 @@ feature {NONE} -- Implementation
 						Result := "BC"
 					end
 				end
-			else			
+			else
 				Result := "Unknown"
 			end
 		ensure
