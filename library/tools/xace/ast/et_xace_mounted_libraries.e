@@ -149,15 +149,7 @@ feature -- Basic operations
 				other_library := a_libraries.item (a_library.pathname)
 				if other_library /= Void then
 					if not other_library.is_root then
-						if other_library.library_prefix /= Void then
-							if a_library.library_prefix /= Void then
-								if not STRING_.same_string (other_library.library_prefix, a_library.library_prefix) then
-									an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
-								end
-							else
-								an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
-							end
-						elseif a_library.library_prefix /= Void then
+						if not a_library.same_library_prefix (other_library) then
 							an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
 						end
 					end

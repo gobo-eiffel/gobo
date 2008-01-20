@@ -161,6 +161,7 @@ feature {NONE} -- AST factory
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
 			a_prefix: STRING
+			l_other_library: ET_XACE_MOUNTED_LIBRARY
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_name := an_element.attribute_by_name (uc_name).value
@@ -221,7 +222,14 @@ feature {NONE} -- AST factory
 										if a_mounts = Void then
 											a_mounts := ast_factory.new_mounted_libraries
 										end
-										a_mounts.put_last (a_mount)
+										l_other_library := a_mounts.item (a_mount.pathname)
+										if l_other_library /= Void then
+											if not a_mount.same_library_prefix (l_other_library) then
+												error_handler.report_multiple_library_prefix_error (a_mount, l_other_library)
+											end
+										else
+											a_mounts.put_last (a_mount)
+										end
 									end
 								elseif STRING_.same_string (a_child.name, uc_option) then
 									if an_option /= Void then
@@ -484,6 +492,7 @@ feature {NONE} -- Element change
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
 			i, nb: INTEGER
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
+			l_other_library: ET_XACE_MOUNTED_LIBRARY
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_name := an_element.attribute_by_name (uc_name).value
@@ -532,7 +541,14 @@ feature {NONE} -- Element change
 											if a_mounts = Void then
 												a_mounts := ast_factory.new_mounted_libraries
 											end
-											a_mounts.put_last (a_mount)
+											l_other_library := a_mounts.item (a_mount.pathname)
+											if l_other_library /= Void then
+												if not a_mount.same_library_prefix (l_other_library) then
+													error_handler.report_multiple_library_prefix_error (a_mount, l_other_library)
+												end
+											else
+												a_mounts.put_last (a_mount)
+											end
 										end
 									elseif STRING_.same_string (a_child.name, uc_option) then
 										if an_option /= Void then
@@ -556,7 +572,14 @@ feature {NONE} -- Element change
 							if a_mounts = Void then
 								a_mounts := ast_factory.new_mounted_libraries
 							end
-							a_mounts.put_last (a_mount)
+							l_other_library := a_mounts.item (a_mount.pathname)
+							if l_other_library /= Void then
+								if not a_mount.same_library_prefix (l_other_library) then
+									error_handler.report_multiple_library_prefix_error (a_mount, l_other_library)
+								end
+							else
+								a_mounts.put_last (a_mount)
+							end
 						end
 					elseif STRING_.same_string (a_child.name, uc_option) then
 						if an_option /= Void then
@@ -624,6 +647,7 @@ feature {NONE} -- Element change
 			a_pathname: STRING
 			i, nb: INTEGER
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
+			l_other_library: ET_XACE_MOUNTED_LIBRARY
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_name := an_element.attribute_by_name (uc_name).value
@@ -672,7 +696,14 @@ feature {NONE} -- Element change
 								if a_mounts = Void then
 									a_mounts := ast_factory.new_mounted_libraries
 								end
-								a_mounts.put_last (a_mount)
+								l_other_library := a_mounts.item (a_mount.pathname)
+								if l_other_library /= Void then
+									if not a_mount.same_library_prefix (l_other_library) then
+										error_handler.report_multiple_library_prefix_error (a_mount, l_other_library)
+									end
+								else
+									a_mounts.put_last (a_mount)
+								end
 							end
 						elseif STRING_.same_string (a_child.name, uc_option) then
 							if an_option /= Void then

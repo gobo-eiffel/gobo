@@ -18,6 +18,9 @@ inherit
 
 	KL_CLONABLE
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -45,6 +48,20 @@ feature -- Status report
 	is_root: BOOLEAN
 			-- Is current library mounted directly to the top level
 			-- system or library?
+
+	same_library_prefix (other: ET_XACE_MOUNTED_LIBRARY): BOOLEAN is
+			-- Do `Current' and `other' have the same library prefix?
+		require
+			other_not_void: other /= Void
+		do
+			if other.library_prefix /= Void then
+				if library_prefix /= Void then
+					Result := STRING_.same_string (other.library_prefix, library_prefix)
+				end
+			else
+				Result := (library_prefix = Void)
+			end
+		end
 
 feature -- Status setting
 
