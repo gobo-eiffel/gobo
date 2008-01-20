@@ -43,8 +43,8 @@ Version 3.8 - ?
 	  order to generate Ace files for ISE, use the new command-line option
 	  '--format=ace'.
 	* The option '--system=ge' now generates an Xace file instead of an
-	  Ace file. This makes if possible for example for 'gec' to determine
-	  whether the Boehm GC should be used trhough the Xace option
+	  Ace file. This makes it possible for example for 'gec' to determine
+	  whether the Boehm GC should be used through the Xace option
 	  'garbage_collector'. Otherwise, with Ace files, this information has
 	  to be passed to 'gec' through the command-line option '--gc=boehm'.
 	  In order to generate Ace files for 'gec', use the new command-line
