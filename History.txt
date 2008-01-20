@@ -34,6 +34,9 @@ Version 3.8 - ?
 	* Fixed bug when the type in a manifest type is based on an unknown class.
 	  Instead of reporting a VTCT error, gelint/gec were reporting another
 	  subsequent error, as shown in bug#1875262.
+	* Made sure that no VAPE error is reported when a feature is exported
+	  to a class that has a syntax error or for which the ancestors could
+	  not be computed.
 
 	gexace:
 
@@ -60,12 +63,14 @@ Version 3.8 - ?
 	  the default value in ECF: inlining, inlining_size,
 	  use_cluster_name_as_namespace, use_full_cluster_name_as_namespace.
 	  See $GOBO/doc/gexace/options.txt for more details.
+	* Fixed bug#1875809 where libraries were duplicated in the generated
+	  output file when appearing twice in the same Xace input file.
+
 
 	Gobo Eiffel Kernel Library:
 
 	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')
 	  in class KL_DIRECTORY.
-
 	* Added feature `prune_all_trailing' to KL_STRING_ROUTINES.
 
 	Gobo Eiffel String Library:
