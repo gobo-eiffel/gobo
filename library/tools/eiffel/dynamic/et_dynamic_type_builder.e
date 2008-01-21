@@ -762,7 +762,7 @@ feature {NONE} -- Feature validity
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
-				if a_feature.is_builtin then
+				if a_feature.is_builtin and then not a_feature.is_builtin_unknown then
 					check_external_builtin_function_validity (a_feature)
 				elseif a_feature.type.same_base_type (universe.string_class, current_type, current_type, universe) then
 					if current_type = current_dynamic_type.base_type then
@@ -783,6 +783,7 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
+			builtin_feature_known: not a_feature.is_builtin_unknown
 		local
 			l_builtin_class: INTEGER
 		do
@@ -1322,7 +1323,7 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
-				if a_feature.is_builtin then
+				if a_feature.is_builtin and then not a_feature.is_builtin_unknown then
 					check_external_builtin_procedure_validity (a_feature)
 				end
 			end
@@ -1335,6 +1336,7 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
+			builtin_feature_known: not a_feature.is_builtin_unknown
 		local
 			l_builtin_class: INTEGER
 		do

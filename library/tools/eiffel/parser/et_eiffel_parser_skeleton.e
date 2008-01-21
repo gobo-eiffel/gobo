@@ -87,6 +87,7 @@ feature {NONE} -- Initialization
 			create procedures.make (Initial_procedures_capacity)
 			create constraints.make (Initial_constraints_capacity)
 			create providers.make (Initial_providers_capacity)
+			unknown_builtin_reported := True
 			make_eiffel_scanner_with_factory ("unknown file", a_universe, a_factory, an_error_handler)
 			make_class_processor (a_universe)
 			make_parser_skeleton
@@ -174,6 +175,9 @@ feature -- Status report
 	overriding_class_added: BOOLEAN
 			-- Has an overriding class been added to universe?
 
+	unknown_builtin_reported: BOOLEAN
+			-- Should unknown built-in features be reported as an error?
+
 feature -- Status setting
 
 	set_null (b: BOOLEAN) is
@@ -190,6 +194,14 @@ feature -- Status setting
 			providers_enabled := b
 		ensure
 			providers_enabled_set: providers_enabled = b
+		end
+
+	set_unknown_builtin_reported (b: BOOLEAN) is
+			-- Set `unknown_builtin_reported' to `b'.
+		do
+			unknown_builtin_reported := b
+		ensure
+			unknown_builtin_reported_set: unknown_builtin_reported = b
 		end
 
 feature -- Parsing
@@ -1864,8 +1876,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2036,8 +2050,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2126,8 +2142,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2210,8 +2228,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2247,8 +2267,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2314,8 +2336,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2349,8 +2373,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2478,8 +2504,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2513,8 +2541,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2583,8 +2613,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2629,8 +2661,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2684,8 +2718,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2834,8 +2870,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2860,8 +2898,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -2901,8 +2941,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -3279,8 +3321,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -3316,8 +3360,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -3747,8 +3793,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -3784,8 +3832,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4031,8 +4081,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4122,8 +4174,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4214,8 +4268,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4268,8 +4324,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4334,8 +4392,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4371,8 +4431,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4409,8 +4471,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4444,8 +4508,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4496,8 +4562,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4531,8 +4599,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4568,8 +4638,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4595,8 +4667,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4636,8 +4710,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4708,8 +4784,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4742,8 +4820,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -4771,8 +4851,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -5131,8 +5213,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -5168,8 +5252,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -5336,8 +5422,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -5373,8 +5461,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 
@@ -5476,8 +5566,10 @@ feature {NONE} -- Built-in
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
-				set_fatal_error (a_class)
-				error_handler.report_gvkbu1a_error (a_class, a_feature)
+				if unknown_builtin_reported then
+					set_fatal_error (a_class)
+					error_handler.report_gvkbu1a_error (a_class, a_feature)
+				end
 			end
 		end
 

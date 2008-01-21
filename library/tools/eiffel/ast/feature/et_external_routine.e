@@ -42,6 +42,14 @@ feature -- Built-in
 			Result := (builtin_code /= tokens.builtin_not_builtin)
 		end
 
+	is_builtin_unknown: BOOLEAN is
+			-- Is current built-in feature unknown?
+		require
+			is_builtin: is_builtin
+		do
+			Result := (builtin_code = tokens.builtin_unknown)
+		end
+
 	builtin_code: INTEGER
 			-- Built-in feature code
 
