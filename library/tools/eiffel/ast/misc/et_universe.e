@@ -1621,6 +1621,9 @@ feature -- Compilation options
 			-- The trace is displayed each time the execution enters or exits
 			-- from a feature.
 
+	use_boehm_gc: BOOLEAN
+			-- Should the application be compiled with the Boehm GC?
+
 	system_name: STRING
 			-- Name of system
 
@@ -1657,6 +1660,14 @@ feature -- Compilation options setting
 			trace_mode := b
 		ensure
 			trace_mode_set: trace_mode = b
+		end
+
+	set_use_boehm_gc (b: BOOLEAN) is
+			-- Set `use_boehm_gc' to `b'.
+		do
+			use_boehm_gc := b
+		ensure
+			use_boehm_gc_set: use_boehm_gc = b
 		end
 
 	set_system_name (a_name: like system_name) is

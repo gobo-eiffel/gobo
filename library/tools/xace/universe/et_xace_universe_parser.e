@@ -5,7 +5,7 @@ indexing
 		"Xace universe parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2007, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,9 @@ inherit
 			parse_file,
 			last_universe, new_universe
 		end
+
+	ET_SHARED_XACE_OPTION_NAMES
+		export {NONE} all end
 
 	UT_STRING_ROUTINES
 		export {NONE} all end
@@ -127,10 +130,12 @@ feature {NONE} -- Xace AST factory
 				Result.set_console_application_mode (l_options.console_application)
 				Result.set_exception_trace_mode (l_options.exception_trace)
 				Result.set_trace_mode (l_options.trace)
+				Result.set_use_boehm_gc (STRING_.same_string (l_options.garbage_collector, options.boehm_value))
 			else
 				Result.set_console_application_mode (True)
 				Result.set_exception_trace_mode (False)
 				Result.set_trace_mode (False)
+				Result.set_use_boehm_gc (False)
 			end
 		end
 

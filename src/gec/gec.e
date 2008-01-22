@@ -215,7 +215,11 @@ feature {NONE} -- Processing
 					l_system_name := l_class.lower_name
 				end
 				create l_generator.make (l_system)
-				l_generator.set_use_boehm_gc (use_boehm_gc)
+				if gc_option.was_found then
+						-- Override any option that might have been specified
+						-- in the Eiffel config file.
+					l_generator.set_use_boehm_gc (use_boehm_gc)
+				end
 				l_generator.set_finalize_mode (is_finalize)
 				l_generator.set_split_mode (not no_split)
 				if split_size > 0 then

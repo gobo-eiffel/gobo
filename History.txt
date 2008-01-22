@@ -26,6 +26,9 @@ Version 3.8 - ?
 	* Fixed bug in recursive once-functions. The second call was returning
 	  the default value of the result type instead of the value of 'Result'
 	  as it was when the recursive call occurred, as specified in ECMA Eiffel.
+	* The Xace option 'garbage_collector' is now taken into account by gec
+	  when set to "boehm". This Xace option can be overridden by the
+	  command-line option --gc when specified.
 
 	gelint:
 

@@ -5,7 +5,7 @@ indexing
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -141,6 +141,7 @@ feature {NONE} -- Initialization
 			short_names := True
 			split_mode := True
 			split_threshold := default_split_threshold
+			use_boehm_gc := universe.use_boehm_gc
 			system_name := "unknown"
 			create type_checker.make (universe)
 			current_system := a_system
