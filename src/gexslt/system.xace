@@ -11,10 +11,16 @@
 
 	<root class="GEXSLT" creation="execute"/>
 	<option name="console_application" value="true"/>
+	<option if="{GOBO_EIFFEL}=ge">
+	  <option if="{BOEHM_GC}">
+	    <option name="garbage_collector" value="boehm"/>
+	    <option unless="${GOBO_OS}=windows">
+	      <option name="link" value="-lpthread" unless="${IS_MAC_OS_X}"/>
+	    </option>
+	  </option>
+	</option>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
-		<option name="garbage_collector" value="internal"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 		<option name="inlining" value="all" unless="${GOBO_EIFFEL}=ise"/>
 		<option if="${GOBO_EIFFEL}=ise">
 				<!--
@@ -27,9 +33,7 @@
 		</option>
 	</option>
 	<option if="${DEBUG}">
-		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
-		<option name="assertion" value="ensure" if="${GOBO_EIFFEL}=ve"/>
-		<option name="garbage_collector" value="internal"/>
+		<option name="assertion" value="all"/>
 		<option name="finalize" value="false"/>
 	</option>
 	<option if="${GOBO_DOTNET}">
