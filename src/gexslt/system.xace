@@ -3,7 +3,7 @@
 <system name="gexslt">
 	<description>
 		system: "Gobo Eiffel XSLT 2.0 processor"
-		copyright: "Copyright (c) 2004, Colin Adams and others"
+		copyright: "Copyright (c) 2004-2008, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -11,13 +11,13 @@
 
 	<root class="GEXSLT" creation="execute"/>
 	<option name="console_application" value="true"/>
-	<option if="{GOBO_EIFFEL}=ge">
-	  <option if="{BOEHM_GC}">
-	    <option name="garbage_collector" value="boehm"/>
-	    <option unless="${GOBO_OS}=windows">
-	      <option name="link" value="-lpthread" unless="${IS_MAC_OS_X}"/>
-	    </option>
-	  </option>
+	<option if="${GOBO_EIFFEL}=ge">
+		<option if="${BOEHM_GC}">
+			<option name="garbage_collector" value="boehm"/>
+			<option unless="${GOBO_OS}=windows">
+				<option name="link" value="-lpthread" unless="${IS_MAC_OS_X}"/>
+			</option>
+		</option>
 	</option>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
