@@ -646,7 +646,7 @@ feature {NONE} -- Generation
 						a_file.put_character ('.')
 					end
 					a_file.put_new_line
-					a_file.put_line ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<")
+					a_file.put_line ("%T%Tdo%N%T%T%Tyyarray_subcopy (an_array, <<")
 					k := a_table_upper.min (i + array_size - 1)
 					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
 					a_file.put_string (", yyDummy>>,%N%T%T%T")

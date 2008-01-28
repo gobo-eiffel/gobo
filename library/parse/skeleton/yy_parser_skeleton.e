@@ -31,6 +31,9 @@ inherit
 	KL_IMPORTED_SPECIAL_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -732,6 +735,25 @@ feature {NONE} -- Implementation
 			count_set: Result.count = an_array.count
 			-- same_items: forall i in 0 .. (an_array.count - 1),
 			--   Result.item (i) = an_array.item (an_array.lower + i)
+		end
+
+	yyarray_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER) is
+			-- Copy items of `other' within bounds `start_pos' and `end_pos'
+			-- to `an_array' starting at index `index_pos'.
+		require
+			an_array_not_void: an_array /= Void
+			other_not_void: other /= Void
+			not_same: an_array /= other
+			start_pos_large_enough: start_pos >= other.lower
+			end_pos_small_enough: end_pos <= other.upper
+			valid_bounds: start_pos <= end_pos + 1
+			index_pos_large_enough: index_pos >= an_array.lower
+			enough_space: (an_array.upper - index_pos) >= (end_pos - start_pos)
+		do
+			INTEGER_ARRAY_.subcopy (an_array, other, start_pos, end_pos, index_pos)
+		ensure
+			-- copied: forall i in 0 .. (end_pos - start_pos),
+			--     an_array.item (index_pos + i) = other.item (start_pos + i)
 		end
 
 	yyss: SPECIAL [INTEGER]
