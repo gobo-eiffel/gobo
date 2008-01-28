@@ -185,6 +185,7 @@ feature {NONE} -- Initialization
 			create agent_manifest_tuple.make_with_capacity (20)
 			create formal_arguments.make (20)
 			create manifest_array_types.make (100)
+			create big_manifest_array_types.make (100)
 			create manifest_tuple_types.make (100)
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
@@ -641,6 +642,14 @@ feature {NONE} -- C code Generation
 					manifest_array_types.forth
 				end
 				manifest_array_types.wipe_out
+					-- Print features which build big manifest arrays.
+				from big_manifest_array_types.start until big_manifest_array_types.after loop
+					print_big_manifest_array_function (big_manifest_array_types.item_for_iteration)
+					current_file.put_new_line
+					flush_to_c_file
+					big_manifest_array_types.forth
+				end
+				big_manifest_array_types.wipe_out
 					-- Print features which build manifest tuples.
 				from manifest_tuple_types.start until manifest_tuple_types.after loop
 					print_manifest_tuple_function (manifest_tuple_types.item_for_iteration)
@@ -7524,7 +7533,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_temp: ET_IDENTIFIER
 			l_temp_index: INTEGER
-			i, nb: INTEGER
+			i, nb, nb2: INTEGER
 			l_assignment_target: ET_WRITABLE
 			l_int_promoted: BOOLEAN
 			l_double_promoted: BOOLEAN
@@ -7534,7 +7543,10 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_static_item_type: ET_DYNAMIC_TYPE
 			l_dynamic_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item: ET_EXPRESSION
+			l_argument_limit: INTEGER
 		do
+			--l_argument_limit := 253 -- tcc limitation
+			l_argument_limit := 1024 -- lcc-win32 limitation
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_dynamic_type_set := dynamic_type_set (an_expression)
@@ -7590,8 +7602,11 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					l_double_promoted := True
 				end
 				manifest_array_types.force_last (l_dynamic_type)
+					-- `nb2' is the maximum number of array elements that can be passed to the
+					-- function 'GE_ma<type-id>' based on C compiler limitation.
+				nb2 := nb.min (l_argument_limit - 2)
 				if in_operand then
-					if l_assignment_target /= Void then
+					if l_assignment_target /= Void and nb <= nb2 then
 						operand_stack.force (l_assignment_target)
 						print_indentation
 						print_writable (l_assignment_target)
@@ -7613,10 +7628,13 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				current_file.put_character ('(')
 				print_type_cast (current_system.integer_type, current_file)
 				current_file.put_integer (nb)
+				current_file.put_character (',')
+				print_type_cast (current_system.integer_type, current_file)
+				current_file.put_integer (nb2)
 				from i := 1 until i > nb loop
 					current_file.put_character (',')
 						-- Print one item per line for better readability,
-						-- avoidind too long lines for big arrays.
+						-- avoiding too long lines for big arrays.
 					current_file.put_new_line
 					l_item := call_operands.item (i)
 					l_dynamic_item_type_set := dynamic_type_set (l_item)
@@ -7638,6 +7656,27 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						print_attachment_expression (l_item, l_dynamic_item_type_set, l_static_item_type)
 					end
 					i := i + 1
+					if i > nb2 and i <= nb then
+							-- `nb2' is the maximum number of array elements that can be passed to the
+							-- function 'GE_ma<type-id>' based on C compiler limitation.
+						nb2 := (nb - i + 1).min (l_argument_limit - 3)
+						current_file.put_character (')')
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_ge_bma)
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character ('(')
+						print_expression (l_temp)
+						current_file.put_character (',')
+						print_type_cast (current_system.integer_type, current_file)
+						current_file.put_integer (i - 1)
+						current_file.put_character (',')
+						print_type_cast (current_system.integer_type, current_file)
+						current_file.put_integer (nb2)
+						nb2 := nb2 + i - 1
+						big_manifest_array_types.force_last (l_dynamic_type)
+					end
 				end
 				current_file.put_character (')')
 				if in_operand then
@@ -19105,10 +19144,14 @@ feature {NONE} -- C function generation
 					-- the resulting application is not slower.
 				header_file.put_character ('(')
 				print_type_declaration (current_system.integer_type, header_file)
-				header_file.put_string (" c, ...)")
+				header_file.put_string (" c, ")
+				print_type_declaration (current_system.integer_type, header_file)
+				header_file.put_string (" n, ...)")
 				current_file.put_character ('(')
 				print_type_declaration (current_system.integer_type, current_file)
-				current_file.put_string (" c, ...)")
+				current_file.put_string (" c, ")
+				print_type_declaration (current_system.integer_type, current_file)
+				current_file.put_string (" n, ...)")
 				header_file.put_character (';')
 				header_file.put_new_line
 				current_file.put_new_line
@@ -19174,13 +19217,13 @@ feature {NONE} -- C function generation
 				current_file.put_new_line
 					-- Copy items to 'area'.
 				print_indentation
-				current_file.put_line ("if (c!=0) {")
+				current_file.put_line ("if (n!=0) {")
 				indent
 				print_indentation
 				current_file.put_line ("va_list v;")
 				print_indentation
 				print_type_declaration (current_system.integer_type, current_file)
-				current_file.put_line (" n = c;")
+				current_file.put_line (" j = n;")
 				print_indentation
 				print_type_declaration (l_item_type, current_file)
 				current_file.put_character (' ')
@@ -19193,9 +19236,9 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
-				current_file.put_line ("va_start(v, c);")
+				current_file.put_line ("va_start(v, n);")
 				print_indentation
-				current_file.put_line ("while (n--) {")
+				current_file.put_line ("while (j--) {")
 				indent
 				print_indentation
 				if
@@ -19299,6 +19342,167 @@ feature {NONE} -- C function generation
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
+	print_big_manifest_array_function (an_array_type: ET_DYNAMIC_TYPE) is
+			-- Print 'GE_bma' function to `current_file' and its signature to `header_file'.
+			-- 'GE_bma<type-id>' is used to create big manifest arrays of type 'type-id'.
+			-- "Big" means more elements than the number of function arguments that the
+			-- underlying C compiler can support.
+		require
+			an_array_type_not_void: an_array_type /= Void
+		local
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_item_type: ET_DYNAMIC_TYPE
+			l_temp: ET_IDENTIFIER
+		do
+			l_queries := an_array_type.queries
+			if an_array_type.attribute_count < 3 then
+					-- Internal error: class ARRAY should have at least the
+					-- features 'area', 'lower' and 'upper' as first features.
+					-- Already reported in ET_SYSTEM.compile_kernel.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_area_type_set := l_queries.first.result_type_set
+				if l_area_type_set = Void then
+						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_special_type ?= l_area_type_set.static_type
+					if l_special_type = Void then
+							-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
+							-- that the attribute `area' is of SPECIAL type.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
+				end
+			end
+			if l_special_type /= Void then
+				l_item_type := l_special_type.item_type_set.static_type
+					-- Print signature to `header_file' and `current_file'.
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+				header_file.put_string (c_void)
+				current_file.put_string (c_void)
+				header_file.put_character (' ')
+				current_file.put_character (' ')
+				header_file.put_string (c_ge_bma)
+				current_file.put_string (c_ge_bma)
+				header_file.put_integer (an_array_type.id)
+				current_file.put_integer (an_array_type.id)
+					-- Use varargs rather than inlining the code, this
+					-- makes the C compilation with the -O2 faster and
+					-- the resulting application is not slower.
+				header_file.put_character ('(')
+				print_type_declaration (an_array_type, header_file)
+				header_file.put_string (" C, ")
+				print_type_declaration (current_system.integer_type, header_file)
+				header_file.put_string (" s, ")
+				print_type_declaration (current_system.integer_type, header_file)
+				header_file.put_string (" n, ...)")
+				current_file.put_character ('(')
+				print_type_declaration (an_array_type, current_file)
+				current_file.put_string (" C, ")
+				print_type_declaration (current_system.integer_type, current_file)
+				current_file.put_string (" s, ")
+				print_type_declaration (current_system.integer_type, current_file)
+				current_file.put_string (" n, ...)")
+				header_file.put_character (';')
+				header_file.put_new_line
+				current_file.put_new_line
+					-- Print body to `current_file'.
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+					-- Copy items to 'area'.
+				print_indentation
+				current_file.put_line ("if (n!=0) {")
+				indent
+				print_indentation
+				current_file.put_line ("va_list v;")
+				print_indentation
+				print_type_declaration (current_system.integer_type, current_file)
+				current_file.put_line (" j = n;")
+				l_temp := temp_variable
+				print_indentation
+				print_type_declaration (l_special_type, current_file)
+				current_file.put_character (' ')
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attribute_access (l_queries.first, tokens.current_keyword, an_array_type, False)
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('*')
+				current_file.put_character ('i')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attribute_special_item_access (l_temp, l_special_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('+')
+				current_file.put_character (' ')
+				current_file.put_character ('s')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_line ("va_start(v, n);")
+				print_indentation
+				current_file.put_line ("while (j--) {")
+				indent
+				print_indentation
+				if
+					l_item_type = current_system.boolean_type or
+					l_item_type = current_system.character_8_type or
+					l_item_type = current_system.integer_8_type or
+					l_item_type = current_system.natural_8_type or
+					l_item_type = current_system.integer_16_type or
+					l_item_type = current_system.natural_16_type
+				then
+						-- ISO C 99 says that through "..." the types are promoted to
+						-- 'int', and that promotion to 'int' leaves the type unchanged
+						-- if all values cannot be represented with an 'int' or
+						-- 'unsigned int'.
+					current_file.put_string ("*(i++) = ")
+					print_type_cast (l_item_type, current_file)
+					current_file.put_string ("va_arg(v, int")
+				elseif
+					l_item_type = current_system.real_type
+				then
+						-- ISO C 99 says that 'float' is promoted to 'double' when
+						-- passed as argument of a function.
+					current_file.put_string ("*(i++) = ")
+					print_type_cast (l_item_type, current_file)
+					current_file.put_string ("va_arg(v, double")
+				else
+					current_file.put_string ("*(i++) = va_arg(v, ")
+					print_type_declaration (l_item_type, current_file)
+				end
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_line ("va_end(v);")
+				dedent
+				print_indentation
+				current_file.put_character ('}')
 				current_file.put_new_line
 				dedent
 				current_file.put_character ('}')
@@ -23262,6 +23466,9 @@ feature {NONE} -- Access
 	manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
 			-- Types of manifest arrays
 
+	big_manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
+			-- Types of big manifest arrays
+
 	manifest_tuple_types: DS_HASH_SET [ET_DYNAMIC_TUPLE_TYPE]
 			-- Types of manifest tuples
 
@@ -24073,6 +24280,7 @@ feature {NONE} -- Constants
 	c_ge_alloc: STRING is "GE_alloc"
 	c_ge_argc: STRING is "GE_argc"
 	c_ge_argv: STRING is "GE_argv"
+	c_ge_bma: STRING is "GE_bma"
 	c_ge_boxed: STRING is "GE_boxed"
 	c_ge_call: STRING is "GE_call"
 	c_ge_catcall: STRING is "GE_catcall"
@@ -24190,6 +24398,8 @@ invariant
 	wrapper_expression_not_void: wrapper_expression /= Void
 	manifest_array_types_not_void: manifest_array_types /= Void
 	no_void_manifest_array_type: not manifest_array_types.has (Void)
+	big_manifest_array_types_not_void: big_manifest_array_types /= Void
+	no_void_big_manifest_array_type: not big_manifest_array_types.has (Void)
 	manifest_tuple_types_not_void: manifest_tuple_types /= Void
 	no_void_manifest_tuple_type: not manifest_tuple_types.has (Void)
 	called_features_not_void: called_features /= Void
