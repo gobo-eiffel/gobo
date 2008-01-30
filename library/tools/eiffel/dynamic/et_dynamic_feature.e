@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 				if a_feature.is_constant_attribute or a_feature.is_unique_attribute then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type
-					l_dynamic_type.set_alive
+					l_dynamic_type_set_builder.mark_type_alive (l_dynamic_type)
 				elseif builtin_code = builtin_identified_feature (builtin_identified_eif_id_object) then
 						-- Note that the 'object_id' mechanism is some kind of
 						-- weak reference implementation. Therefore, by nature,

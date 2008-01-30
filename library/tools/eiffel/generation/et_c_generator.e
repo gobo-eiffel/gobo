@@ -19929,6 +19929,7 @@ feature {NONE} -- Malloc
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
+				print_dispose_registration (tokens.current_keyword, current_type)
 				print_indentation
 				current_file.put_character ('*')
 				print_type_cast (current_type, current_file)
@@ -20001,6 +20002,56 @@ feature {NONE} -- Malloc
 						current_file.put_character ('}')
 						current_file.put_new_line
 						mark_temp_variable_free (l_temp)
+					end
+				end
+			end
+		end
+
+	print_dispose_registration (an_object: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE) is
+			-- Print to `current_file' the registration to the GC of the
+			-- 'dispose' feature, if it exists, to be called when the
+			-- object `an_object' of type `a_type' will be reclaimed.
+			-- Note that no 'dispose' routine will be registered if `a_type'
+			-- is expanded (according to ECMA Eiffel, expanded classes should
+			-- not inherit from class DISPOSABLE), or if the routine has an
+			-- empty compound (optimization).
+		require
+			an_object_not_void: an_object /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_dispose_seed: INTEGER
+			l_dispose_procedure: ET_DYNAMIC_FEATURE
+			l_internal_procedure: ET_INTERNAL_PROCEDURE
+			l_compound: ET_COMPOUND
+		do
+			if not a_type.is_expanded then
+				l_dispose_seed := universe.dispose_seed
+				if l_dispose_seed > 0 then
+					l_dispose_procedure := a_type.seeded_dynamic_procedure (l_dispose_seed, current_system)
+					if l_dispose_procedure /= Void then
+							-- There is a feature 'dispose' available.
+						l_internal_procedure ?= l_dispose_procedure.static_feature
+						if l_internal_procedure /= Void then
+							l_compound := l_internal_procedure.compound
+							if l_compound /= Void and then not l_compound.is_empty then
+									-- The feature 'dispose' is not empty.
+									-- Register it to the GC.
+								print_indentation
+								current_file.put_string (c_ge_register_dispose)
+								current_file.put_character ('(')
+								print_expression (an_object)
+								current_file.put_character (',')
+								current_file.put_character ('&')
+								print_routine_name (l_dispose_procedure, a_type, current_file)
+								current_file.put_character (')')
+								current_file.put_character (';')
+								current_file.put_new_line
+								if not l_dispose_procedure.is_generated then
+									l_dispose_procedure.set_generated (True)
+									called_features.force_last (l_dispose_procedure)
+								end
+							end
+						end
 					end
 				end
 			end
@@ -24307,6 +24358,7 @@ feature {NONE} -- Constants
 	c_ge_object_id_free: STRING is "GE_object_id_free"
 	c_ge_power: STRING is "GE_power"
 	c_ge_raise: STRING is "GE_raise"
+	c_ge_register_dispose: STRING is "GE_register_dispose"
 	c_ge_rescue: STRING is "GE_rescue"
 	c_ge_retry: STRING is "GE_retry"
 	c_ge_setjmp: STRING is "GE_setjmp"

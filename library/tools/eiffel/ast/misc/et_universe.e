@@ -116,6 +116,7 @@ feature {NONE} -- Initialization
 			none_class.set_in_system (True)
 			tuple_class := eiffel_class (tokens.tuple_class_name)
 			tuple_class.set_in_system (True)
+			disposable_class := eiffel_class (tokens.disposable_class_name)
 			bit_class := eiffel_class (tokens.bit_class_name)
 			bit_class.set_in_system (True)
 			string_8_class := eiffel_class (tokens.string_8_class_name)
@@ -278,6 +279,7 @@ feature {NONE} -- Initialization
 			general_class_not_void: general_class /= Void
 			none_class_not_void: none_class /= Void
 			tuple_class_not_void: tuple_class /= Void
+			disposable_class_not_void: disposable_class /= Void
 			bit_class_not_void: bit_class /= Void
 			string_class_not_void: string_class /= Void
 			string_8_class_not_void: string_8_class /= Void
@@ -836,6 +838,9 @@ feature -- Basic classes
 	tuple_class: ET_CLASS
 			-- Class "TUPLE"
 
+	disposable_class: ET_CLASS
+			-- Class "DISPOSABLE"
+
 	bit_class: ET_CLASS
 			-- Class "BIT"
 
@@ -1143,6 +1148,9 @@ feature -- Feature access
 	void_seed: INTEGER
 			-- Seed of feature 'Void' in class ANY
 
+	dispose_seed: INTEGER
+			-- Seed of feature 'dispose' in class DISPOSABLE
+
 	routine_call_seed: INTEGER
 			-- Seed of feature 'call' in class ROUTINE
 
@@ -1193,6 +1201,16 @@ feature -- Feature setting
 			void_seed := a_seed
 		ensure
 			void_seed_set: void_seed = a_seed
+		end
+
+	set_dispose_seed (a_seed: INTEGER) is
+			-- Set `dispose_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			dispose_seed := a_seed
+		ensure
+			dispose_seed_set: dispose_seed = a_seed
 		end
 
 	set_routine_call_seed (a_seed: INTEGER) is
@@ -3197,6 +3215,7 @@ invariant
 	general_class_not_void: general_class /= Void
 	none_class_not_void: none_class /= Void
 	tuple_class_not_void: tuple_class /= Void
+	disposable_class_not_void: disposable_class /= Void
 	bit_class_not_void: bit_class /= Void
 	string_class_not_void: string_class /= Void
 	string_8_class_not_void: string_8_class /= Void
@@ -3264,8 +3283,12 @@ invariant
 	real_64_convert_feature_not_void: real_64_convert_feature /= Void
 	real_convert_feature_not_void: real_convert_feature /= Void
 	double_convert_feature_not_void: double_convert_feature /= Void
-	default_create_seed_non_negative: default_create_seed >= 0
-	void_seed_non_negative: void_seed >= 0
+	default_create_seed_not_negative: default_create_seed >= 0
+	copy_seed_not_negative: copy_seed >= 0
+	void_seed_not_negative: void_seed >= 0
+	dispose_seed_not_negative: dispose_seed >= 0
+	routine_call_seed_not_negative: routine_call_seed >= 0
+	function_item_seed_not_negative: function_item_seed >= 0
 	provider_checker_not_void: provider_checker /= Void
 	ancestor_builder_not_void: ancestor_builder /= Void
 	feature_flattener_not_void: feature_flattener /= Void

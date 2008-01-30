@@ -29,6 +29,9 @@ Version 3.8 - ?
 	* The Xace option 'garbage_collector' is now taken into account by gec
 	  when set to "boehm". This Xace option can be overridden by the
 	  command-line option --gc when specified.
+	* When gec compiles an application with the Boehm GC, it now generates
+	  code that will let the GC trigger the feature `dispose' when objects
+	  are reclaimed.
 
 	gelint:
 

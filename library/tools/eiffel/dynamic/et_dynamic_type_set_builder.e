@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,14 @@ feature -- Access
 			-- Surrounding system
 			-- (Note: there is a frozen feature called `system' in
 			-- class GENERAL of SmartEiffel 1.0)
+
+	universe: ET_UNIVERSE is
+			-- Surrounding universe
+		do
+			Result := current_system.universe
+		ensure
+			universe_not_void: Result /= Void
+		end
 
 feature -- Status report
 
@@ -97,6 +105,53 @@ feature -- Generation
 			-- Build dynamic type sets for `current_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		deferred
+		end
+
+	mark_type_alive (a_type: ET_DYNAMIC_TYPE) is
+			-- Mark `a_type' as alive.
+			-- This means that instances of that type can be created in the system.
+			-- In case of reference type, we have to make sure that its 'dispose'
+			-- feature, if it exists, is compiled into the system.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_dispose_procedure: ET_DYNAMIC_FEATURE
+			l_dispose_seed: INTEGER
+		do
+			if not a_type.is_alive then
+				a_type.set_alive
+				if not a_type.is_expanded then
+					l_dispose_seed := universe.dispose_seed
+					if l_dispose_seed > 0 then
+						l_dispose_procedure := a_type.seeded_dynamic_procedure (l_dispose_seed, current_system)
+						if l_dispose_procedure /= Void then
+							l_dispose_procedure.set_regular (True)
+						end
+					end
+				end
+			end
+		ensure
+			a_type_alive: a_type.is_alive
+		end
+
+	mark_string_type_alive is
+			-- Make sure that `string_type' and its dependent types
+			-- are marked as alive.
+		do
+			mark_type_alive (current_system.string_type)
+				-- Make sure that type SPECIAL[CHARACTER] (used in
+				-- feature 'area') is marked as alive.
+			mark_type_alive (current_system.special_character_type)
+				-- Make sure that type CHARACTER (used as actual generic type
+				-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
+			mark_type_alive (current_system.character_type)
+				-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
+			mark_type_alive (current_system.integer_type)
+		ensure
+			string_type_alive: current_system.string_type.is_alive
+			special_character_type_alive: current_system.special_character_type.is_alive
+			character_type_alive: current_system.character_type.is_alive
+			integer_type_alive: current_system.integer_type.is_alive
 		end
 
 feature -- Error handling

@@ -862,6 +862,13 @@ feature {NONE} -- Basic operations
 					else
 						universe.set_function_item_seed (0)
 					end
+				elseif a_class = universe.disposable_class then
+					l_procedure := a_class.named_procedure (tokens.dispose_feature_name)
+					if l_procedure /= Void then
+						universe.set_dispose_seed (l_procedure.first_seed)
+					else
+						universe.set_dispose_seed (0)
+					end
 				end
 			end
 		end

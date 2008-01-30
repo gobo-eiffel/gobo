@@ -149,9 +149,14 @@ feature -- Status setting
 
 	set_alive is
 			-- Set `is_alive' to True.
+			-- (Note that in order to make sure that the 'dispose' feature, if it exists, is
+			-- compiled into the system, the feature ET_DYNAMIC_TYPE_SET_BUILDER.mark_type_alive
+			-- needs to be called.)
 		do
-			is_alive := True
-			conforming_dynamic_types.put_type (Current)
+			if not is_alive then
+				is_alive := True
+				conforming_dynamic_types.put_type (Current)
+			end
 		ensure
 			alive_set: is_alive
 		end

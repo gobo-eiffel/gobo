@@ -35,6 +35,19 @@
 #define GE_alloc(x) GE_null(GC_MALLOC(x))
 #define GE_alloc_atomic(x) GE_null(GC_MALLOC_ATOMIC(x))
 
+/*
+	Dispose
+*/
+
+/*
+ * Call dispose routine `disp' on object `C'.
+ */
+extern void GE_boehm_dispose(EIF_REFERENCE, void (*)(EIF_REFERENCE));
+/*
+ * Register dispose routine `disp' to be called on object `obj' when it will be collected.
+ */
+#define GE_register_dispose(obj, disp) GC_register_finalizer((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, (void*)(disp), NULL, NULL)
+
 #else
 
 /*
@@ -51,6 +64,15 @@
 */
 #define GE_alloc(x) GE_null(calloc((x),1))
 #define GE_alloc_atomic(x) GE_null(calloc((x),1))
+
+/*
+	Dispose
+*/
+
+/*
+ * Register dispose routine `disp' to be called on object `obj' when it will be collected.
+ */
+#define GE_register_dispose(obj, disp) /* do nothing */
 
 #endif
 

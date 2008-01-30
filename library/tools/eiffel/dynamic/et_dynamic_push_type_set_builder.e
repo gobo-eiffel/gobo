@@ -255,7 +255,7 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.dynamic_type (a_type, current_type)
-				l_type.set_alive
+				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 					-- Make sure that type SPECIAL[XXX] (used in feature 'area') is marked as alive.
 					-- Feature 'area' should be the first in the list of features.
@@ -274,7 +274,7 @@ feature {NONE} -- Event handling
 								-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 							set_fatal_error
 						else
-							l_special_type.set_alive
+							mark_type_alive (l_special_type)
 							l_special_type.put_target (l_area_type_set, current_system)
 							l_item_type_set := l_special_type.item_type_set
 							nb := an_expression.count
@@ -294,8 +294,8 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-					-- Make sure that type INTEGER (used in attributess 'lower' and 'upper') is marked as alive.
-				current_system.integer_type.set_alive
+					-- Make sure that type INTEGER (used in attributes 'lower' and 'upper') is marked as alive.
+				mark_type_alive (current_system.integer_type)
 			end
 		end
 
@@ -312,7 +312,7 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.dynamic_type (a_type, current_type)
-				l_type.set_alive
+				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 				l_tuple_type ?= l_type
 				if l_tuple_type = Void then
@@ -359,7 +359,7 @@ feature {NONE} -- Event handling
 				if a_string.index = 0 and string_index.item /= 0 then
 					a_string.set_index (string_index.item)
 				end
-				l_type.set_alive
+				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, a_string)
 				if string_index.item = 0 then
 					string_index.put (a_string.index)
@@ -368,7 +368,7 @@ feature {NONE} -- Event handling
 					-- feature 'area') is marked as alive.
 					-- Feature 'area' should be the first in the list of features.
 				l_special_type := current_system.special_character_type
-				l_special_type.set_alive
+				mark_type_alive (l_special_type)
 				l_queries := l_type.queries
 				if l_queries.is_empty then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
@@ -384,9 +384,9 @@ feature {NONE} -- Event handling
 				end
 					-- Make sure that type CHARACTER (used as actual generic type
 					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				current_system.character_type.set_alive
+				mark_type_alive (current_system.character_type)
 					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				current_system.integer_type.set_alive
+				mark_type_alive (current_system.integer_type)
 			end
 		end
 
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_dynamic_tuple_type.set_alive
+				mark_type_alive (l_dynamic_tuple_type)
 				if an_agent_type.attribute_count = 0 then
 						-- Internal error: missing feature 'closed_operands' in the Agent type,
 						-- already reported in ET_SYSTEM.compile_kernel.

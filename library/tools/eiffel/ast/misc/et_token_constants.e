@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,6 +80,14 @@ feature -- Class names
 			create {ET_IDENTIFIER} Result.make (capitalized_character_32_name)
 		ensure
 			character_32_class_name_not_void: Result /= Void
+		end
+
+	disposable_class_name: ET_CLASS_NAME is
+			-- "DISPOSABLE" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_disposable_name)
+		ensure
+			disposable_class_name_not_void: Result /= Void
 		end
 
 	double_class_name: ET_CLASS_NAME is
@@ -828,6 +836,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (default_create_name)
 		ensure
 			default_create_feature_name_not_void: Result /= Void
+		end
+
+	dispose_feature_name: ET_FEATURE_NAME is
+			-- 'dispose' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (dispose_name)
+		ensure
+			dispose_feature_name_not_void: Result /= Void
 		end
 
 	eif_id_object_feature_name: ET_FEATURE_NAME is
@@ -2503,6 +2519,7 @@ feature -- Keyword and symbol names
 	capitalized_character_8_name: STRING is "CHARACTER_8"
 	capitalized_character_32_name: STRING is "CHARACTER_32"
 	capitalized_double_name: STRING is "DOUBLE"
+	capitalized_disposable_name: STRING is "DISPOSABLE"
 	capitalized_function_name: STRING is "FUNCTION"
 	capitalized_general_name: STRING is "GENERAL"
 	capitalized_identified_routines_name: STRING is "IDENTIFIED_ROUTINES"
@@ -2638,6 +2655,9 @@ feature -- Keyword and symbol names
 
 	default_create_name: STRING is "default_create"
 		-- Name of Eiffel feature 'default_create'
+
+	dispose_name: STRING is "dispose"
+		-- Name of Eiffel feature 'dispose'
 
 	eif_id_object_name: STRING is "eif_id_object"
 		-- Name of Eiffel feature 'eif_id_object'
