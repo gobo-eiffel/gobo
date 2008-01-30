@@ -314,8 +314,8 @@ feature -- Execution
 						from
 							create s.make_empty
 							a_from_file.read_string (read_chunk_size)
-						until 
-							a_from_file.end_of_file 
+						until
+							a_from_file.end_of_file
 						loop
 							s.append_string (a_from_file.last_string)
 							a_from_file.read_string (read_chunk_size)
@@ -334,10 +334,10 @@ feature -- Execution
 							from
 								l_vars := project.variables
 								l_vars.start
-							until 
-								l_vars.after 
+							until
+								l_vars.after
 							loop
-								s := STRING_.replaced_all_substrings (s, 
+								s := STRING_.replaced_all_substrings (s,
 										a_prefix + l_vars.key_for_iteration + a_postfix,
 										l_vars.item_for_iteration
 									)
@@ -395,8 +395,8 @@ feature -- Execution
 						from
 							create s.make_empty
 							a_from_file.read_string (read_chunk_size)
-						until 
-							a_from_file.end_of_file 
+						until
+							a_from_file.end_of_file
 						loop
 							s.append_string (a_from_file.last_string)
 							a_from_file.read_string (read_chunk_size)
@@ -443,7 +443,7 @@ feature -- Execution
 		require
 			a_filename_nod_void: a_filename /= Void
 			a_to_filename_nod_void: a_to_filename /= Void
-			match_valid: token /= Void and then match.count > 0
+			match_valid: match /= Void and then match.count > 0
 			not_token: token = Void
 		local
 			a_from_file: KL_TEXT_INPUT_FILE
@@ -498,8 +498,8 @@ feature -- Execution
 							from
 								create s.make_empty
 								a_from_file.read_string (read_chunk_size)
-							until 
-								a_from_file.end_of_file 
+							until
+								a_from_file.end_of_file
 							loop
 								s.append_string (a_from_file.last_string)
 								a_from_file.read_string (read_chunk_size)
@@ -507,6 +507,7 @@ feature -- Execution
 							a_from_file.close
 							a_from_file := Void
 
+							regexp.match (s)
 							if regexp.has_matched then
 								project.trace (<<"  [replace] match_count = ", regexp.match_count.out >>)
 								a_to_file := tmp_output_file
