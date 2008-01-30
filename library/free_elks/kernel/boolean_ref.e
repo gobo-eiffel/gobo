@@ -10,7 +10,7 @@ class BOOLEAN_REF inherit
 
 	HASHABLE
 		redefine
-			is_hashable, out
+			out
 		end
 
 feature -- Access
@@ -28,11 +28,6 @@ feature -- Access
 				Result := 1
 			end
 		end
-
-feature -- Status report
-
-	is_hashable: BOOLEAN = True
-			-- May current object be hashed?
 
 feature {NONE} -- Initialization
 

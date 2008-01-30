@@ -14,7 +14,7 @@ deferred class
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		deferred
 		ensure
@@ -23,13 +23,11 @@ feature -- Access
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
-			-- (True if it is not its type's default.)
+			-- (True by default.)
 		do
-			Result := (Current /= default)
-		ensure
-			ok_if_not_default: Result implies (Current /= default)
+			Result := True
 		end
 
 end

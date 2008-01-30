@@ -57,24 +57,21 @@ feature -- Access
 	index: INTEGER is
 			-- Index of current position
 		local
-			p: LINKED_LIST_CURSOR [G]
+			l_active, l_active_iterator: like active
 		do
 			if after then
 				Result := count + 1
 			elseif not before then
-				p ?= cursor
-				check
-					p /= Void
-				end
 				from
-					start; Result := 1
+					Result := 1
+					l_active := active
+					l_active_iterator := first_element
 				until
-					p.active = active
+					l_active_iterator = l_active
 				loop
-					forth
+					l_active_iterator := l_active_iterator.right
 					Result := Result + 1
 				end
-				go_to (p)
 			end
 		end
 

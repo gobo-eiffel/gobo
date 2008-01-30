@@ -28,21 +28,21 @@ convert
 
 feature -- Access
 
-	code: INTEGER is
+	code: INTEGER
 			-- Associated integer value
 		external
 			"built_in"
 		end
 
-	natural_32_code: NATURAL_32 is
-			-- Associated integer value
+	natural_32_code: NATURAL_32
+			-- Associated natural value
 		external
 			"built_in"
 		end
 
 feature -- Conversion
 
-	to_character_8: CHARACTER_8 is
+	to_character_8: CHARACTER_8
 			-- Convert current to CHARACTER_8
 		external
 			"built_in"

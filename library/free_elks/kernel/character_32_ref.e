@@ -17,50 +17,44 @@ inherit
 
 	HASHABLE
 		redefine
-			is_hashable, is_equal, out
-		end
-
-	REFACTORING_HELPER
-		redefine
 			is_equal, out
 		end
 
 feature -- Access
 
-	item: CHARACTER_32 is
+	item: CHARACTER_32
 			-- Unicode character value
 		external
 			"built_in"
 		end
 
-	code: INTEGER is
+	code: INTEGER
 			-- Associated integer value
 		do
 			Result := item.code
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
-			Result := code
+			Result := code.hash_code
 		end
 
-	natural_32_code: NATURAL_32 is
-			-- Associated integer value
+	natural_32_code: NATURAL_32
+			-- Associated natural value
 		do
 			Result := item.natural_32_code
+		ensure
+			natural_32_code_in_range: Result >= min_value and Result <= max_value
 		end
 
-	Min_value: NATURAL_32 is 0
-	Max_value: NATURAL_32 is 4294967295
+	min_value: NATURAL_32 = 0
+	max_value: NATURAL_32 = 4294967295
 			-- Bounds for integer representation of CHARACTER_32
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is True
-			-- May current object be hashed?
-
-	is_space: BOOLEAN is
+	is_space: BOOLEAN
 			-- Is `item' a white space?
 		require
 			is_character_8_compatible: is_character_8
@@ -68,7 +62,7 @@ feature -- Status report
 			Result := to_character_8.is_space
 		end
 
-	is_character_8: BOOLEAN is
+	is_character_8: BOOLEAN
 			-- Can current be represented on a CHARACTER_8?
 		do
 			Result := natural_32_code <= {CHARACTER_8}.max_value.to_natural_32
@@ -76,7 +70,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
 			Result := code < other.code
@@ -84,7 +78,7 @@ feature -- Comparison
 			definition: Result = (code < other.code)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
@@ -93,7 +87,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_item (c: CHARACTER_32) is
+	set_item (c: CHARACTER_32)
 			-- Make `c' the `item' value.
 		external
 			"built_in"
@@ -101,7 +95,7 @@ feature -- Element change
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of wide character
 		do
 			create Result.make (6)
@@ -112,7 +106,7 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: CHARACTER_32_REF) is
+	make_from_reference (v: CHARACTER_32_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -124,7 +118,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: CHARACTER_32_REF is
+	to_reference: CHARACTER_32_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -133,7 +127,7 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	to_character_8: CHARACTER_8 is
+	to_character_8: CHARACTER_8
 			-- Convert current to CHARACTER_8
 		require
 			is_character_8_compatible: is_character_8
@@ -141,13 +135,13 @@ feature -- Conversion
 			Result := item.to_character_8
 		end
 
-	to_character_32: CHARACTER_32 is
+	to_character_32: CHARACTER_32
 			-- Convert current to CHARACTER_32
 		do
 			Result := item
 		end
 
-	as_upper, upper: CHARACTER_32 is
+	as_upper, upper: CHARACTER_32
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		require
@@ -156,7 +150,7 @@ feature -- Conversion
 			Result := to_character_8.upper
 		end
 
-	as_lower, lower: CHARACTER_32 is
+	as_lower, lower: CHARACTER_32
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		require

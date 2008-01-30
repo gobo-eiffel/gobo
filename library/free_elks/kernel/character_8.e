@@ -28,7 +28,7 @@ convert
 
 feature -- Access
 
-	code: INTEGER is
+	code: INTEGER
 			-- Associated integer value
 		external
 			"built_in"
@@ -36,8 +36,8 @@ feature -- Access
 
 feature -- Conversion
 
-	to_character_32: CHARACTER_32 is
-			-- Associated character in 32 bit version.
+	to_character_32: CHARACTER_32
+			-- Associated character in 32 bit version
 		external
 			"built_in"
 		end
