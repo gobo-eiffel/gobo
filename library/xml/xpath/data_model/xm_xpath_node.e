@@ -463,8 +463,8 @@ feature -- Access
 			when Element_node then
 				Result := STRING_.concat ("element(", node_name)
 				Result := STRING_.appended_string (Result, ", ")
-				if type_annotation = type_factory.untyped_atomic_type.fingerprint then
-					Result := STRING_.appended_string (Result, "xdt:untyped)")
+				if type_annotation = type_factory.untyped_type.fingerprint then
+					Result := STRING_.appended_string (Result, "xs:untyped)")
 				else
 					todo ("type_name", True)
 				end
