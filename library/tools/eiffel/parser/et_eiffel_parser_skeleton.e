@@ -2222,6 +2222,18 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, tokens.like_current)
 				end
+			elseif a_feature.name.same_feature_name (tokens.base_address_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_base_address))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'base_address: POINTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.pointer_class)
+				elseif not a_feature.type.same_syntactical_type (universe.pointer_class, a_class, a_class, universe) then
+						-- The signature should be 'base_address: POINTER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.pointer_class)
+				end
 			elseif a_feature.name.same_feature_name (tokens.make_feature_name) then
 					-- 'SPECIAL.make' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_make))
@@ -2751,6 +2763,18 @@ feature {NONE} -- Built-in
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
 				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
 						-- The signature should be 'is_dotnet: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
+				end
+			elseif a_feature.name.same_feature_name (tokens.is_mac_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_mac))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'is_mac: BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
+				elseif not a_feature.type.same_syntactical_type (universe.boolean_class, a_class, a_class, universe) then
+						-- The signature should be 'is_mac: BOOLEAN'.
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
 				end
@@ -4396,6 +4420,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_aliased_resized_area))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, <<universe.integer_type.type>>, tokens.like_current)
+			elseif a_feature.name.same_feature_name (tokens.base_address_feature_name) then
+					-- 'SPECIAL.base_address' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_base_address))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.pointer_class)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -4736,6 +4765,11 @@ feature {NONE} -- Built-in
 			if a_feature.name.same_feature_name (tokens.is_dotnet_feature_name) then
 					-- 'PLATFORM.is_dotnet' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_dotnet))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
+			elseif a_feature.name.same_feature_name (tokens.is_mac_feature_name) then
+					-- 'PLATFORM.is_mac' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_is_mac))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.boolean_class)
 			elseif a_feature.name.same_feature_name (tokens.is_unix_feature_name) then

@@ -51,6 +51,14 @@
 #else
 #define EIF_IS_VMS EIF_FALSE
 #endif
+/* MAC definition */
+#ifdef EIF_MAC
+#define EIF_IS_MAC EIF_TRUE
+#undef EIF_IS_UNIX
+#define EIF_IS_UNIX EIF_FALSE
+#else
+#define EIF_IS_MAC EIF_FALSE
+#endif
 
 #ifdef __cplusplus
 extern "C" {

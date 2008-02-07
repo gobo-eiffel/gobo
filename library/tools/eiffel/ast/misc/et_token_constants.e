@@ -670,6 +670,14 @@ feature -- Feature names
 			as_integer_64_feature_name_not_void: Result /= Void
 		end
 
+	base_address_feature_name: ET_FEATURE_NAME is
+			-- 'base_address' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (base_address_name)
+		ensure
+			base_address_feature_name_not_void: Result /= Void
+		end
+
 	bit_and_feature_name: ET_FEATURE_NAME is
 			-- 'bit_and' feature name
 		once
@@ -1210,6 +1218,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (is_equal_name)
 		ensure
 			is_equal_feature_name_not_void: Result /= Void
+		end
+
+	is_mac_feature_name: ET_FEATURE_NAME is
+			-- 'is_mac' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_mac_name)
+		ensure
+			is_mac_feature_name_not_void: Result /= Void
 		end
 
 	is_thread_capable_feature_name: ET_FEATURE_NAME is
@@ -2593,6 +2609,9 @@ feature -- Keyword and symbol names
 	as_natural_64_name: STRING is "as_natural_64"
 		-- Name of Eiffel feature 'as_natural_64'
 
+	base_address_name: STRING is "base_address"
+		-- Name of Eiffel feature 'base_address'
+
 	bit_and_name: STRING is "bit_and"
 		-- Name of Eiffel feature 'bit_and'
 
@@ -2718,6 +2737,9 @@ feature -- Keyword and symbol names
 
 	is_equal_name: STRING is "is_equal"
 		-- Name of Eiffel feature 'is_equal'
+
+	is_mac_name: STRING is "is_mac"
+		-- Name of Eiffel feature 'is_mac'
 
 	is_thread_capable_name: STRING is "is_thread_capable"
 		-- Name of Eiffel feature 'is_thread_capable'

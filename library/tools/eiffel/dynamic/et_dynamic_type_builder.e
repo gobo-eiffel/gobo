@@ -998,6 +998,8 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 				report_builtin_platform_integer_bytes (a_feature)
 			when builtin_platform_is_dotnet then
 				report_builtin_platform_is_dotnet (a_feature)
+			when builtin_platform_is_mac then
+				report_builtin_platform_is_mac (a_feature)
 			when builtin_platform_is_thread_capable then
 				report_builtin_platform_is_thread_capable (a_feature)
 			when builtin_platform_is_unix then
@@ -1222,6 +1224,8 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_special_aliased_resized_area then
 				report_builtin_special_aliased_resized_area (a_feature)
+			when builtin_special_base_address then
+				report_builtin_special_base_address (a_feature)
 			when builtin_special_count then
 				report_builtin_special_count (a_feature)
 			when builtin_special_element_size then
@@ -3885,6 +3889,21 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_platform_is_mac (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.is_mac' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.boolean_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
 	report_builtin_platform_is_thread_capable (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'PLATFORM.is_thread_capable' is being analyzed.
 		require
@@ -4903,6 +4922,21 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_special_base_address (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'SPECIAL.base_address' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.pointer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 

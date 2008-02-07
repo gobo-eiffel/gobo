@@ -40,6 +40,12 @@ feature -- Platform
 			"built_in static"
 		end
 
+	is_mac: BOOLEAN is
+			-- Are we running on Mac OS?
+		external
+			"built_in static"
+		end
+
 	is_little_endian: BOOLEAN is
 			-- Is current platform a little endian one?
 		local

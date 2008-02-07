@@ -181,6 +181,7 @@ feature -- Built-in codes
 	builtin_special_count: INTEGER is 4
 	builtin_special_element_size: INTEGER is 5
 	builtin_special_aliased_resized_area: INTEGER is 6
+	builtin_special_base_address: INTEGER is 7
 			-- Codes for built-in features from class "SPECIAL"
 
 	builtin_character_8_class: INTEGER is 3
@@ -308,17 +309,18 @@ feature -- Built-in codes
 		end
 
 	builtin_platform_class: INTEGER is 18
-	builtin_platform_is_dotnet: INTEGER is 1
-	builtin_platform_is_windows: INTEGER is 2
-	builtin_platform_is_unix: INTEGER is 3
-	builtin_platform_is_vms: INTEGER is 4
-	builtin_platform_boolean_bytes: INTEGER is 5
-	builtin_platform_character_bytes: INTEGER is 6
-	builtin_platform_integer_bytes: INTEGER is 7
-	builtin_platform_real_bytes: INTEGER is 8
-	builtin_platform_pointer_bytes: INTEGER is 9
-	builtin_platform_is_thread_capable: INTEGER is 10
-	builtin_platform_wide_character_bytes: INTEGER is 11
+	builtin_platform_boolean_bytes: INTEGER is 1
+	builtin_platform_character_bytes: INTEGER is 2
+	builtin_platform_integer_bytes: INTEGER is 3
+	builtin_platform_is_dotnet: INTEGER is 4
+	builtin_platform_is_mac: INTEGER is 5
+	builtin_platform_is_thread_capable: INTEGER is 6
+	builtin_platform_is_unix: INTEGER is 7
+	builtin_platform_is_vms: INTEGER is 8
+	builtin_platform_is_windows: INTEGER is 9
+	builtin_platform_pointer_bytes: INTEGER is 10
+	builtin_platform_real_bytes: INTEGER is 11
+	builtin_platform_wide_character_bytes: INTEGER is 12
 			-- Codes for built-in features from class "PLATFORM"
 
 	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER is

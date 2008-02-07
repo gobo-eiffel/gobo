@@ -1754,6 +1754,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_platform_is_dotnet_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_platform_is_mac then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_platform_is_mac_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_platform_is_thread_capable then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -2239,6 +2245,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_special_aliased_resized_area then
 				print_builtin_special_aliased_resized_area_body (a_feature)
+			when builtin_special_base_address then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_special_base_address_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_special_count then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -10066,6 +10078,8 @@ feature {NONE} -- Query call generation
 				print_builtin_platform_integer_bytes_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_dotnet then
 				print_builtin_platform_is_dotnet_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_platform_is_mac then
+				print_builtin_platform_is_mac_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_thread_capable then
 				print_builtin_platform_is_thread_capable_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_unix then
@@ -10309,6 +10323,8 @@ feature {NONE} -- Query call generation
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_special_base_address then
+				print_builtin_special_base_address_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_special_count then
 				print_builtin_special_count_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_special_element_size then
@@ -14700,6 +14716,20 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_eif_false)
 		end
 
+	print_builtin_platform_is_mac_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'PLATFORM.is_mac'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_eif_is_mac)
+		end
+
 	print_builtin_platform_is_thread_capable_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.is_thread_capable'.
@@ -17666,6 +17696,23 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
+		end
+
+	print_builtin_special_base_address_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'SPECIAL.base_address'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.pointer_type, current_file)
+			current_file.put_character ('(')
+			print_attribute_special_item_access (call_operands.first, a_target_type, a_check_void_target)
+			current_file.put_character (')')
 		end
 
 	print_builtin_special_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
@@ -24464,6 +24511,7 @@ feature {NONE} -- Constants
 	c_eif_integer_16: STRING is "EIF_INTEGER_16"
 	c_eif_integer_32: STRING is "EIF_INTEGER_32"
 	c_eif_integer_64: STRING is "EIF_INTEGER_64"
+	c_eif_is_mac: STRING is "EIF_IS_MAC"
 	c_eif_is_unix: STRING is "EIF_IS_UNIX"
 	c_eif_is_vms: STRING is "EIF_IS_VMS"
 	c_eif_is_windows: STRING is "EIF_IS_WINDOWS"

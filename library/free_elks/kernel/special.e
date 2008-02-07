@@ -21,8 +21,8 @@ create
 
 feature {NONE} -- Initialization
 
-	frozen make (n: INTEGER) is
-			-- Creates a special object for `n' entries.
+	frozen make (n: INTEGER)
+			-- Create a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
 		external
@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 			area_allocated: count = n
 		end
 
-	frozen make_from_native_array (an_array: like native_array) is
-			-- Creates a special object from `an_array'.
+	frozen make_from_native_array (an_array: like native_array)
+			-- Create a special object from `an_array'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
 			an_array_not_void: an_array /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen item alias "[]" (i: INTEGER): T assign put is
+	frozen item alias "[]" (i: INTEGER): T assign put
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -51,7 +51,7 @@ feature -- Access
 			"built_in"
 		end
 
-	frozen infix "@" (i: INTEGER): T is
+	frozen infix "@" (i: INTEGER): T
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -61,9 +61,10 @@ feature -- Access
 			Result := item (i)
 		end
 
-	frozen index_of (v: T; start_position: INTEGER): INTEGER is
+	frozen index_of (v: T; start_position: INTEGER): INTEGER
 			-- Index of first occurrence of item identical to `v'.
 			-- -1 if none.
+			-- (Use object equality for comparison.)
 		require
 			valid_start_position: start_position >= 0
 		local
@@ -84,30 +85,29 @@ feature -- Access
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
 
-	frozen item_address (i: INTEGER): POINTER is
-			-- Address of element at position `i'.
+	frozen item_address (i: INTEGER): POINTER
+			-- Address of element at position `i'
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
 			index_big_enough: i >= 0
 			index_small_enough: i < count
 		do
-			Result := $Current
-			Result := Result + i * element_size
+			Result := base_address + i * element_size
 		ensure
 			element_address_not_null: Result /= default_pointer
 		end
 
-	frozen base_address: POINTER is
-			-- Address of element at position `0'.
+	frozen base_address: POINTER
+			-- Address of element at position `0'
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
-		do
-			Result := $Current
+		external
+			"built_in"
 		ensure
 			base_address_not_null: Result /= default_pointer
 		end
 
-	frozen native_array: NATIVE_ARRAY [T] is
+	frozen native_array: NATIVE_ARRAY [T]
 			-- Only for compatibility with .NET
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -116,30 +116,30 @@ feature -- Access
 
 feature -- Measurement
 
-	lower: INTEGER is 0
+	lower: INTEGER = 0
 			-- Minimum index of Current
 
-	frozen upper: INTEGER is
+	frozen upper: INTEGER
 			-- Maximum index of Current
 		do
 			Result := count - 1
 		end
 
-	frozen count: INTEGER is
-			-- Count of the special area
+	frozen count: INTEGER
+			-- Count of special area
 		external
 			"built_in"
 		end
 
-	frozen capacity: INTEGER is
-			-- Count of the special area
+	frozen capacity: INTEGER
+			-- Count of special area
 		do
 			Result := count
 		end
 
 feature -- Status report
 
-	frozen all_default (upper_bound: INTEGER): BOOLEAN is
+	frozen all_default (upper_bound: INTEGER): BOOLEAN
 			-- Are all items between index `0' and `upper_bound'
 			-- set to default values?
 		require
@@ -161,9 +161,10 @@ feature -- Status report
 			valid_on_empty_area: upper_bound = -1 implies Result
 		end
 
-	frozen same_items (other: like Current; upper_bound: INTEGER): BOOLEAN is
+	frozen same_items (other: like Current; upper_bound: INTEGER): BOOLEAN
 			-- Do all items between index `0' and `upper_bound' have
 			-- same value?
+			-- (Use reference equality for comparison.)
 		require
 			min_upper_bound: upper_bound >= -1
 			max_upper_bound: upper_bound < count
@@ -184,7 +185,7 @@ feature -- Status report
 			valid_on_empty_area: upper_bound = -1 implies Result
 		end
 
-	frozen valid_index (i: INTEGER): BOOLEAN is
+	frozen valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < count)
@@ -192,7 +193,7 @@ feature -- Status report
 
 feature -- Element change
 
-	frozen put (v: T; i: INTEGER) is
+	frozen put (v: T; i: INTEGER)
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require
@@ -202,7 +203,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	frozen fill_with (v: T; start_index, end_index: INTEGER) is
+	frozen fill_with (v: T; start_index, end_index: INTEGER)
 			-- Set items between `start_index' and `end_index' with `v'.
 		require
 			start_index_non_negative: start_index >= 0
@@ -222,7 +223,7 @@ feature -- Element change
 			end
 		end
 
-	frozen copy_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER) is
+	frozen copy_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER)
 			-- Copy `n' elements of `other' from `source_index' position to Current at
 			-- `destination_index'. Other elements of Current remain unchanged.
 		require
@@ -253,7 +254,7 @@ feature -- Element change
 			end
 		end
 
-	frozen move_data (source_index, destination_index, n: INTEGER) is
+	frozen move_data (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -279,7 +280,7 @@ feature -- Element change
 			end
 		end
 
-	frozen overlapping_move (source_index, destination_index, n: INTEGER) is
+	frozen overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -327,7 +328,7 @@ feature -- Element change
 			end
 		end
 
-	frozen non_overlapping_move (source_index, destination_index, n: INTEGER) is
+	frozen non_overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -358,7 +359,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	frozen resized_area (n: INTEGER): like Current is
+	frozen resized_area (n: INTEGER): like Current
 			-- Create a copy of Current with a count of `n'.
 		require
 			valid_new_count: n > count
@@ -371,7 +372,7 @@ feature -- Resizing
 			new_count: Result.count = n
 		end
 
-	frozen aliased_resized_area (n: INTEGER): like Current is
+	frozen aliased_resized_area (n: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n', if not
 			-- possible a new copy.
 		require
@@ -385,7 +386,7 @@ feature -- Resizing
 
 feature -- Removal
 
-	frozen clear_all is
+	frozen clear_all
 			-- Reset all items to default values.
 		local
 			i: INTEGER
@@ -403,7 +404,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	frozen element_size: INTEGER is
+	frozen element_size: INTEGER
 			-- Size of elements.
 		external
 			"built_in"
