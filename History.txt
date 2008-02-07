@@ -32,6 +32,8 @@ Version 3.8 - ?
 	* When gec compiles an application with the Boehm GC, it now generates
 	  code that will let the GC trigger the feature `dispose' when objects
 	  are reclaimed.
+	* Take better advantage of the Boehm GC, using 'GC_malloc_atomic' when
+	  possible.
 
 	gelint:
 

@@ -4,7 +4,7 @@
 		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,8 +32,26 @@
 /*
 	Memory allocation.
 */
+
+/*
+ * GE_alloc allocates memory that can contain pointers to collectable objects.
+ */
 #define GE_alloc(x) GE_null(GC_MALLOC(x))
+
+/*
+ * When defined, GE_alloc_cleared means that GE_alloc makes sure that the allocated memory is zeroed.
+ */
+#define GE_alloc_cleared
+
+/*
+ * GE_alloc_atomic allocates memory that does not contain pointers to collectable objects.
+ */
 #define GE_alloc_atomic(x) GE_null(GC_MALLOC_ATOMIC(x))
+
+/*
+ * When defined, GE_alloc_atomic_cleared means that GE_alloc_atomic makes sure that the allocated memory is zeroed.
+ */
+/* #define GE_alloc_atomic_cleared */
 
 /*
 	Dispose
@@ -43,10 +61,11 @@
  * Call dispose routine `disp' on object `C'.
  */
 extern void GE_boehm_dispose(EIF_REFERENCE, void (*)(EIF_REFERENCE));
+
 /*
  * Register dispose routine `disp' to be called on object `obj' when it will be collected.
  */
-#define GE_register_dispose(obj, disp) GC_register_finalizer((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, (void*)(disp), NULL, NULL)
+#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, (void*)(disp), NULL, NULL)
 
 #else
 
@@ -62,8 +81,26 @@ extern void GE_boehm_dispose(EIF_REFERENCE, void (*)(EIF_REFERENCE));
 /*
 	Memory allocation.
 */
-#define GE_alloc(x) GE_null(calloc((x),1))
-#define GE_alloc_atomic(x) GE_null(calloc((x),1))
+
+/*
+ * GE_alloc allocates memory that can contain pointers to collectable objects.
+ */
+#define GE_alloc(x) GE_null(malloc(x))
+
+/*
+ * When defined, GE_alloc_cleared means that GE_alloc makes sure that the allocated memory is zeroed.
+ */
+/* #define GE_alloc_cleared */
+
+/*
+ * GE_alloc_atomic allocates memory that does not contain pointers to collectable objects.
+ */
+#define GE_alloc_atomic(x) GE_null(malloc(x))
+
+/*
+ * When defined, GE_alloc_atomic_cleared means that GE_alloc_atomic makes sure that the allocated memory is zeroed.
+ */
+/* #define GE_alloc_atomic_cleared */
 
 /*
 	Dispose
