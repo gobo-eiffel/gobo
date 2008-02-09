@@ -92,12 +92,14 @@ feature -- Access
 		require
 			condition_not_void: a_condition /= Void
 		local
-			a_tokens: DS_ARRAYED_LIST [STRING]
 			s: STRING
 			s2: STRING
 			a_string_interpreter: GEANT_STRING_INTERPRETER
+			a_splitter: ST_SPLITTER
+			a_tokens: DS_LIST [STRING]
 		do
-			a_tokens := string_tokens (a_condition, '=')
+			create a_splitter.make_with_separators ("=")
+			a_tokens := a_splitter.split_greedy (a_condition)
 			if a_tokens.count = 1 then
 					-- `a_condition' should be in form "$foo";
 					-- Check if $foo is defined.
