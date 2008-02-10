@@ -1,5 +1,17 @@
 Version 3.8 - ?
 
+	geant:
+
+	* Changed the evaluation of attributes 'if' and 'unless' so that an
+	  empty right/left side of the equals sign is treated as an empty string
+	  which makes comparisons easier. Also leading/trailing white space for
+	  the equals sign is not removed anymore to leave control to the script
+	  developer. Note that this might cause a problem to scripts which made
+	  use of the old behavior. These scripts need to be adapted.
+	* Task 'geant' has a new attribute called 'exit_code_variable'. It can be
+	  used to capture (or ignore) the execution result of a '<geant>' call
+	  and works exactly as in the 'exec' task.
+
 	gec:
 
 	* Generate prototypes for external routines when no header file
