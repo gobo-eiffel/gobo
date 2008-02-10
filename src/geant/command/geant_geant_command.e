@@ -52,6 +52,9 @@ feature -- Access
 	arguments: GEANT_ARGUMENT_VARIABLES
 			-- Actual arguments
 
+	exit_code_variable_name: STRING
+			-- Name of variable holding exit code of execution
+
 feature -- Status report
 
 	is_filename_executable: BOOLEAN is
@@ -144,6 +147,17 @@ feature -- Setting
 			start_target_name_set: start_target_name = a_start_target_name
 		end
 
+	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name) is
+			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
+		require
+			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
+			a_exit_code_variable_name_not_empty: a_exit_code_variable_name.count > 0
+		do
+			exit_code_variable_name := a_exit_code_variable_name
+		ensure
+			exit_code_set: exit_code_variable_name = a_exit_code_variable_name
+		end
+
 feature -- Execution
 
 	execute is
@@ -182,6 +196,15 @@ feature -- Execution
 					execute_with_target (start_target_name)
 				end
 			end
+
+			if exit_code_variable_name /= Void then
+					-- Store return_code of execution:
+				project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+					-- Reset `exit_code' since return code of execution is available through
+					-- variable 'exit_code_variable_name':
+				exit_code := 0
+			end
+
 		end
 
 feature {NONE} -- Implementation
