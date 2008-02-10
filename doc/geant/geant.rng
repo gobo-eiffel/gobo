@@ -240,6 +240,9 @@
 					-->
 				</attribute>
 			</optional>
+			<optional>
+				<attribute name="exit_code_variable"/>
+			</optional>
 			<choice>
 				<attribute name="target"/>
 				<group>
