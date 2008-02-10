@@ -81,7 +81,7 @@ feature -- Setting
 		do
 			exit_code_variable_name := a_exit_code_variable_name
 		ensure
-			command_list_set: exit_code_variable_name = a_exit_code_variable_name
+			exit_code_set: exit_code_variable_name = a_exit_code_variable_name
 		end
 
 	set_command_line (a_command_line: like command_line) is
