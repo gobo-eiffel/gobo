@@ -121,7 +121,7 @@
   <exec executable="dir"/>
 
   <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
-    <fileset directory="." include="@(*.ge)">
+    <fileset dir="." include="@(*.ge)">
       <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
     </fileset>
   </exec>
@@ -141,7 +141,7 @@
 		</para>
 		<programlisting><![CDATA[
   <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
-    <fileset directory="." include="@(*.ge)">
+    <fileset dir="." include="@(*.ge)">
       <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
     </fileset>
   </exec>
@@ -173,7 +173,7 @@
 
 	<programlisting><![CDATA[
   <exec executable="copy ${fs.filename} ${fs.mapped_filename}" dir="${GOBO}/library/kernel">
-	<fileset directory="." include="@(*.ge)" force="false">
+	<fileset dir="." include="@(*.ge)" force="false">
 	  <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e"/>
 	</fileset>
   </exec>
@@ -189,7 +189,7 @@
 	<programlisting><![CDATA[
   <exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
 	<fileset
-	  directory="$GOBO/library/structure/set"
+	  dir="$GOBO/library/structure/set"
 	  include="@(**/*.e)"
 	  force="false"
 	>

@@ -95,7 +95,7 @@
   <delete directory="tmp"/>
 
   <delete>
-    <fileset directory="tmp" include="@(**/*.ge)"/>
+    <fileset dir="tmp" include="@(**/*.ge)"/>
   </delete>
 ]]>
 		</programlisting>

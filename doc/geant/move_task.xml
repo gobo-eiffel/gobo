@@ -114,7 +114,7 @@
   <move file="readme.txt" to_directory="/tmp"/>
 
   <move to_directory="/tmp">
-    <fileset directory="kernel" include="@(**/*.ge)"/>
+    <fileset dir="kernel" include="@(**/*.ge)"/>
   </move>
 ]]>
 	</programlisting>

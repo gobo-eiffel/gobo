@@ -143,7 +143,7 @@
   />
 
   <outofdate variable="generate" dir="${GOBO}/library/kernel">
-    <fileset directory="." include="@(**/*.ge)">
+    <fileset dir="." include="@(**/*.ge)">
       <map type="glob" from="*.ge" to="${GOBO}/example/geant/tmp/*.e">
         <map type="flat"/>
       </map>
@@ -151,7 +151,7 @@
   </outofdate>
 
   <outofdate variable="generate">
-    <fileset directory=".">
+    <fileset dir=".">
       <include name="outofdate.eant"/>
       <include name="build.eant"/>
       <map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/>
@@ -159,7 +159,7 @@
   </outofdate>
 
   <outofdate variable="generate" dir="${GOBO}/library/kernel">
-    <fileset directory=".">
+    <fileset dir=".">
     <include name="${gepp_in_dir}/${gepp_file}.ge"/>
     <include name="${GOBO}/example/geant/misc/outofdate.eant)"/>
     <map type="glob" from="*.ge" to="${gepp_out_dir}/*.e">
