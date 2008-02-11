@@ -68,11 +68,16 @@ feature -- Execution
 	execute is
 			-- Put variable in project variables pool.
 		do
+			if Default_builtin_variables.has (name) then
+				project.log (<<"  [set] ",
+					"warning: you are using the name of the builtin variable '", name, "' in a <set> task" >>)
+			end
+ 
 			if project.options.verbose then
 				if project.is_local_variable (name) then
 					project.trace (<<"  [set local] ", name, "=", value >>)
 				else
-					project.trace (<<"  [set global ", name, "=", value >>)
+					project.trace (<<"  [set global] ", name, "=", value >>)
 				end
 			end
 
