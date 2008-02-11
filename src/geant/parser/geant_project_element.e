@@ -84,6 +84,7 @@ feature {NONE} -- Initialization
 			if has_attribute (Default_attribute_name) then
 				project.set_default_target_name (attribute_value (Default_attribute_name))
 			end
+
 				-- Create GEANT_TARGETs from the GEANT_ELEMENTs:
 			target_elements := elements_by_name (Target_element_name)
 			create a_targets.make_map (target_elements.count)
