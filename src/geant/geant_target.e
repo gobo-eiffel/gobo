@@ -13,26 +13,12 @@ indexing
 class GEANT_TARGET
 
 inherit
-
-	GEANT_INTERPRETING_ELEMENT
+	GEANT_GROUP
 		redefine
-			make, valid_xml_element
+			initialize, valid_xml_element,
+			is_target, associated_target,
+			prepare_variables_before_execution, execute, execute_element
 		end
-
-	KL_SHARED_EXCEPTIONS
-		export {NONE} all end
-
-	KL_SHARED_FILE_SYSTEM
-		export {NONE} all end
-
-	KL_IMPORTED_STRING_ROUTINES
-		export {NONE} all end
-
-	GEANT_SHARED_PROPERTIES
-		export {NONE} all end
-
-	GEANT_ELEMENT_NAMES
-		export {NONE} all end
 
 create
 
@@ -40,18 +26,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
-			-- Create a new target.
+	initialize is
+			-- Initialize current Target
 		local
+			a_xml_element: XM_ELEMENT
 			a_tester: UC_STRING_EQUALITY_TESTER
-			a_description_element: XM_ELEMENT
 			a_obsolete_element: XM_ELEMENT
 			a_exports: DS_ARRAYED_LIST [STRING]
-			a_argument_elements: DS_LINKED_LIST [XM_ELEMENT]
+			a_elements: DS_LINKED_LIST [XM_ELEMENT]
+			a_name: STRING
 			a_argument_element: GEANT_ARGUMENT_ELEMENT
+			a_local_element: GEANT_LOCAL_ELEMENT
+			a_global_element: GEANT_GLOBAL_ELEMENT
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 		do
-			precursor (a_project, a_xml_element)
+			a_xml_element := xml_element
 
 				-- name:
 			if not a_xml_element.has_attribute_by_name (Name_attribute_name) then
@@ -63,13 +52,6 @@ feature {NONE} -- Initialization
 			a_obsolete_element := a_xml_element.element_by_name (Obsolete_element_name)
 			if a_obsolete_element /= Void then
 				set_obsolete_message (a_obsolete_element.text)
-			end
-				-- description:
-			a_description_element := a_xml_element.element_by_name (Description_element_name)
-			if a_description_element /= Void then
-				set_description (a_description_element.text)
-			else
-				set_description ("")
 			end
 
 				-- export:
@@ -91,23 +73,73 @@ feature {NONE} -- Initialization
 
 				-- formal arguments:
 			formal_arguments := Empty_argument_variables
-			a_argument_elements := elements_by_name (Argument_element_name)
-			if a_argument_elements.count /= 0 then
+			a_elements := elements_by_name (Argument_element_name)
+			if a_elements.count /= 0 then
 				create formal_arguments.make
-				cs := a_argument_elements.new_cursor
+				cs := a_elements.new_cursor
 				from cs.start until cs.after loop
 					create a_argument_element.make (cs.item)
 					if a_argument_element.has_name and then a_argument_element.name.count > 0 then
-						formal_arguments.force_last ("dummy_value", a_argument_element.name)
-						project.trace_debug (<<"found formal argument '", a_argument_element.name, "'%N">>)
+						a_name := a_argument_element.name
+						formal_arguments.force_last ("dummy_value", a_name)
+						project.trace_debug (<<"found formal argument '", a_name, "'%N">>)
 					end
 					cs.forth
 				end
 			end
 
+				-- locals declaration:
+			formal_locals := Empty_variables
+			a_elements := elements_by_name (Local_element_name)
+			if a_elements.count /= 0 then
+				create formal_locals.make
+				cs := a_elements.new_cursor
+				from cs.start until cs.after loop
+					create a_local_element.make (cs.item)
+					if a_local_element.has_name and then a_local_element.name.count > 0 then
+						a_name := a_local_element.name
+						formal_locals.force_last (Void, a_name)	--| this is formal variable, the value is ignored at this point.
+						project.trace_debug (<<"found local declaration '", a_name, "'%N">>)
+						if formal_arguments.has (a_name) then
+							project.log (<<"  [local] name=", a_name, " warning: conflict with arguments variable." >>)
+						end
+							--| if a_local_element.has_value, the value will be set, when the element is processed						
+					end
+					cs.forth
+				end
+			end
+
+				-- globals declaration:
+			formal_globals := Empty_variables
+			a_elements := elements_by_name (Global_element_name)
+			if a_elements.count /= 0 then
+				create formal_globals.make
+				cs := a_elements.new_cursor
+				from cs.start until cs.after loop
+					create a_global_element.make (cs.item)
+					if a_global_element.has_name and then a_global_element.name.count > 0 then
+						a_name := a_global_element.name
+						formal_globals.force_last (Void, a_name) --| this is formal variable, the value is ignored at this point.
+						--| if a_global_element.has_value, the value will be set, when the element is processed							
+						project.trace_debug (<<"found global declaration '", a_name, "'%N">>)
+						if formal_arguments.has (a_name) then
+							project.log (<<"  [global] name=", a_name, " warning: conflict with arguments variable." >>)
+						elseif formal_locals.has (a_name) then
+							project.log (<<"  [global] name=", a_name, " warning: conflict with locals variable." >>)
+						end
+					end
+					cs.forth
+				end
+			end
+
+			Precursor {GEANT_GROUP}
+
 		end
 
 feature -- Access
+
+	is_target: BOOLEAN is True
+			-- Is Current a GEANT_TARGET ?
 
 	dependencies: STRING is
 			-- STRING representation of dependencies
@@ -125,9 +157,6 @@ feature -- Access
 	obsolete_message: STRING
 			-- Obsolete message if any
 
-	description: STRING
-			-- Description of target
-
 	exports: DS_ARRAYED_LIST [STRING]
 			-- Exports of target
 
@@ -137,6 +166,12 @@ feature -- Access
 			Result := seed.project
 		ensure
 			origin_not_void: Result /= Void
+		end
+
+	associated_target: GEANT_TARGET is
+			-- Associated target
+		do
+			Result := Current
 		end
 
 	full_name: STRING is
@@ -195,7 +230,13 @@ feature -- Access
 	formal_arguments: GEANT_ARGUMENT_VARIABLES
 			-- Formal arguments of this target
 
-	prepared_arguments_from_formal_arguments (a_arguments: GEANT_ARGUMENT_VARIABLES): GEANT_ARGUMENT_VARIABLES is
+	formal_locals: GEANT_VARIABLES
+			-- Formal locals of this target	
+
+	formal_globals: GEANT_VARIABLES
+			-- Formal globals of this target
+
+	prepared_arguments_from_formal_arguments (a_arguments: like formal_arguments): like formal_arguments is
 			-- Prepared actual arguments arguments for `formal_arguments';
 			-- Numbered arguments are replaced by their associated named arguments according
 			-- to `formal_arguments';
@@ -220,7 +261,7 @@ feature -- Access
 			end
 		end
 
-	named_from_numbered_arguments (a_arguments: GEANT_ARGUMENT_VARIABLES): GEANT_ARGUMENT_VARIABLES is
+	named_from_numbered_arguments (a_arguments: like formal_arguments): like formal_arguments is
 			-- Clone of `a_arguments' where number keys have been replaced by their
 			-- corresponding names from `formal_arguments'
 		require
@@ -241,6 +282,28 @@ feature -- Access
 				Result.force_last (csa.item, csf.key)
 				csa.forth
 				csf.forth
+			end
+		end
+
+	prepared_locals_from_formal_locals (a_locals: like formal_locals): like formal_locals is
+			-- Prepared actual locals for `formal_locals';
+		require
+			a_locals_not_void: a_locals /= Void
+			formal_locals_not_void: formal_locals /= Void
+		local
+			cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+		do
+			Result := a_locals
+
+				-- Default Result is `a_arguments' if nothing needs to be changed:
+			from
+				cursor := formal_locals.new_cursor
+				cursor.start
+			until
+				cursor.after
+			loop
+				Result.force_last (cursor.item, cursor.key)
+				cursor.forth
 			end
 		end
 
@@ -383,16 +446,6 @@ feature -- Setting
 			obsolete_message_set: obsolete_message = a_obsolete_message
 		end
 
-	set_description (a_description: STRING) is
-			-- Set `description' to `a_description'.
-		require
-			a_description_not_void: a_description /= Void
-		do
-			description := a_description
-		ensure
-			description_set: description = a_description
-		end
-
 	set_exports (a_exports: like exports) is
 			-- Set `exports' to `a_exports'.
 		require
@@ -471,13 +524,6 @@ feature -- Processing
 
 	execute is
 			-- Execute all tasks of `a_target' in sequential order.
-		local
-			a_xml_element: XM_ELEMENT
-			a_old_target_cwd: STRING
-			a_new_target_cwd: STRING
-			cs: DS_LINKED_LIST_CURSOR [XM_NODE]
-			a_string_interpreter: GEANT_STRING_INTERPRETER
-			a_arguments: GEANT_ARGUMENT_VARIABLES
 		do
 			if not execute_once or else not is_executed then
 				if is_enabled then
@@ -489,168 +535,85 @@ feature -- Processing
 					if obsolete_message /= Void then
 						project.log (<<"target `", project.name, ".", project.target_name (Current), "%' is obsolete. ", obsolete_message>>)
 					end
-						-- Change to the specified directory if "dir" attribute is provided:
-					if xml_element.has_attribute_by_name (Dir_attribute_name) then
-						create a_string_interpreter.make
-						Project_variables_resolver.set_variables (project.variables)
-						a_string_interpreter.set_variable_resolver (Project_variables_resolver)
-						a_new_target_cwd := a_string_interpreter.interpreted_string (
-							xml_element.attribute_by_name (Dir_attribute_name).value.out)
 
-						project.trace_debug (<<"changing to directory: '", a_new_target_cwd, "%'">>)
-						a_old_target_cwd := file_system.current_working_directory
-						if not file_system.directory_exists (a_new_target_cwd) then
-							exit_application (1, <<"target `", project.name, ".",
-								project.target_name (Current), "%': directory %'", a_new_target_cwd,
-								"%' does not exist">>)
-						end
-						file_system.set_current_working_directory (a_new_target_cwd)
-						project.trace_debug (<<"current working directory: '", file_system.current_working_directory, "%'">>)
-					end
+					Precursor {GEANT_GROUP}
 
-						-- Prepare arguments:
-					a_arguments := target_arguments_stack.item
-					target_arguments_stack.remove
-					a_arguments := prepared_arguments_from_formal_arguments (a_arguments)
-					target_arguments_stack.force (a_arguments)
-
-						-- Execute nested tasks:
-					cs := xml_element.new_cursor
-					from
-						cs.start
-					until
-						cs.after or not is_enabled
-					loop
-						a_xml_element ?= cs.item
-						if a_xml_element /= Void then
-							if not STRING_.same_string (a_xml_element.name, Description_element_name) and then
-								not STRING_.same_string (a_xml_element.name, Argument_element_name) and then
-								not STRING_.same_string (a_xml_element.name, Obsolete_element_name) then
-								execute_task (a_xml_element)
-							end
-						end
-						cs.forth
-					end
-						-- Change back to original directory before target was entered:
-					if has_attribute (Dir_attribute_name) then
-						project.trace_debug (<<"changing to directory: '", a_old_target_cwd, "%'">>)
-						file_system.set_current_working_directory (a_old_target_cwd)
-					end
 						-- Mark target as already executed:
 					set_executed (True)
 				end
 			end
 		end
 
-	execute_task (a_xml_element: XM_ELEMENT) is
-			-- Execute all task defined through `a_xml_element'.
-		require
-			a_xml_element_not_void: a_xml_element /= Void
+feature {NONE} -- Execution implementation
+
+	prepare_variables_before_execution is
+			-- Prepare variables before tasks execution
 		local
-			a_task: GEANT_TASK
+			a_arguments: GEANT_ARGUMENT_VARIABLES
+			a_locals: GEANT_VARIABLES
+			cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
-			if STRING_.same_string (a_xml_element.name, Gec_task_name) then
-					-- gec: Gobo Eiffel compilation
-				create {GEANT_GEC_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Se_task_name) then
-					-- se: SmartEiffel compilation
-				create {GEANT_SE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Ise_task_name) then
-					-- ise: ISE Eiffel compilation
-				create {GEANT_ISE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Ve_task_name) then
-					-- ve: Visual Eiffel compilation
-				create {GEANT_VE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Exec_task_name) then
-					-- exec
-				create {GEANT_EXEC_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Lcc_task_name) then
-					-- lcc
-				create {GEANT_LCC_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Set_task_name) then
-					-- set
-				create {GEANT_SET_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Unset_task_name) then
-					-- unset
-				create {GEANT_UNSET_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Gexace_task_name) then
-					-- gexace
-				create {GEANT_GEXACE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Gelex_task_name) then
-					-- gelex
-				create {GEANT_GELEX_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Geyacc_task_name) then
-					-- geyacc
-				create {GEANT_GEYACC_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Gepp_task_name) then
-					-- gepp
-				create {GEANT_GEPP_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Getest_task_name) then
-					-- getest
-				create {GEANT_GETEST_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Geant_task_name) then
-					-- geant
-				create {GEANT_GEANT_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Echo_task_name) then
-					-- echo
-				create {GEANT_ECHO_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Mkdir_task_name) then
-					-- mkdir
-				create {GEANT_MKDIR_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Delete_task_name) then
-					-- delete
-				create {GEANT_DELETE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Copy_task_name) then
-					-- copy
-				create {GEANT_COPY_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Move_task_name) then
-					-- move
-				create {GEANT_MOVE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Setenv_task_name) then
-					-- setenv
-				create {GEANT_SETENV_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Xslt_task_name) then
-					-- xslt
-				create {GEANT_XSLT_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Outofdate_task_name) then
-					-- outofdate
-				create {GEANT_OUTOFDATE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Exit_task_name) then
-					-- exit
-				create {GEANT_EXIT_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Precursor_task_name) then
-					-- precursor
-				create {GEANT_PRECURSOR_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Available_task_name) then
-					-- available
-				create {GEANT_AVAILABLE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Input_task_name) then
-					-- input
-				create {GEANT_INPUT_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Replace_task_name) then
-					-- replace
-				create {GEANT_REPLACE_TASK} a_task.make (project, a_xml_element)
-			else
-					-- Default:
-				a_task := Void
-			end
-				-- Execute task:
-			if a_task = Void then
-				exit_application (1, <<"unknown task : ", a_xml_element.name>>)
-			end
-			if not a_task.is_executable then
-				exit_application (1, <<"cannot execute task : ", a_xml_element.name>>)
-			end
-			if a_task.is_enabled then
-				a_task.execute
-				if a_task.is_exit_command or a_task.exit_code /= 0 then
-					exit_application (a_task.exit_code, Void)
+				-- Prepare arguments:
+			a_arguments := target_arguments_stack.item
+			target_arguments_stack.remove
+			a_arguments := prepared_arguments_from_formal_arguments (a_arguments)
+			target_arguments_stack.force (a_arguments)
+
+				--| Prepare locals:
+				--| to be sure local variable ${foo} does not return a globals variable's value
+				--| the locals stack needs to have an entry for each locals.
+			a_locals := target_locals_stack.item
+			check no_locals: a_locals.count = 0 end
+			if formal_locals.count > 0 then
+				from
+					cursor := formal_locals.new_cursor
+					cursor.start
+				until
+					cursor.after
+				loop
+					if cursor.item = Void then
+						a_locals.force_last (create {STRING}.make_empty, cursor.key)
+							--| we can not set Void, otherwise the interpreter
+							--| will look in the global variables
+							--| Suggestion: fixed the interpreter to allow Void value.
+					else
+						a_locals.force_last (cursor.item, cursor.key)
+					end
+					cursor.forth
 				end
-			else
-				project.trace_debug (<<"task is disabled">>)
 			end
 
+			--| No need to prepare globals, since the container already exists  `project.variables'
+
+			Precursor {GEANT_GROUP}
 		end
+
+	execute_element (a_xml_element: XM_ELEMENT) is
+			-- Execute  command defined through `a_xml_element'.
+		local
+			var_decl: GEANT_NAME_VALUE_ELEMENT
+			conv_xml_element: XM_ELEMENT
+		do
+			if
+				STRING_.same_string (a_xml_element.name, Local_element_name) or
+				STRING_.same_string (a_xml_element.name, Global_element_name)
+			then
+				create var_decl.make (a_xml_element)
+				if var_decl.has_value then
+					conv_xml_element := a_xml_element.cloned_object
+					conv_xml_element.set_name (Set_attribute_name)
+					execute_task (conv_xml_element)
+				end
+			elseif
+				not STRING_.same_string (a_xml_element.name, Description_element_name) and
+				not STRING_.same_string (a_xml_element.name, Argument_element_name) and
+				not STRING_.same_string (a_xml_element.name, Obsolete_element_name)
+			then
+				execute_task (a_xml_element)
+			end
+		end
+
+feature -- Dependencies
 
 	dependent_targets: DS_ARRAYED_STACK [GEANT_TARGET] is
 			-- All dependent targets
@@ -720,6 +683,15 @@ feature {NONE} -- Constants
 			-- "name" attribute name
 		once
 			Result := "name"
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: Result.count > 0
+		end
+
+	Set_attribute_name: STRING is
+			-- "set" attribute name
+		once
+			Result := "set"
 		ensure
 			attribute_name_not_void: Result /= Void
 			attribute_name_not_empty: Result.count > 0

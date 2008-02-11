@@ -68,8 +68,15 @@ feature -- Execution
 	execute is
 			-- Put variable in project variables pool.
 		do
-			project.trace (<<"  [set] ", name, "=", value>>)
-			project.variables.set_variable_value (name, value)
+			if project.options.verbose then
+				if project.is_local_variable (name) then
+					project.trace (<<"  [set local] ", name, "=", value >>)
+				else
+					project.trace (<<"  [set global ", name, "=", value >>)
+				end
+			end
+
+			project.set_variable_value (name, value)
 			exit_code := 0
 		end
 

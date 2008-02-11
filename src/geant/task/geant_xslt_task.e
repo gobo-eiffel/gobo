@@ -15,9 +15,9 @@ class GEANT_XSLT_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 			a_is_xsltproc_processor: BOOLEAN
 			a_is_gexslt_processor: BOOLEAN
 		do
-			create command.make (a_project)
-			task_make (command, an_xml_element)
+			Precursor {GEANT_TASK} (a_project, an_xml_element)
+
 			if has_attribute (Processor_attribute_name) then
 				a_value := attribute_value (Processor_attribute_name)
 				if STRING_.same_string (a_value, Processor_attribute_value_xalan_cpp) then
@@ -139,6 +139,12 @@ feature {NONE} -- Initialization
 				end
 			end
 
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

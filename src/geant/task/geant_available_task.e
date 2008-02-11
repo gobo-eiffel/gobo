@@ -15,9 +15,9 @@ class GEANT_AVAILABLE_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 		local
 			a_value: STRING
 		do
-			create command.make (a_project)
-			task_make (command, a_xml_element)
+			Precursor {GEANT_TASK} (a_project, a_xml_element)
+
 			if has_attribute (Resource_attribute_name) then
 				a_value := attribute_value (Resource_attribute_name)
 				if a_value.count > 0 then
@@ -62,6 +62,12 @@ feature {NONE} -- Initialization
 					command.set_variable_name (a_value)
 				end
 			end
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

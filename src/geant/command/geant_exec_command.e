@@ -129,7 +129,7 @@ feature -- Execution
 
 				if exit_code_variable_name /= Void then
 						-- Store return_code of process:
-					project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+					project.set_variable_value (exit_code_variable_name, exit_code.out)
 						-- Reset `exit_code' since return_code of process is available through
 						-- variable 'exit_code_variable_name':
 					exit_code := 0
@@ -168,7 +168,7 @@ feature -- Execution
 				end
 			end
 
-			
+
 		end
 
 end

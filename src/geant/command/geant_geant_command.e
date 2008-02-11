@@ -199,7 +199,7 @@ feature -- Execution
 
 			if exit_code_variable_name /= Void then
 					-- Store return_code of execution:
-				project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+				project.set_variable_value (exit_code_variable_name, exit_code.out)
 					-- Reset `exit_code' since return code of execution is available through
 					-- variable 'exit_code_variable_name':
 				exit_code := 0

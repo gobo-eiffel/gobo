@@ -33,7 +33,7 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-		
+
 
 feature -- Access
 
@@ -106,7 +106,6 @@ feature -- Access
 			create Result.make (5)
 		end
 
-
 	Project_variables_resolver: GEANT_PROJECT_VARIABLE_RESOLVER is
 			-- Project variables resolver
 		once
@@ -129,6 +128,18 @@ feature {GEANT_INTERPRETING_ELEMENT} -- Access
 			target_arguments_stack_not_void: Result /= Void
 		end
 
+	target_locals_stack: DS_STACK [GEANT_VARIABLES] is
+			-- Locals stack
+		local
+			a_target_locals_stack: DS_ARRAYED_STACK [GEANT_VARIABLES]
+		once
+				-- Create target locals stack:
+			create a_target_locals_stack.make (10)
+			Result := a_target_locals_stack
+		ensure
+			target_locals_stack_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 -- TODO: find a way to detect that two project with the same name come from different files
@@ -142,7 +153,7 @@ feature -- Status report
 --			a_parent_project: GEANT_PROJECT
 --		do
 --			from
---				i := 1 
+--				i := 1
 --			until
 --				i > system_parents.count or else Result
 --			loop
@@ -171,7 +182,7 @@ feature -- Status report
 --			a_parent_project: GEANT_PROJECT
 --		do
 --			from
---				i := 1 
+--				i := 1
 --			until
 --				i > system_parents.count or else Result
 --			loop
@@ -270,7 +281,7 @@ feature -- Processing
 						nice_string := False
 					end
 				end
-	
+
 				if s.count > 0 then
 					if s.item (s.count) = a_delimiter then
 						s.keep_head (s.count - 1)

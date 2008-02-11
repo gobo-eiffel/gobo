@@ -168,9 +168,9 @@ feature -- Execution
 					a_to_file := file_system.pathname_from_file_system (target_filename, unix_file_system)
 					is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
 					if is_out_of_date then
-						project.variables.set_variable_value (variable_name, true_value)
+						project.set_variable_value (variable_name, true_value)
 					else
-						project.variables.set_variable_value (variable_name, false_value)
+						project.set_variable_value (variable_name, false_value)
 					end
 				end
 			else
@@ -198,9 +198,9 @@ feature -- Execution
 						fileset.forth
 					end
 					if is_out_of_date then
-						project.variables.set_variable_value (variable_name, true_value)
+						project.set_variable_value (variable_name, true_value)
 					else
-						project.variables.set_variable_value (variable_name, false_value)
+						project. set_variable_value (variable_name, false_value)
 					end
 				end
 			end

@@ -24,7 +24,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_command: like command; a_xml_element: XM_ELEMENT) is
+	make (a_project: like project; an_xml_element: XM_ELEMENT) is
+		do
+			build_command (a_project)
+			make_with_command (command, an_xml_element)
+		end
+
+	make_with_command (a_command: like command; a_xml_element: XM_ELEMENT) is
 			-- Create new task with information held in `an_element'.
 		require
 			a_command_not_void: a_command /= Void
@@ -32,6 +38,15 @@ feature {NONE} -- Initialization
 		do
 			set_command (a_command)
 			interpreting_element_make (a_command.project, a_xml_element)
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			-- To be implemented
+			check not_yet_implemented: False end
+		ensure
+			command_instanciated: command /= Void
 		end
 
 feature -- Access

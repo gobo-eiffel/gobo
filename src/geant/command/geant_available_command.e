@@ -111,9 +111,9 @@ feature -- Execution
 			a_from_file := file_system.pathname_from_file_system (resource_name, unix_file_system)
 
 			if file_system.file_exists (a_from_file) or else file_system.directory_exists (a_from_file) then
-				project.variables.set_variable_value (variable_name, true_value)
+				project.set_variable_value (variable_name, true_value)
 			else
-				project.variables.set_variable_value (variable_name, false_value)
+				project.set_variable_value (variable_name, false_value)
 			end
 		end
 

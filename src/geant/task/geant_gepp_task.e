@@ -15,9 +15,9 @@ class GEANT_GEPP_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 			a_xml_subelement: XM_ELEMENT
 			a_fs_element: GEANT_FILESET_ELEMENT
 		do
-			create command.make (a_project)
-			task_make (command, an_xml_element)
+			Precursor {GEANT_TASK} (a_project, an_xml_element)
+
 			if has_attribute (Input_filename_attribute_name) then
 				a_value := attribute_value (Input_filename_attribute_name)
 				if a_value.count > 0 then
@@ -84,6 +84,12 @@ feature {NONE} -- Initialization
 				create a_fs_element.make (project, a_xml_subelement)
 				command.set_fileset (a_fs_element.fileset)
 			end
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

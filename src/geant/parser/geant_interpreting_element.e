@@ -67,6 +67,7 @@ feature -- Status report
 		do
 				-- TODO: improve efficiency:
 			Project_variables_resolver.set_variables (project.variables)
+
 				-- Set default execution conditions:
 			if_condition := true
 			unless_condition := false
@@ -104,7 +105,6 @@ feature -- Access/XML attribute values
 			-- Value of attribue `an_attr_name'
 		local
 			a_string_interpreter: GEANT_STRING_INTERPRETER
-			a_variable_resolver: GEANT_VARIABLES_VARIABLE_RESOLVER
 		do
 			Result := xml_element.attribute_by_name (an_attr_name).value
 			if Result.count > 0 then

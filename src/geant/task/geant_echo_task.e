@@ -15,9 +15,9 @@ class GEANT_ECHO_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			a_has_attribute_message: BOOLEAN
 			a_has_content_text: BOOLEAN
 		do
-			create command.make (a_project)
-			task_make (command, an_xml_element)
+			Precursor {GEANT_TASK} (a_project, an_xml_element)
+
 				-- Content between '<echo>' and '</echo>' if any:
 			a_content_text := an_xml_element.text
 			a_has_content_text := not (a_content_text = Void or else a_content_text.is_empty)
@@ -66,6 +66,12 @@ feature {NONE} -- Initialization
 					command.set_append (boolean_value (Append_attribute_name))
 				end
 			end
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

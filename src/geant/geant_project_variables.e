@@ -39,9 +39,10 @@ feature {NONE} -- Initialization
 			a_name: STRING
 			a_value: STRING
 		do
-			precursor
+			Precursor
 				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
 			Project_variables_resolver.set_variables (Current)
+
 			a_name := gobo_os_name
 			if not Project_variables_resolver.has (a_name) then
 				set_variable_value (a_name, Default_builtin_variables.value (a_name))

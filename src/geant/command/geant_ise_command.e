@@ -172,7 +172,7 @@ feature -- Execution
 			execute_shell (cmd)
 			if exit_code_variable_name /= Void then
 					-- Store return_code of ise compilation process:
-				project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+				project.set_variable_value (exit_code_variable_name, exit_code.out)
 			end
 			if exit_code = 0 and then finish_freezing then
 				if finalize_mode then
@@ -195,7 +195,7 @@ feature -- Execution
 				execute_shell (cmd)
 				if exit_code_variable_name /= Void then
 						-- Store return_code of ise compilation process:
-					project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+					project.set_variable_value (exit_code_variable_name, exit_code.out)
 				end
 				if not project.options.no_exec then
 					if exit_code = 0 then
@@ -204,7 +204,7 @@ feature -- Execution
 							exit_code := -1
 							if exit_code_variable_name /= Void then
 									-- Store return_code of ise compilation process:
-								project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+								project.set_variable_value (exit_code_variable_name, exit_code.out)
 							end
 						elseif not finalize_mode then
 							a_filename := system_name + ".melted"

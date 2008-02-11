@@ -54,9 +54,21 @@ feature -- Execution
 	execute is
 			-- Remove variable from project variables pool.
 		do
-			project.trace (<<"  [unset] ", name>>)
-			project.variables.remove (name)
-			exit_code := 0
+			if project.current_target.formal_arguments.has (name) then
+				project.trace (<<"  [unset] name=", name >>)
+				project.log (<<"  [unset] warning: you can not unset arguments variable (name='", name, "')" >>)
+			else
+				if project.options.verbose then
+					if project.is_local_variable (name) then
+						project.trace (<<"  [unset local] name=", name >>)
+					else
+						project.trace (<<"  [unset global name=", name >>)
+					end
+				end
+
+				project.unset_variable (name)
+				exit_code := 0
+			end
 		end
 
 end

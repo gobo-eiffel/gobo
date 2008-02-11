@@ -15,9 +15,9 @@ class GEANT_GEXACE_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			define_element: GEANT_DEFINE_ELEMENT
 		do
-			create command.make (a_project)
-			task_make (command, an_xml_element)
+			Precursor {GEANT_TASK} (a_project, an_xml_element)
+
 				-- verbose (optional):
 			if has_attribute (Verbose_attribute_name) then
 				command.set_verbose (boolean_value (Verbose_attribute_name))
@@ -99,6 +99,12 @@ feature {NONE} -- Initialization
 				end
 				cs.forth
 			end
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

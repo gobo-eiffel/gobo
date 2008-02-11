@@ -64,6 +64,16 @@ feature -- Access
 			end
 
 			if Result = Void then
+					-- Search target locals:
+				if target_locals_stack.count > 0 then
+					target_locals_stack.item.search (a_name)
+					if target_locals_stack.item.found then
+						Result := target_locals_stack.item.found_item
+					end
+				end
+			end
+
+			if Result = Void then
 					-- Search project variables:
 				variables.search (a_name)
 				if variables.found then
@@ -159,6 +169,15 @@ feature -- Status report
 					-- Search commandline variables:
 				Commandline_variables.search (a_name)
 				Result := Commandline_variables.found
+			end
+
+
+			if not Result then
+					-- Search local project variables:
+				if target_locals_stack.count > 0 then
+					target_locals_stack.item.search (a_name)
+					Result := target_locals_stack.item.found
+				end
 			end
 
 			if not Result then

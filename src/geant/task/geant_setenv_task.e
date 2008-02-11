@@ -15,9 +15,9 @@ class GEANT_SETENV_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -32,8 +32,8 @@ feature {NONE} -- Initialization
 		local
 			a_value: STRING
 		do
-			create command.make (a_project)
-			task_make (command, an_xml_element)
+			Precursor {GEANT_TASK} (a_project, an_xml_element)
+
 				-- name:
 			if has_attribute (Name_attribute_name) then
 				a_value := attribute_value (Name_attribute_name)
@@ -46,6 +46,12 @@ feature {NONE} -- Initialization
 				a_value := attribute_value (Value_attribute_name)
 				command.set_value (a_value)
 			end
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 			create a_tester
 			selected_targets.set_key_equality_tester (a_tester)
 
+			create {DS_ARRAYED_STACK [GEANT_TARGET]} targets_stack.make (10)
+
 			build_successful := True
 		ensure
 			variables_set: a_variables /= Void implies variables = a_variables
@@ -438,7 +440,7 @@ feature -- Processing
 			old_current_target: like current_target
 			a_execute_target: like current_target
 		do
-			trace_debug (<<"project '", name, "': excuting target `", a_target.full_name, "%'">>)
+			trace_debug (<<"project '", name, "': executing target `", a_target.full_name, "%'">>)
 			old_current_target := current_target
 			if a_force or else not a_target.is_executed then
 
@@ -448,7 +450,10 @@ feature -- Processing
 				else
 					a_execute_target := a_target
 				end
-				current_target := a_execute_target
+
+				targets_stack.force (a_execute_target)
+				target_locals_stack.force (create {GEANT_VARIABLES}.make)
+				check current_target = a_execute_target end
 				if a_execute_target.project /= Current then
 					a_execute_target.project.execute_target (a_execute_target, a_arguments, a_force, a_polymorph)
 				else
@@ -456,9 +461,10 @@ feature -- Processing
 					a_execute_target.execute
 					target_arguments_stack.remove
 				end
+				target_locals_stack.remove
+				targets_stack.remove
 			end
-
-			current_target := old_current_target
+			check current_target = old_current_target end
 		end
 
 feature -- Output
@@ -538,11 +544,73 @@ feature -- Output
 			output_file_set: output_file = a_file
 		end
 
+feature {GEANT_COMMAND} -- Change variable
+
+	set_variable_value (a_name, a_value: STRING_8) is
+			-- Set value of variable `a_name' to `a_value'.
+			-- Either local or global depending the case.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_value_not_void: a_value /= Void
+		local
+			vars: GEANT_VARIABLES
+		do
+			if is_local_variable (a_name) then
+				vars := target_locals_stack.item
+			else
+				vars := variables
+			end
+			vars.set_variable_value (a_name, a_value)
+		end
+
+	unset_variable (a_name: STRING_8) is
+			-- Unset variable `a_name'
+			-- Either local or global depending the case.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			vars: GEANT_VARIABLES
+		do
+			if is_local_variable (a_name) then
+				vars := target_locals_stack.item
+				if vars.has (a_name) then
+					vars.replace (create {STRING}.make_empty, a_name)
+				end
+			else
+				variables.remove (a_name)
+			end
+		end
+
+	is_local_variable (a_name: STRING): BOOLEAN is
+			-- Is variable `a_name' local ?
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		do
+			if current_target.formal_locals.has (a_name) then
+				Result := True
+			elseif current_target.formal_globals.has (a_name) then
+				Result := False
+			else
+				Result := options.variable_local_by_default
+			end
+		end
+
 feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 
-	current_target: GEANT_TARGET
+	targets_stack: DS_STACK [GEANT_TARGET]
+			-- Stack of targets
+
+	current_target: GEANT_TARGET is
 			-- Currently executing target;
 			-- Set during processing `execute_target'
+		do
+			if not targets_stack.is_empty then
+				Result := targets_stack.item
+			end
+		end
 
 invariant
 

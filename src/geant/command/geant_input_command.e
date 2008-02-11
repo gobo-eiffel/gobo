@@ -190,7 +190,7 @@ feature -- Execution
 						output.put_string (" -> Answer is required.%N")
 					end
 				end
-				project.variables.set_variable_value (variable, s)
+				project.set_variable_value (variable, s)
 				exit_code := 0
 			end
 		end

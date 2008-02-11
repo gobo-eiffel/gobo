@@ -15,9 +15,9 @@ class GEANT_MKDIR_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -32,14 +32,20 @@ feature {NONE} -- Initialization
 		local
 			a_value: STRING
 		do
-			create command.make (a_project)
-			task_make (command, an_xml_element)
+			Precursor {GEANT_TASK} (a_project, an_xml_element)
+
 			if has_attribute (Directory_attribute_name) then
 				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then
 					command.set_directory (a_value)
 				end
 			end
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

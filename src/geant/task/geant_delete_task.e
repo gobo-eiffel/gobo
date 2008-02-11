@@ -15,9 +15,9 @@ class GEANT_DELETE_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
 		redefine
+			make,
+			build_command,
 			command
 		end
 
@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 			a_fs_element: GEANT_FILESET_ELEMENT
 			a_directoryset_element: GEANT_DIRECTORYSET_ELEMENT
 		do
-			create command.make (a_project)
-			task_make (command, a_xml_element)
+			Precursor {GEANT_TASK} (a_project, a_xml_element)
+
 			if has_attribute (Directory_attribute_name) then
 				a_value := attribute_value (Directory_attribute_name)
 				if a_value.count > 0 then
@@ -59,6 +59,12 @@ feature {NONE} -- Initialization
 				create a_directoryset_element.make (project, a_xml_subelement)
 				command.set_directoryset (a_directoryset_element.directoryset)
 			end
+		end
+
+	build_command (a_project: GEANT_PROJECT) is
+			-- Create instance of `command'
+		do
+			create command.make (a_project)
 		end
 
 feature -- Access

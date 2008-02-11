@@ -34,6 +34,10 @@ feature -- Access
 	no_exec: BOOLEAN
 			-- Do not execute commands (only show what they would do)?
 
+	variable_local_by_default: BOOLEAN
+			-- Variable are local variable by default ?
+			-- Or global (default behavior)
+
 feature -- Setting
 
 	set_verbose (a_verbose: BOOLEAN) is
@@ -58,6 +62,14 @@ feature -- Setting
 			no_exec := a_no_exec
 		ensure
 			no_exec_set: no_exec = a_no_exec
+		end
+
+	set_variable_local_by_default (a_variable_local_by_default: BOOLEAN) is
+			-- Set `variable_local_by_default' to `a_variable_local_by_default'
+		do
+			variable_local_by_default := a_variable_local_by_default
+		ensure
+			variable_local_by_default_set: variable_local_by_default = a_variable_local_by_default
 		end
 
 end
