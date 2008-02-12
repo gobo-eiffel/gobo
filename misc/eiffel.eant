@@ -364,11 +364,11 @@
 	</target>
 
 	<target name="init_windows" if="${GOBO_OS}=windows">
-		<set name="exe" value=".exe"/>
+		<!-- No special windows tasks needed for now but target is kept for possible future instructions -->
 	</target>
 
 	<target name="init_unix" unless="${GOBO_OS}=windows">
-		<set name="exe" value=""/>
+		<!-- No special unix tasks needed for now but target is kept for possible future instructions -->
 	</target>
 
 </project>
