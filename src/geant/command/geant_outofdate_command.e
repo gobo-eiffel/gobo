@@ -193,14 +193,21 @@ feature -- Execution
 						end
 						if exit_code = 0 then
 							a_to_file := file_system.pathname_from_file_system (fileset.item_mapped_filename, unix_file_system)
+						project.trace_debug (<<"  [*outofdate] checking file %'", a_from_file, "%' against file %'",
+							a_to_file, "%'">>)
 							is_out_of_date := is_file_outofdate (a_from_file, a_to_file)
+							if is_out_of_date then
+								project.trace_debug (<<"  [*outofdate] detected file which is out of date.">>)
+							end
 						end
 						fileset.forth
 					end
+						-- Make sure fileset iteration is cleaned up:
+					fileset.go_after
 					if is_out_of_date then
 						project.set_variable_value (variable_name, true_value)
 					else
-						project. set_variable_value (variable_name, false_value)
+						project.set_variable_value (variable_name, false_value)
 					end
 				end
 			end

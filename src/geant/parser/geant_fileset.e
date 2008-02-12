@@ -476,6 +476,15 @@ feature -- Cursor movement
 			project_variables_up_to_date: are_project_variables_up_to_date
 		end
 
+	go_after is
+			-- Move cursor to `after' position.
+		do
+			remove_project_variables
+			filenames.go_after
+		ensure
+			project_variables_up_to_date: are_project_variables_up_to_date
+		end
+
 feature -- Execution
 
 	execute is
