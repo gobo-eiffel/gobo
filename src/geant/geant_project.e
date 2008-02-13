@@ -79,6 +79,18 @@ feature -- Access
 	variables: GEANT_PROJECT_VARIABLES
 			-- Project variables
 
+	aggregated_variables_array: ARRAY [GEANT_VARIABLES] is
+			-- Array of available variables sets
+			-- i.e: arguments, locals, variables
+		do
+			create Result.make (1, 3)
+			Result[1] := target_arguments_stack.item
+			Result[2] := target_locals_stack.item
+			Result[3] := variables
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	options: GEANT_PROJECT_OPTIONS
 			-- Project options
 

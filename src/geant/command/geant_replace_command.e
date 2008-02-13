@@ -276,7 +276,9 @@ feature -- Execution
 			a_postfix: STRING
 			i,pos: INTEGER
 			s: STRING
+			j: INTEGER
 			l_vars: GEANT_VARIABLES
+			l_vars_array: ARRAY [GEANT_VARIABLES]
 		do
 			project.trace (<<"  [replace] file=%"", a_filename, "%" to_file=%"", a_to_filename, "%" variable_pattern=", variable_pattern >>)
 
@@ -297,7 +299,8 @@ feature -- Execution
 				end
 			end
 			if exit_code = 0 then
-				a_prefix := variable_pattern.substring (1, pos - 1)
+				pos := variable_pattern.index_of (placeholder_character, 1)
+ 				a_prefix := variable_pattern.substring (1, pos - 1)
 				a_postfix := variable_pattern.substring (pos + 1, variable_pattern.count)
 
 				if not file_system.file_exists (a_filename) then
@@ -330,18 +333,29 @@ feature -- Execution
 							project.log (<<"  [replace] error: file %"" + a_to_file.name + "%" is not writable">>)
 							exit_code := 1
 						else
-								--| This may be improved by replacing all patterns in one pass.
+							l_vars_array := project.aggregated_variables_array
+
 							from
-								l_vars := project.variables
-								l_vars.start
+								j := l_vars_array.lower
 							until
-								l_vars.after
+								j > l_vars_array.upper
 							loop
-								s := STRING_.replaced_all_substrings (s,
-										a_prefix + l_vars.key_for_iteration + a_postfix,
-										l_vars.item_for_iteration
-									)
-								l_vars.forth
+								l_vars := l_vars_array[j]
+									--| This may be improved by replacing all patterns in one pass.
+								if l_vars /= Void then
+									from
+										l_vars.start
+									until
+										l_vars.after
+									loop
+										s := STRING_.replaced_all_substrings (s,
+												a_prefix + l_vars.key_for_iteration + a_postfix,
+												l_vars.item_for_iteration
+											)
+										l_vars.forth
+									end
+								end
+								j := j + 1
 							end
 							a_to_file.put_string (s)
 							a_to_file.close
