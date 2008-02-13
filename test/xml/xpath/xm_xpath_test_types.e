@@ -1,16 +1,16 @@
 indexing
-	
+
 	description:
-	
+
 		"Test type functions"
-		
+
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_XPATH_TEST_TYPES
+
+class XM_XPATH_TEST_TYPES
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	XM_XPATH_TYPE
 
 	XM_XPATH_SHARED_CONFORMANCE
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_ABS
+class XM_XPATH_TEST_ABS
 
 inherit
 
@@ -34,7 +34,11 @@ inherit
 	
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-		
+
+create
+
+	make_default
+
 feature -- Constant
 
 	ten_and_a_half: MA_DECIMAL is

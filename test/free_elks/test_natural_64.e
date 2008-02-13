@@ -14,50 +14,13 @@ class TEST_NATURAL_64
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_default_create
-			test_less_than
-			test_less_equal
-			test_greater_than
-			test_greater_equal
-			test_out
-			test_item
-			test_set_item___fail_ise
-			test_to_reference
-			test_make_from_reference___fail_ise
-			test_infix_plus
-			test_infix_minus
-			test_infix_times
-			test_infix_divide
-			test_infix_div
-			test_infix_mod
-			test_infix_power
-			test_prefix_plus
-			test_to_character
-			test_to_real_32
-			test_to_real_64
-			test_as_natural_8
-			test_as_natural_16
-			test_as_natural_32
-			test_as_natural_64
-			test_as_integer_8
-			test_as_integer_16
-			test_as_integer_32
-			test_as_integer_64
-			test_bit_and
-			test_bit_or
-			test_bit_xor
-			test_bit_not
-			test_bit_shift_left
-			test_bit_shift_right
-			test_convert
-		end
 
 	test_default_create is
 			-- Test feature 'default_create'.

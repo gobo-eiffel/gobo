@@ -10,10 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_TREE
+class XM_TEST_TREE
 
 inherit
+
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

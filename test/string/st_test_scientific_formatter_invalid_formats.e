@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ST_TEST_SCIENTIFIC_FORMATTER_INVALID_FORMATS
+class ST_TEST_SCIENTIFIC_FORMATTER_INVALID_FORMATS
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 
 	ST_FORMATTING_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

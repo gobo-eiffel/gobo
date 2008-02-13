@@ -14,34 +14,13 @@ class TEST_FUNCTION
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_item_qualified1
-			test_item_qualified2
-			test_item_qualified3
-			test_item_typed1
-			test_item_typed2
-			test_item_typed3
-			test_item_unqualified1
-			test_item_labeled_tuple1
-			test_item_attribute1
-			test_call_qualified1
-			test_call_qualified2
-			test_call_qualified3
-			test_call_typed1
-			test_call_typed2
-			test_call_typed3
-			test_call_unqualified1
-			test_call_labeled_tuple1
-			test_call_attribute1
-			test_boxed_operands
-			test_boxed_result
-		end
 
 	test_item_qualified1 is
 			-- Test feature 'item' with a closed qualified target.

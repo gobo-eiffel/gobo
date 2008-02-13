@@ -10,12 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_CHARACTER_BUFFER
+class KL_TEST_CHARACTER_BUFFER
 
 inherit
 
 	KL_TEST_CASE
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+
+create
+
+	make_default
 
 feature -- Test
 

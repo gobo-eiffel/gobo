@@ -25,11 +25,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_PRECURSOR1
+class TEST_PRECURSOR1
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_INFOSET
+class XM_XSLT_TEST_INFOSET
 
 inherit
 
@@ -23,7 +23,11 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_RESOLVER_FACTORY
-	
+
+create
+
+	make_default
+
 feature -- Test
 
 	test_infoset is

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_ETEST_SCHEMATRON
+class XM_ETEST_SCHEMATRON
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 		redefine
 			program_dirname
 		end
+
+create
+
+	make_default
 
 feature -- Access
 

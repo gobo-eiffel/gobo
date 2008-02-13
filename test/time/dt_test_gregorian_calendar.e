@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DT_TEST_GREGORIAN_CALENDAR
+class DT_TEST_GREGORIAN_CALENDAR
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

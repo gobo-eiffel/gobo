@@ -58,6 +58,17 @@ Version 3.8 - ?
 	  to a class that has a syntax error or for which the ancestors could
 	  not be computed.
 
+	getest:
+
+	* Added features `assert_doubles_equal_with_tolerance' and
+	  `assert_doubles_equal_with_strict_tolerance' to TS_ASSERTION_ROUTINES.
+	* getest now expects test case classes to declare `make_default' inherited
+	  from TS_TEST_CASE as creation procedure. That way there is no need to
+	  generate intermediary classes (e.g. classes of the form XTEST_...
+	  inheriting from TEST_...) anymore, and hence it is easier to call test
+	  cases outside of the test framework.
+	* Removed the command-line option --ve and replaced it by --ge.
+
 	gexace:
 
 	* The option '--system=ise' now generates ECF directly instead of going

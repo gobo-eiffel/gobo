@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_UNICODE_CHARACTERS
+class XM_TEST_UNICODE_CHARACTERS
 
 inherit
 
@@ -18,7 +18,11 @@ inherit
 
 	XM_SHARED_UNICODE_CHARACTERS
 		export {NONE} all end
-		
+
+create
+
+	make_default
+
 feature -- Test
 
 	test_empty is

@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_DTD
+class XM_TEST_DTD
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

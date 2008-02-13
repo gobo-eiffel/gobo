@@ -9,8 +9,8 @@ indexing
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_TEST_BOM
+
+class XM_TEST_BOM
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 	
 	XM_RESOLVER_FACTORY
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test(s)
 

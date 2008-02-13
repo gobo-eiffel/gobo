@@ -10,11 +10,15 @@ indexing
 	revision: "$Revision$"
 	date: "$Date$"
 
-deferred class UT_TEST_BASE64_DECODING
+class UT_TEST_BASE64_DECODING
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Tests
 

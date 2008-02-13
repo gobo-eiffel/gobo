@@ -9,11 +9,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_VJAR_TEST1
+class TEST_VJAR_TEST1
 
 inherit
 
 	GELINT_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

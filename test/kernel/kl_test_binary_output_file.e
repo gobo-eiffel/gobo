@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_BINARY_OUTPUT_FILE
+class KL_TEST_BINARY_OUTPUT_FILE
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 
 	DT_SHARED_SYSTEM_CLOCK
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

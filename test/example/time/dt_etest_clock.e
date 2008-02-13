@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DT_ETEST_CLOCK
+class DT_ETEST_CLOCK
 
 inherit
 
 	EXAMPLE_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Access
 

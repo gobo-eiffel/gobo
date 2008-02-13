@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_STOP_FILTER
+class XM_TEST_STOP_FILTER
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_NAMESPACE_JCLARK
+class XM_TEST_NAMESPACE_JCLARK
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

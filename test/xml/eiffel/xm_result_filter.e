@@ -1,15 +1,15 @@
 indexing
 
 	description:
-	
+
 		"Filter collecting content events"
-	
+
 	library: "Gobo Eiffel XML Tests"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-		
+
 class XM_RESULT_FILTER
 
 inherit

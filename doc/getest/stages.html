@@ -28,15 +28,16 @@ test suite using <em>getest</em>. First, you have to write test
 case classes to be used in the test suite:</p>
 
 <ol>
-    <li>Create deferred classes whose names match the regular
-        expression specified in the <font color="#000080"><em><strong><tt>class</tt></strong></em></font>
+    <li>Create classes whose names match the regular expression
+        specified in the <font color="#000080"><em><strong><tt>class</tt></strong></em></font>
         clause of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
         section of the <a href="configuration.html">configuration
         file</a>. By default the name of these classes should
         have the prefix <font color="#008080"><em><tt>TEST_</tt></em></font>.</li>
     <li>Inherit from class <font color="#008080"><em><tt>TS_TEST_CASE</tt></em></font>
         from the test harness cluster of the <em>Gobo Eiffel Test
-        Library</em>.</li>
+        Library</em>, and declare <font color="#008080"><em><tt>make_default</tt></em></font>
+        as creation procedure.</li>
     <li>Write argumentless procedures whose names match the
         regular expression specified in the <font color="#000080"><em><strong><tt>feature</tt></strong></em></font>
         clause of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
@@ -96,9 +97,9 @@ file</a> to run the test:</p>
         section.</li>
 </ol>
 
-<p>You should also provide the Ace file (ISE Eiffel, SmartEiffel)
-or <font size="2">ESD</font>/Xace file (Visual Eiffel) necessary to
-run the compilation instructions specified in the <font
+<p>You should also provide the ECF file (ISE Eiffel), Ace file
+(ISE Eiffel, SmartEiffel, Gobo Eiffel) or Xace file (Gobo Eiffel)
+necessary to run the compilation instructions specified in the <font
 color="#000080"><em><strong><tt>compile</tt></strong></em></font>
 clause of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
 section of the configuration file above:</p>
@@ -134,11 +135,16 @@ color="#800000">-- Gobo Eiffel Test Harness Library
     $GOBO/library/utility/formatter
     $GOBO/library/utility/support
         -- Gobo Eiffel Kernel Library
-    $GOBO/library/kernel
+    $GOBO/library/kernel/basic
+    $GOBO/library/kernel/elks
+    $GOBO/library/kernel/io
+    $GOBO/library/kernel/misc
+    $GOBO/library/kernel/unicode
+    $GOBO/library/kernel/support
     $GOBO/library/kernel/spec/&lt;<em>compiler</em>&gt;</font></pre>
         <p>where <font color="#800000"><tt>&lt;</tt><em><tt>compiler</tt></em><tt>&gt;</tt></font>
-        is either <font color="#800000"><tt>ise</tt></font>, <font
-        color="#800000"><tt>ve</tt></font> or <font
+        is either <font color="#800000"><tt>ge</tt></font>, <font
+        color="#800000"><tt>ise</tt></font> or <font
         color="#800000"><tt>se</tt></font>.</p>
     </li>
 </ol>
@@ -165,7 +171,7 @@ Test Summary for my_test
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2001-2005</b></font><font
+            <font size="2"><b>Copyright © 2001-2008</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -175,12 +181,12 @@ Test Summary for my_test
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 22 February 2005</font><br>
+            <strong>Last Updated:</strong> 13 February 2008</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$
 $Revision$"
-            -->
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a

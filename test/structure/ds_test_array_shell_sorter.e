@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DS_TEST_ARRAY_SHELL_SORTER
+class DS_TEST_ARRAY_SHELL_SORTER
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

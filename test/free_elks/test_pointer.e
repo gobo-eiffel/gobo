@@ -14,25 +14,13 @@ class TEST_POINTER
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_default_create
-			test_infix_plus
-			test_to_integer_32
-			test_out
-			test_hash_code
-			test_memory_compare
-			test_item
-			test_set_item___fail_ise
-			test_to_reference
-			test_make_from_reference___fail_ise
-			test_convert
-		end
 
 	test_default_create is
 			-- Test feature 'default_create'.

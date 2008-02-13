@@ -10,13 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ST_TEST_WORD_WRAPPER
+class ST_TEST_WORD_WRAPPER
 
 inherit
 
 	TS_TEST_CASE
 
 	KL_IMPORTED_STRING_ROUTINES
+
+create
+
+	make_default
 
 feature -- Testing
 

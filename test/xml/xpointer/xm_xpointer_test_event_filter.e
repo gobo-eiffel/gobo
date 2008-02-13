@@ -1,16 +1,16 @@
 indexing
-	
+
 	description:
-	
+
 		"Test xpointer evaluation for the event implementation"
-		
+
 	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_XPOINTER_TEST_EVENT_FILTER
+
+class XM_XPOINTER_TEST_EVENT_FILTER
 
 inherit
 
@@ -24,9 +24,13 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 
@@ -126,7 +130,7 @@ feature {NONE} -- Implementation
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-		
+
 	test_event_xml_uri: UT_URI is
 			-- URI of file 'test_event.xml'
 		local
@@ -139,4 +143,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-			
+

@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DT_TEST_FIXED_OFFSET_TIME_ZONE
+class DT_TEST_FIXED_OFFSET_TIME_ZONE
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

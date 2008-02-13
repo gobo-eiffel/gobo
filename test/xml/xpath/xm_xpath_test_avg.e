@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_AVG
+class XM_XPATH_TEST_AVG
 
 inherit
 
@@ -34,7 +34,11 @@ inherit
 	
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-		
+
+create
+
+	make_default
+
 feature -- Constant
 
 	four: MA_DECIMAL is
@@ -468,8 +472,7 @@ feature {NONE} -- Implementation
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "xml", "xpath", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xpath", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_void: Result /= Void

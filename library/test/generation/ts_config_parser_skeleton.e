@@ -100,7 +100,7 @@ feature -- Status report
 
 	compiler_ise: BOOLEAN
 	compiler_se: BOOLEAN
-	compiler_ve: BOOLEAN
+	compiler_ge: BOOLEAN
 			-- Compiler which will be used to compile the test classes
 
 	fail_on_rescue: BOOLEAN
@@ -128,12 +128,12 @@ feature -- Status setting
 			compiler_se_set: compiler_se = b
 		end
 
-	set_compiler_ve (b: BOOLEAN) is
-			-- Set `compiler_ve' to `b'.
+	set_compiler_ge (b: BOOLEAN) is
+			-- Set `compiler_ge' to `b'.
 		do
-			compiler_ve := b
+			compiler_ge := b
 		ensure
-			compiler_ve_set: compiler_ve = b
+			compiler_ge_set: compiler_ge = b
 		end
 
 	set_fail_on_rescue (b: BOOLEAN) is
@@ -230,8 +230,8 @@ feature -- Defaults
 				Result := "geant compile_ise"
 			elseif compiler_se then
 				Result := "geant compile_se"
-			elseif compiler_ve then
-				Result := "geant compile_ve"
+			elseif compiler_ge then
+				Result := "geant compile_ge"
 			else
 				Result := "geant compile"
 			end

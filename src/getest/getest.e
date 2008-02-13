@@ -51,9 +51,9 @@ feature -- Processing
 				end
 				create config_parser.make (variables, error_handler)
 				config_parser.set_fail_on_rescue (fail_on_rescue)
+				config_parser.set_compiler_ge (compiler_ge)
 				config_parser.set_compiler_ise (compiler_ise)
 				config_parser.set_compiler_se (compiler_se)
-				config_parser.set_compiler_ve (compiler_ve)
 				config_parser.parse (a_file)
 				a_file.close
 				a_config := config_parser.last_config
@@ -216,19 +216,19 @@ feature -- Status report
 	must_execute: BOOLEAN
 			-- Should the testcases be executed?
 
+	compiler_ge: BOOLEAN
 	compiler_ise: BOOLEAN
 	compiler_se: BOOLEAN
-	compiler_ve: BOOLEAN
 			-- Compiler specified on the command-line
-			-- (--ise, --se or --ve)
+			-- (--ge, --ise or --se)
 
 	compiler_specified: BOOLEAN is
 			-- Has an Eiffel compiler been specified on the command-line?
-			-- (--ise, --se or --ve)
+			-- (--ge, --ise or --se)
 		do
-			Result := (compiler_ise or compiler_se or compiler_ve)
+			Result := (compiler_ge or compiler_ise or compiler_se)
 		ensure
-			definition: Result = (compiler_ise or compiler_se or compiler_ve)
+			definition: Result = (compiler_ge or compiler_ise or compiler_se)
 		end
 
 	fail_on_rescue: BOOLEAN
@@ -268,11 +268,11 @@ feature {NONE} -- Command line
 					else
 						compiler_ise := True
 					end
-				elseif arg.is_equal ("--ve") then
+				elseif arg.is_equal ("--ge") then
 					if compiler_specified then
 						report_usage_error
 					else
-						compiler_ve := True
+						compiler_ge := True
 					end
 				elseif arg.count >= 9 and then arg.substring (1, 9).is_equal ("--define=") then
 					if arg.count > 9 then
@@ -348,10 +348,10 @@ feature {NONE} -- Command line
 					if a_file.exists then
 						config_filename := SE_config_filename
 					end
-				elseif compiler_ve then
-					create a_file.make (VE_config_filename)
+				elseif compiler_ge then
+					create a_file.make (GE_config_filename)
 					if a_file.exists then
-						config_filename := VE_config_filename
+						config_filename := GE_config_filename
 					end
 				end
 			end
@@ -459,7 +459,7 @@ feature {NONE} -- Error handling
 			create Result.make ("[-aceghvV?][--help][--version][--verbose]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
 				%%T[--class=<regexp>][--feature=<regexp>][--default_test]%N%
-				%%T[--compile=<command>][--se|--ise|--ve|<filename>]")
+				%%T[--compile=<command>][--se|--ise|--ge|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -471,7 +471,7 @@ feature {NONE} -- Constants
 
 	ISE_config_filename: STRING is "getest.ise"
 	SE_config_filename: STRING is "getest.se"
-	VE_config_filename: STRING is "getest.ve"
+	GE_config_filename: STRING is "getest.ge"
 	cfg_config_filename: STRING is "getest.cfg"
 			-- Default configuration filenames
 

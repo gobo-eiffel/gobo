@@ -58,17 +58,17 @@ provided by your favorite shell or operating system.) There are
 also some shorthands such as:</p>
 
 <blockquote>
-    <pre><font color="#800000">getest --ise
-getest --se
-getest --ve</font></pre>
+    <pre><font color="#800000">getest --ge
+getest --ise
+getest --se</font></pre>
 </blockquote>
 
 <p>which are equivalent to:</p>
 
 <blockquote>
-    <pre><font color="#800000">getest getest.ise
-getest getest.se
-getest getest.ve</font></pre>
+    <pre><font color="#800000">getest getest.ge
+getest getest.ise
+getest getest.se</font></pre>
 </blockquote>
 
 <p>provided that the corresponding files exist.</p>
@@ -80,16 +80,16 @@ which configuration file to use:</p>
     <li>If a filename has been specified on the command-line,
         then use it.</li>
     <li>If either <font color="#800000"><tt>--</tt></font><a
-        href="#ise"><font color="#800000"><tt>ise</tt></font></a>,
-        <font color="#800000"><tt>--</tt></font><a href="#se"><font
-        color="#800000"><tt>se</tt></font></a> or <font
-        color="#800000"><tt>--</tt></font><a href="#ve"><font
-        color="#800000"><tt>ve</tt></font></a><font
+        href="#ge"><font color="#800000"><tt>ge</tt></font></a>, <font
+        color="#800000"><tt>--</tt></font><a href="#ise"><font
+        color="#800000"><tt>ise</tt></font></a> or <font
+        color="#800000"><tt>--</tt></font><a href="#se"><font
+        color="#800000"><tt>se</tt></font></a><font
         color="#800000"><tt> </tt></font>has been specified on
         the command-line and the corresponding file <font
-        color="#800000"><tt>getest.ise</tt></font>, <font
-        color="#800000"><tt>getest.se</tt></font> or <font
-        color="#800000"><tt>getest.ve</tt></font> exists, then
+        color="#800000"><tt>getest.ge</tt></font>, <font
+        color="#800000"><tt>getest.ise</tt></font> or <font
+        color="#800000"><tt>getest.se</tt></font> exists, then
         use this file.</li>
     <li>If the file <font color="#800000"><tt>getest.cfg</tt></font>
         exists, then use it.</li>
@@ -113,6 +113,17 @@ which configuration file to use:</p>
         --verbose</tt></font></dt>
     <dd>Run <em>getest</em> in verbose mode. In verbose mode, <em>getest</em>
         prints the number of test cases that have been generated.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="ge"><font
+        color="#800000"><tt>ge</tt></font></a></dt>
+    <dd>Run <em>getest</em> with the configuration file <font
+        color="#800000"><tt>getest.ge</tt></font> if it exists.
+        This configuration file is supposed to contain
+        instructions to run the test with the Gobo Eiffel
+        compiler. Also the default value for the <a
+        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file is set to <font color="#800000"><tt>&quot;geant
+        compile_ge&quot;</tt></font>.</dd>
     <dt><font color="#800000"><tt>--</tt></font><a name="ise"><font
         color="#800000"><tt>ise</tt></font></a></dt>
     <dd>Run <em>getest</em> with the configuration file <font
@@ -135,17 +146,6 @@ which configuration file to use:</p>
         color="#000080"><em><strong><tt> </tt></strong></em></font>field
         of the configuration file is set to <font color="#800000"><tt>&quot;geant
         compile_se&quot;</tt></font>.</dd>
-    <dt><font color="#800000"><tt>--</tt></font><a name="ve"><font
-        color="#800000"><tt>ve</tt></font></a></dt>
-    <dd>Run <em>getest</em> with the configuration file <font
-        color="#800000"><tt>getest.ve</tt></font> if it exists.
-        This configuration file is supposed to contain
-        instructions to run the test with the Visual Eiffel
-        compiler. Also the default value for the <a
-        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
-        color="#000080"><em><strong><tt> </tt></strong></em></font>field
-        of the configuration file is set to <font color="#800000"><tt>&quot;geant
-        compile_ve&quot;</tt></font>.</dd>
     <dt><font color="#800000"><tt>-a</tt></font></dt>
     <dd>Do not catch exceptions, but let Eiffel run-time generate
         a stack dump.</dd>
@@ -201,7 +201,7 @@ which configuration file to use:</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2001-2005</b></font><font
+            <font size="2"><b>Copyright © 2001-2008</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -211,7 +211,7 @@ which configuration file to use:</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 16 November 2005</font><br>
+            <strong>Last Updated:</strong> 13 February 2008</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$

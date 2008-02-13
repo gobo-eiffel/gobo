@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TS_ETEST_CONCAT2
+class TS_ETEST_CONCAT2
 
 inherit
 
 	EXAMPLE_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Access
 

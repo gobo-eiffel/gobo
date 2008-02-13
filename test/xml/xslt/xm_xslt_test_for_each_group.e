@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_FOR_EACH_GROUP
+class XM_XSLT_TEST_FOR_EACH_GROUP
 
 inherit
 
@@ -23,6 +23,10 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_RESOLVER_FACTORY
+
+create
+
+	make_default
 
 feature -- Test
 

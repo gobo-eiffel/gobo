@@ -14,7 +14,11 @@ class TEST_INTEGER_64
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

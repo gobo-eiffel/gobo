@@ -30,11 +30,11 @@ inherit
 
 feature -- Access
 
-	test_logger: TS_TEST_LOGGER is
+	logger: TS_TEST_LOGGER is
 			-- Logger for tests and assertion checkings
 		deferred
 		ensure
-			test_logger_not_void: Result /= Void
+			logger_not_void: Result /= Void
 		end
 
 feature {TS_TEST_HANDLER} -- Access
@@ -62,7 +62,7 @@ feature {TS_TEST_HANDLER} -- Basic operations
 			a_tag_not_void: a_tag /= Void
 		do
 			assertions.add_assertion
-			test_logger.report_assertion (a_tag, a_condition)
+			logger.report_assertion (a_tag, a_condition)
 			if not a_condition then
 				assertions.report_error (a_tag)
 			end
@@ -88,7 +88,7 @@ feature {TS_TEST_HANDLER} -- Basic operations
 			a_tag_not_void: a_tag /= Void
 		do
 			assertions.add_assertion
-			test_logger.report_assertion (a_tag, not a_condition)
+			logger.report_assertion (a_tag, not a_condition)
 			if a_condition then
 				assertions.report_error (a_tag)
 			end
@@ -120,7 +120,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := ANY_.equal_objects (expected, actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
@@ -151,7 +151,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := not ANY_.equal_objects (expected, actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_not_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
@@ -182,7 +182,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected = actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
@@ -213,7 +213,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected /= actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_not_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
@@ -244,7 +244,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected = actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
@@ -275,7 +275,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected /= actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
@@ -296,6 +296,72 @@ feature {TS_TEST_HANDLER} -- Equality
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_doubles_equal_with_tolerance (a_tag: STRING; expected, actual, tolerance: DOUBLE) is
+			-- Assert that `(expected - actual).abs <= tolerance'.
+		require
+			a_tag_not_void: a_tag /= Void
+			tolerance_not_negative: tolerance >= 0
+		local
+			a_message: STRING
+			l_condition: BOOLEAN
+		do
+			assertions.add_assertion
+			l_condition := (expected - actual).abs <= tolerance
+			logger.report_assertion (a_tag, l_condition)
+			if not l_condition then
+				a_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, False)
+				assertions.report_error (a_message)
+			end
+		end
+
+	check_doubles_equal_with_tolerance (a_tag: STRING; expected, actual, tolerance: DOUBLE) is
+			-- Check that `(expected - actual).abs <= tolerance'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			tolerance_not_negative: tolerance >= 0
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_doubles_equal_with_tolerance (a_tag, expected, actual, tolerance)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
+	assert_doubles_equal_with_strict_tolerance (a_tag: STRING; expected, actual, tolerance: DOUBLE) is
+			-- Assert that `(expected - actual).abs < tolerance'.
+		require
+			a_tag_not_void: a_tag /= Void
+			tolerance_not_negative: tolerance >= 0
+		local
+			a_message: STRING
+			l_condition: BOOLEAN
+		do
+			assertions.add_assertion
+			l_condition := (expected - actual).abs < tolerance
+			logger.report_assertion (a_tag, l_condition)
+			if not l_condition then
+				a_message := assert_strings_equal_with_tolerance_message (a_tag, expected.out, actual.out, tolerance.out, True)
+				assertions.report_error (a_message)
+			end
+		end
+
+	check_doubles_equal_with_strict_tolerance (a_tag: STRING; expected, actual, tolerance: DOUBLE) is
+			-- Check that `(expected - actual).abs < tolerance'.
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			tolerance_not_negative: tolerance >= 0
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_doubles_equal_with_strict_tolerance (a_tag, expected, actual, tolerance)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_strings_equal (a_tag: STRING; expected, actual: STRING) is
 			-- Assert that `expected' and `actual' are the same string.
 		require
@@ -306,7 +372,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := STRING_.same_string (expected, actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
@@ -337,7 +403,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := not STRING_.same_string (expected, actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_not_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
@@ -368,7 +434,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := STRING_.same_case_insensitive (expected, actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
@@ -399,7 +465,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected = actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
@@ -430,7 +496,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected /= actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
@@ -461,7 +527,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected = actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
@@ -492,7 +558,7 @@ feature {TS_TEST_HANDLER} -- Equality
 		do
 			assertions.add_assertion
 			l_condition := (expected /= actual)
-			test_logger.report_assertion (a_tag, l_condition)
+			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
 				assertions.report_error (a_message)
@@ -604,7 +670,7 @@ feature {TS_TEST_HANDLER} -- Files
 				a_message.append_string (a_filename1)
 				a_message.append_string ("')")
 			end
-			test_logger.report_assertion (a_tag, a_message = Void)
+			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
 				assertions.report_error (a_message)
 			end
@@ -672,7 +738,7 @@ feature {TS_TEST_HANDLER} -- Files
 				a_message.append_string (a_filename2)
 				a_message.append_string ("' are not equal)")
 			end
-			test_logger.report_assertion (a_tag, a_message = Void)
+			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
 				assertions.report_error (a_message)
 			end
@@ -750,7 +816,7 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
-			test_logger.report_assertion (a_tag, a_message = Void)
+			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
 				assertions.report_error (a_message)
 			end
@@ -813,7 +879,7 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
-			test_logger.report_assertion (a_tag, a_message = Void)
+			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
 				assertions.report_error (a_message)
 			end
@@ -889,7 +955,7 @@ feature {TS_TEST_HANDLER} -- Containers
 					end
 				end
 			end
-			test_logger.report_assertion (a_tag, a_message = Void)
+			logger.report_assertion (a_tag, a_message = Void)
 			if a_message /= Void then
 				assertions.report_error (a_message)
 			end
@@ -1067,6 +1133,37 @@ feature {NONE} -- Messages
 				Result.append_string ("Void")
 			else
 				Result.append_string (expected)
+			end
+		ensure
+			message_not_void: Result /= Void
+		end
+
+	assert_strings_equal_with_tolerance_message (a_tag: STRING; expected, actual, tolerance: STRING; a_strict: BOOLEAN): STRING is
+			-- Message stating that `expected' and `actual' should be equal
+			-- with some (possibly strict) `tolerance'.
+		require
+			a_tag_not_void: a_tag /= Void
+			tolerance_not_void: tolerance /= Void
+		do
+			create Result.make (50)
+			Result.append_string (a_tag)
+			Result.append_string ("%N   expected: ")
+			if expected = Void then
+				Result.append_string ("Void")
+			else
+				Result.append_string (expected)
+			end
+			Result.append_string (" with ")
+			if a_strict then
+				Result.append_string ("strict ")
+			end
+			Result.append_string ("tolerance: ")
+			Result.append_string (tolerance)
+			Result.append_string ("%N   but  got: ")
+			if actual = Void then
+				Result.append_string ("Void")
+			else
+				Result.append_string (actual)
 			end
 		ensure
 			message_not_void: Result /= Void

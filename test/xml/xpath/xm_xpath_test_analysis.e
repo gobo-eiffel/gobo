@@ -1,16 +1,16 @@
 indexing
-	
+
 	description:
-	
+
 		"Test static analysis"
-		
+
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_XPATH_TEST_ANALYSIS
+
+class XM_XPATH_TEST_ANALYSIS
 
 inherit
 
@@ -34,7 +34,10 @@ inherit
 	KL_SHARED_STANDARD_FILES
 
 	XM_XPATH_SHARED_NAME_POOL
-	
+
+create
+
+	make_default
 
 feature -- Test
 

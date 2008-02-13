@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_FORMATTING
+class XM_XSLT_TEST_FORMATTING
 
 inherit
 
@@ -25,7 +25,11 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_RESOLVER_FACTORY
-	
+
+create
+
+	make_default
+
 feature -- Test
 
 	test_format_date_one is

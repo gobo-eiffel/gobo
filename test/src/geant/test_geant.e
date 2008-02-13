@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_GEANT
+class TEST_GEANT
 
 inherit
 
 	TOOL_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Access
 

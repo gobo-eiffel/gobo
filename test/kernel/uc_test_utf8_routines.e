@@ -10,12 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class UC_TEST_UTF8_ROUTINES
+class UC_TEST_UTF8_ROUTINES
 
 inherit
 
 	KL_TEST_CASE
 	UC_IMPORTED_UTF8_ROUTINES
+
+create
+
+	make_default
 
 feature
 

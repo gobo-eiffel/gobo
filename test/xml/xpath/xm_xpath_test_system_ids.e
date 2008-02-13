@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_SYSTEM_IDS
+class XM_XPATH_TEST_SYSTEM_IDS
 
 inherit
 
@@ -30,9 +30,11 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
-		-- These tests check the system_id and base_uri rotuines
+create
 
-feature -- Test
+	make_default
+
+feature -- Test. These tests check the system_id and base_uri routines
 
 	test_with_dtd_using_tiny_tree is
 			-- Test using tiny tree

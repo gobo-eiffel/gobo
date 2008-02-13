@@ -14,17 +14,13 @@ class TEST_BASIC_ROUTINES
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_charconv
-			test_bottom_int_div
-			test_up_int_div
-		end
 
 	test_charconv is
 			-- Test feature 'charconv'.

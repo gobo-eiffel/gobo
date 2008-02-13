@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_UNIX_INPUT_FILE
+class KL_TEST_UNIX_INPUT_FILE
 
 inherit
 
@@ -21,6 +21,10 @@ inherit
 
 	DT_SHARED_SYSTEM_CLOCK
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

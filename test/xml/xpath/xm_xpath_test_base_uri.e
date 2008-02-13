@@ -12,7 +12,7 @@ indexing
 
 		-- TODO: awaiting ability to properly calculate Base URI of PIs
 
-deferred class XM_XPATH_TEST_BASE_URI
+class XM_XPATH_TEST_BASE_URI
 
 inherit
 
@@ -36,6 +36,10 @@ inherit
 
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Access
 

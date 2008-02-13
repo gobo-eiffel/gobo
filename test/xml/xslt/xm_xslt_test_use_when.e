@@ -2,7 +2,10 @@ indexing
 
 	description:
 
-		"Test use of use-when attribute."
+	"[
+		Test use of use-when attribute.
+		This class tests conditional compilation ([xsl:]use-when)
+	]"
 
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +13,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_USE_WHEN
+class XM_XSLT_TEST_USE_WHEN
 
 inherit
 
@@ -28,7 +31,9 @@ inherit
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
 
-		-- This class tests conditional compilation ([xsl:]use-when)
+create
+
+	make_default
 
 feature -- Test
 

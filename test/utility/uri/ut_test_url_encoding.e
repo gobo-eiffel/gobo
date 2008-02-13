@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 	date: "$Date$"
 
-deferred class UT_TEST_URL_ENCODING
+class UT_TEST_URL_ENCODING
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 
 	UC_UNICODE_FACTORY
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Tests
 

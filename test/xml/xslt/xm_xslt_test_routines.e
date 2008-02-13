@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_ROUTINES
+class XM_XSLT_TEST_ROUTINES
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 		XM_RESOLVER_FACTORY
 
 		KL_IMPORTED_STRING_ROUTINES
+
+create
+
+	make_default
 
 feature {NONE} -- Test support routines
 

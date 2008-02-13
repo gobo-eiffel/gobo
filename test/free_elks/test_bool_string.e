@@ -14,23 +14,13 @@ class TEST_BOOL_STRING
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_make
-			test_all_true
-			test_all_false
-			test_infix_and
-			test_infix_or
-			test_infix_xor
-			test_prefix_not
-			test_right_shifted
-			test_left_shifted
-		end
 
 	test_make is
 			-- Test feature 'make'.

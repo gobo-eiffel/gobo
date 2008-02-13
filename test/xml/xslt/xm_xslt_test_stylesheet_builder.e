@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_STYLESHEET_BUILDER
+class XM_XSLT_TEST_STYLESHEET_BUILDER
 
 inherit
 
@@ -27,6 +27,10 @@ inherit
 
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

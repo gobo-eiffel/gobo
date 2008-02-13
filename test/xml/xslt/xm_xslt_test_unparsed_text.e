@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_UNPARSED_TEXT
+class XM_XSLT_TEST_UNPARSED_TEXT
 
 inherit
 
@@ -25,6 +25,10 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_RESOLVER_FACTORY
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DS_TEST_ARRAY_QUICK_SORTER
+class DS_TEST_ARRAY_QUICK_SORTER
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

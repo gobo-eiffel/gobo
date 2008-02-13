@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class GEANT_TEST_DIRECTORYSET
+class GEANT_TEST_DIRECTORYSET
 
 inherit
 
@@ -24,6 +24,10 @@ inherit
 
 	KL_SHARED_STREAMS
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

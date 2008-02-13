@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_ETEST_BANG2CREATE
+class ET_ETEST_BANG2CREATE
 
 inherit
 
 	EXAMPLE_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Access
 

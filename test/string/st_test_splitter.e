@@ -10,13 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ST_TEST_SPLITTER
+class ST_TEST_SPLITTER
 
 inherit
 
 	TS_TEST_CASE
 
 	KL_IMPORTED_ARRAY_ROUTINES
+
+create
+
+	make_default
 
 feature -- Testing
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_EXTENSIONS
+class XM_XSLT_TEST_EXTENSIONS
 
 inherit
 
@@ -27,6 +27,10 @@ inherit
 	XM_RESOLVER_FACTORY
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,13 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DT_TEST_XSD_DATE_TIME_PARSER
+class DT_TEST_XSD_DATE_TIME_PARSER
 
 inherit
 
 	TS_TEST_CASE
 
 	DT_GREGORIAN_CALENDAR
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -2,7 +2,12 @@ indexing
 
 	description:
 
-		"Test building XPath tree"
+	"[
+		Test building XPath tree.
+		These tests test the ability to build a standard tree,
+		and exercise the DOM-like navigation features,
+		and the XPath axes.
+	]"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2001, Colin Adams and others"
@@ -10,7 +15,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_BUILDER
+class XM_XPATH_TEST_BUILDER
 
 inherit
 
@@ -28,9 +33,9 @@ inherit
 
 	XM_RESOLVER_FACTORY
 
-		-- These tests test the ability to build a standard tree,
-		-- and exercise the DOM-like navigation features,
-		-- and the XPath axes.
+create
+
+	make_default
 
 feature -- Test
 

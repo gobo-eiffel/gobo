@@ -10,13 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DT_TEST_XSLT_FORMAT_DATE_TIME
+class DT_TEST_XSLT_FORMAT_DATE_TIME
 
 inherit
 
 	TS_TEST_CASE
 
 	DT_XSLT_FORMAT_DATE_TIME
+
+create
+
+	make_default
 
 feature -- Test
 

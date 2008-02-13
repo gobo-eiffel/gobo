@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_DOUBLE_ROUTINES
+class KL_TEST_DOUBLE_ROUTINES
 
 inherit
 
 	KL_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_ANALYZE_STRING
+class XM_XSLT_TEST_ANALYZE_STRING
 
 inherit
 
@@ -25,7 +25,11 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_RESOLVER_FACTORY
-	
+
+create
+
+	make_default
+
 feature -- Tests
 
 	test_replacing_characters is

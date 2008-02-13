@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class XM_TEST_NO_NAMESPACE
+class XM_TEST_NO_NAMESPACE
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 	
 	KL_SHARED_STANDARD_FILES
+
+create
+
+	make_default
 
 feature -- Test
 

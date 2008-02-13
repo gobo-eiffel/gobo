@@ -11,7 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_FRAGMENTS
+class XM_XSLT_TEST_FRAGMENTS
 
 inherit
 
@@ -26,6 +26,10 @@ inherit
 	XM_RESOLVER_FACTORY
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
+
+create
+
+	make_default
 
 feature -- Test
 

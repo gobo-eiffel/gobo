@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_STRING_ROUTINES
+class KL_TEST_STRING_ROUTINES
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ANY_ROUTINES
 	KL_SHARED_PLATFORM
+
+create
+
+	make_default
 
 feature -- Test
 

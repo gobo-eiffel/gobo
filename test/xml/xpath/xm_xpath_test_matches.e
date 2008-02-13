@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_MATCHES
+class XM_XPATH_TEST_MATCHES
 
 inherit
 
@@ -37,6 +37,10 @@ inherit
 
 	UC_UNICODE_FACTORY
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

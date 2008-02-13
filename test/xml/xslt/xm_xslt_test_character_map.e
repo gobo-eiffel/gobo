@@ -2,7 +2,12 @@ indexing
 
 	description:
 
-		"Test character maps and other serialization features."
+	"[
+		Test character maps and other serialization features.
+		This class tests various aspects of serialization.
+		Principally, use of character maps, but also CDATA sections
+		and user-written QName output methods.
+	]"
 
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +15,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_CHARACTER_MAP
+class XM_XSLT_TEST_CHARACTER_MAP
 
 inherit
 
@@ -24,9 +29,9 @@ inherit
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
 
-		-- This class tests various aspects of serialization.
-		-- Principally, use of character maps, but also CDATA sections
-		--  and user-written QName output methods.
+create
+
+	make_default
 
 feature -- Access
 

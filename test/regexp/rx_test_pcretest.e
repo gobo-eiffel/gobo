@@ -9,11 +9,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class RX_TEST_PCRETEST
+class RX_TEST_PCRETEST
 
 inherit
 
 	PROGRAM_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

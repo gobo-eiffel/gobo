@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DT_TEST_WEEK_DAY
+class DT_TEST_WEEK_DAY
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	DT_SHARED_WEEK_DAYS_FROM_MONDAY
 
 	DT_SHARED_WEEK_DAYS_FROM_SUNDAY
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_REMOVE
+class XM_XPATH_TEST_REMOVE
 
 inherit
 
@@ -36,6 +36,10 @@ inherit
 
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Result
 

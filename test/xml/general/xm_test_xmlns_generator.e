@@ -1,20 +1,25 @@
 indexing
-	
+
 	description:
-	
+
 		"Test xmlns generation filter and pretty printing"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_XMLNS_GENERATOR
+class XM_TEST_XMLNS_GENERATOR
 
 inherit
+
 	TS_TEST_CASE
-	
+
+create
+
+	make_default
+
 feature -- Tests
 
 	test_no_namespaces is

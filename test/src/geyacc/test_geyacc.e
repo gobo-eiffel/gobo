@@ -9,11 +9,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_GEYACC
+class TEST_GEYACC
 
 inherit
 
 	TOOL_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Access
 

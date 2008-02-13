@@ -14,29 +14,13 @@ class TEST_BOOLEAN_REF
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_default_create
-			test_out
-			test_item
-			test_set_item
-			test_is_hashable
-			test_hash_code
-			test_to_integer
-			test_to_reference
-			test_infix_and
-			test_infix_and_then
-			test_infix_or
-			test_infix_or_else
-			test_infix_xor
-			test_infix_implies
-			test_prefix_not
-		end
 
 	test_default_create is
 			-- Test feature 'default_create'.

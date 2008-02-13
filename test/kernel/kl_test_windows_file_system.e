@@ -10,12 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_WINDOWS_FILE_SYSTEM
+class KL_TEST_WINDOWS_FILE_SYSTEM
 
 inherit
 
 	KL_TEST_CASE
 	KL_SHARED_EXECUTION_ENVIRONMENT
+
+create
+
+	make_default
 
 feature -- Creation
 

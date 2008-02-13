@@ -14,15 +14,13 @@ class TEST_IDENTIFIED
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_id_object
-		end
 
 	test_id_object is
 			-- Test feature 'id_object'.

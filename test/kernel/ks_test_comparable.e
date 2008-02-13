@@ -10,13 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KS_TEST_COMPARABLE
+class KS_TEST_COMPARABLE
 
 inherit
 
 	KL_TEST_CASE
 
 	KL_IMPORTED_STRING_ROUTINES
+
+create
+
+	make_default
 
 feature -- Test
 

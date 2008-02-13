@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class UC_TEST_UTF8_STRING
+class UC_TEST_UTF8_STRING
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	KL_SHARED_PLATFORM
 	KL_IMPORTED_INTEGER_ROUTINES
 	KL_IMPORTED_STRING_ROUTINES
+
+create
+
+	make_default
 
 feature -- Test
 

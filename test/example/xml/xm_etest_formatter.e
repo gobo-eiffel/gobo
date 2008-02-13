@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_ETEST_FORMATTER
+class XM_ETEST_FORMATTER
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 		redefine
 			program_dirname
 		end
+
+create
+
+	make_default
 
 feature -- Access
 

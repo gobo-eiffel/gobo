@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DS_TEST_LIST_CURSOR
+class DS_TEST_LIST_CURSOR
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 		redefine
 			set_up, tear_down
 		end
+
+create
+
+	make_default
 
 feature -- Fixture
 

@@ -9,11 +9,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_GELEX
+class TEST_GELEX
 
 inherit
 
 	TOOL_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Access
 

@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class PR_ETEST_CALC
+class PR_ETEST_CALC
 
 inherit
 
 	EXAMPLE_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Access
 

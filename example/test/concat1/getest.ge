@@ -1,6 +1,6 @@
 test
 
-	xconcat2
+	xconcat1
 
 default
 
@@ -8,11 +8,11 @@ default
 	feature ("test_[a-z0-9_]*")
 	prefix ("X")
 	testgen ("TESTGEN")
-	compile ("geant compile_ve > xcompile.log 2>&1")
-	execute ("xconcat2")
+	compile ("geant compile_ge > xcompile.log 2>&1")
+	execute ("xconcat1")
 
 cluster
 
-	concat2: "$GOBO/example/test/concat2"
+	concat1: "$GOBO/example/test/concat1"
 
 end

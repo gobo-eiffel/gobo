@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class RX_TEST_PCRE_REGULAR_EXPRESSION
+class RX_TEST_PCRE_REGULAR_EXPRESSION
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

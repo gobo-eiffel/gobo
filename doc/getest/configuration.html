@@ -58,7 +58,7 @@ color="#800000"><em>&quot;X&quot;</em></font>)<em>
     </em><font color="#000080"><em><strong>testgen</strong></em></font><em> </em>(<font
 color="#800000"><em>&quot;TESTGEN&quot;</em></font>)<em>
     </em><font color="#000080"><em><strong>compile</strong></em></font><em> </em>(<font
-color="#800000"><em>&quot;compile se.ace&quot;</em></font>)<em>
+color="#800000"><em>&quot;gec ge.xace&quot;</em></font>)<em>
     </em><font color="#000080"><em><strong>execute</strong></em></font><em> </em>(<font
 color="#800000"><em>&quot;my_test&quot;</em></font>)<em>
 
@@ -98,12 +98,17 @@ in other words class names with the prefix <font color="#008080"><em><tt>TEST_</
 This clause can be overriden by <em>getest</em>'s command-line
 option <font color="#800000"><tt>--</tt></font><a
 href="options.html#class"><font color="#800000"><tt>class</tt></font></a><font
-color="#800000"><tt>=&lt;regexp&gt;</tt></font>. For each test
-case class found <em>getest</em> will generate a new class
-inheriting from this former class and equipped with testing
-facilities. Furthermore each test case class defines a series of
-individual test procedures identified by feature names matching
-the regular expression specified in the <a name="feature"><font
+color="#800000"><tt>=&lt;regexp&gt;</tt></font>. The new way of
+writing test cases is to make sure that the class declares <font
+color="#008080"><em><tt>make_default </tt></em></font>inherited
+from <font color="#008080"><em><tt>TS_TEST_CASE </tt></em></font>as
+creation procedure. For backward compatibility, for each found
+test case class that appears to be deferred <em>getest </em>will
+generate a new class inheriting from this former class with <font
+color="#008080"><em><tt>make_default </tt></em></font>as creation
+procedure. Each test case class defines a series of individual
+test procedures identified by feature names matching the regular
+expression specified in the <a name="feature"><font
 color="#000080"><em><strong><tt>feature</tt></strong></em></font></a><font
 color="#000080"><em><strong><tt> </tt></strong></em></font>clause
 of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
@@ -120,9 +125,10 @@ specified in the configuration file are also case-insensitive.</p>
 <p>We already saw that <em>getest</em> generates the root class
 of the test suite program with the name specified in the <font
 color="#000080"><em><strong><tt>test </tt></strong></em></font>section.
-The new classes generated after the test case classes will have
-names derived from these former classes by adding the prefix
-specified in the <font color="#000080"><em><strong><tt>prefix </tt></strong></em></font>clause
+The new classes generated after the test case classes (when
+deferred, as explained above) will have names derived from these
+former classes by adding the prefix specified in the <font
+color="#000080"><em><strong><tt>prefix </tt></strong></em></font>clause
 of the <font color="#000080"><em><strong><tt>default</tt></strong></em></font>
 section. For example if a test case class is named <font
 color="#008080"><em><tt>TEST_FOO</tt></em></font>, then the
@@ -150,20 +156,20 @@ It can be either a direct call to the Eiffel compiler executable,
 a call to a script or use a <font color="#800000"><tt>Makefile</tt></font>
 and <font color="#800000"><tt>geant</tt></font> build file. It
 can also redirect its output to a temporary file to avoid too
-much noice on the screen. The default value for the <font
+much noise on the screen. The default value for the <font
 color="#000080"><em><strong><tt>compile</tt></strong></em></font>
 clause is <font color="#800000"><tt>&quot;geant compile&quot;</tt></font>,
 or <font color="#800000"><tt>&quot;geant
 compile_&lt;compiler&gt;&quot; </tt></font>where <font
 color="#800000"><tt>&lt;compiler&gt;</tt></font> stands for
-either <font color="#800000"><tt>ise</tt></font>, <font
-color="#800000"><tt>se</tt></font>
-or <font color="#800000"><tt>ve</tt></font> if <em>getest</em>
-has been invoked with the option <font color="#800000"><tt>--</tt></font><a
-href="options.html#ise"><font color="#800000"><tt>ise</tt></font></a>,
-<font color="#800000"><tt>--</tt></font><a href="options.html#se"><font
-color="#800000"><tt>se</tt></font></a> or <font color="#800000"><tt>--</tt></font><a
-href="options.html#ve"><font color="#800000"><tt>ve</tt></font></a>.</p>
+either <font color="#800000"><tt>ge</tt></font>, <font
+color="#800000"><tt>ise</tt></font> or <font color="#800000"><tt>se</tt></font>
+if <em>getest</em> has been invoked with the option <font
+color="#800000"><tt>--</tt></font><a href="options.html#ge"><font
+color="#800000"><tt>ge</tt></font></a>, <font color="#800000"><tt>--</tt></font><a
+href="options.html#ise"><font color="#800000"><tt>ise</tt></font></a>
+or <font color="#800000"><tt>--</tt></font><a
+href="options.html#se"><font color="#800000"><tt>se</tt></font></a>.</p>
 
 <h2><a name="execute">Running Test Cases</a></h2>
 
@@ -180,15 +186,16 @@ suite specified in the <font color="#000080"><em><strong><tt>test
 </tt></strong></em></font>section and <font color="#800000"><tt>[-D
 name=value]*</tt></font> are the <a href="options.html#define">variables</a>
 defined on the command-line. But it can easily be changed to <font
-color="#800000"><tt>&quot;cd EIFGEN/W_code; ./my_test&quot;</tt></font>
-when using the ISE Eiffel compiler for example.</p>
+color="#800000"><tt>&quot;cd EIFGENs/my_test/W_code;
+./my_test&quot;</tt></font> when using the ISE Eiffel compiler
+for example.</p>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2001</b></font><font
+            <font size="2"><b>Copyright © 2001-2008</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -198,7 +205,7 @@ when using the ISE Eiffel compiler for example.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 10 November 2001</font><br>
+            <strong>Last Updated:</strong> 13 February 2008</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

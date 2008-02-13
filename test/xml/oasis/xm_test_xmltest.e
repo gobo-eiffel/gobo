@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_XMLTEST
+class XM_TEST_XMLTEST
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 
 	XMLCONF_XMLTEST_FILES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Deviant tests
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class GEANT_TEST_SHARED_PROPERTIES
+class GEANT_TEST_SHARED_PROPERTIES
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 		redefine
 			tear_down, set_up
 		end
+
+create
+
+	make_default
 
 feature -- Test
 

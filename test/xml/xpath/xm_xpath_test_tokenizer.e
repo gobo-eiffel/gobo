@@ -10,16 +10,20 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class XM_XPATH_TEST_TOKENIZER
+class XM_XPATH_TEST_TOKENIZER
 
 inherit
 
 	TS_TEST_CASE
-	
+
 	XM_XPATH_TOKENS
 
 	KL_IMPORTED_STRING_ROUTINES
-	
+
+create
+
+	make_default
+
 feature -- Test
 
 	test_simple is

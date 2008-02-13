@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_DIRECTORY
+class KL_TEST_DIRECTORY
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	UC_SHARED_STRING_COMPARATOR
 	KL_IMPORTED_STRING_ROUTINES
+
+create
+
+	make_default
 
 feature -- Test
 

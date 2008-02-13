@@ -10,11 +10,15 @@ indexing
 	revision: "$Revision$"
 	date: "$Date$"
 
-deferred class UT_TEST_URI_PARSER
+class UT_TEST_URI_PARSER
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Tests
 

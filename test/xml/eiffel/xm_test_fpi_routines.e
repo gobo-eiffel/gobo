@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_FPI_ROUTINES
+class XM_TEST_FPI_ROUTINES
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	XM_FORMAL_PUBLIC_IDENTIFIER_ROUTINES
 
 	KL_IMPORTED_STRING_ROUTINES
+
+create
+
+	make_default
 
 feature -- Access
 

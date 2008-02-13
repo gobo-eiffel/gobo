@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class MA_TEST_DECIMAL
+class MA_TEST_DECIMAL
 
 inherit
 
@@ -26,6 +26,10 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DP_TEST_SINGLETON
+class DP_TEST_SINGLETON
 
 inherit
 
@@ -23,6 +23,10 @@ inherit
 
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Tests
 

@@ -1,16 +1,16 @@
 indexing
-	
+
 	description:
-	
+
 		"Test xpointer parser"
-		
+
 	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_XPOINTER_TEST_PARSER
+
+class XM_XPOINTER_TEST_PARSER
 
 inherit
 
@@ -18,6 +18,9 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+create
+
+	make_default
 
 feature -- Test
 
@@ -36,7 +39,7 @@ feature -- Test
 			assert_strings_equal ("First scheme is element", "element", a_parser.scheme_sequence.item (2))
 			assert_strings_equal ("Second scheme data", "boy-blue/3", a_parser.scheme_data.item (2))
 		end
-	
+
 	test_two_schemes_with_white_space is
 			-- Test parsing two schemes separated by white space.
 		local
@@ -81,6 +84,6 @@ feature -- Test
 			a_parser.parse ("fred:jim")
 			assert ("Parse in error", a_parser.is_error)
 		end
-	
+
 end
-			
+

@@ -15,11 +15,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_ONCE_RECURSIVE
+class TEST_ONCE_RECURSIVE
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

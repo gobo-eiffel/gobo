@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_INTEGER_ROUTINES
+class KL_TEST_INTEGER_ROUTINES
 
 inherit
 	
@@ -20,6 +20,10 @@ inherit
 		export {NONE} all end
 
 	KL_SHARED_PLATFORM
+
+create
+
+	make_default
 
 feature -- Test
 

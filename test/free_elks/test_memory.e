@@ -14,17 +14,15 @@ class TEST_MEMORY
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
 
 	MEMORY
 
-feature -- Test
+create
 
-	run_all is
-			-- Run all tests.
-		do
-			test_is_in_final_collect
-		end
+	make_default
+
+feature -- Test
 
 	test_is_in_final_collect is
 			-- Test feature 'is_in_final_collect'.

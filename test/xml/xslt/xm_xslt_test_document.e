@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_DOCUMENT
+class XM_XSLT_TEST_DOCUMENT
 
 inherit
 
@@ -25,8 +25,12 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_RESOLVER_FACTORY
-	
-feature
+
+create
+
+	make_default
+
+feature -- Test
 
 	test_document_function is
 			-- Test of document() function.

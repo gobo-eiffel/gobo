@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_CATALOG
+class XM_TEST_CATALOG
 
 inherit
 
@@ -26,6 +26,10 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 
 	XM_SHARED_CATALOG_MANAGER
+
+create
+
+	make_default
 
 feature -- Tests
 

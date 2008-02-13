@@ -14,15 +14,13 @@ class TEST_DIRECTORY
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_has_entry
-		end
 
 	test_has_entry is
 			-- Test feature 'has_entry'.

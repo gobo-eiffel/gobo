@@ -10,11 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class DS_TEST_MULTIARRAYED_HASH_SET
+class DS_TEST_MULTIARRAYED_HASH_SET
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

@@ -10,12 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KS_TEST_ARRAY
+class KS_TEST_ARRAY
 
 inherit
 
 	KL_TEST_CASE
+
 	KL_SHARED_EIFFEL_COMPILER
+
+create
+
+	make_default
 
 feature -- Test
 

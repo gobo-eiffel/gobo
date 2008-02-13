@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_UNICODE_FUNCTIONS
+class XM_XPATH_TEST_UNICODE_FUNCTIONS
 
 inherit
 
@@ -36,7 +36,11 @@ inherit
 		export {NONE} all end
 
 	UC_IMPORTED_UNICODE_ROUTINES
-		
+
+create
+
+	make_default
+
 feature -- Tests
 
 	test_upper_case is

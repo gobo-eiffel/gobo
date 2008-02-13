@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_CHARACTER_ROUTINES
+class KL_TEST_CHARACTER_ROUTINES
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 
 	KL_IMPORTED_CHARACTER_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

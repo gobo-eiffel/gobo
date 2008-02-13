@@ -1,16 +1,16 @@
 indexing
-	
+
 	description:
-	
+
 		"Test xpointer evaluation for the XPath implementation"
-		
+
 	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_XPOINTER_TEST_EVALUATION_XPATH
+
+class XM_XPOINTER_TEST_EVALUATION_XPATH
 
 inherit
 
@@ -28,9 +28,13 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-	
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

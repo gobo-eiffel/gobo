@@ -14,31 +14,13 @@ class TEST_PLATFORM
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_character_bytes
-			test_integer_8_bytes
-			test_integer_16_bytes
-			test_integer_32_bytes
-			test_integer_64_bytes
-			test_natural_8_bytes
-			test_natural_16_bytes
-			test_natural_32_bytes
-			test_natural_64_bytes
-			test_integer_8_bits
-			test_integer_16_bits
-			test_integer_32_bits
-			test_integer_64_bits
-			test_natural_8_bits
-			test_natural_16_bits
-			test_natural_32_bits
-			test_natural_64_bits
-		end
 
 	test_character_bytes is
 			-- Test feature 'character_bytes'.

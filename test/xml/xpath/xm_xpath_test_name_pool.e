@@ -1,16 +1,16 @@
 indexing
-	
+
 	description:
-	
+
 		"Test name pool"
-		
+
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_XPATH_TEST_NAME_POOL
+
+class XM_XPATH_TEST_NAME_POOL
 
 inherit
 
@@ -24,6 +24,10 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XPATH_SHARED_NAME_POOL
+
+create
+
+	make_default
 
 feature -- Access
 	

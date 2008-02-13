@@ -9,12 +9,16 @@ indexing
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_TEST_XMLID
+
+class XM_TEST_XMLID
 
 inherit
 
 	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
 

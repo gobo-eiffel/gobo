@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KS_TEST_STRING
+class KS_TEST_STRING
 
 inherit
 
@@ -27,6 +27,10 @@ inherit
 
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

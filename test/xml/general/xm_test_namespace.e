@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_NAMESPACE
+class XM_TEST_NAMESPACE
 
 inherit
 
@@ -24,6 +24,10 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test printed
 

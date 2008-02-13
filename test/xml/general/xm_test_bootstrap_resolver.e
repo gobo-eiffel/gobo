@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_BOOTSTRAP_RESOLVER
+class XM_TEST_BOOTSTRAP_RESOLVER
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 
 	XM_SHARED_CATALOG_MANAGER
+
+create
+
+	make_default
 
 feature -- Access
 

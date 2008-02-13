@@ -14,38 +14,13 @@ class TEST_DOUBLE
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_default_create
-			test_less_than
-			test_less_equal
-			test_greater_than
-			test_greater_equal
-			test_out
-			test_item
-			test_set_item___fail_ise
-			test_to_reference
-			test_make_from_reference___fail_ise
-			test_infix_plus
-			test_infix_minus
-			test_infix_times
-			test_infix_divide
-			test_infix_power
-			test_prefix_minus
-			test_prefix_plus
-			test_truncated_to_integer
-			test_truncated_to_integer_64
-			test_truncated_to_real
-			test_ceiling_real_64
-			test_floor_real_64
-			test_abs
-			test_convert
-		end
 
 	test_default_create is
 			-- Test feature 'default_create'.

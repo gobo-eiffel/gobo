@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_TEST_AST_PRINTER
+class ET_TEST_AST_PRINTER
 
 inherit
 
@@ -36,6 +36,10 @@ inherit
 
 	UT_SHARED_ECMA_VERSIONS
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

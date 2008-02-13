@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class GEANT_TEST_MAP
+class GEANT_TEST_MAP
 
 inherit
 
@@ -21,6 +21,10 @@ inherit
 
 	KL_SHARED_STREAMS
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

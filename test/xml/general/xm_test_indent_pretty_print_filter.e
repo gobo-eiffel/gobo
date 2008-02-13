@@ -1,24 +1,28 @@
 indexing
 
 	description:
-	
+
 		"Test XM_INDENT_PRETTY_PRINT_FILTER and XM_WHITESPACE_NORMALIZER"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_INDENT_PRETTY_PRINT_FILTER
+class XM_TEST_INDENT_PRETTY_PRINT_FILTER
 
 inherit
-	
+
 	TS_TEST_CASE
-	
+
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
-		
+
+create
+
+	make_default
+
 feature -- Tests
 
 	test_simple_indent is

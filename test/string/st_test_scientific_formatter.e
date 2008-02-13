@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision$"
 
 
-deferred class ST_TEST_SCIENTIFIC_FORMATTER
+class ST_TEST_SCIENTIFIC_FORMATTER
 
 inherit
 
@@ -22,6 +22,10 @@ inherit
 
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

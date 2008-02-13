@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_SCHEMATRON
+class XM_XSLT_TEST_SCHEMATRON
 
 inherit
 
@@ -31,7 +31,11 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
-feature
+create
+
+	make_default
+
+feature -- Test
 
 	test_schematron_basic is
 			-- Tests compiling schematron-basic

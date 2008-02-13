@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XPATH_TEST_CARDINALITY_CHECKS
+class XM_XPATH_TEST_CARDINALITY_CHECKS
 
 inherit
 
@@ -34,7 +34,11 @@ inherit
 	
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-		
+
+create
+
+	make_default
+
 feature -- Test
 
 	test_zero_or_one_no_error is

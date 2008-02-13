@@ -14,34 +14,13 @@ class TEST_SPECIAL
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_make
-			test_count
-			test_capacity
-			test_lower
-			test_upper
-			test_item_address
-			test_item
-			test_alias_bracket
-			test_infix_at
-			test_index_of
-			test_all_default
-			test_same_items
-			test_valid_index
-			test_put
-			test_fill_with
-			test_copy_data
-			test_move_data
-			test_clear_all
-			test_resized_area
-			test_aliased_resized_area
-		end
 
 	test_make is
 			-- Test feature 'make'.

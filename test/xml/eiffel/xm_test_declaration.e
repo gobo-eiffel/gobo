@@ -9,14 +9,18 @@ indexing
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_TEST_DECLARATION
+
+class XM_TEST_DECLARATION
 
 inherit
 
 	TS_TEST_CASE
 	
 	XM_CALLBACKS_FILTER_FACTORY
+
+create
+
+	make_default
 
 feature -- Test
 

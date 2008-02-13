@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Testers"
+		"Testers: test harness to execute registered test cases"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TS_TESTER
+class TS_TESTER
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_STANDARD_FILES
+
+create
+
+	make_default, make
 
 feature {NONE} -- Initialization
 
@@ -30,42 +34,42 @@ feature {NONE} -- Initialization
 		end
 
 	make is
-			-- Create a new tester and execute it.
-		local
-			a_file: KL_TEXT_OUTPUT_FILE
-			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
+			-- Create a new tester, read command-line options and execute the tests.
+			-- This is meant to be the root creation procedure of a test harness
+			-- application. The application will be exited with different exit codes
+			-- when errors occur. Use `make_default' instead when this created tester
+			-- is not meant to be the root of a test harness application.
 		do
+			exit_on_error := True
 			make_default
 			read_command_line
-			if output_filename /= Void then
-				create a_file.make (output_filename)
-				a_file.open_write
-				if a_file.is_open_write then
-					execute (a_file)
-					a_file.close
-				else
-					create cannot_write.make (output_filename)
-					error_handler.report_error (cannot_write)
-				end
-			else
-				execute (std.output)
-			end
+			build_suite
+			execute
 		end
 
 feature -- Access
 
 	suite: TS_TEST_SUITE is
 			-- Suite of tests to be run
-		deferred
+		do
+			if internal_suite = Void then
+				create internal_suite.make (generator.as_lower, variables)
+			end
+			Result := internal_suite
 		ensure
 			suite_not_void: Result /= Void
 		end
 
 	variables: TS_VARIABLES
-			-- Defined variables
+			-- Defined variables (to be passed to the test cases)
 
 	output_filename: STRING
-			-- Output filename
+			-- Output filename where messages and summary about
+			-- the tests will be printed
+			-- (Use standard output when not specified.)
+
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
 
 feature -- Status report
 
@@ -80,10 +84,79 @@ feature -- Status report
 			-- Should progress status be printed while
 			-- executing the test cases?
 
+	exit_on_error: BOOLEAN
+			-- Should the application exit (with the appropriate error code)
+			-- when an error occur?
+			-- (Useful when the current tester is root of a test harness
+			-- application, otherwise return False.)
+
+feature -- Status setting
+
+	set_fail_on_rescue (b: BOOLEAN) is
+			-- Set `fail_on_rescue' to `b'.
+		do
+			fail_on_rescue := b
+		ensure
+			fail_on_rescue_set: fail_on_rescue = b
+		end
+
+	set_progress_status (b: BOOLEAN) is
+			-- Set `progress_status' to `b'.
+		do
+			progress_status := b
+		ensure
+			progress_status_set: progress_status = b
+		end
+
+feature -- Element change
+
+	put_test (a_test: TS_TEST_CASE) is
+			-- Register `a_test' to be excuted by the current tester.
+			-- Note that if several test features need to be registered
+			-- for a given test case, a different instance of the test
+			-- case should be provided for each registration. In other
+			-- words, each test features should be run each on a different
+			-- test object.
+		require
+			a_test_not_void: a_test /= Void
+		do
+			a_test.set_variables (variables)
+			suite.put_test (a_test)
+		end
+
+	build_suite is
+			-- Add to `suite' the test cases that need to executed.
+		do
+		end
+
 feature -- Execution
 
-	execute (a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Execute tester.
+	execute is
+			-- Execute the tests.
+			-- Output messages will be printed to `output_filename'
+			-- if specified, to standard output otherwise.
+		local
+			a_file: KL_TEXT_OUTPUT_FILE
+			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
+		do
+			if output_filename /= Void then
+				create a_file.make (output_filename)
+				a_file.open_write
+				if a_file.is_open_write then
+					execute_with_output (a_file)
+					a_file.close
+				else
+					create cannot_write.make (output_filename)
+					report_error (cannot_write)
+				end
+			else
+				execute_with_output (std.output)
+			end
+		end
+
+	execute_with_output (a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Execute the tests.
+			-- Output messages will be printed to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -109,7 +182,9 @@ feature -- Execution
 					a_file.put_new_line
 					a_summary.print_errors (a_file)
 				end
-				Exceptions.die (3)
+				if exit_on_error then
+					Exceptions.die (3)
+				end
 			end
 		end
 
@@ -186,8 +261,17 @@ feature {NONE} -- Command line
 
 feature {NONE} -- Error handling
 
-	error_handler: UT_ERROR_HANDLER
-			-- Error handler
+	report_error (an_error: UT_ERROR) is
+			-- Report `an_error'.
+			-- Terminate with exit status 1 if `exit_on_error' is True.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			error_handler.report_error (an_error)
+			if exit_on_error then
+				Exceptions.die (1)
+			end
+		end
 
 	report_usage_error is
 			-- Report usage error and then terminate
@@ -204,6 +288,11 @@ feature {NONE} -- Error handling
 		ensure
 			usage_message_not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementation
+
+	internal_suite: TS_TEST_SUITE
+			-- Internal implementation of `suite'
 
 invariant
 

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_XSLT_TEST_GOBO2HTML
+class XM_XSLT_TEST_GOBO2HTML
 
 inherit
 
@@ -21,7 +21,11 @@ inherit
 	XM_XPATH_SHARED_CONFORMANCE
 
 	XM_XPATH_SHARED_NAME_POOL
-	
+
+create
+
+	make_default
+
 feature -- Test
 
 	test_transform2html is

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class TEST_PRECOMP
+class TEST_PRECOMP
 
 inherit
 
@@ -30,6 +30,10 @@ inherit
 
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

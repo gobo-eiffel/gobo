@@ -10,13 +10,17 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ST_TEST_CASE_MAPPINGS
+class ST_TEST_CASE_MAPPINGS
 
 inherit
 
 	TS_TEST_CASE
 
 	ST_UNICODE_FULL_CASE_MAPPING
+
+create
+
+	make_default
 
 feature -- Test
 

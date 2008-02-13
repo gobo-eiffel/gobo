@@ -14,19 +14,13 @@ class TEST_CHARACTER
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_default_create
-			test_less_than
-			test_less_equal
-			test_greater_than
-			test_greater_equal
-		end
 
 	test_default_create is
 			-- Test feature 'default_create'.

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_SIMPLE_RESOLVER
+class XM_TEST_SIMPLE_RESOLVER
 
 inherit
 
@@ -18,6 +18,10 @@ inherit
 
 	XM_RESOLVER_FACTORY
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature -- Test
 

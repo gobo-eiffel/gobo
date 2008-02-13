@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class XM_TEST_CALLBACK
+class XM_TEST_CALLBACK
 
 inherit
 
@@ -46,6 +46,10 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_OPERATING_SYSTEM
+
+create
+
+	make_default
 
 feature {NONE} -- Initialization
 

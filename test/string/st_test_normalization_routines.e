@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ST_TEST_NORMALIZATION_ROUTINES
+class ST_TEST_NORMALIZATION_ROUTINES
 
 inherit
 
@@ -19,6 +19,10 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 
 	ST_UNICODE_NORMALIZATION_ROUTINES
+
+create
+
+	make_default
 
 feature -- Test
 

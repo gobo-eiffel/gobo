@@ -8,7 +8,7 @@ default
 	feature ("test_[a-z0-9_]*")
 	prefix ("X")
 	testgen (".")
-	compile ("geant compile_ve > xcompile.log 2>&1")
+	compile ("geant compile_ge > xcompile.log 2>&1")
 	execute ("xtester")
 
 cluster

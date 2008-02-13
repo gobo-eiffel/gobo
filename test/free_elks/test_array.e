@@ -14,26 +14,13 @@ class TEST_ARRAY
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_manifest_array_character
-			test_manifest_array_boolean
-			test_manifest_array_integer_8
-			test_manifest_array_integer_16
-			test_manifest_array_integer_32
-			test_manifest_array_integer_64
-			test_manifest_array_natural_8
-			test_manifest_array_natural_16
-			test_manifest_array_natural_32
-			test_manifest_array_natural_64
-			test_manifest_array_real_32
-			test_manifest_array_real_64
-		end
 
 	test_manifest_array_character is
 			-- Test manifest arrays of CHARACTER.

@@ -14,37 +14,13 @@ class TEST_TUPLE
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_labels
-			test_polymorphic_labels
-			test_label_setters
-			test_polymorphic_label_setters
-			test_count
-			test_boolean_item
-			test_character_8_item
-			test_integer_item
-			test_reference_item
-			test_item
-			test_is_boolean_item
-			test_is_character_8_item
-			test_is_integer_item
-			test_is_reference_item
-			test_put_boolean
-			test_put_integer
-			test_put_reference
-			test_put
-			test_object_comparison
-			test_valid_type_for_index
-			test_boxed_items
-			test_twin
-			test_deep_twin
-		end
 
 	test_labels is
 			-- Test labeled tuples.

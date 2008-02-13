@@ -14,25 +14,13 @@ class TEST_PROCEDURE
 
 inherit
 
-	TEST_CASE
+	TS_TEST_CASE
+
+create
+
+	make_default
 
 feature -- Test
-
-	run_all is
-			-- Run all tests.
-		do
-			test_call_qualified1
-			test_call_qualified2
-			test_call_qualified3
-			test_call_typed1
-			test_call_typed2
-			test_call_typed3
-			test_call_unqualified1
-			test_valid_operands
-			test_boxed_operands
-			test_twin
-			test_deep_twin
-		end
 
 	test_call_qualified1 is
 			-- Test feature 'call' with a closed qualified target.

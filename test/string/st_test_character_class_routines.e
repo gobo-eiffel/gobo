@@ -10,12 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ST_TEST_CHARACTER_CLASS_ROUTINES
+class ST_TEST_CHARACTER_CLASS_ROUTINES
 
 inherit
 
 	TS_TEST_CASE
 	ST_UNICODE_CHARACTER_CLASS_ROUTINES
+
+create
+
+	make_default
 
 feature -- Test
 

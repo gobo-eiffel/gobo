@@ -10,12 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_TEST_STDOUT_FILE
+class KL_TEST_STDOUT_FILE
 
 inherit
 
 	KL_TEST_CASE
 	KL_SHARED_STANDARD_FILES
+
+create
+
+	make_default
 
 feature -- Status report
 

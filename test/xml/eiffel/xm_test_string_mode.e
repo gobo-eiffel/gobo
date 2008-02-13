@@ -9,8 +9,8 @@ indexing
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class XM_TEST_STRING_MODE
+
+class XM_TEST_STRING_MODE
 
 inherit
 
@@ -21,6 +21,10 @@ inherit
 
 	UC_UNICODE_FACTORY
 		export {NONE} all end
+
+create
+
+	make_default
 
 feature {NONE} -- Test case
 
