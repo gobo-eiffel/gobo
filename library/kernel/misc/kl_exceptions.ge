@@ -12,7 +12,7 @@ indexing
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,20 @@ class KL_EXCEPTIONS
 
 inherit
 
-	EXCEPTIONS
+	KI_EXCEPTIONS
 
+	EXCEPTIONS
+		export {NONE} all end
+
+#ifdef SE
+feature -- Status report
+
+	exception_trace: STRING is
+			-- String representation of the exception trace;
+			-- Note that the string may be Void or always return
+			-- the same object depending on the implementation.
+		do
+		end
+
+#endif
 end

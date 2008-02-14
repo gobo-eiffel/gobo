@@ -97,12 +97,15 @@ Version 3.8 - ?
 	* Fixed bug#1875809 where libraries were duplicated in the generated
 	  output file when appearing twice in the same Xace input file.
 
-
 	Gobo Eiffel Kernel Library:
 
 	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')
 	  in class KL_DIRECTORY.
 	* Added feature `prune_all_trailing' to KL_STRING_ROUTINES.
+	* Improved class KL_EXCEPTIONS to make it clearer what is available
+	  for all Eiffel compilers and what is not.
+	* Added KL_MEMORY and friends to provide a compiler independent way
+	  to access garbage collection facilities.
 
 	Gobo Eiffel String Library:
 

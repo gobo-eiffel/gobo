@@ -274,12 +274,22 @@
 		<geant target="ge2e">
 			<argument name="spec_dir" value="spec"/>
 			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_exceptions"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
 			<argument name="gepp_file" value="kl_execution_environment"/>
 		</geant>
 		<geant target="ge2e">
 			<argument name="spec_dir" value="spec"/>
 			<argument name="gepp_dir" value="misc"/>
 			<argument name="gepp_file" value="kl_hashable_routines"/>
+		</geant>
+		<geant target="ge2e">
+			<argument name="spec_dir" value="spec"/>
+			<argument name="gepp_dir" value="misc"/>
+			<argument name="gepp_file" value="kl_memory"/>
 		</geant>
 		<geant target="ge2e">
 			<argument name="spec_dir" value="spec"/>
