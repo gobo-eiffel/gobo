@@ -18,6 +18,10 @@ inherit
 
 	TS_ASSERTION_ROUTINES
 
+	KL_SHARED_EXCEPTIONS
+
+	KL_SHARED_MEMORY
+
 feature {NONE} -- Initialization
 
 	make_default is
@@ -137,7 +141,10 @@ feature -- Execution
 
 	execute (a_summary: TS_SUMMARY) is
 			-- Run test and put results in `a_summary'.
+		local
+			l_collecting: BOOLEAN
 		do
+			l_collecting := memory.collecting
 			assertions.reset
 			a_summary.start_test (Current)
 			if a_summary.fail_on_rescue then
@@ -147,6 +154,17 @@ feature -- Execution
 			end
 			a_summary.end_test (Current, assertions.count)
 			assertions.reset
+				-- Make sure that the garbage collector is in the
+				-- same state as before running the test.
+			if l_collecting /= memory.collecting then
+				if l_collecting then
+					memory.collection_on
+					memory.full_collect
+					memory.full_coalesce
+				else
+					memory.collection_off
+				end
+			end
 		end
 
 	set_up is
@@ -204,6 +222,7 @@ feature {NONE} -- Execution
 			retried: BOOLEAN
 			i, nb: INTEGER
 			an_error_messages: DS_ARRAYED_LIST [STRING]
+			l_message: STRING
 		do
 			if not retried then
 				execute_without_rescue (a_summary)
@@ -224,7 +243,21 @@ feature {NONE} -- Execution
 						end
 					end
 				else
-					a_summary.put_abort (Current, "Eiffel exception")
+						-- Report any test failure before reporting the Eiffel exception.
+					an_error_messages := assertions.error_messages
+					nb := an_error_messages.count
+					from i := 1 until i > nb loop
+						a_summary.put_failure (Current, an_error_messages.item (i))
+						i := i + 1
+					end
+						-- Report the Eiffel exception.
+					l_message := Exceptions.exception_trace
+					if l_message = Void or else l_message.is_empty then
+						l_message := "Eiffel exception"
+					else
+						l_message := "Eiffel exception%N" + l_message
+					end
+					a_summary.put_abort (Current, l_message)
 				end
 			end
 		rescue

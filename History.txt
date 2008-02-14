@@ -68,6 +68,10 @@ Version 3.8 - ?
 	  inheriting from TEST_...) anymore, and hence it is easier to call test
 	  cases outside of the test framework.
 	* Removed the command-line option --ve and replaced it by --ge.
+	* Print the exception trace if available when an exception occurred
+	  while running a test case.
+	* Make sure that the garbage collector is in the same state as before
+	  running each test case.
 
 	gexace:
 
