@@ -26,9 +26,22 @@ feature -- Status report
 		deferred
 		end
 
+	is_developer_exception: BOOLEAN is
+			-- Is the last exception originally due to
+			-- a developer exception?
+		deferred
+		end
+
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
 			-- Is the last exception originally due to a developer
 			-- exception of name `name'?
+		deferred
+		end
+
+	developer_exception_name: STRING is
+			-- Name of last developer-raised exception
+		require
+			applicable: is_developer_exception
 		deferred
 		end
 
