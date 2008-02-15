@@ -21,6 +21,11 @@ feature -- Status report
 		deferred
 		end
 
+	exception: INTEGER is
+			-- Code of last exception that occurred
+		deferred
+		end
+
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
 			-- Is the last exception originally due to a developer
 			-- exception of name `name'?
