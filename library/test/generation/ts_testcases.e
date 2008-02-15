@@ -124,7 +124,7 @@ feature -- Generation
 				a_file.put_new_line
 				a_file.put_line ("create")
 				a_file.put_new_line
-				a_file.put_line ("%Tmake_default, make_test")
+				a_file.put_line ("%Tmake_default")
 				a_file.put_new_line
 				a_file.put_line ("end")
 				a_file.close
