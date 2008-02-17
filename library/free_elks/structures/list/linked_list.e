@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 	frozen internal_wipe_out is
 			-- Remove all items.
 			--| Used by `copy' instead of `wipe_out' to ensure that it
-			--| will behave consistently even in descendants that 
+			--| will behave consistently even in descendants that
 			--| redefine `wipe_out'.
 		require
 			prunable
@@ -673,7 +673,7 @@ feature {NONE} -- Implementation
 invariant
 
 	prunable: prunable
-	empty_constraint: is_empty implies ((first_element = Void) and 
+	empty_constraint: is_empty implies ((first_element = Void) and
 				(active = Void))
 	not_void_unless_empty: (active = Void) implies is_empty
 	before_constraint: before implies (active = first_element)

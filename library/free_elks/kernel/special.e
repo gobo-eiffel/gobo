@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	frozen make (n: INTEGER)
+	make (n: INTEGER)
 			-- Create a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			area_allocated: count = n
 		end
 
-	frozen make_from_native_array (an_array: like native_array)
+	make_from_native_array (an_array: like native_array)
 			-- Create a special object from `an_array'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen item alias "[]" (i: INTEGER): T assign put
+	item alias "[]" (i: INTEGER): T assign put
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -51,7 +51,7 @@ feature -- Access
 			"built_in"
 		end
 
-	frozen infix "@" (i: INTEGER): T
+	infix "@" (i: INTEGER): T
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -61,7 +61,7 @@ feature -- Access
 			Result := item (i)
 		end
 
-	frozen index_of (v: T; start_position: INTEGER): INTEGER
+	index_of (v: T; start_position: INTEGER): INTEGER
 			-- Index of first occurrence of item identical to `v'.
 			-- -1 if none.
 			-- (Use object equality for comparison.)
@@ -85,7 +85,7 @@ feature -- Access
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
 
-	frozen item_address (i: INTEGER): POINTER
+	item_address (i: INTEGER): POINTER
 			-- Address of element at position `i'
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
@@ -97,7 +97,7 @@ feature -- Access
 			element_address_not_null: Result /= default_pointer
 		end
 
-	frozen base_address: POINTER
+	base_address: POINTER
 			-- Address of element at position `0'
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
@@ -107,7 +107,7 @@ feature -- Access
 			base_address_not_null: Result /= default_pointer
 		end
 
-	frozen native_array: NATIVE_ARRAY [T]
+	native_array: NATIVE_ARRAY [T]
 			-- Only for compatibility with .NET
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -119,81 +119,91 @@ feature -- Measurement
 	lower: INTEGER = 0
 			-- Minimum index of Current
 
-	frozen upper: INTEGER
+	upper: INTEGER
 			-- Maximum index of Current
 		do
 			Result := count - 1
+		ensure
+			definition: lower <= Result + 1
 		end
 
-	frozen count: INTEGER
+	count: INTEGER
 			-- Count of special area
 		external
 			"built_in"
 		end
 
-	frozen capacity: INTEGER
+	capacity: INTEGER
 			-- Count of special area
 		do
 			Result := count
+		ensure
+			capacity_non_negative: Result >= 0
 		end
 
 feature -- Status report
 
-	frozen all_default (upper_bound: INTEGER): BOOLEAN
-			-- Are all items between index `0' and `upper_bound'
+	all_default (start_index, end_index: INTEGER): BOOLEAN
+			-- Are all items between index `start_index' and `end_index'
 			-- set to default values?
 		require
-			min_upper_bound: upper_bound >= -1
-			max_upper_bound: upper_bound < count
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
 		local
 			i: INTEGER
 			t: T
 		do
 			from
 				Result := True
+				i := start_index
 			until
-				i > upper_bound or else not Result
+				i > end_index or else not Result
 			loop
 				Result := item (i) = t
 				i := i + 1
 			end
 		ensure
-			valid_on_empty_area: upper_bound = -1 implies Result
+			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
-	frozen same_items (other: like Current; upper_bound: INTEGER): BOOLEAN
-			-- Do all items between index `0' and `upper_bound' have
+	same_items (other: like Current; start_index, end_index: INTEGER): BOOLEAN
+			-- Do all items between index `start_index' and `end_index' have
 			-- same value?
 			-- (Use reference equality for comparison.)
 		require
-			min_upper_bound: upper_bound >= -1
-			max_upper_bound: upper_bound < count
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
 			other_not_void: other /= Void
-			other_has_enough_items: upper_bound < other.count
+			other_has_enough_items: end_index < other.count
 		local
 			i: INTEGER
 		do
 			from
 				Result := True
+				i := start_index
 			until
-				i > upper_bound or else not Result
+				i > end_index or else not Result
 			loop
 				Result := item (i) = other.item (i)
 				i := i + 1
 			end
 		ensure
-			valid_on_empty_area: upper_bound = -1 implies Result
+			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
-	frozen valid_index (i: INTEGER): BOOLEAN
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
-			Result := (0 <= i) and then (i < count)
+			Result := (0 <= i) and (i < count)
+		ensure
+			definition: Result = ((0 <= i) and (i < count))
 		end
 
 feature -- Element change
 
-	frozen put (v: T; i: INTEGER)
+	put (v: T; i: INTEGER)
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require
@@ -201,13 +211,15 @@ feature -- Element change
 			index_small_enough: i < count
 		external
 			"built_in"
+		ensure
+			inserted: item (i) = v
 		end
 
-	frozen fill_with (v: T; start_index, end_index: INTEGER)
+	fill_with (v: T; start_index, end_index: INTEGER)
 			-- Set items between `start_index' and `end_index' with `v'.
 		require
 			start_index_non_negative: start_index >= 0
-			start_index_not_too_big: start_index <= end_index
+			start_index_not_too_big: start_index <= end_index + 1
 			end_index_valid: end_index < count
 		local
 			i, nb: INTEGER
@@ -221,9 +233,11 @@ feature -- Element change
 				put (v, i)
 				i := i + 1
 			end
+		ensure
+			filled: -- For every `i' in `start_index' .. `end_index', `item' (`i') = `v'
 		end
 
-	frozen copy_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER)
+	copy_data (other: SPECIAL [T]; source_index, destination_index, n: INTEGER)
 			-- Copy `n' elements of `other' from `source_index' position to Current at
 			-- `destination_index'. Other elements of Current remain unchanged.
 		require
@@ -252,9 +266,12 @@ feature -- Element change
 					j := j + 1
 				end
 			end
+		ensure
+			copied:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
+					-- `item' (`i') = `other'.`item' (`source_index' + `i' - `destination_index')
 		end
 
-	frozen move_data (source_index, destination_index, n: INTEGER)
+	move_data (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -278,9 +295,12 @@ feature -- Element change
 					overlapping_move (source_index, destination_index, n)
 				end
 			end
+		ensure
+			moved:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
+					-- `item' (`i') = old `item' (`source_index' + `i' - `destination_index')
 		end
 
-	frozen overlapping_move (source_index, destination_index, n: INTEGER)
+	overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -326,9 +346,12 @@ feature -- Element change
 					i := i + 1
 				end
 			end
+		ensure
+			moved:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
+					-- `item' (`i') = old `item' (`source_index' + `i' - `destination_index')
 		end
 
-	frozen non_overlapping_move (source_index, destination_index, n: INTEGER)
+	non_overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -355,26 +378,31 @@ feature -- Element change
 				put (item (i), i + l_offset)
 				i := i + 1
 			end
+		ensure
+			moved:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
+					-- `item' (`i') = `item' (`source_index' + `i' - `destination_index')
 		end
 
 feature -- Resizing
 
-	frozen resized_area (n: INTEGER): like Current
-			-- Create a copy of Current with a count of `n'.
+	resized_area (n: INTEGER): like Current
+			-- Create a copy of Current with a count of `n'
 		require
-			valid_new_count: n > count
+			n_non_negative: n >= 0
 		do
 			create Result.make (n)
-			Result.copy_data (Current, 0, 0, count)
+			Result.copy_data (Current, 0, 0, n.min (count))
 		ensure
 			Result_not_void: Result /= Void
 			Result_different_from_current: Result /= Current
 			new_count: Result.count = n
+			preserved:	-- For every `i' in `0' .. (n - 1).min (old `upper')
+						-- `item' (`i') = old `item' (`i')
 		end
 
-	frozen aliased_resized_area (n: INTEGER): like Current
+	aliased_resized_area (n: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n', if not
-			-- possible a new copy.
+			-- possible a new copy
 		require
 			valid_new_count: n > count
 		external
@@ -382,11 +410,13 @@ feature -- Resizing
 		ensure
 			Result_not_void: Result /= Void
 			new_count: Result.count = n
+			preserved:	-- For every `i' in `0' .. old `upper'
+						-- `item' (`i') = old `item' (`i')
 		end
 
 feature -- Removal
 
-	frozen clear_all
+	clear_all
 			-- Reset all items to default values.
 		local
 			i: INTEGER
@@ -400,14 +430,18 @@ feature -- Removal
 				put (v, i)
 				i := i - 1
 			end
+		ensure
+			cleared: all_default (0, upper)
 		end
 
 feature {NONE} -- Implementation
 
-	frozen element_size: INTEGER
-			-- Size of elements.
+	element_size: INTEGER
+			-- Size of elements
 		external
 			"built_in"
+		ensure
+			element_size_non_negative: Result >= 0
 		end
 
 end
