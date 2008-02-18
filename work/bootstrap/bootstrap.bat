@@ -89,6 +89,7 @@ if .%CC%. == .lcc. goto lcc-win32
 if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
+if .%CC%. == .mingw. goto mingw
 if .%CC%. == .cc. goto cc
 if .%CC%. == .icc. goto icc
 if .%CC%. == .tcc. goto tcc
@@ -132,6 +133,16 @@ goto exit
 	set LFLAG_OUT=-o 
 	set OBJ=.o
 	echo gcc > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
+
+:mingw
+	set CC=gcc
+	set LD=gcc
+	set CFLAGS=-O2
+	set LFLAGS=-lm
+	set LFLAG_OUT=-o 
+	set OBJ=.o
+	echo mingw > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
 :cc
@@ -263,7 +274,7 @@ goto exit
 
 :usage
 	echo usage: bootstrap.bat [-v][--delivery] ^<c_compiler^> ^<eiffel_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
 	echo    eiffel_compiler:  ge ^| ise ^| se
 	goto exit
 

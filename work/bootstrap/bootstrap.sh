@@ -12,7 +12,7 @@
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v][--delivery] <c_compiler> <eiffel_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | mingw | cc | icc | tcc | no_c"
 	echo "   eiffel_compiler:  ge | ise | se"
 }
 
@@ -128,6 +128,7 @@ elif [ "$EIF" = "" ]; then
 elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 	CC=cl
 	LD=link
+	EXE=.exe
 	CFLAGS='-O2 -nologo -wd4049'
 	LFLAGS='-nologo -subsystem:console'
 	LFLAG_OUT='-out:'
@@ -136,6 +137,7 @@ elif [ "$CC" = "msc" -o "$CC" = "cl" ]; then
 elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	CC=bcc32
 	LD=bcc32
+	EXE=.exe
 	CFLAGS='-5 -q -w-8004 -w-8008 -w-8057 -w-8065 -w-8066 -w-8070 -O2'
 	LFLAGS='-5 -q'
 	LFLAGS='-e'
@@ -144,6 +146,7 @@ elif [ "$CC" = "bcc" -o "$CC" = "bcc32" ]; then
 	$RM *.tds
 elif [ "$CC" = "lcc-win32" -o "$CC" = "lcc" ]; then
 	CC='lcc'
+	EXE=.exe
 #	CFLAGS='-O'   -- Problem when gec is compiled with the -O option.
 	CFLAGS=''
 	LD=lcclnk
@@ -159,6 +162,16 @@ elif [ "$CC" = "gcc" ]; then
 	LFLAGS='-lm'
 	LFLAG_OUT='-o '
 	echo gcc > $GOBO/tool/gec/config/c/default.cfg
+	c_compilation
+elif [ "$CC" = "mingw" ]; then
+	CC=gcc
+	LD=gcc
+	EXE=.exe
+#	CFLAGS='-O2'
+	CFLAGS=''
+	LFLAGS='-lm'
+	LFLAG_OUT='-o '
+	echo mingw > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
 	CC='cc'
