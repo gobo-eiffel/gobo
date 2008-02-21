@@ -30,6 +30,7 @@ extern "C" {
 #define eif_thr_cond_create() NULL
 #define eif_thr_cond_broadcast(a_cond_ptr)
 #define eif_thr_cond_wait(a_cond_ptr,a_mutex_ptr)
+#define eif_thr_cond_destroy(a_mutex_ptr)
 #define eif_thr_thread_id() NULL
 #define eif_thr_last_thread() NULL
 #define eif_thr_default_priority() 0
