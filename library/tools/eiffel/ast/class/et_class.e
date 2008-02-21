@@ -92,7 +92,6 @@ feature -- Initialization
 			-- (i.e. before it was preparsed or parsed).
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
-			reset_flat_implementation_checked
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
@@ -111,7 +110,6 @@ feature -- Initialization
 			-- Do nothing if not parsed.
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
-			reset_flat_implementation_checked
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
@@ -143,7 +141,6 @@ feature -- Initialization
 			features_not_flattened: not features_flattened
 			interface_not_checked: not interface_checked
 			implementation_not_checked: not implementation_checked
-			flat_implementation_not_checked: not flat_implementation_checked
 		end
 
 	reset_after_ancestors_built is
@@ -151,7 +148,6 @@ feature -- Initialization
 			-- Do nothing if ancestors not built.
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
-			reset_flat_implementation_checked
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
@@ -183,7 +179,6 @@ feature -- Initialization
 			features_not_flattened: not features_flattened
 			interface_not_checked: not interface_checked
 			implementation_not_checked: not implementation_checked
-			flat_implementation_not_checked: not flat_implementation_checked
 		end
 
 	reset_after_features_flattened is
@@ -191,7 +186,6 @@ feature -- Initialization
 			-- Do nothing if features not flattened.
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
-			reset_flat_implementation_checked
 			reset_implementation_checked
 			reset_interface_checked
 			queries.reset_after_features_flattened
@@ -214,7 +208,6 @@ feature -- Initialization
 			same_flattening_error: has_flattening_error = old has_flattening_error
 			interface_not_checked: not interface_checked
 			implementation_not_checked: not implementation_checked
-			flat_implementation_not_checked: not flat_implementation_checked
 		end
 
 	reset_after_interface_checked is
@@ -222,7 +215,6 @@ feature -- Initialization
 			-- Do nothing if interface not checked.
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
-			reset_flat_implementation_checked
 			reset_implementation_checked
 			queries.reset_after_features_flattened
 			procedures.reset_after_features_flattened
@@ -242,7 +234,6 @@ feature -- Initialization
 			same_interface_checked: interface_checked = old interface_checked
 			same_interface_erorr: has_interface_error = old has_interface_error
 			implementation_not_checked: not implementation_checked
-			flat_implementation_not_checked: not flat_implementation_checked
 		end
 
 	reset_errors is
@@ -251,32 +242,25 @@ feature -- Initialization
 			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			if has_syntax_error then
-				reset_flat_implementation_checked
 				reset_implementation_checked
 				reset_interface_checked
 				reset_features_flattened
 				reset_ancestors_built
 				reset_parsed
 			elseif has_ancestors_error then
-				reset_flat_implementation_checked
 				reset_implementation_checked
 				reset_interface_checked
 				reset_features_flattened
 				reset_ancestors_built
 			elseif has_flattening_error then
-				reset_flat_implementation_checked
 				reset_implementation_checked
 				reset_interface_checked
 				reset_features_flattened
 			elseif has_interface_error then
-				reset_flat_implementation_checked
 				reset_implementation_checked
 				reset_interface_checked
 			elseif has_implementation_error then
-				reset_flat_implementation_checked
 				reset_implementation_checked
-			elseif has_flat_implementation_error then
-				reset_flat_implementation_checked
 			end
 		end
 
@@ -1509,41 +1493,6 @@ feature -- Implementation checking status
 			implementation_not_checked: not implementation_checked
 			no_implementation_error: not has_implementation_error
 			suppliers_reset: suppliers = Void
-		end
-
-	flat_implementation_checked: BOOLEAN
-			-- Has the implementation (flat mode) of current class been checked?
-			-- All features (immediate, redefined and inherited) and invariant have been checked.
-
-	has_flat_implementation_error: BOOLEAN
-			-- Has a fatal error occurred during implementation (flat mode) checking?
-
-	set_flat_implementation_checked is
-			-- Set `flat_implementation_checked' to True.
-		do
-			flat_implementation_checked := True
-		ensure
-			flat_implementation_checked: flat_implementation_checked
-		end
-
-	set_flat_implementation_error is
-			-- Set `has_flat_implementation_error' to True.
-		require
-			flat_implementation_checked: flat_implementation_checked
-		do
-			has_flat_implementation_error := True
-		ensure
-			has_flat_implementation_error: has_flat_implementation_error
-		end
-
-	reset_flat_implementation_checked is
-			-- Set `flat_implementation_checked' to False.
-		do
-			has_flat_implementation_error := False
-			flat_implementation_checked := False
-		ensure
-			flat_implementation_not_checked: not flat_implementation_checked
-			no_flat_implementation_error: not has_flat_implementation_error
 		end
 
 feature -- Invariant

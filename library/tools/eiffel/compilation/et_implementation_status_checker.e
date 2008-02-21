@@ -110,7 +110,7 @@ feature {NONE} -- Processing
 							-- This is a controlled recursive call to `internal_process_class'.
 						a_parent_class := a_parents.parent (i).type.direct_base_class (universe)
 						internal_process_class (a_parent_class)
-						if not a_parent_class.features_flattened then
+						if not a_parent_class.implementation_checked then
 							l_reset_needed := True
 						end
 						i := i + 1

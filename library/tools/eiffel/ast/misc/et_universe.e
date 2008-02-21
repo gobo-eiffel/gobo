@@ -495,22 +495,6 @@ feature -- Initialization
 						l_class.set_implementation_error
 					end
 				end
-				if l_class.flat_implementation_checked then
-					if l_class.has_flat_implementation_error then
-							-- This class had an error, so we need to reprocess it.
-						l_class.reset_after_interface_checked
-					else
-							-- We mark this class with an error here to indicate that
-							-- we need to check whether it is still correct. If the error
-							-- is confirmed (because the class processing has become
-							-- invalid due to other classes having been modified or
-							-- recursively made invalid), then the class will be reset
-							-- to the previous processing step. Otherwise the error
-							-- flag will be cleared.
-						l_class.reset_flat_implementation_checked
-						l_class.set_implementation_error
-					end
-				end
 					-- Reset overridden class as they were when last parsed.
 				from
 					l_class := l_class.overridden_class
