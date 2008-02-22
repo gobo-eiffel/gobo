@@ -11,6 +11,10 @@ Version 3.8 - ?
 	* Task 'geant' has a new attribute called 'exit_code_variable'. It can be
 	  used to capture (or ignore) the execution result of a '<geant>' call
 	  and works exactly as in the 'exec' task.
+	* Introduced notion of locals, and globals. You can now declare '<local
+	name="varname" />'.
+	* Added support for '<group>' element.
+	* Fixed various issue with '<replace>' task
 
 	gec:
 
