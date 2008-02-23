@@ -57,7 +57,7 @@ inherit
 	XM_XSLT_CONFIGURATION_CONSTANTS
 		export {NONE} all end
 
-	MEMORY
+	KL_SHARED_MEMORY
 		export {NONE} all end
 
 create
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 				else
 					report_usage_message
 					Exceptions.die (1)
-				end					
+				end
 			elseif an_option.substring_index ("output=", 1) = 1 then
 				if an_option.count > 7 then
 					output_destination := an_option.substring (8, an_option.count)
@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 			elseif an_option.substring_index ("context=", 1) = 1 and then an_option.count > 8 then
 				initial_context := an_option.substring (9, an_option.count)
 			elseif an_option.is_equal ("no-gc") then
-				collection_off
+				memory.collection_off
 			elseif an_option.is_equal ("secure") then
 				highly_secure := True
 			elseif an_option.is_equal ("html-text-ok") then
@@ -647,7 +647,7 @@ feature {NONE} -- Implementation
 			elseif an_option.is_equal ("no-extension-functions") then
 				suppress_extension_functions := True
 			elseif an_option.is_equal ("no-network-protocols") then
-					suppress_network_protocols := True
+				suppress_network_protocols := True
 			elseif an_option.is_equal ("no-catalogs") then
 				shared_catalog_manager.suppress_catalogs
 			elseif an_option.is_equal ("no-catalog-pi") then
@@ -697,7 +697,7 @@ feature {NONE} -- Implementation
 				elseif an_option.count > 5 then
 					report_usage_message
 					Exceptions.die (1)
-				end				
+				end
 			elseif an_option.substring_index ("timed-trace", 1) = 1 then
 				is_tracing := True
 				is_timed_tracing := True
@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 				elseif an_option.count > 11 then
 					report_usage_message
 					Exceptions.die (1)
-				end				
+				end
 			elseif an_option.substring_index ("catalog-debug-level=", 1) = 1 and then an_option.count > 20 then
 				a_number := an_option.substring (21, an_option.count)
 				if a_number.is_integer then
@@ -718,7 +718,7 @@ feature {NONE} -- Implementation
 					Exceptions.die (1)
 				end
 			elseif an_option.substring_index ("uri=", 1) = 1 and then an_option.count > 4 then
-					process_uri (an_option.substring (5, an_option.count))
+				process_uri (an_option.substring (5, an_option.count))
 			else
 				report_unknown_option (an_option)
 				report_usage_message
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation
 			end
 			if trace_file /= Void then
 				trace_file.close
-			end				
+			end
 			if a_transformer.is_error then
 				Exceptions.die (3) -- the error listener has already reported the error.message
 			end
@@ -996,7 +996,7 @@ feature {NONE} -- Implementation
 				error_listener.set_warning_threshold (a_warning_threshold.to_integer)
 			else
 				report_general_message ("Warning threshold must be an integer")
-				Exceptions.die (1)				
+				Exceptions.die (1)
 			end
 		end
 
@@ -1009,7 +1009,7 @@ feature {NONE} -- Implementation
 				error_listener.set_recoverable_error_threshold (a_error_threshold.to_integer)
 			else
 				report_general_message ("Error threshold must be an integer")
-				Exceptions.die (1)				
+				Exceptions.die (1)
 			end
 		end
 
