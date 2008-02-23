@@ -2838,6 +2838,18 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
 				end
+			elseif a_feature.name.same_feature_name (tokens.double_bytes_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_double_bytes))
+				l_formals := a_feature.arguments
+				if l_formals /= Void and then l_formals.count /= 0 then
+						-- The signature should be 'double_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				elseif not a_feature.type.same_syntactical_type (universe.integer_class, a_class, a_class, universe) then
+						-- The signature should be 'double_bytes: INTEGER'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+				end
 			elseif a_feature.name.same_feature_name (tokens.integer_bytes_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_integer_bytes))
 				l_formals := a_feature.arguments
@@ -4795,6 +4807,11 @@ feature {NONE} -- Built-in
 			elseif a_feature.name.same_feature_name (tokens.character_bytes_feature_name) then
 					-- 'PLATFORM.character_bytes' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_character_bytes))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
+			elseif a_feature.name.same_feature_name (tokens.double_bytes_feature_name) then
+					-- 'PLATFORM.double_bytes' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_platform_feature (tokens.builtin_platform_double_bytes))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, universe.integer_type)
 			elseif a_feature.name.same_feature_name (tokens.integer_bytes_feature_name) then

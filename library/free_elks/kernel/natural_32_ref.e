@@ -394,7 +394,7 @@ feature -- Conversion
 			a_digit, val: NATURAL_32
 		do
 			from
-				i := (create {PLATFORM}).Integer_bits // 4
+				i := (create {PLATFORM}).Integer_32_bits // 4
 				create Result.make (i)
 				Result.fill_blank
 				val := item
@@ -408,7 +408,7 @@ feature -- Conversion
 			end
 		ensure
 			Result_not_void: Result /= Void
-			Result_valid_count: Result.count = (create {PLATFORM}).Integer_bits // 4
+			Result_valid_count: Result.count = (create {PLATFORM}).Integer_32_bits // 4
 		end
 
 	to_hex_character: CHARACTER is

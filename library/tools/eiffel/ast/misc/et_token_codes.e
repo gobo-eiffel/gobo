@@ -321,6 +321,7 @@ feature -- Built-in codes
 	builtin_platform_pointer_bytes: INTEGER is 10
 	builtin_platform_real_bytes: INTEGER is 11
 	builtin_platform_wide_character_bytes: INTEGER is 12
+	builtin_platform_double_bytes: INTEGER is 13
 			-- Codes for built-in features from class "PLATFORM"
 
 	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER is

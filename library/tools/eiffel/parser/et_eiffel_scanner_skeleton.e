@@ -819,6 +819,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.deep_twin_name)
 			Result.force_new (-1, tokens.default_create_name)
 			Result.force_new (-1, tokens.dispose_name)
+			Result.force_new (-1, tokens.double_bytes_name)
 			Result.force_new (-1, tokens.eif_id_object_name)
 			Result.force_new (-1, tokens.eif_object_id_name)
 			Result.force_new (-1, tokens.eif_object_id_free_name)

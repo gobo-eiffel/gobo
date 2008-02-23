@@ -1746,6 +1746,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_platform_character_bytes_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_platform_double_bytes then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_platform_double_bytes_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_platform_integer_bytes then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -10179,6 +10185,8 @@ feature {NONE} -- Query call generation
 				print_builtin_platform_boolean_bytes_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_character_bytes then
 				print_builtin_platform_character_bytes_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_platform_double_bytes then
+				print_builtin_platform_double_bytes_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_integer_bytes then
 				print_builtin_platform_integer_bytes_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_dotnet then
@@ -14644,6 +14652,26 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_string (c_sizeof)
 			current_file.put_character ('(')
 			current_file.put_string (c_eif_character)
+			current_file.put_character (')')
+			current_file.put_character (')')
+		end
+
+	print_builtin_platform_double_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'PLATFORM.double_bytes'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_type_cast (current_system.integer_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			current_file.put_string (c_eif_double)
 			current_file.put_character (')')
 			current_file.put_character (')')
 		end

@@ -994,6 +994,8 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 				report_builtin_platform_boolean_bytes (a_feature)
 			when builtin_platform_character_bytes then
 				report_builtin_platform_character_bytes (a_feature)
+			when builtin_platform_double_bytes then
+				report_builtin_platform_double_bytes (a_feature)
 			when builtin_platform_integer_bytes then
 				report_builtin_platform_integer_bytes (a_feature)
 			when builtin_platform_is_dotnet then
@@ -3846,6 +3848,21 @@ feature {NONE} -- Built-in features
 
 	report_builtin_platform_character_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'PLATFORM.character_bytes' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_system.integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_double_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.double_bytes' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void

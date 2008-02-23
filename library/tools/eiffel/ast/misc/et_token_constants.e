@@ -854,6 +854,14 @@ feature -- Feature names
 			dispose_feature_name_not_void: Result /= Void
 		end
 
+	double_bytes_feature_name: ET_FEATURE_NAME is
+			-- 'double_bytes' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (double_bytes_name)
+		ensure
+			double_bytes_feature_name_not_void: Result /= Void
+		end
+
 	eif_id_object_feature_name: ET_FEATURE_NAME is
 			-- 'eif_id_object' feature name
 		once
@@ -2677,6 +2685,9 @@ feature -- Keyword and symbol names
 
 	dispose_name: STRING is "dispose"
 		-- Name of Eiffel feature 'dispose'
+
+	double_bytes_name: STRING is "double_bytes"
+		-- Name of Eiffel feature 'double_bytes'
 
 	eif_id_object_name: STRING is "eif_id_object"
 		-- Name of Eiffel feature 'eif_id_object'
