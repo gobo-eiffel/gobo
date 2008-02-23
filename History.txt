@@ -11,10 +11,10 @@ Version 3.8 - ?
 	* Task 'geant' has a new attribute called 'exit_code_variable'. It can be
 	  used to capture (or ignore) the execution result of a '<geant>' call
 	  and works exactly as in the 'exec' task.
-	* Introduced notion of locals, and globals. You can now declare '<local
-	name="varname" />'.
+	* Introduced notion of locals, and globals. You can now declare
+	  '<local name="varname"/>'.
 	* Added support for '<group>' element.
-	* Fixed various issue with '<replace>' task
+	* Fixed various issue with '<replace>' task.
 
 	gec:
 
@@ -50,6 +50,16 @@ Version 3.8 - ?
 	  are reclaimed.
 	* Take better advantage of the Boehm GC, using 'GC_malloc_atomic' when
 	  possible.
+	* The implememtation of the rescue mechanism in C uses 'setjmp' and
+	  'longjmp'. The use of these two C functions requires that any local
+	  variable modified between the call to 'setjmp' and the call to 'longjmp'
+	  to be declared as 'volatile', otherwise its value may be lost after
+	  calling 'longjmp' if the C optimizer decided to implement it with
+	  'register'. For more details, see:
+	     http://www.programmersheaven.com/articles/pathak/article1.htm
+	     http://www.freetype.org/david/reliable-c.html#annex-A
+	     http://msdn2.microsoft.com/en-us/library/xe7acxfb(VS.80).aspx
+	  The generated C code has been adapted accordingly.
 
 	gelint:
 

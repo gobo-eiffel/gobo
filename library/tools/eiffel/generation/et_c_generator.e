@@ -102,6 +102,9 @@ inherit
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
+	ET_SHARED_IDENTIFIER_TESTER
+		export {NONE} all end
+
 	KL_SHARED_STREAMS
 		export {NONE} all end
 
@@ -201,6 +204,7 @@ feature {NONE} -- Initialization
 			included_runtime_c_files.set_equality_tester (string_equality_tester)
 			create c_filenames.make_map (100)
 			c_filenames.set_key_equality_tester (string_equality_tester)
+			make_rescue_data
 			make_external_regexps
 		end
 
@@ -3777,21 +3781,14 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_argument_type: ET_DYNAMIC_TYPE
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			l_local_type_set: ET_DYNAMIC_TYPE_SET
-			l_local_type: ET_DYNAMIC_TYPE
 			l_once_feature: ET_FEATURE
-			i, nb, nb_args: INTEGER
-			l_compound: ET_COMPOUND
-			l_rescue: ET_COMPOUND
+			i, nb_args: INTEGER
 			l_comma: BOOLEAN
 			old_file: KI_TEXT_OUTPUT_STREAM
 			l_name: ET_IDENTIFIER
-			old_call_info: STRING
 		do
 			old_file := current_file
 			current_file := current_function_header_buffer
-			old_call_info := current_call_info
 			print_feature_name_comment (a_feature, current_type, header_file)
 			print_feature_name_comment (a_feature, current_type, current_file)
 			l_result_type_set := current_feature.result_type_set
@@ -3967,76 +3964,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-				--
-				-- Declaration of variables.
-				--
-				-- Variable for exception trace.
-			if exception_trace_mode then
-				print_indentation
-				current_file.put_string (c_ge_call)
-				current_file.put_character (' ')
-				current_file.put_string (c_tc)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_string (c_ac)
-				current_file.put_character ('}')
-				current_file.put_character (';')
-				current_file.put_new_line
-				current_call_info := c_tc_address
-			end
-				-- Variable for rescue chain.
-			l_rescue := a_feature.rescue_clause
-			if l_rescue /= Void then
-				print_indentation
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-				-- Variable for 'Result' entity.
-			if l_result_type /= Void then
-				print_indentation
-				print_type_declaration (l_result_type, current_file)
-				current_file.put_character (' ')
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				print_default_entity_value (l_result_type, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-				-- Local variables.
-			l_locals := a_feature.locals
-			if l_locals /= Void then
-				nb := l_locals.count
-				from i := 1 until i > nb loop
-					l_name := l_locals.local_variable (i).name
-					l_local_type_set := dynamic_type_set (l_name)
-					l_local_type := l_local_type_set.static_type
-					print_indentation
-					print_type_declaration (l_local_type, current_file)
-					current_file.put_character (' ')
-					print_local_name (l_name, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_default_entity_value (l_local_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-					i := i + 1
-				end
-			end
-				--
-				-- Instructions.
-				--
 			current_file := current_function_body_buffer
 			print_feature_trace_message_call (True)
 			if a_creation then
@@ -4101,6 +4028,95 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_character ('}')
 				current_file.put_new_line
 			end
+			print_internal_routine_body_declaration (a_feature, l_result_type)
+			if a_creation then
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				if current_type.is_expanded then
+					current_file.put_character ('*')
+				end
+				print_current_name (current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			print_feature_trace_message_call (False)
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
+				--
+				-- Clean up.
+				--
+			current_file := old_file
+			reset_temp_variables
+				-- Flush to file.
+			flush_to_c_file
+		end
+
+	print_internal_routine_body_declaration (a_feature: ET_INTERNAL_ROUTINE_CLOSURE; a_result_type: ET_DYNAMIC_TYPE) is
+			-- Print the local variables declaration, the compound and the
+			-- rescue clause of `a_feature' to `current_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			i, nb: INTEGER
+			l_name: ET_IDENTIFIER
+			l_local_type_set: ET_DYNAMIC_TYPE_SET
+			l_local_type: ET_DYNAMIC_TYPE
+			l_rescue: ET_COMPOUND
+			l_compound: ET_COMPOUND
+			old_file: KI_TEXT_OUTPUT_STREAM
+			old_call_info: STRING
+			l_result_written_in_body: BOOLEAN
+			l_result_read_in_body: BOOLEAN
+			l_result_written_in_rescue: BOOLEAN
+			l_result_read_in_rescue: BOOLEAN
+		do
+			old_file := current_file
+			current_file := current_function_header_buffer
+			old_call_info := current_call_info
+				--
+				-- Declaration of variables.
+				--
+				-- Variable for exception trace.
+			if exception_trace_mode then
+				print_indentation
+				current_file.put_string (c_ge_call)
+				current_file.put_character (' ')
+				current_file.put_string (c_tc)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_character ('0')
+				current_file.put_character (',')
+				current_file.put_string (c_ac)
+				current_file.put_character ('}')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_call_info := c_tc_address
+			end
+				-- Variable for rescue chain.
+			l_rescue := a_feature.rescue_clause
+			if l_rescue /= Void then
+				print_indentation
+				current_file.put_string (c_ge_rescue)
+				current_file.put_character (' ')
+				current_file.put_character ('r')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+				--
+				-- Instructions.
+				--
+			current_file := current_function_body_buffer
+			reset_rescue_data
+			locals_written := locals_written_in_rescue
+			locals_read := locals_read_in_rescue
 			if l_rescue /= Void then
 				print_indentation
 				current_file.put_string (c_if)
@@ -4145,46 +4161,99 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				current_file.put_string ("GE_last_rescue = &r;")
 				current_file.put_new_line
 			end
+			l_result_written_in_rescue := result_written
+			l_result_read_in_rescue := result_read
+			locals_written := locals_written_in_body
+			locals_read := locals_read_in_body
 			l_compound := a_feature.compound
 			if l_compound /= Void then
 				print_compound (l_compound)
 			end
+			l_result_written_in_body := result_written
+			l_result_read_in_body := result_read
 			if l_rescue /= Void then
 				print_indentation
 				current_file.put_string ("GE_last_rescue = r.previous;")
 				current_file.put_new_line
 			end
-			if l_result_type /= Void then
+			if a_result_type /= Void then
+					-- The 'Result' entity is always implicitly read in the body to return its value.
+				l_result_read_in_body := True
 				print_indentation
 				current_file.put_string (c_return)
 				current_file.put_character (' ')
 				print_result_name (current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
-			elseif a_creation then
+			end
+				--
+				-- Local variables and result declaration.
+				--
+			current_file := current_function_header_buffer
+				-- Variable for 'Result' entity.
+			if a_result_type /= Void then
 				print_indentation
-				current_file.put_string (c_return)
-				current_file.put_character (' ')
-				if current_type.is_expanded then
-					current_file.put_character ('*')
+				if (l_result_read_in_rescue or (has_retry and then l_result_read_in_body)) and then l_result_written_in_body then
+						-- The implememtation of the rescue mechanism in C uses 'setjmp'
+						-- and 'longjmp'. The use of these two C functions requires that
+						-- any local variable modified between the call to 'setjmp' and
+						-- the call to 'longjmp' to be declared as 'volatile', otherwise its
+						-- value may be lost after calling 'longjmp' if the C optimizer
+						-- decided to implement it with 'register'. For more details, see:
+						--  http://www.programmersheaven.com/articles/pathak/article1.htm
+						--  http://www.freetype.org/david/reliable-c.html#annex-A
+						--  http://msdn2.microsoft.com/en-us/library/xe7acxfb(VS.80).aspx
+					current_file.put_string (c_volatile)
+					current_file.put_character (' ')
 				end
-				print_current_name (current_file)
+				print_type_declaration (a_result_type, current_file)
+				current_file.put_character (' ')
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_default_entity_value (a_result_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
-			print_feature_trace_message_call (False)
-			dedent
-			current_file.put_character ('}')
-			current_file.put_new_line
-			current_file.put_new_line
-				--
+				-- Local variables.
+			l_locals := a_feature.locals
+			if l_locals /= Void then
+				nb := l_locals.count
+				from i := 1 until i > nb loop
+					l_name := l_locals.local_variable (i).name
+					l_local_type_set := dynamic_type_set (l_name)
+					l_local_type := l_local_type_set.static_type
+					print_indentation
+					if (locals_read_in_rescue.has (l_name) or (has_retry and then locals_read_in_body.has (l_name))) and then locals_written_in_body.has (l_name) then
+							-- The implememtation of the rescue mechanism in C uses 'setjmp'
+							-- and 'longjmp'. The use of these two C functions requires that
+							-- any local variable modified between the call to 'setjmp' and
+							-- the call to 'longjmp' to be declared as 'volatile', otherwise its
+							-- value may be lost after calling 'longjmp' if the C optimizer
+							-- decided to implement it with 'register'. For more details, see:
+							--  http://www.programmersheaven.com/articles/pathak/article1.htm
+							--  http://www.freetype.org/david/reliable-c.html#annex-A
+							--  http://msdn2.microsoft.com/en-us/library/xe7acxfb(VS.80).aspx
+						current_file.put_string (c_volatile)
+						current_file.put_character (' ')
+					end
+					print_type_declaration (l_local_type, current_file)
+					current_file.put_character (' ')
+					print_local_name (l_name, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_default_entity_value (l_local_type, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+					i := i + 1
+				end
+			end
 				-- Clean up.
-				--
+			reset_rescue_data
 			current_call_info := old_call_info
 			current_file := old_file
-			reset_temp_variables
-				-- Flush to file.
-			flush_to_c_file
 		end
 
 	print_once_function (a_feature: ET_ONCE_FUNCTION) is
@@ -5634,6 +5703,7 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			current_file.put_string (c_ge_retry)
 			current_file.put_character (';')
 			current_file.put_new_line
+			has_retry := True
 		end
 
 	print_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
@@ -7262,6 +7332,10 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						end
 					end
 				elseif l_name.is_local then
+						-- Keep track of the fact that the value of this local variable can
+						-- possibly be modified. Useful to determine the 'volatile' status
+						-- of the local variable when current feature has a rescue clause.
+					locals_written.force_last (l_name.local_name.identifier)
 					l_name_expression := l_name.local_name
 					l_value_type_set := dynamic_type_set (l_name_expression)
 					if l_value_type_set.is_expanded then
@@ -7516,6 +7590,10 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			if in_operand then
 				operand_stack.force (a_name)
 			else
+					-- Keep track of the fact that this local variable has been
+					-- read. Useful to determine the 'volatile' status of the local
+					-- variable when current feature has a rescue clause.
+				locals_read.force_last (a_name)
 				if in_target then
 					l_dynamic_type_set := dynamic_type_set (a_name)
 					l_static_type := l_dynamic_type_set.static_type
@@ -8564,6 +8642,10 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				operand_stack.force (an_expression)
 			else
 				if in_target then
+						-- Keep track of the fact that the value of the 'Result' entity has
+						-- been read. Useful to determine the 'volatile'status of the 'Result'
+						-- entity when current feature has a rescue clause.
+					result_read := True
 					l_dynamic_type_set := dynamic_type_set (an_expression)
 					l_static_type := l_dynamic_type_set.static_type
 					if l_static_type.is_expanded then
@@ -8598,6 +8680,11 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_temp: ET_IDENTIFIER
 			l_pointer: BOOLEAN
 		do
+				-- Keep track of the fact that the value of the 'Result' entity can
+				-- possibly be modified and read. Useful to determine the 'volatile'
+				-- status of the 'Result' entity when current feature has a rescue clause.
+			result_read := True
+			result_written := True
 			l_dynamic_type_set := dynamic_type_set (an_expression)
 			l_dynamic_type := l_dynamic_type_set.static_type
 			l_pointer := (l_dynamic_type = current_system.pointer_type)
@@ -9604,6 +9691,7 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			l_seed: INTEGER
 			old_in_operand: BOOLEAN
 			old_target_type: ET_DYNAMIC_TYPE
+			l_was_read: BOOLEAN
 		do
 			old_in_operand := in_operand
 			old_target_type := call_target_type
@@ -9616,7 +9704,15 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				elseif l_identifier.is_temporary then
 					print_temporary_variable (l_identifier)
 				elseif l_identifier.is_local then
+						-- Keep track of the fact that the value of this local variable
+						-- has been modified. Useful to determine the 'volatile' status
+						-- of the local variable when current feature has a rescue clause.
+					locals_written.force_last (l_identifier)
+					l_was_read := locals_read.has (l_identifier)
 					print_local_variable (l_identifier)
+					if not l_was_read and locals_read.has (l_identifier) then
+						locals_read.remove (l_identifier)
+					end
 				else
 					l_seed := l_identifier.seed
 					l_query := current_type.seeded_dynamic_query (l_seed, current_system)
@@ -9630,7 +9726,16 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 					end
 				end
 			else
+				check
+					is_result: a_writable.is_result
+				end
+					-- Keep track of the fact that the value of the 'Result' entity
+					-- has been modified. Useful to determine the 'volatile' status
+					-- of the 'Result' entity when current feature has a rescue clause.
+				result_written := True
+				l_was_read := result_read
 				a_writable.process (Current)
+				result_read := l_was_read
 			end
 			call_target_type := old_target_type
 			in_operand := old_in_operand
@@ -11174,7 +11279,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_do_function_inline_agent_body_declaration (an_agent: ET_DO_FUNCTION_INLINE_AGENT) is
-			-- Print body if declaration of inline agent `an_agent'.
+			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
 		do
@@ -11182,7 +11287,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_do_procedure_inline_agent_body_declaration (an_agent: ET_DO_PROCEDURE_INLINE_AGENT) is
-			-- Print body if declaration of inline agent `an_agent'.
+			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
 		do
@@ -11190,7 +11295,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_external_function_inline_agent_body_declaration (an_agent: ET_EXTERNAL_FUNCTION_INLINE_AGENT) is
-			-- Print body if declaration of inline agent `an_agent'.
+			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
 		do
@@ -11198,7 +11303,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_external_procedure_inline_agent_body_declaration (an_agent: ET_EXTERNAL_PROCEDURE_INLINE_AGENT) is
-			-- Print body if declaration of inline agent `an_agent'.
+			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
 		do
@@ -11206,7 +11311,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_once_function_inline_agent_body_declaration (an_agent: ET_ONCE_FUNCTION_INLINE_AGENT) is
-			-- Print body if declaration of inline agent `an_agent'.
+			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
 		do
@@ -11214,7 +11319,7 @@ feature {NONE} -- Agent generation
 		end
 
 	print_once_procedure_inline_agent_body_declaration (an_agent: ET_ONCE_PROCEDURE_INLINE_AGENT) is
-			-- Print body if declaration of inline agent `an_agent'.
+			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
 		do
@@ -11222,162 +11327,23 @@ feature {NONE} -- Agent generation
 		end
 
 	print_internal_routine_inline_agent_body_declaration (an_agent: ET_INTERNAL_ROUTINE_INLINE_AGENT) is
-			-- Print body if declaration of inline agent `an_agent'.
+			-- Print body of declaration of inline agent `an_agent'.
 		require
 			an_agent_not_void: an_agent /= Void
 		local
-			l_locals: ET_LOCAL_VARIABLE_LIST
-			i, nb: INTEGER
-			l_name: ET_IDENTIFIER
-			l_local_type_set: ET_DYNAMIC_TYPE_SET
-			l_local_type: ET_DYNAMIC_TYPE
-			l_rescue: ET_COMPOUND
-			l_compound: ET_COMPOUND
 			l_result: ET_RESULT
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type: ET_DYNAMIC_TYPE
-			old_file: KI_TEXT_OUTPUT_STREAM
-			old_call_info: STRING
 		do
 -- TODO: handle case of once-routines
-			old_file := current_file
-			current_file := current_function_header_buffer
-			old_call_info := current_call_info
-				-- Variable for exception trace.
-			if exception_trace_mode then
-				print_indentation
-				current_file.put_string (c_ge_call)
-				current_file.put_character (' ')
-				current_file.put_string (c_tc)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_character ('0')
-				current_file.put_character (',')
-				current_file.put_string (c_ac)
-				current_file.put_character ('}')
-				current_file.put_character (';')
-				current_file.put_new_line
-				current_call_info := c_tc_address
-			end
-				-- Variable for rescue chain.
-			l_rescue := an_agent.rescue_clause
-			if l_rescue /= Void then
-				print_indentation
-				current_file.put_string (c_ge_rescue)
-				current_file.put_character (' ')
-				current_file.put_character ('r')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-				-- Variable for the 'Result' entity.
+			print_agent_trace_message_call (an_agent, True)
 			l_result := an_agent.implicit_result
 			if l_result /= Void then
 				l_result_type_set := dynamic_type_set (l_result)
 				l_result_type := l_result_type_set.static_type
-				print_indentation
-				print_type_declaration (l_result_type, current_file)
-				current_file.put_character (' ')
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				print_default_entity_value (l_result_type, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
 			end
-				-- Local variables.
-			l_locals := an_agent.locals
-			if l_locals /= Void then
-				nb := l_locals.count
-				from i := 1 until i > nb loop
-					l_name := l_locals.local_variable (i).name
-					l_local_type_set := dynamic_type_set (l_name)
-					l_local_type := l_local_type_set.static_type
-					print_indentation
-					print_type_declaration (l_local_type, current_file)
-					current_file.put_character (' ')
-					print_local_name (l_name, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_default_entity_value (l_local_type, current_file)
-					current_file.put_character (';')
-					current_file.put_new_line
-					i := i + 1
-				end
-			end
-				-- Instructions.
-			current_file := current_function_body_buffer
-			print_agent_trace_message_call (an_agent, True)
-			if l_rescue /= Void then
-				print_indentation
-				current_file.put_string (c_if)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_setjmp)
-				current_file.put_character ('(')
-				current_file.put_character ('r')
-				current_file.put_character ('.')
-				current_file.put_character ('j')
-				current_file.put_character ('b')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('!')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('0')
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				indent
-				print_compound (l_rescue)
-				print_indentation
-				current_file.put_string (c_ge_raise)
-				current_file.put_character ('(')
-				current_file.put_character ('8')
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
-				current_file.put_string (c_ge_retry)
-				current_file.put_character (':')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string ("r.previous = GE_last_rescue;")
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string ("GE_last_rescue = &r;")
-				current_file.put_new_line
-			end
-			l_compound := an_agent.compound
-			if l_compound /= Void then
-				print_compound (l_compound)
-			end
-			if l_rescue /= Void then
-				print_indentation
-				current_file.put_string ("GE_last_rescue = r.previous;")
-				current_file.put_new_line
-			end
-			if l_result_type /= Void then
-				print_indentation
-				current_file.put_string (c_return)
-				current_file.put_character (' ')
-				print_result_name (current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
+			print_internal_routine_body_declaration (an_agent, l_result_type)
 			print_agent_trace_message_call (an_agent, False)
-				-- Clean up.
-			current_call_info := old_call_info
-			current_file := old_file
 		end
 
 	agent_instruction: ET_CALL_INSTRUCTION
@@ -13620,7 +13586,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 						current_file.put_character ('+')
 						current_file.put_character ('(')
 						print_attribute_special_count_access (l_target, l_special_type, a_check_void_target)
-							-- The struct already contains one element of the SPECIAL, hence the -1 below. 
+							-- The struct already contains one element of the SPECIAL, hence the -1 below.
 						current_file.put_character ('-')
 						current_file.put_character ('1')
 						current_file.put_character (')')
@@ -24314,6 +24280,68 @@ feature {NONE} -- Tuple arguments in agent routines (Implementation)
 			-- Expressions to extract items of the tuple argument of an agent,
 			-- indexed by item index
 
+feature {NONE} -- Rescue clauses
+
+	has_retry: BOOLEAN
+			-- Is 'retry' being called in the rescue clause of current feature?
+
+	locals_written: DS_HASH_SET [ET_IDENTIFIER]
+			-- Local variables which are written in the code of current feature being processed
+			-- (Can be either in the body or the rescue clause of the current feature)
+
+	locals_written_in_body: DS_HASH_SET [ET_IDENTIFIER]
+			-- Local variables which are written in the body of current feature
+
+	locals_written_in_rescue: DS_HASH_SET [ET_IDENTIFIER]
+			-- Local variables which are written in the rescue clause of current feature
+
+	locals_read: DS_HASH_SET [ET_IDENTIFIER]
+			-- Local variables which are read in the code of current feature being processed
+			-- (Can be either in the body or the rescue clause of the current feature)
+
+	locals_read_in_body: DS_HASH_SET [ET_IDENTIFIER]
+			-- Local variables which are read in the body of current feature
+
+	locals_read_in_rescue: DS_HASH_SET [ET_IDENTIFIER]
+			-- Local variables which are read in the rescue clause of current feature
+
+	result_written: BOOLEAN
+			-- Is the Result entity written in the code of current feature being processed?
+			-- (Can be either in the body or the rescue clause of the current feature)
+
+	result_read: BOOLEAN
+			-- Is the Result entity read in the code of current feature being processed?
+			-- (Can be either in the body or the rescue clause of the current feature)
+
+	make_rescue_data is
+			-- Create data to determine the 'volatile' status of local variables
+			-- in features with a rescue clause.
+		do
+			create locals_written_in_body.make (50)
+			locals_written_in_body.set_equality_tester (identifier_tester)
+			create locals_written_in_rescue.make (50)
+			locals_written_in_rescue.set_equality_tester (identifier_tester)
+			locals_written := locals_written_in_body
+			create locals_read_in_body.make (50)
+			locals_read_in_body.set_equality_tester (identifier_tester)
+			create locals_read_in_rescue.make (50)
+			locals_read_in_rescue.set_equality_tester (identifier_tester)
+			locals_read := locals_read_in_body
+		end
+
+	reset_rescue_data is
+			-- Reset data to determine the 'volatile' status of local variables
+			-- in features with a rescue clause.
+		do
+			locals_written_in_body.wipe_out
+			locals_read_in_body.wipe_out
+			locals_written_in_rescue.wipe_out
+			locals_read_in_rescue.wipe_out
+			result_written := False
+			result_read := False
+			has_retry := False
+		end
+
 feature {NONE} -- Implementation
 
 	in_operand: BOOLEAN
@@ -24608,6 +24636,7 @@ feature {NONE} -- Constants
 	c_undef: STRING is "#undef"
 	c_unsigned: STRING is "unsigned"
 	c_void: STRING is "void"
+	c_volatile: STRING is "volatile"
 	c_while: STRING is "while"
 			-- String constants
 
@@ -24701,6 +24730,19 @@ invariant
 	c_filenames_not_void: c_filenames /= Void
 	no_void_c_filename: not c_filenames.has (Void)
 	no_void_c_file_extension: not c_filenames.has_item (Void)
+		-- Rescue clauses.
+	locals_written_not_void: locals_written /= Void
+	no_void_local_written: not locals_written.has (Void)
+	locals_written_in_body_not_void: locals_written_in_body /= Void
+	no_void_local_written_in_body: not locals_written_in_body.has (Void)
+	locals_written_in_rescue_not_void: locals_written_in_rescue /= Void
+	no_void_local_written_in_rescue: not locals_written_in_rescue.has (Void)
+	locals_read_not_void: locals_read /= Void
+	no_void_local_read: not locals_read.has (Void)
+	locals_read_in_body_not_void: locals_read_in_body /= Void
+	no_void_local_read_in_body: not locals_read_in_body.has (Void)
+	locals_read_in_rescue_not_void: locals_read_in_rescue /= Void
+	no_void_local_read_in_rescue: not locals_read_in_rescue.has (Void)
 		-- Regular expressions for external features.
 	external_c_regexp_not_void: external_c_regexp /= Void
 	external_c_regexp_compiled: external_c_regexp.is_compiled
