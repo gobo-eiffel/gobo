@@ -25,18 +25,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; some_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; some_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+	make (a_executable: XM_XSLT_EXECUTABLE; a_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; a_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Establish invariant.
 		require
-			executable_not_void: an_executable /= Void
-			conditions: some_conditions /= Void and then some_conditions.count > 0
-			actions: some_actions /= Void and then some_actions.count = some_conditions.count
+			executable_not_void: a_executable /= Void
+			conditions: a_conditions /= Void and then not a_conditions.is_empty
+			actions: a_actions /= Void and then a_actions.count = a_conditions.count
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			executable := an_executable
-			conditions := some_conditions
-			actions := some_actions
+			executable := a_executable
+			conditions := a_conditions
+			actions := a_actions
 			from
 				a_cursor := conditions.new_cursor; a_cursor.start
 			until
@@ -56,9 +56,9 @@ feature {NONE} -- Initialization
 			compute_static_properties
 			initialized := True
 		ensure
-			executable_set: executable = an_executable
-			conditions_set: conditions = some_conditions
-			actions_set: actions = some_actions
+			executable_set: executable = a_executable
+			conditions_set: conditions = a_conditions
+			actions_set: actions = a_actions
 		end
 
 feature -- Access
@@ -203,6 +203,8 @@ feature -- Optimization
 				end
 				a_cursor.forth
 			end
+		ensure then
+			same_condition_count: conditions.count = old conditions.count
 		end
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -236,80 +238,89 @@ feature -- Optimization
 				end
 				a_cursor.forth
 			end	
+		ensure then
+			same_condition_count: conditions.count = old conditions.count
 		end
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_expression: XM_XPATH_EXPRESSION
-			a_boolean: BOOLEAN
-			an_index: INTEGER
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_expression: XM_XPATH_EXPRESSION
+			l_boolean: BOOLEAN
+			l_index: INTEGER
+			l_empty: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
 			from
-				a_cursor := conditions.new_cursor; a_cursor.start
+				l_cursor := conditions.new_cursor; l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_expression := a_cursor.item
-				an_expression.optimize (a_context, a_context_item_type)
-				if an_expression.was_expression_replaced then
-					an_expression := an_expression.replacement_expression
-					a_cursor.replace (an_expression)
+				l_expression := l_cursor.item
+				l_expression.optimize (a_context, a_context_item_type)
+				if l_expression.was_expression_replaced then
+					l_expression := l_expression.replacement_expression
+					l_cursor.replace (l_expression)
 				end
-				if an_expression.is_value and then not an_expression.depends_upon_implicit_timezone then
-					an_expression.calculate_effective_boolean_value (Void)
-					if not an_expression.is_error then
-						a_boolean := an_expression.last_boolean_value.value
-						an_index := a_cursor.index
-						if a_boolean then
+				if l_expression.is_value and then not l_expression.depends_upon_implicit_timezone then
+					l_expression.calculate_effective_boolean_value (Void)
+					if not l_expression.is_error then
+						l_boolean := l_expression.last_boolean_value.value
+						l_index := l_cursor.index
+						if l_boolean then
 
 							-- if condition is always true, remove all the subsequent conditions and actions
 
 							
-							if an_index = 1 then
+							if l_index = 1 then
 								set_replacement (actions.item (1))
 							else
-								conditions.keep_first (an_index)
-								actions.keep_first (an_index)
+								conditions.keep_first (l_index)
+								actions.keep_first (l_index)
 							end
-							a_cursor.go_after
+							l_cursor.go_after
 						else
 
 							-- if condition is false, skip this test
 
-							a_cursor.remove
-							actions.remove (an_index)
+							l_cursor.remove
+							actions.remove (l_index)
 						end
 					else -- a run-time error will result only if this condition is tested
-						a_cursor.forth
+						l_cursor.forth
 					end
 				else
-					a_cursor.forth
+					l_cursor.forth
 				end
 			end
 			if not was_expression_replaced then
 				from
-					a_cursor := actions.new_cursor; a_cursor.start
+					l_cursor := actions.new_cursor; l_cursor.start
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					an_expression := a_cursor.item
-					an_expression.optimize (a_context, a_context_item_type)
-					if an_expression.was_expression_replaced then
-						a_cursor.replace (an_expression.replacement_expression)
+					l_expression := l_cursor.item
+					l_expression.optimize (a_context, a_context_item_type)
+					if l_expression.was_expression_replaced then
+						l_cursor.replace (l_expression.replacement_expression)
 					end
-					a_cursor.forth
+					l_cursor.forth
 				end	
 			end
+			if conditions.is_empty then
+				conditions.put_last (create {XM_XPATH_BOOLEAN_VALUE}.make (True))
+				create l_empty.make
+				actions.put_last (l_empty)
+				set_replacement (l_empty)
+			end	
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_expression: XM_XPATH_EXPRESSION
 		do
 
 			-- xsl:when acts as a guard:
@@ -320,42 +331,44 @@ feature -- Optimization
 			if an_offer.action = Inline_variable_references	or an_offer.action = Unordered
 				or an_offer.action = Replace_current then
 				from
-					a_cursor := conditions.new_cursor; a_cursor.start
+					l_cursor := conditions.new_cursor; l_cursor.start
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					an_expression := a_cursor.item
-					an_expression.promote (an_offer)
-					if an_expression.was_expression_replaced then
-						a_cursor.replace (an_expression.replacement_expression)
+					l_expression := l_cursor.item
+					l_expression.promote (an_offer)
+					if l_expression.was_expression_replaced then
+						l_cursor.replace (l_expression.replacement_expression)
 						reset_static_properties
 					end
-					a_cursor.forth
+					l_cursor.forth
 				end
 				from
-					a_cursor := actions.new_cursor; a_cursor.start
+					l_cursor := actions.new_cursor; l_cursor.start
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					an_expression := a_cursor.item
-					an_expression.promote (an_offer)
-					if an_expression.was_expression_replaced then
-						a_cursor.replace (an_expression.replacement_expression)
+					l_expression := l_cursor.item
+					l_expression.promote (an_offer)
+					if l_expression.was_expression_replaced then
+						l_cursor.replace (l_expression.replacement_expression)
 						reset_static_properties
 					end
-					a_cursor.forth
+					l_cursor.forth
 				end
 			else
 
 				-- in other cases, only the first xsl:when condition is promoted
 
-				an_expression := conditions.item (1)
-				an_expression.promote (an_offer)
-				if an_expression.was_expression_replaced then
-					conditions.replace (an_expression.replacement_expression, 1)
+				l_expression := conditions.item (1)
+				l_expression.promote (an_offer)
+				if l_expression.was_expression_replaced then
+					conditions.replace (l_expression.replacement_expression, 1)
 					reset_static_properties
 				end
 			end
+		ensure then
+			same_condition_count: conditions.count = old conditions.count			
 		end
 
 feature -- Evaluation
@@ -496,6 +509,7 @@ feature {NONE} -- Implementation
 invariant
 
 	conditions: initialized implies conditions /= Void
+	conditions: initialized implies not conditions.is_empty
 	actions: initialized implies actions /= Void and then actions.count = conditions.count
 	
 end

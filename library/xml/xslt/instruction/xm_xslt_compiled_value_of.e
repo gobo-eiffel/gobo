@@ -149,6 +149,7 @@ feature -- Evaluation
 				create l_orphan.make (Text_node, last_string_value)
 				a_result.put (l_orphan)
 			else
+				conditionally_set_error_location
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (error_value))
 			end
 		end
@@ -158,6 +159,7 @@ feature -- Evaluation
 		do
 			expand_children (a_context)
 			if is_error then
+				conditionally_set_error_location
 				a_context.transformer.report_recoverable_error (error_value)
 				a_context.current_receiver.on_error (error_value.error_message)
 			else

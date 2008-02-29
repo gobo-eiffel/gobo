@@ -339,6 +339,19 @@ feature -- Status setting
 			end
 		end
 
+	conditionally_set_error_location is
+			-- Copy location information into `error_value' if not set.
+		require
+			error_value_not_void: error_value /= Void
+		local
+			l_id: like system_id
+		do
+			l_id := system_id
+			if l_id /= Void and then not l_id.is_empty then
+				error_value.set_location (l_id, line_number)
+			end
+		end
+			
 feature -- Optimization
 
 	simplify is

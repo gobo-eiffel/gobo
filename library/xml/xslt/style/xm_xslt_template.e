@@ -27,6 +27,9 @@ inherit
 
 	XM_XSLT_MODE_CONSTANTS
 
+	MA_DECIMAL_CONTEXT_CONSTANTS
+		export {NONE} all end
+
 create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -493,25 +496,25 @@ feature {NONE} -- Implementation
 	prepare_priority_attribute (a_priority_attribute: STRING; is_match_attribute_void: BOOLEAN) is
 			-- Prepare priority attribute
 		local
-			a_message: STRING
-			a_decimal_parser: MA_DECIMAL_TEXT_PARSER
-			an_error: XM_XPATH_ERROR_VALUE
+			l_message: STRING
+			l_decimal_parser: MA_DECIMAL_TEXT_PARSER
+			l_ctx: MA_DECIMAL_CONTEXT
 		do
 			if a_priority_attribute /= Void then
 				is_priority_specified := True
 				if is_match_attribute_void then
-					create an_error.make_from_string ("The priority attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0500", Static_error)
-					report_compile_error (an_error)
+					report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("The priority attribute must be absent if the match attribute is absent",
+						Xpath_errors_uri, "XTSE0500", Static_error))
 				else
-					create a_decimal_parser.make
-					a_decimal_parser.parse (a_priority_attribute)
-					if not a_decimal_parser.error and a_priority_attribute.index_of ('e', 1) = 0 and a_priority_attribute.index_of ('E', 1) = 0 then
-						priority := a_decimal_parser.last_decimal
+					create l_decimal_parser.make
+					create l_ctx.make (a_priority_attribute.count, round_half_up)
+					l_decimal_parser.parse_ctx (a_priority_attribute, l_ctx, False)
+					if not l_decimal_parser.error and a_priority_attribute.index_of ('e', 1) = 0 and a_priority_attribute.index_of ('E', 1) = 0 then
+						priority := l_decimal_parser.last_decimal
 					else
-						a_message := STRING_.appended_string ("Invalid decimal value for priority (", a_priority_attribute)
-						a_message := STRING_.appended_string (a_message, ")")
-						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0530", Static_error)
-						report_compile_error (an_error)
+						l_message := STRING_.appended_string ("Invalid decimal value for priority (", a_priority_attribute)
+						l_message := STRING_.appended_string (l_message, ")")
+						report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (l_message, Xpath_errors_uri, "XTSE0530", Static_error))
 					end
 				end
 			end

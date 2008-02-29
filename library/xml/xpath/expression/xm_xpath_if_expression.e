@@ -284,7 +284,13 @@ feature -- Evaluation
 			if l_boolean_value.is_error then
 				a_result.put (l_boolean_value)
 			elseif l_boolean_value.value then
-				then_expression.evaluate_item (a_result, a_context)
+				if then_expression.is_error then
+					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (then_expression.error_value))
+				else
+					then_expression.evaluate_item (a_result, a_context)
+				end
+			elseif else_expression.is_error then
+				a_result.put (create {XM_XPATH_INVALID_ITEM}.make (else_expression.error_value))
 			else
 				else_expression.evaluate_item (a_result, a_context)
 			end
@@ -300,8 +306,14 @@ feature -- Evaluation
 			if a_boolean_value.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
 			elseif a_boolean_value.value then
-				then_expression.create_iterator (a_context)
-				last_iterator := then_expression.last_iterator
+				if then_expression.is_error then
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (then_expression.error_value)
+				else
+					then_expression.create_iterator (a_context)
+					last_iterator := then_expression.last_iterator
+				end
+			elseif else_expression.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (else_expression.error_value)
 			else
 				else_expression.create_iterator (a_context)
 				last_iterator := else_expression.last_iterator
@@ -316,10 +328,16 @@ feature -- Evaluation
 			condition.calculate_effective_boolean_value (a_context)
 			a_boolean_value := condition.last_boolean_value
 			if a_boolean_value.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_iterator.make (a_boolean_value.error_value)
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_boolean_value.error_value)
 			elseif a_boolean_value.value then
-				then_expression.create_node_iterator (a_context)
-				last_node_iterator := then_expression.last_node_iterator
+				if then_expression.is_error then
+					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (then_expression.error_value)
+				else
+					then_expression.create_node_iterator (a_context)
+					last_node_iterator := then_expression.last_node_iterator
+				end
+			elseif else_expression.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (else_expression.error_value)				
 			else
 				else_expression.create_node_iterator (a_context)
 				last_node_iterator := else_expression.last_node_iterator

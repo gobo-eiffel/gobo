@@ -174,7 +174,7 @@ feature -- Basic operations
 		do
 			old_allowed := is_comma_allowed
 			is_comma_allowed := parse_comma_as_decimal_point
-			parse_and_create_last_decimal (s, shared_decimal_context)
+			parse_and_create_last_decimal (s, ctx)
 			is_comma_allowed := old_allowed
 		ensure
 			no_mode_change: is_comma_allowed = old is_comma_allowed
