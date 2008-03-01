@@ -60,7 +60,7 @@
 /*
  * Call dispose routine `disp' on object `C'.
  */
-extern void GE_boehm_dispose(EIF_REFERENCE, void (*)(EIF_REFERENCE));
+extern void GE_boehm_dispose(void*, void*);
 
 /*
  * Register dispose routine `disp' to be called on object `obj' when it will be collected.

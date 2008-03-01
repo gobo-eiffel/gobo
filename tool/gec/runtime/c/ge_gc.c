@@ -17,8 +17,8 @@
 /*
  * Call dispose routine `disp' on object `C'.
  */
-void GE_boehm_dispose(EIF_REFERENCE C, void (*disp)(EIF_REFERENCE)) {
-	disp(C);
+void GE_boehm_dispose(void* C, void* disp) {
+	((GE_types[((EIF_REFERENCE)C)->id]).dispose)((EIF_REFERENCE)C);
 }
 #endif
 

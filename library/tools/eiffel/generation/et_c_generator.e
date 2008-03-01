@@ -193,6 +193,7 @@ feature {NONE} -- Initialization
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create inline_constants.make (10000)
+			create dispose_procedures.make_map (current_system.dynamic_types.count)
 			create dynamic_type_id_set_names.make_map (10000)
 			dynamic_type_id_set_names.set_key_equality_tester (string_equality_tester)
 			create called_features.make (1000)
@@ -716,6 +717,7 @@ feature {NONE} -- C code Generation
 				once_features.wipe_out
 				constant_features.wipe_out
 				inline_constants.wipe_out
+				dispose_procedures.wipe_out
 				dynamic_type_id_set_names.wipe_out
 				l_header_file.close
 				close_c_file
@@ -20225,41 +20227,55 @@ feature {NONE} -- Memory allocation
 		local
 			l_dispose_seed: INTEGER
 			l_dispose_procedure: ET_DYNAMIC_FEATURE
+			l_procedure: ET_DYNAMIC_FEATURE
 			l_internal_procedure: ET_INTERNAL_PROCEDURE
 			l_compound: ET_COMPOUND
 		do
 			if not a_type.is_expanded then
-				l_dispose_seed := universe.dispose_seed
-				if l_dispose_seed > 0 then
-					l_dispose_procedure := a_type.seeded_dynamic_procedure (l_dispose_seed, current_system)
-					if l_dispose_procedure /= Void then
-							-- There is a feature 'dispose' available.
-						l_internal_procedure ?= l_dispose_procedure.static_feature
-						if l_internal_procedure /= Void then
-							l_compound := l_internal_procedure.compound
-							if l_compound /= Void and then not l_compound.is_empty then
-									-- The feature 'dispose' is not empty.
-									-- Register it to the GC.
-								print_indentation
-								current_file.put_string (c_ge_register_dispose)
-								current_file.put_character ('(')
-								print_expression (an_object)
-								current_file.put_character (',')
-								current_file.put_character ('&')
-								print_routine_name (l_dispose_procedure, a_type, current_file)
-								current_file.put_character (')')
-								current_file.put_character (';')
-								current_file.put_new_line
-								if not l_dispose_procedure.is_generated then
-									l_dispose_procedure.set_generated (True)
-									called_features.force_last (l_dispose_procedure)
+				dispose_procedures.search (a_type)
+				if dispose_procedures.found then
+					l_dispose_procedure := dispose_procedures.found_item
+				else
+					l_dispose_seed := universe.dispose_seed
+					if l_dispose_seed > 0 then
+						l_procedure := a_type.seeded_dynamic_procedure (l_dispose_seed, current_system)
+						if l_procedure /= Void then
+								-- There is a feature 'dispose' available.
+							l_internal_procedure ?= l_procedure.static_feature
+							if l_internal_procedure /= Void then
+								l_compound := l_internal_procedure.compound
+								if l_compound /= Void and then not l_compound.is_empty then
+										-- The feature 'dispose' is not empty.
+										-- Register it to the GC.
+									l_dispose_procedure := l_procedure
 								end
 							end
 						end
 					end
+					dispose_procedures.force_last (l_dispose_procedure, a_type)
+				end
+				if l_dispose_procedure /= Void then
+					print_indentation
+					current_file.put_string (c_ge_register_dispose)
+					current_file.put_character ('(')
+					print_expression (an_object)
+					current_file.put_character (',')
+					current_file.put_character ('&')
+					print_routine_name (l_dispose_procedure, a_type, current_file)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					if not l_dispose_procedure.is_generated then
+						l_dispose_procedure.set_generated (True)
+						called_features.force_last (l_dispose_procedure)
+					end
 				end
 			end
 		end
+
+	dispose_procedures: DS_HASH_TABLE [ET_DYNAMIC_FEATURE, ET_DYNAMIC_TYPE]
+			-- 'dispose' procedures indexed by types, or Void if we figured out
+			-- that there was no 'dispose' procedure for the given type
 
 feature {NONE} -- Trace generation
 
@@ -21617,6 +21633,10 @@ feature {NONE} -- Type generation
 			a_file.put_string (c_is_special)
 			a_file.put_character (';')
 			a_file.put_new_line
+			a_file.put_character ('%T')
+			a_file.put_string ("void (*dispose) (EIF_REFERENCE)")
+			a_file.put_character (';')
+			a_file.put_new_line
 			a_file.put_character ('}')
 			a_file.put_character (' ')
 			a_file.put_string (c_eif_type)
@@ -21632,6 +21652,7 @@ feature {NONE} -- Type generation
 			l_type: ET_DYNAMIC_TYPE
 			l_meta_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
+			l_dispose_procedure: ET_DYNAMIC_FEATURE
 		do
 			l_dynamic_types := current_system.dynamic_types
 			nb := l_dynamic_types.count
@@ -21665,6 +21686,9 @@ feature {NONE} -- Type generation
 			current_file.put_character (',')
 			current_file.put_character (' ')
 			current_file.put_string (c_eif_false)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			current_file.put_integer (0)
 			current_file.put_character ('}')
 			current_file.put_character (',')
 			current_file.put_new_line
@@ -21690,6 +21714,20 @@ feature {NONE} -- Type generation
 					current_file.put_string (c_eif_true)
 				else
 					current_file.put_string (c_eif_false)
+				end
+				current_file.put_character (',')
+				current_file.put_character (' ')
+					-- dispose.
+				l_dispose_procedure := Void
+				dispose_procedures.search (l_type)
+				if dispose_procedures.found then
+					l_dispose_procedure := dispose_procedures.found_item
+				end
+				if l_dispose_procedure /= Void then
+					current_file.put_character ('&')
+					print_routine_name (l_dispose_procedure, l_type, current_file)
+				else
+					current_file.put_integer (0)
 				end
 				current_file.put_character ('}')
 				if i /= nb then
@@ -24739,6 +24777,7 @@ invariant
 	-- constant_feature_constraint: forall f in constant_features, f = f.implementation_feature
 	inline_constants_not_void: inline_constants /= Void
 	no_void_inline_constant: not inline_constants.has (Void)
+	dispose_procedures_not_void: dispose_procedures /= Void
 		-- Temporary variables.
 	temp_variables_not_void: temp_variables /= Void
 	no_void_temp_variable: not temp_variables.has (Void)
