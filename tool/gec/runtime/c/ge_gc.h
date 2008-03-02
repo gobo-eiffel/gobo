@@ -65,7 +65,7 @@ extern void GE_boehm_dispose(void*, void*);
 /*
  * Register dispose routine `disp' to be called on object `obj' when it will be collected.
  */
-#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, (void*)(disp), NULL, NULL)
+#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, NULL, NULL, NULL)
 
 #else
 

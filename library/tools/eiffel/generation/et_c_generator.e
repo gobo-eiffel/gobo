@@ -589,6 +589,12 @@ feature {NONE} -- C code Generation
 					header_file.put_line (c_eif_trace)
 					header_file.put_new_line
 				end
+				if exception_trace_mode then
+					header_file.put_string (c_define)
+					header_file.put_character (' ')
+					header_file.put_line (c_eif_exception_trace)
+					header_file.put_new_line
+				end
 				if use_boehm_gc then
 					header_file.put_string (c_define)
 					header_file.put_character (' ')
@@ -24599,6 +24605,7 @@ feature {NONE} -- Constants
 	c_eif_character_8: STRING is "EIF_CHARACTER_8"
 	c_eif_character_32: STRING is "EIF_CHARACTER_32"
 	c_eif_double: STRING is "EIF_DOUBLE"
+	c_eif_exception_trace: STRING is "EIF_EXCEPTION_TRACE"
 	c_eif_false: STRING is "EIF_FALSE"
 	c_eif_integer: STRING is "EIF_INTEGER"
 	c_eif_integer_8: STRING is "EIF_INTEGER_8"
