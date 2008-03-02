@@ -34,17 +34,36 @@ inherit
 #ifdef ISE || VE
 			Boolean_bytes as old_boolean_bytes,
 			Character_bytes as old_character_bytes,
-			Double_bytes as old_double_bytes,
-			Integer_bytes as old_integer_bytes,
 			Pointer_bytes as old_pointer_bytes,
+#endif
+#ifdef VE
+			Integer_bytes as old_integer_bytes,
+			Double_bytes as old_double_bytes,
 			Real_bytes as old_real_bytes,
+#endif
+#ifdef ISE
+			Integer_bytes as old_obsolete_integer_bytes,
+			Integer_32_bytes as old_integer_bytes,
+			Double_bytes as old_obsolete_double_bytes,
+			Real_64_bytes as old_double_bytes,
+			Real_bytes as old_obsolete_real_bytes,
+			Real_32_bytes as old_real_bytes,
+#endif
+#ifdef ISE
+			Integer_bits as old_obsolete_integer_bits,
+			Integer_32_bits as old_integer_bits,
+			Double_bits as old_obsolete_double_bits,
+			Real_64_bits as old_double_bits,
+			Real_bits as old_obsolete_real_bits,
+			Real_32_bits as old_real_bits,
+#else
+			Integer_bits as old_integer_bits,
+			Double_bits as old_double_bits,
+			Real_bits as old_real_bits,
 #endif
 			Boolean_bits as old_boolean_bits,
 			Character_bits as old_character_bits,
-			Double_bits as old_double_bits,
-			Integer_bits as old_integer_bits,
-			Pointer_bits as old_pointer_bits,
-			Real_bits as old_real_bits
+			Pointer_bits as old_pointer_bits
 		export
 			{NONE} all
 		end
@@ -60,7 +79,11 @@ feature -- Bits
 	Character_bits: INTEGER is
 			-- Number of bits in a value of type CHARACTER
 		once
+#ifdef ISE
+			Result := 8
+#else
 			Result := old_character_bits
+#endif
 		end
 
 	Double_bits: INTEGER is
@@ -108,7 +131,11 @@ feature -- Bytes
 #ifdef SE
 			Result := Character_bits // Byte_bits
 #else
+#ifdef ISE
+			Result := 1
+#else
 			Result := old_character_bytes
+#endif
 #endif
 		end
 
@@ -157,13 +184,19 @@ feature -- Values
 	Minimum_character_code: INTEGER is
 			-- Smallest supported code for CHARACTER values
 		once
+#ifdef ISE
+			Result := {CHARACTER}.min_value
+#else
 			Result := old_minimum_character_code
+#endif
 		end
 
 	Maximum_character_code: INTEGER is
 			-- Largest supported code for CHARACTER values
 		once
-#ifdef VE || SE || ISE
+#ifdef ISE
+			Result := {CHARACTER}.max_value
+#else
 			Result := old_maximum_character_code
 #endif
 		end
@@ -175,14 +208,22 @@ feature -- Values
 				-- Avoid overflow:
 			Result := (2 ^ (Integer_bits - 2)).truncated_to_integer * -2
 #else
+#ifdef ISE
+			Result := {INTEGER}.min_value
+#else
 			Result := old_minimum_integer
+#endif
 #endif
 		end
 
 	Maximum_integer: INTEGER is
 			-- Largest supported value of type INTEGER
 		once
+#ifdef ISE
+			Result := {INTEGER}.max_value
+#else
 			Result := old_maximum_integer
+#endif
 		end
 
 #ifndef SE
