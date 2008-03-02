@@ -313,6 +313,7 @@ feature -- Optimization
 				create l_empty.make
 				actions.put_last (l_empty)
 				set_replacement (l_empty)
+				a_context.issue_warning (STRING_.concat ("All conditional branches evaluate to false at ", location_message))
 			end	
 		end
 

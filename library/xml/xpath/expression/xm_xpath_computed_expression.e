@@ -104,6 +104,15 @@ feature -- Access
 			end
 		end
 
+	location_message: STRING is
+			-- Location text for messages
+		do
+			Result := "line " + line_number.out + " in module " + system_id
+		ensure
+			location_message_not_void: Result /= Void
+			location_message_not_empty: not Result.is_empty
+		end
+
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do

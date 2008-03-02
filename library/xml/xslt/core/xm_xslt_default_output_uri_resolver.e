@@ -80,7 +80,7 @@ feature -- Action
 					last_result := l_resolver.last_result
 					error_message := l_resolver.error_message
 					if last_result /= Void then
-						output_destinations.put (last_result, l_uri_to_use)
+						output_destinations.force_new (last_result, l_uri_to_use)
 					end
 				else
 					error_message := STRING_.concat ("Writing output to URI scheme ", l_scheme)

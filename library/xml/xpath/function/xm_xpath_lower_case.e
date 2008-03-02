@@ -57,7 +57,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			create Result.make_optional_item
+			create Result.make_optional_string
 		end
 
 feature -- Evaluation

@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 						a_group.force_last (an_item)
 						groups.force_last (a_group)
 						group_keys.force_last (a_key)
-						a_map.put (a_group, a_comparison_key)
+						a_map.force_new (a_group, a_comparison_key)
 					end
 					first_key := False
 					a_keys_iterator.forth
