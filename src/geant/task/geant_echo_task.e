@@ -39,15 +39,15 @@ feature {NONE} -- Initialization
 			Precursor {GEANT_TASK} (a_project, an_xml_element)
 
 			create a_sp.make
-			create a_message_property.make ("message", a_sp, an_xml_element)
+			create a_message_property.make ("message", a_sp, a_project, an_xml_element)
 			command.set_message_property (a_sp)
 
 			create a_sp.make
-			create a_string_xml_attribute.make ("to_file", a_sp, an_xml_element)
+			create a_string_xml_attribute.make ("to_file", a_sp, a_project, an_xml_element)
 			command.set_to_file_property (a_sp)
 
 			create a_bp.make
-			create a_boolean_xml_attribute.make ("append", a_bp, an_xml_element)
+			create a_boolean_xml_attribute.make ("append", a_bp, a_project, an_xml_element)
 			command.set_append_property (a_bp)
 		end
 
