@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			selected_targets.set_key_equality_tester (a_tester)
 
 			create {DS_ARRAYED_STACK [GEANT_TARGET]} targets_stack.make (10)
+			create task_factory.make (Current)
 
 			build_successful := True
 		ensure
@@ -310,6 +311,19 @@ feature -- Setting
 		ensure
 			old_inherit_set: old_inherit = a_old_inherit
 		end
+
+feature {GEANT_GROUP, GEANT_TARGET} -- Task factory
+
+	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK is
+			-- New GEANT_TASK for `a_xml_element'
+		require
+			task_factory_not_void: task_factory /= Void
+		do
+			Result := task_factory.new_task (a_xml_element)
+		end
+
+	task_factory: GEANT_TASK_FACTORY
+			-- Task factory associated to Current
 
 feature -- Processing
 

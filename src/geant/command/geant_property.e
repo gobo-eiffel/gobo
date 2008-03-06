@@ -29,8 +29,6 @@ feature -- Access
 
 	string_value: STRING is
 			-- String value of property or Void if not available
-		local
-			s: STRING
 		do
 			if not has_been_retrieved then
 				retrieved_string_value := string_value_agent.item ([])

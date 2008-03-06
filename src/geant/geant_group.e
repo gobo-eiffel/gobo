@@ -228,7 +228,7 @@ feature {NONE} -- Execution implementation
 		local
 			a_task: GEANT_TASK
 		do
-			a_task := new_task (a_xml_element)
+			a_task := project.new_task (a_xml_element)
 
 				-- Execute task:
 			if a_task = Void then
@@ -246,76 +246,6 @@ feature {NONE} -- Execution implementation
 				project.trace_debug (<<"task is disabled">>)
 			end
 		end
-
-	new_task (a_xml_element: XM_ELEMENT): GEANT_TASK is
-			-- New GEANT_TASK for `a_xml_element'
-		do
-			if task_builders.has (a_xml_element.name) then
-				Result := Task_builders.item (a_xml_element.name).new_task (project, a_xml_element)
-			end
-		end
-
-	Task_builders: DS_HASH_TABLE [GEANT_TASK_BUILDER [GEANT_TASK], STRING] is
-			-- Table of task builders
-		once
-			create Result.make_equal (30)
-
-				-- gec: Gobo Eiffel compilation
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_GEC_TASK]}, Gec_task_name)
-					-- se: SmartEiffel compilation
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_SE_TASK]}, Se_task_name)
-					-- ise: ISE Eiffel compilation
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_ISE_TASK]}, Ise_task_name)
-					-- ve: Visual Eiffel compilation
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_VE_TASK]}, Ve_task_name)
-					-- exec
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_EXEC_TASK]}, Exec_task_name)
-					-- lcc
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_LCC_TASK]}, Lcc_task_name)
-					-- set
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_SET_TASK]}, Set_task_name)
-					-- unset
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_UNSET_TASK]}, Unset_task_name)
-					-- gexace
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_GEXACE_TASK]}, Gexace_task_name)
-					-- gelex
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_GELEX_TASK]}, Gelex_task_name)
-					-- geyacc
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_GEYACC_TASK]}, Geyacc_task_name)
-					-- gepp
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_GEPP_TASK]}, Gepp_task_name)
-					-- getest
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_GETEST_TASK]}, Getest_task_name)
-					-- geant
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_GEANT_TASK]}, Geant_task_name)
-					-- echo
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_ECHO_TASK]}, Echo_task_name)
-					-- mkdir
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_MKDIR_TASK]}, Mkdir_task_name)
-					-- delete
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_DELETE_TASK]}, Delete_task_name)
-					-- copy
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_COPY_TASK]}, Copy_task_name)
-					-- move
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_MOVE_TASK]}, Move_task_name)
-					-- setenv
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_SETENV_TASK]}, Setenv_task_name)
-					-- xslt
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_XSLT_TASK]}, Xslt_task_name)
-					-- outofdate
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_OUTOFDATE_TASK]}, Outofdate_task_name)
-					-- exit
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_EXIT_TASK]}, Exit_task_name)
-					-- precursor
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_PRECURSOR_TASK]}, Precursor_task_name)
-					-- available
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_AVAILABLE_TASK]}, Available_task_name)
-					-- input
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_INPUT_TASK]}, Input_task_name)
-					-- replace
-			Result.force_last (create {GEANT_TASK_BUILDER [GEANT_REPLACE_TASK]}, Replace_task_name)
-		end
-
 
 feature {NONE} -- Constants
 
