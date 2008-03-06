@@ -51,8 +51,6 @@ feature -- Access
 			else
 				--| Per project custom tasks (for future use)
 			end
-		ensure
-			new_task_not_void: Result /= Void
 		end
 
 feature -- Factory
