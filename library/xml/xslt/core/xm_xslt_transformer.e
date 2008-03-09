@@ -411,14 +411,12 @@ feature -- Basic operations
 			parameters := Void
 		end
 
-	set_string_parameter (a_parameter_value, a_parameter_name: STRING) is
-			-- Set a global string-valued parameter on the stylesheet.
+	set_value_parameter (a_parameter_value: XM_XPATH_VALUE; a_parameter_name: STRING) is
+			-- Set an XPath value as a global parameter on the stylesheet.
 		require
 			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
-			parameter_value_not_void: a_parameter_value /= Void
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
-			a_fingerprint: INTEGER
+			l_fingerprint: INTEGER
 		do
 			if parameters = Void then
 				create parameters.make_empty
@@ -426,9 +424,28 @@ feature -- Basic operations
 			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
 				shared_name_pool.allocate_expanded_name (a_parameter_name)
 			end
-			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
-			create a_string_value.make (a_parameter_value)
-			parameters.put (a_string_value, a_fingerprint) -- this does a replace of an existing parameter of the same name
+			l_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
+			parameters.put (a_parameter_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
+		end
+
+	set_string_parameter (a_parameter_value, a_parameter_name: STRING) is
+			-- Set a global string-valued parameter on the stylesheet.
+		require
+			parameter_name_not_void: a_parameter_name /= Void and then is_valid_expanded_name (a_parameter_name)
+			parameter_value_not_void: a_parameter_value /= Void
+		local
+			l_string_value: XM_XPATH_STRING_VALUE
+			l_fingerprint: INTEGER
+		do
+			if parameters = Void then
+				create parameters.make_empty
+			end
+			if not shared_name_pool.is_expanded_name_allocated (a_parameter_name) then
+				shared_name_pool.allocate_expanded_name (a_parameter_name)
+			end
+			l_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
+			create l_string_value.make (a_parameter_value)
+			parameters.put (l_string_value, l_fingerprint) -- this does a replace of an existing parameter of the same name
 		end
 
 	set_xpath_parameter (a_parameter_value, a_parameter_name: STRING) is

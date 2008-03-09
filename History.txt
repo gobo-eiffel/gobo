@@ -142,6 +142,7 @@ Version 3.8 - ?
 	  almost certainly is not used). Wrote documentation.
 	* Added additional XSLT system-properties, and the ability to
 	  register additional system properties. Documented this.
+	* Added facility to pass XPath values as global XSLT parameter values.
 
 Version 3.7 - 5 November 2007
 

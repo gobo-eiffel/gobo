@@ -203,6 +203,7 @@ feature -- Optimization
 					
 					set_replacement (action_expression)
 					optimized := True
+					-- TODO elseif reference_count = 1 or sequence is a literal (neither in a loop) then
 				end
 				set_declaration_void
 			end

@@ -86,7 +86,7 @@
       then this step is mandatory).
     </para>
     <para>
-      There are two features provided to set the value of a parameter. If, as is common, you
+      There are three features provided to set the value of a parameter. If, as is common, you
       wish to supply a string value (type <xpath>xs:string</xpath>), then you can call
       <featurecall><featurename>set_string_parameter</featurename></featurecall>. This takes two <classname>STRING</classname>s
       as arguments. The first is the name of the parameter, and the second is the value you wish to set.
@@ -103,6 +103,12 @@
     </para>
     <para>
       The XPath expression is evaluated using a dynamic context based on the document element of the XML source data file, if present.
+    </para>
+    <para>
+      Finally, you may already have an XPath value (or a node, which
+      can be treated as an XPath value by wrapping it in
+      an <classname>XM_XPATH_SINGLETON_NODE</classname> object). In
+      this case you can call <featurecall><featurename>set_value_parameter</featurename></featurecall>.
     </para>
   </section>
   <section>
