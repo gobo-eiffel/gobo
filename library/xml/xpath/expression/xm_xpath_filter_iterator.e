@@ -18,10 +18,6 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-		-- This class is not used where the filter is a constant number.
-		-- Instead, use XM_XPATH_POSITION_ITERATOR, so this class does not
-		--  need to do optimization for numeric predicates.
-
 create
 
 	make, make_non_numeric
@@ -129,27 +125,33 @@ feature {NONE} -- Implementation
 	advance is
 			-- Move to next matching node.
 		local
-			next_item: like item
-			matched: BOOLEAN
+			l_item: like item
+			l_matched: BOOLEAN
 		do
 			from
-				matched := False
-				if base_iterator.before then base_iterator.start end
-				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
+				l_matched := False
 			until
-				is_error or else matched or else base_iterator.after
+				l_matched or (is_error or else (not base_iterator.before and then base_iterator.after))
 			loop
-				next_item := base_iterator.item
-				test_match
-				matched := last_match_test
-				if not base_iterator.after then base_iterator.forth end
-				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
+				if base_iterator.before then
+					base_iterator.start
+				else
+					base_iterator.forth
+				end
+				if	base_iterator.is_error then
+					set_last_error (base_iterator.error_value)
+				elseif not base_iterator.after then
+					l_item := base_iterator.item
+					test_match
+					l_matched := last_match_test
+				end
 			end
+
 			if is_error then
 				create {XM_XPATH_BOOLEAN_VALUE} current_item.make (False) -- we need SOMETHING to set an error upon!
 				current_item.set_last_error (error_value)
 			elseif last_match_test then
-				current_item := next_item
+				current_item := l_item
 			else
 				current_item := Void
 			end

@@ -816,6 +816,12 @@ feature -- Status report
 			Result := False
 		end
 
+	is_first_item_expression: BOOLEAN is
+			-- Is `Current' a first item expression?
+		do
+			Result := False
+		end
+
 	is_context_item: BOOLEAN is
 			-- Is `Current' a context-item expression?
 		do

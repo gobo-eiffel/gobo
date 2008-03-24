@@ -79,7 +79,7 @@ feature -- Status report
 		local
 			l_string: STRING
 		do
-			std.error.put_string (STRING_.concat (indentation (a_level), "pattern: "))
+			l_string := STRING_.concat (indentation (a_level), "pattern: ")
 			l_string := STRING_.appended_string (l_string, pattern.original_text)
 			std.error.put_string (l_string)
 			std.error.put_new_line

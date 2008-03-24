@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			optimize, promote, compute_cardinality, evaluate_item
+			optimize, promote, compute_cardinality, evaluate_item, is_first_item_expression
 		end
 
 create
@@ -37,6 +37,14 @@ feature {NONE} -- Initialization
 			base_expression_set: base_expression = a_base_expression
 		end
 
+feature -- Status report
+
+	is_first_item_expression: BOOLEAN is
+			-- Is `Current' a first item expression?
+		do
+			Result := True
+		end
+
 feature -- Optimization
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -49,10 +57,10 @@ feature -- Optimization
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
+			elseif base_expression.is_first_item_expression then
+				set_replacement (base_expression)
 			else
-				if not base_expression.cardinality_allows_many then
-					set_replacement (base_expression)
-				end
+				Precursor (a_context, a_context_item_type)
 			end
 		end
 

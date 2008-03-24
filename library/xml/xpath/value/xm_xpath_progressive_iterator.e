@@ -17,7 +17,8 @@ inherit
 	
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		redefine
-			is_realizable_iterator, realize
+			is_realizable_iterator, realize,
+			is_last_position_finder, last_position
 		end
 
 create
@@ -51,6 +52,19 @@ feature -- Access
 			Result := reservoir.item (index)
 		end
 
+	last_position: INTEGER is
+			-- Last position (= number of items in sequence)
+		do
+			if closure /= Void and then closure.is_all_read then
+					Result := closure.count
+			else
+				fill_reservoir
+				if closure /= Void then
+					Result := closure.count
+				end
+			end
+		end
+
 feature -- Status report
 
 	is_realizable_iterator: BOOLEAN is
@@ -59,6 +73,12 @@ feature -- Status report
 			Result := True
 		end
 
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := True
+		end
+	
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do

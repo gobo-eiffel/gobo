@@ -152,6 +152,7 @@ feature -- Status report
 		do
 			std.error.put_string (STRING_.concat (indentation (a_level), "xsl:result-document"))
 			std.error.put_new_line
+			content.display (a_level + 1)
 		end
 
 feature -- Setting

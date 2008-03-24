@@ -149,7 +149,7 @@ feature -- Element change
 			if group_ending_with /= Void then
 				type_check_pattern ("group-ending-with", group_ending_with)
 			end
-			if group_starting_with /= Void or else group_ending_with /= Void then
+			if group_starting_with /= Void or group_ending_with /= Void then
 				create a_type_checker
 				create a_role.make (Instruction_role, "xsl:for-each-group/select", 1, Xpath_errors_uri, "XTTE1120")
 				create a_node_sequence.make_node_sequence

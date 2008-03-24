@@ -34,7 +34,7 @@ inherit
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
-feature {NONE} -- Implementation
+feature {XM_XSLT_PATTERN} -- Implementation
 
 	xpath_to_xslt_node_test (a_xpath_node_test: XM_XPATH_NODE_TEST; a_context: XM_XPATH_STATIC_CONTEXT): XM_XSLT_NODE_TEST is
 			-- XSLT node-test-pattern from XPath node-test

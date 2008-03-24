@@ -87,7 +87,7 @@ feature -- Access
 			when Ancestor_axis then
 				Result := "ancestor"
 			when Ancestor_or_self_axis then
-				Result := "ancestor-or-seld"
+				Result := "ancestor-or-self"
 			when Attribute_axis then
 				Result := "attribute"
 			when Child_axis then

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		do
 			system_id := a_static_context.system_id
 			line_number := a_static_context.line_number
-			node_test := any_xslt_node_test
+			original_node_test := any_xslt_node_test
 			initialize_dependencies
 		ensure
 			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
@@ -65,13 +65,20 @@ feature -- Access
 	ancestor_pattern: XM_XSLT_PATTERN
 			-- Ancestor pattern
 
-	node_test: XM_XSLT_NODE_TEST
+	node_test: XM_XSLT_NODE_TEST is
 			-- A node test that this pattern matches
+		do
+			if refined_node_test /= Void then
+				Result := refined_node_test
+			else
+				Result := original_node_test
+			end
+		end
 
 	node_kind: INTEGER is
 			-- Type of nodes matched
 		do
-			Result := node_test.node_kind
+			Result := original_node_test.node_kind
 		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
@@ -102,19 +109,19 @@ feature -- Access
 		do
 			if parent_pattern /= Void then
 				Result := STRING_.concat (parent_pattern.original_text, "/")
-				Result := STRING_.appended_string (Result, node_test.original_text)
+				Result := STRING_.appended_string (Result, original_node_test.original_text)
 			elseif ancestor_pattern /= Void then
 				Result := STRING_.concat (ancestor_pattern.original_text, "/")
-				Result := STRING_.appended_string (Result, node_test.original_text)
+				Result := STRING_.appended_string (Result, original_node_test.original_text)
 			else
-				Result := node_test.original_text
+				Result := original_node_test.original_text
 			end
 		end
 
 	fingerprint: INTEGER is
 			-- Determine the name fingerprint of nodes to which this pattern applies
 		do
-			Result := node_test.fingerprint
+			Result := original_node_test.fingerprint
 		end
 
 	computed_dependencies: ARRAY [BOOLEAN] is
@@ -208,7 +215,7 @@ feature -- Optimization
 
 			if parent_pattern = Void and then ancestor_pattern = Void and then filters = Void then
 				Result := node_test.cloned_object
-				-- TODO Result.set_system_id (system_id)
+				Result.set_system_id (system_id)
 				Result.set_line_number (line_number)
 			else
 				l_result_pattern := cloned_object
@@ -246,71 +253,105 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type-check the pattern;
 		local
-			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
-			a_filter_expression, an_expression: XM_XPATH_EXPRESSION
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_filter_expression, l_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_step: XM_XPATH_AXIS_EXPRESSION
+			l_filters: like filters
+			l_routines: XM_XSLT_PATTERN_ROUTINES
 		do
-
+			l_context ?= a_context
+			check
+				l_context_not_void: l_context /= Void
+				-- this is XSLT
+			end
+			
 			-- Analyze each component of the pattern
 
 			if parent_pattern /= Void then
 				parent_pattern.type_check (a_context, a_context_item_type)
-				if parent_pattern.is_error then set_error_value (parent_pattern.error_value) end
-
-				-- TODO: Check that this step in the pattern makes sense in the context of the parent step
-
+				if parent_pattern.is_error then
+					set_error_value (parent_pattern.error_value)
+				else
+					if original_node_test.primitive_type = Attribute_node then
+						create l_step.make (Attribute_axis, original_node_test)
+					else
+						create l_step.make (Child_axis, original_node_test)
+					end
+					l_step.set_source_location (l_context.style_element.containing_stylesheet.module_number (a_context.system_id), line_number)
+					l_step.check_static_type (a_context, a_context_item_type)
+					if l_step.is_error then
+						set_error_value (l_step.error_value)
+					elseif l_step.was_expression_replaced then
+						l_expression := l_step.replacement_expression
+					else
+						l_expression := l_step
+					end
+					if not is_error and then l_expression.item_type.is_node_test then
+						create l_routines
+						refined_node_test := l_routines.xpath_to_xslt_node_test (l_expression.item_type.as_node_test, a_context)
+					end
+				end
 			elseif ancestor_pattern /= Void then
 				ancestor_pattern.type_check (a_context, a_context_item_type)
-				if ancestor_pattern.is_error then set_error_value (ancestor_pattern.error_value) end
+				if ancestor_pattern.is_error then
+					set_error_value (ancestor_pattern.error_value)
+				end
 			end
 
 			if not is_error and then filters /= Void then
+				create l_filters.make (filters.count)
+				l_filters.set_equality_tester (expression_tester)				
 				from
-					a_cursor := filters.new_cursor
-					a_cursor.start
+					l_cursor := filters.new_cursor
+					l_cursor.finish
 				variant
-					filters.count + 1 - a_cursor.index
+					l_cursor.index
 				until
-					is_error or else a_cursor.after
+					is_error or else l_cursor.before
 				loop
-					a_cursor.item.check_static_type (a_context, node_test)
-					if a_cursor.item.was_expression_replaced then
-						a_filter_expression := a_cursor.item.replacement_expression
+					l_cursor.item.check_static_type (a_context, node_test)
+					if l_cursor.item.was_expression_replaced then
+						l_filter_expression := l_cursor.item.replacement_expression
 					else
-						a_filter_expression := a_cursor.item
+						l_filter_expression := l_cursor.item
 					end
-					if a_filter_expression.is_error then
-						set_error_value (a_filter_expression.error_value)
+					if l_filter_expression.is_error then
+						set_error_value (l_filter_expression.error_value)
+					else
+						l_filter_expression.optimize (a_context, node_test)
+						if l_filter_expression.was_expression_replaced then
+							l_filter_expression := l_filter_expression.replacement_expression
+						end
 					end
 					if not is_error then
 
 						-- If the last filter is constant true, remove it.
 
-						if a_filter_expression.is_boolean_value and then a_filter_expression.as_boolean_value.value then
-							-- do nothing
+						if l_filter_expression.is_boolean_value then
+							if l_filter_expression.as_boolean_value.value then
+								-- do nothing
+							end
 						else
-							a_cursor.replace (a_filter_expression)
+							l_filters.put_first (l_filter_expression)
+							l_context.style_element.allocate_slots (l_filter_expression, l_context.style_element.containing_stylesheet.slot_manager)
 						end
-						an_expression_context ?= a_context
-						check
-							an_expression_context_not_void: an_expression_context /= Void
-						end
-						an_expression_context.style_element.allocate_slots (a_filter_expression, an_expression_context.style_element.containing_stylesheet.slot_manager)
 					end
-					a_cursor.forth
+					l_cursor.back
 				end
+				filters := l_filters
 			end
 
 			if not is_error then
 
 				-- See if it's an element pattern with a single positional predicate of [1]
 
-				if node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
-					a_filter_expression := filters.item (1)
-					if (a_filter_expression.is_machine_integer_value and then a_filter_expression.as_machine_integer_value.value = 1
-						or else (a_filter_expression.is_position_range and then
-									(a_filter_expression.as_position_range.minimum_position = 1 and
-									 a_filter_expression.as_position_range.maximum_position = 1))) then
+				if original_node_test.node_kind = Element_node and (filters /= Void and then filters.count = 1) then
+					l_filter_expression := filters.item (1)
+					if (l_filter_expression.is_machine_integer_value and then l_filter_expression.as_machine_integer_value.value = 1
+						or else (l_filter_expression.is_position_range and then
+									(l_filter_expression.as_position_range.minimum_position = 1 and
+									 l_filter_expression.as_position_range.maximum_position = 1))) then
 						set_first_element_pattern (True)
 						set_special_filter (True)
 						set_filters (Void)
@@ -320,7 +361,7 @@ feature -- Optimization
 				-- See if it's an element pattern with a single positional predicate
 				-- of [position()=last()]
 
-				if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
+				if not is_first_element_pattern and original_node_test.node_kind = Element_node and (filters /= Void and then filters.count = 1) then
 					if filters.item (1).is_last_expression  and then filters.item (1).as_last_expression.condition then
 						set_last_element_pattern (True)
 						set_special_filter (True)
@@ -329,21 +370,21 @@ feature -- Optimization
 				end
 
 				if is_positional then
-					an_expression := make_equivalent_expression
-					an_expression.check_static_type (a_context, a_context_item_type)
-					if an_expression.was_expression_replaced then
-						set_equivalent_expression (an_expression.replacement_expression)
+					l_expression := make_equivalent_expression
+					l_expression.check_static_type (a_context, a_context_item_type)
+					if l_expression.was_expression_replaced then
+						set_equivalent_expression (l_expression.replacement_expression)
 					else
-						set_equivalent_expression (an_expression)
+						set_equivalent_expression (l_expression)
 					end
 					if equivalent_expression.is_error then
 						set_error_value (equivalent_expression.error_value)
 					else
-						an_expression_context ?= a_context
+						l_context ?= a_context
 						check
-							an_expression_context_not_void: an_expression_context /= Void
+							l_context_not_void: l_context /= Void
 						end
-						an_expression_context.style_element.allocate_slots (equivalent_expression, an_expression_context.style_element.containing_stylesheet.slot_manager)
+						l_context.style_element.allocate_slots (equivalent_expression, l_context.style_element.containing_stylesheet.slot_manager)
 						set_special_filter (True)
 					end
 				end
@@ -453,13 +494,13 @@ feature -- Element change
 		end
 
 	set_node_test (a_node_test: XM_XSLT_NODE_TEST) is
-			-- Set `node_test'.
+			-- Set `original_node_test'.
 		require
 			node_test_not_void: a_node_test /= Void
 		do
-			node_test := a_node_test
+			original_node_test := a_node_test
 		ensure
-			node_test_set: node_test = a_node_test
+			node_test_set: original_node_test = a_node_test
 		end
 
 feature -- Conversion
@@ -497,25 +538,25 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 			axis: INTEGER
 			step: XM_XPATH_COMPUTED_EXPRESSION
 			parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			if node_test.node_kind = Attribute_node then
+			if original_node_test.node_kind = Attribute_node then
 				axis := Attribute_axis
 			else
 				axis := Child_axis
 			end
-			create {XM_XPATH_AXIS_EXPRESSION} step.make (axis, node_test)
+			create {XM_XPATH_AXIS_EXPRESSION} step.make (axis, original_node_test)
 			if filters /= Void then
 				from
-					a_cursor := filters.new_cursor
-					a_cursor.start
+					l_cursor := filters.new_cursor
+					l_cursor.start
 				variant
-					filters.count + 1 - a_cursor.index
+					filters.count + 1 - l_cursor.index
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					create {XM_XPATH_FILTER_EXPRESSION} step.make (step, a_cursor.item)
-				a_cursor.forth
+					create {XM_XPATH_FILTER_EXPRESSION} step.make (step, l_cursor.item)
+					l_cursor.forth
 				end
 			end
 			create parent_node.make
@@ -527,28 +568,28 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 		local
 			type: INTEGER
 			a_filter_expression: XM_XPATH_EXPRESSION
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			if filters /= Void then
 				from
-					a_cursor := filters.new_cursor
-					a_cursor.start
+					l_cursor := filters.new_cursor
+					l_cursor.start
 				variant
-					filters.count + 1 - a_cursor.index
+					filters.count + 1 - l_cursor.index
 				until
-					a_cursor.after
+					l_cursor.after
 				loop
-					a_filter_expression := a_cursor.item
+					a_filter_expression := l_cursor.item
 					type := a_filter_expression.item_type.primitive_type
-					if type = type_factory.double_type.fingerprint or else type = type_factory.decimal_type.fingerprint
-						or else type = type_factory.integer_type.fingerprint
-						or else (type_factory.float_type /= Void and then type = type_factory.float_type.fingerprint)
-						or else type = type_factory.any_atomic_type.fingerprint then
+					if type = type_factory.double_type.fingerprint or type = type_factory.decimal_type.fingerprint
+						or  type = type_factory.integer_type.fingerprint
+						or (type_factory.float_type /= Void and then type = type_factory.float_type.fingerprint)
+						or type = type_factory.any_atomic_type.fingerprint then
 						Result := True
-					elseif a_filter_expression.depends_upon_position or else a_filter_expression.depends_upon_last then
+					elseif a_filter_expression.depends_upon_position or a_filter_expression.depends_upon_last then
 						Result := True
 					end
-					a_cursor.forth
+					l_cursor.forth
 				end
 			end
 		end
@@ -568,6 +609,12 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 
 feature {XM_XSLT_PATTERN} -- Implementation
 
+	original_node_test: like node_test
+			-- Originally supplied node test
+
+	refined_node_test: like node_test
+			-- `original_node_test' refined by type checking
+
 	variable_binding: XM_XPATH_EXPRESSION
 			-- Bound variable for replacing calls to fn:current()
 
@@ -586,6 +633,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 						parent_pattern.internal_match (l_node, a_context)
 						if parent_pattern.is_error then
 							set_error_value (parent_pattern.error_value)
+							l_is_candidate_match := False
 						else
 							l_is_candidate_match := parent_pattern.last_match_result
 						end
@@ -602,6 +650,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 						ancestor_pattern.internal_match (l_node, a_context)
 						if ancestor_pattern.is_error then
 							set_error_value (ancestor_pattern.error_value)
+							l_is_candidate_match := False
 						else
 							l_is_candidate_match := ancestor_pattern.last_match_result
 						end
@@ -651,12 +700,15 @@ feature {NONE} -- Implementation
 				else
 					l_new_context := a_context.new_minor_context
 					create l_singleton_iterator.make (a_node)
+					l_singleton_iterator.start
 					l_new_context.set_current_iterator (l_singleton_iterator)
 					
 					-- as it's a non-positional filter, we can handle each node separately
 					
 					from
-						l_cursor := filters.new_cursor; l_cursor.start; internal_last_match_result := True
+						l_cursor := filters.new_cursor
+						l_cursor.start
+						internal_last_match_result := True
 					variant
 						filters.count + 1 - l_cursor.index
 					until
@@ -702,7 +754,7 @@ feature {NONE} -- Implementation
 					from
 						l_node_iterator.start
 					until
-						 internal_last_match_result or l_node_iterator.is_error or else l_node_iterator.after
+						 internal_last_match_result or (l_node_iterator.is_error or else l_node_iterator.after)
 					loop
 						if l_node_iterator.item.is_same_node (a_node) then
 							internal_last_match_result := True
@@ -722,6 +774,6 @@ invariant
 
 	not_parent_and_ancestor: (parent_pattern /= Void implies ancestor_pattern = Void)
 		and then (ancestor_pattern /= Void implies parent_pattern = Void)
-	node_test_not_void: node_test /= Void
+	original_node_test_not_void: original_node_test /= Void
 
 end

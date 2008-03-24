@@ -267,7 +267,7 @@ feature -- Element change
 				create id_table.make_with_equality_testers (10, Void, string_equality_tester)
 			end
 			if not id_table.has (a_value) then
-				id_table.put (an_element, a_value)
+				id_table.force_new (an_element, a_value)
 			end
 		end
 

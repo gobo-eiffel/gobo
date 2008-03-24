@@ -713,13 +713,17 @@ feature {NONE} -- Implementation
 				an_expression := step.as_computed_expression
 				an_expression.compute_special_properties
 			end
-			is_start_peer := start.peer_nodeset; is_start_ordered := start.ordered_nodeset
+			is_start_peer := start.peer_nodeset
+			is_start_ordered := start.ordered_nodeset
 			if not start.cardinality_allows_many then
-				is_start_peer := True; is_start_ordered := True
+				is_start_peer := True
+				is_start_ordered := True
 			end
-			is_step_peer := step.peer_nodeset; is_step_ordered := step.ordered_nodeset
+			is_step_peer := step.peer_nodeset
+			is_step_ordered := step.ordered_nodeset
 			if not step.cardinality_allows_many then
-				is_step_peer := True; is_step_ordered := True
+				is_step_peer := True
+				is_step_ordered := True
 			end
 
 			if start.context_document_nodeset and then step.context_document_nodeset then
@@ -759,7 +763,7 @@ feature {NONE} -- Implementation
 			step_special_properties_computed: step.are_special_properties_computed
 		do
 			if is_step_ordered then
-				if not start.cardinality_allows_many or else is_start_ordered then
+				if not start.cardinality_allows_many or is_start_ordered then
 					
 					-- We know now that both the start and the step are sorted. But this does
 					-- not necessarily mean that the combination is sorted
@@ -775,7 +779,7 @@ feature {NONE} -- Implementation
 						-- no node is an ancestor of another) and the step selects within the subtree rooted
 						-- at the context node
 						
-						if is_start_peer and then step.subtree_nodeset then
+						if is_start_peer and step.subtree_nodeset then
 							Result := True
 						end
 					end

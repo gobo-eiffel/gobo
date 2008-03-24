@@ -21,7 +21,13 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_ERROR_TYPES
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	KL_SHARED_PLATFORM
 		export {NONE} all end
 
 		-- This class is not used where the filter is a constant number.
@@ -147,27 +153,33 @@ feature {NONE} -- Implementation
 	advance is
 			-- Move to next matching node.
 		local
-			next_item: like item
-			matched: BOOLEAN
+			l_item: like item
+			l_matched: BOOLEAN
 		do
 			from
-				matched := False
-				if base_iterator.before then base_iterator.start end
+				l_matched := False
 			until
-				is_error or else matched or else base_iterator.after
+				l_matched or (is_error or else (not base_iterator.before and then base_iterator.after))
 			loop
-				next_item := base_iterator.item
-				test_match
-				matched := last_match_test
-				if not base_iterator.after then base_iterator.forth end
-				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
+				if base_iterator.before then
+					base_iterator.start
+				else
+					base_iterator.forth
+				end
+				if	base_iterator.is_error then
+					set_last_error (base_iterator.error_value)
+				elseif not base_iterator.after then
+					l_item := base_iterator.item
+					test_match
+					l_matched := last_match_test
+				end
 			end
 
 			if is_error then
 				create {XM_XPATH_ORPHAN} current_item.make (Text_node, "") -- we need SOMETHING to set an error upon!
 				current_item.set_last_error (error_value)
 			elseif last_match_test then
-				current_item := next_item
+				current_item := l_item
 			else
 				current_item := Void
 			end
@@ -206,20 +218,54 @@ feature {NONE} -- Implementation
 						if l_item.is_node then
 							last_match_test := True
 						elseif l_item.is_boolean_value then
-							if l_item.as_boolean_value.value then	last_match_test := True	else l_iterator.forth; last_match_test := not l_iterator.after end
+							if l_item.as_boolean_value.value then
+								last_match_test := True
+							else
+								l_iterator.forth
+								last_match_test := not l_iterator.after
+								if not last_match_test then
+									set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+										"Effective boolean value is not defined for a sequence of two or more items starting with a boolean",
+										Xpath_errors_uri, "FORG0006", Type_error))
+								end
+							end
+						elseif l_item.is_string_value or l_item.is_untyped_atomic then
+							last_match_test := l_item.as_string_value.string_value.is_empty
+							if not last_match_test then
+								l_iterator.forth
+								last_match_test := not l_iterator.after
+								if not last_match_test then
+									set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+										"Effective boolean value is not defined for a sequence of two or more items starting with a string",
+										Xpath_errors_uri, "FORG0006", Type_error))
+								end
+							end
 						elseif l_item.is_machine_integer_value then
-							if l_item.as_machine_integer_value.value.to_integer = base_iterator.index then last_match_test := True else l_iterator.forth; last_match_test := not l_iterator.after end
+							l_iterator.forth
+							if l_iterator.after then
+								if l_item.as_machine_integer_value.value.abs <= Platform.maximum_integer and
+									l_item.as_machine_integer_value.value.to_integer = base_iterator.index then
+									last_match_test := True
+								end
+							else
+								set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+									"Effective boolean value is not defined for a sequence of two or more items starting with an atomic value",
+									Xpath_errors_uri, "FORG0006", Type_error))
+							end
 						elseif l_item.is_numeric_value then
 							create l_integer_value.make (base_iterator.index)
 							last_match_test := l_item.as_numeric_value.same_expression (l_integer_value)
-							if not last_match_test then l_iterator.forth; last_match_test := not l_iterator.after end
-						else
-							if l_item.is_string_value then
-								last_match_test := STRING_.same_string (l_item.as_string_value.string_value, "")
-								if not last_match_test then l_iterator.forth; last_match_test := not l_iterator.after end
-							else
-								last_match_test := True
+							if not last_match_test then
+								l_iterator.forth
+								last_match_test := not l_iterator.after
+								if not last_match_test then
+									set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (
+										"Effective boolean value is not defined for a sequence of two or more items starting with an atomic value",
+										Xpath_errors_uri, "FORG0006", Type_error))
+								end
 							end
+						else
+							last_match_test := True
 						end
 					end
 				else

@@ -146,13 +146,17 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
-			a_string: STRING
+			l_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "xsl:for-each-group")
-			std.error.put_string (a_string); std.error.put_new_line
+			l_string := STRING_.appended_string (indentation (a_level), "xsl:for-each-group ")
+			l_string := STRING_.appended_string (l_string, algorithm_name)
+			std.error.put_string (l_string)
+			std.error.put_new_line
 			select_expression.display (a_level + 1)
-			a_string := STRING_.appended_string (indentation (a_level), "return")
-			std.error.put_string (a_string); std.error.put_new_line
+			key_expression.display (a_level + 1)
+			l_string := STRING_.appended_string (indentation (a_level), "return")
+			std.error.put_string (l_string)
+			std.error.put_new_line
 			action.display (a_level + 1)
 		end
 
@@ -483,6 +487,25 @@ feature {NONE} -- Implementation
 
 	collation_name: XM_XPATH_EXPRESSION
 			-- Collation name
+
+	algorithm_name: STRING is
+			-- Name of grouping algorithm
+		do
+			inspect
+				algorithm
+			when Group_by_algorithm then
+				Result := "group-by"
+			when Group_adjacent_algorithm then
+				Result := "group-adjacent"
+			when Group_starting_with_algorithm then
+				Result := "group-starting-with"
+			when Group_ending_with_algorithm then
+				Result := "group-ending-with"
+			end
+		ensure
+			algorithm_name_not_void: Result /= Void
+			algorithm_name_not_empty: not Result.is_empty
+		end
 
 	fetch_collator (a_collator: DS_PAIR [ST_COLLATOR, XM_XPATH_ERROR_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Set `a_collator' from `collation_name'.
