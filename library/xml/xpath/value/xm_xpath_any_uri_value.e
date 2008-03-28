@@ -127,17 +127,17 @@ feature -- Status report
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
 		do
 			inspect
 				a_required_type.primitive_type
 			when Any_atomic_type_code, Any_item_fingerprint, Any_uri_type_code then
-				Result := Current
+				converted_value := Current
 			when Untyped_atomic_type_code then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (value)
 			when String_type_code then
-				create {XM_XPATH_STRING_VALUE} Result.make (value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (value)
 			else
 				todo ("convert_to_type (restricted string types)", True)
 			end

@@ -32,10 +32,6 @@ feature -- Access
 			-- Data type of the expression, where known
 		do
 			Result := type_factory.any_atomic_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
 		end
 
 feature -- Status report
@@ -146,7 +142,8 @@ feature {NONE} -- Implementation
 			if primitive_type = Untyped_atomic_type_code then
 				primitive_type := Numeric_type_code
 				if atomic_value.is_convertible (type_factory.double_type) then
-					atomic_value := atomic_value.convert_to_type (type_factory.double_type)
+					atomic_value.convert_to_type (type_factory.double_type)
+					atomic_value := atomic_value.converted_value
 				else
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0006", Dynamic_error))
 					already_finished := True
@@ -204,7 +201,8 @@ feature {NONE} -- Implementation
 			if second_primitive_type = Untyped_atomic_type_code then
 				second_primitive_type := Numeric_type_code
 				if second_atomic_value.is_convertible (type_factory.double_type) then
-					second_atomic_value := second_atomic_value.convert_to_type (type_factory.double_type)
+					second_atomic_value.convert_to_type (type_factory.double_type)
+					second_atomic_value := second_atomic_value.converted_value
 				else
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0006", Dynamic_error))
 					already_finished := True

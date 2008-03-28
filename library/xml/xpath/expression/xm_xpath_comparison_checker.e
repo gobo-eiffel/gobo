@@ -45,30 +45,37 @@ feature -- Comparison
 			l_atomic_value_one := a_atomic_value
 			l_atomic_value_two := a_other_atomic_value
 			if a_atomic_value.is_numeric_value and not a_other_atomic_value.is_numeric_value then
-				l_atomic_value_one := l_atomic_value_one.convert_to_type (type_factory.double_type)
+				l_atomic_value_one.convert_to_type (type_factory.double_type)
+				l_atomic_value_one := l_atomic_value_one.converted_value
 				if l_atomic_value_two.is_convertible (type_factory.double_type) then
-					l_atomic_value_two := l_atomic_value_two.convert_to_type (type_factory.double_type)
+					l_atomic_value_two.convert_to_type (type_factory.double_type)
+					l_atomic_value_two := l_atomic_value_two.converted_value
 				else
 					create {XM_XPATH_DOUBLE_VALUE} l_atomic_value_two.make_nan
 				end
 			elseif not a_atomic_value.is_numeric_value and a_other_atomic_value.is_numeric_value then
-				l_atomic_value_two := l_atomic_value_two.convert_to_type (type_factory.double_type)
+				l_atomic_value_two.convert_to_type (type_factory.double_type)
+				l_atomic_value_two := l_atomic_value_two.converted_value
 				if l_atomic_value_one.is_convertible (type_factory.double_type) then
-					l_atomic_value_one := l_atomic_value_one.convert_to_type (type_factory.double_type)
+					l_atomic_value_one.convert_to_type (type_factory.double_type)
+					l_atomic_value_one := l_atomic_value_one.converted_value
 				else
 					create {XM_XPATH_DOUBLE_VALUE} l_atomic_value_one.make_nan
 				end
 			end
 			if not is_comparison_type_error then
 				if l_atomic_value_one.is_string_value and not l_atomic_value_two.is_string_value then
-					l_atomic_value_two := l_atomic_value_two.convert_to_type (type_factory.string_type)
+					l_atomic_value_two.convert_to_type (type_factory.string_type)
+					l_atomic_value_two := l_atomic_value_two.converted_value
 				end
 				if l_atomic_value_two.is_string_value and not l_atomic_value_one.is_string_value then
-					l_atomic_value_one := l_atomic_value_one.convert_to_type (type_factory.string_type)
+					l_atomic_value_one.convert_to_type (type_factory.string_type)
+					l_atomic_value_one := l_atomic_value_one.converted_value
 				end
 				if l_atomic_value_one.is_untyped_atomic and not (l_atomic_value_two.is_untyped_atomic or l_atomic_value_two.is_string_value) then
 					if l_atomic_value_one.is_convertible (l_atomic_value_two.item_type) then
-						l_atomic_value_one := l_atomic_value_one.convert_to_type (l_atomic_value_two.item_type)
+						l_atomic_value_one.convert_to_type (l_atomic_value_two.item_type)
+						l_atomic_value_one := l_atomic_value_one.converted_value
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert first operand of general comparison in XPath 1.0 compatibility mode operand to dynamic type of second operand",
@@ -77,7 +84,8 @@ feature -- Comparison
 				end
 				if not is_comparison_type_error and l_atomic_value_two.is_untyped_atomic and not (l_atomic_value_one.is_untyped_atomic or l_atomic_value_one.is_string_value) then
 					if l_atomic_value_two.is_convertible (l_atomic_value_one.item_type) then
-						l_atomic_value_two := l_atomic_value_two.convert_to_type (l_atomic_value_one.item_type)
+						l_atomic_value_two.convert_to_type (l_atomic_value_one.item_type)
+						l_atomic_value_two := l_atomic_value_two.converted_value
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert second operand of general comparison in XPath 1.0 compatibility mode operand to dynamic type of first operand",
@@ -106,14 +114,16 @@ feature -- Comparison
 			if a_atomic_value.is_untyped_atomic then
 				if a_other_atomic_value.is_numeric_value then
 					if a_atomic_value.is_convertible (type_factory.double_type) then
-						l_atomic_value_one := a_atomic_value.convert_to_type (type_factory.double_type)
+						a_atomic_value.convert_to_type (type_factory.double_type)
+						l_atomic_value_one := a_atomic_value.converted_value
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string ("Could not convert first general comparison operand to xs:double", Xpath_errors_uri, "FORG0001", Type_error)
 					end
 				else
 					if a_atomic_value.is_convertible (a_other_atomic_value.item_type) then
-						l_atomic_value_one := a_atomic_value.convert_to_type (a_other_atomic_value.item_type)
+						a_atomic_value.convert_to_type (a_other_atomic_value.item_type)
+						l_atomic_value_one := a_atomic_value.converted_value
 					else
 						is_comparison_type_error := True
 						create last_type_error.make_from_string (STRING_.appended_string ("Could not convert first general comparison operand to ", a_other_atomic_value.item_type.conventional_name),
@@ -126,14 +136,16 @@ feature -- Comparison
 				if a_other_atomic_value.is_untyped_atomic then
 					if a_atomic_value.is_numeric_value then
 						if a_other_atomic_value.is_convertible (type_factory.double_type) then
-							l_atomic_value_two := a_other_atomic_value.convert_to_type (type_factory.double_type)
+							a_other_atomic_value.convert_to_type (type_factory.double_type)
+							l_atomic_value_two := a_other_atomic_value.converted_value
 						else
 							is_comparison_type_error := True
 							create last_type_error.make_from_string ("Could not convert second general comparison operand to xs:double", Xpath_errors_uri, "FORG0001", Type_error)
 						end
 					else
 						if a_other_atomic_value.is_convertible (a_atomic_value.item_type) then
-							l_atomic_value_two := a_other_atomic_value.convert_to_type (a_atomic_value.item_type)
+							a_other_atomic_value.convert_to_type (a_atomic_value.item_type)
+							l_atomic_value_two := a_other_atomic_value.converted_value
 						else
 							is_comparison_type_error := True
 							create last_type_error.make_from_string (STRING_.appended_string ("Could not convert second general comparison operand to ", a_other_atomic_value.item_type.conventional_name),

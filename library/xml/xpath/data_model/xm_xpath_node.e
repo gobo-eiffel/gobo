@@ -430,18 +430,15 @@ feature -- Access
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		local
-			a_type: INTEGER
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			l_type: INTEGER
 		do
-			a_type := type_annotation
-			if a_type = type_factory.untyped_atomic_type.fingerprint then
-				create  an_untyped_atomic_value.make (string_value)
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_UNTYPED_ATOMIC_VALUE]} Result.make (an_untyped_atomic_value)
-			elseif a_type = type_factory.untyped_type.fingerprint then
-				create an_untyped_atomic_value.make (string_value)
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_UNTYPED_ATOMIC_VALUE]} Result.make (an_untyped_atomic_value)
+			l_type := type_annotation
+			if l_type = type_factory.untyped_atomic_type.fingerprint then
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (create {XM_XPATH_STRING_VALUE}.make_untyped_atomic (string_value))
+			elseif l_type = type_factory.untyped_type.fingerprint then
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_STRING_VALUE]}  Result.make (create {XM_XPATH_STRING_VALUE}.make_untyped_atomic (string_value))
 			else
-				-- TODO complex types should be dealt with properly
+				-- TODO complex types should be dealt with properly for schema aware
 				todo ("typed_value", True)
 			end
 		end

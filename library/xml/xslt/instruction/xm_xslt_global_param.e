@@ -111,7 +111,8 @@ feature -- Evaluation
 							end
 							if required_type /= Void then
 								if select_expression.is_atomic_value and then select_expression.as_atomic_value.is_convertible (required_type.primary_type) then
-									select_expression := select_expression.as_atomic_value.convert_to_type (required_type.primary_type)
+									select_expression.as_atomic_value.convert_to_type (required_type.primary_type)
+									select_expression := select_expression.as_atomic_value.converted_value
 									-- TODO: how to handle non-atomic types?
 								end
 								check_against_required_type (static_context)

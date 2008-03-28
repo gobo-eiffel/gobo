@@ -129,12 +129,14 @@ feature -- Access
 			Result := False
 		end
 
-	as_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE is
+	as_untyped_atomic: XM_XPATH_STRING_VALUE is
 			-- `Current' seen as an untyped atomic
 		require
 			untyped_atomic_value: is_untyped_atomic
 		do
 		ensure
+			as_untyped_atomic_not_void: Result /= Void
+			untyped_atomic: Result.is_untyped_atomic
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
@@ -261,6 +263,8 @@ feature -- Access
 			string_value: is_string_value
 		do
 		ensure
+			as_string_not_void: Result /= Void
+			string_value: Result.is_string_value
 			same_object: ANY_.same_objects (Result, Current)
 		end
 

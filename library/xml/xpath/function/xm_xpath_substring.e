@@ -91,7 +91,8 @@ feature -- Evaluation
 						second_argument_convertible_to_double: a_result.item.is_atomic_value and then a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
 						-- static typing
 					end
-					l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
+					a_result.item.as_atomic_value.convert_to_type (type_factory.double_type)
+					l_double_value := a_result.item.as_atomic_value.converted_value.as_double_value.rounded_value
 					if l_double_value.is_nan then
 						a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 					elseif l_double_value.is_platform_integer or l_double_value.value = DOUBLE_.minus_infinity then
@@ -111,7 +112,8 @@ feature -- Evaluation
 									third_argument_convertible_to_double: a_result.item.is_atomic_value and then a_result.item.as_atomic_value.is_convertible (type_factory.double_type)
 									-- static typing
 								end
-								l_double_value := a_result.item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value.rounded_value
+								a_result.item.as_atomic_value.convert_to_type (type_factory.double_type)
+								l_double_value := a_result.item.as_atomic_value.converted_value.as_double_value.rounded_value
 								if l_double_value.is_nan then
 									a_result.put (create {XM_XPATH_STRING_VALUE}.make (""))
 								elseif l_double_value.is_platform_integer then

@@ -204,7 +204,8 @@ feature {NONE} -- Implementation
 		do
 			l_primitive_value := a_result.item.as_atomic_value.primitive_value
 			if l_primitive_value.is_convertible (item_type) then
-				a_result.put (l_primitive_value.convert_to_type (item_type))
+				l_primitive_value.convert_to_type (item_type)
+				a_result.put (l_primitive_value.converted_value)
 			else
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Cannot promote non-numeric value to " + item_type.conventional_name,
 					Xpath_errors_uri, "XPTY0004", Dynamic_error))

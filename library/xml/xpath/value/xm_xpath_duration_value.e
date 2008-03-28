@@ -259,24 +259,24 @@ feature -- Conversions
 			Result := Current
 		end
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
 		local
 			a_duration: like duration
 		do
 			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
 				or else a_required_type = type_factory.duration_type then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
 			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			elseif a_required_type = type_factory.year_month_duration_type then
 				create a_duration.make (duration.year, duration.month, 0, 0, 0, 0)
-				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make_from_duration (a_duration)
+				create {XM_XPATH_MONTHS_DURATION_VALUE} converted_value.make_from_duration (a_duration)
 			elseif a_required_type = type_factory.day_time_duration_type then
 				create a_duration.make_precise (0, 0, duration.day, duration.hour, duration.minute, duration.second, duration.millisecond)
-				create {XM_XPATH_SECONDS_DURATION_VALUE} Result.make_from_duration (a_duration)
+				create {XM_XPATH_SECONDS_DURATION_VALUE} converted_value.make_from_duration (a_duration)
 			end
 		end
 

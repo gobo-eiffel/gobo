@@ -151,7 +151,8 @@ feature -- Evaluation
 					a_result.put (Void)
 					if l_atomic_value.is_boolean_value or l_atomic_value.is_string_value or l_atomic_value.is_numeric_value then
 						if l_atomic_value.is_convertible (type_factory.double_type) then
-							l_atomic_value := l_atomic_value.convert_to_type (type_factory.double_type)
+							l_atomic_value.convert_to_type (type_factory.double_type)
+							l_atomic_value := l_atomic_value.converted_value
 						else
 							a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 						end
@@ -171,7 +172,8 @@ feature -- Evaluation
 							l_second_atomic_value := a_result.item.as_atomic_value
 							if l_second_atomic_value.is_boolean_value or l_second_atomic_value.is_string_value or l_second_atomic_value.is_numeric_value then
 								if l_second_atomic_value.is_convertible (type_factory.double_type) then
-									l_second_atomic_value := l_second_atomic_value.convert_to_type (type_factory.double_type)
+									l_second_atomic_value.convert_to_type (type_factory.double_type)
+									l_second_atomic_value := l_second_atomic_value.converted_value
 								else
 									a_result.put (create {XM_XPATH_DOUBLE_VALUE}.make_nan)
 								end

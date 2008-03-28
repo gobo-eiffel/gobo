@@ -208,39 +208,36 @@ feature -- Status report
 			Result := False
 			check
 				not_infinity: not value.is_infinity
-				-- because xs:integer cannot become inifinite
+				-- because xs:integer cannot become infinite
 			end
 		end
 
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
-			-- TODO - need to virtualize the pre-condition so that
-			-- only sub-types of Integer_type are valid
-		local
 		do
 			if a_required_type = type_factory.boolean_type  then
-				create {XM_XPATH_BOOLEAN_VALUE} Result.make (not value.is_zero)
+				create {XM_XPATH_BOOLEAN_VALUE} converted_value.make (not value.is_zero)
 			elseif a_required_type = type_factory.any_atomic_type  then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = any_item  then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.integer_type then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.numeric_type then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.double_type then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (as_double)
+				create {XM_XPATH_DOUBLE_VALUE} converted_value.make (as_double)
 			elseif  a_required_type = type_factory.float_type then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (as_double)
+				create {XM_XPATH_FLOAT_VALUE} converted_value.make (as_double)
 			elseif  a_required_type = type_factory.decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make (value)
+				create {XM_XPATH_DECIMAL_VALUE} converted_value.make (value)
 			elseif  a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
 			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			end
 		end
 
@@ -339,7 +336,8 @@ feature -- Basic operations
 				create l_integer_value.make_from_string (other.as_machine_integer_value.value.out)
 				Result := arithmetic (a_operator, l_integer_value)
 			else
-				l_numeric_value := convert_to_type (other.item_type).as_numeric_value
+				convert_to_type (other.item_type)
+				l_numeric_value := converted_value.as_numeric_value
 				Result := l_numeric_value.arithmetic (a_operator, other)
 			end
 		end

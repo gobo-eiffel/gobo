@@ -177,15 +177,15 @@ feature -- Status report
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
 		do
 			if a_required_type = type_factory.qname_type then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
 			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			end
 		end
 

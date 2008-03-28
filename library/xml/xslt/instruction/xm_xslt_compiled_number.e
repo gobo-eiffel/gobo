@@ -721,7 +721,8 @@ feature {NONE} -- Implementation
 					else
 						if not l_finished then
 							l_numeric_value := l_numeric_value.rounded_value
-							l_atomic_value ?= l_numeric_value.convert_to_type (type_factory.integer_type)
+							l_numeric_value.convert_to_type (type_factory.integer_type)
+							l_atomic_value := l_numeric_value.converted_value
 						end
 					end
 					if not l_finished and then l_atomic_value.as_numeric_value.is_negative then

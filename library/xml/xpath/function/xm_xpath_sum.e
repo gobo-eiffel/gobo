@@ -106,7 +106,8 @@ feature -- Evaluation
 					end
 					l_sum := l_iterator.item.as_atomic_value
 					if l_sum.is_untyped_atomic then
-						l_sum := l_sum.convert_to_type (type_factory.double_type)
+						l_sum.convert_to_type (type_factory.double_type)
+						l_sum := l_sum.converted_value
 					elseif l_sum.is_duration_value then
 						l_duration_value := l_sum.as_duration_value
 						if not l_duration_value.is_months_duration and then not l_duration_value.is_seconds_duration then
@@ -175,7 +176,8 @@ feature {NONE} -- Implementation
 					a_result.put (l_item)
 					l_finished := True
 				elseif l_item.is_untyped_atomic then
-					l_sum := l_item.as_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
+					l_item.as_untyped_atomic.convert_to_type (type_factory.double_type)
+					l_sum := l_item.as_untyped_atomic.converted_value.as_numeric_value
 				elseif not l_item.as_atomic_value.is_numeric_value then
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to sum() contains a mix of numeric and non-numeric values",
 						"", "FORG0006", Dynamic_error))

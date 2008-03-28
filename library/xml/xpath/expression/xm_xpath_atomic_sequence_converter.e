@@ -122,7 +122,8 @@ feature -- Evaluation
 				check
 					atomic_value: a_result.item.is_atomic_value
 				end
-				a_result.put (a_result.item.as_atomic_value.convert_to_type (required_type))
+				a_result.item.as_atomic_value.convert_to_type (required_type)
+				a_result.put (a_result.item.as_atomic_value.converted_value)
 			end
 		end
 
@@ -153,7 +154,8 @@ feature -- Evaluation
 				check
 					atomic_value: a_item.is_atomic_value
 				end
-				Result := a_item.as_atomic_value.convert_to_type (required_type)
+				a_item.as_atomic_value.convert_to_type (required_type)
+				Result := a_item.as_atomic_value.converted_value
 			end
 		end
 

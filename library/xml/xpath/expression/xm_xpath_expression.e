@@ -1697,6 +1697,7 @@ feature -- Conversion
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
+			string: Result.is_string_value
 		end
 
 	as_any_uri: XM_XPATH_ANY_URI_VALUE is
@@ -1708,13 +1709,14 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE is
+	as_untyped_atomic: XM_XPATH_STRING_VALUE is
 			-- `Current' seen as an untyped atomic
 		require
 			untyped_atomic_value: is_untyped_atomic
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
+			untyped_atomic: Result.is_untyped_atomic
 		end
 
 	as_qname_value: XM_XPATH_QNAME_VALUE is

@@ -78,7 +78,7 @@ feature -- Evaluation
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_item: XM_XPATH_ITEM
 			l_atomic_value: XM_XPATH_ATOMIC_VALUE
-			l_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			l_untyped_atomic: XM_XPATH_STRING_VALUE
 			l_numeric_value: XM_XPATH_NUMERIC_VALUE
 			l_duration_value: XM_XPATH_DURATION_VALUE
 		do
@@ -105,7 +105,8 @@ feature -- Evaluation
 						if l_atomic_value.is_untyped_atomic then
 							l_untyped_atomic := l_atomic_value.as_untyped_atomic 
 							if l_untyped_atomic.is_convertible (type_factory.double_type) then
-								l_numeric_value := l_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
+								l_untyped_atomic.convert_to_type (type_factory.double_type)
+								l_numeric_value := l_untyped_atomic.converted_value.as_numeric_value
 							else
 								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
 									Xpath_errors_uri, "FORG0006", Dynamic_error))
@@ -172,7 +173,7 @@ feature {NONE} -- Implementation
 			l_integer_value: XM_XPATH_INTEGER_VALUE
 			l_count: INTEGER
 			l_item: XM_XPATH_ITEM
-			l_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			l_untyped_atomic: XM_XPATH_STRING_VALUE
 		do
 			from
 				l_count := 1
@@ -188,7 +189,8 @@ feature {NONE} -- Implementation
 					if l_item.is_untyped_atomic then
 						l_untyped_atomic := l_item.as_untyped_atomic
 						if l_untyped_atomic.is_convertible (type_factory.double_type) then
-							l_numeric_value := l_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
+							l_untyped_atomic.convert_to_type (type_factory.double_type)
+							l_numeric_value := l_untyped_atomic.converted_value.as_numeric_value
 						else
 							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
 								Xpath_errors_uri, "FORG0006", Dynamic_error))

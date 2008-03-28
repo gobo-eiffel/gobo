@@ -119,11 +119,8 @@ feature -- Access
 
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
-		local
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
-			create an_untyped_atomic_value.make (string_value)
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (an_untyped_atomic_value)
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (create {XM_XPATH_STRING_VALUE}.make_untyped_atomic (string_value))
 		end
 
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
@@ -142,7 +139,7 @@ feature -- Access
 	atomized_value: XM_XPATH_VALUE is
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
-			create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+			create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 		end
 
 feature -- Comparison

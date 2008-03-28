@@ -229,8 +229,10 @@ feature -- Evaluation
 								
 								if is_backwards_compatible_mode then
 									if l_atomic_value.is_convertible (type_factory.numeric_type) and l_other_atomic_value.is_convertible (type_factory.numeric_type) then
-										l_numeric_value := l_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
-										l_other_numeric_value := l_other_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
+										l_atomic_value.convert_to_type (type_factory.numeric_type)
+										l_numeric_value := l_atomic_value.converted_value.as_numeric_value
+										l_other_atomic_value.convert_to_type (type_factory.numeric_type)
+										l_other_numeric_value := l_other_atomic_value.converted_value.as_numeric_value
 										create {XM_XPATH_NUMERIC_ARITHMETIC} l_expression.make (l_numeric_value, operator, l_other_numeric_value)
 										l_expression.evaluate_item (a_result, a_context)
 									else

@@ -174,13 +174,19 @@ feature -- Evaluation
 		end
 
 feature -- Conversion
-	
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+
+	converted_value: XM_XPATH_ATOMIC_VALUE
+		-- Result from `convert_to_type'
+		
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `required_type'
 		require
 			required_type_not_void: a_required_type /= Void
 			convertible: is_convertible (a_required_type)
 		deferred
+		ensure
+			conversion_available: converted_value /= Void
+			correct_type: is_sub_type (a_required_type, converted_value.item_type)
 		end
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is

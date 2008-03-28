@@ -186,7 +186,8 @@ feature -- Comparison
 			a_value: like value
 		do
 			if other.is_integer_value then
-				a_value := other.as_integer_value.convert_to_type (type_factory.decimal_type).as_decimal_value.value
+				other.as_integer_value.convert_to_type (type_factory.decimal_type)
+				a_value := other.as_integer_value.converted_value.as_decimal_value.value
 				is_a_decimal := True
 			elseif other.is_decimal_value then
 				a_value := other.as_decimal_value.value
@@ -305,44 +306,41 @@ feature -- Status report
 
 feature -- Conversion
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
-			-- TODO - need to virtualize the pre-condition so that
-			-- only sub-types of Integer_type are valid
-		local
 		do
 			if a_required_type = type_factory.boolean_type  then
-				create {XM_XPATH_BOOLEAN_VALUE} Result.make (not value.is_zero)
+				create {XM_XPATH_BOOLEAN_VALUE} converted_value.make (not value.is_zero)
 			elseif a_required_type = type_factory.any_atomic_type  then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = any_item  then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.integer_type then
 				if is_platform_integer then
-					create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (value.to_integer.to_integer_64)
+					create {XM_XPATH_MACHINE_INTEGER_VALUE} converted_value.make (value.to_integer.to_integer_64)
 				else
-					create {XM_XPATH_INTEGER_VALUE} Result.make (value)
+					create {XM_XPATH_INTEGER_VALUE} converted_value.make (value)
 				end
 			elseif  a_required_type = type_factory.double_type then
 				if is_nan then
-					create {XM_XPATH_DOUBLE_VALUE} Result.make_nan
+					create {XM_XPATH_DOUBLE_VALUE} converted_value.make_nan
 				else
-					create {XM_XPATH_DOUBLE_VALUE} Result.make (value.to_double)
+					create {XM_XPATH_DOUBLE_VALUE} converted_value.make (value.to_double)
 				end
 			elseif  a_required_type = type_factory.float_type then
 				if is_nan then
-					create {XM_XPATH_FLOAT_VALUE} Result.make_nan
+					create {XM_XPATH_FLOAT_VALUE} converted_value.make_nan
 				else
-					create {XM_XPATH_FLOAT_VALUE} Result.make (value.to_double)
+					create {XM_XPATH_FLOAT_VALUE} converted_value.make (value.to_double)
 				end
 			elseif  a_required_type = type_factory.decimal_type then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.numeric_type then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
 			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			end
 		end
 
@@ -437,10 +435,12 @@ feature -- Basic operations
 					create {XM_XPATH_DECIMAL_VALUE} Result.make (value \\ other.as_decimal_value.value)
 				end
 			elseif other.is_integer_value or other.is_machine_integer_value then
-				l_other_decimal := other.convert_to_type (type_factory.decimal_type).as_decimal_value
+				other.convert_to_type (type_factory.decimal_type)
+				l_other_decimal := other.converted_value.as_decimal_value
 				Result := arithmetic (an_operator, l_other_decimal)
 			else
-				l_atomic_value := convert_to_type (other.item_type)
+				convert_to_type (other.item_type)
+				l_atomic_value := converted_value
 				if l_atomic_value.is_numeric_value then
 					Result := l_atomic_value.as_numeric_value.arithmetic (an_operator, other)
 				else

@@ -325,7 +325,7 @@ feature -- Access
 	atomized_value: XM_XPATH_VALUE is
 			-- Typed value as atomic value or (unusually) sequence of atomic values.
 		do
-			create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+			create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 		end
 
 feature -- Comparison

@@ -148,7 +148,7 @@ feature -- Evaluation
 
 feature -- Conversions
 	
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
 		local
 			l_value: INTEGER
@@ -156,27 +156,29 @@ feature -- Conversions
 		do
 			if value then l_value := 1 end
 			if	a_required_type = type_factory.boolean_type  then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = type_factory.any_atomic_type  then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = any_item  then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = type_factory.numeric_type then
-				create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (l_value)
+				create {XM_XPATH_MACHINE_INTEGER_VALUE} converted_value.make (l_value)
 			elseif a_required_type = type_factory.integer_type then
-				create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (l_value)
+				create {XM_XPATH_MACHINE_INTEGER_VALUE} converted_value.make (l_value)
 			elseif a_required_type = type_factory.decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_integer (l_value)
+				create {XM_XPATH_DECIMAL_VALUE} converted_value.make_from_integer (l_value)
 			elseif a_required_type = type_factory.double_type then
 				create l_integer.make (l_value)
-				Result := l_integer.convert_to_type (a_required_type)
+				l_integer.convert_to_type (a_required_type)
+				converted_value := l_integer.converted_value
 			elseif a_required_type = type_factory.float_type then
 				create l_integer.make (l_value)
-				Result := l_integer.convert_to_type (a_required_type)
+				l_integer.convert_to_type (a_required_type)
+				converted_value := l_integer.converted_value
 			elseif a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
 			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			end
 		end
 

@@ -264,57 +264,57 @@ feature -- Conversions
 			Result := Current
 		end
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
 		do
 			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
 				or else a_required_type = type_factory.date_time_type then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
 			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			elseif a_required_type = type_factory.date_type then
 				if zoned then
-					create {XM_XPATH_DATE_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+					create {XM_XPATH_DATE_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
 				else
-					create {XM_XPATH_DATE_VALUE} Result.make_from_date (local_date_time.date)
+					create {XM_XPATH_DATE_VALUE} converted_value.make_from_date (local_date_time.date)
 				end
 			elseif a_required_type = type_factory.time_type then
 				if zoned then
-					create {XM_XPATH_TIME_VALUE} Result.make_from_zoned_time (zoned_date_time.zoned_time)
+					create {XM_XPATH_TIME_VALUE} converted_value.make_from_zoned_time (zoned_date_time.zoned_time)
 				else
-					create {XM_XPATH_TIME_VALUE} Result.make_from_time (local_date_time.time)
+					create {XM_XPATH_TIME_VALUE} converted_value.make_from_time (local_date_time.time)
 				end
 			elseif a_required_type = type_factory.g_year_month_type then
 				if zoned then
-					create {XM_XPATH_YEAR_MONTH_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+					create {XM_XPATH_YEAR_MONTH_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
 				else
-					create {XM_XPATH_YEAR_MONTH_VALUE} Result.make_from_date (local_date_time.date)
+					create {XM_XPATH_YEAR_MONTH_VALUE} converted_value.make_from_date (local_date_time.date)
 				end
 			elseif a_required_type = type_factory.g_year_type then
 				if zoned then
-					create {XM_XPATH_YEAR_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+					create {XM_XPATH_YEAR_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
 				else
-					create {XM_XPATH_YEAR_VALUE} Result.make_from_date (local_date_time.date)
+					create {XM_XPATH_YEAR_VALUE} converted_value.make_from_date (local_date_time.date)
 				end
 			elseif a_required_type = type_factory.g_month_type then
 				if zoned then
-					create {XM_XPATH_MONTH_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+					create {XM_XPATH_MONTH_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
 				else
-					create {XM_XPATH_MONTH_VALUE} Result.make_from_date (local_date_time.date)
+					create {XM_XPATH_MONTH_VALUE} converted_value.make_from_date (local_date_time.date)
 				end
 			elseif a_required_type = type_factory.g_month_day_type then
 				if zoned then
-					create {XM_XPATH_MONTH_DAY_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+					create {XM_XPATH_MONTH_DAY_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
 				else
-					create {XM_XPATH_MONTH_DAY_VALUE} Result.make_from_date (local_date_time.date)
+					create {XM_XPATH_MONTH_DAY_VALUE} converted_value.make_from_date (local_date_time.date)
 				end
 			elseif a_required_type = type_factory.g_day_type then
 				if zoned then
-					create {XM_XPATH_DAY_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+					create {XM_XPATH_DAY_VALUE} converted_value.make_from_zoned_date (zoned_date_time.zoned_date)
 				else
-					create {XM_XPATH_DAY_VALUE} Result.make_from_date (local_date_time.date)
+					create {XM_XPATH_DAY_VALUE} converted_value.make_from_date (local_date_time.date)
 				end
 			end
 		end

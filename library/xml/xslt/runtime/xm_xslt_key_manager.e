@@ -90,13 +90,15 @@ feature -- Access
 			l_item_type := a_key_value.item_type.primitive_type
 			l_key_set := key_definitions (a_key_fingerprint)
 			if l_key_set.is_backwards_compatible then
-				l_value := a_key_value.convert_to_type (type_factory.string_type)
+				a_key_value.convert_to_type (type_factory.string_type)
+				l_value := a_key_value.converted_value
 				l_item_type := String_type_code
 			elseif l_item_type = Integer_type_code or else
 				l_item_type = Decimal_type_code or else
 				l_item_type = Float_type_code then
 				l_item_type := Double_type_code
-				l_value := a_key_value.convert_to_type (type_factory.schema_type (l_item_type))
+				a_key_value.convert_to_type (type_factory.schema_type (l_item_type))
+				l_value := a_key_value.converted_value
 			else
 				l_value := a_key_value
 			end
@@ -121,7 +123,8 @@ feature -- Access
 				-- a_collator := a_key_definition.collator
 				if l_item_type = Untyped_atomic_type_code then
 					--  TODO - collation keys
-					l_value := l_value.convert_to_type (type_factory.string_type)
+					l_value.convert_to_type (type_factory.string_type)
+					l_value := l_value.converted_value
 				end
 				if l_index.has (l_value) then
 					l_list := l_index.map.item (l_value)
@@ -431,7 +434,8 @@ feature {NONE} -- Implementation
 							l_finished := True
 						else
 							if l_atomic_value.is_convertible (type_factory.schema_type (a_sought_item_type)) then
-								l_value := l_atomic_value.convert_to_type(type_factory.schema_type (a_sought_item_type))
+								l_atomic_value.convert_to_type(type_factory.schema_type (a_sought_item_type))
+								l_value := l_atomic_value.converted_value
 							else
 								l_finished := True
 							end

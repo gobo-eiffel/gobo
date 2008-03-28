@@ -120,10 +120,10 @@ feature -- Status report
 
 feature -- Conversion
 	
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `required_type'
 		do
-			Result := Void
+			converted_value := Void
 		end
 
 end

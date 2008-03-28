@@ -174,7 +174,8 @@ feature -- Evaluation
 					a_result.put (Void)
 				end
 			elseif a_result.item.as_atomic_value.is_convertible (target_type) then
-				a_result.put (a_result.item.as_atomic_value.convert_to_type (target_type))
+				a_result.item.as_atomic_value.convert_to_type (target_type)
+				a_result.put (a_result.item.as_atomic_value.converted_value)
 			else
 				a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
 					target_type.conventional_name), Xpath_errors_uri, "FORG0001", Dynamic_error))

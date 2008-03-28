@@ -209,11 +209,13 @@ feature -- Evaluation
 					else
 						l_atomic_value := l_item.as_atomic_value
 						if l_atomic_value.is_untyped_atomic then
-							l_atomic_value := l_atomic_value.convert_to_type (type_factory.string_type)
+							l_atomic_value.convert_to_type (type_factory.string_type)
+							l_atomic_value := l_atomic_value.converted_value
 						end
 						l_other_atomic_value := l_other_item.as_atomic_value
 						if l_other_atomic_value.is_untyped_atomic then
-							l_other_atomic_value := l_other_atomic_value.convert_to_type (type_factory.string_type)
+							l_other_atomic_value.convert_to_type (type_factory.string_type)
+							l_other_atomic_value := l_other_atomic_value.converted_value
 						end
 						if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
 						check_correct_relation (l_atomic_value, operator, atomic_comparer, l_other_atomic_value)
@@ -243,7 +245,8 @@ feature -- Evaluation
 				end
 				l_atomic_value := a_result.item.as_atomic_value
 				if l_atomic_value.is_untyped_atomic then
-					l_atomic_value := l_atomic_value.convert_to_type (type_factory.string_type)
+					l_atomic_value.convert_to_type (type_factory.string_type)
+					l_atomic_value := l_atomic_value.converted_value
 				end
 				a_result.put (Void)
 				second_operand.evaluate_item (a_result, a_context)
@@ -253,7 +256,8 @@ feature -- Evaluation
 					end
 					l_other_atomic_value := a_result.item.as_atomic_value
 					if l_other_atomic_value.is_untyped_atomic then
-						l_other_atomic_value := l_other_atomic_value.convert_to_type (type_factory.string_type)
+						l_other_atomic_value.convert_to_type (type_factory.string_type)
+						l_other_atomic_value := l_other_atomic_value.converted_value
 					end
 					if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
 					check_correct_relation (l_atomic_value, operator, atomic_comparer, l_other_atomic_value)
@@ -287,7 +291,8 @@ feature {NONE} -- Implementation
 				if an_atomic_value.is_numeric_value then
 					Result := an_atomic_value.as_numeric_value.is_zero
 				elseif an_atomic_value.is_convertible (type_factory.integer_type) then
-					Result := an_atomic_value.convert_to_type (type_factory.integer_type).as_integer_value.is_zero
+					an_atomic_value.convert_to_type (type_factory.integer_type)
+					Result := an_atomic_value.converted_value.as_integer_value.is_zero
 				end
 			end
 		end

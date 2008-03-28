@@ -131,7 +131,6 @@ feature -- Access
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		local
-			l_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 			l_string_value: XM_XPATH_STRING_VALUE
 		do
 			inspect
@@ -140,12 +139,12 @@ feature -- Access
 				create l_string_value.make (string_value)
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_string_value)
 			when Text_node, Namespace_node then
-				create l_untyped_atomic_value.make (string_value)
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_untyped_atomic_value)
+				create l_string_value.make_untyped_atomic (string_value)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_string_value)
 			else
 				if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then
-					create l_untyped_atomic_value.make (string_value)
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_untyped_atomic_value)
+					create l_string_value.make_untyped_atomic (string_value)
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_string_value)
 				else
 					-- schema-aware
 					todo ("typed_value", True)
@@ -161,10 +160,10 @@ feature -- Access
 			when Comment_node, Processing_instruction_node then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			when Text_node, Namespace_node then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 			else
-				if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then
-					create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				if type_annotation = type_factory.untyped_type.fingerprint or type_annotation = type_factory.untyped_atomic_type.fingerprint then
+					create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 				else
 					-- schema-aware
 					todo ("atomized_value", True)

@@ -208,31 +208,29 @@ feature -- Conversion
 			Result := Current
 		end
 
-	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
+	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE) is
 			-- Convert `Current' to `a_required_type'
-			-- TODO - need to virtualize the pre-condition so that
-			-- only sub-types of Integer_type are valid
 		do
 			if a_required_type = type_factory.boolean_type  then
-				create {XM_XPATH_BOOLEAN_VALUE} Result.make (value /= 0.0)
+				create {XM_XPATH_BOOLEAN_VALUE} converted_value.make (value /= 0.0)
 			elseif a_required_type = type_factory.any_atomic_type  then
-				Result := Current
+				converted_value := Current
 			elseif a_required_type = any_item  then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.integer_type then
-				create {XM_XPATH_MACHINE_INTEGER_VALUE} Result.make (DOUBLE_.truncated_to_integer (value).to_integer_64)
+				create {XM_XPATH_MACHINE_INTEGER_VALUE} converted_value.make (DOUBLE_.truncated_to_integer (value).to_integer_64)
 			elseif  a_required_type = type_factory.float_type then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.numeric_type then
-				Result := Current
+				converted_value := Current
 			elseif  a_required_type = type_factory.double_type then
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (value)
+				create {XM_XPATH_DOUBLE_VALUE} converted_value.make (value)
 			elseif  a_required_type = type_factory.decimal_type then
-				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (value.out)
+				create {XM_XPATH_DECIMAL_VALUE} converted_value.make_from_string (value.out)
 			elseif  a_required_type = type_factory.string_type then
-				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make (string_value)
 			elseif a_required_type = type_factory.untyped_atomic_type then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (string_value)
 			end
 		end
 

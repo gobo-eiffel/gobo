@@ -120,7 +120,8 @@ feature -- Evaluation
 				-- nothing to do
 			elseif a_result.item.is_untyped_atomic then
 				if a_result.item.as_untyped_atomic.is_convertible (target_type) then
-					a_result.put (a_result.item.as_untyped_atomic.convert_to_type (target_type))
+					a_result.item.as_untyped_atomic.convert_to_type (target_type)
+					a_result.put (a_result.item.as_untyped_atomic.converted_value)
 				else
 					l_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error))
@@ -147,7 +148,7 @@ feature -- Evaluation
 	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
 			-- Converted version of `a_item'
 		local
-			l_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			l_untyped_atomic_value: XM_XPATH_STRING_VALUE
 			l_message: STRING
 		do
 			if a_item = Void then
@@ -155,7 +156,8 @@ feature -- Evaluation
 			elseif a_item.is_untyped_atomic then
 				l_untyped_atomic_value := a_item.as_untyped_atomic
 				if l_untyped_atomic_value.is_convertible (target_type) then
-					Result := l_untyped_atomic_value.convert_to_type (target_type)
+					l_untyped_atomic_value.convert_to_type (target_type)
+					Result := l_untyped_atomic_value.converted_value
 				else
 					l_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
 					create {XM_XPATH_INVALID_ITEM} Result.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error)

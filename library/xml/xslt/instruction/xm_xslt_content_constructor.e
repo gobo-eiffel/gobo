@@ -183,7 +183,8 @@ feature -- Evaluation
 					elseif a_result.item.is_string_value then
 						a_result.put (a_result.item.as_string_value)
 					elseif a_result.item.is_atomic_value then
-						a_result.put (a_result.item.as_atomic_value.convert_to_type (type_factory.string_type))
+						a_result.item.as_atomic_value.convert_to_type (type_factory.string_type)
+						a_result.put (a_result.item.as_atomic_value.converted_value)
 					else
 						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} l_iterator.make (a_result.item)
 						a_result.put (Void)
