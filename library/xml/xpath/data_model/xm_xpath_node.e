@@ -41,6 +41,9 @@ inherit
 	XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR
 		export {NONE} all end
 
+	XM_XPATH_SHARED_NODE_KIND_TESTS
+		export {NONE} all end
+
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
@@ -436,7 +439,7 @@ feature -- Access
 			if l_type = type_factory.untyped_atomic_type.fingerprint then
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (create {XM_XPATH_STRING_VALUE}.make_untyped_atomic (string_value))
 			elseif l_type = type_factory.untyped_type.fingerprint then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_STRING_VALUE]}  Result.make (create {XM_XPATH_STRING_VALUE}.make_untyped_atomic (string_value))
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (create {XM_XPATH_STRING_VALUE}.make_untyped_atomic (string_value))
 			else
 				-- TODO complex types should be dealt with properly for schema aware
 				todo ("typed_value", True)
@@ -505,15 +508,6 @@ feature -- Access
 
 	generated_id: STRING
 			-- Unique identifier (across all documents)
-
-	boxed: DS_CELL [like Current] is
-        -- Current node boxed in a cell
-    do
-        create Result.make (Current)
-    ensure
-        box_not_void: Result /= Void
-        item_set: Result.item = Current
-    end
 
 	 is_ancestor_or_self (a_node: XM_XPATH_NODE): BOOLEAN is
 		 -- Is `Current' an ancestor of `a_node', or the same node?
@@ -639,19 +633,6 @@ feature -- Duplication
 			receiver_not_void: a_receiver /= Void
 			which_namespaces: which_namespaces = No_namespaces
 				or else which_namespaces = Local_namespaces or else  which_namespaces = All_namespaces 
-		deferred
-		end
-
-feature {XM_XPATH_NODE} -- Local
-
-	identity: INTEGER -- TODO: change to INTEGER_64 when all compilers support this
-			-- Unique identifier within the document
-			-- Increases with document order.
-	
-	is_possible_child: BOOLEAN is
-			-- Can this node be a child of a document or element node?
-		require
-			not_in_error: not is_error
 		deferred
 		end
 

@@ -41,7 +41,7 @@ feature -- Access
 		end
 
 	base_uri: STRING is
-			-- Base URI
+			-- Base URI of document entity
 		deferred
 		end
 
@@ -50,17 +50,13 @@ feature -- Access
 		do
 			Result := "document"
 		ensure then
-			node_kind_is_document: Result /= Void and then ( Result.count = 0 or else Result.is_equal ("document"))
+			node_kind_is_document: Result /= Void and then (Result.count = 0 or else Result.is_equal ("document"))
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			create {XM_XPATH_NODE_KIND_TEST} Result.make_document_test
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
+			Result := document_node_kind_test
 		end
 
 	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_ELEMENT] is

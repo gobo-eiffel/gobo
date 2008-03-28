@@ -33,31 +33,31 @@ feature -- Access
 	bits_20: INTEGER is 1048576 -- 2^20
 			-- For extracting prefix index from name code
 
-	bits_28:INTEGER is 268435455 -- 2^28 -1
+	bits_28: INTEGER is 268435455 -- 2^28 -1
 			-- Maximum limit of fingerprint value
 
 feature -- Status report
 	
-	is_valid_expanded_name (an_expanded_name: STRING): BOOLEAN is
-			-- Is `an_expanded_name' a valid expanded name?
+	is_valid_expanded_name (a_expanded_name: STRING): BOOLEAN is
+			-- Is `a_expanded_name' a valid expanded name?
 			-- Syntax is:
 			--  an optional namespace-URI, followed by '#', followed by:
 			--  an NCName 
 		require
-			expanded_name_not_void: an_expanded_name /= Void
+			expanded_name_not_void: a_expanded_name /= Void
 		local
-			a_hash, an_index: INTEGER
-			a_local_part, a_namespace_uri: STRING
+			l_hash, l_index: INTEGER
+			l_local_part, l_namespace_uri: STRING
 		do
-			a_hash := an_expanded_name.index_of ('#', 1)
-			if a_hash > 0 then
-				an_index := an_expanded_name.index_of ('#', a_hash + 1)
-				if an_index > 0 then a_hash := an_index end -- (namespace-uri may itself include a #)
-				a_local_part := an_expanded_name.substring (a_hash + 1, an_expanded_name.count)
-				a_namespace_uri := an_expanded_name.substring (1, a_hash - 1)
-				Result := is_ncname (a_local_part) and not Url_encoding.has_excluded_characters (a_namespace_uri)
+			l_hash := a_expanded_name.index_of ('#', 1)
+			if l_hash > 0 then
+				l_index := a_expanded_name.index_of ('#', l_hash + 1)
+				if l_index > 0 then l_hash := l_index end -- (namespace-uri may itself include a #)
+				l_local_part := a_expanded_name.substring (l_hash + 1, a_expanded_name.count)
+				l_namespace_uri := a_expanded_name.substring (1, l_hash - 1)
+				Result := is_ncname (l_local_part) and not Url_encoding.has_excluded_characters (l_namespace_uri)
 			else
-				Result := is_ncname (an_expanded_name)
+				Result := is_ncname (a_expanded_name)
 			end
 		end
 
@@ -85,37 +85,41 @@ feature -- Conversion
 			no_shorter: Result.count >= a_local_name.count
 		end
 
-	local_name_from_expanded_name (an_expanded_name: STRING): STRING is
-			-- Local name from `an_expanded_name'
+	local_name_from_expanded_name (a_expanded_name: STRING): STRING is
+			-- Local name from `a_expanded_name'
 		require
-			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
+			valid_expanded_name: a_expanded_name /= Void and then is_valid_expanded_name (a_expanded_name)
 		local
-			a_hash, an_index: INTEGER
+			l_hash, l_index: INTEGER
 		do
-			a_hash := an_expanded_name.index_of ('#', 1)
-			if a_hash > 0 then
-				an_index := an_expanded_name.index_of ('#', a_hash + 1)
-				if an_index > 0 then a_hash := an_index end -- (namespace-uri may include a #
-				Result := an_expanded_name.substring (a_hash + 1, an_expanded_name.count)
+			l_hash := a_expanded_name.index_of ('#', 1)
+			if l_hash > 0 then
+				l_index := a_expanded_name.index_of ('#', l_hash + 1)
+				if l_index > 0 then
+					l_hash := l_index
+				end -- (namespace-uri may include a #
+				Result := a_expanded_name.substring (l_hash + 1, a_expanded_name.count)
 			else
-				Result := an_expanded_name
+				Result := a_expanded_name
 			end
 		ensure
 			local_name_is_NCName: Result /= Void and then is_ncname (Result)
 		end
 
-	namespace_uri_from_expanded_name (an_expanded_name: STRING): STRING is
-			-- Namespace_uri from `an_expanded_name'
+	namespace_uri_from_expanded_name (a_expanded_name: STRING): STRING is
+			-- Namespace_uri from `a_expanded_name'
 		require
-			valid_expanded_name: an_expanded_name /= Void and then is_valid_expanded_name (an_expanded_name)
+			valid_expanded_name: a_expanded_name /= Void and then is_valid_expanded_name (a_expanded_name)
 		local
-			a_hash, an_index: INTEGER
+			l_hash, l_index: INTEGER
 		do
-			a_hash := an_expanded_name.index_of ('#', 1)
-			if a_hash > 0 then
-				an_index := an_expanded_name.index_of ('#', a_hash + 1)
-				if an_index > 0 then a_hash := an_index end -- (namespace-uri may include a #
-				Result := an_expanded_name.substring (1, a_hash - 1)
+			l_hash := a_expanded_name.index_of ('#', 1)
+			if l_hash > 0 then
+				l_index := a_expanded_name.index_of ('#', l_hash + 1)
+				if l_index > 0 then
+					l_hash := l_index
+				end -- (namespace-uri may include a #
+				Result := a_expanded_name.substring (1, l_hash - 1)
 			else
 				Result := ""
 			end

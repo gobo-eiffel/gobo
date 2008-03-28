@@ -12,7 +12,37 @@ indexing
 
 class XM_XPATH_SHARED_NODE_KIND_TESTS
 
+inherit
+
+	XM_XPATH_TYPE
+
 feature -- Access
+
+	shared_node_kind_test (a_node_type: INTEGER): XM_XPATH_NODE_KIND_TEST is
+			-- Shared node-kind test for `a_node_type'
+		require
+			a_node_type_valid: is_node_type (a_node_type)
+		do
+			inspect
+				a_node_type
+			when Document_node then
+				Result := document_node_kind_test
+			when Element_node then
+				Result := element_node_kind_test
+			when Attribute_node then
+				Result := attribute_node_kind_test
+			when Comment_node then
+				Result := comment_node_kind_test
+			when Text_node then
+				Result := text_node_kind_test
+			when Processing_instruction_node then
+				Result := processing_instruction_node_kind_test
+			when Namespace_node then
+				Result := namespace_node_kind_test
+			end
+		ensure
+			shared_node_kind_test_not_void: Result /= Void
+		end
 
 	document_node_kind_test: XM_XPATH_NODE_KIND_TEST is
 			-- Document test

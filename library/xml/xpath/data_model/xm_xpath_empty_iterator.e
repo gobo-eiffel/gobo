@@ -12,6 +12,10 @@ indexing
 
 class XM_XPATH_EMPTY_ITERATOR [G -> XM_XPATH_NODE]
 
+		-- TODO: we can;'t actually share these object, because of the post-condition of
+		--  `forth' means the state changes. But we could pool instances for re-use, reseting
+		--  `index' to zero.
+
 inherit
 
 
@@ -96,6 +100,14 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
+		end
+
+	reset is
+			-- Reset position to facilitate reuse.
+		do
+			index := 0
+		ensure
+			reset: before
 		end
 
 feature -- Conversion

@@ -82,7 +82,6 @@ feature -- Status report
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
 
-
 feature -- Status setting
 
 	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is

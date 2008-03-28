@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Namespace pool entry"
+		"Name pool entries"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"

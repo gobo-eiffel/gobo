@@ -52,15 +52,11 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			create {XM_XPATH_NODE_KIND_TEST} Result.make_element_test
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end			
+			Result := element_node_kind_test
 		end
 
 	base_uri: STRING is
-			-- Base URI
+			-- Base URI as per XML:Base recommendation
 		local
 			l_uri: UT_URI
 			l_xml_base, l_initial_system_id: STRING
@@ -121,25 +117,25 @@ feature -- Access
 			Result := type_factory.untyped_type.fingerprint
 		end
 
-	uri_code_for_prefix (an_xml_prefix: STRING): INTEGER is
-			-- URI code for `an_xml_prefix'
+	uri_code_for_prefix (a_xml_prefix: STRING): INTEGER is
+			-- URI code for `a_xml_prefix'
 		require
-			prefix_not_void: an_xml_prefix /= Void
+			prefix_not_void: a_xml_prefix /= Void
 		local
-			a_prefix_code: INTEGER
+			l_prefix_code: INTEGER
 		do
-			if STRING_.same_string (Xml_prefix, an_xml_prefix) then
+			if STRING_.same_string (Xml_prefix, a_xml_prefix) then
 				Result := Xml_uri_code
 			else
-				if shared_name_pool.is_code_for_prefix_allocated (an_xml_prefix) then
-					a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
+				if shared_name_pool.is_code_for_prefix_allocated (a_xml_prefix) then
+					l_prefix_code := shared_name_pool.code_for_prefix (a_xml_prefix)
 				else
-					a_prefix_code := -1
+					l_prefix_code := -1
 				end
-				if a_prefix_code = -1 then
+				if l_prefix_code = -1 then
 					Result := -1
 				else
-					Result := uri_code_for_prefix_code (a_prefix_code)
+					Result := uri_code_for_prefix_code (l_prefix_code)
 				end
 			end
 		ensure
@@ -170,27 +166,28 @@ feature -- Access
 	prefixes_in_scope: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_STRING_VALUE] is
 			-- Namespace prefixes in scope
 		local
-			a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_prefix_list: DS_ARRAYED_LIST [XM_XPATH_STRING_VALUE]
-			an_xml_prefix: STRING
-			a_string_value: XM_XPATH_STRING_VALUE
+			l_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_prefix_list: DS_ARRAYED_LIST [XM_XPATH_STRING_VALUE]
+			l_xml_prefix: STRING
+			l_string_value: XM_XPATH_STRING_VALUE
 		do
-			a_namespace_code_list := namespace_codes_in_scope
-			create a_prefix_list.make (a_namespace_code_list.count)
+			l_namespace_code_list := namespace_codes_in_scope
+			create l_prefix_list.make (l_namespace_code_list.count)
 			from
-				a_cursor := a_namespace_code_list.new_cursor; a_cursor.start
+				l_cursor := l_namespace_code_list.new_cursor
+				l_cursor.start
 			variant
-				a_namespace_code_list.count + 1 - a_cursor.index
+				l_namespace_code_list.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_xml_prefix := shared_name_pool.prefix_from_namespace_code (a_cursor.item)
-				create a_string_value.make (an_xml_prefix)
-				a_prefix_list.put_last (a_string_value)
-				a_cursor.forth
+				l_xml_prefix := shared_name_pool.prefix_from_namespace_code (l_cursor.item)
+				create l_string_value.make (l_xml_prefix)
+				l_prefix_list.put_last (l_string_value)
+				l_cursor.forth
 			end
-			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (a_prefix_list)
+			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (l_prefix_list)
 		ensure
 			iterator_not_void_nor_in_error: Result /= Void and then not Result.is_error
 		end

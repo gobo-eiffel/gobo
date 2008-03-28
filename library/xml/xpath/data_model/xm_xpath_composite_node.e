@@ -14,7 +14,7 @@ deferred class XM_XPATH_COMPOSITE_NODE
 
 inherit
 
-		XM_XPATH_NODE
+	XM_XPATH_NODE
 		redefine
 			first_child, last_child
 		end
@@ -25,31 +25,33 @@ feature -- Access
 			-- The first child of this node;
 			-- If there are no children, return `Void'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			an_iterator := new_axis_iterator (Child_axis)
-			an_iterator.start
-			if not an_iterator.after then Result := an_iterator.item end
+			l_iterator := new_axis_iterator (Child_axis)
+			l_iterator.start
+			if not l_iterator.after then
+				Result := l_iterator.item
+			end
 		end
 
 	last_child: XM_XPATH_NODE is
 			-- The last child of this node;
 			-- If there are no children, return `Void'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			an_iterator := new_axis_iterator (Child_axis)
+			l_iterator := new_axis_iterator (Child_axis)
 			from
-				an_iterator.start
+				l_iterator.start
 			until
-				an_iterator.after
+				l_iterator.after
 			loop
-				Result := an_iterator.item
+				Result := l_iterator.item
 				check
-					result_not_void: Result /= Void
-					-- Because not before (due to start) and not after (due to until)
+					last_child_not_void: Result /= Void
+					-- Because not `before' (due to `start') and not `after' (due to `until')
 				end
-				an_iterator.forth
+				l_iterator.forth
 			end
 		end
 

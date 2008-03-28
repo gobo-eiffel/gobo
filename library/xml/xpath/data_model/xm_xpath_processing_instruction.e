@@ -32,11 +32,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			create {XM_XPATH_NODE_KIND_TEST} Result.make_processing_instruction_test
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
+			Result := processing_instruction_node_kind_test
 		end
 
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is

@@ -256,10 +256,6 @@ feature -- Duplication
 			end
 		end
 
-feature {XM_XPATH_NODE} -- Local
-	
-	is_possible_child: BOOLEAN
-
 invariant
 
 	no_document: document = Void

@@ -98,9 +98,6 @@ feature -- Access
 	Xpath_errors_uri: STRING is "http://www.w3.org/2005/xqt-errors"
 			-- XPath errors
 
-	Microsoft_uri: STRING is "http://www.w3.org/TR/WD-xsl"
-			-- Recognize the Microsoft namespace so we can give a suitably sarcastic error message
-	
 	Xhtml_uri: STRING is "http://www.w3.org/1999/xhtml"
 			-- XHTML namespace
 
@@ -109,9 +106,6 @@ feature -- Access
 
 	Gexslt_examples_uri: STRING is "http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example"
 			-- Namespace for examples provided in the library, but not regarded as standard extensions
-
-	Exslt_date_uri: STRING is "http://exslt.org/dates-and-times"
-			-- EXSLT dates
 
 	Exslt_environment_uri: STRING is "http://exslt.org/system/environment"
 			-- EXSLT environment variables
@@ -620,11 +614,11 @@ feature -- Status report
 		require
 			uri_not_void: a_uri /= Void
 		do
-			Result := STRING_.same_string (a_uri, Xslt_uri)
-				or else STRING_.same_string (a_uri, Xpath_standard_functions_uri)
-				or else STRING_.same_string (a_uri, Xml_uri)
-				or else STRING_.same_string (a_uri, Xml_schema_uri)
-				or else STRING_.same_string (a_uri, Xml_schema_instance_uri)
+			Result := STRING_.same_string (a_uri, Xslt_uri) or
+				STRING_.same_string (a_uri, Xpath_standard_functions_uri) or
+				STRING_.same_string (a_uri, Xml_uri) or
+				STRING_.same_string (a_uri, Xml_schema_uri) or
+				STRING_.same_string (a_uri, Xml_schema_instance_uri)
 		end
 
 end

@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			document := a_parent
 			document_number := document.document_number
 			name_code := -1
-			is_possible_child := True
 		ensure
 			string_value_set: string_value = a_string_value
 			system_id_set: system_id = a_system_id
@@ -51,7 +50,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			create {XM_XPATH_NODE_KIND_TEST} Result.make (node_type)
+			Result := shared_node_kind_test (node_type)
 		end
 
 	document: XM_XPATH_DOCUMENT
@@ -66,10 +65,10 @@ feature -- Access
 	document_number: INTEGER
 
 	string_value: STRING
-			-- String value
+			-- String value of `Current'
 
 	base_uri: STRING is
-			-- Base URI
+			-- Base URI as per XML:Base recommendation
 		do
 			if system_id.count > 0 then
 				Result := system_id
