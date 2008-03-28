@@ -96,7 +96,7 @@ feature -- Element change
 				a_reference.compute_static_properties
 			end
 			create a_sequence_type.make_any_sequence
-			a_reference.set_static_type (a_sequence_type, Void, Void, Void, Void)
+			a_reference.set_static_type (a_sequence_type, Void, Void)
 			a_reference.fix_up (Current)
 		end
 

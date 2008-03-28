@@ -258,15 +258,15 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			a_type: XM_XPATH_ITEM_TYPE
 		do
 			if is_always_untyped then
-				clone_cardinality (base_expression)
+				set_cardinalities (base_expression)
 			elseif base_expression.cardinality_allows_many then
 				set_cardinality_zero_or_more
 			else
 				a_type := base_expression.item_type
 				if a_type.is_atomic_type then
-					clone_cardinality (base_expression)
+					set_cardinalities (base_expression)
 				elseif a_type.is_node_test and then a_type.as_node_test.content_type.is_atomic_type then
-					clone_cardinality (base_expression)
+					set_cardinalities (base_expression)
 				else
 					set_cardinality_zero_or_more
 				end

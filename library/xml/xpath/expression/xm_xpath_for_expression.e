@@ -145,7 +145,7 @@ feature -- Optimization
 					create a_cardinality_set.make (1, 3)
 					a_cardinality_set.put (True, 2) -- Exactly One
 					set_sequence (a_type_checker.checked_expression)
-					declaration.refine_type_information (sequence.item_type, a_cardinality_set, Void, sequence.dependencies, sequence.special_properties)
+					declaration.refine_type_information (sequence.item_type, Void, sequence)
 					set_declaration_void
 					action_expression.check_static_type (a_context, a_context_item_type)
 					if action.was_expression_replaced then

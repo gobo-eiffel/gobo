@@ -65,17 +65,11 @@ feature -- Element change
 			-- Fix up references from XPath expressions.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
-			a_dependencies_set: ARRAY [BOOLEAN]
-			a_cardinalities_set: ARRAY [BOOLEAN]
-			a_special_properties_set: ARRAY [BOOLEAN]
 			a_constant_value: XM_XPATH_VALUE
 			a_binding_reference: XM_XPATH_VARIABLE_REFERENCE
 			a_relationship: INTEGER
 		do
 			a_constant_value := Void
-			a_dependencies_set := Void
-			a_cardinalities_set := Void
-			a_special_properties_set := Void
 			if is_xslt_variable then
 				if select_expression /= Void and then select_expression.is_value
 					and then not select_expression.depends_upon_implicit_timezone then
@@ -92,11 +86,6 @@ feature -- Element change
 						a_constant_value := Void
 					end
 				end
-				if select_expression /= Void then
-					a_special_properties_set := select_expression.special_properties
-					a_cardinalities_set := select_expression.cardinalities
-					a_dependencies_set := select_expression.dependencies
-				end
 			end
 			from
 				a_cursor := references.new_cursor
@@ -108,7 +97,7 @@ feature -- Element change
 			loop
 				a_binding_reference := a_cursor.item
 				if not a_binding_reference.was_expression_replaced then
-					a_binding_reference.set_static_type (required_type, a_constant_value, a_dependencies_set, a_cardinalities_set, a_special_properties_set)
+					a_binding_reference.set_static_type (required_type, a_constant_value, select_expression)
 				end
 				a_cursor.forth
 			end

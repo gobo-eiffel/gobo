@@ -266,10 +266,6 @@ feature -- Status setting
 			end
 		ensure
 			computed: are_static_properties_computed
-			dependencies_not_void: dependencies /= Void
-			intrisic_dependencies_not_void: intrinsic_dependencies /= Void
-			cardinalities_not_void: cardinalities /= Void
-			special_properties_not_void: special_properties /= Void
 		end
 
 
@@ -281,7 +277,7 @@ feature -- Status setting
 		do
 			initialize_intrinsic_dependencies
 		ensure
-			computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
+			computed: are_intrinsic_dependencies_computed
 		end
 			
 	compute_dependencies is
@@ -295,9 +291,10 @@ feature -- Status setting
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			dependencies := BOOLEAN_ARRAY_.cloned_array (intrinsic_dependencies)
-			are_dependencies_computed := True
+			if not are_intrinsic_dependencies_computed then
+				compute_intrinsic_dependencies
+			end
+			initialize_dependencies_from_intrinsic_dependencies
 			from
 				a_cursor := sub_expressions.new_cursor
 				a_cursor.start
@@ -306,12 +303,12 @@ feature -- Status setting
 			until
 				a_cursor.after
 			loop
-				merge_dependencies (a_cursor.item.dependencies)
+				merge_dependencies (a_cursor.item)
 				a_cursor.forth
 			end
 		ensure
-			intrinsic_computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
-			computed: are_dependencies_computed and then dependencies /= Void
+			intrinsic_computed: are_intrinsic_dependencies_computed
+			computed: are_dependencies_computed
 		end
 
 	reset_dependencies is
@@ -324,8 +321,8 @@ feature -- Status setting
 			are_dependencies_computed := False
 			compute_dependencies
 		ensure
-			intrinsic_computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
-			computed: are_dependencies_computed and then dependencies /= Void
+			intrinsic_computed: are_intrinsic_dependencies_computed
+			computed: are_dependencies_computed
 		end
  
 	reset_static_properties is
@@ -346,6 +343,8 @@ feature -- Status setting
 				and then not container.as_computed_expression.is_error then
 				container.as_computed_expression.reset_static_properties
 			end
+		ensure
+			recomputed: are_static_properties_computed
 		end
 
 	conditionally_set_error_location is
@@ -634,7 +633,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			all_sub_expressions_computed: sub_expressions_have_cardinality
 		deferred
 		ensure
-			computed: are_cardinalities_computed and then cardinalities /= Void
+			computed: are_cardinalities_computed
 		end
 
 	compute_special_properties is
@@ -645,7 +644,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			initialize_special_properties
 		ensure
-			computed: are_special_properties_computed and then special_properties /= Void
+			computed: are_special_properties_computed
 		end
 
 feature {XM_XPATH_COMPUTED_EXPRESSION} -- Local

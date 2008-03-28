@@ -19,11 +19,12 @@ feature -- Access
 	Required_cardinality_exactly_one: INTEGER is 3
 	Required_cardinality_one_or_more: INTEGER is 4
 	Required_cardinality_zero_or_more: INTEGER is 5
+	Required_cardinality_many: INTEGER is 6
 
 	multiply_cardinality (c1, c2: INTEGER): INTEGER is
 			-- Multiply two cardinalities
 		do
-			if c1 = Required_cardinality_empty or else c2 = Required_cardinality_empty then
+			if c1 = Required_cardinality_empty or  c2 = Required_cardinality_empty then
 				Result := Required_cardinality_empty
 			elseif c2 = Required_cardinality_exactly_one then
 				Result := c1
@@ -67,17 +68,18 @@ feature -- Status report
 	is_valid_required_cardinality (a_request: INTEGER): BOOLEAN is
 			-- Is `a_request' a valid cardinality requirement?
 		do
-			Result := a_request = Required_cardinality_empty
-				or a_request = Required_cardinality_optional
-				or a_request = Required_cardinality_exactly_one
-				or a_request = Required_cardinality_one_or_more
-				or a_request = Required_cardinality_zero_or_more
+			Result := a_request = Required_cardinality_empty or
+				a_request = Required_cardinality_optional or
+				a_request = Required_cardinality_exactly_one or
+				a_request = Required_cardinality_one_or_more or
+				a_request = Required_cardinality_zero_or_more or
+				a_request = Required_cardinality_many
 		end
 
 	is_cardinality_allows_many (a_request: INTEGER): BOOLEAN is
 			-- Does `a_request' subsume allows many?
 		do
-			Result := a_request = Required_cardinality_one_or_more or a_request = Required_cardinality_zero_or_more
+			Result := a_request = Required_cardinality_one_or_more or a_request = Required_cardinality_zero_or_more or a_request = Required_cardinality_many
 		end
 
 	is_cardinality_allows_zero (a_request: INTEGER): BOOLEAN is
@@ -88,42 +90,21 @@ feature -- Status report
 
 feature -- Conversion
 
-	cardinalities_to_integer (a_cardinality_set:  ARRAY [BOOLEAN]): INTEGER is
+	cardinalities_to_integer (a_zero, a_one, a_many: BOOLEAN): INTEGER is
 			-- Compressed cardinalities
-		require
-			cardinalities_not_void: a_cardinality_set /= Void and then a_cardinality_set.count = 3
 		do
-			if a_cardinality_set.item (1) then
-				if a_cardinality_set.item (2) then
-					if a_cardinality_set.item (3) then
-
-						-- All 3 `True'
-						
-						Result :=  Required_cardinality_zero_or_more
-					else
-						Result := Required_cardinality_optional
-					end
-				else
-						check
-							zero_or_many_not_allowed: not a_cardinality_set.item (3)
-						end
-					Result := Required_cardinality_empty
-				end
+			if a_zero and a_one and a_many then
+				Result :=  Required_cardinality_zero_or_more
+			elseif a_zero and a_one then
+				Result := Required_cardinality_optional
+			elseif a_one and a_many then
+				Result := Required_cardinality_one_or_more
+			elseif a_one then
+				Result := Required_cardinality_exactly_one
+			elseif a_many then
+				Result := Required_cardinality_many
 			else
-				if a_cardinality_set.item (2) then
-					if a_cardinality_set.item (3) then
-						Result := Required_cardinality_one_or_more
-					else
-						Result := Required_cardinality_exactly_one
-					end	
-				else
-
-					--All 3 `False'
-
-						check
-							all_three_cardinalities_false_disallowed: False
-						end
-				end
+				Result := Required_cardinality_empty
 			end
 		ensure
 			strictly_positive_result: Result > 0

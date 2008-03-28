@@ -18,7 +18,7 @@ inherit
 		redefine
 			fingerprint, simplified_pattern, type_check, internal_match, node_kind,
 			sub_expressions, is_location_pattern, as_location_pattern,
-			computed_dependencies, promote
+			compute_dependencies, promote
 		end
 
 	XM_XPATH_AXIS
@@ -124,13 +124,12 @@ feature -- Access
 			Result := original_node_test.fingerprint
 		end
 
-	computed_dependencies: ARRAY [BOOLEAN] is
-			-- Dependencies which restrict optimizations
+	compute_dependencies is
+			-- Compute dependencies which restrict optimizations
 		local
 			l_depends: BOOLEAN
 			l_cursor:  DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			Result := Precursor
 			if parent_pattern /= Void and then parent_pattern.depends_upon_local_variables then
 				l_depends := True
 			elseif ancestor_pattern /= Void and then ancestor_pattern.depends_upon_local_variables then
@@ -146,7 +145,7 @@ feature -- Access
 				end
 			end
 			if l_depends then
-				Result.put (True, 8)
+				set_depends_upon_local_variables
 			end
 		end
 

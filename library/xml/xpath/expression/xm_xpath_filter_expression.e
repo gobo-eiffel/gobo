@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			filter.simplify
 			if filter.is_error then
 				set_replacement (filter)
+				filter_dependencies := filter
 			else
 				if filter.was_expression_replaced then
 					set_filter (filter.replacement_expression)
@@ -65,7 +66,7 @@ feature {NONE} -- Initialization
 				if not filter.are_dependencies_computed and then filter.is_computed_expression then
 					filter.as_computed_expression.compute_dependencies
 				end
-				filter_dependencies := filter.dependencies
+				filter_dependencies := filter
 			end
 			compute_static_properties
 			adopt_child_expression (base_expression)
@@ -162,29 +163,30 @@ feature -- Status setting
 	compute_dependencies is
 			-- Compute dependencies on context.
 		do
-			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-
+			if not are_intrinsic_dependencies_computed then
+				compute_intrinsic_dependencies
+			end
 			if not base_expression.are_dependencies_computed then
 				if base_expression.is_computed_expression then
 					base_expression.as_computed_expression.compute_dependencies
 				end
 			end
-			set_dependencies (base_expression.dependencies)
+			set_dependencies (base_expression)
 
 			-- If filter depends upon XSLT context then so does `Current'.
 			-- (not all dependencies in the filter expression matter, because the context node,
 			-- position, and size are not dependent on the outer context.)
 
-			if filter_dependencies.item (1) then
+			if filter_dependencies.depends_upon_current_item then
 				set_depends_upon_current_item
 			end
-			if filter_dependencies.item (6) then
+			if filter_dependencies.depends_upon_current_group then
 				set_depends_upon_current_group
 			end
-			if filter_dependencies.item (7) then
+			if filter_dependencies.depends_upon_regexp_group then
 				set_depends_upon_regexp_group
 			end
-			if filter_dependencies.item (9) then
+			if filter_dependencies.depends_upon_user_functions then
 				set_depends_upon_user_functions
 			end
 			are_dependencies_computed := True
@@ -575,7 +577,7 @@ feature {NONE} -- Implementation
 	is_singleton_boolean_filter: BOOLEAN
 			-- `True' if `filter' returns exactly one boolean
 
-	filter_dependencies: ARRAY [BOOLEAN]
+	filter_dependencies: XM_XPATH_EXPRESSION
 			-- Dependencies of the original (but simplifed) filter
 
 	is_positional_filter (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -619,7 +621,7 @@ feature {NONE} -- Implementation
 	compute_special_properties is
 			-- Compute special properties.
 		do
-			set_special_properties (base_expression.special_properties)
+			clone_special_properties (base_expression)
 		end
 
 	

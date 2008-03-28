@@ -69,13 +69,10 @@ feature -- Access
 			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
 		end
 	
-	computed_dependencies: ARRAY [BOOLEAN] is
-			-- Dependencies which restrict optimizations
+	compute_dependencies is
+			-- Compute dependencies which restrict optimizations
 		do
-			create Result.make (1, Dependency_flag_count)
-		ensure
-			result_not_void: Result /= Void
-			correct_count: Result.count = Dependency_flag_count
+			-- Nothing to do by default
 		end
 
 feature -- Status report

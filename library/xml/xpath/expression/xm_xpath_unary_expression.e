@@ -218,13 +218,13 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			clone_cardinality (base_expression)
+			set_cardinalities (base_expression)
 		end
 
 	compute_special_properties is
 			-- Compute special properties.
 		do
-			set_special_properties (base_expression.special_properties)
+			clone_special_properties (base_expression)
 		end
 
 	display_operator: STRING is

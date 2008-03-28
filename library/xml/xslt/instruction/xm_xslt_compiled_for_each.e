@@ -100,9 +100,11 @@ feature -- Status setting
 	compute_dependencies is
 			-- Compute dependencies on context.
 		do
-			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			set_dependencies (select_expression.dependencies)
-			merge_dependencies (action.dependencies)
+			if not are_intrinsic_dependencies_computed then
+				compute_intrinsic_dependencies
+			end
+			set_dependencies (select_expression)
+			merge_dependencies (action)
 			if not select_expression.depends_upon_context_item then
 				set_context_item_independent
 			end

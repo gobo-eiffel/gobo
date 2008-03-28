@@ -35,7 +35,8 @@ feature {NONE} -- Initialization
 			container := a_container
 			initialize_special_properties
 			set_cardinality_exactly_one
-			set_dependencies (pattern.computed_dependencies)
+			pattern.compute_dependencies
+			set_dependencies (pattern)
 		ensure
 			pattern_set: pattern = a_pattern
 			container_set: container = a_container
@@ -97,7 +98,8 @@ feature -- Optimization
 			-- Perform context-independent static optimizations
 		do
 			pattern := pattern.simplified_pattern
-			set_dependencies (pattern.computed_dependencies)
+			pattern.compute_dependencies
+			set_dependencies (pattern)
 		end
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is

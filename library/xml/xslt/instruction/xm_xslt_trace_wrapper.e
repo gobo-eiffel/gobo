@@ -68,7 +68,7 @@ feature -- Status report
 				if not child.are_dependencies_computed then
 					child.as_computed_expression.compute_dependencies
 				end
-				set_dependencies (child.dependencies)
+				set_dependencies (child)
 			else
 				initialize_dependencies
 			end
@@ -232,7 +232,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 					child.as_computed_expression.compute_cardinality
 				end
 			end
-			clone_cardinality (child)
+			set_cardinalities (child)
 		end
 
 	set_unsorted (eliminate_duplicates: BOOLEAN) is

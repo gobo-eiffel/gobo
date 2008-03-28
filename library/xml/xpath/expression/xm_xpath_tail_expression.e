@@ -215,8 +215,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			clone_cardinality (base_expression)
-			cardinalities.put (True, 1) -- allow zero
+			set_cardinalities (base_expression)
+			set_cardinality_allows_zero
 		end
 
 	compute_special_properties is

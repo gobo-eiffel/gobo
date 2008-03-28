@@ -117,7 +117,7 @@ feature -- Element change
 					-- We supply the static properties of the expression later
 					-- in the call to refine_type_information
 					
-					a_reference.set_static_type (required_type, Void, Void, Void, Void)
+					a_reference.set_static_type (required_type, Void, Void)
 					a_reference.fix_up (a_binding)
 				end
 
@@ -125,20 +125,17 @@ feature -- Element change
 			end
 		end
 
-	refine_type_information (a_type: XM_XPATH_ITEM_TYPE; a_cardinality_set: ARRAY [BOOLEAN]; a_constant_value: XM_XPATH_VALUE;
-									 a_dependencies_set: ARRAY [BOOLEAN];  a_special_properties_set: ARRAY [BOOLEAN]) is
+	refine_type_information (a_type: XM_XPATH_ITEM_TYPE; a_constant_value: XM_XPATH_VALUE;
+									 a_properties: XM_XPATH_STATIC_PROPERTY) is
 			-- Set static type in the binding reference more accurately.
 		require
 			type_not_void: a_type /= Void
-			cardinalities_not_void: a_cardinality_set /= Void and then a_cardinality_set.count = 3
 			possible_constant_value: True
-			special_properties_not_void: a_special_properties_set /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			old_item_type, new_item_type: like a_type
-			a_cardinality: INTEGER
 		do
 			a_cursor := references.new_cursor
 			from
@@ -155,9 +152,8 @@ feature -- Element change
 					if is_sub_type (a_type, old_item_type) then
 						new_item_type := a_type
 					end
-					a_cardinality := cardinalities_to_integer (a_variable_reference.merged_cardinality (a_cardinality_set))
-					create a_sequence_type.make (new_item_type, a_cardinality) 
-					a_variable_reference.set_static_type (a_sequence_type, a_constant_value, a_dependencies_set, a_cardinality_set, a_special_properties_set)
+					create a_sequence_type.make (new_item_type, a_variable_reference.merged_cardinalities (a_properties))
+					a_variable_reference.set_static_type (a_sequence_type, a_constant_value, a_properties)
 				end
 				a_cursor.forth
 			end

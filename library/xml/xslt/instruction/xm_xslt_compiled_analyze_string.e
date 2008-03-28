@@ -122,41 +122,50 @@ feature -- Status setting
 	compute_dependencies is
 			-- Compute dependencies on context.
 		local
-			a_dep: ARRAY [BOOLEAN]
-			a_dummy: XM_XPATH_STATIC_PROPERTY
+			l_dummy: XM_XPATH_STATIC_PROPERTY
 		do
-			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			if not select_expression.are_dependencies_computed then select_expression.as_computed_expression.compute_dependencies end
-			set_dependencies (select_expression.dependencies)
-			if not regex_expression.are_dependencies_computed then regex_expression.as_computed_expression.compute_dependencies end
-			merge_dependencies (regex_expression.dependencies)
-			if not flags_expression.are_dependencies_computed then flags_expression.as_computed_expression.compute_dependencies end
-			merge_dependencies (flags_expression.dependencies)
+			if not are_intrinsic_dependencies_computed then
+				compute_intrinsic_dependencies
+			end
+			if not select_expression.are_dependencies_computed then
+				select_expression.as_computed_expression.compute_dependencies
+			end
+			set_dependencies (select_expression)
+			if not regex_expression.are_dependencies_computed then
+				regex_expression.as_computed_expression.compute_dependencies
+			end
+			merge_dependencies (regex_expression)
+			if not flags_expression.are_dependencies_computed then
+				flags_expression.as_computed_expression.compute_dependencies
+			end
+			merge_dependencies (flags_expression)
 			if matching_block /= Void then
-				if not matching_block.are_dependencies_computed then matching_block.as_computed_expression.compute_dependencies end
-				a_dep := BOOLEAN_ARRAY_.cloned_array (matching_block.dependencies)
-				create a_dummy
-				a_dummy.set_dependencies (a_dep)
-				if a_dummy.depends_upon_focus then
-					a_dummy.set_focus_independent
+				if not matching_block.are_dependencies_computed then
+					matching_block.as_computed_expression.compute_dependencies
 				end
-				if a_dummy.depends_upon_regexp_group then
-					a_dummy.set_regexp_group_independent
+				create l_dummy
+				l_dummy.set_dependencies (matching_block)
+				if l_dummy.depends_upon_focus then
+					l_dummy.set_focus_independent
 				end
-				merge_dependencies (a_dummy.dependencies)
+				if l_dummy.depends_upon_regexp_group then
+					l_dummy.set_regexp_group_independent
+				end
+				merge_dependencies (l_dummy)
 			end
 			if non_matching_block /= Void then
-				if not non_matching_block.are_dependencies_computed then non_matching_block.as_computed_expression.compute_dependencies end
-				a_dep := BOOLEAN_ARRAY_.cloned_array (non_matching_block.dependencies)
-				create a_dummy
-				a_dummy.set_dependencies (a_dep)
-				if a_dummy.depends_upon_focus then
-					a_dummy.set_focus_independent
+				if not non_matching_block.are_dependencies_computed then
+					non_matching_block.as_computed_expression.compute_dependencies
 				end
-				if a_dummy.depends_upon_regexp_group then
-					a_dummy.set_regexp_group_independent
+				create l_dummy
+				l_dummy.set_dependencies (non_matching_block)
+				if l_dummy.depends_upon_focus then
+					l_dummy.set_focus_independent
 				end
-				merge_dependencies (a_dummy.dependencies)
+				if l_dummy.depends_upon_regexp_group then
+					l_dummy.set_regexp_group_independent
+				end
+				merge_dependencies (l_dummy)
 			end
 		end
 

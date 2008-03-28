@@ -147,7 +147,7 @@ feature -- Optimization
 						else
 							set_sequence (a_type_checker.checked_expression)
 							actual_item_type := sequence.item_type
-							declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
+							declaration.refine_type_information (actual_item_type, Void, sequence)
 							set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
 							action_expression.check_static_type (a_context, a_context_item_type)
 							if action_expression.was_expression_replaced then

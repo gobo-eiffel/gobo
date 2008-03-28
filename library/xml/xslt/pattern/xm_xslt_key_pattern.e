@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			type_check, sub_expressions, computed_dependencies, promote
+			type_check, sub_expressions, compute_dependencies, promote
 		end
 
 	XM_XPATH_NAME_UTILITIES
@@ -71,13 +71,13 @@ feature -- Access
 			Result.put (key_expression, 1)
 		end
 
-	computed_dependencies: ARRAY [BOOLEAN] is
-			-- Dependencies which restrict optimizations
+	compute_dependencies is
+			-- Compute dependencies which restrict optimizations
 		do
 			if not key_expression.are_dependencies_computed and key_expression.is_computed_expression then
 				key_expression.as_computed_expression.compute_dependencies
 			end
-			Result := key_expression.dependencies
+			set_dependencies (key_expression)
 		end
 
 feature -- Optimization

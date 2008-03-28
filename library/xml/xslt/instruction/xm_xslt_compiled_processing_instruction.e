@@ -86,7 +86,7 @@ feature -- Status setting
 			-- Compute dependencies on context.
 		do
 			Precursor
-			merge_dependencies (name.dependencies)
+			merge_dependencies (name)
 		end
 
 feature -- Optimization

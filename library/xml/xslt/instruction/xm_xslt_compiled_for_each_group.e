@@ -165,17 +165,25 @@ feature -- Status setting
 	compute_dependencies is
 			-- Compute dependencies on context.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+			l_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			l_focus: BOOLEAN
 		do
-			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			if not select_expression.are_dependencies_computed then select_expression.as_computed_expression.compute_dependencies end
-			set_dependencies (select_expression.dependencies)
-			if not action.are_dependencies_computed then action.as_computed_expression.compute_dependencies end
-			merge_dependencies (action.dependencies)
-			if not key_expression.are_dependencies_computed then key_expression.as_computed_expression.compute_dependencies end
-			merge_dependencies (key_expression.dependencies)
+			if not are_intrinsic_dependencies_computed then
+				compute_intrinsic_dependencies
+			end
+			if not select_expression.are_dependencies_computed then
+				select_expression.as_computed_expression.compute_dependencies
+			end
+			set_dependencies (select_expression)
+			if not action.are_dependencies_computed then
+				action.as_computed_expression.compute_dependencies
+			end
+			merge_dependencies (action)
+			if not key_expression.are_dependencies_computed then
+				key_expression.as_computed_expression.compute_dependencies
+			end
+			merge_dependencies (key_expression)
 			if not select_expression.depends_upon_current_group and not key_expression.depends_upon_current_group then
 				set_current_group_independent
 			end
@@ -183,46 +191,49 @@ feature -- Status setting
 				set_focus_independent
 			end
 			from
-				a_cursor := sort_keys.new_cursor; a_cursor.start
+				l_cursor := sort_keys.new_cursor
+				l_cursor.start
+				l_focus := depends_upon_focus
 			variant
-				sort_keys.count + 1 - a_cursor.index
+				sort_keys.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_computed_expression ?= a_cursor.item.sort_key
-				if a_computed_expression /= Void then
-					if not a_computed_expression.are_dependencies_computed then a_computed_expression.compute_dependencies end
-					l_focus := depends_upon_focus
-					merge_dependencies (a_computed_expression.dependencies)
-					if not depends_upon_focus then
+				l_computed_expression ?= l_cursor.item.sort_key
+				if l_computed_expression /= Void then
+					if not l_computed_expression.are_dependencies_computed then
+						l_computed_expression.compute_dependencies
+					end
+					merge_dependencies (l_computed_expression)
+					if not l_focus then
 						set_focus_independent
 					end
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 			from
-				a_cursor := sort_keys.new_cursor; a_cursor.start
+				l_cursor := sort_keys.new_cursor; l_cursor.start
 			variant
-				sort_keys.count + 1 - a_cursor.index
+				sort_keys.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_computed_expression ?= a_cursor.item.case_order_expression
-				if a_computed_expression /= Void then
-					merge_dependencies (a_computed_expression.dependencies)
+				l_computed_expression ?= l_cursor.item.case_order_expression
+				if l_computed_expression /= Void then
+					merge_dependencies (l_computed_expression)
 				end
-				a_computed_expression ?= a_cursor.item.language_expression
-				if a_computed_expression /= Void then
-					merge_dependencies (a_computed_expression.dependencies)
+				l_computed_expression ?= l_cursor.item.language_expression
+				if l_computed_expression /= Void then
+					merge_dependencies (l_computed_expression)
 				end
-				a_computed_expression ?= a_cursor.item.data_type_expression
-				if a_computed_expression /= Void then
-					merge_dependencies (a_computed_expression.dependencies)
+				l_computed_expression ?= l_cursor.item.data_type_expression
+				if l_computed_expression /= Void then
+					merge_dependencies (l_computed_expression)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 			if collation_name /= Void then
-				merge_dependencies (collation_name.dependencies)
+				merge_dependencies (collation_name)
 			end
 		end
 

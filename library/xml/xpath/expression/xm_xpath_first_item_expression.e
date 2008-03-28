@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			clone_cardinality (base_expression)
+			set_cardinalities (base_expression)
 			set_cardinality_disallows_many
 		end
 

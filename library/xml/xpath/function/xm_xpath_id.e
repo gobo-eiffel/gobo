@@ -74,7 +74,7 @@ feature -- Optimization
 		do
 			Precursor
 			add_context_document_argument (1, "id+")
-			merge_dependencies (arguments.item (2).dependencies)
+			merge_dependencies (arguments.item (2))
 		end
 
 feature -- Evaluation

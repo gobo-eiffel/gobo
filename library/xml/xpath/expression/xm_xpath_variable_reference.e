@@ -254,7 +254,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_dependencies_set: ARRAY [BOOLEAN]; a_cardinalities_set: ARRAY [BOOLEAN]; a_special_properties_set: ARRAY [BOOLEAN]) is
+	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY) is
 			-- Fix up the static type of this variable reference
 			-- Optionally, supply a constant value for the variable.
 			-- Also supplies other static properties of the expression to which the variable is bound,
@@ -264,20 +264,18 @@ feature -- Element change
 			not_replaced: not was_expression_replaced
 		do
 			static_type := a_type
-			if are_static_properties_computed then reset_static_properties end
+			if are_static_properties_computed then
+				reset_static_properties
+			end
 			constant_value := a_constant_value
-			if	a_dependencies_set /= Void then
-				merge_dependencies (a_dependencies_set)
-			end
-			if a_cardinalities_set /= Void then
-				set_cardinalities (a_type.merged_cardinality (a_cardinalities_set))
-			end
-			if a_special_properties_set /= Void then
-				set_special_properties (a_special_properties_set)
+			if	a_properties /= Void then
+				merge_dependencies (a_properties)
+				set_cardinality (a_type.merged_cardinalities (a_properties))
+				clone_special_properties (a_properties)
 
 				-- Although the variable may be a context document node-set at the point it is defined,
-            --  the context at the point of use may be different, so this property cannot be transferred.
-
+				--  the context at the point of use may be different, so this property cannot be transferred.
+				
 				reset_context_document_nodeset
 			end
 		end

@@ -96,8 +96,10 @@ feature -- Status setting
 	compute_dependencies is
 			-- Compute dependencies on context.
 		do
-			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			set_dependencies (select_expression.dependencies)
+			if not are_intrinsic_dependencies_computed then
+				compute_intrinsic_dependencies
+			end
+			set_dependencies (select_expression)
 		end
 
 feature -- Optimization
@@ -217,7 +219,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			clone_cardinality (select_expression)
+			set_cardinalities (select_expression)
 		end
 
 feature {NONE} -- Implementation

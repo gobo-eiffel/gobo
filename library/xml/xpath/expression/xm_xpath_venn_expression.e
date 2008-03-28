@@ -288,9 +288,9 @@ feature {NONE} -- Implementation
 			-- Set cardinality for union expression.
 		do
 			if first_operand.is_empty_sequence then
-				clone_cardinality (second_operand)
+				set_cardinalities (second_operand)
 			elseif second_operand.is_empty_sequence then
-				clone_cardinality (first_operand)
+				set_cardinalities (first_operand)
 			elseif first_operand.cardinality_allows_zero or second_operand.cardinality_allows_zero then
 				set_cardinality_zero_or_more
 			else
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			if first_operand.is_empty_sequence then
 				set_cardinality_empty
 			elseif second_operand.is_empty_sequence then
-					clone_cardinality (first_operand)
+					set_cardinalities (first_operand)
 			elseif first_operand.cardinality_allows_many then
 				set_cardinality_zero_or_more
 			else

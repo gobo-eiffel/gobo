@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 		do
 			make_value
 			base_expression := an_expression
-			clone_cardinality (base_expression)
+			set_cardinalities (base_expression)
 			clone_special_properties (base_expression)
 			saved_xpath_context := a_context.new_context
 			save_local_variables (a_context)

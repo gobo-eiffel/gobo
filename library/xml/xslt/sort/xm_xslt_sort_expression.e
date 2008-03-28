@@ -335,7 +335,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			clone_cardinality (select_expression)
+			set_cardinalities (select_expression)
 		end
 
 	compute_special_properties is

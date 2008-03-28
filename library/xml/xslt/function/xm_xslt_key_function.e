@@ -95,7 +95,7 @@ feature -- Optimization
 			if arguments.item (3).context_document_nodeset then
 				set_context_document_nodeset
 			end
-			merge_dependencies (arguments.item (3).dependencies)
+			merge_dependencies (arguments.item (3))
 		end
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is

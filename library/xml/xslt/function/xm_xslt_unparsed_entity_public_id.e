@@ -76,7 +76,7 @@ feature -- Optimization
 				end
 			else
 				add_context_document_argument (1, "unparsed-entity-public-id+")
-				merge_dependencies (arguments.item (2).dependencies)
+				merge_dependencies (arguments.item (2))
 			end
 		end
 

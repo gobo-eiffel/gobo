@@ -111,12 +111,13 @@ feature -- Status setting
 	compute_dependencies is
 			-- Compute dependencies on context.
 		do
-			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			dependencies := BOOLEAN_ARRAY_.cloned_array (start.dependencies)
+			if not are_intrinsic_dependencies_computed then
+				compute_intrinsic_dependencies
+			end
+			set_dependencies (start)
 			if step.depends_upon_xslt_context then
 				set_depends_upon_xslt_context
 			end
-			are_dependencies_computed := True
 		end
 	
 feature -- Optimization

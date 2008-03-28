@@ -174,7 +174,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 					arguments.item (1).as_computed_expression.compute_cardinality
 				end
 			end
-			clone_cardinality (arguments.item (1))
+			set_cardinalities (arguments.item (1))
 		end
 
 	compute_special_properties is

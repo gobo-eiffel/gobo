@@ -175,7 +175,7 @@ feature -- Optimization
 						
 						-- Now set the static type of the binding reference, more accurately:
 						
-						declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
+						declaration.refine_type_information (a_type, a_value, sequence)
 						action_expression.check_static_type (a_context, a_context_item_type)
 						if action_expression.was_expression_replaced then
 							replace_action (action_expression.replacement_expression)
