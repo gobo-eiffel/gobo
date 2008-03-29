@@ -57,28 +57,30 @@ feature -- Element change
 			l_name_code: INTEGER
 			l_expanded_name, l_select_attribute, l_mode_attribute: STRING
 		do
-			from
-				l_cursor := attribute_collection.name_code_cursor
-				l_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - l_cursor.index				
-			until
-				l_cursor.after or any_compile_errors
-			loop
-				l_name_code := l_cursor.item
-				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
-				if STRING_.same_string (l_expanded_name, Select_attribute) then
-					l_select_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_select_attribute)
-					STRING_.right_adjust (l_select_attribute)
-				elseif STRING_.same_string (l_expanded_name, Mode_attribute) then
-					l_mode_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_mode_attribute)
-					STRING_.right_adjust (l_mode_attribute)
-				else
-					check_unknown_attribute (l_name_code)
+			if attribute_collection /= Void then
+				from
+					l_cursor := attribute_collection.name_code_cursor
+					l_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index				
+				until
+					l_cursor.after or any_compile_errors
+				loop
+					l_name_code := l_cursor.item
+					l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+					if STRING_.same_string (l_expanded_name, Select_attribute) then
+						l_select_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_select_attribute)
+						STRING_.right_adjust (l_select_attribute)
+					elseif STRING_.same_string (l_expanded_name, Mode_attribute) then
+						l_mode_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_mode_attribute)
+						STRING_.right_adjust (l_mode_attribute)
+					else
+						check_unknown_attribute (l_name_code)
+					end
+					l_cursor.forth
 				end
-				l_cursor.forth
 			end
 			if l_select_attribute /= Void then
 				generate_expression (l_select_attribute)

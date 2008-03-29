@@ -39,42 +39,44 @@ feature -- Element change
 			a_lang_attribute, a_letter_value_attribute, a_grouping_size_attribute: STRING
 			a_grouping_separator_attribute, an_ordinal_attribute, a_format_attribute: STRING
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Value_attribute) then
-					a_value_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Count_attribute) then
-					a_count_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, From_attribute) then
-					a_from_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Level_attribute) then
-					a_level_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Lang_attribute) then
-					a_lang_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Letter_value_attribute) then
-					a_letter_value_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Grouping_size_attribute) then
-					a_grouping_size_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Grouping_separator_attribute) then
-					a_grouping_separator_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Ordinal_attribute) then
-					an_ordinal_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Format_attribute) then
-					a_format_attribute := attribute_value_by_index (a_cursor.index)
-				else
-					check_unknown_attribute (a_name_code)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Select_attribute) then
+						a_select_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Value_attribute) then
+						a_value_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Count_attribute) then
+						a_count_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, From_attribute) then
+						a_from_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Level_attribute) then
+						a_level_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Lang_attribute) then
+						a_lang_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Letter_value_attribute) then
+						a_letter_value_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Grouping_size_attribute) then
+						a_grouping_size_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Grouping_separator_attribute) then
+						a_grouping_separator_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Ordinal_attribute) then
+						an_ordinal_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Format_attribute) then
+						a_format_attribute := attribute_value_by_index (a_cursor.index)
+					else
+						check_unknown_attribute (a_name_code)
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			prepare_attributes_2 (a_select_attribute, an_ordinal_attribute, a_value_attribute,
 										 a_count_attribute,a_lang_attribute, a_from_attribute,

@@ -42,30 +42,32 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			code := -1
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Character_attribute) then
-					a_character_attribute := attribute_value_by_index (a_cursor.index)
-					if a_character_attribute.count /= 1 then
-						create an_error.make_from_string ("xsl:output-character's 'character' attribute must be a single XML character", Gexslt_eiffel_type_uri, "OUTPUT_CHARACTER", Static_error)
-						report_compile_error (an_error)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Character_attribute) then
+						a_character_attribute := attribute_value_by_index (a_cursor.index)
+						if a_character_attribute.count /= 1 then
+							create an_error.make_from_string ("xsl:output-character's 'character' attribute must be a single XML character", Gexslt_eiffel_type_uri, "OUTPUT_CHARACTER", Static_error)
+							report_compile_error (an_error)
+						else
+							code := a_character_attribute.item_code (1)
+						end
+					elseif STRING_.same_string (an_expanded_name, String_attribute) then
+						replacement_string := attribute_value_by_index (a_cursor.index)
 					else
-						code := a_character_attribute.item_code (1)
+						check_unknown_attribute (a_name_code)
 					end
-				elseif STRING_.same_string (an_expanded_name, String_attribute) then
-					replacement_string := attribute_value_by_index (a_cursor.index)
-				else
-					check_unknown_attribute (a_name_code)
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			if code = -1 then
 				report_absence ("character")

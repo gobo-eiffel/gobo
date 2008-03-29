@@ -54,65 +54,67 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute, a_uri: STRING
 		do
-			from
-				l_cursor := attribute_collection.name_code_cursor
-				l_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - l_cursor.index				
-			until
-				l_cursor.after or any_compile_errors
-			loop
-				a_name_code := l_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Name_attribute) then
-					a_name_attribute := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (a_name_attribute); STRING_.right_adjust (a_name_attribute)
-				elseif STRING_.same_string (an_expanded_name, Method_attribute) then
-					method := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (method); STRING_.right_adjust (method)
-				elseif STRING_.same_string (an_expanded_name, Version_attribute) then
-					output_version := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (output_version); STRING_.right_adjust (output_version)					
-				elseif STRING_.same_string (an_expanded_name, Encoding_attribute) then
-					encoding := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (encoding); STRING_.right_adjust (encoding)
-				elseif STRING_.same_string (an_expanded_name, Omit_xml_declaration_attribute) then
-					omit_xml_declaration := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (omit_xml_declaration); STRING_.right_adjust (omit_xml_declaration)
-				elseif STRING_.same_string (an_expanded_name, Standalone_attribute) then
-					standalone := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (standalone); STRING_.right_adjust (standalone)					
-				elseif STRING_.same_string (an_expanded_name, Doctype_public_attribute) then
-					doctype_public := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_public); STRING_.right_adjust (doctype_public)
-				elseif STRING_.same_string (an_expanded_name, Doctype_system_attribute) then
-					doctype_system := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_system); STRING_.right_adjust (doctype_system)					
-				elseif STRING_.same_string (an_expanded_name, Cdata_section_elements_attribute) then
-					cdata_section_elements := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (cdata_section_elements); STRING_.right_adjust (cdata_section_elements)
-				elseif STRING_.same_string (an_expanded_name, Indent_attribute) then
-					indent := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (indent); STRING_.right_adjust (indent)
-				elseif STRING_.same_string (an_expanded_name, Include_content_type_attribute) then
-					include_content_type := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (include_content_type); STRING_.right_adjust (include_content_type)
-				elseif STRING_.same_string (an_expanded_name, Media_type_attribute) then
-					media_type := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (media_type); STRING_.right_adjust (media_type)
-				elseif STRING_.same_string (an_expanded_name, Escape_uri_attributes_attribute) then
-					escape_uri_attributes := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (escape_uri_attributes); STRING_.right_adjust (escape_uri_attributes)
-				elseif STRING_.same_string (an_expanded_name, Use_character_maps_attribute) then
-					use_character_maps := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
-				elseif STRING_.same_string (an_expanded_name, Undeclare_prefixes_attribute) then
-					undeclare_prefixes := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
-				elseif STRING_.same_string (an_expanded_name, Normalization_form_attribute) then
-					normalization_form := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (normalization_form); STRING_.right_adjust (normalization_form)
-				elseif STRING_.same_string (an_expanded_name, Gexslt_character_representation_attribute) then
-					character_representation := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
-				elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
-					indent_spaces := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (indent_spaces); STRING_.right_adjust (indent_spaces)
-				elseif STRING_.same_string (an_expanded_name, Gexslt_next_in_chain_attribute) then
-					next_in_chain := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (next_in_chain); STRING_.right_adjust (next_in_chain)
-				elseif STRING_.same_string (an_expanded_name, Byte_order_mark_attribute) then
-					byte_order_mark := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
-				else
-					a_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
-					if a_uri.count = 0 or STRING_.same_string (a_uri, Xslt_uri) or STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
-						check_unknown_attribute (a_name_code)
+			if attribute_collection /= Void then
+				from
+					l_cursor := attribute_collection.name_code_cursor
+					l_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index				
+				until
+					l_cursor.after or any_compile_errors
+				loop
+					a_name_code := l_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Name_attribute) then
+						a_name_attribute := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (a_name_attribute); STRING_.right_adjust (a_name_attribute)
+					elseif STRING_.same_string (an_expanded_name, Method_attribute) then
+						method := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (method); STRING_.right_adjust (method)
+					elseif STRING_.same_string (an_expanded_name, Version_attribute) then
+						output_version := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (output_version); STRING_.right_adjust (output_version)					
+					elseif STRING_.same_string (an_expanded_name, Encoding_attribute) then
+						encoding := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (encoding); STRING_.right_adjust (encoding)
+					elseif STRING_.same_string (an_expanded_name, Omit_xml_declaration_attribute) then
+						omit_xml_declaration := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (omit_xml_declaration); STRING_.right_adjust (omit_xml_declaration)
+					elseif STRING_.same_string (an_expanded_name, Standalone_attribute) then
+						standalone := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (standalone); STRING_.right_adjust (standalone)					
+					elseif STRING_.same_string (an_expanded_name, Doctype_public_attribute) then
+						doctype_public := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_public); STRING_.right_adjust (doctype_public)
+					elseif STRING_.same_string (an_expanded_name, Doctype_system_attribute) then
+						doctype_system := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (doctype_system); STRING_.right_adjust (doctype_system)					
+					elseif STRING_.same_string (an_expanded_name, Cdata_section_elements_attribute) then
+						cdata_section_elements := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (cdata_section_elements); STRING_.right_adjust (cdata_section_elements)
+					elseif STRING_.same_string (an_expanded_name, Indent_attribute) then
+						indent := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (indent); STRING_.right_adjust (indent)
+					elseif STRING_.same_string (an_expanded_name, Include_content_type_attribute) then
+						include_content_type := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (include_content_type); STRING_.right_adjust (include_content_type)
+					elseif STRING_.same_string (an_expanded_name, Media_type_attribute) then
+						media_type := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (media_type); STRING_.right_adjust (media_type)
+					elseif STRING_.same_string (an_expanded_name, Escape_uri_attributes_attribute) then
+						escape_uri_attributes := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (escape_uri_attributes); STRING_.right_adjust (escape_uri_attributes)
+					elseif STRING_.same_string (an_expanded_name, Use_character_maps_attribute) then
+						use_character_maps := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
+					elseif STRING_.same_string (an_expanded_name, Undeclare_prefixes_attribute) then
+						undeclare_prefixes := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
+					elseif STRING_.same_string (an_expanded_name, Normalization_form_attribute) then
+						normalization_form := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (normalization_form); STRING_.right_adjust (normalization_form)
+					elseif STRING_.same_string (an_expanded_name, Gexslt_character_representation_attribute) then
+						character_representation := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
+					elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
+						indent_spaces := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (indent_spaces); STRING_.right_adjust (indent_spaces)
+					elseif STRING_.same_string (an_expanded_name, Gexslt_next_in_chain_attribute) then
+						next_in_chain := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (next_in_chain); STRING_.right_adjust (next_in_chain)
+					elseif STRING_.same_string (an_expanded_name, Byte_order_mark_attribute) then
+						byte_order_mark := attribute_value_by_index (l_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
 					else
-						extension_attributes.force (attribute_value_by_index (l_cursor.index), an_expanded_name)
+						a_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
+						if a_uri.count = 0 or STRING_.same_string (a_uri, Xslt_uri) or STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+							check_unknown_attribute (a_name_code)
+						else
+							extension_attributes.force (attribute_value_by_index (l_cursor.index), an_expanded_name)
+						end
 					end
+					l_cursor.forth
 				end
-				l_cursor.forth
 			end
 			if a_name_attribute /= Void then
 				generate_name_code (a_name_attribute)

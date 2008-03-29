@@ -57,23 +57,25 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name: STRING
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Isolation_level_attribute) then
-					isolation_level_attribute_value := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (isolation_level_attribute_value);STRING_.right_adjust (isolation_level_attribute_value);
-				else
-					check_unknown_attribute (a_name_code)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Isolation_level_attribute) then
+						isolation_level_attribute_value := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (isolation_level_attribute_value);STRING_.right_adjust (isolation_level_attribute_value);
+					else
+						check_unknown_attribute (a_name_code)
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			if isolation_level_attribute_value = Void then report_absence ("isolation-level") end
 			attributes_prepared := True

@@ -41,28 +41,30 @@ feature -- Element change
 			an_expanded_name, a_terminate_attribute, a_select_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Terminate_attribute) then
-					a_terminate_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_terminate_attribute)
-					STRING_.right_adjust (a_terminate_attribute)
-				elseif STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_select_attribute)
-					STRING_.right_adjust (a_select_attribute)
-				else
-					check_unknown_attribute (a_name_code)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Terminate_attribute) then
+						a_terminate_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_terminate_attribute)
+						STRING_.right_adjust (a_terminate_attribute)
+					elseif STRING_.same_string (an_expanded_name, Select_attribute) then
+						a_select_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_select_attribute)
+						STRING_.right_adjust (a_select_attribute)
+					else
+						check_unknown_attribute (a_name_code)
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)

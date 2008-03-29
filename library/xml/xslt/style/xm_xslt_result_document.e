@@ -66,46 +66,48 @@ feature -- Element change
 			an_expression: XM_XPATH_EXPRESSION
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Format_attribute) then
-					a_format_attribute := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (a_format_attribute); STRING_.right_adjust (a_format_attribute)
-				elseif STRING_.same_string (an_expanded_name, Href_attribute) then
-					an_href_attribute := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (an_href_attribute); STRING_.right_adjust (an_href_attribute)
-				elseif STRING_.same_string (an_expanded_name, Use_character_maps_attribute) then
-					use_character_maps := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
-				elseif STRING_.same_string (an_expanded_name, Validation_attribute) then
-					a_validation_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Type_attribute) then
-					a_type_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Gexslt_method_attribute) then
-					http_method := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (http_method)
-					STRING_.right_adjust (http_method)
-				elseif formatting_attribute_names.has (an_expanded_name) or else
-					(an_expanded_name.substring_index ("#", 1) /= 0
-					 and then an_expanded_name.substring_index (Gexslt_eiffel_type_uri, 1) /= 1
-					 and then an_expanded_name.substring_index (Xslt_uri, 1) /= 1 ) then
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Format_attribute) then
+						a_format_attribute := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (a_format_attribute); STRING_.right_adjust (a_format_attribute)
+					elseif STRING_.same_string (an_expanded_name, Href_attribute) then
+						an_href_attribute := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (an_href_attribute); STRING_.right_adjust (an_href_attribute)
+					elseif STRING_.same_string (an_expanded_name, Use_character_maps_attribute) then
+						use_character_maps := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
+					elseif STRING_.same_string (an_expanded_name, Validation_attribute) then
+						a_validation_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Type_attribute) then
+						a_type_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Gexslt_method_attribute) then
+						http_method := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (http_method)
+						STRING_.right_adjust (http_method)
+					elseif formatting_attribute_names.has (an_expanded_name) or else
+						(an_expanded_name.substring_index ("#", 1) /= 0
+						and then an_expanded_name.substring_index (Gexslt_eiffel_type_uri, 1) /= 1
+							and then an_expanded_name.substring_index (Xslt_uri, 1) /= 1 ) then
 
-					-- it's a (plausible) serialization parameter
+						-- it's a (plausible) serialization parameter
 
-					a_value := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_value); STRING_.right_adjust (a_value)
-					generate_attribute_value_template (a_value, static_context)
-					an_expression := last_generated_expression
-					formatting_attributes.force (an_expression, fingerprint_from_name_code (a_name_code))
-				else
-					check_unknown_attribute (a_name_code) 
+						a_value := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_value); STRING_.right_adjust (a_value)
+						generate_attribute_value_template (a_value, static_context)
+						an_expression := last_generated_expression
+						formatting_attributes.force (an_expression, fingerprint_from_name_code (a_name_code))
+					else
+						check_unknown_attribute (a_name_code) 
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			if an_href_attribute /= Void then
 				generate_attribute_value_template (an_href_attribute, static_context)

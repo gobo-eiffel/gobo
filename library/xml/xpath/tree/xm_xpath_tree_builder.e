@@ -130,7 +130,7 @@ feature -- Events
 				if pending_namespaces = Void then
 					create pending_namespaces.make (5)
 				elseif not pending_namespaces.extendible (1) then
-					pending_namespaces.resize (2 * pending_namespaces.count)
+					pending_namespaces.resize (pending_namespaces.count + 3)
 				end
 				pending_namespaces.put_last (a_namespace_code)
 			end
@@ -157,9 +157,17 @@ feature -- Events
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
 			l_element: XM_XPATH_TREE_ELEMENT
+			l_namespaces: like pending_namespaces
+			l_attributes: like pending_attributes
 		do
+			if pending_namespaces /= Void and then not pending_namespaces.is_empty then
+				l_namespaces := pending_namespaces
+			end
+			if pending_attributes /= Void and then pending_attributes.number_of_attributes > 0 then
+				l_attributes := pending_attributes
+			end
 			if not has_error then
-				l_element := node_factory.new_element_node (tree_document, current_composite_node, pending_attributes, pending_namespaces,
+				l_element := node_factory.new_element_node (tree_document, current_composite_node, l_attributes, l_namespaces,
 					pending_element_name_code, next_node_number)
 				if l_element = Void then
 					saved_current_composite_node := current_composite_node
@@ -183,8 +191,14 @@ feature -- Events
 					current_composite_node := l_element
 				end
 			end
-			pending_namespaces := Void
-			pending_attributes := Void
+			if pending_namespaces /= Void and then not pending_namespaces.is_empty then
+				pending_namespaces := Void
+				-- else we reuse the empty list for the next element, so saving a memory allocation
+			end
+			if pending_attributes /= Void and then pending_attributes.number_of_attributes > 0 then
+				pending_attributes := Void
+				-- else we reuse the empty list for the next element, so saving memory allocations
+			end
 			is_written := True
 		end
 

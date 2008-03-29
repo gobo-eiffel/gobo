@@ -173,70 +173,71 @@ feature -- Element change
 			an_expanded_name, an_as_attribute, an_override_attribute, a_memo_function_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Name_attribute) then
-					function_name := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (function_name)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Name_attribute) then
+						function_name := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (function_name)
 						STRING_.right_adjust (function_name)
-					if function_name.index_of (':', 2) = 0 then
-						create an_error.make_from_string ("Xsl:function name must have a namespace prefix", Xpath_errors_uri, "XTSE0740", Static_error)
-						report_compile_error (an_error)
-					elseif not is_qname (function_name) then
-						create an_error.make_from_string ("Xsl:function name must be a lexical QName", Xpath_errors_uri, "XTSE0020", Static_error)
-						report_compile_error (an_error)						
-					else
-						generate_name_code (function_name)
-						internal_function_fingerprint := fingerprint_from_name_code (last_generated_name_code)
-						if internal_function_fingerprint = -1 then
-							-- Must be because the namespace is reserved
-							create an_error.make_from_string ("Xsl:function name may not use a reserved namespace", Xpath_errors_uri, "XTSE0080", Static_error)
-							report_compile_error (an_error)							
+						if function_name.index_of (':', 2) = 0 then
+							create an_error.make_from_string ("Xsl:function name must have a namespace prefix", Xpath_errors_uri, "XTSE0740", Static_error)
+							report_compile_error (an_error)
+						elseif not is_qname (function_name) then
+							create an_error.make_from_string ("Xsl:function name must be a lexical QName", Xpath_errors_uri, "XTSE0020", Static_error)
+							report_compile_error (an_error)						
+						else
+							generate_name_code (function_name)
+							internal_function_fingerprint := fingerprint_from_name_code (last_generated_name_code)
+							if internal_function_fingerprint = -1 then
+								-- Must be because the namespace is reserved
+								create an_error.make_from_string ("Xsl:function name may not use a reserved namespace", Xpath_errors_uri, "XTSE0080", Static_error)
+								report_compile_error (an_error)							
+							end
 						end
-					end
-				elseif STRING_.same_string (an_expanded_name, As_attribute) then
-					an_as_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Override_attribute) then
-					an_override_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (an_override_attribute)
-					STRING_.right_adjust (an_override_attribute)
-					if STRING_.same_string (an_override_attribute, "yes") then
-						is_overriding := True
-					elseif STRING_.same_string (an_override_attribute, "no") then
-						is_overriding := False
+					elseif STRING_.same_string (an_expanded_name, As_attribute) then
+						an_as_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Override_attribute) then
+						an_override_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (an_override_attribute)
+						STRING_.right_adjust (an_override_attribute)
+						if STRING_.same_string (an_override_attribute, "yes") then
+							is_overriding := True
+						elseif STRING_.same_string (an_override_attribute, "no") then
+							is_overriding := False
+						else
+							create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+							report_compile_error (an_error)
+						end
+					elseif STRING_.same_string (an_expanded_name, Gexslt_memo_function_attribute) then
+						a_memo_function_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_memo_function_attribute)
+						STRING_.right_adjust (a_memo_function_attribute)
+						if STRING_.same_string (a_memo_function_attribute, "yes") then
+							is_memo_function := False
+							report_compile_warning ("Gexslt:memo-function is no longer supported. Use the gexslt:function extension instruction instead.%NNo memoization will occur")
+						elseif STRING_.same_string (a_memo_function_attribute, "no") then
+							is_memo_function := False
+							report_compile_warning ("Gexslt:memo-function is no longer supported. Use the gexslt:function extension instruction instead.%NNo memoization will occur")
+						else
+							create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no' (but is obsolete - se the gexslt:function extension instruction instead).",
+							Xpath_errors_uri, "XTSE0020", Static_error)
+							report_compile_error (an_error)
+						end
 					else
-						create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
-						report_compile_error (an_error)
+						check_unknown_attribute (a_name_code)
 					end
-				elseif STRING_.same_string (an_expanded_name, Gexslt_memo_function_attribute) then
-					a_memo_function_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_memo_function_attribute)
-					STRING_.right_adjust (a_memo_function_attribute)
-					if STRING_.same_string (a_memo_function_attribute, "yes") then
-						is_memo_function := False
-						report_compile_warning ("Gexslt:memo-function is no longer supported. Use the gexslt:function extension instruction instead.%NNo memoization will occur")
-					elseif STRING_.same_string (a_memo_function_attribute, "no") then
-						is_memo_function := False
-						report_compile_warning ("Gexslt:memo-function is no longer supported. Use the gexslt:function extension instruction instead.%NNo memoization will occur")
-					else
-						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no' (but is obsolete - se the gexslt:function extension instruction instead).",
-						Xpath_errors_uri, "XTSE0020", Static_error)
-						report_compile_error (an_error)
-					end
-				else
-					check_unknown_attribute (a_name_code)
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
-
 			if function_name = Void then
 				report_absence ("name")
 			end

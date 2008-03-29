@@ -43,32 +43,34 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			validation_action := Validation_strip
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Name_attribute) then
-					a_name_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Namespace_attribute) then
-					a_namespace_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Separator_attribute) then
-					a_separator_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Validation_attribute) then
-					a_validation_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Type_attribute) then
-					a_type_attribute := attribute_value_by_index (a_cursor.index)
-				else
-					check_unknown_attribute (a_name_code) 		
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Name_attribute) then
+						a_name_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Namespace_attribute) then
+						a_namespace_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Select_attribute) then
+						a_select_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Separator_attribute) then
+						a_separator_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Validation_attribute) then
+						a_validation_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Type_attribute) then
+						a_type_attribute := attribute_value_by_index (a_cursor.index)
+					else
+						check_unknown_attribute (a_name_code) 		
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			if a_name_attribute = Void then
 				report_absence ("name")

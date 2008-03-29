@@ -41,22 +41,23 @@ feature -- Element change
 			l_expanded_name, l_doe_attribute: STRING
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			from
-				l_cursor := attribute_collection.name_code_cursor
-				l_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - l_cursor.index				
-			until
-				l_cursor.after or any_compile_errors
-			loop
-				l_name_code := l_cursor.item
-				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
-				if STRING_.same_string (l_expanded_name, Disable_output_escaping_attribute) then
-					l_doe_attribute := attribute_value_by_index (l_cursor.index)
+			if attribute_collection /= Void then
+				from
+					l_cursor := attribute_collection.name_code_cursor
+					l_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index				
+				until
+					l_cursor.after or any_compile_errors
+				loop
+					l_name_code := l_cursor.item
+					l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+					if STRING_.same_string (l_expanded_name, Disable_output_escaping_attribute) then
+						l_doe_attribute := attribute_value_by_index (l_cursor.index)
+					end
+					l_cursor.forth
 				end
-				l_cursor.forth
 			end
-
 			if l_doe_attribute /= Void then
 				if STRING_.same_string (l_doe_attribute, "yes") then
 					create l_error.make_from_string ("disable-output-escaping is not supported", Xpath_errors_uri, "XTRE1620", Dynamic_error)

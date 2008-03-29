@@ -54,46 +54,47 @@ feature -- Element change
 			a_type_attribute, a_validation_attribute, an_inherit_namespaces_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Name_attribute) then
-					a_name_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_name_attribute)
-					STRING_.right_adjust (a_name_attribute)
-				elseif STRING_.same_string (an_expanded_name, Namespace_attribute) then
-					a_namespace_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_namespace_attribute)
-					STRING_.right_adjust (a_namespace_attribute)
-				elseif STRING_.same_string (an_expanded_name, Type_attribute) then
-					a_type_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_type_attribute)
-					STRING_.right_adjust (a_type_attribute)
-				elseif STRING_.same_string (an_expanded_name, Validation_attribute) then
-					a_validation_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_validation_attribute)
-					STRING_.right_adjust (a_validation_attribute)
-				elseif STRING_.same_string (an_expanded_name, Inherit_namespaces_attribute) then
-					an_inherit_namespaces_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (an_inherit_namespaces_attribute)
-					STRING_.right_adjust (an_inherit_namespaces_attribute)					
-				elseif STRING_.same_string (an_expanded_name, Use_attribute_sets_attribute) then
-					use_attribute_sets := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (use_attribute_sets)
-					STRING_.right_adjust (use_attribute_sets)					
-				else
-					check_unknown_attribute (a_name_code)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Name_attribute) then
+						a_name_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_name_attribute)
+						STRING_.right_adjust (a_name_attribute)
+					elseif STRING_.same_string (an_expanded_name, Namespace_attribute) then
+						a_namespace_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_namespace_attribute)
+						STRING_.right_adjust (a_namespace_attribute)
+					elseif STRING_.same_string (an_expanded_name, Type_attribute) then
+						a_type_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_type_attribute)
+						STRING_.right_adjust (a_type_attribute)
+					elseif STRING_.same_string (an_expanded_name, Validation_attribute) then
+						a_validation_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_validation_attribute)
+						STRING_.right_adjust (a_validation_attribute)
+					elseif STRING_.same_string (an_expanded_name, Inherit_namespaces_attribute) then
+						an_inherit_namespaces_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (an_inherit_namespaces_attribute)
+						STRING_.right_adjust (an_inherit_namespaces_attribute)					
+					elseif STRING_.same_string (an_expanded_name, Use_attribute_sets_attribute) then
+						use_attribute_sets := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (use_attribute_sets)
+						STRING_.right_adjust (use_attribute_sets)					
+					else
+						check_unknown_attribute (a_name_code)
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
-			
 			if a_name_attribute /= Void then
 				generate_attribute_value_template (a_name_attribute, static_context)
 				element_name := last_generated_expression

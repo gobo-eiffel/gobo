@@ -525,39 +525,41 @@ feature -- Element change
 			l_error: XM_XPATH_ERROR_VALUE
 			l_version_found: BOOLEAN
 		do
-			from
-				l_cursor := attribute_collection.name_code_cursor
-				l_cursor.start
-			until
-				l_cursor.after or any_compile_errors
-			loop
-				l_name_code := l_cursor.item
-				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
-				if STRING_.same_string (l_expanded_name, Version_attribute) then
-					l_version_found := True
-				elseif STRING_.same_string (l_expanded_name, Extension_element_prefixes_attribute) then
-					-- do nothing
-				elseif STRING_.same_string (l_expanded_name, Exclude_result_prefixes_attribute) then
-					-- do nothing
-				elseif STRING_.same_string (l_expanded_name, Id_attribute) then
-					-- do nothing
-				elseif STRING_.same_string (l_expanded_name, Default_validation_attribute) then
-					default_validation := validation_code (attribute_value_by_index (l_cursor.index))
-					if default_validation /= Validation_preserve and then  default_validation /= Validation_strip then
-						create l_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (preserve, strip)", Xpath_errors_uri, "XTSE0020", Static_error)
-						report_compile_error (l_error)
-					elseif conformance.basic_xslt_processor and then default_validation /= Validation_strip then
-						create l_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", Xpath_errors_uri, "XTSE1660", Static_error)
-						report_compile_error (l_error)
+			if attribute_collection /= Void then
+				from
+					l_cursor := attribute_collection.name_code_cursor
+					l_cursor.start
+				until
+					l_cursor.after or any_compile_errors
+				loop
+					l_name_code := l_cursor.item
+					l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+					if STRING_.same_string (l_expanded_name, Version_attribute) then
+						l_version_found := True
+					elseif STRING_.same_string (l_expanded_name, Extension_element_prefixes_attribute) then
+						-- do nothing
+					elseif STRING_.same_string (l_expanded_name, Exclude_result_prefixes_attribute) then
+						-- do nothing
+					elseif STRING_.same_string (l_expanded_name, Id_attribute) then
+						-- do nothing
+					elseif STRING_.same_string (l_expanded_name, Default_validation_attribute) then
+						default_validation := validation_code (attribute_value_by_index (l_cursor.index))
+						if default_validation /= Validation_preserve and then  default_validation /= Validation_strip then
+							create l_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (preserve, strip)", Xpath_errors_uri, "XTSE0020", Static_error)
+							report_compile_error (l_error)
+						elseif conformance.basic_xslt_processor and then default_validation /= Validation_strip then
+							create l_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", Xpath_errors_uri, "XTSE1660", Static_error)
+							report_compile_error (l_error)
+						end
+					elseif STRING_.same_string (l_expanded_name, Input_type_annotations_attribute) then
+						l_input_type_annotations_attribute := attribute_value_by_index (l_cursor.index)
+					elseif STRING_.same_string (l_expanded_name, Gexslt_explain_attribute) then
+						is_all_explaining := STRING_.same_string (attribute_value_by_index (l_cursor.index), "all")
+					else
+						check_unknown_attribute (l_name_code)
 					end
-				elseif STRING_.same_string (l_expanded_name, Input_type_annotations_attribute) then
-					l_input_type_annotations_attribute := attribute_value_by_index (l_cursor.index)
-				elseif STRING_.same_string (l_expanded_name, Gexslt_explain_attribute) then
-					is_all_explaining := STRING_.same_string (attribute_value_by_index (l_cursor.index), "all")
-				else
-					check_unknown_attribute (l_name_code)
+					l_cursor.forth
 				end
-				l_cursor.forth
 			end
 			if version = Void or not l_version_found then
 				report_absence ("version")

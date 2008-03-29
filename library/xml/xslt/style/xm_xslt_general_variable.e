@@ -130,50 +130,51 @@ feature -- Status setting
 			an_expanded_name, a_select_attribute, an_as_attribute, a_required_attribute, a_tunnel_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Name_attribute) then
-					variable_name := attribute_value_by_index (a_cursor.index)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Name_attribute) then
+						variable_name := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (variable_name)
+						STRING_.right_adjust (variable_name)
+					elseif STRING_.same_string (an_expanded_name, Select_attribute) then
+						a_select_attribute := attribute_value_by_index (a_cursor.index)					
+					elseif STRING_.same_string (an_expanded_name, As_attribute) then
+						an_as_attribute := attribute_value_by_index (a_cursor.index)
+					elseif STRING_.same_string (an_expanded_name, Required_attribute) and then allows_required then
+						a_required_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_required_attribute)
+						STRING_.right_adjust (a_required_attribute)
+					elseif STRING_.same_string (an_expanded_name, Tunnel_attribute) and then allows_tunnel then
+						a_tunnel_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_tunnel_attribute)
+						STRING_.right_adjust (a_tunnel_attribute)
+					else
+						check_unknown_attribute (a_name_code)
+					end
+					a_cursor.forth
+				end
+
+				if variable_name = Void then
+					report_absence ("name")
+				elseif not is_qname (variable_name) then
+					create an_error.make_from_string ("Name attribute must be a valid QName", Xpath_errors_uri, "XTSE0020", Static_error)
+					report_compile_error (an_error)
+				else
 					STRING_.left_adjust (variable_name)
 					STRING_.right_adjust (variable_name)
-				elseif STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)					
-				elseif STRING_.same_string (an_expanded_name, As_attribute) then
-					an_as_attribute := attribute_value_by_index (a_cursor.index)
-				elseif STRING_.same_string (an_expanded_name, Required_attribute) and then allows_required then
-					a_required_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_required_attribute)
-					STRING_.right_adjust (a_required_attribute)
-				elseif STRING_.same_string (an_expanded_name, Tunnel_attribute) and then allows_tunnel then
-					a_tunnel_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_tunnel_attribute)
-					STRING_.right_adjust (a_tunnel_attribute)
-				else
-					check_unknown_attribute (a_name_code)
+					generate_name_code (variable_name)
+					cached_variable_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				end
-				a_cursor.forth
 			end
-
-			if variable_name = Void then
-				report_absence ("name")
-			elseif not is_qname (variable_name) then
-				create an_error.make_from_string ("Name attribute must be a valid QName", Xpath_errors_uri, "XTSE0020", Static_error)
-				report_compile_error (an_error)
-			else
-				STRING_.left_adjust (variable_name)
-				STRING_.right_adjust (variable_name)
-				generate_name_code (variable_name)
-				cached_variable_fingerprint := fingerprint_from_name_code (last_generated_name_code)
-			end
-
 			if a_select_attribute /= Void then
 				if not allows_value then
 					create an_error.make_from_string ("Function parameters cannot have a default value", Xpath_errors_uri, "XTSE0760", Static_error)

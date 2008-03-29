@@ -47,15 +47,9 @@ feature {NONE} -- Initialization
 			node_type := Element_node
 			name_code := a_name_code
 			create children.make (5)
-			if an_attribute_collection = Void then
-				create attribute_collection.make
-			else
-				attribute_collection := an_attribute_collection
-			end
+			attribute_collection := an_attribute_collection
 			if a_namespace_list /= Void then
 				namespace_code_list := a_namespace_list
-			else
-				create namespace_code_list.make (5)
 			end
 			sequence_number_high_word := a_sequence_number
 		ensure
@@ -72,13 +66,14 @@ feature {NONE} -- Initialization
 			node_type := Element_node
 			name_code := -1
 			create children.make (0)
-			create attribute_collection.make
-			create namespace_code_list.make (0)
 			sequence_number_high_word := 50000
 			set_last_error_from_string (a_message, Xpath_errors_uri, "FOER0000", Static_error)
 		end
 
 feature -- Access
+
+	attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION
+			-- Attributes
 
 	is_tree_element: BOOLEAN is
 			-- Is `Current' an element?
@@ -117,13 +112,17 @@ feature -- Access
 	attribute_value (a_fingerprint: INTEGER): STRING is
 			-- Value of attribute identified by `a_fingerprint'
 		do
-			Result := attribute_collection.attribute_value (a_fingerprint)
+			if attribute_collection /= Void then
+				Result := attribute_collection.attribute_value (a_fingerprint)
+			end
 		end
 	
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute
 		do
-			Result := attribute_collection.attribute_value_by_name (a_uri, a_local_name)
+			if attribute_collection /= Void then
+				Result := attribute_collection.attribute_value_by_name (a_uri, a_local_name)
+			end
 		end
 
 	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
@@ -136,7 +135,7 @@ feature -- Access
 			Result := -1 -- not found
 			if a_prefix_code = Xml_prefix_index - 1 then
 				Result := Xml_uri_code
-			else
+			elseif namespace_code_list /= Void then
 				from
 					a_cursor := namespace_code_list.new_cursor
 					a_cursor.start
@@ -200,18 +199,21 @@ feature -- Access
 		require
 			valid_uri_code: shared_name_pool.is_valid_uri_code (a_uri_code)
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			from
-				a_cursor := namespace_code_list.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				if uri_code_from_namespace_code (a_cursor.item) = a_uri_code then
-					Result := shared_name_pool.prefix_from_namespace_code (a_cursor.item)
-					a_cursor.go_after
-				else
-					a_cursor.forth
+			if namespace_code_list /= Void then
+				from
+					l_cursor := namespace_code_list.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					if uri_code_from_namespace_code (l_cursor.item) = a_uri_code then
+						Result := shared_name_pool.prefix_from_namespace_code (l_cursor.item)
+						l_cursor.go_after
+					else
+						l_cursor.forth
+					end
 				end
 			end
 		end
@@ -243,6 +245,7 @@ feature -- Access
 	is_idrefs (an_attribute: INTEGER): BOOLEAN is
 			-- Value of is-idrefs property for `an_attribute'
 		require
+			attribute_collection_not_void: attribute_collection /= Void
 			valid_attribute: an_attribute > 0 and then an_attribute <= number_of_attributes
 		do
 			Result := attribute_collection.is_idrefs (an_attribute)
@@ -253,7 +256,9 @@ feature -- Measurement
 	number_of_attributes: INTEGER is
 			-- Number of attributes in `Current'
 		do
-			Result := attribute_collection.number_of_attributes
+			if attribute_collection /= Void then
+				Result := attribute_collection.number_of_attributes
+			end
 		ensure
 			positive_result: Result >= 0
 		end
@@ -271,27 +276,29 @@ feature -- Element change
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local
-			a_parent: XM_XPATH_COMPOSITE_NODE
-         a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_parent: XM_XPATH_COMPOSITE_NODE
+         l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			from
-				a_cursor := namespace_code_list.new_cursor; a_cursor.start
-			until
-					a_cursor.after
-			loop
-				if a_cursor.item >= 0 then -- drop any excluded namespaces
-					a_receiver.notify_namespace (a_cursor.item, 0)
+			if namespace_code_list /= Void then
+				from
+					l_cursor := namespace_code_list.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					if l_cursor.item >= 0 then -- drop any excluded namespaces
+						a_receiver.notify_namespace (l_cursor.item, 0)
+					end
+					l_cursor.forth
 				end
-				a_cursor.forth
+				
+				-- Now add the namespaces defined on the ancestor nodes.
+				-- We rely on the receiver to eliminate multiple declarations of the same prefix.
 			end
-
-			-- Now add the namespaces defined on the ancestor nodes.
-			-- We rely on the receiver to eliminate multiple declarations of the same prefix.
-
 			if include_ancestors then
-				a_parent := parent
-				if a_parent /= Void and then a_parent.is_element then
-					a_parent.as_tree_node.as_tree_element.output_namespace_nodes (a_receiver, true)
+				l_parent := parent
+				if l_parent /= Void and then l_parent.is_element then
+					l_parent.as_tree_node.as_tree_element.output_namespace_nodes (a_receiver, true)
 				end
 			end
 		end
@@ -302,12 +309,15 @@ feature -- Element change
 			valid_namespace_code: shared_name_pool.is_valid_namespace_code (a_namespace_code)
 			namespace_codes_not_accumulated: accumulated_namespace_codes = Void
 		do
+			if namespace_code_list = Void then
+				create namespace_code_list.make (5)
+			end
 			if not namespace_code_list.extendible (1) then
 				namespace_code_list.resize (2 * namespace_code_list.count)
 			end
 			namespace_code_list.put_last (a_namespace_code)
 		ensure
-			namespace_added: namespace_code_list.has (a_namespace_code)
+			namespace_added: namespace_code_list /= Void and then namespace_code_list.has (a_namespace_code)
 		end
 
 	add_attribute (a_name_code, a_type_code: INTEGER; a_value: STRING; a_properties: INTEGER) is
@@ -316,17 +326,21 @@ feature -- Element change
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
 		do
+			if attribute_collection = Void then
+				create attribute_collection.make
+			end
 			attribute_collection.add_attribute (a_name_code, a_type_code, a_value, a_properties)
 		end
 
-	set_attribute_collection (an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION) is
+	set_attribute_collection (a_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION) is
 			-- Set all attributes.
 		require
-			attribute_collection_not_void: an_attribute_collection /= Void
+			attribute_collection_not_void: a_attribute_collection /= Void
 		do
-			attribute_collection := an_attribute_collection
+			attribute_collection := a_attribute_collection
 		ensure
-			attribute_collection_set: attribute_collection = an_attribute_collection
+			attribute_collection_set: attribute_collection = a_attribute_collection
+			attribute_collection_not_void: attribute_collection /= Void
 		end
 
 
@@ -352,20 +366,22 @@ feature -- Duplication
 
          -- output attributes																																	
 
-			from
-            an_index := 1
-			until
-            an_index > attribute_collection.number_of_attributes
-			loop
-            if copy_annotations then
-				   a_type_code := type_annotation
-				else
-				   a_type_code := 0																																	
-				end																																	
-            a_receiver.notify_attribute (attribute_collection.attribute_name_code (an_index), a_type_code,attribute_collection.attribute_value_by_index (an_index), 0)
-            an_index := an_index + 1																																	
+			if attribute_collection /= Void then
+				from
+					an_index := 1
+				until
+					an_index > attribute_collection.number_of_attributes
+				loop
+					if copy_annotations then
+						a_type_code := type_annotation
+					else
+						a_type_code := 0																																	
+					end																																	
+					a_receiver.notify_attribute (attribute_collection.attribute_name_code (an_index), a_type_code,attribute_collection.attribute_value_by_index (an_index), 0)
+					an_index := an_index + 1																																	
+				end
 			end
-
+			
         	-- output children																																
 
 			if which_namespaces /= No_namespaces then
@@ -402,48 +418,51 @@ feature {XM_XPATH_TREE_ELEMENT} -- Local
 			accumulation_list: an_accumulation_list /= Void
 			non_empty_accumulation_list: an_accumulation_list.count > 0 implies an_owner /= Current
 		local
-			a_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_namespace_code: INTEGER
-			a_prefix_code, a_uri_code: INTEGER -- _16
-			a_parent: XM_XPATH_COMPOSITE_NODE
+			l_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_namespace_code: INTEGER
+			l_prefix_code, l_uri_code: INTEGER -- _16
+			l_parent: XM_XPATH_COMPOSITE_NODE
 		do
-			from
-				a_code_cursor := namespace_code_list.new_cursor; a_code_cursor.start
-			variant
-				namespace_code_list.count + 1 - a_code_cursor.index
-			until
-				a_code_cursor.after
-			loop
-				a_namespace_code := a_code_cursor.item
-				a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
-				a_uri_code := uri_code_from_namespace_code (a_namespace_code)
-				if a_uri_code = Default_uri_code then
-
-					-- A namespace undeclaration
-
-					some_excluded_prefixes.force (a_prefix_code)
-				else
-					if not some_excluded_prefixes.has (a_prefix_code) then
-						some_excluded_prefixes.force_new (a_prefix_code)
-						an_accumulation_list.force_last (a_namespace_code)
+			if namespace_code_list /= Void then
+				from
+					l_code_cursor := namespace_code_list.new_cursor
+					l_code_cursor.start
+				variant
+					namespace_code_list.count + 1 - l_code_cursor.index
+				until
+					l_code_cursor.after
+				loop
+					l_namespace_code := l_code_cursor.item
+					l_prefix_code := prefix_code_from_namespace_code (l_namespace_code)
+					l_uri_code := uri_code_from_namespace_code (l_namespace_code)
+					if l_uri_code = Default_uri_code then
+						
+						-- A namespace undeclaration
+						
+					some_excluded_prefixes.force (l_prefix_code)
+					else
+						if not some_excluded_prefixes.has (l_prefix_code) then
+							some_excluded_prefixes.force_new (l_prefix_code)
+							an_accumulation_list.force_last (l_namespace_code)
+						end
 					end
+					l_code_cursor.forth
 				end
-				a_code_cursor.forth
 			end
-
+			
 			-- Now add the namespaces defined on the ancestor nodes.
 
 			if parent.node_type /= Document_node then
-				a_parent := parent
+				l_parent := parent
 				check
-					parent_is_element: a_parent /= Void
+					parent_is_element: l_parent /= Void
 				end
-				a_parent.as_tree_node.as_tree_element.accumulate_namespace_codes (an_owner, an_accumulation_list, False, some_excluded_prefixes)
+				l_parent.as_tree_node.as_tree_element.accumulate_namespace_codes (an_owner, an_accumulation_list, False, some_excluded_prefixes)
 			end
 
 			if add_xml then
-				a_namespace_code := created_namespace_code (Xml_uri_code, Xml_prefix_index - 1)
-				an_accumulation_list.force_last (a_namespace_code)
+				l_namespace_code := created_namespace_code (Xml_uri_code, Xml_prefix_index - 1)
+				an_accumulation_list.force_last (l_namespace_code)
 			end
 		end
 	
@@ -451,7 +470,9 @@ feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_
 
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is
 		do
-			Result := attribute_collection.is_attribute_index_valid (an_attribute_index)
+			if attribute_collection /= Void then
+				Result := attribute_collection.is_attribute_index_valid (an_attribute_index)
+			end
 		end
 
 	attribute_value_by_index (an_attribute_index: INTEGER): STRING is
@@ -486,17 +507,9 @@ feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_
 
 feature {NONE} -- Implementation
 
-	attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION
-			-- Attributes
-
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes for all namespaces defined on this element;
 			-- (NOT all namespaces in scope - must scan up the parent chain for that)
-
-invariant
-
-	namespace_list_not_void: namespace_code_list /= Void
-	attribute_collection_not_void: attribute_collection /= Void
 
 end
 	

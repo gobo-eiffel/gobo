@@ -60,48 +60,50 @@ feature -- Element change
 			l_expanded_name, l_select_attribute, l_order_attribute, l_lang_attribute,
 			l_data_type_attribute, l_case_order_attribute, l_collation_attribute, l_stable_attribute: STRING
 		do
-			from
-				l_cursor := attribute_collection.name_code_cursor
-				l_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - l_cursor.index				
-			until
-				l_cursor.after or any_compile_errors
-			loop
-				l_name_code := l_cursor.item
-				l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
-				if STRING_.same_string (l_expanded_name, Select_attribute) then
-					l_select_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_select_attribute)
-					STRING_.right_adjust (l_select_attribute)
-				elseif STRING_.same_string (l_expanded_name, Order_attribute) then
-					l_order_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_order_attribute)
-					STRING_.right_adjust (l_order_attribute)
-				elseif STRING_.same_string (l_expanded_name, Data_type_attribute) then
-					l_data_type_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_data_type_attribute)
-					STRING_.right_adjust (l_data_type_attribute	)
-				elseif STRING_.same_string (l_expanded_name, Case_order_attribute) then
-					l_case_order_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_case_order_attribute)
-					STRING_.right_adjust (l_case_order_attribute	)
-				elseif STRING_.same_string (l_expanded_name, Lang_attribute) then
-					l_lang_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_lang_attribute)
-					STRING_.right_adjust (l_lang_attribute	)
-				elseif STRING_.same_string (l_expanded_name, Collation_attribute) then
-					l_collation_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_collation_attribute)
-					STRING_.right_adjust (l_collation_attribute)
-				elseif STRING_.same_string (l_expanded_name, Stable_attribute) then
-					l_stable_attribute := attribute_value_by_index (l_cursor.index)
-					STRING_.left_adjust (l_stable_attribute)
-					STRING_.right_adjust (l_stable_attribute)
-				else
-					check_unknown_attribute (l_name_code)
+			if attribute_collection /= Void then
+				from
+					l_cursor := attribute_collection.name_code_cursor
+					l_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index				
+				until
+					l_cursor.after or any_compile_errors
+				loop
+					l_name_code := l_cursor.item
+					l_expanded_name := shared_name_pool.expanded_name_from_name_code (l_name_code)
+					if STRING_.same_string (l_expanded_name, Select_attribute) then
+						l_select_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_select_attribute)
+						STRING_.right_adjust (l_select_attribute)
+					elseif STRING_.same_string (l_expanded_name, Order_attribute) then
+						l_order_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_order_attribute)
+						STRING_.right_adjust (l_order_attribute)
+					elseif STRING_.same_string (l_expanded_name, Data_type_attribute) then
+						l_data_type_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_data_type_attribute)
+						STRING_.right_adjust (l_data_type_attribute	)
+					elseif STRING_.same_string (l_expanded_name, Case_order_attribute) then
+						l_case_order_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_case_order_attribute)
+						STRING_.right_adjust (l_case_order_attribute	)
+					elseif STRING_.same_string (l_expanded_name, Lang_attribute) then
+						l_lang_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_lang_attribute)
+						STRING_.right_adjust (l_lang_attribute	)
+					elseif STRING_.same_string (l_expanded_name, Collation_attribute) then
+						l_collation_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_collation_attribute)
+						STRING_.right_adjust (l_collation_attribute)
+					elseif STRING_.same_string (l_expanded_name, Stable_attribute) then
+						l_stable_attribute := attribute_value_by_index (l_cursor.index)
+						STRING_.left_adjust (l_stable_attribute)
+						STRING_.right_adjust (l_stable_attribute)
+					else
+						check_unknown_attribute (l_name_code)
+					end
+					l_cursor.forth
 				end
-				l_cursor.forth
 			end
 			prepare_attributes_2 (l_select_attribute, l_order_attribute, l_case_order_attribute,
 										 l_data_type_attribute,	l_lang_attribute, l_collation_attribute, l_stable_attribute)

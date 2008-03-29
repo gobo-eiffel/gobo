@@ -52,44 +52,46 @@ feature -- Element change
 			an_expanded_name, a_select_attribute, a_group_by_attribute, a_group_adjacent_attribute,
 			a_group_starting_with_attribute, a_group_ending_with_attribute, a_collation_attribute: STRING
 		do
-			from
-				a_cursor := attribute_collection.name_code_cursor
-				a_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - a_cursor.index				
-			until
-				a_cursor.after or any_compile_errors
-			loop
-				a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				if STRING_.same_string (an_expanded_name, Select_attribute) then
-					a_select_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_select_attribute)
-					STRING_.right_adjust (a_select_attribute)
-				elseif STRING_.same_string (an_expanded_name, Group_by_attribute) then
-					a_group_by_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_group_by_attribute)
-					STRING_.right_adjust (a_group_by_attribute)
-				elseif STRING_.same_string (an_expanded_name, Group_adjacent_attribute) then
-					a_group_adjacent_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_group_adjacent_attribute)
-					STRING_.right_adjust (a_group_adjacent_attribute		)
-				elseif STRING_.same_string (an_expanded_name, Group_starting_with_attribute) then
-					a_group_starting_with_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_group_starting_with_attribute)
-					STRING_.right_adjust (a_group_starting_with_attribute	)
-				elseif STRING_.same_string (an_expanded_name, Group_ending_with_attribute) then
-					a_group_ending_with_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_group_ending_with_attribute)
-					STRING_.right_adjust (a_group_ending_with_attribute		)
-				elseif STRING_.same_string (an_expanded_name, Collation_attribute) then
-					a_collation_attribute := attribute_value_by_index (a_cursor.index)
-					STRING_.left_adjust (a_collation_attribute)
-					STRING_.right_adjust (a_collation_attribute	)
-				else
-					check_unknown_attribute (a_name_code)
+			if attribute_collection /= Void then
+				from
+					a_cursor := attribute_collection.name_code_cursor
+					a_cursor.start
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+				until
+					a_cursor.after or any_compile_errors
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+					if STRING_.same_string (an_expanded_name, Select_attribute) then
+						a_select_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_select_attribute)
+						STRING_.right_adjust (a_select_attribute)
+					elseif STRING_.same_string (an_expanded_name, Group_by_attribute) then
+						a_group_by_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_group_by_attribute)
+						STRING_.right_adjust (a_group_by_attribute)
+					elseif STRING_.same_string (an_expanded_name, Group_adjacent_attribute) then
+						a_group_adjacent_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_group_adjacent_attribute)
+						STRING_.right_adjust (a_group_adjacent_attribute		)
+					elseif STRING_.same_string (an_expanded_name, Group_starting_with_attribute) then
+						a_group_starting_with_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_group_starting_with_attribute)
+						STRING_.right_adjust (a_group_starting_with_attribute	)
+					elseif STRING_.same_string (an_expanded_name, Group_ending_with_attribute) then
+						a_group_ending_with_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_group_ending_with_attribute)
+						STRING_.right_adjust (a_group_ending_with_attribute		)
+					elseif STRING_.same_string (an_expanded_name, Collation_attribute) then
+						a_collation_attribute := attribute_value_by_index (a_cursor.index)
+						STRING_.left_adjust (a_collation_attribute)
+						STRING_.right_adjust (a_collation_attribute	)
+					else
+						check_unknown_attribute (a_name_code)
+					end
+					a_cursor.forth
 				end
-				a_cursor.forth
 			end
 			prepare_attributes_2 (a_select_attribute, a_group_by_attribute, a_group_starting_with_attribute,
 										 a_group_adjacent_attribute,	a_group_ending_with_attribute, a_collation_attribute)
