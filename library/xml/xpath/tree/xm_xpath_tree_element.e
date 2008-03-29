@@ -46,11 +46,11 @@ feature {NONE} -- Initialization
 			parent_node := a_parent
 			node_type := Element_node
 			name_code := a_name_code
-			create children.make (5)
 			attribute_collection := an_attribute_collection
 			if a_namespace_list /= Void then
 				namespace_code_list := a_namespace_list
 			end
+			create children.make (8)
 			sequence_number_high_word := a_sequence_number
 		ensure
 			name_code_set: name_code = a_name_code

@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			valid_expression: an_expression /= Void and then not (an_expression.depends_upon_position or else an_expression.depends_upon_last)
 			context_not_void: a_context /= Void
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			make_value
 			base_expression := an_expression
@@ -63,32 +63,32 @@ feature {NONE} -- Initialization
 
 			-- save a reference to the context item
 
-			an_iterator := a_context.current_iterator
-			if an_iterator /= Void then
-				if an_iterator.is_error then
+			l_iterator := a_context.current_iterator
+			if l_iterator /= Void then
+				if l_iterator.is_error then
 					-- do nothing
-				elseif an_iterator.before then
-					an_iterator := an_iterator.another
-					an_iterator.start
-					if an_iterator.is_error then
+				elseif l_iterator.before then
+					l_iterator := l_iterator.another
+					l_iterator.start
+					if l_iterator.is_error then
 						-- do nothing
-					elseif an_iterator.after then
-						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} an_iterator.make
-					elseif an_iterator.is_node_iterator then
-						create {XM_XPATH_SINGLETON_NODE_ITERATOR} an_iterator.make (an_iterator.item.as_node)
+					elseif l_iterator.after then
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} l_iterator.make
+					elseif l_iterator.is_node_iterator then
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} l_iterator.make (l_iterator.item.as_node)
 					else
-						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (an_iterator.item)
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} l_iterator.make (l_iterator.item)
 					end
-				elseif an_iterator.after then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} an_iterator.make
+				elseif l_iterator.after then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} l_iterator.make
 				else
-					if an_iterator.is_node_iterator then
-						create {XM_XPATH_SINGLETON_NODE_ITERATOR} an_iterator.make (an_iterator.item.as_node)
+					if l_iterator.is_node_iterator then
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} l_iterator.make (l_iterator.item.as_node)
 					else
-						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (an_iterator.item)
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} l_iterator.make (l_iterator.item)
 					end
 				end
-				saved_xpath_context.set_current_iterator (an_iterator)
+				saved_xpath_context.set_current_iterator (l_iterator)
 			end
 		ensure
 			base_expression_set: base_expression = an_expression

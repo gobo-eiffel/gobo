@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			cached_id_table := Void
 			document := Current
 			node_type := Document_node
-			create children.make (5)
+			create children.make (3)
 			create system_id_map.make
 			sequence_number_high_word := 1
 			if a_document_uri /= Void then

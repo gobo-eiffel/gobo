@@ -257,6 +257,9 @@ feature -- Creation
 
 feature {NONE} -- Implementation
 
+	For_clause_list_size: INTEGER is 4
+			-- Guess number of items in for clauses
+	
 	parse_sequence is
 			-- Parse the sequence type production
 		require
@@ -683,7 +686,7 @@ feature {NONE} -- Implementation
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_mapping_expression%N")
 			end
-			create a_clause_list.make (5)
+			create a_clause_list.make (For_clause_list_size)
 			an_operator := tokenizer.last_token
 			from
 				finished := False
@@ -756,7 +759,10 @@ feature {NONE} -- Implementation
 					create a_range_variable.make (a_token_value, last_generated_name_code  \\ bits_20, a_single_item)
 					create a_clause.make (a_range_variable, internal_last_parsed_expression, a_line_number)
 					declare_range_variable (a_clause.range_variable)
-					a_clause_list.force_last (a_clause)
+					if not a_clause_list.extendible (1) then
+						a_clause_list.resize (a_clause_list.count + For_clause_list_size)
+					end
+					a_clause_list.put_last (a_clause)
 				end
 			end
 		end

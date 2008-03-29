@@ -453,7 +453,10 @@ feature {XM_XPATH_SEQUENCE_EXPRESSION} -- Implementation
 				elseif l_child.is_empty_sequence then
 					-- let it drop
 				else
-					a_list.force_last (l_child)
+					if not a_list.extendible (1) then
+						a_list.resize (2 * a_list.count)
+					end
+					a_list.put_last (l_child)
 				end
 				l_cursor.forth
 			end

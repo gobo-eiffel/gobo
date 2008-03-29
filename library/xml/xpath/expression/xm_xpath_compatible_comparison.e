@@ -380,7 +380,8 @@ feature {NONE} -- Implementation
 					elseif not l_other_sequence.before and then l_other_sequence.after then
 						from
 							create l_comparison_checker
-							l_cursor := l_list.new_cursor; l_cursor.start
+							l_cursor := l_list.new_cursor
+							l_cursor.start
 						variant
 							l_list.count + 1 - l_cursor.index
 						until
@@ -438,7 +439,10 @@ feature {NONE} -- Implementation
 
 					-- cache the atomic value to avoid re-creating the iterator
 
-					a_list.force_last (l_other_atomic_value)
+					if not a_list.extendible (1) then
+						a_list.resize (2 * a_list.count)
+					end
+					a_list.put_last (l_other_atomic_value)
 				end
 				if not a_iterator.after then a_iterator.forth end
 			end

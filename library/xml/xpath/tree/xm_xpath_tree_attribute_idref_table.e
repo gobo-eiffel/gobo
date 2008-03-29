@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 								a_list := mapping_table.item (an_idref)
 							else
 								create a_list.make_default
-								mapping_table.force_new (a_list, an_idref)
+								mapping_table.put_new (a_list, an_idref)
 							end
 							if not a_list.has (an_attribute) then
 								a_list.force_last (an_attribute)

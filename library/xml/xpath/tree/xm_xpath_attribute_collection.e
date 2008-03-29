@@ -32,10 +32,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant.
 		do
-			create attribute_name_codes.make (5)
-			create attribute_type_codes.make (5)
-			create attribute_values.make (5)
-			create internal_attribute_properties.make (5)
+			create attribute_name_codes.make (Size_increment)
+			create attribute_type_codes.make (Size_increment)
+			create attribute_values.make (Size_increment)
+			create internal_attribute_properties.make (Size_increment)
 		end
 
 feature -- Access
@@ -151,16 +151,16 @@ feature -- Element change
 			l_value: STRING
 		do
 			l_type_code := Untyped_atomic_type_code
-			attribute_name_codes.force_last (a_name_code)
-			attribute_type_codes.force_last (l_type_code)
-			attribute_values.force_last (a_value)
-			internal_attribute_properties.force_last (a_properties)
-			if a_type_code = Id_type_code or else a_type_code = Idref_type_code
-				or else a_type_code = Idrefs_type_code then
+			ensure_extensible
+			attribute_name_codes.put_last (a_name_code)
+			attribute_type_codes.put_last (l_type_code)
+			attribute_values.put_last (a_value)
+			internal_attribute_properties.put_last (a_properties)
+			if a_type_code = Id_type_code or a_type_code = Idref_type_code or a_type_code = Idrefs_type_code then
 				if attribute_ids = Void then
 					create attribute_ids.make (attribute_name_codes.capacity)
 					from i:= 1 until i = attribute_name_codes.count loop
-						attribute_ids.force_last (No_dtd_property)
+						attribute_ids.put_last (No_dtd_property)
 						i := i + 1
 					end
 				end
@@ -178,15 +178,15 @@ feature -- Element change
 					a_type_code
 				when Id_type_code then
 					if is_ncname (l_value) then
-						attribute_ids.force_last (Id_property)
+						attribute_ids.put_last (Id_property)
 					else
-						attribute_ids.force_last (No_dtd_property)
+						attribute_ids.put_last (No_dtd_property)
 					end
 				when Idref_type_code then
 					if is_ncname (l_value) then
-						attribute_ids.force_last (Idrefs_property)
+						attribute_ids.put_last (Idrefs_property)
 					else
-						attribute_ids.force_last (No_dtd_property)
+						attribute_ids.put_last (No_dtd_property)
 					end
 				when Idrefs_type_code then
 					create l_splitter.make
@@ -201,13 +201,13 @@ feature -- Element change
 						l_cursor.forth
 					end
 					if l_all_idrefs then
-						attribute_ids.force_last (Idrefs_property)
+						attribute_ids.put_last (Idrefs_property)
 					else
-						attribute_ids.force_last (No_dtd_property)
+						attribute_ids.put_last (No_dtd_property)
 					end
 				end
 			elseif attribute_ids /= Void then
-				attribute_ids.force_last (No_dtd_property)
+				attribute_ids.put_last (No_dtd_property)
 			end
 		ensure
 			attribute_name_code_added: attribute_name_codes.has (a_name_code)
@@ -230,6 +230,9 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
+	Size_increment: INTEGER is 4
+			-- Allocation extent size for all arrays
+
 	No_dtd_property: INTEGER is 0
 	Id_property: INTEGER is 1
 	Idrefs_property: INTEGER is 2
@@ -250,6 +253,29 @@ feature {NONE} -- Implementation
 
 	internal_attribute_properties: DS_ARRAYED_LIST [INTEGER]
 			-- Event properties associated with attribute
+
+	ensure_extensible is
+			-- Ensure 1 attribute may be added.
+		local
+			l_new: INTEGER
+		do
+			if not attribute_name_codes.extendible (1) then
+				l_new := attribute_name_codes.count + Size_increment
+				attribute_name_codes.resize (l_new)
+				attribute_type_codes.resize (l_new)
+				attribute_values.resize (l_new)
+				internal_attribute_properties.resize (l_new)
+				if attribute_ids /= Void then
+					attribute_ids.resize (l_new)
+				end
+			end
+		ensure
+			attribute_ids_extendible: attribute_ids /= Void implies attribute_ids.extendible (1)
+			attribute_name_codes_extendible: attribute_name_codes.extendible (1)
+			attribute_type_codes_extendible: attribute_type_codes.extendible (1)
+			attribute_values_extendible: attribute_values.extendible (1)
+			internal_attribute_properties_extendible: internal_attribute_properties.extendible (1)
+		end
 
 	attribute_index (a_fingerprint: INTEGER): INTEGER is
 			-- Index number of attribute with fingerprint `a_fingerprint'

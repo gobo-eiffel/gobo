@@ -58,8 +58,10 @@ feature {NONE} -- Initialization
 			until
 				a_iterator.is_error or else a_iterator.after
 			loop
-				l_value.force_last (a_iterator.item)
-
+				if not l_value.extendible (1) then
+					l_value.resize (2 * l_value.count)
+				end
+				l_value.put_last (a_iterator.item)
 				l_counter := l_counter + 1
 				a_iterator.forth
 			end

@@ -55,13 +55,5 @@ feature -- Duplication
 			a_receiver.notify_comment (string_value, 0)
 		end
 
-feature {XM_XPATH_NODE} -- Resricted
-
-	is_possible_child: BOOLEAN is
-			-- Can this node be a child of a document or element node?
-		do
-			Result := True
-		end
-
 end
 	

@@ -46,7 +46,10 @@ feature {NONE} -- Initialization
 			until
 				an_iterator.is_error or else an_iterator.after
 			loop
-				sequence.force_last (an_iterator.item)
+				if not sequence.extendible (1) then
+					sequence.resize (2 * sequence.count)
+				end
+				sequence.put_last (an_iterator.item)
 				an_iterator.forth
 			end
 			create a_sorter.make (a_comparer)

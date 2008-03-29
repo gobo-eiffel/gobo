@@ -57,13 +57,28 @@ feature {NONE} -- Initialization
 
 	make (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
+		local
+			l_count: INTEGER
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			state := Unread_state
 			is_node_sequence := is_node_item_type (an_expression.item_type)
+			l_iterator := a_context.current_iterator
+			if l_iterator /= Void and then l_iterator.is_last_position_finder then
+				l_count := l_iterator.last_position
+			end
 			if is_node_sequence then
-				create node_reservoir.make_default
+				if l_count /= 0 then
+					create node_reservoir.make (l_count)
+				else
+					create node_reservoir.make_default
+				end
 			else
-				create reservoir.make_default
+				if l_count /= 0 then
+					create reservoir.make (l_count)
+				else
+					create reservoir.make_default
+				end
 			end
 			Precursor (an_expression, a_context)
 		end
@@ -136,13 +151,19 @@ feature -- Access
 						check
 							node_sequence: is_node_sequence
 						end
-						node_reservoir.force_last (input_iterator.as_node_iterator.item)
+						if not node_reservoir.extendible (1) then
+							node_reservoir.resize (2 * node_reservoir.count)
+						end
+						node_reservoir.put_last (input_iterator.as_node_iterator.item)
 						state := Maybe_more_state
 					else
 						check
 							not_node_sequence: not is_node_sequence
 						end
-						reservoir.force_last (input_iterator.item)
+						if not reservoir.extendible (1) then
+							reservoir.resize (2 * reservoir.count)
+						end
+						reservoir.put_last (input_iterator.item)
 						state := Maybe_more_state
 					end
 				end

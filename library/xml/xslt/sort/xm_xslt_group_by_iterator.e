@@ -199,7 +199,10 @@ feature {NONE} -- Implementation
 					if a_map.has (a_comparison_key) then
 						a_group := a_map.item (a_comparison_key)
 						if first_key then
-							a_group.force_last (an_item)
+							if not a_group.extendible (1) then
+								a_group.resize (2 * a_group.count)
+							end
+							a_group.put_last (an_item)
 						else
 							
 							-- If this is not the first key value for this item, we
@@ -208,14 +211,23 @@ feature {NONE} -- Implementation
 							-- If it is in this group, then we know it will be at the end.
 
 							if a_group.last /= an_item then
-								a_group.force_last (an_item)
+								if not a_group.extendible (1) then
+									a_group.resize (2 * a_group.count)
+								end
+								a_group.put_last (an_item)
 							end
 						end
 					else
 						create a_group.make_default
-						a_group.force_last (an_item)
-						groups.force_last (a_group)
-						group_keys.force_last (a_key)
+						a_group.put_last (an_item)
+						if not groups.extendible (1) then
+							groups.resize (2 * groups.count)
+						end
+						groups.put_last (a_group)
+						if not group_keys.extendible (1) then
+							group_keys.resize (2 * group_keys.count)
+						end
+						group_keys.put_last (a_key)
 						a_map.force_new (a_group, a_comparison_key)
 					end
 					first_key := False

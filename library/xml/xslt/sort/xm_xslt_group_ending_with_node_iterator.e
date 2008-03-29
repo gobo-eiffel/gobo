@@ -92,7 +92,11 @@ feature -- Cursor movement
 				else
 					item := next_candidate
 				end
-				if item /= Void then current_members.force_last (item) end
+				if item /= Void then
+					if not current_members.extendible (1) then
+						current_members.resize (2 * current_members.count)
+					end
+					current_members.put_last (item) end
 				from
 					next_candidate := item
 				until
@@ -108,7 +112,10 @@ feature -- Cursor movement
 							matched := True
 						else
 							next_candidate := population.item
-							current_members.force_last (next_candidate)
+							if not current_members.extendible (1) then
+								current_members.resize (2 * current_members.count)
+							end
+							current_members.put_last (next_candidate)
 						end
 					end
 				end

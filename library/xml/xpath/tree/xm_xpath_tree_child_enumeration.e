@@ -95,7 +95,11 @@ feature {NONE} -- Implemnentation
 			a_node: XM_XPATH_NODE
 		do
 			a_node := next_node.next_sibling
-			if a_node /= Void and then a_node.is_tree_node then
+			if a_node /= Void then
+				check
+					tree_node: a_node.is_tree_node
+					-- Because trees cannot mix
+				end
 				next_node := a_node.as_tree_node
 			else
 				next_node := Void

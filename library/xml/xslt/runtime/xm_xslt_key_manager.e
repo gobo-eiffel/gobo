@@ -480,7 +480,10 @@ feature {NONE} -- Implementation
 					--  order, or the same node as the last existing node
 
 					if a_node_list.is_empty or else a_node_list.last /= a_node then
-						a_node_list.force_last (a_node)
+						if not a_node_list.extendible (1) then
+							a_node_list.resize (2 * a_node_list.count)
+						end
+						a_node_list.put_last (a_node)
 					end
 				else
 
@@ -516,12 +519,20 @@ feature {NONE} -- Implementation
 
 					-- Otherwise add the new node at the end.
 
-					if not added then a_node_list.force_last (a_node) end
+					if not added then
+						if not a_node_list.extendible (1) then
+							a_node_list.resize (2 * a_node_list.count)
+						end						
+						a_node_list.put_last (a_node)
+					end
 				end
 			else
 				create a_node_list.make_default
 				a_map.force (a_node_list, a_value)
-				a_node_list.force_last (a_node)
+				if not a_node_list.extendible (1) then
+					a_node_list.resize (2 * a_node_list.count)
+				end
+				a_node_list.put_last (a_node)
 			end
 		end
 

@@ -51,8 +51,10 @@ feature -- Element change
 				is_backwards_compatible := True
 				key_definitions.do_all (agent {XM_XSLT_KEY_DEFINITION}.set_backwards_compatible)
 			end
-
-			key_definitions.force_last (a_def)
+			if not key_definitions.extendible (1) then
+				key_definitions.resize (2 * key_definitions.count)
+			end
+			key_definitions.put_last (a_def)
 		ensure
 			one_more: key_definitions.count = old key_definitions.count + 1
 			inserted: key_definitions.last = a_def

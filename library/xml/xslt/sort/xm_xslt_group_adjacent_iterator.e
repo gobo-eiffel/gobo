@@ -192,7 +192,10 @@ feature {NONE} -- Implementation
 							current_key := next_key
 						end
 						if next_key.is_comparable (l_candidate_key) and then comparer.three_way_comparison (next_key, l_candidate_key) = 0 then
-							current_members.force_last (l_candidate)
+							if not current_members.extendible (1) then
+								current_members.resize (2 * current_members.count)
+							end
+							current_members.put_last (l_candidate)
 						else
 							next_key := l_candidate_key
 							next_item := l_candidate

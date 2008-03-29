@@ -51,39 +51,45 @@ feature -- Access
 			--  bottom half reflecting their relative position.
 			-- This is the default implementation for child nodes.
 		do
-			create Result.make (sequence_number_high_word, 0)
+			if saved_sequence_number = Void then
+				create saved_sequence_number.make (sequence_number_high_word, 0)
+			end
+			Result := saved_sequence_number
+		ensure then
+			saved_sequence_number_not_void: saved_sequence_number /= Void
 		end
 
 	string_value: STRING is
 			-- String-value
 		local
-			a_node: XM_XPATH_NODE
-			a_text_node: XM_XPATH_TREE_TEXT
-			a_string: ST_COPY_ON_WRITE_STRING
+			l_node: XM_XPATH_NODE
+			l_string: ST_COPY_ON_WRITE_STRING
 		do
-
+			-- TODO: review why copy-on-write is being used. The string value
+			--       should be read-only, in which case we might be able to
+			--       cache it.
+			
 			-- Return the concatentation of the string value of all it's
 			-- text-node descendants.
 
 			from
-				a_node := first_child
+				l_node := first_child
 			until
-				a_node = Void
+				l_node = Void
 			loop
-				if a_node.as_tree_node.is_tree_text then
-					a_text_node := a_node.as_tree_node.as_tree_text
-					if a_string = Void then
-						create a_string.make (a_text_node.string_value)
+				if l_node.as_tree_node.is_tree_text then
+					if l_string = Void then
+						create l_string.make (l_node.as_tree_node.as_tree_text.string_value)
 					else
-						a_string.append_string (a_text_node.string_value)
+						l_string.append_string (l_node.as_tree_node.as_tree_text.string_value)
 					end
 				end
-				a_node := a_node.as_tree_node.next_node_in_document_order (Current)
+				l_node := l_node.as_tree_node.next_node_in_document_order (Current)
 			end
-			if a_string = Void then
+			if l_string = Void then
 				Result := ""
 			else
-				Result := a_string.item
+				Result := l_string.item
 			end
 		end
 
@@ -121,12 +127,6 @@ feature -- Access
 			child_iterator_invulnerable: Result /= Void
 		end
 
-	is_idrefs_attribute (an_index: INTEGER): BOOLEAN is
-			-- Is `an_index' the number of an attribute with an is-idrefs property of `True'
-		do
-			-- False for documents
-		end
-	
 feature -- Status report
 
 	has_child_nodes: BOOLEAN is
@@ -135,10 +135,10 @@ feature -- Status report
 			Result := children.count > 0
 		end
 
-	is_valid_child_index (an_index: INTEGER): BOOLEAN is
-			-- Doss `an_index' represent a valid child?
+	is_valid_child_index (a_index: INTEGER): BOOLEAN is
+			-- Does `a_index' represent a valid child?
 		do
-			Result := an_index > 0 and then an_index <= children.count
+			Result := a_index > 0 and a_index <= children.count
 		end
 
 feature -- Element change
@@ -216,12 +216,18 @@ feature {NONE} -- Implementation
 	children: DS_ARRAYED_LIST [XM_XPATH_TREE_NODE]
 			-- Child_nodes
 
+	saved_sequence_number: XM_XPATH_64BIT_NUMERIC_CODE
+			-- Cache for `sequence_number'
+
 	update_indices is
 			-- Update child indices to reflect removal.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NODE]
 		do
-			from l_cursor := children.new_cursor; l_cursor.start until l_cursor.after loop
+			from l_cursor := children.new_cursor
+			l_cursor.start until
+				l_cursor.after
+			loop
 				l_cursor.item.set_child_index (l_cursor.index)
 				l_cursor.forth
 			end
