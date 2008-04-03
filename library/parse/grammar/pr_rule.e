@@ -295,7 +295,7 @@ feature -- Output
 			a_file.put_new_line
 			a_file.put_string (action.out)
 			a_file.put_new_line
-			a_file.put_line ("if yy_parsing_status = yyContinue then")
+			a_file.put_line ("if yy_parsing_status >= yyContinue then")
 			a_file.put_string ("%Tyyssp := yyssp - ")
 			nb := rhs.count
 			a_file.put_integer (nb)
@@ -368,7 +368,7 @@ feature -- Output
 			a_file.put_new_line
 			a_type.old_print_dollar_dollar_finalization (a_file)
 			a_file.put_new_line
-			a_file.put_line ("if yy_parsing_status = yyContinue then")
+			a_file.put_line ("if yy_parsing_status >= yyContinue then")
 			nb := rhs.count
 			if nb /= 0 then
 				a_file.put_string ("%Tyyssp := yyssp - ")

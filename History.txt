@@ -115,6 +115,11 @@ Version 3.8 - ?
 	* Fixed bug#1875809 where libraries were duplicated in the generated
 	  output file when appearing twice in the same Xace input file.
 
+	geyacc:
+
+	* Fixed bug when resuming a parsing that was suspended (with `suspend').
+	  The last action before the call to `suspend' was executed twice.
+
 	Gobo Eiffel Kernel Library:
 
 	* Added iterator features (`do_all', `do_if', `for_all', `there_exists')
