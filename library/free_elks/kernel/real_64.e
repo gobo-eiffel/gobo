@@ -38,7 +38,7 @@ convert
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: REAL_64): BOOLEAN is
 			-- Is `other' greater than current double?
 		external
 			"built_in"
@@ -46,7 +46,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	truncated_to_integer: INTEGER is
+	truncated_to_integer: INTEGER_32 is
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		external
@@ -81,43 +81,43 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: REAL_64): REAL_64 is
 			-- Sum with `other'
 		external
 			"built_in"
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: REAL_64): REAL_64 is
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: REAL_64): REAL_64 is
 			-- Product with `other'
 		external
 			"built_in"
 		end
 
-	infix "/" (other: like Current): like Current is
+	infix "/" (other: REAL_64): REAL_64 is
 			-- Division by `other'
 		external
 			"built_in"
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	infix "^" (other: REAL_64): REAL_64 is
 			-- Current double to the power `other'
 		external
 			"built_in"
 		end
 
-	prefix "+": like Current is
+	prefix "+": REAL_64 is
 			-- Unary plus
 		external
 			"built_in"
 		end
 
-	prefix "-": like Current is
+	prefix "-": REAL_64 is
 			-- Unary minus
 		external
 			"built_in"

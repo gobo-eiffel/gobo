@@ -46,6 +46,8 @@ feature -- Status report
 
 	exponentiable (other: NUMERIC): BOOLEAN is
 			-- May current object be elevated to the power `other'?
+		obsolete
+			"[2008_04_01] Will be removed since not used."
 		require
 			other_exists: other /= Void
 		deferred

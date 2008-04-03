@@ -12,7 +12,7 @@ indexing
 		translation is in effect.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
+	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"

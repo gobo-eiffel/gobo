@@ -92,15 +92,14 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	to_integer_32: INTEGER is
+	to_integer_32: INTEGER_32 is
 			-- Convert `item' into an INTEGER_32 value.
 		require
---			not_too_small: item >= feature {INTEGER}.Min_value
---			not_too_big: item <= feature {INTEGER}.Max_value
+--			not_too_small: item >= {INTEGER_32}.Min_value
+--			not_too_big: item <= {INTEGER_32}.Max_value
 		do
 			fixme (once "Do not forget to add proper precondition to ensure we can convert pointer %
-				%value into an INTEGER")
-			fixme (once "Change return type to INTEGER_32")
+				%value into an INTEGER_32")
 			Result := item.to_integer_32
 		end
 

@@ -4,7 +4,7 @@ indexing
 		in a contiguous range.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ inherit
 			copy, is_equal, out, append_string_general
 		end
 
-	INDEXABLE [CHARACTER, INTEGER]
+	INDEXABLE [CHARACTER_8, INTEGER]
 		rename
 			item as item
 		redefine
@@ -28,13 +28,13 @@ inherit
 			changeable_comparison_criterion
 		end
 
-	RESIZABLE [CHARACTER]
+	RESIZABLE [CHARACTER_8]
 		redefine
 			copy, is_equal, out,
 			changeable_comparison_criterion
 		end
 
-	TO_SPECIAL [CHARACTER]
+	TO_SPECIAL [CHARACTER_8]
 		rename
 			item as item
 		redefine
@@ -84,7 +84,7 @@ feature -- Initialization
 			area_allocated: capacity >= 0
 		end
 
-	make_filled (c: CHARACTER; n: INTEGER) is
+	make_filled (c: CHARACTER_8; n: INTEGER) is
 			-- Create string of length `n' filled with `c'.
 		require
 			valid_count: n >= 0
@@ -224,7 +224,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): CHARACTER assign put is
+	item, infix "@" (i: INTEGER): CHARACTER_8 assign put is
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
@@ -282,7 +282,7 @@ feature -- Access
 			Result := (other /= Void) and then (area = other.area)
 		end
 
-	index_of (c: CHARACTER; start_index: INTEGER): INTEGER is
+	index_of (c: CHARACTER_8; start_index: INTEGER): INTEGER is
 			-- Position of first occurrence of `c' at or after `start_index';
 			-- 0 if none.
 		require
@@ -315,7 +315,7 @@ feature -- Access
 				not substring (start_index, Result - 1).has (c)
 		end
 
-	last_index_of (c: CHARACTER; start_index_from_end: INTEGER): INTEGER is
+	last_index_of (c: CHARACTER_8; start_index_from_end: INTEGER): INTEGER is
 			-- Position of last occurrence of `c'.
 			-- 0 if none
 		require
@@ -434,11 +434,11 @@ feature -- Measurement
 	count: INTEGER
 			-- Actual number of characters making up the string
 
-	occurrences (c: CHARACTER): INTEGER is
+	occurrences (c: CHARACTER_8): INTEGER is
 			-- Number of times `c' appears in the string
 		local
 			i, nb: INTEGER
-			a: SPECIAL [CHARACTER]
+			a: SPECIAL [CHARACTER_8]
 		do
 			from
 				nb := count
@@ -601,7 +601,7 @@ feature -- Status report
 	is_valid_as_string_8: BOOLEAN is True
 			-- Is `Current' convertible to STRING_8 without information loss?
 
-	has (c: CHARACTER): BOOLEAN is
+	has (c: CHARACTER_8): BOOLEAN is
 			-- Does string include `c'?
 		local
 			i, nb: INTEGER
@@ -722,7 +722,7 @@ feature -- Status report
 	valid_code (v: NATURAL_32): BOOLEAN is
 			-- Is `v' a valid code for a CHARACTER_32?
 		do
-			Result := v <= {CHARACTER}.max_value.to_natural_32
+			Result := v <= {CHARACTER_8}.max_value.to_natural_32
 		end
 
 	changeable_comparison_criterion: BOOLEAN is False
@@ -1107,7 +1107,7 @@ feature -- Element change
 			-- all_blank: For every `i' in `count'..`capacity', `item' (`i') = `Blank'
 		end
 
-	fill_with (c: CHARACTER) is
+	fill_with (c: CHARACTER_8) is
 			-- Replace every character with `c'.
 		local
 			l_count: INTEGER
@@ -1122,7 +1122,7 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	replace_character (c: CHARACTER) is
+	replace_character (c: CHARACTER_8) is
 			-- Replace every character with `c'.
 		obsolete
 			"ELKS 2001: use `fill_with' instead'"
@@ -1133,7 +1133,7 @@ feature -- Element change
 			filled: elks_checking implies occurrences (c) = count
 		end
 
-	fill_character (c: CHARACTER) is
+	fill_character (c: CHARACTER_8) is
 			-- Fill with `capacity' characters all equal to `c'.
 		local
 			l_cap: like capacity
@@ -1292,7 +1292,7 @@ feature -- Element change
 			shared_area: other.area = area
 		end
 
-	put (c: CHARACTER; i: INTEGER) is
+	put (c: CHARACTER_8; i: INTEGER) is
 			-- Replace character at position `i' by `c'.
 		do
 			area.put (c, i - 1)
@@ -1310,7 +1310,7 @@ feature -- Element change
 			internal_hash_code := 0
 		end
 
-	precede, prepend_character (c: CHARACTER) is
+	precede, prepend_character (c: CHARACTER_8) is
 			-- Add `c' at front.
 		local
 			l_area: like area
@@ -1438,7 +1438,7 @@ feature -- Element change
 		local
 			l_value: INTEGER
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1489,7 +1489,7 @@ feature -- Element change
 		local
 			l_value: INTEGER_8
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1540,7 +1540,7 @@ feature -- Element change
 		local
 			l_value: INTEGER_16
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1591,7 +1591,7 @@ feature -- Element change
 		local
 			l_value: INTEGER_64
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1642,7 +1642,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_8
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1680,7 +1680,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_16
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1718,7 +1718,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_32
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1756,7 +1756,7 @@ feature -- Element change
 		local
 			l_value: NATURAL_64
 			l_starting_index, l_ending_index: INTEGER
-			l_temp: CHARACTER
+			l_temp: CHARACTER_8
 			l_area: like area
 		do
 			if i = 0 then
@@ -1801,7 +1801,7 @@ feature -- Element change
 			append (d.out)
 		end
 
-	append_character, extend (c: CHARACTER) is
+	append_character, extend (c: CHARACTER_8) is
 			-- Append `c' at end.
 		local
 			current_count: INTEGER
@@ -1878,7 +1878,7 @@ feature -- Element change
 				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
-	insert_character (c: CHARACTER; i: INTEGER) is
+	insert_character (c: CHARACTER_8; i: INTEGER) is
 			-- Insert `c' at index `i', shifting characters between ranks
 			-- `i' and `count' rightwards.
 		require
@@ -1983,7 +1983,7 @@ feature -- Removal
 			removed: elks_checking implies is_equal (old substring (1, count - n.min (count)))
 		end
 
-	prune (c: CHARACTER) is
+	prune (c: CHARACTER_8) is
 			-- Remove first occurrence of `c', if any.
 		require else
 			True
@@ -2002,14 +2002,14 @@ feature -- Removal
 			end
 		end
 
-	prune_all (c: CHARACTER) is
+	prune_all (c: CHARACTER_8) is
 			-- Remove all occurrences of `c'.
 		require else
 			True
 		local
 			i, j, nb: INTEGER
 			l_area: like area
-			l_char: CHARACTER
+			l_char: CHARACTER_8
 		do
 				-- Traverse string and shift characters to the left
 				-- each time we find an occurrence of `c'.
@@ -2033,7 +2033,7 @@ feature -- Removal
 			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
 		end
 
-	prune_all_leading (c: CHARACTER) is
+	prune_all_leading (c: CHARACTER_8) is
 			-- Remove all leading occurrences of `c'.
 		do
 			from
@@ -2044,7 +2044,7 @@ feature -- Removal
 			end
 		end
 
-	prune_all_trailing (c: CHARACTER) is
+	prune_all_trailing (c: CHARACTER_8) is
 			-- Remove all trailing occurrences of `c'.
 		do
 			from
@@ -2257,7 +2257,7 @@ feature -- Conversion
 			same_count: count = old count
 		end
 
-	character_justify (pivot: CHARACTER; position: INTEGER) is
+	character_justify (pivot: CHARACTER_8; position: INTEGER) is
 			-- Justify a string based on a `pivot'
 			-- and the `position' it needs to be in
 			-- the final string.
@@ -2467,10 +2467,10 @@ feature -- Conversion
 				(not Result = false_constant.same_string (as_lower))
 		end
 
-	linear_representation: LINEAR [CHARACTER] is
+	linear_representation: LINEAR [CHARACTER_8] is
 			-- Representation as a linear structure
 		local
-			temp: ARRAYED_LIST [CHARACTER]
+			temp: ARRAYED_LIST [CHARACTER_8]
 			i: INTEGER
 		do
 			create temp.make (capacity)
@@ -2485,7 +2485,7 @@ feature -- Conversion
 			Result := temp
 		end
 
-	split (a_separator: CHARACTER): LIST [STRING] is
+	split (a_separator: CHARACTER_8): LIST [STRING] is
 			-- Split on `a_separator'.
 		local
 			l_list: ARRAYED_LIST [STRING]
@@ -2562,7 +2562,7 @@ feature -- Conversion
 			-- "Hello world" -> "dlrow olleH".
 		local
 			a: like area
-			c: CHARACTER
+			c: CHARACTER_8
 			i, j: INTEGER
 		do
 			if count > 0 then
@@ -2716,7 +2716,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	empty_area: SPECIAL [CHARACTER] is
+	empty_area: SPECIAL [CHARACTER_8] is
 			-- Empty `area' to avoid useless creation of empty areas when wiping out a STRING.
 		obsolete
 			"Simply create `area' directly."

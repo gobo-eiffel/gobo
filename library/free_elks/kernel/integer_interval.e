@@ -1,7 +1,7 @@
 indexing
 	description: "Contiguous integer intervals"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		do
 			lower_defined := True
 			upper_defined := True
-			if min_index <= max_index then		
+			if min_index <= max_index then
 				lower_internal := min_index
 				upper_internal := max_index
 			else
@@ -62,9 +62,9 @@ feature {NONE} -- Initialization
 			empty_if_not_in_order:
 				(min_index > max_index) implies is_empty
 		end
-		
+
 feature -- Initialization
-	
+
 	adapt (other: INTEGER_INTERVAL) is
 			-- Reset to be the same interval as `other'.
 		require
@@ -118,7 +118,7 @@ feature -- Access
 				(upper_defined implies v <= upper) and
 				(lower_defined implies v >= lower)
 		ensure then
-			iff_within_bounds: Result = 
+			iff_within_bounds: Result =
 				((upper_defined implies v <= upper) and
 				(lower_defined implies v >= lower))
 		end
@@ -183,7 +183,7 @@ feature -- Comparison
 		end
 
 feature -- Status report
-	 
+
 	all_cleared: BOOLEAN is
 			-- Are all items set to default values?
 		do
@@ -207,7 +207,7 @@ feature -- Status report
 		end
 
 feature -- Element change
-	
+
 	extend, put (v: INTEGER) is
 			-- Make sure that interval goes all the way
 			-- to `v' (up or down).
@@ -228,7 +228,7 @@ feature -- Resizing
 			-- Rearrange interval to go from at most
 			-- `min_index' to at least `max_index',
 			-- encompassing previous bounds.
-		do	 
+		do
 			lower_internal := min_index.min (lower)
 			upper_internal := max_index.max (upper)
 		end
@@ -295,6 +295,7 @@ feature -- Conversion
 			check
 				False
 			end
+			Result := Current
 		end
 
 	linear_representation: LINEAR [INTEGER] is
@@ -349,7 +350,7 @@ feature -- Iteration
 				i := i + 1
 			end
 		end
-		
+
 	for_all (condition:
 				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
 			BOOLEAN is

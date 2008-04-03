@@ -111,7 +111,7 @@ feature -- Access
 			Result := character_32_item (index)
 		end
 
-	real_64_item (index: INTEGER): DOUBLE is
+	real_64_item (index: INTEGER): REAL_64 is
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -120,7 +120,7 @@ feature -- Access
 			"built_in"
 		end
 
-	double_item (index: INTEGER): DOUBLE is
+	double_item (index: INTEGER): REAL_64 is
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -183,7 +183,7 @@ feature -- Access
 			"built_in"
 		end
 
-	integer_32_item (index: INTEGER): INTEGER is
+	integer_32_item (index: INTEGER): INTEGER_32 is
 			-- INTEGER_32 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -192,7 +192,7 @@ feature -- Access
 			"built_in"
 		end
 
-	integer_item (index: INTEGER): INTEGER is
+	integer_item (index: INTEGER): INTEGER_32 is
 			-- INTEGER_32 item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -219,7 +219,7 @@ feature -- Access
 			"built_in"
 		end
 
-	real_32_item (index: INTEGER): REAL is
+	real_32_item (index: INTEGER): REAL_32 is
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -228,7 +228,7 @@ feature -- Access
 			"built_in"
 		end
 
-	real_item (index: INTEGER): REAL is
+	real_item (index: INTEGER): REAL_32 is
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -366,8 +366,8 @@ feature -- Status report
 			l_b: BOOLEAN_REF
 			l_c: CHARACTER_REF
 			l_wc: CHARACTER_32_REF
-			l_d: DOUBLE_REF
-			l_r: REAL_REF
+			l_d: REAL_64_REF
+			l_r: REAL_32_REF
 			l_p: POINTER_REF
 			l_ui8: NATURAL_8_REF
 			l_ui16: NATURAL_16_REF
@@ -375,7 +375,7 @@ feature -- Status report
 			l_ui64: NATURAL_64_REF
 			l_i8: INTEGER_8_REF
 			l_i16: INTEGER_16_REF
-			l_i32: INTEGER_REF
+			l_i32: INTEGER_32_REF
 			l_i64: INTEGER_64_REF
 		do
 			if v = Void then
@@ -543,6 +543,7 @@ feature -- Element change
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
+			valid_type_for_index: valid_type_for_index (v, index)
 			valid_type: is_reference_item (index)
 		external
 			"built_in"
@@ -593,7 +594,7 @@ feature -- Element change
 			put_character_32 (v, index)
 		end
 
-	put_real_64 (v: DOUBLE; index: INTEGER) is
+	put_real_64 (v: REAL_64; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -602,7 +603,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_double (v: DOUBLE; index: INTEGER) is
+	put_double (v: REAL_64; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -611,7 +612,7 @@ feature -- Element change
 			put_real_64 (v, index)
 		end
 
-	put_real_32 (v: REAL; index: INTEGER) is
+	put_real_32 (v: REAL_32; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -620,7 +621,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_real (v: REAL; index: INTEGER) is
+	put_real (v: REAL_32; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -674,7 +675,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_integer_32 (v: INTEGER; index: INTEGER) is
+	put_integer_32 (v: INTEGER_32; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -683,7 +684,7 @@ feature -- Element change
 			"built_in"
 		end
 
-	put_integer (v: INTEGER; index: INTEGER) is
+	put_integer (v: INTEGER_32; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -746,7 +747,7 @@ feature -- Type queries
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN is
-			-- Is item at `index' a DOUBLE?
+			-- Is item at `index' a REAL_64?
 		require
 			valid_index: valid_index (index)
 		do
@@ -826,7 +827,7 @@ feature -- Type queries
 		end
 
 	is_real_item (index: INTEGER): BOOLEAN is
-			-- Is item at `index' a REAL?
+			-- Is item at `index' a REAL_32?
 		require
 			valid_index: valid_index (index)
 		do
@@ -895,7 +896,7 @@ feature -- Type queries
 		end
 
 	is_uniform_double: BOOLEAN is
-			-- Are all items of type DOUBLE?
+			-- Are all items of type REAL_64?
 		do
 			Result := is_tuple_uniform (real_64_code)
 		ensure
@@ -975,7 +976,7 @@ feature -- Type queries
 		end
 
 	is_uniform_real: BOOLEAN is
-			-- Are all items of type REAL?
+			-- Are all items of type REAL_32?
 		do
 			Result := is_tuple_uniform (real_32_code)
 		ensure
@@ -1129,7 +1130,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	double_arrayed: ARRAY [DOUBLE] is
+	double_arrayed: ARRAY [REAL_64] is
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1204,7 +1205,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	real_arrayed: ARRAY [REAL] is
+	real_arrayed: ARRAY [REAL_32] is
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"

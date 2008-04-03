@@ -48,16 +48,16 @@ create
 
 convert
 	make_from_reference ({NATURAL_16_REF}),
-	to_real_32: {REAL},
-	to_real_64: {DOUBLE},
-	to_integer_32: {INTEGER},
+	to_real_32: {REAL_32},
+	to_real_64: {REAL_64},
+	to_integer_32: {INTEGER_32},
 	to_integer_64: {INTEGER_64},
 	to_natural_32: {NATURAL_32},
 	to_natural_64: {NATURAL_64}
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: NATURAL_16): BOOLEAN is
 			-- Is current integer less than `other'?
 		external
 			"built_in"
@@ -65,49 +65,49 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: NATURAL_16): NATURAL_16 is
 			-- Sum with `other'
 		external
 			"built_in"
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: NATURAL_16): NATURAL_16 is
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: NATURAL_16): NATURAL_16 is
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	infix "/" (other: like Current): DOUBLE is
+	infix "/" (other: NATURAL_16): REAL_64 is
 			-- Division by `other'
 		external
 			"built_in"
 		end
 
-	prefix "+": like Current is
+	prefix "+": NATURAL_16 is
 			-- Unary plus
 		external
 			"built_in"
 		end
 
-	infix "//" (other: like Current): like Current is
+	infix "//" (other: NATURAL_16): NATURAL_16 is
 			-- Integer division of Current by `other'
 		external
 			"built_in"
 		end
 
-	infix "\\" (other: like Current): like Current is
+	infix "\\" (other: NATURAL_16): NATURAL_16 is
 			-- Remainder of the integer division of Current by `other'
 		external
 			"built_in"
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	infix "^" (other: REAL_64): REAL_64 is
 			-- Integer power of Current by `other'
 		external
 			"built_in"
@@ -151,7 +151,7 @@ feature -- Conversion
 			"built_in"
 		end
 
-	as_integer_32: INTEGER is
+	as_integer_32: INTEGER_32 is
 			-- Convert `item' into an INTEGER_32 value.
 		external
 			"built_in"
@@ -163,14 +163,14 @@ feature -- Conversion
 			"built_in"
 		end
 
-	to_real_32: REAL is
-			-- Convert `item' into a REAL
+	to_real_32: REAL_32 is
+			-- Convert `item' into a REAL_32
 		external
 			"built_in"
 		end
 
-	to_real_64: DOUBLE is
-			-- Convert `item' into a DOUBLE
+	to_real_64: REAL_64 is
+			-- Convert `item' into a REAL_64
 		external
 			"built_in"
 		end
@@ -189,37 +189,37 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and (i: like Current): like Current is
+	bit_and (i: NATURAL_16): NATURAL_16 is
 			-- Bitwise and between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_or (i: like Current): like Current is
+	bit_or (i: NATURAL_16): NATURAL_16 is
 			-- Bitwise or between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_xor (i: like Current): like Current is
+	bit_xor (i: NATURAL_16): NATURAL_16 is
 			-- Bitwise xor between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_not: like Current is
+	bit_not: NATURAL_16 is
 			-- One's complement of Current.
 		external
 			"built_in"
 		end
 
-	bit_shift_left (n: INTEGER): like Current is
+	bit_shift_left (n: INTEGER): NATURAL_16 is
 			-- Shift Current from `n' position to left.
 		external
 			"built_in"
 		end
 
-	bit_shift_right (n: INTEGER): like Current is
+	bit_shift_right (n: INTEGER): NATURAL_16 is
 			-- Shift Current from `n' position to right.
 		external
 			"built_in"

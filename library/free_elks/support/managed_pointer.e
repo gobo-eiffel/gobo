@@ -509,7 +509,7 @@ feature -- Element change: Platform specific
 			l_sp := data.area;
 			(item + pos).memory_copy ($l_sp, data.count)
 		ensure
-			inserted: data.is_equal (read_array (pos, data.count))
+			inserted: read_array (pos, data.count).is_equal (data)
 		end
 
 feature -- Access: Little-endian format

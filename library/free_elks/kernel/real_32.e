@@ -34,11 +34,11 @@ create
 
 convert
 	make_from_reference ({REAL_32_REF}),
-	to_double: {DOUBLE}
+	to_double: {REAL_64}
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: REAL_32): BOOLEAN is
 			-- Is `other' greater than current real?
 		external
 			"built_in"
@@ -46,7 +46,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	truncated_to_integer: INTEGER is
+	truncated_to_integer: INTEGER_32 is
 			-- Integer part (same sign, largest absolute
 			-- value no greater than current object's)
 		external
@@ -60,7 +60,7 @@ feature -- Conversion
 			"built_in"
 		end
 
-	to_double: DOUBLE is
+	to_double: REAL_64 is
 			-- Current seen as a double
 		external
 			"built_in"
@@ -80,43 +80,43 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: REAL_32): REAL_32 is
 			-- Sum with `other'
 		external
 			"built_in"
 		end
 
-	infix "-" (other: like Current): like Current is
+	infix "-" (other: REAL_32): REAL_32 is
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: REAL_32): REAL_32 is
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	infix "/" (other: like Current): like Current is
+	infix "/" (other: REAL_32): REAL_32 is
 			-- Division by `other'
 		external
 			"built_in"
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	infix "^" (other: REAL_64): REAL_64 is
 			-- Current real to the power `other'
 		external
 			"built_in"
 		end
 
-	prefix "+": like Current is
+	prefix "+": REAL_32 is
 			-- Unary plus
 		external
 			"built_in"
 		end
 
-	prefix "-": like Current is
+	prefix "-": REAL_32 is
 			-- Unary minus
 		external
 			"built_in"
