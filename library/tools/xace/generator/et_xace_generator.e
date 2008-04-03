@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Eiffel config file from `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -99,7 +99,7 @@ feature -- Output
 		deferred
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Eiffel config file from `a_library'.
 		require
 			a_library_not_void: a_library /= Void

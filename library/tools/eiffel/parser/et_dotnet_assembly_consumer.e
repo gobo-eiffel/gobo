@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	universe: ET_UNIVERSE
+	universe: ET_SYSTEM
 			-- Surrounding universe
 
 	error_handler: ET_ERROR_HANDLER is

@@ -5,7 +5,7 @@ indexing
 		"Eiffel parent validity first pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,12 @@ class ET_PARENT_CHECKER1
 
 inherit
 
+	ET_CLASS_SUBPROCESSOR
+
 	ET_AST_NULL_PROCESSOR
+		undefine
+			make
 		redefine
-			make,
 			process_bit_feature,
 			process_bit_n,
 			process_class,
@@ -31,20 +34,6 @@ create
 
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_universe: like universe) is
-			-- Create a new parent first pass checker.
-		do
-			precursor (a_universe)
-			current_class := a_universe.unknown_class
-		end
-
-feature -- Status report
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred?
-
 feature -- Validity checking
 
 	check_parents_validity (a_class: ET_CLASS) is
@@ -54,6 +43,9 @@ feature -- Validity checking
 			-- constraints (this is done after the ancestors for the involved
 			-- classes have been built). Set `has_fatal_error' if an error
 			-- occurred.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
@@ -132,8 +124,8 @@ feature {NONE} -- Parent validity
 			an_actual: ET_TYPE
 			a_class: ET_CLASS
 		do
-			a_class := a_type.direct_base_class (universe)
-			a_class.process (universe.eiffel_parser)
+			a_class := a_type.base_class
+			a_class.process (current_system.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error
 				if a_type = a_parent.type then
@@ -170,12 +162,12 @@ feature {NONE} -- Parent validity
 						an_actual := an_actuals.type (i)
 						a_formal := a_formals.formal_parameter (i)
 						if a_formal.is_expanded then
-							if not an_actual.is_type_expanded (current_class, universe) then
+							if not an_actual.is_type_expanded (current_class) then
 								error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
 								set_fatal_error
 							end
 						elseif a_formal.is_reference then
-							if not an_actual.is_type_reference (current_class, universe) then
+							if not an_actual.is_type_reference (current_class) then
 								error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
 								set_fatal_error
 							end
@@ -302,26 +294,9 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
 feature {NONE} -- Access
-
-	current_class: ET_CLASS
-			-- Class being processed
 
 	current_parent: ET_PARENT
 			-- Parent being processed
-
-invariant
-
-	current_class_not_void: current_class /= Void
 
 end

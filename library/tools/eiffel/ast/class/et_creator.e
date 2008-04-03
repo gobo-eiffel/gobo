@@ -60,7 +60,7 @@ feature -- Access
 	creation_keyword: ET_KEYWORD
 			-- 'creation' keyword
 
-	clients: ET_CLASS_NAME_LIST
+	clients: ET_CLIENT_LIST
 			-- Clients
 
 	clients_clause: ET_CLIENTS is
@@ -128,18 +128,17 @@ feature -- Access
 
 feature -- Status report
 
-	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
 			-- Is feature name listed in current creation clause
 			-- and is it exported to `a_class'?
-			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
-			a_universe_not_void: a_universe /= Void
 		do
 			if not is_empty then
-				if clients.has_descendant (a_class, a_universe) then
+				if clients.has_descendant (a_class) then
 					Result := has_feature_name (a_name)
 				end
 			end

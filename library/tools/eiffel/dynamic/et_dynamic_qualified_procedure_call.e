@@ -57,7 +57,7 @@ feature -- Access
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure in `a_type' corresponding to current call;
 			-- Void if no such procedure
 		do

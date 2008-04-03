@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Export status
 
-	clients: ET_CLASS_NAME_LIST is
+	clients: ET_CLIENT_LIST is
 			-- Clients to which feature is exported
 		deferred
 		end

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			declared_type := a_type
 			is_keyword := tokens.is_keyword
 			unique_keyword := tokens.unique_keyword
-			clients := tokens.any_clients
+			clients := tokens.empty_clients
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure

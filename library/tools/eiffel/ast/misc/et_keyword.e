@@ -5,7 +5,7 @@ indexing
 		"Eiffel keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,7 +58,6 @@ create
 	make_old,
 	make_once,
 	make_prefix,
-	make_recast,
 	make_redefine,
 	make_reference,
 	make_rename,
@@ -571,17 +570,6 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
-	make_recast is
-			-- Create a new 'recast' keyword.
-		do
-			code := tokens.recast_keyword_code
-			make_token (tokens.recast_keyword_name)
-		ensure
-			is_recast: is_recast
-			line_set: line = no_line
-			column_set: column = no_column
-		end
-
 	make_redefine is
 			-- Create a new 'redefine' keyword.
 		do
@@ -1061,12 +1049,6 @@ feature -- Status report
 			-- Is current keyword 'prefix'?
 		do
 			Result := (code = tokens.prefix_keyword_code)
-		end
-
-	is_recast: BOOLEAN is
-			-- Is current keyword 'recast'?
-		do
-			Result := (code = tokens.recast_keyword_code)
 		end
 
 	is_redefine: BOOLEAN is

@@ -43,8 +43,8 @@ feature -- Execution
 	execute is
 			-- Execute 'system' command.
 		local
-			a_parser: ET_XACE_SYSTEM_PARSER
-			a_system: ET_XACE_SYSTEM
+			a_parser: ET_XACE_SYSTEM_CONFIG_PARSER
+			a_system: ET_XACE_SYSTEM_CONFIG
 			a_file: KL_TEXT_INPUT_FILE
 		do
 			create a_parser.make_with_variables (variables, error_handler)
@@ -69,7 +69,7 @@ feature -- Execution
 			end
 		end
 
-	execute_generators (a_system: ET_XACE_SYSTEM) is
+	execute_generators (a_system: ET_XACE_SYSTEM_CONFIG) is
 			-- Execute Ace file generators.
 		require
 			a_system_not_void: a_system /= Void

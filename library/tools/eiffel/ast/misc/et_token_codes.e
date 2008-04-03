@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,24 +89,23 @@ feature -- Keyword and symbol codes
 	once_keyword_code: CHARACTER is '%/38/'
 	precursor_keyword_code: CHARACTER is '%/39/'
 	prefix_keyword_code: CHARACTER is '%/40/'
-	recast_keyword_code: CHARACTER is '%/41/'
-	redefine_keyword_code: CHARACTER is '%/42/'
-	reference_keyword_code: CHARACTER is '%/43/'
-	rename_keyword_code: CHARACTER is '%/44/'
-	require_keyword_code: CHARACTER is '%/45/'
-	rescue_keyword_code: CHARACTER is '%/46/'
-	result_keyword_code: CHARACTER is '%/47/'
-	retry_keyword_code: CHARACTER is '%/48/'
-	select_keyword_code: CHARACTER is '%/49/'
-	separate_keyword_code: CHARACTER is '%/50/'
-	strip_keyword_code: CHARACTER is '%/51/'
-	then_keyword_code: CHARACTER is '%/52/'
-	true_keyword_code: CHARACTER is '%/53/'
-	undefine_keyword_code: CHARACTER is '%/54/'
-	unique_keyword_code: CHARACTER is '%/55/'
-	until_keyword_code: CHARACTER is '%/56/'
-	variant_keyword_code: CHARACTER is '%/57/'
-	void_keyword_code: CHARACTER is '%/61/'
+	redefine_keyword_code: CHARACTER is '%/41/'
+	reference_keyword_code: CHARACTER is '%/42/'
+	rename_keyword_code: CHARACTER is '%/43/'
+	require_keyword_code: CHARACTER is '%/44/'
+	rescue_keyword_code: CHARACTER is '%/45/'
+	result_keyword_code: CHARACTER is '%/46/'
+	retry_keyword_code: CHARACTER is '%/47/'
+	select_keyword_code: CHARACTER is '%/48/'
+	separate_keyword_code: CHARACTER is '%/49/'
+	strip_keyword_code: CHARACTER is '%/50/'
+	then_keyword_code: CHARACTER is '%/51/'
+	true_keyword_code: CHARACTER is '%/52/'
+	undefine_keyword_code: CHARACTER is '%/53/'
+	unique_keyword_code: CHARACTER is '%/54/'
+	until_keyword_code: CHARACTER is '%/55/'
+	variant_keyword_code: CHARACTER is '%/56/'
+	void_keyword_code: CHARACTER is '%/57/'
 	when_keyword_code: CHARACTER is '%/58/'
 			-- Eiffel keyword codes
 

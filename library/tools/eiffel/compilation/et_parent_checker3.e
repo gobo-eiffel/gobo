@@ -5,7 +5,7 @@ indexing
 		"Eiffel parent validity third pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,15 @@ class ET_PARENT_CHECKER3
 
 inherit
 
-	ET_AST_NULL_PROCESSOR
+	ET_CLASS_SUBPROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_class,
 			process_class_type,
 			process_generic_class_type
@@ -28,18 +34,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new parent third pass checker.
 		do
-			precursor (a_universe)
-			current_class := a_universe.unknown_class
+			precursor {ET_CLASS_SUBPROCESSOR}
 			create classes_to_be_processed.make (10)
 		end
-
-feature -- Status report
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred?
 
 feature -- Validity checking
 
@@ -49,6 +49,7 @@ feature -- Validity checking
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
@@ -71,7 +72,7 @@ feature -- Validity checking
 				loop
 					other_class := classes_to_be_processed.last
 					classes_to_be_processed.remove_last
-					other_class.process (universe.interface_checker)
+					other_class.process (current_system.interface_checker)
 					if not other_class.interface_checked or else other_class.has_interface_error then
 						set_fatal_error
 					end
@@ -115,7 +116,7 @@ feature {NONE} -- Parent validity
 			a_constraint_base_type: ET_BASE_TYPE
 			a_constraint_error: BOOLEAN
 		do
-			a_class := a_type.direct_base_class (universe)
+			a_class := a_type.base_class
 			if not a_class.interface_checked then
 				classes_to_be_processed.force_last (a_class)
 			end
@@ -135,7 +136,7 @@ feature {NONE} -- Parent validity
 						a_formal := a_formals.formal_parameter (i)
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
-							an_actual_class := an_actual.base_class (current_class, universe)
+							an_actual_class := an_actual.base_class (current_class)
 							a_formal_type ?= an_actual
 							if a_formal_type /= Void then
 								an_index := a_formal_type.index
@@ -153,7 +154,9 @@ feature {NONE} -- Parent validity
 							end
 							nb2 := a_creator.count
 							if nb2 > 0 then
-								an_actual_class.process (universe.feature_flattener)
+									-- Note that we already checked in ET_PARENT_CHECKER1 that
+									-- `an_actual_class' had to be preparsed.
+								an_actual_class.process (current_system.feature_flattener)
 								if not an_actual_class.features_flattened or else an_actual_class.has_flattening_error then
 									set_fatal_error
 								elseif a_class.interface_checked and then a_class.has_interface_error then
@@ -174,7 +177,7 @@ feature {NONE} -- Parent validity
 												-- processed (it has been put in `classes_to_be_processed').
 											a_constraint_base_type := a_formal.constraint_base_type
 											if a_constraint_base_type /= Void then
-												a_constraint_class := a_constraint_base_type.direct_base_class (universe)
+												a_constraint_class := a_constraint_base_type.base_class
 											else
 													-- We know that the constraint is not
 													-- void since we have a creation clause.
@@ -182,10 +185,10 @@ feature {NONE} -- Parent validity
 													-- "[G -> H create make end, H -> G]".
 													-- We consider that the base class of the
 													-- constraint in ANY in that case.
-												a_constraint_class := universe.any_class
+												a_constraint_class := current_system.any_class
 											end
 												-- Build the feature table.
-											a_constraint_class.process (universe.feature_flattener)
+											a_constraint_class.process (current_system.feature_flattener)
 											if not a_constraint_class.features_flattened or else a_constraint_class.has_flattening_error then
 												a_constraint_error := True
 											else
@@ -214,7 +217,7 @@ feature {NONE} -- Parent validity
 														error_handler.report_vtcg4b_error (current_class, current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
 													end
 												end
-											elseif not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class, universe) then
+											elseif not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class) then
 												set_fatal_error
 												error_handler.report_vtcg4a_error (current_class, current_class, a_type.position, i, a_name, an_actual_class, a_class)
 											end
@@ -268,27 +271,13 @@ feature {ET_AST_NODE} -- Type dispatcher
 			process_class_type (a_type)
 		end
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
 feature {NONE} -- Access
-
-	current_class: ET_CLASS
-			-- Class being processed
 
 	classes_to_be_processed: DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes that need to be processed
 
 invariant
 
-	current_class_not_void: current_class /= Void
 	classes_to_be_processed_not_void: classes_to_be_processed /= Void
 	no_void_class_to_be_processed: not classes_to_be_processed.has (Void)
 

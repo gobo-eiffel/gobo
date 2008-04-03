@@ -2,26 +2,26 @@ indexing
 
 	description:
 
-		"ECF Eiffel class universes"
+		"ECF Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ECF_UNIVERSE
+class ET_ECF_SYSTEM
 
 inherit
 
-	ET_UNIVERSE
+	ET_SYSTEM
 		redefine
 			clusters, dotnet_assemblies
 		end
 
 create
 
-	make, make_standard, make_with_factory
+	make
 
 feature -- Access
 

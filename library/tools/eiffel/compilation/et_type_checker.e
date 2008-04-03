@@ -5,7 +5,7 @@ indexing
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,15 @@ class ET_TYPE_CHECKER
 
 inherit
 
-	ET_AST_NULL_PROCESSOR
+	ET_CLASS_SUBPROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_bit_feature,
 			process_bit_n,
 			process_class,
@@ -27,9 +33,6 @@ inherit
 			process_tuple_type
 		end
 
-	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} all end
-
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
@@ -39,19 +42,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new type checker.
 		do
-			precursor (a_universe)
-			current_type := a_universe.unknown_class
-			current_class_impl := a_universe.unknown_class
+			precursor {ET_CLASS_SUBPROCESSOR}
+			current_type := tokens.unknown_class
+			current_class_impl := tokens.unknown_class
 			current_feature_impl := dummy_feature
 		end
-
-feature -- Status report
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred?
 
 feature -- Validity checking
 
@@ -67,9 +65,11 @@ feature -- Validity checking
 			a_current_class_impl_not_void: a_current_class_impl /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
+			a_current_class_preparsed: a_current_type.base_class.is_preparsed
 		local
 			old_feature_impl: ET_CLOSURE
 			old_type: ET_BASE_TYPE
+			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
 			l_type: ET_TYPE
 		do
@@ -78,6 +78,8 @@ feature -- Validity checking
 			current_feature_impl := a_current_feature_impl
 			old_type := current_type
 			current_type := a_current_type
+			old_class := current_class
+			current_class := current_type.base_class
 			old_class_impl := current_class_impl
 			current_class_impl := a_current_class_impl
 			l_type := resolved_formal_parameters (a_type, current_class_impl, current_type)
@@ -85,6 +87,7 @@ feature -- Validity checking
 				l_type.process (Current)
 			end
 			current_class_impl := old_class_impl
+			current_class := old_class
 			current_type := old_type
 			current_feature_impl := old_feature_impl
 		end
@@ -99,6 +102,7 @@ feature -- Validity checking
 			a_current_class_impl_not_void: a_current_class_impl /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
+			a_current_class_preparsed: a_current_type.base_class.is_preparsed
 			a_position_not_void: a_position /= Void
 		local
 			a_type_class: ET_CLASS
@@ -122,12 +126,20 @@ feature -- Validity checking
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			had_error: BOOLEAN
-			a_current_class: ET_CLASS
+			old_type: ET_BASE_TYPE
+			old_class: ET_CLASS
+			old_class_impl: ET_CLASS
 		do
 			has_fatal_error := False
+			old_type := current_type
+			current_type := a_current_type
+			old_class := current_class
+			current_class := current_type.base_class
+			old_class_impl := current_class_impl
+			current_class_impl := a_current_class_impl
 			an_actuals := a_type.actual_parameters
-			a_type_class := a_type.direct_base_class (universe)
-			a_type_class.process (universe.interface_checker)
+			a_type_class := a_type.base_class
+			a_type_class.process (current_system.interface_checker)
 			if not a_type_class.interface_checked or else a_type_class.has_interface_error then
 				set_fatal_error
 			elseif an_actuals /= Void and then not an_actuals.is_empty then
@@ -138,21 +150,20 @@ feature -- Validity checking
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					a_current_class := a_current_type.direct_base_class (universe)
-					a_formal_parameters := a_current_class.formal_parameters
+					a_formal_parameters := current_class.formal_parameters
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
-						a_named_actual := an_actual.shallow_named_type (a_current_type, universe)
+						a_named_actual := an_actual.shallow_named_type (current_type)
 						a_formal := a_formals.formal_parameter (i)
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
-							a_base_class := a_named_actual.base_class (a_current_type, universe)
+							a_base_class := a_named_actual.base_class (current_type)
 							a_formal_type ?= a_named_actual
 							if a_formal_type /= Void then
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
 										-- Internal error: `a_formal_parameter' is supposed to be
-										-- a formal parameter of `a_current_type''s base class.
+										-- a formal parameter of `current_type''s base class.
 									has_formal_type_error := True
 									set_fatal_error
 									error_handler.report_giaaa_error
@@ -164,7 +175,7 @@ feature -- Validity checking
 							end
 							nb2 := a_creator.count
 							if nb2 > 0 then
-								a_base_class.process (universe.interface_checker)
+								a_base_class.process (current_system.interface_checker)
 								if not a_base_class.interface_checked or else a_base_class.has_interface_error then
 									set_fatal_error
 								else
@@ -180,11 +191,11 @@ feature -- Validity checking
 											if not has_formal_type_error then
 												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 													set_fatal_error
-													error_handler.report_vtcg4b_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
+													error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
 												end
 											end
-										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, universe) then
-											if universe.is_ise and then (a_current_class.is_deferred and an_actual.is_like_current) then
+										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class) then
+											if current_system.is_ise and then (current_class.is_deferred and an_actual.is_like_current) then
 												-- ISE accepts code of the form:
 												--
 												--   class A [G -> B create default_create end]
@@ -243,8 +254,8 @@ feature -- Validity checking
 												--
 												-- which was nevertheless not more unsafe than the other cases above.
 											elseif
-												(universe.is_ise and then universe.ise_version < ise_6_0_6_7358) and then
-												(a_base_class.is_deferred and a_creation_procedure.has_seed (universe.default_create_seed))
+												(current_system.is_ise and then current_system.ise_version < ise_6_0_6_7358) and then
+												(a_base_class.is_deferred and a_creation_procedure.has_seed (current_system.default_create_seed))
 											then
 												-- ISE started to report this VTCG error with version 6.0.6.7358.
 												-- However we report it anyway, except when the creation procedure
@@ -254,7 +265,7 @@ feature -- Validity checking
 												-- at run-time (we may end up creating instances of deferred classes).
 											else
 												set_fatal_error
-												error_handler.report_vtcg4a_error (a_current_class, a_current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
+												error_handler.report_vtcg4a_error (current_class, current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
 											end
 										end
 										j := j + 1
@@ -269,7 +280,7 @@ feature -- Validity checking
 							l_class_type ?= a_named_actual
 							if l_class_type /= Void then
 								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, a_current_class_impl, a_current_type, a_position)
+								check_creation_type_validity (l_class_type, current_class_impl, current_type, a_position)
 								if had_error then
 									set_fatal_error
 								end
@@ -282,7 +293,7 @@ feature -- Validity checking
 							l_class_type ?= a_named_actual
 							if l_class_type /= Void and then l_class_type.is_expanded then
 								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, a_current_class_impl, a_current_type, a_position)
+								check_creation_type_validity (l_class_type, current_class_impl, current_type, a_position)
 								if had_error then
 									set_fatal_error
 								end
@@ -292,6 +303,9 @@ feature -- Validity checking
 					end
 				end
 			end
+			current_class_impl := old_class_impl
+			current_class := old_class
+			current_type := old_type
 		end
 
 	resolved_formal_parameters (a_type: ET_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE): ET_TYPE is
@@ -304,36 +318,43 @@ feature -- Validity checking
 			a_current_class_impl_not_void: a_current_class_impl /= Void
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
+			a_current_class_preparsed: a_current_type.base_class.is_preparsed
 		local
-			a_current_class: ET_CLASS
 			an_ancestor: ET_BASE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			old_type: ET_BASE_TYPE
+			old_class: ET_CLASS
+			old_class_impl: ET_CLASS
 		do
 			has_fatal_error := False
-			Result := a_type
-			if a_current_class_impl = a_current_type then
+			old_type := current_type
+			current_type := a_current_type
+			old_class := current_class
+			current_class := current_type.base_class
+			old_class_impl := current_class_impl
+			current_class_impl := a_current_class_impl
+			if current_class_impl = current_type then
 				Result := a_type
-			elseif not a_current_class_impl.is_generic then
+			elseif not current_class_impl.is_generic then
 				Result := a_type
 			else
 					-- We need to replace formal generic parameters in
 					-- `a_type' by their corresponding actual parameters.
-				a_current_class := a_current_type.direct_base_class (universe)
-				if a_current_class_impl /= a_current_class then
-						-- We need first to get the ancestor of `a_current_class'
-						-- corresponding to `a_current_class_impl' in order to find
+				if current_class_impl /= current_class then
+						-- We need first to get the ancestor of `current_class'
+						-- corresponding to `current_class_impl' in order to find
 						-- the various generic derivations which occurred on the
-						-- parent clauses between `a_current_class' and
-						-- `a_current_class_impl' where `a_type' was actually written.
-					a_current_class.process (universe.ancestor_builder)
-					if not a_current_class.ancestors_built or else a_current_class.has_ancestors_error then
+						-- parent clauses between `current_class' and
+						-- `current_class_impl' where `a_type' was actually written.
+					current_class.process (current_system.ancestor_builder)
+					if not current_class.ancestors_built or else current_class.has_ancestors_error then
 						set_fatal_error
 							-- Return the input type despite the error.
 						Result := a_type
 					else
-						an_ancestor := a_current_class.ancestor (a_current_class_impl, universe)
+						an_ancestor := current_class.ancestor (current_class_impl)
 						if an_ancestor = Void then
-								-- Internal error: `a_current_class' is a descendant of `a_current_class_impl'.
+								-- Internal error: `current_class' is a descendant of `current_class_impl'.
 							set_fatal_error
 							error_handler.report_giaaa_error
 								-- Return the input type despite the error.
@@ -355,14 +376,14 @@ feature -- Validity checking
 					Result := a_type
 				end
 				if not has_fatal_error then
-					if a_current_class.is_generic and a_current_type /= a_current_class then
+					if current_class.is_generic and current_type /= current_class then
 							-- We need to replace the formal generic parameters of
-							-- `a_current_class' by their corresponding actual
-							-- parameters in `a_current_type'.
-						a_parameters := a_current_type.actual_parameters
+							-- `current_class' by their corresponding actual
+							-- parameters in `current_type'.
+						a_parameters := current_type.actual_parameters
 						if a_parameters = Void then
-								-- Internal error: we said that `a_current_class' was generic.
-								-- Therefore `a_current_type' is generic as well.
+								-- Internal error: we said that `current_class' was generic.
+								-- Therefore `current_type' is generic as well.
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
@@ -371,6 +392,9 @@ feature -- Validity checking
 					end
 				end
 			end
+			current_class_impl := old_class_impl
+			current_class := old_class
+			current_type := old_type
 		ensure
 			resolved_type_not_void: Result /= Void
 		end
@@ -389,396 +413,62 @@ feature -- Type conversion
 		local
 			a_source_base_class: ET_CLASS
 			a_target_base_class: ET_CLASS
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-			an_index: INTEGER
-			a_class: ET_CLASS
-			a_formals: ET_FORMAL_PARAMETER_LIST
-			a_formal: ET_FORMAL_PARAMETER
-			a_constraint: ET_TYPE
-			a_base_type: ET_BASE_TYPE
-			a_target_named_type: ET_NAMED_TYPE
 			a_source_named_type: ET_NAMED_TYPE
 		do
-			a_source_base_class := a_source_type.base_class (universe)
+			a_source_base_class := a_source_type.base_class
 				-- Make sure that the class has been parsed before
 				-- asking for its conversion features.
-			a_source_base_class.process (universe.eiffel_parser)
-			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type, universe)
+			if a_source_base_class.is_preparsed then
+				a_source_base_class.process (a_source_base_class.current_system.eiffel_parser)
+			end
+			Result := a_source_base_class.convert_to_feature (a_target_type, a_source_type)
 			if Result = Void then
-				a_target_base_class := a_target_type.base_class (universe)
+				a_target_base_class := a_target_type.base_class
 					-- Make sure that the class has been parsed before
 					-- asking for its conversion features.
-				a_target_base_class.process (universe.eiffel_parser)
-				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type, universe)
+				if a_target_base_class.is_preparsed then
+					a_target_base_class.process (a_target_base_class.current_system.eiffel_parser)
+				end
+				Result := a_target_base_class.convert_from_feature (a_source_type, a_target_type)
 			end
 			if Result = Void then
-				a_source_named_type := a_source_type.named_type (universe)
-				if universe.is_dotnet and a_target_base_class = universe.system_object_class then
+				a_source_named_type := a_source_type.named_type
+				if a_target_base_class.is_preparsed and then a_target_base_class.current_system.is_dotnet and a_target_base_class = a_target_base_class.current_system.system_object_class then
 						-- Needed for Eiffel for .NET.
 					create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_source_named_type)
-				else
-						-- Needed for compatibility with ISE 5.6.0610:
-						-- a formal generic parameter either conforms or converts to its constraint,
-						-- then the converted version can still be chained with a conformance to
-						-- `a_target_type'.
-					a_formal_type ?= a_source_named_type
-					if a_formal_type /= Void then
-						an_index := a_formal_type.index
-						a_class := a_source_type.root_context.direct_base_class (universe)
-						a_formals := a_class.formal_parameters
-						if a_formals /= Void and then an_index <= a_formals.count then
-							a_formal := a_formals.formal_parameter (an_index)
-							a_constraint := a_formal.constraint
-							if a_constraint /= Void then
-									-- We know that there is a constraint.
-								a_base_type := a_formal.constraint_base_type
-								if a_base_type /= Void then
-										-- There is no cycle of the form
-										-- "[G -> G]" or "[G -> H, H -> G]".
-									a_target_named_type := a_target_type.named_type (universe)
-									if a_base_type.conforms_to_type (a_target_named_type, a_target_type.root_context, a_source_type.root_context, universe) then
-										create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_formal_type)
-									end
-								end
-							else
-								a_base_type := universe.any_class
-								a_target_named_type := a_target_type.named_type (universe)
-								if a_base_type.conforms_to_type (a_target_named_type, a_target_type.root_context, a_base_type, universe) then
-									create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_formal_type)
-								end
-							end
-						end
-					elseif a_target_base_class = universe.integer_8_class then
-						if
-								-- Needed by ISE Eiffel 5.4.
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.integer_8_ref_class
-						then
-							Result := universe.integer_8_convert_feature
-						end
-					elseif a_target_base_class = universe.integer_16_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-								-- Needed by ISE Eiffel 5.4.
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.integer_16_ref_class
-						then
-							Result := universe.integer_16_convert_feature
-						end
-					elseif a_target_base_class = universe.integer_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_16_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.integer_ref_class or
-							a_source_base_class = universe.integer_32_ref_class
-						then
-							Result := universe.integer_convert_feature
-						end
-					elseif a_target_base_class = universe.integer_32_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_16_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.integer_ref_class or
-							a_source_base_class = universe.integer_32_ref_class
-						then
-							Result := universe.integer_32_convert_feature
-						end
-					elseif a_target_base_class = universe.integer_64_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_16_class or
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.integer_64_ref_class
-						then
-							Result := universe.integer_64_convert_feature
-						end
-					elseif a_target_base_class = universe.natural_8_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class
-						then
-							Result := universe.natural_8_convert_feature
-						end
-					elseif a_target_base_class = universe.natural_16_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class
-						then
-							Result := universe.natural_16_convert_feature
-						end
-					elseif a_target_base_class = universe.natural_32_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class
-						then
-							Result := universe.natural_32_convert_feature
-						end
-					elseif a_target_base_class = universe.natural_64_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_64_class
-						then
-							Result := universe.natural_64_convert_feature
-						end
-					elseif a_target_base_class = universe.natural_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class
-						then
-							Result := universe.natural_convert_feature
-						end
-					elseif a_target_base_class = universe.real_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_16_class or
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-							a_source_base_class = universe.integer_64_class or
-								-- Needed by ISE Eiffel 5.4.
-							a_source_base_class = universe.double_class or
-							a_source_base_class = universe.real_64_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.real_ref_class or
-							a_source_base_class = universe.real_32_ref_class
-						then
-							Result := universe.real_convert_feature
-						end
-					elseif a_target_base_class = universe.double_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_16_class or
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-							a_source_base_class = universe.integer_64_class or
-							a_source_base_class = universe.real_class or
-							a_source_base_class = universe.real_32_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.double_ref_class or
-							a_source_base_class = universe.real_64_ref_class
-						then
-							Result := universe.double_convert_feature
-						end
-					elseif a_target_base_class = universe.real_32_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_16_class or
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-							a_source_base_class = universe.integer_64_class or
-								-- Needed by ISE Eiffel 5.4.
-							a_source_base_class = universe.double_class or
-							a_source_base_class = universe.real_64_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.real_ref_class or
-							a_source_base_class = universe.real_32_ref_class
-						then
-							Result := universe.real_32_convert_feature
-						end
-					elseif a_target_base_class = universe.real_64_class then
-						if
-							a_source_base_class = universe.integer_8_class or
-							a_source_base_class = universe.integer_16_class or
-							a_source_base_class = universe.integer_class or
-							a_source_base_class = universe.integer_32_class or
-							a_source_base_class = universe.integer_64_class or
-							a_source_base_class = universe.real_class or
-							a_source_base_class = universe.real_32_class or
-								-- Needed by ISE Eiffel 5.6.
-							a_source_base_class = universe.double_ref_class or
-							a_source_base_class = universe.real_64_ref_class
-						then
-							Result := universe.real_64_convert_feature
-						end
-					elseif a_source_base_class = universe.boolean_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.boolean_ref_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.boolean_convert_feature
-						end
-					elseif a_source_base_class = universe.character_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.character_ref_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.character_convert_feature
-						end
-					elseif a_source_base_class = universe.wide_character_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.wide_character_ref_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.wide_character_convert_feature
-						end
-					elseif a_source_base_class = universe.integer_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.integer_ref_class or
-							a_target_base_class = universe.integer_32_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.integer_convert_feature
-						end
-					elseif a_source_base_class = universe.integer_32_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.integer_ref_class or
-							a_target_base_class = universe.integer_32_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.integer_32_convert_feature
-						end
-					elseif a_source_base_class = universe.integer_8_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.integer_8_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.integer_8_convert_feature
-						end
-					elseif a_source_base_class = universe.integer_16_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.integer_16_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.integer_16_convert_feature
-						end
-					elseif a_source_base_class = universe.integer_64_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.integer_64_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.integer_64_convert_feature
-						end
-					elseif a_source_base_class = universe.real_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.real_ref_class or
-							a_target_base_class = universe.real_32_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.real_convert_feature
-						end
-					elseif a_source_base_class = universe.double_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.double_ref_class or
-							a_target_base_class = universe.real_64_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.double_convert_feature
-						end
-					elseif a_source_base_class = universe.real_32_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.real_ref_class or
-							a_target_base_class = universe.real_32_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.real_32_convert_feature
-						end
-					elseif a_source_base_class = universe.real_64_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.double_ref_class or
-							a_target_base_class = universe.real_64_ref_class or
-							a_target_base_class = universe.numeric_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.comparable_class or
-							a_target_base_class = universe.part_comparable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.real_64_convert_feature
-						end
-					elseif a_source_base_class = universe.pointer_class then
-							-- Needed by ISE Eiffel 5.6.
-						if
-							a_target_base_class = universe.pointer_ref_class or
-							a_target_base_class = universe.hashable_class or
-							a_target_base_class = universe.any_class
-						then
-							Result := universe.pointer_convert_feature
-						end
-					elseif a_source_base_class = universe.boolean_ref_class then
-							-- Needed by ISE Eiffel 5.6.
-						if a_target_base_class = universe.boolean_class then
-							Result := universe.boolean_convert_feature
-						end
-					elseif a_source_base_class = universe.character_ref_class then
-							-- Needed by ISE Eiffel 5.6.
-						if a_target_base_class = universe.character_class then
-							Result := universe.character_convert_feature
-						end
-					elseif a_source_base_class = universe.wide_character_ref_class then
-							-- Needed by ISE Eiffel 5.6.
-						if a_target_base_class = universe.wide_character_class then
-							Result := universe.wide_character_convert_feature
-						end
-					elseif a_source_base_class = universe.pointer_ref_class then
-							-- Needed by ISE Eiffel 5.6.
-						if a_target_base_class = universe.pointer_class then
-							Result := universe.pointer_convert_feature
-						end
-					end
+--				else
+--						-- Needed for compatibility with ISE 5.6.0610:
+--						-- a formal generic parameter either conforms or converts to its constraint,
+--						-- then the converted version can still be chained with a conformance to
+--						-- `a_target_type'.
+--					a_formal_type ?= a_source_named_type
+--					if a_formal_type /= Void then
+--						an_index := a_formal_type.index
+--						a_class := a_source_type.root_context.base_class
+--						a_formals := a_class.formal_parameters
+--						if a_formals /= Void and then an_index <= a_formals.count then
+--							a_formal := a_formals.formal_parameter (an_index)
+--							a_constraint := a_formal.constraint
+--							if a_constraint /= Void then
+--									-- We know that there is a constraint.
+--								a_base_type := a_formal.constraint_base_type
+--								if a_base_type /= Void then
+--										-- There is no cycle of the form
+--										-- "[G -> G]" or "[G -> H, H -> G]".
+--									a_target_named_type := a_target_type.named_type
+--									if a_base_type.conforms_to_type (a_target_named_type, a_target_type.root_context, a_source_type.root_context) then
+--										create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_formal_type)
+--									end
+--								end
+--							else
+--								a_base_type := universe.any_class
+--								a_target_named_type := a_target_type.named_type
+--								if a_base_type.conforms_to_type (a_target_named_type, a_target_type.root_context, a_base_type) then
+--									create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_formal_type)
+--								end
+--							end
+--						end
+--					end
 				end
 			end
 		end
@@ -799,7 +489,7 @@ feature {NONE} -- Validity checking
 -- TODO: should we check whether class BIT is in the universe or not?
 			if a_type.constant = Void then
 					-- Not resolved yet.
-				current_class_impl.process (universe.interface_checker)
+				current_class_impl.process (current_system.interface_checker)
 				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
 					set_fatal_error
 				else
@@ -902,8 +592,8 @@ feature {NONE} -- Validity checking
 			a_constraint: ET_TYPE
 			a_class: ET_CLASS
 		do
-			a_class := a_type.direct_base_class (universe)
-			if a_class = universe.none_class then
+			a_class := a_type.base_class
+			if a_class.is_none then
 				if a_type.is_generic then
 					set_fatal_error
 					if current_class = current_class_impl then
@@ -914,7 +604,7 @@ feature {NONE} -- Validity checking
 					end
 				end
 			else
-				a_class.process (universe.interface_checker)
+				a_class.process (current_system.interface_checker)
 				if not a_class.interface_checked then
 					set_fatal_error
 				elseif not a_class.is_preparsed then
@@ -968,12 +658,12 @@ feature {NONE} -- Validity checking
 							an_actual := an_actuals.type (i)
 							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_expanded then
-								if not an_actual.is_type_expanded (current_type, universe) then
+								if not an_actual.is_type_expanded (current_type) then
 									error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
 									set_fatal_error
 								end
 							elseif a_formal.is_reference then
-								if not an_actual.is_type_reference (current_type, universe) then
+								if not an_actual.is_type_reference (current_type) then
 									error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
 									set_fatal_error
 								end
@@ -998,43 +688,9 @@ feature {NONE} -- Validity checking
 									-- Hence the necessary resolving of formal parameters in the constraint.
 								a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
 							else
-								a_constraint := universe.any_type
+								a_constraint := current_system.any_type
 							end
-							if universe.is_ise and then universe.ise_version <= ise_5_6_latest then
-									-- Test below uses conformance of reference types for compatibility with ISE 5.6.0610.
-									-- the reference version of the actual generic parameter should conform to the
-									-- reference version of the constraint, and the actual generic parameter should
-									-- either conform or convert to the constraint (the latter condition is not checked here).
-								if not an_actual.reference_conforms_to_type (a_constraint, current_type, current_type, universe) then
-										-- The actual parameter does not conform to the
-										-- constraint of its corresponding formal parameter.
-										--
-										-- Note that it is possible that the actual paramater conforms
-										-- to the constraint in `current_class_impl' but not in `current_class'.
-										-- Here is an example:
-										--
-										--   class A
-										--   feature
-										--       y: Y [like Current, X [A]]
-										--   end
-										--
-										--   class B
-										--   inherit
-										--       A
-										--   end
-										--
-										--   class X
-										--   end
-										--
-										--   class Y [G, H -> X [G]]
-										--   end
-										--
-										-- In class B the actual generic parameter 'X [A]' does not conform
-										-- to its constraint 'X [like Current]'.
-									set_fatal_error
-									error_handler.report_vtcg3a_error (current_class, current_class_impl, a_type, an_actual, a_constraint)
-								end
-							elseif not an_actual.conforms_to_type (a_constraint, current_type, current_type, universe) then
+							if not an_actual.conforms_to_type (a_constraint, current_type, current_type) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
 									--
@@ -1095,7 +751,7 @@ feature {NONE} -- Validity checking
 			a_name := a_type.name
 			if a_name.seed = 0 then
 					-- Not resolved yet.
-				current_class_impl.process (universe.interface_checker)
+				current_class_impl.process (current_system.interface_checker)
 				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
 					set_fatal_error
 				else
@@ -1217,16 +873,6 @@ feature {ET_AST_NODE} -- Type processing
 			check_tuple_type_validity (a_type)
 		end
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
 feature {NONE} -- Access
 
 	current_feature_impl: ET_CLOSURE
@@ -1236,14 +882,6 @@ feature {NONE} -- Access
 			-- Class where the type has been written
 			-- (May be different from `current_class' when the
 			-- code has been inherited from an ancestor)
-
-	current_class: ET_CLASS is
-			-- Class where the type appears
-		do
-			Result := current_type.direct_base_class (universe)
-		ensure
-			definition: Result = current_type.direct_base_class (universe)
-		end
 
 	current_type: ET_BASE_TYPE
 			-- Base type where the type appears
@@ -1266,6 +904,7 @@ invariant
 	current_class_impl_not_void: current_class_impl /= Void
 	current_type_not_void: current_type /= Void
 	valid_current_type: current_type.is_valid_context
+	current_class_definition: current_class = current_type.base_class
 	current_feature_impl_not_void: current_feature_impl /= Void
 
 end

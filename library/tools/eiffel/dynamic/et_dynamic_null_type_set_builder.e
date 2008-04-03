@@ -22,14 +22,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_system) is
+	make (a_system: like current_dynamic_system) is
 			-- Create a new dynamic type set builder.
 		require
 			a_system_not_void: a_system /= Void
 		do
-			current_system := a_system
+			current_dynamic_system := a_system
 		ensure
-			current_system_set: current_system = a_system
+			current_dynamic_system_set: current_dynamic_system = a_system
 		end
 
 feature -- Factory
@@ -43,7 +43,7 @@ feature -- Factory
 feature -- Generation
 
 	build_dynamic_type_sets is
-			-- Build dynamic type sets for `current_system'.
+			-- Build dynamic type sets for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			has_fatal_error := False
@@ -81,6 +81,7 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 			-- Dynamic type set of objects that have been registered through
 			-- the object_id mechanism of class "IDENTIFIED" and related classes
 		do
-			Result := current_system.any_type
+			Result := current_dynamic_system.any_type
 		end
+
 end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,15 @@ class ET_FORMAL_PARAMETER_CHECKER1
 
 inherit
 
-	ET_AST_NULL_PROCESSOR
+	ET_CLASS_SUBPROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_bit_feature,
 			process_bit_n,
 			process_class,
@@ -34,19 +40,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new formal parameter first pass checker.
 		do
-			precursor (a_universe)
-			current_class := a_universe.unknown_class
+			precursor {ET_CLASS_SUBPROCESSOR}
 			create formal_parameter_sorter.make_default
 			create direct_formal_parameter_sorter.make_default
 		end
-
-feature -- Status report
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred?
 
 feature -- Validity checking
 
@@ -60,6 +60,7 @@ feature -- Validity checking
 			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			i, j, nb: INTEGER
 			a_parameters: ET_FORMAL_PARAMETER_LIST
@@ -187,8 +188,8 @@ feature {NONE} -- Constraint validity
 			l_formal: ET_FORMAL_PARAMETER
 			l_actual: ET_TYPE
 		do
-			a_class := a_type.direct_base_class (universe)
-			a_class.process (universe.eiffel_parser)
+			a_class := a_type.base_class
+			a_class.process (current_system.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
@@ -220,12 +221,12 @@ feature {NONE} -- Constraint validity
 						l_actual := an_actuals.type (i)
 						l_formal := a_formals.formal_parameter (i)
 						if l_formal.is_expanded then
-							if not l_actual.is_type_expanded (current_class, universe) then
+							if not l_actual.is_type_expanded (current_class) then
 								error_handler.report_gvtcg5b_error (current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
 						elseif l_formal.is_reference then
-							if not l_actual.is_type_reference (current_class, universe) then
+							if not l_actual.is_type_reference (current_class) then
 								error_handler.report_gvtcg5a_error (current_class, a_type, l_actual, l_formal)
 								set_fatal_error
 							end
@@ -431,7 +432,7 @@ feature {NONE} -- Constraint cycles
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					any_type := universe.any_class
+					any_type := current_system.any_class
 					a_parameters_count := a_parameters.count
 					a_sorted_formals := direct_formal_parameter_sorter.sorted_items
 					nb := a_sorted_formals.count
@@ -565,27 +566,13 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
 feature {NONE} -- Access
-
-	current_class: ET_CLASS
-			-- Class being processed
 
 	current_formal: ET_FORMAL_PARAMETER
 			-- Formal generic parameter being processed
 
 invariant
 
-	current_class_not_void: current_class /= Void
 	formal_parameter_sorter_not_void: formal_parameter_sorter /= Void
 	direct_formal_parameter_sorter_not_void: direct_formal_parameter_sorter /= Void
 

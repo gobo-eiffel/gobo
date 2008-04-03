@@ -16,23 +16,21 @@ inherit
 
 	ET_SUPPLIER_HANDLER
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new client/supplier relationship tester.
-		require
-			a_universe_not_void: a_universe /= Void
 		do
-			universe := a_universe
-			current_class := a_universe.unknown_class
+			current_class := tokens.unknown_class
 			supplier_classes := dummy_suppliers
-			create type_checker.make (a_universe)
-		ensure
-			universe_set: universe = a_universe
+			create type_checker.make
 		end
 
 feature -- Initialization
@@ -42,6 +40,7 @@ feature -- Initialization
 			-- a client of at least of `a_suppliers' classes.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 			a_suppliers_not_void: a_suppliers /= Void
 			no_void_supplier: not a_suppliers.has (Void)
 		do
@@ -62,9 +61,6 @@ feature -- Access
 	supplier_classes: DS_ARRAYED_LIST [ET_CLASS]
 			-- Supplier classes
 
-	universe: ET_UNIVERSE
-			-- Eiffel universe
-
 feature -- Status report
 
 	is_client: BOOLEAN
@@ -84,10 +80,10 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					from i := 1 until i > nb loop
-						if a_supplier.base_type_has_class (supplier_classes.item (i), universe) then
+						if a_supplier.base_type_has_class (supplier_classes.item (i)) then
 							is_client := True
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -107,10 +103,10 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					from i := 1 until i > nb loop
-						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client) then
 							is_client := True
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -130,10 +126,10 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					from i := 1 until i > nb loop
-						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client) then
 							is_client := True
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -153,10 +149,10 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					from i := 1 until i > nb loop
-						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client) then
 							is_client := True
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -176,10 +172,10 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					from i := 1 until i > nb loop
-						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+						if a_supplier.base_type_has_class (supplier_classes.item (i), a_client) then
 							is_client := True
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -203,13 +199,13 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					if nb > 0 then
 						a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 						if not type_checker.has_fatal_error then
 							from i := 1 until i > nb loop
-								if a_type.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+								if a_type.base_type_has_class (supplier_classes.item (i), a_client) then
 									is_client := True
 									i := nb + 1 -- Jump out of the loop.
 								else
@@ -235,13 +231,13 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					if nb > 0 then
 						a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 						if not type_checker.has_fatal_error then
 							from i := 1 until i > nb loop
-								if a_type.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+								if a_type.base_type_has_class (supplier_classes.item (i), a_client) then
 									is_client := True
 									i := nb + 1 -- Jump out of the loop.
 								else
@@ -267,13 +263,13 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					if nb > 0 then
 						a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 						if not type_checker.has_fatal_error then
 							from i := 1 until i > nb loop
-								if a_type.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+								if a_type.base_type_has_class (supplier_classes.item (i), a_client) then
 									is_client := True
 									i := nb + 1 -- Jump out of the loop.
 								else
@@ -299,13 +295,13 @@ feature -- Reporting
 			i, nb: INTEGER
 		do
 			if not is_client then
-				if a_client.direct_base_class (universe) = current_class then
+				if a_client.base_class = current_class then
 					nb := supplier_classes.count
 					if nb > 0 then
 						a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 						if not type_checker.has_fatal_error then
 							from i := 1 until i > nb loop
-								if a_type.base_type_has_class (supplier_classes.item (i), a_client, universe) then
+								if a_type.base_type_has_class (supplier_classes.item (i), a_client) then
 									is_client := True
 									i := nb + 1 -- Jump out of the loop.
 								else
@@ -334,8 +330,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	universe_not_void: universe /= Void
 	current_class_not_void: current_class /= Void
+	current_class_preparsed: current_class.is_preparsed
 	supplier_classes_not_void: supplier_classes /= Void
 	no_void_supplier_class: not supplier_classes.has (Void)
 	type_checker_not_void: type_checker /= Void

@@ -47,8 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does one of current types appearing in `a_context' and `other'
 			-- type appearing in `other_context' have the same named type?
 		require
@@ -57,14 +56,13 @@ feature -- Status report
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if storage.item (i).type.same_named_type (other, other_context, a_context, a_universe) then
+				if storage.item (i).type.same_named_type (other, other_context, a_context) then
 					Result := True
 					i := nb + 1 -- Jump out o fthe loop.
 				else

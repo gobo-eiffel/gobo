@@ -5,7 +5,7 @@ indexing
 		".NET name and signature equality testers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,20 +25,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new tester.
-		require
-			a_universe_not_void: a_universe /= Void
 		do
-			universe := a_universe
-		ensure
-			universe_set: universe = a_universe
 		end
-
-feature -- Access
-
-	universe: ET_UNIVERSE
-			-- Surrounding universe
 
 feature -- Status report
 
@@ -69,7 +59,7 @@ feature -- Status report
 					end
 				elseif other_type = Void then
 					Result := False
-				elseif not l_type.same_syntactical_type (other_type, other_class_impl, l_class_impl, universe) then
+				elseif not l_type.same_syntactical_type (other_type, other_class_impl, l_class_impl) then
 					Result := False
 				end
 				l_arguments := v.arguments
@@ -83,7 +73,7 @@ feature -- Status report
 				else
 					nb := l_arguments.count
 					from i := 1 until i > nb loop
-						if not l_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, other_class_impl, l_class_impl, universe) then
+						if not l_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, other_class_impl, l_class_impl) then
 							Result := False
 							i := nb + 1
 						else
@@ -93,9 +83,5 @@ feature -- Status report
 				end
 			end
 		end
-
-invariant
-
-	universe_not_void: universe /= Void
 
 end

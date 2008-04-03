@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature signature checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,15 @@ class ET_SIGNATURE_CHECKER
 
 inherit
 
-	ET_AST_NULL_PROCESSOR
+	ET_CLASS_SUBPROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_bit_feature,
 			process_bit_n,
 			process_class,
@@ -25,37 +31,28 @@ inherit
 			process_tuple_type
 		end
 
-	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} all end
-
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
-			-- Create a new signature checker for features of classes in `a_universe'.
+	make is
+			-- Create a new signature checker for features of  given classes.
 		do
-			universe := a_universe
-			current_class := a_universe.unknown_class
-			create parent_context.make_with_capacity (a_universe.any_class, 1)
+			precursor {ET_CLASS_SUBPROCESSOR}
+			create parent_context.make_with_capacity (current_class, 1)
 		end
-
-feature -- Error handling
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when checking
-			-- validity of last feature signature?
 
 feature -- Signature validity
 
 	check_signature_validity (a_feature: ET_FLATTENED_FEATURE; a_class: ET_CLASS) is
-			-- Check signature validity of `a_feature' for redeclarations and joinings.
+			-- Check signature validity of `a_feature' for redeclarations and joinings in `a_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			a_flattened_feature: ET_FEATURE
 --			an_inherited_flattened_feature: ET_PARENT_FEATURE
@@ -190,7 +187,7 @@ feature {NONE} -- Signature validity
 					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
 				end
 			elseif
-				not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+				not a_type.conforms_to_type (other_type, parent_context, current_class) and then
 					-- The test below is useful in expanded types which contains for
 					-- example 'like Current' in the signature. In that case 'like Current'
 					-- in the context of the current expanded class does not conform to
@@ -198,7 +195,7 @@ feature {NONE} -- Signature validity
 					-- identical so we want to accept this particular case anyway.
 					-- Note that we won't need that trick anymore with ECMA Eiffel where
 					-- expanded types conforms to reference parents.
-				not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+				not a_type.same_syntactical_type (other_type, parent_context, current_class)
 			then
 				set_fatal_error
 				if a_feature.is_inherited then
@@ -212,15 +209,15 @@ feature {NONE} -- Signature validity
 					-- We already checked in `check_redeclaration_validity' whether
 					-- `a_flattened_feature' was an attribute and reported
 					-- an error otherwise.
-				elseif a_type.is_type_expanded (current_class, universe) then
-					if not other_type.is_type_expanded (parent_context, universe) then
+				elseif a_type.is_type_expanded (current_class) then
+					if not other_type.is_type_expanded (parent_context) then
 							-- VDRD-6 says that the types of the two attributes should
 							-- be both expanded or both non-expanded.
 						set_fatal_error
 						error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
 					end
-				elseif a_type.is_type_reference (current_class, universe) then
-					if not other_type.is_type_reference (parent_context, universe) then
+				elseif a_type.is_type_reference (current_class) then
+					if not other_type.is_type_reference (parent_context) then
 							-- VDRD-6 says that the types of the two attributes should
 							-- be both expanded or both non-expanded.
 						set_fatal_error
@@ -231,7 +228,7 @@ feature {NONE} -- Signature validity
 						-- it has to be a formal generic parameter for which we don't
 						-- know yet whether the actual generic parameter will be
 						-- expanded or not.
-					if not a_type.same_named_type (other_type, parent_context, current_class, universe) then
+					if not a_type.same_named_type (other_type, parent_context, current_class) then
 							-- VDRD-6 says that the types of the two attributes should
 							-- be both expanded or both non-expanded.
 						set_fatal_error
@@ -260,7 +257,7 @@ feature {NONE} -- Signature validity
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
 					if
-						not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+						not a_type.conforms_to_type (other_type, parent_context, current_class) and then
 							-- The test below is useful in expanded types which contains for
 							-- example 'like Current' in the signature. In that case 'like Current'
 							-- in the context of the current expanded class does not conform to
@@ -268,7 +265,7 @@ feature {NONE} -- Signature validity
 							-- identical so we want to accept this particular case anyway.
 							-- Note that we won't need that trick anymore with ECMA Eiffel where
 							-- expanded types conforms to reference parents.
-						not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+						not a_type.same_syntactical_type (other_type, parent_context, current_class)
 					then
 						set_fatal_error
 						if a_feature.is_inherited then
@@ -326,7 +323,7 @@ feature {NONE} -- Signature validity
 					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
 				end
 			elseif
-				not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+				not a_type.conforms_to_type (other_type, parent_context, current_class) and then
 					-- The test below is useful in expanded types which contains for
 					-- example 'like Current' in the signature. In that case 'like Current'
 					-- in the context of the current expanded class does not conform to
@@ -334,7 +331,7 @@ feature {NONE} -- Signature validity
 					-- identical so we want to accept this particular case anyway.
 					-- Note that we won't need that trick anymore with ECMA Eiffel where
 					-- expanded types conforms to reference parents.
-				not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+				not a_type.same_syntactical_type (other_type, parent_context, current_class)
 			then
 				set_fatal_error
 				if a_feature.is_inherited then
@@ -370,7 +367,7 @@ feature {NONE} -- Signature validity
 					a_type := an_arguments.formal_argument (i).type
 					other_type := other_arguments.formal_argument (i).type
 					if
-						not a_type.conforms_to_type (other_type, parent_context, current_class, universe) and then
+						not a_type.conforms_to_type (other_type, parent_context, current_class) and then
 							-- The test below is useful in expanded types which contains for
 							-- example 'like Current' in the signature. In that case 'like Current'
 							-- in the context of the current expanded class does not conform to
@@ -378,7 +375,7 @@ feature {NONE} -- Signature validity
 							-- identical so we want to accept this particular case anyway.
 							-- Note that we won't need that trick anymore with ECMA Eiffel where
 							-- expanded types conforms to reference parents.
-						not a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
+						not a_type.same_syntactical_type (other_type, parent_context, current_class)
 					then
 						set_fatal_error
 						if a_feature.is_inherited then
@@ -423,7 +420,7 @@ feature {NONE} -- Signature validity
 			elseif other_type = Void then
 				set_fatal_error
 				error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
-			elseif not a_type.same_syntactical_type (other_type, parent_context, current_class, universe) then
+			elseif not a_type.same_syntactical_type (other_type, parent_context, current_class) then
 				set_fatal_error
 				error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
 			end
@@ -440,7 +437,7 @@ feature {NONE} -- Signature validity
 			else
 				nb := an_arguments.count
 				from i := 1 until i > nb loop
-					if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class, universe) then
+					if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class) then
 						set_fatal_error
 						error_handler.report_vdjr0b_error (current_class, a_feature.flattened_parent, other, i)
 					end
@@ -504,26 +501,19 @@ feature {NONE} -- VTCT Validity checking
 			an_actual: ET_TYPE
 			a_class: ET_CLASS
 		do
-			a_class := a_type.direct_base_class (universe)
-			if a_class = universe.none_class then
-				-- OK.
-			else
-				if not a_class.is_preparsed then
-					a_class.process (universe.eiffel_parser)
-				end
-				if not a_class.is_preparsed then
-					set_fatal_error
-					error_handler.report_vtct0a_error (current_class, a_type)
-				end
-				if a_type.is_generic then
-					an_actuals := a_type.actual_parameters
-					check a_type_generic: an_actuals /= Void end
-					nb := an_actuals.count
-					from i := 1 until i > nb loop
-						an_actual := an_actuals.type (i)
-						an_actual.process (Current)
-						i := i + 1
-					end
+			a_class := a_type.base_class
+			if not a_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_vtct0a_error (current_class, a_type)
+			end
+			if a_type.is_generic then
+				an_actuals := a_type.actual_parameters
+				check a_type_generic: an_actuals /= Void end
+				nb := an_actuals.count
+				from i := 1 until i > nb loop
+					an_actual := an_actuals.type (i)
+					an_actual.process (Current)
+					i := i + 1
 				end
 			end
 		end
@@ -585,21 +575,6 @@ feature {ET_AST_NODE} -- Type processing
 			check_tuple_type_vtct_validity (a_type)
 		end
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
-feature {NONE} -- Access
-
-	current_class: ET_CLASS
-			-- Class being processed
-
 feature {NONE} -- Implementation
 
 	parent_context: ET_NESTED_TYPE_CONTEXT
@@ -607,8 +582,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	universe_not_void: universe /= Void
-	current_class_not_void: current_class /= Void
 	parent_context_not_void: parent_context /= Void
 
 end

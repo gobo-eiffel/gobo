@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			ast_factory := a_factory
 			create parsed_libraries.make_map (10)
 			parsed_libraries.set_key_equality_tester (string_equality_tester)
-				-- We must not create a new ET_XACE_LIBRARY_PARSER
+				-- We must not create a new ET_XACE_LIBRARY_CONFIG_PARSER
 				-- object if `Current' is one already, or we will
 				-- recurse in this routine forever.
 			library_parser ?= Current
@@ -132,8 +132,8 @@ feature -- Parsing
 			a_file_open_read: a_file.is_open_read
 		local
 			a_root_name: STRING
-			a_system: ET_XACE_SYSTEM
-			a_library: ET_XACE_LIBRARY
+			a_system: ET_XACE_SYSTEM_CONFIG
+			a_library: ET_XACE_LIBRARY_CONFIG
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
 			a_position_table: XM_POSITION_TABLE
@@ -175,10 +175,10 @@ feature -- Parsing
 
 feature -- Access
 
-	library_parser: ET_XACE_LIBRARY_PARSER
+	library_parser: ET_XACE_LIBRARY_CONFIG_PARSER
 			-- Library Parser
 
-	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY, STRING]
+	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY_CONFIG, STRING]
 			-- Already parsed Xace libraries, indexed by filenames
 
 feature -- Setting

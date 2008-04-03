@@ -5,7 +5,7 @@ indexing
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,8 +25,6 @@ create
 	make_vaol1a,
 	make_vape0a,
 	make_vape0b,
-	make_vape0c,
-	make_vape0d,
 	make_vave0a,
 	make_vbac1a,
 	make_vbac2a,
@@ -344,7 +342,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 		end
 
-	make_vape0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+	make_vape0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and viewed from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
@@ -376,7 +374,7 @@ feature {NONE} -- Initialization
 			parameters.put (a_name.lower_name, 7)
 			parameters.put (a_feature.lower_name, 8)
 			parameters.put (a_pre_feature.lower_name, 9)
-			parameters.put (a_client.upper_name, 10)
+			parameters.put (a_client.name.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -396,62 +394,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = name of client of feature `$9'
 		end
 
-	make_vape0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client_name: ET_CLASS_NAME) is
-			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
-			-- one of its descendants `a_class' (possibly itself), is not exported to class
-			-- `a_client_name' to which `a_pre_feature' is exported.
-			-- Note that `l_client_name' is assumed not to be a class in the universe.
-			-- Therefore we expect this class name to be explicitly listed in the client
-			-- list of `a_feature' or that `a_feature' be exported to ANY.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_name_not_void: a_client_name /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vape0b_template_code)
-			etl_code := vape_etl_code
-			default_template := default_message_template (vape0b_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_pre_feature.lower_name, 9)
-			parameters.put (a_client_name.upper_name, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $5
-			-- dollar9: $9 = name of feature containing precondition
-			-- dollar10: $10 = name of client of feature `$9'
-		end
-
-	make_vape0c (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+	make_vape0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
 			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
@@ -472,9 +415,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vape0c_template_code)
+			code := template_code (vape0b_template_code)
 			etl_code := vape_etl_code
-			default_template := default_message_template (vape0c_default_template)
+			default_template := default_message_template (vape0b_default_template)
 			create parameters.make (1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -486,66 +429,7 @@ feature {NONE} -- Initialization
 			parameters.put (a_feature.lower_name, 8)
 			parameters.put (a_target_class.upper_name, 9)
 			parameters.put (a_pre_feature.lower_name, 10)
-			parameters.put (a_client.upper_name, 11)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of target of the call
-			-- dollar10: $10 = name of feature containing precondition
-			-- dollar11: $11 = name of client of feature `$9'
-		end
-
-	make_vape0d (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client_name: ET_CLASS_NAME) is
-			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
-			-- call with target's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
-			-- a_class' (possible itself), is not exported to class `a_client_name' to which
-			-- `a_pre_feature' is exported.
-			-- Note that `l_client_name' is assumed not to be a class in the universe.
-			-- Therefore we expect this class name to be explicitly listed in the client
-			-- list of `a_feature' or that `a_feature' be exported to ANY.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_class_not_void: a_target_class /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_name_not_void: a_client_name /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vape0d_template_code)
-			etl_code := vape_etl_code
-			default_template := default_message_template (vape0d_default_template)
-			create parameters.make (1, 11)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_target_class.upper_name, 9)
-			parameters.put (a_pre_feature.lower_name, 10)
-			parameters.put (a_client_name.upper_name, 11)
+			parameters.put (a_client.name.upper_name, 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9624,7 +9508,8 @@ feature {NONE} -- Initialization
 			-- ETR: p.46
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_constraint_not_void: a_constraint /= Void
@@ -11749,9 +11634,7 @@ feature {NONE} -- Implementation
 
 	vaol1a_default_template: STRING is "old expression does not appear in a postcondition."
 	vape0a_default_template: STRING is "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0b_default_template: STRING is "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0c_default_template: STRING is "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
-	vape0d_default_template: STRING is "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
+	vape0b_default_template: STRING is "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
 	vave0a_default_template: STRING is "loop variant expression of non-INTEGER type '$7'."
 	vbac1a_default_template: STRING is "the source of the assigner call (of type '$7') does not conform nor convert to its target (of type '$8')."
 	vbac2a_default_template: STRING is "query `$7' in class $8 has no assigner command."
@@ -12149,8 +12032,6 @@ feature {NONE} -- Implementation
 	vaol1a_template_code: STRING is "vaol1a"
 	vape0a_template_code: STRING is "vape0a"
 	vape0b_template_code: STRING is "vape0b"
-	vape0c_template_code: STRING is "vape0c"
-	vape0d_template_code: STRING is "vape0d"
 	vave0a_template_code: STRING is "vave0a"
 	vbac1a_template_code: STRING is "vbac1a"
 	vbac2a_template_code: STRING is "vbac2a"

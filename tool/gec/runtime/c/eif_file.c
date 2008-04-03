@@ -1384,7 +1384,7 @@ EIF_REFERENCE file_owner(int uid) {
 	snprintf(buf, NAME_MAX, "%d", uid);
 	str = buf;
 #endif
-	return GE_ms(str, strlen(str));
+	return GE_ms8(str, strlen(str));
 }
 
 /*
@@ -1409,7 +1409,7 @@ EIF_REFERENCE file_group(int gid) {
 	snprintf(buf, NAME_MAX, "%d", gid);
 	str = buf;
 #endif
-	return GE_ms(str, strlen(str));
+	return GE_ms8(str, strlen(str));
 }
 
 /*

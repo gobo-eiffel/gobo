@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,22 +19,19 @@ inherit
 		undefine
 			read_token
 		redefine
-			yyparse, universe
+			yyparse
 		end
 
 	ET_EIFFEL_SCANNER
 		rename
-			make as make_eiffel_scanner,
-			make_with_factory as make_eiffel_scanner_with_factory
+			make as make_eiffel_scanner
 		undefine
 			reset, set_syntax_error
-		redefine
-			universe
 		end
 
 create
 
-	make, make_with_factory
+	make
 
 %}
 
@@ -122,7 +119,7 @@ create
 %type <ET_CHOICE_ITEM> Choice_comma
 %type <ET_CHOICE_LIST> Choices Choice_list
 %type <ET_CLASS> Class_header Class_to_end Class_declaration
-%type <ET_CLASS_NAME_ITEM> Client Client_comma
+%type <ET_CLIENT_ITEM> Client Client_comma
 %type <ET_CLIENTS> Clients Client_list
 %type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound Then_compound
 %type <ET_COMPOUND> Else_compound Rescue_compound From_compound Loop_compound
@@ -221,6 +218,9 @@ create
 ------------------------------------------------------------------------------------
 
 Class_declarations: Class_declaration
+		{
+			-- END
+		}
 	| E_BREAK Class_declaration
 		{
 			if $2 /= Void then
@@ -239,7 +239,15 @@ Class_declaration: Indexing_clause_opt Class_to_end
 	;
 
 Class_declaration_opt: -- Empty
-	| Class_declaration
+	|
+		{
+			if not current_system.preparse_multiple_mode then
+					-- Raise syntax error: it is not valid to have more
+					-- than one class text in the same file.
+				raise_error
+			end
+		}
+	  Class_declaration
 	;
 
 Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Creators_opt
@@ -272,7 +280,15 @@ Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Cr
 			$$ := $1
 			set_class_to_end ($$, $3, $4, Void, Void, Void, $5, $6, $7)
 		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt Set_providers Class_to_end
+	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt Set_providers
+		{
+			if not current_system.preparse_multiple_mode then
+					-- Raise syntax error: it is not valid to have more
+					-- than one class text in the same file.
+				raise_error
+			end
+		}
+	  Class_to_end
 		{
 			$$ := $1
 			set_class_to_inheritance_end ($$, $3, $4)
@@ -681,7 +697,7 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 	| E_BITTYPE Untyped_integer_constant
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
-		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
 	;
@@ -699,7 +715,7 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 	| E_BITTYPE Untyped_integer_constant
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
-		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
 	;
@@ -1232,7 +1248,7 @@ Client_list: Client '}'
 
 Client: Identifier
 		{
-			$$ := $1
+			$$ := new_client ($1)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -1241,7 +1257,7 @@ Client: Identifier
 
 Client_comma: Identifier ','
 		{
-			$$ := ast_factory.new_class_name_comma ($1, $2)
+			$$ := new_client_comma ($1, $2)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -1397,7 +1413,7 @@ Creators_list: Creation_clause
 Creation_clause: E_CREATION Clients
 		{ $$ := ast_factory.new_creator ($1, $2, 0) }
 	| E_CREATION
-		{ $$ := ast_factory.new_creator ($1, ast_factory.new_any_clients ($1), 0) }
+		{ $$ := ast_factory.new_creator ($1, new_any_clients ($1), 0) }
 	| E_CREATION Clients
 		{
 			add_keyword ($1)
@@ -1413,7 +1429,7 @@ Creation_clause: E_CREATION Clients
 	| E_CREATION
 		{
 			add_keyword ($1)
-			last_clients := ast_factory.new_any_clients (last_keyword)
+			last_clients := new_any_clients (last_keyword)
 			add_counter
 		}
 	  Creation_procedure_list
@@ -1425,7 +1441,7 @@ Creation_clause: E_CREATION Clients
 	| E_CREATE Clients
 		{ $$ := ast_factory.new_creator ($1, $2, 0) }
 	| E_CREATE
-		{ $$ := ast_factory.new_creator ($1, ast_factory.new_any_clients ($1), 0) }
+		{ $$ := ast_factory.new_creator ($1, new_any_clients ($1), 0) }
 	| E_CREATE Clients
 		{
 			add_keyword ($1)
@@ -1441,7 +1457,7 @@ Creation_clause: E_CREATION Clients
 	| E_CREATE
 		{
 			add_keyword ($1)
-			last_clients := ast_factory.new_any_clients (last_keyword)
+			last_clients := new_any_clients (last_keyword)
 			add_counter
 		}
 	  Creation_procedure_list
@@ -1654,7 +1670,7 @@ Feature_clause_header: E_FEATURE Clients
 		}
 	| E_FEATURE
 		{
-			last_clients := ast_factory.new_any_clients ($1)
+			last_clients := new_any_clients ($1)
 			last_feature_clause := ast_factory.new_feature_clause ($1, last_clients)
 		}
 	;
@@ -1749,7 +1765,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class.master_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' Manifest_constant Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class.master_class)
@@ -1759,7 +1775,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class.master_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' E_UNIQUE Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class.master_class)
@@ -1771,7 +1787,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class.master_class)
@@ -1785,7 +1801,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class.master_class)
@@ -1797,7 +1813,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class.master_class)
@@ -1811,7 +1827,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class.master_class)
@@ -1821,7 +1837,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class.master_class) }
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class.master_class)
@@ -1833,7 +1849,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class.master_class)
@@ -1845,7 +1861,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class.master_class)
@@ -1859,7 +1875,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class.master_class)
@@ -1897,7 +1913,7 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 
 Is_opt: -- Empty
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := Void
@@ -2391,9 +2407,9 @@ Type_no_class_name: Class_name Actual_parameters
 	| E_BITTYPE Untyped_integer_constant
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
-		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := ast_factory.new_tuple_type ($1, $2) }
+		{ $$ := new_tuple_type ($1, $2) }
 	;
 
 Type_no_identifier: Class_name Actual_parameters
@@ -2409,9 +2425,9 @@ Type_no_identifier: Class_name Actual_parameters
 	| E_BITTYPE Untyped_integer_constant
 		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
-		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters
-		{ $$ := ast_factory.new_tuple_type ($1, $2) }
+		{ $$ := new_tuple_type ($1, $2) }
 	;
 
 Class_name: E_IDENTIFIER
@@ -2466,7 +2482,7 @@ Actual_parameter_list: Type ']'
 	| E_TUPLE ',' Increment_counter Actual_parameter_list
 		{
 			$$ := $4
-			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (ast_factory.new_tuple_type ($1, Void), $2), $$)
+			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (new_tuple_type ($1, Void), $2), $$)
 		}
 	;
 
@@ -3009,7 +3025,7 @@ Call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Bracket_expression
 		{
-			if universe.is_ise and then universe.ise_version < ise_5_7_59914 then
+			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
 				raise_error
 			else
 				$$ := $1
@@ -3750,11 +3766,6 @@ Add_counter: { add_counter }
 --------------------------------------------------------------------------------
 %%
 
-feature -- Access
-
-	universe: ET_UNIVERSE
-			-- Surrounding universe
-
 feature -- Parsing
 
 	yyparse is
@@ -3798,6 +3809,25 @@ feature -- Parsing
 					yyss_top := yy_suspended_yyss_top
 					yy_goto := yy_suspended_yy_goto
 					yy_parsing_status := yyContinue
+					if yy_goto = yyReduce then
+							-- Now "shift" the result of the reduction.
+							-- Determine what state that goes to,
+							-- based on the state we popped back to
+							-- and the rule number reduced by.
+						yyn := yyr1.item (yyn)
+						yyss_top := yyss.item (yyssp)
+						index := yyn - yyNtbase
+						yystate := yypgoto.item (index) + yyss_top
+						if
+							(yystate >= 0 and yystate <= yyLast) and then
+							yycheck.item (yystate) = yyss_top
+						then
+							yystate := yytable.item (yystate)
+						else
+							yystate := yydefgoto.item (index)
+						end
+						yy_goto := yyNewstate
+					end
 				else
 					error_count := 0
 					yy_lookahead_needed := True

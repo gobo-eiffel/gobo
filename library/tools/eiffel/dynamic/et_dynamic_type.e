@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -128,21 +128,17 @@ feature -- Status setting
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): BOOLEAN is
+	conforms_to_type (other: ET_DYNAMIC_TYPE): BOOLEAN is
 			-- Does current type conform to `other' type?
-			-- (Note: 'a_system.universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
 			other_not_void: other /= Void
-			a_system_not_void: a_system /= Void
-			-- no_cycle: no cycle in anchored types involved.
 		local
-			l_universe: ET_UNIVERSE
-			l_any: ET_CLASS_TYPE
+			l_other_base_type: ET_BASE_TYPE
 		do
-			l_universe := a_system.universe
-			l_any := l_universe.any_class
-			Result := base_type.conforms_to_type (other.base_type, l_any, l_any, l_universe)
+			l_other_base_type := other.base_type
+			Result := base_type.conforms_to_type (l_other_base_type, l_other_base_type, base_type)
 		end
 
 feature -- Status setting
@@ -317,7 +313,7 @@ feature -- Features
 	procedures: ET_DYNAMIC_FEATURE_LIST
 			-- Procedures executed at run-time, if any
 
-	dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time query associated with `a_query'
 		require
 			a_query_not_void: a_query /= Void
@@ -360,7 +356,7 @@ feature -- Features
 			is_query: Result.is_query
 		end
 
-	dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure associated with `a_procedure'
 		require
 			a_feature_not_void: a_procedure /= Void
@@ -395,7 +391,7 @@ feature -- Features
 			is_procedure: Result.is_procedure
 		end
 
-	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time query with seed `a_seed';
 			-- Void if no such query
 		require
@@ -443,7 +439,7 @@ feature -- Features
 			is_query: Result /= Void implies Result.is_query
 		end
 
-	seeded_dynamic_procedure (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_procedure (a_seed: INTEGER; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure with seed `a_seed';
 			-- Void if no such procedure
 		require
@@ -483,7 +479,7 @@ feature -- Features
 			is_procedure: Result /= Void implies Result.is_procedure
 		end
 
-	use_all_attributes (a_system: ET_SYSTEM) is
+	use_all_attributes (a_system: ET_DYNAMIC_SYSTEM) is
 			-- Make sure that all attributes of current type are marked as
 			-- used and hence included in the generated run-time instances.
 		require
@@ -512,7 +508,7 @@ feature -- Features
 			end
 		end
 
-	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_code: INTEGER; a_system: ET_SYSTEM): BOOLEAN is
+	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_code: INTEGER; a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
 			-- Is built-in feature `a_feature' with code `a_built_code'
 			-- considered as an attribute or not in the current type?
 		require
@@ -589,7 +585,7 @@ feature -- Features
 
 feature {NONE} -- Fetaures
 
-	put_attribute (an_attribute: ET_DYNAMIC_FEATURE; a_system: ET_SYSTEM) is
+	put_attribute (an_attribute: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `an_attribute' to `queries'.
 		require
 			an_attribute_not_void: an_attribute /= Void
@@ -648,12 +644,12 @@ feature -- Calls
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		do
 		end
 
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
+	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_target' to current set.
 			-- (Targets are supersets of current set.)
 		do
@@ -697,7 +693,7 @@ feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	new_dynamic_query (a_query: ET_QUERY; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time query associated with `a_query';
 			-- Create a new object at each call.
 		require
@@ -711,7 +707,7 @@ feature {NONE} -- Implementation
 			is_query: Result.is_query
 		end
 
-	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure associated with `a_procedure';
 			-- Create a new object at each call.
 		require

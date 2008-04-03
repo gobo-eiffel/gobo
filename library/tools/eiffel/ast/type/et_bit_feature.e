@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'BIT feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,16 +25,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name; a_base_class: ET_CLASS) is
 			-- Create a new 'BIT feature' type.
 		require
 			a_name_not_void: a_name /= Void
+			a_base_class_not_void: a_base_class /= Void
 		do
 			bit_keyword := tokens.bit_keyword
 			name := a_name
 			size := No_size
+			base_class := a_base_class
 		ensure
 			name_set: name = a_name
+			base_class_set: base_class = a_base_class
 		end
 
 feature -- Initialization

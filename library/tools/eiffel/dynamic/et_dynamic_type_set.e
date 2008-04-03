@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
+	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_target' to current set.
 			-- (Targets are supersets of current set.)
 		require
@@ -96,7 +96,7 @@ feature -- Element change
 			-- types to targets but pulling them from sources.
 		end
 
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
+	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_source' to current set.
 			-- (Sources are subsets of current set.)
 		require
@@ -107,7 +107,7 @@ feature -- Element change
 			-- types from sources.
 		end
 
-	propagate_types (a_system: ET_SYSTEM) is
+	propagate_types (a_system: ET_DYNAMIC_SYSTEM) is
 			-- Propagate types from `sources'.
 		require
 			a_system_not_void: a_system /= Void

@@ -125,7 +125,7 @@ EIF_REFERENCE dir_next(void* dir) {
 	if (h) {
 		if (FindNextFileA(h, &(GE_dir->data))) {
 			char* s = GE_dir->data.cFileName;
-			return GE_ms(s,strlen(s));
+			return GE_ms8(s,strlen(s));
 		} else {
 			return EIF_VOID;
 		}
@@ -136,14 +136,14 @@ EIF_REFERENCE dir_next(void* dir) {
 		} else {
 			char* s = GE_dir->data.cFileName;
 			GE_dir->handle = h;
-			return GE_ms(s,strlen(s));
+			return GE_ms8(s,strlen(s));
 		}
 	}
 #else
 	struct dirent* p = readdir((DIR*)dir);
 	if (p) {
 		char* s = p->d_name;
-		return GE_ms(s,strlen(s));
+		return GE_ms8(s,strlen(s));
 	} else {
 		return EIF_VOID;
 	}
@@ -285,7 +285,7 @@ EIF_REFERENCE dir_current(void) {
 	EIF_REFERENCE result;
 
 	s = (char*)getcwd(NULL, PATH_MAX);
-	result = GE_ms(s, strlen(s));
+	result = GE_ms8(s, strlen(s));
 	free(s);
 	return result;
 }

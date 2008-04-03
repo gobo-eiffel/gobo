@@ -5,7 +5,7 @@ indexing
 		"Eiffel anchored type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,15 @@ class ET_ANCHORED_TYPE_CHECKER
 
 inherit
 
-	ET_AST_NULL_PROCESSOR
+	ET_CLASS_PROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_class,
 			process_class_type,
 			process_generic_class_type,
@@ -30,18 +36,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new anchored type checker.
 		do
-			precursor (a_universe)
-			current_class := a_universe.unknown_class
+			precursor {ET_CLASS_PROCESSOR}
 			create anchored_type_sorter.make_default
 		end
-
-feature -- Access
-
-	current_class: ET_CLASS
-			-- Class being processed
 
 feature -- Error handling
 
@@ -64,6 +64,7 @@ feature -- Type checking
 			-- held in the types of all signatures of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			l_queries: ET_QUERY_LIST
 			l_query: ET_QUERY
@@ -227,7 +228,6 @@ feature {ET_AST_NODE} -- Type processing
 
 invariant
 
-	current_class_not_void: current_class /= Void
 	anchored_type_sorter_not_void: anchored_type_sorter /= Void
 
 end

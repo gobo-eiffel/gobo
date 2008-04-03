@@ -43,8 +43,8 @@ feature -- Execution
 	execute is
 			-- Execute 'library' command.
 		local
-			a_parser: ET_XACE_LIBRARY_PARSER
-			a_library: ET_XACE_LIBRARY
+			a_parser: ET_XACE_LIBRARY_CONFIG_PARSER
+			a_library: ET_XACE_LIBRARY_CONFIG
 			a_file: KL_TEXT_INPUT_FILE
 		do
 			create a_parser.make_with_variables (variables, error_handler)
@@ -67,7 +67,7 @@ feature -- Execution
 			end
 		end
 
-	execute_generators (a_library: ET_XACE_LIBRARY) is
+	execute_generators (a_library: ET_XACE_LIBRARY_CONFIG) is
 			-- Execute Ace file generators.
 		require
 			a_library_not_void: a_library /= Void

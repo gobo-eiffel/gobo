@@ -71,6 +71,7 @@ Version 3.8 - ?
 	* Made sure that no VAPE error is reported when a feature is exported
 	  to a class that has a syntax error or for which the ancestors could
 	  not be computed.
+	* Added support for the notion of libraries as specified in ECF.
 
 	getest:
 

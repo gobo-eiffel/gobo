@@ -5,7 +5,7 @@ indexing
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -447,15 +447,6 @@ feature -- Eiffel keywords
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := tokens.prefix_keyword
-		end
-
-	new_recast_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
-			-- New 'recast' keyword
-		require
-			a_scanner_not_void: a_scanner /= Void
-			last_literal_not_empty: a_scanner.last_literal_count > 0
-		do
-			Result := tokens.recast_keyword
 		end
 
 	new_redefine_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -1394,24 +1385,6 @@ feature -- AST nodes
 			end
 		end
 
-	new_any_clients (a_keyword: ET_KEYWORD): ET_CLASS_NAME_LIST is
-			-- Implicit client list (when preceded by `a_keyword')
-			-- with only one client: ANY
-		local
-			a_name: ET_IDENTIFIER
-			a_position: ET_POSITION
-		do
-			if a_keyword = Void or else a_keyword.position.is_null then
-				Result := tokens.any_clients
-			else
-				create Result.make_with_capacity (1)
-				create a_name.make (tokens.any_class_name.name)
-				a_position := a_keyword.position
-				a_name.set_position (a_position.line, a_position.column)
-				Result.put_first (a_name)
-			end
-		end
-
 	new_argument_name_comma (a_name: ET_IDENTIFIER; a_comma: ET_SYMBOL): ET_ARGUMENT_NAME is
 			-- New argument_name-comma
 		do
@@ -1455,7 +1428,7 @@ feature -- AST nodes
 		end
 
 	new_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_ATTRIBUTE is
 			-- New attribute declaration
 		do
@@ -1477,22 +1450,22 @@ feature -- AST nodes
 			end
 		end
 
-	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER): ET_BIT_FEATURE is
+	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER; a_base_class: ET_CLASS): ET_BIT_FEATURE is
 			-- New 'BIT Identifier' type
 		do
-			if an_id /= Void then
-				create Result.make (an_id)
+			if an_id /= Void and a_base_class /= Void then
+				create Result.make (an_id, a_base_class)
 				if a_bit /= Void and then not a_bit.position.is_null then
 					Result.set_bit_keyword (a_bit)
 				end
 			end
 		end
 
-	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
+	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT; a_base_class: ET_CLASS): ET_BIT_N is
 			-- New 'BIT N' type
 		do
-			if an_int /= Void then
-				create Result.make (an_int)
+			if an_int /= Void and a_base_class /= Void then
+				create Result.make (an_int, a_base_class)
 				if a_bit /= Void and then not a_bit.position.is_null then
 					Result.set_bit_keyword (a_bit)
 				end
@@ -1585,17 +1558,27 @@ feature -- AST nodes
 			end
 		end
 
-	new_class_name_comma (a_name: ET_CLASS_NAME; a_comma: ET_SYMBOL): ET_CLASS_NAME_ITEM is
-			-- New class_name-comma
-		do
-			Result := a_name
-		end
-
-	new_class_type (a_type_mark: ET_KEYWORD; a_name: ET_CLASS_NAME; a_class: ET_CLASS): ET_CLASS_TYPE is
+	new_class_type (a_type_mark: ET_KEYWORD; a_name: ET_CLASS_NAME; a_base_class: ET_CLASS): ET_CLASS_TYPE is
 			-- New Eiffel class type
 		do
-			if a_name /= Void and a_class /= Void then
-				create Result.make (a_type_mark, a_name, a_class)
+			if a_name /= Void and a_base_class /= Void then
+				create Result.make (a_type_mark, a_name, a_base_class)
+			end
+		end
+
+	new_client (a_name: ET_CLASS_NAME; a_base_class: ET_CLASS): ET_CLIENT is
+			-- New client
+		do
+			if a_name /= Void and a_base_class /= Void then
+				create Result.make (a_name, a_base_class)
+			end
+		end
+
+	new_client_comma (a_name: ET_CLASS_NAME; a_base_class: ET_CLASS; a_comma: ET_SYMBOL): ET_CLIENT_ITEM is
+			-- New client followed by a comma
+		do
+			if a_name /= Void and a_base_class /= Void then
+				create {ET_CLIENT} Result.make (a_name, a_base_class)
 			end
 		end
 
@@ -1640,7 +1623,7 @@ feature -- AST nodes
 
 	new_constant_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
 		an_is: ET_AST_LEAF; a_constant: ET_CONSTANT; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
+		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
 			-- New constant attribute declaration
 		do
@@ -1797,7 +1780,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_creator (a_creation: ET_KEYWORD; a_clients: ET_CLASS_NAME_LIST; nb: INTEGER): ET_CREATOR is
+	new_creator (a_creation: ET_KEYWORD; a_clients: ET_CLIENT_LIST; nb: INTEGER): ET_CREATOR is
 			-- New creation clause with given capacity
 		require
 			nb_positive: nb >= 0
@@ -1859,7 +1842,7 @@ feature -- AST nodes
 		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD;
 		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_DEFERRED_FUNCTION is
 			-- New deferred function
 		do
@@ -1880,7 +1863,7 @@ feature -- AST nodes
 	new_deferred_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD; a_postconditions: ET_POSTCONDITIONS;
-		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_DEFERRED_PROCEDURE is
 			-- New deferred procedure
 		do
@@ -1910,7 +1893,7 @@ feature -- AST nodes
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
+		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_DO_FUNCTION is
 			-- New do function
 		do
@@ -1954,7 +1937,7 @@ feature -- AST nodes
 		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST;
 		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
+		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_DO_PROCEDURE is
 			-- New do procedure
 		do
@@ -2072,7 +2055,7 @@ feature -- AST nodes
 		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
 		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
-		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
 			-- New external function
 		do
@@ -2117,7 +2100,7 @@ feature -- AST nodes
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
 		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
 			-- New external procedure
 		do
@@ -2162,7 +2145,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_feature_clause (a_feature: ET_KEYWORD; a_clients: ET_CLASS_NAME_LIST): ET_FEATURE_CLAUSE is
+	new_feature_clause (a_feature: ET_KEYWORD; a_clients: ET_CLIENT_LIST): ET_FEATURE_CLAUSE is
 			-- New fetaure clause
 		do
 			if a_clients /= Void then
@@ -2277,11 +2260,11 @@ feature -- AST nodes
 		end
 
 	new_generic_class_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
-		a_generics: like new_actual_parameters; a_class: ET_CLASS): ET_GENERIC_CLASS_TYPE is
+		a_generics: like new_actual_parameters; a_base_class: ET_CLASS): ET_GENERIC_CLASS_TYPE is
 			-- New Eiffel generic class type
 		do
-			if a_name /= Void and a_generics /= Void and a_class /= Void then
-				create Result.make (a_type_mark, a_name, a_generics, a_class)
+			if a_name /= Void and a_generics /= Void and a_base_class /= Void then
+				create Result.make (a_type_mark, a_name, a_generics, a_base_class)
 			end
 		end
 
@@ -2839,7 +2822,7 @@ feature -- AST nodes
 		an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_ONCE_FUNCTION is
 			-- New once function
 		do
@@ -2893,7 +2876,7 @@ feature -- AST nodes
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
+		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_ONCE_PROCEDURE is
 			-- New once procedure
 		do
@@ -3221,12 +3204,14 @@ feature -- AST nodes
 			end
 		end
 
-	new_tuple_type (a_tuple: ET_IDENTIFIER; a_generics: like new_actual_parameters): ET_TUPLE_TYPE is
+	new_tuple_type (a_tuple: ET_IDENTIFIER; a_generics: like new_actual_parameters; a_base_class: ET_CLASS): ET_TUPLE_TYPE is
 			-- New 'TUPLE' type
 		do
-			create Result.make (a_generics)
-			if a_tuple /= Void and then not a_tuple.position.is_null then
-				Result.set_tuple_keyword (a_tuple)
+			if a_base_class /= Void then
+				create Result.make (a_generics, a_base_class)
+				if a_tuple /= Void and then not a_tuple.position.is_null then
+					Result.set_tuple_keyword (a_tuple)
+				end
 			end
 		end
 
@@ -3238,7 +3223,7 @@ feature -- AST nodes
 
 	new_unique_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE;
 		an_assigner: ET_ASSIGNER; an_is: ET_AST_LEAF; a_unique: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
-		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
+		a_clients: ET_CLIENT_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration
 		do
@@ -3278,13 +3263,12 @@ feature -- AST nodes
 
 feature -- AST factory
 
-	new_class (a_name: ET_CLASS_NAME; an_id: INTEGER): ET_CLASS is
+	new_class (a_name: ET_CLASS_NAME): ET_CLASS is
 			-- New Eiffel class
 		require
 			a_name_not_void: a_name /= Void
-			an_id_positive: an_id > 0
 		do
-			create Result.make (a_name, an_id)
+			create Result.make (a_name)
 		ensure
 			class_not_void: Result /= Void
 		end

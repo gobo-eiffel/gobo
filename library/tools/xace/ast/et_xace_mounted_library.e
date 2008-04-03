@@ -79,7 +79,7 @@ feature -- Access
 			-- Name of Xace file containing
 			-- the library to be mounted
 
-	library: ET_XACE_LIBRARY
+	library: ET_XACE_LIBRARY_CONFIG
 			-- Mounted library
 
 	library_prefix: STRING

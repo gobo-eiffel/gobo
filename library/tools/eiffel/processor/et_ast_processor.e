@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,29 +18,9 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new AST processor.
-		require
-			a_universe_not_void: a_universe /= Void
 		do
-			universe := a_universe
-		ensure
-			universe_set: universe = a_universe
-		end
-
-feature -- Access
-
-	universe: ET_UNIVERSE
-			-- Surrounding universe
-
-feature -- Error handling
-
-	error_handler: ET_ERROR_HANDLER is
-			-- Error handler
-		do
-			Result := universe.error_handler
-		ensure
-			error_handler_not_void: Result /= Void
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -332,17 +312,24 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_class_name_comma (a_name: ET_CLASS_NAME_COMMA) is
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_client (a_client: ET_CLIENT) is
+			-- Process `a_client'.
+		require
+			a_client_not_void: a_client /= Void
+		deferred
+		end
+
+	process_client_comma (a_client_comma: ET_CLIENT_COMMA) is
+			-- Process `a_client_comma'.
+		require
+			a_client_comma_not_void: a_client_comma /= Void
 		deferred
 		end
 
@@ -1374,8 +1361,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-invariant
+feature {ET_CLUSTER} -- Processing
 
-	universe_not_void: universe /= Void
+	process_cluster (a_cluster: ET_CLUSTER) is
+			-- Process `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		deferred
+		end
 
 end

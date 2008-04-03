@@ -5,7 +5,7 @@ indexing
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,28 +113,29 @@ feature -- Compilation report
 		require
 			a_processor_not_void: a_processor /= Void
 			a_class_not_void: a_class /= Void
+			a_class_is_preparsed: a_class.is_preparsed
 		local
-			a_universe: ET_UNIVERSE
+			l_system: ET_SYSTEM
 		do
 			if is_verbose then
 				if info_file /= Void then
-					a_universe := a_processor.universe
-					if a_processor = a_universe.eiffel_parser then
+					l_system := a_class.current_system
+					if a_processor = l_system.eiffel_parser then
 						info_file.put_string ("Degree 5 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_universe.ancestor_builder then
+					elseif a_processor = l_system.ancestor_builder then
 						info_file.put_string ("Degree 4.3 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_universe.feature_flattener then
+					elseif a_processor = l_system.feature_flattener then
 						info_file.put_string ("Degree 4.2 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_universe.interface_checker then
+					elseif a_processor = l_system.interface_checker then
 						info_file.put_string ("Degree 4.1 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_universe.implementation_checker then
+					elseif a_processor = l_system.implementation_checker then
 						info_file.put_string ("Degree 3 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = a_universe.flat_implementation_checker then
+					elseif a_processor = l_system.flat_implementation_checker then
 						info_file.put_string ("Degree 3 (flat) class ")
 						info_file.put_line (a_class.upper_name)
 					end
@@ -742,7 +743,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+	report_vape0a_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
@@ -766,34 +767,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client_name: ET_CLASS_NAME) is
-			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
-			-- one of its descendants `a_class' (possibly itself), is not exported to class
-			-- `a_client_name' to which `a_pre_feature' is exported.
-			-- Note that `l_client_name' is assumed not to be a class in the universe.
-			-- Therefore we expect this class name to be explicitly listed in the client
-			-- list of `a_feature' or that `a_feature' be exported to ANY.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_name_not_void: a_client_name /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0b (a_class, a_class_impl, a_name, a_feature, a_pre_feature, a_client_name)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vape0c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
+	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
 			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
@@ -814,36 +788,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vape_error (a_class) then
-				create an_error.make_vape0c (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vape0d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client_name: ET_CLASS_NAME) is
-			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
-			-- call with target's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
-			-- a_class' (possibly itself), is not exported to class `a_client_name' to
-			-- which `a_pre_feature' is exported.
-			-- Note that `l_client_name' is assumed not to be a class in the universe.
-			-- Therefore we expect this class name to be explicitly listed in the client
-			-- list of `a_feature' or that `a_feature' be exported to ANY.
-			--
-			-- ETL2: p.122
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_class_not_void: a_target_class /= Void
-			a_pre_feature_not_void: a_pre_feature /= Void
-			a_client_name_not_void: a_client_name /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vape_error (a_class) then
-				create an_error.make_vape0d (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client_name)
+				create an_error.make_vape0b (a_class, a_class_impl, a_name, a_feature, a_target_class, a_pre_feature, a_client)
 				report_validity_error (an_error)
 			end
 		end
@@ -5074,7 +5019,8 @@ feature -- Validity errors
 			-- ETR: p.46
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_type_not_void: a_type /= Void
 			an_actual_not_void: an_actual /= Void
 			a_constraint_not_void: a_constraint /= Void

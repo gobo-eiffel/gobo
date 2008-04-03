@@ -5,7 +5,7 @@ indexing
 		"Eiffel provider checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,22 +15,17 @@ class ET_PROVIDER_CHECKER
 inherit
 
 	ET_CLASS_PROCESSOR
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
 		redefine
-			make,
 			process_class
 		end
 
 create
 
 	make
-
-feature {NONE} -- Initialization
-
-	make (a_universe: like universe) is
-			-- Create a new provider checker for classes in `a_universe'.
-		do
-			precursor (a_universe)
-		end
 
 feature -- Processing
 
@@ -40,18 +35,20 @@ feature -- Processing
 		local
 			a_processor: like Current
 		do
-			if a_class = none_class then
+			if a_class.is_none then
 				-- Do nothing.
-			elseif current_class /= unknown_class then
+			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make (universe)
+				create a_processor.make
 				a_processor.process_class (a_class)
-			elseif a_class /= unknown_class then
-				internal_process_class (a_class)
-			else
+			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+			elseif not a_class.is_preparsed then
+				set_fatal_error (a_class)
+			else
+				internal_process_class (a_class)
 			end
 		end
 
@@ -59,6 +56,8 @@ feature -- Error handling
 
 	set_fatal_error (a_class: ET_CLASS) is
 			-- Report a fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			-- No error is fatal.
 		end
@@ -70,13 +69,14 @@ feature {NONE} -- Processing
 			-- the dependence constraint of its cluster.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
 		do
 			old_class := current_class
 			current_class := a_class
 				-- Parse of `current_class' if not already done.
-			current_class.process (universe.eiffel_parser)
+			current_class.process (current_system.eiffel_parser)
 			if current_class.is_parsed and then not current_class.has_syntax_error then
 				error_handler.report_compilation_status (Current, current_class)
 				check_cluster_dependence_constraints
@@ -123,10 +123,7 @@ feature {NONE} -- Cluster dependence constraints
 					l_providers_cursor := l_providers.new_cursor
 					from l_providers_cursor.start until l_providers_cursor.after loop
 						l_provider := l_providers_cursor.item
-						if not l_provider.is_preparsed then
-							universe.preparse
-						end
-						if l_provider = none_class then
+						if l_provider.is_none then
 							-- Skip this one: no constraint on class NONE.
 						elseif l_provider.is_preparsed then
 							l_dependant_constraint := Void

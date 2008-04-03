@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -510,13 +510,6 @@ feature {ET_AST_NODE} -- Processing
 			a_class.end_keyword.process (Current)
 		end
 
-	process_class_name_comma (a_name: ET_CLASS_NAME_COMMA) is
-			-- Process `a_name'.
-		do
-			a_name.class_name.process (Current)
-			a_name.comma.process (Current)
-		end
-
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		local
@@ -527,6 +520,19 @@ feature {ET_AST_NODE} -- Processing
 				a_type_mark.process (Current)
 			end
 			a_type.name.process (Current)
+		end
+
+	process_client (a_client: ET_CLIENT) is
+			-- Process `a_client'.
+		do
+			a_client.name.process (Current)
+		end
+
+	process_client_comma (a_client_comma: ET_CLIENT_COMMA) is
+			-- Process `a_client_comma'.
+		do
+			a_client_comma.name.process (Current)
+			a_client_comma.comma.process (Current)
 		end
 
 	process_clients (a_list: ET_CLIENTS) is
@@ -2924,6 +2930,14 @@ feature {ET_AST_NODE} -- Processing
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
+		end
+
+feature {ET_CLUSTER} -- Processing
+
+	process_cluster (a_cluster: ET_CLUSTER) is
+			-- Process `a_cluster'.
+		do
+			-- Do not iterate over classes of `a_cluster'.
 		end
 
 end

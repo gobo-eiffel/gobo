@@ -5,7 +5,7 @@ indexing
 		"Eiffel class names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ deferred class ET_CLASS_NAME
 
 inherit
 
-	ET_CLASS_NAME_ITEM
+	ET_AST_NODE
 	ET_PRECURSOR_CLASS_NAME
 	HASHABLE
 
@@ -54,6 +54,8 @@ feature -- Access
 			-- Class name
 		do
 			Result := Current
+		ensure then
+			definition: Result = Current
 		end
 
 feature -- Status report

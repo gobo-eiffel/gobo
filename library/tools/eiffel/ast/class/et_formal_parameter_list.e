@@ -69,7 +69,7 @@ feature -- Access
 			same_name: Result /= Void implies Result.name.same_identifier (a_name)
 		end
 
-	named_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_FORMAL_PARAMETER_LIST is
+	named_types (a_context: ET_TYPE_CONTEXT): ET_FORMAL_PARAMETER_LIST is
 			-- Named types of current parameters, when they appear in `a_context'
 			-- in `a_universe', only made up of class names and generic
 			-- formal parameters when the root type of `a_context' is a

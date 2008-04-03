@@ -3,10 +3,10 @@ indexing
 	description:
 
 		"Checkers to see whether the implementation of a class need to be checked again %
-		%or not after some classes have been modified in the universe."
+		%or not after some classes have been modified in the Eiffel system."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,10 @@ class ET_IMPLEMENTATION_STATUS_CHECKER
 inherit
 
 	ET_CLASS_PROCESSOR
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
 		redefine
 			process_class
 		end
@@ -28,25 +32,27 @@ feature -- Processing
 
 	process_class (a_class: ET_CLASS) is
 			-- Check whether the implementation of `a_class' need to be checked
-			-- again after some classes have been modified in the universe.
+			-- again after some classes have been modified in the Eiffel system.
 			-- If `has_implementation_error' is True, it means that this class
 			-- has not been checked yet. False means that it has already
 			-- been checked. Parent classes will be checked recursively.
 		local
 			a_processor: like Current
 		do
-			if a_class = none_class then
+			if a_class.is_none then
 				a_class.unset_flattening_error
-			elseif current_class /= unknown_class then
+			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make (universe)
+				create a_processor.make
 				a_processor.process_class (a_class)
-			elseif a_class /= unknown_class then
-				internal_process_class (a_class)
-			else
+			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+			elseif not a_class.is_preparsed then
+				set_fatal_error (a_class)
+			else
+				internal_process_class (a_class)
 			end
 		ensure then
 			implementation_checked: not a_class.implementation_checked or else not a_class.has_implementation_error
@@ -56,9 +62,11 @@ feature -- Error handling
 
 	set_fatal_error (a_class: ET_CLASS) is
 			-- Report a fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			a_class.reset_after_interface_checked
-		ensure then
+		ensure
 			implementation_not_checked: not a_class.implementation_checked
 		end
 
@@ -66,12 +74,13 @@ feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS) is
 			-- Check whether the implementation of `a_class' need to be checked
-			-- again after some classes have been modified in the universe.
+			-- again after some classes have been modified in the Eiffel system.
 			-- If `has_implementation_error' is True, it means that this class
 			-- has not been checked yet. False means that it has already
 			-- been checked. Parent classes will be checked recursively.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
 			i, nb: INTEGER
@@ -92,26 +101,27 @@ feature {NONE} -- Processing
 					-- Process parents first.
 				a_parents := current_class.parents
 				if a_parents = Void or else a_parents.is_empty then
-					if current_class = universe.general_class then
+					if current_class = current_system.any_class then
+							-- ANY has no implicit parents.
 						a_parents := Void
-					elseif current_class = universe.any_class then
-							-- ISE Eiffel has no GENERAL class anymore.
-							-- Use ANY as class root now.
-						a_parents := Void
-					elseif current_class.is_dotnet and current_class /= universe.system_object_class then
-						a_parents := universe.system_object_parents
+					elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
+						a_parents := current_system.system_object_parents
 					else
-						a_parents := universe.any_parents
+						a_parents := current_system.any_parents
 					end
 				end
 				if a_parents /= Void then
 					nb := a_parents.count
 					from i := 1 until i > nb loop
-							-- This is a controlled recursive call to `internal_process_class'.
-						a_parent_class := a_parents.parent (i).type.direct_base_class (universe)
-						internal_process_class (a_parent_class)
-						if not a_parent_class.implementation_checked then
+						a_parent_class := a_parents.parent (i).type.base_class
+						if not a_parent_class.is_preparsed then
+								-- This is a controlled recursive call to `internal_process_class'.
 							l_reset_needed := True
+						else
+							internal_process_class (a_parent_class)
+							if not a_parent_class.implementation_checked then
+								l_reset_needed := True
+							end
 						end
 						i := i + 1
 					end

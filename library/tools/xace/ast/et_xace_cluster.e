@@ -5,7 +5,7 @@ indexing
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,21 +28,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname) is
+	make (a_name: like name; a_pathname: like pathname; a_universe: ET_UNIVERSE) is
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
+			a_universe_not_void: a_universe /= Void
 		do
 			name := a_name
 			pathname := a_pathname
 			is_relative := (a_pathname = Void)
+			universe := a_universe
 			library_prefix := empty_prefix
 			cluster_prefix := empty_prefix
 			set_overridden_constraint_enabled (True)
 		ensure
 			name_set: name = a_name
 			pathname_set: pathname = a_pathname
+			universe_set: universe = a_universe
 			prefixed_name_set: prefixed_name = a_name
 			is_relative: is_relative = (a_pathname = Void)
 			no_library_prefix: library_prefix.count = 0
@@ -426,7 +429,7 @@ feature {NONE} -- Implementation
 	new_recursive_cluster (a_name: STRING): like Current is
 			-- New recursive cluster
 		do
-			create Result.make (a_name, Void)
+			create Result.make (a_name, Void, universe)
 			Result.set_parent (Current)
 			Result.set_options (options)
 			Result.set_recursive (True)

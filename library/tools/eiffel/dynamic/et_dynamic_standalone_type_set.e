@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type sets with no sources nor targets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,12 +83,11 @@ feature -- Initialization
 
 feature -- Setting
 
-	set_static_type (a_static_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
+	set_static_type (a_static_type: ET_DYNAMIC_TYPE) is
 			-- Set `static_type' to `a_static_type'.
 		require
 			a_static_type_not_void: a_static_type /= Void
-			a_system_not_void: a_system /= Void
-			conformance: static_type.conforms_to_type (a_static_type, a_system)
+			conformance: static_type.conforms_to_type (a_static_type)
 		do
 			static_type := a_static_type
 		ensure
@@ -111,10 +110,10 @@ feature -- Element change
 			end
 		end
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		do
-			if a_type.conforms_to_type (static_type, a_system) then
+			if a_type.conforms_to_type (static_type) then
 				put_type (a_type)
 			end
 		end

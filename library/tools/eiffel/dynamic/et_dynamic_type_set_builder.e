@@ -14,17 +14,17 @@ deferred class ET_DYNAMIC_TYPE_SET_BUILDER
 
 feature -- Access
 
-	current_system: ET_SYSTEM
-			-- Surrounding system
+	current_dynamic_system: ET_DYNAMIC_SYSTEM
+			-- Surrounding dynamic Eiffel system
 			-- (Note: there is a frozen feature called `system' in
 			-- class GENERAL of SmartEiffel 1.0)
 
-	universe: ET_UNIVERSE is
-			-- Surrounding universe
+	current_system: ET_SYSTEM is
+			-- Surrounding Eiffel system
 		do
-			Result := current_system.universe
+			Result := current_dynamic_system.current_system
 		ensure
-			universe_not_void: Result /= Void
+			current_system_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -102,7 +102,7 @@ feature -- Factory
 feature -- Generation
 
 	build_dynamic_type_sets is
-			-- Build dynamic type sets for `current_system'.
+			-- Build dynamic type sets for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		deferred
 		end
@@ -121,9 +121,9 @@ feature -- Generation
 			if not a_type.is_alive then
 				a_type.set_alive
 				if not a_type.is_expanded then
-					l_dispose_seed := universe.dispose_seed
+					l_dispose_seed := current_system.dispose_seed
 					if l_dispose_seed > 0 then
-						l_dispose_procedure := a_type.seeded_dynamic_procedure (l_dispose_seed, current_system)
+						l_dispose_procedure := a_type.seeded_dynamic_procedure (l_dispose_seed, current_dynamic_system)
 						if l_dispose_procedure /= Void then
 							l_dispose_procedure.set_regular (True)
 						end
@@ -134,24 +134,38 @@ feature -- Generation
 			a_type_alive: a_type.is_alive
 		end
 
-	mark_string_type_alive is
+	mark_string_type_alive (a_universe: ET_UNIVERSE) is
 			-- Make sure that `string_type' and its dependent types
-			-- are marked as alive.
+			-- are marked as alive when in the context of `a_universe'.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			l_string_type: ET_DYNAMIC_TYPE
+			l_string_universe: ET_UNIVERSE
+			l_special_type: ET_DYNAMIC_TYPE
+			l_special_universe: ET_UNIVERSE
 		do
-			mark_type_alive (current_system.string_type)
-				-- Make sure that type SPECIAL[CHARACTER] (used in
-				-- feature 'area') is marked as alive.
-			mark_type_alive (current_system.special_character_type)
-				-- Make sure that type CHARACTER (used as actual generic type
-				-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-			mark_type_alive (current_system.character_type)
-				-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-			mark_type_alive (current_system.integer_type)
+			l_string_type := current_dynamic_system.string_type (a_universe)
+			mark_type_alive (l_string_type)
+			l_string_universe := l_string_type.base_class.universe
+			if l_string_universe /= Void then
+					-- Make sure that type "SPECIAL [CHARACTER]" (used in
+					-- feature 'area') is marked as alive.
+				l_special_type := current_dynamic_system.special_character_type (l_string_universe)
+				mark_type_alive (l_special_type)
+					-- Make sure that type "INTEGER" (used in attribute 'count') is marked as alive.
+				mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
+				l_special_universe := l_special_type.base_class.universe
+				if l_special_universe /= Void then
+						-- Make sure that type "CHARACTER" (used as actual generic type
+						-- of "SPECIAL [CHARACTER]" in feature 'area') is marked as alive.
+					mark_type_alive (current_dynamic_system.character_type (l_special_universe))
+						-- Make sure that type "INTEGER" (used in attribute 'count') is marked as alive.
+					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
+				end
+			end
 		ensure
-			string_type_alive: current_system.string_type.is_alive
-			special_character_type_alive: current_system.special_character_type.is_alive
-			character_type_alive: current_system.character_type.is_alive
-			integer_type_alive: current_system.integer_type.is_alive
+			string_type_alive: current_dynamic_system.string_type (a_universe).is_alive
 		end
 
 feature -- Error handling
@@ -159,7 +173,7 @@ feature -- Error handling
 	error_handler: ET_ERROR_HANDLER is
 			-- Error handler
 		do
-			Result := current_system.error_handler
+			Result := current_dynamic_system.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -214,6 +228,6 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 
 invariant
 
-	current_system_not_void: current_system /= Void
+	current_dynamic_system_not_void: current_dynamic_system /= Void
 
 end

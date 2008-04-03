@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		".NET Assemblies of classes"
+		".NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,14 @@ deferred class ET_DOTNET_ASSEMBLY
 inherit
 
 	ET_GROUP
+		undefine
+			current_system, hash_code
 		redefine
 			is_dotnet_assembly,
 			dotnet_assembly
 		end
+
+	ET_UNIVERSE
 
 feature -- Status report
 
@@ -42,6 +46,14 @@ feature -- Status report
 			-- but is instead the result of assembly dependences?
 
 feature -- Access
+
+	universe: ET_UNIVERSE is
+			-- Surrounding universe
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
 
 	classname_prefix: STRING is
 			-- Prefix for classnames of current assembly
@@ -101,6 +113,59 @@ feature -- Nested
 			-- Parent group
 		do
 			-- Result := Void
+		end
+
+feature -- Parsing
+
+	preparse_local is
+			-- Build a mapping between class names and their filenames and
+			-- populate `classes' (both with classes declared locally and
+			-- exported by other universes which are assumed to have been
+			-- preparsed before this call), even if the classes have not been
+			-- parsed yet. If current universe had already been reparsed,
+			-- then rebuild the mapping between class names and filenames:
+			-- modified classes are reset and left unparsed and new classes
+			-- are added to `classes', but are not parsed.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- `classes_modified' and `classes_added' will be updated.
+		do
+			classes_modified := False
+			classes_added := False
+			if not is_preparsed then
+				is_preparsed := True
+				classes_added := True
+			end
+		end
+
+	parse_all_local is
+			-- Parse all classes declared locally in the current universe.
+			-- There is not need to call one of the preparse routines
+			-- beforehand since the current routine will traverse all
+			-- clusters and parse all Eiffel files anyway. The mapping
+			-- between class names and their filenames will be done during
+			-- this process and `classes' will be populated (both with classes
+			-- declared locally and those exported by other universes which
+			-- are assumed to have been preparsed before this call).
+			-- If current universe had already been preparsed, then rebuild
+			-- the mapping between class names and filenames and reparse
+			-- the classes that have been modified or were not parsed yet.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- `classes_modified' and `classes_added' will be updated.
+		do
+			classes_modified := False
+			classes_added := False
+			if not is_preparsed then
+				is_preparsed := True
+				classes_added := True
+			end
 		end
 
 feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming

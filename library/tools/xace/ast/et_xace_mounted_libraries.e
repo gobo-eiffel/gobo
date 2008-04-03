@@ -113,7 +113,7 @@ feature -- Basic operations
 			i, nb: INTEGER
 			a_mounted_library: ET_XACE_MOUNTED_LIBRARY
 			a_mounted_clusters: ET_XACE_CLUSTERS
-			a_library: ET_XACE_LIBRARY
+			a_library: ET_XACE_LIBRARY_CONFIG
 			a_prefix: STRING
 		do
 			nb := libraries.count

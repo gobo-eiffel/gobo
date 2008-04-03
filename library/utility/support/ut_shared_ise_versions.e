@@ -127,6 +127,48 @@ feature -- Access
 			ise_6_0_latest_not_void: Result /= Void
 		end
 
+	ise_6_1_0: UT_VERSION is
+			-- ISE 6.1.0
+		once
+			create Result.make (6, 1, 0, 0)
+		ensure
+			ise_6_1_0_not_void: Result /= Void
+		end
+
+	ise_6_1_latest: UT_VERSION is
+			-- After the last release ISE 6.1
+		once
+			create Result.make_major_minor (6, 1)
+		ensure
+			ise_6_1_latest_not_void: Result /= Void
+		end
+
+	ise_6_2_0: UT_VERSION is
+			-- ISE 6.2.0
+		once
+			create Result.make (6, 2, 0, 0)
+		ensure
+			ise_6_2_0_not_void: Result /= Void
+		end
+
+	ise_6_2_7_2906: UT_VERSION is
+			-- ISE 6.2.7.2906
+			-- Last release with 'like Current', 'INTEGER', 'REAL' and 'DOUBLE'
+			-- in signatures of basic expanded classes in FreeELKS.
+		once
+			create Result.make (6, 2, 7, 2906)
+		ensure
+			ise_6_2_7_2906: Result /= Void
+		end
+
+	ise_6_2_latest: UT_VERSION is
+			-- After the last release ISE 6.2
+		once
+			create Result.make_major_minor (6, 2)
+		ensure
+			ise_6_2_latest_not_void: Result /= Void
+		end
+
 	ise_latest: UT_VERSION is
 			-- After the latest release of ISE
 		once

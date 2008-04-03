@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			arguments := args
 			declared_type := a_type
 			end_keyword := tokens.end_keyword
-			clients := tokens.any_clients
+			clients := tokens.empty_clients
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure

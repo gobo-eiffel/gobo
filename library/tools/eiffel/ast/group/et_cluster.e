@@ -5,7 +5,7 @@ indexing
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -81,6 +81,9 @@ feature -- Status report
 			-- not taken into account when repreparsing or reparsing
 			-- the universe? (see 'library' in ISE's LACE.)
 
+	is_preparsed: BOOLEAN
+			-- Has current group already been traversed to look for its classes?
+
 	is_implicit: BOOLEAN
 			-- Has current cluster not been explicitly declared
 			-- but is instead the result of the fact that its
@@ -125,6 +128,9 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	universe: ET_UNIVERSE
+			-- Surrounding universe
 
 	full_name (a_separator: CHARACTER): STRING is
 			-- Full name (use `a_separator' as separator
@@ -389,6 +395,14 @@ feature -- Status setting
 			read_only_set: is_read_only = b
 		end
 
+	set_preparsed (b: BOOLEAN) is
+			-- Set `is_preparsed' to `b'.
+		do
+			is_preparsed := b
+		ensure
+			preparsed_set: is_preparsed = b
+		end
+
 	set_implicit (b: BOOLEAN) is
 			-- Set `is_implicit' to `b'.
 		do
@@ -591,6 +605,16 @@ feature {NONE} -- Constants
 	dot_directory_name: STRING is "."
 	dot_dot_directory_name: STRING is ".."
 			-- Directory names
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		require
+			a_processor_not_void: a_processor /= Void
+		do
+			a_processor.process_cluster (Current)
+		end
 
 invariant
 

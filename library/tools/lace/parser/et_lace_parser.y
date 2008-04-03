@@ -50,11 +50,12 @@ create
 Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_opt
 	Defaults_opt Clusters_opt Assemblies_opt Externals_opt Generates_opt L_END
 		{
-			last_universe := new_universe ($8)
-			last_universe.set_dotnet_assemblies ($9)
-			last_universe.set_system_name ($2.name)
-			last_universe.set_root_class ($4)
-			last_universe.set_root_creation ($6)
+			set_system (last_system)
+			last_system.set_clusters ($8)
+			last_system.set_dotnet_assemblies ($9)
+			last_system.set_system_name ($2.name)
+			last_system.set_root_class ($4)
+			last_system.set_root_creation ($6)
 		}
 	;
 

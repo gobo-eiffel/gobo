@@ -5,7 +5,7 @@ indexing
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,6 @@ inherit
 			same_named_class_type,
 			same_base_class_type,
 			conforms_from_class_type,
-			reference_conforms_from_class_type,
 			resolved_formal_parameters,
 			append_unaliased_to_string
 		end
@@ -33,19 +32,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_name: like name; a_class: like eiffel_class) is
+	make (a_type_mark: like type_mark; a_name: like name; a_base_class: ET_CLASS) is
 			-- Create a new class type.
 		require
 			a_name_not_void: a_name /= Void
-			a_class_not_void: a_class /= Void
+			a_base_class_not_void: a_base_class /= Void
 		do
 			type_mark := a_type_mark
 			name := a_name
-			eiffel_class := a_class
+			base_class := a_base_class
 		ensure
 			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
-			eiffel_class_set: eiffel_class = a_class
+			base_class_set: base_class = a_base_class
 		end
 
 feature -- Access
@@ -53,32 +52,13 @@ feature -- Access
 	type_mark: ET_KEYWORD
 			-- 'expanded', 'reference' or 'separate' keyword
 
-	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Class on which current type is directly based
-			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
-			-- Return Void if not directly based on a class
-			-- (e.g. Anchored_type). `a_universe' is the
-			-- surrounding universe holding all classes.
-		do
-			Result := eiffel_class
-		end
-
-	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Base class of current type when it appears in `a_context'
-			-- in `a_universe' (Definition of base class in ETL2 page 198).
-			-- Return "*UNKNOWN*" class if unresolved identifier type,
-			-- or unmatched formal generic parameter.
-		do
-			Result := eiffel_class
-		end
-
-	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', only made up of class names and generic
-			-- formal parameters when the root type of `a_context' is a
-			-- generic type not fully derived (Definition of base type in
-			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, or unmatched formal generic parameter if this parameter
+	base_type (a_context: ET_TYPE_CONTEXT): ET_CLASS_TYPE is
+			-- Base type of current type, when it appears in `a_context',
+			-- only made up of class names and generic formal parameters
+			-- when the root type of `a_context' is a generic type not
+			-- fully derived (Definition of base type in ETL2 p.198).
+			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
+			-- unmatched formal generic parameter if this parameter
 			-- is current type.
 		local
 			an_actual_parameters: like actual_parameters
@@ -93,9 +73,9 @@ feature -- Access
 				Result := Current
 				an_actual_parameters := actual_parameters
 				if an_actual_parameters /= Void then
-					a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
+					a_named_parameters := an_actual_parameters.named_types (a_context)
 					if a_named_parameters /= an_actual_parameters then
-						create a_generic_class_type.make (type_mark, name, a_named_parameters, eiffel_class)
+						create a_generic_class_type.make (type_mark, name, a_named_parameters, base_class)
 						a_generic_class_type.set_unresolved_type (Current)
 						Result := a_generic_class_type
 					end
@@ -158,7 +138,7 @@ feature -- Status report
 			if type_mark /= Void then
 				Result := type_mark.is_separate
 			else
-				Result := eiffel_class.is_separate
+				Result := base_class.is_separate
 			end
 		end
 
@@ -168,37 +148,35 @@ feature -- Status report
 			if type_mark /= Void then
 				Result := type_mark.is_expanded
 			else
-				Result := eiffel_class.is_expanded
+				Result := base_class.is_expanded
 			end
 		end
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type expanded when viewed from
-			-- `a_context' in `a_universe'?
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is current type expanded when viewed from `a_context'?
 		do
 			Result := is_expanded
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the base type of current type contain `a_class'
-			-- when it appears in `a_context' in `a_universe'?
+			-- when it appears in `a_context'?
 		local
 			an_actual_parameters: like actual_parameters
 		do
-			if a_class = eiffel_class then
+			if a_class = base_class then
 				Result := True
 			else
 				an_actual_parameters := actual_parameters
 				if an_actual_parameters /= Void then
-					Result := an_actual_parameters.named_types_have_class (a_class, a_context, a_universe)
+					Result := an_actual_parameters.named_types_have_class (a_class, a_context)
 				end
 			end
 		end
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -206,60 +184,48 @@ feature -- Comparison
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
-		local
-			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
-			elseif other = Current and then other_context = a_context then
+			elseif other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.same_syntactical_class_type (Current, a_context, other_context, a_universe)
+				Result := other.same_syntactical_class_type (Current, a_context, other_context)
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
-		local
-			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
-			elseif other = Current and then other_context = a_context then
+			elseif other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.same_named_class_type (Current, a_context, other_context, a_universe)
+				Result := other.same_named_class_type (Current, a_context, other_context)
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
-		local
-			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
-			elseif other = Current and then other_context = a_context then
+			elseif other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.same_base_class_type (Current, a_context, other_context, a_universe)
+				Result := other.same_base_class_type (Current, a_context, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -269,16 +235,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- if they have the same base type.)
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
-			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
-			elseif other = Current and then other_context = a_context then
+			elseif other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			elseif
-				eiffel_class = other_base_class and
+				base_class = other.base_class and
 				is_expanded = other.is_expanded and
 				is_separate = other.is_separate
 			then
@@ -292,27 +256,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						is_generic: actual_parameters /= Void
 						other_is_generic: other_parameters /= Void
 					end
-					Result := actual_parameters.same_syntactical_types (other_parameters, other_context, a_context, a_universe)
+					Result := actual_parameters.same_syntactical_types (other_parameters, other_context, a_context)
 				end
 			end
 		end
 
-	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
-			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
-			elseif other = Current and then other_context = a_context then
+			elseif other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			elseif
-				eiffel_class = other_base_class and
+				base_class = other.base_class and
 				is_expanded = other.is_expanded and
 				is_separate = other.is_separate
 			then
@@ -326,27 +287,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						is_generic: actual_parameters /= Void
 						other_is_generic: other_parameters /= Void
 					end
-					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context, a_universe)
+					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context)
 				end
 			end
 		end
 
-	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
-			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
-			elseif other = Current and then other_context = a_context then
+			elseif other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			elseif
-				eiffel_class = other_base_class and
+				base_class = other.base_class and
 				is_expanded = other.is_expanded and
 				is_separate = other.is_separate
 			then
@@ -360,53 +318,48 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						is_generic: actual_parameters /= Void
 						other_is_generic: other_parameters /= Void
 					end
-					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context, a_universe)
+					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context)
 				end
 			end
 		end
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
-			elseif other = Current and then other_context = a_context then
+			elseif other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.conforms_from_class_type (Current, a_context, other_context, a_universe)
+				Result := other.conforms_from_class_type (Current, a_context, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			other_base_class: ET_CLASS
 			an_ancestor: ET_BASE_TYPE
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
+			other_base_class := other.base_class
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
-			elseif other = Current and other_context = a_context then
+			elseif other = Current and (other_context = a_context or else not is_generic) then
 				Result := True
-			elseif eiffel_class = other_base_class then
+			elseif base_class = other_base_class then
 				if not other.is_generic then
 					Result := not is_generic
 				elseif not is_generic then
@@ -417,59 +370,37 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						is_generic: actual_parameters /= Void
 						other_is_generic: other_parameters /= Void
 					end
-					if
-						eiffel_class = a_universe.routine_class or
-						eiffel_class = a_universe.procedure_class or
-						eiffel_class = a_universe.function_class or
-						eiffel_class = a_universe.predicate_class
-					then
-							-- SmartEiffel's agent type conformance.
-						-- Result := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-					else
-						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-					end
+-- DISABLED: Use SmartEiffel agent type conformance semantics, where the conformance
+-- of the second actual generic parameter is checked in the reverse order.
+--					if not other_base_class.is_preparsed then
+--							-- This class is not even preparsed (i.e. we know nothing about it,
+--							-- not even its filename). Therefore it is impossible to determine
+--							-- whether it conforms to current type.
+--						Result := False
+--					elseif
+--						other_base_class = other_base_class.current_system.routine_class or
+--						other_base_class = other_base_class.current_system.procedure_class or
+--						other_base_class = other_base_class.current_system.function_class or
+--						other_base_class = other_base_class.current_system.predicate_class
+--					then
+---						-- Use SmartEiffel agent type conformance semantics, where the conformance
+--						-- of the second actual generic parameter is checked in the reverse order.
+--						Result := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context)
+--					else
+						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context)
+--					end
 				end
 			elseif not is_expanded then
-				if other_base_class = a_universe.none_class then
+				if other_base_class.is_none then
 						-- "NONE" conforms to any class type that is not expanded.
 					Result := True
-				elseif other.is_expanded and then (a_universe.is_ise and then a_universe.ise_version <= ise_5_6_latest) then
-						-- This test is needed for compatibility with ISE 5.6.0610:
-						-- expanded types don't conform to reference types, they
-						-- possibly convert to them.
-					Result := False
-				elseif
-					(a_universe.is_ise and then a_universe.ise_version <= ise_5_7_62488) and then
-					(other_base_class = a_universe.boolean_class or
-					other_base_class = a_universe.character_class or
-					other_base_class = a_universe.wide_character_class or
-					other_base_class = a_universe.character_8_class or
-					other_base_class = a_universe.character_32_class or
-					other_base_class = a_universe.integer_class or
-					other_base_class = a_universe.integer_8_class or
-					other_base_class = a_universe.integer_16_class or
-					other_base_class = a_universe.integer_32_class or
-					other_base_class = a_universe.integer_64_class or
-					other_base_class = a_universe.natural_class or
-					other_base_class = a_universe.natural_8_class or
-					other_base_class = a_universe.natural_16_class or
-					other_base_class = a_universe.natural_32_class or
-					other_base_class = a_universe.natural_64_class or
-					other_base_class = a_universe.real_class or
-					other_base_class = a_universe.double_class or
-					other_base_class = a_universe.real_32_class or
-					other_base_class = a_universe.real_64_class or
-					other_base_class = a_universe.pointer_class or
-					other_base_class = a_universe.typed_pointer_class)
-				then
-						-- In ISE 5.7, expanded types conform to there reference ancestors
-						-- expect for basic types (which might convert to them).
-						-- In ISE 5.7.62488, expanded basic types conform to there reference
-						-- ancestors as well.
+				elseif not other_base_class.is_preparsed then
+						-- This class is not even preparsed (i.e. we know nothing about it,
+						-- not even its filename). Therefore it is impossible to determine
+						-- whether it conforms to current type.
 					Result := False
 				else
-					other_base_class.process (a_universe.ancestor_builder)
+					other_base_class.process (other_base_class.current_system.ancestor_builder)
 						-- If there was an error building the ancestors of
 						-- `other_base_class', this error has already been
 						-- reported, so we assume here that everything went
@@ -477,102 +408,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- course we might catch errors which are not errors
 						-- but just consequences of the error which occurred
 						-- when building the ancestors, but this is OK.
-					an_ancestor := other_base_class.ancestor (Current, a_universe)
+					an_ancestor := other_base_class.ancestor (Current)
 					if an_ancestor /= Void then
 						other_parameters := other.actual_parameters
 						if other_parameters /= Void then
 							an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
 						end
-						Result := an_ancestor.conforms_to_type (Current, a_context, other_context, a_universe)
+						Result := an_ancestor.conforms_to_type (Current, a_context, other_context)
 					end
-				end
-			end
-		end
-
-feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of current type appearing in `a_context'
-			-- conform to the reference version `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			other_base_class: ET_CLASS
-		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
-					-- "*UNKNOWN*" conforms to no type, not even itself.
-				Result := False
-			elseif other = Current and then other_context = a_context then
-				Result := True
-			else
-				Result := other.reference_conforms_from_class_type (Current, a_context, other_context, a_universe)
-			end
-		end
-
-feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			other_base_class: ET_CLASS
-			an_ancestor: ET_BASE_TYPE
-			other_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.unknown_class then
-					-- "*UNKNOWN*" conforms to no type, not even itself.
-				Result := False
-			elseif other = Current and other_context = a_context then
-				Result := True
-			elseif eiffel_class = other_base_class then
-				if not other.is_generic then
-					Result := not is_generic
-				elseif not is_generic then
-					Result := False
-				else
-					other_parameters := other.actual_parameters
-					check
-						is_generic: actual_parameters /= Void
-						other_is_generic: other_parameters /= Void
-					end
-					if
-						eiffel_class = a_universe.routine_class or
-						eiffel_class = a_universe.procedure_class or
-						eiffel_class = a_universe.function_class or
-						eiffel_class = a_universe.predicate_class
-					then
-							-- SmartEiffel's agent type conformance.
-						-- Result := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-					else
-						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-					end
-				end
-			elseif other_base_class = a_universe.none_class then
-					-- "NONE" conforms to any class type that is not expanded.
-				Result := True
-			else
-				other_base_class.process (a_universe.ancestor_builder)
-					-- If there was an error building the ancestors of
-					-- `other_base_class', this error has already been
-					-- reported, so we assume here that everything went
-					-- fine in order to catch other possible errors. Of
-					-- course we might catch errors which are not errors
-					-- but just consequences of the error which occurred
-					-- when building the ancestors, but this is OK.
-				an_ancestor := other_base_class.ancestor (Current, a_universe)
-				if an_ancestor /= Void then
-					other_parameters := other.actual_parameters
-					if other_parameters /= Void then
-						an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
-					end
-					Result := an_ancestor.reference_conforms_to_type (Current, a_context, other_context, a_universe)
 				end
 			end
 		end
@@ -593,7 +436,7 @@ feature -- Type processing
 			if an_actual_parameters /= Void then
 				a_resolved_parameters := an_actual_parameters.resolved_formal_parameters (a_parameters)
 				if a_resolved_parameters /= an_actual_parameters then
-					create a_generic_class_type.make (type_mark, name, a_resolved_parameters, eiffel_class)
+					create a_generic_class_type.make (type_mark, name, a_resolved_parameters, base_class)
 					a_generic_class_type.set_unresolved_type (Current)
 					Result := a_generic_class_type
 				end
@@ -638,18 +481,13 @@ feature -- Output
 				a_string.append_string (type_mark.text)
 				a_string.append_character (' ')
 			end
-			a_string.append_string (eiffel_class.upper_name)
+			a_string.append_string (base_class.upper_name)
 			a_parameters := actual_parameters
 			if a_parameters /= Void and then not a_parameters.is_empty then
 				a_string.append_character (' ')
 				a_parameters.append_unaliased_to_string (a_string)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	eiffel_class: ET_CLASS
-			-- Base class
 
 feature -- Processing
 
@@ -658,9 +496,5 @@ feature -- Processing
 		do
 			a_processor.process_class_type (Current)
 		end
-
-invariant
-
-	eiffel_class_not_void: eiffel_class /= Void
 
 end

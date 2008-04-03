@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			extended_name := a_name
 			hash_code := name.hash_code
 			declared_type := a_type
-			clients := tokens.any_clients
+			clients := tokens.empty_clients
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure

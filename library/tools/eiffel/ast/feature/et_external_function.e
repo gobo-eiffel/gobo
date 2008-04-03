@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			declared_type := a_type
 			language := a_language
 			end_keyword := tokens.end_keyword
-			clients := tokens.any_clients
+			clients := tokens.empty_clients
 			implementation_class := a_class
 			implementation_feature := Current
 			builtin_code := tokens.builtin_not_builtin

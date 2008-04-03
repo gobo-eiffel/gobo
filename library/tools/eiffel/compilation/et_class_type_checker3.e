@@ -36,7 +36,7 @@ feature -- Validity checking
 	check_type_validity (a_type: ET_TYPE) is
 			-- Check whether all classes that appear in `a_type'
 			-- have their features already successfully flattened.
-			-- Set `has_fatal_error' to True otherwsise.
+			-- Set `has_fatal_error' to True otherwise.
 		require
 			a_type_not_void: a_type /= Void
 		do
@@ -49,7 +49,7 @@ feature {NONE} -- Type validity
 	check_class_type_validity (a_type: ET_CLASS_TYPE) is
 			-- Check whether all classes that appear in `a_type'
 			-- have their features already successfully flattened.
-			-- Set `has_fatal_error' to True otherwsise.
+			-- Set `has_fatal_error' to True otherwise.
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -57,7 +57,7 @@ feature {NONE} -- Type validity
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
-			l_class := a_type.direct_base_class (universe)
+			l_class := a_type.base_class
 			if not l_class.features_flattened or else l_class.has_flattening_error then
 				set_fatal_error
 			else
@@ -78,7 +78,7 @@ feature {NONE} -- Type validity
 	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
 			-- Check whether all classes that appear in `a_type'
 			-- have their features already successfully flattened.
-			-- Set `has_fatal_error' to True otherwsise.
+			-- Set `has_fatal_error' to True otherwise.
 		require
 			a_type_not_void: a_type /= Void
 		local

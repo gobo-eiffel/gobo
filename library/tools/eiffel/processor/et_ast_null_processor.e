@@ -227,13 +227,18 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_class_name_comma (a_name: ET_CLASS_NAME_COMMA) is
-			-- Process `a_name'.
+	process_class_type (a_type: ET_CLASS_TYPE) is
+			-- Process `a_type'.
 		do
 		end
 
-	process_class_type (a_type: ET_CLASS_TYPE) is
-			-- Process `a_type'.
+	process_client (a_client: ET_CLIENT) is
+			-- Process `a_client'.
+		do
+		end
+
+	process_client_comma (a_client_comma: ET_CLIENT_COMMA) is
+			-- Process `a_client_comma'.
 		do
 		end
 
@@ -964,6 +969,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_when_part_list (a_list: ET_WHEN_PART_LIST) is
 			-- Process `a_list'.
+		do
+		end
+
+feature {ET_CLUSTER} -- Processing
+
+	process_cluster (a_cluster: ET_CLUSTER) is
+			-- Process `a_cluster'.
 		do
 		end
 

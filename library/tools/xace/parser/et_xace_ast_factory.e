@@ -25,13 +25,14 @@ feature {NONE} -- Initialization
 
 feature -- AST factory
 
-	new_cluster (a_name, a_pathname: STRING): ET_XACE_CLUSTER is
+	new_cluster (a_name, a_pathname: STRING; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER is
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
+			a_universe_not_void: a_universe /= Void
 		do
-			create Result.make (a_name, a_pathname)
+			create Result.make (a_name, a_pathname, a_universe)
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -46,7 +47,7 @@ feature -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
-	new_library: ET_XACE_LIBRARY is
+	new_library: ET_XACE_LIBRARY_CONFIG is
 			-- New Xace library
 		do
 			create Result.make
@@ -54,7 +55,7 @@ feature -- AST factory
 			library_not_void: Result /= Void
 		end
 
-	new_mounted_library (a_pathname: STRING; a_library: ET_XACE_LIBRARY; a_position: XM_POSITION): ET_XACE_MOUNTED_LIBRARY is
+	new_mounted_library (a_pathname: STRING; a_library: ET_XACE_LIBRARY_CONFIG; a_position: XM_POSITION): ET_XACE_MOUNTED_LIBRARY is
 			-- New mounted library
 		require
 			a_pathname_not_void: a_pathname /= Void
@@ -106,10 +107,10 @@ feature -- AST factory
 			feature_options_not_void: Result /= Void
 		end
 
-	new_system (a_clusters: ET_XACE_CLUSTERS): ET_XACE_SYSTEM is
+	new_system: ET_XACE_SYSTEM_CONFIG is
 			-- New Xace system
 		do
-			create Result.make (a_clusters)
+			create Result.make
 		ensure
 			system_not_void: Result /= Void
 		end

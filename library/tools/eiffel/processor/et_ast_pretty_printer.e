@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -166,11 +166,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file; a_universe: like universe) is
+	make (a_file: like file) is
 			-- Create a new AST pretty-printer, using `a_file' as output file.
 		do
-			precursor (a_file, a_universe)
-			create comment_finder.make (a_universe)
+			precursor (a_file)
+			create comment_finder.make
 			create comment_list.make (20)
 		end
 
@@ -1040,16 +1040,16 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
-			l_item: ET_CLASS_NAME_ITEM
-			l_client: ET_CLASS_NAME
+			l_item: ET_CLIENT_ITEM
+			l_client_name: ET_CLASS_NAME
 		do
 			a_list.left_brace.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				l_item := a_list.item (i)
-				l_client := l_item.class_name
-				l_client.process (Current)
-				comment_finder.add_excluded_node (l_client)
+				l_client_name := l_item.name
+				l_client_name.process (Current)
+				comment_finder.add_excluded_node (l_client_name)
 				comment_finder.find_comments (l_item, comment_list)
 				comment_finder.reset_excluded_nodes
 				if i /= nb then

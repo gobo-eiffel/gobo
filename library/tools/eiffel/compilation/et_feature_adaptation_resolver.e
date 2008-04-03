@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,6 +13,16 @@ indexing
 class ET_FEATURE_ADAPTATION_RESOLVER
 
 inherit
+
+	ET_CLASS_SUBPROCESSOR
+		redefine
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		end
 
 	ET_SHARED_FEATURE_NAME_TESTER
 
@@ -24,13 +34,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
-			-- Create a new feature adaptation resolver for classes in `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
+	make is
+			-- Create a new feature adaptation resolver for given classes.
 		do
-			universe := a_universe
-			current_class := a_universe.unknown_class
+			precursor {ET_CLASS_SUBPROCESSOR}
 			create rename_table.make_map (10)
 			rename_table.set_key_equality_tester (feature_name_tester)
 			create export_table.make (10)
@@ -42,27 +49,6 @@ feature {NONE} -- Initialization
 			create select_table.make_map (10)
 			select_table.set_key_equality_tester (feature_name_tester)
 			create replicable_features.make_map (400)
-		ensure
-			universe_set: universe = a_universe
-		end
-
-feature -- Access
-
-	universe: ET_UNIVERSE
-			-- Surrounding universe
-
-feature -- Error handling
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when checking
-			-- validity of last feature adaptations?
-
-	error_handler: ET_ERROR_HANDLER is
-			-- Error handler
-		do
-			Result := universe.error_handler
-		ensure
-			error_handler_not_void: Result /= Void
 		end
 
 feature -- Feature adaptation resolving
@@ -73,6 +59,7 @@ feature -- Feature adaptation resolving
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 			a_features_not_void: a_features /= Void
 			no_void_feature: not a_features.has_item (Void)
 		local
@@ -86,14 +73,11 @@ feature -- Feature adaptation resolving
 			add_current_features (a_features)
 			a_parents := current_class.parents
 			if a_parents = Void or else a_parents.is_empty then
-				if current_class = universe.general_class then
-					a_parents := Void
-				elseif current_class = universe.any_class then
-						-- ISE Eiffel has no GENERAL class anymore.
-						-- Use ANY as class root now.
+				if current_class = current_system.any_class then
+						-- "ANY" has no implicit parents.
 					a_parents := Void
 				else
-					a_parents := universe.any_parents
+					a_parents := current_system.any_parents
 				end
 			end
 			if a_parents /= Void then
@@ -221,7 +205,7 @@ feature {NONE} -- Feature recording
 				nb_select := select_table.count
 				has_select := nb_select > 0
 			end
-			a_class := a_parent.type.direct_base_class (universe)
+			a_class := a_parent.type.base_class
 			l_queries := a_class.queries
 			l_procedures := a_class.procedures
 			nb := l_queries.count
@@ -770,21 +754,6 @@ feature {NONE} -- Replication
 			end
 		end
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
-feature {NONE} -- Access
-
-	current_class: ET_CLASS
-			-- Class being processed
-
 feature {NONE} -- Implementation
 
 	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE is
@@ -863,8 +832,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	universe_not_void: universe /= Void
-	current_class_not_void: current_class /= Void
 	rename_table_not_void: rename_table /= Void
 	no_void_rename: not rename_table.has_item (Void)
 	no_void_rename_old_name: not rename_table.has (Void)

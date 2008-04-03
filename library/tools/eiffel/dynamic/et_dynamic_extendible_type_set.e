@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type sets to which new types can be added"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -107,13 +107,13 @@ feature -- Element change
 			end
 		end
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			l_dynamic_type_list: ET_DYNAMIC_TYPE_LIST
 			l_other_dynamic_types: ET_DYNAMIC_TYPES
 		do
-			if a_type.conforms_to_type (static_type, a_system) then
+			if a_type.conforms_to_type (static_type) then
 				l_other_dynamic_types := a_type_set.dynamic_types
 				if dynamic_types = Void then
 						-- The current dynamic type set was empty.

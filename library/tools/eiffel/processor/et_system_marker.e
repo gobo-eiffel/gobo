@@ -5,7 +5,7 @@ indexing
 		"Eiffel system class markers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class ET_SYSTEM_MARKER
 inherit
 
 	ET_AST_NULL_PROCESSOR
+		rename
+			make as make_null
 		redefine
 			process_actual_argument_list,
 			process_actual_parameter_list,
@@ -116,6 +118,25 @@ create
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_system: ET_SYSTEM) is
+			-- Create a new system marker for `a_system'.
+		require
+			a_system_not_void: a_system /= Void
+		do
+			current_system := a_system
+		ensure
+			current_system_set: current_system = a_system
+		end
+
+feature -- Access
+
+	current_system: ET_SYSTEM
+			-- Surrounding Eiffel system
+			-- (Note: there is a frozen feature called `system' in
+			-- class GENERAL of SmartEiffel 1.0)
+
 feature -- Processing
 
 	mark_system (a_class: ET_CLASS) is
@@ -160,16 +181,10 @@ feature -- Processing
 		end
 
 	unmark_all is
-			-- Unmark all classes of universe as if none of them
+			-- Unmark all classes of `current_system' as if none of them
 			-- was in the system.
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
-			a_cursor := universe.classes.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_cursor.item.set_in_system (False)
-				a_cursor.forth
-			end
+			current_system.classes_do_recursive (agent {ET_CLASS}.set_in_system (False))
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -450,7 +465,7 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_class: ET_CLASS
 		do
-			a_class := a_type.direct_base_class (universe)
+			a_class := a_type.base_class
 			if not a_class.in_system then
 				a_class.set_in_system (True)
 				if is_recursive then
@@ -1455,7 +1470,7 @@ feature {ET_AST_NODE} -- Processing
 			a_class: ET_CLASS
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			a_class := a_type.direct_base_class (universe)
+			a_class := a_type.base_class
 			if not a_class.in_system then
 				a_class.set_in_system (True)
 				if is_recursive then
@@ -1545,5 +1560,9 @@ feature {NONE} -- Implementation
 
 	is_recursive: BOOLEAN
 			-- Is the processing recursive?
+
+invariant
+
+	current_system_not_void: current_system /= Void
 
 end

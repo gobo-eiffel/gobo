@@ -106,14 +106,6 @@ feature -- Class names
 			function_class_name_not_void: Result /= Void
 		end
 
-	general_class_name: ET_CLASS_NAME is
-			-- "GENERAL" class name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_general_name)
-		ensure
-			general_class_name_not_void: Result /= Void
-		end
-
 	identified_routines_class_name: ET_CLASS_NAME is
 			-- "IDENTIFIED_ROUTINES" class name
 		once
@@ -412,28 +404,12 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 			character_32_ref_class_name_not_void: Result /= Void
 		end
 
-	comparable_class_name: ET_CLASS_NAME is
-			-- "COMPARABLE" class name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_comparable_name)
-		ensure
-			comparable_class_name_not_void: Result /= Void
-		end
-
 	double_ref_class_name: ET_CLASS_NAME is
 			-- "DOUBLE_REF" class name
 		once
 			create {ET_IDENTIFIER} Result.make (capitalized_double_ref_name)
 		ensure
 			double_ref_class_name_not_void: Result /= Void
-		end
-
-	hashable_class_name: ET_CLASS_NAME is
-			-- "HASHABLE" class name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_hashable_name)
-		ensure
-			hashable_class_name_not_void: Result /= Void
 		end
 
 	integer_ref_class_name: ET_CLASS_NAME is
@@ -514,22 +490,6 @@ feature -- Class names (used for compatibility with 5.6.0610, to be removed late
 			create {ET_IDENTIFIER} Result.make (capitalized_natural_64_ref_name)
 		ensure
 			natural_64_ref_class_name_not_void: Result /= Void
-		end
-
-	numeric_class_name: ET_CLASS_NAME is
-			-- "NUMERIC" class name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_numeric_name)
-		ensure
-			numeric_class_name_not_void: Result /= Void
-		end
-
-	part_comparable_class_name: ET_CLASS_NAME is
-			-- "PART_COMPARABLE" class name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_part_comparable_name)
-		ensure
-			part_comparable_class_name_not_void: Result /= Void
 		end
 
 	pointer_ref_class_name: ET_CLASS_NAME is
@@ -2380,14 +2340,6 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	recast_keyword: ET_KEYWORD is
-			-- 'recast' keyword
-		once
-			create Result.make_recast
-		ensure
-			keyword_not_void: Result /= Void
-		end
-
 	redefine_keyword: ET_KEYWORD is
 			-- 'redefine' keyword
 		once
@@ -2545,7 +2497,6 @@ feature -- Keyword and symbol names
 	capitalized_double_name: STRING is "DOUBLE"
 	capitalized_disposable_name: STRING is "DISPOSABLE"
 	capitalized_function_name: STRING is "FUNCTION"
-	capitalized_general_name: STRING is "GENERAL"
 	capitalized_identified_routines_name: STRING is "IDENTIFIED_ROUTINES"
 	capitalized_integer_name: STRING is "INTEGER"
 	capitalized_integer_8_name: STRING is "INTEGER_8"
@@ -2998,7 +2949,6 @@ feature -- Keyword and symbol names
 	precursor_keyword_name: STRING is "precursor"
 	prefix_keyword_name: STRING is "prefix"
 	redefine_keyword_name: STRING is "redefine"
-	recast_keyword_name: STRING is "recast"
 	reference_keyword_name: STRING is "reference"
 	rename_keyword_name: STRING is "rename"
 	require_keyword_name: STRING is "require"
@@ -3064,9 +3014,7 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 	capitalized_character_ref_name: STRING is "CHARACTER_REF"
 	capitalized_character_8_ref_name: STRING is "CHARACTER_8_REF"
 	capitalized_character_32_ref_name: STRING is "CHARACTER_32_REF"
-	capitalized_comparable_name: STRING is "COMPARABLE"
 	capitalized_double_ref_name: STRING is "DOUBLE_REF"
-	capitalized_hashable_name: STRING is "HASHABLE"
 	capitalized_integer_ref_name: STRING is "INTEGER_REF"
 	capitalized_integer_8_ref_name: STRING is "INTEGER_8_REF"
 	capitalized_integer_16_ref_name: STRING is "INTEGER_16_REF"
@@ -3077,8 +3025,6 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 	capitalized_natural_16_ref_name: STRING is "NATURAL_16_REF"
 	capitalized_natural_32_ref_name: STRING is "NATURAL_32_REF"
 	capitalized_natural_64_ref_name: STRING is "NATURAL_64_REF"
-	capitalized_numeric_name: STRING is "NUMERIC"
-	capitalized_part_comparable_name: STRING is "PART_COMPARABLE"
 	capitalized_pointer_ref_name: STRING is "POINTER_REF"
 	capitalized_real_ref_name: STRING is "REAL_REF"
 	capitalized_real_32_ref_name: STRING is "REAL_32_REF"
@@ -3190,35 +3136,56 @@ feature -- Features
 
 feature -- Clients
 
-	any_clients: ET_CLASS_NAME_LIST is
-			-- Shared "ANY" clients
-		once
-			create Result.make_with_capacity (1)
-			Result.put_first (any_class_name)
-		ensure
-			clients_not_void: Result /= Void
-			one_client: Result.count = 1
-			any_clients: Result.class_name (1) = any_class_name
-		end
-
-	none_clients: ET_CLASS_NAME_LIST is
-			-- Shared "NONE" clients
-		once
-			create Result.make_with_capacity (1)
-			Result.put_first (none_class_name)
-		ensure
-			clients_not_void: Result /= Void
-			one_client: Result.count = 1
-			none_clients: Result.class_name (1) = none_class_name
-		end
-
-	empty_clients: ET_CLASS_NAME_LIST is
+	empty_clients: ET_CLIENT_LIST is
 			-- Shared empty clients
 		once
 			create Result.make
 		ensure
 			clients_not_void: Result /= Void
 			clients_empty: Result.is_empty
+		end
+
+feature -- System
+
+	unknown_class: ET_CLASS is
+			-- Shared unknown class "*UNKNOWN*";
+			-- This class is equal to no other classes, not even itself;
+			-- it does conform to no type, not even itself, and no type
+			-- conforms to it
+		local
+			l_unknown_group: ET_UNKNOWN_GROUP
+		once
+			create Result.make_unknown (unknown_class_name)
+			create l_unknown_group.make
+			Result.set_group (l_unknown_group)
+		ensure
+			unknown_class_not_void: Result /= Void
+			unknown_class_preparsed: Result.is_preparsed
+		end
+
+	empty_system: ET_SYSTEM is
+			-- Shared empty Eiffel system
+		once
+			create Result.make
+		ensure
+			empty_system_not_void: Result /= Void
+		end
+
+	standard_error_handler: ET_ERROR_HANDLER is
+			-- Shared error handler where error messages
+			-- will be sent to standard files
+		once
+			create Result.make_standard
+		ensure
+			standard_error_handler_not_void: Result /= Void
+		end
+
+	default_ast_factory: ET_AST_FACTORY is
+			-- Shared default Eiffel AST factory
+		once
+			create Result.make
+		ensure
+			default_ast_factory_not_void: Result /= Void
 		end
 
 end

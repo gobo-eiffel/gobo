@@ -5,7 +5,7 @@ indexing
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,13 @@ inherit
 
 	ET_CLASS_PROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_class
 		end
 
@@ -29,19 +35,16 @@ inherit
 	ET_SHARED_CLASS_NAME_TESTER
 		export {NONE} all end
 
-	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} all end
-
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
-			-- Create a new feature flattener for classes in `a_universe'.
+	make is
+			-- Create a new feature flattener for given classes.
 		do
-			precursor (a_universe)
+			precursor {ET_CLASS_PROCESSOR}
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create queries.make (400)
@@ -49,26 +52,27 @@ feature {NONE} -- Initialization
 			create aliased_features.make_map (50)
 			aliased_features.set_key_equality_tester (alias_name_tester)
 			create clients_list.make (20)
-			create client_names.make (20)
-			client_names.set_equality_tester (class_name_tester)
-			create feature_adaptation_resolver.make (a_universe)
-			create dotnet_feature_adaptation_resolver.make (a_universe)
-			create identifier_type_resolver.make (a_universe)
-			create anchored_type_checker.make (a_universe)
-			create signature_checker.make (a_universe)
-			create parent_checker.make (a_universe)
-			create formal_parameter_checker.make (a_universe)
-			create precursor_checker.make (a_universe)
+			create client_classes.make_map (20)
+			create feature_adaptation_resolver.make
+			create dotnet_feature_adaptation_resolver.make
+			create identifier_type_resolver.make
+			create anchored_type_checker.make
+			create signature_checker.make
+			create parent_checker.make
+			create formal_parameter_checker.make
+			create precursor_checker.make
 		end
 
 feature -- Error handling
 
 	set_fatal_error (a_class: ET_CLASS) is
 			-- Report a fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			a_class.set_features_flattened
 			a_class.set_flattening_error
-		ensure then
+		ensure
 			features_flattened: a_class.features_flattened
 			has_flattening_error: a_class.has_flattening_error
 		end
@@ -84,18 +88,20 @@ feature -- Processing
 		local
 			a_processor: like Current
 		do
-			if a_class = none_class then
+			if a_class.is_none then
 				a_class.set_features_flattened
-			elseif current_class /= unknown_class then
+			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make (universe)
+				create a_processor.make
 				a_processor.process_class (a_class)
-			elseif a_class /= unknown_class then
-				internal_process_class (a_class)
-			else
+			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+			elseif not a_class.is_preparsed then
+				set_fatal_error (a_class)
+			else
+				internal_process_class (a_class)
 			end
 		ensure then
 			features_flattened: a_class.features_flattened
@@ -111,6 +117,7 @@ feature {NONE} -- Processing
 			-- feature table of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
 			a_parents: ET_PARENT_LIST
@@ -121,32 +128,36 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.features_flattened then
 					-- Build ancestors of `current_class' if not already done.
-				current_class.process (universe.ancestor_builder)
+				current_class.process (current_system.ancestor_builder)
 				if current_class.ancestors_built and then not current_class.has_ancestors_error then
 					current_class.set_features_flattened
 						-- Process parents first.
 					a_parents := current_class.parents
 					if a_parents = Void or else a_parents.is_empty then
-						if current_class = universe.general_class then
+						if current_class = current_system.any_class then
+								-- "ANY" has no implicit parents.
 							a_parents := Void
-						elseif current_class = universe.any_class then
-								-- ISE Eiffel has no GENERAL class anymore.
-								-- Use ANY as class root now.
-							a_parents := Void
-						elseif current_class.is_dotnet and current_class /= universe.system_object_class then
-							a_parents := universe.system_object_parents
+						elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
+							a_parents := current_system.system_object_parents
 						else
-							a_parents := universe.any_parents
+							a_parents := current_system.any_parents
 						end
 					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
-								-- This is a controlled recursive call to `internal_process_class'.
-							a_parent_class := a_parents.parent (i).type.direct_base_class (universe)
-							internal_process_class (a_parent_class)
-							if a_parent_class.has_flattening_error then
+							a_parent_class := a_parents.parent (i).type.base_class
+							if not a_parent_class.is_preparsed then
+									-- Internal error: the VTCT error should have already been
+									-- reported in ET_ANCESTOR_BUILDER.
 								set_fatal_error (current_class)
+								error_handler.report_giaaa_error
+							else
+									-- This is a controlled recursive call to `internal_process_class'.
+								internal_process_class (a_parent_class)
+								if a_parent_class.has_flattening_error then
+									set_fatal_error (current_class)
+								end
 							end
 							i := i + 1
 						end
@@ -374,10 +385,10 @@ feature {NONE} -- Feature flattening
 						a_type := l_query.type
 							-- The type of a once function should not contain
 							-- a formal generic parameter or an anchored type.
-						if a_type.has_anchored_type (current_class, universe) then
+						if a_type.has_anchored_type (current_class) then
 							set_fatal_error (current_class)
 							error_handler.report_vffd7a_error (current_class, l_query)
-						elseif a_type.has_formal_types (current_class, universe) then
+						elseif a_type.has_formal_types (current_class) then
 							set_fatal_error (current_class)
 							error_handler.report_vffd7b_error (current_class, l_query)
 						end
@@ -709,7 +720,7 @@ feature {NONE} -- Feature processing
 			l_parent_alias_name: ET_ALIAS_NAME
 			l_feature_found: BOOLEAN
 			l_duplicated: BOOLEAN
-			l_clients: ET_CLASS_NAME_LIST
+			l_clients: ET_CLIENT_LIST
 			nb_precursors: INTEGER
 			l_precursor: ET_FEATURE
 			l_first_precursor: ET_FEATURE
@@ -753,7 +764,7 @@ feature {NONE} -- Feature processing
 								l_effective.first_seed = l_first_seed and then
 								l_effective.other_seeds = l_other_seeds and then
 								l_effective.parent.actual_parameters = Void and then
-								l_effective.clients.same_class_names (l_clients)
+								l_effective.clients.same_clients (l_clients)
 							then
 								l_feature_found := True
 							end
@@ -778,7 +789,7 @@ feature {NONE} -- Feature processing
 								l_deferred.first_seed = l_first_seed and then
 								l_deferred.other_seeds = l_other_seeds and then
 								l_deferred.parent.actual_parameters = Void and then
-								l_deferred.clients.same_class_names (l_clients)
+								l_deferred.clients.same_clients (l_clients)
 							then
 								l_feature_found := True
 							end
@@ -846,7 +857,7 @@ feature {NONE} -- Feature processing
 				l_duplicated := True
 			end
 			if l_duplicated then
-				universe.register_feature (l_flattened_feature)
+				current_system.register_feature (l_flattened_feature)
 				if a_feature.is_replicated then
 					process_replicated_seeds (a_feature, l_flattened_feature.id)
 				elseif l_keep_same_version then
@@ -991,19 +1002,20 @@ feature {NONE} -- Replication
 
 feature {NONE} -- Clients
 
-	clients_list: DS_ARRAYED_LIST [ET_CLASS_NAME_LIST]
+	clients_list: DS_ARRAYED_LIST [ET_CLIENT_LIST]
 			-- List of client clauses
 
-	client_names: DS_HASH_SET [ET_CLASS_NAME]
-			-- Client class names
+	client_classes: DS_HASH_TABLE [ET_CLIENT, ET_CLASS]
+			-- Clients indexed by classes
 
-	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLASS_NAME_LIST is
+	inherited_clients (a_feature: ET_INHERITED_FEATURE): ET_CLIENT_LIST is
 			-- Clients inherited by the not redeclared feature `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
 			l_parent_feature: ET_PARENT_FEATURE
-			l_clients: ET_CLASS_NAME_LIST
+			l_clients: ET_CLIENT_LIST
+			l_client: ET_CLIENT
 			l_parent: ET_PARENT
 			l_exports: ET_EXPORT_LIST
 			l_export: ET_EXPORT
@@ -1014,7 +1026,7 @@ feature {NONE} -- Clients
 			i, nb: INTEGER
 			j, nb2: INTEGER
 		do
-			l_ise := universe.is_ise
+			l_ise := current_system.is_ise
 			from
 				l_parent_feature := a_feature.parent_feature
 			until
@@ -1078,7 +1090,8 @@ feature {NONE} -- Clients
 				else
 					nb2 := l_clients.count
 					from j := 1 until j > nb2 loop
-						client_names.force (l_clients.class_name (j))
+						l_client := l_clients.client (j)
+						client_classes.force (l_client, l_client.base_class)
 						j := j + 1
 					end
 					i := i + 1
@@ -1090,7 +1103,7 @@ feature {NONE} -- Clients
 				Result := clients_list.first
 			else
 				Result := Void
-				nb2 := client_names.count
+				nb2 := client_classes.count
 				nb := clients_list.count
 				from i := 1 until i > nb loop
 					l_clients := clients_list.item (i)
@@ -1102,24 +1115,24 @@ feature {NONE} -- Clients
 					end
 				end
 				if Result /= Void then
-					from client_names.start until client_names.after loop
-						if not Result.has_class_name (client_names.item_for_iteration) then
+					from client_classes.start until client_classes.after loop
+						if not Result.has_class (client_classes.key_for_iteration) then
 							Result := Void
-							client_names.go_after -- Jump out of the loop.
+							client_classes.go_after -- Jump out of the loop.
 						else
-							client_names.forth
+							client_classes.forth
 						end
 					end
 				end
 				if Result = Void then
 					create Result.make_with_capacity (nb2)
-					from client_names.finish until client_names.before loop
-						Result.put_first (client_names.item_for_iteration)
-						client_names.back
+					from client_classes.finish until client_classes.before loop
+						Result.put_first (client_classes.item_for_iteration)
+						client_classes.back
 					end
 				end
 			end
-			client_names.wipe_out
+			client_classes.wipe_out
 			clients_list.wipe_out
 		end
 
@@ -1643,7 +1656,7 @@ feature -- Assigner validity
 							else
 								l_type := l_query.type
 								l_other_type := l_procedure_arguments.formal_argument (1).type
-								if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+								if not l_type.same_named_type (l_other_type, current_class, current_class) then
 									set_fatal_error (current_class)
 									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 								end
@@ -1652,7 +1665,7 @@ feature -- Assigner validity
 								from j := 2 until j > nb_args loop
 									l_type := l_query_arguments.formal_argument (j - 1).type
 									l_other_type := l_procedure_arguments.formal_argument (j).type
-									if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
 									end
@@ -1714,7 +1727,7 @@ feature -- Assigner validity
 							else
 								l_type := l_query.type
 								l_other_type := l_procedure_arguments.formal_argument (1).type
-								if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+								if not l_type.same_named_type (l_other_type, current_class, current_class) then
 									set_fatal_error (current_class)
 									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 								end
@@ -1723,7 +1736,7 @@ feature -- Assigner validity
 								from j := 2 until j > nb_args loop
 									l_type := l_query_arguments.formal_argument (j - 1).type
 									l_other_type := l_procedure_arguments.formal_argument (j).type
-									if not l_type.same_named_type (l_other_type, current_class, current_class, universe) then
+									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
 									end
@@ -1773,8 +1786,9 @@ invariant
 	no_void_procedure_not_void: not procedures.has (Void)
 	clients_list_not_void: clients_list /= Void
 	not_void_clients: not clients_list.has (Void)
-	client_names_not_void: client_names /= Void
-	no_void_client_name: not client_names.has (Void)
+	client_classes_not_void: client_classes /= Void
+	no_void_client_class: not client_classes.has (Void)
+	no_void_clients: not client_classes.has_item (Void)
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
 	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
 	identifier_type_resolver_not_void: identifier_type_resolver /= Void

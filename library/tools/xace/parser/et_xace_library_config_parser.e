@@ -5,12 +5,12 @@ indexing
 		"Xace library parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_LIBRARY_PARSER
+class ET_XACE_LIBRARY_CONFIG_PARSER
 
 inherit
 
@@ -54,12 +54,13 @@ feature -- Parsing
 			end
 		end
 
-	parse_library (a_library: ET_XACE_LIBRARY; a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_CHARACTER_INPUT_STREAM; a_system: ET_SYSTEM) is
 			-- Parse Xace file `a_file' and fill `a_library'.
 		require
 			a_library_not_void: a_library /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+			a_system_not_void: a_system /= Void
 		local
 			a_document: XM_DOCUMENT
 			a_root_element: XM_ELEMENT
@@ -75,7 +76,7 @@ feature -- Parsing
 					xml_validator.validate_library_doc (a_document, a_position_table)
 					if not xml_validator.has_error then
 						xml_preprocessor.preprocess_element (a_root_element, a_position_table)
-						fill_library (a_library, a_root_element, a_position_table)
+						fill_library (a_library, a_root_element, a_position_table, a_system)
 					end
 				else
 					error_handler.report_parser_error (tree_pipe.last_error)
@@ -87,7 +88,7 @@ feature -- Parsing
 
 feature -- Access
 
-	last_library: ET_XACE_LIBRARY
+	last_library: ET_XACE_LIBRARY_CONFIG
 			-- Library being parsed
 
 end

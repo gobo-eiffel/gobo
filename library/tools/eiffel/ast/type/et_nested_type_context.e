@@ -5,7 +5,7 @@ indexing
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,79 +85,79 @@ feature -- Access
 			Result.force_last (a_type)
 		end
 
-	base_class (a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Base class of current context in `a_universe'
+	base_class: ET_CLASS is
+			-- Base class of current context
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_base_class (a_universe)
+				Result := root_context.base_class
 			when 1 then
-				Result := last.base_class (root_context, a_universe)
+				Result := last.base_class (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_class (Current, a_universe)
+				Result := l_type.base_class (Current)
 				put_last (l_type)
 			end
 		end
 
-	base_type (a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current context in `a_universe'
+	base_type: ET_BASE_TYPE is
+			-- Base type of current context
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_base_type (a_universe)
+				Result := root_context.context_base_type
 			when 1 then
-				Result := last.base_type (root_context, a_universe)
+				Result := last.base_type (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_type (Current, a_universe)
+				Result := l_type.base_type (Current)
 				put_last (l_type)
 			end
 		end
 
-	base_type_actual (i: INTEGER; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+	base_type_actual (i: INTEGER): ET_NAMED_TYPE is
 			-- `i'-th actual generic parameter's type of `base_type'
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_base_type_actual (i, a_universe)
+				Result := root_context.context_base_type_actual (i)
 			when 1 then
-				Result := last.base_type_actual (i, root_context, a_universe)
+				Result := last.base_type_actual (i, root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_type_actual (i, Current, a_universe)
+				Result := l_type.base_type_actual (i, Current)
 				put_last (l_type)
 			end
 		end
 
-	base_type_actual_parameter (i: INTEGER; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+	base_type_actual_parameter (i: INTEGER): ET_ACTUAL_PARAMETER is
 			-- `i'-th actual generic parameter of `base_type'
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_base_type_actual_parameter (i, a_universe)
+				Result := root_context.context_base_type_actual_parameter (i)
 			when 1 then
-				Result := last.base_type_actual_parameter (i, root_context, a_universe)
+				Result := last.base_type_actual_parameter (i, root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_type_actual_parameter (i, Current, a_universe)
+				Result := l_type.base_type_actual_parameter (i, Current)
 				put_last (l_type)
 			end
 		end
 
-	base_type_index_of_label (a_label: ET_IDENTIFIER; a_universe: ET_UNIVERSE): INTEGER is
+	base_type_index_of_label (a_label: ET_IDENTIFIER): INTEGER is
 			-- Index of actual generic parameter with label `a_label' in `base_type';
 			-- 0 if it does not exist
 		local
@@ -165,35 +165,34 @@ feature -- Access
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_base_type_index_of_label (a_label, a_universe)
+				Result := root_context.context_base_type_index_of_label (a_label)
 			when 1 then
-				Result := last.base_type_index_of_label (a_label, root_context, a_universe)
+				Result := last.base_type_index_of_label (a_label, root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_type_index_of_label (a_label, Current, a_universe)
+				Result := l_type.base_type_index_of_label (a_label, Current)
 				put_last (l_type)
 			end
 		end
 
-	named_type (a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+	named_type: ET_NAMED_TYPE is
 			-- Same as `base_type' except when the type is still
 			-- a formal generic parameter after having been replaced
-			-- by its actual counterpart in `a_universe'. Return this
-			-- new formal type in that case instead of the base
-			-- type of its constraint.
+			-- by its actual counterpart. Return this new formal type
+			-- in that case instead of the base type of its constraint.
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_named_type (a_universe)
+				Result := root_context.context_named_type
 			when 1 then
-				Result := last.named_type (root_context, a_universe)
+				Result := last.named_type (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.named_type (Current, a_universe)
+				Result := l_type.named_type (Current)
 				put_last (l_type)
 			end
 		end
@@ -229,20 +228,20 @@ feature -- Setting
 
 feature -- Measurement
 
-	base_type_actual_count (a_universe: ET_UNIVERSE): INTEGER is
+	base_type_actual_count: INTEGER is
 			-- Number of actual generic parameters of `base_type'
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_base_type_actual_count (a_universe)
+				Result := root_context.context_base_type_actual_count
 			when 1 then
-				Result := last.base_type_actual_count (root_context, a_universe)
+				Result := last.base_type_actual_count (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_type_actual_count (Current, a_universe)
+				Result := l_type.base_type_actual_count (Current)
 				put_last (l_type)
 			end
 		end
@@ -255,8 +254,8 @@ feature -- Status report
 			-- the actual parameters of these formal parameters are
 			-- themselves
 
-	is_type_expanded (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `base_type' expanded in `a_universe'?
+	is_type_expanded: BOOLEAN is
+			-- Is `base_type' expanded?
 			-- (Note that the feature name `is_expanded_type' is
 			-- already the name of a feature in SmartEiffel's GENERAL.)
 		local
@@ -264,114 +263,112 @@ feature -- Status report
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_is_type_expanded (a_universe)
+				Result := root_context.context_is_type_expanded
 			when 1 then
-				Result := last.is_type_expanded (root_context, a_universe)
+				Result := last.is_type_expanded (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.is_type_expanded (Current, a_universe)
+				Result := l_type.is_type_expanded (Current)
 				put_last (l_type)
 			end
 		end
 
-	is_type_reference (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `base_type' reference in `a_universe'?
+	is_type_reference: BOOLEAN is
+			-- Is `base_type' a reference type?
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_is_type_reference (a_universe)
+				Result := root_context.context_is_type_reference
 			when 1 then
-				Result := last.is_type_reference (root_context, a_universe)
+				Result := last.is_type_reference (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.is_type_reference (Current, a_universe)
+				Result := l_type.is_type_reference (Current)
 				put_last (l_type)
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the named type of current context in `a_universe'
-			-- contain the formal generic parameter with index `i'?
+	has_formal_type (i: INTEGER): BOOLEAN is
+			-- Does the named type of current context contain the
+			-- formal generic parameter with index `i'?
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_has_formal_type (i, a_universe)
+				Result := root_context.context_has_formal_type (i)
 			when 1 then
-				Result := last.has_formal_type (i, root_context, a_universe)
+				Result := last.has_formal_type (i, root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.has_formal_type (i, Current, a_universe)
+				Result := l_type.has_formal_type (i, Current)
 				put_last (l_type)
 			end
 		end
 
-	has_formal_types (a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the named type of current context in `a_universe'
+	has_formal_types: BOOLEAN is
+			-- Does the named type of current context
 			-- contain a formal generic parameter?
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_has_formal_types (a_universe)
+				Result := root_context.context_has_formal_types
 			when 1 then
-				Result := last.has_formal_types (root_context, a_universe)
+				Result := last.has_formal_types (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.has_formal_types (Current, a_universe)
+				Result := l_type.has_formal_types (Current)
 				put_last (l_type)
 			end
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the base type of current context contain `a_class'
-			-- in `a_universe'?
+	base_type_has_class (a_class: ET_CLASS): BOOLEAN is
+			-- Does the base type of current context contain `a_class'?
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_base_type_has_class (a_class, a_universe)
+				Result := root_context.context_base_type_has_class (a_class)
 			when 1 then
-				Result := last.base_type_has_class (a_class, root_context, a_universe)
+				Result := last.base_type_has_class (a_class, root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_type_has_class (a_class, Current, a_universe)
+				Result := l_type.base_type_has_class (a_class, Current)
 				put_last (l_type)
 			end
 		end
 
-	named_type_has_class (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the named type of current context contain `a_class'
-			-- in `a_universe'?
+	named_type_has_class (a_class: ET_CLASS): BOOLEAN is
+			-- Does the named type of current context contain `a_class'?
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_named_type_has_class (a_class, a_universe)
+				Result := root_context.context_named_type_has_class (a_class)
 			when 1 then
-				Result := last.named_type_has_class (a_class, root_context, a_universe)
+				Result := last.named_type_has_class (a_class, root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.named_type_has_class (a_class, Current, a_universe)
+				Result := l_type.named_type_has_class (a_class, Current)
 				put_last (l_type)
 			end
 		end
 
 feature -- Comparison
 
-	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in `other_context'
 			-- have the same named type?
 		local
@@ -380,25 +377,25 @@ feature -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_named_type (other, other_context, a_universe)
+				Result := root_context.context_same_named_type (other, other_context)
 			when 1 then
-				Result := last.same_named_type (other, other_context, root_context, a_universe)
+				Result := last.same_named_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_named_type (other, other_context, Current, a_universe)
+					Result := l_type.same_named_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_named_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_named_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in `other_context'
 			-- have the same base type?
 		local
@@ -407,27 +404,27 @@ feature -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_base_type (other, other_context, a_universe)
+				Result := root_context.context_same_base_type (other, other_context)
 			when 1 then
-				Result := last.same_base_type (other, other_context, root_context, a_universe)
+				Result := last.same_base_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_base_type (other, other_context, Current, a_universe)
+					Result := l_type.same_base_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_base_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_base_type (other, other_context, a_context)
 				end
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 		local
@@ -436,25 +433,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_named_bit_type (other, other_context, a_universe)
+				Result := root_context.context_same_named_bit_type (other, other_context)
 			when 1 then
-				Result := last.same_named_bit_type (other, other_context, root_context, a_universe)
+				Result := last.same_named_bit_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_named_bit_type (other, other_context, Current, a_universe)
+					Result := l_type.same_named_bit_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_named_bit_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_named_bit_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 		local
@@ -463,26 +460,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_named_class_type (other, other_context, a_universe)
+				Result := root_context.context_same_named_class_type (other, other_context)
 			when 1 then
-				Result := last.same_named_class_type (other, other_context, root_context, a_universe)
+				Result := last.same_named_class_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_named_class_type (other, other_context, Current, a_universe)
+					Result := l_type.same_named_class_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_named_class_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_named_class_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 		local
@@ -491,25 +487,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_named_formal_parameter_type (other, other_context, a_universe)
+				Result := root_context.context_same_named_formal_parameter_type (other, other_context)
 			when 1 then
-				Result := last.same_named_formal_parameter_type (other, other_context, root_context, a_universe)
+				Result := last.same_named_formal_parameter_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_named_formal_parameter_type (other, other_context, Current, a_universe)
+					Result := l_type.same_named_formal_parameter_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_named_formal_parameter_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_named_formal_parameter_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same named type?
 		local
@@ -518,25 +514,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_named_tuple_type (other, other_context, a_universe)
+				Result := root_context.context_same_named_tuple_type (other, other_context)
 			when 1 then
-				Result := last.same_named_tuple_type (other, other_context, root_context, a_universe)
+				Result := last.same_named_tuple_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_named_tuple_type (other, other_context, Current, a_universe)
+					Result := l_type.same_named_tuple_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_named_tuple_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_named_tuple_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 		local
@@ -545,25 +541,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_base_bit_type (other, other_context, a_universe)
+				Result := root_context.context_same_base_bit_type (other, other_context)
 			when 1 then
-				Result := last.same_base_bit_type (other, other_context, root_context, a_universe)
+				Result := last.same_base_bit_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_base_bit_type (other, other_context, Current, a_universe)
+					Result := l_type.same_base_bit_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_base_bit_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_base_bit_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 		local
@@ -572,26 +568,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_base_class_type (other, other_context, a_universe)
+				Result := root_context.context_same_base_class_type (other, other_context)
 			when 1 then
-				Result := last.same_base_class_type (other, other_context, root_context, a_universe)
+				Result := last.same_base_class_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_base_class_type (other, other_context, Current, a_universe)
+					Result := l_type.same_base_class_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_base_class_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_base_class_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 		local
@@ -600,25 +595,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_base_formal_parameter_type (other, other_context, a_universe)
+				Result := root_context.context_same_base_formal_parameter_type (other, other_context)
 			when 1 then
-				Result := last.same_base_formal_parameter_type (other, other_context, root_context, a_universe)
+				Result := last.same_base_formal_parameter_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_base_formal_parameter_type (other, other_context, Current, a_universe)
+					Result := l_type.same_base_formal_parameter_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_base_formal_parameter_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_base_formal_parameter_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current context and `other' type appearing in
 			-- `other_context' have the same base type?
 		local
@@ -627,29 +622,29 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_same_base_tuple_type (other, other_context, a_universe)
+				Result := root_context.context_same_base_tuple_type (other, other_context)
 			when 1 then
-				Result := last.same_base_tuple_type (other, other_context, root_context, a_universe)
+				Result := last.same_base_tuple_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.same_base_tuple_type (other, other_context, Current, a_universe)
+					Result := l_type.same_base_tuple_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.same_base_tuple_type (other, other_context, a_context, a_universe)
+					Result := l_type.same_base_tuple_type (other, other_context, a_context)
 				end
 			end
 		end
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current context conform to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -657,29 +652,29 @@ feature -- Conformance
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_conforms_to_type (other, other_context, a_universe)
+				Result := root_context.context_conforms_to_type (other, other_context)
 			when 1 then
-				Result := last.conforms_to_type (other, other_context, root_context, a_universe)
+				Result := last.conforms_to_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_to_type (other, other_context, Current, a_universe)
+					Result := l_type.conforms_to_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.conforms_to_type (other, other_context, a_context, a_universe)
+					Result := l_type.conforms_to_type (other, other_context, a_context)
 				end
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -687,27 +682,27 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_conforms_from_bit_type (other, other_context, a_universe)
+				Result := root_context.context_conforms_from_bit_type (other, other_context)
 			when 1 then
-				Result := last.conforms_from_bit_type (other, other_context, root_context, a_universe)
+				Result := last.conforms_from_bit_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_from_bit_type (other, other_context, Current, a_universe)
+					Result := l_type.conforms_from_bit_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.conforms_from_bit_type (other, other_context, a_context, a_universe)
+					Result := l_type.conforms_from_bit_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -715,28 +710,27 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_conforms_from_class_type (other, other_context, a_universe)
+				Result := root_context.context_conforms_from_class_type (other, other_context)
 			when 1 then
-				Result := last.conforms_from_class_type (other, other_context, root_context, a_universe)
+				Result := last.conforms_from_class_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_from_class_type (other, other_context, Current, a_universe)
+					Result := l_type.conforms_from_class_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.conforms_from_class_type (other, other_context, a_context, a_universe)
+					Result := l_type.conforms_from_class_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -744,27 +738,27 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_conforms_from_formal_parameter_type (other, other_context, a_universe)
+				Result := root_context.context_conforms_from_formal_parameter_type (other, other_context)
 			when 1 then
-				Result := last.conforms_from_formal_parameter_type (other, other_context, root_context, a_universe)
+				Result := last.conforms_from_formal_parameter_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_from_formal_parameter_type (other, other_context, Current, a_universe)
+					Result := l_type.conforms_from_formal_parameter_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
+					Result := l_type.conforms_from_formal_parameter_type (other, other_context, a_context)
 				end
 			end
 		end
 
-	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform to current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			l_type: ET_TYPE
@@ -772,170 +766,20 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_conforms_from_tuple_type (other, other_context, a_universe)
+				Result := root_context.context_conforms_from_tuple_type (other, other_context)
 			when 1 then
-				Result := last.conforms_from_tuple_type (other, other_context, root_context, a_universe)
+				Result := last.conforms_from_tuple_type (other, other_context, root_context)
 			else
 				if other_context /= Current then
 					l_type := last
 					remove_last
-					Result := l_type.conforms_from_tuple_type (other, other_context, Current, a_universe)
+					Result := l_type.conforms_from_tuple_type (other, other_context, Current)
 					put_last (l_type)
 				else
 					l_type := last
 					a_context := cloned_type_context
 					a_context.remove_last
-					Result := l_type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
-				end
-			end
-		end
-
-feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of current context conform to
-			-- the reference version of `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
-		do
-			inspect count
-			when 0 then
-				Result := root_context.reference_context_conforms_to_type (other, other_context, a_universe)
-			when 1 then
-				Result := last.reference_conforms_to_type (other, other_context, root_context, a_universe)
-			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.reference_conforms_to_type (other, other_context, Current, a_universe)
-					put_last (l_type)
-				else
-					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.reference_conforms_to_type (other, other_context, a_context, a_universe)
-				end
-			end
-		end
-
-feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
-		do
-			inspect count
-			when 0 then
-				Result := root_context.reference_context_conforms_from_bit_type (other, other_context, a_universe)
-			when 1 then
-				Result := last.reference_conforms_from_bit_type (other, other_context, root_context, a_universe)
-			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.reference_conforms_from_bit_type (other, other_context, Current, a_universe)
-					put_last (l_type)
-				else
-					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.reference_conforms_from_bit_type (other, other_context, a_context, a_universe)
-				end
-			end
-		end
-
-	reference_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
-		do
-			inspect count
-			when 0 then
-				Result := root_context.reference_context_conforms_from_class_type (other, other_context, a_universe)
-			when 1 then
-				Result := last.reference_conforms_from_class_type (other, other_context, root_context, a_universe)
-			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.reference_conforms_from_class_type (other, other_context, Current, a_universe)
-					put_last (l_type)
-				else
-					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.reference_conforms_from_class_type (other, other_context, a_context, a_universe)
-				end
-			end
-		end
-
-	reference_conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
-		do
-			inspect count
-			when 0 then
-				Result := root_context.reference_context_conforms_from_formal_parameter_type (other, other_context, a_universe)
-			when 1 then
-				Result := last.reference_conforms_from_formal_parameter_type (other, other_context, root_context, a_universe)
-			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.reference_conforms_from_formal_parameter_type (other, other_context, Current, a_universe)
-					put_last (l_type)
-				else
-					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.reference_conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
-				end
-			end
-		end
-
-	reference_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current context?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			l_type: ET_TYPE
-			a_context: ET_NESTED_TYPE_CONTEXT
-		do
-			inspect count
-			when 0 then
-				Result := root_context.reference_context_conforms_from_tuple_type (other, other_context, a_universe)
-			when 1 then
-				Result := last.reference_conforms_from_tuple_type (other, other_context, root_context, a_universe)
-			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.reference_conforms_from_tuple_type (other, other_context, Current, a_universe)
-					put_last (l_type)
-				else
-					l_type := last
-					a_context := cloned_type_context
-					a_context.remove_last
-					Result := l_type.reference_conforms_from_tuple_type (other, other_context, a_context, a_universe)
+					Result := l_type.conforms_from_tuple_type (other, other_context, a_context)
 				end
 			end
 		end

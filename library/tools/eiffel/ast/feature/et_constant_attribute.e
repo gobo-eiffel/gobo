@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			declared_type := a_type
 			is_keyword := tokens.is_keyword
 			constant := a_constant
-			clients := tokens.any_clients
+			clients := tokens.empty_clients
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure

@@ -18,7 +18,7 @@ inherit
 		undefine
 			error_handler,
 			set_fatal_error,
-			universe
+			current_system
 		redefine
 			has_fatal_error
 		end
@@ -40,13 +40,13 @@ inherit
 			report_attribute_assignment_target,
 			report_bit_constant,
 			report_boolean_constant,
-			report_character_constant,
+			report_character_8_constant,
+			report_character_32_constant,
 			report_builtin_conversion,
 			report_creation_expression,
 			report_creation_instruction,
 			report_current,
 			report_current_type_needed,
-			report_double_constant,
 			report_equality_expression,
 			report_formal_argument,
 			report_formal_argument_declaration,
@@ -54,22 +54,20 @@ inherit
 			report_inline_agent_formal_argument_declaration,
 			report_inline_agent_local_variable_declaration,
 			report_inline_agent_result_declaration,
-			report_integer_constant,
 			report_integer_8_constant,
 			report_integer_16_constant,
 			report_integer_32_constant,
 			report_integer_64_constant,
-			report_natural_constant,
-			report_natural_8_constant,
-			report_natural_16_constant,
-			report_natural_32_constant,
-			report_natural_64_constant,
 			report_local_assignment_target,
 			report_local_variable,
 			report_local_variable_declaration,
 			report_manifest_array,
 			report_manifest_tuple,
 			report_manifest_type,
+			report_natural_8_constant,
+			report_natural_16_constant,
+			report_natural_32_constant,
+			report_natural_64_constant,
 			report_pointer_expression,
 			report_precursor_expression,
 			report_precursor_instruction,
@@ -80,12 +78,14 @@ inherit
 			report_qualified_procedure_call_agent,
 			report_qualified_query_call_agent,
 			report_query_inline_agent,
-			report_real_constant,
+			report_real_32_constant,
+			report_real_64_constant,
 			report_result,
 			report_result_assignment_target,
 			report_static_call_expression,
 			report_static_call_instruction,
-			report_string_constant,
+			report_string_8_constant,
+			report_string_32_constant,
 			report_strip_expression,
 			report_tuple_label_call_agent,
 			report_tuple_label_expression,
@@ -113,39 +113,39 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_system) is
+	make (a_system: like current_dynamic_system) is
 			-- Create a new dynamic type set builder.
 		require
 			a_system_not_void: a_system /= Void
 		do
-			current_system := a_system
-			make_feature_checker (a_system.universe)
+			current_dynamic_system := a_system
+			make_feature_checker
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
 			object_id_dynamic_type_set := dummy_dynamic_type
 			create current_index.make (0)
 			create result_index.make (0)
-			create character_index.make (0)
+			create character_8_index.make (0)
+			create character_32_index.make (0)
 			create boolean_index.make (0)
-			create double_index.make (0)
-			create real_index.make (0)
-			create integer_index.make (0)
+			create real_32_index.make (0)
+			create real_64_index.make (0)
 			create integer_8_index.make (0)
 			create integer_16_index.make (0)
 			create integer_32_index.make (0)
 			create integer_64_index.make (0)
-			create natural_index.make (0)
 			create natural_8_index.make (0)
 			create natural_16_index.make (0)
 			create natural_32_index.make (0)
 			create natural_64_index.make (0)
 			create pointer_index.make (0)
 			create none_index.make (0)
-			create string_index.make (0)
+			create string_8_index.make (0)
+			create string_32_index.make (0)
 			catcall_error_mode := True
 		ensure
-			current_system_set: current_system = a_system
+			current_dynamic_system_set: current_dynamic_system = a_system
 		end
 
 feature -- Factory
@@ -165,7 +165,7 @@ feature -- Status report
 feature -- Generation
 
 	build_dynamic_type_sets is
-			-- Build dynamic type sets for `current_system'.
+			-- Build dynamic type sets for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			i, nb: INTEGER
@@ -185,8 +185,8 @@ feature -- Generation
 		do
 			has_fatal_error := False
 			old_object_id_dynamic_type_set := object_id_dynamic_type_set
-			object_id_dynamic_type_set := new_dynamic_type_set (current_system.any_type)
-			l_dynamic_types := current_system.dynamic_types
+			object_id_dynamic_type_set := new_dynamic_type_set (current_dynamic_system.any_type)
+			l_dynamic_types := current_dynamic_system.dynamic_types
 			is_built := False
 			from until is_built loop
 				is_built := True
@@ -339,7 +339,7 @@ feature -- Generation
 						j > nb
 					loop
 						l_other_type := l_dynamic_types.item (j)
-						if l_type.conforms_to_type (l_other_type, current_system) then
+						if l_type.conforms_to_type (l_other_type) then
 							l_other_type.conforming_dynamic_types.put_type (l_type)
 						end
 						j := j + 1
@@ -361,10 +361,10 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			if not a_call.is_tuple_label then
-				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_system)
+				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_dynamic_system)
 				if l_dynamic_feature = Void then
 					l_target_type_set := a_call.target_type_set
-					if a_type.conforms_to_type (l_target_type_set.static_type, current_system) then
+					if a_type.conforms_to_type (l_target_type_set.static_type) then
 							-- Internal error: there should be a feature with seed
 							-- `l_seed' in all descendants of `l_target_type_set.static_type'.
 						set_fatal_error
@@ -409,7 +409,7 @@ feature {ET_DYNAMIC_FEATURE} -- Generation
 feature {NONE} -- Generation
 
 	is_built: BOOLEAN
-			-- Have the dynamic type sets of `current_system' all been built?
+			-- Have the dynamic type sets of `current_dynamic_system' all been built?
 
 	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_TYPE) is
 			-- Build dynamic type sets for `a_feature' in `a_current_dynamic_type'.
@@ -444,7 +444,7 @@ feature {NONE} -- Generation
 					-- we would need to perform some code flow analysis.
 				l_result_type_set := a_feature.result_type_set
 				if l_result_type_set /= Void and then not l_result_type_set.is_expanded then
-					l_result_type_set.propagate_can_be_void (current_system.none_type)
+					l_result_type_set.propagate_can_be_void (current_dynamic_system.none_type)
 				end
 			end
 			had_error := has_fatal_error
@@ -467,23 +467,22 @@ feature {NONE} -- Generation
 			a_feature.set_built (True)
 			current_index.put (0)
 			result_index.put (0)
-			character_index.put (0)
+			character_8_index.put (0)
+			character_32_index.put (0)
 			boolean_index.put (0)
-			double_index.put (0)
-			real_index.put (0)
-			integer_index.put (0)
+			real_32_index.put (0)
+			real_64_index.put (0)
 			integer_8_index.put (0)
 			integer_16_index.put (0)
 			integer_32_index.put (0)
 			integer_64_index.put (0)
-			natural_index.put (0)
 			natural_8_index.put (0)
 			natural_16_index.put (0)
 			natural_32_index.put (0)
 			natural_64_index.put (0)
 			pointer_index.put (0)
 			none_index.put (0)
-			string_index.put (0)
+			string_8_index.put (0)
 			dynamic_type_sets.wipe_out
 			current_dynamic_feature := old_feature
 			current_dynamic_type := old_type
@@ -500,7 +499,7 @@ feature {NONE} -- CAT-calls
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if catcall_error_mode or catcall_warning_mode then
-				l_dynamic_types := current_system.dynamic_types
+				l_dynamic_types := current_dynamic_system.dynamic_types
 				nb := l_dynamic_types.count
 				from i := 1 until i > nb loop
 					l_type := l_dynamic_types.item (i)
@@ -533,7 +532,7 @@ feature {NONE} -- CAT-calls
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 		do
-			if a_call.current_feature.is_tilde_feature (current_system) then
+			if a_call.current_feature.is_tilde_feature (current_dynamic_system) then
 				-- This feature is supposed to simulate the forthcoming
 				-- '~' operator introduced in ECMA Eiffel 367.
 			else
@@ -600,7 +599,7 @@ feature {NONE} -- CAT-calls
 								nb2 := l_source_type_set.count
 								from j := 1 until j > nb2 loop
 									l_source_type := l_source_type_set.dynamic_type (j)
-									if not l_source_type.conforms_to_type (l_target_type, current_system) then
+									if not l_source_type.conforms_to_type (l_target_type) then
 										report_catcall_error (a_type, Void, 1, l_target_type, l_target_type_set, l_source_type, l_source_type_set, a_call)
 									end
 									j := j + 1
@@ -610,7 +609,7 @@ feature {NONE} -- CAT-calls
 					end
 				end
 			else
-				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_system)
+				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_dynamic_system)
 				if l_dynamic_feature = Void then
 						-- Internal error: there should be a feature in all
 						-- descendants of `a_call.target_type_set.static_type'.
@@ -642,7 +641,7 @@ feature {NONE} -- CAT-calls
 										nb2 := l_source_type_set.count
 										from j := 1 until j > nb2 loop
 											l_source_type := l_source_type_set.dynamic_type (j)
-											if not l_source_type.conforms_to_type (l_target_type, current_system) then
+											if not l_source_type.conforms_to_type (l_target_type) then
 												report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_target_type_set, l_source_type, l_source_type_set, a_call)
 											end
 											j := j + 1
@@ -718,7 +717,7 @@ feature {NONE} -- CAT-calls
 			a_message.append_string (a_call.current_type.base_type.to_text)
 			a_message.append_string (" (")
 			l_class_impl := a_call.current_feature.static_feature.implementation_class
-			if a_call.current_type.base_type.direct_base_class (universe) /= l_class_impl then
+			if a_call.current_type.base_type.base_class /= l_class_impl then
 				a_message.append_string (l_class_impl.upper_name)
 				a_message.append_character (',')
 			end
@@ -765,12 +764,12 @@ feature {NONE} -- Feature validity
 			if not has_fatal_error then
 				if a_feature.is_builtin and then not a_feature.is_builtin_unknown then
 					check_external_builtin_function_validity (a_feature)
-				elseif a_feature.type.same_base_type (universe.string_class, current_type, current_type, universe) then
+				elseif a_feature.type.same_base_type (universe_impl.string_class, current_type, current_type) then
 					if current_type = current_dynamic_type.base_type then
-						mark_string_type_alive
-						propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+						mark_string_type_alive (universe_impl)
+						propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 					end
-				elseif not a_feature.type.is_type_expanded (current_type, universe) then
+				elseif not a_feature.type.is_type_expanded (current_type) then
 -- TODO: build full dynamic type sets, recursively.
 print ("Dynamic type set not built for external feature " + current_type.to_text + "." + a_feature.lower_name + "%N")
 				end
@@ -797,37 +796,37 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 			when builtin_boolean_class then
 				check_external_builtin_boolean_function_validity (a_feature)
 			when builtin_character_8_class then
-				check_external_builtin_sized_character_function_validity (a_feature, current_system.character_8_type)
+				check_external_builtin_sized_character_function_validity (a_feature, current_dynamic_system.character_8_type)
 			when builtin_character_32_class then
-				check_external_builtin_sized_character_function_validity (a_feature, current_system.character_32_type)
+				check_external_builtin_sized_character_function_validity (a_feature, current_dynamic_system.character_32_type)
 			when builtin_function_class then
 				check_external_builtin_function_function_validity (a_feature)
 			when builtin_identified_class then
 				check_external_builtin_identified_function_validity (a_feature)
 			when builtin_integer_8_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.integer_8_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.integer_8_type)
 			when builtin_integer_16_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.integer_16_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.integer_16_type)
 			when builtin_integer_32_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.integer_32_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.integer_32_type)
 			when builtin_integer_64_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.integer_64_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.integer_64_type)
 			when builtin_natural_8_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.natural_8_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.natural_8_type)
 			when builtin_natural_16_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.natural_16_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.natural_16_type)
 			when builtin_natural_32_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.natural_32_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.natural_32_type)
 			when builtin_natural_64_class then
-				check_external_builtin_sized_integer_function_validity (a_feature, current_system.natural_64_type)
+				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.natural_64_type)
 			when builtin_platform_class then
 				check_external_builtin_platform_function_validity (a_feature)
 			when builtin_pointer_class then
 				check_external_builtin_pointer_function_validity (a_feature)
 			when builtin_real_32_class then
-				check_external_builtin_sized_real_function_validity (a_feature, current_system.real_32_type)
+				check_external_builtin_sized_real_function_validity (a_feature, current_dynamic_system.real_32_type)
 			when builtin_real_64_class then
-				check_external_builtin_sized_real_function_validity (a_feature, current_system.real_64_type)
+				check_external_builtin_sized_real_function_validity (a_feature, current_dynamic_system.real_64_type)
 			when builtin_special_class then
 				check_external_builtin_special_function_validity (a_feature)
 			when builtin_tuple_class then
@@ -1354,35 +1353,35 @@ print ("Dynamic type set not built for external feature " + current_type.to_text
 			when builtin_boolean_class then
 				check_external_builtin_boolean_procedure_validity (a_feature)
 			when builtin_character_8_class then
-				check_external_builtin_sized_character_procedure_validity (a_feature, current_system.character_8_type)
+				check_external_builtin_sized_character_procedure_validity (a_feature, current_dynamic_system.character_8_type)
 			when builtin_character_32_class then
-				check_external_builtin_sized_character_procedure_validity (a_feature, current_system.character_32_type)
+				check_external_builtin_sized_character_procedure_validity (a_feature, current_dynamic_system.character_32_type)
 			when builtin_identified_class then
 				check_external_builtin_identified_procedure_validity (a_feature)
 			when builtin_integer_8_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.integer_8_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.integer_8_type)
 			when builtin_integer_16_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.integer_16_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.integer_16_type)
 			when builtin_integer_32_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.integer_32_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.integer_32_type)
 			when builtin_integer_64_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.integer_64_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.integer_64_type)
 			when builtin_natural_8_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.natural_8_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.natural_8_type)
 			when builtin_natural_16_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.natural_16_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.natural_16_type)
 			when builtin_natural_32_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.natural_32_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.natural_32_type)
 			when builtin_natural_64_class then
-				check_external_builtin_sized_integer_procedure_validity (a_feature, current_system.natural_64_type)
+				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.natural_64_type)
 			when builtin_pointer_class then
 				check_external_builtin_pointer_procedure_validity (a_feature)
 			when builtin_procedure_class then
 				check_external_builtin_procedure_procedure_validity (a_feature)
 			when builtin_real_32_class then
-				check_external_builtin_sized_real_procedure_validity (a_feature, current_system.real_32_type)
+				check_external_builtin_sized_real_procedure_validity (a_feature, current_dynamic_system.real_32_type)
 			when builtin_real_64_class then
-				check_external_builtin_sized_real_procedure_validity (a_feature, current_system.real_64_type)
+				check_external_builtin_sized_real_procedure_validity (a_feature, current_dynamic_system.real_64_type)
 			when builtin_special_class then
 				check_external_builtin_special_procedure_validity (a_feature)
 			when builtin_tuple_class then
@@ -1700,7 +1699,7 @@ feature {NONE} -- Event handling
 			l_dynamic_attribute: ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_attribute := current_dynamic_type.dynamic_query (an_attribute, current_system)
+				l_dynamic_attribute := current_dynamic_type.dynamic_query (an_attribute, current_dynamic_system)
 -- TODO: the dynamic type set of `l_dynamic_attribute' may be altered when
 -- its address is passed to an external routine.
 			end
@@ -1713,7 +1712,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type_set := current_dynamic_type.dynamic_query (an_attribute, current_system).result_type_set
+				l_dynamic_type_set := current_dynamic_type.dynamic_query (an_attribute, current_dynamic_system).result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of an attribute cannot be void.
 					set_fatal_error
@@ -1731,7 +1730,7 @@ feature {NONE} -- Event handling
 		do
 -- TODO: not supported.
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.none_type
+				l_type := current_dynamic_system.none_type
 				set_dynamic_type_set (l_type, a_constant)
 			end
 		end
@@ -1742,7 +1741,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.boolean_type
+				l_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and boolean_index.item /= 0 then
 					a_constant.set_index (boolean_index.item)
@@ -1754,20 +1753,38 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_character_constant (a_constant: ET_CHARACTER_CONSTANT) is
-			-- Report that a character has been processed.
+	report_character_8_constant (a_constant: ET_CHARACTER_CONSTANT) is
+			-- Report that a character_8 has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.character_type
+				l_type := current_dynamic_system.character_8_type
 				mark_type_alive (l_type)
-				if a_constant.index = 0 and character_index.item /= 0 then
-					a_constant.set_index (character_index.item)
+				if a_constant.index = 0 and character_8_index.item /= 0 then
+					a_constant.set_index (character_8_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if character_index.item = 0 then
-					character_index.put (a_constant.index)
+				if character_8_index.item = 0 then
+					character_8_index.put (a_constant.index)
+				end
+			end
+		end
+
+	report_character_32_constant (a_constant: ET_CHARACTER_CONSTANT) is
+			-- Report that a character_32 has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_dynamic_system.character_32_type
+				mark_type_alive (l_type)
+				if a_constant.index = 0 and character_32_index.item /= 0 then
+					a_constant.set_index (character_32_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if character_32_index.item = 0 then
+					character_32_index.put (a_constant.index)
 				end
 			end
 		end
@@ -1792,7 +1809,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					l_source_type := l_source_type_set.static_type
-					if l_source_type.base_type.conforms_to_context (a_target_type, universe) then
+					if l_source_type.base_type.conforms_to_context (a_target_type) then
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
 						set_dynamic_type_set (l_source_type_set, an_expression)
 					else
@@ -1818,7 +1835,7 @@ feature {NONE} -- Event handling
 							end
 						elseif l_convert_feature.is_convert_from then
 							l_seed := l_convert_feature.name.seed
-							l_procedure := a_target_type.base_class (universe).seeded_procedure (l_seed)
+							l_procedure := a_target_type.base_class.seeded_procedure (l_seed)
 							if l_procedure = Void then
 									-- Internal error: there should be a procedure with `l_seed'.
 									-- It has been computed in ET_FEATURE_FLATTENER or else an
@@ -1826,7 +1843,7 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								report_creation_expression (an_expression, a_target_type.named_type (universe), l_procedure, an_expression.expression)
+								report_creation_expression (an_expression, a_target_type.named_type, l_procedure, an_expression.expression)
 							end
 						else
 -- TODO: built-in feature between basic types? Should not be needed with ECMA Eiffel.
@@ -1849,8 +1866,8 @@ feature {NONE} -- Event handling
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_creation_type := current_system.dynamic_type (a_creation_type, current_type)
-				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_creation_type := current_dynamic_system.dynamic_type (a_creation_type, current_type)
+				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_creation (True)
 				mark_type_alive (l_dynamic_creation_type)
 				if an_actuals /= Void then
@@ -1877,8 +1894,8 @@ feature {NONE} -- Event handling
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_creation_type := current_system.dynamic_type (a_creation_type, current_type)
-				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_creation_type := current_dynamic_system.dynamic_type (a_creation_type, current_type)
+				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_creation (True)
 				mark_type_alive (l_dynamic_creation_type)
 				l_actuals := an_instruction.arguments
@@ -1917,31 +1934,13 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_double_constant (a_constant: ET_REAL_CONSTANT) is
-			-- Report that a double has been processed.
-		local
-			l_type: ET_DYNAMIC_TYPE
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.double_type
-				mark_type_alive (l_type)
-				if a_constant.index = 0 and double_index.item /= 0 then
-					a_constant.set_index (double_index.item)
-				end
-				set_dynamic_type_set (l_type, a_constant)
-				if double_index.item = 0 then
-					double_index.put (a_constant.index)
-				end
-			end
-		end
-
 	report_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
 			-- Report that an equality expression has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.boolean_type
+				l_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_type)
 				if an_expression.index = 0 and boolean_index.item /= 0 then
 					an_expression.set_index (boolean_index.item)
@@ -1977,7 +1976,7 @@ feature {NONE} -- Event handling
 			l_dynamic_query: ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_system)
+				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_dynamic_system)
 				l_dynamic_query.set_regular (True)
 -- TODO: the dynamic type set of the formal arguments of `l_dynamic_query'
 -- may be altered when its address is passed to an external routine.
@@ -2007,7 +2006,7 @@ feature {NONE} -- Event handling
 			j, nb2: INTEGER
 			l_target: ET_AGENT_TARGET
 		do
-			l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+			l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
 			mark_type_alive (l_dynamic_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
 			l_agent_type ?= l_dynamic_type
@@ -2099,7 +2098,7 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_resolved_type := resolved_formal_parameters (a_formal.type, current_class_impl, current_type)
 				if not has_fatal_error then
-					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
 					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 						-- Unless proven otherwise after possible attachments,
 						-- a formal actual argument is assumed to be never Void.
@@ -2124,7 +2123,7 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_resolved_type := resolved_formal_parameters (a_local.type, current_class_impl, current_type)
 				if not has_fatal_error then
-					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
 					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_dynamic_type_set, a_local.name)
 				end
@@ -2152,28 +2151,10 @@ feature {NONE} -- Event handling
 				else
 					l_resolved_type := resolved_formal_parameters (a_type, current_class_impl, current_type)
 					if not has_fatal_error then
-						l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
+						l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
 						l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 						set_dynamic_type_set (l_dynamic_type_set, current_inline_agent.implicit_result)
 					end
-				end
-			end
-		end
-
-	report_integer_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that an integer has been processed.
-		local
-			l_type: ET_DYNAMIC_TYPE
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.integer_type
-				mark_type_alive (l_type)
-				if a_constant.index = 0 and integer_index.item /= 0 then
-					a_constant.set_index (integer_index.item)
-				end
-				set_dynamic_type_set (l_type, a_constant)
-				if integer_index.item = 0 then
-					integer_index.put (a_constant.index)
 				end
 			end
 		end
@@ -2184,7 +2165,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.integer_8_type
+				l_type := current_dynamic_system.integer_8_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and integer_8_index.item /= 0 then
 					a_constant.set_index (integer_8_index.item)
@@ -2202,7 +2183,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.integer_16_type
+				l_type := current_dynamic_system.integer_16_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and integer_16_index.item /= 0 then
 					a_constant.set_index (integer_16_index.item)
@@ -2220,7 +2201,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.integer_32_type
+				l_type := current_dynamic_system.integer_32_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and integer_32_index.item /= 0 then
 					a_constant.set_index (integer_32_index.item)
@@ -2238,7 +2219,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.integer_64_type
+				l_type := current_dynamic_system.integer_64_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and integer_64_index.item /= 0 then
 					a_constant.set_index (integer_64_index.item)
@@ -2282,7 +2263,7 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_resolved_type := resolved_formal_parameters (a_local.type, current_class_impl, current_type)
 				if not has_fatal_error then
-					l_dynamic_type := current_system.dynamic_type (l_resolved_type, current_type)
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
 					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_dynamic_type_set, a_local.name)
 				end
@@ -2295,31 +2276,48 @@ feature {NONE} -- Event handling
 		local
 			l_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, current_type)
+				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
-					-- Make sure that type SPECIAL[XXX] (used in feature 'area') is marked as alive.
-					-- Feature 'area' should be the first in the list of features.
+					-- Make sure that types "SPECIAL [XXX]" (used in feature 'area'), and
+					-- "INTEGER" (used in feature 'lower' and 'upper') are marked as alive.
 				l_queries := l_type.queries
-				if l_queries.is_empty then
-						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+				if l_queries.count < 3 then
+						-- Error already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 -- TODO: internal error
 				else
-					l_area_type_set := l_queries.item (1).result_type_set
-					if l_area_type_set = Void then
-							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+						-- Feature 'area' should be the first in the list of features.
+					l_dynamic_type_set := l_queries.item (1).result_type_set
+					if l_dynamic_type_set = Void then
+							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
 -- TODO: internal error
 					else
-						mark_type_alive (l_area_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type)
+					end
+						-- Feature 'lower' should be the second in the list of features.
+					l_dynamic_type_set := l_queries.item (2).result_type_set
+					if l_dynamic_type_set = Void then
+							-- Error in feature 'lower', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+						set_fatal_error
+-- TODO: internal error
+					else
+						mark_type_alive (l_dynamic_type_set.static_type)
+					end
+						-- Feature 'upper' should be the third in the list of features.
+					l_dynamic_type_set := l_queries.item (3).result_type_set
+					if l_dynamic_type_set = Void then
+							-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+						set_fatal_error
+-- TODO: internal error
+					else
+						mark_type_alive (l_dynamic_type_set.static_type)
 					end
 				end
-					-- Make sure that type INTEGER (used in attributes 'lower' and 'upper') is marked as alive.
-				mark_type_alive (current_system.integer_type)
 			end
 		end
 
@@ -2330,7 +2328,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, current_type)
+				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 			end
@@ -2343,27 +2341,9 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, a_context)
+				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
-			end
-		end
-
-	report_natural_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that a natural has been processed.
-		local
-			l_type: ET_DYNAMIC_TYPE
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.natural_type
-				mark_type_alive (l_type)
-				if a_constant.index = 0 and natural_index.item /= 0 then
-					a_constant.set_index (natural_index.item)
-				end
-				set_dynamic_type_set (l_type, a_constant)
-				if natural_index.item = 0 then
-					natural_index.put (a_constant.index)
-				end
 			end
 		end
 
@@ -2373,7 +2353,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.natural_8_type
+				l_type := current_dynamic_system.natural_8_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and natural_8_index.item /= 0 then
 					a_constant.set_index (natural_8_index.item)
@@ -2391,7 +2371,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.natural_16_type
+				l_type := current_dynamic_system.natural_16_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and natural_16_index.item /= 0 then
 					a_constant.set_index (natural_16_index.item)
@@ -2409,7 +2389,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.natural_32_type
+				l_type := current_dynamic_system.natural_32_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and natural_32_index.item /= 0 then
 					a_constant.set_index (natural_32_index.item)
@@ -2427,7 +2407,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.natural_64_type
+				l_type := current_dynamic_system.natural_64_type
 				mark_type_alive (l_type)
 				if a_constant.index = 0 and natural_64_index.item /= 0 then
 					a_constant.set_index (natural_64_index.item)
@@ -2445,7 +2425,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.pointer_type
+				l_type := current_dynamic_system.pointer_type
 				mark_type_alive (l_type)
 				if an_expression.index = 0 and pointer_index.item /= 0 then
 					an_expression.set_index (pointer_index.item)
@@ -2470,8 +2450,8 @@ feature {NONE} -- Event handling
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
-				l_precursor := current_dynamic_feature.dynamic_precursor (a_query, l_parent_type, current_system)
+				l_parent_type := current_dynamic_system.dynamic_type (a_parent_type, current_type)
+				l_precursor := current_dynamic_feature.dynamic_precursor (a_query, l_parent_type, current_dynamic_system)
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 					nb := l_actuals.count
@@ -2504,8 +2484,8 @@ feature {NONE} -- Event handling
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
-				l_precursor := current_dynamic_feature.dynamic_precursor (a_procedure, l_parent_type, current_system)
+				l_parent_type := current_dynamic_system.dynamic_type (a_parent_type, current_type)
+				l_precursor := current_dynamic_feature.dynamic_precursor (a_procedure, l_parent_type, current_dynamic_system)
 				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
 					nb := l_actuals.count
@@ -2525,7 +2505,7 @@ feature {NONE} -- Event handling
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_regular (True)
 -- TODO: the dynamic type set of the formal arguments of `l_dynamic_procedure'
 -- may be altered when its address is passed to an external routine.
@@ -2582,7 +2562,7 @@ feature {NONE} -- Event handling
 						end
 					end
 					if l_dynamic_type = Void then
-						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+						l_dynamic_type := current_dynamic_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
 					end
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
 						-- Unless proven otherwise after possible attachments,
@@ -2656,7 +2636,7 @@ feature {NONE} -- Event handling
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
-			l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
+			l_dynamic_type := current_dynamic_system.dynamic_type (an_agent_type, a_context)
 			mark_type_alive (l_dynamic_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
 			l_dynamic_agent_type ?= l_dynamic_type
@@ -2758,20 +2738,38 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_real_constant (a_constant: ET_REAL_CONSTANT) is
-			-- Report that a real has been processed.
+	report_real_32_constant (a_constant: ET_REAL_CONSTANT) is
+			-- Report that a real_32 has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.real_type
+				l_type := current_dynamic_system.real_32_type
 				mark_type_alive (l_type)
-				if a_constant.index = 0 and real_index.item /= 0 then
-					a_constant.set_index (real_index.item)
+				if a_constant.index = 0 and real_32_index.item /= 0 then
+					a_constant.set_index (real_32_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if real_index.item = 0 then
-					real_index.put (a_constant.index)
+				if real_32_index.item = 0 then
+					real_32_index.put (a_constant.index)
+				end
+			end
+		end
+
+	report_real_64_constant (a_constant: ET_REAL_CONSTANT) is
+			-- Report that a real_64 has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_dynamic_system.real_64_type
+				mark_type_alive (l_type)
+				if a_constant.index = 0 and real_64_index.item /= 0 then
+					a_constant.set_index (real_64_index.item)
+				end
+				set_dynamic_type_set (l_type, a_constant)
+				if real_64_index.item = 0 then
+					real_64_index.put (a_constant.index)
 				end
 			end
 		end
@@ -2862,8 +2860,8 @@ feature {NONE} -- Event handling
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
-				l_dynamic_query := l_dynamic_type.dynamic_query (a_query, current_system)
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
+				l_dynamic_query := l_dynamic_type.dynamic_query (a_query, current_dynamic_system)
 				l_dynamic_query.set_static (True)
 				l_dynamic_type.set_static (True)
 				l_actuals := an_expression.arguments
@@ -2896,8 +2894,8 @@ feature {NONE} -- Event handling
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
-				l_dynamic_procedure := l_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
+				l_dynamic_procedure := l_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_static (True)
 				l_dynamic_type.set_static (True)
 				l_actuals := an_instruction.arguments
@@ -2912,29 +2910,83 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_string_constant (a_string: ET_MANIFEST_STRING) is
-			-- Report that a string has been processed.
+	report_string_8_constant (a_string: ET_MANIFEST_STRING) is
+			-- Report that a string_8 has been processed.
 		local
-			l_type: ET_DYNAMIC_TYPE
+			l_string_type: ET_DYNAMIC_TYPE
+			l_special_type: ET_DYNAMIC_TYPE
+			l_string_universe: ET_UNIVERSE
+			l_special_universe: ET_UNIVERSE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.string_type
-				if a_string.index = 0 and string_index.item /= 0 then
-					a_string.set_index (string_index.item)
+				l_string_type := current_dynamic_system.string_8_type
+				if a_string.index = 0 and string_8_index.item /= 0 then
+					a_string.set_index (string_8_index.item)
 				end
-				mark_type_alive (l_type)
-				set_dynamic_type_set (l_type, a_string)
-				if string_index.item = 0 then
-					string_index.put (a_string.index)
+				mark_type_alive (l_string_type)
+				set_dynamic_type_set (l_string_type, a_string)
+				if string_8_index.item = 0 then
+					string_8_index.put (a_string.index)
 				end
-					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- Make sure that type "SPECIAL [CHARACTER_8]" (used in
 					-- feature 'area') is marked as alive.
-				mark_type_alive (current_system.special_character_type)
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				mark_type_alive (current_system.character_type)
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				mark_type_alive (current_system.integer_type)
+				l_special_type := current_dynamic_system.special_character_8_type
+				mark_type_alive (l_special_type)
+					-- Make sure that type "CHARACTER_8" (used as actual generic type
+					-- of "SPECIAL [CHARACTER_8]"  in feature 'area') is marked as alive.
+				mark_type_alive (current_dynamic_system.character_8_type)
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "STRING_8") is marked as alive.
+				l_string_universe := l_string_type.base_class.universe
+				if l_string_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
+				end
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "SPECIAL [CHARACTER_8]") is marked as alive.
+				l_special_universe := l_special_type.base_class.universe
+				if l_special_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
+				end
+			end
+		end
+
+	report_string_32_constant (a_string: ET_MANIFEST_STRING) is
+			-- Report that a string_32 has been processed.
+		local
+			l_string_type: ET_DYNAMIC_TYPE
+			l_special_type: ET_DYNAMIC_TYPE
+			l_string_universe: ET_UNIVERSE
+			l_special_universe: ET_UNIVERSE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_string_type := current_dynamic_system.string_32_type
+				if a_string.index = 0 and string_32_index.item /= 0 then
+					a_string.set_index (string_32_index.item)
+				end
+				mark_type_alive (l_string_type)
+				set_dynamic_type_set (l_string_type, a_string)
+				if string_32_index.item = 0 then
+					string_32_index.put (a_string.index)
+				end
+					-- Make sure that type "SPECIAL [CHARACTER_32]" (used in
+					-- feature 'area') is marked as alive.
+				l_special_type := current_dynamic_system.special_character_32_type
+				mark_type_alive (l_special_type)
+					-- Make sure that type "CHARACTER_32" (used as actual generic type
+					-- of "SPECIAL [CHARACTER_32]"  in feature 'area') is marked as alive.
+				mark_type_alive (current_dynamic_system.character_32_type)
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "STRING_32") is marked as alive.
+				l_string_universe := l_string_type.base_class.universe
+				if l_string_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
+				end
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "SPECIAL [CHARACTER_32]") is marked as alive.
+				l_special_universe := l_special_type.base_class.universe
+				if l_special_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
+				end
 			end
 		end
 
@@ -2945,7 +2997,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, a_context)
+				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 			end
@@ -2964,7 +3016,7 @@ feature {NONE} -- Event handling
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (an_agent_type, a_context)
+				l_dynamic_type := current_dynamic_system.dynamic_type (an_agent_type, a_context)
 				mark_type_alive (l_dynamic_type)
 				set_dynamic_type_set (l_dynamic_type, an_expression)
 				l_dynamic_agent_type ?= l_dynamic_type
@@ -3104,7 +3156,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, a_context)
+				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 			end
@@ -3127,7 +3179,7 @@ feature {NONE} -- Event handling
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_system)
+				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_dynamic_system)
 				l_dynamic_query.set_regular (True)
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
@@ -3222,7 +3274,7 @@ feature {NONE} -- Event handling
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_regular (True)
 				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
@@ -3282,7 +3334,7 @@ feature {NONE} -- Event handling
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_feature := current_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_feature := current_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				report_unqualified_call_agent (an_expression, l_dynamic_feature, a_type, a_context)
 			end
 		end
@@ -3294,7 +3346,7 @@ feature {NONE} -- Event handling
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_feature := current_dynamic_type.dynamic_query (a_query, current_system)
+				l_dynamic_feature := current_dynamic_type.dynamic_query (a_query, current_dynamic_system)
 				set_dynamic_type_set (l_dynamic_feature.result_type_set, an_expression.implicit_result)
 				report_unqualified_call_agent (an_expression, l_dynamic_feature, a_type, a_context)
 			end
@@ -3328,7 +3380,7 @@ feature {NONE} -- Event handling
 			l_target: ET_AGENT_TARGET
 		do
 			a_feature.set_regular (True)
-			l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+			l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
 			mark_type_alive (l_dynamic_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
 			l_agent_type ?= l_dynamic_type
@@ -3431,7 +3483,7 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.none_type
+				l_type := current_dynamic_system.none_type
 				if an_expression.index = 0 and none_index.item /= 0 then
 					an_expression.set_index (none_index.item)
 				end
@@ -3453,7 +3505,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3486,8 +3538,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				mark_string_type_alive
-				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 
@@ -3522,8 +3574,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				mark_string_type_alive
-				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 
@@ -3536,7 +3588,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3551,7 +3603,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3575,7 +3627,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3599,8 +3651,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				mark_string_type_alive
-				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 
@@ -3615,7 +3667,7 @@ feature {NONE} -- Built-in features
 			if current_type = current_dynamic_type.base_type then
 				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
 					-- Feature `copy' is called internally.
-				l_copy_feature := current_dynamic_type.seeded_dynamic_procedure (universe.copy_seed, current_system)
+				l_copy_feature := current_dynamic_type.seeded_dynamic_procedure (current_system.copy_seed, current_dynamic_system)
 				if l_copy_feature = Void then
 						-- Internal error: all classes should have a feature
 						-- 'copy'. Otherwise we get an error when parsing
@@ -3636,8 +3688,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				mark_string_type_alive
-				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 
@@ -3650,7 +3702,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3665,7 +3717,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3680,7 +3732,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3695,7 +3747,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3710,7 +3762,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3721,9 +3773,13 @@ feature {NONE} -- Built-in features
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := current_dynamic_system.boolean_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -3736,7 +3792,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3751,7 +3807,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3775,7 +3831,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3840,7 +3896,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3855,7 +3911,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3870,7 +3926,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3885,7 +3941,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3900,7 +3956,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3915,7 +3971,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3930,7 +3986,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3945,7 +4001,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3960,7 +4016,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3975,7 +4031,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -3990,7 +4046,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4005,7 +4061,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4020,7 +4076,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4035,7 +4091,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4050,7 +4106,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.pointer_type
+				l_result_type := current_dynamic_system.pointer_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4063,8 +4119,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				mark_string_type_alive
-				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 
@@ -4077,7 +4133,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.pointer_type
+				l_result_type := current_dynamic_system.pointer_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4101,7 +4157,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4126,7 +4182,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4158,7 +4214,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_32_type
+				l_result_type := current_dynamic_system.natural_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4184,7 +4240,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.character_8_type
+				l_result_type := current_dynamic_system.character_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4200,7 +4256,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.character_32_type
+				l_result_type := current_dynamic_system.character_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4216,7 +4272,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_8_type
+				l_result_type := current_dynamic_system.integer_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4232,7 +4288,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_16_type
+				l_result_type := current_dynamic_system.integer_16_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4248,7 +4304,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4264,7 +4320,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_64_type
+				l_result_type := current_dynamic_system.integer_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4280,7 +4336,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_8_type
+				l_result_type := current_dynamic_system.natural_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4296,7 +4352,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_16_type
+				l_result_type := current_dynamic_system.natural_16_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4312,7 +4368,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_32_type
+				l_result_type := current_dynamic_system.natural_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4328,7 +4384,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_64_type
+				l_result_type := current_dynamic_system.natural_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4340,9 +4396,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4352,9 +4412,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4364,9 +4428,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4376,9 +4444,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4388,9 +4460,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4400,9 +4476,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4412,9 +4492,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4428,7 +4512,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.double_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4440,9 +4524,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4472,7 +4560,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4484,9 +4572,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4496,9 +4588,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4508,9 +4604,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4520,9 +4620,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4536,7 +4640,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.double_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4558,9 +4662,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			an_integer_type_not_void: an_integer_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := an_integer_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4574,7 +4682,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.character_8_type
+				l_result_type := current_dynamic_system.character_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4590,7 +4698,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.character_32_type
+				l_result_type := current_dynamic_system.character_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4606,7 +4714,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.double_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4622,7 +4730,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_type
+				l_result_type := current_dynamic_system.real_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4638,7 +4746,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_type
+				l_result_type := current_dynamic_system.real_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4654,7 +4762,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.double_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4670,7 +4778,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_32_type
+				l_result_type := current_dynamic_system.real_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4686,7 +4794,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_64_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4698,9 +4806,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := a_real_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4714,7 +4826,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_32_type
+				l_result_type := current_dynamic_system.real_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4730,7 +4842,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_64_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4742,9 +4854,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := a_real_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4774,7 +4890,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4786,9 +4902,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := a_real_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4798,9 +4918,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := a_real_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4812,8 +4936,8 @@ feature {NONE} -- Built-in features
 			a_real_type_not_void: a_real_type /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				mark_string_type_alive
-				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 
@@ -4823,9 +4947,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := a_real_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4839,7 +4967,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.double_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4861,9 +4989,13 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 			a_real_type_not_void: a_real_type /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_result_type := a_real_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
 
@@ -4877,7 +5009,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.double_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4893,7 +5025,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4909,7 +5041,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_64_type
+				l_result_type := current_dynamic_system.integer_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4925,7 +5057,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_32_type
+				l_result_type := current_dynamic_system.real_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4951,7 +5083,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.pointer_type
+				l_result_type := current_dynamic_system.pointer_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4966,7 +5098,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -4981,7 +5113,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5035,7 +5167,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5050,7 +5182,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.character_8_type
+				l_result_type := current_dynamic_system.character_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5065,7 +5197,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.character_32_type
+				l_result_type := current_dynamic_system.character_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5080,7 +5212,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5095,7 +5227,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_8_type
+				l_result_type := current_dynamic_system.integer_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5110,7 +5242,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_16_type
+				l_result_type := current_dynamic_system.integer_16_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5125,7 +5257,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5140,7 +5272,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_64_type
+				l_result_type := current_dynamic_system.integer_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5155,7 +5287,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_8_type
+				l_result_type := current_dynamic_system.natural_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5170,7 +5302,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_8_type
+				l_result_type := current_dynamic_system.natural_8_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5185,7 +5317,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_16_type
+				l_result_type := current_dynamic_system.natural_16_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5200,7 +5332,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_32_type
+				l_result_type := current_dynamic_system.natural_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5215,7 +5347,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.natural_64_type
+				l_result_type := current_dynamic_system.natural_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5230,7 +5362,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.boolean_type
+				l_result_type := current_dynamic_system.boolean_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5245,7 +5377,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.pointer_type
+				l_result_type := current_dynamic_system.pointer_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5415,7 +5547,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.real_type
+				l_result_type := current_dynamic_system.real_32_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5430,7 +5562,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.double_type
+				l_result_type := current_dynamic_system.real_64_type
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5506,7 +5638,7 @@ feature {NONE} -- Built-in features
 		local
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_type_class: ET_CLASS
-			l_any_class: ET_CLASS
+			l_none_class: ET_CLASS
 			l_base_type: ET_BASE_TYPE
 			l_type: ET_TYPE
 			l_type_type: ET_GENERIC_CLASS_TYPE
@@ -5515,7 +5647,7 @@ feature {NONE} -- Built-in features
 			i, nb: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_any_class := universe.any_class
+				l_none_class := current_system.none_class
 				l_parameters := current_type.actual_parameters
 				if l_parameters = Void or else l_parameters.count < 1 then
 						-- Internal error: we should have already checked by now
@@ -5523,17 +5655,17 @@ feature {NONE} -- Built-in features
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_base_type := l_parameters.type (1).shallow_base_type (l_any_class, universe)
+					l_base_type := l_parameters.type (1).shallow_base_type (l_none_class)
 					l_parameters := l_base_type.actual_parameters
 					if l_parameters /= Void then
-						l_type_class := universe.type_class
+						l_type_class := current_system.type_class
 						nb := l_parameters.count
 						from i := 1 until i > nb loop
 							l_type := l_parameters.type (i)
 							create l_type_parameters.make_with_capacity (1)
 							l_type_parameters.put_first (l_type)
 							create l_type_type.make (Void, tokens.type_class_name, l_type_parameters, l_type_class)
-							l_result_type := current_system.dynamic_type (l_type_type, l_any_class)
+							l_result_type := current_dynamic_system.dynamic_type (l_type_type, l_none_class)
 							mark_type_alive (l_result_type)
 							propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 							i := i + 1
@@ -5552,7 +5684,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5565,8 +5697,8 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			if current_type = current_dynamic_type.base_type then
-				mark_string_type_alive
-				propagate_builtin_result_dynamic_types (current_system.string_type, current_dynamic_feature)
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 
@@ -5579,7 +5711,7 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_system.integer_type
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -5599,20 +5731,20 @@ feature {ET_FEATURE_CHECKER} -- Access
 	result_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of "Result" in `dynamic_type_sets'
 
-	character_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of character expressions in `dynamic_type_sets'
+	character_8_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of character_8 expressions in `dynamic_type_sets'
+
+	character_32_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of character_32 expressions in `dynamic_type_sets'
 
 	boolean_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of boolean expressions in `dynamic_type_sets'
 
-	double_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of double expressions in `dynamic_type_sets'
+	real_32_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of real_32 expressions in `dynamic_type_sets'
 
-	real_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of real expressions in `dynamic_type_sets'
-
-	integer_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of integer expressions in `dynamic_type_sets'
+	real_64_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of real_64 expressions in `dynamic_type_sets'
 
 	integer_8_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer_8 expressions in `dynamic_type_sets'
@@ -5625,9 +5757,6 @@ feature {ET_FEATURE_CHECKER} -- Access
 
 	integer_64_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer_64 expressions in `dynamic_type_sets'
-
-	natural_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of natural expressions in `dynamic_type_sets'
 
 	natural_8_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of natural_8 expressions in `dynamic_type_sets'
@@ -5647,8 +5776,11 @@ feature {ET_FEATURE_CHECKER} -- Access
 	none_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of none expressions in `dynamic_type_sets'
 
-	string_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of string expressions in `dynamic_type_sets'
+	string_8_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of string_8 expressions in `dynamic_type_sets'
+
+	string_32_index: DS_CELL [INTEGER]
+			-- Index of dynamic type set of string_32 expressions in `dynamic_type_sets'
 
 feature {NONE} -- Implementation
 
@@ -5831,7 +5963,7 @@ feature {NONE} -- Implementation
 				if i <= nb then
 					dynamic_type_sets.put (a_dynamic_type_set, i)
 				else
-					l_unknown := current_system.unknown_type
+					l_unknown := current_dynamic_system.unknown_type
 					i := i - 1
 					from until nb >= i loop
 						dynamic_type_sets.force_last (l_unknown)
@@ -5858,7 +5990,7 @@ feature {NONE} -- Implementation
 	dummy_dynamic_feature: ET_DYNAMIC_FEATURE is
 			-- Dummy dynamic feature
 		once
-			create Result.make (dummy_feature, dummy_dynamic_type, current_system)
+			create Result.make (dummy_feature, dummy_dynamic_type, current_dynamic_system)
 		ensure
 			dummy_dynamic_feature_not_void: Result /= Void
 		end
@@ -5870,22 +6002,22 @@ invariant
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
 	current_index_not_void: current_index /= Void
 	result_index_not_void: result_index /= Void
-	character_index_not_void: character_index /= Void
+	character_8_index_not_void: character_8_index /= Void
+	character_32_index_not_void: character_32_index /= Void
 	boolean_index_not_void: boolean_index /= Void
-	double_index_not_void: double_index /= Void
-	real_index_not_void: real_index /= Void
-	integer_index_not_void: integer_index /= Void
+	real_32_index_not_void: real_32_index /= Void
+	real_64_index_not_void: real_64_index /= Void
 	integer_8_index_not_void: integer_8_index /= Void
 	integer_16_index_not_void: integer_16_index /= Void
 	integer_32_index_not_void: integer_32_index /= Void
 	integer_64_index_not_void: integer_64_index /= Void
-	natural_index_not_void: natural_index /= Void
 	natural_8_index_not_void: natural_8_index /= Void
 	natural_16_index_not_void: natural_16_index /= Void
 	natural_32_index_not_void: natural_32_index /= Void
 	natural_64_index_not_void: natural_64_index /= Void
 	pointer_index_not_void: pointer_index /= Void
 	none_index_not_void: none_index /= Void
-	string_index_not_void: string_index /= Void
+	string_8_index_not_void: string_8_index /= Void
+	string_32_index_not_void: string_32_index /= Void
 
 end

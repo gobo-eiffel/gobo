@@ -28,23 +28,11 @@ feature -- Access
 		deferred
 		end
 
-	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Class on which current type is directly based
-			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
-			-- Return Void if not directly based on a class
-			-- (e.g. Anchored_type). `a_universe' is the
-			-- surrounding universe holding all classes.
-		do
-			-- Result := Void
-		ensure then
-			no_direct_base_type: Result = Void
-		end
-
 feature -- Status report
 
-	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type contain an anchored type
-			-- when viewed from `a_context' in `a_universe'?
+			-- when viewed from `a_context'?
 		do
 			Result := True
 		end

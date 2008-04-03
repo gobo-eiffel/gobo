@@ -49,7 +49,7 @@ feature -- Execution
 			create a_file.make (a_filename)
 			a_file.open_read
 			if a_file.is_open_read then
-				last_universe := Void
+				last_system := Void
 				nb := a_filename.count
 				if nb > 5 and then STRING_.same_string (a_filename.substring (nb - 4, nb), ".xace") then
 					parse_xace_file (a_file)
@@ -59,13 +59,13 @@ feature -- Execution
 					parse_ace_file (a_file)
 				end
 				a_file.close
-				if last_universe /= Void then
-					process_universe (last_universe)
+				if last_system /= Void then
+					process_system (last_system)
 					debug ("stop")
 						std.output.put_line ("Press Enter...")
 						std.input.read_character
 					end
-					if last_universe.error_handler.has_error then
+					if last_system.error_handler.has_error then
 						Exceptions.die (2)
 					end
 				else
@@ -84,14 +84,14 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
-	last_universe: ET_UNIVERSE
-			-- Last universe parsed, if any
+	last_system: ET_SYSTEM
+			-- Last Eiffel system parsed, if any
 
 feature {NONE} -- Eiffel config file parsing
 
 	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Read Ace file `a_file'.
-			-- Put result in `last_universe' if no error occurred.
+			-- Put result in `last_system' if no error occurred.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -99,23 +99,23 @@ feature {NONE} -- Eiffel config file parsing
 			l_lace_parser: ET_LACE_PARSER
 			l_lace_error_handler: ET_LACE_ERROR_HANDLER
 		do
-			last_universe := Void
+			last_system := Void
 			create l_lace_error_handler.make_standard
 			create l_lace_parser.make (l_lace_error_handler)
 			l_lace_parser.parse_file (a_file)
 			if not l_lace_parser.syntax_error then
-				last_universe := l_lace_parser.last_universe
+				last_system := l_lace_parser.last_system
 			end
 		end
 
 	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Read Xace file `a_file'.
-			-- Put result in `last_universe' if no error occurred.
+			-- Put result in `last_system' if no error occurred.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		local
-			l_xace_parser: ET_XACE_UNIVERSE_PARSER
+			l_xace_parser: ET_XACE_SYSTEM_PARSER
 			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
 			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
 			l_splitter: ST_SPLITTER
@@ -125,7 +125,7 @@ feature {NONE} -- Eiffel config file parsing
 			gobo_eiffel: STRING
 			defined_variables: STRING
 		do
-			last_universe := Void
+			last_system := Void
 			create l_xace_error_handler.make_standard
 			create l_xace_variables.make_map (100)
 			l_xace_variables.set_key_equality_tester (string_equality_tester)
@@ -154,13 +154,13 @@ feature {NONE} -- Eiffel config file parsing
 			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
 			l_xace_parser.parse_file (a_file)
 			if not l_xace_error_handler.has_error then
-				last_universe := l_xace_parser.last_universe
+				last_system := l_xace_parser.last_system
 			end
 		end
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
 			-- Read ECF file `a_file'.
-			-- Put result in `last_universe' if no error occurred.
+			-- Put result in `last_system' if no error occurred.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -172,13 +172,13 @@ feature {NONE} -- Eiffel config file parsing
 
 feature {NONE} -- Processing
 
-	process_universe (a_universe: ET_UNIVERSE) is
-			-- Process `a_universe'.
+	process_system (a_system: ET_SYSTEM) is
+			-- Process `a_system'.
 		require
-			a_universe_not_void: a_universe /= Void
+			a_system_not_void: a_system /= Void
 		local
 			l_null_error_handler: ET_NULL_ERROR_HANDLER
-			l_system: ET_SYSTEM
+			l_system: ET_DYNAMIC_SYSTEM
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_class: ET_CLASS
 			l_generator: ET_C_GENERATOR
@@ -188,29 +188,29 @@ feature {NONE} -- Processing
 		do
 			if is_silent then
 				create l_null_error_handler.make_standard
-				a_universe.set_error_handler (l_null_error_handler)
+				a_system.set_error_handler (l_null_error_handler)
 			end
-			a_universe.error_handler.set_ise
-			a_universe.set_ise_version (ise_latest)
+			a_system.error_handler.set_ise
+			a_system.set_ise_version (ise_latest)
 			if is_verbose then
 -- TODO.
 			end
-			create l_system.make (a_universe)
+			create l_system.make (a_system)
 			l_system.set_catcall_error_mode (catcall_error_mode)
 			l_system.set_catcall_warning_mode (catcall_warning_mode)
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile
-			l_class := a_universe.root_class
+			l_class := a_system.root_class
 			if l_class = Void then
 				-- Do nothing.
-			elseif l_class = a_universe.none_class then
+			elseif l_class = a_system.none_class then
 				-- Do nothing.
 			elseif l_system.has_fatal_error then
 				Exceptions.die (1)
 			else
 					-- C code generation.
-				l_system_name := a_universe.system_name
+				l_system_name := a_system.system_name
 				if l_system_name = Void then
 					l_system_name := l_class.lower_name
 				end

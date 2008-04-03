@@ -30,6 +30,9 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make_standard is
@@ -84,7 +87,7 @@ feature -- Parsing
 			reset
 			named_clusters.wipe_out
 			set_input_buffer (new_file_buffer (a_file))
-			last_universe := Void
+			last_system := new_system
 			override_cluster_names.wipe_out
 			named_clusters.wipe_out
 			external_include_pathnames.wipe_out
@@ -110,8 +113,8 @@ feature -- Parsing
 
 feature -- Access
 
-	last_universe: ET_LACE_UNIVERSE
-			-- Universe being parsed
+	last_system: ET_LACE_SYSTEM
+			-- Eiffel system being parsed
 
 	ast_factory: ET_LACE_AST_FACTORY
 			-- Abstract Syntax Tree factory
@@ -172,7 +175,11 @@ feature {NONE} -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := ast_factory.new_cluster (a_name, a_pathname)
+			if last_system /= Void then
+				Result := ast_factory.new_cluster (a_name, a_pathname, last_system)
+			else
+				Result := ast_factory.new_cluster (a_name, a_pathname, tokens.empty_system)
+			end
 			named_clusters.force_last (Result, a_name)
 		ensure
 			cluster_not_void: Result /= Void
@@ -319,11 +326,20 @@ feature {NONE} -- AST factory
 			subcluster_not_void: Result /= Void
 		end
 
-	new_universe (a_clusters: ET_LACE_CLUSTERS): ET_LACE_UNIVERSE is
-			-- New class universe
-		local
-			an_error_handler: ET_ERROR_HANDLER
-			a_factory: ET_AST_FACTORY
+	new_system: ET_LACE_SYSTEM is
+			-- New Eiffel system
+		do
+			Result := ast_factory.new_system
+			Result.set_error_handler (ast_factory.new_error_handler)
+			Result.set_ast_factory (ast_factory.new_ast_factory)
+		ensure
+			system_not_void: Result /= Void
+		end
+
+	set_system (a_system: ET_LACE_SYSTEM) is
+			-- Set Eiffel system.
+		require
+			a_system_not_void: a_system /= Void
 		do
 			from override_cluster_names.start until override_cluster_names.after loop
 				named_clusters.search (override_cluster_names.item_for_iteration)
@@ -332,18 +348,13 @@ feature {NONE} -- AST factory
 				end
 				override_cluster_names.forth
 			end
-			an_error_handler := ast_factory.new_error_handler
-			a_factory := ast_factory.new_ast_factory
-			Result := ast_factory.new_universe (a_clusters, a_factory, an_error_handler)
-			Result.set_external_include_pathnames (external_include_pathnames)
+			a_system.set_external_include_pathnames (external_include_pathnames)
 			create external_include_pathnames.make (20)
-			Result.set_external_object_pathnames (external_object_pathnames)
+			a_system.set_external_object_pathnames (external_object_pathnames)
 			create external_object_pathnames.make (20)
-			Result.set_console_application_mode (console_application_value)
-			Result.set_exception_trace_mode (exception_trace_value)
-			Result.set_trace_mode (trace_value)
-		ensure
-			universe_not_void: Result /= Void
+			a_system.set_console_application_mode (console_application_value)
+			a_system.set_exception_trace_mode (exception_trace_value)
+			a_system.set_trace_mode (trace_value)
 		end
 
 	add_external_value (a_name, a_value: ET_IDENTIFIER) is

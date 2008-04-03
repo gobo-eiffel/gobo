@@ -22,6 +22,9 @@ inherit
 	ET_XACE_OPTION_NAMES
 		export {NONE} all end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
@@ -62,14 +65,14 @@ feature -- Access
 	error_handler: ET_XACE_ERROR_HANDLER
 			-- Error handler
 
-	library_parser: ET_XACE_LIBRARY_PARSER is
+	library_parser: ET_XACE_LIBRARY_CONFIG_PARSER is
 			-- Library parser
 		deferred
 		ensure
 			library_parser_not_void: Result /= Void
 		end
 
-	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY, STRING] is
+	parsed_libraries: DS_HASH_TABLE [ET_XACE_LIBRARY_CONFIG, STRING] is
 			-- Already parsed Xace libraries, indexed by filenames
 		deferred
 		ensure
@@ -112,21 +115,21 @@ feature -- Status setting
 
 feature {NONE} -- AST factory
 
-	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM is
+	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM_CONFIG is
 			-- New Xace system build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_string (an_element.name, uc_system)
 			a_position_table_not_void: a_position_table /= Void
 		do
-			Result := ast_factory.new_system (Void)
-			fill_system (Result, an_element, a_position_table)
+			Result := ast_factory.new_system
+			fill_system (Result, an_element, a_position_table, tokens.empty_system)
 			Result.mount_libraries
 		ensure
 			new_system_not_void: Result /= Void
 		end
 
-	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_LIBRARY is
+	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_LIBRARY_CONFIG is
 			-- New library build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -135,19 +138,20 @@ feature {NONE} -- AST factory
 			a_position_table_not_void: a_position_table /= Void
 		do
 			Result := ast_factory.new_library
-			fill_library (Result, an_element, a_position_table)
+			fill_library (Result, an_element, a_position_table, tokens.empty_system)
 			Result.mount_libraries
 		ensure
 			new_library_not_void: Result /= Void
 		end
 
-	new_cluster (an_element: XM_ELEMENT; a_parent_prefix: STRING; a_position_table: XM_POSITION_TABLE): ET_XACE_CLUSTER is
+	new_cluster (an_element: XM_ELEMENT; a_parent_prefix: STRING; a_position_table: XM_POSITION_TABLE; a_universe: ET_UNIVERSE): ET_XACE_CLUSTER is
 			-- New cluster build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_cluster: STRING_.same_string (an_element.name, uc_cluster)
 			a_parent_prefix_not_void: a_parent_prefix /= Void
 			a_position_table_not_void: a_position_table /= Void
+			a_universe_not_void: a_universe /= Void
 		local
 			a_name: STRING
 			a_pathname: STRING
@@ -170,7 +174,7 @@ feature {NONE} -- AST factory
 						if an_element.has_attribute_by_name (uc_location) then
 							a_pathname := an_element.attribute_by_name (uc_location).value
 						end
-						Result := ast_factory.new_cluster (a_name, a_pathname)
+						Result := ast_factory.new_cluster (a_name, a_pathname, a_universe)
 						if an_element.has_attribute_by_name (uc_abstract) then
 							error_handler.report_attribute_obsoleted_by_element_warning (an_element, uc_abstract, "<option name=%"abstract%" value=%"true/false%"/>", a_position_table.item (an_element))
 							a_bool := an_element.attribute_by_name (uc_abstract).value
@@ -208,7 +212,7 @@ feature {NONE} -- AST factory
 							a_child ?= a_cursor.item
 							if a_child /= Void then
 								if STRING_.same_string (a_child.name, uc_cluster) then
-									a_cluster := new_cluster (a_child, a_prefix, a_position_table)
+									a_cluster := new_cluster (a_child, a_prefix, a_position_table, a_universe)
 									if a_cluster /= Void then
 										if subclusters = Void then
 											subclusters := ast_factory.new_clusters (a_cluster)
@@ -217,7 +221,7 @@ feature {NONE} -- AST factory
 										end
 									end
 								elseif STRING_.same_string (a_child.name, uc_mount) then
-									a_mount := new_mount (a_child, a_position_table)
+									a_mount := new_mount (a_child, a_position_table, a_universe.current_system)
 									if a_mount /= Void then
 										if a_mounts = Void then
 											a_mounts := ast_factory.new_mounted_libraries
@@ -342,15 +346,16 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_mount (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_MOUNTED_LIBRARY is
+	new_mount (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM): ET_XACE_MOUNTED_LIBRARY is
 			-- New mounted library build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
 			is_mount: STRING_.same_string (an_element.name, uc_mount)
 			a_position_table_not_void: a_position_table /= Void
+			a_eiffel_system_not_void: a_eiffel_system /= Void
 		local
 			a_pathname: STRING
-			a_library: ET_XACE_LIBRARY
+			a_library: ET_XACE_LIBRARY_CONFIG
 			a_prefix: STRING
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
@@ -372,7 +377,7 @@ feature {NONE} -- AST factory
 							create a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
-								library_parser.parse_library (a_library, a_file)
+								library_parser.parse_library (a_library, a_file, a_eiffel_system)
 								a_file.close
 							else
 								error_handler.report_cannot_read_file_error (a_pathname)
@@ -471,13 +476,14 @@ feature {NONE} -- AST factory
 
 feature {NONE} -- Element change
 
-	fill_system (a_system: ET_XACE_SYSTEM; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	fill_system (a_system: ET_XACE_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM) is
 			-- Fill Xace system `a_system' with data found in `an_element'.
 		require
 			a_system_not_void: a_system /= Void
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_string (an_element.name, uc_system)
 			a_position_table_not_void: a_position_table /= Void
+			a_eiffel_system_not_void: a_eiffel_system /= Void
 		local
 			a_name: STRING
 			a_root: XM_ELEMENT
@@ -512,7 +518,7 @@ feature {NONE} -- Element change
 				if a_child /= Void then
 					if STRING_.same_string (a_child.name, uc_cluster) then
 						if a_child.has_attribute_by_name (uc_name) then
-							a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
+							a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
 							if a_cluster /= Void then
 								if a_clusters = Void then
 									a_clusters := ast_factory.new_clusters (a_cluster)
@@ -527,7 +533,7 @@ feature {NONE} -- Element change
 								a_child ?= old_cursor.item
 								if a_child /= Void then
 									if STRING_.same_string (a_child.name, uc_cluster) then
-										a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
+										a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
 										if a_cluster /= Void then
 											if a_clusters = Void then
 												a_clusters := ast_factory.new_clusters (a_cluster)
@@ -536,7 +542,7 @@ feature {NONE} -- Element change
 											end
 										end
 									elseif STRING_.same_string (a_child.name, uc_mount) then
-										a_mount := new_mount (a_child, a_position_table)
+										a_mount := new_mount (a_child, a_position_table, a_eiffel_system)
 										if a_mount /= Void then
 											if a_mounts = Void then
 												a_mounts := ast_factory.new_mounted_libraries
@@ -567,7 +573,7 @@ feature {NONE} -- Element change
 							end
 						end
 					elseif STRING_.same_string (a_child.name, uc_mount) then
-						a_mount := new_mount (a_child, a_position_table)
+						a_mount := new_mount (a_child, a_position_table, a_eiffel_system)
 						if a_mount /= Void then
 							if a_mounts = Void then
 								a_mounts := ast_factory.new_mounted_libraries
@@ -626,7 +632,7 @@ feature {NONE} -- Element change
 			a_system.set_libraries (a_mounts)
 		end
 
-	fill_library (a_library: ET_XACE_LIBRARY; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+	fill_library (a_library: ET_XACE_LIBRARY_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_eiffel_system: ET_SYSTEM) is
 			-- Fill Xace library `a_library' with data found in `an_element'.
 		require
 			a_library_not_void: a_library /= Void
@@ -634,6 +640,7 @@ feature {NONE} -- Element change
 			is_library: STRING_.same_string (an_element.name, uc_library) or
 				STRING_.same_string (an_element.name, uc_cluster)
 			a_position_table_not_void: a_position_table /= Void
+			a_eiffel_system_not_void: a_eiffel_system /= Void
 		local
 			a_name: STRING
 			a_prefix: STRING
@@ -659,7 +666,7 @@ feature {NONE} -- Element change
 			end
 			if STRING_.same_string (an_element.name, uc_cluster) then
 				error_handler.report_element_obsoleted_by_element_warning (an_element, "<library>", a_position_table.item (an_element))
-				a_cluster := new_cluster (an_element, empty_prefix, a_position_table)
+				a_cluster := new_cluster (an_element, empty_prefix, a_position_table, a_eiffel_system)
 				a_library.set_name (a_cluster.name)
 				a_pathname := a_cluster.pathname
 				if a_pathname = Void and a_cluster.is_abstract then
@@ -682,7 +689,7 @@ feature {NONE} -- Element change
 					a_child ?= a_cursor.item
 					if a_child /= Void then
 						if STRING_.same_string (a_child.name, uc_cluster) then
-							a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
+							a_cluster := new_cluster (a_child, empty_prefix, a_position_table, a_eiffel_system)
 							if a_cluster /= Void then
 								if a_clusters = Void then
 									a_clusters := ast_factory.new_clusters (a_cluster)
@@ -691,7 +698,7 @@ feature {NONE} -- Element change
 								end
 							end
 						elseif STRING_.same_string (a_child.name, uc_mount) then
-							a_mount := new_mount (a_child, a_position_table)
+							a_mount := new_mount (a_child, a_position_table, a_eiffel_system)
 							if a_mount /= Void then
 								if a_mounts = Void then
 									a_mounts := ast_factory.new_mounted_libraries

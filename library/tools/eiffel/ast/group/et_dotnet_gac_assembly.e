@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"GAC .NET Assemblies of classes"
+		"GAC .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"

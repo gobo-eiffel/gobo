@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,8 +25,7 @@ inherit
 			same_syntactical_bit_type,
 			same_named_bit_type,
 			same_base_bit_type,
-			conforms_from_bit_type,
-			reference_conforms_from_bit_type
+			conforms_from_bit_type
 		end
 
 feature -- Status report
@@ -34,21 +33,20 @@ feature -- Status report
 	is_expanded: BOOLEAN is True
 			-- Is current type expanded?
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type expanded when viewed from
-			-- `a_context' in `a_universe'?
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is current type expanded when viewed from `a_context'?
 		do
 			Result := True
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the base type of current type contain `a_class'
-			-- when it appears in `a_context' in `a_universe'?
+			-- when it appears in `a_context'?
 		do
 			if constant /= Void then
-				Result := (a_class = a_universe.bit_class)
+				Result := (a_class = base_class)
 			else
-				Result := (a_class = a_universe.unknown_class)
+				Result := a_class.is_unknown
 			end
 		end
 
@@ -63,49 +61,30 @@ feature -- Access
 	size: INTEGER
 			-- Size of current bit type
 
-	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Class on which current type is directly based
-			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
-			-- Return Void if not directly based on a class
-			-- (e.g. Anchored_type). `a_universe' is the
-			-- surrounding universe holding all classes.
-		do
-			Result := a_universe.bit_class
-		end
-
-	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Base class of current type when it appears in `a_context'
-			-- in `a_universe' (Definition of base class in ETL2 page 198).
-			-- Return "*UNKNOWN*" class if unresolved identifier type,
-			-- or unmatched formal generic parameter.
-		do
-			Result := a_universe.bit_class
-		end
-
-	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', only made up of class names and generic
-			-- formal parameters when the root type of `a_context' is a
-			-- generic type not fully derived (Definition of base type in
-			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, or unmatched formal generic parameter if this parameter
+	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context',
+			-- only made up of class names and generic formal parameters
+			-- when the root type of `a_context' is a generic type not
+			-- fully derived (Definition of base type in ETL2 p.198).
+			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
+			-- unmatched formal generic parameter if this parameter
 			-- is current type.
 		do
 			if constant /= Void then
 				Result := Current
 			else
 					-- Unresolved "BIT name".
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			end
 		end
 
-	shallow_base_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', but where the actual generic parameters
-			-- are not replaced by their named version and should still
-			-- be considered as viewed from `a_context'
+	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context',
+			-- but where the actual generic parameters are not replaced
+			-- by their named version and should still be considered as
+			-- viewed from `a_context'
 		do
-			Result := base_type (a_context, a_universe)
+			Result := base_type (a_context)
 		end
 
 feature -- Setting
@@ -158,8 +137,7 @@ feature -- Size
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -168,41 +146,47 @@ feature -- Comparison
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
 		do
-			if other = Current then
+			if base_class = tokens.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.same_syntactical_bit_type (Current, a_context, other_context, a_universe)
+				Result := other.same_syntactical_bit_type (Current, a_context, other_context)
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			if other = Current then
+			if base_class = tokens.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.same_named_bit_type (Current, a_context, other_context, a_universe)
+				Result := other.same_named_bit_type (Current, a_context, other_context)
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			if other = Current then
+			if base_class = tokens.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.same_base_bit_type (Current, a_context, other_context, a_universe)
+				Result := other.same_base_bit_type (Current, a_context, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -211,7 +195,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
 		do
-			if other = Current then
+			if base_class = tokens.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
 				compute_size
@@ -224,87 +211,50 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			Result := same_syntactical_bit_type (other, other_context, a_context, a_universe)
+			Result := same_syntactical_bit_type (other, other_context, a_context)
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			Result := same_syntactical_bit_type (other, other_context, a_context, a_universe)
+			Result := same_syntactical_bit_type (other, other_context, a_context)
 		end
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			if other = Current then
+			if base_class = tokens.unknown_class then
+					-- "*UNKNOWN*" conforms to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				Result := other.conforms_from_bit_type (Current, a_context, other_context, a_universe)
+				Result := other.conforms_from_bit_type (Current, a_context, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			if other = Current then
-				Result := True
-			else
-					-- See VNCB-2 (ETL2 p.229).
-				compute_size
-				if not has_size_error then
-					other.compute_size
-					if not other.has_size_error then
-						Result := (other.size <= size)
-					end
-				end
-			end
-		end
-
-feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of current type appearing in `a_context'
-			-- conform to the reference version `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		do
-			if other = Current then
-				Result := True
-			else
-				Result := other.reference_conforms_from_bit_type (Current, a_context, other_context, a_universe)
-			end
-		end
-
-feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		do
-			if other = Current then
+			if base_class = tokens.unknown_class then
+					-- "*UNKNOWN*" conforms to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
 					-- See VNCB-2 (ETL2 p.229).

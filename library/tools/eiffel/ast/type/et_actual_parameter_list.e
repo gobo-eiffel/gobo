@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,17 +89,15 @@ feature -- Access
 	right_bracket: ET_SYMBOL
 			-- Right bracket
 
-	named_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER_LIST is
-			-- Named types of current parameters, when they appear in `a_context'
-			-- in `a_universe', only made up of class names and generic
-			-- formal parameters when the root type of `a_context' is a
-			-- generic type not fully derived (Definition of base type in
-			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, anchored type involved in a cycle.
+	named_types (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER_LIST is
+			-- Named types of current parameters, when they appear in `a_context',
+			-- only made up of class names and generic formal parameters when the
+			-- root type of `a_context' is a generic type not fully derived
+			-- (Definition of base type in  ETL2 p.198). Replace by "*UNKNOWN*"
+			-- any unresolved identifier type, anchored type involved in a cycle.
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, j, nb: INTEGER
@@ -114,7 +112,7 @@ feature -- Access
 				a_parameter := storage.item (i).actual_parameter
 				l_type := a_parameter.type
 				if l_type /= l_other_type then
-					l_named_type := l_type.named_type (a_context, a_universe)
+					l_named_type := l_type.named_type (a_context)
 					l_other_type := l_type
 				end
 				a_named_parameter := a_parameter.named_parameter_with_type (l_named_type)
@@ -192,20 +190,19 @@ feature -- Access
 
 feature -- Status report
 
-	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does one current types contain an anchored type
-			-- when viewed from `a_context' in `a_universe'?
+			-- when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if storage.item (i).type.has_anchored_type (a_context, a_universe) then
+				if storage.item (i).type.has_anchored_type (a_context) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -214,20 +211,19 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of one of current types contain the formal generic
-			-- parameter with index `i' when viewed from `a_context' in `a_universe'?
+			-- parameter with index `i' when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			j, nb: INTEGER
 		do
 			nb := count - 1
 			from j := 0 until j > nb loop
-				if storage.item (j).type.has_formal_type (i, a_context, a_universe) then
+				if storage.item (j).type.has_formal_type (i, a_context) then
 					Result := True
 					j := nb + 1 -- Jump out of the loop.
 				else
@@ -236,20 +232,19 @@ feature -- Status report
 			end
 		end
 
-	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of one current types contain a formal generic
-			-- parameter when viewed from `a_context' in `a_universe'?
+			-- parameter when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if storage.item (i).type.has_formal_types (a_context, a_universe) then
+				if storage.item (i).type.has_formal_types (a_context) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -258,13 +253,12 @@ feature -- Status report
 			end
 		end
 
-	named_types_have_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	named_types_have_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does one of the named types of current parameters contain
-			-- `a_class' when it appears in `a_context' in `a_universe'?
+			-- `a_class' when it appears in `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 			a_class_not_void: a_class /= Void
 		local
@@ -274,7 +268,7 @@ feature -- Status report
 			nb := count - 1
 			from i := 0 until i > nb loop
 				a_parameter := storage.item (i).actual_parameter
-				if a_parameter.named_parameter_has_class (a_class, a_context, a_universe) then
+				if a_parameter.named_parameter_has_class (a_class, a_context) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -285,8 +279,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	same_syntactical_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current types appearing in `a_context' and `other'
 			-- types appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -300,7 +293,6 @@ feature -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
@@ -315,7 +307,7 @@ feature -- Comparison
 				other_storage := other.storage
 				nb := count - 1
 				from i := 0 until i > nb loop
-					if not storage.item (i).type.same_syntactical_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+					if not storage.item (i).type.same_syntactical_type (other_storage.item (i).type, other_context, a_context) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -325,8 +317,7 @@ feature -- Comparison
 			end
 		end
 
-	same_named_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current types appearing in `a_context' and `other' types
 			-- appearing in `other_context' have the same named types?
 		require
@@ -335,7 +326,6 @@ feature -- Comparison
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
@@ -350,7 +340,7 @@ feature -- Comparison
 				other_storage := other.storage
 				nb := count - 1
 				from i := 0 until i > nb loop
-					if not storage.item (i).type.same_named_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+					if not storage.item (i).type.same_named_type (other_storage.item (i).type, other_context, a_context) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -362,11 +352,10 @@ feature -- Comparison
 
 feature -- Conformance
 
-	conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current actual parameters appearing in `a_context' conform
 			-- to `other' actual parameters appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		require
@@ -375,7 +364,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
@@ -390,7 +378,7 @@ feature -- Conformance
 				other_storage := other.storage
 				nb := count - 1
 				from i := 0 until i > nb loop
-					if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+					if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -400,11 +388,12 @@ feature -- Conformance
 			end
 		end
 
-	agent_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	agent_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current actual parameters (of an Agent type) appearing in `a_context'
 			-- conform to `other' actual parameters appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- Use SmartEiffel agent type conformance semantics, where the conformance
+			-- of the second actual generic parameter is checked in the reverse order.
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		require
@@ -413,7 +402,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 		local
 			i, j, nb: INTEGER
 			other_storage: SPECIAL [ET_ACTUAL_PARAMETER_ITEM]
@@ -431,14 +419,14 @@ feature -- Conformance
 				from i := 0 until i > nb loop
 					if i = j then
 							-- Reverse conformance for the argument parameter.
-						if not other_storage.item (i).type.conforms_to_type (storage.item (i).type, a_context, other_context, a_universe) then
+						if not other_storage.item (i).type.conforms_to_type (storage.item (i).type, a_context, other_context) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
 						end
 					else
-						if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context, a_universe) then
+						if not storage.item (i).type.conforms_to_type (other_storage.item (i).type, other_context, a_context) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -449,11 +437,10 @@ feature -- Conformance
 			end
 		end
 
-	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	tuple_conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current actual parameters (of a Tuple_type) appearing in `a_context'
 			-- conform to `other' actual parameters appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		require
@@ -462,7 +449,6 @@ feature -- Conformance
 			other_context_valid: other_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -473,7 +459,7 @@ feature -- Conformance
 				if nb <= count then
 					Result := True
 					from i := 1 until i > nb loop
-						if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_universe) then
+						if not type (i).conforms_to_type (other.type (i), other_context, a_context) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						else

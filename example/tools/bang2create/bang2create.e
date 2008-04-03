@@ -26,8 +26,7 @@ feature -- Execution
 	execute is
 			-- Execute tool.
 		local
-			a_universe: ET_UNIVERSE
-			an_error_handler: ET_ERROR_HANDLER
+			a_system: ET_SYSTEM
 			an_ast_factory: ET_DECORATED_AST_FACTORY
 			in_file: KL_TEXT_INPUT_FILE
 			out_file: KL_TEXT_OUTPUT_FILE
@@ -36,46 +35,48 @@ feature -- Execution
 			a_printer: CREATE_PRINTER
 			a_class: ET_CLASS
 			a_time_stamp: INTEGER
+			a_parser: ET_EIFFEL_PARSER
 		do
 			Arguments.set_program_name ("bang2create")
 			create error_handler.make_standard
 			read_arguments
+			create a_system.make
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
-			create an_error_handler.make_standard
-			create a_universe.make_with_factory (Void, an_ast_factory, an_error_handler)
-			create a_cluster.make ("cluster_name", ".")
+			a_system.set_ast_factory (an_ast_factory)
+			create a_cluster.make ("cluster_name", ".", a_system)
+			create a_parser.make
 			if in_filename.is_equal ("-") then
-				a_universe.parse_file (std.input, "stdin", a_time_stamp, a_cluster)
+				a_parser.parse_file (std.input, "stdin", a_time_stamp, a_cluster)
 			else
 				create in_file.make (in_filename)
 				a_time_stamp := in_file.time_stamp
 				in_file.open_read
 				if in_file.is_open_read then
-					a_universe.parse_file (in_file, in_filename, a_time_stamp, a_cluster)
+					a_parser.parse_file (in_file, in_filename, a_time_stamp, a_cluster)
 					in_file.close
 				else
 					report_cannot_read_error (in_filename)
 					Exceptions.die (1)
 				end
 			end
-			if a_universe.eiffel_parser.syntax_error then
+			if a_parser.syntax_error then
 				Exceptions.die (1)
 			else
 				if out_filename.is_equal ("-") then
-					create a_printer.make (std.output, a_universe)
+					create a_printer.make (std.output)
 				else
 					create out_file.make (out_filename)
 					out_file.recursive_open_write
 					if out_file.is_open_write then
-						create a_printer.make (out_file, a_universe)
+						create a_printer.make (out_file)
 					else
-						create a_printer.make_null (a_universe)
+						create a_printer.make_null
 						report_cannot_write_error (out_filename)
 						Exceptions.die (1)
 					end
 				end
-				a_cursor := a_universe.classes.new_cursor
+				a_cursor := a_system.classes.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_class := a_cursor.item
 					if a_class.is_parsed then

@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			old_count: INTEGER
@@ -80,7 +80,7 @@ feature -- Element change
 						end
 					end
 				end
-			elseif a_system.universe.is_ise and then not has_type (a_type) then
+			elseif a_system.current_system.is_ise and then not has_type (a_type) then
 					-- ISE Eiffel does not type-check the tuple operand of Agent calls even at
 					-- execution time. It only checks whether the tuple has enough items and
 					-- these items are of the expected types, regardless of the type of the tuple

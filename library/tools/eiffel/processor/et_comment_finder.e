@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,8 +55,9 @@ inherit
 			process_choice_list,
 			process_choice_range,
 			process_class,
-			process_class_name_comma,
 			process_class_type,
+			process_client,
+			process_client_comma,
 			process_clients,
 			process_colon_type,
 			process_compound,
@@ -195,10 +196,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new comment finder.
 		do
-			universe := a_universe
 			create comment_list.make (0)
 			create excluded_nodes.make (10)
 		end
@@ -563,19 +563,27 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_class_name_comma (a_name: ET_CLASS_NAME_COMMA) is
-			-- Process `a_name'.
-		do
-			if not excluded_nodes.has (a_name) then
-				precursor (a_name)
-			end
-		end
-
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		do
 			if not excluded_nodes.has (a_type) then
 				precursor (a_type)
+			end
+		end
+
+	process_client (a_client: ET_CLIENT) is
+			-- Process `a_client'.
+		do
+			if not excluded_nodes.has (a_client) then
+				precursor (a_client)
+			end
+		end
+
+	process_client_comma (a_client_comma: ET_CLIENT_COMMA) is
+			-- Process `a_client_comma'.
+		do
+			if not excluded_nodes.has (a_client_comma) then
+				precursor (a_client_comma)
 			end
 		end
 

@@ -5,7 +5,7 @@ indexing
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,8 +23,6 @@ inherit
 			same_base_tuple_type,
 			conforms_from_class_type,
 			conforms_from_tuple_type,
-			reference_conforms_from_class_type,
-			reference_conforms_from_tuple_type,
 			tuple_keyword, actual_parameters,
 			resolved_formal_parameters,
 			append_unaliased_to_string
@@ -36,13 +34,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameters: like actual_parameters) is
+	make (a_parameters: like actual_parameters; a_base_class: ET_CLASS) is
 			-- Create a new TUPLE type.
+		require
+			a_base_class_not_void: a_base_class /= Void
 		do
 			tuple_keyword := tokens.tuple_keyword
 			actual_parameters := a_parameters
+			base_class := a_base_class
 		ensure
 			actual_parameters_set: actual_parameters = a_parameters
+			base_class_set: base_class = a_base_class
 		end
 
 feature -- Access
@@ -53,32 +55,13 @@ feature -- Access
 	actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			-- Actual generic parameters
 
-	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Class on which current type is directly based
-			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
-			-- Return Void if not directly based on a class
-			-- (e.g. Anchored_type). `a_universe' is the
-			-- surrounding universe holding all classes.
-		do
-			Result := a_universe.tuple_class
-		end
-
-	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
-			-- Base class of current type when it appears in `a_context'
-			-- in `a_universe' (Definition of base class in ETL2 page 198).
-			-- Return "*UNKNOWN*" class if unresolved identifier type,
-			-- or unmatched formal generic parameter.
-		do
-			Result := a_universe.tuple_class
-		end
-
-	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_TUPLE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', only made up of class names and generic
-			-- formal parameters when the root type of `a_context' is a
-			-- generic type not fully derived (Definition of base type in
-			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, or unmatched formal generic parameter if this parameter
+	base_type (a_context: ET_TYPE_CONTEXT): ET_TUPLE_TYPE is
+			-- Base type of current type, when it appears in `a_context',
+			-- only made up of class names and generic formal parameters
+			-- when the root type of `a_context' is a generic type not
+			-- fully derived (Definition of base type in ETL2 p.198).
+			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
+			-- unmatched formal generic parameter if this parameter
 			-- is current type.
 		local
 			an_actual_parameters: like actual_parameters
@@ -92,9 +75,9 @@ feature -- Access
 				Result := Current
 				an_actual_parameters := actual_parameters
 				if an_actual_parameters /= Void then
-					a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
+					a_named_parameters := an_actual_parameters.named_types (a_context)
 					if a_named_parameters /= an_actual_parameters then
-						create Result.make (a_named_parameters)
+						create Result.make (a_named_parameters, base_class)
 						Result.set_tuple_keyword (tuple_keyword)
 					end
 				end
@@ -151,33 +134,31 @@ feature -- Status report
 	is_expanded: BOOLEAN is False
 			-- Is current type expanded?
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type expanded when viewed from
-			-- `a_context' in `a_universe'?
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is current type expanded when viewed from `a_context'?
 		do
 			Result := False
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the base type of current type contain `a_class'
-			-- when it appears in `a_context' in `a_universe'?
+			-- when it appears in `a_context'?
 		local
 			an_actual_parameters: like actual_parameters
 		do
-			if a_class = a_universe.tuple_class then
+			if a_class = base_class then
 				Result := True
 			else
 				an_actual_parameters := actual_parameters
 				if an_actual_parameters /= Void then
-					Result := an_actual_parameters.named_types_have_class (a_class, a_context, a_universe)
+					Result := an_actual_parameters.named_types_have_class (a_class, a_context)
 				end
 			end
 		end
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -186,41 +167,38 @@ feature -- Comparison
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
 		do
-			if other = Current and then other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.same_syntactical_tuple_type (Current, a_context, other_context, a_universe)
+				Result := other.same_syntactical_tuple_type (Current, a_context, other_context)
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			if other = Current and then other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.same_named_tuple_type (Current, a_context, other_context, a_universe)
+				Result := other.same_named_tuple_type (Current, a_context, other_context)
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			if other = Current and then other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.same_base_tuple_type (Current, a_context, other_context, a_universe)
+				Result := other.same_base_tuple_type (Current, a_context, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -231,7 +209,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			if other = Current and then other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
 				other_parameters := other.actual_parameters
@@ -240,19 +218,18 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				elseif actual_parameters = Void then
 					Result := other_parameters.is_empty
 				else
-					Result := actual_parameters.same_syntactical_types (other_parameters, other_context, a_context, a_universe)
+					Result := actual_parameters.same_syntactical_types (other_parameters, other_context, a_context)
 				end
 			end
 		end
 
-	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			if other = Current and then other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
 				other_parameters := other.actual_parameters
@@ -261,19 +238,18 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				elseif actual_parameters = Void then
 					Result := other_parameters.is_empty
 				else
-					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context, a_universe)
+					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context)
 				end
 			end
 		end
 
-	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			if other = Current and then other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
 				other_parameters := other.actual_parameters
@@ -282,59 +258,56 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				elseif actual_parameters = Void then
 					Result := other_parameters.is_empty
 				else
-					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context, a_universe)
+					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context)
 				end
 			end
 		end
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			if other = Current and then other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
-				Result := other.conforms_from_tuple_type (Current, a_context, other_context, a_universe)
+				Result := other.conforms_from_tuple_type (Current, a_context, other_context)
 			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			other_base_class: ET_CLASS
 		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.none_class then
+			other_base_class := other.base_class
+			if other_base_class.is_none then
 					-- "NONE" conforms to any tuple type since it is a reference type.
 				Result := True
-			elseif other_base_class = a_universe.tuple_class and then actual_parameter_count = 0 then
+			elseif other_base_class = base_class and then not is_generic then
 					-- Class type "TUPLE" conforms to Tuple_type "TUPLE".
 				Result := True
 			end
 		end
 
-	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		local
 			a_parameters: like actual_parameters
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			if other = Current and other_context = a_context then
+			if other = Current and then (other_context = a_context or else not is_generic) then
 				Result := True
 			else
 				a_parameters := actual_parameters
@@ -344,69 +317,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				elseif other_parameters = Void then
 					Result := a_parameters.is_empty
 				else
-					Result := other_parameters.tuple_conforms_to_types (a_parameters, a_context, other_context, a_universe)
-				end
-			end
-		end
-
-feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of current type appearing in `a_context'
-			-- conform to the reference version `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		do
-			if other = Current and then other_context = a_context then
-				Result := True
-			else
-				Result := other.reference_conforms_from_tuple_type (Current, a_context, other_context, a_universe)
-			end
-		end
-
-feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			other_base_class: ET_CLASS
-		do
-			other_base_class := other.direct_base_class (a_universe)
-			if other_base_class = a_universe.none_class then
-					-- "NONE" conforms to any tuple type since it is a reference type.
-				Result := True
-			elseif other_base_class = a_universe.tuple_class and then actual_parameter_count = 0 then
-					-- Class type "TUPLE" conforms to Tuple_type "TUPLE".
-				Result := True
-			end
-		end
-
-	reference_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on the classes
-			-- whose ancestors need to be built in order to check for conformance.)
-		local
-			a_parameters: like actual_parameters
-			other_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			if other = Current and other_context = a_context then
-				Result := True
-			else
-				a_parameters := actual_parameters
-				other_parameters := other.actual_parameters
-				if a_parameters = Void then
-					Result := True
-				elseif other_parameters = Void then
-					Result := a_parameters.is_empty
-				else
-					Result := other_parameters.tuple_conforms_to_types (a_parameters, a_context, other_context, a_universe)
+					Result := other_parameters.tuple_conforms_to_types (a_parameters, a_context, other_context)
 				end
 			end
 		end
@@ -426,7 +337,7 @@ feature -- Type processing
 			if an_actual_parameters /= Void then
 				a_resolved_parameters := an_actual_parameters.resolved_formal_parameters (a_parameters)
 				if a_resolved_parameters /= an_actual_parameters then
-					create Result.make (a_resolved_parameters)
+					create Result.make (a_resolved_parameters, base_class)
 					Result.set_tuple_keyword (tuple_keyword)
 				end
 			end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,11 +35,7 @@ inherit
 			conforms_from_bit_type,
 			conforms_from_class_type,
 			conforms_from_formal_parameter_type,
-			conforms_from_tuple_type,
-			reference_conforms_from_bit_type,
-			reference_conforms_from_class_type,
-			reference_conforms_from_formal_parameter_type,
-			reference_conforms_from_tuple_type
+			conforms_from_tuple_type
 		end
 
 create
@@ -120,9 +116,9 @@ feature -- Access
 			index_positive: Result >= 1
 		end
 
-	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
+	base_class (a_context: ET_TYPE_CONTEXT): ET_CLASS is
 			-- Base class of current type when it appears in `a_context'
-			-- in `a_universe' (Definition of base class in ETL2 page 198).
+			-- (Definition of base class in ETL2 page 198).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		local
@@ -134,9 +130,9 @@ feature -- Access
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -149,37 +145,37 @@ feature -- Access
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := a_universe.unknown_class
+						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.base_class (a_context, a_universe)
+						Result := args.item (an_index).type.base_class (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_class (a_context, a_universe)
+					Result := l_query.type.base_class (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			end
 		end
 
-	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', only made up of class names and generic
-			-- formal parameters when the root type of `a_context' is a
-			-- generic type not fully derived (Definition of base type in
-			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
-			-- type, or unmatched formal generic parameter if this parameter
+	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context',
+			-- only made up of class names and generic formal parameters
+			-- when the root type of `a_context' is a generic type not
+			-- fully derived (Definition of base type in ETL2 p.198).
+			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
+			-- unmatched formal generic parameter if this parameter
 			-- is current type.
 		local
 			a_class: ET_CLASS
@@ -190,9 +186,9 @@ feature -- Access
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -205,35 +201,35 @@ feature -- Access
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := a_universe.unknown_class
+						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.base_type (a_context, a_universe)
+						Result := args.item (an_index).type.base_type (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_type (a_context, a_universe)
+					Result := l_query.type.base_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			end
 		end
 
-	shallow_base_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Base type of current type, when it appears in `a_context'
-			-- in `a_universe', but where the actual generic parameters
-			-- are not replaced by their named version and should still
-			-- be considered as viewed from `a_context'
+	shallow_base_type (a_context: ET_BASE_TYPE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context',
+			-- but where the actual generic parameters are not replaced
+			-- by their named version and should still be considered as
+			-- viewed from `a_context'
 		local
 			a_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -243,9 +239,9 @@ feature -- Access
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.direct_base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -258,33 +254,33 @@ feature -- Access
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := a_universe.unknown_class
+						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.shallow_base_type (a_context, a_universe)
+						Result := args.item (an_index).type.shallow_base_type (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.direct_base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.shallow_base_type (a_context, a_universe)
+					Result := l_query.type.shallow_base_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			end
 		end
 
-	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+	base_type_actual (i: INTEGER; a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE is
 			-- `i'-th actual generic parameter's type of the base type of current
-			-- type when it appears in `a_context' in `a_universe'
+			-- type when it appears in `a_context'
 		local
 			a_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -294,9 +290,9 @@ feature -- Access
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -309,33 +305,33 @@ feature -- Access
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := a_universe.unknown_class
+						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.base_type_actual (i, a_context, a_universe)
+						Result := args.item (an_index).type.base_type_actual (i, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_type_actual (i, a_context, a_universe)
+					Result := l_query.type.base_type_actual (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			end
 		end
 
-	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+	base_type_actual_parameter (i: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER is
 			-- `i'-th actual generic parameter of the base type of current
-			-- type when it appears in `a_context' in `a_universe'
+			-- type when it appears in `a_context'
 		local
 			a_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -345,9 +341,9 @@ feature -- Access
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -360,34 +356,33 @@ feature -- Access
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := a_universe.unknown_class
+						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.base_type_actual_parameter (i, a_context, a_universe)
+						Result := args.item (an_index).type.base_type_actual_parameter (i, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_type_actual_parameter (i, a_context, a_universe)
+					Result := l_query.type.base_type_actual_parameter (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			end
 		end
 
-	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
-			-- Index of actual generic parameter with label `a_label'
-			-- in the base type of current type when it appears in
-			-- `a_context' in `a_universe';
+	base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT): INTEGER is
+			-- Index of actual generic parameter with label `a_label' in
+			-- the base type of current type when it appears in `a_context';
 			-- 0 if it does not exist
 		local
 			a_class: ET_CLASS
@@ -400,7 +395,7 @@ feature -- Access
 					-- Anchored type not resolved yet.
 				Result := 0
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -415,7 +410,7 @@ feature -- Access
 							-- current anchored type.
 						Result := 0
 					else
-						Result := args.item (an_index).type.base_type_index_of_label (a_label, a_context, a_universe)
+						Result := args.item (an_index).type.base_type_index_of_label (a_label, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -424,10 +419,10 @@ feature -- Access
 					Result := 0
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_type_index_of_label (a_label, a_context, a_universe)
+					Result := l_query.type.base_type_index_of_label (a_label, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -437,7 +432,7 @@ feature -- Access
 			end
 		end
 
-	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+	named_type (a_context: ET_TYPE_CONTEXT): ET_NAMED_TYPE is
 			-- Same as `base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
 			-- by its actual counterpart in `a_context'. Return this
@@ -452,9 +447,9 @@ feature -- Access
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -467,31 +462,31 @@ feature -- Access
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := a_universe.unknown_class
+						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.named_type (a_context, a_universe)
+						Result := args.item (an_index).type.named_type (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.named_type (a_context, a_universe)
+					Result := l_query.type.named_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			end
 		end
 
-	shallow_named_type (a_context: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+	shallow_named_type (a_context: ET_BASE_TYPE): ET_NAMED_TYPE is
 			-- Same as `shallow_base_type' except when current type is still
 			-- a formal generic parameter after having been replaced
 			-- by its actual counterpart in `a_context'. Return this
@@ -506,9 +501,9 @@ feature -- Access
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := a_universe.unknown_class
+				Result := tokens.unknown_class
 			elseif is_like_argument then
-				a_class := a_context.direct_base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -521,26 +516,26 @@ feature -- Access
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := a_universe.unknown_class
+						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.shallow_named_type (a_context, a_universe)
+						Result := args.item (an_index).type.shallow_named_type (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			else
-				a_class := a_context.direct_base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.shallow_named_type (a_context, a_universe)
+					Result := l_query.type.shallow_named_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := a_universe.unknown_class
+					Result := tokens.unknown_class
 				end
 			end
 		end
@@ -581,7 +576,7 @@ feature -- Access
 
 feature -- Measurement
 
-	base_type_actual_count (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): INTEGER is
+	base_type_actual_count (a_context: ET_TYPE_CONTEXT): INTEGER is
 			-- Number of actual generic parameters of the base type of current type
 		local
 			a_class: ET_CLASS
@@ -594,7 +589,7 @@ feature -- Measurement
 					-- Anchored type not resolved yet.
 				Result := 0
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -609,7 +604,7 @@ feature -- Measurement
 							-- current anchored type.
 						Result := 0
 					else
-						Result := args.item (an_index).type.base_type_actual_count (a_context, a_universe)
+						Result := args.item (an_index).type.base_type_actual_count (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -618,10 +613,10 @@ feature -- Measurement
 					Result := 0
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_type_actual_count (a_context, a_universe)
+					Result := l_query.type.base_type_actual_count (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -655,9 +650,8 @@ feature -- Status report
 			definition: Result = name.is_argument
 		end
 
-	is_type_expanded (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is current type expanded when viewed from
-			-- `a_context' in `a_universe'?
+	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is current type expanded when viewed from `a_context'?
 		local
 			a_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -669,7 +663,7 @@ feature -- Status report
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -684,7 +678,7 @@ feature -- Status report
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.is_type_expanded (a_context, a_universe)
+						Result := args.item (an_index).type.is_type_expanded (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -693,10 +687,10 @@ feature -- Status report
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.is_type_expanded (a_context, a_universe)
+					Result := l_query.type.is_type_expanded (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -706,9 +700,9 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
-			-- with index `i' when viewed from `a_context' in `a_universe'?
+			-- with index `i' when viewed from `a_context'?
 		local
 			a_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -720,7 +714,7 @@ feature -- Status report
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -735,7 +729,7 @@ feature -- Status report
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.has_formal_type (i, a_context, a_universe)
+						Result := args.item (an_index).type.has_formal_type (i, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -744,10 +738,10 @@ feature -- Status report
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.has_formal_type (i, a_context, a_universe)
+					Result := l_query.type.has_formal_type (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -757,9 +751,9 @@ feature -- Status report
 			end
 		end
 
-	has_formal_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain a formal generic parameter
-			-- when viewed from `a_context' in `a_universe'?
+			-- when viewed from `a_context'?
 		local
 			a_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -771,7 +765,7 @@ feature -- Status report
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -784,9 +778,9 @@ feature -- Status report
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						-- Result := False
+						Result := False
 					else
-						Result := args.item (an_index).type.has_formal_types (a_context, a_universe)
+						Result := args.item (an_index).type.has_formal_types (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -795,10 +789,10 @@ feature -- Status report
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.has_formal_types (a_context, a_universe)
+					Result := l_query.type.has_formal_types (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -808,7 +802,7 @@ feature -- Status report
 			end
 		end
 
-	is_formal_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Is current type a formal parameter when viewed from `a_context'?
 		local
 			a_class: ET_CLASS
@@ -821,7 +815,7 @@ feature -- Status report
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -836,7 +830,7 @@ feature -- Status report
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.is_formal_type (a_context, a_universe)
+						Result := args.item (an_index).type.is_formal_type (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -845,10 +839,10 @@ feature -- Status report
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.is_formal_type (a_context, a_universe)
+					Result := l_query.type.is_formal_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -858,9 +852,9 @@ feature -- Status report
 			end
 		end
 
-	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the base type of current type contain `a_class'
-			-- when it appears in `a_context' in `a_universe'?
+			-- when it appears in `a_context'?
 		local
 			a_base_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -870,9 +864,9 @@ feature -- Status report
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := (a_class = a_universe.unknown_class)
+				Result := a_class.is_unknown
 			elseif is_like_argument then
-				a_base_class := a_context.base_class (a_universe)
+				a_base_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -885,33 +879,33 @@ feature -- Status report
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := (a_class = a_universe.unknown_class)
+						Result := a_class.is_unknown
 					else
-						Result := args.item (an_index).type.base_type_has_class (a_class, a_context, a_universe)
+						Result := args.item (an_index).type.base_type_has_class (a_class, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := (a_class = a_universe.unknown_class)
+					Result := a_class.is_unknown
 				end
 			else
-				a_base_class := a_context.base_class (a_universe)
+				a_base_class := a_context.base_class
 				l_query := a_base_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_type_has_class (a_class, a_context, a_universe)
+					Result := l_query.type.base_type_has_class (a_class, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := (a_class = a_universe.unknown_class)
+					Result := a_class.is_unknown
 				end
 			end
 		end
 
-	named_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	named_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain `a_class'
-			-- when it appears in `a_context' in `a_universe'?
+			-- when it appears in `a_context'?
 		local
 			a_base_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -921,9 +915,9 @@ feature -- Status report
 		do
 			if seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := (a_class = a_universe.unknown_class)
+				Result := a_class.is_unknown
 			elseif is_like_argument then
-				a_base_class := a_context.base_class (a_universe)
+				a_base_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -936,34 +930,33 @@ feature -- Status report
 							-- Internal error: an inconsistency has been
 							-- introduced in the AST since we relsolved
 							-- current anchored type.
-						Result := (a_class = a_universe.unknown_class)
+						Result := a_class.is_unknown
 					else
-						Result := args.item (an_index).type.named_type_has_class (a_class, a_context, a_universe)
+						Result := args.item (an_index).type.named_type_has_class (a_class, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := (a_class = a_universe.unknown_class)
+					Result := a_class.is_unknown
 				end
 			else
-				a_base_class := a_context.base_class (a_universe)
+				a_base_class := a_context.base_class
 				l_query := a_base_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.named_type_has_class (a_class, a_context, a_universe)
+					Result := l_query.type.named_type_has_class (a_class, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
 						-- current anchored type.
-					Result := (a_class = a_universe.unknown_class)
+					Result := a_class.is_unknown
 				end
 			end
 		end
 
 feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -975,12 +968,11 @@ feature -- Comparison
 			if other = Current and other_context = a_context then
 				Result := True
 			else
-				Result := other.same_syntactical_like_feature (Current, a_context, other_context, a_universe)
+				Result := other.same_syntactical_like_feature (Current, a_context, other_context)
 			end
 		end
 
-	same_named_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -996,7 +988,7 @@ feature -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_feature := a_class.seeded_query (seed)
 				if l_feature /= Void then
 					args := l_feature.arguments
@@ -1007,7 +999,7 @@ feature -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_named_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_named_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1016,10 +1008,10 @@ feature -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_named_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_named_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1029,8 +1021,7 @@ feature -- Comparison
 			end
 		end
 
-	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1046,7 +1037,7 @@ feature -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1061,7 +1052,7 @@ feature -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_base_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_base_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1070,10 +1061,10 @@ feature -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_base_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_base_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1085,9 +1076,7 @@ feature -- Comparison
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
-	same_syntactical_like_feature (other: ET_LIKE_FEATURE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
+	same_syntactical_like_feature (other: ET_LIKE_FEATURE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
 			-- (Note: We are NOT comparing the basic types here!
@@ -1114,7 +1103,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					if other.seed = seed then
 						Result := True
 					else
-						l_class := other_context.base_class (a_universe)
+						l_class := other_context.base_class
 						l_other_seed := other.seed
 						if other.is_procedure then
 							l_feature := l_class.seeded_procedure (l_other_seed)
@@ -1123,7 +1112,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						end
 						Result := l_feature /= Void and then l_feature.has_seed (seed)
 						if not Result then
-							l_class := a_context.base_class (a_universe)
+							l_class := a_context.base_class
 							if is_procedure then
 								l_feature := l_class.seeded_procedure (seed)
 							else
@@ -1138,10 +1127,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if other.seed = seed then
 					Result := True
 				else
-					l_query := other_context.base_class (a_universe).seeded_query (other.seed)
+					l_query := other_context.base_class.seeded_query (other.seed)
 					Result := l_query /= Void and then l_query.has_seed (seed)
 					if not Result then
-						l_query := a_context.base_class (a_universe).seeded_query (seed)
+						l_query := a_context.base_class.seeded_query (seed)
 						Result := l_query /= Void and then l_query.has_seed (other.seed)
 					end
 				end
@@ -1150,8 +1139,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1165,7 +1153,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1180,7 +1168,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_named_bit_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_named_bit_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1189,10 +1177,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_named_bit_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_named_bit_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1202,8 +1190,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1217,7 +1204,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1232,7 +1219,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_named_class_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_named_class_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1241,10 +1228,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_named_class_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_named_class_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1254,9 +1241,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1270,7 +1255,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1285,7 +1270,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_named_formal_parameter_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_named_formal_parameter_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1294,10 +1279,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_named_formal_parameter_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_named_formal_parameter_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1307,8 +1292,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_named_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		local
@@ -1322,7 +1306,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1337,7 +1321,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_named_tuple_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_named_tuple_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1346,10 +1330,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_named_tuple_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_named_tuple_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1359,8 +1343,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1374,7 +1357,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1389,7 +1372,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_base_bit_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_base_bit_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1398,10 +1381,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_base_bit_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_base_bit_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1411,8 +1394,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1426,7 +1408,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1441,7 +1423,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_base_class_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_base_class_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1450,10 +1432,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_base_class_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_base_class_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1463,9 +1445,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1479,7 +1459,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1494,7 +1474,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_base_formal_parameter_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_base_formal_parameter_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1503,10 +1483,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_base_formal_parameter_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_base_formal_parameter_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1516,8 +1496,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			end
 		end
 
-	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	same_base_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		local
@@ -1531,7 +1510,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1546,7 +1525,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.same_base_tuple_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.same_base_tuple_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1555,10 +1534,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.same_base_tuple_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.same_base_tuple_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1570,11 +1549,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type appearing in `a_context' conform
 			-- to `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		local
@@ -1590,7 +1568,7 @@ feature -- Conformance
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1605,7 +1583,7 @@ feature -- Conformance
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.conforms_to_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.conforms_to_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1614,10 +1592,10 @@ feature -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.conforms_to_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.conforms_to_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1629,11 +1607,10 @@ feature -- Conformance
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
-	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		local
@@ -1647,7 +1624,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1662,7 +1639,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.conforms_from_bit_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.conforms_from_bit_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1671,10 +1648,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.conforms_from_bit_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.conforms_from_bit_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1684,11 +1661,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		local
@@ -1702,7 +1678,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1717,7 +1693,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.conforms_from_class_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.conforms_from_class_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1726,10 +1702,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.conforms_from_class_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.conforms_from_class_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1739,12 +1715,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		local
@@ -1758,7 +1732,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1773,7 +1747,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.conforms_from_formal_parameter_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1782,10 +1756,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.conforms_from_formal_parameter_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1795,11 +1769,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			end
 		end
 
-	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does `other' type appearing in `other_context' conform
 			-- to current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
+			-- (Note: 'current_system.ancestor_builder' is used on classes on
 			-- the classes whose ancestors need to be built in order to check
 			-- for conformance.)
 		local
@@ -1813,7 +1786,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					-- Anchored type not resolved yet.
 				Result := False
 			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				if is_procedure then
 					l_feature := a_class.seeded_procedure (seed)
 				else
@@ -1828,7 +1801,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
+						Result := args.item (an_index).type.conforms_from_tuple_type (other, other_context, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -1837,292 +1810,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					Result := False
 				end
 			else
-				a_class := a_context.base_class (a_universe)
+				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-feature -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of current type appearing in `a_context'
-			-- conform to the reference version `other' type appearing in `other_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
-		local
-			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if other = Current and then other_context = a_context then
-				Result := True
-			elseif seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.reference_conforms_to_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
-					Result := l_query.type.reference_conforms_to_type (other, other_context, a_context, a_universe)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types (compatilibity with ISE 5.6.0610, to be removed later)
-
-	reference_conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
-		local
-			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.reference_conforms_from_bit_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
-					Result := l_query.type.reference_conforms_from_bit_type (other, other_context, a_context, a_universe)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-	reference_conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
-		local
-			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.reference_conforms_from_class_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
-					Result := l_query.type.reference_conforms_from_class_type (other, other_context, a_context, a_universe)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-	reference_conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
-		a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
-		local
-			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.reference_conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
-					Result := l_query.type.reference_conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-	reference_conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
-		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does the reference version of `other' type appearing in `other_context'
-			-- conform to the reference version of current type appearing in `a_context'?
-			-- (Note: 'a_universe.ancestor_builder' is used on classes on
-			-- the classes whose ancestors need to be built in order to check
-			-- for conformance.)
-		local
-			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class (a_universe)
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.reference_conforms_from_tuple_type (other, other_context, a_context, a_universe)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class (a_universe)
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
-					Result := l_query.type.reference_conforms_from_tuple_type (other, other_context, a_context, a_universe)
+					Result := l_query.type.conforms_from_tuple_type (other, other_context, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved

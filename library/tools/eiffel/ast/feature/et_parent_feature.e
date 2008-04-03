@@ -199,7 +199,7 @@ feature -- Access
 			definition: Result = precursor_feature.other_seeds
 		end
 
-	clients: ET_CLASS_NAME_LIST is
+	clients: ET_CLIENT_LIST is
 			-- Clients to which feature is exported
 		do
 			Result := precursor_feature.clients

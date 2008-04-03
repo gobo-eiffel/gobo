@@ -5,7 +5,7 @@ indexing
 		"Eiffel class ancestor builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,13 @@ inherit
 
 	ET_CLASS_PROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_class
 		end
 
@@ -26,15 +32,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
-			-- Create a new ancestor builder for classes in `a_universe'.
+	make is
+			-- Create a new ancestor builder for given classes.
 		do
-			precursor (a_universe)
+			precursor {ET_CLASS_PROCESSOR}
 			create class_sorter.make_default
 			create ancestors.make_map (10)
-			create parent_checker.make (a_universe)
-			create formal_parameter_checker.make (a_universe)
-			create parent_context.make_with_capacity (a_universe.any_class, 1)
+			create parent_checker.make
+			create formal_parameter_checker.make
+			create parent_context.make_with_capacity (current_class, 1)
 		end
 
 feature -- Processing
@@ -49,18 +55,20 @@ feature -- Processing
 		local
 			a_processor: like Current
 		do
-			if a_class = none_class then
+			if a_class.is_none then
 				a_class.set_ancestors_built
-			elseif current_class /= unknown_class then
+			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make (universe)
+				create a_processor.make
 				a_processor.process_class (a_class)
-			elseif a_class /= unknown_class then
-				internal_process_class (a_class)
-			else
+			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+			elseif not a_class.is_preparsed then
+				set_fatal_error (a_class)
+			else
+				internal_process_class (a_class)
 			end
 		ensure then
 			ancestors_built: a_class.ancestors_built
@@ -70,10 +78,12 @@ feature -- Error handling
 
 	set_fatal_error (a_class: ET_CLASS) is
 			-- Report a fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			a_class.set_ancestors_built
 			a_class.set_ancestors_error
-		ensure then
+		ensure
 			ancestors_built: a_class.ancestors_built
 			has_ancestors_error: a_class.has_ancestors_error
 		end
@@ -89,6 +99,7 @@ feature {NONE} -- Processing
 			-- pass of the parent validity check.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
 			sorted_ancestors: DS_ARRAYED_LIST [ET_CLASS]
@@ -101,16 +112,16 @@ feature {NONE} -- Processing
 			old_class := current_class
 			current_class := a_class
 			if not current_class.ancestors_built then
-				current_class.process (universe.eiffel_parser)
+				current_class.process (current_system.eiffel_parser)
 				if not current_class.is_parsed or else current_class.has_syntax_error then
 					set_fatal_error (current_class)
 				else
 					add_class_to_sorter (current_class)
 					class_sorter.sort
 					sorted_ancestors := class_sorter.sorted_items
-					any_parents := universe.any_parents
-					system_object_parents := universe.system_object_parents
-					system_object_class := universe.system_object_class
+					any_parents := current_system.any_parents
+					system_object_parents := current_system.system_object_parents
+					system_object_class := current_system.system_object_class
 					nb := sorted_ancestors.count
 					from i := 1 until i > nb loop
 						current_class := sorted_ancestors.item (i)
@@ -182,37 +193,34 @@ feature {NONE} -- Topological sort
 			any_class: ET_CLASS
 			system_object_class: ET_CLASS
 		do
-			if a_class = none_class then
+			if a_class.is_none then
 				-- The validity error will be reported in `set_ancestors'.
+			elseif not a_class.is_preparsed then
+					-- Error: class not in universe (VTCT, ETL2 p.199).
+					-- The validity error will be reported in `set_ancestors'.
+				set_fatal_error (a_class)
 			elseif not a_class.ancestors_built then
-				a_class.process (universe.eiffel_parser)
-				if not a_class.is_preparsed then
-						-- Error: class not in universe (VTCT, ETL2 p.199).
-						-- The validity error will be reported in `set_ancestors'.
-					set_fatal_error (a_class)
-				elseif not a_class.is_parsed or else a_class.has_syntax_error then
+				a_class.process (current_system.eiffel_parser)
+				if not a_class.is_parsed or else a_class.has_syntax_error then
 						-- This error has already been reported
 						-- somewhere else (during the parsing).
 					set_fatal_error (a_class)
 				elseif a_class.parents = Void or else a_class.parents.is_empty then
-					if a_class = universe.general_class then
-						a_class.set_ancestors_built
-					elseif a_class = universe.any_class then
-							-- ISE Eiffel has no GENERAL class anymore.
-							-- Use ANY as class root now.
+					if a_class = current_system.any_class then
+							-- "ANY" has no implicit parents.
 						a_class.set_ancestors_built
 					elseif not class_sorter.has (a_class) then
-						system_object_class := universe.system_object_class
+						system_object_class := current_system.system_object_class
 						if a_class.is_dotnet and a_class /= system_object_class then
 							if not system_object_class.is_preparsed then
-									-- Error: class SYSTEM_OBJECT not in universe (GVHSO-1, not in ETL2).
+									-- Error: class "SYSTEM_OBJECT" not in universe (GVHSO-1, not in ETL2).
 									-- The validity error will be reported in `set_ancestors'
 									-- (for that to work we need to add `a_class' to the
 									-- class sorter despite the error).
 								set_fatal_error (system_object_class)
 								class_sorter.force (a_class)
 							elseif not system_object_class.is_dotnet then
-									-- Error: class SYSTEM_OBJECT not a .NET class (GVHSO-2, not in ETL2).
+									-- Error: class "SYSTEM_OBJECT" not a .NET class (GVHSO-2, not in ETL2).
 									-- The validity error will be reported in `set_ancestors'
 									-- (for that to work we need to add `a_class' to the
 									-- class sorter despite the error).
@@ -220,13 +228,13 @@ feature {NONE} -- Topological sort
 								class_sorter.force (a_class)
 							else
 								class_sorter.force (a_class)
-								add_parents_to_sorter (a_class, universe.system_object_parents)
+								add_parents_to_sorter (a_class, current_system.system_object_parents)
 							end
 						else
-							any_class := universe.any_class
-							any_class.process (universe.eiffel_parser)
+							any_class := current_system.any_class
+							any_class.process (current_system.eiffel_parser)
 							if not any_class.is_preparsed then
-									-- Error: class ANY not in universe (VHAY, ETL2 p.88).
+									-- Error: class "ANY" not in universe (VHAY, ETL2 p.88).
 									-- The validity error will be reported in `set_ancestors'
 									-- (for that to work we need to add `a_class' to the
 									-- class sorter despite the error).
@@ -238,7 +246,7 @@ feature {NONE} -- Topological sort
 								set_fatal_error (any_class)
 							else
 								class_sorter.force (a_class)
-								add_parents_to_sorter (a_class, universe.any_parents)
+								add_parents_to_sorter (a_class, current_system.any_parents)
 							end
 						end
 					end
@@ -264,7 +272,7 @@ feature {NONE} -- Topological sort
 		do
 			nb := a_parents.count
 			from i := 1 until i > nb loop
-				a_class := a_parents.parent (i).type.direct_base_class (universe)
+				a_class := a_parents.parent (i).type.base_class
 				if not a_class.ancestors_built then
 					add_class_to_sorter (a_class)
 					if a_class.is_preparsed then
@@ -277,7 +285,7 @@ feature {NONE} -- Topological sort
 
 feature {NONE} -- Ancestors
 
-	ancestors: DS_HASH_TABLE [ET_BASE_TYPE, INTEGER]
+	ancestors: DS_HASH_TABLE [ET_BASE_TYPE, ET_CLASS]
 			-- Ancestors of `current_class'
 
 	set_ancestors (a_parents: ET_PARENT_LIST) is
@@ -292,32 +300,36 @@ feature {NONE} -- Ancestors
 			a_parent: ET_PARENT
 			i, nb: INTEGER
 			has_error: BOOLEAN
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_BASE_TYPE, INTEGER]
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_BASE_TYPE, ET_CLASS]
 			anc: ET_BASE_TYPE_LIST
+			system_object_parents: ET_PARENT_LIST
+			any_parents: ET_PARENT_LIST
 		do
+			any_parents := current_system.any_parents
+			system_object_parents := current_system.system_object_parents
 			nb := a_parents.count
 			from i := 1 until i > nb loop
 				a_parent := a_parents.parent (i)
 				a_type := a_parent.type
-				a_class := a_type.direct_base_class (universe)
-				if a_class = none_class then
+				a_class := a_type.base_class
+				if a_class.is_none then
 					set_fatal_error (current_class)
 					error_handler.report_vhpr1b_error (current_class, a_type)
 				elseif a_class.has_ancestors_error then
 					set_fatal_error (current_class)
 					if not a_class.is_preparsed then
-						if a_parents = universe.any_parents then
-								-- Error: class ANY not in universe (VHAY, ETL2 p.88).
+						if a_parents = any_parents then
+								-- Error: class "ANY" not in universe (VHAY, ETL2 p.88).
 							error_handler.report_vhay0a_error (current_class)
-						elseif a_parents = universe.system_object_parents then
-								-- Error: class SYSTEM_OBJECT not in universe (GVHSO-1, not in ETL2).
+						elseif a_parents = system_object_parents then
+								-- Error: class "SYSTEM_OBJECT" not in universe (GVHSO-1, not in ETL2).
 							error_handler.report_gvhso1a_error (current_class)
 						else
 								-- Error: class not in universe (VTCT, ETL2 p.199).
 							error_handler.report_vtct0a_error (current_class, a_type)
 						end
-					elseif a_parents = universe.system_object_parents and not a_class.is_dotnet then
-							-- Error: class SYSTEM_OBJECT not a .NET class (GVHSO-2, not in ETL2).
+					elseif a_parents = system_object_parents and not a_class.is_dotnet then
+							-- Error: class "SYSTEM_OBJECT" not a .NET class (GVHSO-2, not in ETL2).
 						error_handler.report_gvhso2a_error (current_class)
 					end
 					has_error := True
@@ -346,30 +358,28 @@ feature {NONE} -- Ancestors
 			a_parent_not_void: a_parent /= Void
 		local
 			a_class: ET_CLASS
-			a_class_id: INTEGER
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			a_parent_type: ET_BASE_TYPE
-			a_type, anc_type: ET_BASE_TYPE
+			a_type, l_ancestor_type: ET_BASE_TYPE
 			i, nb: INTEGER
 			anc: ET_BASE_TYPE_LIST
 		do
 				-- Add current parent to `ancestors'.
 			a_parent_type := a_parent.type
-			a_class := a_parent_type.direct_base_class (universe)
-			a_class_id := a_class.id
-			ancestors.search (a_class_id)
+			a_class := a_parent_type.base_class
+			ancestors.search (a_class)
 			if ancestors.found then
-				anc_type := ancestors.found_item
+				l_ancestor_type := ancestors.found_item
 					-- The context in which the current parent appears is
 					-- `current_class', hence `current_class' appearing
 					-- twice in the call to `same_syntactical_type' below.
-				if not anc_type.same_syntactical_type (a_parent_type, current_class, current_class, universe) then
+				if not l_ancestor_type.same_syntactical_type (a_parent_type, current_class, current_class) then
 					set_fatal_error (current_class)
-					error_handler.report_gvagp0a_error (current_class, anc_type, a_parent_type)
+					error_handler.report_gvagp0a_error (current_class, l_ancestor_type, a_parent_type)
 				end
 			else
 				a_parameters := a_parent.actual_parameters
-				ancestors.force_new (a_parent_type, a_class_id)
+				ancestors.force_new (a_parent_type, a_class)
 					-- Add proper ancestors of current parent
 					-- to the ancestors of `an_heir'.
 				parent_context.set (a_parent_type, current_class)
@@ -377,18 +387,18 @@ feature {NONE} -- Ancestors
 				nb := anc.count
 				from i := 1 until i > nb loop
 					a_type := anc.item (i)
-					a_class_id := a_type.direct_base_class (universe).id
-					ancestors.search (a_class_id)
+					a_class := a_type.base_class
+					ancestors.search (a_class)
 					if ancestors.found then
-						anc_type := ancestors.found_item
-						if not anc_type.same_syntactical_type (a_type, parent_context, current_class, universe) then
+						l_ancestor_type := ancestors.found_item
+						if not l_ancestor_type.same_syntactical_type (a_type, parent_context, current_class) then
 								-- Compute actual generic derivation of `a_type' in
 								-- `current_class' if needed before reporting the error.
 							if a_parameters /= Void then
 								a_type := a_type.resolved_formal_parameters (a_parameters)
 							end
 							set_fatal_error (current_class)
-							error_handler.report_gvagp0a_error (current_class, anc_type, a_type)
+							error_handler.report_gvagp0a_error (current_class, l_ancestor_type, a_type)
 							i := nb + 1 -- Jump out of the loop.
 						else
 							i := i + 1
@@ -400,7 +410,7 @@ feature {NONE} -- Ancestors
 						if a_parameters /= Void then
 							a_type := a_type.resolved_formal_parameters (a_parameters)
 						end
-						ancestors.force_new (a_type, a_class_id)
+						ancestors.force_new (a_type, a_class)
 						i := i + 1
 					end
 				end
@@ -426,12 +436,12 @@ feature {NONE} -- Error handling
 			system_object_parents: ET_PARENT_LIST
 			any_parents: ET_PARENT_LIST
 		do
-			system_object_class := universe.system_object_class
-			any_parents := universe.any_parents
-			system_object_parents := universe.system_object_parents
+			system_object_class := current_system.system_object_class
+			any_parents := current_system.any_parents
+			system_object_parents := current_system.system_object_parents
 			nb := a_parents.count
 			from i := 1 until i > nb loop
-				a_class := a_parents.parent (i).type.direct_base_class (universe)
+				a_class := a_parents.parent (i).type.base_class
 				if not a_class.ancestors_built then
 					set_fatal_error (a_class)
 					grand_parents := a_class.parents

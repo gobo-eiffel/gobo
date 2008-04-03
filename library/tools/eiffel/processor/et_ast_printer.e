@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,25 +44,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file; a_universe: like universe) is
+	make (a_file: like file) is
 			-- Create a new AST printer, using `a_file' as output file.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: a_file.is_open_write
-			a_universe_not_void: a_universe /= Void
 		do
 			file := a_file
-			universe := a_universe
 		ensure
 			file_set: file = a_file
-			universe_set: universe = a_universe
 		end
 
-	make_null (a_universe: like universe) is
+	make_null is
 			-- Create a new AST printer, initialized with a null output stream.
 		do
-			file := null_output_stream
-			universe := a_universe
+			make (null_output_stream)
 		ensure then
 			file_set: file = null_output_stream
 		end

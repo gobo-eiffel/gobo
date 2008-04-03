@@ -5,7 +5,7 @@ indexing
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,18 +27,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_id; a_pathname: like pathname_id) is
+	make (a_name: like name_id; a_pathname: like pathname_id; a_universe: ET_UNIVERSE) is
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			name_id := a_name
 			pathname_id := a_pathname
 			is_relative := (a_pathname = Void)
+			universe := a_universe
 			set_overridden_constraint_enabled (True)
 		ensure
 			name_id_set: name_id = a_name
 			pathname_id_set: pathname_id = a_pathname
+			universe_set: universe = a_universe
 			is_relative: is_relative = (a_pathname = Void)
 			overridden_constraint_enabled: overridden_constraint_enabled
 		end
@@ -159,7 +162,7 @@ feature {NONE} -- Implementation
 		do
 			create a_name_id.make (a_name)
 			a_name_id.set_position (name_id.line, name_id.column)
-			create Result.make (a_name_id, Void)
+			create Result.make (a_name_id, Void, universe)
 			Result.set_parent (Current)
 			Result.set_recursive (True)
 			Result.set_implicit (True)

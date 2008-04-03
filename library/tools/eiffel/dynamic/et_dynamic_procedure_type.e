@@ -56,7 +56,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time procedure associated with `a_procedure';
 			-- Create a new object at each call.
 		do

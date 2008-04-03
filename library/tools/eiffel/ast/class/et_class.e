@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,6 @@ inherit
 			reset as reset_type,
 			type_mark as class_mark,
 			actual_parameters as formal_parameters
-		export
-			{ET_CLASS} eiffel_class
 		redefine
 			class_mark, process,
 			formal_parameters,
@@ -32,6 +30,14 @@ inherit
 			debug_output, copy, is_equal,
 			append_unaliased_to_string
 		end
+
+--	ET_CLIENT
+--		undefine
+--			copy, is_equal,
+--			first_leaf, last_leaf,
+--			position, break,
+--			process
+--		end
 
 	HASHABLE
 		undefine
@@ -44,25 +50,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; an_id: INTEGER) is
-			-- Create a new class.
+	make (a_name: like name) is
+			-- Create a new class named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			an_id_positive: an_id > 0
 		do
 			name := a_name
-			id := an_id
+			id := 0
 			ancestors := tokens.empty_ancestors
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
-			eiffel_class := Current
+			base_class := Current
 			master_class := Current
 			time_stamp := no_time_stamp
 		ensure
 			name_set: name = a_name
-			id_set: id = an_id
 		end
 
 	make_unknown (a_name: like name) is
@@ -77,7 +81,7 @@ feature {NONE} -- Initialization
 			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
-			eiffel_class := Current
+			base_class := Current
 			master_class := Current
 			time_stamp := no_time_stamp
 		ensure
@@ -277,6 +281,16 @@ feature -- Status report
 			definition: Result = (group /= Void and then group.is_none)
 		end
 
+	is_unknown: BOOLEAN is
+			-- Is current class the "*UNKNOWN*" class?
+			-- This class does not conform to any other class,
+			-- not even itself.
+		do
+			Result := (Current = tokens.unknown_class)
+		ensure
+			definition: Result = (Current = tokens.unknown_class)
+		end
+
 feature -- Access
 
 	obsolete_message: ET_OBSOLETE
@@ -298,7 +312,7 @@ feature -- Access
 			-- Class ID
 
 	index: INTEGER
-			-- Index of class in enclosing universe;
+			-- Index of class in enclosing Eiffel system;
 			-- Used to get dynamic information about this class.
 
 	hash_code: INTEGER is
@@ -352,6 +366,16 @@ feature -- Access
 			-- Arbitrary user data
 
 feature -- Setting
+
+	set_id (an_id: INTEGER) is
+			-- Set `id' to `an_id'.
+		require
+			an_id_positive: an_id > 0
+		do
+			id := an_id
+		ensure
+			id_set: id = an_id
+		end
 
 	set_name (a_name: like name) is
 			-- Set `name' to `a_name'.
@@ -441,6 +465,28 @@ feature -- Preparsing
 
 	group: ET_GROUP
 			-- Group (e.g. cluster or .NET assembly) to which current class belongs
+
+	universe: ET_UNIVERSE is
+			-- Universe to which current class belongs
+		do
+			if group /= Void then
+				Result := group.universe
+			end
+		ensure
+			universe_not_void_when_preparsed: is_preparsed implies Result /= Void
+		end
+
+	current_system: ET_SYSTEM is
+			-- Surrounding Eiffel system
+			-- (Note: there is a frozen feature called `system' in
+			-- class GENERAL of SmartEiffel 1.0)
+		do
+			if group /= Void then
+				Result := group.current_system
+			end
+		ensure
+			current_system_not_void_when_preparsed: is_preparsed implies Result /= Void
+		end
 
 	time_stamp: INTEGER
 			-- Time stamp of the file when it was last parsed
@@ -563,7 +609,8 @@ feature -- Preparsing status
 	is_preparsed: BOOLEAN is
 			-- Has current class been preparsed (i.e. its group is already
 			-- known but the class has not necessarily been parsed yet)?
-			-- This means that the class is in the universe.
+			-- This means that the class is in one the universes making
+			-- up the surrounding Eiffel system.
 		do
 			Result := (group /= Void)
 		ensure
@@ -707,6 +754,19 @@ feature -- Parsing status
 			has_syntax_error := True
 		ensure
 			syntax_error_set: has_syntax_error
+		end
+
+	increment_parsed_counter (a_counter: UT_COUNTER) is
+			-- Increment `a_counter' if current class is parsed.
+		require
+			a_counter_not_void: a_counter /= Void
+		do
+			if is_parsed then
+				a_counter.increment
+			end
+		ensure
+			same_if_not_parsed: not is_parsed implies a_counter.item = old (a_counter.item)
+			increased_if_parsed: is_parsed implies a_counter.item = old (a_counter.item) + 1
 		end
 
 	reset_parsed is
@@ -937,88 +997,94 @@ feature -- Genericity
 
 feature -- Ancestors
 
-	has_ancestor (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Is `a_class' an ancestor of current class in `a_universe'?
+	has_ancestor (a_class: ET_CLASS): BOOLEAN is
+			-- Is `a_class' an ancestor of current class?
 			-- (Note: you have to make sure that the ancestors have correctly
 			-- been built first in order to get the correct answer.)
 		require
 			a_class_not_void: a_class /= Void
-			a_universe_not_void: a_universe /= Void
 		do
-			if Current = a_universe.unknown_class then
-					-- Class *UNKNOWN* has no ancestors.
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no ancestors.
 				Result := False
 			elseif a_class = Current then
 				Result := True
-			elseif Current = a_universe.none_class then
-					-- NONE is a descendant of all classes.
+			elseif is_none then
+					-- "NONE" is a descendant of all classes.
 				Result := True
 			else
-				Result := ancestors.has_class (a_class, a_universe)
+				Result := ancestors.has_class (a_class)
 			end
 		end
 
-	ancestor (a_type: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
-			-- Ancestor of current class with same base class
-			-- as `a_type' in `a_universe'; Void if no such ancestor.
+	ancestor (a_type: ET_BASE_TYPE): ET_BASE_TYPE is
+			-- Ancestor of current class with same base class as `a_type';
+			-- Void if no such ancestor.
 			-- (Note: you have to make sure that the ancestors have correctly
 			-- been built first in order to get the correct answer.)
 		require
 			a_type_not_void: a_type /= Void
-			a_universe_not_void: a_universe /= Void
 		local
 			a_class: ET_CLASS
 		do
-			a_class := a_type.direct_base_class (a_universe)
-			if Current = a_universe.unknown_class then
-					-- Class *UNKNOWN* has no ancestors.
+			a_class := a_type.base_class
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no ancestors.
 				Result := Void
 			elseif a_class = Current then
 				Result := a_type
-			elseif Current = a_universe.none_class then
-					-- NONE is a descendant of all classes.
+			elseif is_none then
+					-- "NONE" is a descendant of all classes.
 				Result := a_type
 			else
-				Result := ancestors.base_type (a_class, a_universe)
+				Result := ancestors.base_type (a_class)
 			end
 		end
 
-	descendants (a_universe: ET_UNIVERSE): DS_ARRAYED_LIST [ET_CLASS] is
-			-- Proper descendant classes in `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			other_class: ET_CLASS
+	descendants: DS_ARRAYED_LIST [ET_CLASS] is
+			-- Proper descendant classes of current class in the surrounding Eiffel system
+			-- (Note: you have to make sure that the ancestors of the classes in the
+			-- surrounding Eiffel system have correctly been built first in order to
+			-- get the correct answer.)
 		do
-			if Current = a_universe.unknown_class then
-					-- Class *UNKNOWN* has no descendants.
+			if is_unknown then
+					-- Class "*UNKNOWN*" has no descendants.
 				create Result.make (0)
-			elseif Current = a_universe.none_class then
-					-- Class NONE has no descendants.
+			elseif is_none then
+					-- Class "NONE" has no descendants.
+				create Result.make (0)
+			elseif not is_preparsed then
+					-- Current class is not preparsed, this means that we know nothing
+					-- about it, not even its filename. Therefore it cannot possibly
+					-- have descendant classes.
 				create Result.make (0)
 			else
-				if Current = a_universe.any_class or Current = a_universe.general_class then
-					create Result.make (a_universe.classes.count)
-				else
-					create Result.make (initial_descendants_capacity)
-				end
-				a_cursor := a_universe.classes.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					other_class := a_cursor.item
-					if other_class /= Current then
-						if other_class.ancestors_built then
-							if other_class.has_ancestor (Current, a_universe) then
-								Result.force_last (other_class)
-							end
-						end
-					end
-					a_cursor.forth
-				end
+				create Result.make (initial_descendants_capacity)
+				current_system.classes_do_recursive (agent {ET_CLASS}.add_to_descendants (Current, Result))
 			end
 		ensure
 			descendants_not_void: Result /= Void
 			no_void_descendant: not Result.has (Void)
+		end
+
+	add_to_descendants (a_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])
+			-- Add current class to `a_descendants' if it is a proper descendant of `a_class'.
+			-- (Note: you have to make sure that the ancestors of current class have correctly
+			-- been built first in order to get the correct behavior.)
+		require
+			a_class_not_void: a_class /= Void
+			a_descendants_not_void: a_descendants /= Void
+			no_void_descedants: not a_descendants.has (Void)
+		do
+			if a_class /= Current then
+				if ancestors_built then
+					if has_ancestor (a_class) then
+						a_descendants.force_last (Current)
+					end
+				end
+			end
+		ensure
+			no_void_descedants: not a_descendants.has (Void)
 		end
 
 	parents: ET_PARENT_LIST
@@ -1092,18 +1158,17 @@ feature -- Ancestor building status
 
 feature -- Creation
 
-	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN is
 			-- Is feature name listed in current creation clauses
 			-- and is it exported to `a_client'?
-			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_client_not_void: a_client /= Void
-			a_universe_not_void: a_universe /= Void
 		do
 			if creators /= Void then
-				Result := creators.is_exported_to (a_name, a_client, a_universe)
+				Result := creators.is_exported_to (a_name, a_client)
 			end
 		end
 
@@ -1136,16 +1201,15 @@ feature -- Creation
 
 feature -- Conversion
 
-	convert_to_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
+	convert_to_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
 			-- Conversion feature, if any, to convert `a_type' to `other'
 		require
 			other_not_void: other /= Void
 			other_context_valid: other.is_valid_context
 			a_type_not_void: a_type /= Void
 			a_type_context_valid: a_type.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
-			valid_type: a_type.base_class (a_universe) = Current
+			valid_type: a_type.base_class = Current
 		local
 			i, nb: INTEGER
 			a_feature: ET_CONVERT_FEATURE
@@ -1157,7 +1221,7 @@ feature -- Conversion
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_to then
-						if a_feature.types.has_named_type (other_type, other, a_type, a_universe) then
+						if a_feature.types.has_named_type (other_type, other, a_type) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end
@@ -1167,16 +1231,15 @@ feature -- Conversion
 			end
 		end
 
-	convert_from_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
+	convert_from_feature (other: ET_TYPE_CONTEXT; a_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
 			-- Conversion feature, if any, to convert `a_type' from `other'
 		require
 			other_not_void: other /= Void
 			other_context_valid: other.is_valid_context
 			a_type_not_void: a_type /= Void
 			a_type_context_valid: a_type.is_valid_context
-			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
-			valid_type: a_type.base_class (a_universe) = Current
+			valid_type: a_type.base_class = Current
 		local
 			i, nb: INTEGER
 			a_feature: ET_CONVERT_FEATURE
@@ -1188,7 +1251,7 @@ feature -- Conversion
 				from i := 1 until i > nb loop
 					a_feature := convert_features.convert_feature (i)
 					if a_feature.is_convert_from then
-						if a_feature.types.has_named_type (other_type, other, a_type, a_universe) then
+						if a_feature.types.has_named_type (other_type, other, a_type) then
 							Result := a_feature
 							i := nb + 1 -- Jump out of the loop.
 						end
@@ -1523,14 +1586,12 @@ feature -- System
 
 feature -- Type context
 
-	is_valid_context: BOOLEAN is
-			-- A context is valid if the `type' of its `root_context'
-			-- is only made up of class names and formal generic
-			-- parameter names, and if the actual parameters of these
-			-- formal parameters are themselves in current context
-		do
-			Result := True
-		end
+	is_valid_context: BOOLEAN is True
+			-- A context is valid if the base class of its `root_context'
+			-- is preparsed and if its `root_context' is only made up
+			-- of class names and formal generic parameter names, and if
+			-- the actual parameters of these formal parameters are
+			-- themselves
 
 feature -- Duplication
 
@@ -1548,7 +1609,7 @@ feature -- Duplication
 		do
 			if other /= Current then
 				standard_copy (other)
-				eiffel_class := Current
+				base_class := Current
 			end
 		end
 
@@ -1562,10 +1623,10 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			else
-				l_class := eiffel_class
-				eiffel_class := other.eiffel_class
+				l_class := base_class
+				base_class := other.base_class
 				Result := standard_is_equal (other)
-				eiffel_class := l_class
+				base_class := l_class
 			end
 		end
 
@@ -1630,8 +1691,8 @@ feature {NONE} -- Constants
 
 invariant
 
-	id_nonnegative: id >= 0
-	index_nonnegative: index >= 0
+	id_not_negative: id >= 0
+	index_not_negative: index >= 0
 	master_class_not_void: master_class /= Void
 	ancestors_not_void: ancestors /= Void
 	queries_not_void: queries /= Void

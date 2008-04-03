@@ -6,7 +6,7 @@ indexing
 		"Eiffel preparsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ inherit
 
 create
 
-	make, make_with_factory
+	make
 %}
 
 %x MS MSN MSN1 VS1 VS2 VS3 LAVS1 LAVS2 LAVS3
@@ -41,7 +41,10 @@ create
 [aA][lL][lL]	|
 [aA][nN][dD]	|
 [aA][sS]	|
+[aA][sS][sS][iI][gG][nN]	|
 [cC][hH][eE][cC][kK]	|
+[cC][oO][nN][vV][eE][rR][tT]	|
+[cC][rR][eE][aA][tT][eE]	|
 [cC][rR][eE][aA][tT][iI][oO][nN]	|
 [cC][uU][rR][rR][eE][nN][tT]	|
 [dD][eE][bB][uU][gG]	|
@@ -91,23 +94,12 @@ create
 [uU][nN][iI][qQ][uU][eE]	|
 [uU][nN][tT][iI][lL]	|
 [vV][aA][rR][iI][aA][nN][tT]	|
+[vV][oO][iI][dD]	|
 [wW][hH][eE][nN]	|
 [xX][oO][rR]	{
 			}
 [cC][lL][aA][sS][sS]	{
 				class_keyword_found := True
-			}
-[aA][sS][sS][iI][gG][nN]	{
-				if use_assign_keyword then
-					-- Do nothing.
-				elseif class_keyword_found then
-					last_token := E_IDENTIFIER
-					last_literal_start := 1
-					last_literal_end := 6
-					last_break_end := 0
-					last_comment_end := 0
-					last_classname := ast_factory.new_identifier (Current)
-				end
 			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE]	{
 				if use_attribute_keyword then
@@ -121,42 +113,6 @@ create
 					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
-[cC][oO][nN][vV][eE][rR][tT]	{
-				if use_convert_keyword then
-					-- Do nothing.
-				elseif class_keyword_found then
-					last_token := E_IDENTIFIER
-					last_literal_start := 1
-					last_literal_end := 7
-					last_break_end := 0
-					last_comment_end := 0
-					last_classname := ast_factory.new_identifier (Current)
-				end
-			}
-[cC][rR][eE][aA][tT][eE]	{
-				if use_create_keyword then
-					-- Do nothing.
-				elseif class_keyword_found then
-					last_token := E_IDENTIFIER
-					last_literal_start := 1
-					last_literal_end := 6
-					last_break_end := 0
-					last_comment_end := 0
-					last_classname := ast_factory.new_identifier (Current)
-				end
-			}
-[rR][eE][cC][aA][sS][tT]	{
-				if use_recast_keyword then
-					-- Do nothing.
-				elseif class_keyword_found then
-					last_token := E_IDENTIFIER
-					last_literal_start := 1
-					last_literal_end := 6
-					last_break_end := 0
-					last_comment_end := 0
-					last_classname := ast_factory.new_identifier (Current)
-				end
-			}
 [rR][eE][fF][eE][rR][eE][nN][cC][eE] {
 				if use_reference_keyword then
 					-- Do nothing.
@@ -164,18 +120,6 @@ create
 					last_token := E_IDENTIFIER
 					last_literal_start := 1
 					last_literal_end := 9
-					last_break_end := 0
-					last_comment_end := 0
-					last_classname := ast_factory.new_identifier (Current)
-				end
-			}
-[vV][oO][iI][dD] {
-				if use_void_keyword then
-					-- Do nothing.
-				elseif class_keyword_found then
-					last_token := E_IDENTIFIER
-					last_literal_start := 1
-					last_literal_end := 4
 					last_break_end := 0
 					last_comment_end := 0
 					last_classname := ast_factory.new_identifier (Current)

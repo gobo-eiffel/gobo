@@ -123,23 +123,19 @@ feature -- Processing
 		local
 			a_cluster: ET_LACE_CLUSTER
 			a_clusters: ET_LACE_CLUSTERS
-			an_ast_factory: ET_AST_FACTORY
-			a_universe: ET_LACE_UNIVERSE
+			a_system: ET_LACE_SYSTEM
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
-			create a_cluster.make (name, pathname)
+			create a_system.make
+			a_system.set_error_handler (an_error_handler)
+			create a_cluster.make (name, pathname, a_system)
 			create a_clusters.make (a_cluster)
-			create an_ast_factory.make
-			create a_universe.make_with_factory (a_clusters, an_ast_factory, an_error_handler)
-			a_universe.set_use_assign_keyword (True)
-			a_universe.set_use_attribute_keyword (False)
-			a_universe.set_use_convert_keyword (True)
-			a_universe.set_use_create_keyword (True)
-			a_universe.set_use_recast_keyword (False)
-			a_universe.set_use_reference_keyword (True)
-			a_universe.set_use_void_keyword (True)
-			a_universe.parse_all
-			a_cursor := a_universe.classes.new_cursor
+			a_system.set_clusters (a_clusters)
+			a_system.set_use_attribute_keyword (False)
+			a_system.set_use_reference_keyword (True)
+			a_system.activate_processors
+			a_system.parse_all
+			a_cursor := a_system.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				if class_regexp.recognizes (a_cursor.key.name) then
 					process_class (a_cursor.item, testcases)

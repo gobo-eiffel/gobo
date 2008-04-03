@@ -997,6 +997,25 @@ feature -- Parsing
 					yyss_top := yy_suspended_yyss_top
 					yy_goto := yy_suspended_yy_goto
 					yy_parsing_status := yyContinue
+					if yy_goto = yyReduce then
+							-- Now "shift" the result of the reduction.
+							-- Determine what state that goes to,
+							-- based on the state we popped back to
+							-- and the rule number reduced by.
+						yyn := yyr1.item (yyn)
+						yyss_top := yyss.item (yyssp)
+						index := yyn - yyNtbase
+						yystate := yypgoto.item (index) + yyss_top
+						if
+							(yystate >= 0 and yystate <= yyLast) and then
+							yycheck.item (yystate) = yyss_top
+						then
+							yystate := yytable.item (yystate)
+						else
+							yystate := yydefgoto.item (index)
+						end
+						yy_goto := yyNewstate
+					end
 				else
 					error_count := 0
 					yy_lookahead_needed := True

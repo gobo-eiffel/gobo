@@ -5,7 +5,7 @@ indexing
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,13 @@ inherit
 	ET_CLASS_PROCESSOR
 		rename
 			make as make_class_processor
+		end
+
+	ET_AST_NULL_PROCESSOR
+		rename
+			make as make_class_processor
+		undefine
+			make_class_processor
 		redefine
 			process_class
 		end
@@ -27,45 +34,33 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
-			-- Create a new implementation checker for classes in `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
+	make is
+			-- Create a new implementation checker for given classes.
 		local
-			l_suppliers: DS_HASH_SET [ET_CLASS]
+			l_feature_checker: ET_FEATURE_CHECKER
 		do
-			make_class_processor (a_universe)
-			create feature_checker.make (a_universe)
-			create precursor_procedures.make (10)
-			create precursor_queries.make (10)
-			create l_suppliers.make (10000)
-			create supplier_builder.make (a_universe)
-			supplier_builder.set (current_class, l_suppliers)
-			create no_suppliers.make (0)
-		ensure
-			universe_set: universe = a_universe
+			create l_feature_checker.make
+			make_with_feature_checker (l_feature_checker)
 		end
 
-	make_with_feature_checker (a_universe: like universe; a_feature_checker: like feature_checker) is
-			-- Create a new implementation checker for classes in `a_universe'
+	make_with_feature_checker (a_feature_checker: like feature_checker) is
+			-- Create a new implementation checker for given classes
 			-- using `a_feature_checker' to check the feature implementation
 			-- and their assertions.
 		require
-			a_universe_not_void: a_universe /= Void
 			a_feature_checker_not_void: a_feature_checker /= Void
 		local
 			l_suppliers: DS_HASH_SET [ET_CLASS]
 		do
-			make_class_processor (a_universe)
+			make_class_processor
 			feature_checker := a_feature_checker
 			create precursor_procedures.make (10)
 			create precursor_queries.make (10)
 			create l_suppliers.make (10000)
-			create supplier_builder.make (a_universe)
+			create supplier_builder.make
 			supplier_builder.set (current_class, l_suppliers)
 			create no_suppliers.make (0)
 		ensure
-			universe_set: universe = a_universe
 			feature_checker_set: feature_checker = a_feature_checker
 		end
 
@@ -135,22 +130,24 @@ feature -- Processing
 		local
 			a_processor: like Current
 		do
-			if a_class = none_class then
+			if a_class.is_none then
 				a_class.set_implementation_checked
-			elseif current_class /= unknown_class then
+			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make_with_feature_checker (universe, feature_checker)
+				create a_processor.make
 				a_processor.set_flat_mode (flat_mode)
 				a_processor.set_flat_dbc_mode (flat_dbc_mode)
 				a_processor.set_short_mode (short_mode)
 				a_processor.set_suppliers_enabled (suppliers_enabled)
 				a_processor.process_class (a_class)
-			elseif a_class /= unknown_class then
-				internal_process_class (a_class)
-			else
+			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+			elseif not a_class.is_preparsed then
+				set_fatal_error (a_class)
+			else
+				internal_process_class (a_class)
 			end
 			if suppliers_enabled and then a_class.suppliers = Void then
 				a_class.set_suppliers (no_suppliers)
@@ -164,10 +161,12 @@ feature -- Error handling
 
 	set_fatal_error (a_class: ET_CLASS) is
 			-- Report a fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			a_class.set_implementation_checked
 			a_class.set_implementation_error
-		ensure then
+		ensure
 			implementation_checked: a_class.implementation_checked
 			has_implementation_error: a_class.has_implementation_error
 		end
@@ -186,6 +185,7 @@ feature {NONE} -- Processing
 			-- between non-flat and flat modes.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
 			a_parents: ET_PARENT_LIST
@@ -198,31 +198,35 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.implementation_checked then
 					-- Check interface of `current_class' if not already done.
-				current_class.process (universe.interface_checker)
+				current_class.process (current_system.interface_checker)
 				if current_class.interface_checked and then not current_class.has_interface_error then
 					current_class.set_implementation_checked
 						-- Process parents first.
 					a_parents := current_class.parents
 					if a_parents = Void or else a_parents.is_empty then
-						if current_class = universe.general_class then
-							a_parents := Void
-						elseif current_class = universe.any_class then
-								-- ISE Eiffel has no GENERAL class anymore.
-								-- Use ANY as class root now.
+						if current_class = current_system.any_class then
+								-- "ANY" has no implicit parents.
 							a_parents := Void
 						else
-							a_parents := universe.any_parents
+							a_parents := current_system.any_parents
 						end
 					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
-								-- This is a controlled recursive call to `internal_process_class'.
-							a_parent_class := a_parents.parent (i).type.direct_base_class (universe)
-							internal_process_class (a_parent_class)
-							if a_parent_class.has_implementation_error then
+							a_parent_class := a_parents.parent (i).type.base_class
+							if not a_parent_class.is_preparsed then
+									-- Internal error: the VTCT error should have already been
+									-- reported in ET_ANCESTOR_BUILDER.
 								a_error_in_parent := True
 								set_fatal_error (current_class)
+							else
+									-- This is a controlled recursive call to `internal_process_class'.
+								internal_process_class (a_parent_class)
+								if a_parent_class.has_implementation_error then
+									a_error_in_parent := True
+									set_fatal_error (current_class)
+								end
 							end
 							i := i + 1
 						end
@@ -235,8 +239,7 @@ feature {NONE} -- Processing
 					check_features_validity (a_error_in_parent)
 					check_invariants_validity (a_error_in_parent)
 					if l_suppliers /= Void then
-						if not a_class.has_implementation_error then
-							l_suppliers.remove (none_class)
+						if not current_class.has_implementation_error then
 							create l_suppliers2.make (l_suppliers.count)
 							l_suppliers2.extend (l_suppliers)
 							current_class.set_suppliers (l_suppliers2)
@@ -252,6 +255,7 @@ feature {NONE} -- Processing
 			current_class := old_class
 		ensure
 			implementation_checked: a_class.implementation_checked
+			suppliers_set: suppliers_enabled implies a_class.suppliers /= Void
 		end
 
 feature {NONE} -- Feature validity
@@ -268,21 +272,18 @@ feature {NONE} -- Feature validity
 			old_supplier_handler: ET_SUPPLIER_HANDLER
 			i, nb: INTEGER
 		do
+			if suppliers_enabled then
+				old_supplier_handler := feature_checker.supplier_handler
+				feature_checker.set_supplier_handler (supplier_builder)
+			end
 			l_queries := current_class.queries
 			nb := l_queries.declared_count
-			if suppliers_enabled then
-				old_supplier_handler := universe.supplier_handler
-				universe.set_supplier_handler (supplier_builder)
-			end
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
 				l_query.reset_implementation_checked
 				l_query.reset_assertions_checked
 				check_query_validity (l_query, an_error_in_parent)
 				i := i + 1
-			end
-			if suppliers_enabled then
-				universe.set_supplier_handler (old_supplier_handler)
 			end
 			if flat_mode and not an_error_in_parent then
 				i := nb + 1
@@ -295,19 +296,12 @@ feature {NONE} -- Feature validity
 			end
 			l_procedures := current_class.procedures
 			nb := l_procedures.declared_count
-			if suppliers_enabled then
-				old_supplier_handler := universe.supplier_handler
-				universe.set_supplier_handler (supplier_builder)
-			end
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)
 				l_procedure.reset_implementation_checked
 				l_procedure.reset_assertions_checked
 				check_procedure_validity (l_procedure, an_error_in_parent)
 				i := i + 1
-			end
-			if suppliers_enabled then
-				universe.set_supplier_handler (old_supplier_handler)
 			end
 			if flat_mode and not an_error_in_parent then
 				i := nb + 1
@@ -317,6 +311,9 @@ feature {NONE} -- Feature validity
 					check_procedure_validity (l_procedure, an_error_in_parent)
 					i := i + 1
 				end
+			end
+			if suppliers_enabled then
+				feature_checker.set_supplier_handler (old_supplier_handler)
 			end
 		end
 
@@ -489,8 +486,8 @@ feature {NONE} -- Assertion validity
 			i, nb: INTEGER
 		do
 			if suppliers_enabled then
-				old_supplier_handler := universe.supplier_handler
-				universe.set_supplier_handler (supplier_builder)
+				old_supplier_handler := feature_checker.supplier_handler
+				feature_checker.set_supplier_handler (supplier_builder)
 			end
 			an_invariants := current_class.invariants
 			if an_invariants /= Void then
@@ -501,13 +498,13 @@ feature {NONE} -- Assertion validity
 				end
 			end
 			if suppliers_enabled then
-				universe.set_supplier_handler (old_supplier_handler)
+				feature_checker.set_supplier_handler (old_supplier_handler)
 			end
 			if flat_mode and not an_error_in_parent then
 				an_ancestors := current_class.ancestors
 				nb := an_ancestors.count
 				from i := 1 until i > nb loop
-					an_ancestor := an_ancestors.item (i).direct_base_class (universe)
+					an_ancestor := an_ancestors.item (i).base_class
 					an_invariants := an_ancestor.invariants
 					if an_invariants /= Void then
 						feature_checker.check_invariants_validity (an_invariants, an_ancestor)

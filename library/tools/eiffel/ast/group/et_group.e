@@ -5,7 +5,7 @@ indexing
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,13 @@ feature -- Status report
 		end
 
 	is_none: BOOLEAN is
-			-- Is current group a built-in group for class NONE?
+			-- Is current group a built-in group for class "NONE"?
+		do
+			-- Result := False
+		end
+
+	is_unknown: BOOLEAN is
+			-- Is current group a built-in group for class "*UNKNOWN*"?
 		do
 			-- Result := False
 		end
@@ -51,6 +57,11 @@ feature -- Status report
 			-- In other words, are changes in this group and in its classes
 			-- not taken into account when repreparsing or reparsing
 			-- the universe? (see 'library' in ISE's LACE.)
+		deferred
+		end
+
+	is_preparsed: BOOLEAN is
+			-- Has current group already been traversed to look for its classes?
 		deferred
 		end
 
@@ -73,6 +84,23 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	universe: ET_UNIVERSE is
+			-- Surrounding universe
+		deferred
+		ensure
+			universe_not_void: Result /= Void
+		end
+
+	current_system: ET_SYSTEM is
+			-- Surrounding Eiffel system
+			-- (Note: there is a frozen feature called `system' in
+			-- class GENERAL of SmartEiffel 1.0)
+		do
+			Result := universe.current_system
+		ensure
+			current_system_not_void: Result /= Void
+		end
 
 	name: STRING is
 			-- Name

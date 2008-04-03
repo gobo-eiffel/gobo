@@ -5,33 +5,16 @@ indexing
 		"Built-in groups of classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_BUILTIN_GROUP
+deferred class ET_BUILTIN_GROUP
 
 inherit
 
 	ET_GROUP
-
-create
-
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_name: like name) is
-			-- Create a new built-in group.
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
-		do
-			name := a_name
-		ensure
-			name_set: name = a_name
-		end
 
 feature -- Status report
 
@@ -46,6 +29,9 @@ feature -- Status report
 			-- In other words, are changes in this group and in its classes
 			-- not taken into account when repreparsing or reparsing
 			-- the universe? (see 'library' in ISE's LACE.)
+
+	is_preparsed: BOOLEAN is True
+			-- Has current group already been traversed to look for its classes?
 
 feature -- Access
 

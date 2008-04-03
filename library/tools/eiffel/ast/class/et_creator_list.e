@@ -38,21 +38,20 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+	is_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN is
 			-- Is feature name listed in current creation clauses
 			-- and is it exported to `a_client'?
-			-- (Note: Use `a_universe.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_client_not_void: a_client /= Void
-			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if storage.item (i).is_exported_to (a_name, a_client, a_universe) then
+				if storage.item (i).is_exported_to (a_name, a_client) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

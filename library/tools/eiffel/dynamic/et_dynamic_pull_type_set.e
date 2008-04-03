@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_SYSTEM) is
+	put_source (a_source: ET_DYNAMIC_ATTACHMENT; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_source' to current set.
 			-- (Sources are subsets of current set.)
 		local

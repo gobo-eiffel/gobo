@@ -5,7 +5,7 @@ indexing
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,51 +40,18 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING; a_universe: ET_UNIVERSE; an_error_handler: like error_handler) is
+	make (a_filename: STRING) is
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
-			a_universe_not_void: a_universe /= Void
-			an_error_handler_not_void: an_error_handler /= Void
-		local
-			a_factory: ET_AST_FACTORY
-		do
-			create a_factory.make
-			make_with_factory (a_filename, a_universe, a_factory, an_error_handler)
-		ensure
-			filename_set: filename = a_filename
-			universe_set: universe = a_universe
-			error_handler_set: error_handler = an_error_handler
-		end
-
-	make_with_factory (a_filename: STRING; a_universe: ET_UNIVERSE;
-		a_factory: like ast_factory; an_error_handler: like error_handler) is
-			-- Create a new Eiffel scanner.
-		require
-			a_filename_not_void: a_filename /= Void
-			a_universe_not_void: a_universe /= Void
-			a_factory_not_void: a_factory /= Void
-			an_error_handler_not_void: an_error_handler /= Void
 		do
 			make_with_buffer (Empty_buffer)
 			last_text_count := 1
 			last_literal_start := 1
 			filename := a_filename
-			universe := a_universe
-			ast_factory := a_factory
-			error_handler := an_error_handler
-			set_use_assign_keyword (True)
-			set_use_attribute_keyword (True)
-			set_use_convert_keyword (True)
-			set_use_create_keyword (True)
-			set_use_recast_keyword (True)
-			set_use_reference_keyword (True)
-			set_use_void_keyword (True)
+			group := tokens.unknown_class.group
 		ensure
 			filename_set: filename = a_filename
-			universe_set: universe = a_universe
-			ast_factory_set: ast_factory = a_factory
-			error_handler_set: error_handler = an_error_handler
 		end
 
 feature -- Initialization
@@ -105,6 +72,27 @@ feature -- Access
 	filename: STRING
 			-- Name of file being parsed
 
+	group: ET_GROUP
+			-- Group to which the class being parsed belongs
+
+	universe: ET_UNIVERSE is
+			-- Universe to which the class being parsed belongs
+		do
+			Result := group.universe
+		ensure
+			universe_not_void: Result /= Void
+		end
+
+	current_system: ET_SYSTEM is
+			-- Surrounding Eiffel system
+			-- (Note: there is a frozen feature called `system' in
+			-- class GENERAL of SmartEiffel 1.0)
+		do
+			Result := group.current_system
+		ensure
+			current_system_not_void: Result /= Void
+		end
+
 	current_position: ET_POSITION is
 			-- Current position
 			-- (Create a new object at each call.)
@@ -114,104 +102,39 @@ feature -- Access
 			current_position_not_void: Result /= Void
 		end
 
-	universe: ET_UNIVERSE
-			-- Surrounding universe
-
-	ast_factory: ET_AST_FACTORY
+	ast_factory: ET_AST_FACTORY is
 			-- Abstract Syntax Tree factory
+		do
+			Result := current_system.ast_factory
+		ensure
+			ast_factory_not_void: Result /= Void
+		end
 
 feature -- Status report
 
-	use_assign_keyword: BOOLEAN
-			-- Should 'assign' be considered as
-			-- a keyword (otherwise identifier)?
-
-	use_attribute_keyword: BOOLEAN
+	use_attribute_keyword: BOOLEAN is
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
+		do
+			Result := current_system.use_attribute_keyword
+		end
 
-	use_convert_keyword: BOOLEAN
-			-- Should 'convert' be considered as
-			-- a keyword (otherwise identifier)?
-
-	use_create_keyword: BOOLEAN
-			-- Should 'create' be considered as
-			-- a keyword (otherwise identifier)?
-
-	use_recast_keyword: BOOLEAN
-			-- Should 'recast' be considered as
-			-- a keyword (otherwise identifier)?
-
-	use_reference_keyword: BOOLEAN
+	use_reference_keyword: BOOLEAN is
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
-
-	use_void_keyword: BOOLEAN
-			-- Should 'void' be considered as
-			-- a keyword (otherwise identifier)?
-
-feature -- Statut setting
-
-	set_use_assign_keyword (b: BOOLEAN) is
-			-- Set `use_assign_keyword' to `b'.
 		do
-			use_assign_keyword := b
-		ensure
-			use_assign_keyword_set: use_assign_keyword = b
-		end
-
-	set_use_attribute_keyword (b: BOOLEAN) is
-			-- Set `use_attribute_keyword' to `b'.
-		do
-			use_attribute_keyword := b
-		ensure
-			use_attribute_keyword_set: use_attribute_keyword = b
-		end
-
-	set_use_convert_keyword (b: BOOLEAN) is
-			-- Set `use_convert_keyword' to `b'.
-		do
-			use_convert_keyword := b
-		ensure
-			use_convert_keyword_set: use_convert_keyword = b
-		end
-
-	set_use_create_keyword (b: BOOLEAN) is
-			-- Set `use_create_keyword' to `b'.
-		do
-			use_create_keyword := b
-		ensure
-			use_create_keyword_set: use_create_keyword = b
-		end
-
-	set_use_recast_keyword (b: BOOLEAN) is
-			-- Set `use_recast_keyword' to `b'.
-		do
-			use_recast_keyword := b
-		ensure
-			use_recast_keyword_set: use_recast_keyword = b
-		end
-
-	set_use_reference_keyword (b: BOOLEAN) is
-			-- Set `use_reference_keyword' to `b'.
-		do
-			use_reference_keyword := b
-		ensure
-			use_reference_keyword_set: use_reference_keyword = b
-		end
-
-	set_use_void_keyword (b: BOOLEAN) is
-			-- Set `use_void_keyword' to `b'.
-		do
-			use_void_keyword := b
-		ensure
-			use_void_keyword_set: use_void_keyword = b
+			Result := current_system.use_reference_keyword
 		end
 
 feature -- Error handling
 
-	error_handler: ET_ERROR_HANDLER
+	error_handler: ET_ERROR_HANDLER is
 			-- Error handler
+		do
+			Result := current_system.error_handler
+		ensure
+			error_handler_not_void: Result /= Void
+		end
 
 	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
@@ -248,8 +171,11 @@ feature -- Cluster dependences
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+			old_group: ET_GROUP
 		do
-			if universe.cluster_dependence_enabled then
+			old_group := group
+			group := a_cluster
+			if current_system.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "providers.txt"))
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -274,6 +200,7 @@ feature -- Cluster dependences
 				end
 				a_cluster.set_provider_constraint (l_provider_constraint)
 			end
+			group := old_group
 		end
 
 	build_dependant_constraint (a_cluster: ET_CLUSTER) is
@@ -288,8 +215,11 @@ feature -- Cluster dependences
 			l_names: DS_LIST [STRING]
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+			old_group: ET_GROUP
 		do
-			if universe.cluster_dependence_enabled then
+			old_group := group
+			group := a_cluster
+			if current_system.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "dependants.txt"))
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -314,6 +244,7 @@ feature -- Cluster dependences
 				end
 				a_cluster.set_dependant_constraint (l_dependant_constraint)
 			end
+			group := old_group
 		end
 
 feature -- Tokens
@@ -713,9 +644,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_character_ref_name)
 			Result.force_new (-1, tokens.capitalized_character_8_ref_name)
 			Result.force_new (-1, tokens.capitalized_character_32_ref_name)
-			Result.force_new (-1, tokens.capitalized_comparable_name)
 			Result.force_new (-1, tokens.capitalized_double_ref_name)
-			Result.force_new (-1, tokens.capitalized_hashable_name)
 			Result.force_new (-1, tokens.capitalized_integer_ref_name)
 			Result.force_new (-1, tokens.capitalized_integer_8_ref_name)
 			Result.force_new (-1, tokens.capitalized_integer_16_ref_name)
@@ -726,8 +655,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_natural_16_ref_name)
 			Result.force_new (-1, tokens.capitalized_natural_32_ref_name)
 			Result.force_new (-1, tokens.capitalized_natural_64_ref_name)
-			Result.force_new (-1, tokens.capitalized_numeric_name)
-			Result.force_new (-1, tokens.capitalized_part_comparable_name)
 			Result.force_new (-1, tokens.capitalized_pointer_ref_name)
 			Result.force_new (-1, tokens.capitalized_real_ref_name)
 			Result.force_new (-1, tokens.capitalized_real_32_ref_name)
@@ -749,7 +676,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.capitalized_disposable_name)
 			Result.force_new (-1, tokens.capitalized_double_name)
 			Result.force_new (-1, tokens.capitalized_function_name)
-			Result.force_new (-1, tokens.capitalized_general_name)
 			Result.force_new (-1, tokens.capitalized_identified_routines_name)
 			Result.force_new (-1, tokens.capitalized_integer_name)
 			Result.force_new (-1, tokens.capitalized_integer_8_name)
@@ -958,7 +884,6 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.precursor_keyword_name)
 			Result.force_new (-1, tokens.prefix_keyword_name)
 			Result.force_new (-1, tokens.redefine_keyword_name)
-			Result.force_new (-1, tokens.recast_keyword_name)
 			Result.force_new (-1, tokens.reference_keyword_name)
 			Result.force_new (-1, tokens.rename_keyword_name)
 			Result.force_new (-1, tokens.require_keyword_name)
@@ -977,8 +902,8 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.void_keyword_name)
 			Result.force_new (-1, tokens.when_keyword_name)
 			Result.force_new (-1, tokens.xor_keyword_name)
-			Result.force_new (-1, tokens.arrow_symbol_name)
 				-- Symbols.
+			Result.force_new (-1, tokens.arrow_symbol_name)
 			Result.force_new (-1, tokens.assign_symbol_name)
 			Result.force_new (-1, tokens.assign_attempt_symbol_name)
 			Result.force_new (-1, tokens.at_symbol_name)
@@ -1423,10 +1348,8 @@ feature {NONE} -- Processing
 						when 'i', 'I' then
 							inspect text_item (4)
 							when 'd', 'D' then
-								if use_void_keyword then
-									last_token := E_VOID
-									last_et_void_value := ast_factory.new_void_keyword (Current)
-								end
+								last_token := E_VOID
+								last_et_void_value := ast_factory.new_void_keyword (Current)
 							else
 								-- Do nothing.
 							end
@@ -1741,10 +1664,8 @@ feature {NONE} -- Processing
 								when 'g', 'G' then
 									inspect text_item (6)
 									when 'n', 'N' then
-										if use_assign_keyword then
-											last_token := E_ASSIGN
-											last_et_keyword_value := ast_factory.new_assign_keyword (Current)
-										end
+										last_token := E_ASSIGN
+										last_et_keyword_value := ast_factory.new_assign_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1771,10 +1692,8 @@ feature {NONE} -- Processing
 								when 't', 'T' then
 									inspect text_item (6)
 									when 'e', 'E' then
-										if use_create_keyword then
-											last_token := E_CREATE
-											last_et_keyword_value := ast_factory.new_create_keyword (Current)
-										end
+										last_token := E_CREATE
+										last_et_keyword_value := ast_factory.new_create_keyword (Current)
 									else
 										-- Do nothing.
 									end
@@ -1924,26 +1843,6 @@ feature {NONE} -- Processing
 					inspect text_item (2)
 					when 'e', 'E' then
 						inspect text_item (3)
-						when 'c', 'C' then
-							inspect text_item (4)
-							when 'a', 'A' then
-								inspect text_item (5)
-								when 's', 'S' then
-									inspect text_item (6)
-									when 't', 'T' then
-										if use_recast_keyword then
-											last_token := E_RECAST
-											last_et_keyword_value := ast_factory.new_recast_keyword (Current)
-										end
-									else
-										-- Do nothing.
-									end
-								else
-									-- Do nothing.
-								end
-							else
-								-- Do nothing.
-							end
 						when 'n', 'N' then
 							inspect text_item (4)
 							when 'a', 'A' then
@@ -2101,10 +2000,8 @@ feature {NONE} -- Processing
 									when 'r', 'R' then
 										inspect text_item (7)
 										when 't', 'T' then
-											if use_convert_keyword then
-												last_token := E_CONVERT
-												last_et_keyword_value := ast_factory.new_convert_keyword (Current)
-											end
+											last_token := E_CONVERT
+											last_et_keyword_value := ast_factory.new_convert_keyword (Current)
 										else
 											-- Do nothing.
 										end
@@ -3534,10 +3431,8 @@ feature {NONE} -- Implementation
 
 invariant
 
+	group_not_void: group /= Void
 	filename_not_void: filename /= Void
-	universe_not_void: universe /= Void
-	ast_factory_not_void: ast_factory /= Void
-	error_handler_not_void: error_handler /= Void
 	last_text_count_positive: last_text_count >= 0
 	last_literal_start_large_enough: last_literal_start >= 1
 	last_literal_start_small_enough: last_literal_start <= last_literal_end + 1

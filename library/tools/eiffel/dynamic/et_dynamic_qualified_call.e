@@ -5,7 +5,7 @@ indexing
 		"Eiffel qualified calls at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Static report
 
-	is_equal_in_tilde_feature (a_system: ET_SYSTEM): BOOLEAN is
+	is_equal_in_tilde_feature (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
 			-- Is current call a call to 'is_equal' in the feature that is supposed
 			-- to simulate the forthcoming '~' operator introduced in ECMA Eiffel 367?
 			-- (This feature is KL_ANY_ROUTINES.equal_objects.)
@@ -75,7 +75,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			l_dynamic_feature: like seeded_dynamic_feature
@@ -84,7 +84,7 @@ feature -- Element change
 			if not is_tuple_label then
 				l_dynamic_feature := seeded_dynamic_feature (a_type, a_system)
 				if l_dynamic_feature = Void then
-					if a_type.conforms_to_type (target_type_set.static_type, a_system) then
+					if a_type.conforms_to_type (target_type_set.static_type) then
 							-- Internal error: there should be a feature with that seed
 							-- in all descendants of `target_type_set.static_type'.
 						l_builder := a_system.dynamic_type_set_builder
@@ -138,13 +138,13 @@ feature -- Element change
 			a_builder_not_void: a_builder /= Void
 		local
 			l_dynamic_feature: like seeded_dynamic_feature
-			l_system: ET_SYSTEM
+			l_system: ET_DYNAMIC_SYSTEM
 		do
 			if not is_tuple_label then
-				l_system := a_builder.current_system
+				l_system := a_builder.current_dynamic_system
 				l_dynamic_feature := seeded_dynamic_feature (a_type, l_system)
 				if l_dynamic_feature = Void then
-					if a_type.conforms_to_type (target_type_set.static_type, l_system) then
+					if a_type.conforms_to_type (target_type_set.static_type) then
 							-- Internal error: there should be a feature with that seed
 							-- in all descendants of `target_type_set.static_type'.
 						a_builder.set_fatal_error
@@ -160,7 +160,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time feature in `a_type' corresponding to current call;
 			-- Void if no such feature
 		require
@@ -172,7 +172,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {NONE} -- Implementation
 
-	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_SYSTEM) is
+	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' to current set.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		require
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 								else
 									l_open_operand_type_set ?= l_target_argument_type_set
 									l_manifest_tuple_type := l_source_argument_type_set.static_type
-									if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type, a_system) then
+									if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
 										l_open_operand_type_set.put_type (l_manifest_tuple_type)
 									else
 										l_source_argument_type_set.put_target (l_target_argument_type_set, a_system)
@@ -312,9 +312,9 @@ feature {NONE} -- Implementation
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_manifest_tuple_type: ET_DYNAMIC_TYPE
-			l_system: ET_SYSTEM
+			l_system: ET_DYNAMIC_SYSTEM
 		do
-			l_system := a_builder.current_system
+			l_system := a_builder.current_dynamic_system
 			a_feature.set_regular (True)
 			l_actuals := static_call.arguments
 			if l_actuals /= Void then
@@ -383,7 +383,7 @@ feature {NONE} -- Implementation
 									else
 										l_open_operand_type_set ?= l_target_argument_type_set
 										l_manifest_tuple_type := l_source_argument_type_set.static_type
-										if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type, l_system) then
+										if l_open_operand_type_set /= Void and then l_manifest_tuple_type.conforms_to_type (l_open_operand_type_set.static_type) then
 											l_open_operand_type_set.put_type (l_manifest_tuple_type)
 										else
 											create l_attachment.make (l_source_argument_type_set, l_actual, current_feature, current_type)

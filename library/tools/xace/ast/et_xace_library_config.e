@@ -5,12 +5,12 @@ indexing
 		"Xace libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_XACE_LIBRARY
+class ET_XACE_LIBRARY_CONFIG
 
 create
 

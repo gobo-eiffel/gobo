@@ -66,14 +66,14 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
-	named_parameter (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER is
+	named_parameter (a_context: ET_TYPE_CONTEXT): ET_ACTUAL_PARAMETER is
 			-- Same as current actual parameter but its type
 			-- replaced by its named type
 		local
 			a_named_type: ET_NAMED_TYPE
 			a_parameter: like Current
 		do
-			a_named_type := type.named_type (a_context, a_universe)
+			a_named_type := type.named_type (a_context)
 			if a_named_type = type then
 				Result := Current
 			else
@@ -123,11 +123,11 @@ feature -- Access
 
 feature -- Status report
 
-	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+	named_parameter_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named parameter of current type contain `a_class'
-			-- when it appears in `a_context' in `a_universe'?
+			-- when it appears in `a_context'?
 		do
-			Result := type.named_parameter_has_class (a_class, a_context, a_universe)
+			Result := type.named_parameter_has_class (a_class, a_context)
 		end
 
 feature -- Type processing

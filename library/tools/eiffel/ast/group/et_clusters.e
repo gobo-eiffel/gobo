@@ -199,6 +199,45 @@ feature -- Access
 	clusters: DS_ARRAYED_LIST [like cluster]
 			-- Clusters
 
+feature -- Iterators
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+			-- Apply `an_action' to every cluster.
+			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				an_action.call ([clusters.item (i)])
+				i := i + 1
+			end
+		end
+
+	do_all_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+			-- Apply `an_action' to every cluster and recursively their subclusters.
+			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+			l_cluster: ET_CLUSTER
+			l_subclusters: ET_CLUSTERS
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				l_cluster := clusters.item (i)
+				an_action.call ([l_cluster])
+				l_subclusters := l_cluster.subclusters
+				if l_subclusters /= Void then
+					l_subclusters.do_all_recursive (an_action)
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Measurement
 
 	count: INTEGER is

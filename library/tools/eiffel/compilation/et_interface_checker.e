@@ -5,7 +5,7 @@ indexing
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,13 @@ inherit
 
 	ET_CLASS_PROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_class
 		end
 
@@ -28,11 +34,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
-			-- Create a new interface checker for classes in `a_universe'.
+	make is
+			-- Create a new interface checker for given classes.
 		do
-			precursor (a_universe)
-			create parent_checker3.make (a_universe)
+			precursor {ET_CLASS_PROCESSOR}
+			create parent_checker3.make
 		end
 
 feature -- Processing
@@ -46,18 +52,20 @@ feature -- Processing
 		local
 			a_processor: like Current
 		do
-			if a_class = none_class then
+			if a_class.is_none then
 				a_class.set_interface_checked
-			elseif current_class /= unknown_class then
+			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make (universe)
+				create a_processor.make
 				a_processor.process_class (a_class)
-			elseif a_class /= unknown_class then
-				internal_process_class (a_class)
-			else
+			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
+			elseif not a_class.is_preparsed then
+				set_fatal_error (a_class)
+			else
+				internal_process_class (a_class)
 			end
 		ensure then
 			interface_checked: a_class.interface_checked
@@ -67,10 +75,12 @@ feature -- Error handling
 
 	set_fatal_error (a_class: ET_CLASS) is
 			-- Report a fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
 		do
 			a_class.set_interface_checked
 			a_class.set_interface_error
-		ensure then
+		ensure
 			interface_checked: a_class.interface_checked
 			has_interface_error: a_class.has_interface_error
 		end
@@ -85,6 +95,7 @@ feature {NONE} -- Processing
 			-- so for its parent classes recursively.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
 			a_parents: ET_PARENT_LIST
@@ -95,32 +106,36 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.interface_checked then
 					-- Flatten features of `current_class' if not already done.
-				current_class.process (universe.feature_flattener)
+				current_class.process (current_system.feature_flattener)
 				if current_class.features_flattened and then not current_class.has_flattening_error then
 					current_class.set_interface_checked
 						-- Process parents first.
 					a_parents := current_class.parents
 					if a_parents = Void or else a_parents.is_empty then
-						if current_class = universe.general_class then
+						if current_class = current_system.any_class then
+								-- "ANY" has no implicit parents.
 							a_parents := Void
-						elseif current_class = universe.any_class then
-								-- ISE Eiffel has no GENERAL class anymore.
-								-- Use ANY as class root now.
-							a_parents := Void
-						elseif current_class.is_dotnet and current_class /= universe.system_object_class then
-							a_parents := universe.system_object_parents
+						elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
+							a_parents := current_system.system_object_parents
 						else
-							a_parents := universe.any_parents
+							a_parents := current_system.any_parents
 						end
 					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
-								-- This is a controlled recursive call to `internal_process_class'.
-							a_parent_class := a_parents.parent (i).type.direct_base_class (universe)
-							internal_process_class (a_parent_class)
-							if a_parent_class.has_interface_error then
+							a_parent_class := a_parents.parent (i).type.base_class
+							if not a_parent_class.is_preparsed then
+									-- Internal error: the VTCT error should have already been
+									-- reported in ET_ANCESTOR_BUILDER.
 								set_fatal_error (current_class)
+								error_handler.report_giaaa_error
+							else
+									-- This is a controlled recursive call to `internal_process_class'.
+								internal_process_class (a_parent_class)
+								if a_parent_class.has_interface_error then
+									set_fatal_error (current_class)
+								end
 							end
 							i := i + 1
 						end
@@ -179,7 +194,7 @@ feature {NONE} -- Constraint creation validity
 			if a_creator /= Void then
 				a_base_type := a_formal.constraint_base_type
 				if a_base_type /= Void then
-					a_class := a_base_type.direct_base_class (universe)
+					a_class := a_base_type.base_class
 				else
 						-- We know that the constraint is not
 						-- void since we have a creation clause.
@@ -187,10 +202,10 @@ feature {NONE} -- Constraint creation validity
 						-- "[G -> H create make end, H -> G]".
 						-- We consider that the base class of the
 						-- constraint in ANY in that case.
-					a_class := universe.any_class
+					a_class := current_system.any_class
 				end
 					-- Build the feature table.
-				a_class.process (universe.feature_flattener)
+				a_class.process (current_system.feature_flattener)
 				if not a_class.features_flattened or else a_class.has_flattening_error then
 					set_fatal_error (current_class)
 				else
@@ -241,7 +256,7 @@ feature {NONE} -- Parents validity
 				-- to `process', hence the following precaution
 				-- with `current_class'.
 			old_class := current_class
-			current_class := unknown_class
+			current_class := tokens.unknown_class
 			parent_checker3.check_parents_validity (old_class)
 			if parent_checker3.has_fatal_error then
 				set_fatal_error (old_class)

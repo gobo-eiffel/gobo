@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like static_feature; a_target_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is
+	make (a_feature: like static_feature; a_target_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Create a new feature equipped with dynamic type sets,
 			-- associated with compilation time feature `a_feature' in
 			-- type `a_target_type' in the surrounding system `a_system'.
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			l_external_routine ?= a_feature
 			if l_external_routine /= Void then
 				builtin_code := l_external_routine.builtin_code
-			elseif a_target_type.base_class = a_system.universe.procedure_class then
+			elseif a_target_type.base_class = a_system.current_system.procedure_class then
 				if a_feature.name.same_feature_name (tokens.call_feature_name) then
 						-- Make sure that PROCEDURE.call is considered as
 						-- a built-in feature when computing dynamic type sets.
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 				else
 					builtin_code := builtin_not_builtin
 				end
-			elseif a_target_type.base_class = a_system.universe.function_class then
+			elseif a_target_type.base_class = a_system.current_system.function_class then
 				l_name := a_feature.name
 				if l_name.same_feature_name (tokens.item_feature_name) then
 						-- Make sure that FUNCTION.iteml is considered as
@@ -174,7 +174,7 @@ feature -- Access
 			-- Other precursors called from current feature;
 			-- May be void if zero or one precursor called
 
-	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_PRECURSOR is
+	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_PRECURSOR is
 			-- Dynamic precursor of current feature;
 			-- `a_feature' is the precursor of the current feaure in `a_parent_type'
 		require
@@ -273,7 +273,7 @@ feature -- Status report
 	is_static: BOOLEAN
 			-- Is current feature used as a static feature?
 
-	is_function (a_system: ET_SYSTEM): BOOLEAN is
+	is_function (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
 			-- Is feature a function?
 		require
 			a_system_not_void: a_system /= Void
@@ -290,7 +290,7 @@ feature -- Status report
 			query: Result implies is_query
 		end
 
-	is_attribute (a_system: ET_SYSTEM): BOOLEAN is
+	is_attribute (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
 			-- Is feature an attribute?
 		require
 			a_system_not_void: a_system /= Void
@@ -344,7 +344,7 @@ feature -- Status report
 			definition: Result = static_feature.is_once
 		end
 
-	is_tilde_feature (a_system: ET_SYSTEM): BOOLEAN is
+	is_tilde_feature (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
 			-- Is current feature supposed to simulate the forthcoming
 			-- '~' operator introduced in ECMA Eiffel 367?
 			-- (This feature is KL_ANY_ROUTINES.equal_objects.)
@@ -363,7 +363,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_semistrict (a_system: ET_SYSTEM): BOOLEAN is
+	is_semistrict (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
 			-- Is current feature semistrict?
 		require
 			a_system_not_void: a_system /= Void

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			hash_code := name.hash_code
 			arguments := args
 			end_keyword := tokens.end_keyword
-			clients := tokens.any_clients
+			clients := tokens.empty_clients
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure

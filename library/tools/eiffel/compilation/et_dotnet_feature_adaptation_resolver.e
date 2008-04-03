@@ -5,7 +5,7 @@ indexing
 		"Feature adaptation resolvers for .NET classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,15 @@ class ET_DOTNET_FEATURE_ADAPTATION_RESOLVER
 
 inherit
 
-	ANY -- Needed for SE.
+	ET_CLASS_SUBPROCESSOR
+		redefine
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		end
 
 create
 
@@ -22,41 +30,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
-			-- Create a new feature adaptation resolver for .NET classes in `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
+	make is
+			-- Create a new feature adaptation resolver for .NET classes.
 		local
 			l_dotnet_signature_tester: ET_DOTNET_SIGNATURE_TESTER
 		do
-			universe := a_universe
-			current_class := a_universe.unknown_class
+			precursor {ET_CLASS_SUBPROCESSOR}
 			create dotnet_features.make (400)
-			create l_dotnet_signature_tester.make (a_universe)
+			create l_dotnet_signature_tester.make
 			dotnet_features.set_equality_tester (l_dotnet_signature_tester)
 			create other_dotnet_features.make_map (400)
 			other_dotnet_features.set_key_equality_tester (l_dotnet_signature_tester)
-		ensure
-			universe_set: universe = a_universe
-		end
-
-feature -- Access
-
-	universe: ET_UNIVERSE
-			-- Surrounding universe
-
-feature -- Error handling
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when checking
-			-- validity of last feature adaptations?
-
-	error_handler: ET_ERROR_HANDLER is
-			-- Error handler
-		do
-			Result := universe.error_handler
-		ensure
-			error_handler_not_void: Result /= Void
 		end
 
 feature -- Feature adaptation resolving
@@ -67,6 +51,7 @@ feature -- Feature adaptation resolving
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 			a_class_is_dotnet: a_class.is_dotnet
 			a_features_not_void: a_features /= Void
 			no_void_feature: not a_features.has_item (Void)
@@ -89,11 +74,11 @@ feature -- Feature adaptation resolving
 				-- the inheritance links.
 			a_parents := current_class.parents
 			if a_parents = Void or else a_parents.is_empty then
-				if current_class = universe.system_object_class then
+				if current_class = current_system.system_object_class then
 						-- Features from "ANY" will be added at the end.
 					a_parents := Void
 				else
-					a_parents := universe.system_object_parents
+					a_parents := current_system.system_object_parents
 				end
 			end
 			if a_parents /= Void then
@@ -230,7 +215,7 @@ feature {NONE} -- Feature recording
 			l_feature_list: DS_LINKED_LIST [ET_DOTNET_FEATURE]
 			i, nb: INTEGER
 		do
-			l_class := a_parent.type.direct_base_class (universe)
+			l_class := a_parent.type.base_class
 			l_queries := l_class.queries
 			l_procedures := l_class.procedures
 			nb := l_queries.declared_count
@@ -327,7 +312,7 @@ feature {NONE} -- Feature recording
 			elseif a_parent_feature.is_frozen and l_heir_class_impl /= l_parent_class_impl then
 -- TODO: if the feature is frozen in the parent then they should be declared in the same class.
 -- If not then they are two different routines.
-			elseif not l_heir_class_impl.conforms_to_type (l_parent_class_impl, current_class, current_class, universe) then
+			elseif not l_heir_class_impl.conforms_to_type (l_parent_class_impl, current_class, current_class) then
 -- TODO: there is no guarantee that these two features are related.
 			else
 				found := True
@@ -378,8 +363,8 @@ feature {NONE} -- Feature recording
 			l_rename: ET_RENAME
 			l_identifier: ET_IDENTIFIER
 		do
-			l_any := universe.any_class
-			l_any_parent := universe.any_parent
+			l_any := current_system.any_class
+			l_any_parent := current_system.any_parent
 			l_queries := l_any.queries
 			l_procedures := l_any.procedures
 			nb := l_queries.count
@@ -467,21 +452,6 @@ feature {NONE} -- Features
 			-- (which can happen because of weirdness either in .NET
 			-- or in the metadata consumer)
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
-feature {NONE} -- Access
-
-	current_class: ET_CLASS
-			-- Class being processed
-
 feature {NONE} -- Implementation
 
 	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE is
@@ -560,8 +530,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	universe_not_void: universe /= Void
-	current_class_not_void: current_class /= Void
 	dotnet_features_not_void: dotnet_features /= Void
 	no_void_dotnet_feature: not dotnet_features.has (Void)
 	-- no_inherited: for all f in dotnet_features, not f.is_inherited

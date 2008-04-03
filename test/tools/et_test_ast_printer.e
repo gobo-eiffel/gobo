@@ -48,20 +48,12 @@ feature -- Test
 			-- precomp Ace file.
 		local
 			an_xace_file: KL_TEXT_INPUT_FILE
-			an_xace_parser: ET_XACE_UNIVERSE_PARSER
+			an_xace_parser: ET_XACE_SYSTEM_PARSER
 			an_xace_ast_factory: ET_XACE_AST_FACTORY
 			an_eiffel_ast_factory: ET_DECORATED_AST_FACTORY
 			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
 			an_xace_variables: DS_HASH_TABLE [STRING, STRING]
-			a_universe: ET_UNIVERSE
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class: ET_CLASS
-			a_printer: ET_AST_PRINTER
-			a_file: KL_TEXT_OUTPUT_FILE
-			old_count, new_count: INTEGER
-			a_prefixed_name: STRING
-			a_full_test: BOOLEAN
-			ve_os: STRING
+			a_system: ET_SYSTEM
 			ise_version: UT_VERSION
 			ecma_version: UT_VERSION
 		do
@@ -72,16 +64,6 @@ feature -- Test
 			create an_xace_variables.make_map (100)
 			an_xace_variables.set_key_equality_tester (string_equality_tester)
 			an_xace_variables.force_last (eiffel_compiler.vendor, "GOBO_EIFFEL")
-			if eiffel_compiler.is_ve then
-				ve_os := Execution_environment.variable_value ("VE_OS")
-				if ve_os /= Void and then ve_os.count > 0 then
-					an_xace_variables.force_last (ve_os, "VE_OS")
-				elseif operating_system.is_windows then
-					an_xace_variables.force_last ("Win32", "VE_OS")
-				else
-					an_xace_variables.force_last ("Linux", "VE_OS")
-				end
-			end
 			create an_xace_ast_factory.make
 			create an_eiffel_ast_factory.make
 			an_eiffel_ast_factory.set_keep_all_breaks (True)
@@ -90,70 +72,52 @@ feature -- Test
 			an_xace_parser.parse_file (an_xace_file)
 			an_xace_file.close
 			assert ("xace_parsed", not an_xace_error_handler.has_error)
-			a_universe := an_xace_parser.last_universe
-			assert ("universe_not_void", a_universe /= Void)
+			a_system := an_xace_parser.last_system
+			assert ("system_not_void", a_system /= Void)
 			if eiffel_compiler.is_ise then
 				ise_version := ise_5_7_latest
 			elseif eiffel_compiler.is_ge then
 				ise_version := ise_5_7_latest
 			end
-			a_universe.set_ise_version (ise_version)
-			a_universe.set_ecma_version (ecma_version)
-			if eiffel_compiler.is_ve then
-				a_universe.set_use_void_keyword (False)
-			else
-				a_universe.set_use_void_keyword (True)
-			end
-			if eiffel_compiler.is_ve then
-				a_universe.preparse_multiple
-			else
-				a_universe.preparse_single
-			end
-			a_full_test :=  variables.has ("full_test")
-			create a_printer.make_null (a_universe)
-			a_cursor := a_universe.classes.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				a_class := a_cursor.item
-				if
-					(not eiffel_compiler.is_ve or else not a_class.upper_name.same_string ("SORTED_ARRAY")) and
-						-- Class SORTED_ARRAY in VE 4.0 has a feature named `create'.
-					(not eiffel_compiler.is_ise or else not a_class.upper_name.same_string ("ANY"))
-						-- Class ANY in ISE 5.4 has 'Void' as a feature and not as a keyword.
-				then
-					if a_class.is_in_cluster then
-						a_prefixed_name := a_class.group.prefixed_name
-						if a_full_test or else (a_prefixed_name.count > 2 and then (a_prefixed_name.item (1) = 'd' and a_prefixed_name.item (2) = 't')) then
-							if not a_class.is_parsed then
-									-- If the class has already been parsed, this means that it
-									-- is contained in a file containing more than one class
-									-- text (allowed in VE). This is case is not handled by the
-									-- current test.
-								a_class.process (a_universe.eiffel_parser)
-								assert (a_class.lower_name + "_parsed", a_class.is_parsed)
-								assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
-								if eiffel_compiler.is_ve then
-									new_count := a_universe.parsed_classes_count
-								else
-									new_count := old_count + 1
-								end
-								if new_count = old_count + 1 then
-										-- Do not handle files containing more
-										-- than one class text (allowed by VE).
-									create a_file.make ("gobo.txt")
-									a_file.open_write
-									assert ("is_open_write", a_file.is_open_write)
-									a_printer.set_file (a_file)
-									a_class.process (a_printer)
-									a_printer.set_null_file
-									a_file.close
-									assert_files_equal (a_class.lower_name + "_diff", a_class.filename, "gobo.txt")
-								end
-								old_count := new_count
-							end
-						end
-					end
+			a_system.set_ise_version (ise_version)
+			a_system.set_ecma_version (ecma_version)
+				-- We restrict this test to files that contain only one class.
+			a_system.set_preparse_single_mode
+			a_system.activate_processors
+			a_system.preparse
+			a_system.classes_do_recursive (agent check_class)
+		end
+
+feature {NONE} -- Test
+
+	check_class (a_class: ET_CLASS) is
+			-- Check that after parsing `a_class' and printing back its AST,
+			-- we get two files containing the same text.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_printer: ET_AST_PRINTER
+			l_file: KL_TEXT_OUTPUT_FILE
+			l_prefixed_name: STRING
+			l_full_test: BOOLEAN
+		do
+			if a_class.is_in_cluster then
+				l_full_test := variables.has ("full_test")
+				l_prefixed_name := a_class.group.prefixed_name
+				if l_full_test or else (l_prefixed_name.count > 2 and then (l_prefixed_name.item (1) = 'd' and l_prefixed_name.item (2) = 't')) then
+					a_class.process (a_class.current_system.eiffel_parser)
+					assert (a_class.lower_name + "_parsed", a_class.is_parsed)
+					assert (a_class.lower_name + "_no_syntax_error", not a_class.has_syntax_error)
+					create l_file.make ("gobo.txt")
+					l_file.open_write
+					assert ("is_open_write", l_file.is_open_write)
+					create l_printer.make_null
+					l_printer.set_file (l_file)
+					a_class.process (l_printer)
+					l_printer.set_null_file
+					l_file.close
+					assert_files_equal (a_class.lower_name + "_diff", a_class.filename, "gobo.txt")
 				end
-				a_cursor.forth
 			end
 		end
 

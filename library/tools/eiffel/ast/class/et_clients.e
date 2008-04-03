@@ -5,7 +5,7 @@ indexing
 		"Eiffel client lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 
 	ET_AST_NODE
 
-	ET_CLASS_NAME_LIST
+	ET_CLIENT_LIST
 		redefine
 			make, make_with_capacity
 		end

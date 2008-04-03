@@ -5,7 +5,7 @@ indexing
 		"Eiffel identifier type resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,12 @@ class ET_IDENTIFIER_TYPE_RESOLVER
 
 inherit
 
+	ET_CLASS_SUBPROCESSOR
+
 	ET_AST_NULL_PROCESSOR
+		undefine
+			make
 		redefine
-			make,
 			process_bit_feature,
 			process_class,
 			process_class_type,
@@ -29,38 +32,11 @@ create
 
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_universe: like universe) is
-			-- Create a new identifier type resolver.
-		do
-			precursor (a_universe)
-			current_class := a_universe.unknown_class
-		end
-
 feature -- Access
-
-	current_class: ET_CLASS
-			-- Class where the type appears
 
 	current_feature: ET_FEATURE
 			-- Feature where the type appears;
 			-- Void if the type does not appear in a feature
-
-feature -- Status report
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when resolving last type?
-
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
 
 feature -- Type resolving
 
@@ -72,6 +48,7 @@ feature -- Type resolving
 			a_type_not_void: a_type /= Void
 			a_feature_registered: a_feature /= Void implies a_feature.is_registered
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
@@ -268,7 +245,6 @@ feature {ET_AST_NODE} -- Type processing
 
 invariant
 
-	current_class_not_void: current_class /= Void
 	current_feature_registered: current_feature /= Void implies current_feature.is_registered
 
 end

@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_SYSTEM) is
+	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
 			old_count: INTEGER
@@ -68,7 +68,7 @@ feature -- Element change
 			end
 		end
 
-	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
+	put_target (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_target' to current set.
 			-- (Targets are supersets of current set.)
 		local

@@ -84,7 +84,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	propagate_types (a_target: ET_DYNAMIC_TARGET; a_system: ET_SYSTEM) is
+	propagate_types (a_target: ET_DYNAMIC_TARGET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Propagate types to `a_target'.
 		require
 			a_target_not_void: a_target /= Void

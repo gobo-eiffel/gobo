@@ -5,7 +5,7 @@ indexing
 		"Eiffel console-mode signature viewers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,12 +15,17 @@ class ET_SIGNATURE_VIEWER
 inherit
 
 	ET_AST_NULL_PROCESSOR
+		rename
+			make as make_null
 		redefine
-			make,
 			process_class
 		end
 
+	ET_SHARED_TOKEN_CONSTANTS
+		export {NONE} all end
+
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 create
 
@@ -30,11 +35,15 @@ feature {NONE} -- Initialization
 
 	make (a_universe: like universe) is
 			-- Create a new signature viewer for classes in `a_universe'.
+		require
+			a_universe_not_void: a_universe /= Void
 		do
 			universe := a_universe
-			current_context := a_universe.unknown_class
+			current_context := tokens.unknown_class
 			input_file := std.input
 			output_file := std.output
+		ensure
+			universe_set: universe = a_universe
 		end
 
 feature -- Access
@@ -47,6 +56,9 @@ feature -- Access
 
 	current_context: ET_TYPE_CONTEXT
 			-- Current type context
+
+	universe: ET_UNIVERSE
+			-- Surrounding universe
 
 feature -- Execution
 
@@ -69,7 +81,7 @@ feature -- Execution
 						a_base_type := base_type (a_name)
 						if a_base_type /= Void then
 							current_context := a_base_type
-							a_class := a_base_type.direct_base_class (universe)
+							a_class := a_base_type.base_class
 							process_class (a_class)
 						end
 					end
@@ -77,7 +89,7 @@ feature -- Execution
 					stop := True
 				end
 			end
-			current_context := universe.unknown_class
+			current_context := tokens.unknown_class
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -162,7 +174,7 @@ feature {ET_AST_NODE} -- Processing
 					arg := args.formal_argument (i)
 					output_file.put_string (arg.name.name)
 					output_file.put_string (": ")
-					output_file.put_string (arg.type.base_type (current_context, universe).to_text)
+					output_file.put_string (arg.type.base_type (current_context).to_text)
 					if i /= nb then
 						output_file.put_string ("; ")
 					end
@@ -171,7 +183,7 @@ feature {ET_AST_NODE} -- Processing
 				output_file.put_string (")")
 			end
 			output_file.put_string (": ")
-			output_file.put_string (a_query.type.base_type (current_context, universe).to_text)
+			output_file.put_string (a_query.type.base_type (current_context).to_text)
 		end
 
 	process_procedure (a_procedure: ET_PROCEDURE) is
@@ -192,7 +204,7 @@ feature {ET_AST_NODE} -- Processing
 					arg := args.formal_argument (i)
 					output_file.put_string (arg.name.name)
 					output_file.put_string (": ")
-					output_file.put_string (arg.type.base_type (current_context, universe).to_text)
+					output_file.put_string (arg.type.base_type (current_context).to_text)
 					if i /= nb then
 						output_file.put_string ("; ")
 					end
@@ -313,11 +325,11 @@ feature {NONE} -- Implementation
 			Result := parse_class (str, a_position)
 			a_class := last_class
 			if a_class /= Void then
-				if a_class = universe.tuple_class then
+				if a_class = universe.current_system.tuple_class then
 						-- Tuples have a variable number of arguments.
 					i := parse_open_bracket (str, Result)
 					if i > str.count + 1 then
-						create {ET_TUPLE_TYPE} last_base_type.make (Void)
+						create {ET_TUPLE_TYPE} last_base_type.make (Void, a_class)
 					else
 						from
 							Result := i
@@ -353,7 +365,7 @@ feature {NONE} -- Implementation
 								an_actuals.force_first (tmp_actuals.item (i))
 								i := i + 1
 							end
-							create {ET_TUPLE_TYPE} last_base_type.make (an_actuals)
+							create {ET_TUPLE_TYPE} last_base_type.make (an_actuals, a_class)
 						end
 					end
 				elseif a_class.is_generic then
@@ -550,7 +562,9 @@ feature {NONE} -- Implementation
 
 invariant
 
+	universe_not_void: universe /= Void
 	current_context_not_void: current_context /= Void
+	current_context_valid: current_context.is_valid_context
 	input_file_not_void: input_file /= Void
 	input_file_open_read: input_file.is_open_read
 	output_file_not_void: output_file /= Void

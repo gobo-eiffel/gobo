@@ -5,7 +5,7 @@ indexing
 		"Lace Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,12 +45,13 @@ feature -- AST factory
 			assemblies_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER): ET_LACE_CLUSTER is
+	new_cluster (a_name: ET_IDENTIFIER; a_pathname: ET_IDENTIFIER; a_universe: ET_UNIVERSE): ET_LACE_CLUSTER is
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void
+			a_universe_not_void: a_universe /= Void
 		do
-			create Result.make (a_name, a_pathname)
+			create Result.make (a_name, a_pathname, a_universe)
 		ensure
 			cluster_not_void: Result /= Void
 		end
@@ -76,16 +77,12 @@ feature -- AST factory
 			assembly_not_void: Result /= Void
 		end
 
-	new_universe (a_clusters: ET_LACE_CLUSTERS; a_factory: ET_AST_FACTORY;
-		an_error_handler: ET_ERROR_HANDLER): ET_LACE_UNIVERSE is
-			-- New class universe
-		require
-			an_error_handler_not_void: an_error_handler /= Void
-			a_factory_not_void: a_factory /= Void
+	new_system: ET_LACE_SYSTEM is
+			-- New Eiffel system
 		do
-			create Result.make_with_factory (a_clusters, a_factory, an_error_handler)
+			create Result.make
 		ensure
-			universe_not_void: Result /= Void
+			system_not_void: Result /= Void
 		end
 
 feature -- Eiffel AST factory

@@ -67,7 +67,7 @@ feature -- Access
 
 feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
-	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+	seeded_dynamic_feature (a_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time query in `a_type' corresponding to current call;
 			-- Void if no such query
 		do
@@ -76,7 +76,7 @@ feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
 
 feature {NONE} -- Implementation
 
-	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_SYSTEM) is
+	put_type_with_feature (a_type: ET_DYNAMIC_TYPE; a_feature: like seeded_dynamic_feature; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' to current set.
 			-- `a_feature' is the feature in `a_type' corresponding to current call.
 		local
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 				a_builder.error_handler.report_giaaa_error
 			elseif not result_type_set.is_expanded then
 				create l_result_attachment.make (l_result_type_set, current_feature, current_type)
-				result_type_set.put_source (l_result_attachment, a_builder.current_system)
+				result_type_set.put_source (l_result_attachment, a_builder.current_dynamic_system)
 			end
 		end
 

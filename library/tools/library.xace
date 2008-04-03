@@ -19,10 +19,10 @@
 				<cluster name="agent"/>
 				<cluster name="assertion"/>
 				<cluster name="class"/>
-				<cluster name="cluster"/>
 				<cluster name="constant"/>
 				<cluster name="expression"/>
 				<cluster name="feature"/>
+				<cluster name="group"/>
 				<cluster name="instruction"/>
 				<cluster name="misc"/>
 				<cluster name="name"/>
@@ -53,7 +53,6 @@
 			<cluster name="generator"/>
 			<cluster name="parser"/>
 			<cluster name="support"/>
-			<cluster name="universe"/>
 		</cluster>
 	</cluster>
 </library>

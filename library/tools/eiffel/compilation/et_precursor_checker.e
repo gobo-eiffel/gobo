@@ -5,7 +5,7 @@ indexing
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,15 @@ class ET_PRECURSOR_CHECKER
 
 inherit
 
-	ET_AST_NULL_PROCESSOR
+	ET_CLASS_SUBPROCESSOR
 		redefine
-			make,
+			make
+		end
+
+	ET_AST_NULL_PROCESSOR
+		undefine
+			make
+		redefine
 			process_actual_argument_list,
 			process_agent_argument_operand_list,
 			process_assigner_instruction,
@@ -66,36 +72,27 @@ inherit
 			process_when_part_list
 		end
 
-	ET_SHARED_TOKEN_CONSTANTS
-		export {NONE} all end
-
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make is
 			-- Create a new precursor validity checker.
 		do
-			universe := a_universe
-			current_class := a_universe.unknown_class
+			precursor {ET_CLASS_SUBPROCESSOR}
 			current_feature := dummy_feature
 		end
-
-feature -- Status report
-
-	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when checking
-			-- validity of last feature?
 
 feature -- Validity checking
 
 	check_feature_validity (a_feature: ET_REDECLARED_FEATURE; a_class: ET_CLASS) is
-			-- Check validity of Precursor constructs in `a_feature' in `a_class'.
+			-- Check validity of Precursor constructs in `a_feature' appearing in `a_class'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
 		local
 			old_feature: ET_REDECLARED_FEATURE
 			old_class: ET_CLASS
@@ -144,7 +141,7 @@ feature {NONE} -- Precursor validity
 						a_parent_feature = Void
 					loop
 						a_parent_type := a_parent_feature.parent.type
-						if a_parent_type.direct_base_class (universe) = a_class then
+						if a_parent_type.base_class = a_class then
 							a_precursor_feature := a_parent_feature.precursor_feature
 							if an_effective /= Void then
 								if not a_parent_feature.is_deferred then
@@ -179,7 +176,7 @@ feature {NONE} -- Precursor validity
 								a_parent_feature = Void
 							loop
 								a_parent_type := a_parent_feature.parent.type
-								if a_parent_type.direct_base_class (universe) = a_class then
+								if a_parent_type.base_class = a_class then
 									a_precursor_feature := a_parent_feature.precursor_feature
 									if an_effective /= Void then
 										if not a_precursor_feature.is_deferred then
@@ -207,7 +204,7 @@ feature {NONE} -- Precursor validity
 						else
 							a_parents := current_class.parents
 							if a_parents = Void then
-								if a_class /= universe.any_class then
+								if a_class /= current_system.any_class then
 									set_fatal_error
 									error_handler.report_vdpr2a_error (current_class, a_precursor)
 								else
@@ -218,7 +215,7 @@ feature {NONE} -- Precursor validity
 							else
 								nb := a_parents.count
 								from i := 1 until i > nb loop
-									if a_parents.parent (i).type.direct_base_class (universe) = a_class then
+									if a_parents.parent (i).type.base_class = a_class then
 										a_parent_found := True
 										i := nb + 1 -- Jump out of the loop.
 									else
@@ -248,8 +245,8 @@ feature {NONE} -- Precursor validity
 						if not a_parent_feature.is_deferred then
 							-- Note: use `same_version' to behave like ISE's implementation.
 							--a_parent_type := a_parent_feature.parent.type
-							--a_class := a_parent_type.direct_base_class (universe)
-							--if a_class /= an_effective.parent.type.direct_base_class (universe) then
+							--a_class := a_parent_type.base_class
+							--if a_class /= an_effective.parent.type.base_class then
 							--	a_feature := current_feature.flattened_feature
 							--	set_fatal_error
 							--	error_handler.report_vdpr3a_error (current_class, a_precursor, a_feature, an_effective, a_parent_feature)
@@ -286,8 +283,8 @@ feature {NONE} -- Precursor validity
 								if not a_precursor_feature.is_deferred then
 									-- Note: use `same_version' to behave like ISE's implementation.
 									--a_parent_type := a_parent_feature.parent.type
-									--a_class := a_parent.direct_base_class (universe)
-									--if a_class /= an_effective.parent.type.direct_base_class (universe) then
+									--a_class := a_parent.direct_base_class
+									--if a_class /= an_effective.parent.type.base_class then
 									--	a_feature := current_feature.flattened_feature
 									--	set_fatal_error
 									--	error_handler.report_vdpr3a_error (current_class, a_precursor, a_feature, an_effective, a_parent_feature)
@@ -872,23 +869,10 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-feature {NONE} -- Error handling
-
-	set_fatal_error is
-			-- Report a fatal error.
-		do
-			has_fatal_error := True
-		ensure
-			has_fatal_error: has_fatal_error
-		end
-
 feature {NONE} -- Access
 
 	current_feature: ET_REDECLARED_FEATURE
 			-- Feature being processed
-
-	current_class: ET_CLASS
-			-- Class to with `current_feature' belongs
 
 feature {NONE} -- Implementation
 
@@ -901,7 +885,7 @@ feature {NONE} -- Implementation
 		once
 			create {ET_IDENTIFIER} a_name.make ("**dummy**")
 			create {ET_DEFERRED_PROCEDURE} a_feature.make (a_name, Void, current_class)
-			create a_parent_feature.make (a_feature, universe.any_parent)
+			create a_parent_feature.make (a_feature, current_system.any_parent)
 			create Result.make (a_feature, a_parent_feature)
 		ensure
 			dummy_feature_not_void: Result /= Void
@@ -910,6 +894,5 @@ feature {NONE} -- Implementation
 invariant
 
 	current_feature_not_void: current_feature /= Void
-	current_class_not_void: current_class /= Void
 
 end

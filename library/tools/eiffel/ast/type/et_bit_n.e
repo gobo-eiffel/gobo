@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,16 +22,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_constant: like constant) is
+	make (a_constant: like constant; a_base_class: ET_CLASS) is
 			-- Create a new 'BIT N' type.
 		require
 			a_constant_not_void: a_constant /= Void
+			a_base_class_not_void: a_base_class /= Void
 		do
 			bit_keyword := tokens.bit_keyword
 			constant := a_constant
 			size := No_size
+			base_class := a_base_class
 		ensure
 			constant_set: constant = a_constant
+			base_class_set: base_class = a_base_class
 		end
 
 feature -- Access

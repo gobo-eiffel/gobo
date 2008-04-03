@@ -44,13 +44,13 @@ feature -- Access
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_system'.
 		do
 			print_ace_file (a_system, a_file)
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Ace file from `a_library'.
 		do
 			print_precompile_ace_file (a_library, a_file)
@@ -58,7 +58,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_ace_file (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_ace_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Ace `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -120,7 +120,7 @@ feature {NONE} -- Output
 			a_file.put_line ("end")
 		end
 
-	print_precompile_ace_file (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_precompile_ace_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print precompilation Ace file to `a_file'.
 		require
 			a_library_not_void: a_library /= Void

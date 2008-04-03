@@ -39,13 +39,13 @@ feature -- Access
 
 feature -- Output
 
-	generate_system (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_system (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Xace file from `a_system'.
 		do
 			print_xace_system_file (a_system, a_file)
 		end
 
-	generate_library (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+	generate_library (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Generate a new Xace file from `a_library'.
 		do
 			print_xace_library_file (a_library, a_file)
@@ -53,7 +53,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_xace_system_file (a_system: ET_XACE_SYSTEM; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_xace_system_file (a_system: ET_XACE_SYSTEM_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Xace version of `a_system' to `a_file'.
 		require
 			a_system_not_void: a_system /= Void
@@ -97,7 +97,7 @@ feature {NONE} -- Output
 			a_file.put_line ("</system>")
 		end
 
-	print_xace_library_file (a_library: ET_XACE_LIBRARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+	print_xace_library_file (a_library: ET_XACE_LIBRARY_CONFIG; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print Xace version of `a_library' to `a_file'.
 		require
 			a_library_not_void: a_library /= Void

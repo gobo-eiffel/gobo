@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type set builders where types are pushed to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,8 @@ inherit
 			build_agent_call,
 			report_manifest_array,
 			report_manifest_tuple,
-			report_string_constant,
+			report_string_8_constant,
+			report_string_32_constant,
 			propagate_agent_closed_operands_dynamic_types,
 			propagate_argument_dynamic_types,
 			propagate_argument_operand_dynamic_types,
@@ -64,7 +65,7 @@ feature -- Factory
 feature -- Generation
 
 	build_dynamic_type_sets is
-			-- Build dynamic type sets for `current_system'.
+			-- Build dynamic type sets for `current_dynamic_system'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			i, nb: INTEGER
@@ -80,8 +81,8 @@ feature -- Generation
 		do
 			has_fatal_error := False
 			old_object_id_dynamic_type_set := object_id_dynamic_type_set
-			object_id_dynamic_type_set := new_dynamic_type_set (current_system.any_type)
-			l_dynamic_types := current_system.dynamic_types
+			object_id_dynamic_type_set := new_dynamic_type_set (current_dynamic_system.any_type)
+			l_dynamic_types := current_dynamic_system.dynamic_types
 			is_built := False
 			from until is_built loop
 				is_built := True
@@ -193,7 +194,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 				l_item_type_sets := a_tuple_type.item_type_sets
 				nb := l_item_type_sets.count
 				from i := 1 until i > nb loop
-					l_item_type_sets.item (i).put_target (l_result_type_set, current_system)
+					l_item_type_sets.item (i).put_target (l_result_type_set, current_dynamic_system)
 					i := i + 1
 				end
 			end
@@ -213,7 +214,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 				l_item_type_sets := a_tuple_type.item_type_sets
 				nb := l_item_type_sets.count
 				from i := 1 until i > nb loop
-					l_argument_type_set.put_target (l_item_type_sets.item (i), current_system)
+					l_argument_type_set.put_target (l_item_type_sets.item (i), current_dynamic_system)
 					i := i + 1
 				end
 			end
@@ -247,55 +248,73 @@ feature {NONE} -- Event handling
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_expression_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, current_type)
+				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
-					-- Make sure that type SPECIAL[XXX] (used in feature 'area') is marked as alive.
-					-- Feature 'area' should be the first in the list of features.
+					-- Make sure that types "SPECIAL [XXX]" (used in feature 'area'), and
+					-- "INTEGER" (used in feature 'lower' and 'upper') are marked as alive.
 				l_queries := l_type.queries
-				if l_queries.is_empty then
-						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+				if l_queries.count < 3 then
+						-- Error already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
+-- TODO: internal error
 				else
-					l_area_type_set := l_queries.item (1).result_type_set
-					if l_area_type_set = Void then
-							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+						-- Feature 'area' should be the first in the list of features.
+					l_dynamic_type_set := l_queries.item (1).result_type_set
+					if l_dynamic_type_set = Void then
+							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
 					else
-						l_special_type ?= l_area_type_set.static_type
+						l_special_type ?= l_dynamic_type_set.static_type
 						if l_special_type = Void then
-								-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+								-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 							set_fatal_error
 						else
 							mark_type_alive (l_special_type)
-							l_special_type.put_target (l_area_type_set, current_system)
+							l_special_type.put_target (l_dynamic_type_set, current_dynamic_system)
 							l_item_type_set := l_special_type.item_type_set
 							nb := an_expression.count
 							from i := 1 until i > nb loop
 								l_expression := an_expression.expression (i)
-								l_dynamic_type_set := dynamic_type_set (l_expression)
-								if l_dynamic_type_set = Void then
+								l_expression_type_set := dynamic_type_set (l_expression)
+								if l_expression_type_set = Void then
 										-- Internal error: the dynamic type set of the expressions
 										-- in the manifest array should be known at this stage.
 									set_fatal_error
 									error_handler.report_giaaa_error
 								else
-									l_dynamic_type_set.put_target (l_item_type_set, current_system)
+									l_expression_type_set.put_target (l_item_type_set, current_dynamic_system)
 								end
 								i := i + 1
 							end
 						end
 					end
+						-- Feature 'lower' should be the second in the list of features.
+					l_dynamic_type_set := l_queries.item (2).result_type_set
+					if l_dynamic_type_set = Void then
+							-- Error in feature 'lower', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+						set_fatal_error
+-- TODO: internal error
+					else
+						mark_type_alive (l_dynamic_type_set.static_type)
+					end
+						-- Feature 'upper' should be the third in the list of features.
+					l_dynamic_type_set := l_queries.item (3).result_type_set
+					if l_dynamic_type_set = Void then
+							-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+						set_fatal_error
+-- TODO: internal error
+					else
+						mark_type_alive (l_dynamic_type_set.static_type)
+					end
 				end
-					-- Make sure that type INTEGER (used in attributes 'lower' and 'upper') is marked as alive.
-				mark_type_alive (current_system.integer_type)
 			end
 		end
 
@@ -311,7 +330,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.dynamic_type (a_type, current_type)
+				l_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				mark_type_alive (l_type)
 				set_dynamic_type_set (l_type, an_expression)
 				l_tuple_type ?= l_type
@@ -337,7 +356,7 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								l_dynamic_type_set.put_target (l_item_type_sets.item (i), current_system)
+								l_dynamic_type_set.put_target (l_item_type_sets.item (i), current_dynamic_system)
 							end
 							i := i + 1
 						end
@@ -346,47 +365,115 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_string_constant (a_string: ET_MANIFEST_STRING) is
-			-- Report that a string has been processed.
+	report_string_8_constant (a_string: ET_MANIFEST_STRING) is
+			-- Report that a string_8 has been processed.
 		local
-			l_type: ET_DYNAMIC_TYPE
+			l_string_type: ET_DYNAMIC_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_TYPE
+			l_string_universe: ET_UNIVERSE
+			l_special_universe: ET_UNIVERSE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_type := current_system.string_type
-				if a_string.index = 0 and string_index.item /= 0 then
-					a_string.set_index (string_index.item)
+				l_string_type := current_dynamic_system.string_8_type
+				if a_string.index = 0 and string_8_index.item /= 0 then
+					a_string.set_index (string_8_index.item)
 				end
-				mark_type_alive (l_type)
-				set_dynamic_type_set (l_type, a_string)
-				if string_index.item = 0 then
-					string_index.put (a_string.index)
+				mark_type_alive (l_string_type)
+				set_dynamic_type_set (l_string_type, a_string)
+				if string_8_index.item = 0 then
+					string_8_index.put (a_string.index)
 				end
-					-- Make sure that type SPECIAL[CHARACTER] (used in
+					-- Make sure that type "SPECIAL [CHARACTER_8]" (used in
 					-- feature 'area') is marked as alive.
-					-- Feature 'area' should be the first in the list of features.
-				l_special_type := current_system.special_character_type
+				l_special_type := current_dynamic_system.special_character_8_type
 				mark_type_alive (l_special_type)
-				l_queries := l_type.queries
+					-- Feature 'area' should be the first in the list of features.
+				l_queries := l_string_type.queries
 				if l_queries.is_empty then
-						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+						-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 				else
 					l_area_type_set := l_queries.item (1).result_type_set
 					if l_area_type_set = Void then
-							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
 					else
-						l_special_type.put_target (l_area_type_set, current_system)
+						l_special_type.put_target (l_area_type_set, current_dynamic_system)
 					end
 				end
-					-- Make sure that type CHARACTER (used as actual generic type
-					-- of 'SPECIAL[CHARACTER]' in feature 'area') is marked as alive.
-				mark_type_alive (current_system.character_type)
-					-- Make sure that type INTEGER (used in attribute 'count') is marked as alive.
-				mark_type_alive (current_system.integer_type)
+					-- Make sure that type "CHARACTER_8" (used as actual generic type
+					-- of "SPECIAL [CHARACTER_8]" in feature 'area') is marked as alive.
+				mark_type_alive (current_dynamic_system.character_8_type)
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "STRING_8") is marked as alive.
+				l_string_universe := l_string_type.base_class.universe
+				if l_string_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
+				end
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "SPECIAL [CHARACTER_8]") is marked as alive.
+				l_special_universe := l_special_type.base_class.universe
+				if l_special_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
+				end
+			end
+		end
+
+	report_string_32_constant (a_string: ET_MANIFEST_STRING) is
+			-- Report that a string_32 has been processed.
+		local
+			l_string_type: ET_DYNAMIC_TYPE
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_special_type: ET_DYNAMIC_TYPE
+			l_string_universe: ET_UNIVERSE
+			l_special_universe: ET_UNIVERSE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_string_type := current_dynamic_system.string_32_type
+				if a_string.index = 0 and string_32_index.item /= 0 then
+					a_string.set_index (string_32_index.item)
+				end
+				mark_type_alive (l_string_type)
+				set_dynamic_type_set (l_string_type, a_string)
+				if string_32_index.item = 0 then
+					string_32_index.put (a_string.index)
+				end
+					-- Make sure that type "SPECIAL [CHARACTER_32]" (used in
+					-- feature 'area') is marked as alive.
+				l_special_type := current_dynamic_system.special_character_32_type
+				mark_type_alive (l_special_type)
+					-- Feature 'area' should be the first in the list of features.
+				l_queries := l_string_type.queries
+				if l_queries.is_empty then
+						-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+					set_fatal_error
+				else
+					l_area_type_set := l_queries.item (1).result_type_set
+					if l_area_type_set = Void then
+							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+						set_fatal_error
+					else
+						l_special_type.put_target (l_area_type_set, current_dynamic_system)
+					end
+				end
+					-- Make sure that type "CHARACTER_32" (used as actual generic type
+					-- of "SPECIAL [CHARACTER_32]" in feature 'area') is marked as alive.
+				mark_type_alive (current_dynamic_system.character_32_type)
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "STRING_32") is marked as alive.
+				l_string_universe := l_string_type.base_class.universe
+				if l_string_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
+				end
+					-- Make sure that type "INTEGER" (used in attribute 'count'
+					-- of "SPECIAL [CHARACTER_32]") is marked as alive.
+				l_special_universe := l_special_type.base_class.universe
+				if l_special_universe /= Void then
+					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
+				end
 			end
 		end
 
@@ -438,8 +525,8 @@ feature {NONE} -- Implementation
 					l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
 				end
 			end
-			create l_tuple_type.make (l_parameters)
-			l_dynamic_tuple_type ?= current_system.dynamic_type (l_tuple_type, universe.any_type)
+			create l_tuple_type.make (l_parameters, current_system.tuple_class)
+			l_dynamic_tuple_type ?= current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
 			if l_dynamic_tuple_type = Void then
 					-- Internal error: the dynamic type of a Tuple type
 					-- should be a dynamic tuple type.
@@ -449,10 +536,10 @@ feature {NONE} -- Implementation
 				mark_type_alive (l_dynamic_tuple_type)
 				if an_agent_type.attribute_count = 0 then
 						-- Internal error: missing feature 'closed_operands' in the Agent type,
-						-- already reported in ET_SYSTEM.compile_kernel.
+						-- already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
 				else
-					l_dynamic_tuple_type.put_target (an_agent_type.queries.item (1).result_type_set, current_system)
+					l_dynamic_tuple_type.put_target (an_agent_type.queries.item (1).result_type_set, current_dynamic_system)
 					l_item_type_sets := l_dynamic_tuple_type.item_type_sets
 					j := 1
 					nb_items := l_item_type_sets.count
@@ -470,7 +557,7 @@ feature {NONE} -- Implementation
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
-							l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_system)
+							l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_dynamic_system)
 							j := j + 1
 						end
 					end
@@ -489,7 +576,7 @@ feature {NONE} -- Implementation
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
-								l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_system)
+								l_dynamic_type_set.put_target (l_item_type_sets.item (j), current_dynamic_system)
 								j := j + 1
 							end
 						end
@@ -513,7 +600,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_actual_type_set.put_target (a_formal_type_set, current_system)
+				l_actual_type_set.put_target (a_formal_type_set, current_dynamic_system)
 			end
 		end
 
@@ -538,7 +625,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_actual_type_set.put_target (l_formal_type_set, current_system)
+				l_actual_type_set.put_target (l_formal_type_set, current_dynamic_system)
 			end
 		end
 
@@ -562,7 +649,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_source_type_set.put_target (l_target_type_set, current_system)
+				l_source_type_set.put_target (l_target_type_set, current_dynamic_system)
 			end
 		end
 
@@ -586,7 +673,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_source_type_set.put_target (l_target_type_set, current_system)
+				l_source_type_set.put_target (l_target_type_set, current_dynamic_system)
 			end
 		end
 
@@ -604,7 +691,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				a_source_type_set.put_target (l_formal_type_set, current_system)
+				a_source_type_set.put_target (l_formal_type_set, current_dynamic_system)
 			end
 		end
 
@@ -622,7 +709,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_formal_type_set.put_target (a_target_type_set, current_system)
+				l_formal_type_set.put_target (a_target_type_set, current_dynamic_system)
 			end
 		end
 
@@ -638,7 +725,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				a_source_type_set.put_target (l_result_type_set, current_system)
+				a_source_type_set.put_target (l_result_type_set, current_dynamic_system)
 			end
 		end
 
@@ -655,7 +742,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_dynamic_type_set.put_target (a_result_type_set, current_system)
+				l_dynamic_type_set.put_target (a_result_type_set, current_dynamic_system)
 			end
 		end
 
@@ -672,7 +759,7 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				a_creation_type.put_target (l_target_type_set, current_system)
+				a_creation_type.put_target (l_target_type_set, current_dynamic_system)
 			end
 		end
 
@@ -698,7 +785,7 @@ feature {NONE} -- Implementation
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_dynamic_type_set.put_target (a_result_type_set, current_system)
+					l_dynamic_type_set.put_target (a_result_type_set, current_dynamic_system)
 				end
 			end
 		end
@@ -710,7 +797,7 @@ feature {NONE} -- Implementation
 			-- `a_formal_type_set' has a static type which corresponds to the formal type of the argument.
 			-- `an_actual_type_set' has a static type which corresponds to the actual type of the argument.
 		do
-			a_formal_type_set.put_target (an_actual_type_set, current_system)
+			a_formal_type_set.put_target (an_actual_type_set, current_dynamic_system)
 		end
 
 	propagate_tuple_label_setter_dynamic_types (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
@@ -726,14 +813,14 @@ feature {NONE} -- Implementation
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_source_type_set.put_target (a_target_type_set, current_system)
+				l_source_type_set.put_target (a_target_type_set, current_dynamic_system)
 			end
 		end
 
 	propagate_qualified_call_target_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Propagate the dynamic types of the target of `a_call' to the call itself.
 		do
-			a_call.target_type_set.put_target (a_call, current_system)
+			a_call.target_type_set.put_target (a_call, current_dynamic_system)
 		end
 
 end

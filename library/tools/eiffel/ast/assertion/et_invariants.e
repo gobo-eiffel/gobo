@@ -148,10 +148,14 @@ feature -- Access
 
 feature -- Export status
 
-	clients: ET_CLASS_NAME_LIST is
+	clients: ET_CLIENT_LIST is
 			-- Clients to which feature is exported
-		once
-			Result := tokens.any_clients
+		do
+			if implementation_class.is_preparsed then
+				Result := implementation_class.current_system.any_clients
+			else
+				Result := tokens.empty_clients
+			end
 		end
 
 feature -- Setting

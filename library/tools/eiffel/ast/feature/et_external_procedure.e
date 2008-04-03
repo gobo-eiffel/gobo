@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			arguments := args
 			language := a_language
 			end_keyword := tokens.end_keyword
-			clients := tokens.any_clients
+			clients := tokens.empty_clients
 			implementation_class := a_class
 			implementation_feature := Current
 			builtin_code := tokens.builtin_not_builtin
