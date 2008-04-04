@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_VARIABLE_DECLARATION
 		redefine
-			make_style_element, validate, allows_required, allows_value, is_param, as_param
+			make_style_element, validate, allows_required, allows_value,
+			is_param, as_param, is_non_white_following_sibling
 		end
 
 	DT_STRING_ROUTINES
@@ -34,7 +35,6 @@ feature {NONE} -- Initialization
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
-			is_non_white_following_sibling := True
 			cached_variable_fingerprint := -1
 			create references.make (5)
 			allows_tunnel := True
@@ -44,6 +44,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_non_white_following_sibling: BOOLEAN is
+			-- Is `Current' such that an immediate preceding-sibling all-whitspace text node should be stripped in xslt stylesheets?
+		do
+			Result := True
+		end
 
 	required_type: XM_XPATH_SEQUENCE_TYPE is
 			-- Static type of the variable

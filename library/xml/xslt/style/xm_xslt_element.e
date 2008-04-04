@@ -213,7 +213,9 @@ feature -- Element change
 						create {XM_XSLT_BLOCK} l_content.make (a_executable, l_attributes_usage, l_content, principal_stylesheet.module_number (system_id), line_number)
 					end
 				end
-				if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
+				if l_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+				end
 				create l_element.make (a_executable, element_name, namespace, l_namespace_context, used_attribute_sets, Void, validation_action, is_inherit_namespaces, l_content)
 				last_generated_expression := l_element
 			end

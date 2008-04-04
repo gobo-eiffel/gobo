@@ -27,7 +27,7 @@ inherit
 		redefine
 			has_child_nodes, sequence_number, is_tree_composite_node, as_tree_composite_node
 		end
-				
+
 feature -- Access
 
 	is_tree_composite_node: BOOLEAN is
@@ -44,12 +44,6 @@ feature -- Access
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order)
-			-- In this implementation, parent nodes (elements and roots)
-			--  have a zero least-significant word, while namespaces,
-			--  attributes, text nodes, comments, and PIs have
-			--  the top word the same as their owner and the
-			--  bottom half reflecting their relative position.
-			-- This is the default implementation for child nodes.
 		do
 			if saved_sequence_number = Void then
 				create saved_sequence_number.make (sequence_number_high_word, 0)

@@ -306,7 +306,9 @@ feature -- Element change
   
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), False)
 			a_body := last_generated_expression
-			if a_body = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_body.make end
+			if a_body = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} a_body.make
+			end
 			a_body.simplify
 			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
 			a_body.check_static_type (static_context, Void)

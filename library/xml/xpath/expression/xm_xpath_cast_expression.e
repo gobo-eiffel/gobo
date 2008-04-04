@@ -106,7 +106,6 @@ feature -- Optimization
 			l_type_checker: XM_XPATH_TYPE_CHECKER
 			l_expression: XM_XPATH_EXPRESSION
 			l_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
-			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			mark_unreplaced
@@ -146,8 +145,7 @@ feature -- Optimization
 							create l_result.make (Void)
 							evaluate_item (l_result, a_context.new_compile_time_context)
 							if l_result.item = Void then
-								create l_empty_sequence.make
-								set_replacement (l_empty_sequence)
+								set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 							elseif l_result.item.is_error then
 								set_last_error (l_result.item.error_value)
 							elseif l_result.item.is_atomic_value then

@@ -277,14 +277,12 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		local
 			an_origin, a_kind: INTEGER
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_message, an_article: STRING
 			--	a_schema_type: XM_XPATH_SCHEMA_TYPE
 		do
 			an_origin := a_node_test.primitive_type
 			if an_origin /= Any_node and then is_axis_always_empty (axis, an_origin) then
-				create an_empty_sequence.make
-				set_replacement (an_empty_sequence)
+				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 				a_message := STRING_.concat ("The ", axis_name (axis))
 				a_message := STRING_.appended_string (a_message, " axis starting at ")
 				if an_origin = Element_node or else an_origin = Attribute_node then
@@ -299,16 +297,14 @@ feature {NONE} -- Implementation
 			elseif node_test /= Void then
 				a_kind := node_test.primitive_type
 				if a_kind /= Any_node and then not axis_contains_node_kind (axis, a_kind) then
-					create an_empty_sequence.make
-					set_replacement (an_empty_sequence)
+					set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 					a_message := STRING_.concat ("The ", axis_name (axis))
 					a_message := STRING_.appended_string (a_message, " axis will never select any ")
 					a_message := STRING_.appended_string (a_message, node_kind_description (a_kind))
 					a_message := STRING_.appended_string (a_message, " nodes")
 					a_context.issue_warning (a_message)
 				elseif axis = Self_axis and then a_kind /= Any_node and then an_origin /= Any_node and then a_kind /= an_origin then
-					create an_empty_sequence.make
-					set_replacement (an_empty_sequence)
+					set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 					a_message := STRING_.concat ("The self axis will never select any ", node_kind_description (an_origin))
 					a_message := STRING_.appended_string (a_message, " nodes when starting at ")
 					if an_origin = Element_node or else an_origin = Attribute_node then

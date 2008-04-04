@@ -197,7 +197,6 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 		do
@@ -234,8 +233,7 @@ feature -- Optimization
 							elseif  a_boolean_value.value then
 								set_replacement (base_expression)
 							else
-								create an_empty_sequence.make
-								set_replacement (an_empty_sequence)
+								set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 							end
 						else
 							

@@ -25,20 +25,24 @@ create
 
 	make
 	
-feature {NONE} -- Initialization
+feature {XM_XPATH_ITERATOR_POOL} -- Initialization
 
-	make (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
+	make (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST; a_self: BOOLEAN) is
 			-- Establish invariant
 		require
 			starting_node_not_void: a_starting_node /= Void
 			node_test_not_void: a_node_test /= Void
 		do
-			include_self := self
+			include_self := a_self
 			make_enumeration (a_starting_node, a_node_test)
 			next_node := starting_node
 			if not include_self or else not is_conforming (next_node) then
 				advance
 			end
+		ensure
+			starting_node_set: starting_node = a_starting_node
+			test_set: node_test = a_node_test
+			include_self_set: include_self = a_self
 		end
 
 feature -- Access
@@ -77,7 +81,7 @@ feature -- Duplication
 			create Result.make (starting_node, node_test, include_self)
 		end
 
-feature {NONE} -- Implemnentation
+feature {NONE} -- Implementation
 
 	include_self: BOOLEAN
 			-- Do we include ourself in the enumeration

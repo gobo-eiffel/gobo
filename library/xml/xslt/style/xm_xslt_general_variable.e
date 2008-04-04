@@ -336,7 +336,9 @@ feature {NONE} -- Implementation
 			if has_child_nodes then
 				if as_type = Void then
 					compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
-					if last_generated_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make end
+					if last_generated_expression = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make
+					end
 					create l_document.make (a_executable, is_text_only, constant_text, base_uri, last_generated_expression)
 					select_expression := l_document
 					a_variable.set_selector (l_document)

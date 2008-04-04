@@ -259,7 +259,7 @@ feature -- Element change
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 			if last_generated_expression = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
 			else
 				a_content := last_generated_expression
 			end

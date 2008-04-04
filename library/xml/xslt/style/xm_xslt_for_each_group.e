@@ -192,7 +192,9 @@ feature -- Element change
 				end
 				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 				l_action := last_generated_expression
-				if l_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_action.make end
+				if l_action = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} l_action.make
+				end
 				if l_pattern then
 					create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make_pattern (a_executable, select_expression, l_action, l_key_pattern, l_algorithm, sort_keys, collation_name, default_collation_name)
 				else

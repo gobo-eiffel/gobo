@@ -22,6 +22,9 @@ inherit
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
+	MEMORY
+		export {NONE} all end
+
 feature -- Access
 
 	item: G is

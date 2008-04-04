@@ -86,6 +86,7 @@ feature -- Optimization
 					create a_sequence_extent.make (last_iterator)
 					set_replacement (a_sequence_extent)
 				end
+				free (last_iterator)
 			end
 		end
 

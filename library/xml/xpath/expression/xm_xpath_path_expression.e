@@ -205,8 +205,6 @@ feature -- Optimization
 
 	simplify is
 			-- Perform context-independent static optimizations.
-		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
 			if analysis_state < Simplified_state then
@@ -242,8 +240,7 @@ feature -- Optimization
 								-- the expression /.. is sometimes used to represent the empty node-set
 								
 								if start.is_root_expression and then step.is_parent_node_expression then
-									create an_empty_sequence.make
-									set_replacement (an_empty_sequence)
+									set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 								end
 							end
 						end

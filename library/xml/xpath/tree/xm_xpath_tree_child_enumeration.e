@@ -25,7 +25,7 @@ create
 
 	make
 	
-feature {NONE} -- Initialization
+feature {XM_XPATH_ITERATOR_POOL} -- Initialization
 
 	make (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Establish invariant
@@ -87,7 +87,7 @@ feature -- Duplication
 			create Result.make (starting_node, node_test)
 		end
 
-feature {NONE} -- Implemnentation
+feature {NONE} -- Implementation
 
 	advance_one_step is
 			-- Move to the next candidate node

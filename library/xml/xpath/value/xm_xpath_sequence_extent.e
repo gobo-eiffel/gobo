@@ -252,14 +252,12 @@ feature -- Optimization
 			-- Perform context-independent static optimizations.
 		local
 			a_count: INTEGER
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			an_item: XM_XPATH_ITEM
 			a_singleton_node: XM_XPATH_SINGLETON_NODE
 		do
 			a_count := count
 			if a_count = 0 then
-				create an_empty_sequence.make
-				set_replacement (an_empty_sequence)
+				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 			elseif a_count = 1 then
 				an_item := item_at (1)
 				if an_item.is_atomic_value then

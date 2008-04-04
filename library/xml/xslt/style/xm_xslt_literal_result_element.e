@@ -220,7 +220,9 @@ feature -- Element change
 						create {XM_XSLT_BLOCK} l_content.make (a_executable, l_attributes_usage, l_content, principal_stylesheet.module_number (system_id), line_number)
 					end
 				end
-				if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
+				if l_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+				end
 				create l_fixed_element.make (a_executable, result_name_code, namespace_codes, Void, Void, validation, is_inherit_namespaces, l_content)
 				l_fixed_element.set_base_uri (base_uri)
 				last_generated_expression := l_fixed_element

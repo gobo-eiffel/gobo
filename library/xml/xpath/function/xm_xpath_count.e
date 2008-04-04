@@ -107,6 +107,7 @@ feature -- Evaluation
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make (l_iterator.error_value))
 				end
 			end
+			free (l_iterator)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -69,6 +69,8 @@ inherit
 	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
 		export {NONE} all end
 
+	MEMORY
+		export {NONE} all end
 
 feature -- Access
 

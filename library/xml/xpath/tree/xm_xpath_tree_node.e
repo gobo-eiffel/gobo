@@ -36,8 +36,11 @@ feature -- Access
 	document: XM_XPATH_TREE_DOCUMENT
 			-- Document that owns this node
 
-	is_non_white_following_sibling: BOOLEAN
+	is_non_white_following_sibling: BOOLEAN is
 			-- Is `Current' such that an immediate preceding-sibling all-whitspace text node should be stripped in xslt stylesheets?
+		do
+			Result := False
+		end
 
 	is_tree_node: BOOLEAN is
 			-- Is `Current' a tree node?

@@ -128,39 +128,40 @@ feature -- Access
 			-- This is implemented as a memo function:
 			--  the first time it is called for a particular
 			--  element type, it remembers the result for next time.
-				local
+		local
 			a_list: DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT]
 			a_node: XM_XPATH_TREE_NODE
 		do
 			if element_list = Void then
 				create element_list.make_map (10)
 			end
-			if not element_list.has (a_fingerprint) then
-				create a_list.make_default
+			if element_list.has (a_fingerprint) then
+				Result := element_list.item (a_fingerprint)
 			else
-				a_list := element_list.item (a_fingerprint)
-			end
-
-			from
-				a_node := next_node_in_document_order (Current)
-			until
-				a_node = Void
-			loop
-				if a_node.node_type = Element_node and then
-					a_node.fingerprint = a_fingerprint then
-					check
-						is_an_element: a_node.is_tree_element
-						-- because of `node_type'
+				create a_list.make_default
+				from
+					a_node := next_node_in_document_order (Current)
+				until
+					a_node = Void
+				loop
+					if a_node.node_type = Element_node and then
+						a_node.fingerprint = a_fingerprint then
+						check
+							is_an_element: a_node.is_tree_element
+							-- because of `node_type'
+						end
+						if a_list.is_full then
+							a_list.resize (a_list.count * 2)
+						end
+						a_list.put_last (a_node.as_tree_element)
 					end
-					if a_list.is_full then
-						a_list.resize (a_list.count * 2)
-					end
-					a_list.put_last (a_node.as_tree_element)
+					a_node := a_node.next_node_in_document_order (Current)
 				end
-				a_node := a_node.next_node_in_document_order (Current)
+				Result := a_list
+				element_list.force_new (a_list, a_fingerprint)
 			end
-
-			Result := a_list
+		ensure then
+			all_elements_cached: element_list.has (a_fingerprint)
 		end
 		
 	unparsed_entity_system_id (an_entity_name: STRING): STRING is
@@ -355,14 +356,6 @@ feature -- Duplication
 			end
 		end
 
-feature {XM_XPATH_NODE} -- Restricted
-
-	is_possible_child: BOOLEAN is
-			-- Can this node be a child of a document or element node?
-		do
-			Result := False
-		end
-
 feature {NONE} -- Implementation
 
 	element_list: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT], INTEGER]
@@ -387,7 +380,7 @@ feature {NONE} -- Implementation
 				Result := cached_attribute_idref_table
 			end
 		ensure
-			result_not_void: Result /= Void
+			attribute_idref_table_not_void: Result /= Void
 		end
 
 	id_table: DS_HASH_TABLE [XM_XPATH_TREE_ELEMENT, STRING] is

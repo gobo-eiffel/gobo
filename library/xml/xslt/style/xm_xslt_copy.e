@@ -152,7 +152,6 @@ feature -- Element change
 			l_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
 			l_condition: XM_XPATH_INSTANCE_OF_EXPRESSION
 			l_type: XM_XPATH_SEQUENCE_TYPE
-			l_empty: XM_XPATH_EMPTY_SEQUENCE
 		do
 			compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
 			l_content := last_generated_expression
@@ -164,15 +163,16 @@ feature -- Element change
 				create l_context_item.make
 				create l_type.make (element_node_kind_test, Required_cardinality_exactly_one)
 				create l_condition.make (l_context_item, l_type)
-				create l_empty.make
-				create l_if.make (l_condition, l_attributes_usage, l_empty)
+				create l_if.make (l_condition, l_attributes_usage, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 				if l_content = Void then
 					l_content := l_if
 				else
 					create {XM_XSLT_BLOCK} l_content.make (a_executable, l_if, l_content, principal_stylesheet.module_number (system_id), line_number)
 				end
 			end
-			if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
+			if l_content = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+			end
 			create {XM_XSLT_COMPILED_COPY} last_generated_expression.make (a_executable, l_content,
 																								used_attribute_sets,
 																								is_copy_namespaces,

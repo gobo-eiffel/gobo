@@ -249,7 +249,6 @@ feature -- Optimization
 			l_expression: XM_XPATH_EXPRESSION
 			l_boolean: BOOLEAN
 			l_index: INTEGER
-			l_empty: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
 			from
@@ -310,9 +309,8 @@ feature -- Optimization
 			end
 			if conditions.is_empty then
 				conditions.put_last (create {XM_XPATH_BOOLEAN_VALUE}.make (True))
-				create l_empty.make
-				actions.put_last (l_empty)
-				set_replacement (l_empty)
+				actions.put_last (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 				a_context.issue_warning (STRING_.concat ("All conditional branches evaluate to false at ", location_message))
 			end	
 		end

@@ -114,7 +114,7 @@ feature -- Evaluation
 						elseif l_atomic_value.is_duration_value then
 							l_duration_value := l_atomic_value.as_duration_value
 							if not l_duration_value.is_months_duration and then not l_duration_value.is_seconds_duration then
-								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a duration value that is neither xdt:yearMonthDuration nor xdt:dayTimeDuration",
+								a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains a duration value that is neither xs:yearMonthDuration nor xs:dayTimeDuration",
 									Xpath_errors_uri, "FORG0006", Dynamic_error))
 							end
 						elseif l_atomic_value.is_numeric_value then
@@ -137,6 +137,7 @@ feature -- Evaluation
 					end
 				end
 			end
+			free (l_iterator)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -254,7 +255,7 @@ feature {NONE} -- Implementation
 					else
 						l_duration_value := l_item.as_atomic_value.as_duration_value
 						if l_duration_value.is_months_duration /= l_is_year_month then
-							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains mixed xdt:yearMonthDuration and xdt:dayTimeDuration values",
+							a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string ("Input to avg() contains mixed xs:yearMonthDuration and xs:dayTimeDuration values",
 								Xpath_errors_uri, "FORG0006", Dynamic_error))
 						end
 					end

@@ -159,6 +159,7 @@ feature -- Optimization
 				a_sequence_extent.reduce
 				last_reduced_value := a_sequence_extent.last_reduced_value
 			end
+			free (last_iterator)
 		end
 
 feature -- Evaluation
@@ -173,6 +174,7 @@ feature -- Evaluation
 			elseif not last_iterator.after then
 				a_result.put (last_iterator.item) -- the assumption is cardinality is zero or one
 			end
+			free (last_iterator)
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
@@ -300,6 +302,7 @@ feature {NONE} -- Implementation
 								if a_depth >= Maximum_closure_nesting_depth then
 									a_closure.create_iterator (a_context)
 									expression_factory.create_sequence_extent (a_closure.last_iterator)
+									free (a_closure.last_iterator)
 									a_value := expression_factory.last_created_closure
 									if a_value.is_error then
 										set_last_error (a_value.error_value)

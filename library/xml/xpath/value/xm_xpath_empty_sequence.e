@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath empty sequences"
+		"XPath empty sequences, intended to be shared"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -51,12 +51,8 @@ feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
-		do
+		once
 			Result := empty_item
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
 		end
 	
 	count: INTEGER is
@@ -106,12 +102,14 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Yields an iterator to iterate over the values of a sequence
 		do
+			-- This will work even in a concurrent environment with sharing.
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 		end
 
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		do
+			-- This will work even in a concurrent environment with sharing.
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 		end
 
@@ -119,7 +117,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
-		do
+		once
 			Result := Supports_evaluate
 		end
 

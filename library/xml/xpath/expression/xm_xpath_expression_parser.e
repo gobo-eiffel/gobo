@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			a_message, a_local_name, a_uri: STRING
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_fingerprint: INTEGER
-			is_empty_sequence: BOOLEAN
+			l_empty_sequence: BOOLEAN
 		do
 			a_primary_type := any_item
 			if tokenizer.last_token = Name_token then
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 							next_token ("In parse_sequence after empty-sequence after RPAR: current token is ")
 						end
 					end
-					is_empty_sequence := True
+					l_empty_sequence := True
 				else
 
 					-- Covers element(N,T), comment(), text(), etc
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 				report_parse_error (a_message, "XPST0003")
 			end
 			if not is_parse_error then
-				if is_empty_sequence then
+				if l_empty_sequence then
 					create internal_last_parsed_sequence.make_empty
 				else
 					set_occurrence_flag (a_primary_type)

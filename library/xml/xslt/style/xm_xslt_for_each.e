@@ -113,7 +113,9 @@ feature -- Element change
 				end
 				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 				a_content := last_generated_expression
-				if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
+				if a_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+				end
 				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
 				create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, a_sorted_sequence, a_content)
 			end

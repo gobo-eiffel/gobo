@@ -35,8 +35,9 @@ create {XM_XPATH_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-			a_name_code: INTEGER; a_sequence_number: INTEGER) is
+	make (a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		require
 			document_not_void: a_document /= Void
@@ -401,14 +402,6 @@ feature -- Duplication
          a_receiver.end_element																																	
 		end
 																																	
-																																	
-feature {XM_XPATH_NODE} -- Restricted
-
-	is_possible_child: BOOLEAN is
-			-- Can this node be a child of a document or element node?
-		do
-			Result := True
-		end
 feature {XM_XPATH_TREE_ELEMENT} -- Local
 
 	accumulate_namespace_codes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [INTEGER]; add_xml: BOOLEAN; some_excluded_prefixes: DS_HASH_SET [INTEGER]) is

@@ -95,7 +95,9 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-			if last_generated_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make end
+			if last_generated_expression = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} last_generated_expression.make
+			end
 			create {XM_XSLT_COMPILED_DOCUMENT} last_generated_expression.make (an_executable, False, Void, base_uri, last_generated_expression)
 		end
 

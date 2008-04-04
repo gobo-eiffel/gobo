@@ -236,8 +236,9 @@ feature -- Element change
 					l_namespace_resolver := static_context.namespace_resolver
 					compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 					l_content := last_generated_expression
-					if l_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_content.make end
-					
+					if l_content = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
+					end
 					create l_result.make (an_executable, l_global_property_set, l_local_property_set, href,
 						format_expression, base_uri, validation_action,
 						Void, formatting_attributes, l_namespace_resolver, l_content)

@@ -24,10 +24,10 @@ feature {NONE} -- Initialization
 			node_test := a_node_test
 		ensure
 			starting_node_set: starting_node = a_starting_node
-			test_set: node_test = a_node_test			
+			test_set: node_test = a_node_test
 		end
 
-feature {NONE} -- Implemnentation
+feature {NONE} -- Implmenentation
 
 	starting_node: XM_XPATH_TREE_NODE
 			-- The starting node for the enumeration

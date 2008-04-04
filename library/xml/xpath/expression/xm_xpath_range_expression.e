@@ -126,7 +126,6 @@ feature -- Optimization
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_integer, l_other_integer: INTEGER_64
-			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_integer_range: XM_XPATH_INTEGER_RANGE
 		do
@@ -149,8 +148,7 @@ feature -- Optimization
 						l_integer := first_operand.as_machine_integer_value.as_integer
 						l_other_integer := second_operand.as_machine_integer_value.as_integer
 						if l_integer > l_other_integer then
-							create l_empty_sequence.make
-							set_replacement (l_empty_sequence)
+							set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 						elseif l_integer = l_other_integer then
 							create l_integer_value.make (l_integer)
 							set_replacement (l_integer_value)

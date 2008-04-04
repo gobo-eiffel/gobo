@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, may_contain_sequence_constructor, is_sort, make_style_element
+			validate, may_contain_sequence_constructor, is_sort, is_non_white_following_sibling
 		end
 
 	XM_XPATH_ROLE
@@ -25,18 +25,13 @@ create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
-feature {NONE} -- Initialization
-	
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
-		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
-			-- Establish invariant.
-		do
-			is_non_white_following_sibling := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
-		end
-
 feature -- Access
+
+	is_non_white_following_sibling: BOOLEAN is
+			-- Is `Current' such that an immediate preceding-sibling all-whitspace text node should be stripped in xslt stylesheets?
+		do
+			Result := True
+		end
 
 	sort_key_definition: XM_XSLT_SORT_KEY_DEFINITION
 			-- Sort key

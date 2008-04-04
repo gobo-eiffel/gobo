@@ -108,9 +108,10 @@ feature -- Duplication
 			create Result.make (starting_node, node_test)
 		end
 
-feature {NONE} -- Implemnentation
+feature {NONE} -- Implmenentation
 
 	root: XM_XPATH_TREE_DOCUMENT
+			-- Root of examined document tree
 
 	advance_one_step is
 			-- Move to the next candidate node

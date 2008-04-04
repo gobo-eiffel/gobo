@@ -185,15 +185,13 @@ feature -- Optimization
 			-- Perform context-independent static optimizations.
 		local
 			l_all_atomic, l_nested: DS_CELL [BOOLEAN]
-			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			l_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			l_children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			l_extent: XM_XPATH_SEQUENCE_EXTENT
 			l_child: XM_XPATH_EXPRESSION
 		do
 			if children.count = 0 then
-				create l_empty_sequence.make
-				set_replacement (l_empty_sequence)
+				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
 			elseif children.count = 1 then
 				l_child := children.item (1)
 				l_child.simplify

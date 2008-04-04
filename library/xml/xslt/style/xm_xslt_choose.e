@@ -156,7 +156,9 @@ feature -- Element change
 					compiled_conditions.put_last (a_condition)
 					compile_sequence_constructor (an_executable, an_otherwise.new_axis_iterator (Child_axis), True)
 					an_action := last_generated_expression
-					if an_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_action.make end
+					if an_action = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} an_action.make
+					end
 					an_action.simplify
 					if an_action.was_expression_replaced then an_action := an_action.replacement_expression end
 					if an_action.is_error then
@@ -240,7 +242,9 @@ feature {NONE} -- Implementation
 			a_condition := a_when.condition
 			compile_sequence_constructor (an_executable, a_when.new_axis_iterator (Child_axis), True)
 			an_action := last_generated_expression
-			if an_action = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_action.make end
+			if an_action = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} an_action.make
+			end
 			an_action.simplify
 			if an_action.was_expression_replaced then an_action := an_action.replacement_expression end
 			if an_action.is_error then

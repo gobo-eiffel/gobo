@@ -62,7 +62,9 @@ feature -- Cursor movement
 					child_index := child_index + 1
 					child_list.item (child_index).create_iterator (context)
 					child_iterator := child_list.item (child_index).last_iterator
-					if not child_iterator.is_error then child_iterator.start end
+					if not child_iterator.is_error then
+						child_iterator.start
+					end
 				end
 			else
 				child_iterator.forth
@@ -74,7 +76,9 @@ feature -- Cursor movement
 						child_index := child_index + 1
 						child_list.item (child_index).create_iterator (context)
 						child_iterator := child_list.item (child_index).last_iterator
-						if not child_iterator.is_error then child_iterator.start end
+						if not child_iterator.is_error then
+							child_iterator.start
+						end
 					end
 				end
 			end
@@ -85,6 +89,7 @@ feature -- Cursor movement
 					last_child: child_index >= child_list.count
 					-- routine logic
 				end
+				free (child_iterator)
 				item := Void
 			else
 				item := child_iterator.item

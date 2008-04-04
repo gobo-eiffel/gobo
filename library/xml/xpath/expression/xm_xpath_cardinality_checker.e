@@ -144,7 +144,6 @@ feature -- Evaluation
 						end
 					end
 				end
-
 				if not l_iterator.is_error then
 					if l_items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
 						a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
@@ -165,6 +164,7 @@ feature -- Evaluation
 					a_result.item.error_value.set_location (system_id, line_number)
 				end
 			end
+			free (base_expression.last_iterator)
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is

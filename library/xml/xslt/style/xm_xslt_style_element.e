@@ -2001,7 +2001,9 @@ feature -- Element change
 						create a_range_variable.make (a_local_variable.variable_name, a_local_variable.variable_fingerprint, a_required_type)
 						a_range_variable.set_reference_list (a_variable.references)
 						an_expression := a_local_variable.select_expression
-						if an_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_expression.make end
+						if an_expression = Void then
+							create {XM_XPATH_EMPTY_SEQUENCE} an_expression.make
+						end
 						create a_let_expression.make (a_range_variable, an_expression, last_generated_expression)
 						a_let_expression.set_slot_number (a_local_variable.slot_number)
 						a_variable.fixup_binding (a_let_expression)
@@ -2052,7 +2054,9 @@ feature -- Element change
 					l_other_iterator := l_fallback.new_axis_iterator (Child_axis)
 					l_fallback.compile_sequence_constructor (a_executable, l_other_iterator, True)
 					l_expression := l_fallback.last_generated_expression
-					if l_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} l_expression.make end
+					if l_expression = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} l_expression.make
+					end
 					if l_fallback_expression = Void then
 						l_fallback_expression := l_expression
 					else
