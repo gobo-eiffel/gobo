@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	tree_document: XM_XPATH_TREE_DOCUMENT
-			-- Created ocument
+			-- Created document
 
 	last_xpath_error: XM_XPATH_ERROR_VALUE
 			-- Last error value
@@ -185,8 +185,13 @@ feature -- Events
 					end
 					next_node_number := next_node_number + 1
 					current_depth := current_depth + 1
-					if current_composite_node = tree_document then
+					if tree_document = Void then
+						if current_root = Void then
+							current_root := l_element
+						end
+					elseif current_composite_node = tree_document then
 						tree_document.set_document_element (l_element)
+					
 					end
 					current_composite_node := l_element
 				end

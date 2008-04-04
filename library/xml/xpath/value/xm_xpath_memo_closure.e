@@ -344,7 +344,6 @@ feature -- Evaluation
 						end
 					end
 				end
-				free (last_iterator)
 			end
 		end
 

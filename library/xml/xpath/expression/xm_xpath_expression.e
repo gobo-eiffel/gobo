@@ -69,9 +69,6 @@ inherit
 	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
 		export {NONE} all end
 
-	MEMORY
-		export {NONE} all end
-
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is

@@ -166,7 +166,6 @@ feature -- Optimization
 							an_iterator.forth
 						end
 					end
-					free (base_expression.last_iterator)
 					if not finished then
 						set_replacement (base_expression)
 					end

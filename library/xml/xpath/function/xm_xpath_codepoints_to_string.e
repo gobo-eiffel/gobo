@@ -117,7 +117,6 @@ feature -- Evaluation
 					a_result.put (create {XM_XPATH_STRING_VALUE}.make (l_string))
 				end
 			end
-			free (l_iterator)
 		end
 
 	

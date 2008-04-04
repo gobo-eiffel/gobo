@@ -19,6 +19,9 @@ inherit
 			pre_evaluate, create_iterator, check_static_type
 		end
 
+	XM_XPATH_NODE_FACTORY
+		export {NONE} all end
+
 create
 
 	make
@@ -88,7 +91,7 @@ feature -- Evaluation
 		local
 			l_context: XM_XSLT_EVALUATION_CONTEXT
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
-			l_builder: XM_XPATH_TINY_BUILDER
+			l_builder: XM_XPATH_TREE_BUILDER
 			l_config: XM_XSLT_CONFIGURATION
 			l_tracer: XM_XSLT_TRACE_LISTENER
 		do
@@ -103,7 +106,7 @@ feature -- Evaluation
 																Gexslt_eiffel_type_uri, "NO_INITIAL_TEMPLATE", Static_error)
 				last_iterator := qname_value_iterator
 			else
-				create l_builder.make (static_context.base_uri.full_reference, Void)
+				create l_builder.make (Current, static_context.base_uri.full_reference, Void)
 				create l_result.make_receiver (l_builder)
 				l_config := transformer.configuration
 				l_tracer := l_config.trace_listener

@@ -89,7 +89,6 @@ feature -- Cursor movement
 					last_child: child_index >= child_list.count
 					-- routine logic
 				end
-				free (child_iterator)
 				item := Void
 			else
 				item := child_iterator.item

@@ -181,38 +181,38 @@ feature -- Access
 			if not element_list.has (a_fingerprint) then
 				create a_list.make_default
 			else
-				a_list := element_list.item (a_fingerprint)
+				Result := element_list.item (a_fingerprint)
 			end
-
-			from
-				an_index := 1
-			variant
-				tree.number_of_nodes - an_index + 1
-			until
-				an_index > tree.number_of_nodes
-			loop
-				a_stored_name_code := tree.retrieve_name_code (an_index)
-				top_bits := (a_stored_name_code // bits_20) * bits_20
-				another_fingerprint := a_stored_name_code - top_bits
-				if tree.retrieve_node_kind (an_index) = Element_node
-					and then  another_fingerprint = a_fingerprint then
-					a_node := tree.retrieve_node (an_index)
+			if Result = Void then
+				from
+					an_index := 1
+				variant
+					tree.number_of_nodes - an_index + 1
+				until
+					an_index > tree.number_of_nodes
+				loop
+					a_stored_name_code := tree.retrieve_name_code (an_index)
+					top_bits := (a_stored_name_code // bits_20) * bits_20
+					another_fingerprint := a_stored_name_code - top_bits
+					if tree.retrieve_node_kind (an_index) = Element_node
+						and then  another_fingerprint = a_fingerprint then
+						a_node := tree.retrieve_node (an_index)
 						check
 							is_element: a_node.is_tiny_element
 						end
-					if a_list.is_full then
-						a_list.resize (a_list.count * 2)
+						if a_list.is_full then
+							a_list.resize (a_list.count * 2)
+						end
+						a_list.put_last (a_node.as_tiny_element)
 					end
-					a_list.put_last (a_node.as_tiny_element)
+					an_index := an_index + 1
 				end
-				an_index := an_index + 1
+				if element_list.is_full then
+					element_list.resize (element_list.count * 2)
+				end
+				element_list.put (a_list, a_fingerprint)
+				Result := a_list
 			end
-			if element_list.is_full then
-				element_list.resize (element_list.count * 2)
-			end
-			element_list.put (a_list, a_fingerprint)
-
-			Result := a_list
 		end
 
 	root: XM_XPATH_NODE is

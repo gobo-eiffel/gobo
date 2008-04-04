@@ -103,6 +103,7 @@ feature {NONE} -- Initialization
 			-- Create from a list of items.
 		require
 			list_not_void: a_list /= Void
+			no_void_items: not a_list.has (Void)
 		do
 			make_value
 			make_from_linear (a_list)
@@ -234,15 +235,16 @@ feature -- Status report
 	is_node_sequence: BOOLEAN is
 			-- Is `Current' a node-sequence?
 		local
-			an_index: INTEGER
+			l_index: INTEGER
 		do
 			from
-				an_index := 1; Result := True
+				l_index := 1
+				Result := True
 			until
-				not Result or else an_index > count
+				not Result or else l_index > count
 			loop
-				Result := item_at (an_index).is_node
-				an_index := an_index + 1
+				Result := item_at (l_index).is_node
+				l_index := l_index + 1
 			end
 		end
 

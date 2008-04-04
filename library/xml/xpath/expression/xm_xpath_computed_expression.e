@@ -392,7 +392,6 @@ feature -- Evaluation
 					a_result.put (last_iterator.item) -- the assumption in cardinality is zero-or-one
 				end
 			end
-			free (last_iterator)
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
@@ -509,7 +508,6 @@ feature -- Evaluation
 						a_context.report_fatal_error (l_error_value)
 					end
 				end
-				free (last_iterator)
 			else
 				check
 					not_supported: False

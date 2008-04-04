@@ -29,6 +29,9 @@ inherit
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
+	XM_XPATH_NODE_FACTORY
+		export {NONE} all end
+	
 	-- This outputter is used when writing a sequence of atomic values and nodes,
 	--  e.g. when xsl:variable is used with content and an "as" attribute. The outputter
 	--  builds the sequence and provides access to it. (It isn't really an outputter at all,
@@ -412,7 +415,7 @@ feature {NONE} -- Implementation
 	tree: XM_XPATH_RECEIVER
 			-- Output tree
 
-	builder: XM_XPATH_TINY_BUILDER
+	builder: XM_XPATH_TREE_BUILDER
 			-- Tree builder
 
 	level: INTEGER
@@ -429,8 +432,8 @@ feature {NONE} -- Implementation
 			a_reducer: XM_XSLT_NAMESPACE_REDUCER
 			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
 		do
-			create builder.make (base_uri, document_uri)
-			builder.set_defaults (50, 10, 5, 200)
+			create builder.make (Current, base_uri, document_uri)
+			-- only applicable to tiny builder: builder.set_defaults (50, 10, 5, 200)
 			create a_reducer.make (builder)
 			create a_complex_outputter.make (a_reducer)
 			tree := a_complex_outputter

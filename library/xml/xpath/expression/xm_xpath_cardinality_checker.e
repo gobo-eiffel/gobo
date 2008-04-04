@@ -164,7 +164,6 @@ feature -- Evaluation
 					a_result.item.error_value.set_location (system_id, line_number)
 				end
 			end
-			free (base_expression.last_iterator)
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is

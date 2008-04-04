@@ -201,8 +201,6 @@ feature -- Evaluation
 					set_last_error (last_boolean_value.error_value)
 				end
 			end
-			free (first_operand.last_iterator)
-			free (second_operand.last_iterator)
 			if last_boolean_value = Void then
 				calculate_effective_boolean_value_not_booleans (a_context, l_iterator, l_other_iterator)
 			end

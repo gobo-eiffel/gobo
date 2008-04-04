@@ -137,7 +137,6 @@ feature -- Evaluation
 					end
 				end
 			end
-			free (l_iterator)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
