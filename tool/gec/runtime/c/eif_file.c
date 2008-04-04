@@ -483,7 +483,7 @@ EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) {
 EIF_INTEGER file_gss(FILE* f, char* s, EIF_INTEGER bound) {
 	EIF_INTEGER amount;
 	amount = (EIF_INTEGER)fread((void*)s, (size_t)1, (size_t)bound, f);
-	if (amount != bound && ferror(f)) {
+	if (ferror(f)) {
 			/* An I/O error occurred */
 			/* Raise exception */
 		eise_io("FILE: unable to read stream.");
