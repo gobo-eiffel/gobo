@@ -298,6 +298,69 @@ feature -- Resizing
 			capacity := n
 		end
 
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+			-- Apply `an_action' to every item, from last to first inserted.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from i := count until i < 1 loop
+				an_action.call ([storage.item (i)])
+				i := i - 1
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from last to first inserted.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			i: INTEGER
+			l_item: G
+		do
+			from i := count until i < 1 loop
+				l_item := storage.item (i)
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				i := i - 1
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from i := count until i < 1 loop
+				if a_test.item ([storage.item (i)]) then
+					Result := True
+					i := 0 -- Jump out of the loop.
+				else
+					i := i - 1
+				end
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			Result := True
+			from i := count until i < 1 loop
+				if not a_test.item ([storage.item (i)]) then
+					Result := False
+					i := 0 -- Jump out of the loop.
+				else
+					i := i - 1
+				end
+			end
+		end
+
 feature {DS_ARRAYED_STACK} -- Implementation
 
 	storage: SPECIAL [G]

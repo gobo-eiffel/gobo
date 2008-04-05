@@ -283,6 +283,73 @@ feature -- Removal
 			count := 0
 		end
 
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+			-- Apply `an_action' to every item, from last to first inserted.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			a_cell: like first_cell
+		do
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+				an_action.call ([a_cell.item])
+				a_cell := a_cell.right
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from last to first inserted.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			a_cell: like first_cell
+			l_item: G
+		do
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+				l_item := a_cell.item
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				a_cell := a_cell.right
+			end
+		end
+
+	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			a_cell: like first_cell
+		do
+			a_cell := first_cell
+			from until (a_cell = Void) loop
+				if a_test.item ([a_cell.item]) then
+					Result := True
+					a_cell := Void -- Jump out of the loop.
+				else
+					a_cell := a_cell.right
+				end
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			a_cell: like first_cell
+		do
+			a_cell := first_cell
+			Result := True
+			from until (a_cell = Void) loop
+				if not a_test.item ([a_cell.item]) then
+					Result := False
+					a_cell := Void -- Jump out of the loop.
+				else
+					a_cell := a_cell.right
+				end
+			end
+		end
+
 feature {DS_LINKED_STACK} -- Implementation
 
 	first_cell: DS_LINKABLE [G]

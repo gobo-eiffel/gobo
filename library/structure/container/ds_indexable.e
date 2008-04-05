@@ -286,8 +286,6 @@ feature -- Iteration
 	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
 			-- Apply `an_action' to every item, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
-		require
-			an_action_not_void: an_action /= Void
 		local
 			i: INTEGER
 		do
@@ -301,8 +299,6 @@ feature -- Iteration
 			-- Apply `an_action' to every item, from first to last.
 			-- `an_action' receives the item and its index.
 			-- (Semantics not guaranteed if `an_action' changes the structure.)
-		require
-			an_action_not_void: an_action /= Void
 		local
 			i: INTEGER
 		do
@@ -315,9 +311,6 @@ feature -- Iteration
 	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
-		require
-			an_action_not_void: an_action /= Void
-			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
 			l_item: G
@@ -335,9 +328,6 @@ feature -- Iteration
 			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
 			-- `an_action' and `a_test' receive the item and its index.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
-		require
-			an_action_not_void: an_action /= Void
-			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
 			l_item: G
@@ -354,8 +344,6 @@ feature -- Iteration
 	there_exists (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `a_test' true for at least one item?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
-		require
-			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
 		do
@@ -372,8 +360,6 @@ feature -- Iteration
 	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `a_test' true for all items?
 			-- (Semantics not guaranteed if `a_test' changes the structure.)
-		require
-			a_test_not_void: a_test /= Void
 		local
 			i: INTEGER
 		do

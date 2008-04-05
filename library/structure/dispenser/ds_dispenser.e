@@ -17,7 +17,8 @@ inherit
 	DS_EXTENDIBLE [G]
 		redefine
 			put, force,
-			extend, append
+			extend, append,
+			do_all, do_if
 		end
 
 feature -- Access
@@ -88,6 +89,20 @@ feature -- Removal
 		deferred
 		ensure
 			new_count: count = n
+		end
+
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [G]]) is
+			-- Apply `an_action' to every item, from first to last item accessible.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		deferred
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [G]]; a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last item accessible.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		deferred
 		end
 
 end

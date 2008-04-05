@@ -507,6 +507,44 @@ feature -- Duplication
 			internal_keys := l_keys
 		end
 
+feature -- Iteration
+
+	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- `an_action' receives the item and its key.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from i := 1 until i > last_position loop
+				if clashes_item (i) > Free_watermark then
+					an_action.call ([item_storage_item (i), key_storage_item (i)])
+				end
+				i := i + 1
+			end
+		end
+
+	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- `an_action' and `a_test' receive the item and its key.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		local
+			i: INTEGER
+			l_item: G
+			l_key: K
+		do
+			from i := 1 until i > last_position loop
+				if clashes_item (i) > Free_watermark then
+					l_item := item_storage_item (i)
+					l_key := key_storage_item (i)
+					if a_test.item ([l_item, l_key]) then
+						an_action.call ([l_item, l_key])
+					end
+				end
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	internal_set_key_equality_tester (a_tester: like key_equality_tester) is

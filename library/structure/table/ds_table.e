@@ -5,7 +5,7 @@ indexing
 		"Data structures whose items are accessible through keys"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,7 @@ feature -- Access
 		do
 			if has (k) then
 				Result := item (k)
-			end 
+			end
 		end
 
 feature -- Status report
@@ -117,6 +117,27 @@ feature -- Removal
 			same_count: (not old has (k)) implies (count = old count)
 			one_less: (old has (k)) implies (count = old count - 1)
 			removed: not has (k)
+		end
+
+feature -- Iteration
+
+	do_all_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]) is
+			-- Apply `an_action' to every item.
+			-- `an_action' receives the item and its key.
+			-- (Semantics not guaranteed if `an_action' changes the structure.)
+		require
+			an_action_not_void: an_action /= Void
+		deferred
+		end
+
+	do_if_with_key (an_action: PROCEDURE [ANY, TUPLE [G, K]]; a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test'.
+			-- `an_action' and `a_test' receive the item and its key.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the structure.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		deferred
 		end
 
 end

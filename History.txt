@@ -135,6 +135,13 @@ Version 3.8 - ?
 
 	* Added full Unicode case-mapping routines.
 
+	Gobo Eiffel Structure Library:
+
+	* Moved features `do_all', `do_if', `there_exists' and `for_all'
+	  up to class DS_CONTAINER.
+	* Added features `do_all_with_key' and `do_if_with_key' to class
+	  DS_TABLE.
+
 	Gobo Eiffel Time Library:
 
 	* Added support for formatting dates and times according
