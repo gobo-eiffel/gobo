@@ -18,13 +18,11 @@ inherit
 		undefine
 			document_element, next_sibling, previous_sibling, has_child_nodes,
 			first_child, last_child, is_tree_node, as_tree_node
-		redefine
-			hash_code
 		end
 
 	XM_XPATH_TREE_COMPOSITE_NODE
 		undefine
-			document_number, base_uri, local_part, system_id, line_number, hash_code, is_document, as_document
+			document_number, base_uri, local_part, system_id, line_number, is_document, as_document
 		redefine
 			document_element, next_sibling, previous_sibling, root, document_root, is_tree_document, as_tree_document
 		end
@@ -90,11 +88,6 @@ feature -- Access
 
 	document_element: XM_XPATH_TREE_ELEMENT
 			-- Document element
-
-	hash_code: INTEGER is
-		do
-			Result := document_number \\ 7
-		end
 
 	previous_sibling: XM_XPATH_NODE is
 			-- The previous sibling of this node;

@@ -32,4 +32,14 @@ feature -- Access
 			 Result := attribute_node_kind_test
 		end
 
+	path: STRING is
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		do
+			Result := STRING_.concat ("/@", node_name)
+			if parent /= Void then
+				Result := STRING_.appended_string (parent.path, Result)
+			end
+		end
+
 end

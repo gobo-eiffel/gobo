@@ -53,63 +53,6 @@ inherit
 		--  along with additional features to make life easier.
 
 feature -- Access
-	
-	is_node: BOOLEAN is
-			-- Is `Current' a node?
-		do
-			Result := True
-		end
-
-	as_node: XM_XPATH_NODE is
-			-- `Current' seen as a node
-		do
-			Result := Current
-		end
-
-	is_namespace: BOOLEAN is
-			-- Is `Current' a namespace?
-		do
-			Result := False
-		end
-	
-	as_namespace: XM_XPATH_NAMESPACE_NODE is
-			-- `Current' seen as a node
-		require
-			namespace: is_namespace
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_tiny_node: BOOLEAN is
-			-- Is `Current' a tiny-tree node?
-		do
-			Result := False
-		end
-
-	as_tiny_node: XM_XPATH_TINY_NODE is
-			-- `Current' seen as a tiny-tree node
-		require
-			tiny_node: is_tiny_node
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)			
-		end
-
-	is_tree_node: BOOLEAN is
-			-- Is `Current' a tree node?
-		do
-			Result := False
-		end
-
-	as_tree_node: XM_XPATH_TREE_NODE is
-			-- `Current' seen as a tree node
-		require
-			tree_node: is_tree_node
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)			
-		end
 
 	document: XM_XPATH_DOCUMENT is
 			-- Document that owns this node
@@ -129,11 +72,11 @@ feature -- Access
 			-- Uniquely identifies the owning document.
 		deferred
 		ensure
-			strictly_positiv_result: Result > 0
+			strictly_positive_result: Result > 0
 		end
 
 	base_uri: STRING is
-			-- Base URI
+			-- Base URI as per W3C XML:base REC
 		require
 			not_in_error: not is_error
 		do
@@ -231,7 +174,7 @@ feature -- Access
 
 
 	uri: STRING is
-			-- URI part of the name of this node;
+			-- Namespace URI part of the name of this node;
 			-- This is the URI corresponding to the prefix,
 			--  or the URI of the default namespace if appropriate.
 		do
@@ -245,108 +188,40 @@ feature -- Access
 		end
 
 	path: STRING is
-			-- XPath expression for location with document
-		local
-			a_preceding_path, a_test: STRING
-		do
-			inspect
-				node_type
-			when Document_node then Result := "/"
-			when Element_node then
-				if parent = Void then
-					Result := node_name
-				else
-					a_preceding_path := parent.path
-					if STRING_.same_string (a_preceding_path, "/") then
-						Result := STRING_.concat (a_preceding_path, node_name)
-					else
-						Result := STRING_.concat (a_preceding_path, "/")
-						Result := STRING_.appended_string (Result, node_name)
-						Result := STRING_.appended_string (Result, "[")
-						Result := STRING_.appended_string (Result, simple_number)
-						Result := STRING_.appended_string (Result, "]")
-					end
-				end
-			when Attribute_node then
-				Result := STRING_.concat ("/@", node_name)
-				if parent /= Void then
-					Result := STRING_.appended_string (parent.path, Result)
-				end
-			when Text_node then
-				Result := STRING_.concat ("/text()[", simple_number)
-				Result := STRING_.appended_string (Result, "]")
-				if parent /= Void then
-					a_preceding_path := parent.path
-					if not STRING_.same_string (a_preceding_path, "/") then
-						Result := STRING_.appended_string (a_preceding_path, Result)
-					end
-				end
-			when Comment_node then
-				Result := STRING_.concat ("/comment()[", simple_number)
-				Result := STRING_.appended_string (Result, "]")
-				if parent /= Void then
-					a_preceding_path := parent.path
-					if not STRING_.same_string (a_preceding_path, "/") then
-						Result := STRING_.appended_string (a_preceding_path, Result)
-					end
-				end
-			when Processing_instruction_node then
-				Result := STRING_.concat ("/processing-instruction()[", simple_number)
-				Result := STRING_.appended_string (Result, "]")
-				if parent /= Void then
-					a_preceding_path := parent.path
-					if not STRING_.same_string (a_preceding_path, "/") then
-						Result := STRING_.appended_string (a_preceding_path, Result)
-					end
-				end
-			when Namespace_node then
-				a_test := local_part
-				if a_test.count = 0 then
-
-					-- Default namespace: need a node-test that selects unnamed nodes only
-					
-					a_test := "*[not(local-name()]"
-				end
-				Result := STRING_.concat (parent.path, "/namespace::")
-				Result := STRING_.appended_string (Result, a_test)
-			end
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		deferred
 		ensure
 			path_not_void: Result /= Void
 		end
 
 	simple_number: STRING is
-			-- Position of `Current' amongst it's siblings;
-			-- Not 100% pure - may put `Current' into error status.
+			-- Position of `Current' amongst it's siblings
 		require
 			no_previous_error: not is_error
 		local
-			a_node_test: XM_XPATH_NODE_TEST
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_position: INTEGER
+			l_node_test: XM_XPATH_NODE_TEST
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_position: INTEGER
 		do
 			if fingerprint = -1 then
-				create {XM_XPATH_NODE_KIND_TEST} a_node_test.make (node_type)
+				create {XM_XPATH_NODE_KIND_TEST} l_node_test.make (node_type)
 			else
-				create {XM_XPATH_NAME_TEST} a_node_test.make_same_type (Current)
+				create {XM_XPATH_NAME_TEST} l_node_test.make_same_type (Current)
 			end
-			an_iterator := new_axis_iterator_with_node_test (Preceding_sibling_axis, a_node_test)
 			from
-				a_position := 1
-				an_iterator.start
+				l_position := 1
+				l_iterator := new_axis_iterator_with_node_test (Preceding_sibling_axis, l_node_test)
+				l_iterator.start
 			until
-				an_iterator.is_error or else an_iterator.after
+				l_iterator.after
 			loop
-				a_position := a_position + 1
-				an_iterator.forth
+				l_position := l_position + 1
+				l_iterator.forth
 			end
-			if an_iterator.is_error then
-				Result := an_iterator.error_value.error_message
-				set_last_error (an_iterator.error_value)
-			else
-				Result := a_position.out
-			end
+			Result := l_position.out
 		ensure
-			strictly_positive_integer: not is_error implies Result /= Void and then Result.is_integer and then Result.to_integer > 0
+			strictly_positive_integer: Result /= Void and then Result.is_integer and then Result.to_integer > 0
 		end
 
 	document_root: XM_XPATH_DOCUMENT is
@@ -381,12 +256,12 @@ feature -- Access
 		require
 			not_in_error: not is_error
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			an_iterator := new_axis_iterator (Preceding_sibling_axis)
-			an_iterator.start
-			if not an_iterator.after then
-				Result := an_iterator.item
+			l_iterator := new_axis_iterator (Preceding_sibling_axis)
+			l_iterator.start
+			if not l_iterator.after then
+				Result := l_iterator.item
 			end
 		end
 	
@@ -396,12 +271,12 @@ feature -- Access
 		require
 			not_in_error: not is_error
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			an_iterator := new_axis_iterator (Following_sibling_axis)
-			an_iterator.start
-			if not an_iterator.after then
-				Result := an_iterator.item
+			l_iterator := new_axis_iterator (Following_sibling_axis)
+			l_iterator.start
+			if not l_iterator.after then
+				Result := l_iterator.item
 			end
 		end
 	
@@ -413,19 +288,17 @@ feature -- Access
 		require
 			not_in_error: not is_error
 		local
-			a_root: XM_XPATH_DOCUMENT
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			an_element_node_test: XM_XPATH_NODE_KIND_TEST
+			l_root: XM_XPATH_DOCUMENT
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_element_node_test: XM_XPATH_NODE_KIND_TEST
 		do
-			a_root := document_root
-			if a_root = Void or else a_root.is_error then
-				Result := Void
-			else
-				create an_element_node_test.make (Element_node)
-				an_iterator := a_root.new_axis_iterator_with_node_test (Child_axis, an_element_node_test)
-				an_iterator.start
-				if not an_iterator.is_error and then not an_iterator.after and then an_iterator.item.is_element then
-					Result := an_iterator.item.as_element
+			l_root := document_root
+			if l_root /= Void then
+				create l_element_node_test.make (Element_node)
+				l_iterator := l_root.new_axis_iterator_with_node_test (Child_axis, l_element_node_test)
+				l_iterator.start
+				if not l_iterator.after and then l_iterator.item.is_element then
+					Result := l_iterator.item.as_element
 				end
 			end
 		end
@@ -466,11 +339,12 @@ feature -- Access
 				if type_annotation = type_factory.untyped_type.fingerprint then
 					Result := STRING_.appended_string (Result, "xs:untyped)")
 				else
+					-- TODO: schema-aware
 					todo ("type_name", True)
 				end
 			when Attribute_node then
 				Result := STRING_.concat ("attribute(", node_name)
-				Result := STRING_.appended_string (Result, ")") -- TODO add type annotatio
+				Result := STRING_.appended_string (Result, ")") -- TODO add type annotation
 			when Text_node then
 				Result := "text()"
 			when Comment_node then
@@ -482,24 +356,24 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
-			-- An enumeration over the nodes reachable by `an_axis_type' from this node
+	new_axis_iterator (a_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `a_axis_type' from this node
 		require
 			not_in_error: not is_error
-			valid_axis: is_axis_valid (an_axis_type)
+			valid_axis: is_axis_valid (a_axis_type)
 		deferred
 		ensure
 			result_not_in_error: Result /= Void and then not Result.is_error
 			invulnerable: Result.is_invulnerable
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
-			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
+	new_axis_iterator_with_node_test (a_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+			-- An enumeration over the nodes reachable by `a_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		require
 			not_in_error: not is_error
 			node_test_not_void: a_node_test /= Void
-			valid_axis: is_axis_valid (an_axis_type)
+			valid_axis: is_axis_valid (a_axis_type)
 		deferred
 		ensure
 			result_not_in_error: Result /= Void and then not Result.is_error
@@ -532,23 +406,23 @@ feature -- Access
 	 
 feature -- Comparison
 
-	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
-			-- Does `Current' represent the same node in the tree as `other'?
+	is_same_node (a_other: XM_XPATH_NODE): BOOLEAN is
+			-- Does `Current' represent the same node in the tree as `a_other'?
 		require
 			not_in_error: not is_error
-			other_node_not_void: other /= Void
+			a_other_node_not_void: a_other /= Void
 		deferred
 		end
 
-	three_way_comparison (other: XM_XPATH_NODE): INTEGER is
+	three_way_comparison (a_other: XM_XPATH_NODE): INTEGER is
 			-- If current object equal to other, 0;
 			-- if smaller, -1; if greater, 1
 		require
-			other_not_void: other /= Void
+			a_other_not_void: a_other /= Void
 		do
-			if sequence_number < other.sequence_number then
+			if sequence_number < a_other.sequence_number then
 				Result := -1
-			elseif sequence_number > other.sequence_number then
+			elseif sequence_number > a_other.sequence_number then
 				Result := 1
 			else
 				Result := 0
@@ -566,7 +440,8 @@ feature -- Status report
 			-- Error value
 
 	is_nilled: BOOLEAN is
-			-- Is current node "nilled"? (i.e. xsi: nill="true")
+			-- Is current node "nilled"? (i.e. xsi: nill="true");
+			-- This cannot be `True' until we have schema-aware version.
 		require
 			not_in_error: not is_error
 		do
@@ -589,20 +464,44 @@ feature -- Status report
 			Result := False -- overriden for composite nodes
 		end
 
-feature -- Status setting
-
-	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
-			-- Set `error_value'.
+	is_node: BOOLEAN is
+			-- Is `Current' a node?
 		do
-			is_error := True
-			error_value := an_error_value
+			Result := True
 		end
 
-	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
+	is_namespace: BOOLEAN is
+			-- Is `Current' a namespace?
+		do
+			Result := False
+		end
+
+	is_tiny_node: BOOLEAN is
+			-- Is `Current' a tiny-tree node?
+		do
+			Result := False
+		end
+
+	is_tree_node: BOOLEAN is
+			-- Is `Current' a standard (linked) tree node?
+		do
+			Result := False
+		end
+
+feature -- Status setting
+
+	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE) is
 			-- Set `error_value'.
 		do
 			is_error := True
-			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
+			error_value := a_error_value
+		end
+
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER) is
+			-- Set `error_value'.
+		do
+			is_error := True
+			create error_value.make_from_string (a_message, a_namespace_uri, a_code, a_error_type)
 		end
 
 feature -- Conversion
@@ -612,27 +511,60 @@ feature -- Conversion
 		do
 			create {XM_XPATH_SINGLETON_NODE} Result.make (Current)
 		end
+	
+	as_node: XM_XPATH_NODE is
+			-- `Current' seen as a node
+		do
+			Result := Current
+		end
+	
+	as_namespace: XM_XPATH_NAMESPACE_NODE is
+			-- `Current' seen as a node
+		require
+			namespace: is_namespace
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 
-feature -- Element change
+	as_tiny_node: XM_XPATH_TINY_NODE is
+			-- `Current' seen as a tiny-tree node
+		require
+			tiny_node: is_tiny_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)			
+		end
+
+	as_tree_node: XM_XPATH_TREE_NODE is
+			-- `Current' seen as a tree node
+		require
+			tree_node: is_tree_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)			
+		end
+
+feature -- Basic operations
 	
 	generate_id is
 			-- Generate a unique id for `Current'
 		require
 			no_generated_id_yet: generated_id = Void
 		do
-			generated_id := "N" + document_number.out + "N" + sequence_number.high_word.out + "N" + sequence_number.low_word.out
+			generated_id := "D" + document_number.out + "H" + sequence_number.high_word.out + "L" + sequence_number.low_word.out
 		ensure
 			id_generated: generated_id /= Void
 		end
 
 feature -- Duplication
 
-	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+	copy_node (a_receiver: XM_XPATH_RECEIVER; a_which_namespaces: INTEGER; a_copy_annotations: BOOLEAN) is
 			-- Copy `Current' to `a_receiver'.
 		require
 			receiver_not_void: a_receiver /= Void
-			which_namespaces: which_namespaces = No_namespaces
-				or else which_namespaces = Local_namespaces or else  which_namespaces = All_namespaces 
+			a_which_namespaces_valid: a_which_namespaces = No_namespaces
+				or a_which_namespaces = Local_namespaces or a_which_namespaces = All_namespaces 
 		deferred
 		end
 

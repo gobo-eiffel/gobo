@@ -21,12 +21,12 @@ inherit
 		undefine
 			has_child_nodes, first_child, is_tiny_node, as_tiny_node
 		redefine
-			node_kind, hash_code
+			node_kind
 		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
 		undefine
-			document_number, base_uri, local_part, hash_code, is_document, as_document
+			document_number, base_uri, local_part, is_document, as_document
 		redefine
 			root, document_root, system_id, line_number, is_tiny_document, as_tiny_document
 		end
@@ -117,11 +117,6 @@ feature -- Access
 			else
 				Result := Void
 			end
-		end
-
-	hash_code: INTEGER is
-		do
-			Result := document_number \\ 7
 		end
 
 	unparsed_entity_system_id (an_entity_name: STRING): STRING is

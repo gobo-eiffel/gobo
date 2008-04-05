@@ -192,6 +192,28 @@ feature -- Access
 			iterator_not_void_nor_in_error: Result /= Void and then not Result.is_error
 		end
 
+	path: STRING is
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		local
+			l_preceding_path: STRING
+		do
+			if parent = Void then
+				Result := node_name
+			else
+				l_preceding_path := parent.path
+				if STRING_.same_string (l_preceding_path, "/") then
+					Result := STRING_.concat (l_preceding_path, node_name)
+				else
+					Result := STRING_.concat (l_preceding_path, "/")
+					Result := STRING_.appended_string (Result, node_name)
+					Result := STRING_.appended_string (Result, "[")
+					Result := STRING_.appended_string (Result, simple_number)
+					Result := STRING_.appended_string (Result, "]")
+				end
+			end
+		end
+
 feature -- Status report
 
 	is_nilled: BOOLEAN is

@@ -141,6 +141,13 @@ feature -- Access
 			create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 		end
 
+	path: STRING is
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		do
+			Result := "/text()[1]"
+		end
+	
 feature -- Comparison
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is

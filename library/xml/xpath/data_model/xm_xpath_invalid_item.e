@@ -68,10 +68,19 @@ feature -- Access
 			-- pre-condition cannot be met
 		end
 
-		type_name: STRING is
+	type_name: STRING is
 			-- Type name for diagnostic purposes
 		do
 			Result := "Item in error"
+		end
+
+	as_item_value: XM_XPATH_VALUE is
+			-- `Current' seen as a value
+		do
+			check
+				not_called: False
+				-- precondition is never met
+			end
 		end
 
 feature -- Status report

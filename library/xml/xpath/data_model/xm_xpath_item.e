@@ -43,12 +43,6 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	hash_code: INTEGER is
-			-- Hash code value
-		do
-			Result := string_value.hash_code
-		end
-
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		require
@@ -72,21 +66,30 @@ feature -- Access
 			type_name_not_void: Result /= Void
 		end
 
+	error_value: XM_XPATH_ERROR_VALUE is
+			-- Error value
+		deferred
+		end
+	
+feature -- Status report
+
+	is_error: BOOLEAN is
+			-- Has item failed evaluation?
+		deferred
+		end
+
 	is_node: BOOLEAN is
 			-- Is `Current' a node?
 		do
 			Result := False
 		end
 
-	as_node: XM_XPATH_NODE is
-			-- `Current' seen as a node
-		require
-			node: is_node
+	is_atomic_value: BOOLEAN is
+			-- Is `Current' an atomic value?
 		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
+			Result := False
 		end
-
+	
 	is_function_package: BOOLEAN is
 			-- Is `Current' an XSLT function call package??
 		do
@@ -99,6 +102,129 @@ feature -- Access
 			Result := False
 		end
 
+	is_document: BOOLEAN is
+			-- Is `Current' a document?
+		do
+			Result := False
+		end
+	
+	is_untyped_atomic: BOOLEAN is
+			-- Is `Current' an untyped atomic value?
+		do
+			Result := False
+		end
+
+	is_numeric_value: BOOLEAN is
+			-- Is `Current' a numeric value?
+		do
+			Result := False
+		end
+
+	is_integer_value: BOOLEAN is
+			-- Is `Current' an integer value?
+		do
+			Result := False
+		end
+
+	is_machine_integer_value: BOOLEAN is
+			-- Is `Current' a machine integer value?
+		do
+			Result := False
+		end
+
+	is_double_value: BOOLEAN is
+			-- Is `Current' a double value?
+		do
+			Result := False
+		end
+
+	is_decimal_value: BOOLEAN is
+			-- Is `Current' a decimal value?
+		do
+			Result := False
+		end
+
+	is_string_value: BOOLEAN is
+			-- Is `Current' a string value?
+		do
+			Result := False
+		end
+
+	is_boolean_value: BOOLEAN is
+			-- Is `Current' a boolean value?
+		do
+			Result := False
+		end
+
+	is_qname_value: BOOLEAN is
+			-- Is `Current' a QName value?
+		do
+			Result := False
+		end
+
+	is_any_uri: BOOLEAN is
+			-- Is `Current' an anyURI value?
+		do
+			Result := False
+		end
+
+feature -- Status setting
+
+	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE) is
+			-- Set `error_value'.
+		require
+			item_not_in_error: not is_error
+			error_value_not_void: a_error_value /= Void
+		deferred
+		ensure
+			item_in_error: is_error
+			error_value_set: error_value = a_error_value
+		end
+
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER) is
+			-- Set `error_value'.
+		require
+			item_not_in_error: not is_error
+			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
+			message_not_void: a_message /= Void and then a_message.count > 0
+			namespace_uri_not_void: a_namespace_uri /= Void
+			code_not_void: a_code /= Void
+		deferred
+		ensure
+			item_in_error: is_error
+			valid_error: error_value /= Void
+				and then STRING_.same_string (error_value.code , a_code)
+		end
+
+feature -- Conversion
+	
+	as_item_value: XM_XPATH_VALUE is
+			-- `Current' seen as a value
+		require
+			item_not_in_error: not is_error
+		deferred
+		ensure
+			value_not_void: Result /= Void
+		end
+
+	as_node: XM_XPATH_NODE is
+			-- `Current' seen as a node
+		require
+			node: is_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_atomic_value: XM_XPATH_ATOMIC_VALUE is
+			-- `Current' seen as an atomic_value
+		require
+			atomic_value: is_atomic_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
 	as_element: XM_XPATH_ELEMENT is
 			-- `Current' seen as an element
 		require
@@ -108,12 +234,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_document: BOOLEAN is
-			-- Is `Current' a document?
-		do
-			Result := False
-		end
-
 	as_document: XM_XPATH_DOCUMENT is
 			-- `Current' seen as a document
 		require
@@ -121,12 +241,6 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-	
-	is_untyped_atomic: BOOLEAN is
-			-- Is `Current' an untyped atomic value?
-		do
-			Result := False
 		end
 
 	as_untyped_atomic: XM_XPATH_STRING_VALUE is
@@ -140,33 +254,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_object_value: BOOLEAN is
-			-- Is `Current' an object value?
-		do
-			Result := False
-		end
-
-	is_atomic_value: BOOLEAN is
-			-- Is `Current' an atomic value?
-		do
-			Result := False
-		end
-
-	as_atomic_value: XM_XPATH_ATOMIC_VALUE is
-			-- `Current' seen as an atomic_value
-		require
-			atomic_value: is_atomic_value
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_numeric_value: BOOLEAN is
-			-- Is `Current' a numeric value?
-		do
-			Result := False
-		end
-
 	as_numeric_value: XM_XPATH_NUMERIC_VALUE is
 			-- `Current' seen as a numeric value
 		require
@@ -174,12 +261,6 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_integer_value: BOOLEAN is
-			-- Is `Current' an integer value?
-		do
-			Result := False
 		end
 
 	as_integer_value: XM_XPATH_INTEGER_VALUE is
@@ -191,12 +272,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_machine_integer_value: BOOLEAN is
-			-- Is `Current' a machine integer value?
-		do
-			Result := False
-		end
-
 	as_machine_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE is
 			-- `Current' seen as a machine integer value
 		require
@@ -204,12 +279,6 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_double_value: BOOLEAN is
-			-- Is `Current' a double value?
-		do
-			Result := False
 		end
 
 	as_double_value: XM_XPATH_DOUBLE_VALUE is
@@ -236,12 +305,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_decimal_value: BOOLEAN is
-			-- Is `Current' a decimal value?
-		do
-			Result := False
-		end
-
 	as_decimal_value: XM_XPATH_DECIMAL_VALUE is
 			-- `Current' seen as a decimal value
 		require
@@ -249,12 +312,6 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_string_value: BOOLEAN is
-			-- Is `Current' a string value?
-		do
-			Result := False
 		end
 
 	as_string_value: XM_XPATH_STRING_VALUE is
@@ -268,12 +325,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_boolean_value: BOOLEAN is
-			-- Is `Current' a boolean value?
-		do
-			Result := False
-		end
-
 	as_boolean_value: XM_XPATH_BOOLEAN_VALUE is
 			-- `Current' seen as a boolean value
 		require
@@ -281,12 +332,6 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_qname_value: BOOLEAN is
-			-- Is `Current' a QName value?
-		do
-			Result := False
 		end
 
 	as_qname_value: XM_XPATH_QNAME_VALUE is
@@ -298,12 +343,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_any_uri: BOOLEAN is
-			-- Is `Current' an anyURI value?
-		do
-			Result := False
-		end
-
 	as_any_uri: XM_XPATH_ANY_URI_VALUE is
 			-- `Current' seen as an anyURI value
 		require
@@ -311,61 +350,6 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-	
-feature -- Status report
-
-	is_error: BOOLEAN is
-			-- Has item failed evaluation?
-		deferred
-		end
-	
-	error_value: XM_XPATH_ERROR_VALUE is
-			-- Error value
-		deferred
-		end
-
-feature -- Status setting
-
-	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
-			-- Set `error_value'.
-		require
-			item_not_in_error: not is_error
-			error_value_not_void: an_error_value /= Void
-		deferred
-		ensure
-			item_in_error: is_error
-			value_set: error_value = an_error_value
-		end
-
-	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
-			-- Set `error_value'.
-		require
-			item_not_in_error: not is_error
-			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
-			message_not_void: a_message /= Void and then a_message.count > 0
-			namespace_uri_not_void: a_namespace_uri /= Void
-			code_not_void: a_code /= Void
-		deferred
-		ensure
-			item_in_error: is_error
-			valid_error: error_value /= Void
-				and then STRING_.same_string (error_value.code , a_code)
-		end
-
-feature -- Conversion
-	
-	as_item_value: XM_XPATH_VALUE is
-			-- `Current' seen as a value
-		require
-			item_not_in_error: not is_error
-		do
-
-			-- This default version is re-defined by NODE and ATOMIC_VALUE
-
-			create {XM_XPATH_EMPTY_SEQUENCE} Result.make
-		ensure
-			value_not_void: Result /= Void
 		end
 
 feature -- Output

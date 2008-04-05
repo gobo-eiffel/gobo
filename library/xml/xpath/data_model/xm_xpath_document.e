@@ -28,6 +28,11 @@ feature -- Access
 	document_number: INTEGER
 			-- Uniquely identifies this document.
 
+	hash_code: INTEGER is
+		do
+			Result := document_number \\ 7
+		end
+
 	is_document: BOOLEAN is
 			-- Is `Current' a document?
 		do
@@ -101,6 +106,13 @@ feature -- Access
 		deferred
 		ensure
 			sequence_before: Result /= Void and then Result.before
+		end
+
+	path: STRING is
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		do
+			Result := "/"
 		end
 
 feature {XM_XPATH_NAME_POOL, XM_XPATH_TINY_FOREST} -- Restricted

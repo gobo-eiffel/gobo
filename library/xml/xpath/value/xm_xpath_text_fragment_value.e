@@ -15,9 +15,6 @@ class XM_XPATH_TEXT_FRAGMENT_VALUE
 inherit
 
 	XM_XPATH_DOCUMENT
-		redefine
-			hash_code
-		end
 
 create
 
@@ -161,11 +158,6 @@ feature -- Access
 			-- Name code this node - used in displaying names
 		do
 			Result := -1
-		end
-
-	hash_code: INTEGER is
-		do
-			Result := document_number \\ 7
 		end
 
 	all_elements (a_fingerprint: INTEGER): DS_ARRAYED_LIST [XM_XPATH_ELEMENT] is

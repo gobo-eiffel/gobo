@@ -228,6 +228,23 @@ feature -- Access
 			end
 		end
 
+	path: STRING is
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		local
+			l_test: STRING
+		do
+			l_test := local_part
+			if l_test.is_empty then
+
+				-- Default namespace: need a node-test that selects unnamed nodes only
+				
+				l_test := "*[not(local-name()]"
+			end
+			Result := STRING_.concat (parent.path, "/namespace::")
+			Result := STRING_.appended_string (Result, l_test)
+		end
+
 feature -- Comparison
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is

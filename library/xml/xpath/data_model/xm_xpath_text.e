@@ -32,6 +32,22 @@ feature -- Access
 			Result := text_node_kind_test
 		end
 
+	path: STRING is
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		local
+			l_preceding_path: STRING
+		do
+			Result := STRING_.concat ("/text()[", simple_number)
+			Result := STRING_.appended_string (Result, "]")
+			if parent /= Void then
+				l_preceding_path := parent.path
+				if not STRING_.same_string (l_preceding_path, "/") then
+					Result := STRING_.appended_string (l_preceding_path, Result)
+				end
+			end
+		end
+
 invariant
 
 	type: item_type /= Void

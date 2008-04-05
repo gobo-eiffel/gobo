@@ -53,8 +53,11 @@ feature -- Access
 			create {XM_XPATH_NODE_KIND_TEST} Result.make (node_type)
 		end
 
-	document: XM_XPATH_DOCUMENT
+	document: XM_XPATH_DOCUMENT is
 			-- Document that owns this node
+		do
+			-- `Void' - by definition of an orphan
+		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order).
@@ -182,6 +185,13 @@ feature -- Access
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
 			todo ("new_axis_iterator with node test", False)
+		end
+
+	path: STRING is
+			-- XPath expression for location within document;
+			-- Used for reporting purposes.
+		do
+			Result := "/" + node_kind
 		end
 
 feature -- Comparison
