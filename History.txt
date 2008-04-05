@@ -131,6 +131,11 @@ Version 3.8 - ?
 	* Added KL_MEMORY and friends to provide a compiler independent way
 	  to access garbage collection facilities.
 
+	Gobo Eiffel Regexp Library:
+
+	* Fixed bug#1917556 where feature `split' in RX_PCRE_REGULAR_EXPRESSION
+	  was not behaving correctly when the regexp could match empty strings.
+
 	Gobo Eiffel String Library:
 
 	* Added full Unicode case-mapping routines.

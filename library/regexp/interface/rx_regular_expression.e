@@ -207,20 +207,60 @@ feature -- Splitting
 			is_matching: is_matching
 			an_array_not_void: an_array /= Void
 		local
-			i, j, nb: INTEGER
+			i, j, k, nb: INTEGER
+			l_last_char_matched: INTEGER
 			old_subject_start: INTEGER
 		do
 			i := subject_start
+			l_last_char_matched := i - 1
 			old_subject_start := i
 			nb := an_array.upper
 			from until not has_matched loop
-				j := captured_start_position (0) - 1
-				if i <= j + 1 then
-					nb := nb + 1
-					an_array.force (subject.substring (i, j), nb)
+				j := captured_start_position (0)
+				k := captured_end_position (0)
+				if j > k then
+						-- We matched an empty string, so we have to
+						-- move to the next character, otherwise we
+						-- will enter an infinite loop.
+					if i <= j and j <= subject_end then
+						nb := nb + 1
+						an_array.force (subject.substring (i, j), nb)
+					end
+					i := k + 2
+					if i <= subject_end then
+						match_substring (subject, i, subject_end)
+					else
+							-- We reached the end of the subject.
+							-- Stop searching for matching substring,
+							-- otherwise it would always match since
+							-- the current regexp can match the empty
+							-- string, resulting in an infinite loop.
+						i := subject_end + 2
+						match_count := 0
+						check
+							not_has_matched: not has_matched
+						end
+					end
+				else
+					if i < j then
+						nb := nb + 1
+						an_array.force (subject.substring (i, j - 1), nb)
+					elseif i = j and (l_last_char_matched = i - 1) then
+							-- If the string between two consecutive matches is
+							-- empty, then the previous character (at position
+							-- i-1) should be the last character matched in the
+							-- previous iteration). If it's not, then it means
+							-- that at the previous iteration we matched the
+							-- empty string. Therefore we cannot add to `an_array'
+							-- a string (i.e. the empty string) which itself can
+							-- be matched by the current regexp.
+						nb := nb + 1
+						an_array.force ("", nb)
+					end
+					l_last_char_matched := k
+					i := k + 1
+					match_substring (subject, i, subject_end)
 				end
-				i := captured_end_position (0) + 1
-				match_substring (subject, i, subject_end)
 			end
 			if i <= subject_end + 1 then
 				nb := nb + 1
