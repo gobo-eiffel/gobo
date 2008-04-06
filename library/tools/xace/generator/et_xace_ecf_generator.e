@@ -350,35 +350,35 @@ feature {NONE} -- Output
 				print_indentation (indent + 1, a_file)
 				a_file.put_string ("<assertions")
 					-- precondition
-				if l_assertions.has (options.require_value) then
+				if l_assertions.has (options.require_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" precondition=%"true%"")
 				else
 					a_file.put_string (" precondition=%"false%"")
 				end
 					-- supplier_precondition
-				if l_assertions.has (options.supplier_precondition_value) then
+				if l_assertions.has (options.supplier_precondition_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" supplier_precondition=%"true%"")
 				end
 					-- postcondition
-				if l_assertions.has (options.ensure_value) then
+				if l_assertions.has (options.ensure_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" postcondition=%"true%"")
 				else
 					a_file.put_string (" postcondition=%"false%"")
 				end
 					-- check
-				if l_assertions.has (options.check_value) then
+				if l_assertions.has (options.check_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" check=%"true%"")
 				else
 					a_file.put_string (" check=%"false%"")
 				end
 					-- invariant
-				if l_assertions.has (options.invariant_value) then
+				if l_assertions.has (options.invariant_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" invariant=%"true%"")
 				else
 					a_file.put_string (" invariant=%"false%"")
 				end
 					-- loop
-				if l_assertions.has (options.loop_variant_value) or l_assertions.has (options.loop_invariant_value) then
+				if l_assertions.has (options.loop_variant_value) or l_assertions.has (options.loop_invariant_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" loop=%"true%"")
 				else
 					a_file.put_string (" loop=%"false%"")
@@ -1240,35 +1240,35 @@ feature {NONE} -- Output
 				print_indentation (indent + 1, a_file)
 				a_file.put_string ("<assertions")
 					-- precondition
-				if l_assertions.has (options.require_value) then
+				if l_assertions.has (options.require_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" precondition=%"true%"")
 				else
 					a_file.put_string (" precondition=%"false%"")
 				end
 					-- supplier_precondition
-				if l_assertions.has (options.supplier_precondition_value) then
+				if l_assertions.has (options.supplier_precondition_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" supplier_precondition=%"true%"")
 				end
 					-- postcondition
-				if l_assertions.has (options.ensure_value) then
+				if l_assertions.has (options.ensure_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" postcondition=%"true%"")
 				else
 					a_file.put_string (" postcondition=%"false%"")
 				end
 					-- check
-				if l_assertions.has (options.check_value) then
+				if l_assertions.has (options.check_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" check=%"true%"")
 				else
 					a_file.put_string (" check=%"false%"")
 				end
 					-- invariant
-				if l_assertions.has (options.invariant_value) then
+				if l_assertions.has (options.invariant_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" invariant=%"true%"")
 				else
 					a_file.put_string (" invariant=%"false%"")
 				end
 					-- loop
-				if l_assertions.has (options.loop_variant_value) or l_assertions.has (options.loop_invariant_value) then
+				if l_assertions.has (options.loop_variant_value) or l_assertions.has (options.loop_invariant_value) or l_assertions.has (options.all_value) then
 					a_file.put_string (" loop=%"true%"")
 				else
 					a_file.put_string (" loop=%"false%"")
