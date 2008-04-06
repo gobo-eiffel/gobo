@@ -25,7 +25,7 @@ create
 
 	make
 	
-feature {XM_XPATH_ITERATOR_POOL} -- Initialization
+feature -- Initialization
 
 	make (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST; a_self: BOOLEAN) is
 			-- Establish invariant

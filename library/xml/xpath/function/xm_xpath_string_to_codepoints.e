@@ -78,7 +78,7 @@ feature -- Evaluation
 		local
 			l_item: XM_XPATH_ITEM
 			l_string: STRING
-			l_array: ARRAY [XM_XPATH_INTEGER_VALUE]
+			l_array: DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE]
 			l_index, l_count: INTEGER
 			l_integer: XM_XPATH_INTEGER_VALUE
 			l_result: DS_CELL [XM_XPATH_ITEM]
@@ -96,7 +96,9 @@ feature -- Evaluation
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				else
 					from
-						create l_array.make (1, l_string.count); l_index := 1; l_count := l_string.count
+						create l_array.make (l_string.count)
+						l_index := 1
+						l_count := l_string.count
 					until
 						l_index > l_count
 					loop
@@ -104,7 +106,7 @@ feature -- Evaluation
 						l_array.put (l_integer, l_index)
 						l_index := l_index + 1
 					end
-					create {XM_XPATH_ARRAY_ITERATOR [XM_XPATH_INTEGER_VALUE]} last_iterator.make (l_array, 1, l_count)
+					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_INTEGER_VALUE]} last_iterator.make (l_array)
 				end
 			end
 		end

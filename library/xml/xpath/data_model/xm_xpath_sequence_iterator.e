@@ -213,7 +213,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_array_iterator: XM_XPATH_ARRAY_ITERATOR [G] is
+	as_array_iterator: XM_XPATH_ARRAY_LIST_ITERATOR [G] is
 			-- `Current' seen as an array iterator
 		require
 			array_iterator: is_array_iterator

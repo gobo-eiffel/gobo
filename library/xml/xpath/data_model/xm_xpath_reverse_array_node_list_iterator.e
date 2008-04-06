@@ -21,7 +21,7 @@ inherit
 
 create
 
-	make
+	make, make_slice
 
 feature -- Access
 
