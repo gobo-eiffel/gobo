@@ -20,8 +20,6 @@ inherit
 	XM_XPATH_DOCUMENT
 		undefine
 			has_child_nodes, first_child, is_tiny_node, as_tiny_node
-		redefine
-			node_kind
 		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
@@ -100,12 +98,6 @@ feature -- Access
 		do
 			Result := Current
 		end
-
-	node_kind: STRING is
-			-- Kind of node
-		do
-			Result := "document"
-		end		
 
 	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'

@@ -56,7 +56,7 @@ feature -- Access
 		end
 
 	base_uri: STRING is
-			-- Base URI as per XML:Base recommendation
+			-- Base URI as per W3C XML:Base REC
 		local
 			l_uri: UT_URI
 			l_xml_base, l_initial_system_id: STRING
@@ -219,7 +219,7 @@ feature -- Status report
 	is_nilled: BOOLEAN is
 			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		do
-			Result := nilled_property
+			Result := False
 		end
 
 feature -- Status setting
@@ -243,25 +243,21 @@ feature -- Element change
 
 feature {NONE} -- Access
 
-	-- TODO - scrap this
-
-	nilled_property: BOOLEAN
-			-- Nilled property from the infoset
-
 	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
 			-- Characters not to be escaped for fn:encode-for-uri()
 		local
-			a_character_set: STRING
+			l_character_set: STRING
 		once
-			a_character_set := STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters)
-			a_character_set := STRING_.appended_string (a_character_set, Rfc_digit_characters)
-			a_character_set := STRING_.appended_string (a_character_set, Rfc_mark_characters)
-			a_character_set := STRING_.appended_string (a_character_set, "#")
-			Result := new_character_set (a_character_set)
+			l_character_set := STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters)
+			l_character_set := STRING_.appended_string (l_character_set, Rfc_digit_characters)
+			l_character_set := STRING_.appended_string (l_character_set, Rfc_mark_characters)
+			l_character_set := STRING_.appended_string (l_character_set, "#")
+			Result := new_character_set (l_character_set)
 		end
 
 invariant
-	-- namespaces_have_unique_names: All namespace nodes must have distinct names.
+
+		-- namespaces_have_unique_names: All namespace nodes must have distinct names.
 	-- At most one has no name.
 	-- parent_namespace_relationship: namespaces.for_all (agent (parent.is_equal (Current)))
 	-- attributes_have_distinct_names: All attributes must have distinct QNames.

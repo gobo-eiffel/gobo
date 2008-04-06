@@ -16,18 +16,10 @@ feature -- Access
 
 	shared_name_pool: XM_XPATH_NAME_POOL is
 			-- Shared name pool
-		do
-			Result := default_pool.default_pool
-		ensure
-			shared_name_pool_not_void: Result /= Void
-		end
-
-	default_pool: XM_XPATH_DEFAULT_NAME_POOL is
-			-- The default pool
 		once
 			create Result.make
 		ensure
-			default_pool_not_void: Result /= Void			
+			shared_name_pool_not_void: Result /= Void
 		end
 
 end

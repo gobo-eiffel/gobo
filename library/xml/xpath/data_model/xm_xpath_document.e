@@ -33,20 +33,8 @@ feature -- Access
 			Result := document_number \\ 7
 		end
 
-	is_document: BOOLEAN is
-			-- Is `Current' a document?
-		do
-			Result := True
-		end
-
-	as_document: XM_XPATH_DOCUMENT is
-			-- `Current' seen as a document
-		do
-			Result := Current
-		end
-
 	base_uri: STRING is
-			-- Base URI of document entity
+			-- Base URI of document entity as per W3C XML:Base REC
 		deferred
 		end
 
@@ -55,7 +43,7 @@ feature -- Access
 		do
 			Result := "document"
 		ensure then
-			node_kind_is_document: Result /= Void and then (Result.count = 0 or else Result.is_equal ("document"))
+			node_kind_is_document: Result /= Void and then Result.is_equal ("document")
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -71,17 +59,17 @@ feature -- Access
 			element_list_not_void: Result /= Void
 		end
 
-	unparsed_entity_system_id (an_entity_name: STRING): STRING is
+	unparsed_entity_system_id (a_entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		require
-			entity_name_not_void: an_entity_name /= Void
+			a_entity_name_not_void: a_entity_name /= Void
 		deferred
 		end
 
-	unparsed_entity_public_id (an_entity_name: STRING): STRING is
+	unparsed_entity_public_id (a_entity_name: STRING): STRING is
 			-- Public identifier of an unparsed external entity
 		require
-			entity_name_not_void: an_entity_name /= Void
+			a_entity_name_not_void: a_entity_name /= Void
 		deferred
 		end
 
@@ -92,17 +80,17 @@ feature -- Access
 			absolute_uri: Result /= Void implies Result.is_absolute
 		end
 
-	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
+	selected_id (a_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'
 		require
-			id_not_void: an_id /= Void
+			a_id_not_void: a_id /= Void
 		deferred
 		end
 
-	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
+	idrefs_nodes (a_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Sequence of nodes in document order with an IDREF in `a_idrefs'
 		require
-			idrefs_not_empty: some_idrefs /= Void and then some_idrefs.count > 0
+			idrefs_not_empty: a_idrefs /= Void and then not a_idrefs.is_empty
 		deferred
 		ensure
 			sequence_before: Result /= Void and then Result.before
@@ -115,6 +103,22 @@ feature -- Access
 			Result := "/"
 		end
 
+feature -- Status report
+
+		is_document: BOOLEAN is
+			-- Is `Current' a document?
+		do
+			Result := True
+		end
+
+feature -- Conversion
+
+	as_document: XM_XPATH_DOCUMENT is
+			-- `Current' seen as a document
+		do
+			Result := Current
+		end
+	
 feature {XM_XPATH_NAME_POOL, XM_XPATH_TINY_FOREST} -- Restricted
 
 	set_document_number (a_number: INTEGER) is

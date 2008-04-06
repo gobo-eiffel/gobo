@@ -15,10 +15,10 @@ class XM_XPATH_INVALID_ITERATOR
 	
 inherit
 
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
-
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
 	XM_XPATH_ERROR_TYPES
 		export {NONE} all end
@@ -32,30 +32,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error: XM_XPATH_ERROR_VALUE) is
+	make (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Establish invariant.
 		require
-			error_not_void: an_error /= Void
+			error_not_void: a_error /= Void
 		do
-			set_last_error (an_error)
+			set_last_error (a_error)
 		ensure
-			error_set: error_value = an_error
+			error_set: error_value = a_error
 		end
 
-	make_from_string (a_string, a_namespace_uri, an_error_code: STRING; an_error_type: INTEGER) is
+	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER) is
 			-- Create from `a_string'.
 		require
-			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
 			string_not_void: a_string /= Void and then a_string.count > 0
 			namespace_uri_not_void: a_namespace_uri /= Void
-			error_code_not_void: an_error_code /= Void
+			error_code_not_void: a_error_code /= Void
 		do
-			create error_value.make_from_string (a_string, a_namespace_uri, an_error_code, an_error_type)
+			create error_value.make_from_string (a_string, a_namespace_uri, a_error_code, a_error_type)
 			is_error := True
 		ensure
 			description_set: STRING_.same_string (error_value.description, a_string)
-			code_set: error_value.code = an_error_code
-			type_set: error_value.type = an_error_type
+			code_set: error_value.code = a_error_code
+			type_set: error_value.type = a_error_type
 		end
 
 feature -- Access
@@ -63,7 +63,10 @@ feature -- Access
 	item: XM_XPATH_ITEM is
 			-- Value or node at the current position
 		do
-			-- (pre-condition can't be met)
+			check
+				not_called: False
+				-- precondition is never met
+			end
 		end
 
 feature -- Status report
@@ -71,24 +74,32 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			-- (pre-condition can't be met)
+			check
+				not_called: False
+				-- precondition is never met
+			end
 		end
 
 feature -- Cursor movement
 
-		forth is
+	forth is
 			-- Move to next position
 		do
-			-- (pre-condition can't be met)
+			check
+				not_called: False
+				-- precondition is never met
+			end
 		end
 
 feature -- Duplication
 
 	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
+			-- Another iterator that iterates over the same items as the original
 		do
-			-- (pre-condition can't be met)
+			check
+				not_called: False
+				-- precondition is never met
+			end
 		end
 
 invariant

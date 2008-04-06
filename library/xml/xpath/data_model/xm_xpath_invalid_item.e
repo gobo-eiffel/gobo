@@ -22,30 +22,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error: XM_XPATH_ERROR_VALUE) is
+	make (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Establish invariant.
 		require
-			error_not_void: an_error /= Void
+			error_not_void: a_error /= Void
 		do
-			set_last_error (an_error)
+			set_last_error (a_error)
 		ensure
-			error_set: error_value = an_error
+			error_set: error_value = a_error
 		end
 
-	make_from_string (a_string, a_namespace_uri, an_error_code: STRING; an_error_type: INTEGER) is
+	make_from_string (a_string, a_namespace_uri, a_error_code: STRING; a_error_type: INTEGER) is
 			-- Create from `a_string'.
 		require
 			namespace_uri_not_void: a_namespace_uri /= Void
-			code_not_void: an_error_code /= Void
-			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			code_not_void: a_error_code /= Void
+			valid_error_type: a_error_type = Static_error or a_error_type = Type_error or a_error_type = Dynamic_error
 			string_not_void: a_string /= Void and then a_string.count > 0
 		do
-			create error_value.make_from_string (a_string, a_namespace_uri, an_error_code, an_error_type)
+			create error_value.make_from_string (a_string, a_namespace_uri, a_error_code, a_error_type)
 			is_error := True
 		ensure
 			description_set: error_value /= Void and then error_value.description /= Void and then STRING_.same_string (error_value.description, a_string)
-			code_set: error_value.code = an_error_code
-			type_set: error_value.type = an_error_type
+			code_set: error_value.code = a_error_code
+			type_set: error_value.type = a_error_type
 		end
 
 feature -- Access
@@ -59,13 +59,19 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			-- pre-condition cannot be met
+			check
+				not_called: False
+				-- precondition is never met
+			end
 		end
 
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		do
-			-- pre-condition cannot be met
+			check
+				not_called: False
+				-- precondition is never met
+			end
 		end
 
 	type_name: STRING is
@@ -93,18 +99,18 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
+	set_last_error (a_error_value: XM_XPATH_ERROR_VALUE) is
 			-- Set `error_value'.
 		do
 			is_error := True
-			error_value := an_error_value
+			error_value := a_error_value
 		end
 
-	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
+	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; a_error_type: INTEGER) is
 			-- Set `error_value'.
 		do
 			is_error := True
-			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
+			create error_value.make_from_string (a_message, a_namespace_uri, a_code, a_error_type)
 		end
 
 invariant
