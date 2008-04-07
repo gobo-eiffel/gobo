@@ -31,6 +31,18 @@ feature -- Test
 			assert_strings_equal ("no_element", "STRING:1:1:parse error", parser.last_error_extended_description)
 		end
 
+	test_entity_quoted_quote is
+			--Test quote/apos in quote.
+		do
+			create parser.make
+			parser.parse_from_string ("<!DOCTYPE doc [ <!ENTITY t '%" %"'> ]> <doc>&t;</doc>")
+			assert ("quote_in_apos", parser.is_correct)
+
+			create parser.make
+			parser.parse_from_string ("<!DOCTYPE doc [ <!ENTITY t %"' '%"> ]> <doc>&t;</doc>")
+			assert ("apos_in_quote", parser.is_correct)
+		end
+
 	test_entity_error is
 			-- Test entity error.
 		do
