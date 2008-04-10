@@ -946,7 +946,13 @@ feature -- Setting
 		require
 			a_name_not_void: a_name /= Void
 		do
-			root_class := eiffel_class (a_name)
+			if a_name.same_class_name (tokens.none_class_name) then
+				root_class := none_class
+			elseif a_name.same_class_name (tokens.any_class_name) then
+				root_class := any_class
+			else
+				root_class := eiffel_class (a_name)
+			end
 			root_class.set_in_system (True)
 		ensure
 			root_class_not_void: root_class /= Void
