@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_CHILD_ENUMERATION
-	
+
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TREE_NODE]
@@ -24,8 +24,8 @@ inherit
 create
 
 	make
-	
-feature -- Initialization
+
+feature {NONE} -- Initialization
 
 	make (a_starting_node: XM_XPATH_TREE_NODE; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Establish invariant
@@ -107,4 +107,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+
