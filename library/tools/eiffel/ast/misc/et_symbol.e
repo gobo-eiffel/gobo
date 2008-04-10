@@ -5,7 +5,7 @@ indexing
 		"Eiffel lexical symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,10 +14,13 @@ class ET_SYMBOL
 
 inherit
 
-	ET_AST_LEAF
+	ET_CLASS_MARK
 		rename
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
+		undefine
+			is_bang,
+			is_question_mark
 		end
 
 	ET_TOKEN_CODES
@@ -490,9 +493,6 @@ feature -- Access
 					-- Should never happen.
 				Result := tokens.unknown_name
 			end
-		ensure
-			text_not_void: Result /= Void
-			text_not_empty: Result.count > 0
 		end
 
 	last_position: ET_POSITION is

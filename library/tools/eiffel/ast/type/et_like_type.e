@@ -5,7 +5,7 @@ indexing
 		"Eiffel anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,9 @@ inherit
 	HASHABLE
 
 feature -- Access
+
+	type_mark: ET_TYPE_MARK
+			-- '!' or '?' symbol
 
 	like_keyword: ET_KEYWORD is
 			-- 'like' keyword

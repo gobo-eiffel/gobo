@@ -2840,10 +2840,10 @@ feature -- AST nodes
 			end
 		end
 
-	new_like_current (a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is
+	new_like_current (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is
 			-- New 'like Current' type
 		do
-			create Result.make
+			create Result.make (a_type_mark)
 			if a_like /= Void then
 				Result.set_like_keyword (a_like)
 			end
@@ -2852,11 +2852,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_like_feature (a_like: ET_KEYWORD; a_name: ET_FEATURE_NAME): ET_LIKE_FEATURE is
+	new_like_feature (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_name: ET_FEATURE_NAME): ET_LIKE_FEATURE is
 			-- New 'like name' type
 		do
 			if a_name /= Void then
-				create Result.make (a_name)
+				create Result.make (a_type_mark, a_name)
 				if a_like /= Void then
 					Result.set_like_keyword (a_like)
 				end

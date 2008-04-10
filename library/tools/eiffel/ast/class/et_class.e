@@ -923,8 +923,9 @@ feature -- Class header
 			definition: Result = (external_keyword /= Void)
 		end
 
-	class_mark: ET_KEYWORD
-			-- 'deferred', 'expanded', 'reference' or 'separate' keyword
+	class_mark: ET_CLASS_MARK
+			-- 'deferred', 'expanded', 'reference' or 'separate' keyword,
+			-- or '!' or '?' symbol
 
 	set_class_mark (a_mark: like class_mark) is
 			-- Set `class_mark' to `a_mark'.

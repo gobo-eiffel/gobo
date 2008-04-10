@@ -775,7 +775,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		local
 			a_name: ET_IDENTIFIER
 			a_formal: ET_FORMAL_PARAMETER
-			a_type_mark: ET_KEYWORD
+			a_type_mark: ET_TYPE_MARK
 			a_base_class: ET_CLASS
 		do
 			a_name := a_constraint.name
@@ -784,7 +784,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			if a_formal /= Void then
 				if a_type_mark /= Void then
 						-- A formal parameter cannot be prefixed by
-						-- 'expanded' or 'reference'.
+						-- 'expanded', 'reference', 'separate', '!' or '?'.
 					report_syntax_error (a_type_mark.position)
 				end
 				Result := ast_factory.new_formal_parameter_type (a_name, a_formal.index)
@@ -819,7 +819,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formals_not_void: a_formals /= Void
 		local
 			a_name: ET_IDENTIFIER
-			a_type_mark: ET_KEYWORD
+			a_type_mark: ET_TYPE_MARK
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_class: ET_CLASS
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -830,7 +830,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			if a_formal /= Void then
 				if a_type_mark /= Void then
 						-- A formal parameter cannot be prefixed by
-						-- 'expanded' or 'reference'.
+						-- 'expanded', 'reference', 'separate', '!' or '?'.
 					report_syntax_error (a_type_mark.position)
 				end
 					-- A formal parameter cannot have actual generic parameters.
@@ -1066,7 +1066,7 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_client_comma (a_name, l_base_class, a_comma)
 		end
 
-	new_constraint_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
+	new_constraint_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
 		a_parameters: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): ET_CONSTRAINT_NAMED_TYPE is
 			-- New Eiffel class type or formal generic paramater
 			-- appearing in a generic constraint
@@ -1215,7 +1215,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
+	new_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
 			-- New Eiffel class type or formal generic paramater
 		local
 			a_parameter: ET_FORMAL_PARAMETER

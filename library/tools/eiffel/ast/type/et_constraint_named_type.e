@@ -42,8 +42,9 @@ feature -- Access
 	name: ET_IDENTIFIER
 			-- Name of type
 
-	type_mark: ET_KEYWORD
-			-- 'expanded', 'reference' or 'separate' keyword
+	type_mark: ET_TYPE_MARK
+			-- 'expanded', 'reference' or 'separate' keyword,
+			-- or '!' or '?' symbol
 
 	position: ET_POSITION is
 			-- Position of first character of

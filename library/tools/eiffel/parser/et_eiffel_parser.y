@@ -203,7 +203,7 @@ create
 %type <ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
 %type <ET_SYMBOL> Left_parenthesis
-%type <ET_TYPE> Type Type_no_class_name Type_no_identifier
+%type <ET_TYPE> Type Type_no_class_name Type_no_identifier Type_no_bang_identifier
 %type <ET_TYPE_ITEM> Type_comma
 %type <ET_TYPE_LIST> Convert_types Convert_type_list
 %type <ET_VARIANT> Variant_clause_opt
@@ -692,6 +692,10 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '!' Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '?' Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -709,6 +713,10 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 	| E_SEPARATE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '!' Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| '?' Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| Anchored_type
 		{ $$ := $1 }
@@ -2402,6 +2410,10 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| '!' Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '?' Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2420,6 +2432,10 @@ Type_no_identifier: Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| '!' Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '?' Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2427,6 +2443,30 @@ Type_no_identifier: Class_name Actual_parameters
 	| E_BITTYPE Identifier
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters
+		{ $$ := new_tuple_type ($1, $2) }
+	;
+
+Type_no_bang_identifier: Class_name
+		{ $$ := new_named_type (Void, $1, Void) }
+	| Class_name Actual_parameters
+		{ $$ := new_named_type (Void, $1, $2) }
+	| E_EXPANDED Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_SEPARATE Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_REFERENCE Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '!' Class_name Actual_parameters
+		{ $$ := new_named_type ($1, $2, $3) }
+	| '?' Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| Anchored_type
+		{ $$ := $1 }
+	| E_BITTYPE Untyped_integer_constant
+		{ $$ := new_bit_n ($1, $2) }
+	| E_BITTYPE Identifier
+		{ $$ := new_bit_feature ($1, $2)  }
+	| E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type ($1, $2) }
 	;
 
@@ -2593,9 +2633,17 @@ Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
 	;
 
 Anchored_type: E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2) }
+		{ $$ := ast_factory.new_like_feature (Void, $1, $2) }
+	| '!' E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+	| '?' E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
 	| E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current ($1, $2) }
+		{ $$ := ast_factory.new_like_current (Void, $1, $2) }
+	| '!' E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+	| '?' E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	;
 
 ------------------------------------------------------------------------------------
@@ -2734,9 +2782,9 @@ Instruction: Creation_instruction
 
 ------------------------------------------------------------------------------------
 
-Creation_instruction: '!' Type '!' Writable
+Creation_instruction: '!' Type_no_bang_identifier '!' Writable
 		{ $$ := ast_factory.new_bang_instruction ($1, $2, $3, $4, Void) }
-	| '!' Type '!' Writable '.' Identifier Actuals_opt
+	| '!' Type_no_bang_identifier '!' Writable '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_bang_instruction ($1, $2, $3, $4, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($5, $6), $7)) }
 	| '!' '!' Writable
 		{ $$ := ast_factory.new_bang_instruction ($1, Void, $2, $3, Void) }

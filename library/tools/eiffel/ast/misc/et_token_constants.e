@@ -1746,7 +1746,7 @@ feature -- Types
 	like_current: ET_LIKE_CURRENT is
 			-- Type 'like Current'
 		once
-			create Result.make
+			create Result.make (Void)
 		ensure
 			like_current_not_void: Result /= Void
 		end

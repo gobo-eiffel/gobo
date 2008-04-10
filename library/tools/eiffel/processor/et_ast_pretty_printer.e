@@ -915,7 +915,7 @@ feature {ET_AST_NODE} -- Processing
 		local
 			an_indexing: ET_INDEXING_LIST
 			a_frozen: ET_KEYWORD
-			a_class_mark: ET_KEYWORD
+			a_class_mark: ET_CLASS_MARK
 			an_external: ET_KEYWORD
 			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
 			l_obsolete_message: ET_OBSOLETE
@@ -1026,7 +1026,7 @@ feature {ET_AST_NODE} -- Processing
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		local
-			a_type_mark: ET_KEYWORD
+			a_type_mark: ET_TYPE_MARK
 		do
 			a_type_mark := a_type.type_mark
 			if a_type_mark /= Void then
@@ -3534,7 +3534,14 @@ feature {ET_AST_NODE} -- Processing
 
 	process_like_current (a_type: ET_LIKE_CURRENT) is
 			-- Process `a_type'.
+		local
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				print_space
+			end
 			a_type.like_keyword.process (Current)
 			print_space
 			a_type.current_keyword.process (Current)
@@ -3542,7 +3549,14 @@ feature {ET_AST_NODE} -- Processing
 
 	process_like_feature (a_type: ET_LIKE_FEATURE) is
 			-- Process `a_type'.
+		local
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				print_space
+			end
 			a_type.like_keyword.process (Current)
 			print_space
 			a_type.name.process (Current)

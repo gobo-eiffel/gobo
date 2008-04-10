@@ -40,33 +40,21 @@ inherit
 
 create
 
-	make, make_with_seed
+	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_type_mark: like type_mark; a_name: like name) is
 			-- Create a new 'like name' type.
 		require
 			a_name_not_void: a_name /= Void
 		do
+			type_mark := a_type_mark
 			like_keyword := tokens.like_keyword
 			name := a_name
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
-		end
-
-	make_with_seed (a_name: like name; a_seed: INTEGER) is
-			-- Create a new 'like name' type.
-		require
-			a_name_not_void: a_name /= Void
-			a_seed_positive: a_seed >= 0
-		do
-			like_keyword := tokens.like_keyword
-			name := a_name
-			seed := a_seed
-		ensure
-			name_set: name = a_name
-			seed_set: seed = a_seed
 		end
 
 feature -- Initialization

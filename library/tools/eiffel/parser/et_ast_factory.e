@@ -661,7 +661,8 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			Result := tokens.bang_symbol
+			create Result.make_bang
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_colon_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
@@ -1558,7 +1559,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_class_type (a_type_mark: ET_KEYWORD; a_name: ET_CLASS_NAME; a_base_class: ET_CLASS): ET_CLASS_TYPE is
+	new_class_type (a_type_mark: ET_TYPE_MARK; a_name: ET_CLASS_NAME; a_base_class: ET_CLASS): ET_CLASS_TYPE is
 			-- New Eiffel class type
 		do
 			if a_name /= Void and a_base_class /= Void then
@@ -1673,7 +1674,7 @@ feature -- AST nodes
 			create Result.make_with_capacity (nb)
 		end
 
-	new_constraint_generic_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
+	new_constraint_generic_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
 		a_generics: like new_constraint_actual_parameters): ET_CONSTRAINT_GENERIC_NAMED_TYPE is
 			-- New Eiffel constraint generic named type
 		do
@@ -1704,7 +1705,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_constraint_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_CONSTRAINT_NAMED_TYPE is
+	new_constraint_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER): ET_CONSTRAINT_NAMED_TYPE is
 			-- New Eiffel constraint named type
 		do
 			if a_name /= Void then
@@ -2259,7 +2260,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_generic_class_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
+	new_generic_class_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
 		a_generics: like new_actual_parameters; a_base_class: ET_CLASS): ET_GENERIC_CLASS_TYPE is
 			-- New Eiffel generic class type
 		do
@@ -2634,20 +2635,20 @@ feature -- AST nodes
 			end
 		end
 
-	new_like_current (a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is
+	new_like_current (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_current: ET_CURRENT): ET_LIKE_CURRENT is
 			-- New 'like Current' type
 		do
-			create Result.make
+			create Result.make (a_type_mark)
 			if a_like /= Void and then not a_like.position.is_null then
 				Result.set_like_keyword (a_like)
 			end
 		end
 
-	new_like_feature (a_like: ET_KEYWORD; a_name: ET_FEATURE_NAME): ET_LIKE_FEATURE is
+	new_like_feature (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_name: ET_FEATURE_NAME): ET_LIKE_FEATURE is
 			-- New 'like name' type
 		do
 			if a_name /= Void then
-				create Result.make (a_name)
+				create Result.make (a_type_mark, a_name)
 				if a_like /= Void and then not a_like.position.is_null then
 					Result.set_like_keyword (a_like)
 				end

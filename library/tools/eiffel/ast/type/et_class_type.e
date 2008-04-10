@@ -49,8 +49,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type_mark: ET_KEYWORD
-			-- 'expanded', 'reference' or 'separate' keyword
+	type_mark: ET_TYPE_MARK
+			-- 'expanded', 'reference' or 'separate' keyword,
+			-- or '!' or '?' symbol
 
 	base_type (a_context: ET_TYPE_CONTEXT): ET_CLASS_TYPE is
 			-- Base type of current type, when it appears in `a_context',

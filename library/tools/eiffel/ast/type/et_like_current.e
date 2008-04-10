@@ -42,11 +42,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_type_mark: like type_mark) is
 			-- Create a new 'like Current' type.
 		do
+			type_mark := a_type_mark
 			like_keyword := tokens.like_keyword
 			current_keyword := tokens.current_keyword
+		ensure
+			type_mark_set: type_mark = a_type_mark
 		end
 
 feature -- Access

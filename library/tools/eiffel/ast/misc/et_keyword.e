@@ -19,6 +19,17 @@ inherit
 			make as make_token
 		end
 
+	ET_CLASS_MARK
+		rename
+			make as make_leaf,
+			make_with_position as make_leaf_with_position
+		undefine
+			is_deferred,
+			is_expanded,
+			is_reference,
+			is_separate
+		end
+
 create
 
 	make_alias,
