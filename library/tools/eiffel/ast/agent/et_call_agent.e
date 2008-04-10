@@ -102,13 +102,9 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			if is_qualified_call and use_tilde then
+			Result := agent_keyword.position
+			if Result.is_null then
 				Result := target.position
-			else
-				Result := agent_keyword.position
-				if Result.is_null then
-					Result := target.position
-				end
 			end
 			if Result.is_null then
 				Result := name.position
@@ -118,11 +114,7 @@ feature -- Access
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			if is_qualified_call and use_tilde then
-				Result := target.first_leaf
-			else
-				Result := agent_keyword
-			end
+			Result := agent_keyword
 		end
 
 	last_leaf: ET_AST_LEAF is
@@ -170,15 +162,6 @@ feature -- Status report
 
 	is_call_agent: BOOLEAN is True
 			-- Is current agent a call agent?
-
-	use_tilde: BOOLEAN is
-			-- Is the old syntax with '~' used?
-		local
-			a_symbol: ET_SYMBOL
-		do
-			a_symbol ?= agent_keyword
-			Result := a_symbol /= Void
-		end
 
 feature -- Status setting
 

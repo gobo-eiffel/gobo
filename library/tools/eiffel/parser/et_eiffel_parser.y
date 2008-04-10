@@ -111,7 +111,7 @@ create
 %type <ET_BOOLEAN_CONSTANT> Boolean_constant
 %type <ET_BRACKET_ARGUMENT_LIST> Bracket_actual_list
 %type <ET_BRACKET_EXPRESSION> Bracket_expression
-%type <ET_CALL_AGENT> Call_agent Tilde_call_agent
+%type <ET_CALL_AGENT> Call_agent
 %type <ET_CALL_EXPRESSION> Qualified_call_expression
 %type <ET_CHARACTER_CONSTANT> Character_constant
 %type <ET_CHOICE> Choice
@@ -211,7 +211,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 65
+%expect 51
 %start Class_declarations
 
 %%
@@ -3254,8 +3254,6 @@ Bracket_target: Call_expression
 		{ $$ := $1 }
 	| Manifest_type
 		{ $$ := $1 }
-	| Tilde_call_agent
-		{ $$ := $1 }
 	| Call_agent
 		{ $$ := $1 }
 	| Inline_agent
@@ -3495,20 +3493,6 @@ Call_agent: E_AGENT Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, Void, $2, $3) }
 	| E_AGENT Agent_target '.' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, $2, ast_factory.new_dot_feature_name ($3, $4), $5) }
-	;
-
-Tilde_call_agent: '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($1, Void, $2, $3) }
-	| Identifier '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($2, new_agent_identifier_target ($1), $3, $4) }
-	| Parenthesized_expression '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
-	| E_RESULT '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
-	| E_CURRENT '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
-	| '{' Type '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, $2, $3), $5, $6) }
 	;
 
 Inline_agent:

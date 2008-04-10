@@ -355,13 +355,8 @@ feature {ET_AST_NODE} -- Processing
 			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			a_target := an_expression.target
-			if an_expression.use_tilde then
-				a_target.process (Current)
-				an_expression.agent_keyword.process (Current)
-			else
-				an_expression.agent_keyword.process (Current)
-				a_target.process (Current)
-			end
+			an_expression.agent_keyword.process (Current)
+			a_target.process (Current)
 			an_expression.qualified_name.process (Current)
 			an_arguments ?= an_expression.arguments
 			if an_arguments /= Void then

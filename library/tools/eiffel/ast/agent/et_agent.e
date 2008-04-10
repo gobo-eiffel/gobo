@@ -21,8 +21,8 @@ inherit
 
 feature -- Access
 
-	agent_keyword: ET_AST_LEAF
-			-- 'agent' keyword or '~' symbol
+	agent_keyword: ET_AGENT_KEYWORD
+			-- 'agent' keyword
 
 	target: ET_AGENT_TARGET
 			-- Target

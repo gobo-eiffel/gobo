@@ -1491,7 +1491,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_call_agent (an_agent: ET_AST_LEAF; a_target: ET_AGENT_TARGET; a_name: ET_QUALIFIED_FEATURE_NAME;
+	new_call_agent (an_agent: ET_AGENT_KEYWORD; a_target: ET_AGENT_TARGET; a_name: ET_QUALIFIED_FEATURE_NAME;
 		args: ET_AGENT_ARGUMENT_OPERAND_LIST): ET_CALL_AGENT is
 			-- New call agent
 		do
