@@ -3,12 +3,12 @@
 <system name="all_libs">
 	<description>
 		system: "Gobo Eiffel Tools Library Tester"
-		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<root class="NONE" creation="do_nothing"/>
-	<mount location="${GOBO}/test/precomp/precomp.xace"/>
+	<mount location="${GOBO}/library/library.xace"/>
 </system>
