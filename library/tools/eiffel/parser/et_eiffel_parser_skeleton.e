@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			create last_local_variables_stack.make (Initial_last_local_variables_stack_capacity)
 			create last_keywords.make (Initial_last_keywords_capacity)
 			create last_symbols.make (Initial_last_symbols_capacity)
+			create last_object_tests.make_with_capacity (Initial_last_object_tests_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create queries.make (Initial_queries_capacity)
 			create procedures.make (Initial_procedures_capacity)
@@ -94,6 +95,7 @@ feature -- Initialization
 			last_local_variables_stack.wipe_out
 			last_keywords.wipe_out
 			last_symbols.wipe_out
+			last_object_tests.wipe_out
 			providers.wipe_out
 			assertions.wipe_out
 			queries.wipe_out
@@ -429,10 +431,11 @@ feature {NONE} -- Basic operations
 				queries.force_last (a_query)
 				queries.finish
 			end
-				-- Reset local variables and formal arguments
-				-- before reading the next feature.
+				-- Reset local variables, formal arguments and
+				-- object-tests before reading the next feature.
 			last_formal_arguments_stack.wipe_out
 			last_local_variables_stack.wipe_out
+			last_object_tests.wipe_out
 		end
 
 	register_query_synonym (a_query: ET_QUERY) is
@@ -456,10 +459,11 @@ feature {NONE} -- Basic operations
 				procedures.force_last (a_procedure)
 				procedures.finish
 			end
-				-- Reset local variables and formal arguments
-				-- before reading the next feature.
+				-- Reset local variables, formal arguments and
+				-- object-tests before reading the next feature.
 			last_formal_arguments_stack.wipe_out
 			last_local_variables_stack.wipe_out
+			last_object_tests.wipe_out
 		end
 
 	register_procedure_synonym (a_procedure: ET_PROCEDURE) is
@@ -1277,6 +1281,20 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
+			-- New object-test expression
+		local
+			l_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_object_test (a_left_brace, a_name, a_colon, a_type, a_right_brace, a_expression)
+			if Result /= Void then
+				last_object_tests.force_last (Result)
+				l_name := Result.name
+				l_name.set_object_test_local (True)
+				l_name.set_seed (last_object_tests.count)
+			end
+		end
+
 	new_once_manifest_string (a_once: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING is
 			-- New once manifest string
 		do
@@ -1425,6 +1443,12 @@ feature {NONE} -- AST factory
 						a_name.set_seed (a_seed)
 						a_name.set_local (True)
 						last_local_variables.local_variable (a_seed).set_used (True)
+					end
+				end
+				if a_seed = 0 then
+					a_seed := last_object_tests.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_object_test_local (True)
 					end
 				end
 			end
@@ -5660,6 +5684,21 @@ feature {NONE} -- Access
 	last_class: ET_CLASS
 			-- Class being parsed
 
+	assertions: DS_ARRAYED_LIST [ET_ASSERTION_ITEM]
+			-- List of assertions currently being parsed
+
+	queries: DS_ARRAYED_LIST [ET_QUERY]
+			-- List of queries currently being parsed
+
+	procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
+			-- List of procedures currently being parsed
+
+	constraints: DS_ARRAYED_LIST [ET_CONSTRAINT_TYPE]
+			-- List of generic constraints currently being parsed
+
+	providers: DS_HASH_SET [ET_CLASS]
+			-- Provider classes already read (when enabled)
+
 feature {NONE} -- Local variables
 
 	last_local_variables: ET_LOCAL_VARIABLE_LIST is
@@ -5672,6 +5711,12 @@ feature {NONE} -- Local variables
 
 	last_local_variables_stack: DS_ARRAYED_STACK [ET_LOCAL_VARIABLE_LIST]
 			-- Stack of last local variable clause read
+
+feature {NONE} -- Object-tests
+
+	last_object_tests: ET_OBJECT_TEST_LIST
+			-- Object-tests already found in current feature/invariant
+			-- and its inline agents
 
 feature {NONE} -- Formal arguments
 
@@ -5816,32 +5861,20 @@ feature {NONE} -- Constants
 	Initial_last_symbols_capacity: INTEGER is 5
 			-- Initial capacity for `last_symbols'
 
-	assertions: DS_ARRAYED_LIST [ET_ASSERTION_ITEM]
-			-- List of assertions currently being parsed
+	Initial_last_object_tests_capacity: INTEGER is 50
+			-- Initial capacity for `last_object_tests'
 
 	Initial_assertions_capacity: INTEGER is 20
 			-- Initial capacity for `assertions'
 
-	queries: DS_ARRAYED_LIST [ET_QUERY]
-			-- List of queries currently being parsed
-
 	Initial_queries_capacity: INTEGER is 100
 			-- Initial capacity for `queries'
-
-	procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
-			-- List of procedures currently being parsed
 
 	Initial_procedures_capacity: INTEGER is 100
 			-- Initial capacity for `procedures'
 
-	constraints: DS_ARRAYED_LIST [ET_CONSTRAINT_TYPE]
-			-- List of generic constraints currently being parsed
-
 	Initial_constraints_capacity: INTEGER is 10
 			-- Initial capacity for `constraints'
-
-	providers: DS_HASH_SET [ET_CLASS]
-			-- Provider classes already read (when enabled)
 
 	Initial_providers_capacity: INTEGER is 100
 			-- Initial capacity for `providers'
@@ -5894,5 +5927,7 @@ invariant
 	constraints_not_void: constraints /= Void
 	providers_not_void: providers /= Void
 	no_void_provider: not providers.has (Void)
+		-- Object-tests.
+	last_object_tests_not_void: last_object_tests /= Void
 
 end

@@ -58,6 +58,7 @@ feature -- Initialization
 			l_convert: ET_CONVERT_EXPRESSION
 		do
 			name.reset
+			is_boolean_operator := False
 			l_cast ?= left
 			if l_cast /= Void then
 				left := l_cast.expression
@@ -78,6 +79,22 @@ feature -- Access
 
 	name: ET_OPERATOR
 			-- Feature name
+
+feature -- Status report
+
+	is_boolean_operator: BOOLEAN
+			-- Is current infix expression a boolean operator
+			-- between two boolean expressions?
+
+feature -- Status setting
+
+	set_boolean_operator (b: BOOLEAN) is
+			-- Set `is_boolean_operator' to `b'.
+		do
+			is_boolean_operator := b
+		ensure
+			boolean_operator_set: is_boolean_operator = b
+		end
 
 feature -- Processing
 

@@ -2162,6 +2162,17 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right_brace.process (Current)
 		end
 
+	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			an_expression.left_brace.process (Current)
+			an_expression.name.process (Current)
+			an_expression.colon.process (Current)
+			an_expression.type.process (Current)
+			an_expression.right_brace.process (Current)
+			an_expression.expression.process (Current)
+		end
+
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do

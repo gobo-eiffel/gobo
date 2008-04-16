@@ -64,6 +64,7 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_object_test,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -174,6 +175,7 @@ feature {NONE} -- Initialization
 			create deep_twin_types.make (100)
 			create deep_equal_types.make (100)
 			create deep_feature_target_type_sets.make_map (100)
+			create current_object_tests.make (20)
 			create current_agents.make (20)
 			create agent_open_operands.make (20)
 			create agent_closed_operands.make (20)
@@ -860,7 +862,7 @@ feature {NONE} -- Feature generation
 			old_type: ET_DYNAMIC_TYPE
 			old_feature: ET_DYNAMIC_FEATURE
 			old_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			i: INTEGER
+			i, nb: INTEGER
 		do
 			if not a_feature.is_semistrict (current_dynamic_system) then
 				old_type := current_type
@@ -879,6 +881,12 @@ feature {NONE} -- Feature generation
 					i := i + 1
 				end
 				current_agents.wipe_out
+					-- Print object-test functions.
+				nb := current_object_tests.count
+				from i := 1 until i > nb loop
+					print_object_test_function (i, current_object_tests.item (i))
+				end
+				current_object_tests.wipe_out
 				current_dynamic_type_sets := old_dynamic_type_sets
 				current_feature := old_feature
 				current_type := old_type
@@ -4236,7 +4244,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			if a_result_type /= Void then
 				print_indentation
 				if (l_result_read_in_rescue or (has_retry and then l_result_read_in_body)) and then l_result_written_in_body then
-						-- The implememtation of the rescue mechanism in C uses 'setjmp'
+						-- The implementation of the rescue mechanism in C uses 'setjmp'
 						-- and 'longjmp'. The use of these two C functions requires that
 						-- any local variable modified between the call to 'setjmp' and
 						-- the call to 'longjmp' to be declared as 'volatile', otherwise its
@@ -4268,7 +4276,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					l_local_type := l_local_type_set.static_type
 					print_indentation
 					if (locals_read_in_rescue.has (l_name) or (has_retry and then locals_read_in_body.has (l_name))) and then locals_written_in_body.has (l_name) then
-							-- The implememtation of the rescue mechanism in C uses 'setjmp'
+							-- The implementation of the rescue mechanism in C uses 'setjmp'
 							-- and 'longjmp'. The use of these two C functions requires that
 							-- any local variable modified between the call to 'setjmp' and
 							-- the call to 'longjmp' to be declared as 'volatile', otherwise its
@@ -4643,18 +4651,19 @@ feature {NONE} -- Instruction generation
 			l_target_type: ET_DYNAMIC_TYPE
 			l_conforming_types: ET_DYNAMIC_TYPE_LIST
 			l_non_conforming_types: ET_DYNAMIC_TYPE_LIST
+			l_can_be_void: BOOLEAN
 		do
 			l_source := an_instruction.source
 			l_source_type_set := dynamic_type_set (l_source)
+			l_source_type := l_source_type_set.static_type
 			l_target := an_instruction.target
 			l_target_type_set := dynamic_type_set (l_target)
+			l_target_type := l_target_type_set.static_type
 			nb := l_source_type_set.count
 			l_conforming_types := conforming_types
 			l_conforming_types.resize (nb)
 			l_non_conforming_types := non_conforming_types
 			l_non_conforming_types.resize (nb)
-			l_target_type := l_target_type_set.static_type
-			l_source_type := l_source_type_set.static_type
 			from i := 1 until i > nb loop
 				l_dynamic_type := l_source_type_set.dynamic_type (i)
 				if l_dynamic_type.conforms_to_type (l_target_type) then
@@ -4685,8 +4694,9 @@ feature {NONE} -- Instruction generation
 				current_file.put_string (c_eif_void)
 				current_file.put_character (';')
 				current_file.put_new_line
-			elseif l_non_conforming_types.count < l_conforming_types.count then
-				if not l_source_type.is_expanded then
+			else
+				l_can_be_void := l_source_type_set.can_be_void
+				if l_can_be_void then
 					print_indentation
 					current_file.put_string (c_if)
 					current_file.put_character (' ')
@@ -4725,6 +4735,7 @@ feature {NONE} -- Instruction generation
 						-- Therefore the source is polymorphic. As a consequence if
 						-- `l_source_type' is expanded then it should be generic
 						-- (because non-generic expanded types cannot be polymorphic).
+						-- So we know that a type-id is always available.
 					generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
 				end
 				print_indentation
@@ -4736,74 +4747,85 @@ feature {NONE} -- Instruction generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				nb := l_non_conforming_types.count
-				from i := 1 until i > nb loop
-					l_dynamic_type := l_non_conforming_types.dynamic_type (i)
+				if l_non_conforming_types.count < l_conforming_types.count then
+					nb := l_non_conforming_types.count
+					from i := 1 until i > nb loop
+						l_dynamic_type := l_non_conforming_types.dynamic_type (i)
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character (':')
+						current_file.put_new_line
+						i := i + 1
+					end
+					indent
 					print_indentation
-					current_file.put_string (c_case)
+					print_writable (l_target)
 					current_file.put_character (' ')
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (':')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
 					current_file.put_new_line
-					i := i + 1
-				end
-				indent
-				print_indentation
-				print_writable (l_target)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_eif_void)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_break)
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				print_indentation
-				current_file.put_string (c_default)
-				current_file.put_character (':')
-				current_file.put_new_line
-				indent
-				print_indentation
-				print_writable (l_target)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-				if l_source_type_set.is_never_void then
-					conforming_type_set.set_never_void
-				end
-				print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
-				conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				print_indentation
-				current_file.put_character ('}')
-				current_file.put_new_line
-				if not l_source_type.is_expanded then
+					print_indentation
+					current_file.put_string (c_break)
+					current_file.put_character (';')
+					current_file.put_new_line
 					dedent
 					print_indentation
-					current_file.put_character ('}')
+					current_file.put_string (c_default)
+					current_file.put_character (':')
 					current_file.put_new_line
-				end
-			else
-				if not l_source_type.is_expanded then
+					indent
 					print_indentation
-					current_file.put_string (c_if)
+					print_writable (l_target)
 					current_file.put_character (' ')
-					current_file.put_character ('(')
-					current_file.put_character ('(')
-					print_expression (call_operands.first)
-					current_file.put_character (')')
 					current_file.put_character ('=')
-					current_file.put_character ('=')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (')')
 					current_file.put_character (' ')
-					current_file.put_character ('{')
+					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+					if l_source_type_set.is_never_void then
+						conforming_type_set.set_never_void
+					end
+					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
+					conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+				else
+					nb := l_conforming_types.count
+					from i := 1 until i > nb loop
+						l_dynamic_type := l_conforming_types.dynamic_type (i)
+						print_indentation
+						current_file.put_string (c_case)
+						current_file.put_character (' ')
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character (':')
+						current_file.put_new_line
+						i := i + 1
+					end
+					indent
+					print_indentation
+					print_writable (l_target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+					if l_source_type_set.is_never_void then
+						conforming_type_set.set_never_void
+					end
+					print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
+					conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_break)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_string (c_default)
+					current_file.put_character (':')
 					current_file.put_new_line
 					indent
 					print_indentation
@@ -4815,79 +4837,11 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (';')
 					current_file.put_new_line
 					dedent
-					print_indentation
-					current_file.put_character ('}')
-					current_file.put_character (' ')
-					current_file.put_string (c_else)
-					current_file.put_character (' ')
-					current_file.put_character ('{')
-					current_file.put_new_line
-					indent
 				end
-				check
-						-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
-						-- Therefore the source is polymorphic. As a consequence if
-						-- `l_source_type' is expanded then it should be generic
-						-- (because non-generic expanded types cannot be polymorphic).
-					generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
-				end
-				print_indentation
-				current_file.put_string (c_switch)
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_attribute_type_id_access (call_operands.first, l_target_type, False)
-				current_file.put_character (')')
-				current_file.put_character (' ')
-				current_file.put_character ('{')
-				current_file.put_new_line
-				nb := l_conforming_types.count
-				from i := 1 until i > nb loop
-					l_dynamic_type := l_conforming_types.dynamic_type (i)
-					print_indentation
-					current_file.put_string (c_case)
-					current_file.put_character (' ')
-					current_file.put_integer (l_dynamic_type.id)
-					current_file.put_character (':')
-					current_file.put_new_line
-					i := i + 1
-				end
-				indent
-				print_indentation
-				print_writable (an_instruction.target)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-				if l_source_type_set.is_never_void then
-					conforming_type_set.set_never_void
-				end
-				print_attachment_expression (call_operands.first, conforming_type_set, l_target_type)
-				conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_string (c_break)
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
-				print_indentation
-				current_file.put_string (c_default)
-				current_file.put_character (':')
-				current_file.put_new_line
-				indent
-				print_indentation
-				print_writable (an_instruction.target)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_eif_void)
-				current_file.put_character (';')
-				current_file.put_new_line
-				dedent
 				print_indentation
 				current_file.put_character ('}')
 				current_file.put_new_line
-				if not l_source_type.is_expanded then
+				if l_can_be_void then
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -5367,31 +5321,43 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			if l_compound /= Void then
 				print_compound (l_compound)
 			end
-			l_expression := an_instruction.until_expression
-			print_operand (l_expression)
-			fill_call_operands (1)
 			print_indentation
 			current_file.put_string (c_while)
 			current_file.put_character (' ')
 			current_file.put_character ('(')
-			current_file.put_character ('!')
-			current_file.put_character ('(')
-			print_expression (call_operands.first)
-			call_operands.wipe_out
-			current_file.put_character (')')
+			current_file.put_character ('1')
 			current_file.put_character (')')
 			current_file.put_character (' ')
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
+			l_expression := an_instruction.until_expression
+			print_operand (l_expression)
+			fill_call_operands (1)
+			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_expression (call_operands.first)
+			call_operands.wipe_out
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_break)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
 			l_compound := an_instruction.loop_compound
 			if l_compound /= Void then
 				print_compound (l_compound)
 			end
-			print_operand (l_expression)
 			dedent
-			fill_call_operands (1)
-			call_operands.wipe_out
 			print_indentation
 			current_file.put_character ('}')
 			current_file.put_new_line
@@ -7995,7 +7961,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		do
 			if a_check_void then
 				l_dynamic_type_set := dynamic_type_set (an_expression)
-				if l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void then
+				if l_dynamic_type_set.can_be_void and not an_expression.is_never_void then
 					can_be_void_target_count := can_be_void_target_count + 1
 					current_file.put_string (c_ge_void)
 					current_file.put_character ('(')
@@ -8007,6 +7973,158 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			print_expression (an_expression)
 			if l_do_check_void then
 				current_file.put_character (')')
+			end
+		end
+
+	print_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		local
+			l_assignment_target: ET_WRITABLE
+			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
+			i, nb: INTEGER
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_source: ET_EXPRESSION
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type: ET_DYNAMIC_TYPE
+			l_target: ET_IDENTIFIER
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type: ET_DYNAMIC_TYPE
+			nb_conforming_types: INTEGER
+			nb_non_conforming_types: INTEGER
+			l_can_be_void: BOOLEAN
+		do
+			l_assignment_target := assignment_target
+			assignment_target := Void
+			l_source := an_expression.expression
+			l_source_type_set := dynamic_type_set (l_source)
+			l_source_type := l_source_type_set.static_type
+			l_target := an_expression.name
+			l_target_type_set := dynamic_type_set (l_target)
+			l_target_type := l_target_type_set.static_type
+			if in_operand then
+				print_operand (l_source)
+				fill_call_operands (1)
+				if l_assignment_target /= Void then
+					operand_stack.force (l_assignment_target)
+					print_indentation
+					print_writable (l_assignment_target)
+				else
+					l_temp := new_temp_variable (dynamic_type_set (an_expression).static_type)
+						-- We will set the index of `l_temp' later because
+						-- it could still be used in `call_operands'.
+					l_temp_index := an_expression.index
+					operand_stack.force (l_temp)
+					print_indentation
+					print_temp_name (l_temp, current_file)
+				end
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+			end
+				-- Declaration of the object-test local.
+			current_function_header_buffer.put_character ('%T')
+			print_type_declaration (l_target_type, current_function_header_buffer)
+			current_function_header_buffer.put_character (' ')
+			print_object_test_local_name (l_target, current_function_header_buffer)
+			current_function_header_buffer.put_character (';')
+			current_function_header_buffer.put_new_line
+				-- Check type conformance.
+			nb := l_source_type_set.count
+			from i := 1 until i > nb loop
+				l_dynamic_type := l_source_type_set.dynamic_type (i)
+				if l_dynamic_type.conforms_to_type (l_target_type) then
+					nb_conforming_types := nb_conforming_types + 1
+				else
+					nb_non_conforming_types := nb_non_conforming_types + 1
+				end
+				i := i + 1
+			end
+			if nb_non_conforming_types = 0 then
+					-- All types in the source type set conform to the target type.
+				l_can_be_void := l_source_type_set.can_be_void
+				if l_can_be_void then
+					current_file.put_character ('(')
+					print_expression (call_operands.first)
+					current_file.put_character ('?')
+					current_file.put_character ('(')
+				end
+				current_file.put_character ('(')
+				print_object_test_local_name (l_target, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_true)
+				current_file.put_character (')')
+				if l_can_be_void then
+					current_file.put_character (')')
+					current_file.put_character (':')
+					current_file.put_string (c_eif_false)
+					current_file.put_character (')')
+				end
+			elseif nb_conforming_types = 0 then
+					-- All types in the source type set conform to the target type.
+				current_file.put_string (c_eif_false)
+			else
+				current_object_tests.force_last (an_expression)
+				print_object_test_function_name (current_object_tests.count, current_feature, current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('&')
+				print_object_test_local_name (l_target, current_file)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_expression (call_operands.first)
+				current_file.put_character (')')
+			end
+			if in_operand then
+				current_file.put_character (';')
+				current_file.put_new_line
+				call_operands.wipe_out
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					check l_temp_not_void: l_temp /= Void end
+					l_temp.set_index (l_temp_index)
+				end
+			end
+		end
+
+	print_object_test_local (a_name: ET_IDENTIFIER) is
+			-- Print object-test local `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_object_test_local: a_name.is_object_test_local
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_static_type: ET_DYNAMIC_TYPE
+		do
+			if in_operand then
+				operand_stack.force (a_name)
+			else
+				if in_target then
+					l_dynamic_type_set := dynamic_type_set (a_name)
+					l_static_type := l_dynamic_type_set.static_type
+					if l_static_type.is_expanded then
+							-- Pass the address of the expanded object.
+						current_file.put_character ('&')
+						print_object_test_local_name (a_name, current_file)
+					elseif call_target_type.is_expanded and not call_target_type.is_generic then
+							-- We need to unbox the object and then pass its address.
+						current_file.put_character ('&')
+						current_file.put_character ('(')
+						print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
+						current_file.put_character (')')
+					else
+						print_object_test_local_name (a_name, current_file)
+					end
+				else
+					print_object_test_local_name (a_name, current_file)
+				end
 			end
 		end
 
@@ -9002,7 +9120,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 		do
 			if a_check_void_target then
 				l_dynamic_type_set := dynamic_type_set (an_expression)
-				if not a_target_type.is_expanded and then (l_dynamic_type_set.is_empty or not l_dynamic_type_set.is_never_void) then
+				if not a_target_type.is_expanded and then l_dynamic_type_set.can_be_void and not an_expression.is_never_void then
 					can_be_void_target_count := can_be_void_target_count + 1
 					current_file.put_string (c_ge_void)
 					current_file.put_character ('(')
@@ -9779,6 +9897,290 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			end
 			call_target_type := old_target_type
 			in_operand := old_in_operand
+		end
+
+feature {NONE} -- Object-test generation
+
+	print_object_test_function (i: INTEGER; a_object_test: ET_OBJECT_TEST) is
+			-- Print function corresponding to `i'-th object-test `a_object_test'
+			-- to `current_file' and its signature to `header_file'.
+			-- This function will return True or False depending if it's
+			-- successful or not, and when successful it will attach
+			-- the value of the expression passed as second argument
+			-- to the object-test local whose address is passed as first
+			-- argument.
+		require
+			a_object_test_not_void: a_object_test /= Void
+		local
+			old_file: KI_TEXT_OUTPUT_STREAM
+			l_result_type: ET_DYNAMIC_TYPE
+			j, nb: INTEGER
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type: ET_DYNAMIC_TYPE
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type: ET_DYNAMIC_TYPE
+			l_conforming_types: ET_DYNAMIC_TYPE_LIST
+			l_non_conforming_types: ET_DYNAMIC_TYPE_LIST
+			l_target_argument: ET_IDENTIFIER
+			l_source_argument: ET_IDENTIFIER
+			l_can_be_void: BOOLEAN
+		do
+			l_source_type_set := dynamic_type_set (a_object_test.expression)
+			l_target_type_set := dynamic_type_set (a_object_test.name)
+			l_target_type := l_target_type_set.static_type
+			l_source_type := l_source_type_set.static_type
+				-- Print signature to `header_file' and `current_file'.
+			old_file := current_file
+			current_file := current_function_header_buffer
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			l_result_type := dynamic_type_set (a_object_test).static_type
+			print_type_declaration (l_result_type, header_file)
+			print_type_declaration (l_result_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			print_object_test_function_name (i, current_feature, current_type, header_file)
+			print_object_test_function_name (i, current_feature, current_type, current_file)
+			header_file.put_character ('(')
+			current_file.put_character ('(')
+			l_target_argument := formal_argument (1)
+			print_type_declaration (l_target_type, header_file)
+			header_file.put_character ('*')
+			header_file.put_character (' ')
+			print_argument_name (l_target_argument, header_file)
+			header_file.put_character (',')
+			header_file.put_character (' ')
+			print_type_declaration (l_target_type, current_file)
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			print_argument_name (l_target_argument, current_file)
+			current_file.put_character (',')
+			current_file.put_character (' ')
+			l_source_argument := formal_argument (2)
+			print_type_declaration (l_source_type, header_file)
+			header_file.put_character (' ')
+			print_argument_name (l_source_argument, header_file)
+			print_type_declaration (l_source_type, current_file)
+			current_file.put_character (' ')
+			print_argument_name (l_source_argument, current_file)
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			current_file := current_function_body_buffer
+			nb := l_source_type_set.count
+			l_conforming_types := conforming_types
+			l_conforming_types.resize (nb)
+			l_non_conforming_types := non_conforming_types
+			l_non_conforming_types.resize (nb)
+			from j := 1 until j > nb loop
+				l_dynamic_type := l_source_type_set.dynamic_type (j)
+				if l_dynamic_type.conforms_to_type (l_target_type) then
+					l_conforming_types.put_last (l_dynamic_type)
+				else
+					l_non_conforming_types.put_last (l_dynamic_type)
+				end
+				j := j + 1
+			end
+			if l_conforming_types.is_empty then
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_false)
+				current_file.put_character (';')
+				current_file.put_new_line
+			else
+				l_can_be_void := l_source_type_set.can_be_void
+				if l_can_be_void then
+					print_indentation
+					current_file.put_string (c_if)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					current_file.put_character ('(')
+					print_expression (l_source_argument)
+					current_file.put_character (')')
+					current_file.put_character ('=')
+					current_file.put_character ('=')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_false)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_character (' ')
+					current_file.put_string (c_else)
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					indent
+				end
+				if l_non_conforming_types.is_empty then
+						-- Direct assignment.
+					print_indentation
+					current_file.put_character ('*')
+					print_argument_name (l_target_argument, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_attachment_expression (l_source_argument, l_source_type_set, l_target_type)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string (c_return)
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_true)
+					current_file.put_character (';')
+					current_file.put_new_line
+				else
+					check
+							-- None of `l_non_conforming_types' and `l_conforming_types' are empty.
+							-- Therefore the source is polymorphic. As a consequence if
+							-- `l_source_type' is expanded then it should be generic
+							-- (because non-generic expanded types cannot be polymorphic).
+							-- So we know that a type-id is always available.
+						generic_if_expanded: l_source_type.is_expanded implies l_source_type.is_generic
+					end
+					print_indentation
+					current_file.put_string (c_switch)
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_attribute_type_id_access (l_source_argument, l_source_type, False)
+					current_file.put_character (')')
+					current_file.put_character (' ')
+					current_file.put_character ('{')
+					current_file.put_new_line
+					if l_non_conforming_types.count < l_conforming_types.count then
+						nb := l_non_conforming_types.count
+						from j := 1 until j > nb loop
+							l_dynamic_type := l_non_conforming_types.dynamic_type (j)
+							print_indentation
+							current_file.put_string (c_case)
+							current_file.put_character (' ')
+							current_file.put_integer (l_dynamic_type.id)
+							current_file.put_character (':')
+							current_file.put_new_line
+							j := j + 1
+						end
+						indent
+						print_indentation
+						current_file.put_string (c_return)
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_false)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+						print_indentation
+						current_file.put_string (c_default)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_indentation
+						current_file.put_character ('*')
+						print_argument_name (l_target_argument, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+						if l_source_type_set.is_never_void then
+							conforming_type_set.set_never_void
+						end
+						print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
+						conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_return)
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_true)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+					else
+						nb := l_conforming_types.count
+						from j := 1 until j > nb loop
+							l_dynamic_type := l_conforming_types.dynamic_type (i)
+							print_indentation
+							current_file.put_string (c_case)
+							current_file.put_character (' ')
+							current_file.put_integer (l_dynamic_type.id)
+							current_file.put_character (':')
+							current_file.put_new_line
+							j := j + 1
+						end
+						indent
+						print_indentation
+						current_file.put_character ('*')
+						print_argument_name (l_target_argument, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+						if l_source_type_set.is_never_void then
+							conforming_type_set.set_never_void
+						end
+						print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
+						conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_break)
+						current_file.put_character (';')
+						current_file.put_new_line
+						print_indentation
+						current_file.put_string (c_return)
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_true)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+						print_indentation
+						current_file.put_string (c_default)
+						current_file.put_character (':')
+						current_file.put_new_line
+						indent
+						print_indentation
+						current_file.put_string (c_return)
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_false)
+						current_file.put_character (';')
+						current_file.put_new_line
+						dedent
+					end
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+				if l_can_be_void then
+					dedent
+					print_indentation
+					current_file.put_character ('}')
+					current_file.put_new_line
+				end
+			end
+			l_conforming_types.wipe_out
+			l_non_conforming_types.wipe_out
+			current_file := old_file
+			flush_to_c_file
+			reset_temp_variables
 		end
 
 feature {NONE} -- Query call generation
@@ -22991,6 +23393,39 @@ feature {NONE} -- Feature name generation
 			end
 		end
 
+	print_object_test_local_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of object-test local `a_name' to `a_file'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_object_test_local: a_name.is_object_test_local
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				a_file.put_character ('m')
+				a_file.put_integer (a_name.seed)
+			else
+-- TODO: long names
+				short_names := True
+				print_local_name (a_name, a_file)
+				short_names := False
+			end
+		end
+
+	print_object_test_function_name (i: INTEGER; a_routine: ET_DYNAMIC_FEATURE; a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print name of `i'-th object-test function appearing in `a_routine' from `a_type' to `a_file'.
+		require
+			a_routine_not_void: a_routine /= Void
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			print_routine_name (a_routine, a_type, a_file)
+			a_file.put_character ('o')
+			a_file.put_character ('t')
+			a_file.put_integer (i)
+		end
+
 	print_temp_name (a_name: ET_IDENTIFIER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print name of temporary variable `a_name' to `a_file'.
 		require
@@ -23978,6 +24413,8 @@ feature {ET_AST_NODE} -- Processing
 				print_temporary_variable (an_identifier)
 			elseif an_identifier.is_local then
 				print_local_variable (an_identifier)
+			elseif an_identifier.is_object_test_local then
+				print_object_test_local (an_identifier)
 			elseif an_identifier.is_agent_open_operand then
 				print_agent_open_operand (an_identifier)
 			elseif an_identifier.is_agent_closed_operand then
@@ -24035,6 +24472,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_manifest_type (an_expression)
+		end
+
+	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			print_object_test (an_expression)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
@@ -24283,6 +24726,10 @@ feature {NONE} -- Access
 
 	current_agents: DS_ARRAYED_LIST [ET_AGENT]
 			-- Agents already processed in `current_feature'
+
+	current_object_tests: DS_ARRAYED_LIST [ET_OBJECT_TEST]
+			-- Object-tests appearing in `current_feature' for which
+			-- a function needs to be generated
 
 	current_call_info: STRING
 			-- Textual representation of a pointer to a 'GE_call'
@@ -25304,6 +25751,8 @@ invariant
 	no_void_big_manifest_array_type: not big_manifest_array_types.has (Void)
 	manifest_tuple_types_not_void: manifest_tuple_types /= Void
 	no_void_manifest_tuple_type: not manifest_tuple_types.has (Void)
+	current_object_tests_not_void: current_object_tests /= Void
+	no_void_current_object_test: not current_object_tests.has (Void)
 	called_features_not_void: called_features /= Void
 	no_void_called_feature: not called_features.has (Void)
 	once_features_not_void: once_features /= Void

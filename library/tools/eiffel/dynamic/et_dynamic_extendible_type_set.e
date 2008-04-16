@@ -23,6 +23,9 @@ feature -- Status report
 
 	is_never_void: BOOLEAN
 			-- Can the expression of current dynamic type set never be void?
+			-- (Note that in order to be truly true, the current dynamic type
+			-- set should also be non-empty. Therefore it is recommended to
+			-- use 'not can_be_void'.)
 
 feature -- Status setting
 

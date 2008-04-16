@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature call names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset feature name as it was when it was first parsed.
+			-- Reset call name as it was when it was first parsed.
 		do
 			seed := 0
 		end
@@ -69,193 +69,199 @@ feature -- Setting
 feature -- Status report
 
 	is_identifier: BOOLEAN is
-			-- Is current feature name an identifier?
+			-- Is current call name an identifier?
 		do
 			-- Result := False
 		end
 
 	is_local: BOOLEAN is
-			-- Is current feature name actually a local variable name?
+			-- Is current call name actually a local variable name?
+		do
+			-- Result := False
+		end
+
+	is_object_test_local: BOOLEAN
+			-- Is current call name actually an object-test local name?
 		do
 			-- Result := False
 		end
 
 	is_argument: BOOLEAN is
-			-- Is current feature name actually a formal argument name?
+			-- Is current call name actually a formal argument name?
 		do
 			-- Result := False
 		end
 
 	is_tuple_label: BOOLEAN is
-			-- Is current identifier a tuple label?
+			-- Is current call name a tuple label?
 		do
 			-- Result := False
 		end
 
 	is_infix: BOOLEAN is
-			-- Is current feature name of the form 'infix ...'?
+			-- Is current call name of the form 'infix ...'?
 		do
 			-- Result := False
 		end
 
 	is_infix_and: BOOLEAN is
-			-- Is current feature name of the form 'infix "and"'?
+			-- Is current call name of the form 'infix "and"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_and_then: BOOLEAN is
-			-- Is current feature name of the form 'infix "and then"'?
+			-- Is current call name of the form 'infix "and then"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_div: BOOLEAN is
-			-- Is current feature name of the form 'infix "//"'?
+			-- Is current call name of the form 'infix "//"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_divide: BOOLEAN is
-			-- Is current feature name of the form 'infix "/"'?
+			-- Is current call name of the form 'infix "/"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_freeop: BOOLEAN is
-			-- Is current feature name of the form 'infix "free-operator"'?
+			-- Is current call name of the form 'infix "free-operator"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_ge: BOOLEAN is
-			-- Is current feature name of the form 'infix ">="'?
+			-- Is current call name of the form 'infix ">="'?
 		do
 			-- Result := False
 		end
 
 	is_infix_gt: BOOLEAN is
-			-- Is current feature name of the form 'infix ">"'?
+			-- Is current call name of the form 'infix ">"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_implies: BOOLEAN is
-			-- Is current feature name of the form 'infix "implies"'?
+			-- Is current call name of the form 'infix "implies"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_le: BOOLEAN is
-			-- Is current feature name of the form 'infix "<="'?
+			-- Is current call name of the form 'infix "<="'?
 		do
 			-- Result := False
 		end
 
 	is_infix_lt: BOOLEAN is
-			-- Is current feature name of the form 'infix "<"'?
+			-- Is current call name of the form 'infix "<"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_minus: BOOLEAN is
-			-- Is current feature name of the form 'infix "-"'?
+			-- Is current call name of the form 'infix "-"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_mod: BOOLEAN is
-			-- Is current feature name of the form 'infix "\\"'?
+			-- Is current call name of the form 'infix "\\"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_or: BOOLEAN is
-			-- Is current feature name of the form 'infix "or"'?
+			-- Is current call name of the form 'infix "or"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_or_else: BOOLEAN is
-			-- Is current feature name of the form 'infix "or else"'?
+			-- Is current call name of the form 'infix "or else"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_plus: BOOLEAN is
-			-- Is current feature name of the form 'infix "+"'?
+			-- Is current call name of the form 'infix "+"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_power: BOOLEAN is
-			-- Is current feature name of the form 'infix "^"'?
+			-- Is current call name of the form 'infix "^"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_times: BOOLEAN is
-			-- Is current feature name of the form 'infix "*"'?
+			-- Is current call name of the form 'infix "*"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_xor: BOOLEAN is
-			-- Is current feature name of the form 'infix "xor"'?
+			-- Is current call name of the form 'infix "xor"'?
 		do
 			-- Result := False
 		end
 
 	is_infix_dotdot: BOOLEAN is
-			-- Is current feature name of the form 'infix ".."'?
+			-- Is current call name of the form 'infix ".."'?
 		do
 			-- Result := False
 		end
 
 	is_prefix: BOOLEAN is
-			-- Is current feature name of the form 'prefix ...'?
+			-- Is current call name of the form 'prefix ...'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_minus: BOOLEAN is
-			-- Is current feature name of the form 'prefix "-"'?
+			-- Is current call name of the form 'prefix "-"'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_plus: BOOLEAN is
-			-- Is current feature name of the form 'prefix "+"'?
+			-- Is current call name of the form 'prefix "+"'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_freeop: BOOLEAN is
-			-- Is current feature name of the form 'prefix "free-operator"'?
+			-- Is current call name of the form 'prefix "free-operator"'?
 		do
 			-- Result := False
 		end
 
 	is_prefix_not: BOOLEAN is
-			-- Is current feature name of the form 'prefix "not"'?
+			-- Is current call name of the form 'prefix "not"'?
 		do
 			-- Result := False
 		end
 
 	is_bracket: BOOLEAN is
-			-- Is current feature name of the form 'alias "[]"'?
+			-- Is current call name of the form 'alias "[]"'?
 		do
 			-- Result := False
 		end
 
 	is_alias: BOOLEAN is
-			-- Is current feature name of the form 'alias "..."'?
+			-- Is current call name of the form 'alias "..."'?
 		do
 			-- Result := False
 		end
 
 	is_precursor: BOOLEAN is
-			-- Is current feature name of the form 'precursor'?
+			-- Is current call name of the form 'precursor'?
 		do
 			-- Result := False
 		end

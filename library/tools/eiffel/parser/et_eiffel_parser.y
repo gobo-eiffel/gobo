@@ -693,9 +693,21 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 	| E_REFERENCE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
 	| '?' Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -715,9 +727,21 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 	| E_REFERENCE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
 	| '?' Class_name Constraint_actual_parameters_opt
-		{ $$ := new_constraint_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2411,9 +2435,21 @@ Type_no_class_name: Class_name Actual_parameters
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_named_type ($1, $2, $3)
+			end
+		}
 	| '?' Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_named_type ($1, $2, $3)
+			end
+		}
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2433,9 +2469,21 @@ Type_no_identifier: Class_name Actual_parameters
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_named_type ($1, $2, $3)
+			end
+		}
 	| '?' Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_named_type ($1, $2, $3)
+			end
+		}
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2457,9 +2505,21 @@ Type_no_bang_identifier: Class_name
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' Class_name Actual_parameters
-		{ $$ := new_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_named_type ($1, $2, $3)
+			end
+		}
 	| '?' Class_name Actual_parameters_opt
-		{ $$ := new_named_type ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_named_type ($1, $2, $3)
+			end
+		}
 	| Anchored_type
 		{ $$ := $1 }
 	| E_BITTYPE Untyped_integer_constant
@@ -2635,15 +2695,39 @@ Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
 Anchored_type: E_LIKE Identifier
 		{ $$ := ast_factory.new_like_feature (Void, $1, $2) }
 	| '!' E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_like_feature ($1, $2, $3)
+			end
+		}
 	| '?' E_LIKE Identifier
-		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_like_feature ($1, $2, $3)
+			end
+		}
 	| E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current (Void, $1, $2) }
 	| '!' E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_like_current ($1, $2, $3)
+			end
+		}
 	| '?' E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_like_current ($1, $2, $3)
+			end
+		}
 	;
 
 ------------------------------------------------------------------------------------
@@ -3228,6 +3312,14 @@ Non_binary_expression: Bracket_target
 		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
 	| E_OLD Non_binary_expression
 		{ $$ := ast_factory.new_old_expression ($1, $2) }
+	| '{' E_IDENTIFIER ':' Type '}' Expression %prec E_NOT
+		{
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_object_test ($1, $2, $3, $4, $5, $6)
+			end
+		}
 	;
 
 Bracket_target: Call_expression

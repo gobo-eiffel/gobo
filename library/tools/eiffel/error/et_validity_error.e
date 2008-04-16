@@ -91,6 +91,8 @@ create
 	make_veen2e,
 	make_veen2f,
 	make_veen2g,
+	make_veen8a,
+	make_veen8b,
 	make_vfac1a,
 	make_vfac1b,
 	make_vfac2a,
@@ -237,6 +239,14 @@ create
 	make_vuex1a,
 	make_vuex2a,
 	make_vuex2b,
+	make_vuot1a,
+	make_vuot1b,
+	make_vuot1c,
+	make_vuot1d,
+	make_vuot3a,
+	make_vuot3b,
+	make_vuot4a,
+	make_vuot4b,
 	make_vwbe0a,
 	make_vweq0a,
 	make_vwst1a,
@@ -3452,6 +3462,93 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
+		end
+
+	make_veen8a (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Create a new VEEN-8 error: `an_identifier', appearing in `a_feature'
+			-- of `a_class' or one of its (possibly nested) inline agents, is an
+			-- object-test local that is used outside of its scope.
+			--
+			-- ECMA-367-2: p.103
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_identifier_object_test_local: an_identifier.is_object_test_local
+			a_feature_not_void: a_feature /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := an_identifier.position
+			code := template_code (veen8a_template_code)
+			etl_code := veen8_etl_code
+			default_template := default_message_template (veen8a_default_template)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (an_identifier.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local
+			-- dollar8: $8 = feature name
+		end
+
+	make_veen8b (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER) is
+			-- Create a new VEEN-8 error: `an_identifier', appearing in the invariant
+			-- of `a_class' or one of its (possibly nested) inline agents, is an
+			-- object-test local that is used outside of its scope.
+			--
+			-- ECMA-367-2: p.103
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_identifier_object_test_local: an_identifier.is_object_test_local
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := an_identifier.position
+			code := template_code (veen8b_template_code)
+			etl_code := veen8_etl_code
+			default_template := default_message_template (veen8b_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (an_identifier.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-test local
 		end
 
 	make_vfac1a (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
@@ -10327,6 +10424,327 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base class of target of the call
 		end
 
+	make_vuot1a (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+			-- Create a new VUOT-1 error: The local of `a_object_test' has the same
+			-- name as `a_feature' in `a_class'.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test.name.position
+			code := template_code (vuot1a_template_code)
+			etl_code := vuot1_etl_code
+			default_template := default_message_template (vuot1a_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
+	make_vuot1b (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT) is
+			-- Create a new VUOT-1 error: The local of `a_object_test' has
+			-- the same name as argument `arg' of an enclosing feature or
+			-- inline agent.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			arg_not_void: arg /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test.name.position
+			code := template_code (vuot1b_template_code)
+			etl_code := vuot1_etl_code
+			default_template := default_message_template (vuot1b_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
+	make_vuot1c (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE) is
+			-- Create a new VUOT-1 error: The local of `a_object_test' has
+			-- the same name as local variable `a_local' of an enclosing
+			-- feature or inline agent.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			a_local_not_void: a_local /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test.name.position
+			code := template_code (vuot1c_template_code)
+			etl_code := vuot1_etl_code
+			default_template := default_message_template (vuot1c_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
+	make_vuot1d (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+			-- Create a new VUOT-1 error: `a_object_test1' appears in the scope
+			-- of the local of `a_object_test2' with the same local name.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test1_not_void: a_object_test1 /= Void
+			a_object_test2_not_void: a_object_test2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test1.name.position
+			code := template_code (vuot1d_template_code)
+			etl_code := vuot1_etl_code
+			default_template := default_message_template (vuot1d_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test1.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
+	make_vuot3a (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+			-- Create a new VUOT-3 error: The local of `a_object_test1' has
+			-- the same name as the local of `a_object_test2' appearing in
+			-- `a_feature' of `a_class' or one of its (possibly nested)
+			-- inline agents.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test1_not_void: a_object_test1 /= Void
+			a_object_test2_not_void: a_object_test2 /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test1.name.position
+			code := template_code (vuot3a_template_code)
+			etl_code := vuot3_etl_code
+			default_template := default_message_template (vuot3a_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test1.name.lower_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vuot3b (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+			-- Create a new VUOT-3 error: The local of `a_object_test1' has
+			-- the same name as the local of `a_object_test2' appearing in
+			-- the invariant of `a_class' or one of its (possibly nested)
+			-- inline agents.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test1_not_void: a_object_test1 /= Void
+			a_object_test2_not_void: a_object_test2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test1.name.position
+			code := template_code (vuot3b_template_code)
+			etl_code := vuot3_etl_code
+			default_template := default_message_template (vuot3b_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test1.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
+	make_vuot4a (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+			-- Create a new VUOT-4 error: ISE does not support object-tests in preconditions.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test.name.position
+			code := template_code (vuot4a_template_code)
+			etl_code := vuot4_etl_code
+			default_template := default_message_template (vuot4a_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
+	make_vuot4b (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+			-- Create a new VUOT-4 error: ISE does not support object-tests in check instructions.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test.name.position
+			code := template_code (vuot4b_template_code)
+			etl_code := vuot4_etl_code
+			default_template := default_message_template (vuot4b_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
 	make_vwbe0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
 			-- Create a new VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
@@ -11701,6 +12119,8 @@ feature {NONE} -- Implementation
 	veen2e_default_template: STRING is "local entity `$7' appears in the precondition or postcondition of an inline agent."
 	veen2f_default_template: STRING is "entity 'Result' appears in the precondition of an inline agent."
 	veen2g_default_template: STRING is "entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
+	veen8a_default_template: STRING is "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
+	veen8b_default_template: STRING is "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	vfac1a_default_template: STRING is "query `$7' has an assigner mark `$8' but there is no feature with that name."
 	vfac1b_default_template: STRING is "query `$7' has an assigner mark `$8' but this feature is not a procedure."
 	vfac2a_default_template: STRING is "the number of arguments in assigner procedure `$8' is not one more than the number of arguments in query `$7'."
@@ -11847,6 +12267,14 @@ feature {NONE} -- Implementation
 	vuex1a_default_template: STRING is "`$7' is not the final name of a feature in class $5."
 	vuex2a_default_template: STRING is "`$7' is not the final name of a feature in class $8."
 	vuex2b_default_template: STRING is "feature `$8' of class $9 is not exported to class $5."
+	vuot1a_default_template: STRING is "object-test local name '$6' is also the final name of a feature."
+	vuot1b_default_template: STRING is "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
+	vuot1c_default_template: STRING is "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
+	vuot1d_default_template: STRING is "object-test with local name '$6' appears in the scope of another object-test local with the same name."
+	vuot3a_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in feature `$7' or one of its possibly nested inline agents."
+	vuot3b_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or one of its possibly nested inline agents."
+	vuot4a_default_template: STRING is "ISE does not support object-tests in preconditions."
+	vuot4b_default_template: STRING is "ISE does not support object-tests in check instructions."
 	vwbe0a_default_template: STRING is "boolean expression of non-BOOLEAN type '$7'."
 	vweq0a_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms to the other."
 	vwst1a_default_template: STRING is "feature name `$7' is not the final name of a feature in class $5."
@@ -11911,6 +12339,7 @@ feature {NONE} -- Implementation
 	vdus4_etl_code: STRING is "VDUS-4"
 	veen_etl_code: STRING is "VEEN"
 	veen2_etl_code: STRING is "VEEN-2"
+	veen8_etl_code: STRING is "VEEN-8"
 	vfac1_etl_code: STRING is "VFAC-1"
 	vfac2_etl_code: STRING is "VFAC-2"
 	vfac3_etl_code: STRING is "VFAC-3"
@@ -11986,6 +12415,9 @@ feature {NONE} -- Implementation
 	vuar4_etl_code: STRING is "VUAR-4"
 	vuex1_etl_code: STRING is "VUEX-1"
 	vuex2_etl_code: STRING is "VUEX-2"
+	vuot1_etl_code: STRING is "VUOT-1"
+	vuot3_etl_code: STRING is "VUOT-3"
+	vuot4_etl_code: STRING is "VUOT-4"
 	vwbe_etl_code: STRING is "VWBE"
 	vweq_etl_code: STRING is "VWEQ"
 	vwst1_etl_code: STRING is "VWST-1"
@@ -12098,6 +12530,8 @@ feature {NONE} -- Implementation
 	veen2e_template_code: STRING is "veen2e"
 	veen2f_template_code: STRING is "veen2f"
 	veen2g_template_code: STRING is "veen2g"
+	veen8a_template_code: STRING is "veen8a"
+	veen8b_template_code: STRING is "veen8b"
 	vfac1a_template_code: STRING is "vfac1a"
 	vfac1b_template_code: STRING is "vfac1b"
 	vfac2a_template_code: STRING is "vfac2a"
@@ -12244,6 +12678,14 @@ feature {NONE} -- Implementation
 	vuex1a_template_code: STRING is "vuex1a"
 	vuex2a_template_code: STRING is "vuex2a"
 	vuex2b_template_code: STRING is "vuex2b"
+	vuot1a_template_code: STRING is "vuot1a"
+	vuot1b_template_code: STRING is "vuot1b"
+	vuot1c_template_code: STRING is "vuot1c"
+	vuot1d_template_code: STRING is "vuot1d"
+	vuot3a_template_code: STRING is "vuot3a"
+	vuot3b_template_code: STRING is "vuot3b"
+	vuot4a_template_code: STRING is "vuot4a"
+	vuot4b_template_code: STRING is "vuot4b"
 	vwbe0a_template_code: STRING is "vwbe0a"
 	vweq0a_template_code: STRING is "vweq0a"
 	vwst1a_template_code: STRING is "vwst1a"

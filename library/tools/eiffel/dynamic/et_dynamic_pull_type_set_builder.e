@@ -40,6 +40,7 @@ inherit
 			propagate_creation_dynamic_type,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_like_argument_dynamic_types,
+			propagate_object_test_dynamic_types,
 			propagate_tuple_label_setter_dynamic_types
 		end
 
@@ -1328,6 +1329,32 @@ feature {NONE} -- Implementation
 			if not an_actual_type_set.is_expanded then
 				create l_attachment.make (a_formal_type_set, a_call, current_dynamic_feature, current_dynamic_type)
 				an_actual_type_set.put_source (l_attachment, current_dynamic_system)
+			end
+		end
+
+	propagate_object_test_dynamic_types (a_object_test: ET_OBJECT_TEST) is
+			-- Propagate dynamic types of the expression of `a_object_test'
+			-- to the dynamic type set of the local of `a_object_test'.
+		local
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_object_test: ET_DYNAMIC_OBJECT_TEST
+		do
+			l_source_type_set := dynamic_type_set (a_object_test.expression)
+			l_target_type_set := dynamic_type_set (a_object_test.name)
+			if l_source_type_set = Void then
+					-- Internal error: the dynamic type sets of the expression
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_target_type_set = Void then
+					-- Internal error: the dynamic type sets of the object-test label
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif not l_target_type_set.is_expanded then
+				create l_dynamic_object_test.make (l_source_type_set, a_object_test, current_dynamic_feature, current_dynamic_type)
+				l_target_type_set.put_source (l_dynamic_object_test, current_dynamic_system)
 			end
 		end
 

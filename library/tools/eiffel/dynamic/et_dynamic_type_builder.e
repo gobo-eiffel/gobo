@@ -68,6 +68,8 @@ inherit
 			report_natural_16_constant,
 			report_natural_32_constant,
 			report_natural_64_constant,
+			report_object_test,
+			report_object_test_local,
 			report_pointer_expression,
 			report_precursor_expression,
 			report_precursor_instruction,
@@ -2416,6 +2418,49 @@ feature {NONE} -- Event handling
 				if natural_64_index.item = 0 then
 					natural_64_index.put (a_constant.index)
 				end
+			end
+		end
+
+	report_object_test (a_object_test: ET_OBJECT_TEST) is
+			-- Report that the object-test `a_object_test' has been processed.
+			-- Note: The type of the object-test local is still viewed from
+			-- the implementation class of `current_feature'. Its formal
+			-- generic parameters need to be resolved in `current_class'
+			-- before using it.
+		local
+			l_resolved_type: ET_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Object-tests are of type "BOOLEAN".
+				l_dynamic_type := current_dynamic_system.boolean_type
+				mark_type_alive (l_dynamic_type)
+				if a_object_test.index = 0 and boolean_index.item /= 0 then
+					a_object_test.set_index (boolean_index.item)
+				end
+				set_dynamic_type_set (l_dynamic_type, a_object_test)
+				if boolean_index.item = 0 then
+					boolean_index.put (a_object_test.index)
+				end
+					-- Take care of the type of the object-test local.
+				l_resolved_type := resolved_formal_parameters (a_object_test.type, current_class_impl, current_type)
+				if not has_fatal_error then
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
+					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+						-- An object-test local is assumed to be never Void.
+					l_dynamic_type_set.set_never_void
+					set_dynamic_type_set (l_dynamic_type_set, a_object_test.name)
+					propagate_object_test_dynamic_types (a_object_test)
+				end
+			end
+		end
+
+	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_OBJECT_TEST) is
+			-- Report that a call to object-test local `a_name' has been processed.
+		do
+			if current_type = current_dynamic_type.base_type then
+				a_name.set_index (a_object_test.name.index)
 			end
 		end
 
@@ -5908,6 +5953,15 @@ feature {NONE} -- Implementation
 			a_call_not_void: a_call /= Void
 			a_formal_type_set_not_void: a_formal_type_set /= Void
 			an_actual_type_set_not_void: an_actual_type_set /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_object_test_dynamic_types (a_object_test: ET_OBJECT_TEST) is
+			-- Propagate dynamic types of the expression of `a_object_test'
+			-- to the dynamic type set of the local of `a_object_test'.
+		require
+			a_object_test_not_void: a_object_test /= Void
 		do
 			-- Do nothing.
 		end

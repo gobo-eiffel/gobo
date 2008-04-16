@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'precursor' keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,11 @@ inherit
 	ET_KEYWORD
 		rename
 			make_precursor as make,
-			text as name
+			text as name,
+			is_local as is_local_keyword,
+			is_infix as is_infix_keyword,
+			is_prefix as is_prefix_keyword,
+			is_alias as is_alias_keyword
 		redefine
 			process, is_equal
 		end
@@ -25,8 +29,7 @@ inherit
 	ET_CALL_NAME
 		undefine
 			first_position, last_position,
-			is_equal, is_precursor, is_local,
-			is_infix, is_prefix, is_alias
+			is_equal, is_precursor
 		redefine
 			precursor_keyword
 		end

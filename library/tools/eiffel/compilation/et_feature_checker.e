@@ -73,6 +73,7 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_object_test,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -129,16 +130,24 @@ feature {NONE} -- Initialization
 			current_feature := dummy_feature
 			current_feature_impl := dummy_feature.implementation_feature
 			current_class_impl := current_feature_impl.implementation_class
+				-- Inline agents.
 			create enclosing_inline_agents.make (10)
+				-- .NET overloading.
 			create overloaded_procedures.make (10)
 			create unused_overloaded_procedures_list.make (10)
 			create overloaded_queries.make (10)
 			create unused_overloaded_queries_list.make (10)
 			create best_overloaded_features.make (10)
+				-- Type contexts.
 			create unused_contexts.make (20)
 			current_context := new_context (current_type)
 			current_target_type := tokens.unknown_class
 			free_context (current_context)
+				-- Object-tests.
+			create current_object_test_scope.make
+			create object_test_scope_builder.make
+			create current_object_tests.make_with_capacity (100)
+			create object_test_finder.make
 		end
 
 feature -- Status report
@@ -188,6 +197,8 @@ feature -- Validity checking
 			old_type: ET_BASE_TYPE
 			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
 		do
 			has_fatal_error := False
 			l_feature_impl := a_feature.implementation_feature
@@ -199,8 +210,8 @@ feature -- Validity checking
 				set_fatal_error
 				error_handler.report_giaaa_error
 			elseif l_class_impl /= a_current_type then
-				-- Check that this feature has already been checked in the
-				-- context of its implementation class.
+					-- Check that this feature has already been checked in the
+					-- context of its implementation class.
 				if l_feature_impl.implementation_checked then
 					if l_feature_impl.has_implementation_error then
 							-- The error should have already been reported.
@@ -227,6 +238,22 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
+					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
+							-- ISE has a validity rule VUOT-3 which forbids two object-tests
+							-- in the same feature to have the same local name.
+							-- (See `check_object_test_validity'.)
+						if current_class = current_class_impl then
+								-- Find object-tests in assertions.
+							l_preconditions := a_feature.preconditions
+							if l_preconditions /= Void then
+								object_test_finder.find_object_tests (l_preconditions, current_object_tests)
+							end
+							l_postconditions := a_feature.postconditions
+							if l_postconditions /= Void then
+								object_test_finder.find_object_tests (l_postconditions, current_object_tests)
+							end
+						end
+					end
 					a_feature.process (Current)
 					if current_type = current_class_impl then
 						a_feature.set_implementation_checked
@@ -235,6 +262,7 @@ feature -- Validity checking
 						end
 					end
 				end
+				current_object_tests.wipe_out
 				current_class := old_class
 				current_type := old_type
 				current_class_impl := old_class_impl
@@ -261,8 +289,7 @@ feature -- Validity checking
 		end
 
 	check_preconditions_validity (a_preconditions: ET_PRECONDITIONS;
-		a_current_feature_impl, a_current_feature: ET_STANDALONE_CLOSURE;
-		a_current_type: ET_BASE_TYPE) is
+		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `a_preconditions' of `a_current_feature'
 			-- (written in `a_current_feature_impl') in `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -287,7 +314,7 @@ feature -- Validity checking
 			boolean_type: ET_CLASS_TYPE
 			l_named_type: ET_NAMED_TYPE
 			had_error: BOOLEAN
-			l_feature_impl: ET_STANDALONE_CLOSURE
+			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
 			l_current_class: ET_CLASS
 		do
@@ -356,6 +383,7 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_precondition := old_in_precondition
+				current_object_tests.wipe_out
 				current_class := old_class
 				current_type := old_type
 				current_class_impl := old_class_impl
@@ -365,8 +393,7 @@ feature -- Validity checking
 		end
 
 	check_postconditions_validity (a_postconditions: ET_POSTCONDITIONS;
-		a_current_feature_impl, a_current_feature: ET_STANDALONE_CLOSURE;
-		a_current_type: ET_BASE_TYPE) is
+		a_current_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `a_postconditions' of `a_current_feature'
 			-- (written in `a_current_feature_impl') in `a_current_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -391,9 +418,10 @@ feature -- Validity checking
 			boolean_type: ET_CLASS_TYPE
 			l_named_type: ET_NAMED_TYPE
 			had_error: BOOLEAN
-			l_feature_impl: ET_STANDALONE_CLOSURE
+			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
 			l_current_class: ET_CLASS
+			l_preconditions: ET_PRECONDITIONS
 		do
 			has_fatal_error := False
 			l_feature_impl := a_current_feature_impl.implementation_feature
@@ -436,6 +464,21 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
+					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
+							-- ISE has a validity rule VUOT-3 which forbids two object-tests
+							-- in the same feature to have the same local name.
+							-- (See `check_object_test_validity'.)
+						if current_class = current_class_impl then
+								-- Find object-tests in preconditions.
+								-- Name clashes between object-test locals in the body
+								-- of the feature and its postconditions are already
+								-- handled in `check_feature_validity'.
+							l_preconditions := a_current_feature.preconditions
+							if l_preconditions /= Void then
+								object_test_finder.find_object_tests (l_preconditions, current_object_tests)
+							end
+						end
+					end
 					boolean_type := current_system.boolean_class
 					l_assertion_context := new_context (current_type)
 					nb := a_postconditions.count
@@ -460,6 +503,7 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_postcondition := old_in_postcondition
+				current_object_tests.wipe_out
 				current_class := old_class
 				current_type := old_type
 				current_class_impl := old_class_impl
@@ -563,6 +607,7 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_invariant := old_in_invariant
+				current_object_tests.wipe_out
 				current_class := old_class
 				current_type := old_type
 				current_class_impl := old_class_impl
@@ -2272,6 +2317,7 @@ feature {NONE} -- Instruction validity
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
+			in_check_instruction := True
 			boolean_type := current_system.boolean_class
 			l_assertion_context := new_context (current_type)
 			nb := an_instruction.count
@@ -2293,6 +2339,7 @@ feature {NONE} -- Instruction validity
 				set_fatal_error
 			end
 			free_context (l_assertion_context)
+			in_check_instruction := False
 		end
 
 	check_create_instruction_validity (an_instruction: ET_CREATE_INSTRUCTION) is
@@ -2682,11 +2729,14 @@ feature {NONE} -- Instruction validity
 			l_conditional: ET_EXPRESSION
 			l_conditional_context: ET_NESTED_TYPE_CONTEXT
 			l_compound: ET_COMPOUND
+			l_else_compound: ET_COMPOUND
 			l_elseif_parts: ET_ELSEIF_PART_LIST
 			l_elseif: ET_ELSEIF_PART
 			i, nb: INTEGER
 			had_error: BOOLEAN
 			l_named_type: ET_NAMED_TYPE
+			l_old_scope: INTEGER
+			l_old_elseif_scope: INTEGER
 		do
 			has_fatal_error := False
 			boolean_type := current_system.boolean_class
@@ -2702,46 +2752,59 @@ feature {NONE} -- Instruction validity
 				error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
 			end
 			free_context (l_conditional_context)
+			l_old_scope := current_object_test_scope.count
 			l_compound := an_instruction.then_compound
 			if l_compound /= Void then
+				object_test_scope_builder.build_scope (l_conditional, current_object_test_scope)
 				check_instructions_validity (l_compound)
+				current_object_test_scope.keep_object_tests (l_old_scope)
 				if has_fatal_error then
 					had_error := True
 				end
 			end
 			l_elseif_parts := an_instruction.elseif_parts
-			if l_elseif_parts /= Void then
-				nb := l_elseif_parts.count
-				from i := 1 until i > nb loop
-					l_elseif := l_elseif_parts.item (i)
-					l_conditional := l_elseif.conditional.expression
-					l_conditional_context := new_context (current_type)
-					check_expression_validity (l_conditional, l_conditional_context, boolean_type)
-					if has_fatal_error then
-						had_error := True
-					elseif not l_conditional_context.same_named_type (boolean_type, current_type) then
-						had_error := True
-						set_fatal_error
-						l_named_type := l_conditional_context.named_type
-						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
-					end
-					free_context (l_conditional_context)
-					l_compound := l_elseif.then_compound
-					if l_compound /= Void then
-						check_instructions_validity (l_compound)
+			l_else_compound := an_instruction.else_compound
+			if l_elseif_parts /= Void or l_else_compound /= Void then
+				object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope)
+				if l_elseif_parts /= Void then
+					nb := l_elseif_parts.count
+					from i := 1 until i > nb loop
+						l_elseif := l_elseif_parts.item (i)
+						l_conditional := l_elseif.conditional.expression
+						l_conditional_context := new_context (current_type)
+						check_expression_validity (l_conditional, l_conditional_context, boolean_type)
 						if has_fatal_error then
 							had_error := True
+						elseif not l_conditional_context.same_named_type (boolean_type, current_type) then
+							had_error := True
+							set_fatal_error
+							l_named_type := l_conditional_context.named_type
+							error_handler.report_vwbe0a_error (current_class, current_class_impl, l_conditional, l_named_type)
 						end
+						free_context (l_conditional_context)
+						l_compound := l_elseif.then_compound
+						if l_compound /= Void then
+							l_old_elseif_scope := current_object_test_scope.count
+							object_test_scope_builder.build_scope (l_conditional, current_object_test_scope)
+							check_instructions_validity (l_compound)
+							current_object_test_scope.keep_object_tests (l_old_elseif_scope)
+							if has_fatal_error then
+								had_error := True
+							end
+						end
+						if i < nb or else l_else_compound /= Void then
+							object_test_scope_builder.build_negated_scope (l_conditional, current_object_test_scope)
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
-			end
-			l_compound := an_instruction.else_compound
-			if l_compound /= Void then
-				check_instructions_validity (l_compound)
-				if has_fatal_error then
-					had_error := True
+				if l_else_compound /= Void then
+					check_instructions_validity (l_else_compound)
+					if has_fatal_error then
+						had_error := True
+					end
 				end
+				current_object_test_scope.keep_object_tests (l_old_scope)
 			end
 			if had_error then
 				set_fatal_error
@@ -2959,6 +3022,7 @@ feature {NONE} -- Instruction validity
 			boolean_type: ET_CLASS_TYPE
 			l_variant: ET_VARIANT
 			l_invariant: ET_LOOP_INVARIANTS
+			l_old_scope: INTEGER
 		do
 			has_fatal_error := False
 			l_compound := an_instruction.from_compound
@@ -2997,7 +3061,10 @@ feature {NONE} -- Instruction validity
 			free_context (l_expression_context)
 			l_compound := an_instruction.loop_compound
 			if l_compound /= Void then
+				l_old_scope := current_object_test_scope.count
+				object_test_scope_builder.build_negated_scope (l_expression, current_object_test_scope)
 				check_instructions_validity (l_compound)
+				current_object_test_scope.keep_object_tests (l_old_scope)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -5103,6 +5170,7 @@ feature {NONE} -- Expression validity
 		local
 			l_name: ET_CALL_NAME
 			l_target: ET_EXPRESSION
+			l_boolean_target: ET_EXPRESSION
 			l_class: ET_CLASS
 			l_query: ET_QUERY
 			l_procedure: ET_PROCEDURE
@@ -5133,6 +5201,7 @@ feature {NONE} -- Expression validity
 			any_type: ET_CLASS_TYPE
 			l_cast_expression: ET_INFIX_CAST_EXPRESSION
 			l_builtin: ET_BUILTIN_CONVERT_FEATURE
+			l_old_scope: INTEGER
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -5177,6 +5246,14 @@ feature {NONE} -- Expression validity
 										-- ISE Eiffel 5.4 reports this error as a VEEN,
 										-- but it is in fact a VUEX-2 (ETL2 p.368).
 									error_handler.report_vuex2a_error (current_class, l_name, l_class)
+								end
+							end
+							if not has_fatal_error then
+								if l_class = current_system.boolean_class then
+										-- This is useful to know which binary expressions are
+										-- boolean operators between two boolean expressions
+										-- when trying to determine the scope of object-test locals.
+									an_expression.set_boolean_operator (True)
 								end
 							end
 						end
@@ -5243,7 +5320,23 @@ feature {NONE} -- Expression validity
 						if has_fatal_error then
 							had_error := True
 						end
+							-- Make sure that the scope of object-test locals are handled
+							-- correctly when the infix expression is a boolean operator
+							-- between two boolean expressions. The right-hand-side of
+							-- the infix expression might be part of an object-test local
+							-- appearing in the left-hand-side.
+						l_old_scope := current_object_test_scope.count
+						if not an_expression.is_boolean_operator then
+							-- Do nothing.
+						elseif l_name.is_infix_and_then then
+							object_test_scope_builder.build_scope (l_target, current_object_test_scope)
+						elseif l_name.is_infix_implies then
+							object_test_scope_builder.build_scope (l_target, current_object_test_scope)
+						elseif l_name.is_infix_or_else then
+							object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope)
+						end
 						check_expression_validity (l_actual, l_actual_context, l_formal_context)
+						current_object_test_scope.keep_object_tests (l_old_scope)
 						if had_error then
 							set_fatal_error
 						end
@@ -5437,6 +5530,57 @@ feature {NONE} -- Expression validity
 															-- Insert the cast expression in the AST.
 														an_expression.set_left (l_cast_expression)
 														l_target := l_cast_expression
+														if l_class = current_system.boolean_class then
+																-- This is useful to know which binary expressions are
+																-- boolean operators between two boolean expressions
+																-- when trying to determine the scope of object-test locals.
+															an_expression.set_boolean_operator (True)
+																-- We should note that if the left-hand-side contains object-tests,
+																-- then when we checked the right-hand-side earlier with the previous
+																-- type for the target (i.e. the left-hand-side), no scope of
+																-- object-test locals could be found because at that time the target
+																-- was not of type boolean. Now the target is of type boolean, but
+																-- nothing is changed to the scope of object-test locals in the
+																-- right-hand-side. Indeed, when we change the type of the target
+																-- to be boolean, we could not use boolean operators (boolean operators
+																-- only have boolean operands, and the type of the target was not
+																-- boolean). Therefore we cannot prove that object-tests appearing
+																-- in the target will always evaluate to True if the new target
+																-- evaluates to True, and likewise if the new target evaluates to
+																-- False. So the right-hand-side cannot be part of the scope of
+																-- their object-test locals.
+														elseif an_expression.is_boolean_operator then
+																-- We should note that if the left-hand-side contains object-tests,
+																-- then when we checked the right-hand-side earlier with the
+																-- previous type for the target (i.e. the left-hand-side), scope of
+																-- object-test locals could be found because at that time the target
+																-- was of type boolean. Now the target is not of type boolean anymore,
+																-- so the right-hand-side should not be in the scope of these
+																-- object-test locals anymore. We need to reprocess the right-hand-side
+																-- in this new context.
+															l_old_scope := current_object_test_scope.count
+															l_boolean_target := an_expression.left
+															if l_name.is_infix_and_then then
+																object_test_scope_builder.build_scope (l_boolean_target, current_object_test_scope)
+															elseif l_name.is_infix_implies then
+																object_test_scope_builder.build_scope (l_boolean_target, current_object_test_scope)
+															elseif l_name.is_infix_or_else then
+																object_test_scope_builder.build_negated_scope (l_boolean_target, current_object_test_scope)
+															end
+															an_expression.set_boolean_operator (False)
+															if l_old_scope /= current_object_test_scope.count then
+																current_object_test_scope.keep_object_tests (l_old_scope)
+																	-- The right-hand-side was in the scope of object-test locals
+																	-- declared in the left-hand-side. So we need to reprocess
+																	-- the right-hand-side as explained above.
+																l_actual_context.reset (current_type)
+																l_formal_context := a_context
+																l_formal_type := other_formal.type
+																l_formal_context.force_last (l_formal_type)
+																check_expression_validity (l_actual, l_actual_context, l_formal_context)
+																l_formal_context.remove_last
+															end
+														end
 													end
 												end
 											end
@@ -5467,7 +5611,23 @@ feature {NONE} -- Expression validity
 							l_formal_context.force_last (l_query.arguments.formal_argument (1).type)
 							a_context.wipe_out
 							l_actual := an_expression.right
+								-- Make sure that the scope of object-test locals is handled
+								-- correctly when the infix expression is a boolean operator
+								-- between two boolean expressions. The right-hand-side of
+								-- the infix expression might be part of an object-test local
+								-- appearing in the left-hand-side.
+							l_old_scope := current_object_test_scope.count
+							if not an_expression.is_boolean_operator then
+								-- Do nothing.
+							elseif l_name.is_infix_and_then then
+								object_test_scope_builder.build_scope (l_target, current_object_test_scope)
+							elseif l_name.is_infix_implies then
+								object_test_scope_builder.build_scope (l_target, current_object_test_scope)
+							elseif l_name.is_infix_or_else then
+								object_test_scope_builder.build_negated_scope (l_target, current_object_test_scope)
+							end
 							check_expression_validity (l_actual, a_context, l_formal_context)
+							current_object_test_scope.keep_object_tests (l_old_scope)
 							if not has_fatal_error then
 								l_convert_expression ?= l_actual
 								if l_convert_expression /= Void then
@@ -5946,6 +6106,195 @@ feature {NONE} -- Expression validity
 			end
 		end
 
+	check_object_test_validity (an_expression: ET_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_other_object_test: ET_OBJECT_TEST
+			l_type: ET_TYPE
+			l_had_error: BOOLEAN
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_name: ET_IDENTIFIER
+			l_feature: ET_FEATURE
+			i, j, nb: INTEGER
+			l_enclosing_agent: ET_INLINE_AGENT
+			args: ET_FORMAL_ARGUMENT_LIST
+			l_locals: ET_LOCAL_VARIABLE_LIST
+		do
+			has_fatal_error := False
+			l_type := an_expression.type
+			check_type_validity (l_type)
+			l_expression_context := new_context (current_type)
+			if has_fatal_error then
+					-- The type is not valid. We will consider that it is of
+					-- type 'ANY' when checking the validity of the expression.
+				l_had_error := True
+				l_expression_context.force_last (current_system.any_type)
+			else
+				l_expression_context.force_last (l_type)
+			end
+			check_expression_validity (an_expression.expression, a_context, l_expression_context)
+			free_context (l_expression_context)
+			if l_had_error then
+				set_fatal_error
+			end
+				-- Check object-test local name clashes (see VUOT-1, in ECMA-367-2 p.127).
+			if current_class = current_class_impl then
+				l_name := an_expression.name
+				l_feature := current_class.named_query (l_name)
+				if l_feature /= Void then
+						-- This object-test local has the same name as the
+						-- final name of a feature in `current_class'.
+					set_fatal_error
+					error_handler.report_vuot1a_error (current_class, an_expression, l_feature)
+				else
+					l_feature := current_class.named_procedure (l_name)
+					if l_feature /= Void then
+							-- This object-test local has the same name as the
+							-- final name of a feature in `current_class'.
+						set_fatal_error
+						error_handler.report_vuot1a_error (current_class, an_expression, l_feature)
+					end
+				end
+				if current_inline_agent /= Void then
+					enclosing_inline_agents.force_last (current_inline_agent)
+					nb := enclosing_inline_agents.count
+					from i := 1 until i > nb loop
+						l_enclosing_agent := enclosing_inline_agents.item (i)
+						args := l_enclosing_agent.formal_arguments
+						if args /= Void then
+							j := args.index_of (l_name)
+							if j /= 0 then
+									-- This object-test local has the same name as a formal
+									-- argument of an enclosing inline agent.
+								set_fatal_error
+								error_handler.report_vuot1b_error (current_class, an_expression, args.formal_argument (j))
+							end
+						end
+						l_locals := l_enclosing_agent.locals
+						if l_locals /= Void then
+							j := l_locals.index_of (l_name)
+							if j /= 0 then
+									-- This object-test local has the same name as a
+									-- local variable of an enclosing inline agent.
+								set_fatal_error
+								error_handler.report_vuot1c_error (current_class, an_expression, l_locals.local_variable (j))
+							end
+						end
+						i := i + 1
+					end
+					enclosing_inline_agents.remove_last
+				end
+				args := current_feature.arguments
+				if args /= Void then
+					j := args.index_of (l_name)
+					if j /= 0 then
+							-- This object-test local has the same name as a formal
+							-- argument of the enclosing feature.
+						set_fatal_error
+						error_handler.report_vuot1b_error (current_class, an_expression, args.formal_argument (j))
+					end
+				end
+				l_locals := current_feature.locals
+				if l_locals /= Void then
+					j := l_locals.index_of (l_name)
+					if j /= 0 then
+							-- This object-test local has the same name as a
+							-- local variable of the enclosing feature.
+						set_fatal_error
+						error_handler.report_vuot1c_error (current_class, an_expression, l_locals.local_variable (j))
+					end
+				end
+				l_other_object_test := current_object_test_scope.object_test (l_name)
+				if l_other_object_test /= Void then
+						-- This object-test appears in the scope of another
+						-- object-test local with the same name.
+					set_fatal_error
+					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
+				end
+				if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
+						-- ISE has a validity rule VUOT-3 which forbids two object-tests
+						-- in the same feature to have the same local name.
+					j := current_object_tests.index_of (l_name)
+					if j /= 0 then
+						set_fatal_error
+						if current_feature_impl.is_feature then
+							error_handler.report_vuot3a_error (current_class, an_expression, current_object_tests.object_test (j), current_feature_impl.as_feature)
+						else
+							error_handler.report_vuot3b_error (current_class, an_expression, current_object_tests.object_test (j))
+						end
+					end
+					current_object_tests.force_last (an_expression)
+						-- ISE does not support object-tests in preconditions.
+					if in_precondition then
+						set_fatal_error
+						error_handler.report_vuot4a_error (current_class, an_expression)
+					end
+						-- ISE does not support object-tests in preconditions.
+					if in_check_instruction then
+						set_fatal_error
+						error_handler.report_vuot4b_error (current_class, an_expression)
+					end
+				end
+			end
+			if not has_fatal_error then
+				a_context.reset (current_type)
+				a_context.force_last (current_system.boolean_class)
+				report_object_test (an_expression)
+			end
+		end
+
+	check_object_test_local_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of object-test local `a_name'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_object_test_local: a_name.is_object_test_local
+			a_context_not_void: a_context /= Void
+		local
+			l_seed: INTEGER
+			l_type: ET_TYPE
+			l_object_test: ET_OBJECT_TEST
+		do
+			has_fatal_error := False
+			l_object_test := current_object_test_scope.object_test (a_name)
+			if l_object_test = Void then
+					-- Error: `a_name' is an object-test local that is used outside of its scope.
+				set_fatal_error
+				if current_feature_impl.is_feature then
+					error_handler.report_veen8a_error (current_class, a_name, current_feature_impl.as_feature)
+				else
+					error_handler.report_veen8b_error (current_class, a_name)
+				end
+			else
+				l_seed := l_object_test.name.seed
+				if a_name.seed = 0 then
+					a_name.set_seed (l_seed)
+				elseif a_name.seed /= l_seed then
+						-- Internal error: the local should have the same
+						-- seed as its associated object-test.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				if not has_fatal_error then
+						-- Contrary to the types appearing in the signatures, types of
+						-- object-test locals in the AST are those found in the implementation
+						-- class of `current_feature', and hence need to be resolved in
+						-- `current_type'.
+					l_type := resolved_formal_parameters (l_object_test.type, current_class_impl, current_type)
+					if not has_fatal_error then
+						a_context.force_last (l_type)
+						report_object_test_local (a_name, l_object_test)
+					end
+				end
+			end
+		end
+
 	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
@@ -6194,6 +6543,8 @@ feature {NONE} -- Expression validity
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			i, nb: INTEGER
 			nb_args: INTEGER
+			l_prefix_expression: ET_PREFIX_EXPRESSION
+			l_infix_expression: ET_INFIX_EXPRESSION
 		do
 			has_fatal_error := False
 			l_target := a_call.target
@@ -6300,6 +6651,22 @@ feature {NONE} -- Expression validity
 												-- ISE Eiffel 5.4 reports this error as a VEEN,
 												-- but it is in fact a VUEX-2 (ETL2 p.368).
 											error_handler.report_vuex2a_error (current_class, l_name, l_class)
+										end
+									end
+								end
+							end
+							if not has_fatal_error then
+								if l_class = current_system.boolean_class then
+										-- This is useful to know which unary and binary expressions
+										-- are boolean operators between boolean expressions
+										-- when trying to determine the scope of object-test locals.
+									l_prefix_expression ?= a_call
+									if l_prefix_expression /= Void then
+										l_prefix_expression.set_boolean_operator (True)
+									else
+										l_infix_expression ?= a_call
+										if l_infix_expression /= Void then
+											l_infix_expression.set_boolean_operator (True)
 										end
 									end
 								end
@@ -9930,6 +10297,27 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_object_test (a_object_test: ET_OBJECT_TEST) is
+			-- Report that the object-test `a_object_test' has been processed.
+			-- Note: The type of the object-test local is still viewed from
+			-- the implementation class of `current_feature'. Its formal
+			-- generic parameters need to be resolved in `current_class'
+			-- before using it.
+		require
+			no_error: not has_fatal_error
+			a_object_test_not_void: a_object_test /= Void
+		do
+		end
+
+	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_OBJECT_TEST) is
+			-- Report that a call to object-test local `a_name' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_name_not_void: a_name /= Void
+			a_object_test_not_void: a_object_test /= Void
+		do
+		end
+
 	report_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION) is
 			-- Report that a pointer expression has been processed.
 		require
@@ -10674,6 +11062,8 @@ feature {ET_AST_NODE} -- Processing
 				check_formal_argument_validity (an_identifier, current_context)
 			elseif an_identifier.is_local then
 				check_local_variable_validity (an_identifier, current_context)
+			elseif an_identifier.is_object_test_local then
+				check_object_test_local_validity (an_identifier, current_context)
 			elseif an_identifier.is_instruction then
 				check_unqualified_call_instruction_validity (an_identifier)
 			else
@@ -10727,6 +11117,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_manifest_type_validity (an_expression, current_context)
+		end
+
+	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			check_object_test_validity (an_expression, current_context)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
@@ -10981,6 +11377,22 @@ feature {NONE} -- Access
 	current_target_type: ET_TYPE_CONTEXT
 			-- Type of the target of expression being processed
 
+feature {NONE} -- Object-tests
+
+	current_object_test_scope: ET_OBJECT_TEST_SCOPE
+			-- Object-tests for which we are currently in the
+			-- scope of their locals
+
+	object_test_scope_builder: ET_OBJECT_TEST_SCOPE_BUILDER
+			-- Object-tests local scope builder
+
+	current_object_tests: ET_OBJECT_TEST_LIST
+			-- Object-tests already found in `current_feature'
+			-- and its (possibly nested) inline agents
+
+	object_test_finder: ET_OBJECT_TEST_FINDER
+			-- Object-test finder
+
 feature {NONE} -- Status report
 
 	in_rescue: BOOLEAN
@@ -10997,6 +11409,9 @@ feature {NONE} -- Status report
 
 	in_invariant: BOOLEAN
 			-- Are we processing an invariant?
+
+	in_check_instruction: BOOLEAN
+			-- Are we processing a check instruction?
 
 	in_precursor: BOOLEAN
 			-- Are we processing a precursor feature?
@@ -11403,5 +11818,10 @@ invariant
 	unused_contexts_not_void: unused_contexts /= Void
 	no_void_unused_context: not unused_contexts.has (Void)
 	current_target_type_not_void: current_target_type /= Void
+		-- Object-tests
+	current_object_test_scope_not_void: current_object_test_scope /= Void
+	object_test_scope_builder_not_void: object_test_scope_builder /= Void
+	current_object_tests_not_void: current_object_tests /= Void
+	object_test_finder_not_void: object_test_finder /= Void
 
 end

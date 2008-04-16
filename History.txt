@@ -72,6 +72,9 @@ Version 3.8 - ?
 	  to a class that has a syntax error or for which the ancestors could
 	  not be computed.
 	* Added support for the notion of libraries as specified in ECF.
+	* Added type-marks '!' and '?' (part of void-safety mechanism) in the
+	  parser. But do not check validity rules yet.
+	* Implemented Object-Test as specified in ECMA 367-2.
 
 	getest:
 

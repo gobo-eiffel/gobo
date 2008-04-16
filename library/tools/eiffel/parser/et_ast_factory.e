@@ -1589,7 +1589,7 @@ feature -- AST nodes
 			nb_positive: nb >= 0
 		do
 			create Result.make_with_capacity (nb)
-			if a_left /= Void and then not a_left.is_null then
+			if a_left /= Void and then not a_left.position.is_null then
 				Result.set_left_brace (a_left)
 			end
 		end
@@ -2776,7 +2776,7 @@ feature -- AST nodes
 			-- Client list of the form {}
 		do
 			create Result.make
-			if a_left /= Void and then not a_left.is_null then
+			if a_left /= Void and then not a_left.position.is_null then
 				Result.set_left_brace (a_left)
 			end
 		end
@@ -2797,6 +2797,17 @@ feature -- AST nodes
 			-- New obsolete clause
 		do
 			Result := a_message
+		end
+
+	new_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
+			-- New object-test expression
+		do
+			if a_name /= Void and a_type /= Void and a_expression /= Void then
+				create Result.make (a_name, a_type, a_expression)
+				if a_left_brace /= Void and then not a_left_brace.position.is_null then
+					Result.set_left_brace (a_left_brace)
+				end
+			end
 		end
 
 	new_old_expression (an_old: ET_KEYWORD; e: ET_EXPRESSION): ET_OLD_EXPRESSION is

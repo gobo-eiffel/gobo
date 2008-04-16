@@ -270,6 +270,7 @@ inherit
 			new_none_clients,
 			new_null_export,
 			new_null_instruction,
+			new_object_test,
 			new_obsolete_message,
 			new_old_expression,
 			new_once_compound,
@@ -3011,6 +3012,23 @@ feature -- AST nodes
 			-- New null instruction
 		do
 			Result := a_semicolon
+		end
+
+	new_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
+			-- New object-test expression
+		do
+			if a_name /= Void and a_type /= Void and a_expression /= Void then
+				create Result.make (a_name, a_type, a_expression)
+				if a_left_brace /= Void then
+					Result.set_left_brace (a_left_brace)
+				end
+				if a_colon /= Void then
+					Result.set_colon (a_colon)
+				end
+				if a_right_brace /= Void then
+					Result.set_right_brace (a_right_brace)
+				end
+			end
 		end
 
 	new_obsolete_message (an_obsolete: ET_KEYWORD; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is

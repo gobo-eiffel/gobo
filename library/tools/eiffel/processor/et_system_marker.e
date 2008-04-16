@@ -84,6 +84,7 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_object_test,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -1149,6 +1150,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			an_expression.type.process (Current)
+		end
+
+	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			an_expression.type.process (Current)
+			an_expression.expression.process (Current)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is

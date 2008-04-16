@@ -5,8 +5,8 @@ indexing
 		"Test semantics of recursive once functions"
 
 	remark: "[
-		See ECMA 367-2, section 8.23.22, page 124: Semantics: Once Routine Execution Semantics,
-		which says that the recursive calls to once-functions should return the value of
+		ECMA 367-2, section 8.23.22 p.124: "Semantics: Once Routine Execution Semantics",
+		says that the recursive calls to once-functions should return the value of
 		'Result' as it was when the recursive calls occurred.
 	]"
 
@@ -29,8 +29,8 @@ feature -- Test
 
 	test_once_recursive is
 			-- Test recursive once functions.
-			-- See ECMA 367-2, section 8.23.22, page 124: Semantics: Once Routine Execution Semantics,
-			-- which says that the recursive calls to once-functions should return the value of
+			-- ECMA 367-2, section 8.23.22 p.124: "Semantics: Once Routine Execution Semantics",
+			-- says that the recursive calls to once-functions should return the value of
 			-- 'Result' as it was when the recursive calls occurred.
 		do
 			assert_integers_equal ("one", 1, f)

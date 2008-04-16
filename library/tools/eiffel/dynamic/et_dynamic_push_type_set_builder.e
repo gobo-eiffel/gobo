@@ -37,6 +37,7 @@ inherit
 			propagate_creation_dynamic_type,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_like_argument_dynamic_types,
+			propagate_object_test_dynamic_types,
 			propagate_tuple_label_setter_dynamic_types,
 			propagate_qualified_call_target_dynamic_types
 		end
@@ -798,6 +799,30 @@ feature {NONE} -- Implementation
 			-- `an_actual_type_set' has a static type which corresponds to the actual type of the argument.
 		do
 			a_formal_type_set.put_target (an_actual_type_set, current_dynamic_system)
+		end
+
+	propagate_object_test_dynamic_types (a_object_test: ET_OBJECT_TEST) is
+			-- Propagate dynamic types of the expression of `a_object_test'
+			-- to the dynamic type set of the local of `a_object_test'.
+		local
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			l_source_type_set := dynamic_type_set (a_object_test.expression)
+			l_target_type_set := dynamic_type_set (a_object_test.name)
+			if l_source_type_set = Void then
+					-- Internal error: the dynamic type sets of the expression
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_target_type_set = Void then
+					-- Internal error: the dynamic type sets of the object-test label
+					-- should be known at this stage.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_source_type_set.put_target (l_target_type_set, current_dynamic_system)
+			end
 		end
 
 	propagate_tuple_label_setter_dynamic_types (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type_set: ET_DYNAMIC_TYPE_SET) is

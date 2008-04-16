@@ -1016,6 +1016,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		require

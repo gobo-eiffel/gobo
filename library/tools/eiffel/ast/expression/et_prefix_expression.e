@@ -52,6 +52,7 @@ feature -- Initialization
 		do
 			name.reset
 			expression.reset
+			is_boolean_operator := False
 		end
 
 feature -- Access
@@ -77,6 +78,22 @@ feature -- Access
 			-- current node in source code
 		do
 			Result := name.position
+		end
+
+feature -- Status report
+
+	is_boolean_operator: BOOLEAN
+			-- Is current prefix expression a boolean operator
+			-- on a boolean expression?
+
+feature -- Status setting
+
+	set_boolean_operator (b: BOOLEAN) is
+			-- Set `is_boolean_operator' to `b'.
+		do
+			is_boolean_operator := b
+		ensure
+			boolean_operator_set: is_boolean_operator = b
 		end
 
 feature -- Processing

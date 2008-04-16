@@ -2277,6 +2277,47 @@ feature -- Validity errors
 			end
 		end
 
+	report_veen8a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report VEEN-8 error: `an_identifier', appearing in `a_feature'
+			-- of `a_class' or one of its (possibly nested) inline agents, is an
+			-- object-test local that is used outside of its scope.
+			--
+			-- ECMA-367-2: p.103
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_identifier_object_test_local: an_identifier.is_object_test_local
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen8_error (a_class) then
+				create an_error.make_veen8a (a_class, an_identifier, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen8b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER) is
+			-- Report VEEN-8 error: `an_identifier', appearing in the invariant
+			-- of `a_class' or one of its (possibly nested) inline agents, is an
+			-- object-test local that is used outside of its scope.
+			--
+			-- ECMA-367-2: p.103
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_identifier_not_void: an_identifier /= Void
+			an_identifier_object_test_local: an_identifier.is_object_test_local
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen8_error (a_class) then
+				create an_error.make_veen8b (a_class, an_identifier)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vfac1a_error (a_class: ET_CLASS; an_assigner: ET_FEATURE_NAME; a_query: ET_QUERY) is
 			-- Report VFAC-1 error: `a_query' has an assigner `an_assigner'
 			-- but there is not feature with that name in `a_class'.
@@ -5375,6 +5416,165 @@ feature -- Validity errors
 			end
 		end
 
+	report_vuot1a_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+			-- Report VUOT-1 error: The local of `a_object_test' has the same
+			-- name as `a_feature' in `a_class'.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot1_error (a_class) then
+				create an_error.make_vuot1a (a_class, a_object_test, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot1b_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT) is
+			-- Report VUOT-1 error: The local of `a_object_test' has
+			-- the same name as argument `arg' of an enclosing feature or
+			-- inline agent.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			arg_not_void: arg /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot1_error (a_class) then
+				create an_error.make_vuot1b (a_class, a_object_test, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot1c_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE) is
+			-- Report VUOT-1 error: The local of `a_object_test' has
+			-- the same name as local variable `a_local' of an enclosing
+			-- feature or inline agent.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+			a_local_not_void: a_local /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot1_error (a_class) then
+				create an_error.make_vuot1c (a_class, a_object_test, a_local)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot1d_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+			-- Report VUOT-1 error: `a_object_test1' appears in the scope
+			-- of the local of `a_object_test2' with the same local name.
+			--
+			-- ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test1_not_void: a_object_test1 /= Void
+			a_object_test2_not_void: a_object_test2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot1_error (a_class) then
+				create an_error.make_vuot1d (a_class, a_object_test1, a_object_test2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot3a_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+			-- Report VUOT-3 error: The local of `a_object_test1' has
+			-- the same name as the local of `a_object_test2' appearing in
+			-- `a_feature' of `a_class' or one of its (possibly nested)
+			-- inline agents.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test1_not_void: a_object_test1 /= Void
+			a_object_test2_not_void: a_object_test2 /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot3_error (a_class) then
+				create an_error.make_vuot3a (a_class, a_object_test1, a_object_test2, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot3b_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+			-- Report VUOT-3 error: The local of `a_object_test1' has
+			-- the same name as the local of `a_object_test2' appearing in
+			-- the invariant of `a_class' or one of its (possibly nested)
+			-- inline agents.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test1_not_void: a_object_test1 /= Void
+			a_object_test2_not_void: a_object_test2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot3_error (a_class) then
+				create an_error.make_vuot3b (a_class, a_object_test1, a_object_test2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot4a_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+			-- Report VUOT-4 error: ISE does not support object-tests in preconditions.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot4_error (a_class) then
+				create an_error.make_vuot4a (a_class, a_object_test)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuot4b_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+			-- Report VUOT-4 error: ISE does not support object-tests in check instructions.
+			--
+			-- Only in ISE.
+			-- See ECMA 367-2: p.127
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test_not_void: a_object_test /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuot4_error (a_class) then
+				create an_error.make_vuot4b (a_class, a_object_test)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vwbe0a_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
 			-- Report VWBE error: the boolean expression `an_expression'
 			-- in `a_class_impl' and viewed from one of its descendants
@@ -6261,6 +6461,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_veen8_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VEEN-8 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vfac1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VFAC-1 error be reported when it
 			-- appears in `a_class'?
@@ -6993,6 +7203,36 @@ feature -- Validity error status
 
 	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VUEX-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuot1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUOT-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuot3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUOT-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuot4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUOT-4 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

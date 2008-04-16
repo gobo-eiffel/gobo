@@ -79,8 +79,9 @@ feature -- Status report
 
 	is_never_void: BOOLEAN is
 			-- Can the expression of current dynamic type set never be void?
-			-- (Note that is order to be truly true, the current dynamic type
-			-- set should also be non-empty.)
+			-- (Note that in order to be truly true, the current dynamic type
+			-- set should also be non-empty. Therefore it is recommended to
+			-- use 'not can_be_void'.)
 		do
 			Result := not base_class.is_none
 		end

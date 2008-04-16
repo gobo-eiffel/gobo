@@ -113,6 +113,7 @@ inherit
 			process_manifest_array,
 			process_manifest_string_list,
 			process_manifest_tuple,
+			process_object_test,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -3799,6 +3800,19 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			an_expression.right_symbol.process (Current)
+		end
+
+	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			an_expression.left_brace.process (Current)
+			an_expression.name.process (Current)
+			an_expression.colon.process (Current)
+			print_space
+			an_expression.type.process (Current)
+			an_expression.right_brace.process (Current)
+			print_space
+			an_expression.expression.process (Current)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is

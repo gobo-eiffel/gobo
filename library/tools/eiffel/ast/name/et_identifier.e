@@ -5,7 +5,7 @@ indexing
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,8 @@ inherit
 			reset, is_tuple_label,
 			is_local, is_argument,
 			is_identifier, is_equal,
-			local_name, argument_name
+			local_name, argument_name,
+			is_object_test_local
 		end
 
 	ET_CLASS_NAME
@@ -34,12 +35,14 @@ inherit
 		undefine
 			first_position, last_position,
 			reset, is_equal
+		redefine
+			is_never_void
 		end
 
 	ET_ARGUMENT_NAME
 		undefine
 			first_position, last_position,
-			reset, is_equal
+			reset, is_equal, is_never_void
 		end
 
 	ET_LABEL
@@ -57,13 +60,13 @@ inherit
 	ET_WRITABLE
 		undefine
 			first_position, last_position,
-			reset, is_equal
+			reset, is_equal, is_never_void
 		end
 
 	ET_CHOICE_CONSTANT
 		undefine
 			first_position, last_position,
-			reset, is_equal
+			reset, is_equal, is_never_void
 		end
 
 	ET_INDEXING_TERM
@@ -86,7 +89,8 @@ inherit
 			name as identifier
 		undefine
 			first_position, last_position,
-			is_tuple_label, reset, is_equal
+			is_tuple_label, reset, is_equal,
+			is_never_void
 		end
 
 	ET_FEATURE_CALL_INSTRUCTION
@@ -235,6 +239,12 @@ feature -- Status report
 			Result := (status_code = local_code)
 		end
 
+	is_object_test_local: BOOLEAN is
+			-- Is current identifier actually an object-test local name?
+		do
+			Result := (status_code = object_test_local_code)
+		end
+
 	is_temporary: BOOLEAN is
 			-- Is current identifier a temporary variable name?
 			-- (Used in C code generation for example.)
@@ -272,6 +282,12 @@ feature -- Status report
 			Result := (status_code = instruction_code)
 		end
 
+	is_never_void: BOOLEAN is
+			-- Can current expression never be void?
+		do
+			Result := is_object_test_local
+		end
+
 feature -- Status setting
 
 	set_local (b: BOOLEAN) is
@@ -284,6 +300,18 @@ feature -- Status setting
 			end
 		ensure
 			local_set: is_local = b
+		end
+
+	set_object_test_local (b: BOOLEAN) is
+			-- Set `is_object_test_local' to `b'.
+		do
+			if b then
+				status_code := object_test_local_code
+			else
+				status_code := no_code
+			end
+		ensure
+			object_test_local_set: is_object_test_local = b
 		end
 
 	set_temporary (b: BOOLEAN) is
@@ -520,6 +548,7 @@ feature {NONE} -- Implementation
 
 	status_code: CHARACTER
 	local_code: CHARACTER is 'l'
+	object_test_local_code: CHARACTER is 'm'
 	argument_code: CHARACTER is 'a'
 	temporary_code: CHARACTER is 'v'
 	tuple_label_code: CHARACTER is 't'
