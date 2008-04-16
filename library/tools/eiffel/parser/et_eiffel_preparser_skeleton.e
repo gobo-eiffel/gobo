@@ -31,14 +31,12 @@ inherit
 			make, process_cluster
 		end
 
-	ET_SHARED_EIFFEL_BUFFER
-		export {NONE} all end
-
 feature {NONE} -- Initialization
 
 	make is
 			-- Create a new Eiffel preparser.
 		do
+			create eiffel_buffer.make_with_size (std.input, Initial_eiffel_buffer_size)
 			make_eiffel_scanner ("unknown file")
 		end
 
@@ -48,7 +46,7 @@ feature -- Initialization
 			-- Reset parser before parsing next input.
 		do
 			precursor
-			Eiffel_buffer.set_end_of_file
+			eiffel_buffer.set_end_of_file
 			class_keyword_found := False
 			last_classname := Void
 		end
@@ -215,8 +213,8 @@ feature {NONE} -- Parsing
 				l_file.open_read
 				if l_file.is_open_read then
 					filename := a_filename
-					input_buffer := Eiffel_buffer
-					Eiffel_buffer.set_file (l_file)
+					input_buffer := eiffel_buffer
+					eiffel_buffer.set_file (l_file)
 					yy_load_input_buffer
 					read_token
 					if last_classname /= Void then
@@ -405,6 +403,18 @@ feature -- Error handling
 			error_handler.report_syntax_error (filename, current_position)
 		end
 
+feature {NONE} -- Input buffer
+
+	eiffel_buffer: YY_FILE_BUFFER
+			-- Eiffel file input buffer
+
+feature {NONE} -- Constants
+
+	Initial_eiffel_buffer_size: INTEGER is 500
+			-- Initial size for `eiffel_buffer';
+			-- No need to have a very large buffer, we just scan the
+			-- beginning of the class to determine its name
+
 feature {NONE} -- Implementation
 
 	tmp_directory: KL_DIRECTORY is
@@ -426,5 +436,9 @@ feature {NONE} -- Implementation
 		ensure
 			directory_not_void: Result /= Void
 		end
+
+invariant
+
+	eiffel_buffer_not_void: eiffel_buffer /= Void
 
 end

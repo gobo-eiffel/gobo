@@ -53,9 +53,6 @@ inherit
 			process_class, process_cluster
 		end
 
-	ET_SHARED_EIFFEL_BUFFER
-		export {NONE} all end
-
 	ET_SHARED_FEATURE_NAME_TESTER
 		export {NONE} all end
 
@@ -68,6 +65,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel parser.
 		do
 			precursor {ET_CLASS_PROCESSOR}
+			create eiffel_buffer.make_with_size (std.input, Initial_eiffel_buffer_size)
 			create counters.make (Initial_counters_capacity)
 			create last_formal_arguments_stack.make (Initial_last_formal_arguments_stack_capacity)
 			create last_local_variables_stack.make (Initial_last_local_variables_stack_capacity)
@@ -89,7 +87,7 @@ feature -- Initialization
 			-- Reset parser before parsing next input.
 		do
 			precursor
-			Eiffel_buffer.set_end_of_file
+			eiffel_buffer.set_end_of_file
 			counters.wipe_out
 			last_formal_arguments_stack.wipe_out
 			last_local_variables_stack.wipe_out
@@ -157,8 +155,8 @@ feature -- Parsing
 			end
 			filename := a_filename
 			time_stamp := a_time_stamp
-			input_buffer := Eiffel_buffer
-			Eiffel_buffer.set_file (a_file)
+			input_buffer := eiffel_buffer
+			eiffel_buffer.set_file (a_file)
 			yy_load_input_buffer
 			yyparse
 			reset
@@ -5844,7 +5842,15 @@ feature {NONE} -- Counters
 			-- Counters currently in use by the parser
 			-- to build lists of AST nodes
 
+feature {NONE} -- Input buffer
+
+	eiffel_buffer: YY_FILE_BUFFER
+			-- Eiffel file input buffer
+
 feature {NONE} -- Constants
+
+	Initial_eiffel_buffer_size: INTEGER is 50000
+			-- Initial size for `eiffel_buffer'
 
 	Initial_counters_capacity: INTEGER is 10
 			-- Initial capacity for `counters'
@@ -5929,5 +5935,7 @@ invariant
 	no_void_provider: not providers.has (Void)
 		-- Object-tests.
 	last_object_tests_not_void: last_object_tests /= Void
+		-- Input buffer.
+	eiffel_buffer_not_void: eiffel_buffer /= Void
 
 end
