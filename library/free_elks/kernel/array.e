@@ -6,7 +6,7 @@ indexing
 		]"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2005, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,7 +110,6 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			l_area: like area
-			l_item: G
 		do
 			l_area := area
 			nb := upper - lower
@@ -119,8 +118,7 @@ feature -- Access
 				until
 					i > nb or Result
 				loop
-					l_item := l_area.item (i)
-					Result := l_item /= Void and then l_item.is_equal (v)
+					Result := {l_item: G} l_area.item (i) and then l_item.is_equal (v)
 					i := i + 1
 				end
 			else
@@ -161,7 +159,7 @@ feature -- Measurement
 				until
 					i > upper
 				loop
-					if item (i) /= Void and then v.is_equal (item (i)) then
+					if {x: like item} item (i) and then v.is_equal (x) then
 						Result := Result + 1
 					end
 					i := i + 1
@@ -226,8 +224,7 @@ feature -- Status report
 			Result := area.all_default (0, upper - lower)
 		ensure
 			definition: Result = (count = 0 or else
-				((item (upper) = Void or else
-				item (upper) = item (upper).default) and
+				((not {i: like item} item (upper) or else i = i.default) and
 				subarray (lower, upper - 1).all_default))
 		end
 

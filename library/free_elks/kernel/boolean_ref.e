@@ -1,7 +1,7 @@
 indexing
 	description: "References to objects containing a boolean value"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -151,10 +151,9 @@ feature -- Output
 	out: STRING
 			-- Printable representation of boolean
 		do
+			Result := "False"
 			if item then
 				Result := "True"
-			else
-				Result := "False"
 			end
 		end
 

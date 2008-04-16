@@ -23,12 +23,12 @@ class LINKABLE [G] inherit
 
 feature -- Access
 
-	right: like Current
+	right: ?like Current
 			-- Right neighbor
 
 feature {CELL, CHAIN} -- Implementation
 
-	put_right (other: like Current) is
+	put_right (other: ?like Current) is
 			-- Put `other' to the right of current cell.
 		do
 			right := other
@@ -46,7 +46,7 @@ feature {CELL, CHAIN} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

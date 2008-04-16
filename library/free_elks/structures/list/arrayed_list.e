@@ -151,7 +151,6 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 		do
 			l_area := area
@@ -161,8 +160,7 @@ feature -- Access
 				until
 					i > nb or Result
 				loop
-					l_item := l_area.item (i)
-					Result := l_item /= Void and then v.is_equal (l_item)
+					Result := {l_item: like item} l_area.item (i) and then v.is_equal (l_item)
 					i := i + 1
 				end
 			else
@@ -197,11 +195,8 @@ feature -- Status report
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
-		local
-			al_c: ARRAYED_LIST_CURSOR
 		do
-			al_c ?= p
-			if al_c /= Void then
+			if {al_c: ARRAYED_LIST_CURSOR} p then
 				Result := valid_cursor_index (al_c.index)
 			end
 		end
@@ -279,14 +274,14 @@ feature -- Cursor movement
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
-		local
-			al_c: ARRAYED_LIST_CURSOR
 		do
-			al_c ?= p
+			if {al_c: ARRAYED_LIST_CURSOR} p then
+				index := al_c.index
+			else
 				check
-					al_c /= Void
+					correct_cursor_type: False
 				end
-			index := al_c.index
+			end
 		end
 
 	search (v: like item) is
@@ -298,7 +293,6 @@ feature -- Cursor movement
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 			l_found: BOOLEAN
 		do
@@ -312,8 +306,7 @@ feature -- Cursor movement
 				until
 					i > nb or l_found
 				loop
-					l_item := l_area.item (i)
-					l_found := l_item /= Void and then v.is_equal (l_item)
+					l_found := {l_item: like item} l_area.item (i) and then v.is_equal (l_item)
 					i := i + 1
 				end
 			else
@@ -423,11 +416,9 @@ feature -- Element change
 	append (s: SEQUENCE [G]) is
 			-- Append a copy of `s'.
 		local
-			al: ARRAYED_LIST [G]
 			c, old_count, new_count: INTEGER
 		do
-			al ?= s
-			if al /= Void then -- Optimization for arrayed lists
+			if {al: ARRAYED_LIST [G]} s then -- Optimization for arrayed lists
 				c := al.count
 					-- If `s' is empty nothing to be done.
 				if c > 0 then
@@ -468,7 +459,7 @@ feature -- Removal
 				if v /= Void then
 					from
 					until
-						after or else (item /= Void and then v.is_equal (item))
+						after or else ({i: like item} item and then v.is_equal (i))
 					loop
 						forth
 					end
@@ -605,6 +596,7 @@ feature {NONE} -- Inapplicable
 	new_chain: like Current is
 			-- Unused
 		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation
@@ -655,7 +647,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

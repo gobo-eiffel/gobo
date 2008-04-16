@@ -107,7 +107,7 @@ feature -- Access
 			base_address_not_null: Result /= default_pointer
 		end
 
-	native_array: NATIVE_ARRAY [T]
+	native_array: ?NATIVE_ARRAY [T]
 			-- Only for compatibility with .NET
 		require
 			is_dotnet: {PLATFORM}.is_dotnet

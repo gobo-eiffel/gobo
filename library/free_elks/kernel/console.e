@@ -137,40 +137,42 @@ feature -- Input
 			str_area: ANY
 			done: BOOLEAN
 		do
-			from
-				if last_string = Void then
-					create_last_string (0)
-				end
-				str_area := last_string.area
-				str_cap := last_string.capacity
-			until
-				done
-			loop
-				read := read +
-					console_readline (file_pointer, $str_area, str_cap, read)
-				if read > str_cap then
-						-- End of line not reached yet
-						--|The string must be consistently set before
-						--|resizing.
-					last_string.set_count (str_cap)
-					if str_cap < 2048 then
-						last_string.grow (str_cap + 1024)
-					else
-							-- Increase capacity by `Growth_percentage' as
-							-- defined in RESIZABLE.
-						last_string.automatic_grow
-					end
-					str_area := last_string.area
-					str_cap := last_string.capacity
-					read := read - 1	-- True amount of byte read
-				else
-					last_string.set_count (read)
-					done := True
-				end
+			if last_string = Void then
+				create_last_string (0)
 			end
-				-- Ensure fair amount of garbage.
-			if read < 1024 then
-				last_string.resize (read)
+			if {l: like last_string} last_string then
+				from
+					str_area := l.area
+					str_cap := l.capacity
+				until
+					done
+				loop
+					read := read +
+						console_readline (file_pointer, $str_area, str_cap, read)
+					if read > str_cap then
+							-- End of line not reached yet
+							--|The string must be consistently set before
+							--|resizing.
+						l.set_count (str_cap)
+						if str_cap < 2048 then
+							l.grow (str_cap + 1024)
+						else
+								-- Increase capacity by `Growth_percentage' as
+								-- defined in RESIZABLE.
+							l.automatic_grow
+						end
+						str_area := l.area
+						str_cap := l.capacity
+						read := read - 1	-- True amount of byte read
+					else
+						l.set_count (read)
+						done := True
+					end
+				end
+					-- Ensure fair amount of garbage.
+				if read < 1024 then
+					l.resize (read)
+				end
 			end
 		end
 
@@ -184,12 +186,13 @@ feature -- Input
 		do
 			if last_string = Void then
 				create_last_string (nb_char)
-			else
-				last_string.grow (nb_char)
 			end
-			str_area := last_string.area
-			new_count := console_readstream (file_pointer, $str_area, nb_char)
-			last_string.set_count (new_count)
+			if {l: like last_string} last_string then
+				l.grow (nb_char)
+				str_area := l.area
+				new_count := console_readstream (file_pointer, $str_area, nb_char)
+				l.set_count (new_count)
+			end
 		end
 
 	read_word, readword is
@@ -201,37 +204,39 @@ feature -- Input
 			done: BOOLEAN
 			read: INTEGER
 		do
-			from
-				if last_string = Void then
-					create_last_string (0)
-				end
-				str_area := last_string.area
-				str_cap := last_string.capacity
-			until
-				done
-			loop
-				read := read +
-					console_readword (file_pointer, $str_area, str_cap, read)
-				if read > str_cap then
-						-- End of word not reached yet
-					if str_cap < 2048 then
-						last_string.grow (str_cap + 1024)
-					else
-							-- Increase capacity by `Growth_percentage' as
-							-- defined in RESIZABLE.
-						last_string.automatic_grow
-					end
-					str_area := last_string.area
-					str_cap := last_string.capacity
-					read := read - 1	-- True amount of byte read
-				else
-					last_string.set_count (read)
-					done := True
-				end
+			if last_string = Void then
+				create_last_string (0)
 			end
-				-- Ensure fair amount of garbage.
-			if read < 1024 then
-				last_string.resize (read)
+			if {l: like last_string} last_string then
+				from
+					str_area := l.area
+					str_cap := l.capacity
+				until
+					done
+				loop
+					read := read +
+						console_readword (file_pointer, $str_area, str_cap, read)
+					if read > str_cap then
+							-- End of word not reached yet
+						if str_cap < 2048 then
+							l.grow (str_cap + 1024)
+						else
+								-- Increase capacity by `Growth_percentage' as
+								-- defined in RESIZABLE.
+							l.automatic_grow
+						end
+						str_area := l.area
+						str_cap := l.capacity
+						read := read - 1	-- True amount of byte read
+					else
+						l.set_count (read)
+						done := True
+					end
+				end
+					-- Ensure fair amount of garbage.
+				if read < 1024 then
+					l.resize (read)
+				end
 			end
 			separator := console_separator (file_pointer) -- Look ahead
 		end

@@ -32,7 +32,7 @@ feature -- Measurement
 			-- Number of items
 		deferred
 		end
-	 
+
 feature -- Comparison
 
 	disjoint (other: TRAVERSABLE_SUBSET [G]): BOOLEAN is
@@ -48,7 +48,7 @@ feature -- Comparison
 				Result := True
 			end
 		end
-		
+
 	is_subset (other: TRAVERSABLE_SUBSET [G]): BOOLEAN is
 			-- Is current set a subset of `other'?
 		do
@@ -77,12 +77,12 @@ feature -- Status report
 			-- Is cursor off the active items?
 		deferred
 		end
-	 
+
 	is_empty: BOOLEAN is
 			-- Is container empty?
 		deferred
 		end
-	 
+
 feature -- Cursor movement
 
 	start is
@@ -96,27 +96,29 @@ feature -- Cursor movement
 			not_after: not after
 		deferred
 		end
-		
+
 feature -- Element change
 
 	merge (other: CONTAINER [G]) is
 			-- Add all items of `other'.
 		local
-			lin_rep: LINEAR [G]
-		do 
+			lin_rep: ?LINEAR [G]
+		do
 			lin_rep ?= other
 			if lin_rep = Void then
 					-- `other' is not a descendant of LINEAR, therefore  we
 					-- must convert its contents into a linear representation.
 				lin_rep := other.linear_representation
 			end
-			from
-				lin_rep.start
-			until
-				lin_rep.off
-			loop
-				extend (lin_rep.item)
-				lin_rep.forth
+			if {l: LINEAR [G]} lin_rep then
+				from
+					l.start
+				until
+					l.off
+				loop
+					extend (l.item)
+					l.forth
+				end
 			end
 		end
 
@@ -128,7 +130,7 @@ feature -- Removal
 			not_off: not off
 		deferred
 		end
-	 
+
 feature -- Basic operations
 
 	symdif (other: TRAVERSABLE_SUBSET [G]) is
@@ -196,7 +198,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]): 
+	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]):
 							SUBSET_STRATEGY [G] is
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
@@ -229,7 +231,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

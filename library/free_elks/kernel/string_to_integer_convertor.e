@@ -1,7 +1,7 @@
 indexing
 	description: "Convertor to do string to integer/natural conversion"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,8 +21,8 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		do
 			reset (type_no_limitation)
-			set_leading_separators (" ")
-			set_trailing_separators (" ")
+			create leading_separators.make_from_string (" ")
+			create trailing_separators.make_from_string (" ")
 		ensure
 			leading_separators_set: leading_separators.is_equal (" ")
 			trailing_separators_set: trailing_separators.is_equal (" ")
@@ -104,16 +104,13 @@ feature -- String parsing
 		local
 			i: INTEGER
 			l_c: INTEGER
-			l_str8: STRING_8
 			l_area8: SPECIAL [CHARACTER_8]
-			l_str32: STRING_32
 			l_area32: SPECIAL [CHARACTER_32]
 		do
 			reset (type)
 			i := 0
 			l_c := s.count
-			l_str8 ?= s
-			if l_str8 /= Void then
+			if {l_str8: STRING_8} s then
 				from
 					l_area8 := l_str8.area
 				until
@@ -122,27 +119,24 @@ feature -- String parsing
 					parse_character (l_area8.item (i))
 					i := i + 1
 				end
+			elseif {l_str32: STRING_32} s then
+				from
+					l_area32 := l_str32.area
+				until
+					i = l_c or last_state >= 4
+				loop
+					parse_character (l_area32.item (i).to_character_8)
+					i := i + 1
+				end
 			else
-				l_str32 ?= s
-				if l_str32 /= Void then
-					from
-						l_area32 := l_str32.area
-					until
-						i = l_c or last_state >= 4
-					loop
-						parse_character (l_area32.item (i).to_character_8)
-						i := i + 1
-					end
-				else
-					from
-						i := 1
-						l_c := s.count
-					until
-						i > l_c or last_state >= 4
-					loop
-						parse_character (s.code (i).to_character_8)
-						i := i + 1
-					end
+				from
+					i := 1
+					l_c := s.count
+				until
+					i > l_c or last_state >= 4
+				loop
+					parse_character (s.code (i).to_character_8)
+					i := i + 1
 				end
 			end
 		end

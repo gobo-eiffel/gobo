@@ -1,7 +1,7 @@
 indexing
 	description: "Helper for routines in INTERNAL class."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
+	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,6 @@ feature -- Status report
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 		local
-			l_parameters: ARRAYED_LIST [STRING]
 			l_type_name: STRING
 			l_start_pos, l_end_pos: INTEGER
 			l_class_type_name: STRING
@@ -51,12 +50,13 @@ feature -- Status report
 					l_type_name.left_adjust
 					l_type_name.right_adjust
 
-					Result := is_valid_identifier (l_type_name)
-
-					if Result then
-						l_parameters := parameters_decomposition (
+					if
+						is_valid_identifier (l_type_name) and then
+						{l_parameters: ARRAYED_LIST [STRING]} parameters_decomposition (
 							l_class_type_name.substring (l_start_pos + 1, l_end_pos - 1))
+					then
 						from
+							Result := True
 							l_parameters.start
 						until
 							l_parameters.after or not Result
@@ -80,16 +80,13 @@ feature -- Status report
 		local
 			l_table: like pre_ecma_type_mapping
 		do
+			Result := a_type
 			if not is_pre_ecma_mapping_disabled then
 				l_table := pre_ecma_type_mapping
 				l_table.search (a_type)
 				if l_table.found then
 					Result := l_table.found_item
-				else
-					Result := a_type
 				end
-			else
-				Result := a_type
 			end
 		ensure
 			mapped_type_not_void: Result /= Void
@@ -136,7 +133,7 @@ feature {NONE} -- Implementation: status report
 
 feature {NONE} -- Decompose string type
 
-	parameters_decomposition (a_str: STRING): ARRAYED_LIST [STRING] is
+	parameters_decomposition (a_str: STRING): ?ARRAYED_LIST [STRING] is
 			-- Decompose `a_str' which should be of the form "A, B, D [G], H [E ,F]"
 			-- into a list of strings "A", "B", "D [G]", "H [E, F]"
 			-- If decomposition is not possible, Void.
@@ -147,9 +144,10 @@ feature {NONE} -- Decompose string type
 			l_invalid: BOOLEAN
 			l_first_pos: INTEGER
 			l_nesting: INTEGER
+			r: ARRAYED_LIST [STRING]
 		do
 			from
-				create Result.make (5)
+				create r.make (5)
 				i := 1
 				l_first_pos := 1
 				nb := a_str.count
@@ -160,7 +158,7 @@ feature {NONE} -- Decompose string type
 					a_str.item (i)
 				when ',' then
 					if l_nesting = 0 then
-						Result.extend (a_str.substring (l_first_pos, i - 1))
+						r.extend (a_str.substring (l_first_pos, i - 1))
 						l_first_pos := i + 1
 					end
 				when '[' then
@@ -173,11 +171,9 @@ feature {NONE} -- Decompose string type
 				end
 				i := i + 1
 			end
-			l_invalid := l_invalid or l_nesting /= 0
-			if l_nesting /= 0 then
-				Result := Void
-			else
-				Result.extend (a_str.substring (l_first_pos, i - 1))
+			if not l_invalid and then l_nesting = 0 then
+				r.extend (a_str.substring (l_first_pos, i - 1))
+				Result := r
 			end
 		end
 

@@ -1,7 +1,7 @@
 indexing
 	description: "String to real/double convertor"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			set_leading_separators (" ")
-			set_trailing_separators (" ")
+			create leading_separators.make_from_string (" ")
+			create trailing_separators.make_from_string (" ")
 		ensure
 			leading_separators_set: leading_separators.is_equal (" ")
 			trailing_separators_set: trailing_separators.is_equal (" ")

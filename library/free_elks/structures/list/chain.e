@@ -288,10 +288,9 @@ feature -- Element change
 			l: like s
 			l_cursor: CURSOR
 		do
+			l := s
 			if s = Current then
 				l := twin
-			else
-				l := s
 			end
 			from
 				l_cursor := cursor

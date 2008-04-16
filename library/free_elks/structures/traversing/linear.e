@@ -49,7 +49,7 @@ feature -- Access
 				until
 					exhausted or (occur = i)
 				loop
-					if item /= Void and then v.is_equal (item) then
+					if {w: like item} item and then v.is_equal (w) then
 						occur := occur + 1
 					end
 					forth
@@ -86,7 +86,7 @@ feature -- Access
 			if object_comparison and v /= Void then
 				from
 				until
-					exhausted or else (item /= Void and then v.is_equal (item))
+					exhausted or else ({i: like item} item and then v.is_equal (i))
 				loop
 					forth
 				end
@@ -181,12 +181,10 @@ feature -- Iteration
 			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
-			cs: CURSOR_STRUCTURE [G]
-			c: CURSOR
+			c: ?CURSOR
 		do
-			cs ?= Current
-			if cs /= Void then
-				c := cs.cursor
+			if {acs: CURSOR_STRUCTURE [G]} Current then
+				c := acs.cursor
 			end
 
 			create t
@@ -200,8 +198,8 @@ feature -- Iteration
 				forth
 			end
 
-			if cs /= Void then
-				cs.go_to (c)
+			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
+				cs.go_to (ac)
 			end
 		end
 
@@ -211,12 +209,10 @@ feature -- Iteration
 			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
-			cs: CURSOR_STRUCTURE [G]
-			c: CURSOR
+			c: ?CURSOR
 		do
-			cs ?= Current
-			if cs /= Void then
-				c := cs.cursor
+			if {acs: CURSOR_STRUCTURE [G]} Current then
+				c := acs.cursor
 			end
 
 			create t
@@ -232,8 +228,8 @@ feature -- Iteration
 				forth
 			end
 
-			if cs /= Void then
-				cs.go_to (c)
+			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
+				cs.go_to (ac)
 			end
 		end
 
@@ -242,15 +238,13 @@ feature -- Iteration
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		local
-			cs: CURSOR_STRUCTURE [G]
-			c: CURSOR
+			c: ?CURSOR
 			t: TUPLE [G]
 		do
 			create t
 
-			cs ?= Current
-			if cs /= Void then
-				c := cs.cursor
+			if {acs: CURSOR_STRUCTURE [G]} Current then
+				c := acs.cursor
 			end
 
 			from
@@ -263,8 +257,8 @@ feature -- Iteration
 				forth
 			end
 
-			if cs /= Void then
-				cs.go_to (c)
+			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
+				cs.go_to (ac)
 			end
 		end
 
@@ -273,15 +267,13 @@ feature -- Iteration
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		local
-			cs: CURSOR_STRUCTURE [G]
-			c: CURSOR
+			c: ?CURSOR
 			t: TUPLE [G]
 		do
 			create t
 
-			cs ?= Current
-			if cs /= Void then
-				c := cs.cursor
+			if {acs: CURSOR_STRUCTURE [G]} Current then
+				c := acs.cursor
 			end
 
 			from
@@ -295,8 +287,8 @@ feature -- Iteration
 				forth
 			end
 
-			if cs /= Void then
-				cs.go_to (c)
+			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
+				cs.go_to (ac)
 			end
 		ensure then
 			empty: is_empty implies Result
@@ -316,7 +308,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

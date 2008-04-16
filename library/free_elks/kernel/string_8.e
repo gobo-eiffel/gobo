@@ -377,9 +377,8 @@ feature -- Access
 	string_representation: STRING_8 is
 			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_8}
 		do
-			if same_type (create {STRING_8}.make_empty) then
-				Result := Current
-			else
+			Result := Current
+			if not same_type (create {STRING_8}.make_empty) then
 				Result := string
 			end
 		ensure
@@ -1372,11 +1371,8 @@ feature -- Element change
 
 	append_string_general (s: STRING_GENERAL) is
 			-- Append a copy of `s' at end.
-		local
-			l_s8: STRING
 		do
-			if same_type (s) then
-				l_s8 ?= s
+			if same_type (s) and then {l_s8: STRING} s then
 				append (l_s8)
 			else
 				Precursor {STRING_GENERAL} (s)

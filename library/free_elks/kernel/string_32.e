@@ -4,7 +4,7 @@ indexing
 		in a contiguous range.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -375,11 +375,10 @@ feature -- Access
 		end
 
 	string_representation: STRING_32 is
-			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_8}
+			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_32}
 		do
-			if same_type (create {STRING_32}.make_empty) then
-				Result := Current
-			else
+			Result := Current
+			if not same_type (create {STRING_32}.make_empty) then
 				Result := string
 			end
 		ensure
@@ -1399,12 +1398,8 @@ feature -- Element change
 
 	append_string_general (s: STRING_GENERAL) is
 			-- Append a copy of `s' at end.
-		local
-			l_s32: STRING_32
 		do
-			if same_type (s) then
-				l_s32 ?= s
-				check l_s32_not_void: l_s32 /= Void end
+			if same_type (s) and then {l_s32: STRING_32} s then
 				append (l_s32)
 			else
 				Precursor {STRING_GENERAL} (s)

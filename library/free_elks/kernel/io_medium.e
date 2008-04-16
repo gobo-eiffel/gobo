@@ -1,7 +1,7 @@
 indexing
 	description: "Any medium that can perform input and/or output"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -100,7 +100,7 @@ feature -- Status report
 	last_character: CHARACTER
 			-- Last character read by `read_character'
 
-	last_string: STRING
+	last_string: ?STRING
 			-- Last string read
 
 	last_integer: INTEGER
@@ -471,7 +471,7 @@ feature -- Obsolete
 			Result := last_character
 		end
 
-	laststring: STRING is
+	laststring: ?STRING is
 			-- Last string read
 		do
 			Result := last_string

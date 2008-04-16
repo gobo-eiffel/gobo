@@ -24,46 +24,47 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Does `other' contain the same elements?
-		local
-			c1, c2: CURSOR
 		do
 			if Current = other then
 				Result := True
 			else
-				Result := (is_empty = other.is_empty) and 
+				Result := (is_empty = other.is_empty) and
 						(object_comparison = other.object_comparison) and
 						(count = other.count)
 				if Result and not is_empty then
-					c1 ?= cursor
-					c2 ?= other.cursor
-					check
-						cursors_exist: c1 /= Void and c2 /= Void
-							-- Because every list contains a cursor object
-					end
-					
-					from
-						start
-						other.start
-					until
-						after or not Result
-					loop
-						if object_comparison then
-							Result := equal (item, other.item)
-						else
-							Result := (item = other.item)
+					if
+						{c1: CURSOR} cursor and then
+						{c2: CURSOR} other.cursor
+					then
+						from
+							start
+							other.start
+						until
+							after or not Result
+						loop
+							if object_comparison then
+								Result := equal (item, other.item)
+							else
+								Result := (item = other.item)
+							end
+							forth
+							other.forth
 						end
-						forth
-						other.forth
+						go_to (c1)
+						other.go_to (c2)
+					else
+						check
+							cursors_exist: False
+								-- Because every list contains a cursor object
+						end
 					end
-					go_to (c1) 
-					other.go_to (c2)
-				elseif is_empty and other.is_empty and 
+				elseif is_empty and other.is_empty and
 					object_comparison = other.object_comparison then
 					Result := True
 				end
 			end
 		ensure then
-			indices_unchanged: 
+			indices_unchanged:
 				index = old index and other.index = old other.index
 			true_implies_same_size: Result implies count = other.count
 		end
@@ -99,7 +100,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

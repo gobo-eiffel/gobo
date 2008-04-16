@@ -453,11 +453,9 @@ feature -- Status report
 		require
 			c_not_void: c /= Void
 		local
-			ht_cursor: HASH_TABLE_CURSOR
 			cursor_position: INTEGER
 		do
-			ht_cursor ?= c
-			if ht_cursor /= Void then
+			if {ht_cursor: HASH_TABLE_CURSOR} c then
 				cursor_position := ht_cursor.position
 				Result :=
 						(is_off_position (cursor_position)) or else
@@ -538,11 +536,8 @@ feature -- Cursor movement
 		require
 			c_not_void: c /= Void
 			valid_cursor: valid_cursor (c)
-		local
-			ht_cursor: HASH_TABLE_CURSOR
 		do
-			ht_cursor ?= c
-			if ht_cursor /= Void then
+			if {ht_cursor: HASH_TABLE_CURSOR} c then
 				iteration_position := ht_cursor.position
 			end
 		end
@@ -968,9 +963,6 @@ feature {NONE} -- Transformation
 	correct_mismatch is
 			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.
 		local
-			array_content: ARRAY [G]
-			array_keys: ARRAY [H]
-			array_marks: ARRAY [BOOLEAN]
 			l_deleted_marks: SPECIAL [BOOLEAN]
 		do
 				-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'
@@ -979,20 +971,17 @@ feature {NONE} -- Transformation
 				-- need to convert those ARRAY instances into SPECIAL instances.
 
 				-- Convert `content' from ARRAY to SPECIAL
-			array_content ?= mismatch_information.item ("content")
-			if array_content /= Void then
+			if {array_content: ARRAY [G]} mismatch_information.item ("content") then
 				content := array_content.area
 			end
 
 				-- Convert `keys' from ARRAY to SPECIAL
-			array_keys ?= mismatch_information.item ("keys")
-			if array_keys /= Void then
+			if {array_keys: ARRAY [H]} mismatch_information.item ("keys") then
 				keys := array_keys.area
 			end
 
 				-- Convert `deleted_marks' from ARRAY to SPECIAL
-			array_marks ?= mismatch_information.item ("deleted_marks")
-			if array_marks /= Void then
+			if {array_marks: ARRAY [BOOLEAN]} mismatch_information.item ("deleted_marks") then
 				deleted_marks := array_marks.area
 			end
 
@@ -1203,11 +1192,10 @@ feature {NONE} -- Implementation
 			first_deleted_position: INTEGER
 			stop: BOOLEAN
 			l_keys: like keys
-			l_key: H
 			l_deleted_marks: like deleted_marks
 		do
 			first_deleted_position := impossible_position
-			if key = l_default_key then
+			if key = l_default_key or else key = Void then
 				position := capacity
 				if has_default then
 					control := found_constant
@@ -1227,8 +1215,7 @@ feature {NONE} -- Implementation
 				loop
 						-- Go to next increment.
 					l_pos := (l_pos + increment) \\ l_capacity
-					l_key := l_keys.item (l_pos)
-					if l_key = l_default_key then
+					if not {l_key: H} l_keys.item (l_pos) or else l_key = l_default_key then
 						if not l_deleted_marks.item (l_pos) then
 							stop := True
 							control := not_found_constant
@@ -1273,7 +1260,7 @@ feature {NONE} -- Implementation
 			l_deleted_marks: like deleted_marks
 			l_keys: like keys
 		do
-			if key = l_default_key then
+			if key = l_default_key or else key = Void then
 				check
 						-- Because of the precondition
 					not has_default
@@ -1456,7 +1443,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

@@ -48,8 +48,9 @@ feature -- Access
 			--| Useful if a class inherits from STD_FILES and
 			--| and a `putint' is applied without standard setting.
 		do
+			Result := output
 			if default_output = Void then
-				Result := output
+				-- Result := output
 			else
 				Result := default_output
 			end
@@ -117,7 +118,7 @@ feature -- Status report
 			Result := input.last_real
 		end
 
-	last_string, laststring: STRING is
+	last_string, laststring: ?STRING is
 			-- Last string read by `read_line',
 			-- `read_stream', or `read_word'
 		do

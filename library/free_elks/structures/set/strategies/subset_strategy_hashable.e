@@ -20,7 +20,6 @@ feature -- Comparison
 			-- Are `set1' and `set2' disjoint?
 		local
 			hash: HASH_TABLE [G, INTEGER]
-			h: HASHABLE
 			c: INTEGER
 		do
 			create hash.make (set1.count + set2.count)
@@ -35,17 +34,18 @@ feature -- Comparison
 				not Result or else (set1.after and set2.after)
 			loop
 				if not set1.after then
-					h ?= set1.item
-					check
-						hashable_item: h /= Void
-							-- Because this strategy is used for hashable
-							-- objects only.
-							
+					if {h1: HASHABLE} set1.item then
+						c := h1.hash_code
+					else
+						check
+							hashable_item: False
+								-- Because this strategy is used for hashable
+								-- objects only.
+						end
 					end
-					c := h.hash_code
 					Result := not hash.has (c)
-					if Result then 
-						hash.put (set1.item, c) 
+					if Result then
+						hash.put (set1.item, c)
 					else
 						hash.search (c)
 						check
@@ -61,16 +61,18 @@ feature -- Comparison
 					set1.forth
 				end
 				if Result and then not set2.after then
-					h ?= set2.item
-					check
-						hashable_item: h /= Void
-							-- Because this strategy is used for hashable
-							-- objects only.
+					if {h2: HASHABLE} set2.item then
+						c := h2.hash_code
+					else
+						check
+							hashable_item: False
+								-- Because this strategy is used for hashable
+								-- objects only.
+						end
 					end
-					c := h.hash_code
 					hash.search (c)
 					Result := not hash.found
-					if Result then 
+					if Result then
 						hash.put (set2.item, c)
 					else
 						if set1.object_comparison then
@@ -83,7 +85,7 @@ feature -- Comparison
 				end
 			end
 		end
-	
+
 feature -- Basic operations
 
 	symdif (set1, set2: TRAVERSABLE_SUBSET [G]) is
@@ -91,7 +93,6 @@ feature -- Basic operations
 			-- items of `set2' not already present in `set1'.
 		local
 			hash: HASH_TABLE [G, INTEGER]
-			h: HASHABLE
 			c: INTEGER
 			eq: BOOLEAN
 		do
@@ -100,33 +101,37 @@ feature -- Basic operations
 				hash.compare_objects
 			end
 			from set1.start until set1.after loop
-				h ?= set1.item
-				check
-					hashable_item: h /= Void
-						-- Because this strategy is only used when items
-						-- are hashable.
+				if {h1: HASHABLE} set1.item then
+					hash.put (set1.item, h1.hash_code)
+				else
+					check
+						hashable_item: False
+							-- Because this strategy is only used when items
+							-- are hashable.
+					end
 				end
-				hash.put (set1.item, h.hash_code)
 				set1.forth
 			end
 			from set2.start until set2.after loop
-				h ?= set2.item
-				check
-					hashable_item: h /= Void
-						-- Because this strategy is only used when items
-						-- are hashable.
-				end
-				c := h.hash_code
-				hash.search (c)
-				if hash.found then
-					if set1.object_comparison then
-						eq := equal (set2.item, hash.found_item)
+				if {h2: HASHABLE} set2.item then
+					c := h2.hash_code
+					hash.search (c)
+					if hash.found then
+						if set1.object_comparison then
+							eq := equal (set2.item, hash.found_item)
+						else
+							eq := (set2.item = hash.found_item)
+						end
+						if eq then hash.remove (c) end
 					else
-						eq := (set2.item = hash.found_item)
+						hash.put (set2.item, c)
 					end
-					if eq then hash.remove (h.hash_code) end
 				else
-					hash.put (set2.item, h.hash_code)
+					check
+						hashable_item: False
+							-- Because this strategy is only used when items
+							-- are hashable.
+					end
 				end
 				set2.forth
 			end
@@ -134,12 +139,12 @@ feature -- Basic operations
 			from hash.start until hash.after loop
 				set1.extend (hash.item_for_iteration)
 				hash.forth
-			end	
+			end
 		end
-	
+
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

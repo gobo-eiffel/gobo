@@ -59,10 +59,9 @@ feature -- Element change
 		local
 			l: like s
 		do
+			l := s
 			if s = Current then
 				l := twin
-			else
-				l := s
 			end
 			from
 				l.start
