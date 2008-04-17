@@ -207,6 +207,8 @@ feature {NONE} -- Eiffel config file parsing
 			gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
 			if gobo_eiffel /= Void then
 				l_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
+			else
+				l_xace_variables.force_last ("ge", "GOBO_EIFFEL")
 			end
 			if defined_variables /= Void then
 				create l_splitter.make
