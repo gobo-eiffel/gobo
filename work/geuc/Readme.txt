@@ -22,6 +22,9 @@ values are in use (hopefully, the changes files will tell you this).
 When all supported compilers support NATURAL_8, then we can drop these
 projections.
 
+N.B. This is now the case, but I don't feel energetic enough to change
+the code right now. Anyone who feels energetic - feel free.
+
 A note on Hangul syllables and conjoining jamo behavior
 -------------------------------------------------------
 
