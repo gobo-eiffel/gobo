@@ -5,7 +5,7 @@ indexing
 		"Data structures that can be searched"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,6 +28,18 @@ feature -- Status report
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		deferred
+		ensure
+			not_empty: Result implies not is_empty
+		end
+
+	has_void: BOOLEAN is
+			-- Does container include Void?
+		local
+			v: G
+		do
+			if v = Void then
+				Result := has (v)
+			end
 		ensure
 			not_empty: Result implies not is_empty
 		end

@@ -151,6 +151,7 @@ Version 3.8 - ?
 	  up to class DS_CONTAINER.
 	* Added features `do_all_with_key' and `do_if_with_key' to class
 	  DS_TABLE.
+	* Added feature `has_void' to class DS_SEARCHABLE.
 
 	Gobo Eiffel Time Library:
 
