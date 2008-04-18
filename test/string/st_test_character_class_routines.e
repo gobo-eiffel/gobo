@@ -42,7 +42,9 @@ feature -- Test
 			assert ("MAI HAN_AKAT is alphabetic", is_alphabetic (3633))
 			assert ("MAI HAN_AKAT is not in letter categories", not is_letter (3633))
 			assert ("Variation selector-253 is a non-spacing mark", is_nonspacing_mark (917996))
-			assert ("SYLOTI NAGRI SIGN DVISVARA is a combining mark", is_combining_spacing_mark (43010))
+			-- this next character changed class between 5.0.0 and 5.0.1
+			assert ("SYLOTI NAGRI SIGN DVISVARA is non-spacing mark", is_nonspacing_mark (43010))
+			assert ("DEVANAGRI SIGN VISARGA is combining-spacing mark", is_combining_spacing_mark (2307))
 			assert ("COMBINING ENCLOSING UPWARD POINTING TRIANGLE is an enclosing mark", is_enclosing_mark (8420))
 			assert ("SYLOTI NAGRI SIGN DVISVARA is a mark", is_mark (43010))
 			assert ("FULLWIDTH DIGIT ZERO is a decimal digit", is_decimal_digit (65296))
