@@ -133,6 +133,7 @@ Version 3.8 - ?
 	  for all Eiffel compilers and what is not.
 	* Added KL_MEMORY and friends to provide a compiler independent way
 	  to access garbage collection facilities.
+	* Upgraded Unicode support to version 5.1.0.
 
 	Gobo Eiffel Regexp Library:
 
@@ -142,6 +143,7 @@ Version 3.8 - ?
 	Gobo Eiffel String Library:
 
 	* Added full Unicode case-mapping routines.
+	* Upgraded Unicode support to version 5.1.0.
 
 	Gobo Eiffel Structure Library:
 
