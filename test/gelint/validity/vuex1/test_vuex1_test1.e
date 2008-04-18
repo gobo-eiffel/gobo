@@ -9,15 +9,16 @@ indexing
 		of the enclosing feature.
 
 		ECMA 367-2 gives the choice between two validity rules:
-		VPIR-1, section 8.27.11 p.136: "Validity: Inline Agent Requirements"
+		VPIR-2, section 8.27.11 p.136: "Validity: Inline Agent Requirements"
 			An Inline_agent 'a' must satisfy the following conditions:
-			1. No formal argument or local variable of 'a' has the same name as a
-			   feature of the enclosing class, or a formal argument or local
-			   variable other than 'Result' of an enclosing feature or Inline_agent.
+			2. Every entity appearing in the Attribute_or_routine part of
+			   'a' is the name of one of: a formal argument of 'a'; a local
+			   variable of 'a'; a feature of the enclosing class; 'Current'.
 		VUEX-1, section 8.23.11 p.122: "Validity: Export rule"
-			A Non_object_call of Type T and feature `fname' in a class C is valid
-			if and only if it satisfies the following conditions:
-			1. `fname' is the final name of a feature `f' of T.
+			An Object_call appearing in a class C, with `fname' as the feature
+			of the call, is export-valid for C if and only if it satisfies
+			the following conditions.
+			1. `fname' is the final name of a feature of the target type of the call.
 
 		Gobo reports a VUEX-1 error. Note that ISE reports a VEEN error.
 	]"

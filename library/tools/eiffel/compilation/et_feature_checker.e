@@ -9289,6 +9289,7 @@ feature {NONE} -- Agent validity
 			l_type: ET_TYPE
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_old_hidden: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9297,6 +9298,10 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (current_inline_agent)
 			end
 			current_inline_agent := an_expression
+				-- Make sure that we do not use object-test locals declared
+				-- in the enclosing feature or inline agent.
+			l_old_hidden := current_object_test_scope.hidden_count
+			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
@@ -9327,6 +9332,9 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 			end
+				-- Restore the scope object-test locals declared
+				-- in the enclosing feature or inline agent.
+			current_object_test_scope.hide_object_tests (l_old_hidden)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9349,6 +9357,7 @@ feature {NONE} -- Agent validity
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_old_hidden: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9357,6 +9366,10 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (current_inline_agent)
 			end
 			current_inline_agent := an_expression
+				-- Make sure that we do not use object-test locals declared
+				-- in the enclosing feature or inline agent.
+			l_old_hidden := current_object_test_scope.hidden_count
+			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
@@ -9380,6 +9393,9 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 			end
+				-- Restore the scope object-test locals declared
+				-- in the enclosing feature or inline agent.
+			current_object_test_scope.hide_object_tests (l_old_hidden)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9401,6 +9417,7 @@ feature {NONE} -- Agent validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
+			l_old_hidden: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9409,6 +9426,10 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (current_inline_agent)
 			end
 			current_inline_agent := an_expression
+				-- Make sure that we do not use object-test locals declared
+				-- in the enclosing feature or inline agent.
+			l_old_hidden := current_object_test_scope.hidden_count
+			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
 				-- Check the associated feature's declaration.
 			l_arguments := an_expression.formal_arguments
 			if l_arguments /= Void then
@@ -9421,6 +9442,9 @@ feature {NONE} -- Agent validity
 				report_inline_agent_result_declaration (l_type)
 				report_inline_agent_result_supplier (l_type, current_class, current_feature)
 			end
+				-- Restore the scope object-test locals declared
+				-- in the enclosing feature or inline agent.
+			current_object_test_scope.hide_object_tests (l_old_hidden)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9441,6 +9465,7 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_old_hidden: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9449,12 +9474,19 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (current_inline_agent)
 			end
 			current_inline_agent := an_expression
+				-- Make sure that we do not use object-test locals declared
+				-- in the enclosing feature or inline agent.
+			l_old_hidden := current_object_test_scope.hidden_count
+			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
 				-- Check the associated feature's declaration.
 			l_arguments := an_expression.formal_arguments
 			if l_arguments /= Void then
 				check_inline_agent_formal_arguments_validity (l_arguments, an_expression)
 				had_error := has_fatal_error
 			end
+				-- Restore the scope object-test locals declared
+				-- in the enclosing feature or inline agent.
+			current_object_test_scope.hide_object_tests (l_old_hidden)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9478,6 +9510,7 @@ feature {NONE} -- Agent validity
 			l_type: ET_TYPE
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_old_hidden: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9486,6 +9519,10 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (current_inline_agent)
 			end
 			current_inline_agent := an_expression
+				-- Make sure that we do not use object-test locals declared
+				-- in the enclosing feature or inline agent.
+			l_old_hidden := current_object_test_scope.hidden_count
+			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
@@ -9516,6 +9553,9 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 			end
+				-- Restore the scope object-test locals declared
+				-- in the enclosing feature or inline agent.
+			current_object_test_scope.hide_object_tests (l_old_hidden)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9538,6 +9578,7 @@ feature {NONE} -- Agent validity
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
+			l_old_hidden: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9546,6 +9587,10 @@ feature {NONE} -- Agent validity
 				enclosing_inline_agents.force_last (current_inline_agent)
 			end
 			current_inline_agent := an_expression
+				-- Make sure that we do not use object-test locals declared
+				-- in the enclosing feature or inline agent.
+			l_old_hidden := current_object_test_scope.hidden_count
+			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
@@ -9569,6 +9614,9 @@ feature {NONE} -- Agent validity
 					had_error := had_error or has_fatal_error
 				end
 			end
+				-- Restore the scope object-test locals declared
+				-- in the enclosing feature or inline agent.
+			current_object_test_scope.hide_object_tests (l_old_hidden)
 				-- Manage enclosing inline agents.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last

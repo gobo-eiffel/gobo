@@ -5,7 +5,7 @@ indexing
 		"Test for validity rule VUEX-1"
 
 	remark: "[
-		In this test we call `a' in an inline agent, but `a' is a local variable
+		In this test we call `a' in an inline agent, but `a' is an object-test local
 		of the enclosing feature.
 
 		ECMA 367-2 gives the choice between two validity rules:
@@ -20,7 +20,7 @@ indexing
 			the following conditions.
 			1. `fname' is the final name of a feature of the target type of the call.
 
-		Gobo reports a VUEX-1 error. Note that ISE reports a VEEN error.
+		Note that Gobo reports a VEEN-8 error, and ISE reports a VEEN error.
 	]"
 
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
@@ -28,7 +28,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TEST_VUEX1_TEST2
+class TEST_VUEX1_TEST3
 
 inherit
 
@@ -43,7 +43,7 @@ feature -- Test
 	test_validity is
 			-- Test for validity rule VUEX-1.
 		do
-			compile_and_test ("test2")
+			compile_and_test ("test3")
 		end
 
 feature {NONE} -- Implementation
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	testdir: STRING is
 			-- Name of temporary directory where to run the test
 		do
-			Result := "Ttest2"
+			Result := "Ttest3"
 		end
 
 end
