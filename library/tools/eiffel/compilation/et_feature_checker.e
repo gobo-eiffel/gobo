@@ -1153,6 +1153,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			args: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_enclosing_agent: ET_INLINE_AGENT
+			l_object_test: ET_OBJECT_TEST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1231,6 +1232,14 @@ feature {NONE} -- Locals/Formal arguments validity
 							set_fatal_error
 							error_handler.report_vpir1b_error (current_class, l_formal, an_agent, l_locals.local_variable (k))
 						end
+					end
+					l_object_test := current_object_test_scope.hidden_object_test (l_name)
+					if l_object_test /= Void then
+							-- This formal argument has the same name as an object-test local
+							-- of an enclosing feature or inline agent whose scope contains
+							-- the inline agent `an_agent'.
+						set_fatal_error
+						error_handler.report_vpir1e_error (current_class, l_formal, an_agent, l_object_test)
 					end
 					l_type := l_formal.type
 					had_error := had_error or has_fatal_error
@@ -1361,6 +1370,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_enclosing_agent: ET_INLINE_AGENT
 			l_type: ET_TYPE
+			l_object_test: ET_OBJECT_TEST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1449,6 +1459,14 @@ feature {NONE} -- Locals/Formal arguments validity
 							set_fatal_error
 							error_handler.report_vpir1d_error (current_class, l_local, an_agent, l_locals.local_variable (k))
 						end
+					end
+					l_object_test := current_object_test_scope.hidden_object_test (l_name)
+					if l_object_test /= Void then
+							-- This local variable has the same name as an object-test local
+							-- of an enclosing feature or inline agent whose scope contains
+							-- the inline agent `an_agent'.
+						set_fatal_error
+						error_handler.report_vpir1f_error (current_class, l_local, an_agent, l_object_test)
 					end
 					l_type := l_local.type
 					had_error := had_error or has_fatal_error

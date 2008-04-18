@@ -181,6 +181,8 @@ create
 	make_vpir1b,
 	make_vpir1c,
 	make_vpir1d,
+	make_vpir1e,
+	make_vpir1f,
 	make_vqmc1a,
 	make_vqmc2a,
 	make_vqmc3a,
@@ -7704,6 +7706,98 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local variable name
 		end
 
+	make_vpir1e (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+			-- Create a new VPIR-1 error: `arg' in inline agent `an_agent' has
+			-- the same name as object-test local `a_object_test' of an enclosing
+			-- feature or inline agent whose scope contains the inline agent.
+			--
+			-- ECMA 367-2: p.136
+			-- This rule should be extended to say they should not have the same lower-name
+			-- as an object-test local of an enclosing feature or inline agent whose scope
+			-- contains the inline agent. See message sent by Eric Bezault to ECMA on 9 April 2008.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			an_agent_not_void: an_agent /= Void
+			a_object_test_not_void: a_object_test /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := arg.name.position
+			code := template_code (vpir1e_template_code)
+			etl_code := vpir1_etl_code
+			default_template := default_message_template (vpir1e_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (arg.name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = argument name
+		end
+
+	make_vpir1f (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+			-- Create a new VPIR-1 error: `a_local' in inline agent `an_agent' has
+			-- the same name as object-test local `a_object_test' of an enclosing
+			-- feature or inline agent whose scope contains the inline agent.
+			--
+			-- ECMA 367-2: p.136
+			-- This rule should be extended to say they should not have the same lower-name
+			-- as an object-test local of an enclosing feature or inline agent whose scope
+			-- contains the inline agent. See message sent by Eric Bezault to ECMA on 9 April 2008.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			an_agent_not_void: an_agent /= Void
+			a_object_test_not_void: a_object_test /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_local.name.position
+			code := template_code (vpir1f_template_code)
+			etl_code := vpir1_etl_code
+			default_template := default_message_template (vpir1f_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_local.name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = local name
+		end
+
 	make_vqmc1a (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
 			-- Create a new VQMC-1 error: `an_attribute', declared in `a_class_impl, introduces
 			-- a boolean constant but its type is not "BOOLEAN" when viewed from one of its
@@ -12209,6 +12303,8 @@ feature {NONE} -- Implementation
 	vpir1b_default_template: STRING is "argument name '$7' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
 	vpir1c_default_template: STRING is "local variable name '$7' in inline agent is also the name of a formal argument of an enclosing feature or inline agent."
 	vpir1d_default_template: STRING is "local variable name '$7' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
+	vpir1e_default_template: STRING is "argument name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1f_default_template: STRING is "local variable name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
 	vqmc1a_default_template: STRING is "boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING is "character constant attribute `$7' is not declared of type CHARACTER."
 	vqmc3a_default_template: STRING is "integer constant attribute `$7' is not declared of type INTEGER."
@@ -12620,6 +12716,8 @@ feature {NONE} -- Implementation
 	vpir1b_template_code: STRING is "vpir1b"
 	vpir1c_template_code: STRING is "vpir1c"
 	vpir1d_template_code: STRING is "vpir1d"
+	vpir1e_template_code: STRING is "vpir1e"
+	vpir1f_template_code: STRING is "vpir1f"
 	vqmc1a_template_code: STRING is "vqmc1a"
 	vqmc2a_template_code: STRING is "vqmc2a"
 	vqmc3a_template_code: STRING is "vqmc3a"

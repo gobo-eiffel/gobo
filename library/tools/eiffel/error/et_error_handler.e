@@ -4226,6 +4226,54 @@ feature -- Validity errors
 			end
 		end
 
+	report_vpir1e_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+			-- Report VPIR-1 error: `arg' in inline agent `an_agent' has
+			-- the same name as object-test local `a_object_test' of an enclosing
+			-- feature or inline agent whose scope contains the inline agent.
+			--
+			-- ECMA 367-2: p.136
+			-- This rule should be extended to say they should not have the same lower-name
+			-- as an object-test local of an enclosing feature or inline agent whose scope
+			-- contains the inline agent. See message sent by Eric Bezault to ECMA on 9 April 2008.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			arg_not_void: arg /= Void
+			an_agent_not_void: an_agent /= Void
+			a_object_test_not_void: a_object_test /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1e (a_class, arg, an_agent, a_object_test)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vpir1f_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+			-- Report VPIR-1 error: `a_local' in inline agent `an_agent' has
+			-- the same name as object-test local `a_object_test' of an enclosing
+			-- feature or inline agent whose scope contains the inline agent.
+			--
+			-- ECMA 367-2: p.136
+			-- This rule should be extended to say they should not have the same lower-name
+			-- as an object-test local of an enclosing feature or inline agent whose scope
+			-- contains the inline agent. See message sent by Eric Bezault to ECMA on 9 April 2008.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_local_not_void: a_local /= Void
+			an_agent_not_void: an_agent /= Void
+			a_object_test_not_void: a_object_test /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vpir1_error (a_class) then
+				create an_error.make_vpir1f (a_class, a_local, an_agent, a_object_test)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vqmc1a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
 			-- Report VQMC-1 error: `an_attribute', declared in `a_class_impl, introduces
 			-- a boolean constant but its type is not "BOOLEAN" when viewed from one of its

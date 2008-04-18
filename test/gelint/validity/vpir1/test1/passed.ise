@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+
+Error code: VPIR(1)
+Error: Tried to use an entity name of an enclosing feature
+What to do: make sure that your inline agents operands and locals have names that are different from its enclosing feature.
+
+Class: AA
+Feature: f
+Entity name: a
+
+-------------------------------------------------------------------------------
