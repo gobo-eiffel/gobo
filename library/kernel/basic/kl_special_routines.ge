@@ -110,7 +110,7 @@ feature -- Resizing
 		do
 #ifdef ISE
 			if n > an_array.count then
-				Result := an_array.resized_area (n)
+				Result := an_array.aliased_resized_area (n)
 			else
 				Result := an_array
 			end
