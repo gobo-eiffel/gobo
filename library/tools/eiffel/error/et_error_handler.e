@@ -5545,8 +5545,7 @@ feature -- Validity errors
 	report_vuot3a_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
 			-- Report VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
-			-- `a_feature' of `a_class' or one of its (possibly nested)
-			-- inline agents.
+			-- the same `a_feature' of `a_class' or in the same inline agent.
 			--
 			-- Only in ISE.
 			-- See ECMA 367-2: p.127
@@ -5568,8 +5567,7 @@ feature -- Validity errors
 	report_vuot3b_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
 			-- Report VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
-			-- the invariant of `a_class' or one of its (possibly nested)
-			-- inline agents.
+			-- the invariant of `a_class' or in the same inline agent.
 			--
 			-- Only in ISE.
 			-- See ECMA 367-2: p.127

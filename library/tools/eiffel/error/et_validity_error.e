@@ -10679,8 +10679,7 @@ feature {NONE} -- Initialization
 	make_vuot3a (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
 			-- Create a new VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
-			-- `a_feature' of `a_class' or one of its (possibly nested)
-			-- inline agents.
+			-- the same `a_feature' of `a_class' or in the same inline agent.
 			--
 			-- Only in ISE.
 			-- See ECMA 367-2: p.127
@@ -10724,8 +10723,7 @@ feature {NONE} -- Initialization
 	make_vuot3b (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
 			-- Create a new VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
-			-- the invariant of `a_class' or one of its (possibly nested)
-			-- inline agents.
+			-- the invariant of `a_class' or in the same inline agent.
 			--
 			-- Only in ISE.
 			-- See ECMA 367-2: p.127
@@ -12367,8 +12365,8 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING is "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING is "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING is "object-test with local name '$6' appears in the scope of another object-test local with the same name."
-	vuot3a_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in feature `$7' or one of its possibly nested inline agents."
-	vuot3b_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or one of its possibly nested inline agents."
+	vuot3a_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
+	vuot3b_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
 	vuot4a_default_template: STRING is "ISE does not support object-tests in preconditions."
 	vuot4b_default_template: STRING is "ISE does not support object-tests in check instructions."
 	vwbe0a_default_template: STRING is "boolean expression of non-BOOLEAN type '$7'."

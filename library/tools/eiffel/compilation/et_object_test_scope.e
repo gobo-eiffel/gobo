@@ -206,6 +206,16 @@ feature -- Element change
 			same_count: count = old count
 		end
 
+	wipe_out is
+			-- Indicate that we are in the scope of no object-test local anymore.
+		do
+			hidden_count := 0
+			object_tests.wipe_out
+		ensure
+			wiped_out: count = 0
+			no_hidden: hidden_count = 0
+		end
+
 invariant
 
 	object_tests_not_void: object_tests /= Void

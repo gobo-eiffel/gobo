@@ -7,7 +7,7 @@ indexing
 	remark: "[
 		In this test the formal argument `a' in an inline agent has the same
 		name as the object-test local of the enclosing feature whose scope
-		contains the inline agent.
+		contains the inline agent declaration.
 
 		ECMA 367-2, section 8.27.11 p.136: "Validity: Inline Agent Requirements"
 		Validity code: VPIR-1
