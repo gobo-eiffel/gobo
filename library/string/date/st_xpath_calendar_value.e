@@ -4,13 +4,13 @@ indexing
 
 		"Chronological values consistent with XPath 2.0"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-01-02 13:57:21 +0000 (Wed, 02 Jan 2008) $"
+	revision: "$Revision: 6243 $"
 
-deferred class DT_XPATH_CALENDAR_VALUE
+deferred class ST_XPATH_CALENDAR_VALUE
 
 inherit
 
@@ -261,7 +261,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_xpath_time: DT_XPATH_TIME_VALUE is
+	as_xpath_time: ST_XPATH_TIME_VALUE is
 			-- `Current' seen as a time value
 		require
 			is_xpath_time_value: is_xpath_time
@@ -270,7 +270,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 	
-	as_xpath_date: DT_XPATH_DATE_VALUE is
+	as_xpath_date: ST_XPATH_DATE_VALUE is
 			-- `Current' seen as a date value
 		require
 			is_xpath_date_value: is_xpath_date
@@ -279,7 +279,7 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	as_xpath_date_time: DT_XPATH_DATE_TIME_VALUE is
+	as_xpath_date_time: ST_XPATH_DATE_TIME_VALUE is
 			-- `Current' seen as a date-time value
 		require
 			is_xpath_date_time_value: is_xpath_date_time

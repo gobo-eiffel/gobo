@@ -332,10 +332,7 @@ feature -- Status setting
 			not_replaced: not was_expression_replaced
 			not_in_error: not is_error
 		do
-			are_dependencies_computed := False
-			are_intrinsic_dependencies_computed := False
-			are_cardinalities_computed := False
-			are_special_properties_computed := False
+			reinitialize_all_static_properties
 			compute_static_properties
 			if container /= Void and then container.is_computed_expression
 				and then not container.as_computed_expression.was_expression_replaced

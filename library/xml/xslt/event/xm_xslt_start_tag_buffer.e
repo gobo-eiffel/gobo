@@ -18,7 +18,7 @@ inherit
 		redefine
 			start_document, end_document,
 			start_element, end_element,
-			notify_namespace, notify_attribute, start_content
+			notify_namespace, notify_attribute, start_content, close
 		end
 
 	XM_XPATH_NAMESPACE_RESOLVER
@@ -96,6 +96,17 @@ feature -- Access
 		end
 
 feature -- Events
+
+	
+	close is
+			-- Notify end of event stream.
+		do
+			if base_receiver.is_document_started then
+				base_receiver.end_document
+			end
+			base_receiver.close
+			is_open := False
+		end
 
 	start_document is
 			-- New document

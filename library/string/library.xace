@@ -15,6 +15,7 @@
 		<cluster name="collation"/>
 		<cluster name="unicode"/>
 		<cluster name="support"/>
+		<cluster name="date"/>
 		<cluster name="formatter">
 			<option name="abstract" value="true"/>
 			<cluster name="general"/>

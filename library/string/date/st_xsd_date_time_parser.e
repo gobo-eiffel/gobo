@@ -4,17 +4,17 @@ indexing
 
 		"XSD dates and times parsers"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2007-01-26 18:55:25 +0000 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
 
-class DT_XSD_DATE_TIME_PARSER
+class ST_XSD_DATE_TIME_PARSER
 
 inherit
 
-	DT_DATE_TIME_PARSER
+	ST_DATE_TIME_PARSER
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end

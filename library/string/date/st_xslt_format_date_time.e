@@ -13,13 +13,13 @@ indexing
         See also possible errata regarding time zones.
        ]"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-01-20 17:59:26 +0000 (Sun, 20 Jan 2008) $"
+	revision: "$Revision: 6272 $"
 
-class DT_XSLT_FORMAT_DATE_TIME
+class ST_XSLT_FORMAT_DATE_TIME
 
 inherit
 
@@ -34,7 +34,7 @@ inherit
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
-	DT_XSLT_NUMBER_ROUTINES
+	ST_XSLT_NUMBER_ROUTINES
 		export {NONE} all end
 
 	MA_SHARED_DECIMAL_CONTEXT
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	format_date_time (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
+	format_date_time (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
 			-- Format the result.
 		require
 			a_result_not_void: a_result /= Void
@@ -78,7 +78,7 @@ feature -- Basic operations
 			l_result_string, l_language, l_calendar: STRING
 		do
 			if a_picture.is_empty then
-				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make (""))
+				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make (""))
 			else
 				l_result_string := new_unicode_string_with_capacity (32)
 				if not is_language_supported (a_requested_language) then
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	primary_modifier: STRING
 			-- Specifier in current variable marker
 
-	parse_picture_string (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE;	a_picture, a_language, a_calendar, a_country: STRING) is
+	parse_picture_string (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE;	a_picture, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_picture' and format output.
 		require
 			a_result_not_void: a_result /= Void
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 						if a_picture.index_of (']', i) = i then
 							i := i + 1
 							if a_picture.index_of (']', i) /= i then
-								a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error ("] must be doubled in picture string", "XTDE1340"))
+								a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error ("] must be doubled in picture string", "XTDE1340"))
 								l_finished := True; l_finished_inner := True
 							end
 						end
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 				if i > l_count then
 					l_finished := True
 					if l_open > 0 and l_close = 0 then
-						a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error ("] not found after [ in picture string", "XTDE1340"))
+						a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error ("] not found after [ in picture string", "XTDE1340"))
 					end
 				elseif not l_finished then
 					if a_picture.index_of ('[', i) = i then
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 					else
 						l_close := a_picture.index_of (']', i)
 						if l_close = 0 then
-							a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error ("] not found after [ in picture string", "XTDE1340"))
+							a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error ("] not found after [ in picture string", "XTDE1340"))
 							l_finished := True
 						else
 							format_marker (a_result, a_result_string, a_calendar_value, a_picture.substring (l_open + 1, l_close - 1), a_language, a_calendar, a_country)
@@ -177,11 +177,11 @@ feature {NONE} -- Implementation
 				end
 			end
 			if a_result.item = Void then -- no error
-				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make (a_result_string))
+				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make (a_result_string))
 			end
 		end
 
-	format_marker (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
+	format_marker (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_marker' and format output by appending to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -209,12 +209,13 @@ feature {NONE} -- Implementation
 				STRING_.right_adjust (l_modifiers)
 			end
 			if l_invalid then
-				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker), "XTDE1340"))
+				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker), "XTDE1340"))
+			else
+				parse_and_format_marker (a_result, a_result_string, a_calendar_value, l_specifier, l_modifiers, a_language, a_calendar, a_country)
 			end
-			parse_and_format_marker (a_result, a_result_string, a_calendar_value, l_specifier, l_modifiers, a_language, a_calendar, a_country)
 		end
 
-	parse_and_format_marker (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	parse_and_format_marker (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format `a_calendar_value' according to `a_specifier' and `some_modifiers' by appending to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -267,7 +268,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_not_date_value (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_date_value (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:date.
 		require
 			a_result_not_void: a_result /= Void
@@ -276,11 +277,11 @@ feature {NONE} -- Implementation
 			message_not_empty: a_message /= Void and then not a_message.is_empty
 		do
 			if a_calendar_value.is_xpath_date then
-				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1350"))
+				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1350"))
 			end
 		end
 
-	check_not_time_value (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_time_value (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:time.
 		require
 			a_result_not_void: a_result /= Void
@@ -289,7 +290,7 @@ feature {NONE} -- Implementation
 			message_not_empty: a_message /= Void and then not a_message.is_empty
 		do
 			if a_calendar_value.is_xpath_time then
-				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1350"))
+				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1350"))
 			end
 		end
 
@@ -318,7 +319,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_year (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_year (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format year from `a_calendar_value' and append to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -332,7 +333,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_result, a_calendar_value, "Y specifier not allowed for format-time()")
@@ -356,7 +357,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_month (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_month (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -370,7 +371,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_integer: INTEGER
 			l_number: MA_DECIMAL
 		do
@@ -403,7 +404,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_month (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_month (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -417,7 +418,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_result, a_calendar_value, "D specifier not allowed for format-time()")
@@ -441,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_year (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_year (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-year from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -455,7 +456,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_result, a_calendar_value, "d specifier not allowed for format-time()")
@@ -482,7 +483,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_of_week (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_of_week (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-of-week from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -496,7 +497,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 			l_iso_day_number: INTEGER
 		do
@@ -529,7 +530,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_week_in_year (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_year (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-year from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -543,7 +544,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_result, a_calendar_value, "W specifier not allowed for format-time()")
@@ -571,7 +572,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_week_in_month (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_month (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -585,7 +586,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_time_value (a_result, a_calendar_value, "w specifier not allowed for format-time()")
@@ -612,7 +613,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_hour (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-day from `a_calendar_value' using 24-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -626,7 +627,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_result, a_calendar_value, "H specifier not allowed for format-date()")
@@ -653,7 +654,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_hour_in_half_day (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour_in_half_day (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-half-day from `a_calendar_value' using 12-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -667,7 +668,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_result, a_calendar_value, "h specifier not allowed for format-date()")
@@ -694,7 +695,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_am_pm (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_am_pm (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format AM/PM marker from `a_calendar_value' using 24-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -708,7 +709,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 		do
 			check_not_date_value (a_result, a_calendar_value, "P specifier not allowed for format-date()")
 			if a_result.item = Void then
@@ -725,7 +726,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_minute (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_minute (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format minute-in-hour from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -739,7 +740,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_result, a_calendar_value, "m specifier not allowed for format-date()")
@@ -766,7 +767,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_second (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_second (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format second-in-hour from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -780,7 +781,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_result, a_calendar_value, "s specifier not allowed for format-date()")
@@ -807,7 +808,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_millisecond (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_millisecond (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format fractional seconds from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -821,7 +822,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: a_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: DT_XSLT_NUMBERER
+			l_numberer: ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 		do
 			check_not_date_value (a_result, a_calendar_value, "f specifier not allowed for format-date()")
@@ -858,7 +859,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_time_zone (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_time_zone (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from UTC, or as the conventional name from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -898,7 +899,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_gmt_offset (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_gmt_offset (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -930,7 +931,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_calendar_name (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_calendar_name (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format calendar name.
 		require
 			a_result_not_void: a_result /= Void
@@ -965,7 +966,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_era (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: DT_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_era (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -986,7 +987,7 @@ feature {NONE} -- Implementation
 				if not is_name_modifier then primary_modifier := "n" end
 				if a_result.item = Void then
 					if a_calendar_value.is_xpath_time then
-						a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error ("Era is not available with time values", "XTDE1350"))
+						a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error ("Era is not available with time values", "XTDE1350"))
 					else
 						l_string := era (a_calendar_value, a_language, a_calendar, a_country)
 						l_string := correctly_cased_name (l_string)
@@ -1009,7 +1010,7 @@ feature {NONE} -- Implementation
 				(primary_modifier.count = 1 and then is_one (primary_modifier.item_code (1)))
 		end
 
-	check_modifiers (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
+	check_modifiers (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
 			-- Check `some_modifiers' for syntax errors.
 		require
 			a_result_not_void: a_result /= Void
@@ -1033,7 +1034,7 @@ feature {NONE} -- Implementation
 				if some_components.count > 2 then
 					a_message := STRING_.concat ("More than one comma present in '", some_modifiers)
 					a_message := STRING_.appended_string (a_message, "'")
-					a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+					a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
 				elseif some_components.count = 2 then
 					a_modifier := some_components.item (1)
 					if a_modifier.count /= 1 or else (a_modifier.item (1) /= 'i' and a_modifier.item (1) /= 'I') then
@@ -1060,7 +1061,7 @@ feature {NONE} -- Implementation
 						else
 							a_message := STRING_.concat ("Misplaced 't' in '", a_modifier)
 							a_message := STRING_.appended_string (a_message, "'")
-							a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+							a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
 						end
 					end
 					an_index := a_modifier.index_of ('o', 1)
@@ -1070,7 +1071,7 @@ feature {NONE} -- Implementation
 						else
 							a_message := STRING_.concat ("Misplaced 'o' in '", a_modifier)
 							a_message := STRING_.appended_string (a_message, "'")
-							a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+							a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
 						end
 					end
 				end
@@ -1111,7 +1112,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_widths (a_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]; a_width: STRING) is
+	set_widths (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_width: STRING) is
 			-- Set widths.
 		require
 			a_result_not_void: a_result /= Void
@@ -1126,13 +1127,13 @@ feature {NONE} -- Implementation
 			if a_width.index_of ('+', 1) > 0 then
 				a_message := STRING_.concat ("Plus sign present in '", a_width)
 				a_message := STRING_.appended_string (a_message, "'")
-				a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
 			else
 				some_components := a_splitter.split_greedy (a_width)
 				if some_components.count > 2 then
 					a_message := STRING_.concat ("Two many hyphens in '", a_width)
 					a_message := STRING_.appended_string (a_message, "'")
-					a_result.put (create {DT_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+					a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
 				elseif some_components.count = 2 then
 					l_string := some_components.item (1)
 					STRING_.left_adjust (l_string)
@@ -1317,7 +1318,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	era (a_calendar_value: DT_XPATH_CALENDAR_VALUE; a_language, a_calendar, a_country: STRING): STRING is
+	era (a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_language, a_calendar, a_country: STRING): STRING is
 			-- Era
 		require
 			calendar_value_not_void: a_calendar_value /= Void

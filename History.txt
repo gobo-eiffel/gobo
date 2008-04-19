@@ -144,6 +144,9 @@ Version 3.8 - ?
 
 	* Added full Unicode case-mapping routines.
 	* Upgraded Unicode support to version 5.1.0.
+	* Added support for formatting dates and times according
+	  using the picture strings from the XSLT functions
+	  format-date(), format-time() and format-date-time().
 
 	Gobo Eiffel Structure Library:
 
@@ -152,12 +155,6 @@ Version 3.8 - ?
 	* Added features `do_all_with_key' and `do_if_with_key' to class
 	  DS_TABLE.
 	* Added feature `has_void' to class DS_SEARCHABLE.
-
-	Gobo Eiffel Time Library:
-
-	* Added support for formatting dates and times according
-	  using the picture strings from the XSLT functions
-	  format-date(), format-time() and format-date-time().
 
 	Gobo Eiffel XML Library:
 

@@ -2,19 +2,19 @@ indexing
 
 	description: "Objects that support number formatting for language en."
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-01-02 13:57:21 +0000 (Wed, 02 Jan 2008) $"
+	revision: "$Revision: 6243 $"
 
-class DT_XSLT_NUMBERER_EN
+class ST_XSLT_NUMBERER_EN
 
 inherit
 
-	DT_XSLT_NUMBERER
+	ST_XSLT_NUMBERER
 
-	DT_STRING_ROUTINES
+	ST_STRING_ROUTINES
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end

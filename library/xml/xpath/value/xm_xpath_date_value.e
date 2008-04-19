@@ -21,7 +21,7 @@ inherit
 			is_date_value, as_date_value, hash_code
 		end
 
-	DT_XPATH_DATE_VALUE
+	ST_XPATH_DATE_VALUE
 		redefine
 			make, make_from_date, make_from_zoned_date
 		end
@@ -72,7 +72,7 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		local
-			a_date_time_parser: DT_XSD_DATE_TIME_FORMAT
+			a_date_time_parser: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_date_time_parser.make_1_1
 			if zoned then

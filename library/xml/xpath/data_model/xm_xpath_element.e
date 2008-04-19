@@ -157,10 +157,11 @@ feature -- Access
 		end
 
 	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
-			-- List of namespace codes in scope
+			-- List of namespace codes in scope, including the XML namespace
 		deferred
 		ensure
 			namespace_codes_in_scope_not_void: Result /= Void
+			namespace_codes_in_scope_not_empty: not Result.is_empty
 		end
 
 	prefixes_in_scope: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_STRING_VALUE] is
@@ -186,6 +187,10 @@ feature -- Access
 				create l_string_value.make (l_xml_prefix)
 				l_prefix_list.put_last (l_string_value)
 				l_cursor.forth
+			end
+			check
+				not_empty: not l_prefix_list.is_empty
+				-- because of XML namespace, or more formally, the postcondition of `namespace_codes_in_scope'
 			end
 			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (l_prefix_list)
 		ensure

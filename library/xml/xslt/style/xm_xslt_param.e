@@ -20,7 +20,7 @@ inherit
 			is_param, as_param, is_non_white_following_sibling
 		end
 
-	DT_STRING_ROUTINES
+	ST_STRING_ROUTINES
 
 	XM_XPATH_ROLE
 

@@ -19,7 +19,7 @@ inherit
 			validate, returned_item_type
 		end
 
-	DT_XSLT_NUMBER_ROUTINES
+	ST_XSLT_NUMBER_ROUTINES
 
 	XM_XPATH_ROLE
 
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 	formatter: XM_XSLT_NUMBER_FORMATTER
 			-- Formatter
 
-	numberer: DT_XSLT_NUMBERER
+	numberer: ST_XSLT_NUMBERER
 			-- Numberer
 
 	prepare_attributes_2 (a_select_attribute, an_ordinal_attribute, a_value_attribute: STRING;

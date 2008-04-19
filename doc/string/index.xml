@@ -57,6 +57,15 @@ This document is structured as follows:
 
 	<varlistentry>
 		<term>
+			Date and time formatting
+		</term>
+		<listitem><para>
+			For date and time formatting see class <classname>ST_DATE_TIME_ROUTINES</classname>.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
 			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
 			Instructions</ulink>
 		</term>
@@ -64,6 +73,7 @@ This document is structured as follows:
 			License agreement and downloading instructions.
 		</para></listitem>
 	</varlistentry>
+
 </variablelist>
 </blockquote>
 

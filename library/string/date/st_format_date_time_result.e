@@ -3,17 +3,17 @@ indexing
 	description:
 
 		"[
-        Results from {DT_XSLT_FORMAT_DATE_TIME}.format_date_time .
+        Results from {ST_XSLT_FORMAT_DATE_TIME}.format_date_time .
         Either a formatted string or an error.
        ]"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-01-02 13:57:21 +0000 (Wed, 02 Jan 2008) $"
+	revision: "$Revision: 6243 $"
 
-class DT_FORMAT_DATE_TIME_RESULT
+class ST_FORMAT_DATE_TIME_RESULT
 
 create
 

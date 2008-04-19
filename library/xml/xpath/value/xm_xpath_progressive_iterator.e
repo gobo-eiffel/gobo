@@ -113,9 +113,9 @@ feature -- Cursor movement
 					elseif not base_iterator.after then
 						if not reservoir.extendible (1) then
 							if base_iterator.is_last_position_finder then
-								reservoir.resize (reservoir.count + base_iterator.last_position - base_iterator.index + 1)
+								reservoir.resize (reservoir.capacity + base_iterator.last_position - base_iterator.index + 1)
 							else
-								reservoir.resize (2 * reservoir.count)
+								reservoir.resize (2 * reservoir.capacity)
 							end
 						end
 						reservoir.put_last (base_iterator.item)
@@ -169,9 +169,9 @@ feature {NONE} -- Implementation
 				if not base_iterator.after then
 					if not reservoir.extendible (1) then
 						if base_iterator.is_last_position_finder then
-							reservoir.resize (reservoir.count + base_iterator.last_position)
+							reservoir.resize (reservoir.capacity + base_iterator.last_position)
 						else
-							reservoir.resize (2 * reservoir.count)
+							reservoir.resize (2 * reservoir.capacity)
 						end
 					end
 					reservoir.put_last (base_iterator.item)
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 				base_iterator.forth
 				if not base_iterator.after then
 					if not reservoir.extendible (1) then
-						reservoir.resize (2 * reservoir.count)
+						reservoir.resize (2 * reservoir.capacity)
 					end
 					reservoir.put_last (base_iterator.item)
 				end

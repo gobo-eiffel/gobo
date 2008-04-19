@@ -338,6 +338,8 @@ feature -- Evaluation
 		do
 			if is_node_sequence then
 				Result := node_iterator (True)
+			elseif count = 0 then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			else
 				create {XM_XPATH_REVERSE_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
 			end
@@ -351,25 +353,29 @@ feature -- Evaluation
 			a_node_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_ITEM]
 		do
-			create a_node_list.make (count)
-			from
-				a_cursor := new_cursor; a_cursor.start
-			variant
-				count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				check
-					is_node: a_cursor.item.is_node
-					-- from pre-condition
-				end
-				a_node_list.put_last (a_cursor.item.as_node)
-				a_cursor.forth
-			end
-			if in_reverse then
-				create {XM_XPATH_REVERSE_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
+			if count = 0 then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			else
-				create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
+				create a_node_list.make (count)
+				from
+					a_cursor := new_cursor; a_cursor.start
+				variant
+					count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					check
+						is_node: a_cursor.item.is_node
+						-- from pre-condition
+					end
+					a_node_list.put_last (a_cursor.item.as_node)
+					a_cursor.forth
+				end
+				if in_reverse then
+					create {XM_XPATH_REVERSE_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
+				else
+					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
+				end
 			end
 		end
 

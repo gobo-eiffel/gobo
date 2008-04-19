@@ -44,6 +44,51 @@ feature -- Status report
 			Result := are_dependencies_computed and then are_cardinalities_computed and then are_special_properties_computed
 		end
 
+feature -- Status setting
+
+	reinitialize_all_static_properties is
+			-- Re-initialize all static properties to `False'
+		do
+			are_dependencies_computed := False
+			are_intrinsic_dependencies_computed := False
+			are_cardinalities_computed := False
+			are_special_properties_computed := False
+			depends_upon_current_item := False
+			depends_upon_context_item := False
+			depends_upon_position := False
+			depends_upon_last := False
+			depends_upon_context_document := False
+			depends_upon_current_group	:= False
+			depends_upon_regexp_group := False
+			depends_upon_local_variables := False
+			depends_upon_user_functions := False
+			depends_upon_implicit_timezone := False
+			depends_upon_xslt_context :=False
+			intrinsically_depends_upon_current_item := False
+			intrinsically_depends_upon_context_item := False
+			intrinsically_depends_upon_position := False
+			intrinsically_depends_upon_last := False
+			intrinsically_depends_upon_context_document := False
+			intrinsically_depends_upon_current_group := False
+			intrinsically_depends_upon_regexp_group := False
+			intrinsically_depends_upon_local_variables := False
+			intrinsically_depends_upon_user_functions := False
+			intrinsically_depends_upon_implicit_timezone := False
+			intrinsically_depends_upon_xslt_context := False
+			cardinality_allows_zero := False
+			cardinality_allows_one := False
+			cardinality_allows_many := False
+			are_special_properties_computed := False
+			context_document_nodeset := False
+			ordered_nodeset := False
+			reverse_document_order := False
+			peer_nodeset := False
+			subtree_nodeset := False
+			attribute_ns_nodeset := False
+			non_creating := False
+			single_document_nodeset := False
+		end
+
 feature -- Dependencies
 
 		-- These attributes are only meaningfull if `are_dependencies_computed' = `True'
@@ -186,6 +231,7 @@ feature -- Setting dependencies
 		require
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
 		do
+			are_dependencies_computed := True
 			depends_upon_current_item := intrinsically_depends_upon_current_item
 			depends_upon_context_item := intrinsically_depends_upon_context_item
 			depends_upon_position := intrinsically_depends_upon_position
@@ -650,9 +696,12 @@ feature -- Cardinality
 				Result := Required_cardinality_one_or_more
 			elseif cardinality_allows_one then
 				Result := Required_cardinality_optional
+			elseif cardinality_allows_many then
+				Result := Required_cardinality_many
 			else
 					check
-						empty: cardinality_allows_zero and not cardinality_allows_many
+						empty: cardinality_allows_zero and not cardinality_allows_many and not cardinality_allows_one
+						-- only remaining possibility
 					end
 				Result := Required_cardinality_empty
 			end
@@ -676,11 +725,11 @@ feature -- Cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := cardinality_allows_zero and
+			Result := (cardinality_allows_zero and
 				not cardinality_allows_one and
-				not cardinality_allows_many
+				not cardinality_allows_many)
 		ensure
-			definition: Result = cardinality_allows_zero and not cardinality_allows_one and not cardinality_allows_many
+			definition: Result = (cardinality_allows_zero and not cardinality_allows_one and not cardinality_allows_many)
 		end
 
 	cardinality_allows_zero_or_one: BOOLEAN is
@@ -696,11 +745,10 @@ feature -- Cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := cardinality_allows_one and
-				not cardinality_allows_zero and
-				not cardinality_allows_many
+			Result := (cardinality_allows_one and (not cardinality_allows_zero) and
+				(not cardinality_allows_many))
 		ensure
-			definition: Result = cardinality_allows_one and not cardinality_allows_zero and not cardinality_allows_many
+			definition: Result = (cardinality_allows_one and (not cardinality_allows_zero) and (not cardinality_allows_many))
 		end
 
 
@@ -709,9 +757,9 @@ feature -- Cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := not cardinality_allows_zero and
+			Result := (not cardinality_allows_zero and
 				cardinality_allows_one and
-				cardinality_allows_many
+				cardinality_allows_many)
 		end
 
 	cardinality_allows_zero_or_more: BOOLEAN is
@@ -719,11 +767,11 @@ feature -- Cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := cardinality_allows_zero and
+			Result := (cardinality_allows_zero and
 				cardinality_allows_one and
-				cardinality_allows_many
+				cardinality_allows_many)
 		ensure
-			definition: Result = cardinality_allows_zero and cardinality_allows_one and cardinality_allows_many
+			definition: Result = (cardinality_allows_zero and cardinality_allows_one and cardinality_allows_many)
 		end
 
 	cardinality_subsumes (requested_cardinality: INTEGER): BOOLEAN is
@@ -741,6 +789,8 @@ feature -- Cardinality
 				Result := cardinality_allows_one and cardinality_allows_many
 			when Required_cardinality_zero_or_more then
 				Result := cardinality_allows_zero_or_more
+			when Required_cardinality_many then
+				Result := cardinality_allows_many
 			end
 		end
 
@@ -816,6 +866,8 @@ feature -- Setting cardinality
 				set_cardinality_one_or_more
 			when Required_cardinality_zero_or_more then
 				set_cardinality_zero_or_more
+			when Required_cardinality_many then
+				set_cardinality_many
 			end
 		ensure
 			cardinalities_computed: are_cardinalities_computed
@@ -1043,14 +1095,14 @@ feature -- Setting special properties
 			non_creating := a_other.non_creating and non_creating
 			single_document_nodeset := a_other.single_document_nodeset and single_document_nodeset
 		ensure
-			context_document_nodeset_masked: context_document_nodeset = a_other.context_document_nodeset and old context_document_nodeset
-			ordered_nodeset_masked: ordered_nodeset = a_other.ordered_nodeset and old ordered_nodeset
-			reverse_document_order_masked: reverse_document_order = a_other.reverse_document_order and old reverse_document_order
-			peer_nodeset_masked: peer_nodeset = a_other.peer_nodeset and old peer_nodeset
-			subtree_nodeset_masked: subtree_nodeset = a_other.subtree_nodeset and old subtree_nodeset
-			attribute_ns_nodeset_masked: attribute_ns_nodeset = a_other.attribute_ns_nodeset and old attribute_ns_nodeset
-			non_creating_masked: non_creating = a_other.non_creating and old non_creating
-			single_document_nodeset_masked: single_document_nodeset = a_other.single_document_nodeset and old single_document_nodeset
+			context_document_nodeset_masked: context_document_nodeset = (a_other.context_document_nodeset and old context_document_nodeset)
+			ordered_nodeset_masked: ordered_nodeset = (a_other.ordered_nodeset and old ordered_nodeset)
+			reverse_document_order_masked: reverse_document_order = (a_other.reverse_document_order and old reverse_document_order)
+			peer_nodeset_masked: peer_nodeset = (a_other.peer_nodeset and old peer_nodeset)
+			subtree_nodeset_masked: subtree_nodeset = (a_other.subtree_nodeset and old subtree_nodeset)
+			attribute_ns_nodeset_masked: attribute_ns_nodeset = (a_other.attribute_ns_nodeset and old attribute_ns_nodeset)
+			non_creating_masked: non_creating = (a_other.non_creating and old non_creating)
+			single_document_nodeset_masked: single_document_nodeset = (a_other.single_document_nodeset and old single_document_nodeset)
 		end
 
 	set_context_document_nodeset is

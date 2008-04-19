@@ -4,17 +4,17 @@ indexing
 
 		"Time values consistent with XPath 2.0"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-01-02 13:57:21 +0000 (Wed, 02 Jan 2008) $"
+	revision: "$Revision: 6243 $"
 
-class DT_XPATH_TIME_VALUE
+class ST_XPATH_TIME_VALUE
 
 inherit
 
-	DT_XPATH_CALENDAR_VALUE
+	ST_XPATH_CALENDAR_VALUE
 		redefine
 			is_xpath_time, as_xpath_time
 		end
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		require
 			lexical_time: a_lexical_time /= Void and then is_time (a_lexical_time)
 		local
-			l_date_time_parser: DT_XSD_DATE_TIME_PARSER
+			l_date_time_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create l_date_time_parser.make_1_1
 			if l_date_time_parser.is_zoned_time (a_lexical_time) then
@@ -91,7 +91,7 @@ feature -- Status report
 		require
 			lexical_time_not_void: a_lexical_time /= Void
 		local
-			l_date_time_parser: DT_XSD_DATE_TIME_PARSER
+			l_date_time_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create l_date_time_parser.make_1_1
 			Result := l_date_time_parser.is_zoned_time (a_lexical_time) or l_date_time_parser.is_time (a_lexical_time)
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	as_xpath_time: DT_XPATH_TIME_VALUE is
+	as_xpath_time: ST_XPATH_TIME_VALUE is
 			-- `Current' seen as a time value
 		do
 			Result := Current

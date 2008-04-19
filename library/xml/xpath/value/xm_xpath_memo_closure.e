@@ -261,7 +261,11 @@ feature -- Evaluation
 						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator, Current)
 					end
 				when All_read_state then
-					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_reservoir)
+					if l_reservoir.is_empty then
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+					else
+						create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_reservoir)
+					end
 				when Busy_state then
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Attempting to access a variable while it is being evaluated", Xpath_errors_uri, "XTDE0640", Dynamic_error)
 					check

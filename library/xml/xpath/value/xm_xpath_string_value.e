@@ -190,7 +190,7 @@ feature -- Status report
 			-- Is `Current' convertible to `a_required_type'?
 		local
 			a_string: STRING
-			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
+			a_date_time_parser: ST_XSD_DATE_TIME_PARSER
 			a_duration_parser: XM_XPATH_DURATION_PARSER
 		do
 			if a_required_type = type_factory.boolean_type then

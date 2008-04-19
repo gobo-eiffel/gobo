@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Test features of class DT_XSD_DATE_TIME_PARSER and DT_XSD_DATE_TIME_FORMAT"
+		"Test features of class ST_XSD_DATE_TIME_PARSER and ST_XSD_DATE_TIME_FORMAT"
 
-	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2005, Colin Adams and others"
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2008, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date:  $"
+	revision: "$Revision:  $"
 
-class DT_TEST_XSD_DATE_TIME_PARSER
+class ST_TEST_XSD_DATE_TIME_PARSER
 
 inherit
 
@@ -28,7 +28,7 @@ feature -- Test
 			-- Test is_date and string_to_date.
 		local
 			d1: DT_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create a_parser.make_1_0
 			assert ("24th March 2000", a_parser.is_date ("2000-03-24"))
@@ -92,7 +92,7 @@ feature -- Test
 			-- Test is_zoned_date and string_to_zoned_date.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
@@ -151,7 +151,7 @@ feature -- Test
 			-- Test is_time and string_to_time.
 		local
 			t1, t2: DT_TIME
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_string, another_time_string: STRING
 		do
 			create a_parser.make_1_0
@@ -206,7 +206,7 @@ feature -- Test
 			-- Test is_zoned_time and string_to_zoned_time.
 		local
 			t1: DT_FIXED_OFFSET_ZONED_TIME
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
@@ -253,7 +253,7 @@ feature -- Test
 			-- Test is_date_time and string_to_date_time.
 		local
 			dt1: DT_DATE_TIME
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_date_time: STRING
 		do
 			create a_parser.make_1_0
@@ -291,7 +291,7 @@ feature -- Test
 			-- Test is_zoned_date_time and string_to_zoned_date_time.
 		local
 			dt1: DT_FIXED_OFFSET_ZONED_DATE_TIME
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_date_time: STRING
 		do
 			create a_parser.make_1_0
@@ -331,7 +331,7 @@ feature -- Test
 			-- Test date_to_string
 		local
 			d1: DT_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (2000, 3, 24)
@@ -359,7 +359,7 @@ feature -- Test
 			d1: DT_DATE
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dz1: DT_FIXED_OFFSET_ZONED_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (2000, 3, 24)
@@ -401,7 +401,7 @@ feature -- Test
 			-- Test time_to_string
 		local
 			t1: DT_TIME
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create t1.make (7, 15, 34)
@@ -421,7 +421,7 @@ feature -- Test
 			t1: DT_TIME
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dz1: DT_FIXED_OFFSET_ZONED_TIME
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create t1.make (7, 15, 34)
@@ -455,7 +455,7 @@ feature -- Test
 			-- Test date_time_to_string
 		local
 			dt1: DT_DATE_TIME
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create dt1.make (2000, 3, 24, 7, 15, 34)
@@ -483,7 +483,7 @@ feature -- Test
 			dt1: DT_DATE_TIME
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dtz1: DT_FIXED_OFFSET_ZONED_DATE_TIME
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create dt1.make (2000, 3, 24, 7, 15, 34)
@@ -517,7 +517,7 @@ feature -- Test
 			-- Test is_year_month and string_to_year_month.
 		local
 			d1: DT_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create a_parser.make_1_0
 			assert ("March 2000", a_parser.is_year_month ("2000-03"))
@@ -577,7 +577,7 @@ feature -- Test
 			-- Test is_zoned_year_month and string_to_zoned_year_month.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
@@ -636,7 +636,7 @@ feature -- Test
 			-- Test is_year and string_to_year.
 		local
 			d1: DT_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create a_parser.make_1_0
 			assert ("2000", a_parser.is_year ("2000"))
@@ -686,7 +686,7 @@ feature -- Test
 			-- Test is_zoned_year and string_to_zoned_year.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
@@ -745,7 +745,7 @@ feature -- Test
 			-- Test is_month_day and string_to_month_day.
 		local
 			d1: DT_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create a_parser.make_1_0
 			assert ("21st March", a_parser.is_month_day ("--03-21"))
@@ -763,7 +763,7 @@ feature -- Test
 			-- Test is_zoned_month_day and string_to_zoned_month_day.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
@@ -794,7 +794,7 @@ feature -- Test
 			-- Test is_day and string_to_day.
 		local
 			d1: DT_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create a_parser.make_1_0
 			assert ("21st", a_parser.is_day ("---21"))
@@ -810,7 +810,7 @@ feature -- Test
 			-- Test is_zoned_day and string_to_zoned_day.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
@@ -841,7 +841,7 @@ feature -- Test
 			-- Test is_month and string_to_month.
 		local
 			d1: DT_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create a_parser.make_1_0
 			assert ("March", a_parser.is_month ("--03"))
@@ -859,7 +859,7 @@ feature -- Test
 			-- Test is_zoned_month and string_to_zoned_month.
 		local
 			d1: DT_FIXED_OFFSET_ZONED_DATE
-			a_parser: DT_XSD_DATE_TIME_PARSER
+			a_parser: ST_XSD_DATE_TIME_PARSER
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			create a_parser.make_1_0
@@ -890,7 +890,7 @@ feature -- Test
 			-- Test year_month_to_string
 		local
 			d1: DT_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (2000, 3, 1)
@@ -918,7 +918,7 @@ feature -- Test
 			d1: DT_DATE
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dz1: DT_FIXED_OFFSET_ZONED_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (2000, 3, 1)
@@ -960,7 +960,7 @@ feature -- Test
 			-- Test year_to_string
 		local
 			d1: DT_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (2000, 1, 1)
@@ -988,7 +988,7 @@ feature -- Test
 			d1: DT_DATE
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dz1: DT_FIXED_OFFSET_ZONED_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (2000, 1, 1)
@@ -1030,7 +1030,7 @@ feature -- Test
 			-- Test month_day_to_string
 		local
 			d1: DT_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (1, 3, 24)
@@ -1058,7 +1058,7 @@ feature -- Test
 			d1: DT_DATE
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dz1: DT_FIXED_OFFSET_ZONED_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (1, 3, 24)
@@ -1100,7 +1100,7 @@ feature -- Test
 			-- Test day_to_string
 		local
 			d1: DT_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (1, 1, 24)
@@ -1128,7 +1128,7 @@ feature -- Test
 			d1: DT_DATE
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dz1: DT_FIXED_OFFSET_ZONED_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (1, 1, 24)
@@ -1170,7 +1170,7 @@ feature -- Test
 			-- Test month_to_string
 		local
 			d1: DT_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (1, 3, 1)
@@ -1189,7 +1189,7 @@ feature -- Test
 			d1: DT_DATE
 			tz1: DT_FIXED_OFFSET_TIME_ZONE
 			dz1: DT_FIXED_OFFSET_ZONED_DATE
-			a_formatter: DT_XSD_DATE_TIME_FORMAT
+			a_formatter: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make_1_0
 			create d1.make (1, 3, 1)

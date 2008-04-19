@@ -847,6 +847,16 @@ feature -- Status report
 
 feature -- Status setting
 
+	clear_error is
+			-- Clear `error_value'.
+		require
+			in_error: is_error
+		do
+			error_value := Void
+		ensure
+			not_in_error: not is_error
+		end
+
 	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
 			-- Set `error_value'.
 		require

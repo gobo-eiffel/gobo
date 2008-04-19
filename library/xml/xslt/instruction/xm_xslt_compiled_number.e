@@ -26,7 +26,7 @@ inherit
 
 	XM_XPATH_NUMERIC_ROUTINES
 
-	DT_XSLT_NUMBER_ROUTINES
+	ST_XSLT_NUMBER_ROUTINES
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; a_level, a_hash_code: INTEGER; a_count_pattern, a_from_pattern: XM_XSLT_PATTERN;
 		a_value_expression, a_format, a_grouping_size, a_grouping_separator, a_letter_value, an_ordinal, a_language: XM_XPATH_EXPRESSION;
-		a_formatter: XM_XSLT_NUMBER_FORMATTER;	a_numberer: DT_XSLT_NUMBERER; a_variables_in_patterns, a_backwards: BOOLEAN) is
+		a_formatter: XM_XSLT_NUMBER_FORMATTER;	a_numberer: ST_XSLT_NUMBERER; a_variables_in_patterns, a_backwards: BOOLEAN) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 	formatter: XM_XSLT_NUMBER_FORMATTER
 			-- Formatter
 
-	numberer: DT_XSLT_NUMBERER
+	numberer: ST_XSLT_NUMBERER
 			-- Numberer
 
 	has_variables_in_patterns: BOOLEAN

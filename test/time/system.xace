@@ -39,7 +39,5 @@
 	<mount location="${GOBO}/library/structure/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/pattern/library.xace"/>
-	<mount location="${GOBO}/library/string/library.xace"/>
-	<mount location="${GOBO}/library/math/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

@@ -32,7 +32,7 @@ inherit
 
 	XM_XPATH_TYPE
 
-	DT_STRING_ROUTINES
+	ST_STRING_ROUTINES
 
 create
 

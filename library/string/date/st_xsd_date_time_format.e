@@ -4,19 +4,19 @@ indexing
 
 		"Objects that format XML Schema dates and times"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2007-03-02 14:44:35 +0000 (Fri, 02 Mar 2007) $"
+	revision: "$Revision: 5909 $"
 
-class DT_XSD_DATE_TIME_FORMAT
+class ST_XSD_DATE_TIME_FORMAT
 
 inherit
 
-	DT_DATE_TIME_FORMAT
+	ST_DATE_TIME_FORMAT
 
-	DT_XSD_DATE_TIME_PARSER
+	ST_XSD_DATE_TIME_PARSER
 
 	KL_IMPORTED_INTEGER_ROUTINES
 

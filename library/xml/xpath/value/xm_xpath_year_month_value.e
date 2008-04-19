@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 	make (a_lexical_date: STRING) is
 			-- Create from lexical date.
 		local
-			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
+			a_date_time_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			make_atomic_value
 			create a_date_time_parser.make_1_1
@@ -76,7 +76,7 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		local
-			a_date_time_parser: DT_XSD_DATE_TIME_FORMAT
+			a_date_time_parser: ST_XSD_DATE_TIME_FORMAT
 		do
 			create a_date_time_parser.make_1_1
 			if zoned then
@@ -163,7 +163,7 @@ feature -- Status report
 	is_date (a_lexical_date: STRING): BOOLEAN is
 			-- Is `a_lexical_date' a valid date?
 		local
-			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
+			a_date_time_parser: ST_XSD_DATE_TIME_PARSER
 		do
 			create a_date_time_parser.make_1_1
 			Result := a_date_time_parser.is_zoned_year_month (a_lexical_date)

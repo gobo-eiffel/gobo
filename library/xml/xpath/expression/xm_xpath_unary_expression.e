@@ -130,6 +130,9 @@ feature -- Optimization
 					
 					if is_error or expression_factory.last_created_closure.is_error then
 						error_value := Void
+						if base_expression.is_error then
+							base_expression.clear_error
+						end
 					else
 						set_replacement (expression_factory.last_created_closure)
 					end
@@ -164,6 +167,9 @@ feature -- Optimization
 					
 					if is_error or expression_factory.last_created_closure.is_error then
 						error_value := Void
+						if base_expression.is_error then
+							base_expression.clear_error
+						end						
 					else
 						set_replacement (expression_factory.last_created_closure)
 					end

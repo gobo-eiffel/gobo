@@ -121,7 +121,7 @@ feature -- Evaluation
 			elseif a_result.item.is_untyped_atomic then
 				if a_result.item.as_untyped_atomic.is_convertible (target_type) then
 					a_result.item.as_untyped_atomic.convert_to_type (target_type)
-					a_result.put (a_result.item.as_untyped_atomic.converted_value)
+					a_result.put (a_result.item.as_atomic_value.converted_value)
 				else
 					l_message := STRING_.concat ("Unable to convert an xs:untypedAtomic value to type ", target_type.conventional_name)
 					a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error))

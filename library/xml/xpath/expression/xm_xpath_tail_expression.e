@@ -164,10 +164,6 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			elseif an_iterator.is_array_iterator then
-
-				-- Hm. This is theoretically insufficient, but in practice memory will get
-				--  exhausted before the problem manifests itself
-
 				last_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
 			elseif an_iterator.is_node_iterator then
 				create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, start)
@@ -186,10 +182,6 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_node_iterator := an_iterator
 			elseif an_iterator.is_array_iterator then
-
-				-- Hm. This is theoretically insufficient, but in practice memory will get
-				--  exhausted before the problem manifests itself
-
 				last_node_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
 			else
 				create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (an_iterator, start)

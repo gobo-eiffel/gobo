@@ -19,7 +19,7 @@ inherit
 			is_calendar_value, as_calendar_value
 		end
 
-	DT_XPATH_CALENDAR_VALUE
+	ST_XPATH_CALENDAR_VALUE
 
 feature -- Access
 

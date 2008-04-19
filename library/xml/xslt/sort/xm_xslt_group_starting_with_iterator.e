@@ -134,7 +134,11 @@ feature -- Evaluation
 	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the members of the current group, in population order.
 		do
-			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (current_members)
+			if current_members.is_empty then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+			else
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (current_members)
+			end
 		end
 
 feature -- Duplication

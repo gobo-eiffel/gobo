@@ -4,17 +4,17 @@ indexing
 
 		"Objects that format dates and times"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2007-01-26 18:55:25 +0000 (Fri, 26 Jan 2007) $"
+	revision: "$Revision: 5877 $"
 
-deferred class DT_DATE_TIME_FORMAT
+deferred class ST_DATE_TIME_FORMAT
 
 inherit
 
-	DT_DATE_TIME_PARSER
+	ST_DATE_TIME_PARSER
 
 feature -- Conversion
 

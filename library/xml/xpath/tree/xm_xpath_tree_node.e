@@ -531,13 +531,20 @@ feature {NONE} -- Implementation
 			-- New descendant axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
+		local
+			l_list: DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT]
 		do
 			if node_type = Document_node and then a_node_test.is_name_test and then a_node_test.as_name_test.node_kind = Element_node then
 				check
 					document: is_tree_document
 					-- as `node_type' is `Document_node'
 				end
-				create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (as_tree_document.all_elements (a_node_test.fingerprint))
+				l_list := as_tree_document.all_elements (a_node_test.fingerprint)
+				if l_list.is_empty then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TREE_NODE]} Result.make
+				else
+					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (l_list)
+				end
 			elseif has_child_nodes then
 				create {XM_XPATH_TREE_DESCENDANT_ENUMERATION} Result.make (Current, a_node_test, False)
 			else

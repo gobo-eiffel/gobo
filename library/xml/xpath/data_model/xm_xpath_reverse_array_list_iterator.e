@@ -21,6 +21,9 @@ inherit
 			is_reversible_iterator, is_last_position_finder
 		end
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create
 
 	make, make_slice
@@ -30,7 +33,8 @@ feature {NONE} -- Initialization
 	make (a_list: DS_ARRAYED_LIST [G]) is
 		require
 			list_not_void: a_list /= Void
-			no_void_item: a_list.has (Void)
+			list_not_empty: not a_list.is_empty
+			no_void_item: not a_list.has_void
 		do
 			list := a_list
 			cursor := list.new_cursor
@@ -43,17 +47,22 @@ feature {NONE} -- Initialization
 	make_slice (a_list: DS_ARRAYED_LIST [G]; a_start, a_end: INTEGER) is
 		require
 			list_not_void: a_list /= Void
-			no_void_item: a_list.has (Void)
-			first_item: a_start >= 1 and a_start <= a_list.count
+			list_not_empty: not a_list.is_empty			
+			no_void_item: not a_list.has_void
+			first_item: a_start >= 1
 			last_item: a_end <= a_start
 		do
 			list := a_list
 			cursor := list.new_cursor
-			first_item := a_start
+			if a_start > a_list.count then
+				first_item := a_list.count
+			else
+				first_item := a_start
+			end
 			last_item := a_end
 		ensure
 			list_set: list = a_list
-			first_item_set: first_item = a_start
+			first_item_set: first_item = a_start.min (a_list.count)
 			last_item_set: last_item = a_end
 		end
 
@@ -111,7 +120,7 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there no more items in the sequence?
 		do
-			Result := index > first_item - last_item + 1
+			Result := cursor.before or (index > first_item - last_item + 1)
 		end
 
 feature -- Cursor movement
@@ -171,7 +180,8 @@ feature {NONE} -- Implementation
 invariant
 
 	list_not_void: list /= Void
-	no_void_item: list.has (Void)
+	list_not_empty: not list.is_empty
+	no_void_item: not list.has_void
 	first_item: first_item >= 1
 	last_item: last_item <= list.count
 	last_not_greater_than_first: last_item <= first_item

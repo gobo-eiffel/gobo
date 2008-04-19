@@ -297,10 +297,10 @@ feature {NONE} -- Implementation
 			not_yet_sorted: not count_determined
 		local
 			l_item: DS_CELL [XM_XPATH_ITEM]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
-			a_sort_record: XM_XSLT_SORT_RECORD
-			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
-			a_sort_key: XM_XPATH_ATOMIC_VALUE
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
+			l_sort_record: XM_XSLT_SORT_RECORD
+			l_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
+			l_sort_key: XM_XPATH_ATOMIC_VALUE
 		do
 			create node_keys.make_default
 			
@@ -310,45 +310,45 @@ feature {NONE} -- Implementation
 				from
 					base_iterator.start
 				until
-					context.transformer.is_error or else base_iterator.after
+					is_error or base_iterator.after
 				loop
 					if node_keys.is_full then
 						node_keys.resize (node_keys.count * 2)
 					end
 					from
-						create a_key_list.make (sort_keys.count)
-						a_cursor := sort_keys.new_cursor; a_cursor.start
+						create l_key_list.make (sort_keys.count)
+						l_cursor := sort_keys.new_cursor; l_cursor.start
 					until
-						a_cursor.after
+						is_error or l_cursor.after
 					loop
 						create l_item.make (Void)
-						a_cursor.item.sort_key.evaluate_item (l_item, context)
+						l_cursor.item.sort_key.evaluate_item (l_item, context)
 						if l_item.item /= Void then
 							if l_item.item.is_error then
-								context.transformer.report_fatal_error (l_item.item.error_value)
+								set_last_error (l_item.item.error_value)
 							else
 								if l_item.item.is_atomic_value then
-									a_sort_key := l_item.item.as_atomic_value
+									l_sort_key := l_item.item.as_atomic_value
 								else
-									create {XM_XPATH_STRING_VALUE} a_sort_key.make (l_item.item.as_node.string_value)
+									create {XM_XPATH_STRING_VALUE} l_sort_key.make (l_item.item.as_node.string_value)
 								end
 							end
 						else
-							a_sort_key := Void  -- = () - an empty sequence
+							l_sort_key := Void  -- = () - an empty sequence
 						end
-						a_key_list.put_last (a_sort_key)
-						a_cursor.forth
+						l_key_list.put_last (l_sort_key)
+						l_cursor.forth
 					end
 
 					-- Make the sort stable by adding the record number.
 					
 					count := count + 1
-					create a_sort_record.make (base_iterator.item, a_key_list, count)
-					node_keys.put_last (a_sort_record)
+					create l_sort_record.make (base_iterator.item, l_key_list, count)
+					node_keys.put_last (l_sort_record)
 					base_iterator.forth
 				end
-				if base_iterator.is_error then
-					context.transformer.report_fatal_error (base_iterator.error_value)
+				if not is_error and base_iterator.is_error then
+					set_last_error (base_iterator.error_value)
 				end
 			end
 			count_determined := True

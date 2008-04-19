@@ -19,7 +19,7 @@ inherit
 			evaluate_item
 		end
 
-	DT_XSLT_FORMAT_DATE_TIME
+	ST_XSLT_FORMAT_DATE_TIME
 		export {NONE} all end
 
 create
@@ -107,8 +107,8 @@ feature -- Evaluation
 		local
 			l_calendar_value: XM_XPATH_CALENDAR_VALUE
 			l_picture, l_language, l_country, l_calendar: STRING
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
-			l_value: DT_FORMAT_DATE_TIME_RESULT
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_FORMAT_DATE_TIME_RESULT
 			l_error: XM_XPATH_ERROR_VALUE
 		do
 			arguments.item (1).evaluate_item (a_result, a_context)

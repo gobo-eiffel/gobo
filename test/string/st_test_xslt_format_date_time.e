@@ -2,21 +2,21 @@ indexing
 
 	description:
 
-		"Test features of class DT_XSLT_FORMAT_DATE_TIME"
+		"Test features of class ST_XSLT_FORMAT_DATE_TIME"
 
-	library: "Gobo Eiffel Time Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2008, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date:  $"
+	revision: "$Revision:  $"
 
-class DT_TEST_XSLT_FORMAT_DATE_TIME
+class ST_TEST_XSLT_FORMAT_DATE_TIME
 
 inherit
 
 	TS_TEST_CASE
 
-	DT_XSLT_FORMAT_DATE_TIME
+	ST_XSLT_FORMAT_DATE_TIME
 
 create
 
@@ -28,8 +28,8 @@ feature -- Test
 			-- Test formatting '2002-12-31' as '[Y0001]-[M01]-[D01]'.
 		local
 			l_date: DT_DATE
-			l_value: DT_XPATH_DATE_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_date.make (2002, 12, 31)
 			create l_value.make_from_date (l_date)
@@ -44,8 +44,8 @@ feature -- Test
 			-- Test formatting '2002-12-31' as '[M]-[D]-[Y]'.
 		local
 			l_date: DT_DATE
-			l_value: DT_XPATH_DATE_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_date.make (2002, 12, 31)
 			create l_value.make_from_date (l_date)
@@ -60,8 +60,8 @@ feature -- Test
 			-- Test formatting '2002-12-31' as '[D]-[M]-[Y]'.
 		local
 			l_date: DT_DATE
-			l_value: DT_XPATH_DATE_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_date.make (2002, 12, 31)
 			create l_value.make_from_date (l_date)
@@ -76,8 +76,8 @@ feature -- Test
 			-- Test formatting '2002-12-31' as '[D1] [MI] [Y]'.
 		local
 			l_date: DT_DATE
-			l_value: DT_XPATH_DATE_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_date.make (2002, 12, 31)
 			create l_value.make_from_date (l_date)
@@ -92,8 +92,8 @@ feature -- Test
 			-- Test formatting '2002-12-31' as '[D1o] [MNn], [Y]'.
 		local
 			l_date: DT_DATE
-			l_value: DT_XPATH_DATE_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_date.make (2002, 12, 31)
 			create l_value.make_from_date (l_date)
@@ -108,8 +108,8 @@ feature -- Test
 			-- Test formatting '2002-12-31' as '[[[Y0001]-[M01]-[D01]]]'.
 		local
 			l_date: DT_DATE
-			l_value: DT_XPATH_DATE_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_date.make (2002, 12, 31)
 			create l_value.make_from_date (l_date)
@@ -124,8 +124,8 @@ feature -- Test
 			-- Test formatting '2002-12-31' as '[YWw]'
 		local
 			l_date: DT_DATE
-			l_value: DT_XPATH_DATE_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_date.make (2002, 12, 31)
 			create l_value.make_from_date (l_date)
@@ -139,8 +139,8 @@ feature -- Test
 	test_format_time_one is
 			-- Test formatting '15:58:45.762' as '[h]:[m01] [PN, *-2]'.
 		local
-			l_value: DT_XPATH_TIME_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_TIME_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_value.make ("15:58:45.762")
 			create l_result.make (Void)
@@ -153,8 +153,8 @@ feature -- Test
 	test_format_time_two is
 			-- Test formatting '15:58:45.762' as '[h]:[m01]:[s01] [Pn, 1-2]'.
 		local
-			l_value: DT_XPATH_TIME_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_TIME_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_value.make ("15:58:45.762")
 			create l_result.make (Void)
@@ -167,8 +167,8 @@ feature -- Test
 	test_format_time_three is
 			-- Test formatting '15:58:45.762' as '[H01]:[m01]:[s01].[f001]'.
 		local
-			l_value: DT_XPATH_TIME_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_TIME_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_value.make ("15:58:45.762")
 			create l_result.make (Void)
@@ -181,8 +181,8 @@ feature -- Test
 	test_format_time_four is
 			-- Test formatting '15:58:45.762+02:00' as '[H01]:[m01]:[s01] [z]'.
 		local
-			l_value: DT_XPATH_TIME_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_TIME_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_value.make ("15:58:45.762+02:00")
 			create l_result.make (Void)
@@ -195,8 +195,8 @@ feature -- Test
 	test_format_date_time_one is
 			-- Test formatting '2002-12-31T15:58:45.762+02:00' as '[h].[m01][Pn] on [FNn], [D1o] [MNn]'.
 		local
-			l_value: DT_XPATH_DATE_TIME_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_TIME_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_value.make ("2002-12-31T15:58:45.762+02:00")
 			create l_result.make (Void)
@@ -209,8 +209,8 @@ feature -- Test
 	test_format_date_time_two is
 			-- Test formatting '2002-12-31T15:58:45.762+02:00' as '[M01]/[D01]/[Y0001] at [H01]:[m01]:[s01]').
 		local
-			l_value: DT_XPATH_DATE_TIME_VALUE
-			l_result: DS_CELL [DT_FORMAT_DATE_TIME_RESULT]
+			l_value: ST_XPATH_DATE_TIME_VALUE
+			l_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]
 		do
 			create l_value.make ("2002-12-31T15:58:45.762+02:00")
 			create l_result.make (Void)

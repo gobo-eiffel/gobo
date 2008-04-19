@@ -199,7 +199,9 @@ feature -- Evaluation
 	map (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `a_item' to a sequence
 		do
-			if not a_item.is_error then test_conformance (a_item) end
+			if not a_item.is_error then
+				test_conformance (a_item)
+			end
 			create last_mapped_item.make_item (a_item)
 		end
 
@@ -242,7 +244,7 @@ feature {NONE} -- Implementation
 
 	test_conformance (a_item: XM_XPATH_ITEM) is
 			-- Test conformance of `a_item' to `required_item_type'.
-			-- Marks `a_item' as in error if check fails.
+			-- Marks `Current' and `a_item' as in error if check fails.
 		require
 			item_not_in_error: a_item /= Void and then not a_item.is_error 
 		local
@@ -255,6 +257,7 @@ feature {NONE} -- Implementation
 				l_message := STRING_.appended_string (l_message, "; supplied value is ")
 				l_message := STRING_.appended_string (l_message, a_item.item_type.conventional_name)
 				a_item.set_last_error_from_string (l_message, Xpath_errors_uri, error_code, Type_error)
+				set_last_error_from_string (l_message, Xpath_errors_uri, error_code, Type_error)
 			end
 		end
 

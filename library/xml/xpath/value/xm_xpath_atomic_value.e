@@ -192,7 +192,7 @@ feature -- Conversion
 		deferred
 		ensure
 			conversion_available: converted_value /= Void
-			correct_type: is_sub_type (a_required_type, converted_value.item_type)
+			correct_type: is_sub_type (converted_value.item_type, a_required_type)
 		end
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
