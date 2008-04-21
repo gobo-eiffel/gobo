@@ -31,6 +31,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_list: DS_ARRAYED_LIST [G]) is
+			-- Initialize using `a_list'.
 		require
 			list_not_void: a_list /= Void
 			list_not_empty: not a_list.is_empty
@@ -45,6 +46,7 @@ feature {NONE} -- Initialization
 		end
 	
 	make_slice (a_list: DS_ARRAYED_LIST [G]; a_start, a_end: INTEGER) is
+			-- Initialize using slice of `a_list' from `a_start' to `a_end'.
 		require
 			list_not_void: a_list /= Void
 			list_not_empty: not a_list.is_empty
