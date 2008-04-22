@@ -47,7 +47,7 @@ feature -- Test
 		do
 			-- Saturday 1 January 2005.
 			create l_date.make (2005, 1, 1)
-			l_result := xslt_formatted (l_date, Void, "[FNn] [Do] of [MNn], [Y]", Void, Void, Void)
+			l_result := xslt_formatted_date (l_date, Void, "[FNn] [Do] of [MNn], [Y]", Void, Void, Void)
 			assert ("Result not void", l_result /= Void)
 			assert ("No error", not l_result.is_error)
 			assert ("Non-void value", l_result.value /= Void)
@@ -62,7 +62,7 @@ feature -- Test
 		do
 			-- Saturday 1 January 2005, 21:45:15.
 			create l_date_time.make (2005, 1, 1, 21, 45, 15)
-			l_result := xslt_formatted (l_date_time, Void, "[h]:[m] [P] on [FNn] [Do] of [MNn], [Y]", Void, Void, Void)
+			l_result := xslt_formatted_date_time (l_date_time, Void, "[h]:[m] [P] on [FNn] [Do] of [MNn], [Y]", Void, Void, Void)
 			assert ("Result not void", l_result /= Void)
 			assert ("No error", not l_result.is_error)
 			assert ("Non-void value", l_result.value /= Void)
