@@ -624,7 +624,9 @@ feature {NONE} -- Element change
 					-- Make sure that default values are taken into account.
 				an_option := ast_factory.new_options
 			end
-			a_system.set_clusters (a_clusters)
+			if a_clusters /= Void then
+				a_system.set_clusters (a_clusters)
+			end
 			a_system.set_system_name (a_name)
 			a_system.set_root_class_name (a_class)
 			a_system.set_creation_procedure_name (a_creation)
