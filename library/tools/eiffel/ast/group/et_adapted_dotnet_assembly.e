@@ -10,19 +10,28 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_ADAPTED_DOTNET_ASSEMBLY
+class ET_ADAPTED_DOTNET_ASSEMBLY
 
 inherit
 
-	ET_DOTNET_ASSEMBLY
+	ET_ADAPTED_UNIVERSE
+		rename
+			universe as dotnet_assembly
+		redefine
+			dotnet_assembly
+		end
+
+create
+
+	make
 
 feature -- Access
 
-	adapted_dotnet_assembly: ET_DOTNET_ASSEMBLY
+	dotnet_assembly: ET_DOTNET_ASSEMBLY
 			-- .NET assembly being adapted
 
 invariant
 
-	adapted_dotnet_assembly_not_void: adapted_dotnet_assembly /= Void
+	dotnet_assembly_not_void: dotnet_assembly /= Void
 
 end

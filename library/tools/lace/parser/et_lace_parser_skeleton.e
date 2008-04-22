@@ -155,12 +155,16 @@ feature {NONE} -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := ast_factory.new_assembly (a_name, a_pathname)
+			if last_system /= Void then
+				Result := ast_factory.new_assembly (a_name, a_pathname, last_system)
+			else
+				Result := ast_factory.new_assembly (a_name, a_pathname, tokens.empty_system)
+			end
 		ensure
 			assembly_not_void: Result /= Void
 		end
 
-	new_assemblies (an_assembly: ET_LACE_DOTNET_ASSEMBLY): ET_LACE_DOTNET_ASSEMBLIES is
+	new_assemblies (an_assembly: ET_LACE_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLIES is
 			-- New assembly list
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -254,10 +258,14 @@ feature {NONE} -- AST factory
 			a_name_not_void: a_name /= Void
 			an_assembly_name_not_void: an_assembly_name /= Void
 		do
-			Result := ast_factory.new_gac_assembly (a_name, an_assembly_name)
-			Result.set_assembly_version (a_version)
-			Result.set_assembly_culture (a_culture)
-			Result.set_assembly_public_key_token (a_public_key_token)
+			if last_system /= Void then
+				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, last_system)
+			else
+				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, tokens.empty_system)
+			end
+			Result.set_assembly_version_id (a_version)
+			Result.set_assembly_culture_id (a_culture)
+			Result.set_assembly_public_key_token_id (a_public_key_token)
 		ensure
 			assembly_not_void: Result /= Void
 		end

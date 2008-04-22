@@ -17,6 +17,9 @@ inherit
 	ET_INTERNAL_UNIVERSE
 
 	ET_ADAPTED_LIBRARY
+		rename
+			make as make_adapted
+		end
 
 create
 
@@ -28,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel class library.
 		do
 			make_from_system (a_system)
-			library := Current
+			make_adapted (Current)
 		ensure
 			current_system_set: current_system = a_system
 		end

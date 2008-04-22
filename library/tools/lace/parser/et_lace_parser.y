@@ -40,7 +40,7 @@ create
 %type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
 %type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt Prefix_opt External_items
 %type <ET_LACE_DOTNET_ASSEMBLY> Assembly
-%type <ET_LACE_DOTNET_ASSEMBLIES> Assembly_list Assemblies_opt
+%type <ET_ADAPTED_DOTNET_ASSEMBLIES> Assembly_list Assemblies_opt
 
 %start Ace
 
@@ -300,12 +300,12 @@ Assembly_list: Assembly
 Assembly: Identifier ':' Identifier Prefix_opt
 		{
 			$$ := new_assembly ($1, $3)
-			$$.set_classname_prefix ($4)
+			$$.set_classname_prefix_id ($4)
 		}
 	| Identifier ':' Identifier ',' Identifier ',' Identifier ',' Identifier Prefix_opt
 		{
 			$$ := new_gac_assembly ($1, $3, $5, $7, $9)
-			$$.set_classname_prefix ($10)
+			$$.set_classname_prefix_id ($10)
 		}
 	;
 

@@ -21,6 +21,10 @@ inherit
 			library
 		end
 
+create
+
+	make
+
 feature -- Access
 
 	library: ET_LIBRARY

@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			precursor
 			create libraries.make_empty
 			create clusters.make_empty
+			create dotnet_assemblies.make_empty
 		end
 
 feature -- Status report
@@ -65,7 +66,7 @@ feature -- Access
 	libraries: ET_ADAPTED_LIBRARIES
 			-- Libraries
 
-	dotnet_assemblies: ET_DOTNET_ASSEMBLIES
+	dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
 			-- .NET assemblies
 
 	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
@@ -151,9 +152,7 @@ feature -- Measurement
 	dotnet_assembly_count: INTEGER is
 			-- Number of .NET assemblies
 		do
-			if dotnet_assemblies /= Void then
-				Result := dotnet_assemblies.count
-			end
+			Result := dotnet_assemblies.count
 		ensure
 			dotnet_assembly_count_not_negavite: Result >= 0
 		end
@@ -182,6 +181,8 @@ feature -- Setting
 
 	set_dotnet_assemblies (a_assemblies: like dotnet_assemblies) is
 			-- Set `a_assemblies' to `dotnet_assemblies'.
+		require
+			a_assemblies_not_void: a_assemblies /= Void
 		do
 			dotnet_assemblies := a_assemblies
 		ensure
@@ -202,22 +203,22 @@ feature -- Iteration
 
 	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
 			-- Apply `an_action' on all classes declared locally in current universe
-			-- as well as on the classes that are declared in the universe it depends
+			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively.
 		do
--- TODO: .NET assemblies.
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.classes_do_local (an_action))
 			libraries.do_recursive (agent {ET_LIBRARY}.classes_do_local (an_action))
 			classes_do_local (an_action)
 		end
 
 	classes_do_ordered (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
 			-- Apply `an_action' on all classes declared locally in current universe
-			-- as well as on the classes that are declared in the universe it depends
+			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively. The classes declared in a given universe will be
 			-- processed only after those from the universes it depends on have
 			-- been processed.
 		do
--- TODO: .NET assemblies.
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.classes_do_local (an_action))
 			libraries.do_ordered (agent {ET_LIBRARY}.classes_do_local (an_action))
 			classes_do_local (an_action)
 		end
@@ -239,8 +240,13 @@ feature -- Parsing
 			-- for more details.
 			--
 			-- `classes_modified' and `classes_added' will be updated.
+		local
+			l_assemblies: ET_DOTNET_ASSEMBLIES
 		do
--- TODO			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse_local)
+			create l_assemblies.make_empty
+			dotnet_assemblies.do_all (agent l_assemblies.put_last)
+			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse_local)
 			libraries.do_ordered (agent {ET_LIBRARY}.preparse_local)
 			preparse_local
 		end
@@ -268,7 +274,7 @@ feature -- Parsing
 				import_classes
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_preparser))
 			else
--- TODO: .NET assemblies
+-- TODO: .NET assemblies are currently considered read-only.
 -- TODO: take care of classes which have been moved for a library to the current universe
 -- or vice-versa.
 				libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_classes_modified (Current))
@@ -306,8 +312,13 @@ feature -- Parsing
 			-- for more details.
 			--
 			-- `classes_modified' and `classes_added' will be updated.
+		local
+			l_assemblies: ET_DOTNET_ASSEMBLIES
 		do
--- TODO			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all_local)
+			create l_assemblies.make_empty
+			dotnet_assemblies.do_all (agent l_assemblies.put_last)
+			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all_local)
 			libraries.do_ordered (agent {ET_LIBRARY}.parse_all_local)
 			parse_all_local
 		end
@@ -338,7 +349,7 @@ feature -- Parsing
 				import_classes
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_parser))
 			else
--- TODO: .NET assemblies
+-- TODO: .NET assemblies are currently considered read-only.
 -- TODO: take care of classes which have been moved for a library to the current universe
 -- or vice-versa.
 				libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_classes_modified (Current))
@@ -418,14 +429,13 @@ feature {NONE} -- Parsing
 				classes.force_last (current_system.type_class, current_system.type_class.name)
 				classes.force_last (current_system.typed_pointer_class, current_system.typed_pointer_class.name)
 			end
-			if dotnet_assemblies /= Void then
---					current_system.dotnet_assembly_consumer.consume_assemblies (dotnet_assemblies)
-			end
+			dotnet_assemblies.do_adapted (agent {ET_ADAPTED_DOTNET_ASSEMBLY}.export_classes (Current))
 		end
 
 invariant
 
 	libraries_not_void: libraries /= Void
 	clusters_not_void: clusters /= Void
+	dotnet_assemblies_not_void: dotnet_assemblies /= Void
 
 end

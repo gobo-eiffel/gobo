@@ -106,6 +106,23 @@ feature -- Element change
 			assembly_added: assemblies.last = an_assembly
 		end
 
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_DOTNET_ASSEMBLY]]) is
+			-- Apply `an_action' to every .NET assembly, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := assemblies.count
+			from i := 1 until i > nb loop
+				an_action.call ([assemblies.item (i)])
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Constants
 
 	Initial_assemblies_capacity: INTEGER is 50

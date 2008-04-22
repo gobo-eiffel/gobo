@@ -10,7 +10,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_ADAPTED_UNIVERSE
+deferred class ET_ADAPTED_UNIVERSE
+
+feature {NONE} -- Initialization
+
+	make (a_universe: like universe) is
+			-- Create a new adapted view of `a_universe'.
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+		ensure
+			universe_set: universe = a_universe
+		end
 
 feature -- Access
 

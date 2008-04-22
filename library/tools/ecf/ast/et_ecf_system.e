@@ -16,7 +16,7 @@ inherit
 
 	ET_SYSTEM
 		redefine
-			clusters, dotnet_assemblies
+			clusters
 		end
 
 create
@@ -27,9 +27,6 @@ feature -- Access
 
 	clusters: ET_ECF_CLUSTERS
 			-- Clusters
-
-	dotnet_assemblies: ET_ECF_DOTNET_ASSEMBLIES
-			-- .NET assemblies
 
 feature -- Setting
 

@@ -587,7 +587,7 @@ feature -- Iteration
 
 	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
 			-- Apply `an_action' on all classes declared locally in current universe
-			-- as well as on the classes that are declared in the universe it depends
+			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively.
 		require
 			an_action_not_void: an_action /= Void
@@ -597,7 +597,7 @@ feature -- Iteration
 
 	classes_do_ordered (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
 			-- Apply `an_action' on all classes declared locally in current universe
-			-- as well as on the classes that are declared in the universe it depends
+			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively. The classes declared in a given universe will be
 			-- processed only after those from the universes it depends on have
 			-- been processed.
