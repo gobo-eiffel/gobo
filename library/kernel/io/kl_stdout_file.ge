@@ -18,19 +18,10 @@ class KL_STDOUT_FILE
 inherit
 
 	KI_TEXT_OUTPUT_STREAM
-#ifdef VE
-		undefine
-			copy
-		end
-#endif
 
 	KL_OPERATING_SYSTEM
 		export
 			{NONE} all
-#ifdef VE
-		undefine
-			copy
-#endif
 		end
 
 #ifdef ISE
@@ -66,22 +57,6 @@ inherit
 			{NONE} all
 		end
 #endif
-#ifdef VE
-	FILE
-		rename
-			make as old_make,
-			put_character as old_put_character,
-			put_string as old_put_string,
-			put_boolean as old_put_boolean,
-			put_integer as old_put_integer,
-			is_open_write as old_is_open_write,
-			close as old_close
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
-#endif
 
 create
 
@@ -98,10 +73,6 @@ feature {NONE} -- Initialization
 #ifdef SE
 			name := "stdout"
 			old_make
-#endif
-#ifdef VE
-			make_open_stdout
-			name := "stdout"
 #endif
 		ensure
 			name_set: name.is_equal ("stdout")
@@ -131,12 +102,6 @@ feature -- Output
 	put_character (c: CHARACTER) is
 			-- Write `c' to standard output file.
 		do
-#ifdef VE
-			if is_windows and then c = '%N' then
-					-- Windows.
-				old_put_character ('%R')
-			end
-#endif
 			old_put_character (c)
 		end
 
@@ -146,30 +111,9 @@ feature -- Output
 			-- write the bytes of its associated UTF unicode encoding.
 		local
 			a_string_string: STRING
-#ifdef VE
-			i, nb: INTEGER
-			c: CHARACTER
-#endif
 		do
 			a_string_string := STRING_.as_string (a_string)
-#ifdef VE
-			if is_windows then
-					-- Windows.
-				nb := a_string_string.count
-				from i := 1 until i > nb loop
-					c := a_string_string.item (i)
-					if c = '%N' then
-						old_put_character ('%R')
-					end
-					old_put_character (c)
-					i := i + 1
-				end
-			else
-				old_put_string (a_string_string)
-			end
-#else
 			old_put_string (a_string_string)
-#endif
 		end
 
 feature -- Basic operations
@@ -177,19 +121,7 @@ feature -- Basic operations
 	flush is
 			-- Flush buffered data to disk.
 		do
-#ifndef VE
 			old_flush
-#endif
 		end
 
-#ifdef VE
-feature {NONE} -- GC
-
-	dispose is
-			-- Do not close standard output file.
-		do
-			handle := INVALID_HANDLE_VALUE
-		end
-
-#endif
 end

@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="pcretest_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="pcretest" location="${GOBO}/test/regexp/pcretest"/>
 
 	<mount location="${GOBO}/library/regexp/library.xace"/>

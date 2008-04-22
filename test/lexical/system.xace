@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="lx_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="lx_tester" location="${GOBO}/test/lexical"/>
 	<cluster name="lx_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

@@ -92,9 +92,9 @@ expressions.
 <section id="filenames"><title>Filenames</title>
 
 <para>
-<ulink url="http://www.object-tools.com/products/VisualEiffel.html">Visual Eiffel</ulink> 
-allows to have several classes in the same file, but the other Eiffel compilers 
-don't. So each file should contain only one class.
+Some the Eiffel compilers supported in the Gobo package do not
+allow to have several classes in the same file (even though some might).
+So each file should contain only one class.
 </para>
 
 <para>
@@ -136,14 +136,9 @@ have the same name and put into the three following clusters:
 			<comment>Implementation for ISE Eiffel</comment></term>
 	</varlistentry>
 	<varlistentry>
-		<term><filename class="directory">spec/se</filename>
+		<term><filename class="directory">spec/ge</filename>
 			<text>         </text>
-			<comment>Implementation for SmartEiffel</comment></term>
-	</varlistentry>
-	<varlistentry>
-		<term><filename class="directory">spec/ve</filename>
-			<text>         </text>
-			<comment>Implementation for Visual Eiffel</comment></term>
+			<comment>Implementation for Gobo Eiffel</comment></term>
 	</varlistentry>
 </variablelist>
 </blockquote>

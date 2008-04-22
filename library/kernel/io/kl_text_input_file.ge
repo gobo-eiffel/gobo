@@ -20,31 +20,20 @@ inherit
 
 	KI_TEXT_INPUT_FILE
 		undefine
-#ifdef ISE || SE || VE
 			read_to_string,
-#endif
-#ifdef VE
-			copy,
-#endif
 			read_to_buffer
 		end
 
 	KL_INPUT_FILE
-#ifdef ISE || VE
-		redefine
 #ifdef ISE
+		redefine
 			string_name,
 			last_character,
 			last_string
-#endif
-#ifdef VE
-			read_character,
-			read_string
-#endif
 		end
 #endif
 
-#ifdef ISE || GE
+#ifdef ISE
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
@@ -131,90 +120,6 @@ feature -- Access
 
 feature -- Input
 
-#ifdef VE
-	read_character is
-			-- Read the next character in input file.
-			-- Make the result available in `last_character'.
-		do
-			if character_buffer /= Void then
-				last_character := character_buffer.item
-				character_buffer := character_buffer.right
-			elseif old_end_of_file then
-				end_of_file := True
-			else
-				if operating_system.is_windows then
-						-- Windows.
-					old_read_character
-					if not old_end_of_file then
-						if last_character = '%R' then
-							old_read_character
-							if old_end_of_file then
-								last_character := '%R'
-							elseif last_character /= '%N' then
-								unread_character (last_character)
-								last_character := '%R'
-							end
-						end
-					else
-						end_of_file := True
-					end
-				else
-					old_read_character
-					end_of_file := old_end_of_file
-				end
-			end
-		end
-
-#endif
-#ifdef VE
-	read_string (nb: INTEGER) is
-			-- Read at most `nb' characters from input file.
-			-- Make the characters that have actually been read
-			-- available in `last_string'.
-		local
-			i, j: INTEGER
-			a_target: STRING
-		do
-			if operating_system.is_windows then
-					-- Windows.
-				if last_string = Void then
-					create last_string.make_filled ('%U', nb)
-				elseif last_string.count < nb then
-					last_string.resize (nb)
-				end
-				a_target := last_string
-				from i := nb until i < 1 loop
-					read_character
-					if not end_of_file then
-						j := j + 1
-						a_target.put (last_character, j)
-						i := i - 1
-					else
-						i := 0 -- Jump out of the loop.
-					end
-				end
-				a_target.resize (j)
-			else
-				if last_string = Void then
-					create last_string.make_filled ('%U', nb)
-				elseif last_string.count < nb then
-					last_string.resize (nb)
-				end
-				if character_buffer = Void then
-					if not old_end_of_file then
-						old_read_stream (nb)
-					else
-						last_string.wipe_out
-					end
-				else
-					i := read_to_string (last_string, 1, nb)
-					last_string.resize (i)
-				end
-			end
-			end_of_file := (last_string.count = 0)
-		end
-
-#endif
 	read_line is
 			-- Read characters from input file until a line separator
 			-- or end of file is reached. Make the characters that have
@@ -230,16 +135,12 @@ feature -- Input
 			has_carriage: BOOLEAN
 		do
 			if last_string = Void then
-#ifdef VE
-				create last_string.make_empty
-#else
 				create last_string.make (256)
-#endif
 			else
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef VE || SE
+#ifdef SE
 				last_string.wipe_out
 #endif
 			end
@@ -282,16 +183,12 @@ feature -- Input
 			-- '%N', '%R%N and '%R'.
 		do
 			if last_string = Void then
-#ifdef VE
-				create last_string.make_empty
-#else
 				create last_string.make (256)
-#endif
 			else
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef VE || SE
+#ifdef SE
 				last_string.wipe_out
 #endif
 			end
@@ -319,7 +216,6 @@ feature -- Input
 			end_of_file := False
 		end
 
-#ifdef SE || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -336,7 +232,6 @@ feature {NONE} -- Implementation
 	string_name: STRING
 			-- Name of file (STRING version)
 
-#endif
 #endif
 #ifdef GE
 feature {PLAIN_TEXT_FILE} -- Implementation

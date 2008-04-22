@@ -14,7 +14,7 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 		<option if="${GOBO_EIFFEL}=ise">
 			<!--
 				In finized mode, it takes a huge amount of time to compile a big generated C file.
@@ -28,8 +28,7 @@
 	<option if="${DEBUG}">
 		<option name="case_insensitive" value="true" />
 		<option name="trace" value="false" />
-		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
-		<option name="assertion" value="ensure" if="${GOBO_EIFFEL}=ve"/>
+		<option name="assertion" value="all"/>
 		<option name="garbage_collector" value="internal"/> 
 		<option name="gc_info" value="false"/> 
 		<option name="finalize" value="false"/>
@@ -45,7 +44,6 @@
 		<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
 	</option>
 
-	<cluster name="xpointer_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="xpointer_tester" location="${GOBO}/test/xml/xpointer"/>
 	<cluster name="eiffel_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

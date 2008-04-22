@@ -17,12 +17,7 @@ inherit
 
 	KI_TEXT_INPUT_FILE
 		undefine
-#ifdef ISE || SE || VE
 			read_to_string,
-#endif
-#ifdef VE
-			copy,
-#endif
 			read_to_buffer
 		end
 
@@ -57,16 +52,12 @@ feature -- Input
 			is_eof: BOOLEAN
 		do
 			if last_string = Void then
-#ifdef VE
-				create last_string.make_empty
-#else
 				create last_string.make (256)
-#endif
 			else
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef VE || SE
+#ifdef SE
 				last_string.wipe_out
 #endif
 			end
@@ -98,16 +89,12 @@ feature -- Input
 			-- was found.
 		do
 			if last_string = Void then
-#ifdef VE
-				create last_string.make_empty
-#else
 				create last_string.make (256)
-#endif
 			else
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef VE || SE
+#ifdef SE
 				last_string.wipe_out
 #endif
 			end

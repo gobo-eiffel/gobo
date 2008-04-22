@@ -17,12 +17,10 @@
 		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
 		<echo message="   geant compile_se"/>
-		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
 		<echo message="   geant compile_debug_se"/>
-		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -61,14 +59,6 @@
 		<geant target="do_all" arguments="compile_ise"/>
 	</target>
 
-	<target name="compile_ve" depend="init">
-		<description>
-			Compile Gobo tools with Visual Eiffel.
-		</description>
-
-		<geant target="do_all" arguments="compile_ve"/>
-	</target>
-
 	<target name="compile_se" depend="init">
 		<description>
 			Compile Gobo tools with SmartEiffel.
@@ -101,14 +91,6 @@
 		</description>
 
 		<geant target="do_all" arguments="compile_debug_ise"/>
-	</target>
-
-	<target name="compile_debug_ve" depend="init">
-		<description>
-			Compile Gobo tools with Visual Eiffel in debug mode.
-		</description>
-
-		<geant target="do_all" arguments="compile_debug_ve"/>
 	</target>
 
 	<target name="compile_debug_se" depend="init">

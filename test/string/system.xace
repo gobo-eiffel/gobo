@@ -39,7 +39,6 @@
 		<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
 	</option>
 
-	<cluster name="st_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="st_tester" location="${GOBO}/test/string"/>
 	<cluster name="st_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

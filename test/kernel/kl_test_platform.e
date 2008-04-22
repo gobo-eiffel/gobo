@@ -223,11 +223,7 @@ feature -- Test
 			assert ("meaningful", a_platform.Minimum_integer <= 0)
 			assert ("definition", a_platform.Minimum_integer = INTEGER_.power (2, a_platform.Integer_bits - 2) * -2)
 			if a_platform.Integer_bits = 32 then
-				if not eiffel_compiler.is_ve then
-						-- There is a bug in VE 4.0 (build 4001) in STRING.out
-						-- when the integer value is PLATFORM.Minimum_integer.
-					assert_equal ("value_32_bits", "-2147483648", a_platform.Minimum_integer.out)
-				end
+				assert_equal ("value_32_bits", "-2147483648", a_platform.Minimum_integer.out)
 			end
 		end
 

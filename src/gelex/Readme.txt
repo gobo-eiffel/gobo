@@ -4,13 +4,12 @@ The code of Gelex is mainly based on the Gobo Eiffel Lexical Library.
 To compile Gelex:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
-   to launch the compilation:
+   the provided Ace, Xace or ECF file (e.g. <compiler>.ecf). Alternatively
+   you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 've' or 'se'.
+   where <compiler> is either 'ise', 'ge' or 'se'.
 
 2. Run Gelex using:
 
@@ -21,4 +20,4 @@ A "User's Manual" documentation for Gelex, in HTML format, is provided
 in "$GOBO/doc/gelex".
 
 --
-Copyright (c) 1997-2005, Eric Bezault and others
+Copyright (c) 1997-2008, Eric Bezault and others

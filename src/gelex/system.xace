@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="gelex_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="gelex" location="${GOBO}/src/gelex"/>
 
 	<mount location="${GOBO}/library/argument/library.xace"/>

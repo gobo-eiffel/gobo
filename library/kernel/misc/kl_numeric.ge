@@ -19,12 +19,6 @@ inherit
 			sign as se_sign
 		end
 #endif
-#ifdef VE
-		rename 
-			exponentiable as ve_exponentiable,
-			infix "^" as ve_exponentiation
-		end
-#endif
 
 #ifdef SE
 feature -- Measurement
@@ -34,20 +28,6 @@ feature -- Measurement
 			-- Not implemented.
 		do
 			-- Not implemented.
-		end
-
-#endif
-#ifdef VE
-feature -- Basic operations
-
-	ve_exponentiation (other: DOUBLE): DOUBLE is
-			-- Not implemented
-		do
-		end
-
-	ve_exponentiable (other: DOUBLE): BOOLEAN is
-			-- Not implemented
-		do
 		end
 
 #endif

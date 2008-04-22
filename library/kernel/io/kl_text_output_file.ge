@@ -18,26 +18,15 @@ class KL_TEXT_OUTPUT_FILE
 inherit
 
 	KI_TEXT_OUTPUT_FILE
-#ifdef VE
-		undefine
-			copy
-		end
-#endif
 
 	KL_OUTPUT_FILE
-#ifdef VE || ISE
-		redefine
 #ifdef ISE
+		redefine
 			string_name
-#endif
-#ifdef VE
-			put_character,
-			put_string
-#endif
 		end
 #endif
 
-#ifdef ISE || GE
+#ifdef ISE
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
@@ -104,45 +93,6 @@ feature -- Access
 	eol: STRING is "%N"
 			-- Line separator
 
-#ifdef VE
-feature -- Output
-
-	put_character (c: CHARACTER) is
-			-- Write `c' to output file.
-		do
-			if c = '%N' and then operating_system.is_windows then
-					-- Windows.
-				old_put_character ('%R')
-			end
-			old_put_character (c)
-		end
-
-	put_string (a_string: STRING) is
-			-- Write `a_string' to output file.
-		local
-			i, nb: INTEGER
-			c: CHARACTER
-			a_string_string: STRING
-		do
-			a_string_string := STRING_.as_string (a_string)
-			if operating_system.is_windows then
-					-- Windows.
-				nb := a_string_string.count
-				from i := 1 until i > nb loop
-					c := a_string_string.item (i)
-					if c = '%N' then
-						old_put_character ('%R')
-					end
-					old_put_character (c)
-					i := i + 1
-				end
-			else
-				old_put_string (a_string_string)
-			end
-		end
-
-#endif
-#ifdef SE || ISE || GE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -191,6 +141,5 @@ feature {NONE} -- Implementation
 			end
 		end
 
-#endif
 #endif
 end

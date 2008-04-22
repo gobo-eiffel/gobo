@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel XML Library Tester"
-		copyright: "Copyright (c) 2002-2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -17,12 +17,10 @@
 		<echo message="   geant test_ge"/>
 		<echo message="   geant test_ise"/>
 		<echo message="   geant test_se"/>
-		<echo message="   geant test_ve"/>
 		<echo message="   geant test_debug"/>
 		<echo message="   geant test_debug_ge"/>
 		<echo message="   geant test_debug_ise"/>
 		<echo message="   geant test_debug_se"/>
-		<echo message="   geant test_debug_ve"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -61,14 +59,6 @@
 		<geant target="do_all" arguments="test_ise,true"/>
 	</target>
 
-	<target name="test_ve" depend="init">
-		<description>
-			Test the Gobo Eiffel XML Library with Visual Eiffel.
-		</description>
-
-		<geant target="do_all" arguments="test_ve,true"/>
-	</target>
-
 	<target name="test_se" depend="init">
 		<description>
 			Test the Gobo Eiffel XML Library with SmartEiffel.
@@ -101,14 +91,6 @@
 		</description>
 
 		<geant target="do_all" arguments="test_debug_ise,true"/>
-	</target>
-
-	<target name="test_debug_ve" depend="init">
-		<description>
-			Test the Gobo Eiffel XML Library with Visual Eiffel in debug mode.
-		</description>
-
-		<geant target="do_all" arguments="test_debug_ve,true"/>
 	</target>
 
 	<target name="test_debug_se" depend="init">

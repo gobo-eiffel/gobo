@@ -21,12 +21,10 @@
 		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
 		<echo message="   geant compile_se"/>
-		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
 		<echo message="   geant compile_debug_se"/>
-		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -52,10 +50,6 @@
 		<unset name="xace_format" if="${ISE_5_7}"/>
 		<geant target="xace">
 			<argument name="a_compiler" value="se"/>
-			<argument name="a_output" value=""/>
-		</geant>
-		<geant target="xace">
-			<argument name="a_compiler" value="ve"/>
 			<argument name="a_output" value=""/>
 		</geant>
 		<geant target="other_install"/>
@@ -140,24 +134,6 @@
 		</copy>
 	</target>
 
-	<target name="compile_ve" depend="prepare_compile">
-		<description>
-			Compile '${system}' with Visual Eiffel.
-			Compile in debug mode if ${debug} is defined.
-			If '${vetuner}' is set, set call 'vetuner'
-			with the given tuning level.
-		</description>
-
-		<set name="eiffel" value="ve"/>
-		<geant target="xace">
-			<argument name="a_compiler" value="ve"/>
-			<argument name="a_output" value="compile_ve.xace"/>
-		</geant>
-		<delete file="${system}${exe}"/>
-		<ve xace="compile_ve.xace"/>
-		<ve tune="${system}${exe}" level="${vetuner}" if="${vetuner}"/>
-	</target>
-
 	<target name="compile_se" depend="prepare_compile">
 		<description>
 			Compile '${system}' with SmartEiffel.
@@ -204,18 +180,6 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_ve" depend="prepare_compile">
-		<description>
-			Compile '${system}' with Visual Eiffel in debug mode.
-			If '${vetuner}' is set, set call 'vetuner'
-			with the given tuning level.
-		</description>
-
-		<set name="eiffel" value="ve"/>
-		<set name="debug" value="true"/>
-		<geant target="compile"/>
-	</target>
-
 	<target name="compile_debug_se" depend="prepare_compile">
 		<description>
 			Compile '${system}' with SmartEiffel in debug mode.
@@ -234,14 +198,11 @@
 		<gec clean="${system}"/>
 		<ise clean="${system}"/>
 		<se clean="${system}"/>
-		<ve clean="${system}" recursive="true"/>
 		<delete file="compile_ge.ace"/>
 		<delete file="compile_ge.xace"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
 		<delete file="compile_se.ace"/>
-		<delete file="compile_ve.esd"/>
-		<delete file="compile_ve.xace"/>
 		<delete>
 			<fileset include="vc*.pdb"/>
 		</delete>
@@ -261,8 +222,6 @@
 		<delete file="ise.ace"/>
 		<delete file="ise.ecf"/>
 		<delete file="se.ace"/>
-		<delete file="ve.esd"/>
-		<delete file="ve.xace"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
@@ -270,7 +229,6 @@
 			<fileset include="?(${system}_)module_*.dll"/>
 		</delete>
 		<delete file="EiffelSoftware.Runtime.dll"/>
-		<delete file="${system}.h2o"/>
 		<geant target="other_clobber"/>
 	</target>
 
@@ -281,7 +239,7 @@
 		<argument name="a_compiler"/>
 		<argument name="a_output"/>
 		<description>
-			Build Ace file or ESD file for Eiffel compiler ${a_compiler}.
+			Build Ace, Xace or ECF file for Eiffel compiler ${a_compiler}.
 			Generate file in ${a_output} if specified.
 			Pass $DEBUG option to 'gexace' if ${debug} is defined.
 			Pass $GOBO_EIFFEL value to 'gexace'.

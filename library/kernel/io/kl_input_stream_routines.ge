@@ -56,12 +56,6 @@ feature -- Initialization
 			elseif a_file.is_connected then
 				a_file.disconnect
 #endif
-#ifdef VE
-				create Result.make (a_filename)
-				Result.open_read
-			elseif not Result.is_closed then
-				Result.close
-#endif
 			end
 		ensure
 			file_not_void: Result /= Void
@@ -140,9 +134,6 @@ feature -- Status report
 #endif
 #ifdef SE
 			Result := a_stream.end_of_input
-#endif
-#ifdef VE
-			Result := a_stream.end_of_file
 #endif
 		end
 
@@ -223,11 +214,7 @@ feature -- Input operations
 #ifndef SE
 			a_string: STRING
 #endif
-#ifdef VE
-			a_memory: expanded MEMORY
-#else
 			i, j: INTEGER
-#endif
 		do
 #ifdef SE
 			if not a_stream.end_of_input then
@@ -248,16 +235,12 @@ feature -- Input operations
 			a_stream.read_stream (nb_char)
 			a_string := a_stream.last_string
 			Result := a_string.count
-#ifdef VE
-			a_memory.mem_copy (a_buffer.to_c + (pos - 1), a_string.to_c, Result)
-#else
 			j := pos
 			from i := 1 until i > Result loop
 				a_buffer.put (a_string.item (i), j)
 				j := j + 1
 				i := i + 1
 			end
-#endif
 #endif
 		ensure
 			nb_char_read_large_enough: Result >= 0

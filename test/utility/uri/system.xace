@@ -28,7 +28,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="uri_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="uri_tester" location="${GOBO}/test/utility/uri"/>
 	<cluster name="uri_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

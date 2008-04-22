@@ -19,9 +19,7 @@ inherit
 #ifdef ISE
 			as_special,
 #endif
-#ifdef ISE || SE
 			append_substring_to_string,
-#endif
 			fill_from_string, fill_from_stream,
 			move_left, move_right
 		end
@@ -56,9 +54,6 @@ feature {NONE} -- Initialization
 				area.set_count (n)
 			end
 #endif
-#ifdef VE
-			create area.make_filled ('%U', n)
-#endif
 #ifdef SE
 			create area_string.make_filled ('%U', n + 2)
 			area_string.remove_tail (1)
@@ -86,21 +81,14 @@ feature -- Access
 	substring (s, e: INTEGER): STRING is
 			-- New string made up of characters held in
 			-- buffer between indexes `s' and `e'
-#ifdef SE || VE
+#ifdef SE
 		local
 			i, nb: INTEGER
-#ifdef VE
-			j: INTEGER
-#endif
 #endif
 		do
 			if e < s then
 					-- Empty string
-#ifdef VE
-				create Result.make_empty
-#else
 				create Result.make (0)
-#endif
 			else
 #ifdef ISE
 				if as_special /= Void then
@@ -114,15 +102,6 @@ feature -- Access
 				create Result.make (nb)
 				from i := s until i > e loop
 					Result.append_character (area.item (i))
-					i := i + 1
-				end
-#endif
-#ifdef VE
-				nb := e - s + 1
-				create Result.make_filled ('%U', nb)
-				from i := s until i > e loop
-					j := j + 1
-					Result.put (area.item (i), j)
 					i := i + 1
 				end
 #endif
@@ -176,7 +155,6 @@ feature -- Element change
 #endif
 		end
 
-#ifdef ISE || SE
 	append_substring_to_string (s, e: INTEGER; a_string: STRING) is
 			-- Append string made up of characters held in buffer
 			-- between indexes `s' and `e' to `a_string'.
@@ -213,7 +191,8 @@ feature -- Element change
 					end
 				end
 			end
-#else
+#endif
+#ifdef SE
 		local
 			i, nb: INTEGER
 			old_count, new_count: INTEGER
@@ -234,7 +213,6 @@ feature -- Element change
 #endif
 		end
 
-#endif
 	fill_from_string (a_string: STRING; pos: INTEGER) is
 			-- Copy characters of `a_string' to buffer
 			-- starting at position `pos'.
@@ -341,10 +319,6 @@ feature -- Resizing
 	resize (n: INTEGER) is
 			-- Resize buffer so that it contains `n' characters.
 			-- Do not lose any previously entered characters.
-#ifdef VE
-		do
-			area.resize (n)
-#endif
 #ifdef SE
 		do
 			area_string.resize (n + 2)
@@ -383,10 +357,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-#ifdef ISE || VE
+#ifdef ISE
 	area_not_void: area /= Void
 #endif
-
 #ifdef SE
 	area_string_not_void: area_string /= Void
 #endif

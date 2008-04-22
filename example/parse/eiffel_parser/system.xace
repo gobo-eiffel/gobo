@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="eiffel_parser_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="eiffel_parser" location="${GOBO}/example/parse/eiffel_parser"/>
 	<mount location="${GOBO}/library/parse/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>

@@ -3,7 +3,7 @@
 <system name="xtools">
 	<description>
 		system: "Gobo Eiffel Tools Library Tester"
-		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -14,12 +14,10 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 	</option>
 	<option if="${DEBUG}">
-			<!-- Last too long when compiled with all assertions with Visual Eiffel -->
-		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
-		<option name="assertion" value="require" if="${GOBO_EIFFEL}=ve"/>
+		<option name="assertion" value="all"/>
 		<option name="garbage_collector" value="internal"/>
 			<!-- Generate too big C file with SmartEiffel -->
 		<option name="split" value="true" if="${GOBO_EIFFEL}=se"/>
@@ -34,7 +32,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="et_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="et_tester" location="${GOBO}/test/tools"/>
 	<cluster name="et_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

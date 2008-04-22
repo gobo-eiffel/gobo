@@ -39,7 +39,6 @@
 			Remove intermediary generated files.
 		</description>
 
-		<ve clean="xml" recursive="true"/>
 	</target>
 
 	<target name="clobber">

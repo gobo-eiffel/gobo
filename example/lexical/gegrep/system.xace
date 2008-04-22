@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="gegrep_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="gegrep" location="${GOBO}/example/lexical/gegrep"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/parse/library.xace"/>

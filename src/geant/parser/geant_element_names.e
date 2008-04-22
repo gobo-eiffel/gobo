@@ -61,15 +61,6 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Ve_task_name: STRING is
-			-- "ve" task name
-		once
-			Result := "ve"
-		ensure
-			task_name_not_void: Result /= Void
-			task_name_not_empty: Result.count > 0
-		end
-
 	Exec_task_name: STRING is
 			-- "exec" task name
 		once

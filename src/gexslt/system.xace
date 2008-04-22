@@ -62,7 +62,6 @@
 	<!-- <option name="debug_tag" value="XSLT pattern parsing"/>-->
 	<!-- <option name="debug_tag" value="XSLT memo function"/>-->
 
-	<cluster name="gexslt_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="gexslt" location="${GOBO}/src/gexslt"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/math/library.xace"/>

@@ -56,12 +56,6 @@ feature -- Initialization
 			elseif a_file.is_connected then
 				a_file.disconnect
 #endif
-#ifdef VE
-				create Result.make (a_filename)
-				Result.open_write
-			elseif not Result.is_closed then
-				Result.close
-#endif
 			end
 		ensure
 			file_not_void: Result /= Void
@@ -131,7 +125,7 @@ feature -- Element change
 #ifdef SE
 		do
 			a_stream.flush
-#else
+#endif
 #ifdef ISE
 		local
 			a_file: FILE
@@ -140,11 +134,6 @@ feature -- Element change
 			if a_file /= Void then
 				a_file.flush
 			end
-#else
-#ifdef VE
-		do
-#endif
-#endif
 #endif
 		end
 

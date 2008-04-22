@@ -11,13 +11,12 @@ To compile this program:
    'geant scanner' to generate class GEPP_SCANNER if necessary.
 
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
-   to launch the compilation:
+   the provided Ace, Xace or ECF file (e.g. <compiler>.ecf). Alternatively
+   you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 've' or 'se'.
+   where <compiler> is either 'ise', 'ge' or 'se'.
 
 3. Run Gepp using:
 
@@ -31,4 +30,4 @@ to make the classes from this package compilable with any Eiffel compiler.
 See "$GOBO/doc/portability" for details on portability issues.
 
 --
-Copyright (c) 1997-2000, Eric Bezault and others
+Copyright (c) 1997-2008, Eric Bezault and others

@@ -26,9 +26,6 @@ feature -- Conversion
 			an_int_large_enough: an_int >= Platform.Minimum_character_code
 			an_int_small_enough: an_int <= Platform.Maximum_character_code
 		do
-#ifdef VE
-			Result.from_integer (an_int)
-#endif
 #ifdef SE
 			Result := an_int.to_character
 #endif
@@ -98,11 +95,7 @@ feature -- Conversion
 			an_int_large_enouh: an_int >= -128
 			an_int_small_enouh: an_int <= 127
 		do
-#ifdef VE
-			Result.from_integer (an_int)
-#else
 			Result := an_int.to_integer_8
-#endif
 		end
 
 feature -- Output
@@ -377,16 +370,7 @@ feature -- Operation(s)
 
 	bit_and (m, n: INTEGER): INTEGER is
 			-- Bitwise 'and' between `m' and `n'
-		local
-#ifdef VE
-			i, j: BIT 32
-#endif
 		do
-#ifdef VE
-			i.from_integer (m)
-			j.from_integer (n)
-			Result := (i and j).to_integer
-#endif
 #ifdef ISE
 			Result := m.bit_and (n)
 #endif
@@ -397,16 +381,7 @@ feature -- Operation(s)
 
 	bit_or (m, n: INTEGER): INTEGER is
 			-- Bitwise 'or' between `m' and `n'
-		local
-#ifdef VE
-			i, j: BIT 32
-#endif
 		do
-#ifdef VE
-			i.from_integer (m)
-			j.from_integer (n)
-			Result := (i or j).to_integer
-#endif
 #ifdef ISE
 			Result := m.bit_or (n)
 #endif
@@ -417,16 +392,7 @@ feature -- Operation(s)
 
 	bit_xor (m, n: INTEGER): INTEGER is
 			-- Bitwise 'xor' between `m' and `n'
-		local
-#ifdef VE
-			i, j: BIT 32
-#endif
 		do
-#ifdef VE
-			i.from_integer (m)
-			j.from_integer (n)
-			Result := (i xor j).to_integer
-#endif
 #ifdef ISE
 			Result := m.bit_xor (n)
 #endif
@@ -437,15 +403,7 @@ feature -- Operation(s)
 
 	bit_not (n: INTEGER): INTEGER is
 			-- Bitwise 'not' of `n'
-		local
-#ifdef VE
-			i: BIT 32
-#endif
 		do
-#ifdef VE
-			i.from_integer (n)
-			Result := (not i).to_integer
-#endif
 #ifdef ISE
 			Result := n.bit_not
 #endif
@@ -459,15 +417,7 @@ feature -- Operation(s)
 			-- Note: The new bits added on the right are 0.
 		require
 			thirty_two_bit_shift: 0 <= n and n < 32
-		local
-#ifdef VE
-			i: BIT 32
-#endif
 		do
-#ifdef VE
-			i.from_integer (m)
-			Result := (i ^ -n).to_integer
-#endif
 #ifdef ISE
 			Result := m.bit_shift_left (n)
 #endif
@@ -483,24 +433,7 @@ feature -- Operation(s)
 			-- the new bits added on the left are 1; otherwise they are 0.
 		require
 			thirty_two_bit_shift: 0 <= n and n < 32
-		local
-#ifdef VE
-			b: BIT 32
-			i: INTEGER
-#endif
 		do
-#ifdef VE
-			b.from_integer (m)
-			b := b ^ n
-			if m < 0 then
-				i := 32 - n + 1
-				from until i > 32 loop
-					b.put (True, i)
-					i := i + 1
-				end
-			end
-			Result := b.to_integer
-#endif
 #ifdef ISE
 			Result := m.bit_shift_right (n)
 #endif

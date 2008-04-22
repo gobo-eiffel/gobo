@@ -115,7 +115,7 @@ feature -- Resizing
 				Result := an_array
 			end
 #endif
-#ifdef SE || VE
+#ifdef SE
 			Result := an_array.resize (n)
 #endif
 		ensure

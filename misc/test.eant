@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Gobo Eiffel Kernel Library Tester"
-		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -25,22 +25,18 @@
 		<echo message="   geant test_ge"/>
 		<echo message="   geant test_ise"/>
 		<echo message="   geant test_se"/>
-		<echo message="   geant test_ve"/>
 		<echo message="   geant test_debug"/>
 		<echo message="   geant test_debug_ge"/>
 		<echo message="   geant test_debug_ise"/>
 		<echo message="   geant test_debug_se"/>
-		<echo message="   geant test_debug_ve"/>
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
 		<echo message="   geant compile_se"/>
-		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
 		<echo message="   geant compile_debug_se"/>
-		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -93,16 +89,6 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_ve" depend="init">
-		<description>
-			Test '${system}' with Visual Eiffel.
-			Compile in debug mode if ${debug} is defined.
-		</description>
-
-		<set name="eiffel" value="ve"/>
-		<geant target="test"/>
-	</target>
-
 	<target name="test_se" depend="init">
 		<description>
 			Test '${system}' with SmartEiffel.
@@ -144,16 +130,6 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug_ve" depend="init">
-		<description>
-			Test '${system}' with Visual Eiffel in debug mode.
-		</description>
-
-		<set name="eiffel" value="ve"/>
-		<set name="debug" value="true"/>
-		<geant target="test"/>
-	</target>
-
 	<target name="test_debug_se" depend="init">
 		<description>
 			Test '${system}' with SmartEiffel in debug mode.
@@ -172,14 +148,11 @@
 		<gec clean="${system}"/>
 		<ise clean="${system}"/>
 		<se clean="${system}"/>
-		<ve clean="${system}" recursive="true"/>
 		<delete file="compile_ge.ace"/>
 		<delete file="compile_ge.xace"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
 		<delete file="compile_se.ace"/>
-		<delete file="compile_ve.esd"/>
-		<delete file="compile_ve.xace"/>
 		<delete>
 			<fileset include="vc*.pdb"/>
 		</delete>

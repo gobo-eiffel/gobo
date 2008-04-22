@@ -3,7 +3,7 @@
 <system name="xmloasis">
 	<description>
 		system: "Gobo Eiffel XML Library Tester: OASIS test suite"
-		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -14,15 +14,10 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="internal"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 	</option>
 	<option if="${DEBUG}">
-			<!--
-				Run out of memory when compiled with all assertions
-				ON with Visual Eiffel.
-			-->
-		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
-		<option name="assertion" value="require" if="${GOBO_EIFFEL}=ve"/>
+		<option name="assertion" value="all"/>
 		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="false"/>
 	</option>
@@ -35,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="xmloasis_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="xmloasis" location="${GOBO}/test/xml/oasis"/>
 	<cluster name="xmloasis_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

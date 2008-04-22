@@ -17,12 +17,7 @@ inherit
 
 	KI_BINARY_INPUT_FILE
 		undefine
-#ifdef ISE || SE || VE
 			read_to_string,
-#endif
-#ifdef VE
-			copy,
-#endif
 			read_to_buffer
 		end
 
@@ -35,7 +30,7 @@ inherit
 		end
 #endif
 
-#ifdef ISE || GE
+#ifdef ISE
 	RAW_FILE
 		rename
 			make as old_make,
@@ -112,7 +107,6 @@ feature -- Access
 			-- However `last_string' is not shared between file objects.)
 
 #endif
-#ifdef ISE || SE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -142,7 +136,6 @@ feature {NONE} -- Implementation
 	string_name: STRING
 			-- Name of file (STRING version)
 
-#endif
 #endif
 #ifdef GE
 feature {RAW_FILE} -- Implementation

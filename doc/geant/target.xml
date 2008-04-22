@@ -251,7 +251,6 @@
         <ref name="set"/>
         <ref name="setenv"/>
         <ref name="unset"/>
-        <ref name="ve"/>
         <ref name="xslt"/>
       </choice>
     </zeroOrMore>

@@ -46,12 +46,6 @@ feature -- Access
 			-- Note: If `a_variable' is a UC_STRING or descendant, then
 			-- the bytes of its associated UTF unicode encoding will
 			-- be used to query its value to the environment.
-#ifdef VE
-		local
-			environment: expanded ENVIRONMENT
-		do
-			Result := environment.env_item (STRING_.as_string (a_variable))
-#endif
 #ifdef ISE
 		do
 			Result := environment_impl.get (STRING_.as_string (a_variable))
@@ -74,12 +68,6 @@ feature -- Setting
 			a_variable_not_void: a_variable /= Void
 			a_variable_not_empty: a_variable.count > 0
 			a_value_not_void: a_value /= Void
-#ifdef VE
-		local
-			environment: expanded ENVIRONMENT
-		do
-			environment.env_put (STRING_.as_string (a_variable), STRING_.as_string (a_value))
-#endif
 #ifdef ISE
 		do
 			put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
@@ -190,7 +178,6 @@ feature -- Conversion
 			interpreted_string_not_void: Result /= Void
 		end
 
-#ifdef ISE || SE
 feature {NONE} -- Implementation
 
 #ifdef ISE
@@ -207,6 +194,5 @@ feature {NONE} -- Implementation
 	environment_impl: SYSTEM
 			-- Execution environment impl
 
-#endif
 #endif
 end

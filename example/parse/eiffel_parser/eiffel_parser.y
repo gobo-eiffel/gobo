@@ -606,10 +606,7 @@ Choice: Choice_constant
 
 Choice_constant: Integer_constant
 	| E_CHARACTER
-		-- For Visual Eiffel and TowerEiffel
-		-- (not standard Eiffel!):
-	| Call
-	-- | Identifier
+	| Identifier
 	;
 
 --------------------------------------------------------------------------------

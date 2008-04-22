@@ -28,8 +28,7 @@
 	<option if="${DEBUG}">
 		<option name="case_insensitive" value="false" />
 		<option name="trace" value="false" />
-		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
-		<option name="assertion" value="ensure" if="${GOBO_EIFFEL}=ve"/>
+		<option name="assertion" value="all"/>
 		<option name="garbage_collector" value="internal"/> 
 		<option name="gc_info" value="false"/> 
 		<option name="finalize" value="false"/>
@@ -51,7 +50,6 @@
 	<!-- <option name="debug_tag" value="XPath Expression Parser"/>  
 	<option name="debug_tag" value="XPath content emitter"/> -->
 
-	<cluster name="xslt_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="xslt_tester" location="${GOBO}/test/xml/xslt"/>
 	<cluster name="eiffel_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

@@ -14,12 +14,11 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="internal"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 <!--		<option name="inlining" value="all"/> -->
 	</option>
 	<option if="${DEBUG}">
-		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
-		<option name="assertion" value="ensure" if="${GOBO_EIFFEL}=ve"/>
+		<option name="assertion" value="all"/>
 		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="false"/>
 	</option>
@@ -33,7 +32,6 @@
 	<!--	<option name="garbage_collector" value="internal" />  -->
 	</option>
 
-	<cluster name="geuc_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="geuc" location="${GOBO}/work/geuc"/>
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>

@@ -15,37 +15,20 @@ deferred class KL_FILE
 inherit
 
 	KI_FILE
-#ifdef VE
-		undefine
-			copy
-		end
-#endif
 
 	KL_SHARED_FILE_SYSTEM
 		export
 			{NONE} all
-#ifdef VE
-		undefine
-			copy
-#endif
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
-#ifdef VE
-		undefine
-			copy
-#endif
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		export
 			{NONE} all
-#ifdef VE
-		undefine
-			copy
-#endif
 		end
 
 #ifdef SE
@@ -64,36 +47,8 @@ inherit
 		export
 			{NONE} all
 		end
-#endif
-#ifdef VE
-	FILE
-		rename
-			make as old_make,
-			name as string_name,
-			count as old_count,
-			exists as old_exists,
-			is_open_read as old_is_open_read,
-			is_open_write as old_is_open_write,
-			end_of_file as old_end_of_file,
-			is_closed as old_is_closed,
-			open_read as old_open_read,
-			open_write as old_open_write,
-			open_append as old_open_append,
-			put_character as old_put_character,
-			put_string as old_put_string,
-			put_integer as old_put_integer,
-			put_boolean as old_put_boolean,
-			read_character as old_read_character,
-			read_stream as old_read_stream,
-			read_line as old_read_line,
-			change_name as old_change_name,
-			close as old_close,
-			delete as old_delete
-		export
-			{NONE} all
-		end
-#endif
 
+#endif
 feature {NONE} -- Initialization
 
 	make (a_name: like name) is
@@ -111,7 +66,7 @@ feature {NONE} -- Initialization
 			end
 			old_make
 #endif
-#ifdef VE || ISE
+#ifdef ISE
 			if a_name.count > 0 then
 				old_make (STRING_.as_string (a_name))
 			else
@@ -144,12 +99,6 @@ feature -- Access
 			local_time: TIME
 			old_is_local: BOOLEAN
 #endif
-#ifdef VE
-			dos_datetime: INTEGER
-			dos_date, dos_time: INTEGER
-			y, m, d: INTEGER
-			h, mi, s: INTEGER
-#endif
 		do
 			Result := -1
 			if not rescued then
@@ -172,47 +121,6 @@ feature -- Access
 						if Result < 0 then
 							Result := -1
 						end
-					end
-#endif
-#ifdef VE
-						-- The return value of `file_time' is calculated
-						-- as "((DWORD) wDosDate << 16) + wDosTime" assigned
-						-- to REAL. Here:
-						--  wDosDate bits are:
-						--   0-4 Day of the month (1-31)
-						--   5-8 Month (1 = January, 2 = February, etc.)
-						--   9-15 Year offset from 1980 (add 1980 to get actual year)
-						--  wDosTime bits are:
-						--   0-4 Second divided by 2
-						--   5-10 Minute (0-59)
-						--   11-15 Hour (0-23 on a 24-hour clock)
-					dos_datetime := file_system_impl.file_time (string_name).truncated_to_integer
-					dos_date := dos_datetime // 65536 -- 2^16
-					d := dos_date \\ 32 -- 2^5
-					dos_date := dos_date // 32 -- 2^5
-					m := dos_date \\ 16 -- 2^4
-					dos_date := dos_date // 16 -- 2^4
-					y := 1980 + dos_date \\ 128 -- 2^7
-					dos_time := dos_datetime \\ 65536 -- 2^16
-					s := dos_time \\ 32 -- 2^5
-					s := s * 2
-					dos_time := dos_time // 32 -- 2^5
-					mi := dos_time \\ 64 -- 2^6
-					dos_time := dos_time // 64 -- 2^6
-					h := dos_time \\ 32 -- 2^5
-					date_impl.set_date (y, m, d)
-					d := date_impl.absolute_days - epoch_absolute_days
-					Result := (((d * 24) + h) * 60 + mi) * 60 + s
-					if not operating_system.is_windows then
-							-- Convert to UTC time.
-						local_timestamp.set_local_time
-						utc_timestamp.set_to_now
-						Result := Result +
-							(utc_timestamp.milliseconds - local_timestamp.milliseconds) // 1000 +
-							(utc_timestamp.absolute_days - local_timestamp.absolute_days) * 86400
-					end
-					if Result < 0 then
-						Result := -1
 					end
 #endif
 #ifdef ISE
@@ -279,9 +187,6 @@ feature -- Status report
 #ifdef SE
 					Result := is_readable
 #endif
-#ifdef VE
-					Result := old_exists
-#endif
 				end
 			else
 				Result := False
@@ -303,9 +208,6 @@ feature -- Status report
 #ifdef SE
 				tmp_file2.reset (string_name)
 				Result := tmp_file2.is_readable
-#endif
-#ifdef VE
-				Result := old_exists and then file_system_impl.has_readperm (string_name)
 #endif
 			end
 		end
@@ -594,7 +496,7 @@ feature -- Basic operations
 #ifdef SE
 					old_delete (string_name)
 #endif
-#ifdef ISE || VE
+#ifdef ISE
 					if old_exists then
 						old_delete
 					end
@@ -643,8 +545,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-#endif
-#ifdef SE || VE
 	tmp_file2: KL_TEXT_INPUT_FILE is
 			-- Temporary file object
 		once
@@ -652,47 +552,6 @@ feature {NONE} -- Implementation
 		ensure
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
-		end
-
-#endif
-#ifdef VE
-	file_system_impl: FILE_SYSTEM is
-			-- Implementation
-		once
-			create Result.make
-		ensure
-			file_system_impl_not_void: Result /= Void
-		end
-
-	date_impl: DATE is
-			-- Date implementation
-		once
-			create Result.set_date (1970, 1, 1)
-		ensure
-			date_impl_not_void: Result /= Void
-		end
-
-	local_timestamp: TIMESTAMP is
-			-- Local timestamp
-		once
-			create Result.set (1970, 1, 1, 0, 0, 0.0)
-		ensure
-			timestamp_not_void: Result /= Void
-		end
-
-	utc_timestamp: TIMESTAMP is
-			-- UTC timestamp
-		once
-			create Result.set (1970, 1, 1, 0, 0, 0.0)
-		ensure
-			timestamp_not_void: Result /= Void
-		end
-
-	epoch_absolute_days: INTEGER is
-			-- Absolute days for epoch (1 Jan 1970)
-		once
-			date_impl.set_date (1970, 1, 1)
-			Result := date_impl.absolute_days
 		end
 
 #endif

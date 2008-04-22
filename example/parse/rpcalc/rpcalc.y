@@ -122,11 +122,6 @@ feature {NONE} -- Scanner
 					has_pending_character := True
 				end
 				last_double_value := buffer.to_double
-			elseif c = '%R' then
-					-- Bug in Visual Eiffel 2.1: when the Enter Key
-					-- is pressed, `read_character' gets '%R' instead
-					-- of '%N' or instead of the sequence '%R''%N'.
-				last_token := ('%N').code
 			else
 					-- Return single character
 				last_token := c.code

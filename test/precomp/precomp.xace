@@ -14,7 +14,6 @@
 		<option name="line_generation" value="true"/>
 	</option>
 
-	<cluster name="precomp_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<mount location="${GOBO}/library/argument/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>

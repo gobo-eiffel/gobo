@@ -37,7 +37,7 @@
 		<exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
 			<fileset
 				include="@(**/*.e)"
-				exclude="@(**/spec/ise/*.e|**/spec/ve/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
+				exclude="@(**/spec/ise/*.e|**/spec/ge/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
 				force="false"
 				dir="$GOBO/library/structure/set"
 			>
@@ -58,7 +58,7 @@
 		<exec executable="short -html2 se.ace ${fs.filename} &gt; ${fs.mapped_filename}">
 			<fileset
 				include="@(**/*.e)"
-				exclude="@(**/spec/ise/*.e|**/spec/ve/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
+				exclude="@(**/spec/ise/*.e|**/spec/ge/*.e|**/other/**/*.e|**/regexp/**/*.e|**/expat/**/*.e)"
 				force="true"
 				dir="$GOBO/library/structure/set"
 			>

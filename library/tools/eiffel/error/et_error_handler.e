@@ -32,8 +32,6 @@ feature -- Status report
 
 	is_se: BOOLEAN
 
-	is_ve: BOOLEAN
-
 	is_ge: BOOLEAN
 
 	is_etl: BOOLEAN
@@ -66,7 +64,6 @@ feature -- Status setting
 		do
 			is_ise := True
 			is_se := True
-			is_ve := True
 			is_ge := True
 		end
 
@@ -714,7 +711,6 @@ feature -- Validity errors
 			if
 				(is_ise and an_error.ise_reported) or
 				(is_se and an_error.se_reported) or
-				(is_ve and an_error.ve_reported) or
 				(is_ge and an_error.ge_reported)
 			then
 				has_eiffel_error := True
@@ -1039,13 +1035,11 @@ feature -- Validity errors
 			if reportable_vtct_error (a_class) then
 				create an_error.make_vtct0b (a_class, a_constraint)
 				an_error.set_ise_reported (False)
-				an_error.set_ve_reported (False)
 				an_error.set_ge_reported (False)
 				report_validity_error (an_error)
 			end
 			if reportable_vcfg3_error (a_class) then
 				create an_error.make_vcfg3d (a_class, a_formal, a_constraint)
-				an_error.set_ve_reported (False)
 				an_error.set_se_reported (False)
 				report_validity_error (an_error)
 			end
@@ -1069,7 +1063,6 @@ feature -- Validity errors
 		do
 			if reportable_vcfg3_error (a_class) then
 				create an_error.make_vcfg3e (a_class, a_formal, a_constraint)
-				an_error.set_ve_reported (False)
 				an_error.set_ge_reported (False)
 				an_error.set_se_reported (False)
 				an_error.set_ise_reported (False)
@@ -1095,7 +1088,6 @@ feature -- Validity errors
 		do
 			if reportable_vtct_error (a_class) then
 				create an_error.make_vtct0b (a_class, a_constraint)
-				an_error.set_ve_reported (False)
 				an_error.set_ge_reported (False)
 				an_error.set_se_reported (False)
 				report_validity_error (an_error)
@@ -1119,7 +1111,6 @@ feature -- Validity errors
 		do
 			if reportable_vcfg3_error (a_class) then
 				create an_error.make_vcfg3g (a_class, a_cycle)
-				an_error.set_ve_reported (False)
 				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
@@ -1141,7 +1132,6 @@ feature -- Validity errors
 		do
 			if reportable_vtct_error (a_class) then
 				create an_error.make_vtct0b (a_class, a_type)
-				an_error.set_ve_reported (False)
 				an_error.set_ise_reported (False)
 				an_error.set_ge_reported (False)
 				report_validity_error (an_error)
@@ -1149,7 +1139,6 @@ feature -- Validity errors
 			if reportable_vcfg3_error (a_class) then
 				if is_pedantic then
 					create an_error.make_vcfg3h (a_class, a_formal, a_type)
-					an_error.set_ve_reported (False)
 					an_error.set_ise_reported (False)
 					an_error.set_se_reported (False)
 					an_error.set_ge_reported (False)
@@ -1175,7 +1164,6 @@ feature -- Validity errors
 		do
 			if reportable_vtct_error (a_class) then
 				create an_error.make_vtct0b (a_class, a_type)
-				an_error.set_ve_reported (False)
 				an_error.set_se_reported (False)
 				an_error.set_ge_reported (False)
 				report_validity_error (an_error)
@@ -1199,7 +1187,6 @@ feature -- Validity errors
 		do
 			if reportable_vcfg3_error (a_class) then
 				create an_error.make_vcfg3j (a_class, a_cycle)
-				an_error.set_ve_reported (False)
 				an_error.set_ise_reported (False)
 				an_error.set_ge_reported (False)
 				report_validity_error (an_error)
@@ -1663,7 +1650,6 @@ feature -- Validity errors
 		do
 			if reportable_vdrd4_error (a_class) then
 				create an_error.make_vdrd4a (a_class, f1, f2)
-				an_error.set_ve_reported (False)
 				an_error.set_ise_reported (False)
 				an_error.set_se_reported (False)
 				report_validity_error (an_error)
@@ -1690,7 +1676,6 @@ feature -- Validity errors
 		do
 			if reportable_vdrd4_error (a_class) then
 				create an_error.make_vdrd4b (a_class, f1, f2)
-				an_error.set_ve_reported (False)
 				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
@@ -1716,7 +1701,6 @@ feature -- Validity errors
 		do
 			if reportable_vdrd4_error (a_class) then
 				create an_error.make_vdrd4c (a_class, f1, f2)
-				an_error.set_ve_reported (False)
 				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
 			end
@@ -1742,7 +1726,6 @@ feature -- Validity errors
 		do
 			if reportable_vdrd5_error (a_class) then
 				create an_error.make_vdrd5a (a_class, f1, f2)
-				an_error.set_ve_reported (False)
 				an_error.set_se_reported (False)
 				report_validity_error (an_error)
 			end
@@ -1979,7 +1962,6 @@ feature -- Validity errors
 		do
 			if reportable_vdrs4_error (a_class) then
 				create an_error.make_vdrs4b (a_class, a_deferred, an_effective)
-				an_error.set_ve_reported (False)
 				an_error.set_se_reported (False)
 				an_error.set_ise_reported (False)
 				report_validity_error (an_error)
@@ -2067,7 +2049,6 @@ feature -- Validity errors
 		do
 			if reportable_vdus3_error (a_class) then
 				create an_error.make_vdus3a (a_class, a_parent, f)
-				an_error.set_ve_reported (False)
 				an_error.set_se_reported (False)
 				report_validity_error (an_error)
 			end
@@ -3705,7 +3686,6 @@ feature -- Validity errors
 			if reportable_vmfn_error (a_class) then
 				create an_error.make_vmfn0b (a_class, f1, f2)
 				an_error.set_se_reported (False)
-				an_error.set_ve_reported (False)
 				an_error.set_ge_reported (False)
 				report_validity_error (an_error)
 			end
@@ -3880,7 +3860,6 @@ feature -- Validity errors
 			if reportable_vmss3_error (a_class) then
 				create an_error.make_vmss3a (a_class, a_feature)
 				an_error.set_se_reported (False)
-				an_error.set_ve_reported (False)
 				report_validity_error (an_error)
 			end
 		end
@@ -5069,7 +5048,6 @@ feature -- Validity errors
 					create an_error.make_vtbt0d (a_class, a_type)
 					an_error.set_ise_reported (False)
 					an_error.set_ge_reported (False)
-					an_error.set_ve_reported (False)
 					report_validity_error (an_error)
 				end
 			end
@@ -5760,7 +5738,6 @@ feature -- Validity errors
 			if reportable_gvagp_error (a_class) then
 				create an_error.make_gvagp0a (a_class, anc1, anc2)
 				an_error.set_se_reported (False)
-				an_error.set_ve_reported (False)
 				report_validity_error (an_error)
 			end
 		end

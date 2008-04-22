@@ -144,9 +144,6 @@ create
 			end
 			set_start_condition (INITIAL)
 		}
-	-- The following line is not correct Eiffel
-	-- but is used in Visual Eiffel.
-<IN_STR>%.			eif_buffer.append_character (text_item (2))
 
 <IN_STR>.|\n				|
 <IN_STR>%[ \t\r]*\n[ \t\r]*	|

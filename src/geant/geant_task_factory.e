@@ -85,16 +85,6 @@ feature -- Factory
 			new_ise_task_not_void: Result /= Void
 		end
 
-	new_ve_task (a_xml_element: XM_ELEMENT): GEANT_VE_TASK is
-			-- ve: Visual Eiffel compilation
-		require
-			a_xml_element_not_void: a_xml_element /= Void
-		do
-			create Result.make (project, a_xml_element)
-		ensure
-			new_ve_task_not_void: Result /= Void
-		end
-
 	new_exec_task (a_xml_element: XM_ELEMENT): GEANT_EXEC_TASK is
 			-- exec
 		require
@@ -338,57 +328,55 @@ feature {NONE} -- Implementation
 
 				-- gec: Gobo Eiffel compilation
 			builders.force_last (agent new_gec_task, Gec_task_name)
-					-- se: SmartEiffel compilation
+				-- se: SmartEiffel compilation
 			builders.force_last (agent new_se_task, Se_task_name)
-					-- ise: ISE Eiffel compilation
+				-- ise: ISE Eiffel compilation
 			builders.force_last (agent new_ise_task, Ise_task_name)
-					-- ve: Visual Eiffel compilation
-			builders.force_last (agent new_ve_task, Ve_task_name)
-					-- exec
+				-- exec
 			builders.force_last (agent new_exec_task, Exec_task_name)
-					-- lcc
+				-- lcc
 			builders.force_last (agent new_lcc_task, Lcc_task_name)
-					-- set
+				-- set
 			builders.force_last (agent new_set_task, Set_task_name)
-					-- unset
+				-- unset
 			builders.force_last (agent new_unset_task, Unset_task_name)
-					-- gexace
+				-- gexace
 			builders.force_last (agent new_gexace_task, Gexace_task_name)
-					-- gelex
+				-- gelex
 			builders.force_last (agent new_gelex_task, Gelex_task_name)
-					-- geyacc
+				-- geyacc
 			builders.force_last (agent new_geyacc_task, Geyacc_task_name)
-					-- gepp
+				-- gepp
 			builders.force_last (agent new_gepp_task, Gepp_task_name)
-					-- getest
+				-- getest
 			builders.force_last (agent new_getest_task, Getest_task_name)
-					-- geant
+				-- geant
 			builders.force_last (agent new_geant_task, Geant_task_name)
-					-- echo
+				-- echo
 			builders.force_last (agent new_echo_task, Echo_task_name)
-					-- mkdir
+				-- mkdir
 			builders.force_last (agent new_mkdir_task, Mkdir_task_name)
-					-- delete
+				-- delete
 			builders.force_last (agent new_delete_task, Delete_task_name)
-					-- copy
+				-- copy
 			builders.force_last (agent new_copy_task, Copy_task_name)
-					-- move
+				-- move
 			builders.force_last (agent new_move_task, Move_task_name)
-					-- setenv
+				-- setenv
 			builders.force_last (agent new_setenv_task, Setenv_task_name)
-					-- xslt
+				-- xslt
 			builders.force_last (agent new_xslt_task, Xslt_task_name)
-					-- outofdate
+				-- outofdate
 			builders.force_last (agent new_outofdate_task, Outofdate_task_name)
-					-- exit
+				-- exit
 			builders.force_last (agent new_exit_task, Exit_task_name)
-					-- precursor
+				-- precursor
 			builders.force_last (agent new_precursor_task, Precursor_task_name)
-					-- available
+				-- available
 			builders.force_last (agent new_available_task, Available_task_name)
-					-- input
+				-- input
 			builders.force_last (agent new_input_task, Input_task_name)
-					-- replace
+				-- replace
 			builders.force_last (agent new_replace_task, Replace_task_name)
 		end
 

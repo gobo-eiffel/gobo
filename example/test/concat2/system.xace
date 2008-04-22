@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="xconcat2_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="xconcat2" location="${GOBO}/example/test/concat2"/>
 	<cluster name="xconcat2_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

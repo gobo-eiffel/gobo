@@ -35,7 +35,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="telco_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="telco" location="${GOBO}/example/math/decimal/telco"/>
 	<mount location="${GOBO}/library/math/library.xace"/>
 	<mount location="${GOBO}/library/pattern/library.xace"/>

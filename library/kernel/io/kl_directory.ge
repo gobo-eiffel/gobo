@@ -64,12 +64,6 @@ feature {NONE} -- Initialization
 #ifdef SE
 			string_name := STRING_.as_string (a_name)
 #endif
-#ifdef VE
-			string_name := STRING_.as_string (a_name)
-			if string_name.count > 0 then
-				create directory.make (string_name)
-			end
-#endif
 		end
 
 feature -- Access
@@ -174,7 +168,7 @@ feature -- Status report
 	is_open_read: BOOLEAN is
 			-- Has directory been opened in read mode?
 		do
-#ifdef ISE || VE
+#ifdef ISE
 			Result := not is_closed
 #endif
 #ifdef SE
@@ -182,15 +176,11 @@ feature -- Status report
 #endif
 		end
 
-#ifdef SE || VE
+#ifdef SE
 	is_closed: BOOLEAN is
 			-- Is directory closed?
 		do
-#ifdef SE
 			Result := not basic_directory.is_connected
-#else
-			Result := (directory_stream = Void)
-#endif
 		end
 
 #endif
@@ -208,9 +198,6 @@ feature -- Status report
 #endif
 #ifdef SE
 				Result := is_readable
-#endif
-#ifdef VE
-				Result := directory.exists
 #endif
 			end
 		end
@@ -291,9 +278,6 @@ feature -- Basic operations
 #ifdef SE
 					basic_directory.connect_to (string_name)
 #endif
-#ifdef VE
-					create directory_stream.make (directory)
-#endif
 				end
 			elseif not is_closed then
 				close
@@ -318,10 +302,6 @@ feature -- Basic operations
 #ifdef ISE
 				old_close
 				lastentry := Void
-#endif
-#ifdef VE
-				directory_stream.close
-				directory_stream := Void
 #endif
 				entry_buffer := Void
 				last_entry := Void
@@ -354,9 +334,6 @@ feature -- Basic operations
 					if not old_exists then
 						create_dir
 					end
-#endif
-#ifdef VE
-					directory.originate
 #endif
 				end
 			end
@@ -411,9 +388,6 @@ feature -- Basic operations
 #ifdef SE
 					b := basic_directory.remove_directory (string_name)
 #endif
-#ifdef VE
-					directory.delete
-#endif
 #ifdef ISE
 					if old_exists and then is_empty then
 						old_delete
@@ -435,7 +409,7 @@ feature -- Basic operations
 			-- be deleted, if it did not exist.
 		local
 			rescued: BOOLEAN
-#ifdef SE || VE
+#ifdef SE
 			a_name: STRING
 			a_dir: KL_DIRECTORY
 			a_pathname: STRING
@@ -443,7 +417,7 @@ feature -- Basic operations
 		do
 			if not rescued then
 				if string_name.count > 0 then
-#ifdef VE || SE
+#ifdef SE
 					open_read
 					if is_open_read then
 						from read_entry until end_of_input loop
@@ -672,10 +646,6 @@ feature -- Input
 				basic_directory.read_entry
 				last_entry := basic_directory.last_entry.twin
 #endif
-#ifdef VE
-				directory_stream.read
-				last_entry := directory_stream.item
-#endif
 				end_of_input := old_end_of_input
 			end
 		end
@@ -698,7 +668,7 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-#ifdef SE || VE
+#ifdef SE
 	string_name: STRING
 			-- Name of directory (STRING version)
 
@@ -715,9 +685,6 @@ feature {NONE} -- Implementation
 #endif
 #ifdef SE
 			Result := basic_directory.end_of_input
-#endif
-#ifdef VE
-			Result := directory_stream.end_of_stream
 #endif
 		end
 
@@ -742,12 +709,6 @@ feature {NONE} -- Implementation
 	dummy_name: STRING is "dummy"
 			-- Dummy name
 
-#ifdef VE
-	directory: DIRECTORY
-	directory_stream: DIRECTORY_INPUT_STREAM
-			-- Internal data
-
-#endif
 #ifdef SE
 	basic_directory: BASIC_DIRECTORY
 			-- Internal data
@@ -760,13 +721,10 @@ feature {NONE} -- Implementation
 #endif
 invariant
 
-#ifdef SE || VE
+#ifdef SE
 	string_name_not_void: string_name /= Void
 #endif
 	string_name_is_string: ANY_.same_types (string_name, "")
 	no_void_bufferred_entry: entry_buffer /= Void implies entry_buffer.item /= Void
-#ifdef VE
-	directory_not_void: string_name.count > 0 implies directory /= Void
-#endif
 
 end

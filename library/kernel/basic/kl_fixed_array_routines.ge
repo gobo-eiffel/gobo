@@ -158,10 +158,6 @@ feature -- Resizing
 			Result := an_array
 			Result.resize (n)
 #endif
-#ifdef VE
-			Result := an_array
-			Result.resize (0, n - 1)
-#endif
 		ensure
 			fixed_array_not_void: Result /= Void
 			valid_fixed_array: valid_fixed_array (Result)
@@ -184,17 +180,6 @@ feature -- Removal
 			v: G
 		do
 			an_array.set_all_with (v)
-#endif
-#ifdef VE
-		local
-			i, nb: INTEGER
-			v: G
-		do
-			nb := an_array.upper
-			from until i > nb loop
-				an_array.put (v, i)
-				i := i + 1
-			end
 #endif
 		ensure
 			-- all_cleared: forall i in 0..(an_array.count - 1), an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default

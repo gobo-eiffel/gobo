@@ -39,35 +39,8 @@ feature -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 			a_string_is_decimal: STRING_.is_decimal (a_string)
-		local
-			i, nb: INTEGER
 		do
-				-- TODO: There is a bug in VE 4.0 (build 4001).
-				-- STRING.is_integer (the precondition of STRING.to_integer)
-				-- returns false when the number of characters in `a_string'
-				-- is greater than PLATFORM.Maximum_integer.out.count. So
-				-- "00000000000000000000000000000000065" is not considered
-				-- as an integer even though it is valid according to ELKS 2001.
-				-- Workaround: strip the leading zeros. (ericb)
-			check is_integer: a_string.count > 0 end
-			nb := a_string.count
-			if a_string.item (1) /= '0' or else nb = 1 then
-				code := a_string.to_integer
-			else
-				from
-					i := 1
-				until
-					i > nb or else
-					a_string.item (i) /= '0'
-				loop
-					i := i + 1
-				end
-				if i > nb then
-					code := 0
-				else
-					code := a_string.substring (i, nb).to_integer
-				end
-			end
+			code := a_string.to_integer
 		end
 
 	from_hexadecimal (a_string: STRING) is

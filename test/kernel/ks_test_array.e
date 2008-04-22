@@ -26,7 +26,7 @@ feature -- Test
 
 	test_subarray is
 			-- Test feature `subarray'.
-			-- Note: ELKS 2000 ARRAY and VE 4.1 return an 'ARRAY [G]'
+			-- Note: ELKS 2000 ARRAY returns an 'ARRAY [G]'
 			-- whereas SE 1.0 and ISE 5.4/5.5 return a 'like Current'.
 			-- Note2: ISE 5.4/5.5 does not allow subarrays of empty array,
 			-- and does not work with empty subarrays.

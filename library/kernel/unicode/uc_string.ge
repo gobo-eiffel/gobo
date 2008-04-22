@@ -33,7 +33,7 @@ inherit
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory
 #endif
-#ifdef ISE || VE
+#ifdef ISE
 		select
 				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
@@ -44,29 +44,20 @@ inherit
 
 	STRING
 		rename
-#ifdef ISE
-			capacity as byte_capacity,
-#endif
-#ifdef ISE || SE
-			set_count as old_set_count,
-#endif
 #ifdef SE
 			prepend as old_prepend,
 			remove_prefix as old_remove_prefix,
 #endif
 #ifdef ISE
+			capacity as byte_capacity,
 			clear_all as old_clear_all,
 			left_adjust as old_left_adjust,
 			right_adjust as old_right_adjust,
-#endif
-#ifdef ISE
 				-- Note: The postconditions of `wipe_out' in
 				-- ISE 5.4/5.5 does not allow an optimized ELKS compliant
 				-- redefinition here. In particular we don't want to
 				-- reset the capacity to zero.
 			wipe_out as old_wipe_out,
-#endif
-#ifdef ISE || VE
 			empty as old_empty,
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
@@ -77,6 +68,7 @@ inherit
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
 #endif
+			set_count as old_set_count,
 			is_empty as old_is_empty
 		export
 #ifdef SE
@@ -89,7 +81,7 @@ inherit
 #endif
 			{NONE} all
 		undefine
-#ifdef VE || SE
+#ifdef SE
 			compare,
 #endif
 			infix ">", infix "<=", infix ">=", max, min
@@ -200,7 +192,7 @@ inherit
 #endif
 			three_way_comparison,
 			is_equal, copy, out
-#ifdef ISE || VE
+#ifdef ISE
 		select
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
@@ -305,10 +297,6 @@ feature -- Initialization
 			-- (Extended from ELKS 2001 STRING)
 		do
 			reset_byte_index_cache
-#ifdef VE
-			create storage.make_filled ('%U', suggested_capacity)
-			ve_make_byte_storage ('%U', 0)
-#else
 #ifdef ISE
 			count := 0
 			if suggested_capacity = 0 then
@@ -319,7 +307,6 @@ feature -- Initialization
 			end
 #else
 			precursor (suggested_capacity)
-#endif
 #endif
 #ifdef ISE
 			set_count (byte_capacity)
@@ -1138,11 +1125,7 @@ feature -- Measurement
 #ifdef SE
 			Result := capacity
 #else
-#ifdef VE
-			Result := storage.count
-#else
 			Result := precursor
-#endif
 #endif
 		end
 
@@ -1597,9 +1580,6 @@ feature -- Element change
 #ifdef ISE
 				old_put (c, k)
 #endif
-#ifdef VE
-				storage.put (c, k)
-#endif
 #ifdef SE
 				storage.put (c, k - 1)
 #endif
@@ -1615,7 +1595,6 @@ feature -- Element change
 	append_string (a_string: STRING) is
 			-- Append a copy of `a_string' at end.
 			-- (ELKS 2001 STRING)
-#ifdef ISE || SE
 		local
 			nb: INTEGER
 			old_a_string_byte_count: INTEGER
@@ -1624,12 +1603,10 @@ feature -- Element change
 			new_count: INTEGER
 			a_utf8_string: UC_UTF8_STRING
 			a_uc_string: UC_STRING
-#endif
 #ifdef ISE
 			b: BOOLEAN
 #endif
 		do
-#ifdef ISE || SE
 			if ANY_.same_types (a_string, dummy_string) then
 					-- Check if string does not contain non-ascii characters.
 					-- Unfortunately, this is a slow but necessary call.
@@ -1706,9 +1683,6 @@ feature -- Element change
 					append_substring (a_string, 1, a_string.count)
 				end
 			end
-#else
-			append_substring (a_string, 1, a_string.count)
-#endif
 		end
 
 	append_substring (a_string: STRING; s, e: INTEGER) is
@@ -2089,13 +2063,7 @@ feature -- Element change
 			end
 		end
 
-#ifdef VE
-	-- Note: VE 4.1 has 'like Current' in its signature instead
-	-- of STRING as specified in ELKS 2001:
-	replace_substring (a_string: like Current; start_index, end_index: INTEGER) is
-#else
 	replace_substring (a_string: STRING; start_index, end_index: INTEGER) is
-#endif
 			-- Replace the substring from `start_index' to `end_index',
 			-- inclusive, with `a_string'.
 			-- (ELKS 2001 STRING)
@@ -2286,14 +2254,12 @@ feature -- Duplication
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by clone.)
 			-- (ELKS 2001 STRING)
-#ifdef ISE || SE
 		local
 #ifdef ISE
 			other_count: INTEGER
 #endif
 #ifdef SE
 			c: INTEGER
-#endif
 #endif
 		do
 			if other /= Current then
@@ -2303,13 +2269,6 @@ feature -- Duplication
 				precursor {STRING} (other)
 				set_count (other_count)
 				other.set_count (other_count)
-#endif
-#ifdef VE
-				c_string_copy (other)
-				storage := clone (other.storage)
-				byte_count := other.byte_count
-				last_byte_index_input := other.last_byte_index_input
-				last_byte_index_result := other.last_byte_index_result
 #endif
 #ifdef SE
 				c := other.byte_count
@@ -2331,11 +2290,7 @@ feature -- Duplication
 	cloned_string: like Current is
 			-- New object equal to `Current'
 		do
-#ifdef VE
-			Result := clone (Current)
-#else
 			Result := twin
-#endif
 		ensure
 			twin_not_void: Result /= Void
 			is_equal: Result.is_equal (Current)
@@ -2910,11 +2865,6 @@ feature -- Obsolete
 
 feature {UC_STRING_HANDLER} -- Implementation
 
-#ifdef VE
-	storage: STRING
-			-- Internal byte storage
-
-#endif
 	byte_item (i: INTEGER): CHARACTER is
 			-- Byte at index `i'
 		require
@@ -2930,9 +2880,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 			set_count (byte_count)
 			Result := old_item (i)
 			set_count (old_count)
-#endif
-#ifdef VE
-			Result := storage.item (i)
 #endif
 #ifdef SE
 			Result := storage.item (i - 1)
@@ -2954,9 +2901,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 			set_count (byte_count)
 			old_put (c, i)
 			set_count (old_count)
-#endif
-#ifdef VE
-			storage.put (c, i)
 #endif
 #ifdef SE
 			storage.put (c, i - 1)
@@ -2989,9 +2933,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 				end
 				capacity := n
 #endif
-#ifdef VE
-				storage.resize (n)
-#endif
 			end
 		ensure
 			byte_capacity_set: byte_capacity = n
@@ -3014,7 +2955,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 				reset_byte_index_cache
 			end
 			from
-#ifdef VE || ISE
+#ifdef ISE
 				j := byte_count
 				nb := i
 #else
@@ -3033,9 +2974,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 				old_put (old_item (j), j + offset)
 #endif
 #ifdef SE
-				storage.put (storage.item (j), j + offset)
-#endif
-#ifdef VE
 				storage.put (storage.item (j), j + offset)
 #endif
 				j := j - 1
@@ -3064,7 +3002,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 				reset_byte_index_cache
 			end
 			from
-#ifdef VE || ISE
+#ifdef ISE
 				j := i
 				nb := byte_count
 #else
@@ -3082,9 +3020,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 				old_put (old_item (j), j - offset)
 #endif
 #ifdef SE
-				storage.put (storage.item (j), j - offset)
-#endif
-#ifdef VE
 				storage.put (storage.item (j), j - offset)
 #endif
 				j := j + 1
@@ -3115,25 +3050,11 @@ feature {UC_STRING_HANDLER} -- Implementation
 			-- Set `count' to `nb'.
 		require
 			nb_positive: nb >= 0
-#ifdef VE
-		local
-			s: STRING
-#endif
 		do
 			if last_byte_index_input > nb then
 				reset_byte_index_cache
 			end
-#ifdef VE
-			if nb > count then
-				create s.make_filled ('%U', nb - count)
-				ve_append_string (s)
-			elseif nb < count then
-				ve_keep_head (nb)
-			end
-#endif
-#ifdef SE || ISE
 			count := nb
-#endif
 		ensure
 			count_set: count = nb
 		end
@@ -3324,40 +3245,6 @@ feature {NONE} -- Implementation
 			dummy_uc_string_not_void: Result /= Void
 		end
 
-#ifdef VE
-	ve_make_byte_storage (c: CHARACTER; n: INTEGER) is
-			-- Create storage of length `n' bytes filled with `c'.
-		require
-			valid_count: n >= 0
-		external
-			"CWC"
-		alias
-			"_STR_make_filled"
-		ensure
-			count_set: count = n
-		end
-
-	ve_append_string (s: STRING) is
-			-- Append a copy of `s' at end.
-		external
-			"CWC"
-		alias
-			"_STR_append_string"
-		end
-
-	ve_keep_head (n: INTEGER) is
-			-- Remove all the characters except for the first `n';
-			-- if `n' >= `count', do nothing.
-		require
-			n_non_negative: n >= 0
-		external
-			"CWC"
-		alias
-			"_STR_head"
-		end
-
-#endif
-#ifdef ISE || SE
 feature {NONE} -- Inapplicable
 
 #ifdef SE
@@ -3478,14 +3365,10 @@ feature {UC_STRING} -- Inapplicable
 		end
 
 #endif
-#endif
 invariant
 
 	non_negative_byte_count: byte_count >= 0
 	byte_count_small_enough: byte_count <= byte_capacity
 	count_small_enough: count <= byte_count
-#ifdef VE
-	storage_not_void: storage /= Void
-#endif
 
 end

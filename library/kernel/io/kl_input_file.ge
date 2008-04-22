@@ -16,17 +16,8 @@ deferred class KL_INPUT_FILE
 inherit
 
 	KI_INPUT_FILE
-#ifdef VE
-		undefine
-			copy,
-				-- Make sure that this deferred class
-				-- has a deferred routine.
-			valid_unread_character
-#endif
 		redefine
-#ifdef ISE || SE || VE
 			read_to_string,
-#endif
 			read_to_buffer
 		end
 
@@ -46,13 +37,7 @@ inherit
 
 #endif
 	KL_IMPORTED_ANY_ROUTINES
-#ifdef VE
-		undefine
-			copy
-		end
-#endif
 
-#ifdef SE || ISE
 feature -- Access
 
 	last_character: CHARACTER
@@ -65,7 +50,6 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 
-#endif
 feature -- Status report
 
 #ifdef SE
@@ -194,30 +178,9 @@ feature -- Input
 				end
 			end
 #endif
-#ifdef VE
-		local
-			i: INTEGER
-		do
-			if last_string = Void then
-				create last_string.make_filled ('%U', nb)
-			elseif last_string.count < nb then
-				last_string.resize (nb)
-			end
-			if character_buffer = Void then
-				if not old_end_of_file then
-					old_read_stream (nb)
-				else
-					last_string.wipe_out
-				end
-			else
-				i := read_to_string (last_string, 1, nb)
-				last_string.resize (i)
-			end
-#endif
 			end_of_file := (last_string.count = 0)
 		end
 
-#ifdef ISE || SE || VE
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with
 			-- at most `nb' characters read from input file.
@@ -226,11 +189,6 @@ feature -- Input
 			-- in the input file, there is no guarantee that they
 			-- will all be read.)
 		local
-#ifdef VE
-			end_pos: INTEGER
-			memory_threshold: INTEGER
-			a_memory: expanded MEMORY
-#endif
 #ifdef ISE
 			j: INTEGER
 			tmp_string: STRING
@@ -241,39 +199,6 @@ feature -- Input
 #endif
 			i: INTEGER
 		do
-#ifdef VE
-			if not string_postconditions_enabled then
-				Result := precursor (a_string, pos, nb)
-			else
-				memory_threshold := 10000000
-				if nb * a_string.count < memory_threshold then
-					Result := precursor (a_string, pos, nb)
-				else
-					end_pos := pos + nb - 1
-					from i := pos until i > end_pos loop
-						read_character
-						if not end_of_file then
-							if i \\ 100 = 0 then
-									-- Give a chance to the GC to run a cycle. This
-									-- is because in Visual Eiffel the GC is off in
-									-- assertions, which causes problems because the
-									-- postconditions of STRING.put create garbage
-									-- which would never be collected before memory
-									-- exhaustion if `nb' is relatively large.
-								a_memory.full_collect
-							end
-							a_string.put (last_character, i)
-							i := i + 1
-						else
-							Result := i - pos - nb
-							i := end_pos + 1 -- Jump out of the loop.
-						end
-					end
-					Result := Result + i - pos
-				end
-			end
-#endif
-#ifdef ISE || SE
 			from
 				j := pos
 			until
@@ -322,10 +247,8 @@ feature -- Input
 				end_of_file := old_end_of_file
 			end
 			Result := i
-#endif
 		end
 
-#endif
 	read_to_buffer (a_buffer: KI_BUFFER [CHARACTER]; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_buffer', starting at position `pos', with
 			-- at most `nb' characters read from input file.
@@ -359,12 +282,8 @@ feature -- Basic operations
 #ifdef ISE
 					if old_exists and then old_is_readable then
 #endif
-#ifdef VE
-					if old_exists then
-						eof := False
-#endif
 						old_open_read
-#ifdef ISE || VE
+#ifdef ISE
 					end
 #endif
 				end
@@ -448,21 +367,6 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#ifdef VE
-	string_postconditions_enabled: BOOLEAN is
-			-- Are postconditions in class STRING enabled?
-		local
-			rts_server: RTS_SERVER
-			rts_class_info: RTS_CLASS_INFO
-		once
-			create rts_server
-			rts_class_info := rts_server.class_info_by_name ("STRING")
-			if rts_class_info /= Void then
-				Result := rts_class_info.is_ensure_on
-			end
-		end
-
-#endif
 #ifdef ISE
 	file_readable: BOOLEAN is
 			-- Is there a current item that may be read?
@@ -470,8 +374,6 @@ feature {NONE} -- Implementation
 			Result := is_open_read
 		end
 
-#endif
-#ifdef ISE
 	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.

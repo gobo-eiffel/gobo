@@ -38,9 +38,11 @@ standard. But this standard is not perfect yet.</p>
 <p>The other problem encountered when writing portable code is
 incompatibility between the different language dialects provided
 by the Eiffel compilers. The definition of the Eiffel language is
-controlled by the <a href="http://www.ecma-international.org/memento/TC39-TG4.htm"><font size="2">ECMA TC39-TG4</font></a> 
-committee for the standardization of the Eiffel Language,
-after the specification given in <a
+controlled by the <a
+href="http://www.ecma-international.org/memento/TC49-TG4.htm"><font
+size="2">ECMA TC49-TG4</font></a> committee for the
+standardization of the Eiffel Language, after the specification
+given in <a
 href="http://www.prenhall.com/books/ptr_0132479257.html"><em>Eiffel:
 The Language</em></a>, second printing. However no Eiffel
 compiler will realistically implement the <em>standard</em>
@@ -80,9 +82,10 @@ color="#800000">-</font>]</pre>
 </blockquote>
 
 <p>where the first <font color="#800000"><em><tt>filename</tt></em></font>
-is the name of the input file and the second <font color="#800000"><em><tt>filename</tt></em></font>
-is the name of the output file. If the input filename is missing,
-or if<font color="#800000" size="2" face="Courier New"> </font><font
+is the name of the input file and the second <font
+color="#800000"><em><tt>filename</tt></em></font> is the name of
+the output file. If the input filename is missing, or if<font
+color="#800000" size="2" face="Courier New"> </font><font
 color="#800000"><tt>-</tt></font><font color="#800000" size="2"
 face="Courier New"> </font>is specified instead, the <em>gepp</em>
 reads its input from the standard input. Likewise, if the output
@@ -345,23 +348,28 @@ alphabetical order:</p>
 <blockquote>
     <table border="0">
         <tr>
-            <td width="140">ISE Eiffel</td>
+            <td width="160">ISE Eiffel</td>
             <td><font color="#800080"><tt>ISE</tt></font></td>
         </tr>
         <tr>
-            <td width="140">SmartEiffel</td>
+            <td width="160">Gobo Eiffel</td>
+            <td><font color="#800080"><tt>GE</tt></font></td>
+        </tr>
+        <tr>
+            <td width="160">SmartEiffel</td>
             <td><font color="#800080"><tt>SE</tt></font></td>
         </tr>
         <tr>
-            <td width="140">Visual Eiffel</td>
+            <td width="160">Visual Eiffel (deprecated)</td>
             <td><font color="#800080"><tt>VE</tt></font></td>
         </tr>
     </table>
 </blockquote>
 
-<p>(Note that <font color="#800080"><tt>ISE</tt></font>, 
-<font color="#800080"><tt>SE</tt></font>, <font color="#800080"><tt>VE</tt></font> 
-should be all in uppercase because <em>gepp</em> is case-sensitive.)</p>
+<p>(Note that <font color="#800080"><tt>ISE</tt></font>, <font
+color="#800080"><tt>GE</tt></font>, <font color="#800080"><tt>SE</tt></font>,
+<font color="#800080"><tt>VE</tt></font> should be all in
+uppercase because <em>gepp</em> is case-sensitive.)</p>
 
 <p><em>gepp</em> should then be invoked as follows:</p>
 
@@ -373,13 +381,13 @@ should be all in uppercase because <em>gepp</em> is case-sensitive.)</p>
             </tt><em><tt>foo.ge foo.e</tt></em></font></td>
         </tr>
         <tr>
-            <td width="140">SmartEiffel</td>
-            <td><font color="#800000"><tt>gepp -D</tt><em><tt>SE</tt></em><tt>
+            <td width="140">Gobo Eiffel</td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>GE</tt></em><tt>
             </tt><em><tt>foo.ge foo.e</tt></em></font></td>
         </tr>
         <tr>
-            <td width="140">Visual Eiffel</td>
-            <td><font color="#800000"><tt>gepp -D</tt><em><tt>VE</tt></em><tt>
+            <td width="140">SmartEiffel</td>
+            <td><font color="#800000"><tt>gepp -D</tt><em><tt>SE</tt></em><tt>
             </tt><em><tt>foo.ge foo.e</tt></em></font></td>
         </tr>
     </table>
@@ -412,7 +420,8 @@ such as:</p>
 color="#800080">VE</font><font color="#008080">
             <em>Result</em>.<em>from_integer</em> (<em>an_int</em>)
 </font><font color="#0000FF">#else
-#ifdef</font><font color="#008080"> </font><font color="#800080">ISE</font><font color="#008080">
+#ifdef</font><font color="#008080"> </font><font color="#800080">ISE</font><font
+color="#008080">
             <em>Result</em> := <em>'%U'</em> + <em>an_int</em>
 </font><font color="#0000FF">#else</font><font color="#008080">
             <em>Result</em> := <em>an_int</em>.<em>to_character</em>
@@ -485,7 +494,7 @@ where no other solutions were satisfactory.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2005</b></font><font
+            <font size="2"><b>Copyright © 1998-2008</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -495,7 +504,7 @@ where no other solutions were satisfactory.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 11 February 2005</font><br>
+            <strong>Last Updated:</strong> 19 April 2008</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

@@ -39,11 +39,7 @@ feature -- Access
 		require
 			c_small_enough: c.code < Platform.Maximum_character_code
 		do
-#ifdef VE
-			Result.from_integer (c.code + 1)
-#else
 			Result := c.next
-#endif
 		ensure
 			definition: Result.code = c.code + 1
 		end
@@ -53,11 +49,7 @@ feature -- Access
 		require
 			c_small_enough: c.code > Platform.Minimum_character_code
 		do
-#ifdef VE
-			Result.from_integer (c.code - 1)
-#else
 			Result := c.previous
-#endif
 		ensure
 			definition: Result.code = c.code - 1
 		end
@@ -71,9 +63,6 @@ feature -- Access
 #ifdef SE
 			Result := c.to_lower
 #endif
-#ifdef VE
-			Result :=  c.as_lower
-#endif
 		end
 
 	as_upper (c: CHARACTER): CHARACTER is
@@ -84,9 +73,6 @@ feature -- Access
 #endif
 #ifdef SE
 			Result := c.to_upper
-#endif
-#ifdef VE
-			Result :=  c.as_upper
 #endif
 		end
 

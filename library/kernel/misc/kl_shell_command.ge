@@ -30,18 +30,6 @@ inherit
 		end
 
 #endif
-#ifdef VE
-	EXTERNAL_PROCESS
-		rename
-			make as old_make,
-			command as old_command,
-			execute as old_execute,
-			exit_code as old_exit_code
-		export
-			{NONE} all
-		end
-
-#endif
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
 
@@ -59,9 +47,6 @@ feature {NONE} -- Initialization
 			-- Create a new shell command.
 		do
 			string_command := STRING_.as_string (a_command)
-#ifdef VE
-			make_shell (string_command)
-#endif
 			command := a_command
 		end
 
@@ -101,10 +86,6 @@ feature -- Execution
 #ifdef ISE
 				system (string_command)
 				exit_code := return_code
-#endif
-#ifdef VE
-				old_execute
-				exit_code := old_exit_code
 #endif
 #ifdef SE
 				exit_code := execute_command (string_command)

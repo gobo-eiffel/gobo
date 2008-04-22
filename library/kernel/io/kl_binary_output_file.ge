@@ -16,11 +16,6 @@ class KL_BINARY_OUTPUT_FILE
 inherit
 
 	KI_BINARY_OUTPUT_FILE
-#ifdef VE
-		undefine
-			copy
-		end
-#endif
 
 	KL_OUTPUT_FILE
 #ifdef ISE
@@ -29,7 +24,7 @@ inherit
 		end
 #endif
 
-#ifdef ISE || GE
+#ifdef ISE
 	RAW_FILE
 		rename
 			make as old_make,
@@ -86,7 +81,6 @@ create
 
 	make
 
-#ifdef SE || ISE || GE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -153,6 +147,5 @@ feature {NONE} -- Implementation
 			end
 		end
 
-#endif
 #endif
 end

@@ -43,9 +43,6 @@ feature -- Initialization
 				Result := Result.calloc (n)
 			end
 #endif
-#ifdef VE
-			create Result.make (0, n - 1)
-#endif
 		ensure
 #ifndef SE
 			native_array_not_void: Result /= Void
@@ -62,11 +59,7 @@ feature -- Status report
 			an_array_not_void: an_array /= Void
 #endif
 		do
-#ifdef ISE || SE
 			Result := True
-#else
-			Result := an_array.lower = 0
-#endif
 		end
 
 feature -- Resizing
@@ -97,12 +90,6 @@ feature -- Resizing
 				Result := an_array.realloc (old_size, new_size)
 			else
 				Result := Result.calloc (new_size)
-			end
-#endif
-#ifdef VE
-			Result := an_array
-			if new_size > an_array.count then
-				Result.resize (0, new_size - 1)
 			end
 #endif
 		ensure

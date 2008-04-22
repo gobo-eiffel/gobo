@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="mcalc_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="mcalc" location="${GOBO}/example/parse/mcalc"/>
 	<mount location="${GOBO}/library/parse/library.xace"/>
 	<mount location="${GOBO}/library/structure/library.xace"/>

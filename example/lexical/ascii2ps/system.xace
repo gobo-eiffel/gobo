@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="ascii2ps_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="ascii2ps" location="${GOBO}/example/lexical/ascii2ps"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>

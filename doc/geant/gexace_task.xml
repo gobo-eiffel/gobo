@@ -6,7 +6,7 @@
 		"Gexace Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexace_task">
 <chapterinfo>
 	<copyright>
-		<year>2002-2005</year>
+		<year>2002-2008</year>
 		<holder>Sven Ehrke</holder>
 	</copyright>
 	<author>
 		<firstname>Sven</firstname><surname>Ehrke</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>7 July 2005</date>
+	<date>20 April 2008</date>
 </chapterinfo>
 
 	<title>gexace</title>
@@ -57,20 +57,7 @@
 					<para><emphasis>Description: </emphasis>System</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>ise|se|ve|xml</para>
-				</listitem>
-				<listitem>
-					<para><emphasis>Default: </emphasis>-</para>
-				</listitem>
-			</varlistentry>
-
-			<varlistentry>
-				<term>cluster</term>
-				<listitem>
-					<para><emphasis>Description: </emphasis>cluster (obsolete. Use 'library' instead)</para>
-				</listitem>
-				<listitem>
-					<para><emphasis>Domain: </emphasis>ise|se|ve|xml</para>
+					<para><emphasis>Domain: </emphasis>ise|ge|se</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -83,7 +70,20 @@
 					<para><emphasis>Description: </emphasis>library</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>ise|se|ve|xml</para>
+					<para><emphasis>Domain: </emphasis>ise|ge|se</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>-</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>format</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>format</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>ace|ecf|xace|loadpath</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -145,19 +145,27 @@
           <!-- runtime evaluation
           <choice>
             <value>ise</value>
+            <value>ge</value>
             <value>se</value>
-            <value>ve</value>
-            <value>xml</value>
           </choice>
           -->
         </attribute>
-        <attribute name="cluster">
+        <attribute name="library">
           <!-- runtime evaluation
           <choice>
             <value>ise</value>
+            <value>ge</value>
             <value>se</value>
-            <value>ve</value>
-            <value>xml</value>
+          </choice>
+          -->
+        </attribute>
+        <attribute name="format">
+          <!-- runtime evaluation
+          <choice>
+            <value>ace</value>
+            <value>ecf</value>
+            <value>xace</value>
+            <value>loadpath</value>
           </choice>
           -->
         </attribute>
@@ -184,7 +192,7 @@
 	<section id="gexace_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
-  <gexace system="se" xace="${system}.xace"/>
+  <gexace system="ge" xace="${system}.xace"/>
 
   <gexace system="${eiffel}" output="${gexace_output}" xace="${system_dir}/system.xace">
 

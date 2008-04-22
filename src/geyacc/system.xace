@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="geyacc_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="geyacc" location="${GOBO}/src/geyacc"/>
 
 	<mount location="${GOBO}/library/lexical/library.xace"/>

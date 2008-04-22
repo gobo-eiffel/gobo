@@ -30,9 +30,6 @@ feature -- Access
 #ifdef SE
 			Result := se_vendor
 #endif
-#ifdef VE
-			Result := ve_vendor
-#endif
 #endif
 		ensure
 			vendor_not_void: Result /= Void
@@ -57,8 +54,15 @@ feature -- Access
 	se_vendor: STRING is "se"
 			-- SmartEiffel vendor
 
-	ve_vendor: STRING is "ve"
+	ve_vendor: STRING is
 			-- Visual Eiffel vendor
+		obsolete
+			"[080419] VE not supported anymore."
+		once
+			Result := "ve"
+		ensure
+			vendor_not_void: Result /= Void
+		end
 
 feature -- Status report
 
@@ -98,10 +102,12 @@ feature -- Status report
 
 	is_ve: BOOLEAN is
 			-- Has this program been compiled with Visual Eiffel?
+		obsolete
+			"[040922] VE not supported anymore."
 		once
-			Result := (vendor = ve_vendor)
+			Result := False
 		ensure
-			definition: Result = (vendor = ve_vendor)
+			definition: not Result
 		end
 
 end

@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="clock_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="clock" location="${GOBO}/example/time/clock"/>
 	<mount location="${GOBO}/library/time/library.xace"/>
 	<mount location="${GOBO}/library/regexp/library.xace"/>

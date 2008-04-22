@@ -13,7 +13,7 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 	</option>
 	<option if="${DEBUG}">
 		<option name="assertion" value="all"/>

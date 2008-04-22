@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="eiffel_scanner_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="eiffel_scanner" location="${GOBO}/example/lexical/eiffel_scanner"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>

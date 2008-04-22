@@ -15,7 +15,7 @@
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none" if="${BOOTSTRAP}"/>
 		<option name="garbage_collector" value="internal" unless="${BOOTSTRAP}"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 	</option>
 	<option if="${DEBUG}">
 		<option name="assertion" value="all"/>
@@ -32,7 +32,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="geant_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<mount location="${GOBO}/src/geant/library.xace"/>
 	<mount location="${GOBO}/library/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>

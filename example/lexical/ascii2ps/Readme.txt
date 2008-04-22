@@ -10,13 +10,12 @@ To compile this example:
 1. Use the script 'geant scanner' to generate class ASCII2PS if necessary.
 
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
-   to launch the compilation:
+   the provided Ace, Xace or ECF file (e.g. <compiler>.ecf). Alternatively
+   you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 've' or 'se'.
+   where <compiler> is either 'ise', 'ge' or 'se'.
 
 3. Run the filter using:
 
@@ -56,4 +55,4 @@ we have the Gobo Eiffel Time Library it would be a good exercise
 to use it here.
 
 --
-Copyright (c) 1997-2005, Eric Bezault and others
+Copyright (c) 1997-2008, Eric Bezault and others

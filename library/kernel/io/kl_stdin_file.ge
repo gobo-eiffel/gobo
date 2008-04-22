@@ -22,10 +22,6 @@ inherit
 	KI_TEXT_INPUT_STREAM
 		rename
 			end_of_input as end_of_file
-#ifdef VE
-		undefine
-			copy
-#endif
 		redefine
 #ifdef ISE
 			read_to_string,
@@ -36,19 +32,11 @@ inherit
 	KL_OPERATING_SYSTEM
 		export
 			{NONE} all
-#ifdef VE
-		undefine
-			copy
-#endif
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		export
 			{NONE} all
-#ifdef VE
-		undefine
-			copy
-#endif
 		end
 
 #ifdef ISE
@@ -86,22 +74,6 @@ inherit
 			last_string
 		end
 #endif
-#ifdef VE
-	FILE
-		rename
-			make as old_make,
-			read_character as old_read_character,
-			read_stream as old_read_stream,
-			read_line as old_read_line,
-			is_open_read as old_is_open_read,
-			end_of_file as old_end_of_file,
-			close as old_close
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
-#endif
 
 create
 
@@ -118,10 +90,6 @@ feature {NONE} -- Initialization
 #ifdef SE
 			name := "stdin"
 			old_make
-#endif
-#ifdef VE
-			make_open_stdin
-			name := "stdin"
 #endif
 			end_of_file := False
 		ensure
@@ -173,35 +141,12 @@ feature -- Input
 			elseif old_end_of_file then
 				end_of_file := True
 			else
-#ifdef VE
-				if is_windows then
-						-- Windows.
-					old_read_character
-					if not old_end_of_file then
-						if last_character = '%R' then
-							old_read_character
-							if old_end_of_file then
-								last_character := '%R'
-							elseif last_character /= '%N' then
-								unread_character (last_character)
-								last_character := '%R'
-							end
-						end
-					else
-						end_of_file := True
-					end
-				else
-					old_read_character
-					end_of_file := old_end_of_file
-				end
-#else
 				old_read_character
 				end_of_file := old_end_of_file
 #ifdef SE
 				if not end_of_file then
 					last_character := old_last_character
 				end
-#endif
 #endif
 			end
 		end
@@ -277,48 +222,6 @@ feature -- Input
 				end
 			end
 #endif
-#ifdef VE
-		local
-			i, j: INTEGER
-			a_target: STRING
-		do
-			if is_windows then
-					-- Windows.
-				if last_string = Void then
-					create last_string.make_filled ('%U', nb)
-				elseif last_string.count < nb then
-					last_string.resize (nb)
-				end
-				a_target := last_string
-				from i := nb until i < 1 loop
-					read_character
-					if not end_of_file then
-						j := j + 1
-						a_target.put (last_character, j)
-						i := i - 1
-					else
-						i := 0 -- Jump out of the loop.
-					end
-				end
-				a_target.resize (j)
-			else
-				if last_string = Void then
-					create last_string.make_filled ('%U', nb)
-				elseif last_string.count < nb then
-					last_string.resize (nb)
-				end
-				if character_buffer = Void then
-					if not old_end_of_file then
-						old_read_stream (nb)
-					else
-						last_string.wipe_out
-					end
-				else
-					i := read_to_string (last_string, 1, nb)
-					last_string.resize (i)
-				end
-			end
-#endif
 			end_of_file := (last_string.count = 0)
 		end
 
@@ -337,16 +240,12 @@ feature -- Input
 			has_carriage: BOOLEAN
 		do
 			if last_string = Void then
-#ifdef VE
-				create last_string.make_empty
-#else
 				create last_string.make (256)
-#endif
 			else
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef VE || SE
+#ifdef SE
 				last_string.wipe_out
 #endif
 			end
@@ -389,16 +288,12 @@ feature -- Input
 			-- input file are: '%N', '%R%N and '%R'.
 		do
 			if last_string = Void then
-#ifdef VE
-				create last_string.make_empty
-#else
 				create last_string.make (256)
-#endif
 			else
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef VE || SE
+#ifdef SE
 				last_string.wipe_out
 #endif
 			end
@@ -494,16 +389,6 @@ feature -- Input
 			end
 		end
 
-#ifdef VE
-feature {NONE} -- GC
-
-	dispose is
-			-- Do not close standard input file.
-		do
-			handle := INVALID_HANDLE_VALUE
-		end
-
-#endif
 feature {NONE} -- Implementation
 
 	character_buffer: KL_LINKABLE [CHARACTER]

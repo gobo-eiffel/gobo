@@ -25,17 +25,6 @@ inherit
 		end
 
 #endif
-#ifdef VE
-	MATH
-		rename
-			log as old_log,
-			exp as old_exp
-		export
-			{NONE} all
-		end
-
-#endif
-
 	KL_SHARED_PLATFORM
 
 feature -- Logarithms
@@ -51,36 +40,23 @@ feature -- Logarithms
 #ifdef ISE
 			Result := old_log (d)
 #endif
-#ifdef VE
-			Result := old_log (d.truncated_to_real)
-#endif
 		end
 
 	log2 (d: DOUBLE): DOUBLE is
 			-- Base 2 logarithm of `d'
 		require
 			d_positive: d > 0.0
-#ifdef VE || SE
-		local
-#endif
 #ifdef SE
+		local
 			a: DOUBLE
-#endif
-#ifdef VE
-			a: REAL
 #endif
 		do
 #ifdef ISE
 			Result := log_2 (d)
 #endif
-#ifdef VE || SE
-			a := 2.0
-#endif
 #ifdef SE
+			a := 2.0
 			Result := d.log / a.log
-#endif
-#ifdef VE
-			Result := old_log (d.truncated_to_real) / log (a)
 #endif
 		end
 
@@ -95,9 +71,6 @@ feature -- Logarithms
 #ifdef ISE
 			Result := old_log10 (d)
 #endif
-#ifdef VE
-			Result := log (d) / log (10.0)
-#endif
 		end
 
 feature -- Exponent
@@ -111,21 +84,14 @@ feature -- Exponent
 #ifdef ISE
 			Result := old_exp (d)
 #endif
-#ifdef VE
-			Result := old_exp (d.truncated_to_real)
-#endif
 		end
 
 	nth_root (d, n: DOUBLE): DOUBLE is
 			-- `n'-th root of `d'
 		require
-#ifdef VE
-			divisible: (1.0).divisible (n.truncated_to_real)
-#else
 			divisible: (1.0).divisible (n)
-#endif
 		do
-#ifdef ISE || VE
+#ifdef ISE
 			Result := d ^ (1.0 / n)
 #endif
 #ifdef SE
@@ -283,23 +249,8 @@ feature -- Infinity
 			p.put_natural_8 (240, 6)
 			p.put_natural_8 (127, 7)
 			Result := p.read_real_64 (0)
-#else
-#ifdef VE
-		local
-			p: RTS_MEMORY_MAPPED_AREA_ARRAY [CHARACTER]
-		once
-				-- Binary representation of IEEE 754 '+infinity'.
-				-- See: http://en.wikipedia.org/wiki/IEEE_754
-			create p.make ($Result, 8)
-			p.put ('%/0/', 1)
-			p.put ('%/0/', 2)
-			p.put ('%/0/', 3)
-			p.put ('%/0/', 4)
-			p.put ('%/0/', 5)
-			p.put ('%/0/', 6)
-			p.put ('%/240/', 7)
-			p.put ('%/127/', 8)
-#else
+#endif
+#ifdef SE
 		local
 			d1: DOUBLE
 			large_number: DOUBLE
@@ -313,7 +264,6 @@ feature -- Infinity
 			-- Result := large_number * large_number
 			d1 := large_number
 			Result := d1 * d1
-#endif
 #endif
 		ensure
 			positive: Result > 0
@@ -337,23 +287,8 @@ feature -- Infinity
 			p.put_natural_8 (240, 6)
 			p.put_natural_8 (255, 7)
 			Result := p.read_real_64 (0)
-#else
-#ifdef VE
-		local
-			p: RTS_MEMORY_MAPPED_AREA_ARRAY [CHARACTER]
-		once
-				-- Binary representation of IEEE 754 '+infinity'.
-				-- See: http://en.wikipedia.org/wiki/IEEE_754
-			create p.make ($Result, 8)
-			p.put ('%/0/', 1)
-			p.put ('%/0/', 2)
-			p.put ('%/0/', 3)
-			p.put ('%/0/', 4)
-			p.put ('%/0/', 5)
-			p.put ('%/0/', 6)
-			p.put ('%/240/', 7)
-			p.put ('%/255/', 8)
-#else
+#endif
+#ifdef SE
 		local
 			d1, d2: DOUBLE
 			large_number: DOUBLE
@@ -370,7 +305,6 @@ feature -- Infinity
 			d1 := large_number
 			d2 := large_negative_number
 			Result := d1 * d2
-#endif
 #endif
 		ensure
 			negative: Result < 0

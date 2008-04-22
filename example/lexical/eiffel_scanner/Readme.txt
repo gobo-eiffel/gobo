@@ -18,17 +18,15 @@ To compile this example:
    if necessary.
 
 2. Choose either `execute' or `benchmark' as the creation procedure of
-   the root class EIFFEL_SCANNER in your Ace file (ISE Eiffel: ise.ace,
-   SmartEiffel: se.ace) or your Xace file (Visual Eiffel: ve.xace).
+   the root class EIFFEL_SCANNER in your Ace, Xace or ECF file.
 
 3. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
-   to launch the compilation:
+   the provided Ace, Xace or ECF file (e,g, <compiler>.ecf). Alternatively
+   you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 've' or 'se'.
+   where <compiler> is either 'ise', 'ge' or 'se'.
 
 4. Execute the Eiffel scanner using
 
@@ -42,4 +40,4 @@ To compile this example:
    filenames containing Eiffel classes and `nb' is an integer.
 
 --
-Copyright (c) 1997-2005, Eric Bezault and others
+Copyright (c) 1997-2008, Eric Bezault and others

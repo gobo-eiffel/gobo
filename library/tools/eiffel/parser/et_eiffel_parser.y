@@ -400,10 +400,6 @@ Index_clause_impl: Index_terms
 		{
 			$$ := ast_factory.new_tagged_indexing (ast_factory.new_tag ($1, $2), $3)
 		}
-
-		-- Note: Eiffel says that the Index_terms list 
-		-- should not be empty, but VE allows that!
---	| Identifier ':'
 	;
 
 Index_clause_semicolon: Index_clause ';'
@@ -3051,10 +3047,6 @@ Choice: Choice_constant
 Choice_constant: Integer_constant
 		{ $$ := $1 }
 	| Character_constant
-		{ $$ := $1 }
-	| Qualified_call_expression
-		-- For Visual Eiffel and TowerEiffel (not standard Eiffel,
-		-- should be 'Identifier' instead of '[Qualified_]Call_expression'):
 		{ $$ := $1 }
 	| Identifier
 		{ $$ := $1 }

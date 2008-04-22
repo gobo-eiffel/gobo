@@ -93,12 +93,4 @@
 		</cluster>
 	</cluster>
 
-	<cluster name="ve" location="${VE_Lib}" if="${GOBO_EIFFEL}=ve">
-		<option name="abstract" value="true"/>
-		<mount location="${VE_Lib}/kernel/library.xace"/>
-		<mount location="${VE_Lib}/misc/pool/library.xace"/>
-		<mount location="${VE_Lib}/tool/gargs/library.xace"/>
-		<mount location="${VE_Lib}/timedate/library.xace"/>
-	</cluster>
-
 </library>

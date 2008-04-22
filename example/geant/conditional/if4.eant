@@ -1,7 +1,7 @@
 <project name="if_demo4" default="info">
 
 	<target name="check_eiffel" unless="$GOBO_EIFFEL">
-		<echo message="You have to set GOBO_EIFFEL to one of (ise,se,ve)"/>
+		<echo message="You have to set GOBO_EIFFEL to one of (ise,ge,se)"/>
 	</target>
 
 	<target name="eiffel" if="$GOBO_EIFFEL=se" depend="check_eiffel">

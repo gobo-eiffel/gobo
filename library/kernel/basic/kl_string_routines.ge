@@ -67,24 +67,6 @@ feature -- Initialization
 				create Result.make_from_string (s)
 			else
 				nb := s.count
-#ifdef VE
-				create Result.make_filled ('%U', nb)
-				uc_string ?= s
-				if uc_string /= Void then
-					nb := uc_string.byte_count
-					from j := 1 until j > nb loop
-						i := i + 1
-						Result.put (uc_string.character_item_at_byte_index (j), i)
-						j := uc_string.next_byte_index (j)
-					end
-				else
-					from i := 1 until i > nb loop
-						Result.put (s.item (i), i)
-						i := i + 1
-					end
-				end
-#endif
-#ifdef SE || ISE
 				create Result.make (nb)
 				uc_string ?= s
 				if uc_string /= Void then
@@ -99,7 +81,6 @@ feature -- Initialization
 						i := i + 1
 					end
 				end
-#endif
 			end
 		ensure
 			string_not_void: Result /= Void
@@ -709,9 +690,6 @@ feature -- Access
 #ifdef SE
 				Result := a_string_count * a_string.item (a_string_count).to_lower.code
 #endif
-#ifdef VE
-				Result := a_string_count * a_string.item (a_string_count).as_lower.code
-#endif
 				nb := 5
 			else
 				nb := a_string_count
@@ -722,9 +700,6 @@ feature -- Access
 #endif
 #ifdef SE
 				Result := Result + a_string.item (i).to_lower.code
-#endif
-#ifdef VE
-				Result := Result + a_string.item (i).as_lower.code
 #endif
 				i := i + 1
 			end
@@ -913,9 +888,6 @@ feature -- Comparison
 #ifdef SE
 						elseif c1.to_lower = c2.to_lower then
 #endif
-#ifdef VE
-						elseif c1.as_lower = c2.as_lower then
-#endif
 							i := i + 1
 						else
 							Result := False
@@ -1070,10 +1042,6 @@ feature -- Comparison
 						c1 := c1.to_lower
 						c2 := c2.to_lower
 #endif
-#ifdef VE
-						c1 := c1.as_lower
-						c2 := c2.as_lower
-#endif
 						if c1 = c2 then
 							i := i + 1
 						elseif c1 < c2 then
@@ -1140,11 +1108,7 @@ feature -- Duplication
 		require
 			a_string_not_void: a_string /= Void
 		do
-#ifdef VE
-			Result := clone (a_string)
-#else
 			Result := a_string.twin
-#endif
 		ensure
 			cloned_not_void: Result /= Void
 			same_type: ANY_.same_types (Result, a_string)
@@ -1569,7 +1533,6 @@ feature -- Removal
 			-- (Not in ELKS 2001 STRING)
 			-- Note: SE 1.1 removes the following characters: ' ';
 			-- ISE 5.4 removes the following characters: ' ', '%T', '%R', '%N';
-			-- VE 4.1 removes the characters <= ' '. 
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -1598,7 +1561,6 @@ feature -- Removal
 			-- (Not in ELKS 2001 STRING)
 			-- Note: SE 1.1 removes the following characters: ' ';
 			-- ISE 5.4 removes the following characters: ' ', '%T', '%R', '%N';
-			-- VE 4.1 removes the characters <= ' '. 
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -1704,8 +1666,7 @@ feature -- Removal
 			-- Do not discard allocated memory (i.e. do not
 			-- change capacity) when allowed by the underlying
 			-- Eiffel compiler.
-			-- Note: currently only ISE and SE will not change
-			-- capacity, whereas VE will reset capacity to zero.
+			-- Note: currently ISE and SE will not change capacity.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -1751,14 +1712,9 @@ feature -- Resizing
 			a_string_not_void: a_string /= Void
 			a_string_is_string: ANY_.same_types (a_string, "")
 			n_large_enough: n >= a_string.count
-#ifndef VE
 		local
 			i: INTEGER
-#endif
 		do
-#ifdef VE
-			a_string.resize (n)
-#endif
 #ifdef SE
 			from
 				i := n - a_string.count
@@ -1791,10 +1747,9 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 			integer_64_string: is_integer_64 (a_string)
-#ifdef ISE || GE
+#ifdef ISE
 		do
 			Result := a_string.to_integer_64
-		end
 #endif
 #ifdef SE
 		local
@@ -1824,8 +1779,8 @@ feature -- Conversion
 				end
 				i := i + 1
 			end
-		end
 #endif
+		end
 
 feature {NONE} -- Implementation
 

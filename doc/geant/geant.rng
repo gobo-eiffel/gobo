@@ -3,7 +3,7 @@
 <!--
 	description: "Eiffel Ant RelaxNG specification"
 	system: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,7 +110,6 @@
 				<ref name="set"/>
 				<ref name="setenv"/>
 				<ref name="unset"/>
-				<ref name="ve"/>
 				<ref name="xslt"/>
 			</choice>
 		</zeroOrMore>
@@ -406,35 +405,29 @@
 					<!-- runtime evaluation
 					<choice>
 						<value>ise</value>
+						<value>ge</value>
 						<value>se</value>
-						<value>ve</value>
-						<value>xml</value>
 					</choice>
 					-->
 				</attribute>
-				<choice>
-					<attribute name="cluster">
-						<!-- Note: this attribute is obsolete. Use attribute 'library' instead -->
-						<!-- runtime evaluation
-						<choice>
-							<value>ise</value>
-							<value>se</value>
-							<value>ve</value>
-							<value>xml</value>
-						</choice>
-						-->
-					</attribute>
-					<attribute name="library">
-						<!-- runtime evaluation
-						<choice>
-							<value>ise</value>
-							<value>se</value>
-							<value>ve</value>
-							<value>xml</value>
-						</choice>
-						-->
-					</attribute>
-				</choice>
+				<attribute name="library">
+					<!-- runtime evaluation
+					<choice>
+						<value>ise</value>
+						<value>ge</value>
+						<value>se</value>
+					</choice>
+					-->
+				</attribute>
+				<attribute name="format">
+					<!-- runtime evaluation
+					<choice>
+						<value>ace</value>
+						<value>ecf</value>
+						<value>xace</value>
+						<value>loadpath</value>
+					</choice>
+					-->
 			</choice>
 			<optional>
 				<attribute name="verbose"/>
@@ -448,12 +441,6 @@
 			<zeroOrMore>
 				<ref name="define"/>
 			</zeroOrMore>
-		</element>
-	</define>
-	<define name="gexmlsplit">
-		<element name="gexmlsplit">
-			<ref name="dir_if_unless"/>
-			<attribute name="input"/>
 		</element>
 	</define>
 	<define name="ise">
@@ -585,37 +572,6 @@
 		<element name="unset">
 			<ref name="dir_if_unless"/>
 			<attribute name="name"/>
-		</element>
-	</define>
-	<define name="ve">
-		<element name="ve">
-			<ref name="dir_if_unless"/>
-			<optional>
-				<attribute name="exit_code_variable"/>
-			</optional>
-			<choice>
-				<attribute name="xace"/>
-				<attribute name="esd"/>
-				<group>
-					<attribute name="clean"/>
-					<optional>
-						<attribute name="recursive"/>
-					</optional>
-				</group>
-				<group>
-					<attribute name="tune"/>
-					<optional>
-						<attribute name="level">
-							<!-- runtime evaluation
-							<choice>
-								<value>large</value>
-								<value>huge</value>
-							</choice>
-							-->
-						</attribute>
-					</optional>
-				</group>
-			</choice>
 		</element>
 	</define>
 	<define name="xslt">

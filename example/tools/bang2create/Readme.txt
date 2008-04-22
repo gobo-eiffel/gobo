@@ -5,13 +5,12 @@ the keyword 'create'.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
-   to launch the compilation:
+   the provided Ace, Xace or ECF file (e.g. <compiler>.ecf). Alternatively
+   you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 've' or 'se'.
+   where <compiler> is either 'ise', 'ge' or 'se'.
 
 
 2. Run the program using:
@@ -34,4 +33,4 @@ To compile this example:
        geant -b bang2create.eant recursive
 
 --
-Copyright (c) 2002, Eric Bezault and others
+Copyright (c) 2002-2008, Eric Bezault and others

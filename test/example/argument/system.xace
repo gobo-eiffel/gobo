@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="example_argument_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="argument_tester" location="${GOBO}/test/example" prefix="example_">
 		<option name="abstract" value="true"/>
 		<cluster name="argument"/>

@@ -24,11 +24,7 @@ feature -- Duplication
 	cloned_object: like Current is
 			-- Clone of current object
 		do
-#ifdef VE
-			Result := clone (Current)
-#else
 			Result := twin
-#endif
 		ensure
 			cloned_not_void: Result /= Void
 			same_type: ANY_.same_types (Result, Current)

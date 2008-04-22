@@ -9,13 +9,12 @@ implementation uses input files with BCD encoded decimals.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
-   to launch the compilation:
+   the provided Ace, Xace or ECF file (e.g. <compiler>.ecf). Alternatively
+   you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 've' or 'se'.
+   where <compiler> is either 'ise', 'ge' or 'se'.
 
 
 2. Run the program using:
@@ -53,5 +52,5 @@ To compile this example:
        0.06
 
 --
-Copyright (c) 2005, Paul G. Crismer and others
+Copyright (c) 2005-2008, Paul G. Crismer and others
 Specifications are Copyright (c) 2002, IBM Corporation

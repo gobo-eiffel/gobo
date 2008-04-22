@@ -114,8 +114,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
-			-- VE requires the type, although it is actually the same routine:
-			Precursor {XM_XPATH_SYSTEM_FUNCTION} (a_context)
+			Precursor (a_context)
 			arguments.item (1).set_unsorted (False)
 		end
 

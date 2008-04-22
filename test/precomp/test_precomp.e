@@ -5,7 +5,7 @@ indexing
 		"Test precompilation of Gobo Library classes"
 
 	library: "Gobo Eiffel Library"
-	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,14 +63,6 @@ feature -- Test
 		do
 			if eiffel_compiler.is_ise then
 				precomp_ise (False)
-			end
-		end
-
-	test_ve is
-			-- Test precompilation with Visual Eiffel.
-		do
-			if eiffel_compiler.is_ve then
-				precomp_ve
 			end
 		end
 
@@ -148,22 +140,6 @@ feature {NONE} -- Precompilation
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)
-		end
-
-	precomp_ve is
-			-- Test precompilation with Visual Eiffel.
-		do
-			old_cwd := file_system.cwd
-			file_system.create_directory (testdir)
-			assert (testdir + "_exists", file_system.directory_exists (testdir))
-			file_system.cd (testdir)
-				-- Generate Xace file.
-			assert_execute ("gexace --library=ve " + xace_filename + output_log)
-				-- Eiffel precompilation.
-			assert_execute ("vec -no -p:ve.xace" + output_log)
-			assert ("no_output", not file_system.file_exists ("Result.out"))
-				-- Done.
-			assert_execute ("vec -no -dc -y" + output_log)
 		end
 
 	precomp_se is

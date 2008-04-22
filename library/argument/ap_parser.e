@@ -241,7 +241,7 @@ feature -- Validity checks
 	is_alpha_numeric (a_character: CHARACTER): BOOLEAN is
 			-- Is `a_character' an alpha-numeric character?
 			-- (the property is available in CHARACTER_REF of FreeELKS,
-			-- unfortunately Visual Eiffel does not seem to support it)
+			-- unfortunately SmartEiffel does not seem to support it)
 		local
 			c: CHARACTER
 		do

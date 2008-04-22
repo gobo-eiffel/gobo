@@ -45,9 +45,6 @@ feature -- Creating and destroying parsers
 #ifdef ISE
 			"C (XML_Char *): EIF_POINTER | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_ParserCreate"
 		end
@@ -71,9 +68,6 @@ feature -- Creating and destroying parsers
 #ifdef ISE
 			"C (XML_Char *, XML_Char): EIF_POINTER | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_ParserCreateNS"
 		end
@@ -93,9 +87,6 @@ feature -- Creating and destroying parsers
 #endif
 #ifdef ISE
 			"C (XML_Char *, XML_Memory_Handling_Suite *, XML_Char *): EIF_POINTER | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_ParserCreate_MM"
@@ -130,9 +121,6 @@ feature -- Creating and destroying parsers
 #ifdef ISE
 			"C (XML_Parser, XML_Char *, XML_Char *): EIF_POINTER | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_ExternalEntityParserCreate"
 		end
@@ -148,9 +136,6 @@ feature -- Creating and destroying parsers
 #endif
 #ifdef ISE
 			"C (XML_Parser) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_ParserFree"
@@ -173,9 +158,6 @@ feature -- Parsing
 #endif
 #ifdef ISE
 			"C (XML_Parser, int): EIF_POINTER | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_GetBuffer"
@@ -214,7 +196,7 @@ feature -- Parsing
 			c_str := s.to_c
 			Result := exml_XML_Parse (a_parser, $c_str, s.count, int)
 #endif
-#ifdef SE || VE
+#ifdef SE
 			Result := exml_XML_Parse (a_parser, s.to_external, s.count, int)
 #endif
 		end
@@ -233,9 +215,6 @@ feature -- Parsing
 #endif
 #ifdef ISE
 			"C (XML_Parser, char *, int, int): EIF_INTEGER | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_Parse"
@@ -259,9 +238,6 @@ feature -- Parsing
 #ifdef ISE
 			"C (XML_Parser, int, int): EIF_INTEGER | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_ParseBuffer"
 		end
@@ -280,9 +256,6 @@ feature -- Error reporting
 #ifdef ISE
 			"C (XML_Parser): EIF_INTEGER | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_GetErrorCode"
 		end
@@ -295,9 +268,6 @@ feature -- Error reporting
 #endif
 #ifdef ISE
 			"C (int): EIF_POINTER | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_ErrorString"
@@ -324,9 +294,6 @@ feature -- Parse state
 #ifdef ISE
 			"C (XML_Parser): EIF_INTEGER | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_GetCurrentLineNumber"
 		end
@@ -341,9 +308,6 @@ feature -- Parse state
 #ifdef ISE
 			"C (XML_Parser): EIF_INTEGER | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_GetCurrentColumnNumber"
 		end
@@ -357,9 +321,6 @@ feature -- Parse state
 #endif
 #ifdef ISE
 			"C (XML_Parser): EIF_INTEGER | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_GetCurrentByteIndex"
@@ -379,19 +340,19 @@ feature -- Miscellaneous
 #endif
 		do
 #ifdef ISE
-			-- For ISE we have to enable the garbage collector to be
-			-- able to freeze the object so it will not move. Because, if
-			-- it moves, the call from Expat to our routines will given
-			-- an invalid Current. And that will cause a segment
-			-- violation, panics, and lots of distress for your users.
-			-- If the garbage collector isn't enabled, we have to enable
-			-- it in order to freeze the object. Because it might not be
-			-- abled now, but either you, or a 3rd party libary might
-			-- enabled it at some point in time, causing our callback
-			-- object to move.
-			-- This all is bad, because enabling the garbage collector
-			-- might cause a sweep. So if you're really concerned after
-			-- reading this, try the Eiffel parser.
+				-- For ISE we have to enable the garbage collector to be
+				-- able to freeze the object so it will not move. Because, if
+				-- it moves, the call from Expat to our routines will given
+				-- an invalid Current. And that will cause a segment
+				-- violation, panics, and lots of distress for your users.
+				-- If the garbage collector isn't enabled, we have to enable
+				-- it in order to freeze the object. Because it might not be
+				-- abled now, but either you, or a 3rd party libary might
+				-- enabled it at some point in time, causing our callback
+				-- object to move.
+				-- This all is bad, because enabling the garbage collector
+				-- might cause a sweep. So if you're really concerned after
+				-- reading this, try the Eiffel parser.
 			is_collecting := memory.collecting
 			if not is_collecting then
 				memory.collection_on
@@ -412,8 +373,7 @@ feature -- Miscellaneous
 				memory.collection_off
 			end
 #endif
-#ifdef SE || VE
-				-- BdB: I think we need to freeze for VE too, look it up.
+#ifdef SE
 			exml_XML_SetUserData (a_parser, a_callback)
 			exml_XML_SetExternalEntityRefHandlerArg (a_parser, a_callback)
 #endif
@@ -429,7 +389,7 @@ feature -- Miscellaneous
 #endif
 		end
 
-#ifdef SE || VE
+#ifdef SE
 	exml_XML_SetUserData (a_parser: POINTER; a_callback: XM_EXPAT_CALLBACK) is
 #else
 	exml_XML_SetUserData (a_parser, a_callback: POINTER) is
@@ -444,9 +404,6 @@ feature -- Miscellaneous
 #endif
 #ifdef ISE
 			"C (XML_Parser, void *) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetUserData"
@@ -473,7 +430,7 @@ feature -- Miscellaneous
 			c_str := a_base.to_c
 			Result := exml_XML_SetBase (a_parser, $c_str)
 #endif
-#ifdef SE || VE
+#ifdef SE
 			Result := exml_XML_SetBase (a_parser, a_base.to_external)
 #endif
 			end
@@ -497,9 +454,6 @@ feature -- Miscellaneous
 #ifdef ISE
 			"C (XML_Parser, const XML_Char *): EIF_BOOLEAN | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetBase"
 		end
@@ -513,9 +467,6 @@ feature -- Miscellaneous
 #endif
 #ifdef ISE
 			"C (XML_Parser): EIF_POINTER | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_GetBase"
@@ -553,9 +504,6 @@ feature -- Miscellaneous
 #ifdef ISE
 			"C (XML_Parser, enum XML_ParamEntityParsing): unsigned char | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetParamEntityParsing"
 		end
@@ -568,9 +516,6 @@ feature -- Miscellaneous
 #endif
 #ifdef ISE
 			"C (): EIF_POINTER | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_ExpatVersion"
@@ -588,9 +533,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_ElementDeclHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetElementDeclHandler"
 		end
@@ -604,9 +546,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_AttlistDeclHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetAttlistDeclHandler"
@@ -622,9 +561,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_XmlDeclHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetXmlDeclHandler"
 		end
@@ -638,9 +574,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_EntityDeclHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetEntityDeclHandler"
@@ -656,9 +589,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_StartElementHandler, XML_EndElementHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetElementHandler"
 		end
@@ -672,9 +602,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_StartElementHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetStartElementHandler"
@@ -690,9 +617,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_EndElementHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetEndElementHandler"
 		end
@@ -706,9 +630,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_CharacterDataHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetCharacterDataHandler"
@@ -724,9 +645,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_ProcessingInstructionHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetProcessingInstructionHandler"
 		end
@@ -740,9 +658,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_CommentHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetCommentHandler"
@@ -758,9 +673,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_StartCdataSectionHandler, XML_EndCdataSectionHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetCdataSectionHandler"
 		end
@@ -775,9 +687,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_StartCdataSectionHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetStartCdataSectionHandler"
 		end
@@ -791,9 +700,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_EndCdataSectionHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetEndCdataSectionHandler"
@@ -812,9 +718,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_DefaultHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetDefaultHandler"
 		end
@@ -832,9 +735,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_DefaultHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetDefaultHandlerExpand"
 		end
@@ -848,9 +748,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_StartDoctypeDeclHandler, XML_EndDoctypeDeclHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetDoctypeDeclHandler"
@@ -866,9 +763,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_StartDoctypeDeclHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetStartDoctypeDeclHandler"
 		end
@@ -882,9 +776,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_EndDoctypeDeclHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetEndDoctypeDeclHandler"
@@ -900,9 +791,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_NotationDeclHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetNotationDeclHandler"
 		end
@@ -916,9 +804,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_StartNamespaceDeclHandler, XML_EndNamespaceDeclHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetNamespaceDeclHandler"
@@ -934,9 +819,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_StartNamespaceDeclHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetStartNamespaceDeclHandler"
 		end
@@ -950,9 +832,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_EndNamespaceDeclHandler) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetEndNamespaceDeclHandler"
@@ -968,9 +847,6 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_NotStandaloneHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetNotStandaloneHandler"
 		end
@@ -985,14 +861,11 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser,  XML_ExternalEntityRefHandler) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetExternalEntityRefHandler"
 		end
 
-#ifdef SE || VE
+#ifdef SE
 	exml_XML_SetExternalEntityRefHandlerArg (a_parser: POINTER; a_arg: XM_EXPAT_CALLBACK) is
 #else
 	exml_XML_SetExternalEntityRefHandlerArg (a_parser: POINTER; a_arg: POINTER) is
@@ -1005,9 +878,6 @@ feature -- Handlers
 #endif
 #ifdef ISE
 			"C (XML_Parser, void *) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_SetExternalEntityRefHandlerArg"
@@ -1023,18 +893,12 @@ feature -- Handlers
 #ifdef ISE
 			"C (XML_Parser, XML_UnknownEncodingHandler, void *) | <expat.h>"
 #endif
-#ifdef VE
-			"C"
-#endif
 		alias
 			"XML_SetUnknownEncodingHandler"
 		end
 
 feature -- XML_ParamEntityParsing enum
 
-#ifdef VE
-	XML_PARAM_ENTITY_PARSING_NEVER: INTEGER is 0
-#else
 	XML_PARAM_ENTITY_PARSING_NEVER: INTEGER is
 		external
 #ifdef SE
@@ -1046,11 +910,7 @@ feature -- XML_ParamEntityParsing enum
 		alias
 			"XML_PARAM_ENTITY_PARSING_NEVER"
 		end
-#endif
 
-#ifdef VE
-	XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE: INTEGER is 1
-#else
 	XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE: INTEGER is
 		external
 #ifdef SE
@@ -1062,11 +922,7 @@ feature -- XML_ParamEntityParsing enum
 		alias
 			"XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE"
 		end
-#endif
 
-#ifdef VE
-	XML_PARAM_ENTITY_PARSING_ALWAYS: INTEGER is 2
-#else
 	XML_PARAM_ENTITY_PARSING_ALWAYS: INTEGER is
 		external
 #ifdef SE
@@ -1078,13 +934,9 @@ feature -- XML_ParamEntityParsing enum
 		alias
 			"XML_PARAM_ENTITY_PARSING_ALWAYS"
 		end
-#endif
 
 feature -- XML_Content_Type enum
 
-#ifdef VE
-	XML_CTYPE_EMPTY: INTEGER is 1
-#else
 	XML_CTYPE_EMPTY: INTEGER is
 		external
 #ifdef SE
@@ -1096,11 +948,7 @@ feature -- XML_Content_Type enum
 		alias
 			"XML_CTYPE_EMPTY"
 		end
-#endif
 
-#ifdef VE
-	XML_CTYPE_ANY: INTEGER is 2
-#else
 	XML_CTYPE_ANY: INTEGER is
 		external
 #ifdef SE
@@ -1112,11 +960,7 @@ feature -- XML_Content_Type enum
 		alias
 			"XML_CTYPE_ANY"
 		end
-#endif
 
-#ifdef VE
-	XML_CTYPE_MIXED: INTEGER is 3
-#else
 	XML_CTYPE_MIXED: INTEGER is
 		external
 #ifdef SE
@@ -1128,11 +972,7 @@ feature -- XML_Content_Type enum
 		alias
 			"XML_CTYPE_MIXED"
 		end
-#endif
 
-#ifdef VE
-	XML_CTYPE_NAME: INTEGER is 4
-#else
 	XML_CTYPE_NAME: INTEGER is
 		external
 #ifdef SE
@@ -1144,11 +984,7 @@ feature -- XML_Content_Type enum
 		alias
 			"XML_CTYPE_NAME"
 		end
-#endif
 
-#ifdef VE
-	XML_CTYPE_CHOICE: INTEGER is 5
-#else
 	XML_CTYPE_CHOICE: INTEGER is
 		external
 #ifdef SE
@@ -1160,11 +996,7 @@ feature -- XML_Content_Type enum
 		alias
 			"XML_CTYPE_CHOICE"
 		end
-#endif
 
-#ifdef VE
-	XML_CTYPE_SEQ: INTEGER is 6
-#else
 	XML_CTYPE_SEQ: INTEGER is
 		external
 #ifdef SE
@@ -1176,381 +1008,209 @@ feature -- XML_Content_Type enum
 		alias
 			"XML_CTYPE_SEQ"
 		end
-#endif
 
 feature -- XML_Content_Quant enum
 
-#ifdef VE
-	XML_CQUANT_NONE: INTEGER is 0
-#else
 	XML_CQUANT_NONE: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_CQUANT_NONE"
 		end
-#endif
 
-#ifdef VE
-	XML_CQUANT_OPT: INTEGER is 1
-#else
 	XML_CQUANT_OPT: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_CQUANT_OPT"
 		end
-#endif
 
-#ifdef VE
-	XML_CQUANT_REP: INTEGER is 2
-#else
 	XML_CQUANT_REP: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_CQUANT_REP"
 		end
-#endif
 
-#ifdef VE
-	XML_CQUANT_PLUS: INTEGER is 3
-#else
 	XML_CQUANT_PLUS: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_CQUANT_PLUS"
 		end
-#endif
 
 feature -- XML_Error enum
 
-#ifdef VE
-	XML_ERROR_NONE: INTEGER is 0
-#else
 	XML_ERROR_NONE: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_NONE"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_NO_MEMORY: INTEGER is 1
-#else
 	XML_ERROR_NO_MEMORY: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_NO_MEMORY"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_SYNTAX: INTEGER is 2
-#else
 	XML_ERROR_SYNTAX: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_SYNTAX"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_NO_ELEMENTS: INTEGER is 3
-#else
 	XML_ERROR_NO_ELEMENTS: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_NO_ELEMENTS"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_INVALID_TOKEN: INTEGER is 4
-#else
 	XML_ERROR_INVALID_TOKEN: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_INVALID_TOKEN"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_UNCLOSED_TOKEN: INTEGER is 5
-#else
 	XML_ERROR_UNCLOSED_TOKEN: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_UNCLOSED_TOKEN"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_PARTIAL_CHAR: INTEGER is 6
-#else
 	XML_ERROR_PARTIAL_CHAR: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_PARTIAL_CHAR"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_TAG_MISMATCH: INTEGER is 7
-#else
 	XML_ERROR_TAG_MISMATCH: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_TAG_MISMATCH"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_DUPLICATE_ATTRIBUTE: INTEGER is 8
-#else
 	XML_ERROR_DUPLICATE_ATTRIBUTE: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_DUPLICATE_ATTRIBUTE"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_JUNK_AFTER_DOC_ELEMENT: INTEGER is 9
-#else
 	XML_ERROR_JUNK_AFTER_DOC_ELEMENT: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_JUNK_AFTER_DOC_ELEMENT"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_PARAM_ENTITY_REF: INTEGER is 10
-#else
 	XML_ERROR_PARAM_ENTITY_REF: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_PARAM_ENTITY_REF"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_UNDEFINED_ENTITY: INTEGER is 11
-#else
 	XML_ERROR_UNDEFINED_ENTITY: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_UNDEFINED_ENTITY"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_RECURSIVE_ENTITY_REF: INTEGER is 12
-#else
 	XML_ERROR_RECURSIVE_ENTITY_REF: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_RECURSIVE_ENTITY_REF"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_ASYNC_ENTITY: INTEGER is 13
-#else
 	XML_ERROR_ASYNC_ENTITY: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_ASYNC_ENTITY"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_BAD_CHAR_REF: INTEGER is 14
-#else
 	XML_ERROR_BAD_CHAR_REF: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_BAD_CHAR_REF"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_BINARY_ENTITY_REF: INTEGER is 15
-#else
 	XML_ERROR_BINARY_ENTITY_REF: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_BINARY_ENTITY_REF"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF: INTEGER is 16
-#else
 	XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_MISPLACED_XML_PI: INTEGER is 17
-#else
 	XML_ERROR_MISPLACED_XML_PI: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_MISPLACED_XML_PI"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_UNKNOWN_ENCODING: INTEGER is 18
-#else
 	XML_ERROR_UNKNOWN_ENCODING: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_UNKNOWN_ENCODING"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_INCORRECT_ENCODING: INTEGER is 19
-#else
 	XML_ERROR_INCORRECT_ENCODING: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_INCORRECT_ENCODING"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_UNCLOSED_CDATA_SECTION: INTEGER is 20
-#else
 	XML_ERROR_UNCLOSED_CDATA_SECTION: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_UNCLOSED_CDATA_SECTION"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_EXTERNAL_ENTITY_HANDLING: INTEGER is 21
-#else
 	XML_ERROR_EXTERNAL_ENTITY_HANDLING: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_EXTERNAL_ENTITY_HANDLING"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_NOT_STANDALONE: INTEGER is 22
-#else
 	XML_ERROR_NOT_STANDALONE: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_NOT_STANDALONE"
 		end
-#endif
 
-#ifdef VE
-	XML_ERROR_UNEXPECTED_STATE: INTEGER is 23
-#else
 	XML_ERROR_UNEXPECTED_STATE: INTEGER is
 		external
-#ifdef SE || ISE
 			"C macro use <expat.h>"
-#endif
 		alias
 			"XML_ERROR_UNEXPECTED_STATE"
 		end
-#endif
 
 feature -- XML_cp members
 
-#ifdef VE
-	exml_XML_cp_size: INTEGER is 20
-#else
 	exml_XML_cp_size: INTEGER is
 		external
 #ifdef SE
@@ -1564,18 +1224,10 @@ feature -- XML_cp members
 			"sizeof(XML_Content)"
 #endif
 		end
-#endif
 
 	exml_XML_cp_type (cp: POINTER): INTEGER is
 		require
 			have_struct_pointer: cp /= default_pointer
-#ifdef VE
-		local
-			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
-		do
-			create m_cp.make (cp, exml_XML_cp_size)
-			Result := m_cp.item (1)
-#else
 		external
 #ifdef SE
 			"C struct XML_Content get type use <expat.h>"
@@ -1585,19 +1237,11 @@ feature -- XML_cp members
 		alias
 			"type"
 #endif
-#endif
 		end
 
 	exml_XML_cp_quant (cp: POINTER): INTEGER is
 		require
 			have_struct_pointer: cp /= default_pointer
-#ifdef VE
-		local
-			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
-		do
-			create m_cp.make (cp, exml_XML_cp_size)
-			Result := m_cp.item (2)
-#else
 		external
 #ifdef SE
 			"C struct XML_Content get quant use <expat.h>"
@@ -1607,19 +1251,11 @@ feature -- XML_cp members
 		alias
 			"quant"
 #endif
-#endif
 		end
 
 	exml_XML_cp_name (cp: POINTER): POINTER is
 		require
 			have_struct_pointer: cp /= default_pointer
-#ifdef VE
-		local
-			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
-		do
-			create m_cp.make (cp, exml_XML_cp_size)
-			Result := m_cp.item (3)
-#else
 		external
 #ifdef SE
 			"C struct XML_Content get name use <expat.h>"
@@ -1629,19 +1265,11 @@ feature -- XML_cp members
 		alias
 			"name"
 #endif
-#endif
 		end
 
 	exml_XML_cp_numchildren (cp: POINTER): INTEGER is
 		require
 			have_struct_pointer: cp /= default_pointer
-#ifdef VE
-		local
-			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [INTEGER]
-		do
-			create m_cp.make (cp, exml_XML_cp_size)
-			Result := m_cp.item (4)
-#else
 		external
 #ifdef SE
 			"C struct XML_Content get numchildren use <expat.h>"
@@ -1650,7 +1278,6 @@ feature -- XML_cp members
 			"C [struct <expat.h>] (struct XML_cp): EIF_INTEGER"
 		alias
 			"numchildren"
-#endif
 #endif
 		end
 
@@ -1667,13 +1294,6 @@ feature -- XML_cp members
 		require
 			have_struct_pointer: cp /= default_pointer
 			valid_index: index >= 0 and index < exml_XML_cp_numchildren (cp)
-#ifdef VE
-		local
-			m_cp: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
-		do
-			create m_cp.make (cp, exml_XML_cp_size + (exml_XML_cp_numchildren (cp) * exml_XML_cp_size))
-			Result := m_cp.item (5) + (index * exml_XML_cp_size)
-#else
 #ifdef SE
 		external
 			"C inline"
@@ -1685,12 +1305,7 @@ feature -- XML_cp members
 			children: POINTER
 		do
 			children := exml_XML_cp_children_0 (cp)
-#ifdef ISE
 			Result := children + (index * exml_XML_cp_size)
-#else
-			Result := integer_to_pointer (pointer_to_integer (children) + (index * exml_XML_cp_size))
-#endif
-#endif
 #endif
 		ensure
 			valid_struct: Result /= default_pointer
@@ -1710,9 +1325,6 @@ feature -- XML_Content freeing
 #endif
 #ifdef ISE
 			"C (XML_Parser, XML_Content *) | <expat.h>"
-#endif
-#ifdef VE
-			"C"
 #endif
 		alias
 			"XML_FreeContentModel"
@@ -1739,14 +1351,8 @@ feature -- Conversion
 			a_storage: SPECIAL [POINTER]
 			ptr_size: INTEGER
 			ptr2: POINTER
-#endif
-#ifdef ISE
 			to_special: TO_SPECIAL [POINTER]
 			ptr1: POINTER
-#endif
-#ifdef VE
-			a_storage: RTS_MEMORY_MAPPED_AREA_ARRAY [POINTER]
-			i: INTEGER
 #endif
 		do
 			create Result.make
@@ -1763,11 +1369,6 @@ feature -- Conversion
 				ptr1 := c_rtid ($a_storage)
 				ptr1.memory_copy (ptr2, ptr_size)
 				ptr := a_storage.item (0)
-#endif
-#ifdef VE
-				i := 1
-				create a_storage.make (attr_spec_ptr, i)
-				ptr := a_storage.item (i)
 #endif
 			until
 				ptr = default_pointer
@@ -1790,11 +1391,6 @@ feature -- Conversion
 				ptr1.memory_copy (ptr2, ptr_size)
 				ptr := a_storage.item (0)
 #endif
-#ifdef VE
-				i := i + 1
-				a_storage.resize (i)
-				ptr := a_storage.item (i)
-#endif
 				a_value := new_unicode_string_from_utf8 (new_string_from_c_zero_terminated_string (ptr))
 				create pair1.make (a_name, a_prefix)
 				create pair2.make (pair1, a_value)
@@ -1808,11 +1404,6 @@ feature -- Conversion
 				ptr1 := c_rtid ($a_storage)
 				ptr1.memory_copy (ptr2, ptr_size)
 				ptr := a_storage.item (0)
-#endif
-#ifdef VE
-				i := i + 1
-				a_storage.resize (i)
-				ptr := a_storage.item (i)
 #endif
 			end
 		ensure
@@ -1832,11 +1423,6 @@ feature -- Conversion: C Strings to STRING
 #ifdef SE
 			create Result.from_external_copy (psz)
 #else
-#ifdef VE
-			create Result.make_empty
-#else
-			create Result.make (0)
-#endif
 			Result.from_c (psz)
 #endif
 		ensure
@@ -1850,15 +1436,10 @@ feature -- Conversion: C Strings to STRING
 		require
 			ps_valid: ps /= default_pointer
 			len_valid: length >= 0
-#ifdef SE || VE
+#ifdef SE
 		local
 			i: INTEGER
-#ifdef SE
 			storage: NATIVE_ARRAY [CHARACTER]
-#endif
-#ifdef VE
-			a_storage: RTS_MEMORY_MAPPED_AREA_ARRAY [CHARACTER]
-#endif
 #endif
 		do
 			if length = 0 then
@@ -1875,14 +1456,6 @@ feature -- Conversion: C Strings to STRING
 #ifdef ISE
 				create Result.make (length)
 				Result.from_c_substring (ps, 1, length)
-#endif
-#ifdef VE
-				create Result.make_filled ('%U', length)
-				create a_storage.make (ps, length)
-				from i := 1 until i > length loop
-					Result.put (a_storage.item (i), i)
-					i := i + 1
-				end
 #endif
 			end
 		ensure
@@ -1938,9 +1511,9 @@ feature -- Conversion: C Strings to UC_STRING
 			string_not_void: Result /= Void
 		end
 
+#ifdef ISE
 feature {NONE} -- Implementation
 
-#ifdef ISE
 	c_rtid (p: POINTER): POINTER is
 			-- Return `p'
 		external
@@ -1982,10 +1555,14 @@ feature {NONE} -- Implementation
 			"XML_GetUserData"
 		end
 
-	memory: expanded MEMORY
+	memory: MEMORY is
 			-- Check if garbage collection is enabled, else `eif_freeze'
 			-- returns default_pointer.
+		once
+			create Result
+		ensure
+			memory_not_void: Result /= Void
+		end
+
 #endif
-
-
 end

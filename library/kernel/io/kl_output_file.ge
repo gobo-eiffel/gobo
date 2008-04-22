@@ -16,14 +16,6 @@ deferred class KL_OUTPUT_FILE
 inherit
 
 	KI_OUTPUT_FILE
-#ifdef VE
-		undefine
-			copy,
-				-- Make sure that this deferred class
-				-- has a deferred routine.
-			put_boolean
-		end
-#endif
 
 	KL_FILE
 		rename
@@ -162,12 +154,9 @@ feature -- Basic operations
 	flush is
 			-- Flush buffered data to disk.
 		do
-#ifndef VE
 			old_flush
-#endif
 		end
 
-#ifdef SE || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -278,6 +267,5 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-#endif
 #endif
 end

@@ -17,11 +17,6 @@ inherit
 	KS_HASHABLE
 		undefine
 			is_equal, copy, out
-		redefine
-				-- Note: VE 4.0 wants `is_equal', `copy' and `out' to be listed
-				-- here, but this is a bug since this deferred version should be
-				-- merged with the version inherited from KS_COMPARABLE:
-			is_equal, copy, out
 		end
 
 	KS_COMPARABLE
@@ -35,40 +30,20 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			is_equal, copy, out
-		redefine
-				-- Note: VE 4.0 wants `is_equal', `copy' and `out' to be listed
-				-- here, but this is a bug since this deferred version should be
-				-- merged with the version inherited from KS_COMPARABLE:
-			is_equal, copy, out
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			is_equal, copy, out
-		redefine
-				-- Note: VE 4.0 wants `is_equal', `copy' and `out' to be listed
-				-- here, but this is a bug since this deferred version should be
-				-- merged with the version inherited from KS_COMPARABLE:
 			is_equal, copy, out
 		end
 
 	KL_IMPORTED_CHARACTER_ROUTINES
 		undefine
 			is_equal, copy, out
-		redefine
-				-- Note: VE 4.0 wants `is_equal', `copy' and `out' to be listed
-				-- here, but this is a bug since this deferred version should be
-				-- merged with the version inherited from KS_COMPARABLE:
-			is_equal, copy, out
 		end
 
 	KL_SHARED_PLATFORM
 		undefine
-			is_equal, copy, out
-		redefine
-				-- Note: VE 4.0 wants `is_equal', `copy' and `out' to be listed
-				-- here, but this is a bug since this deferred version should be
-				-- merged with the version inherited from KS_COMPARABLE:
 			is_equal, copy, out
 		end
 

@@ -23,17 +23,15 @@ To compile this example:
    and EIFFEL_TOKENS if necessary.
 
 3. Choose either `execute' or `benchmark' as the creation prodecure of
-   the root class EIFFEL_PARSER in your Ace file (ISE Eiffel: ise.ace,
-   SmartEiffel: se.ace) or your Xace file (Visual Eiffel: ve.xace).
+   the root class EIFFEL_PARSER in your Ace, Xace or ECF file.
 
 4. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
-   to launch the compilation:
+   the provided Ace, Xace or ECF file (e.g. <compiler>.ecf). Alternatively
+   you can use 'geant' to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 've' or 'se'.
+   where <compiler> is either 'ise', 'ge' or 'se'.
 
 5. Execute the Eiffel parser using
 
@@ -47,4 +45,4 @@ To compile this example:
    filenames containing Eiffel classes and `nb' is an integer.
 
 --
-Copyright (c) 1997-2005, Eric Bezault and others
+Copyright (c) 1997-2008, Eric Bezault and others

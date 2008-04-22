@@ -12,7 +12,7 @@ implementation for these features, but some don't.
 The Gobo Eiffel Kernel Library has been designed to make it possible to
 write portable Eiffel classes using the adaptation techniques described
 in "$GOBO/doc/portability". Clusters of the form "spec/<compiler_name>",
-where <compiler_name> is either "ise", "se" or "ve", contain classes
+where <compiler_name> is either "ise", "ge" or "ge", contain classes
 adapted from non-portable classes (filenames suffixed by ".ge" instead
 of ".e").
 

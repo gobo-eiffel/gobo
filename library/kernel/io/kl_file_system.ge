@@ -15,11 +15,6 @@ deferred class KL_FILE_SYSTEM
 inherit
 
 	KI_FILE_SYSTEM
-#ifdef VE
-		redefine
-			make
-		end
-#endif
 
 	KL_IMPORTED_STRING_ROUTINES
 #ifdef SE
@@ -51,15 +46,6 @@ inherit
 			{NONE} all
 		end
 
-#ifdef VE
-feature {NONE} -- Initialization
-
-	make is
-			-- Create a new file system object.
-		do
-		end
-
-#endif
 feature -- Status report
 
 	is_current_file_system: BOOLEAN is
@@ -438,9 +424,6 @@ feature -- Working directory
 #ifdef ISE
 			Result := execution_environment.current_working_directory
 #endif
-#ifdef VE
-			Result := file_system_impl.current_cluster
-#endif
 		end
 
 	cd, set_current_working_directory (a_dirname: STRING) is
@@ -462,11 +445,6 @@ feature -- Working directory
 #endif
 #ifdef ISE
 					execution_environment.change_working_directory (a_string_dirname)
-#endif
-#ifdef VE
-					if file_system_impl.cluster_exists (a_string_dirname) then
-						file_system_impl.change_cluster (a_string_dirname)
-					end
 #endif
 				end
 			end
@@ -503,16 +481,6 @@ feature {NONE} -- Implementation
 #ifdef SE
 	basic_directory: BASIC_DIRECTORY
 			-- Implementation
-
-#endif
-#ifdef VE
-	file_system_impl: FILE_SYSTEM is
-			-- Implementation
-		once
-			create Result.make
-		ensure
-			file_system_impl_not_void: Result /= Void
-		end
 
 #endif
 #ifdef ISE

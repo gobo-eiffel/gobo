@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Gobo Eiffel Ant Documentation"
-		copyright: "Copyright (c) 2002-2003, Sven Ehrke and others"
+		copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -58,7 +58,6 @@
 		<geant target="xslt_and_shift" arguments="set_task"/>
 		<geant target="xslt_and_shift" arguments="setenv_task"/>
 		<geant target="xslt_and_shift" arguments="unset_task"/>
-		<geant target="xslt_and_shift" arguments="ve_task"/>
 		<geant target="xslt_and_shift" arguments="xslt_task"/>
 		<geant target="xslt_and_shift" arguments="overview"/>
 	</target>
@@ -108,7 +107,6 @@
 		<delete file="set_task.html"/>
 		<delete file="setenv_task.html"/>
 		<delete file="unset_task.html"/>
-		<delete file="ve_task.html"/>
 		<delete file="xslt_task.html"/>
 	</target>
 

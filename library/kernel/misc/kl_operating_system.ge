@@ -95,9 +95,6 @@ feature {NONE} -- Implementation
 #ifdef ISE
 			Result := execution_environment.current_working_directory
 #endif
-#ifdef VE
-			Result := file_system_impl.current_cluster
-#endif
 		ensure
 			current_working_directory_not_void: Result /= Void
 		end
@@ -107,12 +104,6 @@ feature {NONE} -- Implementation
 			-- Void if `a_variable' has not been set
 		require
 			a_variable_not_void: a_variable /= Void
-#ifdef VE
-		local
-			environment: expanded ENVIRONMENT
-		do
-			Result := environment.env_item (a_variable)
-#endif
 #ifdef ISE
 		do
 			Result := execution_environment.get (a_variable)
@@ -129,16 +120,6 @@ feature {NONE} -- Implementation
 
 	environment_impl: SYSTEM
 			-- Execution environment implementation
-
-#endif
-#ifdef VE
-	file_system_impl: FILE_SYSTEM is
-			-- Implementation
-		once
-			create Result.make
-		ensure
-			file_system_impl_not_void: Result /= Void
-		end
 
 #endif
 #ifdef ISE

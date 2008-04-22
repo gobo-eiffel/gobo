@@ -69,15 +69,6 @@ feature -- Status report
 			-- instead (e.g. compiler or runtime crash, incorrect
 			-- execution behavior, etc.)?
 
-	ve_reported: BOOLEAN
-			-- Is current error reported by Visual Eiffel?
-
-	ve_fatal: BOOLEAN
-			-- Is current error considered as fatal by ISE Eiffel,
-			-- or is it not reported but produces flawed behaviors
-			-- instead (e.g. compiler or runtime crash, incorrect
-			-- execution behavior, etc.)?
-
 	ge_reported: BOOLEAN
 			-- Is current error reported by Gobo Eiffel?
 
@@ -90,17 +81,17 @@ feature -- Status report
 	all_reported: BOOLEAN is
 			-- Is current error reported by all Eiffel compilers?
 		do
-			Result := ise_reported and se_reported and ve_reported and ge_reported
+			Result := ise_reported and se_reported and ge_reported
 		ensure
-			definition: Result = (ise_reported and se_reported and ve_reported and ge_reported)
+			definition: Result = (ise_reported and se_reported and ge_reported)
 		end
 
 	all_fatal: BOOLEAN is
 			-- Is current error considered as fatal by all Eiffel compilers?
 		do
-			Result := ise_fatal and se_fatal and ve_fatal and ge_fatal
+			Result := ise_fatal and se_fatal and ge_fatal
 		ensure
-			definition: Result = (ise_fatal and se_fatal and ve_fatal and ge_fatal)
+			definition: Result = (ise_fatal and se_fatal and ge_fatal)
 		end
 
 feature -- Status setting
@@ -137,22 +128,6 @@ feature -- Status setting
 			se_fatal: se_fatal = b
 		end
 
-	set_ve_reported (b: BOOLEAN) is
-			-- Set `ve_reported' to `b'.
-		do
-			ve_reported := b
-		ensure
-			ve_reported: ve_reported = b
-		end
-
-	set_ve_fatal (b: BOOLEAN) is
-			-- Set `ve_fatal' to `b'.
-		do
-			ve_fatal := b
-		ensure
-			ve_fatal: ve_fatal = b
-		end
-
 	set_ge_reported (b: BOOLEAN) is
 			-- Set `ge_reported' to `b'.
 		do
@@ -176,8 +151,6 @@ feature -- Status setting
 			ise_fatal := b
 			se_reported := b
 			se_fatal := b
-			ve_reported := b
-			ve_fatal := b
 			ge_reported := b
 			ge_fatal := b
 		ensure
@@ -185,8 +158,6 @@ feature -- Status setting
 			ise_fatal: ise_fatal = b
 			se_reported: se_reported = b
 			se_fatal: se_fatal = b
-			ve_reported: ve_reported = b
-			ve_fatal: ve_fatal = b
 			ge_reported: ge_reported = b
 			ge_fatal: ge_fatal = b
 		end

@@ -14,7 +14,7 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="none"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 	</option>
 	<option if="${DEBUG}">
 		<option name="assertion" value="all"/>
@@ -30,7 +30,6 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="src_geant_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="geant_tester" location="${GOBO}/test/src" prefix="src_">
 		<option name="abstract" value="true"/>
 		<cluster name="geant"/>

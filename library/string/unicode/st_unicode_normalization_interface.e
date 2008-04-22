@@ -818,11 +818,8 @@ feature {NONE} -- Implementation
 			-- Canonical combining class injected from a small set of integers
 		require
 			valid_projection: a_class >= 0 and a_class <= 60
-		local
-			c: INTEGER
 		do
-			c := a_class -- for VE - as also the lack of .. notation
-			inspect c
+			inspect a_class
 			when 0 then
 				Result := 0
 			when 1 then

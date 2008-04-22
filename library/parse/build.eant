@@ -33,7 +33,6 @@
 			Remove intermediary generated files.
 		</description>
 
-		<ve clean="parse" recursive="true"/>
 	</target>
 
 	<target name="clobber">

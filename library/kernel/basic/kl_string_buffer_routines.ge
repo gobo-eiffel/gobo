@@ -39,7 +39,7 @@ feature -- Initialization
 			create Result.make (n)
 			Result.set_count (n)
 #endif
-#ifdef VE || SE
+#ifdef SE
 			create Result.make_filled ('%U', n)
 #endif
 		ensure
@@ -91,11 +91,7 @@ feature -- Access
 		do
 			if e < s then
 					-- Empty string
-#ifdef VE
-				create Result.make_empty
-#else
 				create Result.make (0)
-#endif
 			else
 				Result := a_buffer.substring (s, e)
 			end
@@ -255,10 +251,6 @@ feature -- Resizing
 #ifdef ISE
 			a_buffer.resize (n)
 			a_buffer.set_count (n)
-			Result := a_buffer
-#endif
-#ifdef VE
-			a_buffer.resize (n)
 			Result := a_buffer
 #endif
 #ifdef SE

@@ -14,7 +14,7 @@
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="internal"/>
-		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="finalize" value="true"/>
 		<option if="${GOBO_EIFFEL}=ise">
 				<!--
 					In finized mode, it takes a huge amount of time to compile a big generated C file.
@@ -41,7 +41,6 @@
 		<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
 	</option>
 
-	<cluster name="schematron_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="schematron" location="${GOBO}/example/xml/xslt/schematron"/>
 	<mount location="${GOBO}/library/xml/xslt/library.xace" />
 	<mount location="${GOBO}/library/math/library.xace"/>

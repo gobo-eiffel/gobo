@@ -46,9 +46,9 @@
 		<set name="gendir" value="${gendir_deep}"/>
 		<set name="eiffelcomp" value="ise"/>
 		<geant target="gepp_deep"/>
-		<set name="eiffelcomp" value="se"/>
+		<set name="eiffelcomp" value="ge"/>
 		<geant target="gepp_deep"/>
-		<set name="eiffelcomp" value="ve"/>
+		<set name="eiffelcomp" value="se"/>
 		<geant target="gepp_deep"/>
 	</target>
 

@@ -29,7 +29,6 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-		<ve clean="structure" recursive="true"/>
 	</target>
 
 	<target name="clobber">

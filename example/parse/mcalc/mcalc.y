@@ -211,11 +211,6 @@ feature {NONE} -- Scanner
 							-- Return single character
 						last_token := (':').code 
 					end
-				when '%R' then
-						-- Bug in Visual Eiffel 2.1: when the Enter Key
-						-- is pressed, `read_character' gets '%R' instead
-						-- of '%N' or instead of the sequence '%R''%N'.
-					last_token := ('%N').code
 				else
 						-- Return single character
 					last_token := c.code
