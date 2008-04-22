@@ -694,7 +694,7 @@ feature -- Basic classes
 				-- Type "ARRAY [NONE]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (none_type)
-			create array_any_type.make (Void, array_class.name, l_parameters, array_class)
+			create array_none_type.make (Void, array_class.name, l_parameters, array_class)
 		ensure
 			none_class_set: none_class = a_class
 		end
