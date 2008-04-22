@@ -369,7 +369,12 @@ feature -- AST processing
 						end
 						a_file.open_read
 						if a_file.is_open_read then
+								-- Set `current_class' to unknown_class when calling `parse_file' to
+								-- make sure that the invariant 'current_class.is_preparsed' is not
+								-- violated by callbacks to current object.
+							current_class := tokens.unknown_class
 							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+							current_class := a_class
 							a_file.close
 							if not current_class.is_preparsed then
 									-- Make sure that `current_class' is as it was
