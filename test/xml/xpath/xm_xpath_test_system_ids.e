@@ -43,7 +43,7 @@ feature -- Test. These tests check the system_id and base_uri routines
 		end
 
 	test_with_dtd_using_standard_tree is
-			-- Test using tiny tree
+			-- Test using standard tree
 		do
 			main_routine (False)
 		end
@@ -83,7 +83,7 @@ feature -- Test. These tests check the system_id and base_uri routines
 				assert_strings_equal ("Base-URI equals SYSTEM ID for document", document.system_id, document.base_uri)
 
 			end
-			a_base_uri := resolved_uri_string ("data/books2.xml")
+			a_base_uri := resolved_uri_string ("books2.xml")
 			if is_tiny then
 				assert_strings_case_insensitive_equal ("SYSTEM ID for document", a_base_uri, tiny_document.system_id)
 			else
@@ -103,7 +103,7 @@ feature -- Test. These tests check the system_id and base_uri routines
 			books_element ?= document_element.first_child
 			assert ("Books", books_element /= Void)
 			assert ("Books element line number is 2", books_element.line_number = 2)
-			a_base_uri := resolved_uri_string ("data/booklist.xml")
+			a_base_uri := resolved_uri_string ("booklist.xml")
 			assert_strings_case_insensitive_equal ("SYSTEM ID for BOOKS", a_base_uri, books_element.base_uri)
 
 			-- look for "ITEM" number 6 descendant of the document_element
@@ -187,7 +187,8 @@ feature {NONE} -- Implementation
 			l_uri: UT_URI
 			l_entity_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
-			l_entity_resolver := new_file_resolver_current_directory
+			l_uri := file_uri.filename_to_uri (file_system.pathname (data_dirname, "dummy.xml"))
+			l_entity_resolver := new_file_resolver_with_uri (l_uri)
 			create parser.make
 			parser.set_resolver (l_entity_resolver)
 			create l_uri.make (a_base_uri)
@@ -227,35 +228,25 @@ feature {NONE} -- Implementation
 	books2_xml_uri: UT_URI is
 			-- URI of file 'books2.xml'
 		local
-			a_path: STRING
+			l_path: STRING
 		once
-			a_path := file_system.pathname (data_dirname, "books2.xml")
-			Result := File_uri.filename_to_uri (a_path)
+			l_path := file_system.pathname (data_dirname, "books2.xml")
+			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			books2_xml_uri_not_void: Result /= Void
 		end
 
 	resolved_uri_string (a_relative_uri: STRING): STRING is
-			-- Resolved path for `a_relative_uri' relative to
-			-- `current_directory_base'
+			-- Resolved path for `a_relative_uri' relative to `books2_xml_uri'
 		require
 			a_relative_uri_not_void: a_relative_uri /= Void
 		local
-			a_uri: UT_URI
+			l_uri: UT_URI
 		do
-			create a_uri.make_resolve (current_directory_base, a_relative_uri)
-			Result := a_uri.full_reference
+			create l_uri.make_resolve (books2_xml_uri, a_relative_uri)
+			Result := l_uri.full_reference
 		ensure
 			resolved_uri_string_not_void: Result /= Void
-		end
-
-	current_directory_base: UT_URI is
-			-- URI of current directory
-		local
-			a_cwd: KI_PATHNAME
-		once
-			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
-			Result := File_uri.pathname_to_uri (a_cwd)
 		end
 
 end
