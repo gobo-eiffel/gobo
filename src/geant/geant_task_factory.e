@@ -5,15 +5,17 @@ indexing
 		"Geant tasks factory"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001-2002, Sven Ehrke, Jocelyn Fiat, and others"
+	copyright: "Copyright (c) 2001-2008, Sven Ehrke, Jocelyn Fiat, and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	GEANT_TASK_FACTORY
+class GEANT_TASK_FACTORY
 
 inherit
+
+	ANY
+
 	GEANT_ELEMENT_NAMES
 		export {NONE} all end
 

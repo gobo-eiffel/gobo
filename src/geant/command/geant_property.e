@@ -14,9 +14,10 @@ deferred class GEANT_PROPERTY [G]
 
 inherit
 
+	ANY
+
     GEANT_SHARED_PROPERTIES
         export {NONE} all end
-
 
 feature {NONE} -- Initialization
 
