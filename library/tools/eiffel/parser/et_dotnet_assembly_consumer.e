@@ -5,7 +5,7 @@ indexing
 		".NET assembly consumers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,25 +14,25 @@ deferred class ET_DOTNET_ASSEMBLY_CONSUMER
 
 feature {NONE} -- Initialization
 
-	make (a_universe: like universe) is
+	make (a_system: like current_system) is
 			-- Create a new assembly consumer.
 		require
-			a_universe_not_void: a_universe /= Void
+			a_system_not_void: a_system /= Void
 		do
-			universe := a_universe
+			current_system := a_system
 		ensure
-			universe_set: universe = a_universe
+			current_system_set: current_system = a_system
 		end
 
 feature -- Access
 
-	universe: ET_SYSTEM
-			-- Surrounding universe
+	current_system: ET_SYSTEM
+			-- Surrounding Eiffel system
 
 	error_handler: ET_ERROR_HANDLER is
 			-- Error handler
 		do
-			Result := universe.error_handler
+			Result := current_system.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -81,6 +81,6 @@ feature {ET_DOTNET_ASSEMBLY} -- Consuming
 
 invariant
 
-	universe_not_void: universe /= Void
+	current_system_not_void: current_system /= Void
 
 end
