@@ -22,6 +22,7 @@ inherit
 			initialize, preparse,
 			parse_all,
 			classes_do_recursive,
+			classes_do_if_recursive,
 			classes_do_ordered
 		end
 
@@ -209,6 +210,16 @@ feature -- Iteration
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.classes_do_local (an_action))
 			libraries.do_recursive (agent {ET_LIBRARY}.classes_do_local (an_action))
 			classes_do_local (an_action)
+		end
+
+	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
+			-- Apply `an_action' on all classes that satisfy `a_test', declared
+			-- locally in current universe as well as on the classes that are
+			-- declared in the universes it depends on recursively.
+		do
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.classes_do_if_local (an_action, a_test))
+			libraries.do_recursive (agent {ET_LIBRARY}.classes_do_if_local (an_action, a_test))
+			classes_do_if_local (an_action, a_test)
 		end
 
 	classes_do_ordered (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is

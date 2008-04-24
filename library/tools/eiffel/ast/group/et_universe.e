@@ -585,6 +585,28 @@ feature -- Iteration
 			end
 		end
 
+	classes_do_if_local (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
+			-- Apply `an_action' on all classes declared locally in current universe
+			-- that satisfy `a_test'.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			l_class: ET_CLASS
+		do
+			l_cursor := classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_class := l_cursor.item
+				if l_class.universe = Current then
+					if a_test.item ([l_class]) then
+						an_action.call ([l_class])
+					end
+				end
+				l_cursor.forth
+			end
+		end
+
 	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- as well as on the classes that are declared in the universes it depends
@@ -593,6 +615,17 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 		do
 			classes_do_local (an_action)
+		end
+
+	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
+			-- Apply `an_action' on all classes that satisfy `a_test', declared
+			-- locally in current universe as well as on the classes that are
+			-- declared in the universes it depends on recursively.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			classes_do_if_local (an_action, a_test)
 		end
 
 	classes_do_ordered (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
