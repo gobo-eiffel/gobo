@@ -888,11 +888,11 @@ feature -- Class registration
 		require
 			a_class_not_void: a_class /= Void
 		do
-			class_count := class_count + 1
-			a_class.set_id (class_count)
+			registered_class_count := registered_class_count + 1
+			a_class.set_id (registered_class_count)
 		end
 
-	class_count: INTEGER
+	registered_class_count: INTEGER
 			-- Number of classes already registered
 
 feature -- Feature registration
@@ -902,13 +902,13 @@ feature -- Feature registration
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			feature_count := feature_count + 1
-			a_feature.set_id (feature_count)
+			registered_feature_count := registered_feature_count + 1
+			a_feature.set_id (registered_feature_count)
 		ensure
 			a_feature_registered: a_feature.is_registered
 		end
 
-	feature_count: INTEGER
+	registered_feature_count: INTEGER
 			-- Number of features already registered
 
 feature -- Inline constant registration
@@ -918,26 +918,12 @@ feature -- Inline constant registration
 		require
 			a_constant_not_void: a_constant /= Void
 		do
-			inline_constant_count := inline_constant_count + 1
-			a_constant.set_id (inline_constant_count)
+			registered_inline_constant_count := registered_inline_constant_count + 1
+			a_constant.set_id (registered_inline_constant_count)
 		end
 
-	inline_constant_count: INTEGER
+	registered_inline_constant_count: INTEGER
 			-- Number of inline constants already registered
-
-feature -- Measurement
-
-	parsed_classes_count: INTEGER is
-			-- Number of parsed classes in Eiffel system
-		local
-			l_counter: UT_COUNTER
-		do
-			create l_counter.make (0)
-			classes_do_recursive (agent {ET_CLASS}.increment_parsed_counter (l_counter))
-			Result := l_counter.item
-		ensure
-			parsed_classes_count_not_negative: Result >= 0
-		end
 
 feature -- Setting
 
@@ -1487,9 +1473,9 @@ feature -- Compilation
 				error_handler.info_file.put_integer (class_count)
 				error_handler.info_file.put_line (" classes")
 				error_handler.info_file.put_string ("Parsed ")
-				error_handler.info_file.put_integer (parsed_classes_count)
+				error_handler.info_file.put_integer (parsed_class_count)
 				error_handler.info_file.put_line (" classes")
-				error_handler.info_file.put_integer (feature_count)
+				error_handler.info_file.put_integer (registered_feature_count)
 				error_handler.info_file.put_line (" features")
 			end
 			if error_handler.benchmark_shown then
@@ -1549,13 +1535,13 @@ feature -- Compilation
 			-- Equivalent of ISE's Degree 5.
 		do
 				-- Parse classes.
-			classes_do_ordered (agent parse_class)
+			classes_do_recursive (agent parse_class)
 			check_provider_validity
 			if error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Parsed ")
-				error_handler.info_file.put_integer (class_count)
+				error_handler.info_file.put_integer (parsed_class_count)
 				error_handler.info_file.put_line (" classes")
-				error_handler.info_file.put_integer (feature_count)
+				error_handler.info_file.put_integer (registered_feature_count)
 				error_handler.info_file.put_line (" features")
 			end
 		end
@@ -1564,16 +1550,16 @@ feature -- Compilation
 			-- Equivalent of ISE Eiffel's Degree 4.
 		do
 				-- Build ancestors.
-			classes_do_ordered (agent build_ancestors)
+			classes_do_recursive (agent build_ancestors)
 				-- Flatten features.
-			classes_do_ordered (agent flatten_features)
+			classes_do_recursive (agent flatten_features)
 				-- Check interface.
-			classes_do_ordered (agent check_interface)
+			classes_do_recursive (agent check_interface)
 			if error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Flattened ")
-				error_handler.info_file.put_integer (class_count)
+				error_handler.info_file.put_integer (parsed_class_count)
 				error_handler.info_file.put_line (" classes")
-				error_handler.info_file.put_integer (feature_count)
+				error_handler.info_file.put_integer (registered_feature_count)
 				error_handler.info_file.put_line (" features")
 			end
 		end
@@ -1586,73 +1572,59 @@ feature -- Compilation
 			-- are checked again in the redeclaration of features.
 		do
 				-- Check implementation.
-			classes_do_ordered (agent check_implementation)
+			classes_do_recursive (agent check_implementation)
 		end
 
 	check_provider_validity is
 			-- Check cluster dependence constraints.
 		do
 			if cluster_dependence_enabled then
-				classes_do_ordered (agent check_providers)
+				classes_do_recursive (agent check_providers)
 			end
 		end
 
 	parse_class (a_class: ET_CLASS) is
-			-- Parse `a_class' is already preparsed.
+			-- Parse `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if a_class.is_preparsed then
-				a_class.process (eiffel_parser)
-			end
+			a_class.process (eiffel_parser)
 		end
 
 	check_providers (a_class: ET_CLASS) is
-			-- Check cluster dependence constraints of the providers
-			-- of `a_class' if it is already parsed.
+			-- Check cluster dependence constraints of the providers of `a_class'
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if a_class.is_parsed then
-				a_class.process (provider_checker)
-			end
+			a_class.process (provider_checker)
 		end
 
 	build_ancestors (a_class: ET_CLASS) is
-			-- Build ancestors of `a_class' if already parsed.
+			-- Build ancestors of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if a_class.is_parsed then
-				a_class.process (ancestor_builder)
-			end
+			a_class.process (ancestor_builder)
 		end
 
 	flatten_features (a_class: ET_CLASS) is
-			-- Flatten features of `a_class' if its ancestors
-			-- have already been built.
+			-- Flatten features of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if a_class.ancestors_built then
-				a_class.process (feature_flattener)
-			end
+			a_class.process (feature_flattener)
 		end
 
 	check_interface (a_class: ET_CLASS) is
-			-- Check interface of `a_class' if its features
-			-- have already been flattened.
+			-- Check interface of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if a_class.features_flattened then
-				a_class.process (interface_checker)
-			end
+			a_class.process (interface_checker)
 		end
 
 	check_implementation (a_class: ET_CLASS) is
-			-- Check implementation of `a_class' if its interface
-			-- has already been checked.
+			-- Check implementation of `a_class'.
 			-- `flat_mode' means that the inherited features are checked
 			-- again in the descendant classes.
 			-- `flat_dbc_mode' means that the inherited pre- and postconditions
@@ -1663,20 +1635,18 @@ feature -- Compilation
 			l_checker: ET_IMPLEMENTATION_CHECKER
 			l_processor: ET_AST_PROCESSOR
 		do
-			if a_class.interface_checked then
-				if flat_mode then
-					l_processor := flat_implementation_checker
-				else
-					l_processor := implementation_checker
-				end
-				l_checker ?= l_processor
-				if l_checker /= Void then
-					l_checker.set_flat_mode (flat_mode)
-					l_checker.set_flat_dbc_mode (flat_dbc_mode)
-					l_checker.set_suppliers_enabled (suppliers_enabled)
-				end
-				a_class.process (l_processor)
+			if flat_mode then
+				l_processor := flat_implementation_checker
+			else
+				l_processor := implementation_checker
 			end
+			l_checker ?= l_processor
+			if l_checker /= Void then
+				l_checker.set_flat_mode (flat_mode)
+				l_checker.set_flat_dbc_mode (flat_dbc_mode)
+				l_checker.set_suppliers_enabled (suppliers_enabled)
+			end
+			a_class.process (l_processor)
 		end
 
 feature -- Processors

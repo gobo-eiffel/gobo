@@ -334,7 +334,7 @@ feature -- Access
 			end
 		end
 
-	classes_by_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
 			-- Classes in universe which are in `a_group';
 			-- Create a new list at each call
 		require
@@ -343,7 +343,7 @@ feature -- Access
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 		do
-			create Result.make (initial_classes_by_group_capacity)
+			create Result.make (initial_classes_in_group_capacity)
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				from
@@ -363,7 +363,7 @@ feature -- Access
 			no_void_class: not Result.has (Void)
 		end
 
-	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
 			-- Classes in universe which are in `a_group'
 			-- or recursively in one of its subgroups;
 			-- Create a new list at each call
@@ -373,7 +373,7 @@ feature -- Access
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 		do
-			create Result.make (initial_classes_by_group_capacity)
+			create Result.make (initial_classes_in_group_capacity)
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				from
@@ -381,7 +381,7 @@ feature -- Access
 				until
 					a_class = Void
 				loop
-					if a_class.is_in_group (a_group) then
+					if a_class.is_in_group_recursive (a_group) then
 						Result.force_last (a_class)
 					end
 					a_class := a_class.overridden_class
@@ -402,6 +402,76 @@ feature -- Access
 			-- Hash value
 		do
 			Result := 1
+		end
+
+feature -- Measurement
+
+	class_count: INTEGER is
+			-- Number of classes declared locally in current universe
+			-- and recursively in the universes it depends on
+		do
+			Result := class_count
+		ensure
+			definition: Result = class_count
+		end
+
+	class_count_local: INTEGER is
+			-- Number of classes declared locally in current universe
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_local (agent {ET_CLASS}.increment_counter (l_counter))
+			Result := l_counter.item
+		ensure
+			class_count_not_negative: Result >= 0
+		end
+
+	class_count_recursive: INTEGER is
+			-- Number of classes declared locally in current universe
+			-- and recursively in the universes it depends on
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_recursive (agent {ET_CLASS}.increment_counter (l_counter))
+			Result := l_counter.item
+		ensure
+			class_count_not_negative: Result >= 0
+		end
+
+	parsed_class_count: INTEGER is
+			-- Number of classes parsed locally in current universe
+			-- and recursively in the universes it depends on
+		do
+			Result := parsed_class_count
+		ensure
+			definition: Result = parsed_class_count
+		end
+
+	parsed_class_count_local: INTEGER is
+			-- Number of classes parsed locally in current universe
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_if_local (agent {ET_CLASS}.increment_counter (l_counter), agent {ET_CLASS}.is_parsed)
+			Result := l_counter.item
+		ensure
+			parsed_class_count_not_negative: Result >= 0
+		end
+
+	parsed_class_count_recursive: INTEGER is
+			-- Number of classes parsed locally in current universe
+			-- and recursively in the universes it depends on
+		local
+			l_counter: UT_COUNTER
+		do
+			create l_counter.make (0)
+			classes_do_if_recursive (agent {ET_CLASS}.increment_counter (l_counter), agent {ET_CLASS}.is_parsed)
+			Result := l_counter.item
+		ensure
+			parsed_class_count_not_negative: Result >= 0
 		end
 
 feature -- Class mapping
@@ -571,18 +641,8 @@ feature -- Iteration
 			-- Apply `an_action' on all classes declared locally in current universe.
 		require
 			an_action_not_void: an_action /= Void
-		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			l_class: ET_CLASS
 		do
-			l_cursor := classes.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				l_class := l_cursor.item
-				if l_class.universe = Current then
-					an_action.call ([l_class])
-				end
-				l_cursor.forth
-			end
+			classes.do_if (an_action, agent {ET_CLASS}.is_in_universe (Current))
 		end
 
 	classes_do_if_local (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
@@ -614,7 +674,7 @@ feature -- Iteration
 		require
 			an_action_not_void: an_action /= Void
 		do
-			classes_do_local (an_action)
+			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_local (an_action))
 		end
 
 	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
@@ -625,19 +685,33 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
 		do
-			classes_do_if_local (an_action, a_test)
+			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_if_local (an_action, a_test))
 		end
 
-	classes_do_ordered (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
-			-- Apply `an_action' on all classes declared locally in current universe
-			-- as well as on the classes that are declared in the universes it depends
-			-- on recursively. The classes declared in a given universe will be
-			-- processed only after those from the universes it depends on have
-			-- been processed.
+	universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+			-- Apply `an_action' on current universe and recursively on
+			-- the universes it depends on.
 		require
 			an_action_not_void: an_action /= Void
+		local
+			l_visited: DS_HASH_SET [ET_UNIVERSE]
 		do
-			classes_do_local (an_action)
+			create l_visited.make (10)
+			add_universe_recursive (l_visited)
+			l_visited.do_all (an_action)
+		end
+
+feature -- Relations
+
+	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE]) is
+			-- Add current universe to `a_visited' and
+			-- recursively the universes it depends on.
+		require
+			a_visited_not_void: a_visited /= Void
+		do
+			if not a_visited.has (Current) then
+				a_visited.force_last (Current)
+			end
 		end
 
 feature -- Parsing
@@ -664,7 +738,7 @@ feature -- Parsing
 			--
 			-- `classes_modified' and `classes_added' will be updated.
 		do
-			preparse_local
+			preparse_recursive
 		ensure
 			preparsed: is_preparsed
 		end
@@ -684,7 +758,31 @@ feature -- Parsing
 			-- for more details.
 			--
 			-- `classes_modified' and `classes_added' will be updated.
-		deferred
+		do
+			classes_modified := False
+			classes_added := False
+			is_preparsed := True
+		ensure
+			preparsed: is_preparsed
+		end
+
+	preparse_recursive is
+			-- Build a mapping between class names and their filenames and
+			-- populate `classes' (both with classes declared locally and
+			-- exported by other universes which have themselves been preparsed
+			-- recursively during this call), even if the classes have not been
+			-- parsed yet. If current universe had already been reparsed,
+			-- then rebuild the mapping between class names and filenames:
+			-- modified classes are reset and left unparsed and new classes
+			-- are added to `classes', but are not parsed.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- `classes_modified' and `classes_added' will be updated.
+		do
+			preparse_local
 		ensure
 			preparsed: is_preparsed
 		end
@@ -709,7 +807,7 @@ feature -- Parsing
 			--
 			-- `classes_modified' and `classes_added' will be updated.
 		do
-			parse_all_local
+			parse_all_recursive
 		ensure
 			preparsed: is_preparsed
 		end
@@ -732,7 +830,35 @@ feature -- Parsing
 			-- for more details.
 			--
 			-- `classes_modified' and `classes_added' will be updated.
-		deferred
+		do
+			classes_modified := False
+			classes_added := False
+			is_preparsed := True
+		ensure
+			preparsed: is_preparsed
+		end
+
+	parse_all_recursive is
+			-- Parse all classes declared locally in the current universe,
+			-- and recursively those that are declared in universes it
+			-- depends on. There is not need to call one of the preparse
+			-- routines beforehand since the current routine will traverse
+			-- all clusters and parse all Eiffel files anyway. The mapping
+			-- between class names and their filenames will be done during
+			-- this process and `classes' will be populated (both with classes
+			-- declared locally and those exported by other universes which
+			-- have themselves been parsed recursively during this call).
+			-- If current universe had already been preparsed, then rebuild
+			-- the mapping between class names and filenames and reparse
+			-- the classes that have been modified or were not parsed yet.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- `classes_modified' and `classes_added' will be updated.
+		do
+			parse_all_local
 		ensure
 			preparsed: is_preparsed
 		end
@@ -989,8 +1115,8 @@ feature {NONE} -- Parsing
 
 feature {NONE} -- Constants
 
-	initial_classes_by_group_capacity: INTEGER is
-			-- Initial capacity for `classes_by_group'
+	initial_classes_in_group_capacity: INTEGER is
+			-- Initial capacity for `classes_in_group'
 		once
 			Result := 20
 		ensure

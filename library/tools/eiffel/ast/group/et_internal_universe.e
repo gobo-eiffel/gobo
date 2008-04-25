@@ -19,11 +19,12 @@ inherit
 
 	ET_UNIVERSE
 		redefine
-			initialize, preparse,
-			parse_all,
-			classes_do_recursive,
-			classes_do_if_recursive,
-			classes_do_ordered
+			initialize,
+			preparse_local,
+			preparse_recursive,
+			parse_all_local,
+			parse_all_recursive,
+			add_universe_recursive
 		end
 
 	KL_IMPORTED_ARRAY_ROUTINES
@@ -93,7 +94,7 @@ feature -- Access
 						if Result.found then
 							l_classes := Result.found_item
 						else
-							create l_classes.make (initial_classes_by_group_capacity)
+							create l_classes.make (initial_classes_in_group_capacity)
 							Result.force_last (l_classes, l_group)
 						end
 						l_classes.force_last (l_class)
@@ -200,67 +201,20 @@ feature -- Element change
 			clusters.add_implicit_subclusters
 		end
 
-feature -- Iteration
+feature -- Relations
 
-	classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
-			-- Apply `an_action' on all classes declared locally in current universe
-			-- as well as on the classes that are declared in the universes it depends
-			-- on recursively.
+	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE]) is
+			-- Add current universe to `a_visited' and
+			-- recursively the universes it depends on.
 		do
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.classes_do_local (an_action))
-			libraries.do_recursive (agent {ET_LIBRARY}.classes_do_local (an_action))
-			classes_do_local (an_action)
-		end
-
-	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
-			-- Apply `an_action' on all classes that satisfy `a_test', declared
-			-- locally in current universe as well as on the classes that are
-			-- declared in the universes it depends on recursively.
-		do
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.classes_do_if_local (an_action, a_test))
-			libraries.do_recursive (agent {ET_LIBRARY}.classes_do_if_local (an_action, a_test))
-			classes_do_if_local (an_action, a_test)
-		end
-
-	classes_do_ordered (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
-			-- Apply `an_action' on all classes declared locally in current universe
-			-- as well as on the classes that are declared in the universes it depends
-			-- on recursively. The classes declared in a given universe will be
-			-- processed only after those from the universes it depends on have
-			-- been processed.
-		do
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.classes_do_local (an_action))
-			libraries.do_ordered (agent {ET_LIBRARY}.classes_do_local (an_action))
-			classes_do_local (an_action)
+			if not a_visited.has (Current) then
+				a_visited.force_last (Current)
+				libraries.do_all (agent {ET_LIBRARY}.add_universe_recursive (a_visited))
+				dotnet_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_universe_recursive (a_visited))
+			end
 		end
 
 feature -- Parsing
-
-	preparse is
-			-- Build a mapping between class names and their filenames and
-			-- populate `classes' (both with classes declared locally and
-			-- exported by other universes which have themselves been preparsed
-			-- recursively during this call), even if the classes have not been
-			-- parsed yet. If current universe had already been preparsed,
-			-- then rebuild the mapping between class names and filenames:
-			-- modified classes are reset and left unparsed and new classes
-			-- are added to `classes', but are not parsed.
-			--
-			-- The queries `current_system.preparse_*_mode' govern the way
-			-- preparsing works. Read the header comments of these features
-			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
-		local
-			l_assemblies: ET_DOTNET_ASSEMBLIES
-		do
-			create l_assemblies.make_empty
-			dotnet_assemblies.do_all (agent l_assemblies.put_last)
-			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse_local)
-			libraries.do_ordered (agent {ET_LIBRARY}.preparse_local)
-			preparse_local
-		end
 
 	preparse_local is
 			-- Build a mapping between class names and their filenames and
@@ -304,19 +258,15 @@ feature -- Parsing
 			end
 		end
 
-	parse_all is
-			-- Parse all classes declared locally in the current universe,
-			-- and recursively those that are declared in universes it
-			-- depends on. There is not need to call one of the preparse
-			-- routines beforehand since the current routine will traverse
-			-- all clusters and parse all Eiffel files anyway. The mapping
-			-- between class names and their filenames will be done during
-			-- this process and `classes' will be populated (both with classes
-			-- declared locally and those exported by other universes which
-			-- have themselves been parsed recursively during this call).
-			-- If current universe had already been preparsed, then rebuild
-			-- the mapping between class names and filenames and reparse
-			-- the classes that have been modified or were not parsed yet.
+	preparse_recursive is
+			-- Build a mapping between class names and their filenames and
+			-- populate `classes' (both with classes declared locally and
+			-- exported by other universes which have themselves been preparsed
+			-- recursively during this call), even if the classes have not been
+			-- parsed yet. If current universe had already been preparsed,
+			-- then rebuild the mapping between class names and filenames:
+			-- modified classes are reset and left unparsed and new classes
+			-- are added to `classes', but are not parsed.
 			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
@@ -329,9 +279,9 @@ feature -- Parsing
 			create l_assemblies.make_empty
 			dotnet_assemblies.do_all (agent l_assemblies.put_last)
 			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all_local)
-			libraries.do_ordered (agent {ET_LIBRARY}.parse_all_local)
-			parse_all_local
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse_local)
+			libraries.do_ordered (agent {ET_LIBRARY}.preparse_local)
+			preparse_local
 		end
 
 	parse_all_local is
@@ -377,6 +327,36 @@ feature -- Parsing
 					reset_classes_incremental
 				end
 			end
+		end
+
+	parse_all_recursive is
+			-- Parse all classes declared locally in the current universe,
+			-- and recursively those that are declared in universes it
+			-- depends on. There is not need to call one of the preparse
+			-- routines beforehand since the current routine will traverse
+			-- all clusters and parse all Eiffel files anyway. The mapping
+			-- between class names and their filenames will be done during
+			-- this process and `classes' will be populated (both with classes
+			-- declared locally and those exported by other universes which
+			-- have themselves been parsed recursively during this call).
+			-- If current universe had already been preparsed, then rebuild
+			-- the mapping between class names and filenames and reparse
+			-- the classes that have been modified or were not parsed yet.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- `classes_modified' and `classes_added' will be updated.
+		local
+			l_assemblies: ET_DOTNET_ASSEMBLIES
+		do
+			create l_assemblies.make_empty
+			dotnet_assemblies.do_all (agent l_assemblies.put_last)
+			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all_local)
+			libraries.do_ordered (agent {ET_LIBRARY}.parse_all_local)
+			parse_all_local
 		end
 
 feature {NONE} -- Parsing

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Relations
 
-	recursive_add (a_visited: DS_HASH_SET [ET_LIBRARY]) is
+	add_library_recursive (a_visited: DS_HASH_SET [ET_LIBRARY]) is
 			-- Add current library to `a_visited' and
 			-- recursively the libraries it depends on.
 		require
@@ -46,7 +46,7 @@ feature -- Relations
 		do
 			if not a_visited.has (Current) then
 				a_visited.force_last (Current)
-				libraries.do_all (agent {ET_LIBRARY}.recursive_add (a_visited))
+				libraries.do_all (agent {ET_LIBRARY}.add_library_recursive (a_visited))
 			end
 		end
 
@@ -54,7 +54,7 @@ feature -- Relations
 			-- Add current library to `a_visited', and if `other_library'
 			-- is not void add the dependence link between `other_library'
 			-- and the current library (i.e. `other_library' depends
-			-- on current library). Add recursively the libraries that 
+			-- on current library). Add recursively the libraries that
 			-- current library depends on as well as the dependence links
 			-- between these libraries.
 		require

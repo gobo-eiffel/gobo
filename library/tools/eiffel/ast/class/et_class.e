@@ -509,7 +509,7 @@ feature -- Preparsing
 			end
 		end
 
-	class_in_group (a_group: ET_GROUP): ET_CLASS is
+	class_in_group_recursive (a_group: ET_GROUP): ET_CLASS is
 			-- First class among current class and its overridden classes that
 			-- is in `a_group' or recursively one of its subgroups;
 			-- Void if no such class
@@ -523,7 +523,7 @@ feature -- Preparsing
 			until
 				l_class = Void
 			loop
-				if l_class.is_in_group (a_group) then
+				if l_class.is_in_group_recursive (a_group) then
 					Result := l_class
 					l_class := Void
 				else
@@ -618,6 +618,16 @@ feature -- Preparsing status
 		end
 
 	is_in_group (a_group: ET_GROUP): BOOLEAN is
+			-- Has current class been declared in `a_universe'?
+		require
+			a_group_not_void: a_group /= Void
+		do
+			Result := (group = a_group)
+		ensure
+			definition: Result = (group = a_group)
+		end
+
+	is_in_group_recursive (a_group: ET_GROUP): BOOLEAN is
 			-- Is current class in `a_group' or recursively
 			-- in one of its subgroups?
 		require
@@ -630,6 +640,16 @@ feature -- Preparsing status
 					Result := a_group.has_subgroup (group)
 				end
 			end
+		end
+
+	is_in_universe (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Has current class been declared in `a_universe'?
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			Result := (universe = a_universe)
+		ensure
+			definition: Result = (universe = a_universe)
 		end
 
 	is_in_cluster: BOOLEAN is
@@ -737,6 +757,14 @@ feature -- Parsing status
 			-- `is_parsed' is set to True even if it was not
 			-- preparsed (and hence not actually parsed).
 
+	is_parsed_successfully: BOOLEAN is
+			-- Has current class been successfully parsed?
+		do
+			Result := is_parsed and then not has_syntax_error
+		ensure
+			definition: Result = (is_parsed and then not has_syntax_error)
+		end
+
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
 
@@ -754,19 +782,6 @@ feature -- Parsing status
 			has_syntax_error := True
 		ensure
 			syntax_error_set: has_syntax_error
-		end
-
-	increment_parsed_counter (a_counter: UT_COUNTER) is
-			-- Increment `a_counter' if current class is parsed.
-		require
-			a_counter_not_void: a_counter /= Void
-		do
-			if is_parsed then
-				a_counter.increment
-			end
-		ensure
-			same_if_not_parsed: not is_parsed implies a_counter.item = old (a_counter.item)
-			increased_if_parsed: is_parsed implies a_counter.item = old (a_counter.item) + 1
 		end
 
 	reset_parsed is
@@ -1117,6 +1132,14 @@ feature -- Ancestor building status
 	ancestors_built: BOOLEAN
 			-- Have `ancestors' been built?
 
+	ancestors_built_successfully: BOOLEAN is
+			-- Have `ancestors' been successfully built?
+		do
+			Result := ancestors_built and then not has_ancestors_error
+		ensure
+			definition: Result = (ancestors_built and then not has_ancestors_error)
+		end
+
 	has_ancestors_error: BOOLEAN
 			-- Has a fatal error occurred when building `ancestors'?
 
@@ -1399,6 +1422,14 @@ feature -- Feature flattening status
 	features_flattened: BOOLEAN
 			-- Have features been flattened?
 
+	features_flattened_successfully: BOOLEAN is
+			-- Have features been successfully flattened?
+		do
+			Result := features_flattened and then not has_flattening_error
+		ensure
+			definition: Result = (features_flattened and then not has_flattening_error)
+		end
+
 	has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
 
@@ -1443,6 +1474,14 @@ feature -- Interface checking status
 
 	interface_checked: BOOLEAN
 			-- Has the interface of current class been checked?
+
+	interface_checked_successfully: BOOLEAN is
+			-- Has the interface of current class been successfully checked?
+		do
+			Result := interface_checked and then not has_interface_error
+		ensure
+			definition: Result = (interface_checked and then not has_interface_error)
+		end
 
 	has_interface_error: BOOLEAN
 			-- Has a fatal error occurred during interface checking?
@@ -1516,7 +1555,16 @@ feature -- Implementation checking status
 
 	implementation_checked: BOOLEAN
 			-- Has the implementation of current class been checked?
-			-- Immediate and redefined features and invariant have been checked.
+			-- Immediate and redefined (and possibly inherited when in flat mode)
+			-- features and invariant have been checked.
+
+	implementation_checked_successfully: BOOLEAN is
+			-- Has the implementation of current class been successfully checked?
+		do
+			Result := implementation_checked and then not has_implementation_error
+		ensure
+			definition: Result = (implementation_checked and then not has_implementation_error)
+		end
 
 	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
@@ -1675,6 +1723,18 @@ feature -- Processing
 			-- Process current node.
 		do
 			a_processor.process_class (Current)
+		end
+
+	increment_counter (a_counter: UT_COUNTER) is
+			-- Increment `a_counter'.
+			-- (Useful when we want to pass it as an agent which
+			-- requires an open operand of type ET_CLASS.)
+		require
+			a_counter_not_void: a_counter /= Void
+		do
+			a_counter.increment
+		ensure
+			increased: a_counter.item = old (a_counter.item) + 1
 		end
 
 feature {NONE} -- Constants

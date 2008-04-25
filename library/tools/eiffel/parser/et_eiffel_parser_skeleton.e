@@ -215,7 +215,7 @@ feature -- Parsing
 									-- we are only interested in new or modified classes,
 									-- or those which have not been parsed yet.
 								if l_classes = Void then
-									l_classes := universe.classes_by_group (a_cluster)
+									l_classes := universe.classes_in_group (a_cluster)
 								end
 								l_class := Void
 								nb := l_classes.count

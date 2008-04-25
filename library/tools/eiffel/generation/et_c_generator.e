@@ -9061,7 +9061,7 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						-- class where this unique attribute has been written). For
 						-- synonyms the fetaure id is in the reverse order, hence the
 						-- arithmetic below.
-					current_file.put_integer (current_system.feature_count - l_query.implementation_feature.id + 1)
+					current_file.put_integer (current_system.registered_feature_count - l_query.implementation_feature.id + 1)
 					current_file.put_character (')')
 				else
 					l_dynamic_feature := l_target_type.dynamic_query (l_query, current_dynamic_system)
@@ -10312,7 +10312,7 @@ feature {NONE} -- Query call generation
 						-- class where this unique attribute has been written). For
 						-- synonyms the feature id is in the reverse order, hence the
 						-- arithmetic below.
-					current_file.put_integer (current_system.feature_count - l_unique_attribute.implementation_feature.id + 1)
+					current_file.put_integer (current_system.registered_feature_count - l_unique_attribute.implementation_feature.id + 1)
 					current_file.put_character (')')
 				else
 					l_attribute ?= l_static_query

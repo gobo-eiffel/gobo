@@ -23,6 +23,11 @@ inherit
 		end
 
 	ET_UNIVERSE
+		redefine
+			preparse_local,
+			parse_all_local,
+			add_universe_recursive
+		end
 
 	ET_ADAPTED_DOTNET_ASSEMBLY
 		rename
@@ -147,6 +152,34 @@ feature -- Nested
 			-- Result := Void
 		end
 
+feature -- Relations
+
+	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE]) is
+			-- Add current universe to `a_visited' and
+			-- recursively the universes it depends on.
+		do
+			if not a_visited.has (Current) then
+				a_visited.force_last (Current)
+				if referenced_assemblies /= Void then
+					referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_universe_recursive (a_visited))
+				end
+			end
+		end
+
+	add_dotnet_assembly_recursive (a_visited: DS_HASH_SET [ET_DOTNET_ASSEMBLY]) is
+			-- Add current .NET assembly to `a_visited' and
+			-- recursively the .NET assemblies it depends on.
+		require
+			a_visited_not_void: a_visited /= Void
+		do
+			if not a_visited.has (Current) then
+				a_visited.force_last (Current)
+				if referenced_assemblies /= Void then
+					referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_dotnet_assembly_recursive (a_visited))
+				end
+			end
+		end
+
 feature -- Parsing
 
 	preparse_local is
@@ -256,22 +289,6 @@ feature {NONE} -- Parsing
 			classes.force_last (current_system.tuple_class, current_system.tuple_class.name)
 			classes.force_last (current_system.type_class, current_system.type_class.name)
 			classes.force_last (current_system.typed_pointer_class, current_system.typed_pointer_class.name)
-		end
-
-feature -- Relations
-
-	recursive_add (a_visited: DS_HASH_SET [ET_DOTNET_ASSEMBLY]) is
-			-- Add current .NET assembly to `a_visited' and
-			-- recursively the .NET assemblies it depends on.
-		require
-			a_visited_not_void: a_visited /= Void
-		do
-			if not a_visited.has (Current) then
-				a_visited.force_last (Current)
-				if referenced_assemblies /= Void then
-					referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.recursive_add (a_visited))
-				end
-			end
 		end
 
 feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming

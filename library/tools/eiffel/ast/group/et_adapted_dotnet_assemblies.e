@@ -127,7 +127,7 @@ feature -- Iteration
 			l_visited: DS_HASH_SET [ET_DOTNET_ASSEMBLY]
 		do
 			create l_visited.make (10)
-			do_all (agent {ET_DOTNET_ASSEMBLY}.recursive_add (l_visited))
+			do_all (agent {ET_DOTNET_ASSEMBLY}.add_dotnet_assembly_recursive (l_visited))
 			l_visited.do_all (an_action)
 		end
 

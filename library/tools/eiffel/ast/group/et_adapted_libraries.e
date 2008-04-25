@@ -127,7 +127,7 @@ feature -- Iteration
 			l_visited: DS_HASH_SET [ET_LIBRARY]
 		do
 			create l_visited.make (10)
-			do_all (agent {ET_LIBRARY}.recursive_add (l_visited))
+			do_all (agent {ET_LIBRARY}.add_library_recursive (l_visited))
 			l_visited.do_all (an_action)
 		end
 
