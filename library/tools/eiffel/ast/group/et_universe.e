@@ -410,9 +410,9 @@ feature -- Measurement
 			-- Number of classes declared locally in current universe
 			-- and recursively in the universes it depends on
 		do
-			Result := class_count
+			Result := class_count_recursive
 		ensure
-			definition: Result = class_count
+			definition: Result = class_count_recursive
 		end
 
 	class_count_local: INTEGER is
@@ -444,9 +444,9 @@ feature -- Measurement
 			-- Number of classes parsed locally in current universe
 			-- and recursively in the universes it depends on
 		do
-			Result := parsed_class_count
+			Result := parsed_class_count_recursive
 		ensure
-			definition: Result = parsed_class_count
+			definition: Result = parsed_class_count_recursive
 		end
 
 	parsed_class_count_local: INTEGER is
