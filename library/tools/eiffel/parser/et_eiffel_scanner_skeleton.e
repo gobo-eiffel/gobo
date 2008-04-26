@@ -767,6 +767,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.is_dotnet_name)
 			Result.force_new (-1, tokens.is_equal_name)
 			Result.force_new (-1, tokens.is_mac_name)
+			Result.force_new (-1, tokens.is_target_closed_name)
 			Result.force_new (-1, tokens.is_thread_capable_name)
 			Result.force_new (-1, tokens.is_unix_name)
 			Result.force_new (-1, tokens.is_vms_name)

@@ -11596,9 +11596,10 @@ feature {NONE} -- Agent generation
 				current_file.put_new_line
 				j := j + 1
 			end
-			if l_agent_type.attribute_count < 1 then
+			if l_agent_type.attribute_count < 2 then
 					-- Internal error: the Agent type should have at least
-					-- the attribute 'closed_operands' as first feature.
+					-- the attribute 'closed_operands' as first feature
+					-- and the attribute 'is_target_closed' as second feature.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
@@ -11609,6 +11610,19 @@ feature {NONE} -- Agent generation
 				current_file.put_character ('=')
 				current_file.put_character (' ')
 				print_temp_name (temp_variable, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set 'is_target_closed'.
+				print_indentation
+				print_attribute_access (l_agent_type.queries.item (2), tokens.result_keyword, l_agent_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if l_target.is_open_operand then
+					current_file.put_string (c_eif_false)
+				else
+					current_file.put_string (c_eif_true)
+				end
 				current_file.put_character (';')
 				current_file.put_new_line
 			end

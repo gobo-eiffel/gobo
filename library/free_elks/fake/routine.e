@@ -17,6 +17,14 @@ inherit
 
 feature -- Access
 
+	target: ANY is
+			-- Target of call, if already known
+		do
+			if is_target_closed then
+				Result := closed_operands.item (1)
+			end
+		end
+
 	hash_code: INTEGER is
 			-- Hash code value.
 		do
@@ -80,6 +88,24 @@ feature -- Status report
 					end
 				end
 			end
+		end
+
+	is_target_closed: BOOLEAN
+			-- Is target for current agent closed, i.e. specified at creation time?
+
+feature -- Setting
+
+	set_target (a_target: like target) is
+			-- Set `a_target' as the next `target' for remaining calls to Current.
+		require
+			a_target_not_void: a_target /= Void
+			is_target_closed: is_target_closed
+			target_not_void: target /= Void
+			same_target_type: target.same_type (a_target)
+		do
+			closed_operands.put (a_target, 1)
+		ensure
+			target_set: target = a_target
 		end
 
 feature -- Basic operations

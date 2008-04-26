@@ -409,6 +409,35 @@ feature -- Test
 			assert ("valid2", p1.valid_operands (t1))
 		end
 
+	test_is_target_closed is
+			-- Test feature 'is_target_closed'.
+		local
+			s: STRING
+			p1: PROCEDURE [ANY, TUPLE [STRING]]
+			p2: PROCEDURE [ANY, TUPLE]
+		do
+			p1 := agent {STRING}.wipe_out
+			assert ("is_open", not p1.is_target_closed)
+			s := "gobo"
+			p2 := agent s.wipe_out
+			assert ("is_closed", p2.is_target_closed)
+		end
+
+	test_set_target is
+			-- Test feature 'set_target'.
+		local
+			s1, s2: STRING
+			p: PROCEDURE [ANY, TUPLE [STRING]]
+		do
+			s1 := "gobo"
+			p := agent s1.append_string
+			s2 := "foo"
+			p.set_target (s2)
+			p.call (["bar"])
+			assert_strings_equal ("s1", "gobo", s1)
+			assert_strings_equal ("s2", "foobar", s2)
+		end
+
 	test_boxed_operands is
 			-- Test that the access to the items of the tuple argument
 			-- of 'call' is correctly done, with boxing of expanded

@@ -1196,6 +1196,14 @@ feature -- Feature names
 			is_mac_feature_name_not_void: Result /= Void
 		end
 
+	is_target_closed_feature_name: ET_FEATURE_NAME is
+			-- 'is_target_closed' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_target_closed_name)
+		ensure
+			is_target_closed_feature_name_not_void: Result /= Void
+		end
+
 	is_thread_capable_feature_name: ET_FEATURE_NAME is
 			-- 'is_thread_capable' feature name
 		once
@@ -2702,6 +2710,9 @@ feature -- Keyword and symbol names
 
 	is_mac_name: STRING is "is_mac"
 		-- Name of Eiffel feature 'is_mac'
+
+	is_target_closed_name: STRING is "is_target_closed"
+		-- Name of Eiffel feature 'is_target_closed'
 
 	is_thread_capable_name: STRING is "is_thread_capable"
 		-- Name of Eiffel feature 'is_thread_capable'

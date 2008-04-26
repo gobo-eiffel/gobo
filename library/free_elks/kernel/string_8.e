@@ -362,7 +362,7 @@ feature -- Access
 		end
 
 	string: STRING_8 is
-			-- New STRING having same character sequence as `Current'.
+			-- New STRING_8 having same character sequence as `Current'.
 		do
 			create Result.make (count)
 			Result.append (Current)

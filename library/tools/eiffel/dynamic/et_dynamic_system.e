@@ -708,6 +708,11 @@ feature {NONE} -- Types
 				if routine_closed_operands_feature /= Void then
 					l_dynamic_feature := Result.seeded_dynamic_query (routine_closed_operands_feature.first_seed, Current)
 				end
+					-- Make feature 'is_target_closed' alive at the second position
+					-- in the feature list of the "PROCEDURE" type.
+				if routine_is_target_closed_feature /= Void then
+					l_dynamic_feature := Result.seeded_dynamic_query (routine_is_target_closed_feature.first_seed, Current)
+				end
 			else
 				create Result.make (a_base_type, l_base_class)
 			end
@@ -769,6 +774,11 @@ feature {NONE} -- Types
 				if routine_closed_operands_feature /= Void then
 					l_dynamic_feature := Result.seeded_dynamic_query (routine_closed_operands_feature.first_seed, Current)
 				end
+					-- Make feature 'is_target_closed' alive at the second position
+					-- in the feature list of the "FUNCTION" type.
+				if routine_is_target_closed_feature /= Void then
+					l_dynamic_feature := Result.seeded_dynamic_query (routine_is_target_closed_feature.first_seed, Current)
+				end
 			else
 				create Result.make (a_base_type, l_base_class)
 			end
@@ -823,6 +833,11 @@ feature {NONE} -- Types
 					-- in the feature list of the "PREDICATE" type.
 				if routine_closed_operands_feature /= Void then
 					l_dynamic_feature := Result.seeded_dynamic_query (routine_closed_operands_feature.first_seed, Current)
+				end
+					-- Make feature 'is_target_closed' alive at the second position
+					-- in the feature list of the "PREDICATE" type.
+				if routine_is_target_closed_feature /= Void then
+					l_dynamic_feature := Result.seeded_dynamic_query (routine_is_target_closed_feature.first_seed, Current)
 				end
 			else
 				create Result.make (a_base_type, l_base_class)
@@ -1402,6 +1417,26 @@ feature {NONE} -- Compilation
 						error_handler.report_gvkfe3a_error (l_class, routine_closed_operands_feature, current_system.tuple_type)
 						routine_closed_operands_feature := Void
 					end
+						-- Check feature 'is_target_closed' of class "ROUTINE".
+					routine_is_target_closed_feature := l_class.named_query (tokens.is_target_closed_feature_name)
+					if routine_is_target_closed_feature = Void then
+						l_procedure := l_class.named_procedure (tokens.is_target_closed_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, l_procedure)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.is_target_closed_feature_name)
+						end
+					elseif not routine_is_target_closed_feature.is_attribute then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, routine_is_target_closed_feature)
+						routine_is_target_closed_feature := Void
+					elseif not routine_is_target_closed_feature.type.same_named_type (current_system.boolean_class, l_class, l_class) then
+						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, routine_is_target_closed_feature, current_system.boolean_class)
+						routine_is_target_closed_feature := Void
+					end
 				end
 			end
 				-- Type "ANY".
@@ -1531,6 +1566,9 @@ feature {NONE} -- Features
 
 	routine_closed_operands_feature: ET_QUERY
 			-- Expected attribute 'closed_operands' in class "ROUTINE"
+
+	routine_is_target_closed_feature: ET_QUERY
+			-- Expected attribute 'is_target_closed' in class "ROUTINE"
 
 feature {NONE} -- Implementation
 

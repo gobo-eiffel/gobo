@@ -900,6 +900,33 @@ feature -- Test
 			assert_integers_equal ("last_result3", 13, p3.last_result)
 		end
 
+	test_is_target_closed is
+			-- Test feature 'is_target_closed'.
+		local
+			s: STRING
+			p1: FUNCTION [ANY, TUPLE [STRING], INTEGER]
+			p2: FUNCTION [ANY, TUPLE, INTEGER]
+		do
+			p1 := agent {STRING}.count
+			assert ("is_open", not p1.is_target_closed)
+			s := "gobo"
+			p2 := agent s.count
+			assert ("is_closed", p2.is_target_closed)
+		end
+
+	test_set_target is
+			-- Test feature 'set_target'.
+		local
+			s1, s2: STRING
+			p: FUNCTION [ANY, TUPLE, INTEGER]
+		do
+			s1 := "gobo"
+			p := agent s1.count
+			s2 := "foo"
+			p.set_target (s2)
+			assert_integers_equal ("s2", 3, p.item ([]))
+		end
+
 	test_boxed_operands is
 			-- Test that the access to the items of the tuple argument
 			-- of 'item' is correctly done, with boxing of expanded

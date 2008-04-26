@@ -20,55 +20,54 @@ feature -- Status report
 
 	is_valid_type_string (s: STRING): BOOLEAN is
 			-- Is `s' a valid string representation for a TYPE.
-		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
 		local
 			l_type_name: STRING
 			l_start_pos, l_end_pos: INTEGER
 			l_class_type_name: STRING
 		do
-			l_class_type_name := s.twin
-			l_class_type_name.left_adjust
-			l_class_type_name.right_adjust
+			if s /= Void and then not s.is_empty then
+				l_class_type_name := s.twin
+				l_class_type_name.left_adjust
+				l_class_type_name.right_adjust
 
-				-- Let's see if it is a generic type.
-			l_start_pos := l_class_type_name.index_of ('[', 1)
+					-- Let's see if it is a generic type.
+				l_start_pos := l_class_type_name.index_of ('[', 1)
 
-			if l_start_pos > 1 then
-					-- Looks like it is a generic class.
-				l_end_pos := l_class_type_name.count
-				if l_class_type_name.item (l_end_pos) /= ']' then
-					l_end_pos := 0
-				end
-				if
-					l_end_pos = l_class_type_name.count and l_start_pos < l_end_pos and
-					l_class_type_name.occurrences ('[') = l_class_type_name.occurrences (']')
-				then
-						-- A well formed generic class.
-					l_type_name := l_class_type_name.substring (1, l_start_pos - 1)
-					l_type_name.left_adjust
-					l_type_name.right_adjust
-
+				if l_start_pos > 1 then
+						-- Looks like it is a generic class.
+					l_end_pos := l_class_type_name.count
+					if l_class_type_name.item (l_end_pos) /= ']' then
+						l_end_pos := 0
+					end
 					if
-						is_valid_identifier (l_type_name) and then
-						{l_parameters: ARRAYED_LIST [STRING]} parameters_decomposition (
-							l_class_type_name.substring (l_start_pos + 1, l_end_pos - 1))
+						l_end_pos = l_class_type_name.count and l_start_pos < l_end_pos and
+						l_class_type_name.occurrences ('[') = l_class_type_name.occurrences (']')
 					then
-						from
-							Result := True
-							l_parameters.start
-						until
-							l_parameters.after or not Result
-						loop
-							Result := is_valid_type_string (l_parameters.item)
-							l_parameters.forth
+							-- A well formed generic class.
+						l_type_name := l_class_type_name.substring (1, l_start_pos - 1)
+						l_type_name.left_adjust
+						l_type_name.right_adjust
+
+						if
+							is_valid_identifier (l_type_name) and then
+							{l_parameters: ARRAYED_LIST [STRING]} parameters_decomposition (
+								l_class_type_name.substring (l_start_pos + 1, l_end_pos - 1))
+						then
+							from
+								Result := True
+								l_parameters.start
+							until
+								l_parameters.after or not Result
+							loop
+								Result := is_valid_type_string (l_parameters.item)
+								l_parameters.forth
+							end
 						end
 					end
+				else
+						-- Ensures that it is a valid type name.
+					Result := is_valid_identifier (l_class_type_name)
 				end
-			else
-					-- Ensures that it is a valid type name.
-				Result := is_valid_identifier (l_class_type_name)
 			end
 		end
 
