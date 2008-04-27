@@ -1062,6 +1062,8 @@ feature -- Ancestors
 			-- (Note: you have to make sure that the ancestors of the classes in the
 			-- surrounding Eiffel system have correctly been built first in order to
 			-- get the correct answer.)
+		local
+			l_old_stoppable: BOOLEAN
 		do
 			if is_unknown then
 					-- Class "*UNKNOWN*" has no descendants.
@@ -1075,8 +1077,11 @@ feature -- Ancestors
 					-- have descendant classes.
 				create Result.make (0)
 			else
+				l_old_stoppable := current_system.is_stoppable
+				current_system.set_stoppable (False)
 				create Result.make (initial_descendants_capacity)
 				current_system.classes_do_recursive (agent {ET_CLASS}.add_to_descendants (Current, Result))
+				current_system.set_stoppable (l_old_stoppable)
 			end
 		ensure
 			descendants_not_void: Result /= Void
@@ -1093,10 +1098,8 @@ feature -- Ancestors
 			no_void_descedants: not a_descendants.has (Void)
 		do
 			if a_class /= Current then
-				if ancestors_built then
-					if has_ancestor (a_class) then
-						a_descendants.force_last (Current)
-					end
+				if ancestors_built and then has_ancestor (a_class) then
+					a_descendants.force_last (Current)
 				end
 			end
 		ensure

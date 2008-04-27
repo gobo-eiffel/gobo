@@ -204,37 +204,65 @@ feature -- Iterators
 	do_all (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
 			-- Apply `an_action' to every cluster.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
+			--
+			-- The iteration will be interrupted if surrounding Eiffel system
+			-- has been marked as stoppable and it received a stop request.
+			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
+			-- ET_SYSTEM for more details.
 		require
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
+			l_system: ET_SYSTEM
 		do
 			nb := clusters.count
-			from i := 1 until i > nb loop
-				an_action.call ([clusters.item (i)])
-				i := i + 1
+			if nb > 0 then
+				l_system := clusters.item (1).current_system
+				from i := 1 until i > nb loop
+					if l_system.is_stoppable and then l_system.stop_requested then
+						l_system.set_stopped
+						i := nb + 1
+					else
+						an_action.call ([clusters.item (i)])
+						i := i + 1
+					end
+				end
 			end
 		end
 
-	do_all_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+	do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
 			-- Apply `an_action' to every cluster and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
+			--
+			-- The iteration will be interrupted if surrounding Eiffel system
+			-- has been marked as stoppable and it received a stop request.
+			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
+			-- ET_SYSTEM for more details.
 		require
 			an_action_not_void: an_action /= Void
 		local
 			i, nb: INTEGER
 			l_cluster: ET_CLUSTER
 			l_subclusters: ET_CLUSTERS
+			l_system: ET_SYSTEM
 		do
 			nb := clusters.count
-			from i := 1 until i > nb loop
-				l_cluster := clusters.item (i)
-				an_action.call ([l_cluster])
-				l_subclusters := l_cluster.subclusters
-				if l_subclusters /= Void then
-					l_subclusters.do_all_recursive (an_action)
+			if nb > 0 then
+				l_system := clusters.item (1).current_system
+				from i := 1 until i > nb loop
+					if l_system.is_stoppable and then l_system.stop_requested then
+						l_system.set_stopped
+						i := nb + 1
+					else
+						l_cluster := clusters.item (i)
+						an_action.call ([l_cluster])
+						l_subclusters := l_cluster.subclusters
+						if l_subclusters /= Void then
+							l_subclusters.do_recursive (an_action)
+						end
+						i := i + 1
+					end
 				end
-				i := i + 1
 			end
 		end
 
