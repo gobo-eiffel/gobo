@@ -51,8 +51,12 @@ Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_o
 	Defaults_opt Clusters_opt Assemblies_opt Externals_opt Generates_opt L_END
 		{
 			set_system (last_system)
-			last_system.set_clusters ($8)
-			last_system.set_dotnet_assemblies ($9)
+			if $8 /= Void then
+				last_system.set_clusters ($8)
+			end
+			if $9 /= Void then
+				last_system.set_dotnet_assemblies ($9)
+			end
 			last_system.set_system_name ($2.name)
 			last_system.set_root_class ($4)
 			last_system.set_root_creation ($6)
