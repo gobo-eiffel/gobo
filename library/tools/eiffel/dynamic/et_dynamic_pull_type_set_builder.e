@@ -1018,7 +1018,7 @@ feature {NONE} -- Implementation
 					l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
 				end
 			end
-			create l_tuple_type.make (l_parameters, current_system.tuple_class)
+			create l_tuple_type.make (Void, l_parameters, current_system.tuple_class)
 			l_dynamic_tuple_type ?= current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
 			if l_dynamic_tuple_type = Void then
 					-- Internal error: the dynamic type of a Tuple type

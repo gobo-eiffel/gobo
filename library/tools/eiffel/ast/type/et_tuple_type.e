@@ -34,20 +34,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameters: like actual_parameters; a_base_class: ET_CLASS) is
+	make (a_type_mark: like type_mark; a_parameters: like actual_parameters; a_base_class: ET_CLASS) is
 			-- Create a new TUPLE type.
 		require
 			a_base_class_not_void: a_base_class /= Void
 		do
+			type_mark := a_type_mark
 			tuple_keyword := tokens.tuple_keyword
 			actual_parameters := a_parameters
 			base_class := a_base_class
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			actual_parameters_set: actual_parameters = a_parameters
 			base_class_set: base_class = a_base_class
 		end
 
 feature -- Access
+
+	type_mark: ET_TYPE_MARK
+			-- '!' or '?' symbol
 
 	tuple_keyword: ET_IDENTIFIER
 			-- 'TUPLE' keyword
@@ -77,7 +82,7 @@ feature -- Access
 				if an_actual_parameters /= Void then
 					a_named_parameters := an_actual_parameters.named_types (a_context)
 					if a_named_parameters /= an_actual_parameters then
-						create Result.make (a_named_parameters, base_class)
+						create Result.make (type_mark, a_named_parameters, base_class)
 						Result.set_tuple_keyword (tuple_keyword)
 					end
 				end
@@ -337,7 +342,7 @@ feature -- Type processing
 			if an_actual_parameters /= Void then
 				a_resolved_parameters := an_actual_parameters.resolved_formal_parameters (a_parameters)
 				if a_resolved_parameters /= an_actual_parameters then
-					create Result.make (a_resolved_parameters, base_class)
+					create Result.make (type_mark, a_resolved_parameters, base_class)
 					Result.set_tuple_keyword (tuple_keyword)
 				end
 			end

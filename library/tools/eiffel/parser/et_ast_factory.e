@@ -3216,11 +3216,11 @@ feature -- AST nodes
 			end
 		end
 
-	new_tuple_type (a_tuple: ET_IDENTIFIER; a_generics: like new_actual_parameters; a_base_class: ET_CLASS): ET_TUPLE_TYPE is
+	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: like new_actual_parameters; a_base_class: ET_CLASS): ET_TUPLE_TYPE is
 			-- New 'TUPLE' type
 		do
 			if a_base_class /= Void then
-				create Result.make (a_generics, a_base_class)
+				create Result.make (a_type_mark, a_generics, a_base_class)
 				if a_tuple /= Void and then not a_tuple.position.is_null then
 					Result.set_tuple_keyword (a_tuple)
 				end

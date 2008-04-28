@@ -6089,7 +6089,7 @@ feature {NONE} -- Expression validity
 			if had_error then
 				set_fatal_error
 			else
-				create l_tuple_type.make (l_actuals, current_system.tuple_class)
+				create l_tuple_type.make (Void, l_actuals, current_system.tuple_class)
 				report_manifest_tuple (an_expression, l_tuple_type)
 				a_context.force_last (l_tuple_type)
 			end
@@ -8428,7 +8428,7 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_query, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 				a_type := a_query.type
 -- TODO: like argument
 				if
@@ -8486,7 +8486,7 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_procedure, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 				an_agent_class := current_system.procedure_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
@@ -8745,7 +8745,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 				a_type := a_query.type
 -- TODO: like argument
 				if
@@ -8816,7 +8816,7 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 				an_agent_class := current_system.procedure_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
@@ -9141,7 +9141,7 @@ feature {NONE} -- Agent validity
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
 				an_open_operands.put_first (a_target_type)
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 				a_result_type := a_query.type
 -- TODO: like argument
 				if
@@ -9217,7 +9217,7 @@ feature {NONE} -- Agent validity
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
 				an_open_operands.put_first (a_target_type)
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 				an_agent_class := current_system.procedure_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
@@ -9278,7 +9278,7 @@ feature {NONE} -- Agent validity
 				l_target_type := a_target.type
 				create l_open_operands.make_with_capacity (1)
 				l_open_operands.put_first (l_target_type)
-				create l_tuple_type.make (l_open_operands, current_system.tuple_class)
+				create l_tuple_type.make (Void, l_open_operands, current_system.tuple_class)
 				if
 					current_system.predicate_class.is_preparsed and then
 					l_type.same_named_type (current_system.boolean_class, current_type, current_type)
@@ -9700,7 +9700,7 @@ feature {NONE} -- Agent validity
 			end
 			check_agent_arguments_validity (an_expression, a_formal_arguments, Void, an_open_operands, a_context)
 			if not has_fatal_error then
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 					-- Contrary to the types appearing in the signatures of features, types
 					-- in signatures of inline agents in the AST are those found in the
 					-- implementation class of `current_feature', and hence need to be
@@ -9754,7 +9754,7 @@ feature {NONE} -- Agent validity
 			end
 			check_agent_arguments_validity (an_expression, a_formal_arguments, Void, an_open_operands, a_context)
 			if not has_fatal_error then
-				create a_tuple_type.make (an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
 				an_agent_class := current_system.procedure_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)

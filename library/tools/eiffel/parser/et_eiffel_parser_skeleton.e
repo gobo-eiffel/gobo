@@ -802,12 +802,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				end
 				a_base_class.set_in_system (True)
 				if a_base_class = current_system.tuple_class then
-					if a_type_mark /= Void then
+					if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
 							-- A TUPLE type is not a class type. It cannot
 							-- be prefixed by 'expanded' or 'reference'.
+							-- But it can be prefixed by '!' or '?'.
 						report_syntax_error (a_type_mark.position)
+						Result := ast_factory.new_tuple_type (Void, a_name, Void, a_base_class)
+					else
+						Result := ast_factory.new_tuple_type (a_type_mark, a_name, Void, a_base_class)
 					end
-					Result := ast_factory.new_tuple_type (a_name, Void, a_base_class)
 				else
 					Result := ast_factory.new_class_type (a_type_mark, a_name, a_base_class)
 				end
@@ -852,12 +855,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					end
 					a_base_class.set_in_system (True)
 					if a_base_class = current_system.tuple_class then
-						if a_type_mark /= Void then
+						if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
 								-- A TUPLE type is not a class type. It cannot
 								-- be prefixed by 'expanded' or 'reference'.
+								-- But it can be prefixed by '!' or '?'.
 							report_syntax_error (a_type_mark.position)
+							Result := ast_factory.new_tuple_type (Void, a_name, a_parameters, a_base_class)
+						else
+							Result := ast_factory.new_tuple_type (a_type_mark, a_name, a_parameters, a_base_class)
 						end
-						Result := ast_factory.new_tuple_type (a_name, a_parameters, a_base_class)
 					else
 						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_parameters, a_base_class)
 					end
@@ -1417,10 +1423,10 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_tuple_type (a_tuple: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
+	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
 			-- New 'TUPLE' type
 		do
-			Result := ast_factory.new_tuple_type (a_tuple, a_generics, current_system.tuple_class)
+			Result := ast_factory.new_tuple_type (a_type_mark, a_tuple, a_generics, current_system.tuple_class)
 		end
 
 	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION is

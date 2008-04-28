@@ -11363,7 +11363,7 @@ feature {NONE} -- Agent generation
 				l_parameters.put_first (dynamic_type_set (agent_closed_operands.item (j)).static_type.base_type)
 				j := j - 1
 			end
-			create l_tuple_type.make (l_parameters, current_system.tuple_class)
+			create l_tuple_type.make (Void, l_parameters, current_system.tuple_class)
 			agent_closed_operands_type := current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
 				--
 				-- Print function associated with the agent to `current_file'.

@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 						-- Tuples have a variable number of arguments.
 					i := parse_open_bracket (str, Result)
 					if i > str.count + 1 then
-						create {ET_TUPLE_TYPE} last_base_type.make (Void, a_class)
+						create {ET_TUPLE_TYPE} last_base_type.make (Void, Void, a_class)
 					else
 						from
 							Result := i
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 								an_actuals.force_first (tmp_actuals.item (i))
 								i := i + 1
 							end
-							create {ET_TUPLE_TYPE} last_base_type.make (an_actuals, a_class)
+							create {ET_TUPLE_TYPE} last_base_type.make (Void, an_actuals, a_class)
 						end
 					end
 				elseif a_class.is_generic then

@@ -489,7 +489,7 @@ feature -- Basic classes
 			tuple_class := ast_factory.new_class (tokens.tuple_class_name)
 			register_class (tuple_class)
 			tuple_class.set_in_system (True)
-			create tuple_type.make (Void, tuple_class)
+			create tuple_type.make (Void, Void, tuple_class)
 				-- Class "TYPE".
 			type_class := ast_factory.new_class (tokens.type_class_name)
 			register_class (type_class)

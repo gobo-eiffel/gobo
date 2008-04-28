@@ -712,6 +712,22 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
+		{
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
+	| '?' E_TUPLE Constraint_tuple_actual_parameters_opt
+		{
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
 	;
 
 Constraint_type_no_identifier: Class_name Constraint_actual_parameters
@@ -746,6 +762,22 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
+	| '?' E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_constraint_named_type ($1, $2, $3)
+			end
+		}
 	;
 
 Constraint_actual_parameters_opt: -- Empty
@@ -2465,7 +2497,23 @@ Type_no_class_name: Class_name Actual_parameters
 	| E_BITTYPE Identifier
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type ($1, $2) }
+		{ $$ := new_tuple_type (Void, $1, $2) }
+	| '!' E_TUPLE Tuple_actual_parameters_opt
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_tuple_type ($1, $2, $3)
+			end
+		}
+	| '?' E_TUPLE Tuple_actual_parameters_opt
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_tuple_type ($1, $2, $3)
+			end
+		}
 	;
 
 Type_no_identifier: Class_name Actual_parameters
@@ -2499,7 +2547,23 @@ Type_no_identifier: Class_name Actual_parameters
 	| E_BITTYPE Identifier
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters
-		{ $$ := new_tuple_type ($1, $2) }
+		{ $$ := new_tuple_type (Void, $1, $2) }
+	| '!' E_TUPLE Tuple_actual_parameters_opt
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_tuple_type ($1, $2, $3)
+			end
+		}
+	| '?' E_TUPLE Tuple_actual_parameters_opt
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_tuple_type ($1, $2, $3)
+			end
+		}
 	;
 
 Type_no_bang_identifier: Class_name
@@ -2535,7 +2599,23 @@ Type_no_bang_identifier: Class_name
 	| E_BITTYPE Identifier
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
-		{ $$ := new_tuple_type ($1, $2) }
+		{ $$ := new_tuple_type (Void, $1, $2) }
+	| '!' E_TUPLE Tuple_actual_parameters
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_tuple_type ($1, $2, $3)
+			end
+		}
+	| '?' E_TUPLE Tuple_actual_parameters_opt
+		{ 
+			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := new_tuple_type ($1, $2, $3)
+			end
+		}
 	;
 
 Class_name: E_IDENTIFIER
@@ -2590,7 +2670,7 @@ Actual_parameter_list: Type ']'
 	| E_TUPLE ',' Increment_counter Actual_parameter_list
 		{
 			$$ := $4
-			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (new_tuple_type ($1, Void), $2), $$)
+			add_to_actual_parameter_list (ast_factory.new_actual_parameter_comma (new_tuple_type (Void, $1, Void), $2), $$)
 		}
 	;
 
