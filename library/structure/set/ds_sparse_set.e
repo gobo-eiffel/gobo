@@ -373,6 +373,7 @@ feature -- Element change
 			end
 		ensure then
 			last: (not old has (v)) implies last = v
+			-- not_changed: old has (v) implies all items at the same position
 		end
 
 	extend (other: DS_LINEAR [G]) is
