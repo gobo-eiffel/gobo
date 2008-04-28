@@ -276,6 +276,43 @@ feature -- Resizing
 			resized: capacity >= nb
 		end
 
+feature -- Iteration
+
+	do_all (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+			-- Apply `an_action' to every item, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				an_action.call ([storage.item (i)])
+				i := i + 1
+			end
+		end
+
+	do_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+			-- Apply `an_action' to every item that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				l_item := storage.item (i)
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	storage: SPECIAL [like item]

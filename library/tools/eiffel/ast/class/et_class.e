@@ -1420,6 +1420,52 @@ feature -- Features
 			procedures_set: procedures = a_procedures
 		end
 
+	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+			-- Apply `an_action' to every feature of current class.
+			-- (Semantics not guaranteed if `an_action' changes the list of features.)
+		require
+			an_action_not_void: an_action /= Void
+		do
+			queries.features_do_all (an_action)
+			procedures.features_do_all (an_action)
+		end
+
+	features_do_declared (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+			-- Apply `an_action' to every feature declared in current class
+			-- (i.e. do not traverse inherited features which have not been
+			-- redefined in current class).
+			-- (Semantics not guaranteed if `an_action' changes the list of features.)
+		require
+			an_action_not_void: an_action /= Void
+		do
+			queries.features_do_declared (an_action)
+			procedures.features_do_declared (an_action)
+		end
+
+	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			queries.features_do_if (an_action, a_test)
+			procedures.features_do_if (an_action, a_test)
+		end
+
+	features_do_declared_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+			-- Apply `an_action' to every feature declared in current class
+			-- (i.e. do not traverse inherited features which have not been
+			-- redefined in current class) that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			queries.features_do_declared_if (an_action, a_test)
+			procedures.features_do_declared_if (an_action, a_test)
+		end
+
 feature -- Feature flattening status
 
 	features_flattened: BOOLEAN
