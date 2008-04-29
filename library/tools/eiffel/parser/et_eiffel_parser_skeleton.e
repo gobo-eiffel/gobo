@@ -71,7 +71,8 @@ feature {NONE} -- Initialization
 			create last_local_variables_stack.make (Initial_last_local_variables_stack_capacity)
 			create last_keywords.make (Initial_last_keywords_capacity)
 			create last_symbols.make (Initial_last_symbols_capacity)
-			create last_object_tests.make_with_capacity (Initial_last_object_tests_capacity)
+			create last_object_tests_stack.make (Initial_last_object_tests_capacity)
+			create last_object_tests_pool.make (Initial_last_object_tests_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create queries.make (Initial_queries_capacity)
 			create procedures.make (Initial_procedures_capacity)
@@ -89,11 +90,11 @@ feature -- Initialization
 			precursor
 			eiffel_buffer.set_end_of_file
 			counters.wipe_out
-			last_formal_arguments_stack.wipe_out
-			last_local_variables_stack.wipe_out
+			wipe_out_last_formal_arguments_stack
+			wipe_out_last_local_variables_stack
+			wipe_out_last_object_tests_stack
 			last_keywords.wipe_out
 			last_symbols.wipe_out
-			last_object_tests.wipe_out
 			providers.wipe_out
 			assertions.wipe_out
 			queries.wipe_out
@@ -436,9 +437,9 @@ feature {NONE} -- Basic operations
 			end
 				-- Reset local variables, formal arguments and
 				-- object-tests before reading the next feature.
-			last_formal_arguments_stack.wipe_out
-			last_local_variables_stack.wipe_out
-			last_object_tests.wipe_out
+			wipe_out_last_formal_arguments_stack
+			wipe_out_last_local_variables_stack
+			wipe_out_last_object_tests_stack
 		end
 
 	register_query_synonym (a_query: ET_QUERY) is
@@ -464,9 +465,9 @@ feature {NONE} -- Basic operations
 			end
 				-- Reset local variables, formal arguments and
 				-- object-tests before reading the next feature.
-			last_formal_arguments_stack.wipe_out
-			last_local_variables_stack.wipe_out
-			last_object_tests.wipe_out
+			wipe_out_last_formal_arguments_stack
+			wipe_out_last_local_variables_stack
+			wipe_out_last_object_tests_stack
 		end
 
 	register_procedure_synonym (a_procedure: ET_PROCEDURE) is
@@ -764,6 +765,54 @@ feature {NONE} -- Basic operations
 		do
 			if a_list /= Void and a_parameter /= Void then
 				a_list.put_first (a_parameter)
+			end
+		end
+
+	set_start_closure (a_formal_arguments: ET_FORMAL_ARGUMENT_LIST) is
+			-- Indicate the we just parsed the formal arguments of a
+			-- new closure (i.e. feature, invariant or inline agent).
+			-- Keep track of the values of `last_formal_arguments',
+			-- `last_local_variables' and `last_object_tests' for the
+			-- enclosing closure. They will be restored when we reach
+			-- the end of the closure by `set_end_closure'.
+		do
+			if not last_formal_arguments_stack.is_empty or last_formal_arguments /= Void then
+				last_formal_arguments_stack.force (last_formal_arguments)
+			end
+			last_formal_arguments := a_formal_arguments
+			if not last_local_variables_stack.is_empty or last_local_variables /= Void then
+				last_local_variables_stack.force (last_local_variables)
+			end
+			last_local_variables := Void
+			if not last_object_tests_stack.is_empty or last_object_tests /= Void then
+				last_object_tests_stack.force (last_object_tests)
+			end
+			last_object_tests := Void
+		end
+
+	set_end_closure is
+			-- Indicate that the end of the closure (i.e. feature, invariant
+			-- or inline agent) being parsed has been reached. Restore 
+			-- `last_formal_arguments', `last_local_variables' and
+			-- `last_object_tests' for the enclosing closure if any.
+		do
+			if not last_formal_arguments_stack.is_empty then
+				last_formal_arguments := last_formal_arguments_stack.item
+				last_formal_arguments_stack.remove
+			else
+				last_formal_arguments := Void
+			end
+			if not last_local_variables_stack.is_empty then
+				last_local_variables := last_local_variables_stack.item
+				last_local_variables_stack.remove
+			else
+				last_local_variables := Void
+			end
+			if not last_object_tests_stack.is_empty then
+				last_object_tests := last_object_tests_stack.item
+				last_object_tests_stack.remove
+			else
+				last_object_tests := Void
 			end
 		end
 
@@ -1135,13 +1184,46 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_feature_address (d: ET_SYMBOL; a_name: ET_FEATURE_NAME): ET_FEATURE_ADDRESS is
+			-- New feature address
+		local
+			l_identifier: ET_IDENTIFIER
+			l_seed: INTEGER
+		do
+			l_identifier ?= a_name
+			if l_identifier /= Void then
+				if last_formal_arguments /= Void then
+					l_seed := last_formal_arguments.index_of (l_identifier)
+					if l_seed /= 0 then
+						l_identifier.set_seed (l_seed)
+						l_identifier.set_argument (True)
+						last_formal_arguments.formal_argument (l_seed).set_used (True)
+					end
+				end
+				if l_seed = 0 and then last_local_variables /= Void then
+					l_seed := last_local_variables.index_of (l_identifier)
+					if l_seed /= 0 then
+						l_identifier.set_seed (l_seed)
+						l_identifier.set_local (True)
+						last_local_variables.local_variable (l_seed).set_used (True)
+					end
+				end
+				if l_seed = 0 and then last_object_tests /= Void then
+					l_seed := last_object_tests.index_of (l_identifier)
+					if l_seed /= 0 then
+						l_identifier.set_object_test_local (True)
+					end
+				end
+			end
+			Result := ast_factory.new_feature_address (d, a_name)
+		end
+
 	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST is
 			-- New formal argument list with given capacity
 		require
 			nb_positive: nb >= 0
 		do
 			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
-			last_formal_arguments_stack.force (Result)
 		end
 
 	new_invalid_alias_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
@@ -1205,7 +1287,7 @@ feature {NONE} -- AST factory
 			nb_positive: nb >= 0
 		do
 			Result := ast_factory.new_local_variables (a_local, nb)
-			last_local_variables_stack.force (Result)
+			last_local_variables := Result
 		end
 
 	new_loop_invariants (an_invariant: ET_KEYWORD): ET_LOOP_INVARIANTS is
@@ -1297,6 +1379,9 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_object_test (a_left_brace, a_name, a_colon, a_type, a_right_brace, a_expression)
 			if Result /= Void then
+				if last_object_tests = Void then
+					last_object_tests := new_object_test_list
+				end
 				last_object_tests.force_last (Result)
 				l_name := Result.name
 				l_name.set_object_test_local (True)
@@ -1454,7 +1539,7 @@ feature {NONE} -- AST factory
 						last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 then
+				if a_seed = 0 and then last_object_tests /= Void then
 					a_seed := last_object_tests.index_of (a_name)
 					if a_seed /= 0 then
 						a_name.set_object_test_local (True)
@@ -5710,35 +5795,103 @@ feature {NONE} -- Access
 
 feature {NONE} -- Local variables
 
-	last_local_variables: ET_LOCAL_VARIABLE_LIST is
-			-- Last local variable clause read
-		do
-			if not last_local_variables_stack.is_empty then
-				Result := last_local_variables_stack.item
-			end
-		end
+	last_local_variables: ET_LOCAL_VARIABLE_LIST
+			-- Last local variable clause read for the closure
+			-- (i.e. feature or inline agent) being parsed
 
 	last_local_variables_stack: DS_ARRAYED_STACK [ET_LOCAL_VARIABLE_LIST]
-			-- Stack of last local variable clause read
+			-- Stack of last local variable clauses read
+			-- for the enclosing closures (i.e. feature or
+			-- inline agents) of the closure being parsed
+
+	wipe_out_last_local_variables_stack is
+			-- Wipe out `last_local_variables_stack' and
+			-- set `last_local_variables' to Void.
+		do
+			last_local_variables_stack.wipe_out
+			last_local_variables := Void
+		ensure
+			last_local_variables_stack_wiped_out: last_local_variables_stack.is_empty
+			last_local_variables_void: last_local_variables = Void
+		end
 
 feature {NONE} -- Object-tests
 
 	last_object_tests: ET_OBJECT_TEST_LIST
-			-- Object-tests already found in current feature/invariant
-			-- and its inline agents
+			-- Object-tests already found in the closure (i.e. feature,
+			-- invariant or inline agent) being parsed
+
+	last_object_tests_stack: DS_ARRAYED_STACK [ET_OBJECT_TEST_LIST]
+			-- Stack of object-tests already found in the enclosing
+			-- closures (i.e. feature, invariant or inline agents)
+			-- of the closure being parsed
+
+	last_object_tests_pool: DS_ARRAYED_STACK [ET_OBJECT_TEST_LIST]
+			-- Pool of object-test lists available for usage
+			-- whenever needed
+
+	new_object_test_list: ET_OBJECT_TEST_LIST is
+			-- New object-test list;
+			-- Reuse items from `last_object_tests_pool' if available.
+		do
+			if not last_object_tests_pool.is_empty then
+				Result := last_object_tests_pool.item
+				last_object_tests_pool.remove
+			else
+				create Result.make_with_capacity (Initial_last_object_tests_capacity)
+			end
+		ensure
+			new_object_test_list_not_void: Result /= Void
+		end
+
+	wipe_out_last_object_tests_stack is
+			-- Wipe out `last_object_tests_stack' and
+			-- set `last_object_tests' to Void.
+		local
+			l_object_test_list: ET_OBJECT_TEST_LIST
+			i, nb: INTEGER
+		do
+			if last_object_tests /= Void then
+				last_object_tests.wipe_out
+				last_object_tests_pool.force (last_object_tests)
+				last_object_tests := Void
+			end
+			nb := last_object_tests_stack.count
+			from i := 1 until i > nb loop
+				l_object_test_list := last_object_tests_stack.i_th (i)
+				if l_object_test_list /= Void then
+					l_object_test_list.wipe_out
+					last_object_tests_pool.force (l_object_test_list)
+				end
+				i := i + 1
+			end
+			last_object_tests_stack.wipe_out
+		ensure
+			last_object_tests_stack_wiped_out: last_object_tests_stack.is_empty
+			last_object_tests_void: last_object_tests = Void
+		end
 
 feature {NONE} -- Formal arguments
 
-	last_formal_arguments: ET_FORMAL_ARGUMENT_LIST is
-			-- Last formal argument clause read
-		do
-			if not last_formal_arguments_stack.is_empty then
-				Result := last_formal_arguments_stack.item
-			end
-		end
+	last_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			-- Last formal argument clause read for the closure
+			-- (i.e. feature or inline agent) being parsed
 
 	last_formal_arguments_stack: DS_ARRAYED_STACK [ET_FORMAL_ARGUMENT_LIST]
-			-- Stack of last formal argument clause read
+			-- Stack of last formal argument clauses read
+			-- for the enclosing closures (i.e. feature or
+			-- inline agents) of the closure being parsed
+
+	wipe_out_last_formal_arguments_stack is
+			-- Wipe out `last_formal_arguments_stack' and
+			-- set `last_formal_arguments' to Void.
+		do
+			last_formal_arguments_stack.wipe_out
+			last_formal_arguments := Void
+		ensure
+			last_formal_arguments_stack_wiped_out: last_formal_arguments_stack.is_empty
+			last_formal_arguments_void: last_formal_arguments = Void
+		end
 
 feature {NONE} -- Last keyword
 
@@ -5945,7 +6098,9 @@ invariant
 	providers_not_void: providers /= Void
 	no_void_provider: not providers.has (Void)
 		-- Object-tests.
-	last_object_tests_not_void: last_object_tests /= Void
+	last_object_tests_stack_not_void: last_object_tests_stack /= Void
+	last_object_tests_pool_not_void: last_object_tests_pool /= Void
+	no_void_last_object_tests_in_pool: not last_object_tests_pool.has (Void)
 		-- Input buffer.
 	eiffel_buffer_not_void: eiffel_buffer /= Void
 

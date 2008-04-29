@@ -7307,47 +7307,16 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				l_name := an_expression.name
 				if l_name.is_argument then
 					l_name_expression := l_name.argument_name
-					l_value_type_set := dynamic_type_set (l_name_expression)
-					if l_value_type_set.is_expanded then
-						print_type_cast (current_dynamic_system.pointer_type, current_file)
-						current_file.put_character ('&')
-						print_expression (l_name_expression)
-					else
-						l_special_type := l_value_type_set.special_type
-						if l_special_type /= Void then
-							current_file.put_character ('(')
-							print_expression (l_name_expression)
-							current_file.put_character ('?')
-							print_type_cast (current_dynamic_system.pointer_type, current_file)
-							current_file.put_character ('(')
-							current_file.put_string (c_ge_types)
-							current_file.put_character ('[')
-							print_attribute_type_id_access (l_name_expression, l_value_type_set.static_type, False)
-							current_file.put_character (']')
-							current_file.put_character ('.')
-							current_file.put_string (c_is_special)
-							current_file.put_character ('?')
-							print_type_cast (current_dynamic_system.pointer_type, current_file)
-							print_attribute_special_item_access (l_name_expression, l_special_type, False)
-							current_file.put_character (':')
-							print_type_cast (current_dynamic_system.pointer_type, current_file)
-							print_expression (l_name_expression)
-							current_file.put_character (')')
-							current_file.put_character (':')
-							print_type_cast (current_dynamic_system.pointer_type, current_file)
-							current_file.put_character ('0')
-							current_file.put_character (')')
-						else
-							print_type_cast (current_dynamic_system.pointer_type, current_file)
-							print_expression (l_name_expression)
-						end
-					end
 				elseif l_name.is_local then
 						-- Keep track of the fact that the value of this local variable can
 						-- possibly be modified. Useful to determine the 'volatile' status
 						-- of the local variable when current feature has a rescue clause.
 					locals_written.force_last (l_name.local_name.identifier)
 					l_name_expression := l_name.local_name
+				elseif l_name.is_object_test_local then
+					l_name_expression := l_name.object_test_local_name
+				end
+				if l_name_expression /= Void then
 					l_value_type_set := dynamic_type_set (l_name_expression)
 					if l_value_type_set.is_expanded then
 						print_type_cast (current_dynamic_system.pointer_type, current_file)

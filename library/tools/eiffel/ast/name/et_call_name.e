@@ -308,4 +308,14 @@ feature -- Conversion
 			definition: ANY_.same_objects (Result, Current)
 		end
 
+	object_test_local_name: ET_OBJECT_TEST_LOCAL_NAME is
+			-- Current name viewed as an object-test local name
+		require
+			is_object_test_local: is_object_test_local
+		do
+			check is_object_test_local: is_object_test_local end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
 end

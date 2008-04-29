@@ -22,6 +22,7 @@ inherit
 			is_local, is_argument,
 			is_identifier, is_equal,
 			local_name, argument_name,
+			object_test_local_name,
 			is_object_test_local
 		end
 
@@ -32,6 +33,14 @@ inherit
 		end
 
 	ET_LOCAL_NAME
+		undefine
+			first_position, last_position,
+			reset, is_equal
+		redefine
+			is_never_void
+		end
+
+	ET_OBJECT_TEST_LOCAL_NAME
 		undefine
 			first_position, last_position,
 			reset, is_equal
@@ -498,6 +507,12 @@ feature -- Conversion
 
 	argument_name: ET_ARGUMENT_NAME is
 			-- Current name viewed as an argument name
+		do
+			Result := Current
+		end
+
+	object_test_local_name: ET_OBJECT_TEST_LOCAL_NAME is
+			-- Current name viewed as an object-test local name
 		do
 			Result := Current
 		end

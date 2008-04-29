@@ -158,7 +158,7 @@ create
 %type <ET_FEATURE_NAME_ITEM> Feature_name_comma Creation_procedure_comma
 %type <ET_FORMAL_ARGUMENT> Formal_argument_name Formal_argument_name_comma
 %type <ET_FORMAL_ARGUMENT_ITEM> Formal_argument Formal_argument_semicolon
-%type <ET_FORMAL_ARGUMENT_LIST> Formal_arguments Formal_argument_list
+%type <ET_FORMAL_ARGUMENT_LIST> Formal_arguments Formal_argument_list Inline_agent_formal_arguments Feature_formal_arguments
 %type <ET_FORMAL_PARAMETER> Formal_parameter
 %type <ET_FORMAL_PARAMETER_ITEM> Formal_parameter_comma
 %type <ET_FORMAL_PARAMETER_LIST> Formal_parameters_opt Formal_parameter_list
@@ -1853,11 +1853,11 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class.master_class)
 			end
 		}
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
@@ -1879,11 +1879,11 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class.master_class)
 			end
 		}
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
@@ -1903,10 +1903,10 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class.master_class)
 			end
 		}
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
 			if current_system.is_ise and then current_system.ise_version < ise_5_7_59914 then
@@ -1927,11 +1927,11 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class.master_class)
 			end
 		}
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, ast_factory.new_external_language ($10, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments ':' Type Assigner_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
@@ -1946,26 +1946,26 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class.master_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class.master_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, last_clients, last_feature_clause, last_class.master_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_procedure ($1, Void, $2, $3, $4, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $11, last_clients, last_feature_clause, last_class.master_class) }
-	| Extended_feature_name Formal_arguments Is_opt Indexing_clause_opt
+	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, $6, ast_factory.new_external_language ($7, $8), $9, $10, $11, $12, last_clients, last_feature_clause, last_class.master_class) }
@@ -2143,9 +2143,10 @@ Alias_name: E_ALIAS E_STRNOT
 
 ------------------------------------------------------------------------------------
 
-No_formal_arguments: -- Empty
+Feature_formal_arguments: Formal_arguments
 		{
-			last_formal_arguments_stack.force (Void)
+			$$ := $1
+			set_start_closure ($$)
 		}
 	;
 
@@ -2259,17 +2260,8 @@ Formal_argument_semicolon: Identifier ':' Type  ';'
 
 ------------------------------------------------------------------------------------
 
-No_local_declarations: -- Empty
-		{
-			last_local_variables_stack.force (Void)
-		}
-	;
-
 Local_declarations_opt: -- Empty
-		{
-			$$ := Void
-			last_local_variables_stack.force (Void)
-		}
+		{ $$ := Void }
 	| E_LOCAL
 		{ $$ := new_local_variables ($1, 0) }
 	| E_LOCAL
@@ -3310,7 +3302,7 @@ Expression_comma: Expression ','
 	;
 
 Address_mark: '$' Feature_name
-		{ $$ := ast_factory.new_feature_address ($1, $2) }
+		{ $$ := new_feature_address ($1, $2) }
 	| '$' E_CURRENT
 		{ $$ := ast_factory.new_current_address ($1, $2) }
 	| '$' E_RESULT
@@ -3675,90 +3667,71 @@ Inline_agent:
 -- There is a syntactical ambiguity with attribute inline agents.
 --	E_AGENT ':' Type Agent_actuals_opt
 --		{ $$ := ast_factory.new_attribute_inline_agent ($1, ast_factory.new_colon_type ($2, $3), $4) }
-	E_AGENT No_formal_arguments ':' Type
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
+	E_AGENT No_inline_agent_formal_arguments ':' Type
+	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_do_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $6, $8, $9, $10, $11, $12, $14) }
-	| E_AGENT Formal_arguments ':' Type
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
+		{ $$ := ast_factory.new_do_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12) }
+	| E_AGENT Inline_agent_formal_arguments ':' Type
+	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_do_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $6, $8, $9, $10, $11, $12, $14) }
-	| E_AGENT No_formal_arguments ':' Type
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+		{ $$ := ast_factory.new_do_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12) }
+	| E_AGENT No_inline_agent_formal_arguments ':' Type
+	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $6, $8, $9, $10, $11, $12, $14) }
-	| E_AGENT Formal_arguments ':' Type
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+		{ $$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12) }
+	| E_AGENT Inline_agent_formal_arguments ':' Type
+	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $6, $8, $9, $10, $11, $12, $14) }
-	| E_AGENT No_formal_arguments ':' Type
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	No_local_declarations E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
+		{ $$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12) }
+	| E_AGENT No_inline_agent_formal_arguments ':' Type
+	Precondition_opt E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_external_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $6, ast_factory.new_external_language ($9, $10), $11, $12, $13, $15) }
-	| E_AGENT Formal_arguments ':' Type
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	No_local_declarations E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
+		{ $$ := ast_factory.new_external_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $12) }
+	| E_AGENT Inline_agent_formal_arguments ':' Type
+	Precondition_opt E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_external_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $6, ast_factory.new_external_language ($9, $10), $11, $12, $13, $15) }
-	| E_AGENT No_formal_arguments
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
+		{ $$ := ast_factory.new_external_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $12) }
+	| E_AGENT No_inline_agent_formal_arguments
+	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_do_procedure_inline_agent ($1, Void, $4, $6, $7, $8, $9, $10, $12) }
-	| E_AGENT Formal_arguments
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
+		{ $$ := ast_factory.new_do_procedure_inline_agent ($1, Void, $3, $4, $5, $6, $7, $8, $10) }
+	| E_AGENT Inline_agent_formal_arguments
+	Precondition_opt Local_declarations_opt Do_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_do_procedure_inline_agent ($1, $2, $4, $6, $7, $8, $9, $10, $12) }
-	| E_AGENT No_formal_arguments
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+		{ $$ := ast_factory.new_do_procedure_inline_agent ($1, $2, $3, $4, $5, $6, $7, $8, $10) }
+	| E_AGENT No_inline_agent_formal_arguments
+	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $4, $6, $7, $8, $9, $10, $12) }
-	| E_AGENT Formal_arguments
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
+		{ $$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $3, $4, $5, $6, $7, $8, $10) }
+	| E_AGENT Inline_agent_formal_arguments
+	Precondition_opt Local_declarations_opt Once_compound Postcondition_opt Rescue_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $4, $6, $7, $8, $9, $10, $12) }
-	| E_AGENT No_formal_arguments
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	No_local_declarations E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
+		{ $$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $3, $4, $5, $6, $7, $8, $10) }
+	| E_AGENT No_inline_agent_formal_arguments
+	Precondition_opt E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_external_procedure_inline_agent ($1, Void, $4, ast_factory.new_external_language ($7, $8), $9, $10, $11, $13) }
-	| E_AGENT Formal_arguments
-	Hide_enclosing_locals Precondition_opt Show_enclosing_locals
-	No_local_declarations E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
+		{ $$ := ast_factory.new_external_procedure_inline_agent ($1, Void, $3, ast_factory.new_external_language ($4, $5), $6, $7, $8, $10) }
+	| E_AGENT Inline_agent_formal_arguments
+	Precondition_opt E_EXTERNAL Manifest_string External_name_opt Postcondition_opt E_END
 	End_of_inline_agent Agent_actuals_opt
-		{ $$ := ast_factory.new_external_procedure_inline_agent ($1, $2, $4, ast_factory.new_external_language ($7, $8), $9, $10, $11, $13) }
+		{ $$ := ast_factory.new_external_procedure_inline_agent ($1, $2, $3, ast_factory.new_external_language ($4, $5), $6, $7, $8, $10) }
+	;
+
+Inline_agent_formal_arguments: Formal_arguments
+		{
+			$$ := $1
+			set_start_closure ($$)
+		}
+	;
+
+No_inline_agent_formal_arguments: -- Empty
+		{ set_start_closure (Void) }
 	;
 
 End_of_inline_agent: -- Empty
 		{
 				-- Clean up after the inline agent has been parsed.
-			last_formal_arguments_stack.remove
-			last_local_variables_stack.remove
-		}
-	;
-
-Hide_enclosing_locals: -- Empty
-		{
-				-- Make sure that the code in the inline agent
-				-- does not see the local variables declared in
-				-- the enclosing feature or inline agent.
-			last_local_variables_stack.force (Void)
-		}
-	;
-
-Show_enclosing_locals: -- Empty
-		{
-				-- Remove the local variable visibility protection
-				-- put in place by `hide_enclosing_locals.
-			last_local_variables_stack.remove
+			set_end_closure
 		}
 	;
 

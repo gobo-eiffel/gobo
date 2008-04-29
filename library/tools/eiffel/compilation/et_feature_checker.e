@@ -4578,8 +4578,8 @@ feature {NONE} -- Expression validity
 			l_typed_pointer_class: ET_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
-			l_need_current_type: BOOLEAN
 			l_class_impl: ET_CLASS
+			l_object_test: ET_OBJECT_TEST
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -4595,117 +4595,33 @@ feature {NONE} -- Expression validity
 						error_handler.report_giaaa_error
 					end
 				else
-					l_identifier ?= l_name
-					if l_identifier /= Void then
-						l_arguments := current_closure_impl.arguments
-						if l_arguments /= Void then
-								-- Try to see if it is of the form '$argument'.
-							l_seed := l_arguments.index_of (l_identifier)
-							if l_seed /= 0 then
-								l_identifier.set_seed (l_seed)
-								l_identifier.set_argument (True)
-								l_argument := l_arguments.formal_argument (l_seed)
-								l_argument.set_used (True)
-								if current_inline_agent = Void and in_invariant then
-										-- VEEN-3: the formal argument appears in an invariant.
-										-- Internal error: the invariant has no formal argument.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								else
-									report_formal_argument (l_identifier, l_argument)
-									l_typed_pointer_class := current_system.typed_pointer_class
-									if l_typed_pointer_class.is_preparsed then
-											-- Class TYPED_POINTER has been found in the universe.
-											-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
-										l_type := l_argument.type
-										if not l_type.is_base_type then
-												-- The type of the argument contains formal generic parameters
-												-- or anchored types whose resolved value may vary in various
-												-- descendant classes/types.
-											report_current_type_needed
-											l_need_current_type := True
-										end
-										if not l_need_current_type or current_class = current_type then
-											create l_actuals.make_with_capacity (1)
-											l_actuals.put_first (l_type)
-											create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-											report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-											a_context.force_last (l_typed_pointer_type)
-												-- No need to check validity in the context of `current_type' again.
-											already_checked := True
-										end
-									else
-											-- Use the ETL2 implementation: the type of '$argument' is POINTER.
-										a_context.force_last (current_system.pointer_class)
-										report_pointer_expression (an_expression)
-											-- No need to check validity in the context of `current_type' again.
-										already_checked := True
-									end
-								end
+					if l_name.is_argument then
+							-- Internal error: the seed of the argument should have
+							-- been set by the parser.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_name.is_local then
+							-- Internal error: the seed of the local should have
+							-- been set by the parser.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif l_name.is_object_test_local then
+						l_identifier ?= l_name
+						check is_object_test_local: l_identifier /= Void end
+						l_object_test := current_object_test_scope.object_test (l_identifier)
+						if l_object_test = Void then
+								-- Error: `l_identifier' is an object-test local that is used outside of its scope.
+							set_fatal_error
+							if current_feature_impl.is_feature then
+								error_handler.report_veen8a_error (current_class, l_identifier, current_feature_impl.as_feature)
+							else
+								error_handler.report_veen8b_error (current_class, l_identifier)
 							end
+						else
+							l_seed := l_object_test.name.seed
+							l_identifier.set_seed (l_seed)
 						end
-						if l_seed = 0 then
-								-- Try to see if it is of the form '$local'.
-							l_locals := current_closure_impl.locals
-							if l_locals /= Void then
-								l_seed := l_locals.index_of (l_identifier)
-								if l_seed /= 0 then
-									l_identifier.set_seed (l_seed)
-									l_identifier.set_local (True)
-									l_local := l_locals.local_variable (l_seed)
-									l_local.set_used (True)
-									if in_precondition or in_postcondition then
-											-- The local entity appears in a pre- or postcondition.
-										set_fatal_error
-										if current_inline_agent /= Void then
-											error_handler.report_veen2e_error (current_class, l_identifier, current_inline_agent)
-										elseif current_feature_impl.is_feature then
-											error_handler.report_veen2c_error (current_class, l_identifier, current_feature_impl.as_feature)
-										else
-												-- Internal error: invariants don't have pre- or postconditions.
-											error_handler.report_giaaa_error
-										end
-									elseif current_inline_agent = Void and in_invariant then
-											-- VEEN-2: the local entity appears in an invariant.
-											-- Internal error: the invariant has no local entity.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									else
-										report_local_variable (l_identifier, l_local)
-										l_typed_pointer_class := current_system.typed_pointer_class
-										if l_typed_pointer_class.is_preparsed then
-												-- Class TYPED_POINTER has been found in the universe.
-												-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
-											l_type := l_local.type
-											if not l_type.is_base_type then
-													-- The type of the local variable contains formal generic parameters
-													-- or anchored types whose resolved value may vary in various
-													-- descendant classes/types.
-												report_current_type_needed
-												l_need_current_type := True
-											end
-											if not l_need_current_type or current_class = current_type then
-												create l_actuals.make_with_capacity (1)
-												l_actuals.put_first (l_type)
-												create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-												report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-												a_context.force_last (l_typed_pointer_type)
-													-- No need to check validity in the context of `current_type' again.
-												already_checked := True
-											end
-										else
-												-- Use the ETL2 implementation: the type of '$local' is POINTER.
-											a_context.force_last (current_system.pointer_class)
-											report_pointer_expression (an_expression)
-												-- No need to check validity in the context of `current_type' again.
-											already_checked := True
-										end
-									end
-								end
-							end
-						end
-					end
-					if l_seed = 0 then
+					else
 							-- Try to see if it is of the form '$feature_name'.
 -- TODO: I don't think we need to check the interface of `current_class' again.
 -- I guess that's already done in `check_feature_validity'.
@@ -4858,7 +4774,8 @@ feature {NONE} -- Expression validity
 					end
 				elseif l_name.is_local then
 						-- This is of the form '$local'.
-					if in_precondition or in_postcondition then
+					if current_inline_agent = Void and (in_precondition or in_postcondition) then
+-- TODO: check the case where we are in the pre- or postcondition of an inline agent.
 							-- The local entity appears in a pre- or postcondition.
 						set_fatal_error
 						if current_class_impl = current_class then
@@ -4925,6 +4842,55 @@ feature {NONE} -- Expression validity
 								a_context.force_last (current_system.pointer_class)
 								report_pointer_expression (an_expression)
 							end
+						end
+					end
+				elseif l_name.is_object_test_local then
+					l_identifier ?= l_name
+					check is_object_test_local: l_identifier /= Void end
+					l_object_test := current_object_test_scope.object_test (l_identifier)
+					if l_object_test = Void then
+							-- Error: `l_identifier' is an object-test local that is used outside of its scope.
+						set_fatal_error
+						if current_feature_impl.is_feature then
+							error_handler.report_veen8a_error (current_class, l_identifier, current_feature_impl.as_feature)
+						else
+							error_handler.report_veen8b_error (current_class, l_identifier)
+						end
+					elseif l_object_test.name.seed /= l_seed then
+							-- Internal error: the local should have the same
+							-- seed as its associated object-test.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						report_object_test_local (l_identifier, l_object_test)
+						l_typed_pointer_class := current_system.typed_pointer_class
+						if l_typed_pointer_class.is_preparsed then
+								-- Class TYPED_POINTER has been found in the universe.
+								-- Use ISE's implementation: the type of '$object_test_local' is
+								-- 'TYPED_POINTER [<type-of-object_test_local>]'.
+								-- Contrary to the types appearing in the signatures, types of
+								-- object-test locals in the AST are those found in the implementation
+								-- class of `current_feature', and hence need to be resolved in
+								-- `current_type'.
+							l_type := l_object_test.type
+							l_resolved_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
+							if not has_fatal_error then
+								create l_actuals.make_with_capacity (1)
+								l_actuals.put_first (l_resolved_type)
+								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+								a_context.force_last (l_typed_pointer_type)
+								if not l_type.is_base_type then
+										-- The type of the object-test local contains formal generic parameters
+										-- or anchored types whose resolved value may vary in various
+										-- descendant classes/types.
+									report_current_type_needed
+								end
+							end
+						else
+								-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
+							a_context.force_last (current_system.pointer_class)
+							report_pointer_expression (an_expression)
 						end
 					end
 				else

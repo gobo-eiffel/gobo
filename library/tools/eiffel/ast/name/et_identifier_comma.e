@@ -5,7 +5,7 @@ indexing
 		"Eiffel identifiers followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,7 @@ inherit
 
 	ET_LOCAL_NAME
 	ET_ARGUMENT_NAME
+	ET_OBJECT_TEST_LOCAL_NAME
 	ET_LABEL
 
 create
