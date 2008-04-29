@@ -4809,7 +4809,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		local
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+				print_space
+			end
 			process_token (tokens.tuple_keyword)
 			comment_finder.find_comments (a_type.tuple_keyword, comment_list)
 			l_actual_parameters := a_type.actual_parameters

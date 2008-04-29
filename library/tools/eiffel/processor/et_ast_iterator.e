@@ -2812,7 +2812,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+			end
 			a_type.tuple_keyword.process (Current)
 			a_parameters := a_type.actual_parameters
 			if a_parameters /= Void then
