@@ -5,7 +5,7 @@ indexing
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -369,6 +369,11 @@ feature -- Status report
 	is_feature: BOOLEAN is True
 			-- Is `Current' a feature?
 
+	is_used: BOOLEAN
+			-- Is current feature used in the system?
+			-- For example, is it reachable from the root creation
+			-- procedure through the transitive closure.
+
 feature -- Measurement
 
 	arguments_count: INTEGER is
@@ -604,6 +609,16 @@ feature -- Setting
 		do
 		ensure
 			postconditions_reset: postconditions = Void
+		end
+
+feature -- Status setting
+
+	set_used (b: BOOLEAN) is
+			-- Set `is_used' to `b'.
+		do
+			is_used := b
+		ensure
+			used_set: is_used = b
 		end
 
 feature -- Duplication
