@@ -1095,7 +1095,7 @@ feature -- Ancestors
 		require
 			a_class_not_void: a_class /= Void
 			a_descendants_not_void: a_descendants /= Void
-			no_void_descedants: not a_descendants.has (Void)
+			no_void_descendants: not a_descendants.has (Void)
 		do
 			if a_class /= Current then
 				if ancestors_built and then has_ancestor (a_class) then
@@ -1103,7 +1103,7 @@ feature -- Ancestors
 				end
 			end
 		ensure
-			no_void_descedants: not a_descendants.has (Void)
+			no_void_descendants: not a_descendants.has (Void)
 		end
 
 	parents: ET_PARENT_LIST

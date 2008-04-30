@@ -656,7 +656,7 @@ feature -- Iteration
 	classes_do_local (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
 			-- Apply `an_action' on all classes declared locally in current universe.
 			--
-			-- The iteration will be interrupted if surrounding Eiffel system
+			-- The iteration will be interrupted if the surrounding Eiffel system
 			-- has been marked as stoppable and it received a stop request.
 			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
 			-- ET_SYSTEM for more details.
@@ -691,7 +691,7 @@ feature -- Iteration
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- that satisfy `a_test'.
 			--
-			-- The iteration will be interrupted if surrounding Eiffel system
+			-- The iteration will be interrupted if the surrounding Eiffel system
 			-- has been marked as stoppable and it received a stop request.
 			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
 			-- ET_SYSTEM for more details.
@@ -728,7 +728,7 @@ feature -- Iteration
 			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively.
 			--
-			-- The iteration will be interrupted if surrounding Eiffel system
+			-- The iteration will be interrupted if the surrounding Eiffel system
 			-- has been marked as stoppable and it received a stop request.
 			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
 			-- ET_SYSTEM for more details.
@@ -743,7 +743,7 @@ feature -- Iteration
 			-- locally in current universe as well as on the classes that are
 			-- declared in the universes it depends on recursively.
 			--
-			-- The iteration will be interrupted if surrounding Eiffel system
+			-- The iteration will be interrupted if the surrounding Eiffel system
 			-- has been marked as stoppable and it received a stop request.
 			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
 			-- ET_SYSTEM for more details.
@@ -758,7 +758,7 @@ feature -- Iteration
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on.
 			--
-			-- The iteration will be interrupted if surrounding Eiffel system
+			-- The iteration will be interrupted if the surrounding Eiffel system
 			-- has been marked as stoppable and it received a stop request.
 			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
 			-- ET_SYSTEM for more details.
