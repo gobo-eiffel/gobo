@@ -97,10 +97,9 @@ feature -- Status setting
 
 feature -- Optimization
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			mark_unreplaced
 			if a_context_item_type = Void then
 				if is_current_replacement then
 					set_last_error_from_string ("The context item is undefined at this point", Xpath_errors_uri, "XTDE1360", Type_error)
@@ -110,9 +109,10 @@ feature -- Optimization
 			else
 				item_type := a_context_item_type
 			end
+			a_replacement.put (Current)
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 
@@ -120,7 +120,7 @@ feature -- Optimization
 			--  because it's done one XPath expression,
 			--  at a time. So we repeat the check here.
 
-			check_static_type (a_context, a_context_item_type)
+			check_static_type (a_replacement, a_context, a_context_item_type)
 		end
 
 feature -- Evaluation

@@ -85,12 +85,13 @@ feature -- Access
 feature -- Optimization
 
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Type-check the pattern;
+			-- Type-check the pattern
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			id_expression.check_static_type (a_context, a_context_item_type)
-			if id_expression.was_expression_replaced then
-				id_expression := id_expression.replacement_expression
-			end
+			create l_replacement.make (Void)
+			id_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			id_expression := l_replacement.item
 			if id_expression.is_error then
 				set_error_value (id_expression.error_value)
 			end			
@@ -98,11 +99,12 @@ feature -- Optimization
 
 	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote sub-expressions of `Current'.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			id_expression.promote (a_offer)
-			if id_expression.was_expression_replaced then
-				id_expression := id_expression.replacement_expression
-			end
+			create l_replacement.make (Void)
+			id_expression.promote (l_replacement, a_offer)
+			id_expression := l_replacement.item
 		end
 
 feature -- Matching

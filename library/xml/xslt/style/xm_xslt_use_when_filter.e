@@ -279,6 +279,7 @@ feature {NONE} -- Implementation
 			l_expression: XM_XPATH_EXPRESSION
 			l_slot_manager: XM_XPATH_SLOT_MANAGER
 			l_context: XM_XPATH_CONTEXT
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			last_use_when_value := False
 			from
@@ -302,13 +303,12 @@ feature {NONE} -- Implementation
 				on_error (parsed_error_value.error_message)
 			else
 				l_expression := parsed_expression
-				l_expression.check_static_type (l_static_context, any_type)
+				create l_replacement.make (Void)
+				l_expression.check_static_type (l_replacement, l_static_context, any_type)
+				l_expression := l_replacement.item
 				if l_expression.is_error then
 					on_error (l_expression.error_value.error_message)
 				else
-					if l_expression.was_expression_replaced then
-						l_expression := l_expression.replacement_expression
-					end
 					create l_slot_manager.make
 					l_expression.allocate_slots (1, l_slot_manager)
 					l_context := l_static_context.new_compile_time_context

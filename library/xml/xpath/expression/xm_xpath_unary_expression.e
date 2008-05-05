@@ -91,38 +91,36 @@ feature -- Status report
 	
 feature -- Optimization	
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.simplify
+			create l_replacement.make (Void)
+			base_expression.simplify (l_replacement)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
+				set_replacement (a_replacement, base_expression)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				if base_expression.replacement_expression.is_error then
-					set_last_error (base_expression.replacement_expression.error_value)
-				else
-					set_base_expression (base_expression.replacement_expression)
-				end
-			end
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement (a_replacement, base_expression)
 			else
 
 				-- If operand is a value, pre-evaluate the expression
 
-				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
+				if base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
 					create_iterator (a_context.new_compile_time_context)
 					expression_factory.create_sequence_extent (last_iterator)
 					
@@ -133,28 +131,26 @@ feature -- Optimization
 						if base_expression.is_error then
 							base_expression.clear_error
 						end
+						a_replacement.put (Current)
 					else
-						set_replacement (expression_factory.last_created_closure)
+						set_replacement (a_replacement, expression_factory.last_created_closure)
 					end
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.optimize (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				if base_expression.replacement_expression.is_error then
-					set_last_error (base_expression.replacement_expression.error_value)
-				else
-					set_base_expression (base_expression.replacement_expression)
-				end
-			end
+			create l_replacement.make (Void)
+			base_expression.optimize (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement (a_replacement, base_expression)
 			else
 				
 				-- If  operand value is, pre-evaluate the expression
@@ -169,30 +165,33 @@ feature -- Optimization
 						error_value := Void
 						if base_expression.is_error then
 							base_expression.clear_error
-						end						
+						end
+						a_replacement.put (Current)
 					else
-						set_replacement (expression_factory.last_created_closure)
+						set_replacement (a_replacement, expression_factory.last_created_closure)
 					end
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end
 	
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				base_expression.promote (an_offer)
-				if base_expression.was_expression_replaced then
-					set_base_expression (base_expression.replacement_expression)
-					reset_static_properties
-				end
+				a_replacement.put (Current)
+				create l_replacement.make (Void)
+				base_expression.promote (l_replacement, a_offer)
+				set_base_expression (l_replacement.item)
+				reset_static_properties
 			end
 		end
 
@@ -212,11 +211,9 @@ feature -- Element change
 			operand_not_void: an_operand /= Void
 		do
 			base_expression := an_operand
-			base_expression.mark_unreplaced
 			adopt_child_expression (base_expression)
 		ensure
 			base_expression_set: base_expression = an_operand
-			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

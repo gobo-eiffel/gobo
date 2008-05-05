@@ -167,7 +167,6 @@ feature -- Optimization
 				elseif not must_eliminate_duplicates then
 					if a_child_expression.is_document_sorter then
 						accepted_expression := a_child_expression.as_document_sorter.base_expression
-						accepted_expression.mark_unreplaced
 					else
 						accepted_expression := Void
 					end

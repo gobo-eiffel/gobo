@@ -97,8 +97,7 @@ feature -- Status report
 
 feature -- Optimization	
 
-
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_role: XM_XPATH_ROLE_LOCATOR
@@ -107,25 +106,25 @@ feature -- Optimization
 			l_expression: XM_XPATH_EXPRESSION
 			l_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
 			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
 			else
+				set_base_expression (l_replacement.item)
 				create l_sequence_type.make (type_factory.any_atomic_type, cardinality)
 				create l_role.make (Type_operation_role, "cast as", 1, Xpath_errors_uri, "XPTY0004")
 				create l_type_checker
 				l_type_checker.static_type_check (a_context, base_expression, l_sequence_type, False, l_role)
 				if l_type_checker.is_static_type_check_error then
 					set_last_error (l_type_checker.static_type_check_error)
+					a_replacement.put (Current)
 				else
 					l_expression := l_type_checker.checked_expression
 					if is_sub_type (l_expression.item_type, target_type) then
-						set_replacement (l_expression)
+						set_replacement (a_replacement, l_expression)
 
 						-- It's not entirely clear that the spec permits this. Perhaps we should change the type label?
 						-- On the other hand, it's generally true that any expression defined to return an X
@@ -133,29 +132,32 @@ feature -- Optimization
 
 					elseif is_sub_type (target_type, type_factory.qname_type) then --or else (type_factory.notation_type /= Void and then is_sub_type (target_type, type_factory.notation_type)) then
 						create l_qname_cast.make (l_expression)
-						l_qname_cast.check_static_type (a_context, a_context_item_type)
-						if l_qname_cast.is_error then
-							set_last_error (l_qname_cast.error_value)
+						l_replacement.put (Void)
+						l_qname_cast.check_static_type (l_replacement, a_context, a_context_item_type)
+						if l_replacement.item.is_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_replacement.item.error_value))
 						else
-							check replaced: l_qname_cast.was_expression_replaced end
-							set_replacement (l_qname_cast.replacement_expression)
+							set_replacement (a_replacement, l_replacement.item)
 						end
 					else
 						if l_expression.is_atomic_value then
 							create l_result.make (Void)
 							evaluate_item (l_result, a_context.new_compile_time_context)
 							if l_result.item = Void then
-								set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+								set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 							elseif l_result.item.is_error then
-								set_last_error (l_result.item.error_value)
+								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_result.item.error_value))
 							elseif l_result.item.is_atomic_value then
-								set_replacement (l_result.item.as_atomic_value)
+								set_replacement (a_replacement, l_result.item.as_atomic_value)
 							end
 						else
 							set_base_expression (l_expression)
 						end
 					end
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 

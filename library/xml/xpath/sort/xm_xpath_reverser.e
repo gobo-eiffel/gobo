@@ -26,15 +26,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_EXPRESSION) is
+	make (a_expression: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
-			base_expression_not_replaced: an_expression /= Void	and then not an_expression.was_expression_replaced
+			a_expression_not_void: a_expression /= Void
+			a_expression_initialized: a_expression.are_static_properties_computed
 		do
-			make_unary (an_expression)
+			make_unary (a_expression)
 			compute_static_properties
 		ensure
-			base_expression_set: base_expression = an_expression
+			base_expression_set: base_expression = a_expression
 		end
 
 feature -- Access
@@ -53,19 +54,22 @@ feature -- Access
 
 feature -- Optimization
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				base_expression.promote (an_offer)
-				if base_expression.was_expression_replaced then
-					set_base_expression (base_expression.replacement_expression )
+				a_replacement.put (Current)
+				create l_replacement.make (Void)
+				base_expression.promote (l_replacement, a_offer)
+				if base_expression /= l_replacement.item then
+					set_base_expression (l_replacement.item)
 					reset_static_properties
 				end
 			end

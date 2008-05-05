@@ -30,10 +30,10 @@ feature -- Evaluation
 			a_result.put (create {XM_XPATH_INVALID_ITEM}.make_from_string (l_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error))
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--	do_nothing
+			a_replacement.put (Current)
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is

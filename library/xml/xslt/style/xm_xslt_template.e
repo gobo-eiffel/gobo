@@ -246,90 +246,92 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_rule_manager: XM_XSLT_RULE_MANAGER
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_mode: XM_XSLT_MODE
-			a_name_code: INTEGER
-			a_rule_value: XM_XSLT_RULE_VALUE
-			a_content: XM_XPATH_EXPRESSION
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
-			a_context_item_type: XM_XPATH_ITEM_TYPE
+			l_rule_manager: XM_XSLT_RULE_MANAGER
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_mode: XM_XSLT_MODE
+			l_name_code: INTEGER
+			l_rule_value: XM_XSLT_RULE_VALUE
+			l_content: XM_XPATH_EXPRESSION
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			l_context_item_type: XM_XPATH_ITEM_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 			if last_generated_expression = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
 			else
-				a_content := last_generated_expression
+				l_content := last_generated_expression
 			end
-			if not a_content.is_error then a_content.simplify end
-			if a_content.is_error then
-				report_compile_error (a_content.error_value)
+			if not l_content.is_error then
+				create l_replacement.make (Void)
+				l_content.simplify (l_replacement)
+				l_content := l_replacement.item
+			end
+			if l_content.is_error then
+				report_compile_error (l_content.error_value)
 			else
-				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
 				if required_type /= Void then
-					create a_role.make (Template_result_role, role_identifier, 1, Xpath_errors_uri, "XTTE0505")
-					create a_type_checker
-					a_type_checker.static_type_check (static_context, a_content, required_type, False, a_role)
-					if a_type_checker.is_static_type_check_error	then
-						report_compile_error (a_type_checker.static_type_check_error)
+					create l_role.make (Template_result_role, role_identifier, 1, Xpath_errors_uri, "XTTE0505")
+					create l_type_checker
+					l_type_checker.static_type_check (static_context, l_content, required_type, False, l_role)
+					if l_type_checker.is_static_type_check_error	then
+						report_compile_error (l_type_checker.static_type_check_error)
 					else
-						a_content := a_type_checker.checked_expression
+						l_content := l_type_checker.checked_expression
 					end	
 				end
 			end
 			if not any_compile_errors then
-				a_context_item_type := any_item
+				l_context_item_type := any_item
 				if template_fingerprint = -1 then
 
 					-- Template can't be called by name, so the context item will match the match pattern
-					a_context_item_type := match.node_test
+					l_context_item_type := match.node_test
 				end
-				a_content.check_static_type (static_context, a_context_item_type)
-				if a_content.is_error then
-					report_compile_error (a_content.error_value)
+				l_replacement.put (Void)
+				l_content.check_static_type (l_replacement, static_context, l_context_item_type)
+				l_content := l_replacement.item
+				if l_content.is_error then
+					report_compile_error (l_content.error_value)
 				else
-					if a_content.was_expression_replaced then
-						a_content := a_content.replacement_expression
+					l_replacement.put (Void)
+					l_content.optimize (l_replacement, static_context, l_context_item_type)
+					l_content := l_replacement.item
+					if configuration.is_tracing and not l_content.is_trace_wrapper then
+						create l_trace_wrapper.make (l_content, an_executable, Current)
+						l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+						-- TODO: sort out - l_trace_wrapper.set_parent (compiled_template)
+						l_content := l_trace_wrapper
 					end
-					a_content.optimize (static_context, a_context_item_type)
-					if a_content.was_expression_replaced then
-						a_content := a_content.replacement_expression
-					end
-					if configuration.is_tracing and not a_content.is_trace_wrapper then
-						create a_trace_wrapper.make (a_content, an_executable, Current)
-						a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
-						-- TODO: sort out - a_trace_wrapper.set_parent (compiled_template)
-						a_content := a_trace_wrapper
-					end
-					compiled_template.initialize (an_executable, a_content, template_fingerprint, precedence, minimum_import_precedence, system_id, line_number, slot_manager)
-					if a_content.is_error then
-						report_compile_error (a_content.error_value)
+					compiled_template.initialize (an_executable, l_content, template_fingerprint, precedence, minimum_import_precedence, system_id, line_number, slot_manager)
+					if l_content.is_error then
+						report_compile_error (l_content.error_value)
 					else
-						style_element_allocate_slots (a_content, slot_manager)
+						style_element_allocate_slots (l_content, slot_manager)
 						if match /= Void then
-							a_rule_manager := principal_stylesheet.rule_manager
+							l_rule_manager := principal_stylesheet.rule_manager
 							from
-								a_cursor := mode_name_codes.new_cursor
-								a_cursor.start
+								l_cursor := mode_name_codes.new_cursor
+								l_cursor.start
 							variant
-								mode_name_codes.count + 1 - a_cursor.index
+								mode_name_codes.count + 1 - l_cursor.index
 							until
-								a_cursor.after
+								l_cursor.after
 							loop
-								a_name_code := a_cursor.item
-								if not a_rule_manager.is_mode_registered (a_name_code) then
-									a_rule_manager.register_mode (a_name_code)
+								l_name_code := l_cursor.item
+								if not l_rule_manager.is_mode_registered (l_name_code) then
+									l_rule_manager.register_mode (l_name_code)
 								end
-								a_mode := a_rule_manager.mode (a_name_code)
-								create a_rule_value.make (compiled_template)
+								l_mode := l_rule_manager.mode (l_name_code)
+								create l_rule_value.make (compiled_template)
 								if is_priority_specified then
-									a_rule_manager.set_handler (match, a_rule_value, a_mode, precedence, priority)
+									l_rule_manager.set_handler (match, l_rule_value, l_mode, precedence, priority)
 								else
-									a_rule_manager.set_handler_with_default_priority (match, a_rule_value, a_mode, precedence)
+									l_rule_manager.set_handler_with_default_priority (match, l_rule_value, l_mode, precedence)
 								end
-								a_cursor.forth
+								l_cursor.forth
 							end
 						end
 						if is_explaining or else principal_stylesheet.is_all_explaining then
@@ -405,7 +407,7 @@ feature {NONE} -- Implementation
 			Result := a_stylesheet.minimum_import_precedence
 		end
 
-	prepare_mode_attribute (a_mode_attribute: STRING; is_match_attribute_void: BOOLEAN) is
+	prepare_mode_attribute (l_mode_attribute: STRING; is_match_attribute_void: BOOLEAN) is
 			-- Prepare mode attribute
 		require
 			attributes_not_prepared: not attributes_prepared
@@ -413,11 +415,11 @@ feature {NONE} -- Implementation
 		local
 			a_splitter: ST_SPLITTER
 			mode_tokens: DS_LIST [STRING]
-			a_cursor: DS_LIST_CURSOR [STRING]
-			a_mode: STRING
+			l_cursor: DS_LIST_CURSOR [STRING]
+			l_mode: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
-			if a_mode_attribute = Void then
+			if l_mode_attribute = Void then
 				create mode_name_codes.make (1)
 				mode_name_codes.put_last (Default_mode)
 			else
@@ -426,43 +428,43 @@ feature {NONE} -- Implementation
 					report_compile_error (an_error)
 				else
 					create a_splitter.make
-					mode_tokens := a_splitter.split (a_mode_attribute)
+					mode_tokens := a_splitter.split (l_mode_attribute)
 					if mode_tokens.count = 0 then
 						create an_error.make_from_string ("The mode attribute must not be empty", Xpath_errors_uri, "XTSE0550", Static_error)
 						report_compile_error (an_error)
 					else
 						create mode_name_codes.make (mode_tokens.count)
 						from
-							a_cursor := mode_tokens.new_cursor
-							a_cursor.start
+							l_cursor := mode_tokens.new_cursor
+							l_cursor.start
 						variant
-							mode_tokens.count + 1 - a_cursor.index
+							mode_tokens.count + 1 - l_cursor.index
 						until
-							a_cursor.after
+							l_cursor.after
 						loop
-							a_mode := a_cursor.item
-							if STRING_.same_string (a_mode, "#default") then
+							l_mode := l_cursor.item
+							if STRING_.same_string (l_mode, "#default") then
 								mode_name_codes.put_last (Default_mode)
-							elseif STRING_.same_string (a_mode, "#all") then
+							elseif STRING_.same_string (l_mode, "#all") then
 								if mode_tokens.count /= 1 then
 									create an_error.make_from_string ("mode='#all' cannot be combined with other modes", Xpath_errors_uri, "XTSE0550", Static_error)
 									report_compile_error (an_error)
 								else
 									mode_name_codes.put_last (All_modes)
 								end
-							elseif not is_qname (a_mode) then
+							elseif not is_qname (l_mode) then
 								create an_error.make_from_string ("Mode names must be QNames or the token '#default' or the token '#all'", Xpath_errors_uri, "XTSE0550", Static_error)
 								report_compile_error (an_error)
 							else
-								generate_name_code (a_mode)
+								generate_name_code (l_mode)
 								if last_generated_name_code = -1 then
 									report_compile_error (name_code_error_value)
-									a_cursor.go_after
+									l_cursor.go_after
 								else
 									mode_name_codes.put_last (last_generated_name_code)
 								end
 							end
-							a_cursor.forth
+							l_cursor.forth
 						end
 						if not any_compile_errors then
 							check_all_modes_distinct
@@ -526,26 +528,26 @@ feature {NONE} -- Implementation
 			-- Check no duplicate mode names.
 		local
 			a_set: DS_HASH_SET [INTEGER]
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_name_code: INTEGER
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_name_code: INTEGER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create a_set.make (mode_name_codes.count)
 			from
-				a_cursor := mode_name_codes.new_cursor; a_cursor.start
+				l_cursor := mode_name_codes.new_cursor; l_cursor.start
 			variant
-				mode_name_codes.count + 1 - a_cursor.index
+				mode_name_codes.count + 1 - l_cursor.index
 			until
-				any_compile_errors or else a_cursor.after
+				any_compile_errors or else l_cursor.after
 			loop
-				a_name_code := a_cursor.item
-				if a_set.has (a_name_code) then
+				l_name_code := l_cursor.item
+				if a_set.has (l_name_code) then
 					create an_error.make_from_string ("Mode names must all be distinct", Xpath_errors_uri, "XTSE0550", Static_error)
 					report_compile_error (an_error)
 				else
-					a_set.put (a_name_code)
+					a_set.put (l_name_code)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 

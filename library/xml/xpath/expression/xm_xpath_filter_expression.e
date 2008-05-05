@@ -50,24 +50,6 @@ feature {NONE} -- Initialization
 		do
 			base_expression := a_start
 			filter := a_filter
-
-			-- the reason we simplify the filter 
-			-- is to ensure that functions like name() are expanded to use the
-			-- context node as an implicit argument, before checking its dependencies.
-
-			filter.simplify
-			if filter.is_error then
-				set_replacement (filter)
-				filter_dependencies := filter
-			else
-				if filter.was_expression_replaced then
-					set_filter (filter.replacement_expression)
-				end
-				if not filter.are_dependencies_computed and then filter.is_computed_expression then
-					filter.as_computed_expression.compute_dependencies
-				end
-				filter_dependencies := filter
-			end
 			compute_static_properties
 			adopt_child_expression (base_expression)
 			adopt_child_expression (filter)
@@ -177,16 +159,16 @@ feature -- Status setting
 			-- (not all dependencies in the filter expression matter, because the context node,
 			-- position, and size are not dependent on the outer context.)
 
-			if filter_dependencies.depends_upon_current_item then
+			if filter.depends_upon_current_item then
 				set_depends_upon_current_item
 			end
-			if filter_dependencies.depends_upon_current_group then
+			if filter.depends_upon_current_group then
 				set_depends_upon_current_group
 			end
-			if filter_dependencies.depends_upon_regexp_group then
+			if filter.depends_upon_regexp_group then
 				set_depends_upon_regexp_group
 			end
-			if filter_dependencies.depends_upon_user_functions then
+			if filter.depends_upon_user_functions then
 				set_depends_upon_user_functions
 			end
 			are_dependencies_computed := True
@@ -194,31 +176,30 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.simplify
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+			create l_replacement.make (Void)
+			base_expression.simplify (l_replacement)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
 			else
-				if base_expression.was_expression_replaced then
-					set_base_expression (base_expression.replacement_expression)
-				end
-				filter.simplify
-				if filter.is_error then
-					set_last_error (filter.error_value)
+				set_base_expression (l_replacement.item)
+				l_replacement.put (Void)
+				filter.simplify (l_replacement)
+				if l_replacement.item.is_error then
+					set_replacement (a_replacement, l_replacement.item)
 				else
-					if filter.was_expression_replaced then
-						set_filter (filter.replacement_expression)
-					end
+					set_filter (l_replacement.item)
 
 					-- Ignore the filter if `base_expression' is an empty sequence.
 					
 					if base_expression.is_empty_sequence then
-						set_replacement (base_expression.as_empty_sequence)
+						set_replacement (a_replacement, base_expression.as_empty_sequence)
 					else
 						
 						-- Check whether the filter is a constant true() or false().
@@ -227,13 +208,13 @@ feature -- Optimization
 							and then not filter.is_numeric_value then
 							-- TODO: need a compile-time context
 							filter.calculate_effective_boolean_value (Void)
-							a_boolean_value := filter.last_boolean_value
-							if a_boolean_value.is_error then
-								set_last_error (a_boolean_value.error_value)
-							elseif  a_boolean_value.value then
-								set_replacement (base_expression)
+							l_boolean_value := filter.last_boolean_value
+							if l_boolean_value.is_error then
+								set_replacement (a_replacement, l_boolean_value)
+							elseif l_boolean_value.value then
+								set_replacement (a_replacement, base_expression)
 							else
-								set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+								set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 							end
 						else
 							
@@ -241,168 +222,149 @@ feature -- Optimization
 							-- (note, position()=last() is handled elsewhere)
 							
 							if filter.is_last_function then
-								create an_is_last_expression.make (True)
-								set_filter (an_is_last_expression)
+								create l_is_last_expression.make (True)
+								set_filter (l_is_last_expression)
+							else
+								a_replacement.put (Current)
 							end
 						end
 					end
 				end
 			end
 		end
-
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_expression: XM_XPATH_EXPRESSION
 			l_position_range: XM_XPATH_POSITION_RANGE
 			l_min, l_max: INTEGER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement(a_replacement, base_expression)
 			else
-				filter.check_static_type (a_context, base_expression.item_type)
-				if filter.was_expression_replaced then
-					set_filter (filter.replacement_expression)
-				end
+				l_replacement.put (Void)
+				filter.check_static_type (l_replacement, a_context, base_expression.item_type)
+				set_filter (l_replacement.item)
 				if filter.is_error then
-					set_last_error (filter.error_value)
+					set_replacement (a_replacement, filter)
 				else
-											
 					--	The filter expression usually need not be sorted.
-					
-					filter.set_unsorted_if_homogeneous (False)
-					if filter.was_expression_replaced then
-						set_filter (filter.replacement_expression)
-					end
-
+					l_replacement.put (Void)
+					filter.set_unsorted_if_homogeneous (l_replacement, False)
+					set_filter (l_replacement.item)
 					-- Treat head expressions (E[1]) as a special case
-					
 					if is_constant_one (filter) then
-						create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
-						set_replacement (l_expression)
+						set_replacement (a_replacement, create {XM_XPATH_FIRST_ITEM_EXPRESSION}.make (base_expression))
 					else
 						-- TODO: can check for other literals
-
-					-- Treat other numeric predicates and tail expressions as a special case
-
+						-- Treat other numeric predicates and tail expressions as a special case
 						if filter.is_position_range then
 							l_position_range := filter.as_position_range
 							l_min := l_position_range.minimum_position
 							l_max := l_position_range.maximum_position
 							if l_min = 1 and then l_max = 1 then
-								create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
-								set_replacement (l_expression)
+								set_replacement (a_replacement, create {XM_XPATH_FIRST_ITEM_EXPRESSION}.make (base_expression))
 							elseif l_max = Platform.Maximum_integer then
-								create {XM_XPATH_TAIL_EXPRESSION} l_expression.make (base_expression, l_min)
-								set_replacement (l_expression)
+								set_replacement (a_replacement, create {XM_XPATH_TAIL_EXPRESSION}.make (base_expression, l_min))
 							end
 						end
 					end
-					if not was_expression_replaced then
+					if a_replacement.item = Void then
 						filter_is_positional := is_positional_filter (filter)
 						is_singleton_boolean_filter := filter.cardinality_exactly_one and filter.item_type.is_same_type (type_factory.boolean_type)
 						reset_static_properties
+						a_replacement.put (Current)
 					end
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 			l_position_range: XM_XPATH_POSITION_RANGE
 			l_min, l_max: INTEGER
 		do
-			mark_unreplaced
-			base_expression.optimize (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.optimize (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement(a_replacement, base_expression)
 			else
-				filter.optimize (a_context, base_expression.item_type)
-				if filter.was_expression_replaced then
-					set_filter (filter.replacement_expression)
-				end
+				l_replacement.put (Void)
+				filter.optimize (l_replacement, a_context, base_expression.item_type)
+				set_filter (l_replacement.item)
 				if filter.is_error then
-					set_last_error (filter.error_value)
+					set_replacement (a_replacement, filter)
 				else
-			
 					--	The filter expression usually need not be sorted.
-					
-					filter.set_unsorted_if_homogeneous (False)
-					if filter.was_expression_replaced then
-						set_filter (filter.replacement_expression)
-					end
-					
+					l_replacement.put (Void)
+					filter.set_unsorted_if_homogeneous (l_replacement, False)
+					set_filter (l_replacement.item)
 					-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 					-- and treat them specially.
-					
 					if is_constant_one (filter) then
-						create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
-						set_replacement (l_expression)
+						set_replacement (a_replacement, create {XM_XPATH_FIRST_ITEM_EXPRESSION}.make (base_expression))
 					else
 						if filter.is_position_range then
 							l_position_range := filter.as_position_range
 							l_min := l_position_range.minimum_position
 							l_max := l_position_range.maximum_position
 							if l_min = 1 and then l_max = 1 then
-								create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (base_expression)
-								set_replacement (l_expression)
+								set_replacement (a_replacement, create {XM_XPATH_FIRST_ITEM_EXPRESSION}.make (base_expression))
 							elseif l_max = Platform.Maximum_integer then
-								create {XM_XPATH_TAIL_EXPRESSION} l_expression.make (base_expression, l_min)
-								set_replacement (l_expression)
+								set_replacement (a_replacement, create {XM_XPATH_TAIL_EXPRESSION}.make (base_expression, l_min))
 							end
 						end
 					end
-					if not was_expression_replaced then
-						optimize_positional_filter (a_context, a_context_item_type)
+					if a_replacement.item = Void then
+						optimize_positional_filter (a_replacement, a_context, a_context_item_type)
 					end
-					if not is_error and then not was_expression_replaced then
-						promote_sub_expressions (a_context, a_context_item_type)
+					if a_replacement.item = Current then
+						a_replacement.put (Void)
+						promote_sub_expressions (a_replacement, a_context, a_context_item_type)
 					end
 				end
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				if not (an_offer.action = Unordered and then filter_is_positional) then
-					base_expression.promote (an_offer)
-					if base_expression.was_expression_replaced then
-						set_base_expression (base_expression.replacement_expression)
+				if not (a_offer.action = Unordered and then filter_is_positional) then
+					create l_replacement.make (Void)
+					base_expression.promote (l_replacement, a_offer)
+					if base_expression /= l_replacement.item then
+						set_base_expression (l_replacement.item)
 						reset_static_properties
 					end
 				end
-				if an_offer.action = Inline_variable_references
-				 or an_offer.action = Replace_current then
-
+				if a_offer.action = Inline_variable_references
+					or a_offer.action = Replace_current then
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
-
-					filter.promote (an_offer)
-					if filter.was_expression_replaced then
-						set_filter (filter.replacement_expression)
+					l_replacement.put (Void)
+					filter.promote (l_replacement, a_offer)
+					if filter /= l_replacement.item then
+						set_filter (l_replacement.item)
 						reset_static_properties
 					end
 				end
+				a_replacement.put (Current)
 			end
 		end	
 
@@ -513,11 +475,9 @@ feature -- Element change
 			base_expression_not_void: a_base_expression /= Void
 		do
 			base_expression := a_base_expression
-			base_expression.mark_unreplaced
 			adopt_child_expression (base_expression)
 		ensure
 			base_expression_set: base_expression = a_base_expression
-			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
 		end
 
 	set_filter (a_filter: XM_XPATH_EXPRESSION) is
@@ -526,11 +486,9 @@ feature -- Element change
 			filter_not_void: a_filter /= Void
 		do
 			filter := a_filter
-			filter.mark_unreplaced
 			adopt_child_expression (filter)
 		ensure
 			filter_set: filter = a_filter
-			filter_not_marked_for_replacement: not filter.was_expression_replaced
 		end
 
 feature {NONE} -- Implementation
@@ -574,9 +532,6 @@ feature {NONE} -- Implementation
 
 	is_singleton_boolean_filter: BOOLEAN
 			-- `True' if `filter' returns exactly one boolean
-
-	filter_dependencies: XM_XPATH_EXPRESSION
-			-- Dependencies of the original (but simplifed) filter
 
 	is_positional_filter (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `an_expression', when used as a filter, positional?
@@ -630,7 +585,7 @@ feature {NONE} -- Implementation
 			base_iterator_before: a_base_iterator /= void and then not a_base_iterator.is_error and then a_base_iterator.before
 		local
 			a_position: INTEGER
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			if a_number /= Void then
 				if a_number.is_platform_integer then
@@ -654,10 +609,10 @@ feature {NONE} -- Implementation
 				-- Filter is a constant that we can treat as boolean
 
 				filter.calculate_effective_boolean_value (a_context)
-				a_boolean_value := filter.last_boolean_value
-				if a_boolean_value.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
-				elseif a_boolean_value.value then
+				l_boolean_value := filter.last_boolean_value
+				if l_boolean_value.is_error then
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_boolean_value.error_value)
+				elseif l_boolean_value.value then
 					last_iterator := a_base_iterator
 				else
 					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
@@ -665,12 +620,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_positional_filter (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize_positional_filter (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Determine whether the filter might depend on position.
+		require
+			context_not_void: a_context /= Void
+			context_item_may_not_be_set: True
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			another_expression, a_third_expression: XM_XPATH_EXPRESSION
-			a_filter, another_filter: XM_XPATH_FILTER_EXPRESSION
-			a_boolean_filter: XM_XPATH_BOOLEAN_EXPRESSION
+			l_expression, l_third_expression: XM_XPATH_EXPRESSION
+			l_filter, l_other_filter: XM_XPATH_FILTER_EXPRESSION
+			l_boolean_filter: XM_XPATH_BOOLEAN_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			filter_is_positional := is_positional_filter (filter)
 			is_singleton_boolean_filter := filter.cardinality_exactly_one and filter.item_type.is_same_type (type_factory.boolean_type)
@@ -679,69 +640,78 @@ feature {NONE} -- Implementation
 			-- the chances of finishing early.
 
 			if filter_is_positional and then filter.is_boolean_expression then
-				a_boolean_filter := filter.as_boolean_expression
-				if a_boolean_filter.operator = And_token then
-					if is_explicitly_positional_filter (a_boolean_filter.first_operand)
-						and then not is_explicitly_positional_filter (a_boolean_filter.second_operand) then
-						another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
-						a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
-						create a_filter.make (base_expression, another_expression)
-						create another_filter.make (a_filter, a_third_expression)
-						another_filter.optimize (a_context, a_context_item_type)
-						if another_filter.was_expression_replaced then
-							set_replacement (another_filter.replacement_expression)
-						else
-							set_replacement (another_filter)
-						end
-					elseif is_explicitly_positional_filter (a_boolean_filter.second_operand)
-						and then not is_explicitly_positional_filter (a_boolean_filter.first_operand) then
-						another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
-						a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
-						create a_filter.make (base_expression, a_third_expression)
-						create another_filter.make (a_filter, another_expression)
-						another_filter.optimize (a_context, a_context_item_type)
-						if another_filter.was_expression_replaced then
-							set_replacement (another_filter.replacement_expression)
-						else
-							set_replacement (another_filter)
-						end
+				l_boolean_filter := filter.as_boolean_expression
+				if l_boolean_filter.operator = And_token then
+					if is_explicitly_positional_filter (l_boolean_filter.first_operand)
+						and then not is_explicitly_positional_filter (l_boolean_filter.second_operand) then
+						l_expression := force_to_boolean (l_boolean_filter.first_operand, a_context)
+						l_third_expression := force_to_boolean (l_boolean_filter.second_operand, a_context)
+						create l_filter.make (base_expression, l_expression)
+						create l_other_filter.make (l_filter, l_third_expression)
+						create l_replacement.make (Void)
+						l_other_filter.optimize (l_replacement, a_context, a_context_item_type)
+						set_replacement (a_replacement, l_replacement.item)
+					elseif is_explicitly_positional_filter (l_boolean_filter.second_operand)
+						and then not is_explicitly_positional_filter (l_boolean_filter.first_operand) then
+						l_expression := force_to_boolean (l_boolean_filter.first_operand, a_context)
+						l_third_expression := force_to_boolean (l_boolean_filter.second_operand, a_context)
+						create l_filter.make (base_expression, l_third_expression)
+						create l_other_filter.make (l_filter, l_expression)
+						create l_replacement.make (Void)
+						l_other_filter.optimize (l_replacement, a_context, a_context_item_type)
+						set_replacement (a_replacement, l_replacement.item)
 					end
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	promote_sub_expressions  (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is				
+	promote_sub_expressions  (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is				
 			-- This causes them to be evaluated once, outside the path  expression.
 		require
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
+			context_not_void: a_context /= Void
+			context_item_may_not_be_set: True
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			an_offer: XM_XPATH_PROMOTION_OFFER
-			a_let_expression: XM_XPATH_LET_EXPRESSION
+			l_offer: XM_XPATH_PROMOTION_OFFER
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
-			filter.promote (an_offer)
-			if filter.was_expression_replaced then
-				set_filter(filter.replacement_expression)
+			create l_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
+			create l_replacement.make (Void)
+			filter.promote (l_replacement, l_offer)
+			if filter /= l_replacement.item then
+				set_filter(l_replacement.item)
 				reset_static_properties
 			end
-			if an_offer.containing_expression.is_let_expression then
-				a_let_expression := an_offer.containing_expression.as_let_expression
-				a_let_expression.check_static_type (a_context, a_context_item_type) 
-				if not a_let_expression.is_error and then not a_let_expression.was_expression_replaced then 
-					a_let_expression.optimize (a_context, a_context_item_type)
+			if l_offer.containing_expression.is_let_expression then
+				l_let_expression := l_offer.containing_expression.as_let_expression
+				l_replacement.put (Void)
+				l_let_expression.check_static_type (l_replacement, a_context, a_context_item_type) 
+				if l_let_expression /= l_replacement.item then
+					l_offer.set_containing_expression (l_replacement.item)
+				elseif not ANY_.same_objects (l_let_expression.action, Current) then
+					l_replacement.put (Void)
+					l_let_expression.optimize (l_replacement, a_context, a_context_item_type)
+					if l_let_expression  /= l_replacement.item then
+						l_offer.set_containing_expression (l_replacement.item)
+					end
 				end
-				if a_let_expression.is_error then
-					set_last_error (a_let_expression.error_value)
-				elseif a_let_expression.was_expression_replaced then
-					an_offer.set_containing_expression (a_let_expression.replacement_expression)
+				if l_offer.containing_expression /= Current then
+					set_replacement (a_replacement, l_offer.containing_expression)
 				end
 			end
-			if not is_error and then an_offer.containing_expression /= Current and then not was_expression_replaced then
-				set_replacement (an_offer.containing_expression)
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
-
 
 	create_fast_path_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create iterator where both operands are constants, or simple variable references.
@@ -850,6 +820,5 @@ invariant
 
 	base_expression_not_void: base_expression /= Void
 	filter_not_void: filter /= Void
-	filter_dependencies_not_void: filter_dependencies /= Void
 
 end

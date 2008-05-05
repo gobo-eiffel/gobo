@@ -127,145 +127,163 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			condition.simplify
-			if condition.is_error then
-				set_last_error (condition.error_value)
+			create l_replacement.make (Void)
+			condition.simplify (l_replacement)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
 			else
-				if condition.was_expression_replaced then
-					set_condition (condition.replacement_expression)
-				end
+				set_condition (l_replacement.item)
+				l_replacement.put (Void)
 				if condition.is_value and then not condition.depends_upon_implicit_timezone then
 					condition.calculate_effective_boolean_value (Void)
-					a_boolean_value := condition.last_boolean_value
-					if not a_boolean_value.is_error and then a_boolean_value.value then
-						then_expression.simplify
-						if then_expression.is_error then
-							set_last_error (then_expression.error_value)
-						elseif then_expression.was_expression_replaced then
-							set_then_expression (then_expression.replacement_expression)
+					l_boolean_value := condition.last_boolean_value
+					if not l_boolean_value.is_error and then l_boolean_value.value then
+						then_expression.simplify (l_replacement)
+						if l_replacement.item.is_error then
+							set_replacement (a_replacement, l_replacement.item)
+						else
+							set_then_expression (l_replacement.item)
 						end
 					else
-						else_expression.simplify
-						if else_expression.is_error then
-							set_last_error (else_expression.error_value)
-						elseif else_expression.was_expression_replaced then
-							set_else_expression (else_expression.replacement_expression)
+						else_expression.simplify (l_replacement)
+						if l_replacement.item.is_error then
+							set_replacement (a_replacement, l_replacement.item)
+						else
+							set_else_expression (l_replacement.item)
 						end						
 					end
 				else
-					then_expression.simplify
-					if then_expression.was_expression_replaced then
-						set_then_expression (then_expression.replacement_expression)
+					then_expression.simplify (l_replacement)
+					if l_replacement.item.is_error then
+						set_replacement (a_replacement, l_replacement.item)
+					else
+						set_then_expression (l_replacement.item)
 					end
-					else_expression.simplify
-					if else_expression.was_expression_replaced then
-						set_else_expression (else_expression.replacement_expression)
+					l_replacement.put (Void)
+					else_expression.simplify (l_replacement)
+					if l_replacement.item.is_error then
+						set_replacement (a_replacement, l_replacement.item)
+					else
+						set_else_expression (l_replacement.item)
 					end
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			condition.check_static_type (a_context, a_context_item_type)
-			if condition.was_expression_replaced then
-				set_condition (condition.replacement_expression)
-			end
-			if condition.is_error then
-				set_last_error (condition.error_value)
-			elseif condition.is_boolean_value then
-				-- If the condition after typechecking is reduced to a constant, cut it down to the appropriate branch.
-				if condition.as_boolean_value.value then
-					then_expression.check_static_type (a_context, a_context_item_type)
-					if then_expression.is_error then
-						set_last_error (then_expression.error_value)
-					elseif then_expression.was_expression_replaced then
-						set_replacement (then_expression.replacement_expression)
+			create l_replacement.make (Void)
+			condition.check_static_type (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
+			else
+				set_condition (l_replacement.item)
+				l_replacement.put (Void)
+				if condition.is_boolean_value then
+					-- If the condition after typechecking is reduced to a constant, cut it down to the appropriate branch.
+					if condition.as_boolean_value.value then
+						then_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+						set_replacement (a_replacement, l_replacement.item)
 					else
-						set_replacement (then_expression)
-					end
-				else
-					else_expression.check_static_type (a_context, a_context_item_type)
-					if else_expression.is_error then
-						set_last_error (else_expression.error_value)
-					elseif else_expression.was_expression_replaced then
-						set_replacement (else_expression.replacement_expression)
-					else
-						set_replacement (else_expression)
+						else_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+						set_replacement (a_replacement, l_replacement.item)
 					end					
-				end
-			else
-				then_expression.check_static_type (a_context, a_context_item_type)
-				if then_expression.is_error then
-					set_last_error (then_expression.error_value)
-				elseif then_expression.was_expression_replaced then
-					set_then_expression (then_expression.replacement_expression)
 				else
-					else_expression.check_static_type (a_context, a_context_item_type)
-					if else_expression.is_error then
-						set_last_error (else_expression.error_value)
-					elseif else_expression.was_expression_replaced then
-						set_else_expression (else_expression.replacement_expression)
+					then_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+					if l_replacement.item.is_error then
+						set_replacement (a_replacement, l_replacement.item)
+					else
+						set_then_expression (l_replacement.item)
+					end
+					l_replacement.put (Void)
+					else_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+					if l_replacement.item.is_error then
+						set_replacement (a_replacement, l_replacement.item)
+					else
+						set_else_expression (l_replacement.item)
 					end
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end			
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			condition.optimize (a_context, a_context_item_type)
-			if condition.was_expression_replaced then	set_condition (condition.replacement_expression) end
-			if condition.is_error then
-				set_last_error (condition.error_value)
+			create l_replacement.make (Void)
+			condition.optimize (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
 			else
-				then_expression.optimize (a_context, a_context_item_type)
-				if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
-				if then_expression.is_error then
-					set_last_error (then_expression.error_value)
+				set_condition (l_replacement.item)
+				l_replacement.put (Void)
+				then_expression.optimize (l_replacement, a_context, a_context_item_type)
+				if l_replacement.item.is_error then
+					set_replacement (a_replacement, l_replacement.item)
 				else
-					else_expression.optimize (a_context, a_context_item_type)
-					if else_expression.was_expression_replaced then set_else_expression (else_expression.replacement_expression) end
-					if else_expression.is_error then
-						set_last_error (else_expression.error_value)
-					end
+					set_then_expression (l_replacement.item)
 				end
+				l_replacement.put (Void)
+				else_expression.optimize (l_replacement, a_context, a_context_item_type)
+				if l_replacement.item.is_error then
+					set_replacement (a_replacement, l_replacement.item)
+				else
+					set_else_expression (l_replacement.item)
+				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				condition.promote (an_offer)
-				if condition.was_expression_replaced then
-					set_condition (condition.replacement_expression)
+				a_replacement.put (Current)
+				create l_replacement.make (Void)
+				condition.promote (l_replacement, a_offer)
+				if condition /= l_replacement.item then
+					set_condition (l_replacement.item)
 					reset_static_properties
 				end
-				if an_offer.action = Unordered or an_offer.action = Inline_variable_references
-					or an_offer.action = Replace_current then
-					then_expression.promote (an_offer)
-					if then_expression.was_expression_replaced then
-						set_then_expression (then_expression.replacement_expression)
+				if a_offer.action = Unordered or a_offer.action = Inline_variable_references or
+					a_offer.action = Replace_current then
+					l_replacement.put (Void)
+					then_expression.promote (l_replacement, a_offer)
+					if then_expression /=  l_replacement.item then
+						set_then_expression (l_replacement.item)
 						reset_static_properties
 					end
-					else_expression.promote (an_offer)
-					if else_expression.was_expression_replaced then
-						set_else_expression (else_expression.replacement_expression)
+					l_replacement.put (Void)
+					else_expression.promote (l_replacement, a_offer)
+					if else_expression /=  l_replacement.item then
+						set_else_expression (l_replacement.item)
 						reset_static_properties
 					end					
 				end
@@ -299,13 +317,13 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over the values of a sequence
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			condition.calculate_effective_boolean_value (a_context)
-			a_boolean_value := condition.last_boolean_value
-			if a_boolean_value.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
-			elseif a_boolean_value.value then
+			l_boolean_value := condition.last_boolean_value
+			if l_boolean_value.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_boolean_value.error_value)
+			elseif l_boolean_value.value then
 				if then_expression.is_error then
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (then_expression.error_value)
 				else
@@ -323,13 +341,13 @@ feature -- Evaluation
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			condition.calculate_effective_boolean_value (a_context)
-			a_boolean_value := condition.last_boolean_value
-			if a_boolean_value.is_error then
-				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (a_boolean_value.error_value)
-			elseif a_boolean_value.value then
+			l_boolean_value := condition.last_boolean_value
+			if l_boolean_value.is_error then
+				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_boolean_value.error_value)
+			elseif l_boolean_value.value then
 				if then_expression.is_error then
 					create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (then_expression.error_value)
 				else
@@ -352,11 +370,9 @@ feature -- Element change
 			condition_not_void: a_condition /= Void
 		do
 			condition := a_condition
-			if condition.was_expression_replaced then condition.mark_unreplaced end
 			adopt_child_expression (condition)
 		ensure
 			condition_set: condition = a_condition
-			condition_not_marked_for_replacement: not condition.was_expression_replaced
 		end
 
 	set_then_expression (a_then_expression: XM_XPATH_EXPRESSION) is
@@ -365,11 +381,9 @@ feature -- Element change
 			then_not_void: a_then_expression /= Void
 		do
 			then_expression := a_then_expression
-			if then_expression.was_expression_replaced then then_expression.mark_unreplaced end
 			adopt_child_expression (then_expression)
 		ensure
 			then_set: then_expression = a_then_expression
-				then_expression_not_marked_for_replacement: not then_expression.was_expression_replaced
 		end
 
 	set_else_expression (an_else_expression: XM_XPATH_EXPRESSION) is
@@ -378,11 +392,9 @@ feature -- Element change
 			else_not_void: an_else_expression /= Void
 		do
 			else_expression := an_else_expression
-			if else_expression.was_expression_replaced then else_expression.mark_unreplaced end
 			adopt_child_expression (else_expression)
 		ensure
 			else_set: else_expression = an_else_expression
-			else_expression_not_marked_for_replacement: not else_expression.was_expression_replaced
 		end	
 
 

@@ -64,14 +64,14 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		do
 			if arguments.count = 1 then
 				set_intrinsically_depends_upon_implicit_timezone
 				reset_dependencies
 			end
-			Precursor
+			Precursor (a_replacement)
 		end
 
 feature -- Evaluation
@@ -116,10 +116,10 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			-- do_nothing
+			a_replacement.put (Current)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

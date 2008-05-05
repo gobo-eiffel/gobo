@@ -121,8 +121,13 @@ feature -- Status_setting
 		require
 			attribute_name_not_void: a_name /= Void
 		do
-			attribute_name := a_name
-			adopt_child_expression (attribute_name)
+			if a_name /= attribute_name then
+				attribute_name := a_name
+				adopt_child_expression (attribute_name)
+				if are_static_properties_computed then
+					reset_static_properties
+				end
+			end
 		ensure
 			set: attribute_name = a_name
 		end
@@ -130,9 +135,14 @@ feature -- Status_setting
 	set_namespace (a_namespace: like namespace) is
 			-- Set attribute name.
 		do
-			namespace := a_namespace
-			if namespace /= Void then
-				adopt_child_expression (namespace)
+			if a_namespace /= namespace then
+				namespace := a_namespace
+				if namespace /= Void then
+					adopt_child_expression (namespace)
+				end
+				if are_static_properties_computed then
+					reset_static_properties
+				end
 			end
 		ensure
 			set: namespace = a_namespace
@@ -140,73 +150,90 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
-		do
-			attribute_name.simplify
-			if attribute_name.was_expression_replaced then set_attribute_name (attribute_name.replacement_expression) end
-			if attribute_name.is_error then set_last_error (attribute_name.error_value) end
-			if namespace /= Void then
-				namespace.simplify
-				if namespace.was_expression_replaced then set_namespace (namespace.replacement_expression) end
-				if namespace.is_error then set_last_error (namespace.error_value) end
-			end
-			Precursor
-		end
-
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Perform static type checking
 		local
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_single_string_type: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
-			attribute_name.check_static_type (a_context, a_context_item_type)
-			if attribute_name.was_expression_replaced then set_attribute_name (attribute_name.replacement_expression) end
-			if attribute_name.is_error then set_last_error (attribute_name.error_value) end
-			create a_role.make (Instruction_role, "xsl:attribute/name", 1, Xpath_errors_uri, "XPTY0004")
-			create a_type_checker
-			create a_single_string_type.make_single_string
-			a_type_checker.static_type_check (a_context, attribute_name, a_single_string_type, False, a_role)
-			if a_type_checker.is_static_type_check_error then
-				set_last_error (a_type_checker.static_type_check_error)
+			create l_replacement.make (Void)
+			attribute_name.simplify (l_replacement)
+			set_attribute_name (l_replacement.item)
+			if attribute_name.is_error then
+				set_replacement (a_replacement, attribute_name)
 			else
-				set_attribute_name (a_type_checker.checked_expression)
-			end
-			if namespace /= Void then
-				namespace.check_static_type (a_context, a_context_item_type)
-				if namespace.was_expression_replaced then set_namespace (namespace.replacement_expression) end
-				if namespace.is_error then set_last_error (namespace.error_value) end
-				create a_role.make (Instruction_role, "xsl:attribute/namespace", 1, Xpath_errors_uri, "XPTY0004")
-				create a_type_checker
-				a_type_checker.static_type_check (a_context, namespace, a_single_string_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
-				else
-					set_namespace (a_type_checker.checked_expression)
+				if namespace /= Void then
+					l_replacement.put (Void)
+					namespace.simplify (l_replacement)
+					set_namespace (l_replacement.item)
+					if namespace.is_error then
+						set_replacement (a_replacement, namespace)
+					else
+						Precursor (a_replacement)
+					end
 				end
 			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this instruction.
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform static type checking.
+		local
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_single_string_type: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
-			attribute_name.promote (an_offer)
-			if attribute_name.was_expression_replaced then
-				set_attribute_name (attribute_name.replacement_expression)
-				reset_static_properties
-			end
-			if attribute_name.is_error then set_last_error (attribute_name.error_value) end
-			if not is_error and then namespace /= Void then
-				namespace.promote (an_offer)
-				if namespace.was_expression_replaced then
-					namespace := namespace.replacement_expression
-					adopt_child_expression (namespace)
-					reset_static_properties
+			create l_replacement.make (Void)		
+			attribute_name.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_attribute_name (l_replacement.item)
+			if attribute_name.is_error then
+				set_replacement (a_replacement, attribute_name)
+			else
+				create l_role.make (Instruction_role, "xsl:attribute/name", 1, Xpath_errors_uri, "XPTY0004")
+				create l_type_checker
+				create l_single_string_type.make_single_string
+				l_type_checker.static_type_check (a_context, attribute_name, l_single_string_type, False, l_role)
+				if l_type_checker.is_static_type_check_error then
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+				else
+					set_attribute_name (l_type_checker.checked_expression)
+					if namespace /= Void then
+						l_replacement.put (Void)
+						namespace.check_static_type (l_replacement, a_context, a_context_item_type)
+						set_namespace (l_replacement.item)
+						if namespace.is_error then
+							set_replacement (a_replacement, namespace)
+						else
+							create l_role.make (Instruction_role, "xsl:attribute/namespace", 1, Xpath_errors_uri, "XPTY0004")
+							create l_type_checker
+							l_type_checker.static_type_check (a_context, namespace, l_single_string_type, False, l_role)
+							if l_type_checker.is_static_type_check_error then
+								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+							else
+								set_namespace (l_type_checker.checked_expression)
+							end
+						end
+					end
 				end
-				if namespace.is_error then set_last_error (namespace.error_value) end
 			end
-			if not is_error then Precursor (an_offer) end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
+		end
+
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			create l_replacement.make (Void)		
+			attribute_name.promote (l_replacement, a_offer)
+			set_attribute_name (l_replacement.item)
+			if namespace /= Void then
+				l_replacement.put (Void)
+				namespace.promote (l_replacement, a_offer)
+				set_namespace (l_replacement.item)
+			end
+			Precursor (a_offer)
 		end
 
 feature -- Evaluation

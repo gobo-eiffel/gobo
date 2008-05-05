@@ -142,6 +142,7 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_content: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression = Void then
 				compile_sequence_constructor (a_executable, new_axis_iterator (Child_axis), True)
@@ -150,10 +151,9 @@ feature -- Element change
 				else
 					l_content := last_generated_expression
 				end
-				l_content.simplify
-				if l_content.was_expression_replaced then
-					l_content := l_content.replacement_expression
-				end
+				create l_replacement.make (Void)
+				l_content.simplify (l_replacement)
+				l_content := l_replacement.item
 				sort_key_definition.set_sort_key (l_content)
 			end
 			-- TODO: simplify sort key definition
@@ -261,75 +261,76 @@ feature {NONE} -- Implementation
 	validate_2 is
 			-- Perform further validation.
 		local
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_role: XM_XPATH_ROLE_LOCATOR
-			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 				if select_expression.is_error then
 					report_compile_error (select_expression.error_value)
-				elseif select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
 				end
 			end
 			if order /= Void then
-				type_check_expression ("order", order)
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "order", order)
+				order := l_replacement.item
 				if order.is_error then
 					report_compile_error (order.error_value)
-				elseif order.was_expression_replaced then
-					order := order.replacement_expression
 				end
 			end
 			if case_order /= Void then
-				type_check_expression ("case-order", case_order)
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "case-order", case_order)
+				case_order := l_replacement.item
 				if case_order.is_error then
 					report_compile_error (case_order.error_value)
-				elseif case_order.was_expression_replaced then
-					case_order := case_order.replacement_expression
 				end
 			end
 			if language /= Void then
-				type_check_expression ("lang", language)
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "lang", language)
+				language := l_replacement.item
 				if language.is_error then
 					report_compile_error (language.error_value)
-				elseif language.was_expression_replaced then
-					language := language.replacement_expression
 				end
 			end
 			if data_type /= Void then
-				type_check_expression ("data-type", data_type)
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "data-type", data_type)
+				data_type := l_replacement.item
 				if data_type.is_error then
 					report_compile_error (data_type.error_value)
-				elseif data_type.was_expression_replaced then
-					data_type := data_type.replacement_expression
 				end
 			end
 			if collation_name /= Void then
-				type_check_expression ("collation", collation_name)
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "collation", collation_name)
+				collation_name := l_replacement.item
 				if collation_name.is_error then
 					report_compile_error (collation_name.error_value)
-				elseif collation_name.was_expression_replaced then
-					collation_name := collation_name.replacement_expression
 				end
 			end
 			if stable_attribute_value /= Void then
-				type_check_expression ("stable", stable_attribute_value)
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "stable", stable_attribute_value)
+				stable_attribute_value := l_replacement.item
 				if stable_attribute_value.is_error then
 					report_compile_error (stable_attribute_value.error_value)
-				elseif stable_attribute_value.was_expression_replaced then
-					stable_attribute_value := stable_attribute_value.replacement_expression
 				end
 			end			
 			if select_expression /= Void then
-				create a_role.make (Instruction_role, "xsl:sort/select", 1, Xpath_errors_uri, "XPTY0004")
-				create a_type_checker
-				create an_atomic_sequence.make_atomic_sequence
-				a_type_checker.static_type_check (static_context, select_expression, an_atomic_sequence, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				create l_role.make (Instruction_role, "xsl:sort/select", 1, Xpath_errors_uri, "XPTY0004")
+				create l_type_checker
+				create l_atomic_sequence.make_atomic_sequence
+				l_type_checker.static_type_check (static_context, select_expression, l_atomic_sequence, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					select_expression := a_type_checker.checked_expression
+					select_expression := l_type_checker.checked_expression
 					create sort_key_definition.make (select_expression, order, case_order, language, data_type, collation_name)
 				end
 			else

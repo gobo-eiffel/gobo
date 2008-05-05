@@ -90,12 +90,13 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
-			type_check_expression ("test", condition)
-			if condition.was_expression_replaced then
-				condition := condition.replacement_expression
-			end			
+			create l_replacement.make (Void)
+			type_check_expression (l_replacement, "test", condition)
+			condition := l_replacement.item
 			validated := True
 		end
 

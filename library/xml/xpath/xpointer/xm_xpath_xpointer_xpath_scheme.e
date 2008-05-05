@@ -95,63 +95,52 @@ feature -- Status report
 
 feature -- Element change
 
-	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; some_data: STRING) is
-			-- Evaluate `some_data' against `a_resource' within `a_namespace_context'.
+	evaluate (a_resource: XM_XPATH_DOCUMENT; a_namespace_context: XM_XPOINTER_NAMESPACE_CONTEXT; a_data: STRING) is
+			-- Evaluate `a_data' against `a_resource' within `a_namespace_context'.
 		local
-			a_base_uri: UT_URI
-			a_static_context: XM_XPATH_STAND_ALONE_CONTEXT
-			an_expression: XM_XPATH_EXPRESSION
-			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
-			a_slot_manager: XM_XPATH_SLOT_MANAGER
+			l_base_uri: UT_URI
+			l_static_context: XM_XPATH_STAND_ALONE_CONTEXT
+			l_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			l_slot_manager: XM_XPATH_SLOT_MANAGER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			evaluated := True
-			create a_base_uri.make (a_resource.base_uri)
-			create a_static_context.make (False, False, a_base_uri, function_library)
-			a_static_context.clear_all_namespaces
-			a_static_context.declare_namespace ("xml", Xml_uri)
+			create l_base_uri.make (a_resource.base_uri)
+			create l_static_context.make (False, False, l_base_uri, function_library)
+			l_static_context.clear_all_namespaces
+			l_static_context.declare_namespace ("xml", Xml_uri)
 			from
-				a_cursor := a_namespace_context.namespace_cursor; a_cursor.start
+				l_cursor := a_namespace_context.namespace_cursor; l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_static_context.declare_namespace (a_cursor.key, a_cursor.item)
-				a_cursor.forth
+				l_static_context.declare_namespace (l_cursor.key, l_cursor.item)
+				l_cursor.forth
 			end
-			expression_factory.make_expression (some_data, a_static_context, 1, Eof_token, 1, "unknown:")
+			expression_factory.make_expression (a_data, l_static_context, 1, Eof_token, 1, "unknown:")
 			if expression_factory.is_parse_error then
 				is_error := True
 				create {XM_XPATH_INVALID_VALUE} value.make (expression_factory.parsed_error_value)
 			else
-				an_expression := expression_factory.parsed_expression
-				an_expression.check_static_type (a_static_context, any_item)
-				if an_expression.is_error then
+				l_expression := expression_factory.parsed_expression
+				create l_replacement.make (Void)
+				l_expression.check_static_type (l_replacement, l_static_context, any_item)
+				l_expression := l_replacement.item
+				if l_expression.is_error then
 					is_error := True
-					create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
+					create {XM_XPATH_INVALID_VALUE} value.make (l_expression.error_value)
 				else
-					if an_expression.was_expression_replaced then
-						an_expression := an_expression.replacement_expression
-					end
-					if an_expression.is_error then
+					l_replacement.put (Void)
+					l_expression.optimize (l_replacement, l_static_context, any_item)
+					l_expression := l_replacement.item
+					if l_expression.is_error then
 						is_error := True
-						create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
+						create {XM_XPATH_INVALID_VALUE} value.make (l_expression.error_value)
 					else
-						an_expression.optimize (a_static_context, any_item)
-						if an_expression.is_error then
-							is_error := True
-							create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
-						else
-							if an_expression.was_expression_replaced then
-								an_expression := an_expression.replacement_expression
-							end
-							if an_expression.is_error then
-								is_error := True
-								create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
-							else
-								create a_slot_manager.make
-								an_expression.allocate_slots (1, a_slot_manager)
-								evaluate_post_analysis (an_expression, a_resource)
-							end
-						end
+						create l_slot_manager.make
+						l_expression.allocate_slots (1, l_slot_manager)
+						evaluate_post_analysis (l_expression, a_resource)
 					end
 				end
 			end
@@ -162,10 +151,10 @@ feature {NONE} -- Implementation
 	function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER
 			-- Function library
 
-	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION; a_document: XM_XPATH_DOCUMENT) is
-			-- perform evaluation on `an_expression'.
+	evaluate_post_analysis (a_expression: XM_XPATH_EXPRESSION; a_document: XM_XPATH_DOCUMENT) is
+			-- perform evaluation on `a_expression'.
 		require
-			expression_checked_and_optimized_without_error: an_expression /= Void and then not an_expression.is_error
+			expression_checked_and_optimized_without_error: a_expression /= Void and then not a_expression.is_error
 			document_not_void: a_document /= Void
 		local
 			a_document_pool: XM_XPATH_DOCUMENT_POOL
@@ -176,8 +165,8 @@ feature {NONE} -- Implementation
 			a_document_pool.add (a_document, Void, a_document.base_uri) -- N.B. We can safely ignore the media type
 			create a_context.make (a_document, a_document_pool, function_library)
 			a_context.set_string_mode_mixed
-			an_expression.create_iterator (a_context)			
-			a_sequence_iterator := an_expression.last_iterator
+			a_expression.create_iterator (a_context)			
+			a_sequence_iterator := a_expression.last_iterator
 			if a_sequence_iterator.is_error then
 				is_error := True
 				create {XM_XPATH_INVALID_VALUE} value.make (a_sequence_iterator.error_value)

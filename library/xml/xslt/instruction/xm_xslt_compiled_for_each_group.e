@@ -24,6 +24,9 @@ inherit
 
 	XM_XPATH_NODE_MAPPING_FUNCTION
 
+	XM_XSLT_SORT_ROUTINES
+		export {NONE} all end
+
 create
 
 	make, make_pattern
@@ -239,115 +242,116 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			select_expression.simplify
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
-			end
-			action.simplify
-			if action.was_expression_replaced then
-				action := action.replacement_expression
-				adopt_child_expression (action)
-			end
-			key_expression.simplify
-			if key_expression.was_expression_replaced then
-				key_expression := key_expression.replacement_expression
-				adopt_child_expression (key_expression)
+			create l_replacement.make (Void)
+			select_expression.simplify (l_replacement)
+			set_select_expression (l_replacement.item)
+			if select_expression.is_error then
+				set_replacement (a_replacement, select_expression)
+			else
+				l_replacement.put (Void)
+				action.simplify (l_replacement)
+				set_action (l_replacement.item)
+				if action.is_error then
+					set_replacement (a_replacement, action)
+				else
+					l_replacement.put (Void)
+					key_expression.simplify (l_replacement)
+					set_key_expression (l_replacement.item)
+					if key_expression.is_error then
+						set_replacement (a_replacement, key_expression)
+					else
+						a_replacement.put (Current)
+					end
+				end
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 			l_item_type: XM_XPATH_ITEM_TYPE
 		do
-			mark_unreplaced
-			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-			end
-			l_item_type := select_expression.item_type
-			l_empty_sequence ?= select_expression
-			if l_empty_sequence /= Void then
-				set_replacement (l_empty_sequence) -- NOP
+			create l_replacement.make (Void)
+			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_select_expression (l_replacement.item)
+			if select_expression.is_error then
+				set_replacement (a_replacement, select_expression)
 			else
-				action.check_static_type (a_context, l_item_type)
-				if action.was_expression_replaced then
-					action := action.replacement_expression
-				end
-				l_empty_sequence ?= action
-				if l_empty_sequence /= Void then
-					set_replacement (l_empty_sequence) -- NOP
+				l_item_type := select_expression.item_type
+				if select_expression.is_empty_sequence then
+					set_replacement (a_replacement, select_expression)
 				else
-					key_expression.check_static_type (a_context, l_item_type)
-					if key_expression.was_expression_replaced then
-						key_expression := key_expression.replacement_expression
+					l_replacement.put (Void)
+					action.check_static_type (l_replacement, a_context, l_item_type)
+					set_action (l_replacement.item)
+					if action.is_error or else action.is_empty_sequence then
+						set_replacement (a_replacement, action)
+					else
+						l_replacement.put (Void)
+						key_expression.check_static_type (l_replacement, a_context, l_item_type)
+						set_key_expression (l_replacement.item)
+						if key_expression.is_error then
+							set_replacement (a_replacement, key_expression)
+						else
+							sort_keys.do_all (agent check_sort_key (a_replacement, ?, a_context, l_item_type))
+							if a_replacement.item = Void then
+								a_replacement.put (Current)
+							end
+						end
 					end
 				end
 			end
-			sort_keys.do_all_with_index (agent check_sort_key (?, ?, a_context, l_item_type))
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			l_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			select_expression.optimize (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-			end
-			l_empty_sequence ?= select_expression
-			if l_empty_sequence /= Void then
-				set_replacement (l_empty_sequence) -- NOP
+			create l_replacement.make (Void)
+			select_expression.optimize (l_replacement, a_context, a_context_item_type)
+			set_select_expression (l_replacement.item)
+			if select_expression.is_error or else select_expression.is_empty_sequence then
+				set_replacement (a_replacement, select_expression)
 			else
-				action.optimize (a_context, select_expression.item_type)
-				if action.was_expression_replaced then
-					action := action.replacement_expression
-				end
-				l_empty_sequence ?= action
-				if l_empty_sequence /= Void then
-					set_replacement (l_empty_sequence) -- NOP
+				l_replacement.put (Void)
+				action.optimize (l_replacement, a_context, select_expression.item_type)
+				set_action (l_replacement.item)
+				if action.is_error or else action.is_empty_sequence then
+					set_replacement (a_replacement, action)
 				else
-					key_expression.optimize (a_context, select_expression.item_type)
-					if key_expression.was_expression_replaced then
-						key_expression := key_expression.replacement_expression
+					l_replacement.put (Void)
+					key_expression.optimize (l_replacement, a_context, select_expression.item_type)
+					set_key_expression (l_replacement.item)
+					if key_expression.is_error then
+						set_replacement (a_replacement, key_expression)
+					else
+						a_replacement.put (Current)
 					end
 				end
-			end
-			if not was_expression_replaced then
-				adopt_child_expression (select_expression)
-				adopt_child_expression (action)
-				adopt_child_expression (key_expression)
 			end
 		end
 
 	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			select_expression.promote (a_offer)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
-				reset_static_properties
-			end
-			action.promote (a_offer)
-			if action.was_expression_replaced then
-				action := action.replacement_expression
-				adopt_child_expression (action)
-				reset_static_properties
-			end
-			key_expression.promote (a_offer)
-			if key_expression.was_expression_replaced then
-				key_expression := key_expression.replacement_expression
-				adopt_child_expression (key_expression)
-				reset_static_properties
-			end
+			create l_replacement.make (Void)		
+			select_expression.promote (l_replacement, a_offer)
+			set_select_expression (l_replacement.item)
+			l_replacement.put (Void)
+			action.promote (l_replacement, a_offer)
+			set_action (l_replacement.item)
+			l_replacement.put (Void)
+			key_expression.promote (l_replacement, a_offer)
+			set_key_expression (l_replacement.item)
 		end
 
 feature -- Evaluation
@@ -499,6 +503,48 @@ feature {NONE} -- Implementation
 	collation_name: XM_XPATH_EXPRESSION
 			-- Collation name
 
+	set_select_expression (a_replacement: XM_XPATH_EXPRESSION) is
+			-- Conditionally set `select_expression' to `a_replacement'.
+		require
+			a_replacement_not_void: a_replacement /= Void
+		do
+			if select_expression /= a_replacement then
+				select_expression := a_replacement
+				adopt_child_expression (select_expression)
+				reset_static_properties
+			end
+		ensure
+			select_expression_set: select_expression = a_replacement
+		end
+
+	set_action (a_replacement: XM_XPATH_EXPRESSION) is
+			-- Conditionally set `action' to `a_replacement'.
+		require
+			a_replacement_not_void: a_replacement /= Void
+		do
+			if action /= a_replacement then
+				action := a_replacement
+				adopt_child_expression (action)
+				reset_static_properties
+			end
+		ensure
+			action_set: action = a_replacement
+		end
+
+	set_key_expression (a_replacement: XM_XPATH_EXPRESSION) is
+			-- Conditionally set `key_expression' to `a_replacement'.
+		require
+			a_replacement_not_void: a_replacement /= Void
+		do
+			if key_expression /= a_replacement then
+				key_expression := a_replacement
+				adopt_child_expression (key_expression)
+				reset_static_properties
+			end
+		ensure
+			key_expression_set: key_expression = a_replacement
+		end
+	
 	algorithm_name: STRING is
 			-- Name of grouping algorithm
 		do
@@ -769,39 +815,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_or_error: a_result.first = Void xor a_result.second = Void
-		end
-
-	-- TODO: identical code in XM_XSLT_SORT_EXPRESSION
-
-	check_sort_key (a_key: XM_XSLT_SORT_KEY_DEFINITION; a_index: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Check `a_key' for more than one item.
-			-- TODO: also perform early evaluation of comparators.
-		require
-			a_key_not_void: a_key /= Void
-			a_index_large_enough: a_index > 0
-			a_index_small_enough: a_index <= sort_keys.count
-			a_context_not_void: a_context /= Void
-			context_item_may_not_be_set: True
-		local
-			l_expression: XM_XPATH_EXPRESSION
-			l_role: XM_XPATH_ROLE_LOCATOR
-		do
-			l_expression := a_key.sort_key
-			l_expression.check_static_type (a_context, a_context_item_type)
-			if l_expression.is_error then
-				set_last_error (l_expression.error_value)
-			else
-				if l_expression.was_expression_replaced then
-					l_expression := l_expression.replacement_expression
-				end
-				if a_context.is_backwards_compatible_mode then
-					create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (l_expression)
-				else
-					create l_role.make (Instruction_role, "xsl:sort select", 1, Xpath_errors_uri, "XTTE1020")
-					create {XM_XPATH_CARDINALITY_CHECKER} l_expression.make (l_expression, Required_cardinality_optional, l_role)
-				end
-				a_key.set_sort_key (l_expression)
-			end
 		end
 
 invariant

@@ -73,10 +73,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 		do
 			clone_special_properties (arguments.item (1))
-			Precursor
+			Precursor (a_replacement)
 		end
 
 feature -- Evaluation

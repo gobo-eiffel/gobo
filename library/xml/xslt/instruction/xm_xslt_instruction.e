@@ -46,7 +46,7 @@ inherit
 feature -- Access
 
 	executable: XM_XSLT_EXECUTABLE
-			-- Executable
+			-- Compiled executable xsl:transform/xsl:stylesheet
 
 	system_id_from_module_number (a_module_number: INTEGER): STRING is
 			-- System identifier
@@ -136,22 +136,26 @@ feature -- Status report
 
 feature -- Optimization
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		require
-			promotion_offer_not_void: an_offer /= Void
+			promotion_offer_not_void: a_offer /= Void
+			no_error_yet: not is_error
 		do
 			-- Default implementation does nothing
+		ensure
+			still_no_error: not is_error
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		do
-			an_offer.accept (Current)
-			if an_offer.accepted_expression = Void then
-				promote_instruction (an_offer)
+			a_offer.accept (Current)
+			if a_offer.accepted_expression = Void then
+				promote_instruction (a_offer)
+				a_replacement.put (Current)
 			else
-				set_replacement (an_offer.accepted_expression)
+				set_replacement (a_replacement, a_offer.accepted_expression)
 			end
 		end
 

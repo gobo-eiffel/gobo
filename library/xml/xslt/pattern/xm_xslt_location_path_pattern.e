@@ -179,13 +179,19 @@ feature -- Status setting
 			a_offer_not_void: a_offer /= Void
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
 		do
 			if filters /= Void then
-				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
-					l_cursor.item.promote (a_offer)
-					if l_cursor.item.was_expression_replaced then
-						l_cursor.replace (l_cursor.item.replacement_expression)
+				from
+					create l_replacement.make (Void)
+					l_cursor := filters.new_cursor
+					l_cursor.start
+				until l_cursor.after loop
+					l_cursor.item.promote (l_replacement, a_offer)
+					if l_cursor.item /= l_replacement.item then
+						l_cursor.replace (l_replacement.item)
 					end
+					l_replacement.put (Void)
 					l_cursor.forth
 				end
 			end
@@ -208,6 +214,7 @@ feature -- Optimization
 			l_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			l_filter_expression: XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
@@ -231,17 +238,19 @@ feature -- Optimization
 					from
 						l_cursor := l_result_pattern.filters.new_cursor
 						l_cursor.start
+						create l_replacement.make (Void)
 					variant
 						l_result_pattern.filters.count + 1 - l_cursor.index
 					until
 						l_cursor.after
 					loop
 						l_filter_expression := l_cursor.item
-						l_filter_expression.simplify
-						if l_filter_expression.was_expression_replaced then
-							l_filter_expression := l_filter_expression.replacement_expression
+						
+						l_filter_expression.simplify (l_replacement)
+						if l_filter_expression /= l_replacement.item then
+							l_cursor.replace (l_replacement.item)
 						end
-						l_cursor.replace (l_filter_expression)
+						l_replacement.put (Void)
 						l_cursor.forth
 					end
 				end
@@ -258,6 +267,7 @@ feature -- Optimization
 			l_step: XM_XPATH_AXIS_EXPRESSION
 			l_filters: like filters
 			l_routines: XM_XSLT_PATTERN_ROUTINES
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
 		do
 			l_context ?= a_context
 			check
@@ -278,13 +288,11 @@ feature -- Optimization
 						create l_step.make (Child_axis, original_node_test)
 					end
 					l_step.set_source_location (l_context.style_element.containing_stylesheet.module_number (a_context.system_id), line_number)
-					l_step.check_static_type (a_context, a_context_item_type)
+					create l_replacement.make (Void)
+					l_step.check_static_type (l_replacement, a_context, a_context_item_type)
+					l_expression := l_replacement.item
 					if l_step.is_error then
 						set_error_value (l_step.error_value)
-					elseif l_step.was_expression_replaced then
-						l_expression := l_step.replacement_expression
-					else
-						l_expression := l_step
 					end
 					if not is_error and then l_expression.item_type.is_node_test then
 						create l_routines
@@ -302,6 +310,7 @@ feature -- Optimization
 				create l_filters.make (filters.count)
 				l_filters.set_equality_tester (expression_tester)				
 				from
+					create l_replacement.make (Void)
 					l_cursor := filters.new_cursor
 					l_cursor.finish
 				variant
@@ -309,19 +318,15 @@ feature -- Optimization
 				until
 					is_error or else l_cursor.before
 				loop
-					l_cursor.item.check_static_type (a_context, node_test)
-					if l_cursor.item.was_expression_replaced then
-						l_filter_expression := l_cursor.item.replacement_expression
-					else
-						l_filter_expression := l_cursor.item
-					end
+					l_cursor.item.check_static_type (l_replacement, a_context, node_test)
+					l_filter_expression := l_replacement.item
 					if l_filter_expression.is_error then
 						set_error_value (l_filter_expression.error_value)
 					else
-						l_filter_expression.optimize (a_context, node_test)
-						if l_filter_expression.was_expression_replaced then
-							l_filter_expression := l_filter_expression.replacement_expression
-						end
+						l_replacement.put (Void)
+						l_filter_expression.optimize (l_replacement, a_context, node_test)
+						l_filter_expression := l_replacement.item
+						l_replacement.put (Void)
 					end
 					if not is_error then
 
@@ -370,12 +375,9 @@ feature -- Optimization
 
 				if is_positional then
 					l_expression := make_equivalent_expression
-					l_expression.check_static_type (a_context, a_context_item_type)
-					if l_expression.was_expression_replaced then
-						set_equivalent_expression (l_expression.replacement_expression)
-					else
-						set_equivalent_expression (l_expression)
-					end
+					create l_replacement.make (Void)
+					l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+					set_equivalent_expression (l_replacement.item)
 					if equivalent_expression.is_error then
 						set_error_value (equivalent_expression.error_value)
 					else
@@ -394,6 +396,7 @@ feature -- Optimization
 			-- Promote sub-expressions of `Current'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
 		do
 			if parent_pattern /= Void then
 				parent_pattern.promote (a_offer)
@@ -403,9 +406,9 @@ feature -- Optimization
 			end
 			if filters /= Void then
 				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
-					l_cursor.item.promote (a_offer)
-					if l_cursor.item.was_expression_replaced then
-						l_cursor.replace (l_cursor.item.replacement_expression)
+					l_cursor.item.promote (l_replacement, a_offer)
+					if l_cursor.item /= l_replacement.item then
+						l_cursor.replace (l_replacement.item)
 					end
 					l_cursor.forth
 				end

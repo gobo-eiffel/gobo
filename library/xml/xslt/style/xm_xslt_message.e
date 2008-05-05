@@ -96,23 +96,22 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_function: XM_XSLT_FUNCTION
+			l_function: XM_XSLT_FUNCTION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			a_function ?= parent_node
-			if a_function = Void then
+			l_function ?= parent_node
+			if l_function = Void then
 				check_within_template
 			end
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 			end
 			if terminate /= Void then
-				type_check_expression ("terminate", terminate)
-				if terminate.was_expression_replaced then
-					terminate := terminate.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "terminate", terminate)
+				terminate := l_replacement.item
 			end
 			validated := True
 		end

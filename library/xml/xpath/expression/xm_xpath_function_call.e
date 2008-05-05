@@ -124,172 +124,179 @@ feature -- Status setting
 	
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		do
-			simplify_arguments
-		end
-
-	simplify_arguments is
-			-- Simplify `arguments'
-		require
-			no_previous_error: not is_error
-		local
-			an_argument: XM_XPATH_EXPRESSION
-			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-		do
-			from
-				arguments_cursor := arguments.new_cursor
-				arguments_cursor.start
-			variant
-				arguments.count + 1 - arguments_cursor.index
-			until
-				is_error or else arguments_cursor.after
-			loop
-				an_argument := arguments_cursor.item
-				if an_argument.was_expression_replaced then
-					an_argument := an_argument.replacement_expression
-					adopt_child_expression (an_argument)
-					arguments_cursor.replace (an_argument)
-				end
-				an_argument.simplify
-				if an_argument.is_error then
-					set_last_error (an_argument.error_value)
-				elseif an_argument.was_expression_replaced then
-					arguments_cursor.replace (an_argument.replacement_expression)
-					adopt_child_expression (an_argument.replacement_expression)
-				end
-				arguments_cursor.forth
-			end
-		end
-
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Perform static type-checking of `Current' and its subexpressions.
-		local
-			fixed_values: BOOLEAN
-			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-		do
-			mark_unreplaced
-			from
-				fixed_values := True -- until we find otherwise
-				arguments_cursor := arguments.new_cursor
-				arguments_cursor.start
-			variant
-				arguments.count + 1 - arguments_cursor.index
-			until
-				is_error or else arguments_cursor.after
-			loop
-				arguments_cursor.item.check_static_type (a_context, a_context_item_type)
-				if arguments_cursor.item.is_error then
-					set_last_error (arguments_cursor.item.error_value)
-				else
-					if arguments_cursor.item.was_expression_replaced then
-						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
-						if arguments_cursor.item.is_error then
-							set_last_error (arguments_cursor.item.error_value)
-						else
-							arguments_cursor.item.mark_unreplaced
-							adopt_child_expression (arguments_cursor.item)
-						end
-					end
-					if not arguments_cursor.item.is_value
-						or else arguments_cursor.item.depends_upon_implicit_timezone then
-						fixed_values := False
-					end
-				end
-				arguments_cursor.forth
-			end
-			
-			if not is_error then check_arguments (a_context) end
-			
-			-- Now, if any of the arguments has a static type error,
-			--  then `Current' as a whole has too.
-			
-			if not is_error and then fixed_values then
-				pre_evaluate (a_context) -- May or may not be in error
+			simplify_arguments (a_replacement)
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end			
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Perform optimization of `Current' and its subexpressions.
+	simplify_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+			-- Simplify `arguments'
+		require
+			no_previous_error: not is_error
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			fixed_values: BOOLEAN
-			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_argument: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
 			from
-				fixed_values := True -- until we find otherwise
-				arguments_cursor := arguments.new_cursor
-				arguments_cursor.start
+				l_cursor := arguments.new_cursor
+				l_cursor.start
+				create l_replacement.make (Void)
 			variant
-				arguments.count + 1 - arguments_cursor.index
+				arguments.count + 1 - l_cursor.index
 			until
-				is_error or else arguments_cursor.after
+				a_replacement.item /= Void or l_cursor.after
 			loop
-				arguments_cursor.item.optimize (a_context, a_context_item_type)
-				if arguments_cursor.item.is_error then
-					set_last_error (arguments_cursor.item.error_value)
-				else
-					if arguments_cursor.item.was_expression_replaced then
-						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
-						if arguments_cursor.item.is_error then
-							set_last_error (arguments_cursor.item.error_value)
-						else
-							arguments_cursor.item.mark_unreplaced
-							adopt_child_expression (arguments_cursor.item)
-						end
-					end
-					if not arguments_cursor.item.is_value
-						or else arguments_cursor.item.depends_upon_implicit_timezone then
-						fixed_values := False
-					end					
+				l_argument := l_cursor.item
+				l_argument.simplify (l_replacement)
+				if l_argument.is_error then
+					set_replacement (a_replacement, l_argument)
+				elseif l_argument /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
+					adopt_child_expression (l_replacement.item)
 				end
-				arguments_cursor.forth
-			end
-				
-			if not is_error then check_arguments (a_context) end
-			
-			-- Now, if any of the arguments has a static type error,
-			--  then `Current' as a whole has too.
-			
-			if not is_error and then fixed_values then
-				pre_evaluate (a_context) -- May or may not be in error
+				l_cursor.forth
+				l_replacement.put (Void)
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this subexpression.
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_fixed_values: BOOLEAN
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
-			elseif an_offer.action /= Unordered then
-				a_cursor := arguments.new_cursor
-				from
-					a_cursor.start
-				variant
-					arguments.count + 1 - a_cursor.index
-				until
-						a_cursor.after
-				loop
-					a_cursor.item.promote (an_offer)
-					if a_cursor.item.was_expression_replaced then
-						a_cursor.replace (a_cursor.item.replacement_expression)
-						a_cursor.item.mark_unreplaced
+			from
+				l_fixed_values := True -- until we find otherwise
+				l_cursor := arguments.new_cursor
+				l_cursor.start
+				create l_replacement.make (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
+			until
+				a_replacement.item /= Void or l_cursor.after
+			loop
+				l_cursor.item.check_static_type (l_replacement, a_context, a_context_item_type)
+				if l_cursor.item.is_error then
+					set_replacement (a_replacement, l_cursor.item)
+				elseif l_cursor.item /= l_replacement.item then
+					if l_replacement.item.is_error then
+						set_replacement (a_replacement, l_replacement.item)
+					else
+						l_cursor.replace (l_replacement.item)
+						adopt_child_expression (l_replacement.item)
 						reset_static_properties
 					end
-					a_cursor.forth
 				end
+				if not l_cursor.item.is_value or l_cursor.item.depends_upon_implicit_timezone then
+					l_fixed_values := False
+				end
+				l_cursor.forth
+				l_replacement.put (Void)
+			end
+			
+			if a_replacement.item = Void then
+				check_arguments (a_replacement, a_context)
+			end
+			if a_replacement.item = Void then
+				if l_fixed_values then
+					pre_evaluate (a_replacement, a_context) -- May or may not be in error
+				else
+					a_replacement.put (Current)
+				end
+			end			
+		end
+
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_fixed_values: BOOLEAN
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			from
+				l_fixed_values := True -- until we find otherwise
+				l_cursor := arguments.new_cursor
+				l_cursor.start
+				create l_replacement.make (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
+			until
+				a_replacement.item /= Void or l_cursor.after
+			loop
+				l_cursor.item.optimize (l_replacement, a_context, a_context_item_type)
+				if l_cursor.item.is_error then
+					set_replacement (a_replacement, l_cursor.item)
+				elseif l_cursor.item /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
+					adopt_child_expression (l_replacement.item)
+					reset_static_properties
+				end
+				if not l_cursor.item.is_value or l_cursor.item.depends_upon_implicit_timezone then
+					l_fixed_values := False
+				end
+				l_cursor.forth
+				l_replacement.put (Void)
+			end
+	
+			if a_replacement.item = Void then
+				check_arguments (a_replacement, a_context)
+			end
+			if a_replacement.item = Void then
+				if l_fixed_values then
+					pre_evaluate (a_replacement, a_context) -- May or may not be in error
+				else
+					a_replacement.put (Current)
+				end
+			end		
+		end
+
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this subexpression.
+		local
+			l_promotion: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
+			elseif a_offer.action /= Unordered then
+				l_cursor := arguments.new_cursor
+				from
+					l_cursor.start
+					create l_replacement.make (Void)
+				variant
+					arguments.count + 1 - l_cursor.index
+				until
+					l_cursor.after
+				loop
+					l_cursor.item.promote (l_replacement, a_offer)
+					if l_cursor.item /= l_replacement.item then
+						l_cursor.replace (l_replacement.item)
+						adopt_child_expression (l_replacement.item)
+						reset_static_properties
+					end
+					l_replacement.put (Void)
+					l_cursor.forth
+				end
+				a_replacement.put (Current)
+			else
+				a_replacement.put (Current)
 			end
 		end	
 
 feature -- Evaluation
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 			-- Functions that do not allow pre-evaluation,
 			--  or that need access to context information,
@@ -297,28 +304,33 @@ feature -- Evaluation
 		require
 			no_error: not is_error
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		do
 			create_iterator (a_context.new_compile_time_context)
 			if last_iterator.is_error then
-				if not is_error then
-					set_last_error (last_iterator.error_value)
-				end
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (last_iterator.error_value))
 			else
 				expression_factory.create_sequence_extent (last_iterator)
-				set_replacement (expression_factory.last_created_closure)
+				set_replacement (a_replacement, expression_factory.last_created_closure)
 			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
-
+	
 feature {XM_XPATH_FUNCTION_CALL} -- Local
-
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		require
 			no_error: not is_error
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		deferred
 		ensure
 			maybe_type_error: True
+			not_necessarily_replaced: True
 		end
 
 feature {NONE} -- Implementation

@@ -176,10 +176,11 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
 			-- Suppress compile-time evaluation
+			a_replacement.put (Current)
 		end
 
 feature -- Element change
@@ -205,54 +206,54 @@ feature -- Element change
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			a_uri: STRING
-			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
-			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
-			a_fingerprint: INTEGER
-			a_parser: XM_XPATH_QNAME_PARSER
+			l_uri: STRING
+			l_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
+			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_fingerprint: INTEGER
+			l_parser: XM_XPATH_QNAME_PARSER
 		do
 			if not are_arguments_checked then
 				are_arguments_checked := True
-				Precursor (a_context)
+				Precursor (a_replacement, a_context)
 				if arguments.item (2).is_string_value then
 					
 					-- picture is known statically - optimize for this common case
 					
 					picture := arguments.item (2).as_string_value.string_value
 				end
-				an_expression_context ?= a_context
+				l_expression_context ?= a_context
 				check
-					expression_context: an_expression_context /= Void
+					expression_context: l_expression_context /= Void
 				end
-				if arguments.count = 3 then
+				if arguments.count = 3 and a_replacement.item = Current then
 					if arguments.item (3).is_string_value then
 						
 						-- common case, decimal format name is supplied as a string literal
 						
-						create a_parser.make (arguments.item (3).as_string_value.string_value)
-						if a_parser.is_valid then
-							a_dfm := an_expression_context.style_sheet.decimal_format_manager
+						create l_parser.make (arguments.item (3).as_string_value.string_value)
+						if l_parser.is_valid then
+							l_dfm := l_expression_context.style_sheet.decimal_format_manager
 							is_fixup_required := True
 							
-							if a_parser.is_prefix_present then
-								if a_context.is_prefix_declared (a_parser.optional_prefix) then
-									a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
+							if l_parser.is_prefix_present then
+								if a_context.is_prefix_declared (l_parser.optional_prefix) then
+									l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
 								else
 									set_last_error_from_string ("Prefix of decimal-format-name has not been declared",
 										Xpath_errors_uri, "XTDE1280", Static_error)
 								end
 							else
-								a_uri := Null_uri
+								l_uri := Null_uri
 							end
 							if not is_error then
-								if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
-									shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
+								if not shared_name_pool.is_name_code_allocated (l_parser.optional_prefix, l_uri, l_parser.local_name) then
+									shared_name_pool.allocate_name (l_parser.optional_prefix, l_uri, l_parser.local_name)
 								end
-								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
-								a_dfm.register_usage (a_fingerprint, Current)
+								l_fingerprint := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
+								l_dfm.register_usage (l_fingerprint, Current)
 							end
 						else
 							set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
@@ -268,8 +269,8 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 					
 					-- two arguments only: it uses the default decimal format
 					
-					a_dfm := an_expression_context.style_sheet.decimal_format_manager
-					a_dfm.register_usage (-1, Current)
+					l_dfm := l_expression_context.style_sheet.decimal_format_manager
+					l_dfm.register_usage (-1, Current)
 				end
 			end
 		end

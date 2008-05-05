@@ -98,10 +98,10 @@ feature -- Access
 
 feature -- Optimization
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			Precursor (a_context, a_context_item_type)
+			Precursor (a_replacement, a_context, a_context_item_type)
 			default_collation_name := a_context.default_collation_name
 		ensure then
 			default_collation_name_not_void: default_collation_name /= Void
@@ -112,10 +112,10 @@ feature -- Evaluation
 
 	-- Since collations aren't avaialble statically: (maybe we can change this?)
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			-- do nothing
+			a_replacement.put (Current)
 		end
 
 end

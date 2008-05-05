@@ -45,7 +45,7 @@ feature -- Access
 		do
 			Result := internal_parsed_expression
 		ensure
-			parsed_expression_not_replaced: Result /= Void and then not Result.was_expression_replaced
+			parsed_expression_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -55,29 +55,30 @@ feature -- Status report
 
 feature -- Creation
 
-	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER; a_system_id: STRING) is
+	make_expression (a_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER; a_system_id: STRING) is
 			-- Parse an expression;
 			-- This performs the basic analysis of the expression against the grammar,
 			--  it binds variable references and function calls to variable definitions and
 			--  function definitions, and it performs context-independent expression
 			--  rewriting for optimization purposes.
 		require
-			expression_not_void: an_expression /= Void
+			expression_not_void: a_expression /= Void
 			context_not_void: a_context /= Void
 			strictly_positive_start: a_start > 0
 			nearly_positive_line_number: a_line_number >= -1
 			system_id_known: not a_system_id.is_empty
 		local
-			a_parser: XM_XPATH_EXPRESSION_PARSER
-			an_error_type: INTEGER
+			l_parser: XM_XPATH_EXPRESSION_PARSER
+			l_error_type: INTEGER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			is_parse_error := False
 			internal_parsed_expression := Void
-			if an_expression.count > 0 then
-				create a_parser.make
-				a_parser.parse (an_expression, a_context, a_start, a_terminator, a_line_number)
-				if not a_parser.is_parse_error then
-					internal_parsed_expression := a_parser.last_parsed_expression
+			if a_expression.count > 0 then
+				create l_parser.make
+				l_parser.parse (a_expression, a_context, a_start, a_terminator, a_line_number)
+				if not l_parser.is_parse_error then
+					internal_parsed_expression := l_parser.last_parsed_expression
 					check
 						no_error: not internal_parsed_expression.is_error
 					end
@@ -86,34 +87,28 @@ feature -- Creation
 						internal_parsed_expression.display (1)
 						std.error.put_new_line
 					end
-					internal_parsed_expression.simplify
-					if internal_parsed_expression.is_error then
+					create l_replacement.make (Void)
+					internal_parsed_expression.simplify (l_replacement)
+					if l_replacement.item.is_error then
 						is_parse_error := True
-						parsed_error_value := internal_parsed_expression.error_value
+						parsed_error_value := l_replacement.item.error_value
 						internal_parsed_expression := Void
 						debug ("XPath expression factory")
 							std.error.put_string ("Simplification failed!%N")
 						end
 					else
-						if internal_parsed_expression.was_expression_replaced then
-							internal_parsed_expression := internal_parsed_expression.replacement_expression
-						end
-						debug ("XPath expression factory")
-							std.error.put_string ("After simplication:%N%N")
-							internal_parsed_expression.display (1)
-							std.error.put_new_line
-						end					
+						internal_parsed_expression := l_replacement.item
 					end
 				else
 					is_parse_error := True
-					an_error_type := Static_error
-					create parsed_error_value.make_from_string (a_parser.first_parse_error, Xpath_errors_uri, a_parser.first_parse_error_code, an_error_type)
-					parsed_error_value.set_location (a_system_id, a_parser.first_parse_error_line_number)
+					l_error_type := Static_error
+					create parsed_error_value.make_from_string (l_parser.first_parse_error, Xpath_errors_uri, l_parser.first_parse_error_code, l_error_type)
+					parsed_error_value.set_location (a_system_id, l_parser.first_parse_error_line_number)
 				end
 			else
 				is_parse_error := True
-				an_error_type := Static_error
-				create parsed_error_value.make_from_string ("Empty expression text", Xpath_errors_uri, "XPST0003", an_error_type)
+				l_error_type := Static_error
+				create parsed_error_value.make_from_string ("Empty expression text", Xpath_errors_uri, "XPST0003", l_error_type)
 				parsed_error_value.set_location (a_system_id, a_line_number)
 			end
 		ensure
@@ -204,22 +199,21 @@ feature -- Creation
 				create {XM_XPATH_CARDINALITY_CHECKER} Result.make (a_sequence, a_requested_cardinality, a_role)
 			end
 		ensure
-			result_not_void: Result /= Void
+			created_cardinality_checker_not_void: Result /= Void
 		end
 
-	created_lazy_expression (an_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+	created_lazy_expression (a_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
 			-- Possible lazy expression
 		require
-			expression_not_void: an_expression /= Void
+			a_expression_not_void: a_expression /= Void
 		do
-			if an_expression.is_lazy_expression
-				or else an_expression.is_value then
-				Result := an_expression
+			if a_expression.is_lazy_expression or a_expression.is_value then
+				Result := a_expression
 			else
-				create {XM_XPATH_LAZY_EXPRESSION} Result.make (an_expression.as_computed_expression)
+				create {XM_XPATH_LAZY_EXPRESSION} Result.make (a_expression.as_computed_expression)
 			end
 		ensure
-			result_not_void: Result /= Void
+			created_lazy_expression_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

@@ -88,10 +88,10 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			-- Suppress compile-time evaluation
+			a_replacement.put (Current)
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -67,44 +67,41 @@ feature -- Status report
 
 feature -- Optimization	
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_type: XM_XPATH_ITEM_TYPE
-			a_value: XM_XPATH_VALUE
+			l_type: XM_XPATH_ITEM_TYPE
+			l_value: XM_XPATH_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
+				set_replacement (a_replacement, base_expression)
+			elseif base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
 				create_iterator (a_context.new_compile_time_context)
 				if last_iterator.is_error then
-					set_last_error (last_iterator.error_value)
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (last_iterator.error_value))
 				else
 					expression_factory.create_sequence_extent (last_iterator)
-					a_value := expression_factory.last_created_closure
-					a_value.simplify
-					if a_value.was_expression_replaced then
-						set_replacement (a_value.replacement_expression)
-					else
-						set_replacement (a_value)
-					end
+					l_value := expression_factory.last_created_closure
+					l_value.simplify (a_replacement)
 				end
 			else
-				a_type := base_expression.item_type
-				if not is_sub_type (a_type, any_node_test) then
-					if not (a_type = any_item or else a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type) then
+				l_type := base_expression.item_type
+				if not is_sub_type (l_type, any_node_test) then
+					if not (l_type = any_item or else l_type = type_factory.any_atomic_type or else l_type = type_factory.untyped_atomic_type) then
 						
 						-- The base_expression can't contain any untyped atomic values,
 						--  so there's no need for a converter
 						
-						set_replacement (base_expression)
+						set_replacement (a_replacement, base_expression)
 					end
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 

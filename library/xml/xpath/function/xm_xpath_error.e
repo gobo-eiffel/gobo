@@ -139,10 +139,10 @@ feature -- Evaluation
 			invalid_item: a_result.item.is_error
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--	do_nothing
+			a_replacement.put (Current)
 		end
 
 	

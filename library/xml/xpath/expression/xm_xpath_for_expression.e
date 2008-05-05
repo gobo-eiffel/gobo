@@ -31,24 +31,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; an_action: XM_XPATH_EXPRESSION) is
+	make (a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION; a_sequence_expression: XM_XPATH_EXPRESSION; a_action: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
 			range_variable_not_void: a_range_variable /= Void
 			sequence_not_void: a_sequence_expression /= Void
-			action_not_void: an_action /= Void
+			a_action_not_void: a_action /= Void
 		do
 			operator := For_token
 			set_declaration (a_range_variable)
 			set_sequence (a_sequence_expression)
-			set_action (an_action)
+			set_action (a_action)
 			compute_static_properties
 			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			range_variable_set: declaration = a_range_variable
 			sequence_set: sequence = a_sequence_expression
-			action_set: action_expression = an_action
+			action_set: action = a_action
 		end
 	
 feature -- Access
@@ -56,11 +56,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
-			Result := action_expression.item_type
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
+			Result := action.item_type
 		end
 
 	required_type: XM_XPATH_SEQUENCE_TYPE is
@@ -72,7 +68,7 @@ feature -- Access
 	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		do
-			Result := a_child = action_expression
+			Result := a_child = action
 		end
 
 feature -- Status report
@@ -90,7 +86,7 @@ feature -- Status report
 			sequence.display (a_level + 1)
 			std.error.put_string (STRING_.appended_string (indentation (a_level), "return"))
 			std.error.put_new_line
-			action_expression.display (a_level + 1)
+			action.display (a_level + 1)
 		end
 
 	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
@@ -100,7 +96,7 @@ feature -- Status report
 			if sequence.cardinality_allows_many then
 				create Result.make_false
 			else
-				Result := action_expression.contains_recursive_tail_function_calls (a_name_code, a_arity)
+				Result := action.contains_recursive_tail_function_calls (a_name_code, a_arity)
 			end
 		end
 
@@ -110,61 +106,67 @@ feature -- Status setting
   			-- Mark tail calls on stylesheet functions.
   		do
   			if not sequence.cardinality_allows_many then
-				action_expression.mark_tail_function_calls
+				action.mark_tail_function_calls
 			end
   		end
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_cardinality_set: ARRAY [BOOLEAN]
+			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_properties: XM_XPATH_STATIC_PROPERTY
 		do
-			mark_unreplaced
-			sequence.check_static_type (a_context, a_context_item_type)
-			if sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
+			create l_replacement.make (Void)
+			sequence.check_static_type (l_replacement, a_context, a_context_item_type)
+			if sequence /= l_replacement.item then
+				set_sequence (l_replacement.item)
 			end
 			if sequence.is_error then
-				set_replacement (sequence)
+				set_replacement (a_replacement, sequence)
 			else
-				
-			end
-			if declaration /= Void and then not is_error then
-				create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
-				create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XPTY0004")
-				create a_type_checker
-				a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
+				if declaration /= Void then
+					create l_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
+					create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					l_type_checker.static_type_check (a_context, sequence, l_sequence_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						set_last_error (l_type_checker.static_type_check_error)
+						a_replacement.put (Current)
+					else
+						l_properties := sequence.twin
+						l_properties.set_cardinality_exactly_one
+						set_sequence (l_type_checker.checked_expression)
+						declaration.refine_type_information (sequence.item_type, Void, l_properties)
+						set_declaration_void
+						l_replacement.put (Void)
+						action.check_static_type (l_replacement, a_context, a_context_item_type)
+						if action /= l_replacement.item then
+							replace_action (l_replacement.item)
+						end
+						if action.is_error then
+							set_replacement (a_replacement, action)
+						elseif action.is_empty_sequence then
+							set_replacement (a_replacement, action)
+						else
+							a_replacement.put (Current)
+						end
+					end
 				else
-					create a_cardinality_set.make (1, 3)
-					a_cardinality_set.put (True, 2) -- Exactly One
-					set_sequence (a_type_checker.checked_expression)
-					declaration.refine_type_information (sequence.item_type, Void, sequence)
-					set_declaration_void
-					action_expression.check_static_type (a_context, a_context_item_type)
-					if action.was_expression_replaced then
-						replace_action (action_expression.replacement_expression)
-					end
-					if action_expression.is_error then
-						set_replacement (action_expression)
-					elseif action_expression.is_empty_sequence then
-						set_replacement (action_expression)
-					end
+					a_replacement.put (Current)
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			mark_unreplaced
-			-- TODO - plenty of optimization chanes here - see e.g. quantified expression
+			a_replacement.put (Current)
+			-- TODO - plenty of optimization chances here - see e.g. quantified expression
 		end
 
 feature -- Evaluation
@@ -238,7 +240,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality (multiply_cardinality (sequence.cardinality, action_expression.cardinality))
+			set_cardinality (multiply_cardinality (sequence.cardinality, action.cardinality))
 		end
 
 invariant

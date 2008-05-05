@@ -136,40 +136,45 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		local
-			a_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
+			l_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
 		do
 			if axis = Parent_axis and then (node_test = Void or else node_test = any_node_test) then
-				create  a_parent_node.make
-				set_replacement (a_parent_node)
+				create  l_parent_node.make
+				set_replacement (a_replacement, l_parent_node)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_message: STRING
+			l_message: STRING
 		do
-			mark_unreplaced
 			if a_context_item_type = Void then
-				a_message := STRING_.concat ("Axis step ", axis_description)
-				a_message := STRING_.appended_string (a_message, " cannot be used here: the context item is undefined")
-				set_last_error_from_string (a_message, Xpath_errors_uri, "XPDY0002", Dynamic_error)
+				l_message := STRING_.concat ("Axis step ", axis_description)
+				l_message := STRING_.appended_string (l_message, " cannot be used here: the context item is undefined")
+				set_last_error_from_string (l_message, Xpath_errors_uri, "XPDY0002", Dynamic_error)
+				a_replacement.put (Current)
 			elseif a_context_item_type.is_atomic_type then
-				a_message := STRING_.concat ("Axis step ", axis_description)
-				a_message := STRING_.appended_string (a_message, " cannot be used here: the context item is an atomic value")
-				set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0020", Type_error)
+				l_message := STRING_.concat ("Axis step ", axis_description)
+				l_message := STRING_.appended_string (l_message, " cannot be used here: the context item is an atomic value")
+				set_last_error_from_string (l_message, Xpath_errors_uri, "XPTY0020", Type_error)
+				a_replacement.put (Current)
 			elseif a_context_item_type.is_node_test then
-				check_node_test_static_type (a_context, a_context_item_type.as_node_test)
+				check_node_test_static_type (a_replacement, a_context, a_context_item_type.as_node_test)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			mark_unreplaced
+			a_replacement.put (Current)
 		end
 
 feature -- Evaluation
@@ -270,56 +275,63 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	check_node_test_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST) is
+	check_node_test_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Check static type when context item is a node test.
 		require
 			context_not_void: a_context /= Void
 			node_test_not_void: a_node_test /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			an_origin, a_kind: INTEGER
-			a_message, an_article: STRING
+			l_origin, l_kind: INTEGER
+			l_message, l_article: STRING
 			--	a_schema_type: XM_XPATH_SCHEMA_TYPE
 		do
-			an_origin := a_node_test.primitive_type
-			if an_origin /= Any_node and then is_axis_always_empty (axis, an_origin) then
-				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
-				a_message := STRING_.concat ("The ", axis_name (axis))
-				a_message := STRING_.appended_string (a_message, " axis starting at ")
-				if an_origin = Element_node or else an_origin = Attribute_node then
-					an_article := "an "
+			l_origin := a_node_test.primitive_type
+			if l_origin /= Any_node and then is_axis_always_empty (axis, l_origin) then
+				set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+				l_message := STRING_.concat ("The ", axis_name (axis))
+				l_message := STRING_.appended_string (l_message, " axis starting at ")
+				if l_origin = Element_node or else l_origin = Attribute_node then
+					l_article := "an "
 				else
-					an_article := "a "
+					l_article := "a "
 				end
-				a_message := STRING_.appended_string (a_message, an_article)
-				a_message := STRING_.appended_string (a_message, node_kind_description (an_origin))
-				a_message := STRING_.appended_string (a_message, " will never select anything")
-				a_context.issue_warning (a_message)
+				l_message := STRING_.appended_string (l_message, l_article)
+				l_message := STRING_.appended_string (l_message, node_kind_description (l_origin))
+				l_message := STRING_.appended_string (l_message, " will never select anything")
+				a_context.issue_warning (l_message)
 			elseif node_test /= Void then
-				a_kind := node_test.primitive_type
-				if a_kind /= Any_node and then not axis_contains_node_kind (axis, a_kind) then
-					set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
-					a_message := STRING_.concat ("The ", axis_name (axis))
-					a_message := STRING_.appended_string (a_message, " axis will never select any ")
-					a_message := STRING_.appended_string (a_message, node_kind_description (a_kind))
-					a_message := STRING_.appended_string (a_message, " nodes")
-					a_context.issue_warning (a_message)
-				elseif axis = Self_axis and then a_kind /= Any_node and then an_origin /= Any_node and then a_kind /= an_origin then
-					set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
-					a_message := STRING_.concat ("The self axis will never select any ", node_kind_description (an_origin))
-					a_message := STRING_.appended_string (a_message, " nodes when starting at ")
-					if an_origin = Element_node or else an_origin = Attribute_node then
-						an_article := "an "
+				l_kind := node_test.primitive_type
+				if l_kind /= Any_node and then not axis_contains_node_kind (axis, l_kind) then
+					set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+					l_message := STRING_.concat ("The ", axis_name (axis))
+					l_message := STRING_.appended_string (l_message, " axis will never select any ")
+					l_message := STRING_.appended_string (l_message, node_kind_description (l_kind))
+					l_message := STRING_.appended_string (l_message, " nodes")
+					a_context.issue_warning (l_message)
+				elseif axis = Self_axis and then l_kind /= Any_node and then l_origin /= Any_node and then l_kind /= l_origin then
+					set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+					l_message := STRING_.concat ("The self axis will never select any ", node_kind_description (l_origin))
+					l_message := STRING_.appended_string (l_message, " nodes when starting at ")
+					if l_origin = Element_node or else l_origin = Attribute_node then
+						l_article := "an "
 					else
-						an_article := "a "
+						l_article := "a "
 					end
-					a_message := STRING_.appended_string (a_message, an_article)
-					a_message := STRING_.appended_string (a_message, " node")
-					a_context.issue_warning (a_message)
+					l_message := STRING_.appended_string (l_message, l_article)
+					l_message := STRING_.appended_string (l_message, " node")
+					a_context.issue_warning (l_message)
 				else
+					a_replacement.put (Current)
 					--a_schema_type := a_node_test.content_type
 					-- TODO: schema-aware version
 				end
+			else
+				a_replacement.put (Current)
 			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 
 end

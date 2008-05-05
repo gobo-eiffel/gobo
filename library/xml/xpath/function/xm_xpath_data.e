@@ -59,24 +59,19 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
-			-- Perform context-independent static optimizations
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+			-- Perform context-independent static optimizations.
 		local
-			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
-			a_configuration: XM_XPATH_CONFIGURATION
+			l_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
+			l_configuration: XM_XPATH_CONFIGURATION
 		do
 
 			-- TODO: the following line is not the right approach,
 			--       but it will work fine until a schema-aware version
 
-			create a_configuration.make_configuration
-			create an_atomizer.make (arguments.item (1), a_configuration.are_all_nodes_untyped)
-			an_atomizer.simplify
-			if an_atomizer.was_expression_replaced then
-				set_replacement (an_atomizer.replacement_expression)
-			else
-				set_replacement (an_atomizer)
-			end
+			create l_configuration.make_configuration
+			create l_atomizer.make (arguments.item (1), l_configuration.are_all_nodes_untyped)
+			l_atomizer.simplify (a_replacement)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

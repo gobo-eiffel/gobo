@@ -67,9 +67,10 @@ feature -- Status report
 feature -- Evaluation
 
 	
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
+			a_replacement.put (Current)
 			-- Suppress compile-time evaluation
 		end
 

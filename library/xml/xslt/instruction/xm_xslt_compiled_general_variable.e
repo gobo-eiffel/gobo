@@ -83,11 +83,14 @@ feature -- Status report
 feature -- Status setting
 
 	set_selector (a_select_expression: XM_XPATH_EXPRESSION) is
-			-- Set `select_expression'.
+			-- Ensure `select_expression' = `a_select_expression'.
 		do
-			select_expression := a_select_expression
-			if select_expression /= Void then
-				adopt_child_expression (select_expression)
+			if select_expression /= a_select_expression then
+				select_expression := a_select_expression
+				if select_expression /= Void then
+					adopt_child_expression (select_expression)
+					reset_static_properties
+				end
 			end
 		ensure
 			set: select_expression = a_select_expression
@@ -119,56 +122,72 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void then
 				if not select_expression.is_error then
-					select_expression.simplify
-					if select_expression.was_expression_replaced then
-						set_selector (select_expression.replacement_expression)
-					end
+					create l_replacement.make (Void)
+					select_expression.simplify (l_replacement)
+					set_selector (l_replacement.item)
 				end
-				if select_expression.is_error then set_last_error (select_expression.error_value) end
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
+				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-				if select_expression /= Void then
-				select_expression.check_static_type (a_context, a_context_item_type)
-				if select_expression.was_expression_replaced then
-					set_selector (select_expression.replacement_expression)
+			if select_expression /= Void then
+				create l_replacement.make (Void)
+				select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_selector (l_replacement.item)
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
 				end
-				if select_expression.is_error then set_last_error (select_expression.error_value) end
 			end
-			if not is_error then check_against_required_type (a_context) end
+			if not is_error and a_replacement.item = Void then
+				check_against_required_type (a_replacement, a_context)
+			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void then
-				select_expression.optimize (a_context, a_context_item_type)
-				if select_expression.was_expression_replaced then
-					set_selector (select_expression.replacement_expression)
+				create l_replacement.make (Void)
+				select_expression.optimize (l_replacement, a_context, a_context_item_type)
+				set_selector (l_replacement.item)
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
 				end
-				if select_expression.is_error then set_last_error (select_expression.error_value) end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void then
-				select_expression.promote (an_offer)
-				if select_expression.was_expression_replaced then
-					set_selector (select_expression.replacement_expression)
-					reset_static_properties
-				end
+				create l_replacement.make (Void)
+				select_expression.promote (l_replacement, a_offer)
+				set_selector (l_replacement.item)
 			end
-			if select_expression.is_error then set_last_error (select_expression.error_value) end
 		end
 
 feature -- Evaluation
@@ -260,28 +279,35 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 	
-	check_against_required_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_against_required_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check conformity against `required_type'.
 		require
 			static_context_not_void: a_context /= Void
 			not_in_error: not is_error
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void			
 		local
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
 		do
 
 			-- N.B. Sometimes this check gets performed more than once
 
 			if required_type /= Void and then select_expression /= Void then
-				create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
-				create a_type_checker
-				a_type_checker.static_type_check (a_context, select_expression, required_type, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					set_last_error (a_type_checker.static_type_check_error)
+				create l_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
+				create l_type_checker
+				l_type_checker.static_type_check (a_context, select_expression, required_type, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 				else
-					set_selector (a_type_checker.checked_expression)
+					set_selector (l_type_checker.checked_expression)
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 
 end

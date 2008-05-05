@@ -71,22 +71,21 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		do
 			use_context_item_as_default
-			Precursor
+			Precursor (a_replacement)
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-			mark_unreplaced
-			Precursor (a_context, a_context_item_type)
-			if not is_error and not was_expression_replaced then
-				if arguments.item (1).item_type.is_same_type (type_factory.string_type)
-					and then arguments.item (1).cardinality_exactly_one then
-					set_replacement (arguments.item (1))
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if a_replacement.item = Current then
+				if arguments.item (1).item_type.is_same_type (type_factory.string_type) and
+					arguments.item (1).cardinality_exactly_one then
+					set_replacement (a_replacement, arguments.item (1))
 				end
 			end
 		end

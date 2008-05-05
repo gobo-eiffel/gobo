@@ -73,6 +73,7 @@ feature -- Basic operations
 			l_left_curly_brace, l_right_curly_brace, l_left_double_curly_brace, l_right_double_curly_brace: INTEGER
 			l_parser: XM_XPATH_EXPRESSION_PARSER
 			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			from
 				l_avt_length := avt.count
@@ -118,12 +119,9 @@ feature -- Basic operations
 							create error_value.make_from_string (l_parser.first_parse_error, Xpath_errors_uri, l_parser.first_parse_error_code, Static_error)
 							l_leading_character := avt.count + 1
 						else
-							l_parser.last_parsed_expression.simplify
-							if l_parser.last_parsed_expression.was_expression_replaced then
-								l_expression := l_parser.last_parsed_expression.replacement_expression
-							else
-								l_expression := l_parser.last_parsed_expression
-							end
+							create l_replacement.make (Void)
+							l_parser.last_parsed_expression.simplify (l_replacement)
+							l_expression := l_replacement.item
 							append_parsed_expression (l_expression)
 							l_leading_character := l_parser.tokenizer.next_token_start_index + 1
 						end

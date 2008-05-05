@@ -73,14 +73,13 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-			-- This is called once for each element, after the entire tree has been built.
-			-- As well as validation, it can perform first-time initialisation.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]			
 		do
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 			end
 			check_within_template
 			Precursor

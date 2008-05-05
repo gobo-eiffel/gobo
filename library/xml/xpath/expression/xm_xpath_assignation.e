@@ -36,11 +36,8 @@ feature -- Access
 	sequence: XM_XPATH_EXPRESSION
 			-- Sequence expression
 
-	action: XM_XPATH_EXPRESSION is
+	action: XM_XPATH_EXPRESSION
 			-- Action expression
-		do
-			Result := action_expression -- See XM_XPATH_LET_EXPRESSION for an explanation
-		end
 
 	declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			-- Range variable
@@ -79,78 +76,88 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if declaration /= Void then
 				simplified := True
-				sequence.simplify
+				create l_replacement.make (Void)
+				sequence.simplify (l_replacement)
 				if sequence.is_error then
-					set_last_error (sequence.error_value)
+					set_replacement (a_replacement, sequence)
 				else
-					if sequence.was_expression_replaced then
-						set_sequence (sequence.replacement_expression)
-					end
-					action.simplify
-					if action_expression.is_error then
-						set_last_error (action_expression.error_value)
-					elseif action_expression.was_expression_replaced then
-						set_action (action_expression.replacement_expression)
+					set_sequence (l_replacement.item)
+					l_replacement.put (Void)
+					action.simplify (l_replacement)
+					if action.is_error then
+						set_replacement (a_replacement, action)
 					else
-						set_action (action_expression) -- this fixes up references on the declaration
+						set_action (l_replacement.item) -- this fixes up references on the declaration
 					end
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
-			a_cursor: DS_LIST_CURSOR [XM_XPATH_BINDING]
-			a_saved_binding_list, a_new_binding_list: DS_LIST [XM_XPATH_BINDING]
+			l_promotion: XM_XPATH_EXPRESSION
+			l_cursor: DS_LIST_CURSOR [XM_XPATH_BINDING]
+			l_saved_binding_list, l_new_binding_list: DS_LIST [XM_XPATH_BINDING]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				sequence.promote (an_offer)
-				if sequence.was_expression_replaced then
-					set_sequence (sequence.replacement_expression)
+				create l_replacement.make (Void)
+				sequence.promote (l_replacement, a_offer)
+				if l_replacement.item /= sequence then
+					set_sequence (l_replacement.item)
 					reset_static_properties
 				end
-				if an_offer.action = Inline_variable_references or else an_offer.action = Unordered
-					or else an_offer.action = Replace_current then
-
+				if a_offer.action = Inline_variable_references or a_offer.action = Unordered or
+					a_offer.action = Replace_current then
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					-- them to say we are interested in subexpressions that don't depend on either the
 					-- outer context or the inner context.
-					
-					action_expression.promote (an_offer)
-					if action_expression.was_expression_replaced then
-						replace_action (action_expression.replacement_expression)
+					l_replacement.put (Void)
+					action.promote (l_replacement, a_offer)
+					if action /= l_replacement.item then
+						replace_action (l_replacement.item)
 						reset_static_properties
 					end
-				elseif an_offer.action = Range_independent then
-
-					-- Pass the offer to the action expression only if the action isn't dependent on the
+				elseif a_offer.action = Range_independent then
+					-- Pass the offer to the action only if the action isn't dependent on the
 					--  variable bound by this assignation
-
-					a_saved_binding_list := an_offer.binding_list
-					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_new_binding_list.make (a_saved_binding_list.count + 1)
-					from a_cursor := an_offer.binding_list.new_cursor; a_cursor.start until a_cursor.after loop
-						a_new_binding_list.put (a_cursor.item, a_cursor.index); a_cursor.forth
+					l_saved_binding_list := a_offer.binding_list
+					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} l_new_binding_list.make (l_saved_binding_list.count + 1)
+					from
+						l_cursor := a_offer.binding_list.new_cursor
+						l_cursor.start
+					until
+						l_cursor.after
+					loop
+						l_new_binding_list.put (l_cursor.item, l_cursor.index)
+						l_cursor.forth
 					end
-					a_new_binding_list.put_last (Current)
-					an_offer.set_binding_list (a_new_binding_list)
-					action.promote (an_offer)
-					if action.was_expression_replaced then
-						replace_action (action.replacement_expression)
+					l_new_binding_list.put_last (Current)
+					a_offer.set_binding_list (l_new_binding_list)
+					l_replacement.put (Void)
+					action.promote (l_replacement, a_offer)
+					if action /= l_replacement.item then
+						replace_action (l_replacement.item)
 						reset_static_properties
 					end
-					an_offer.set_binding_list (a_saved_binding_list)		
+					a_offer.set_binding_list (l_saved_binding_list)		
 				end
+				a_replacement.put (Current)
 			end
 		end
 
@@ -184,35 +191,32 @@ feature -- Element change
 			sequence_not_void: a_sequence /= Void
 		do
 			sequence := a_sequence
-			if sequence.was_expression_replaced then sequence.mark_unreplaced end
 			adopt_child_expression (sequence)
 		ensure
 			sequence_set: sequence = a_sequence
-			sequence_not_marked_for_replacement: not sequence.was_expression_replaced
 		end
 
-	replace_action (an_action: XM_XPATH_EXPRESSION) is
+	replace_action (a_action: XM_XPATH_EXPRESSION) is
 			-- Set `action'.
 		require
-			action_not_void: an_action /= Void
+			a_action_not_void: a_action /= Void
 		do
-			action_expression := an_action
-			adopt_child_expression (action_expression)
+			action := a_action
+			adopt_child_expression (action)
 		ensure
-			action_set: action_expression = an_action
-			action_not_marked_for_replacement: not action_expression.was_expression_replaced
+			action_set: action = a_action
 		end
 
-	set_action (an_action: XM_XPATH_EXPRESSION) is
+	set_action (a_action: XM_XPATH_EXPRESSION) is
 			-- Set `action'.
 		require
-			action_not_void: an_action /= Void
+			a_action_not_void: a_action /= Void
 			declaration_not_void: declaration /= Void
 		do
-			replace_action (an_action)
+			replace_action (a_action)
 			declaration.fix_up_references (Current)
 		ensure
-			action_set: action_expression = an_action
+			action_set: action = a_action
 		end
 
 	set_declaration (a_declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION) is
@@ -253,13 +257,10 @@ feature {XM_XPATH_ASSIGNATION} -- Local
 	simplified: BOOLEAN
 			-- Has simplify been run?
 
-	action_expression: XM_XPATH_EXPRESSION
-			-- Underlying action
-
 invariant
 
 	valid_operator: operator = For_token or operator = Some_token or operator = Every_token or operator = Let_token
 	sequence_not_void: initialized implies sequence /= Void
-	action_not_void: initialized implies action_expression /= Void
+	action_not_void: initialized implies action /= Void
 	
 end

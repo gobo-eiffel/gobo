@@ -98,74 +98,62 @@ feature -- Element change
 	fix_up_references (a_binding: XM_XPATH_BINDING) is
 			-- Fix up binding references.
 		require
-			binding_not_void: a_binding /= Void
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
-			a_reference: XM_XPATH_VARIABLE_REFERENCE
+			a_binding_not_void: a_binding /= Void
 		do
-			a_cursor := references.new_cursor
-			from
-				a_cursor.start
-			variant
-				references.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				a_reference := a_cursor.item
-				if not a_reference.was_expression_replaced then
-
-					-- We supply the static properties of the expression later
-					-- in the call to refine_type_information
-					
-					a_reference.set_static_type (required_type, Void, Void)
-					a_reference.fix_up (a_binding)
-				end
-
-				a_cursor.forth
-			end
+			references.do_all (agent fix_up_reference (a_binding, ?))
 		end
 
 	refine_type_information (a_type: XM_XPATH_ITEM_TYPE; a_constant_value: XM_XPATH_VALUE;
 									 a_properties: XM_XPATH_STATIC_PROPERTY) is
 			-- Set static type in the binding reference more accurately.
 		require
-			type_not_void: a_type /= Void
+			a_type_not_void: a_type /= Void
 			possible_constant_value: True
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
-			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
-			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			old_item_type, new_item_type: like a_type
 		do
-			a_cursor := references.new_cursor
-			from
-				a_cursor.start
-			variant
-				references.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				a_variable_reference := a_cursor.item
-				if not a_variable_reference.was_expression_replaced then
-					old_item_type := a_variable_reference.item_type
-					new_item_type := old_item_type
-					if is_sub_type (a_type, old_item_type) then
-						new_item_type := a_type
-					end
-					create a_sequence_type.make (new_item_type, a_variable_reference.merged_cardinalities (a_properties))
-					a_variable_reference.set_static_type (a_sequence_type, a_constant_value, a_properties)
-				end
-				a_cursor.forth
+			references.do_all (agent refine_type (?, a_type, a_constant_value, a_properties))
+		end
+
+	refine_type (a_variable_reference: XM_XPATH_VARIABLE_REFERENCE; a_type: XM_XPATH_ITEM_TYPE;
+		a_constant_value: XM_XPATH_VALUE; a_properties: XM_XPATH_STATIC_PROPERTY) is
+			-- Set static type in the binding reference more accurately.
+		require
+			a_variable_reference_not_void: a_variable_reference /= Void			
+		local
+			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			l_old_item_type, l_new_item_type: like a_type
+		do
+			l_old_item_type := a_variable_reference.item_type
+			l_new_item_type := l_old_item_type
+			if is_sub_type (a_type, l_old_item_type) then
+				l_new_item_type := a_type
 			end
+			create l_sequence_type.make (l_new_item_type, a_variable_reference.merged_cardinalities (a_properties))
+			a_variable_reference.set_static_type (l_sequence_type, a_constant_value, a_properties)
 		end
 
 feature {NONE} -- Implementation
 
 	references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]
+			-- All references to `Current'
+
+	fix_up_reference (a_binding: XM_XPATH_BINDING; a_reference: XM_XPATH_VARIABLE_REFERENCE) is
+			-- Fix up `a_reference' to `a_binding'.
+		require
+			a_binding_not_void: a_binding /= Void
+			a_reference_not_void: a_reference /= Void
+		do
+	
+				-- We supply the static properties of the expression later
+				-- in the call to refine_type_information
+				
+				a_reference.set_static_type (required_type, Void, Void)
+				a_reference.fix_up (a_binding)
+		end
 
 invariant
 
-	references_not_void: references /= Void
+	references_not_void: not references.has_void
+	all_references_not_void: not references.has (Void)
 	name_not_void: variable_name /= Void and then variable_name.count > 0
 	required_type_not_void: required_type /= Void
 

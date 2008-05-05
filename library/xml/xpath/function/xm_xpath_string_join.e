@@ -65,17 +65,16 @@ feature -- Status report
 
 feature -- Optimization
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			an_expression: XM_XPATH_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
 		do
-			mark_unreplaced
-			Precursor (a_context, a_context_item_type)
-			if not is_error and then not was_expression_replaced then
-				an_expression := simplified_singleton
-				if an_expression /= Current then
-					set_replacement (an_expression)
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if not is_error and a_replacement.item = Current then
+				l_expression := simplified_singleton
+				if l_expression /= Current then
+					set_replacement (a_replacement, l_expression)
 				end
 			end
 		end

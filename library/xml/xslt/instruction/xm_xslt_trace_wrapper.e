@@ -91,31 +91,37 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
-			-- Perform context-independent static optimizations
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			child.simplify
-			if child.was_expression_replaced then child := child.replacement_expression end
+			create l_replacement.make (Void)
+			child.simplify (l_replacement)
+			set_child (l_replacement.item)
+			a_replacement.put (Current)
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			child.check_static_type (a_context, a_context_item_type)
-			if child.was_expression_replaced then
-				child := child.replacement_expression
-				reset_static_properties
-			end
+			create l_replacement.make (Void)		
+			child.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_child (l_replacement.item)
+			a_replacement.put (Current)
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			child.optimize (a_context, a_context_item_type)
-			if child.was_expression_replaced then
-				child := child.replacement_expression
-				reset_static_properties
-			end
+			create l_replacement.make (Void)			
+			child.optimize (l_replacement, a_context, a_context_item_type)
+			set_child (l_replacement.item)
+			a_replacement.put (Current)
 		end
 
 feature -- Evaluation
@@ -235,20 +241,45 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_cardinalities (child)
 		end
 
-	set_unsorted (eliminate_duplicates: BOOLEAN) is
+	set_unsorted (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; eliminate_duplicates: BOOLEAN) is
 			-- Remove unwanted sorting from an expression, at compile time.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			child.set_unsorted (eliminate_duplicates)
-			if child.was_expression_replaced then child := child.replacement_expression end
+			a_replacement.put (Current)
+			create l_replacement.make (Void)
+			child.set_unsorted (l_replacement, eliminate_duplicates)
+			set_child (l_replacement.item)
 		end
 
-	set_unsorted_if_homogeneous  (eliminate_duplicates: BOOLEAN) is
+	set_unsorted_if_homogeneous  (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; eliminate_duplicates: BOOLEAN) is
 			-- Remove unwanted sorting from an expression, at compile time,
 			--  but only if all nodes or all atomic values.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			child.set_unsorted_if_homogeneous (eliminate_duplicates)
-			if child.was_expression_replaced then child := child.replacement_expression end		
+			a_replacement.put (Current)
+			create l_replacement.make (Void)
+			child.set_unsorted_if_homogeneous (l_replacement, eliminate_duplicates)
+			set_child (l_replacement.item)
 		end
+
+feature {NONE} -- Implementation
+
+	set_child (a_child: XM_XPATH_EXPRESSION) is
+			-- Ensure `child' = `a_child'.
+		do
+			if child /= a_child then
+				child := a_child
+				if child /= Void then
+					adopt_child_expression (child)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: child = a_child
+		end
+
 
 invariant
 

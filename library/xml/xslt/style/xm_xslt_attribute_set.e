@@ -202,6 +202,7 @@ feature -- Element change
 			l_body: XM_XPATH_EXPRESSION
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 			l_instruction: XM_XSLT_COMPILED_ATTRIBUTE_SET
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			last_generated_expression := Void
 			if reference_count > 0 then
@@ -210,8 +211,9 @@ feature -- Element change
 				if l_body = Void then
 					create {XM_XPATH_EMPTY_SEQUENCE} l_body.make
 				end
-				l_body.simplify
-				if l_body.was_expression_replaced then l_body := l_body.replacement_expression end
+				create l_replacement.make (Void)
+				l_body.simplify (l_replacement)
+				l_body := l_replacement.item
 				if configuration.is_tracing then
 					create l_trace_wrapper.make (l_body, a_executable, Current)
 					l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)

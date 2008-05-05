@@ -79,16 +79,17 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_sort_comes_first (False)
 			if select_expression.is_error then
 				report_compile_error (select_expression.error_value)
 			else
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 			end
 			validated := True
 		end
@@ -96,28 +97,30 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
-			a_sorted_sequence: XM_XPATH_EXPRESSION
-			a_content: XM_XPATH_EXPRESSION
+			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
+			l_sorted_sequence: XM_XPATH_EXPRESSION
+			l_content: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			a_sorted_sequence := select_expression
+			l_sorted_sequence := select_expression
 			assemble_sort_keys
 			if not any_compile_errors then
-				a_sort_key_list := sort_keys
-				if a_sort_key_list.count > 0 then
-					create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
-					a_sorted_sequence.check_static_type (static_context, any_item)
-					if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
-					a_sorted_sequence.optimize (static_context, any_item)
-					if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
+				l_sort_key_list := sort_keys
+				if l_sort_key_list.count > 0 then
+					create {XM_XSLT_SORT_EXPRESSION} l_sorted_sequence.make (select_expression, l_sort_key_list)
+					create l_replacement.make (Void)
+					l_sorted_sequence.check_static_type (l_replacement, static_context, any_item)
+					l_sorted_sequence := l_replacement.item
+					l_replacement.put (Void)
+					l_sorted_sequence.optimize (l_replacement, static_context, any_item)
+					l_sorted_sequence := l_replacement.item
 				end
 				compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
-				a_content := last_generated_expression
-				if a_content = Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} a_content.make
+				l_content := last_generated_expression
+				if l_content = Void then
+					create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
 				end
-				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
-				create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, a_sorted_sequence, a_content)
+				create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, l_sorted_sequence, l_content)
 			end
 		end
 

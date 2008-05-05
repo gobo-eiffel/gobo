@@ -104,42 +104,60 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			select_expression.simplify
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
+			a_replacement.put (Current)
+			create l_replacement.make (Void)
+			select_expression.simplify (l_replacement)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
 				adopt_child_expression (select_expression)
+				reset_static_properties
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
-			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
+			a_replacement.put (Current)
+			create l_replacement.make (Void)
+			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
 				adopt_child_expression (select_expression)
+				reset_static_properties
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
-			select_expression.optimize (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
+			a_replacement.put (Current)
+			create l_replacement.make (Void)		
+			select_expression.optimize (l_replacement, a_context, a_context_item_type)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
 				adopt_child_expression (select_expression)
+				reset_static_properties
 			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			select_expression.promote (an_offer)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
+			create l_replacement.make (Void)	
+			select_expression.promote (l_replacement, a_offer)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
 				adopt_child_expression (select_expression)
 				reset_static_properties
 			end

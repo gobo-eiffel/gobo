@@ -42,39 +42,39 @@ create
 feature -- Test
 
 	test_filtered_path_two is
+		-- Test evaluation of "//fred[position() = last()".
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_context: XM_XPATH_STAND_ALONE_CONTEXT
-			a_string: STRING
-			a_base_uri: UT_URI
-			a_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
+			l_expression: XM_XPATH_EXPRESSION
+			l_context: XM_XPATH_STAND_ALONE_CONTEXT
+			l_string: STRING
+			l_base_uri: UT_URI
+			l_function_library: XM_XPATH_CORE_FUNCTION_LIBRARY
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			a_string := "//fred[position() = last()]"
-			create a_base_uri.make ("test:/test-path")
-			create a_function_library.make
-			create a_context.make (False, False, a_base_uri, a_function_library)
-			expression_factory.make_expression (a_string, a_context, 1, Eof_token, 1, "unknown:")
+			l_string := "//fred[position() = last()]"
+			create l_base_uri.make ("test:/test-path")
+			create l_function_library.make
+			create l_context.make (False, False, l_base_uri, l_function_library)
+			expression_factory.make_expression (l_string, l_context, 1, Eof_token, 1, "unknown:")
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
 				std.error.put_string (expression_factory.parsed_error_value.error_message)
 				std.error.put_new_line
 			else
-				an_expression := expression_factory.parsed_expression
+				l_expression := expression_factory.parsed_expression
 			end
-			assert ("Parse sucessful", an_expression /= Void)
-			an_expression.check_static_type (a_context, any_item)
-			if an_expression.was_expression_replaced then
-				an_expression := an_expression.replacement_expression
-			end
-			assert ("Type checking sucessfull", not an_expression.is_error)
-			an_expression.optimize (a_context, any_item)
-			if an_expression.was_expression_replaced then
-				an_expression := an_expression.replacement_expression
-			end
-			assert ("Optimization sucessfull", not an_expression.is_error)
+			assert ("Parse sucessful", l_expression /= Void)
+			create l_replacement.make (Void)
+			l_expression.check_static_type (l_replacement, l_context, any_item)
+			l_expression := l_replacement.item
+			assert ("Type checking sucessfull", not l_expression.is_error)
+			l_replacement.put (Void)
+			l_expression.optimize (l_replacement, l_context, any_item)
+			l_expression := l_replacement.item
+			assert ("Optimization sucessfull", not l_expression.is_error)
 			debug ("XPath expression factory")
 				print ("After analysis: %N")
-				an_expression.display (1)
+				l_expression.display (1)
 			end
 		end
 

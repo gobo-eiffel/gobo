@@ -59,11 +59,11 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		do
 			use_context_item_as_default
-			Precursor
+			Precursor (a_replacement)
 		end
 
 feature -- Evaluation

@@ -201,63 +201,46 @@ feature -- Element change
 
 feature -- Evaluation
 
-	evaluate (an_expression_text: STRING) is
-			-- Evaluate `an_expression' against `context_item'.
+	evaluate (a_expression_text: STRING) is
+			-- Evaluate `a_expression_text' against `context_item'.
 		require
-			expression_not_void: an_expression_text /= Void
+			expression_not_void: a_expression_text /= Void
 			static_context_not_void: static_context /= Void
 			context_item_not_void: context_item /= Void
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_slot_manager: XM_XPATH_SLOT_MANAGER
+			l_expression: XM_XPATH_EXPRESSION
+			l_slot_manager: XM_XPATH_SLOT_MANAGER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token, 1, "unknown:")
+			expression_factory.make_expression (a_expression_text, static_context, 1, Eof_token, 1, "unknown:")
 			if expression_factory.is_parse_error then
 				is_error := True
 				internal_error_value := expression_factory.parsed_error_value
 			else
-				an_expression := expression_factory.parsed_expression
-				an_expression.check_static_type (static_context, any_item)
-				if an_expression.is_error then
+				l_expression := expression_factory.parsed_expression
+				create l_replacement.make (Void)
+				l_expression.check_static_type (l_replacement, static_context, any_item)
+				l_expression := l_replacement.item
+				if l_expression.is_error then
 					is_error := True
-					internal_error_value := an_expression.error_value
+					internal_error_value := l_expression.error_value
 				else
-					if an_expression.was_expression_replaced then
-						an_expression := an_expression.replacement_expression
-						check
-							not_replaced: not an_expression.was_expression_replaced
-						end
+					debug ("XPath evaluator")
+						l_expression.display (1)
 					end
-					if an_expression.is_error then
+					l_replacement.put (Void)
+					l_expression.optimize (l_replacement, static_context, any_item)
+					l_expression := l_replacement.item
+					if l_expression.is_error then
 						is_error := True
-						internal_error_value := an_expression.error_value
+						internal_error_value := l_expression.error_value
 					else
 						debug ("XPath evaluator")
-							an_expression.display (1)
+							l_expression.display (1)
 						end
-						an_expression.optimize (static_context, any_item)
-						if an_expression.is_error then
-							is_error := True
-							internal_error_value := an_expression.error_value
-						else
-							if an_expression.was_expression_replaced then
-								an_expression := an_expression.replacement_expression
-								check
-									not_replaced: not an_expression.was_expression_replaced
-								end
-							end
-							if an_expression.is_error then
-								is_error := True
-								internal_error_value := an_expression.error_value
-							else
-								debug ("XPath evaluator")
-									an_expression.display (1)
-								end
-								create a_slot_manager.make
-								an_expression.allocate_slots (1, a_slot_manager)
-								evaluate_post_analysis (an_expression, a_slot_manager)
-							end
-						end
+						create l_slot_manager.make
+						l_expression.allocate_slots (1, l_slot_manager)
+						evaluate_post_analysis (l_expression, l_slot_manager)
 					end
 				end
 			end
@@ -310,57 +293,57 @@ feature {NONE} -- Implementation
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
 		-- Tree builder
 
-	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
-			-- perform evaluation on `an_expression'.
+	evaluate_post_analysis (a_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
+			-- perform evaluation on `a_expression'.
 		require
-			expression_checked_and_optimized_without_error: an_expression /= Void and then not an_expression.is_error
-			slot_manager_not_void: a_slot_manager /= Void
+			a_expression_checked_and_optimized_without_error: a_expression /= Void and then not a_expression.is_error
+			a_slot_manager_not_void: a_slot_manager /= Void
 		local
-			a_document_pool: XM_XPATH_DOCUMENT_POOL
-			a_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
+			l_document_pool: XM_XPATH_DOCUMENT_POOL
+			l_context: XM_XPATH_STAND_ALONE_DYNAMIC_CONTEXT
+			l_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_item: XM_XPATH_ITEM
 		do
-			create a_document_pool.make (Serializable)
+			create l_document_pool.make (Serializable)
 			-- TODO media_type needs to be retrieved (earlier) from the tree pipe
-			a_document_pool.add (document, media_type, source_uri)
-			create a_context.make (context_item, a_document_pool, function_library)
-			if implicit_timezone /= Void then a_context.set_implicit_timezone (implicit_timezone) end
-			a_context.copy_string_mode (Current)
-			a_context.open_stack_frame (a_slot_manager)
-			an_expression.create_iterator (a_context)
-			a_sequence_iterator := an_expression.last_iterator
+			l_document_pool.add (document, media_type, source_uri)
+			create l_context.make (context_item, l_document_pool, function_library)
+			if implicit_timezone /= Void then l_context.set_implicit_timezone (implicit_timezone) end
+			l_context.copy_string_mode (Current)
+			l_context.open_stack_frame (a_slot_manager)
+			a_expression.create_iterator (l_context)
+			l_sequence_iterator := a_expression.last_iterator
 			
-			if a_sequence_iterator.is_error then
+			if l_sequence_iterator.is_error then
 				is_error := True
-				internal_error_value := a_sequence_iterator.error_value
+				internal_error_value := l_sequence_iterator.error_value
 			else
 				from
-					a_sequence_iterator.start
-					if a_sequence_iterator.is_error then
+					l_sequence_iterator.start
+					if l_sequence_iterator.is_error then
 						is_error := True
-						internal_error_value := a_sequence_iterator.error_value
+						internal_error_value := l_sequence_iterator.error_value
 					end
 					create evaluated_items.make
 				until
-					is_error or else a_sequence_iterator.is_error or else a_sequence_iterator.after
+					is_error or else l_sequence_iterator.is_error or else l_sequence_iterator.after
 				loop
 						check
-							item_not_void: a_sequence_iterator.item /= Void
+							item_not_void: l_sequence_iterator.item /= Void
 							-- Because start ensures not before and until clause ensures not after
 						end
-					an_item := a_sequence_iterator.item
-					if an_item.is_error then
+					l_item := l_sequence_iterator.item
+					if l_item.is_error then
 						is_error := True
-						internal_error_value := an_item.error_value
+						internal_error_value := l_item.error_value
 					else
-						evaluated_items.put_last (an_item)
+						evaluated_items.put_last (l_item)
 					end
 					
-					a_sequence_iterator.forth
-					if a_sequence_iterator.is_error then
+					l_sequence_iterator.forth
+					if l_sequence_iterator.is_error then
 						is_error := True
-						internal_error_value := a_sequence_iterator.error_value
+						internal_error_value := l_sequence_iterator.error_value
 					end
 				end
 			end

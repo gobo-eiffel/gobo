@@ -85,11 +85,15 @@ feature {NONE} -- Initialization
 			set_cardinality_from_count
 		end
 
-	make_as_view (an_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
+	make_as_view (a_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
 			-- Create as a view over `an_extent'.
+		require
+			a_extent_not_void: a_extent /= Void
+			a_start_large_enough: a_start > 0
+			a_start_small_enough: (a_start - 1) <= a_extent.count
 		do
 			make_value
-			make_from_linear (an_extent)
+			make_from_linear (a_extent)
 			if a_start > 1 then
 				prune_first (a_start - 1)
 			end
@@ -250,37 +254,42 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		local
-			a_count: INTEGER
-			an_item: XM_XPATH_ITEM
-			a_singleton_node: XM_XPATH_SINGLETON_NODE
+			l_count: INTEGER
+			l_item: XM_XPATH_ITEM
+			l_singleton_node: XM_XPATH_SINGLETON_NODE
 		do
-			a_count := count
-			if a_count = 0 then
-				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
-			elseif a_count = 1 then
-				an_item := item_at (1)
-				if an_item.is_atomic_value then
-					set_replacement (an_item.as_atomic_value)
+			l_count := count
+			if l_count = 0 then
+				set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+			elseif l_count = 1 then
+				l_item := item_at (1)
+				if l_item.is_atomic_value then
+					set_replacement (a_replacement, l_item.as_atomic_value)
 				else
-					create a_singleton_node.make (an_item.as_node)
-					set_replacement (a_singleton_node)
+					create l_singleton_node.make (l_item.as_node)
+					set_replacement (a_replacement, l_singleton_node)
 				end
+			else
+				a_replacement.put (Current)
 			end
 		end
 
 	reduce is
 			-- Reduce a value to its simplest form.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			simplify
-			if was_expression_replaced then
+			create l_replacement.make (Void)
+			simplify (l_replacement)
+			if l_replacement.item /= Void then
 				check
-					still_a_value: replacement_expression.is_value
+					still_a_value: l_replacement.item.is_value
 					-- Values never become non-values
 				end
-				last_reduced_value := replacement_expression.as_value
+				last_reduced_value := l_replacement.item.as_value
 				if last_reduced_value.is_error then
 					set_last_error (last_reduced_value.error_value)
 				end

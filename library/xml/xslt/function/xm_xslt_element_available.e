@@ -103,7 +103,7 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
@@ -116,25 +116,25 @@ feature -- Evaluation
 			end
 			create l_parser.make (arguments.item (1).as_string_value.string_value)
 			if not l_parser.is_valid then
-				set_last_error_from_string ("Argument to 'element-available' is not a lexical QName",
-													 Xpath_errors_uri, "XTDE1440", Static_error)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string ("Argument to 'element-available' is not a lexical QName",
+					Xpath_errors_uri, "XTDE1440", Static_error))
 			else
 				l_boolean := a_context.is_element_available (arguments.item (1).as_string_value.string_value)
 				create l_boolean_value.make (l_boolean)
-				set_replacement (l_boolean_value)
+				set_replacement (a_replacement, l_boolean_value)
 			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			namespaces_needed: BOOLEAN
 			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			if not checked then
-				Precursor (a_context)
+				Precursor (a_replacement, a_context)
 				if not arguments.item (1).is_value then
 					namespaces_needed := True
 					l_expression_context ?= a_context

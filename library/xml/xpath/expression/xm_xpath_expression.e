@@ -79,7 +79,6 @@ feature -- Access
 			-- and (b) it is the same for all items in the sequence.
 		require
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			item_type_not_void: Result /= Void
@@ -145,7 +144,6 @@ feature -- Access
 			-- Immediate sub-expressions of `Current'
 		require
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 		deferred
 			-- TODO: consider changing this to return a sequence iterator, as now that
 			--       XSLT compiles to expressions, there could be a lot of array
@@ -225,36 +223,24 @@ feature -- Status report
 
 	is_evaluate_supported: BOOLEAN is
 			-- Is `evaluate' supported natively?
-		require
-			not_replaced: not was_expression_replaced
 		do
 			Result := INTEGER_.bit_and (native_implementations, Supports_evaluate) /= 0
 		end
 
 	is_iterator_supported: BOOLEAN is
 			-- Is `iterator' supported natively?
-		require
-			not_replaced: not was_expression_replaced
 		do
 			Result := INTEGER_.bit_and (native_implementations, Supports_iterator) /= 0
 		end
 
 	is_process_supported: BOOLEAN is
 			-- Is `generate_events' supported natively?
-		require
-			not_replaced: not was_expression_replaced
 		do
 			Result := INTEGER_.bit_and (native_implementations, Supports_process) /= 0
 		end
 
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Last error value
-
-	was_expression_replaced: BOOLEAN
-			-- Did any routine create a replacement expression for `Current'?
-
-	replacement_expression: XM_XPATH_EXPRESSION
-			-- Replacement for `Current' when `expression_replaced' is `True'
 
 	last_evaluated_string: XM_XPATH_STRING_VALUE
 			-- Value from last call to `evaluate_as_string'
@@ -285,8 +271,6 @@ feature -- Status report
 
 	calls_function (a_name_code: INTEGER): BOOLEAN is
 			-- Does `Current' include a call to function named by `a_name_code'?
-		require
-			not_replaced: not was_expression_replaced
 		local
 			l_fingerprint: INTEGER
 			l_expression: XM_XPATH_EXPRESSION
@@ -298,14 +282,13 @@ feature -- Status report
 			end
 			if not Result then
 				from
-					l_cursor := sub_expressions.new_cursor; l_cursor.start
+					l_cursor := sub_expressions.new_cursor
+					l_cursor.start
 				until
-					Result or else l_cursor.after
+					Result or l_cursor.after
 				loop
 					l_expression := l_cursor.item
-					if not l_expression.was_expression_replaced then
-						Result := l_expression.calls_function (a_name_code)
-					end
+					Result := l_expression.calls_function (a_name_code)
 					l_cursor.forth
 				end
 			end
@@ -321,8 +304,6 @@ feature -- Status report
 	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
 			-- Does `Current' contains recursive tail calls of stylesheet functions?
 			-- `Undecided' means it contains a tail call to another function.
-		require
-			not_replaced: not was_expression_replaced
 		do
 			create Result.make_false
 		ensure
@@ -885,127 +866,103 @@ feature -- Status setting
 			in_error: is_error
 		end
 
-	mark_unreplaced is
-			-- Reset replacement status.
-		require
-			not_in_error: not is_error
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-		do
-			was_expression_replaced := False
-			replacement_expression := Void
-			from
-				a_cursor := sub_expressions.new_cursor
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				if a_cursor.item.was_expression_replaced then
-					a_cursor.item.mark_unreplaced
-				end
-				a_cursor.forth
-			end
-		ensure
-			no_longer_marked_as_replaced: not was_expression_replaced
-		end
-
-	set_replacement (an_expression: XM_XPATH_EXPRESSION) is
+	set_replacement (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_expression: XM_XPATH_EXPRESSION) is
 			-- Set replacement for `Current'.
 		require
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
-			replacement_expression_not_replaced: an_expression /= Void and then not an_expression.was_expression_replaced
-			no_circularity: an_expression /= Current
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
+			no_circularity: a_expression /= Current
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
-			debug ("XPath expression replacement")
-				std.error.put_string ("An " + an_expression.generating_type + " is about to be set as a replacement for an " + generating_type + "%N")
-			end
-			if an_expression.is_computed_expression then
-				an_expression.as_computed_expression.copy_location_identifier (Current)
-				if not an_expression.is_error then
-					from a_cursor := an_expression.sub_expressions.new_cursor; a_cursor.start until a_cursor.after loop
-						if a_cursor.item.is_computed_expression then a_cursor.item.as_computed_expression.set_parent (an_expression.as_computed_expression) end
-						a_cursor.forth
+			if a_expression.is_computed_expression then
+				a_expression.as_computed_expression.copy_location_identifier (Current)
+				if not a_expression.is_error then
+					from l_cursor := a_expression.sub_expressions.new_cursor
+					l_cursor.start
+					until
+						l_cursor.after
+					loop
+						if l_cursor.item.is_computed_expression then
+							l_cursor.item.as_computed_expression.set_parent (a_expression.as_computed_expression)
+						end
+						l_cursor.forth
 					end
 				end
 			end
-			replacement_expression := an_expression
-			was_expression_replaced := True
+			a_replacement.put (a_expression)
 		ensure
-			marked_as_replaced: was_expression_replaced
-			replacement_set: replacement_expression = an_expression
+			replaced: a_replacement.item /= Void
+			replacement_set: a_replacement.item = a_expression
 		end
 
-	resolve_calls_to_current_function is
-			-- Resolve calls to "current()".
+	resolve_calls_to_current_function (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+			-- Resolve calls to "fn:current()".
+		require
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
-			a_sequence_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
-			a_name_code, a_counter: INTEGER
-			a_required_type: XM_XPATH_SEQUENCE_TYPE
-			name_code_created: BOOLEAN
-			a_local_name, a_local_name_prefix: STRING
-			an_offer: XM_XPATH_PROMOTION_OFFER
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
+			l_sequence_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
+			l_name_code, l_counter: INTEGER
+			l_required_type: XM_XPATH_SEQUENCE_TYPE
+			l_name_code_created: BOOLEAN
+			l_local_name, l_local_name_prefix: STRING
+			l_offer: XM_XPATH_PROMOTION_OFFER
 		do
-			mark_unreplaced
 			if calls_function (Current_function_type_code) then
-				create a_required_type.make_single_item
+				create l_required_type.make_single_item
 				from
-					a_local_name_prefix := "current_"; a_counter := 0
+					l_local_name_prefix := "current_"; l_counter := 0
 				until
-					name_code_created
+					l_name_code_created
 				loop
-					a_local_name := STRING_.concat (a_local_name_prefix, a_counter.out)
-					if not shared_name_pool.is_name_code_allocated ("gexslt_system_usage", Gexslt_examples_uri, a_local_name) then
-						shared_name_pool.allocate_name ("gexslt_system_usage", Gexslt_examples_uri, a_local_name)
-						name_code_created := True
-						a_name_code := shared_name_pool.last_name_code
+					l_local_name := STRING_.concat (l_local_name_prefix, l_counter.out)
+					if not shared_name_pool.is_name_code_allocated ("gexslt_system_usage", Gexslt_examples_uri, l_local_name) then
+						shared_name_pool.allocate_name ("gexslt_system_usage", Gexslt_examples_uri, l_local_name)
+						l_name_code_created := True
+						l_name_code := shared_name_pool.last_name_code
 					else
-						a_counter := a_counter + 1
+						l_counter := l_counter + 1
 					end
 				end
-				create a_range_variable.make ("gexslt_system_usage:current_function", a_name_code, a_required_type)
-				create a_sequence_expression.make_current
-				create a_let_expression.make (a_range_variable, a_sequence_expression, Current)
-				create an_offer.make (Replace_current, Void, a_let_expression, False, False)
-				promote (an_offer)
-				if was_expression_replaced then
-					a_let_expression.set_action (replacement_expression)
-				else
-					a_let_expression.set_action (Current)
-				end
-				mark_unreplaced
-				set_replacement (a_let_expression)
+				create l_range_variable.make ("gexslt_system_usage:current_function", l_name_code, l_required_type)
+				create l_sequence_expression.make_current
+				create l_let_expression.make (l_range_variable, l_sequence_expression, Current)
+				create l_offer.make (Replace_current, Void, l_let_expression, False, False)
+				promote (a_replacement, l_offer)
+				l_let_expression.set_action (a_replacement.item)
+				a_replacement.put (l_let_expression)
+			else
+				a_replacement.put (Current)
 			end
 		ensure
-			may_be_replaced: True
+			may_be_replaced: a_replacement.item /= Void
 		end
 
 	mark_tail_function_calls is
   			-- Mark tail calls on stylesheet functions.
-  		require
-  			not_replaced: not was_expression_replaced
   		do
   			-- do_nothing by default.
   		end
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		require
 			no_previous_error: not is_error
-			not_replaced: not was_expression_replaced
 			static_properties_computed: are_static_properties_computed
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		deferred
 		ensure
-			simplified_expression_not_void: was_expression_replaced implies replacement_expression /= Void
+			simplified_expression_not_void: a_replacement.item /= Void
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 			-- This checks statically that the operands of the expression have the correct type.
 			-- If necessary it generates code to do run-time type checking or type conversion.
@@ -1015,17 +972,18 @@ feature -- Optimization
 			--  to the declaration of the function or variable. However, the types of such functions and
 			--  variables will only be accurately known if they have been explicitly declared.
 		require
-			context_not_void: a_context /= Void
+			a_context_not_void: a_context /= Void
 			context_item_may_not_be_set: True
 			no_previous_error: not is_error
-			not_replaced: not was_expression_replaced
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 			static_properties_computed: are_static_properties_computed
 		deferred
 		ensure
-			expression_may_be_replaced: was_expression_replaced implies replacement_expression /= Void
+			replaced: a_replacement.item /= Void
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 			-- This routine is called after all references to functions and variables have been resolved
 			--  to the declaration of the function or variable, and after static type-checking.
@@ -1033,28 +991,32 @@ feature -- Optimization
 			context_not_void: a_context /= Void
 			context_item_may_not_be_set: True
 			no_previous_error: not is_error
-			not_replaced: not was_expression_replaced
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 			static_properties_computed: are_static_properties_computed
 		deferred
 		ensure
-			may_be_in_error: True -- due to possible early evaluation.
+			replaced: a_replacement.item /= Void
+			may_be_in_error: True -- even if there was no replacement, early evaluation can cause this
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 			-- The offer will be accepted if the subexpression is not dependent on
-			--  the factors (e.g. the context item) identified in `an_offer'.
+			--  the factors (e.g. the context item) identified in `a_offer'.
 			-- By default the offer is not accepted - this is appropriate in the case of simple expressions
 			-- such as constant values and variable references where promotion would give no performance
 			-- advantage. This routine is always called at compile time.
 		require
-			offer_not_void: an_offer /= Void
+			offer_not_void: a_offer /= Void
 			no_previous_error: not is_error
-			not_replaced: not was_expression_replaced
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 			static_properties_computed: are_static_properties_computed
 		deferred
 		ensure
-			still_no_error: not is_error
+			replaced: a_replacement.item /= Void
+			no_error: not a_replacement.item.is_error
 		end
 
 feature -- Evaluation
@@ -1066,7 +1028,6 @@ feature -- Evaluation
 		require
 			context_may_be_void: True
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 			a_mode_large_enough: a_mode >= Evaluation_method_undecided
 			a_mode_small_enough: a_mode <= Create_memo_closure
 			a_result_not_void: a_result /= Void
@@ -1150,7 +1111,6 @@ feature -- Evaluation
 		require
 			context_may_be_void: True
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 		local
 			l_item: XM_XPATH_ITEM
 		do
@@ -1231,7 +1191,6 @@ feature -- Evaluation
 			a_result_empty: a_result.item = Void
 			context_may_be_void: True
 			expression_not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			item_evaluated_but_may_be_void: True
@@ -1248,7 +1207,6 @@ feature -- Evaluation
 			-- TODO - check the above and turn it into pre-conditions.if possible
 			context_may_be_void: True
 			expression_not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			string_not_void_but_may_be_in_error: last_evaluated_string /= Void
@@ -1259,7 +1217,6 @@ feature -- Evaluation
 		require
 			not_in_error: not is_error
 			context_may_be_void: True
-			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			iterator_not_void_but_may_be_error: last_iterator /= Void
@@ -1272,7 +1229,6 @@ feature -- Evaluation
 			not_in_error: not is_error
 			context_may_be_void: True
 			node_sequence: is_node_sequence
-			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			iterator_not_void_but_may_be_error: last_node_iterator /= Void
@@ -1284,7 +1240,6 @@ feature -- Evaluation
 		require
 			evaluation_context_not_void: a_context /= Void
 			push_processing: a_context.has_push_processing
-			not_replaced: not was_expression_replaced
 			no_error: not a_context.is_process_error
 		deferred
 		ensure
@@ -1297,7 +1252,6 @@ feature -- Evaluation
 			expression_not_in_error: not is_error
 			context_may_be_void: True
 			process_supported: is_process_supported
-			not_replaced: not was_expression_replaced
 		deferred
 		ensure
 			processed_eager_evaluation_not_void: Result /= Void
@@ -1312,7 +1266,6 @@ feature -- Element change
 			a_next_free_slot_large_enough: a_next_free_slot >= last_slot_number
 			slot_manager_may_be_void: True
 			not_in_error: not is_error -- should really be all sub-expressions not in error - think about this
-			not_replaced: not was_expression_replaced
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_last_slot: INTEGER
@@ -1332,7 +1285,6 @@ feature -- Element change
 				l_cursor.after
 			loop
 				if not l_cursor.item.is_error then
-					l_cursor.item.mark_unreplaced -- in case it's a path expression replaced by `Current'
 					l_last_slot := l_cursor.item.last_slot_number
 					if l_last_slot > last_slot_number then
 						last_slot_number := l_last_slot
@@ -2029,31 +1981,41 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			bit_set: Result < 8 and then Result > 0 and then INTEGER_.bit_and (Result, INTEGER_.bit_or (INTEGER_.bit_or (Supports_evaluate, Supports_iterator), Supports_process)) /= 0
 		end
 
-	set_unsorted (eliminate_duplicates: BOOLEAN) is
+	set_unsorted (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_eliminate_duplicates: BOOLEAN) is
 			-- Remove unwanted sorting from an expression, at compile time.
 		require
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void			
 		local
-			an_offer: XM_XPATH_PROMOTION_OFFER
+			l_offer: XM_XPATH_PROMOTION_OFFER
 		do
-			create an_offer.make (Unordered, Void, Void, eliminate_duplicates, False)
-			promote (an_offer)
+			create l_offer.make (Unordered, Void, Void, a_eliminate_duplicates, False)
+			promote (a_replacement, l_offer)
+		ensure
+			replaced: a_replacement.item /= Void
+			not_in_error: not a_replacement.item.is_error
 		end
 
-	set_unsorted_if_homogeneous  (eliminate_duplicates: BOOLEAN) is
+	set_unsorted_if_homogeneous  (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_eliminate_duplicates: BOOLEAN) is
 			-- Remove unwanted sorting from an expression, at compile time,
 			--  but only if all nodes or all atomic values.
 		require
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			an_offer: XM_XPATH_PROMOTION_OFFER
+			l_offer: XM_XPATH_PROMOTION_OFFER
 		do
 			if not is_value and then not item_type.is_any_item_type then
-				create an_offer.make (Unordered, Void, Void, eliminate_duplicates, False)
-				promote (an_offer)
+				create l_offer.make (Unordered, Void, Void, a_eliminate_duplicates, False)
+				promote (a_replacement, l_offer)
+			else
+				a_replacement.put (Current)
 			end
+		ensure
+			replaced: a_replacement.item /= Void
+			not_in_error: not a_replacement.item.is_error			
 		end
 
 	indentation (a_level: INTEGER): STRING is
@@ -2093,7 +2055,6 @@ feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 		require
 			context_may_be_void: True
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 			a_result_not_void: a_result /= Void
 			a_result_empty: a_result.item = Void
 			lazy_tail_expression: is_tail_expression and then as_tail_expression.base_expression.is_variable_reference
@@ -2103,7 +2064,8 @@ feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 			l_value: XM_XPATH_VALUE
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_finished: BOOLEAN
-			l_start, l_end: INTEGER
+			l_start, l_end, l_length: INTEGER
+			l_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			l_tail := as_tail_expression
 			l_var := l_tail.base_expression.as_variable_reference
@@ -2140,7 +2102,14 @@ feature {XM_XPATH_EXPRESSION_FACTORY} -- Implementation
 							a_result.put (create {XM_XPATH_INTEGER_RANGE}.make (l_start, l_end))
 						end
 					elseif l_value.is_sequence_extent then
-						a_result.put (create {XM_XPATH_SEQUENCE_EXTENT}.make_as_view (l_value.as_sequence_extent, l_tail.start, l_value.as_sequence_extent.count - l_tail.start + 1)) 
+						l_start := l_tail.start
+						l_length := l_value.as_sequence_extent.count - l_tail.start + 1
+						l_extent := l_value.as_sequence_extent
+						if l_start > 0 and (l_start - 1) <= l_extent.count then
+							a_result.put (create {XM_XPATH_SEQUENCE_EXTENT}.make_as_view (l_extent, l_start, l_length))
+						else
+							a_result.put (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+						end
 					end
 				end
 			end
@@ -2153,7 +2122,6 @@ feature {NONE} -- Implementation
 		require
 			context_may_be_void: True
 			not_in_error: not is_error
-			not_replaced: not was_expression_replaced
 			a_result_not_void: a_result /= Void
 			a_result_empty: a_result.item = Void
 		do
@@ -2164,8 +2132,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	replacement_expression: was_expression_replaced implies replacement_expression /= Void
-	no_replacement: not was_expression_replaced implies replacement_expression = Void
 	value_or_computed_expression: BOOLEAN_.nxor (<<is_value, is_computed_expression, is_pattern_bridge>>)
 
 end

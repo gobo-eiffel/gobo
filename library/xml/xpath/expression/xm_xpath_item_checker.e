@@ -100,40 +100,43 @@ feature -- Comparison
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.simplify
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.simplify (l_replacement)
+			set_base_expression (l_replacement.item)
 			if required_item_type = any_item or else base_expression.is_error then
-				set_replacement (base_expression)
+				set_replacement (a_replacement, base_expression)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_relation: INTEGER
-			a_message: STRING
+			l_relation: INTEGER
+			l_message: STRING
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement (a_replacement, base_expression)
 			elseif base_expression.cardinality_is_empty then
 				-- no type checking needed
-				set_replacement (base_expression)
+				set_replacement (a_replacement, base_expression)
 			else
-				a_relation := type_relationship (required_item_type, base_expression.item_type)
-				if a_relation = Same_item_type or else a_relation = Subsuming_type then
-					set_replacement (base_expression)
-				elseif a_relation = Disjoint_types then
+				l_relation := type_relationship (required_item_type, base_expression.item_type)
+				if l_relation = Same_item_type or else l_relation = Subsuming_type then
+					set_replacement (a_replacement, base_expression)
+				elseif l_relation = Disjoint_types then
 					if base_expression.cardinality_allows_zero then
 						a_context.issue_warning (STRING_.concat ("The only value that can pass type-checking is an empty sequence. ", role_locator.message))
 					elseif required_item_type = type_factory.string_type and is_sub_type (base_expression.item_type, type_factory.any_uri_type)  then
@@ -141,13 +144,16 @@ feature -- Optimization
 						if base_expression.is_computed_expression then
 							base_expression.as_computed_expression.set_parent (parent)
 						end
-						set_replacement (base_expression)
+						set_replacement (a_replacement, base_expression)
 					else
-						a_message := "Required type of " + role_locator.message + " is "
+						l_message := "Required type of " + role_locator.message + " is "
 							+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
-						set_last_error_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (l_message, Xpath_errors_uri, error_code, Type_error))
 					end
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 

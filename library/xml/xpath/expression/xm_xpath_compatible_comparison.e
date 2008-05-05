@@ -89,57 +89,56 @@ feature -- Status report
 	
 feature -- Optimization	
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check
 				backwards_compatible_mode: a_context.is_backwards_compatible_mode
 			end
-			mark_unreplaced
-			first_operand.check_static_type (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
-			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+			create l_replacement.make (Void)
+			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				a_replacement.put (Current)
 			else
-				second_operand.check_static_type (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
+				set_first_operand (l_replacement.item)
+				l_replacement.put (Void)
+				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+				if not l_replacement.item.is_error then
+					set_second_operand (l_replacement.item)
 				end
-				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
-				end
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check
 				backwards_compatible_mode: a_context.is_backwards_compatible_mode
 			end
-			mark_unreplaced
-			first_operand.optimize (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
-			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+			create l_replacement.make (Void)
+			first_operand.optimize (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				a_replacement.put (Current)
 			else
-				second_operand.optimize (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
-				end
-				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
+				set_first_operand (l_replacement.item)
+				l_replacement.put (Void)
+				second_operand.optimize (l_replacement, a_context, a_context_item_type)
+				if l_replacement.item.is_error then
+					a_replacement.put (Current)
 				else
-					first_operand.set_unsorted (False)
-					if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
-					second_operand.set_unsorted (False)
-					if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
+					set_second_operand (l_replacement.item)
+					l_replacement.put (Void)
+					first_operand.set_unsorted (l_replacement, False)
+					set_first_operand (l_replacement.item)
+					l_replacement.put (Void)
+					second_operand.set_unsorted (l_replacement, False)
+					set_second_operand (l_replacement.item)
 					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
 						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 						create  l_result.make (Void)
@@ -149,10 +148,10 @@ feature -- Optimization
 							-- We are guarenteed a boolean value
 						end
 						if not is_error then
-							set_replacement (l_result.item.as_boolean_value)
+							set_replacement (a_replacement, l_result.item.as_boolean_value)
 						end
 					else
-						optimize_stage_2 (a_context, a_context_item_type)
+						optimize_stage_2 (a_replacement, a_context, a_context_item_type)
 					end
 				end
 			end
@@ -266,68 +265,63 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_stage_2 (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize_stage_2 (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize after operands have been optimized.
 		require
 			no_previous_error: not is_error
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 			xpath_1_mode: a_context.is_backwards_compatible_mode	
 		local
-			a_type, another_type: XM_XPATH_ITEM_TYPE
-			maybe_first_operand_numeric, maybe_second_operand_numeric: BOOLEAN
-			is_first_operand_numeric, is_second_operand_numeric: BOOLEAN
-			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
-			a_relationship, another_relationship: INTEGER
-			an_expression: XM_XPATH_EXPRESSION
+			l_type, l_other_type: XM_XPATH_ITEM_TYPE
+			l_maybe_first_operand_numeric, l_maybe_second_operand_numeric: BOOLEAN
+			l_is_first_operand_numeric, l_is_second_operand_numeric: BOOLEAN
+			l_general_comparison: XM_XPATH_GENERAL_COMPARISON
+			l_relationship, l_other_relationship: INTEGER
+			l_expression: XM_XPATH_EXPRESSION
 		do
-			a_type := first_operand.item_type
-			another_type := second_operand.item_type
-			if a_type.is_atomic_type then
+			l_type := first_operand.item_type
+			l_other_type := second_operand.item_type
+			if l_type.is_atomic_type then
 				atomize_first_operand  := False
 			end
-			if another_type.is_atomic_type then
+			if l_other_type.is_atomic_type then
 				atomize_second_operand  := False
 			end
-			if type_relationship (a_type, type_factory.boolean_type) = Disjoint_types then
+			if type_relationship (l_type, type_factory.boolean_type) = Disjoint_types then
 				maybe_first_operand_boolean := False
 			end
-			if type_relationship (another_type, type_factory.boolean_type) = Disjoint_types then
+			if type_relationship (l_other_type, type_factory.boolean_type) = Disjoint_types then
 				maybe_second_operand_boolean := False
 			end
-			if not maybe_first_operand_boolean and then not maybe_second_operand_boolean then
-				a_relationship := type_relationship (a_type, type_factory.numeric_type)
-				another_relationship := type_relationship (another_type, type_factory.numeric_type)
-				maybe_first_operand_numeric := a_relationship /= Disjoint_types
-				maybe_second_operand_numeric := another_relationship /= Disjoint_types
-				is_first_operand_numeric := a_relationship = Subsumed_type or else a_relationship = Same_item_type
-				is_second_operand_numeric := another_relationship = Subsumed_type or else another_relationship = Same_item_type
+			if not maybe_first_operand_boolean and not maybe_second_operand_boolean then
+				l_relationship := type_relationship (l_type, type_factory.numeric_type)
+				l_other_relationship := type_relationship (l_other_type, type_factory.numeric_type)
+				l_maybe_first_operand_numeric := l_relationship /= Disjoint_types
+				l_maybe_second_operand_numeric := l_other_relationship /= Disjoint_types
+				l_is_first_operand_numeric := l_relationship = Subsumed_type or else l_relationship = Same_item_type
+				l_is_second_operand_numeric := l_other_relationship = Subsumed_type or else l_other_relationship = Same_item_type
 
-				if (is_first_operand_numeric and then is_second_operand_numeric)
-					or else (not maybe_first_operand_numeric and then not maybe_second_operand_numeric) then
+				if (l_is_first_operand_numeric and then l_is_second_operand_numeric)
+					or else (not l_maybe_first_operand_numeric and then not l_maybe_second_operand_numeric) then
 					
 					-- Use the XPath 2.0 route if we don't have to deal with the possibility of boolean values,
 					--  or the complications of converting values to numbers
 					
-					create a_general_comparison.make (first_operand, operator, second_operand, atomic_comparer.collator)
-					a_general_comparison.check_static_type (a_context, a_context_item_type)
-					if a_general_comparison.is_error then
-						set_last_error (a_general_comparison.error_value)
-					elseif a_general_comparison.was_expression_replaced then
-						an_expression := a_general_comparison.replacement_expression
-					else
-						an_expression := a_general_comparison
+					create l_general_comparison.make (first_operand, operator, second_operand, atomic_comparer.collator)
+					l_general_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
+					if not a_replacement.item.is_error then
+						l_expression := a_replacement.item
 					end
-					if not is_error then
-						an_expression.optimize (a_context, a_context_item_type)
-						if an_expression.is_error then
-							set_last_error (an_expression.error_value)
-						elseif an_expression.was_expression_replaced then
-							set_replacement (an_expression.replacement_expression)
-						else
-							set_replacement (an_expression)
-						end
+					if not a_replacement.item.is_error then
+						a_replacement.put (Void)
+						l_expression.optimize (a_replacement, a_context, a_context_item_type)
 					end
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 

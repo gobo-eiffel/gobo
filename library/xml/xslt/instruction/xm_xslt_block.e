@@ -50,9 +50,7 @@ feature {NONE} -- Initialization
 		require
 			a_executable_not_void: a_executable /= Void
 			a_head_not_void: a_head /= Void
-			a_head_not_replaced: not a_head.was_expression_replaced
 			a_tail_not_void: a_tail /= Void
-			a_tail_not_replaced: not a_tail.was_expression_replaced
 			strictly_positive_module_number: a_module_number > 0
 			positive_line_number: a_line_number >= 0
 		do
@@ -90,26 +88,30 @@ feature -- Status report
 
 feature -- Optimization
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			a_child: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_child: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			from
-				a_cursor := children.new_cursor; a_cursor.start
+				create l_replacement.make (Void)
+				l_cursor := children.new_cursor
+				l_cursor.start
 			variant
-				children.count + 1 - a_cursor.index
+				children.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_child := a_cursor.item
-				a_child.promote (an_offer)
-				if a_child.was_expression_replaced then
-					a_cursor.replace (a_child.replacement_expression)
+				l_child := l_cursor.item
+				l_child.promote (l_replacement, a_offer)
+				if l_replacement.item /= l_child then
+					l_cursor.replace (l_replacement.item)
 					reset_static_properties
 				end
-				a_cursor.forth
+				l_replacement.put (Void)
+				l_cursor.forth
 			end	
 		end
 

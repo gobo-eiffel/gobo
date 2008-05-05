@@ -173,186 +173,213 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
+			a_replacement.put (Current)
 			from
-				a_cursor := conditions.new_cursor; a_cursor.start
+				create l_replacement.make (Void)
+				l_cursor := conditions.new_cursor
+				l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_expression := a_cursor.item
-				an_expression.simplify
-				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
+				l_expression := l_cursor.item
+				l_expression.simplify (l_replacement)
+				if l_expression /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
+					reset_static_properties
 				end
-				a_cursor.forth
+				l_replacement.put (Void)
+				l_cursor.forth
 			end
 			from
-				a_cursor := actions.new_cursor; a_cursor.start
+				l_cursor := actions.new_cursor
+				l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_expression := a_cursor.item
-				an_expression.simplify
-				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
+				l_expression := l_cursor.item
+				l_expression.simplify (l_replacement)
+				if l_expression /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
+					reset_static_properties
 				end
-				a_cursor.forth
+				l_replacement.put (Void)
+				l_cursor.forth
 			end
 		ensure then
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
+			a_replacement.put (Current)
 			from
-				a_cursor := conditions.new_cursor; a_cursor.start
+				create l_replacement.make (Void)
+				l_cursor := conditions.new_cursor
+				l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_expression := a_cursor.item
-				an_expression.check_static_type (a_context, a_context_item_type)
-				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
+				l_expression := l_cursor.item
+				l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				if l_expression /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
+					reset_static_properties
 				end
-				a_cursor.forth
+				l_replacement.put (Void)
+				l_cursor.forth
 			end
 			from
-				a_cursor := actions.new_cursor; a_cursor.start
+				l_cursor := actions.new_cursor
+				l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_expression := a_cursor.item
-				an_expression.check_static_type (a_context, a_context_item_type)
-				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
+				l_expression := l_cursor.item
+				l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				if l_expression /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
+					reset_static_properties
 				end
-				a_cursor.forth
+				l_replacement.put (Void)
+				l_cursor.forth
 			end	
 		ensure then
 			same_condition_count: conditions.count = old conditions.count
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
 			l_boolean: BOOLEAN
 			l_index: INTEGER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
 			from
-				l_cursor := conditions.new_cursor; l_cursor.start
+				create l_replacement.make (Void)
+				l_cursor := conditions.new_cursor
+				l_cursor.start
 			until
 				l_cursor.after
 			loop
 				l_expression := l_cursor.item
-				l_expression.optimize (a_context, a_context_item_type)
-				if l_expression.was_expression_replaced then
-					l_expression := l_expression.replacement_expression
-					l_cursor.replace (l_expression)
+				l_expression.optimize (l_replacement, a_context, a_context_item_type)
+				if l_expression /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
+					reset_static_properties
 				end
-				if l_expression.is_value and then not l_expression.depends_upon_implicit_timezone then
+				if l_expression.is_value and not l_expression.depends_upon_implicit_timezone then
 					l_expression.calculate_effective_boolean_value (Void)
 					if not l_expression.is_error then
 						l_boolean := l_expression.last_boolean_value.value
 						l_index := l_cursor.index
 						if l_boolean then
-
-							-- if condition is always true, remove all the subsequent conditions and actions
-
-							
+							-- if condition is always true, remove all the subsequent conditions and actions		
 							if l_index = 1 then
-								set_replacement (actions.item (1))
+								set_replacement (a_replacement, actions.item (1))
 							else
 								conditions.keep_first (l_index)
 								actions.keep_first (l_index)
 							end
+							l_replacement.put (Void)
 							l_cursor.go_after
 						else
-
 							-- if condition is false, skip this test
-
 							l_cursor.remove
 							actions.remove (l_index)
 						end
 					else -- a run-time error will result only if this condition is tested
+						l_replacement.put (Void)
 						l_cursor.forth
 					end
 				else
+					l_replacement.put (Void)
 					l_cursor.forth
 				end
 			end
-			if not was_expression_replaced then
+			if a_replacement.item = Void then
 				from
-					l_cursor := actions.new_cursor; l_cursor.start
+					l_cursor := actions.new_cursor
+					l_cursor.start
 				until
 					l_cursor.after
 				loop
 					l_expression := l_cursor.item
-					l_expression.optimize (a_context, a_context_item_type)
-					if l_expression.was_expression_replaced then
-						l_cursor.replace (l_expression.replacement_expression)
+					l_expression.optimize (l_replacement, a_context, a_context_item_type)
+					if l_expression /= l_replacement.item then
+						l_cursor.replace (l_replacement.item)
+						reset_static_properties
 					end
+					l_replacement.put (Void)
 					l_cursor.forth
 				end	
 			end
 			if conditions.is_empty then
 				conditions.put_last (create {XM_XPATH_BOOLEAN_VALUE}.make (True))
 				actions.put_last (create {XM_XPATH_EMPTY_SEQUENCE}.make)
-				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+				set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 				a_context.issue_warning (STRING_.concat ("All conditional branches evaluate to false at ", location_message))
-			end	
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-
 			-- xsl:when acts as a guard:
 			-- Expressions inside the when mustn't be evaluated if the when is false,
 			--  and conditions after the first mustn't be evaluated if a previous condition is true.
-			-- So we don't pass all promotion offers on
-
-			if an_offer.action = Inline_variable_references	or an_offer.action = Unordered
-				or an_offer.action = Replace_current then
+			-- So we don't pass all promotion offers on.
+			create l_replacement.make (Void)
+			if a_offer.action = Inline_variable_references	or a_offer.action = Unordered or
+			   a_offer.action = Replace_current then
 				from
-					l_cursor := conditions.new_cursor; l_cursor.start
+					l_cursor := conditions.new_cursor
+					l_cursor.start
 				until
 					l_cursor.after
 				loop
 					l_expression := l_cursor.item
-					l_expression.promote (an_offer)
-					if l_expression.was_expression_replaced then
-						l_cursor.replace (l_expression.replacement_expression)
+					l_expression.promote (l_replacement, a_offer)
+					if l_expression /= l_replacement.item then
+						l_cursor.replace (l_replacement.item)
 						reset_static_properties
 					end
+					l_replacement.put (Void)
 					l_cursor.forth
 				end
 				from
-					l_cursor := actions.new_cursor; l_cursor.start
+					l_cursor := actions.new_cursor
+					l_cursor.start
 				until
 					l_cursor.after
 				loop
 					l_expression := l_cursor.item
-					l_expression.promote (an_offer)
-					if l_expression.was_expression_replaced then
-						l_cursor.replace (l_expression.replacement_expression)
+					l_expression.promote (l_replacement, a_offer)
+					if l_expression /= l_replacement.item then
+						l_cursor.replace (l_replacement.item)
 						reset_static_properties
 					end
+					l_replacement.put (Void)
 					l_cursor.forth
 				end
 			else
@@ -360,9 +387,9 @@ feature -- Optimization
 				-- in other cases, only the first xsl:when condition is promoted
 
 				l_expression := conditions.item (1)
-				l_expression.promote (an_offer)
-				if l_expression.was_expression_replaced then
-					conditions.replace (l_expression.replacement_expression, 1)
+				l_expression.promote (l_replacement, a_offer)
+				if l_expression /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
 					reset_static_properties
 				end
 			end
@@ -375,7 +402,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
@@ -386,14 +413,14 @@ feature -- Evaluation
 				-- This is XSLT
 			end
 			from
-				a_cursor := conditions.new_cursor; a_cursor.start
+				l_cursor := conditions.new_cursor; l_cursor.start
 			variant
-				conditions.count + 1 - a_cursor.index
+				conditions.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_cursor.item.calculate_effective_boolean_value (a_context)
-				a_boolean_value := a_cursor.item.last_boolean_value
+				l_cursor.item.calculate_effective_boolean_value (a_context)
+				a_boolean_value := l_cursor.item.last_boolean_value
 				if a_boolean_value.is_error then
 					a_boolean_value.error_value.set_location (system_id, line_number)
 					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value)
@@ -402,13 +429,13 @@ feature -- Evaluation
 					else
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
 					end
-					a_cursor.go_after
+					l_cursor.go_after
 				elseif a_boolean_value.value then
-					actions.item (a_cursor.index).create_iterator (a_context)
-					last_iterator := actions.item (a_cursor.index).last_iterator
-					a_cursor.go_after
+					actions.item (l_cursor.index).create_iterator (a_context)
+					last_iterator := actions.item (l_cursor.index).last_iterator
+					l_cursor.go_after
 				else
-					a_cursor.forth
+					l_cursor.forth
 				end
 			end
 			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make end

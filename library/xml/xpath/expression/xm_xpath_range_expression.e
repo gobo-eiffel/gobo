@@ -80,82 +80,83 @@ feature -- Access
 
 feature -- Optimization	
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			a_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
+			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			first_operand.check_static_type (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_first_operand (l_replacement.item)
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+				set_replacement (a_replacement, first_operand)
 			else
-				second_operand.check_static_type (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
-				end
+				l_replacement.put (Void)
+				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_second_operand (l_replacement.item)
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
+					set_replacement (a_replacement, second_operand)
 				else
-					create a_sequence_type.make_optional_integer
-					create a_role.make (Binary_expression_role, "to", 1, Xpath_errors_uri, "XPTY0004")
-					create a_type_checker
-					a_type_checker.static_type_check (a_context, first_operand, a_sequence_type, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
+					create l_sequence_type.make_optional_integer
+					create l_role.make (Binary_expression_role, "to", 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 					else
-						set_first_operand (a_type_checker.checked_expression)
-						create another_role.make (Binary_expression_role, "to", 2, Xpath_errors_uri, "XPTY0004")
-						a_type_checker.static_type_check (a_context, second_operand, a_sequence_type, False, another_role)
-						if a_type_checker.is_static_type_check_error then
-							set_last_error (a_type_checker.static_type_check_error)
+						set_first_operand (l_type_checker.checked_expression)
+						create l_other_role.make (Binary_expression_role, "to", 2, Xpath_errors_uri, "XPTY0004")
+						l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, False, l_other_role)
+						if l_type_checker.is_static_type_check_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 						else
-							set_second_operand (a_type_checker.checked_expression)
+							set_second_operand (l_type_checker.checked_expression)
+							a_replacement.put (Current)
 						end
 					end
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			l_integer, l_other_integer: INTEGER_64
 			l_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
 			l_integer_range: XM_XPATH_INTEGER_RANGE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			first_operand.optimize (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			first_operand.optimize (l_replacement, a_context, a_context_item_type)
+			set_first_operand (l_replacement.item)
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+				set_replacement (a_replacement, first_operand)
 			else
-				second_operand.optimize (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
-				end
+				l_replacement.put (Void)
+				second_operand.optimize (l_replacement, a_context, a_context_item_type)
+				set_second_operand (l_replacement.item)
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
+					set_replacement (a_replacement, second_operand)
 				else
-					if first_operand.is_machine_integer_value and then second_operand.is_machine_integer_value then
+					if first_operand.is_machine_integer_value and second_operand.is_machine_integer_value then
 						l_integer := first_operand.as_machine_integer_value.as_integer
 						l_other_integer := second_operand.as_machine_integer_value.as_integer
 						if l_integer > l_other_integer then
-							set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+							set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 						elseif l_integer = l_other_integer then
 							create l_integer_value.make (l_integer)
-							set_replacement (l_integer_value)
+							set_replacement (a_replacement, l_integer_value)
 						elseif l_integer.abs <=  Platform.Maximum_integer and l_other_integer.abs <=  Platform.Maximum_integer then 
 							create l_integer_range.make (l_integer.to_integer_32, l_other_integer.to_integer_32)
-							set_replacement (l_integer_range)
+							set_replacement (a_replacement, l_integer_range)
+						else
+							a_replacement.put (Current)
 						end
+					else
+						a_replacement.put (Current)
 					end
 				end
 			end

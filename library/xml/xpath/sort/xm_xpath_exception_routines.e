@@ -12,7 +12,7 @@ indexing
 		by {DS_SORTER}.sort.
 		So instead {XM_XPATH_ATOMIC_COMPARER}.less_than will make the check prior
 		to calling `three_way_comparison', and raise an exception if the check fails.
-		This excpetion will then be caught by routine `perform_sorting' of classes
+		This exception will then be caught by routine `perform_sorting' of classes
 		XM_XSLT_SORTED_NODE_ITERATOR and XM_XSLT_SORTED_ITERATOR, which will set the
 		XTDE1030 error condition.
 		This class provides for sharing the common features between these classes.

@@ -72,66 +72,64 @@ feature -- Access
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			first_operand.simplify
+			create l_replacement.make (Void)
+			first_operand.simplify (l_replacement)
+			set_first_operand (l_replacement.item)
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
-			elseif first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
-
-			if not is_error then
-				second_operand.simplify
+				set_replacement (a_replacement, first_operand)
+			else
+				l_replacement.put (Void)
+				second_operand.simplify (l_replacement)
+				set_second_operand (l_replacement.item)
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
-				elseif second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
+					set_replacement (a_replacement, second_operand)
+				else
+					simplify_empty_expression (a_replacement)
 				end
-			end
-			if not is_error then
-				simplify_empty_expression
 			end
 		end
 
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_node_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			first_operand.check_static_type (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_first_operand (l_replacement.item)
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+				set_replacement (a_replacement, first_operand)
 			else
-				second_operand.check_static_type (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
-				end
+				l_replacement.put (Void)
+				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_second_operand (l_replacement.item)
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
+					set_replacement (a_replacement, second_operand)
 				else
-					create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-					create a_type_checker
-					create a_node_sequence.make_node_sequence
-					a_type_checker.static_type_check (a_context, first_operand, a_node_sequence, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
+					create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					create l_node_sequence.make_node_sequence
+					l_type_checker.static_type_check (a_context, first_operand, l_node_sequence, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 					else
-						set_first_operand (a_type_checker.checked_expression)
-						create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-						a_type_checker.static_type_check (a_context, second_operand, a_node_sequence, False, another_role)
-						if a_type_checker.is_static_type_check_error then
-							set_last_error (a_type_checker.static_type_check_error)
+						set_first_operand (l_type_checker.checked_expression)
+						create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+						l_type_checker.static_type_check (a_context, second_operand, l_node_sequence, False, l_other_role)
+						if l_type_checker.is_static_type_check_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 						else
-							set_second_operand (a_type_checker.checked_expression)
+							set_second_operand (l_type_checker.checked_expression)
+							a_replacement.put (Current)
 						end
 					end
 				end
@@ -239,47 +237,52 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {XM_XPATH_VENN_EXPRESSION} -- Local
 
-	simplify_empty_expression is
+	simplify_empty_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Further simplification when either operand is an empty sequence;
 			-- This can happen after reduction with constructs of the form //a[condition] | //b[not(condition)]
 			-- (common in XPath 1.0 because there were no conditional expressions)
+		require
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			finished: BOOLEAN
+			l_finished: BOOLEAN
 		do
 			inspect
 				operator
 			when Union_token then
 				if first_operand.is_empty_sequence and second_operand.ordered_nodeset then
-					set_replacement (second_operand)
-					finished := True
-				else
-					if second_operand.is_empty_sequence and first_operand.ordered_nodeset then
-						set_replacement (first_operand)
-						finished := True
-					end
+					set_replacement (a_replacement, second_operand)
+					l_finished := True
+				elseif second_operand.is_empty_sequence and first_operand.ordered_nodeset then
+						set_replacement (a_replacement, first_operand)
+						l_finished := True
 				end
 			when Intersect_token then
 				if first_operand.is_empty_sequence then
-					set_replacement (first_operand)
-					finished := True
+					set_replacement (a_replacement, first_operand)
+					l_finished := True
 				else
 					if second_operand.is_empty_sequence then
-						set_replacement (second_operand)
-						finished := True
+						set_replacement (a_replacement, second_operand)
+						l_finished := True
 					end
 				end
 			when Except_token then
 				if first_operand.is_empty_sequence then
-					set_replacement (first_operand)
-					finished := True
+					set_replacement (a_replacement, first_operand)
+					l_finished := True
 				else
 					if second_operand.is_empty_sequence and first_operand.ordered_nodeset then
-						set_replacement (first_operand)
-						finished := True
+						set_replacement (a_replacement, first_operand)
+						l_finished := True
 					end
 				end				
 			end			
-			if not finished then	merge_axis_expression end
+			if not l_finished then
+				merge_axis_expression (a_replacement)
+			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 		
 feature {NONE} -- Implementation
@@ -354,86 +357,99 @@ feature {NONE} -- Implementation
 			end				
 		end
 
-	merge_axis_expression is
+	merge_axis_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Merge expressions when both operands are axis expressions on the same axis;
 			--  ie. rewrite (axis::test1 | axis::test2) as axis::(test1 | test2)
+		require
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void			
 		local
-			an_axis_expression, another_axis_expression: XM_XPATH_AXIS_EXPRESSION
-			a_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
+			l_axis_expression, l_other_axis_expression: XM_XPATH_AXIS_EXPRESSION
+			l_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
 		do
 			if first_operand.is_axis_expression and second_operand.is_axis_expression then
-				an_axis_expression := first_operand.as_axis_expression;
-				another_axis_expression := second_operand.as_axis_expression;
-				if an_axis_expression.axis = another_axis_expression.axis then
-					create a_combined_node_test.make (an_axis_expression.node_test, operator, another_axis_expression.node_test)
-					create another_axis_expression.make (an_axis_expression.axis, a_combined_node_test)
-					set_replacement (another_axis_expression)
+				l_axis_expression := first_operand.as_axis_expression;
+				l_other_axis_expression := second_operand.as_axis_expression;
+				if l_axis_expression.axis = l_other_axis_expression.axis then
+					create l_combined_node_test.make (l_axis_expression.node_test, operator, l_other_axis_expression.node_test)
+					create l_other_axis_expression.make (l_axis_expression.axis, l_combined_node_test)
+					set_replacement (a_replacement, l_other_axis_expression)
 				else
-					merge_common_start_expression
+					merge_common_start_expression (a_replacement)
 				end
 			else
-				merge_common_start_expression
+				merge_common_start_expression (a_replacement)
 			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 
-	merge_common_start_expression is
+	merge_common_start_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Merge common start path expressions;
 			--  i.e. rewrite (/X | /Y) as /(X|Y).
 			--  This applies recursively, so that /A/B/C | /A/B/D becomes /A/B/child::(C|D)
+		require
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void		
 		local
-			a_path_expression, another_path_expression: XM_XPATH_PATH_EXPRESSION
-			a_venn_expression: XM_XPATH_VENN_EXPRESSION
+			l_path_expression, l_other_path_expression: XM_XPATH_PATH_EXPRESSION
+			l_venn_expression: XM_XPATH_VENN_EXPRESSION
 		do
 			if first_operand.is_path_expression and second_operand.is_path_expression and operator = Union_token then
-				a_path_expression := first_operand.as_path_expression
-				another_path_expression := second_operand.as_path_expression
-				if a_path_expression.first_step.same_expression (another_path_expression.first_step) then
-					create a_venn_expression.make (a_path_expression.remaining_steps, operator, another_path_expression.remaining_steps, function_library)
-					create another_path_expression.make (a_path_expression.first_step, a_venn_expression)
-					another_path_expression.simplify
-					if another_path_expression.was_expression_replaced then
-						set_replacement (another_path_expression.replacement_expression)
-					else
-						set_replacement (another_path_expression)
-					end
+				l_path_expression := first_operand.as_path_expression
+				l_other_path_expression := second_operand.as_path_expression
+				if l_path_expression.first_step.same_expression (l_other_path_expression.first_step) then
+					create l_venn_expression.make (l_path_expression.remaining_steps, operator, l_other_path_expression.remaining_steps, function_library)
+					create l_other_path_expression.make (l_path_expression.first_step, l_venn_expression)
+					l_other_path_expression.simplify (a_replacement)
 				else
-					merge_non_positional_filter_expression
+					merge_non_positional_filter_expression (a_replacement)
 				end
 			else
-				merge_non_positional_filter_expression
+				merge_non_positional_filter_expression (a_replacement)
 			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 
-	merge_non_positional_filter_expression is
+	merge_non_positional_filter_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Merge non-positional filter expressions;
 			-- A[exp0] | A[exp1] becomes A[exp0 | exp1]
+		require
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void		
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_filter_expression, another_filter_expression: XM_XPATH_FILTER_EXPRESSION
-			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			l_expression: XM_XPATH_EXPRESSION
+			l_filter_expression, l_other_filter_expression: XM_XPATH_FILTER_EXPRESSION
+			l_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
 			if first_operand.is_filter_expression and second_operand.is_filter_expression then
-				a_filter_expression := first_operand.as_filter_expression
-				another_filter_expression := second_operand.as_filter_expression
-				if not a_filter_expression.is_positional and not another_filter_expression.is_positional and
-					a_filter_expression.base_expression.same_expression (another_filter_expression.base_expression) then
+				l_filter_expression := first_operand.as_filter_expression
+				l_other_filter_expression := second_operand.as_filter_expression
+				if not l_filter_expression.is_positional and not l_other_filter_expression.is_positional and
+					l_filter_expression.base_expression.same_expression (l_other_filter_expression.base_expression) then
 					inspect
 						operator
 					when Union_token then
-						create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, Or_token, another_filter_expression.filter)
+						create {XM_XPATH_BOOLEAN_EXPRESSION} l_expression.make (l_filter_expression.filter, Or_token, l_other_filter_expression.filter)
 					when Intersect_token then
-						create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, another_filter_expression.filter)
+						create {XM_XPATH_BOOLEAN_EXPRESSION} l_expression.make (l_filter_expression.filter, And_token, l_other_filter_expression.filter)
 					when Except_token then
-						create arguments.make (1)
-						arguments.put (another_filter_expression.filter, 1)
-						function_library.bind_function (not_function_fingerprint, arguments, False)
-						create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, function_library.last_bound_function.as_not_function)
+						create l_arguments.make (1)
+						l_arguments.put (l_other_filter_expression.filter, 1)
+						function_library.bind_function (not_function_fingerprint, l_arguments, False)
+						create {XM_XPATH_BOOLEAN_EXPRESSION} l_expression.make (l_filter_expression.filter, And_token, function_library.last_bound_function.as_not_function)
 					end
-					copy_location_identifier (an_expression)
-					create another_filter_expression.make (a_filter_expression.base_expression, an_expression)
-					set_replacement (another_filter_expression)
+					copy_location_identifier (l_expression)
+					create l_other_filter_expression.make (l_filter_expression.base_expression, l_expression)
+					set_replacement (a_replacement, l_other_filter_expression)
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 
 	function_library: XM_XPATH_FUNCTION_LIBRARY

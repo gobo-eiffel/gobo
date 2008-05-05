@@ -103,26 +103,26 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_relation: INTEGER
 			l_result: DS_CELL [XM_XPATH_ITEM]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement (a_replacement, base_expression)
 			else
-				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
+				if base_expression.is_value and not base_expression.depends_upon_implicit_timezone then
 					create l_result.make (Void)
 					evaluate_item (l_result, a_context.new_compile_time_context)
 					if l_result.item /= Void then
-						set_replacement (l_result.item.as_atomic_value)
+						set_replacement (a_replacement, l_result.item.as_atomic_value)
 					end
 				else
 					
@@ -132,16 +132,19 @@ feature -- Optimization
 						l_relation := type_relationship (base_expression.item_type, target_type.primary_type)
 						if l_relation = Same_item_type or else l_relation = Subsumed_type then
 							create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (True)
-							set_replacement (l_expression)
+							set_replacement (a_replacement, l_expression)
 						elseif l_relation = Disjoint_types then
 							-- it might still be true - iff both sequences are empty
 							if (not base_expression.cardinality_allows_zero) or (not target_type.cardinality_allows_zero) then
 								create {XM_XPATH_BOOLEAN_VALUE} l_expression.make (False)
-								set_replacement (l_expression)
+								set_replacement (a_replacement, l_expression)
 							end
 						end
 					end
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 

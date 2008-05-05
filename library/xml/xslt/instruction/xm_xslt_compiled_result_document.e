@@ -169,144 +169,191 @@ feature -- Setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
-			an_attribute: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			l_attribute: XM_XPATH_EXPRESSION
 		do
-			content.simplify
-			if content.was_expression_replaced then
-				content := content.replacement_expression; adopt_child_expression (content)
-			end
-			if href /= Void then
-				href.simplify
-				if href.was_expression_replaced then
-					href := href.replacement_expression; adopt_child_expression (href)
+			create l_replacement.make (Void)
+			content.simplify (l_replacement)
+			set_content (l_replacement.item)
+			if content.is_error then
+				set_replacement (a_replacement, content)
+			else
+				if href /= Void then
+					l_replacement.put (Void)
+					href.simplify (l_replacement)
+					set_href (l_replacement.item)
+					if href.is_error then
+						set_replacement (a_replacement, href)
+					end
 				end
-			end
-			from
-				a_cursor := formatting_attributes.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				an_attribute := a_cursor.item
-				an_attribute.simplify
-				if an_attribute.was_expression_replaced then
-					an_attribute := an_attribute.replacement_expression; adopt_child_expression (an_attribute)
-					a_cursor.replace (an_attribute)
+				if a_replacement.item = Void and format /= Void then
+					l_replacement.put (Void)
+					format.simplify (l_replacement)
+					set_format (l_replacement.item)
+					if format.is_error then
+						set_replacement (a_replacement, format)
+					end
 				end
-				a_cursor.forth
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+					from
+						l_cursor := formatting_attributes.new_cursor
+						l_cursor.start
+					until
+						l_cursor.after
+					loop
+						l_attribute := l_cursor.item
+						l_replacement.put (Void)
+						l_attribute.simplify (l_replacement)
+						if l_attribute /= l_replacement.item then
+							l_attribute := l_replacement.item
+							adopt_child_expression (l_attribute)
+							l_cursor.replace (l_attribute)
+							reset_static_properties
+						end
+						l_cursor.forth
+					end
+				end
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
-			an_attribute: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			l_attribute: XM_XPATH_EXPRESSION
 		do
-			mark_unreplaced
-			content.check_static_type (a_context, a_context_item_type)
-			if content.was_expression_replaced then
-				content := content.replacement_expression; adopt_child_expression (content)
-			end
-			if href /= Void then
-				href.check_static_type (a_context, a_context_item_type)
-				if href.was_expression_replaced then
-					href := href.replacement_expression; adopt_child_expression (href)
+			create l_replacement.make (Void)
+			content.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_content (l_replacement.item)
+			if content.is_error then
+				set_replacement (a_replacement, content)
+			elseif href /= Void then
+				l_replacement.put (Void)
+				href.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_href (l_replacement.item)
+				if href.is_error then
+					set_replacement (a_replacement, href)
 				end
 			end
-			if format /= Void then
-				format.check_static_type (a_context, a_context_item_type)
-				if format.was_expression_replaced then
-					format := format.replacement_expression; adopt_child_expression (format)
+			if a_replacement.item = Void and format /= Void then
+				l_replacement.put (Void)
+				format.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_format (l_replacement.item)
+				if format.is_error then
+					set_replacement (a_replacement, format)
 				end
 			end
-			from
-				a_cursor := formatting_attributes.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				an_attribute := a_cursor.item
-				an_attribute.check_static_type (a_context, a_context_item_type)
-				if an_attribute.was_expression_replaced then
-					an_attribute := an_attribute.replacement_expression; adopt_child_expression (an_attribute)
-					a_cursor.replace (an_attribute)
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+				from
+					l_cursor := formatting_attributes.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_attribute := l_cursor.item
+					l_replacement.put (Void)
+					l_attribute.check_static_type (l_replacement, a_context, a_context_item_type)
+					if l_attribute /= l_replacement.item then
+						l_attribute := l_replacement.item
+						adopt_child_expression (l_attribute)
+						l_cursor.replace (l_attribute)
+						reset_static_properties
+					end
+					l_cursor.forth
 				end
-				a_cursor.forth
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
-			an_attribute: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			l_attribute: XM_XPATH_EXPRESSION
 		do
-			content.optimize (a_context, a_context_item_type)
-			if content.was_expression_replaced then
-				content := content.replacement_expression; adopt_child_expression (content)
-			end
-			if href /= Void then
-				href.optimize (a_context, a_context_item_type)
-				if href.was_expression_replaced then
-					href := href.replacement_expression; adopt_child_expression (href)
+			create l_replacement.make (Void)
+			content.optimize (l_replacement, a_context, a_context_item_type)
+			set_content (l_replacement.item)
+			if content.is_error then
+				set_replacement (a_replacement, content)
+			elseif href /= Void then
+				l_replacement.put (Void)
+				href.optimize (l_replacement, a_context, a_context_item_type)
+				set_href (l_replacement.item)
+				if href.is_error then
+					set_replacement (a_replacement, href)
 				end
 			end
-			if format /= Void then
-				format.optimize (a_context, a_context_item_type)
-				if format.was_expression_replaced then
-					format := format.replacement_expression; adopt_child_expression (format)
+			if a_replacement.item = Void and format /= Void then
+				l_replacement.put (Void)
+				format.optimize (l_replacement, a_context, a_context_item_type)
+				set_format (l_replacement.item)
+				if format.is_error then
+					set_replacement (a_replacement, format)
 				end
 			end
 			-- TODO: if `format' is a string literal, evaluate now
-			from
-				a_cursor := formatting_attributes.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				an_attribute := a_cursor.item
-				an_attribute.optimize (a_context, a_context_item_type)
-				if an_attribute.was_expression_replaced then
-					an_attribute := an_attribute.replacement_expression; adopt_child_expression (an_attribute)
-					a_cursor.replace (an_attribute)
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+				from
+					l_cursor := formatting_attributes.new_cursor
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					l_attribute := l_cursor.item
+					l_replacement.put (Void)
+					l_attribute.optimize (l_replacement, a_context, a_context_item_type)
+					if l_attribute /= l_replacement.item then
+						l_attribute := l_replacement.item
+						adopt_child_expression (l_attribute)
+						l_cursor.replace (l_attribute)
+						reset_static_properties
+					end
+					l_cursor.forth
 				end
-				a_cursor.forth
 			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
-			an_attribute: XM_XPATH_EXPRESSION
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			l_attribute: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			content.promote (an_offer)
-			if content.was_expression_replaced then
-				content := content.replacement_expression; adopt_child_expression (content)
-				reset_static_properties
-			end
+			create l_replacement.make (Void)
+			content.promote (l_replacement, a_offer)
+			set_content (l_replacement.item)
 			if href /= Void then
-				href.promote (an_offer)
-				if href.was_expression_replaced then
-					href := href.replacement_expression; adopt_child_expression (href)
-					reset_static_properties
-				end
+				l_replacement.put (Void)
+				href.promote (l_replacement, a_offer)
+				set_href (l_replacement.item)
 			end
 			from
-				a_cursor := formatting_attributes.new_cursor; a_cursor.start
+				l_cursor := formatting_attributes.new_cursor
+				l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_attribute := a_cursor.item
-				an_attribute.promote (an_offer)
-				if an_attribute.was_expression_replaced then
-					an_attribute := an_attribute.replacement_expression; adopt_child_expression (an_attribute)
+				l_attribute := l_cursor.item
+				l_replacement.put (Void)
+				l_attribute.promote (l_replacement, a_offer)
+				if l_attribute /= l_replacement.item then
+					l_attribute := l_replacement.item
+					adopt_child_expression (l_attribute)
+					l_cursor.replace (l_attribute)
 					reset_static_properties
-					a_cursor.replace (an_attribute)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 
@@ -416,6 +463,48 @@ feature {NONE} -- Implementation
 	computed_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			-- Merged and computed output properties
 
+	set_content (a_content: XM_XPATH_EXPRESSION) is
+			-- Ensure `content' = `a_content'.
+		do
+			if content /= a_content then
+				content := a_content
+				if content /= Void then
+					adopt_child_expression (content)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: content = a_content
+		end
+
+	set_href (a_href: XM_XPATH_EXPRESSION) is
+			-- Ensure `href' = `a_href'.
+		do
+			if href /= a_href then
+				href := a_href
+				if href /= Void then
+					adopt_child_expression (href)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: href = a_href
+		end
+
+	set_format (a_format: XM_XPATH_EXPRESSION) is
+			-- Ensure `format' = `a_format'.
+		do
+			if format /= a_format then
+				format := a_format
+				if format /= Void then
+					adopt_child_expression (format)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: format = a_format
+		end
+
 	process_format_attribute (a_context: XM_XSLT_EVALUATION_CONTEXT; a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Evaluate and process `format'.
 		require
@@ -474,7 +563,7 @@ feature {NONE} -- Implementation
 			transformer_not_void: a_transformer /= Void
 			no_previous_error: not a_transformer.is_error
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 			a_fingerprint: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
 			a_value: XM_XPATH_STRING_VALUE
@@ -489,21 +578,21 @@ feature {NONE} -- Implementation
 				if formatting_attributes.count > 0 then
 					-- AVT local properties
 					from
-						a_cursor := formatting_attributes.new_cursor; a_cursor.start
+						l_cursor := formatting_attributes.new_cursor; l_cursor.start
 					until
-						a_cursor.after
+						l_cursor.after
 					loop
-						a_fingerprint := a_cursor.key
-						an_expression := a_cursor.item
+						a_fingerprint := l_cursor.key
+						an_expression := l_cursor.item
 						an_expression.evaluate_as_string (a_context)
 						a_value :=  an_expression.last_evaluated_string
 						if a_value.is_error then
 							a_value.error_value.set_location (system_id, line_number)
 							a_transformer.report_fatal_error (a_value.error_value)
-							a_cursor.go_after
+							l_cursor.go_after
 						else
 							computed_property_set.set_property (a_fingerprint, a_value.string_value, namespace_resolver)
-							a_cursor.forth
+							l_cursor.forth
 						end
 					end
 				end

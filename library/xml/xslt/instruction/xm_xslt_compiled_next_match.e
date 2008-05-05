@@ -14,21 +14,12 @@ inherit
 	
 	XM_XSLT_COMPILED_APPLY_IMPORTS
 		redefine
-			generate_tail_call, make
+			generate_tail_call
 		end
 
 create
 
 	make
-
-feature {NONE} -- Initialization
-
-	make (an_executable: XM_XSLT_EXECUTABLE; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]) is
-			-- Establish invariant.
-		do
-			Precursor (an_executable, some_actual_parameters, some_tunnel_parameters)
-			-- TODO: remove this re-defintion (?) instruction_name := "xsl:next-match"
-		end
 
 feature -- Evaluation
 

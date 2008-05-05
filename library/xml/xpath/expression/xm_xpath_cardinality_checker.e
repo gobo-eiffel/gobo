@@ -57,48 +57,44 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				if base_expression.replacement_expression.is_error then
-					set_last_error (base_expression.replacement_expression.error_value)
-				else
-					set_base_expression (base_expression.replacement_expression)
-				end
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
 			else
+				set_base_expression (l_replacement.item)
 				if required_cardinality = Required_cardinality_zero_or_more then
-					set_replacement (base_expression)
+					set_replacement (a_replacement, base_expression)
 				elseif base_expression.cardinality_subsumed_by (required_cardinality) then
-					set_replacement (base_expression)
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.optimize (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				if base_expression.replacement_expression.is_error then
-					set_last_error (base_expression.replacement_expression.error_value)
-				else
-					set_base_expression (base_expression.replacement_expression)
-				end
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+			create l_replacement.make (Void)
+			base_expression.optimize (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
 			else
+				set_base_expression (l_replacement.item)
 				if required_cardinality = Required_cardinality_zero_or_more then
-					set_replacement (base_expression)
+					set_replacement (a_replacement, base_expression)
 				elseif base_expression.cardinality_subsumed_by (required_cardinality) then
-					set_replacement (base_expression)
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)					
 				end
 			end
 		end

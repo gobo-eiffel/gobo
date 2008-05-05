@@ -90,11 +90,12 @@ feature -- Element change
 			end
 		end
 
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_local_variable: XM_XSLT_LOCAL_VARIABLE
-			a_global_variable: XM_XSLT_GLOBAL_VARIABLE
+			l_local_variable: XM_XSLT_LOCAL_VARIABLE
+			l_global_variable: XM_XSLT_GLOBAL_VARIABLE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			last_generated_expression := Void
 			if references.count = 0 then
@@ -105,38 +106,34 @@ feature -- Element change
 					strictly_positive_slot_number: slot_number > 0
 				end
 				if is_global_variable then
-					create a_global_variable.make_global_variable (an_executable, variable_name, slot_number, slot_manager)
-					initialize_instruction (an_executable, a_global_variable)
-					if select_expression /= Void and then select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
-					a_global_variable.set_required_type (required_type)
-					fixup_binding (a_global_variable)					
-					last_generated_expression := a_global_variable
+					create l_global_variable.make_global_variable (a_executable, variable_name, slot_number, slot_manager)
+					initialize_instruction (a_executable, l_global_variable)
+					l_global_variable.set_required_type (required_type)
+					fixup_binding (l_global_variable)					
+					last_generated_expression := l_global_variable
 				else
-					create a_local_variable.make (an_executable, variable_name, slot_number)
-					initialize_instruction (an_executable, a_local_variable)
-					a_local_variable.set_required_type (required_type)
+					create l_local_variable.make (a_executable, variable_name, slot_number)
+					initialize_instruction (a_executable, l_local_variable)
+					l_local_variable.set_required_type (required_type)
 					-- fixup_binding omitted, as that is done by `compile_variable'
 
-					last_generated_expression := a_local_variable
+					last_generated_expression := l_local_variable
 				end
 				if last_generated_expression /= Void then
-					last_generated_expression.simplify
-					if last_generated_expression.was_expression_replaced then
-						last_generated_expression := last_generated_expression.replacement_expression
-					end
+					create l_replacement.make (Void)
+					last_generated_expression.simplify (l_replacement)
+					last_generated_expression := l_replacement.item
 					if not last_generated_expression.is_error then
-						last_generated_expression.check_static_type (static_context, any_item)
-						if last_generated_expression.was_expression_replaced then
-							last_generated_expression := last_generated_expression.replacement_expression
-						end
+						l_replacement.put (Void)
+						last_generated_expression.check_static_type (l_replacement, static_context, any_item)
+						last_generated_expression := l_replacement.item
 					end
 					if last_generated_expression.is_error then
 						report_compile_error (last_generated_expression.error_value)
 					else
-						last_generated_expression.optimize (static_context, any_item)
-						if last_generated_expression.was_expression_replaced then
-							last_generated_expression := last_generated_expression.replacement_expression
-						end
+						l_replacement.put (Void)
+						last_generated_expression.optimize (l_replacement, static_context, any_item)
+						last_generated_expression := l_replacement.item
 					end
 				end
 			end

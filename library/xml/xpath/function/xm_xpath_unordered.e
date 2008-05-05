@@ -63,48 +63,56 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			Precursor (a_context, a_context_item_type)
-			if not was_expression_replaced then
-				arguments.item (1).set_unsorted (True)
-				if arguments.item (1).was_expression_replaced then
-					arguments.replace (arguments.item (1).replacement_expression, 1)
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if a_replacement.item = Current then
+				create l_replacement.make (Void)
+				arguments.item (1).set_unsorted (l_replacement, True)
+				if arguments.item (1) /= l_replacement.item then
+					arguments.replace (l_replacement.item, 1)
 				end
-			elseif replacement_expression.is_unordered_function then
-				replacement_expression.as_unordered_function.arguments.item (1).set_unsorted (True)
+			elseif l_replacement.item.is_unordered_function then
+				l_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
 			end
-			if not was_expression_replaced then
-				set_replacement (arguments.item (1))
+			if a_replacement.item /= Void then
+				set_replacement (a_replacement, arguments.item (1))
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
-			mark_unreplaced
-			Precursor (a_context, a_context_item_type)
-			if not is_error and then not was_expression_replaced then
-				arguments.item (1).set_unsorted (True)
-				if arguments.item (1).was_expression_replaced then
-					arguments.replace (arguments.item (1).replacement_expression, 1)
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if not is_error and a_replacement.item = Current then
+				create l_replacement.make (Void)
+				arguments.item (1).set_unsorted (l_replacement, True)
+				if arguments.item (1) /= l_replacement.item then
+					arguments.replace (l_replacement.item, 1)
 				end
-			elseif replacement_expression.is_unordered_function then
-				replacement_expression.as_unordered_function.arguments.item (1).set_unsorted (True)
+			elseif l_replacement.item.is_unordered_function then
+				l_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
 			end
-			if not was_expression_replaced then
-				set_replacement (arguments.item (1))
+			if a_replacement.item /= Void then
+				set_replacement (a_replacement, arguments.item (1))
+			else
+				a_replacement.put (Current)
 			end
 		end
 
 feature -- Evaluation
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			set_replacement (arguments.item (1))
+			set_replacement (a_replacement, arguments.item (1))
 		end
 
 feature -- Status report

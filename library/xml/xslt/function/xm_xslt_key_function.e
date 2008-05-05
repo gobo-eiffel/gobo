@@ -78,32 +78,34 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		local
-			a_function:XM_XSLT_KEY_FUNCTION
+			l_function:XM_XSLT_KEY_FUNCTION
 		do
-			Precursor
-			if was_expression_replaced then
-				a_function ?= replacement_expression -- TODO: as_key_function
-				if a_function /= Void then
-					a_function.add_context_document_argument (2, "key+")
+			Precursor (a_replacement)
+			if a_replacement.item /= Current then
+				l_function ?= a_replacement.item -- TODO: as_key_function
+				if l_function /= Void then
+					l_function.add_context_document_argument (2, "key+")
 				end
 			else
 				add_context_document_argument (2, "key+")
+				if arguments.item (3).context_document_nodeset then
+					set_context_document_nodeset
+				end
+				merge_dependencies (arguments.item (3))
 			end
-			if arguments.item (3).context_document_nodeset then
-				set_context_document_nodeset
-			end
-			merge_dependencies (arguments.item (3))
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			Precursor (a_context, a_context_item_type)
-			if is_error and then STRING_.same_string (error_value.code, new_unicode_string ("XPDY0002")) and then STRING_.same_string (error_value.namespace_uri, new_unicode_string (Xpath_errors_uri)) then
-				error_value.set_code ("XTDE1270")
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if a_replacement.item.is_error and then
+				STRING_.same_string (a_replacement.item.error_value.code, new_unicode_string ("XPDY0002")) and then
+				STRING_.same_string (a_replacement.item.error_value.namespace_uri, new_unicode_string (Xpath_errors_uri)) then
+				a_replacement.item.error_value.set_code ("XTDE1270")
 			end
 		end
 
@@ -203,9 +205,10 @@ feature -- Evaluation
 			node_iterator: last_iterator.is_node_iterator
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
+			a_replacement.put (Current)
 			-- Suppress compile-time evaluation
 		end
 	
@@ -218,37 +221,43 @@ feature -- Evaluation
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
-			an_xslt_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_string_value: XM_XPATH_STRING_VALUE
+			l_xslt_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if not arguments_checked then
 				arguments_checked := True
-				Precursor (a_context)
-				arguments.item (2).set_unsorted (False)
-				if arguments.item (2).was_expression_replaced then
-					arguments.replace (arguments.item (2).replacement_expression, 1)
-				end
-				a_string_value ?= arguments.item (1)
-				an_xslt_context ?= a_context
-				check
-					static_context_is_xslt_context: an_xslt_context /= Void
-				end
-				if a_string_value /= Void then
-					
-					-- Common case, key name is supplied as a constant
-					
-					key_fingerprint := an_xslt_context.fingerprint (a_string_value.string_value, False)
-					if key_fingerprint = -1 then
-						set_last_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (a_string_value.string_value, " is not a defined key"),
-							Xpath_errors_uri, "XTDE1260", Static_error))
+				Precursor (a_replacement, a_context)
+				if a_replacement.item = Void then
+					create l_replacement.make (Void)
+					arguments.item (2).set_unsorted (l_replacement, False)
+					if arguments.item (2) /= l_replacement.item then
+						arguments.replace (l_replacement.item, 1)
 					end
-				else
-					namespace_context := an_xslt_context.namespace_context
+					l_string_value ?= arguments.item (1)
+					l_xslt_context ?= a_context
+					check
+						static_context_is_xslt_context: l_xslt_context /= Void
+					end
+					if l_string_value /= Void then
+						
+						-- Common case, key name is supplied as a constant
+						
+						key_fingerprint := l_xslt_context.fingerprint (l_string_value.string_value, False)
+						if key_fingerprint = -1 then
+							a_replacement.put (Void)
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (
+								STRING_.concat (l_string_value.string_value, " is not a defined key"),
+								Xpath_errors_uri, "XTDE1260", Static_error))
+						end
+					else
+						namespace_context := l_xslt_context.namespace_context
+					end
 				end
-			end
+			END
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

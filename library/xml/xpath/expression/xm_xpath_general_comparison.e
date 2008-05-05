@@ -69,78 +69,89 @@ feature -- Access
 feature -- Optimization	
 
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			first_operand.check_static_type (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
+			create l_replacement.make (Void)
+			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+			if first_operand /= l_replacement.item then
+				set_first_operand (l_replacement.item)
 			end
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+				set_replacement (a_replacement, first_operand)
 			else
-				second_operand.check_static_type (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
+				l_replacement.put (Void)
+				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+				if second_operand /= l_replacement.item then
+					set_second_operand (l_replacement.item)
 				end
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
-				end
-				if not is_error then
+					set_replacement (a_replacement, second_operand)
+				elseif first_operand.is_empty_sequence or second_operand.is_empty_sequence then
 
 					-- If either operand is statically empty, evaluate as `False'.
 
-					if first_operand.is_empty_sequence
-						or else second_operand.is_empty_sequence then
-						create a_boolean_value.make (False)
-						set_replacement (a_boolean_value)
-					else
-						first_operand.set_unsorted (False)
-						if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
-						second_operand.set_unsorted (False)
-						if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-						operands_not_in_error_so_type_check (a_context, a_context_item_type)
+					create l_boolean_value.make (False)
+					set_replacement (a_replacement, l_boolean_value)
+				else
+					l_replacement.put (Void)
+					first_operand.set_unsorted (l_replacement, False)
+					if first_operand /= l_replacement.item then
+						set_first_operand (l_replacement.item)
 					end
+					l_replacement.put (Void)
+					second_operand.set_unsorted (l_replacement, False)
+					if second_operand /= l_replacement.item then
+						set_second_operand (l_replacement.item)
+					end
+					operands_not_in_error_so_type_check (a_replacement, a_context, a_context_item_type)
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			first_operand.optimize (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
+			create l_replacement.make (Void)
+			first_operand.optimize (l_replacement, a_context, a_context_item_type)
+			if first_operand /= l_replacement.item then
+				set_first_operand (l_replacement.item)
 			end
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+				set_replacement (a_replacement, first_operand)
 			else
-				second_operand.optimize (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
+				l_replacement.put (Void)
+				second_operand.optimize (l_replacement, a_context, a_context_item_type)
+				if second_operand /= l_replacement.item then
+					set_second_operand (l_replacement.item)
 				end
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
+					set_replacement (a_replacement, second_operand)
 				else
-					
+
 					-- If either operand is statically empty, evaluate as `False'.
 					
-					if first_operand.is_empty_sequence
-						or else second_operand.is_empty_sequence then
-						create a_boolean_value.make (False)
-						set_replacement (a_boolean_value)
+					if first_operand.is_empty_sequence or second_operand.is_empty_sequence then
+						create l_boolean_value.make (False)
+						set_replacement (a_replacement, l_boolean_value)
 					else
-						first_operand.set_unsorted (False)
-						if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
-						second_operand.set_unsorted (False)
-						if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-						operands_not_in_error_so_optimize (a_context, a_context_item_type)
+						l_replacement.put (Void)
+						first_operand.set_unsorted (l_replacement, False)
+						if first_operand /= l_replacement.item then
+							set_first_operand (l_replacement.item)
+						end
+						l_replacement.put (Void)
+						second_operand.set_unsorted (l_replacement, False)
+						if second_operand /= l_replacement.item then
+							set_second_operand (l_replacement.item)
+						end
+						operands_not_in_error_so_optimize (a_replacement, a_context, a_context_item_type)
 					end
 				end
 			end
@@ -305,30 +316,34 @@ feature {NONE} -- Implementation
 			last_boolean_value_not_void: last_boolean_value /= Void			
 		end
 
-	type_check_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check_two_singletons (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
+		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
 			first_type_not_void: a_type /= Void
-			second_type_not_void: another_type /= Void
+			second_type_not_void: a_other_type /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
 			l_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if a_type = type_factory.untyped_atomic_type then
-				if another_type = type_factory.untyped_atomic_type then
+				if a_other_type = type_factory.untyped_atomic_type then
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.string_type, False)
 					adopt_child_expression (first_operand)
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.string_type, False)
 					adopt_child_expression (second_operand)
-				elseif is_sub_type (another_type, type_factory.numeric_type) then
+				elseif is_sub_type (a_other_type, type_factory.numeric_type) then
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.double_type, False)
 					adopt_child_expression (first_operand)
 				else
-					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, another_type, False)
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, a_other_type, False)
 					adopt_child_expression (first_operand)
 				end
-			elseif another_type = type_factory.untyped_atomic_type then
+			elseif a_other_type = type_factory.untyped_atomic_type then
 				if is_sub_type (a_type, type_factory.numeric_type) then
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.double_type, False)
 					adopt_child_expression (second_operand)
@@ -337,49 +352,46 @@ feature {NONE} -- Implementation
 					adopt_child_expression (second_operand)
 				end	
 			end
-			
+			create l_replacement.make (Void)
 			create {XM_XPATH_VALUE_COMPARISON} l_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
 			l_computed_expression.set_parent (container)
-			l_computed_expression.simplify
-			if not l_computed_expression.is_error then
-				if l_computed_expression.was_expression_replaced then
-					l_expression := l_computed_expression.replacement_expression
-				else
-					l_expression := l_computed_expression
-				end
-				l_expression.check_static_type (a_context, a_context_item_type)
-				if l_expression.was_expression_replaced then
-					set_replacement (l_expression.replacement_expression)
-				else
-					set_replacement (l_expression)
-				end
+			l_computed_expression.simplify (l_replacement)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
+			else
+				l_expression := l_replacement.item
+				l_expression.check_static_type (a_replacement, a_context, a_context_item_type)
 			end
 		end
 	
-	optimize_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize_two_singletons (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
+		a_type, a_other_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
 			first_type_not_void: a_type /= Void
-			second_type_not_void: another_type /= Void
+			second_type_not_void: a_other_type /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
+			l_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if a_type = type_factory.untyped_atomic_type then
-				if another_type = type_factory.untyped_atomic_type then
+				if a_other_type = type_factory.untyped_atomic_type then
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.string_type, False)
 					adopt_child_expression (first_operand)
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.string_type, False)
 					adopt_child_expression (second_operand)
-				elseif is_sub_type (another_type, type_factory.numeric_type) then
+				elseif is_sub_type (a_other_type, type_factory.numeric_type) then
 					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.double_type, False)
 					adopt_child_expression (first_operand)
 				else
-					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (second_operand, another_type, False)
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (second_operand, a_other_type, False)
 					adopt_child_expression (first_operand)
 				end
-			elseif another_type = type_factory.untyped_atomic_type then
+			elseif a_other_type = type_factory.untyped_atomic_type then
 				if is_sub_type (a_type, type_factory.numeric_type) then
 					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.double_type, False)
 					adopt_child_expression (second_operand)
@@ -388,30 +400,26 @@ feature {NONE} -- Implementation
 					adopt_child_expression (second_operand)
 				end	
 			end
-			
-			create {XM_XPATH_VALUE_COMPARISON} a_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
-			a_computed_expression.set_parent (container)
-			a_computed_expression.simplify
-			if not a_computed_expression.is_error then
-				if a_computed_expression.was_expression_replaced then
-					an_expression := a_computed_expression.replacement_expression
-				else
-					an_expression := a_computed_expression
-				end
-				an_expression.optimize (a_context, a_context_item_type)
-				if an_expression.was_expression_replaced then
-					set_replacement (an_expression.replacement_expression)
-				else
-					set_replacement (an_expression)
-				end
+			create l_replacement.make (Void)
+			create {XM_XPATH_VALUE_COMPARISON} l_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
+			l_computed_expression.set_parent (container)
+			l_computed_expression.simplify (l_replacement)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
+			else
+				l_expression := l_replacement.item
+				l_expression.optimize (a_replacement, a_context, a_context_item_type)
 			end
 		end
 
 
-	operands_not_in_error_so_type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	operands_not_in_error_so_type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type check after operands have been checked.
 		require
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
 			l_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
@@ -425,183 +433,193 @@ feature {NONE} -- Implementation
 			create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
 			l_type_checker.static_type_check (a_context, first_operand, l_atomic_sequence, False, l_role)
 			if l_type_checker.is_static_type_check_error then
-				set_last_error (l_type_checker.static_type_check_error)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 			else
 				set_first_operand (l_type_checker.checked_expression)
 				create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
 				l_type_checker.static_type_check (a_context, second_operand, l_atomic_sequence, False, l_other_role)
 				if l_type_checker.is_static_type_check_error	then
-					set_last_error (l_type_checker.static_type_check_error)
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 				else
 					set_second_operand (l_type_checker.checked_expression)
-					if not is_error and then (first_operand.cardinality_is_empty or second_operand.cardinality_is_empty) then
+					if first_operand.cardinality_is_empty or second_operand.cardinality_is_empty then
 						create l_boolean_value.make (False)
-						set_replacement (l_boolean_value)
+						set_replacement (a_replacement, l_boolean_value)
 					else
 						l_type := first_operand.item_type
 						l_other_type := second_operand.item_type
-						if not is_error and then not (l_type = type_factory.any_atomic_type or else l_type = type_factory.untyped_atomic_type
-							or else l_other_type = type_factory.any_atomic_type or else l_other_type = type_factory.untyped_atomic_type) then
+						if not (l_type = type_factory.any_atomic_type or l_type = type_factory.untyped_atomic_type or
+							l_other_type = type_factory.any_atomic_type or l_other_type = type_factory.untyped_atomic_type) then
 							if l_type.primitive_type /= l_other_type.primitive_type and then
 								not are_types_comparable (l_type.primitive_type, l_other_type.primitive_type) then
-									l_message := STRING_.appended_string ("Cannot compare ", l_type.conventional_name)
-									l_message := STRING_.appended_string (l_message, " with ")
-									l_message := STRING_.appended_string (l_message, l_other_type.conventional_name)
-									set_last_error_from_string (l_message, Xpath_errors_uri, "XPTY0004", Type_error)
+								l_message := STRING_.appended_string ("Cannot compare ", l_type.conventional_name)
+								l_message := STRING_.appended_string (l_message, " with ")
+								l_message := STRING_.appended_string (l_message, l_other_type.conventional_name)
+								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (l_message, Xpath_errors_uri, "XPTY0004", Type_error))
 							end
 						end
-						if not is_error then
-							if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
-								l_type /= type_factory.any_atomic_type and then l_other_type /= type_factory.any_atomic_type and then
-								l_type.is_atomic_type and then l_other_type.is_atomic_type then
-									type_check_two_singletons (a_context, l_type.as_atomic_type, l_other_type.as_atomic_type, a_context_item_type)
+						if a_replacement.item = Void then
+							if first_operand.cardinality_exactly_one and second_operand.cardinality_exactly_one and
+								l_type /= type_factory.any_atomic_type and l_other_type /= type_factory.any_atomic_type and
+								l_type.is_atomic_type and l_other_type.is_atomic_type then
+								type_check_two_singletons (a_replacement, a_context, l_type.as_atomic_type, l_other_type.as_atomic_type, a_context_item_type)
 							elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-								type_check_singleton_and_empty_sequence (a_context, a_context_item_type)
+								type_check_singleton_and_empty_sequence (a_replacement, a_context, a_context_item_type)
 							elseif not first_operand.cardinality_allows_many then
-								type_check_first_operand_single (a_context, a_context_item_type)
+								type_check_first_operand_single (a_replacement, a_context, a_context_item_type)
 							else
-								if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (l_type, type_factory.numeric_type)
-									or else is_sub_type (l_other_type, type_factory.numeric_type)) then
-										type_check_inequalities (a_context, l_type, l_other_type, a_context_item_type)
+								if operator /= Equals_token and operator /= Not_equal_token	and (is_sub_type (l_type, type_factory.numeric_type)
+									or is_sub_type (l_other_type, type_factory.numeric_type)) then
+									type_check_inequalities (a_replacement, a_context, l_type, l_other_type, a_context_item_type)
 								end
-								if not was_expression_replaced then
-									evaluate_two_constants (a_context)
+								if a_replacement.item = Void then
+									evaluate_two_constants (a_replacement, a_context)
 								end
 							end
 						end
 					end
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	operands_not_in_error_so_optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	operands_not_in_error_so_optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize after operands have been optimized.
 		require
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_type, another_type: XM_XPATH_ITEM_TYPE
+			l_type, l_other_type: XM_XPATH_ITEM_TYPE
 		do
-			a_type := first_operand.item_type
-			another_type := second_operand.item_type
-			if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
-				a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type and then
-				a_type.is_atomic_type and then another_type.is_atomic_type then
-				optimize_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type, a_context_item_type)
+			l_type := first_operand.item_type
+			l_other_type := second_operand.item_type
+			if first_operand.cardinality_exactly_one and second_operand.cardinality_exactly_one and
+				l_type /= type_factory.any_atomic_type and l_other_type /= type_factory.any_atomic_type and
+				l_type.is_atomic_type and l_other_type.is_atomic_type then
+				optimize_two_singletons (a_replacement, a_context, l_type.as_atomic_type, l_other_type.as_atomic_type, a_context_item_type)
 			elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-				optimize_singleton_and_empty_sequence (a_context, a_context_item_type)
+				optimize_singleton_and_empty_sequence (a_replacement, a_context, a_context_item_type)
 			elseif not first_operand.cardinality_allows_many then
-				optimize_first_operand_single (a_context, a_context_item_type)
-			elseif first_operand.is_range_expression and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
-				optimize_n_to_m_equals_i (a_context, first_operand.as_range_expression)
-			elseif first_operand.is_integer_range and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
-				optimize_n_to_m_equals_i_two (a_context, first_operand.as_integer_range)
-			elseif not was_expression_replaced then
-				evaluate_two_constants (a_context)
+				optimize_first_operand_single (a_replacement, a_context, a_context_item_type)
+			elseif first_operand.is_range_expression and is_sub_type (second_operand.item_type, type_factory.integer_type) and
+				not second_operand.cardinality_allows_many then
+				optimize_n_to_m_equals_i (a_replacement, a_context, first_operand.as_range_expression)
+			elseif first_operand.is_integer_range and is_sub_type (second_operand.item_type, type_factory.integer_type) and
+				not second_operand.cardinality_allows_many then
+				optimize_n_to_m_equals_i_two (a_replacement, a_context, first_operand.as_integer_range)
+			else
+				evaluate_two_constants (a_replacement, a_context)
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 
-	type_check_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check_singleton_and_empty_sequence (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type check when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
+			l_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
 		do
-			create a_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
-			a_singleton_comparison.check_static_type (a_context, a_context_item_type)
-			if a_singleton_comparison.was_expression_replaced then
-				set_replacement (a_singleton_comparison.replacement_expression)
-			else
-				set_replacement (a_singleton_comparison)
-			end
+			create l_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
+			l_singleton_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
 		end
 
-	optimize_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize_singleton_and_empty_sequence (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
+			l_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
 		do
-			create a_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
-			a_singleton_comparison.optimize (a_context, a_context_item_type)
-			if a_singleton_comparison.was_expression_replaced then
-				set_replacement (a_singleton_comparison.replacement_expression)
-			else
-				set_replacement (a_singleton_comparison)
-			end
+			create l_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
+			l_singleton_comparison.optimize (a_replacement, a_context, a_context_item_type)
 		end
 
-	type_check_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check_first_operand_single (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
+			l_general_comparison: XM_XPATH_GENERAL_COMPARISON
 		do	
-			create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
-			a_general_comparison.check_static_type (a_context, a_context_item_type)
-			if a_general_comparison.was_expression_replaced then
-				set_replacement (a_general_comparison.replacement_expression)
-			else
-				set_replacement (a_general_comparison)
-			end
+			create l_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
+			l_general_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
 		end
 
-	optimize_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize_first_operand_single (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
+			l_general_comparison: XM_XPATH_GENERAL_COMPARISON
 		do	
-			create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
-			a_general_comparison.optimize (a_context, a_context_item_type)
-			if a_general_comparison.was_expression_replaced then
-				set_replacement (a_general_comparison.replacement_expression)
-			else
-				set_replacement (a_general_comparison)
-			end
+			create l_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
+			l_general_comparison.optimize (a_replacement, a_context, a_context_item_type)
 		end
 
-	optimize_n_to_m_equals_i (a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION) is
+	optimize_n_to_m_equals_i (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION) is
 			-- Look for (N to M = I)
 		require
 			context_not_void: a_context /= Void
 			range_expression_not_void: a_range_expression /= void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			an_expression: XM_XPATH_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
 		do
-			if a_range_expression.lower_bound.is_machine_integer_value and then a_range_expression.upper_bound.is_machine_integer_value
-				and then second_operand.is_position_function and then a_range_expression.lower_bound.as_machine_integer_value.is_platform_integer
-				and then a_range_expression.upper_bound.as_machine_integer_value.is_platform_integer then
-				create {XM_XPATH_POSITION_RANGE} an_expression.make (a_range_expression.lower_bound.as_machine_integer_value.value.to_integer, a_range_expression.upper_bound.as_machine_integer_value.value.to_integer)
+			if a_range_expression.lower_bound.is_machine_integer_value and a_range_expression.upper_bound.is_machine_integer_value and
+				second_operand.is_position_function and a_range_expression.lower_bound.as_machine_integer_value.is_platform_integer and
+				a_range_expression.upper_bound.as_machine_integer_value.is_platform_integer then
+				create {XM_XPATH_POSITION_RANGE} l_expression.make (a_range_expression.lower_bound.as_machine_integer_value.value.to_integer, a_range_expression.upper_bound.as_machine_integer_value.value.to_integer)
 			else
-				create {XM_XPATH_INTEGER_RANGE_TEST} an_expression.make (second_operand, a_range_expression.lower_bound, a_range_expression.upper_bound)
+				create {XM_XPATH_INTEGER_RANGE_TEST} l_expression.make (second_operand, a_range_expression.lower_bound, a_range_expression.upper_bound)
 			end
-			set_replacement (an_expression)
+			set_replacement (a_replacement, l_expression)
 		end
 
-	optimize_n_to_m_equals_i_two (a_context: XM_XPATH_STATIC_CONTEXT; an_integer_range: XM_XPATH_INTEGER_RANGE) is
+	optimize_n_to_m_equals_i_two (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; an_integer_range: XM_XPATH_INTEGER_RANGE) is
 			-- Look for (N to M = I)
 		require
 			context_not_void: a_context /= Void
 			range_not_void: an_integer_range /= void
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE
+			l_expression: XM_XPATH_EXPRESSION
+			l_integer_value, l_other_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			if second_operand.is_position_function then
-				create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer_range.minimum, an_integer_range.maximum)
+				create {XM_XPATH_POSITION_RANGE} l_expression.make (an_integer_range.minimum, an_integer_range.maximum)
 			else
-				create an_integer_value.make_from_integer (an_integer_range.minimum)
-				create another_integer_value.make_from_integer (an_integer_range.maximum)
-				create {XM_XPATH_INTEGER_RANGE_TEST} an_expression.make (second_operand, an_integer_value, another_integer_value)
+				create l_integer_value.make_from_integer (an_integer_range.minimum)
+				create l_other_integer_value.make_from_integer (an_integer_range.maximum)
+				create {XM_XPATH_INTEGER_RANGE_TEST} l_expression.make (second_operand, l_integer_value, l_other_integer_value)
 			end
-			set_replacement (an_expression)
+			set_replacement (a_replacement, l_expression)
 		end
 
-	type_check_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ITEM_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check_inequalities (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_type, a_other_type: XM_XPATH_ITEM_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- If the operator is gt, ge, lt, le then replace X < Y by min(X) < max(Y)
 
 			-- This optimization is done only in the case where at least one of the
@@ -611,50 +629,49 @@ feature {NONE} -- Implementation
 			-- involves both string and numeric comparisons.
 		require
 			context_not_void: a_context /= Void
-			type_not_void: another_type /= Void
+			type_not_void: a_other_type /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_numeric_type: XM_XPATH_SEQUENCE_TYPE
-			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_minimax_comparison: XM_XPATH_MINIMAX_COMPARISON
-			a_type_checker: XM_XPATH_TYPE_CHECKER
+			l_numeric_type: XM_XPATH_SEQUENCE_TYPE
+			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
+			l_minimax_comparison: XM_XPATH_MINIMAX_COMPARISON
+			l_type_checker: XM_XPATH_TYPE_CHECKER
 		do
-			create a_type_checker
+			create l_type_checker
 			if not is_sub_type (a_type, type_factory.numeric_type) then
-				create a_numeric_type.make_numeric_sequence
-				create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (a_context, first_operand, a_numeric_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
+				create l_numeric_type.make_numeric_sequence
+				create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (a_context, first_operand, l_numeric_type, False, l_role)
+				if l_type_checker.is_static_type_check_error then
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 				else
-					set_first_operand (a_type_checker.checked_expression)
+					set_first_operand (l_type_checker.checked_expression)
 				end
 			end
-			if not is_error and then not is_sub_type (another_type, type_factory.numeric_type) then
-				create a_type_checker
-				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				create a_numeric_type.make_numeric_sequence
-				a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, False, another_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
+			if a_replacement.item = Void and not is_sub_type (a_other_type, type_factory.numeric_type) then
+				create l_type_checker
+				create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+				create l_numeric_type.make_numeric_sequence
+				l_type_checker.static_type_check (a_context, second_operand, l_numeric_type, False, l_other_role)
+				if l_type_checker.is_static_type_check_error then
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 				else
-					set_second_operand (a_type_checker.checked_expression)
+					set_second_operand (l_type_checker.checked_expression)
 				end
 			end
-			if not is_error then
-				create a_minimax_comparison.make (first_operand, operator, second_operand)
-				a_minimax_comparison.check_static_type (a_context, a_context_item_type)
-				if a_minimax_comparison.was_expression_replaced then
-					set_replacement (a_minimax_comparison.replacement_expression)
-				else
-					set_replacement (a_minimax_comparison)
-				end
+			if a_replacement.item = Void then
+				create l_minimax_comparison.make (first_operand, operator, second_operand)
+				l_minimax_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
 			end
 		end
 
-	evaluate_two_constants (a_context: XM_XPATH_STATIC_CONTEXT) is
+	evaluate_two_constants (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Evaluate the expression now if both arguments are constant
 		require
 			a_context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
@@ -666,7 +683,7 @@ feature {NONE} -- Implementation
 					boolean_value: l_result.item.is_boolean_value
 					-- We are guarenteed a boolean value
 				end
-				set_replacement (l_result.item.as_boolean_value)
+				set_replacement (a_replacement, l_result.item.as_boolean_value)
 			end
 		end
 

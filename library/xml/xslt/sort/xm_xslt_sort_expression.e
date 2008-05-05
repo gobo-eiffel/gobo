@@ -23,6 +23,9 @@ inherit
 	XM_XPATH_ROLE
 		export {NONE} all end
 
+	XM_XSLT_SORT_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -160,46 +163,52 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform of context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
-			select_expression.simplify
-			if select_expression.was_expression_replaced then
-				set_select_expression (select_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			select_expression.simplify (l_replacement)
+			set_select_expression (l_replacement.item)
 			if select_expression.is_error then
-				set_last_error (select_expression.error_value)
+				set_replacement (a_replacement, select_expression)
 			end
+			a_replacement.put (Current)
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
 			l_sort_item_type: XM_XPATH_ITEM_TYPE
 		do
-			mark_unreplaced
-			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				set_select_expression (select_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_select_expression (l_replacement.item)
 			if select_expression.is_error then
-				set_last_error (select_expression.error_value)
+				set_replacement (a_replacement, select_expression)
+			else
+				l_sort_item_type := select_expression.item_type
+				sort_key_list.do_all (agent check_sort_key (a_replacement, ?, a_context, l_sort_item_type))
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end
 			end
-			l_sort_item_type := select_expression.item_type
-			sort_key_list.do_all_with_index (agent check_sort_key (?, ?, a_context, l_sort_item_type))
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			select_expression.optimize (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				set_select_expression (select_expression.replacement_expression)
-			end
-			if select_expression.is_error then
-				set_last_error (select_expression.error_value)
-			elseif not select_expression.cardinality_allows_many then
-				set_replacement (select_expression)
+			create l_replacement.make (Void)
+			select_expression.optimize (l_replacement, a_context, a_context_item_type)
+			set_select_expression (l_replacement.item)
+			if select_expression.is_error or else not select_expression.cardinality_allows_many then
+				set_replacement (a_replacement, select_expression)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
@@ -322,12 +331,15 @@ feature {XM_XSLT_SORT_EXPRESSION} -- Local
 		require
 			underlying_expression_not_void: a_select_expression /= Void
 		do
-			select_expression := a_select_expression
-			if select_expression.was_expression_replaced then select_expression.mark_unreplaced end
-			adopt_child_expression (select_expression)
+			if select_expression /= a_select_expression then
+				select_expression := a_select_expression
+				adopt_child_expression (select_expression)
+				if are_static_properties_computed then
+					reset_static_properties
+				end
+			end
 		ensure
 			select_expression_set: select_expression = a_select_expression
-			select_expression_not_marked_for_replacement: not select_expression.was_expression_replaced
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -363,37 +375,6 @@ feature {NONE} -- Implementation
 
 			--	Commented out 20071215 - see comment for creation procedure: fixed_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			-- Fixed sort keys
-
-	check_sort_key (a_key: XM_XSLT_SORT_KEY_DEFINITION; a_index: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Check `a_key' for more than one item.
-			-- TODO: also perform early evaluation of comparators.
-		require
-			a_key_not_void: a_key /= Void
-			a_index_large_enough: a_index > 0
-			a_index_small_enough: a_index <= sort_key_list.count
-			a_context_not_void: a_context /= Void
-			context_item_may_not_be_set: True
-		local
-			l_expression: XM_XPATH_EXPRESSION
-			l_role: XM_XPATH_ROLE_LOCATOR
-		do
-			l_expression := a_key.sort_key
-			l_expression.check_static_type (a_context, a_context_item_type)
-			if l_expression.is_error then
-				set_last_error (l_expression.error_value)
-			else
-				if l_expression.was_expression_replaced then
-					l_expression := l_expression.replacement_expression
-				end
-				if a_context.is_backwards_compatible_mode then
-					create {XM_XPATH_FIRST_ITEM_EXPRESSION} l_expression.make (l_expression)
-				else
-					create l_role.make (Instruction_role, "xsl:sort select", 1, Xpath_errors_uri, "XTTE1020")
-					create {XM_XPATH_CARDINALITY_CHECKER} l_expression.make (l_expression, Required_cardinality_optional, l_role)
-				end
-				a_key.set_sort_key (l_expression)
-			end
-		end
 
 invariant
 

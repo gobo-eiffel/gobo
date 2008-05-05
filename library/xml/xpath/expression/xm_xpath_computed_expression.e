@@ -71,9 +71,7 @@ feature -- Access
 		local
 			a_module_number: INTEGER
 		do
-			if was_expression_replaced then -- WHY is this necessary ??
-				Result := ""
-			elseif location_identifier /= 0 then
+			if location_identifier /= 0 then
 				a_module_number := INTEGER_.bit_shift_right (location_identifier, module_number_shift)
 				if a_module_number > 0 then
 					Result := system_id_from_module_number (a_module_number)
@@ -95,9 +93,7 @@ feature -- Access
 
 			-- Default implementation - redefined by top-level containers
 
-			if was_expression_replaced then -- WHY is this necessary ??
-				Result := ""
-			elseif container = Void then
+			if container = Void then
 				Result := ""
 			else
 				Result := container.system_id_from_module_number (a_module_number)
@@ -315,7 +311,6 @@ feature -- Status setting
 			-- Re-compute dependencies.
 		require
 			dependencies_previously_computed: are_dependencies_computed
-			not_replaced: not was_expression_replaced
 			not_in_error: not is_error
 		do
 			are_dependencies_computed := False
@@ -329,13 +324,11 @@ feature -- Status setting
 			-- Re-compute all static properties.
 		require
 			static_properties_previously_computed: are_static_properties_computed
-			not_replaced: not was_expression_replaced
 			not_in_error: not is_error
 		do
 			reinitialize_all_static_properties
 			compute_static_properties
 			if container /= Void and then container.is_computed_expression
-				and then not container.as_computed_expression.was_expression_replaced
 				and then container.as_computed_expression.are_static_properties_computed
 				and then not container.as_computed_expression.is_error then
 				container.as_computed_expression.reset_static_properties
@@ -359,16 +352,18 @@ feature -- Status setting
 			
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		do
 			-- do nothing
+			a_replacement.put (Current)
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		do
 			-- do nothing
+			a_replacement.put (Current)
 		end
 	
 feature -- Evaluation
@@ -544,7 +539,7 @@ feature -- Element change
 	copy_location_identifier (a_destination: XM_XPATH_EXPRESSION) is
 			-- Copy source location information.
 		require
-			destination_not_replaced: a_destination /= Void and then not a_destination.was_expression_replaced
+			a_destination_not_void: a_destination /= Void
 		do
 			if a_destination.is_computed_expression then
 				a_destination.as_computed_expression.set_location_identifier (location_identifier)
@@ -564,13 +559,12 @@ feature -- Element change
 	adopt_child_expression (a_child: XM_XPATH_EXPRESSION) is
 			-- Adopt `a_child' if it is a computed expression.
 		require
-			child_expression_not_replaced: a_child /= Void and then not a_child.was_expression_replaced
+			a_child_not_void: a_child /= Void
 			not_self: a_child /= Current
 		local
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			a_module_number, a_line_number: INTEGER
 		do
-			if not a_child.is_error then a_child.mark_unreplaced end
 			if a_child.is_computed_expression then
 				a_computed_expression := a_child.as_computed_expression
 				if a_computed_expression.container /= Current then
@@ -726,6 +720,7 @@ feature {NONE} -- Implementation
 invariant
 
 		positive_location_identifier: location_identifier >= 0
+		parent_not_current: parent /= Void implies not (ANY_.same_objects (Current, parent))
 
 end
 	

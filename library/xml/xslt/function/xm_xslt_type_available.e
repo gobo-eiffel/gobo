@@ -55,11 +55,11 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			namespace_resolver := a_context.namespace_resolver
-			Precursor (a_context, a_context_item_type)
+			Precursor (a_replacement, a_context, a_context_item_type)
 		end
 
 feature -- Evaluation

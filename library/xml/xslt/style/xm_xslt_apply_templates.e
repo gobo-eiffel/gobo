@@ -111,73 +111,73 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_sort: XM_XSLT_SORT
-			a_param: XM_XSLT_WITH_PARAM
-			a_node: XM_XPATH_NODE
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
-			a_rule_manager: XM_XSLT_RULE_MANAGER
-			an_error: XM_XPATH_ERROR_VALUE
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_sort: XM_XSLT_SORT
+			l_param: XM_XSLT_WITH_PARAM
+			l_node: XM_XPATH_NODE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_node_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_rule_manager: XM_XSLT_RULE_MANAGER
+			l_error: XM_XPATH_ERROR_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 
 			-- get the mode object
 
 			if not use_current_mode then
-				a_rule_manager := principal_stylesheet.rule_manager
-				if not a_rule_manager.is_mode_registered (mode_name_code) then
-					a_rule_manager.register_mode (mode_name_code)
+				l_rule_manager := principal_stylesheet.rule_manager
+				if not l_rule_manager.is_mode_registered (mode_name_code) then
+					l_rule_manager.register_mode (mode_name_code)
 				end
-				mode := a_rule_manager.mode (mode_name_code)
+				mode := l_rule_manager.mode (mode_name_code)
 			end
 
 			from
-				a_child_iterator := new_axis_iterator (Child_axis)
-				a_child_iterator.start
+				l_child_iterator := new_axis_iterator (Child_axis)
+				l_child_iterator.start
 			until
-				any_compile_errors or else a_child_iterator.after
+				any_compile_errors or else l_child_iterator.after
 			loop
-				a_node := a_child_iterator.item
-				a_sort ?= a_node
-				if a_sort /= Void then
+				l_node := l_child_iterator.item
+				l_sort ?= l_node
+				if l_sort /= Void then
 					-- do nothing
 				else
-					a_param ?= a_node
-					if a_param /= Void then
+					l_param ?= l_node
+					if l_param /= Void then
 						-- do nothing
-					elseif a_node.node_type = Text_node then
-						if not is_all_whitespace (a_node.string_value) then
-							create an_error.make_from_string ("No character data allowed within xsl:apply-templates",
+					elseif l_node.node_type = Text_node then
+						if not is_all_whitespace (l_node.string_value) then
+							create l_error.make_from_string ("No character data allowed within xsl:apply-templates",
 																		 Xpath_errors_uri, "XTSE0010", Static_error)
-							report_compile_error (an_error)
+							report_compile_error (l_error)
 						end
 					else
-						create an_error.make_from_string ("Invalid element within xsl:apply-templates",
+						create l_error.make_from_string ("Invalid element within xsl:apply-templates",
 																	 Xpath_errors_uri, "XTSE0010", Static_error)
-						report_compile_error (an_error)
+						report_compile_error (l_error)
 					end
 				end
-				a_child_iterator.forth
+				l_child_iterator.forth
 			end
 			if select_expression = Void then
 				create {XM_XPATH_AXIS_EXPRESSION} select_expression.make (Child_axis, Void)
 			end
-			type_check_expression ("select", select_expression)
+			create l_replacement.make (Void)
+			type_check_expression (l_replacement, "select", select_expression)
 			if not any_compile_errors then
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
-				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:apply-templates/select", 1,
+				select_expression := l_replacement.item
+				create l_type_checker
+				create l_role.make (Instruction_role, "xsl:apply-templates/select", 1,
 					Xpath_errors_uri, "XTTE0520")
-				create a_node_sequence.make_node_sequence
-				a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				create l_node_sequence.make_node_sequence
+				l_type_checker.static_type_check (static_context, select_expression, l_node_sequence, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					select_expression := a_type_checker.checked_expression
+					select_expression := l_type_checker.checked_expression
 				end
 			end
 			validated := True
@@ -186,18 +186,18 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
-			a_sorted_sequence: XM_XPATH_EXPRESSION
+			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
+			l_sorted_sequence: XM_XPATH_EXPRESSION
 		do
-			a_sorted_sequence := select_expression
+			l_sorted_sequence := select_expression
 			assemble_sort_keys
 			if not any_compile_errors then
-				a_sort_key_list := sort_keys
-				if a_sort_key_list.count > 0 then
+				l_sort_key_list := sort_keys
+				if l_sort_key_list.count > 0 then
 					use_tail_recursion := False
-					create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
+					create {XM_XSLT_SORT_EXPRESSION} l_sorted_sequence.make (select_expression, l_sort_key_list)
 				end
-				create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_expression.make (an_executable, a_sorted_sequence,
+				create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_expression.make (an_executable, l_sorted_sequence,
 					with_param_instructions (an_executable, False),
 					with_param_instructions (an_executable, True),
 					use_current_mode, use_tail_recursion, mode, is_select_defaulted)

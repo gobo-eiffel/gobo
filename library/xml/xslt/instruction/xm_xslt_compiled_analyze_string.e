@@ -171,140 +171,169 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Preform context-independent static optimizations
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			select_expression.simplify
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
-			regex_expression.simplify
-			if regex_expression.was_expression_replaced then regex_expression := regex_expression.replacement_expression end
-			flags_expression.simplify
-			if flags_expression.was_expression_replaced then flags_expression := flags_expression.replacement_expression end
-			if matching_block /= Void then
-				matching_block.simplify
-				if matching_block.was_expression_replaced then matching_block := matching_block.replacement_expression end
+			create l_replacement.make (Void)
+			select_expression.simplify (l_replacement)
+			set_select_expression (l_replacement.item)
+			if select_expression.is_error then
+				set_replacement (a_replacement, select_expression)
+			else
+				l_replacement.put (Void)
+				regex_expression.simplify (l_replacement)
+				set_regex_expression (l_replacement.item)
+				if regex_expression.is_error then
+					set_replacement (a_replacement, regex_expression)
+				else
+					l_replacement.put (Void)
+					flags_expression.simplify (l_replacement)
+					set_flags_expression (l_replacement.item)
+					if flags_expression.is_error then
+						set_replacement (a_replacement, flags_expression)
+					else
+						if matching_block /= Void then
+							l_replacement.put (Void)
+							matching_block.simplify (l_replacement)
+							set_matching_block (l_replacement.item)
+							if matching_block.is_error then
+								set_replacement (a_replacement, matching_block)
+							elseif non_matching_block /= Void then
+								l_replacement.put (Void)
+								non_matching_block.simplify (l_replacement)
+								set_non_matching_block (l_replacement.item)
+								if non_matching_block.is_error then
+									set_replacement (a_replacement, non_matching_block)
+								end
+							end
+						end
+					end
+				end
 			end
-			if non_matching_block /= Void then
-				non_matching_block.simplify
-				if non_matching_block.was_expression_replaced then non_matching_block := non_matching_block.replacement_expression end
-			end			
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			select_expression.check_static_type (a_context, a_context_item_type)
+			create l_replacement.make (Void)
+			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_select_expression (l_replacement.item)
 			if select_expression.is_error then
-				set_last_error (select_expression.error_value)
-			elseif select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression)
-			end
-			regex_expression.check_static_type (a_context, a_context_item_type)
-			if regex_expression.is_error then
-				set_last_error (regex_expression.error_value)
-			elseif regex_expression.was_expression_replaced then
-				regex_expression := regex_expression.replacement_expression; adopt_child_expression (regex_expression)
-			end
-			flags_expression.check_static_type (a_context, a_context_item_type)
-			if flags_expression.is_error then
-				set_last_error (flags_expression.error_value)
-			elseif flags_expression.was_expression_replaced then
-				flags_expression := flags_expression.replacement_expression; adopt_child_expression (flags_expression)
-			end
-			if matching_block /= Void then
-				matching_block.check_static_type (a_context, context_item_type)
-				if matching_block.is_error then
-					set_last_error (matching_block.error_value)
-				elseif matching_block.was_expression_replaced then
-					matching_block := matching_block.replacement_expression; adopt_child_expression (matching_block)
+				set_replacement (a_replacement, select_expression)
+			else			
+				l_replacement.put (Void)
+				regex_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_regex_expression (l_replacement.item)
+				if regex_expression.is_error then
+					set_replacement (a_replacement, regex_expression)
+				else
+					l_replacement.put (Void)
+					flags_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+					set_flags_expression (l_replacement.item)
+					if flags_expression.is_error then
+						set_replacement (a_replacement, flags_expression)
+					else
+						if matching_block /= Void then
+							l_replacement.put (Void)
+							matching_block.check_static_type (l_replacement, a_context, context_item_type)
+							set_matching_block (l_replacement.item)
+							if matching_block.is_error then
+								set_replacement (a_replacement, matching_block)
+							end
+						end
+						if non_matching_block /= Void then
+							l_replacement.put (Void)
+							non_matching_block.check_static_type (l_replacement, a_context, context_item_type)
+							set_non_matching_block (l_replacement.item)
+							if non_matching_block.is_error then
+								set_replacement (a_replacement, non_matching_block)
+							end
+						end
+					end
 				end
 			end
-			if non_matching_block /= Void then
-				non_matching_block.check_static_type (a_context, context_item_type)
-				if non_matching_block.is_error then
-					set_last_error (non_matching_block.error_value)
-				elseif non_matching_block.was_expression_replaced then
-					non_matching_block := non_matching_block.replacement_expression; adopt_child_expression (non_matching_block)
-				end
-			end
-		end
-
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Perform optimization of `Current' and its subexpressions.
-		do
-			select_expression.optimize (a_context, a_context_item_type)
-			if select_expression.is_error then
-				set_last_error (select_expression.error_value)
-			elseif select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression)
-			end
-			regex_expression.optimize (a_context, a_context_item_type)
-			if regex_expression.is_error then
-				set_last_error (regex_expression.error_value)
-			elseif regex_expression.was_expression_replaced then
-				regex_expression := regex_expression.replacement_expression; adopt_child_expression (regex_expression)
-			end
-			flags_expression.optimize (a_context, a_context_item_type)
-			if flags_expression.is_error then
-				set_last_error (flags_expression.error_value)
-			elseif flags_expression.was_expression_replaced then
-				flags_expression := flags_expression.replacement_expression; adopt_child_expression (flags_expression)
-			end
-			if matching_block /= Void then
-				matching_block.optimize (a_context, context_item_type)
-				if matching_block.is_error then
-					set_last_error (matching_block.error_value)
-				elseif matching_block.was_expression_replaced then
-					matching_block := matching_block.replacement_expression; adopt_child_expression (matching_block)
-				end
-			end
-			if non_matching_block /= Void then
-				non_matching_block.optimize (a_context, context_item_type)
-				if non_matching_block.is_error then
-					set_last_error (non_matching_block.error_value)
-				elseif non_matching_block.was_expression_replaced then
-					non_matching_block := non_matching_block.replacement_expression; adopt_child_expression (non_matching_block)
-				end
-			end
-		end
-
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this instruction.
-		do
-			select_expression.promote (an_offer)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
-				reset_static_properties
-			end
-			regex_expression.promote (an_offer)
-			if regex_expression.was_expression_replaced then
-				regex_expression := regex_expression.replacement_expression
-				adopt_child_expression (regex_expression)
-				reset_static_properties
-			end
-			flags_expression.promote (an_offer)
-			if flags_expression.was_expression_replaced then
-				flags_expression := flags_expression.replacement_expression
-				adopt_child_expression (flags_expression)
-				reset_static_properties
-			end
-			if matching_block /= Void then
-				matching_block.promote (an_offer)
-				if matching_block.was_expression_replaced then
-					matching_block := matching_block.replacement_expression
-					adopt_child_expression (matching_block)
-					reset_static_properties
-				end
-			end
-			if non_matching_block /= Void then
-				non_matching_block.promote (an_offer)
-				if non_matching_block.was_expression_replaced then
-					non_matching_block := non_matching_block.replacement_expression
-					adopt_child_expression (non_matching_block)
-					reset_static_properties
-				end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end			
+		end
+
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			create l_replacement.make (Void)
+			select_expression.optimize (l_replacement, a_context, a_context_item_type)
+			if select_expression.is_error then
+				set_replacement (a_replacement, select_expression)
+			else			
+				l_replacement.put (Void)
+				regex_expression.optimize (l_replacement, a_context, a_context_item_type)
+				if regex_expression.is_error then
+					set_replacement (a_replacement, regex_expression)
+				else
+					l_replacement.put (Void)
+					flags_expression.optimize (l_replacement, a_context, a_context_item_type)
+					set_flags_expression (l_replacement.item)
+					if flags_expression.is_error then
+						set_replacement (a_replacement, flags_expression)
+					else
+						l_replacement.put (Void)
+						if matching_block /= Void then
+							matching_block.optimize (l_replacement, a_context, context_item_type)
+							set_matching_block (l_replacement.item)
+							if matching_block.is_error then
+								set_replacement (a_replacement, matching_block)
+							end
+						end
+						if non_matching_block /= Void then
+							l_replacement.put (Void)
+							non_matching_block.optimize (l_replacement, a_context, context_item_type)
+							set_non_matching_block (l_replacement.item)
+							if non_matching_block.is_error then
+								set_replacement (a_replacement, non_matching_block)
+							end
+						end
+					end
+				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end			
+		end
+
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+		do
+			create l_replacement.make (Void)
+			select_expression.promote (l_replacement, a_offer)
+			set_select_expression (l_replacement.item)
+			l_replacement.put (Void)
+			regex_expression.promote (l_replacement, a_offer)
+			set_regex_expression (l_replacement.item)
+			l_replacement.put (Void)
+			flags_expression.promote (l_replacement, a_offer)
+			set_flags_expression (l_replacement.item)
+			l_replacement.put (Void)
+			if matching_block /= Void then
+				l_replacement.put (Void)
+				matching_block.promote (l_replacement, a_offer)
+				set_matching_block (l_replacement.item)
+			end
+			if non_matching_block /= Void then
+				l_replacement.put (Void)
+				non_matching_block.promote (l_replacement, a_offer)
+				set_non_matching_block (l_replacement.item)
+			end
 		end
 
 feature -- Evaluation
@@ -404,6 +433,79 @@ feature {NONE} -- Implementation
 
 	context_item_type: XM_XPATH_ITEM_TYPE
 			-- Known context item type for xsl:(non-)matching-substring
+
+	set_select_expression (a_expression: XM_XPATH_EXPRESSION) is
+			-- Ensure `select_expression' is `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			if select_expression /= a_expression then
+				select_expression := a_expression
+				adopt_child_expression (select_expression)
+				reset_static_properties
+			end
+		ensure
+			select_expression_set: select_expression = a_expression
+		end
+
+	set_regex_expression (a_expression: XM_XPATH_EXPRESSION) is
+			-- Ensure `regex_expression' is `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			if regex_expression /= a_expression then
+				regex_expression := a_expression
+				adopt_child_expression (regex_expression)
+				reset_static_properties				
+			end
+		ensure
+			regex_expression_set: regex_expression = a_expression
+		end
+
+	set_flags_expression (a_expression: XM_XPATH_EXPRESSION) is
+			-- Ensure `flags_expression' is `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			if flags_expression /= a_expression then
+				flags_expression := a_expression
+				adopt_child_expression (flags_expression)
+				reset_static_properties				
+			end
+		ensure
+			flags_expression_set: flags_expression = a_expression
+		end
+
+
+	set_matching_block (a_expression: XM_XPATH_EXPRESSION) is
+			-- Ensure `matching_block' is `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			if matching_block /= a_expression then
+				matching_block := a_expression
+				adopt_child_expression (matching_block)
+				reset_static_properties				
+			end
+		ensure
+			matching_block_set: matching_block = a_expression
+		end
+
+
+	set_non_matching_block (a_expression: XM_XPATH_EXPRESSION) is
+			-- Ensure `non_matching_block' is `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
+		do
+			if non_matching_block /= a_expression then
+				non_matching_block := a_expression
+				adopt_child_expression (non_matching_block)
+				reset_static_properties				
+			end
+		ensure
+			non_matching_block_set: non_matching_block = a_expression
+		end
+
 
 	regexp_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_REGEXP_ITERATOR is
 			-- Iterator over substrings in regular expression;

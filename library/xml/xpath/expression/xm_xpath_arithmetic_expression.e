@@ -117,58 +117,62 @@ feature -- Status_setting
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			l_role, another_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
 			if is_backwards_compatible_mode then
-				create_1_0_expression (a_context, a_context_item_type)
+				create_1_0_expression (a_replacement, a_context, a_context_item_type)
 			else
-				first_operand.check_static_type (a_context, a_context_item_type)
+				create l_replacement.make (Void)
+				first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_first_operand (l_replacement.item)
 				if first_operand.is_error then
-					set_last_error (first_operand.error_value)
-				elseif first_operand.was_expression_replaced then
-					set_first_operand (first_operand.replacement_expression)
-				end
-				second_operand.check_static_type (a_context, a_context_item_type)
-				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
-				elseif second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
-				end
-				if not is_error then
-					create l_sequence_type.make_optional_atomic
-					create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-					create l_type_checker
-					l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, False, l_role)
-					if l_type_checker.is_static_type_check_error then
-						set_last_error (l_type_checker.static_type_check_error)
+					set_replacement (a_replacement, first_operand)
+				else
+					l_replacement.put (Void)
+					second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+					set_second_operand (l_replacement.item)
+					if second_operand.is_error then
+						set_replacement (a_replacement, second_operand)
 					else
-						set_first_operand (l_type_checker.checked_expression)
-						create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-						l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, False, another_role)
+						create l_sequence_type.make_optional_atomic
+						create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+						create l_type_checker
+						l_type_checker.static_type_check (a_context, first_operand, l_sequence_type, False, l_role)
 						if l_type_checker.is_static_type_check_error then
-							set_last_error (l_type_checker.static_type_check_error)
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 						else
-							set_second_operand (l_type_checker.checked_expression)
-							if first_operand.cardinality_is_empty then
-								set_replacement (first_operand)
-							elseif second_operand.cardinality_is_empty then
-								set_replacement (second_operand)
+							set_first_operand (l_type_checker.checked_expression)
+							create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+							l_type_checker.static_type_check (a_context, second_operand, l_sequence_type, False, another_role)
+							if l_type_checker.is_static_type_check_error then
+								set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 							else
-								Precursor (a_context, a_context_item_type)
-								if not was_expression_replaced and not is_error then
-									type_check_arithmetic_expression (a_context)
+								set_second_operand (l_type_checker.checked_expression)
+								if first_operand.cardinality_is_empty then
+									set_replacement (a_replacement, first_operand)
+								elseif second_operand.cardinality_is_empty then
+									set_replacement (a_replacement, second_operand)
+								else
+									Precursor (a_replacement, a_context, a_context_item_type)
+									-- TODO: review this:
+									--if not not is_error then
+									--	type_check_arithmetic_expression (a_context)
+									--end
 								end
 							end
 						end
 					end
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 
@@ -261,7 +265,8 @@ feature -- Evaluation
 feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 
 	type_check_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static type checking of `Current' and its subexpressions
+			-- Perform static type checking of `Current' and its subexpressions.
+			-- TODO: this is currently a no-op. review.
 		require
 			no_previous_error: not is_error
 			a_context_not_void: a_context /= Void
@@ -466,32 +471,26 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 
 feature {NONE} -- Optimization
 
-	create_1_0_expression (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	create_1_0_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Create XPath 1.0 compatibility expression.
 		require
 			no_previous_error: not is_error
-			not_replaced: not was_expression_replaced
 			static_properties_computed: are_static_properties_computed
 			a_context_not_void: a_context /= Void
 			a_context_item_type_not_void: a_context_item_type /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void			
 		local
 			l_nan: XM_XPATH_DOUBLE_VALUE
 			l_backwards: XM_XPATH_ARITHMETIC10_EXPRESSION
 		do
 			if first_operand.cardinality_is_empty or second_operand.cardinality_is_empty then
 				create l_nan.make_nan
-				set_replacement (l_nan)
+				set_replacement (a_replacement, l_nan)
 			else
 				create l_backwards.make (first_operand, operator, second_operand)
-				l_backwards.check_static_type (a_context, a_context_item_type)
-				if l_backwards.was_expression_replaced then
-					set_replacement (l_backwards.replacement_expression)
-				else
-					set_replacement (l_backwards)
-				end
+				l_backwards.check_static_type (a_replacement, a_context, a_context_item_type)
 			end
-		ensure
-			expression_replaced: was_expression_replaced
 		end
 
 invariant

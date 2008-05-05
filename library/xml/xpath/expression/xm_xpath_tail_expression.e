@@ -108,46 +108,53 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-		end
-
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Perform optimization of `Current' and its subexpressions.
-		do
-			mark_unreplaced
-			base_expression.optimize (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement (a_replacement, base_expression)
+			else
+				set_replacement (a_replacement, Current)
+			end
+		end
+
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			create l_replacement.make (Void)
+			base_expression.optimize (l_replacement,a_context, a_context_item_type)
+			if base_expression.is_error then
+				set_replacement (a_replacement, base_expression)
+			else
+				set_replacement (a_replacement, Current)
 			end
 		end
 
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				if not (an_offer.action = Unordered) then
-					base_expression.promote (an_offer)
-					if base_expression.was_expression_replaced then
-						set_base_expression (base_expression.replacement_expression)
-						reset_static_properties
-					end
+				set_replacement (a_replacement, Current)
+				if not (a_offer.action = Unordered) then
+					create l_replacement.make (Void)
+					base_expression.promote (l_replacement, a_offer)
+					set_base_expression (l_replacement.item)
+					reset_static_properties
 				end
 			end
 		end
@@ -157,34 +164,42 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over the values of a sequence
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_iterator
-			if an_iterator.is_error then
-				last_iterator := an_iterator
-			elseif an_iterator.is_array_iterator then
-				last_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
-			elseif an_iterator.is_node_iterator then
-				create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, start)
+			l_iterator := base_expression.last_iterator
+			if l_iterator.is_error then
+				last_iterator := l_iterator
+			elseif l_iterator.is_array_iterator then
+				if start > l_iterator.as_array_iterator.last_item then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
+				else
+					last_iterator := l_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+				end
+			elseif l_iterator.is_node_iterator then
+				create {XM_XPATH_NODE_TAIL_ITERATOR} last_iterator.make (l_iterator.as_node_iterator, start)
 			else
-				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, start)
+				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (l_iterator, start)
 			end
 		end
 	
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			base_expression.create_iterator (a_context)
-			an_iterator := base_expression.last_node_iterator
-			if an_iterator.is_error then
-				last_node_iterator := an_iterator
-			elseif an_iterator.is_array_iterator then
-				last_node_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+			l_iterator := base_expression.last_node_iterator
+			if l_iterator.is_error then
+				last_node_iterator := l_iterator
+			elseif l_iterator.is_array_iterator then
+				if start > l_iterator.as_array_iterator.last_item then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+				else
+					last_node_iterator := l_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+				end
 			else
-				create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (an_iterator, start)
+				create {XM_XPATH_NODE_TAIL_ITERATOR} last_node_iterator.make (l_iterator, start)
 			end
 		end
 	
@@ -196,10 +211,8 @@ feature -- Element change
 			base_expression_not_void: a_base_expression /= Void
 		do
 			base_expression := a_base_expression
-			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
 		ensure
 			base_expression_set: base_expression = a_base_expression
-			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted

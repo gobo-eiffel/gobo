@@ -95,30 +95,30 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 			end
-			type_check_expression ("name", name)
-			if name.was_expression_replaced then
-				name := name.replacement_expression
-			end				
+			create l_replacement.make (Void)
+			type_check_expression (l_replacement, "name", name)
+			name := l_replacement.item
 			Precursor
 		end
 			
-	compile (an_executable: XM_XSLT_EXECUTABLE) is
+	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_string_value: XM_XPATH_STRING_VALUE
 			l_pi: XM_XSLT_COMPILED_PROCESSING_INSTRUCTION
 		do
-			create l_pi.make (an_executable, name)
+			create l_pi.make (a_executable, name)
 			create l_string_value.make (" ")
-			compile_content (an_executable, l_pi, l_string_value)
+			compile_content (a_executable, l_pi, l_string_value)
 			last_generated_expression := l_pi
 		end
 

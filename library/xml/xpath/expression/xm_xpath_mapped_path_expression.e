@@ -122,76 +122,75 @@ feature -- Status setting
 	
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			-- Original path expression has been checked already
-			mark_unreplaced
+			a_replacement.put (Current)
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			an_offer: XM_XPATH_PROMOTION_OFFER
+			l_offer: XM_XPATH_PROMOTION_OFFER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			start.optimize (a_context, a_context_item_type)
-			if start.was_expression_replaced then
-				set_start (start.replacement_expression)
+			create l_replacement.make (Void)
+			start.optimize (l_replacement, a_context, a_context_item_type)
+			if start /= l_replacement.item then
+				set_start (l_replacement.item)
 			end
 			if start.is_error then
-				set_last_error (start.error_value)
+				set_replacement (a_replacement, start)
 			else
-				step.optimize (a_context, start.item_type)
-				if step.was_expression_replaced then
-					set_step (step.replacement_expression)
+				l_replacement.put (Void)
+				step.optimize (l_replacement, a_context, start.item_type)
+				if step /= l_replacement.item then
+					set_step (l_replacement.item)
 				end
 				if step.is_error then
-					set_last_error (step.error_value)
+					set_replacement (a_replacement, step)
 				else
-					
 					--	If any subexpressions within the step are not dependent on the focus,
 					--  and if they cannot create new nodes, then promote them:
 					-- This causes them to be evaluated once, outside the path expression
-					
-					create an_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
-					promote_sub_expressions (a_context, a_context_item_type, an_offer)
+					create l_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
+					promote_sub_expressions (a_replacement, a_context, a_context_item_type, l_offer)
 				end
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				start.promote (an_offer)
-				if start.was_expression_replaced then
-					set_start (start.replacement_expression)
+				a_replacement.put (Current)
+				create l_replacement.make (Void)
+				start.promote (l_replacement, a_offer)
+				if start /= l_replacement.item then
+					set_start (l_replacement.item)
 					reset_static_properties
 				end
-				
-				if an_offer.action = Inline_variable_references
-					or an_offer.action = Replace_current then
-
+				if a_offer.action = Inline_variable_references or a_offer.action = Replace_current then
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
-
-					step.promote (an_offer)
-					if step.was_expression_replaced then
-						set_step (step.replacement_expression)
+					l_replacement.put (Void)
+					step.promote (l_replacement, a_offer)
+					if step /= l_replacement.item then
+						set_step (l_replacement.item)
 						reset_static_properties
 					end
 				end
 			end
 		end
-
 
 feature -- Evaluation
 
@@ -278,11 +277,9 @@ feature {XM_XPATH_PATH_EXPRESSION} -- Local
 			start_not_void: a_start /= Void
 		do
 			start := a_start
-			start.mark_unreplaced
 			adopt_child_expression (start)
 		ensure
 			start_set: start = a_start
-			start_not_marked_for_replacement: not start.was_expression_replaced
 		end
 
 	set_step (a_step: XM_XPATH_EXPRESSION) is
@@ -291,11 +288,9 @@ feature {XM_XPATH_PATH_EXPRESSION} -- Local
 			step_not_void: a_step /= Void
 		do
 			step := a_step
-			step.mark_unreplaced
 			adopt_child_expression (step)
 		ensure
 			step_set: step = a_step
-			step_not_marked_for_replacement: not step.was_expression_replaced
 		end
 
 feature -- Conversion
@@ -335,40 +330,37 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	
 feature {NONE} -- Implementation
 
-	promote_sub_expressions (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_sub_expressions (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];
+		a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote any subexpressions within the step are not dependent on the focus.
 			-- This causes them to be evaluated once, outside the path  expression.
 		require
 			promotion_offer_not_void: a_offer /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
 			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			step.promote (a_offer)
-			if step.was_expression_replaced then
-				set_step (step.replacement_expression)
+			create l_replacement.make (Void)
+			step.promote (l_replacement, a_offer)
+			if step /= l_replacement.item then
+				set_step (l_replacement.item)
 				reset_static_properties
 			end
 			if step.is_error then
-				set_last_error (step.error_value)
-			end
-			if not is_error then
+				set_replacement (a_replacement, step)
+			else
 				reset_static_properties
 				if a_offer.containing_expression /= Current then
-					a_offer.containing_expression.check_static_type (a_context, a_context_item_type)
-					if a_offer.containing_expression.was_expression_replaced then
-						l_expression := a_offer.containing_expression.replacement_expression
-					else
-						l_expression := a_offer.containing_expression
-					end
-					l_expression.optimize (a_context, a_context_item_type)
-					if l_expression.is_error then
-						set_last_error (l_expression.error_value)
-					else
-						if l_expression.was_expression_replaced then
-							l_expression := l_expression.replacement_expression
-						end
-						if l_expression /= Current then set_replacement (l_expression) end
-					end
+					l_replacement.put (Void)
+					a_offer.containing_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+					l_expression := l_replacement.item
+					l_replacement.put (Void)
+					l_expression.optimize (l_replacement, a_context, a_context_item_type)
+					set_replacement (a_replacement, l_replacement.item)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end

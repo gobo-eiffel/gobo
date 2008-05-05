@@ -32,9 +32,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		require
 			a_head_not_void: a_head /= Void
-			a_head_not_replaced: not a_head.was_expression_replaced
 			a_tail_not_void: a_tail /= Void
-			a_tail_not_replaced: not a_tail.was_expression_replaced
 		local
 			l_child_count: INTEGER
 		do
@@ -181,7 +179,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		local
 			l_all_atomic, l_nested: DS_CELL [BOOLEAN]
@@ -189,17 +187,15 @@ feature -- Optimization
 			l_children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			l_extent: XM_XPATH_SEQUENCE_EXTENT
 			l_child: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if children.count = 0 then
-				set_replacement (create {XM_XPATH_EMPTY_SEQUENCE}.make)
+				set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 			elseif children.count = 1 then
 				l_child := children.item (1)
-				l_child.simplify
-				if l_child.was_expression_replaced then
-					set_replacement (l_child.replacement_expression)
-				else
-					set_replacement (l_child)
-				end
+				create l_replacement.make (Void)
+				l_child.simplify (l_replacement)
+				set_replacement (a_replacement, l_replacement.item)
 			else
 				create l_all_atomic.make (True)
 				create l_nested.make (False)
@@ -213,35 +209,41 @@ feature -- Optimization
 					create l_list.make (children.count)
 					children.do_all (agent add_atomic_value (l_list, ?))
 					create l_extent.make_from_list (l_list)
-					set_replacement (l_extent)
+					set_replacement (a_replacement, l_extent)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			l_nested: DS_CELL [BOOLEAN]
 			l_children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
 			create l_nested.make (False)
-			children.do_all_with_index (agent check_child_type (l_nested, a_context, a_context_item_type, ?, ?))
-			if l_nested.item then
-				create l_children.make (children.count * 2)
-				flatten_list (l_children)
-				repopulate_children (l_children)
+			children.do_all_with_index (agent check_child_type (a_replacement, l_nested, a_context, a_context_item_type, ?, ?))
+			if a_replacement.item = Void then
+				if l_nested.item then
+					create l_children.make (children.count * 2)
+					flatten_list (l_children)
+					repopulate_children (l_children)
+				end
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			mark_unreplaced
-			children.do_all_with_index (agent optimize_child (a_context, a_context_item_type, ?, ?))
+			children.do_all_with_index (agent optimize_child (a_replacement, a_context, a_context_item_type, ?, ?))
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote `Current'.
 		local
 			l_promotion: XM_XPATH_EXPRESSION
@@ -249,9 +251,14 @@ feature -- Optimization
 			a_offer.accept (Current)
 			l_promotion := a_offer.accepted_expression
 			if l_promotion /= Void then
-				set_replacement (l_promotion)
+				set_replacement (a_replacement, l_promotion)
 			elseif a_offer.action /= Unordered then
 				children.do_all_with_index (agent promote_child (a_offer, ?, ?))
+				if a_replacement.item = Void then
+					a_replacement.put (Current)
+				end				
+			else
+				a_replacement.put (Current)
 			end
 		end
 
@@ -321,16 +328,16 @@ feature {NONE} -- Agents
 			a_all_atomic_not_void: a_all_atomic /= Void
 			a_nested_not_void: a_nested /= Void
 			a_child_not_void: a_child /= Void
-			a_child_not_replaced: not a_child.was_expression_replaced
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
 		local
 			l_child: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			a_child.simplify
-			if a_child.was_expression_replaced then
-				l_child := a_child.replacement_expression
-				children.replace (l_child, a_index)
+			create l_replacement.make (Void)
+			a_child.simplify (l_replacement)
+			if a_child /= l_replacement.item then
+				children.replace (l_replacement.item, a_index)
 			else
 				l_child := a_child
 				if not l_child.is_atomic_value then
@@ -356,7 +363,8 @@ feature {NONE} -- Agents
 			a_expression_added: a_list.last = a_expression.as_atomic_value
 		end
 
-	check_child_type (a_nested: DS_CELL [BOOLEAN]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
+	check_child_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_nested: DS_CELL [BOOLEAN]; a_context: XM_XPATH_STATIC_CONTEXT;
+		a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
 			-- Check static type of `a_child'.
 		require
 			initialized: initialized
@@ -365,30 +373,33 @@ feature {NONE} -- Agents
 			a_context_item_type_may_not_be_set: True
 			a_child_not_void: a_child /= Void
 			no_previous_error: not a_child.is_error
-			not_replaced: not a_child.was_expression_replaced
+			a_replacement_not_void: a_replacement /= Void
 			static_properties_computed: a_child.are_static_properties_computed
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
 		local
 			l_child: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			a_child.check_static_type (a_context, a_context_item_type)
-			if a_child.is_error then
-				set_last_error (a_child.error_value)
-			else
-				if a_child.was_expression_replaced then
-					l_child := a_child.replacement_expression
-					children.replace (l_child, a_index)
+			if a_replacement.item = Void then
+				create l_replacement.make (Void)
+				a_child.check_static_type (l_replacement, a_context, a_context_item_type)
+				if l_replacement.item /= Void and then l_replacement.item.is_error then
+					set_replacement (a_replacement, l_replacement.item)
 				else
-					l_child := a_child
+					if a_child /= l_replacement.item then
+						children.replace (l_replacement.item, a_index)
+					end
+					l_child := l_replacement.item
+					if l_child.is_sequence_expression or l_child.is_empty_sequence then
+						a_nested.put (True)
+					end
 				end
-				if l_child.is_sequence_expression or l_child.is_empty_sequence then
-					a_nested.put (True)
-				end
-			end			
+			end
 		end
 
-	optimize_child (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
+	optimize_child (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT;
+		a_context_item_type: XM_XPATH_ITEM_TYPE; a_child: XM_XPATH_EXPRESSION; a_index: INTEGER) is
 			-- Optimize `a_child'.
 		require
 			initialized: initialized
@@ -396,17 +407,20 @@ feature {NONE} -- Agents
 			a_context_item_type_may_not_be_set: True
 			a_child_not_void: a_child /= Void
 			no_previous_error: not a_child.is_error
-			not_replaced: not a_child.was_expression_replaced
+			a_replacement_not_void: a_replacement /= Void
 			static_properties_computed: a_child.are_static_properties_computed
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			if not is_error then
-				a_child.optimize (a_context, a_context_item_type)
-				if a_child.is_error then
-					set_last_error (a_child.error_value)
-				elseif a_child.was_expression_replaced then
-					children.replace (a_child.replacement_expression, a_index)
+			if a_replacement.item = Void then
+				create l_replacement.make (Void)
+				a_child.optimize (l_replacement, a_context, a_context_item_type)
+				if l_replacement.item /= Void and then l_replacement.item.is_error then
+					set_replacement (a_replacement, l_replacement.item)
+				elseif a_child /= l_replacement.item then
+					children.replace (l_replacement.item, a_index)
 				end			
 			end
 		end
@@ -417,13 +431,15 @@ feature {NONE} -- Agents
 			initialized: initialized
 			a_offer_not_void: a_offer /= Void
 			a_child_not_void: a_child /= Void
-			not_replaced: not a_child.was_expression_replaced
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]			
 		do
-			a_child.promote (a_offer)
-			if a_child.was_expression_replaced then
-				children.replace (a_child.replacement_expression, a_index)
+			create l_replacement.make (Void)
+			a_child.promote (l_replacement, a_offer)
+			if a_child /= l_replacement.item then
+				children.replace (l_replacement.item, a_index)
 				reset_static_properties
 			end			
 		end

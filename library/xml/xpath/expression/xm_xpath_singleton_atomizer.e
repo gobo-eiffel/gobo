@@ -102,36 +102,42 @@ feature -- Access
 
 feature -- Optimization	
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.simplify
+			create l_replacement.make (Void)
+			base_expression.simplify (l_replacement)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-			if base_expression.is_atomic_value then
-				set_replacement (base_expression.as_atomic_value)
+				set_replacement (a_replacement, base_expression)
+			elseif base_expression.is_atomic_value then
+				set_replacement (a_replacement, base_expression.as_atomic_value)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
+			create l_replacement.make (Void)		
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement (a_replacement, base_expression)
 			else
-				if base_expression.was_expression_replaced then
-					set_base_expression (base_expression.replacement_expression)
-				end
 				reset_static_properties
 				if base_expression.is_empty_sequence and then not allows_empty then
-					set_last_error_from_string (STRING_.concat ("An empty sequence is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error)
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (
+						STRING_.concat ("An empty sequence is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error))
 				elseif is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
-					set_replacement (base_expression)
+					set_replacement (a_replacement, base_expression)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end

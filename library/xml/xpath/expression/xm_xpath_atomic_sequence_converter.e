@@ -66,16 +66,18 @@ feature -- Status report
 
 feature -- Optimization	
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		local
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			l_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.simplify
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
+			create l_replacement.make (Void)
+			base_expression.simplify (l_replacement)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
+			else
+				set_base_expression (l_replacement.item)
 			end
 			if base_expression.is_value then
 				-- TODO: possible BUG - no static context available to get compile-time dynamic context
@@ -83,31 +85,35 @@ feature -- Optimization
 				if last_iterator.is_error then
 					set_last_error (last_iterator.error_value)
 				else
-					create a_sequence_extent.make (last_iterator)
-					set_replacement (a_sequence_extent)
+					create l_sequence_extent.make (last_iterator)
+					set_replacement (a_replacement, l_sequence_extent)
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_cast_expression: XM_XPATH_CAST_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_cast_expression: XM_XPATH_CAST_EXPRESSION
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
 			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+				set_replacement (a_replacement, base_expression)
 			else
 				if is_sub_type (base_expression.item_type, required_type) then
-					set_replacement (base_expression)
+					set_replacement (a_replacement, base_expression)
 				elseif not base_expression.cardinality_allows_many then
-					create a_cast_expression.make (base_expression, required_type, base_expression.cardinality_allows_zero)
-					a_cast_expression.set_parent (container)
-					set_replacement (a_cast_expression)
+					create l_cast_expression.make (base_expression, required_type, base_expression.cardinality_allows_zero)
+					l_cast_expression.set_parent (container)
+					set_replacement (a_replacement, l_cast_expression)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end

@@ -51,10 +51,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
 		do
-			Precursor
+			Precursor (a_replacement)
 			check_non_creating
 		end
 
@@ -126,22 +126,25 @@ feature {XM_XPATH_SYSTEM_FUNCTION} -- Local
 			-- Cannot be called in creation procedure, as arguments are not yet initialized.
 			-- Therefore, must call in `simplify'.
 		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			is_creating: BOOLEAN
+			l_atomic_type: XM_XPATH_ATOMIC_TYPE
+			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			l_creating: BOOLEAN
 		do
-			if an_atomic_type /= Void then
+			if l_atomic_type /= Void then
 				set_non_creating
 			else
 				from
-					a_cursor := arguments.new_cursor; a_cursor.start
+					l_cursor := arguments.new_cursor
+					l_cursor.start
 				until
-					is_creating or else a_cursor.after
+					l_creating or l_cursor.after
 				loop
-					is_creating := not a_cursor.item.non_creating
-					a_cursor.forth
+					l_creating := not l_cursor.item.non_creating
+					l_cursor.forth
 				end
-				if not is_creating then set_non_creating end
+				if not l_creating then
+					set_non_creating
+				end
 			end
 		end
 
@@ -150,10 +153,10 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 	argument_error_code: STRING
 			-- Error code set by `check_argument'
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			counter: INTEGER
+			l_counter: INTEGER
 		do
 			if argument_error_code = Void then
 				set_argument_error_code ("FORG0006")
@@ -161,14 +164,14 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			check_argument_count (minimum_argument_count, maximum_argument_count)
 			if not is_error then
 				from
-					counter := 1
+					l_counter := 1
 				variant
-					supplied_argument_count + 1 - counter
+					supplied_argument_count + 1 - l_counter
 				until
-					is_error or else counter > supplied_argument_count
+					is_error or a_replacement.item /= Void or l_counter > supplied_argument_count
 				loop
-					check_argument (counter, a_context)
-					counter := counter + 1
+					check_argument (a_replacement, l_counter, a_context)
+					l_counter := l_counter + 1
 				end
 			end
 		end
@@ -179,38 +182,42 @@ feature {NONE} -- Implementation
 			-- Minimum and maximum number of arguments permitted;
 			-- Maximum_argument_count = -1 implies no maximum
 
-	check_argument (argument_number: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_argument (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_argument_number: INTEGER; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static type checking on an argument to a function call, and add
 			--  type conversion logic where necessary.
 		require
-			argument_number_in_range: argument_number > 0 and then argument_number <= supplied_argument_count
+			a_argument_number_in_range: a_argument_number > 0 and then a_argument_number <= supplied_argument_count
 			context_not_void: a_context /= Void
 			no_error: not is_error
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			a_role_locator: XM_XPATH_ROLE_LOCATOR
-			an_argument: XM_XPATH_EXPRESSION
-			a_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role_locator: XM_XPATH_ROLE_LOCATOR
+			l_argument: XM_XPATH_EXPRESSION
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create a_type_checker
-			create a_role_locator.make (Function_role, name, argument_number, Xpath_errors_uri, argument_error_code)
-			a_type_checker.static_type_check (a_context, arguments.item (argument_number), required_type (argument_number), a_context.is_backwards_compatible_mode, a_role_locator)
-			if a_type_checker.is_static_type_check_error then
-				set_last_error (a_type_checker.static_type_check_error)
+			create l_type_checker
+			create l_role_locator.make (Function_role, name, a_argument_number, Xpath_errors_uri, argument_error_code)
+			l_type_checker.static_type_check (a_context, arguments.item (a_argument_number), required_type (a_argument_number), a_context.is_backwards_compatible_mode, l_role_locator)
+			if l_type_checker.is_static_type_check_error then
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 			else
-				an_argument := a_type_checker.checked_expression
-				an_argument.simplify
-				if an_argument.is_error then
-					if an_argument.error_value.type = Type_error then
-						set_last_error_from_string (an_argument.error_value.error_message, Xpath_errors_uri, argument_error_code, Type_error)
+				l_argument := l_type_checker.checked_expression
+				create l_replacement.make (Void)
+				l_argument.simplify (l_replacement)
+				if l_argument /= l_replacement.item then
+					l_argument := l_replacement.item
+				end
+				if l_argument.is_error then
+					if l_argument.error_value.type = Type_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string
+							(l_argument.error_value.error_message, Xpath_errors_uri, argument_error_code, Type_error))
 					else
-						set_last_error (an_argument.error_value)
+						set_replacement (a_replacement, l_argument)
 					end
 				else
-					if an_argument.was_expression_replaced then
-						arguments.replace (an_argument.replacement_expression, argument_number)
-					else
-						arguments.replace (an_argument, argument_number)
-					end
+					arguments.replace (l_argument, a_argument_number)
 				end
 			end
 		end

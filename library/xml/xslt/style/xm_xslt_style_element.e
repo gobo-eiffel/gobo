@@ -1049,65 +1049,37 @@ feature -- Status setting
 			end
 		end
 
-	type_check_expression (a_name: STRING; an_expression: XM_XPATH_EXPRESSION) is
+	type_check_expression (a_replacement: DS_CELL [XM_XPATH_EXPRESSION];	a_name: STRING; a_expression: XM_XPATH_EXPRESSION) is
 			-- Type-check and optimize `an expression.'.
 			-- This is called to check each expression while the containing  instruction is being validated.
 			-- It is not just a static type-check, it also adds code
 			--  to perform any necessary run-time type checking and/or conversion
 		require
-			expression_not_in_error: an_expression /= Void and then not an_expression.is_error
+			expression_not_in_error: a_expression /= Void and then not a_expression.is_error
 			valid_name: a_name /= Void and then a_name.count > 0
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
-			an_analyzed_expression: XM_XPATH_EXPRESSION
-			was_replaced: BOOLEAN
-			--some_trace_details: XM_XSLT_INSTRUCTION_DETAILS
-			--a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
+			l_analyzed_expression: XM_XPATH_EXPRESSION
 		do
-			if an_expression.is_computed_expression then
+			if a_expression.is_computed_expression then
 
 				-- temporary measure, until instruction is compiled:
 
-				an_expression.as_computed_expression.set_parent (Current)
+				a_expression.as_computed_expression.set_parent (Current)
 			end
-			an_expression.check_static_type (static_context, any_item)
-			if an_expression.was_expression_replaced then
-				an_analyzed_expression := an_expression.replacement_expression
-				was_replaced := True
-			else
-				an_analyzed_expression := an_expression
-			end
-			if an_analyzed_expression.is_error then
-				if an_analyzed_expression.error_value.type /= Dynamic_error then
-					report_compile_error (an_analyzed_expression.error_value)
+			a_expression.check_static_type (a_replacement, static_context, any_item)
+			l_analyzed_expression := a_replacement.item
+			if l_analyzed_expression.is_error then
+				if l_analyzed_expression.error_value.type /= Dynamic_error then
+					report_compile_error (l_analyzed_expression.error_value)
 				end
 			else
-				an_analyzed_expression.resolve_calls_to_current_function
-				if an_analyzed_expression.was_expression_replaced then
-					an_analyzed_expression := an_analyzed_expression.replacement_expression
-					was_replaced := True
-				end
-				if an_analyzed_expression.is_error and then an_analyzed_expression.error_value.type /= Dynamic_error then
-					report_compile_error (an_analyzed_expression.error_value)
-				else
-					if was_replaced then
-						if an_analyzed_expression.was_expression_replaced then
-							an_analyzed_expression := an_analyzed_expression.replacement_expression
-						end
-						if not an_expression.was_expression_replaced
-							or else an_expression.replacement_expression /= an_analyzed_expression then
-							if an_expression.was_expression_replaced then an_expression.mark_unreplaced end
-							an_expression.set_replacement (an_analyzed_expression)
-						end
-					end
-					-- TODO: this all needs an executable
-					--if configuration.is_tracing then
-					--	create some_trace_details.make (Xpath_expression_in_xslt, line_numer, system_id)
-					--	some_trace_details.set_trace_property (a_name, Gexslt_expression_name_pseudo_attribute)
-					--	create a_trace_instruction.make (an_analyzed_expression, an_executable, some_trace_details)
-					--	a_trace_expression.set_parent (Current)
-					--	a_trace_expression.set_source_location (containing_stylesheet.module_number (system_id), line_number)
-					--	an_expression.set_replacement (an_analyzed_expression)
-					--end
+				a_replacement.put (Void)
+				l_analyzed_expression.resolve_calls_to_current_function (a_replacement)
+				l_analyzed_expression := a_replacement.item
+				if l_analyzed_expression.is_error and then l_analyzed_expression.error_value.type /= Dynamic_error then
+					report_compile_error (l_analyzed_expression.error_value)
 				end
 			end
 		end
@@ -1310,6 +1282,7 @@ feature -- Creation
 		local
 			l_avt: XM_XSLT_AVT_PARSER
 			l_concat_function: XM_XPATH_CONCAT
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_avt.make (a_avt, a_static_context, configuration.are_all_nodes_untyped)
 			l_avt.parse_components (line_number)
@@ -1319,20 +1292,15 @@ feature -- Creation
 			elseif l_avt.components.count = 0 then
 				create {XM_XPATH_STRING_VALUE} last_generated_expression.make ("")
 			elseif l_avt.components.count = 1 then
-				last_generated_expression := l_avt.components.item (1)
-				last_generated_expression.simplify
-				if last_generated_expression.was_expression_replaced then
-					last_generated_expression := last_generated_expression.replacement_expression
-				end
+				create l_replacement.make (Void)
+				l_avt.components.item (1).simplify (l_replacement)
+				last_generated_expression := l_replacement.item
 			else
 				create l_concat_function.make
 				l_concat_function.set_arguments (l_avt.components)
-				l_concat_function.simplify
-				if l_concat_function.was_expression_replaced then
-					last_generated_expression := l_concat_function.replacement_expression
-				else
-					last_generated_expression := l_concat_function
-				end
+				create l_replacement.make (Void)
+				l_concat_function.simplify (l_replacement)
+				last_generated_expression := l_replacement.item
 			end
 			if last_generated_expression.is_error then
 				report_compile_error (last_generated_expression.error_value)
@@ -1526,7 +1494,6 @@ feature -- Element change
 			-- This version can be called by XM_XSLT_TEMPLATE, even though it redefines `allocate_slots'.
 		require
 			expression_not_in_error: a_expression /= Void and then not a_expression.is_error
-			expression_not_replaced: not a_expression.was_expression_replaced
 			slot_manager_not_void: a_slot_manager /= Void
 		local
 			a_first_slot, a_high_water_mark: INTEGER

@@ -290,10 +290,11 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_body: XM_XPATH_EXPRESSION
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			l_body: XM_XPATH_EXPRESSION
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 
 			-- Compile the function into a XM_XSLT_COMPILED_USER_FUNCTION, which treats the function
@@ -305,40 +306,43 @@ feature -- Element change
 			--  no calls to it, the compiled function will be garbage-collected away.
   
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), False)
-			a_body := last_generated_expression
-			if a_body = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} a_body.make
+			l_body := last_generated_expression
+			if l_body = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} l_body.make
 			end
-			a_body.simplify
-			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
-			a_body.check_static_type (static_context, Void)
-			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
-			if a_body.is_error then
-				report_compile_error (a_body.error_value)
+			create l_replacement.make (Void)
+			l_body.simplify (l_replacement)
+			l_body := l_replacement.item
+			l_replacement.put (Void)
+			l_body.check_static_type (l_replacement, static_context, Void)
+			l_body := l_replacement.item
+			if l_body.is_error then
+				report_compile_error (l_body.error_value)
 			else
-				a_body.optimize (static_context, Void)
-				if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
-				if a_body.is_error then
-					report_compile_error (a_body.error_value)
+				l_replacement.put (Void)
+				l_body.optimize (l_replacement, static_context, Void)
+				l_body := l_replacement.item
+				if l_body.is_error then
+					report_compile_error (l_body.error_value)
 				else
 					if result_type /= Void then
-						create a_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XTTE0780")
-						create a_type_checker
-						a_type_checker.static_type_check (static_context, a_body, result_type, False, a_role)
-						if a_type_checker.is_static_type_check_error then
-							report_compile_error (a_type_checker.static_type_check_error)
+						create l_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XTTE0780")
+						create l_type_checker
+						l_type_checker.static_type_check (static_context, l_body, result_type, False, l_role)
+						if l_type_checker.is_static_type_check_error then
+							report_compile_error (l_type_checker.static_type_check_error)
 						else
-							a_body := a_type_checker.checked_expression
+							l_body := l_type_checker.checked_expression
 						end
 					end
 					if configuration.is_tracing then
-						create a_trace_wrapper.make (a_body, an_executable, Current)
-						a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
-						a_body := a_trace_wrapper
+						create l_trace_wrapper.make (l_body, an_executable, Current)
+						l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+						l_body := l_trace_wrapper
 					end
-					allocate_slots (a_body, slot_manager)
-					a_body.mark_tail_function_calls
-					create compiled_function.make (an_executable, a_body, function_name, function_fingerprint, arity, system_id,
+					allocate_slots (l_body, slot_manager)
+					l_body.mark_tail_function_calls
+					create compiled_function.make (an_executable, l_body, function_name, function_fingerprint, arity, system_id,
 						line_number, slot_manager, result_type, is_memo_function)
 					set_parameter_definitions (compiled_function)
 					fixup_instruction (compiled_function)
@@ -350,16 +354,16 @@ feature -- Element change
 						std.error.put_string (" in ")
 						std.error.put_string (system_id)
 						std.error.put_new_line
-						if not a_body.is_error then
+						if not l_body.is_error then
 							std.error.put_string ("Static type: ")
-							std.error.put_string (a_body.item_type.conventional_name)
-							std.error.put_string (a_body.occurrence_indicator)
+							std.error.put_string (l_body.item_type.conventional_name)
+							std.error.put_string (l_body.occurrence_indicator)
 							std.error.put_new_line
 							std.error.put_string ("Optimized expression tree:%N")
-							a_body.display (10)
+							l_body.display (10)
 						else
 							std.error.put_string ("Function body is in error%N")
-							std.error.put_string (a_body.error_value.error_message)
+							std.error.put_string (l_body.error_value.error_message)
 							std.error.put_new_line
 						end
 					end

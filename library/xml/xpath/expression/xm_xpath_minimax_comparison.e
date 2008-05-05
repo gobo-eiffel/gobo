@@ -50,57 +50,56 @@ feature -- Access
 
 feature -- Optimization
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			a_value: XM_XPATH_VALUE
-			a_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
+			l_value: XM_XPATH_VALUE
+			l_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			first_operand.optimize (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			first_operand.optimize (l_replacement, a_context, a_context_item_type)
+			set_first_operand (l_replacement.item)
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+				set_replacement (a_replacement, first_operand)
 			else
-				second_operand.optimize (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
-				end
+				l_replacement.put (Void)
+				second_operand.optimize (l_replacement, a_context, a_context_item_type)
+				set_second_operand (l_replacement.item)
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
+					set_replacement (a_replacement, second_operand)
 				end
-				if not is_error and then not was_expression_replaced then
-
+				if a_replacement.item = Void then
 					-- If either operand is a statically-known list of values, we only need
 					-- to retain the minimum or maximum value, depending on the operator.
-					
-					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone then
-						a_value := first_operand.as_value
-						a_value.create_iterator (Void)
-						a_range := computed_range (a_value.last_iterator, Void)
-						if a_range = Void then
-							set_replacement (false_value)
+					if first_operand.is_value and not first_operand.depends_upon_implicit_timezone then
+						l_value := first_operand.as_value
+						l_value.create_iterator (Void)
+						l_range := computed_range (l_value.last_iterator, Void)
+						if l_range = Void then
+							set_replacement (a_replacement, false_value)
 						elseif operator = Less_than_token or else operator = Less_equal_token then
-							set_first_operand (a_range.item (1))
+							set_first_operand (l_range.item (1))
 						else
-							set_first_operand (a_range.item (2))
+							set_first_operand (l_range.item (2))
 						end
 					end
-					if not was_expression_replaced then
-						if second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
-							a_value := second_operand.as_value
-							a_value.create_iterator (Void)
-							a_range :=  computed_range (a_value.last_iterator, Void)
-							if a_range = Void then
-								set_replacement (false_value)
+					if a_replacement.item = Void then
+						if second_operand.is_value and not second_operand.depends_upon_implicit_timezone then
+							l_value := second_operand.as_value
+							l_value.create_iterator (Void)
+							l_range :=  computed_range (l_value.last_iterator, Void)
+							if l_range = Void then
+								set_replacement (a_replacement, false_value)
 							elseif operator = Greater_than_token or else operator = Greater_equal_token then
-								set_second_operand (a_range.item (1))
+								set_second_operand (l_range.item (1))
 							else
-								set_second_operand (a_range.item (2))
+								set_second_operand (l_range.item (2))
 							end
 						end
+					end
+					if a_replacement.item = Void then
+						a_replacement.put (Current)
 					end
 				end
 			end

@@ -108,7 +108,7 @@ feature -- Evaluation
 		end
 
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
 			l_uri: STRING
@@ -124,8 +124,8 @@ feature -- Evaluation
 			end
 			create l_parser.make (arguments.item (1).as_string_value.string_value)
 			if not l_parser.is_valid then
-				set_last_error_from_string ("Argument to 'system-property' is not a QName",
-													 Xpath_errors_uri, "XTDE1390", Static_error)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string ("Argument to 'system-property' is not a QName",
+					Xpath_errors_uri, "XTDE1390", Static_error))
 			else
 				if not l_parser.is_prefix_present then
 					l_uri := ""
@@ -133,35 +133,35 @@ feature -- Evaluation
 					if a_context.is_prefix_declared (l_parser.optional_prefix) then
 						l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
 					else
-						set_last_error_from_string ("Prefix to argument to 'system-property' is not declared",
-							Xpath_errors_uri, "XTDE1390", Static_error)
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string ("Prefix to argument to 'system-property' is not declared",
+							Xpath_errors_uri, "XTDE1390", Static_error))
 					end
 				end
-				if not is_error then
+				if a_replacement.item = Void then
 					create l_string_value.make (system_property (l_uri, l_parser.local_name, a_context.configuration))
-					set_replacement (l_string_value)
+					set_replacement (a_replacement, l_string_value)
 				end
 			end
 		end
 	
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
-			Precursor (a_context)
+			Precursor (a_replacement, a_context)
 			if not arguments.item (1).is_string_value then
 
 				-- we need to save the namespace context
 
-				an_expression_context ?= a_context
+				l_expression_context ?= a_context
 				check
-					expression_context: an_expression_context /= Void
+					expression_context: l_expression_context /= Void
 					-- as this is XSLT
 				end
-				namespace_context := an_expression_context.namespace_context
+				namespace_context := l_expression_context.namespace_context
 			end
 		end
 

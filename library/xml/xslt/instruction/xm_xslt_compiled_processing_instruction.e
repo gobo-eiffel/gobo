@@ -91,47 +91,55 @@ feature -- Status setting
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		local
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_required_type: XM_XPATH_SEQUENCE_TYPE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_required_type: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			name.check_static_type (a_context, a_context_item_type)
-			if name.was_expression_replaced then
-				name := name.replacement_expression
-			end
-			create a_required_type.make_single_string
-			create a_role.make (Instruction_role, "processing-instruction:name", 1, Xpath_errors_uri, "XPTY0004")
-			create a_type_checker
-			a_type_checker.static_type_check (a_context, name, a_required_type, False, a_role)
-			if a_type_checker.is_static_type_check_error then
-				name.set_last_error (a_type_checker.static_type_check_error)
+			name.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_name (l_replacement.item)
+			if name.is_error then
+				set_replacement (a_replacement, name)
 			else
-				name := a_type_checker.checked_expression; adopt_child_expression (name)
-			end			
-		end
-
-	simplify is
-			-- Perform context-independent static optimizations
-		do
-			name.simplify
-			if name.was_expression_replaced then
-				name := name.replacement_expression;  adopt_child_expression (name)
+				create l_required_type.make_single_string
+				create l_role.make (Instruction_role, "processing-instruction:name", 1, Xpath_errors_uri, "XPTY0004")
+				create l_type_checker
+				l_type_checker.static_type_check (a_context, name, l_required_type, False, l_role)
+				if l_type_checker.is_static_type_check_error then
+				 set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
+				else
+					set_name (l_type_checker.checked_expression)
+				end
 			end
-			Precursor
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+		do
+			create l_replacement.make (Void)
+			name.simplify (l_replacement)
+			set_name (l_replacement.item)
+			if name.is_error then
+				set_replacement (a_replacement, name)
+			else
+				Precursor (a_replacement)
+			end
+		end
+
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			name.promote (an_offer)
-			if name.was_expression_replaced then
-				name := name.replacement_expression;  adopt_child_expression (name)
-				reset_static_properties
-			end
-			Precursor (an_offer)
+			create l_replacement.make (Void)
+			name.promote (l_replacement, a_offer)
+			set_name (l_replacement.item)
+			Precursor (a_offer)
 		end
 
 feature -- Evaluation
@@ -166,6 +174,20 @@ feature {NONE} -- Implementation
 
 	evaluated_name: STRING
 			-- Result of calling `evaluate_name'
+
+	set_name (a_name: XM_XPATH_EXPRESSION) is
+			-- Ensure `name' = `a_name'.
+		do
+			if name /= a_name then
+				name := a_name
+				if name /= Void then
+					adopt_child_expression (name)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: name = a_name
+		end
 
 	check_content (a_content: STRING; a_context: XM_XPATH_CONTEXT) is
 			-- Check and possibly modify `a_content' for conformance to node kind.

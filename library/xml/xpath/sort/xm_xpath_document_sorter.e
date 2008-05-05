@@ -27,12 +27,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_EXPRESSION) is
+	make (a_expression: XM_XPATH_EXPRESSION) is
 		require
-			expression_not_replaced: an_expression /= Void and then an_expression.are_static_properties_computed
-				and then not an_expression.was_expression_replaced
+			a_expression_not_void: a_expression /= Void
+			a_expression_initialized: a_expression.are_static_properties_computed
 		do
-			make_unary (an_expression)
+			make_unary (a_expression)
 			if base_expression.context_document_nodeset or else base_expression.single_document_nodeset then
 				create {XM_XPATH_LOCAL_ORDER_COMPARER} comparer
 			else
@@ -61,58 +61,56 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
-			if base_expression.was_expression_replaced and then base_expression.replacement_expression = Current then
-				base_expression.mark_unreplaced
-			end
 			Result := base_expression.item_type
 		end
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.simplify
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.ordered_nodeset then
-				set_replacement (base_expression)
+			create l_replacement.make (Void)
+			base_expression.simplify (l_replacement)
+			set_base_expression (l_replacement.item)
+			if base_expression.is_error or else base_expression.ordered_nodeset then
+				set_replacement (a_replacement, base_expression)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.optimize (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.ordered_nodeset then
-				set_replacement (base_expression)
+			create l_replacement.make (Void)
+			base_expression.optimize (l_replacement, a_context, a_context_item_type)
+			set_base_expression (l_replacement.item)
+			if base_expression.is_error or else base_expression.ordered_nodeset then
+				set_replacement (a_replacement, base_expression)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
-				base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-				base_expression.promote (an_offer)
-				if base_expression.was_expression_replaced then
-					set_base_expression (base_expression.replacement_expression )
+				a_replacement.put (Current)
+				create l_replacement.make (Void)
+				base_expression.promote (l_replacement, a_offer)
+				if base_expression /= l_replacement.item then
+					set_base_expression (l_replacement.item)
 					reset_static_properties
 				end
 			end
@@ -159,7 +157,6 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do
-			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 			base_expression.calculate_effective_boolean_value (a_context)
 			last_boolean_value := base_expression.last_boolean_value
 		end

@@ -160,37 +160,38 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
-			a_fingerprint: INTEGER
-			an_attribute_name: STRING
-			an_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			l_fingerprint: INTEGER
+			l_attribute_name: STRING
+			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
+			create l_replacement.make (Void)
 			if href /= Void then
-				type_check_expression ("href", href)
-				if href.was_expression_replaced then
-					href := href.replacement_expression
-				end
+				type_check_expression (l_replacement, "href", href)
+				href := l_replacement.item
 			end
 			if format_expression /= Void then
-				type_check_expression ("format", format_expression)
-				if format_expression.was_expression_replaced then
-					format_expression := format_expression.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "format", format_expression)
+				format_expression := l_replacement.item
 			end
 			from
-				a_cursor := formatting_attributes.new_cursor; a_cursor.start
+				l_cursor := formatting_attributes.new_cursor
+				l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_fingerprint := a_cursor.key
-				an_attribute_name := shared_name_pool.display_name_from_name_code (a_fingerprint)
-				an_expression := a_cursor.item
-				type_check_expression (an_attribute_name, an_expression)
-				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
+				l_fingerprint := l_cursor.key
+				l_attribute_name := shared_name_pool.display_name_from_name_code (l_fingerprint)
+				l_expression := l_cursor.item
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, l_attribute_name, l_expression)
+				if l_expression /= l_replacement.item then
+					l_cursor.replace (l_replacement.item)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 			validated := True
 		end
@@ -256,7 +257,7 @@ feature -- Element change
 			local_properties_not_void: a_local_property_set /= Void
 		local
 			a_fingerprint_list: DS_ARRAYED_LIST [INTEGER]
-			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			l_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 			another_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_fingerprint: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
@@ -267,16 +268,16 @@ feature -- Element change
 			create a_fingerprint_list.make (formatting_attributes.count)
 			a_namespace_resolver := static_context.namespace_resolver
 			from
-				a_cursor := formatting_attributes.new_cursor; a_cursor.start
+				l_cursor := formatting_attributes.new_cursor; l_cursor.start
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_fingerprint := a_cursor.key
-				an_expression := a_cursor.item
+				a_fingerprint := l_cursor.key
+				an_expression := l_cursor.item
 				if an_expression.is_string_value then
 					a_local_property_set.set_property (a_fingerprint, an_expression.as_string_value.string_value, a_namespace_resolver)
 					if a_local_property_set.is_error then
-						a_cursor.go_after
+						l_cursor.go_after
 						create an_error.make_from_string (a_local_property_set.error_message, Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					else
@@ -288,7 +289,7 @@ feature -- Element change
 						STRING_.same_string (a_local_name, Cdata_section_elements_attribute) then
 					end
 				end
-				if not a_cursor.after then a_cursor.forth end
+				if not l_cursor.after then l_cursor.forth end
 			end
 			from
 				another_cursor := a_fingerprint_list.new_cursor; another_cursor.start

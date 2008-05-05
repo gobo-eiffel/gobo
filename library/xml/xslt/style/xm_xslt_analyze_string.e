@@ -113,47 +113,49 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_style_element: XM_XSLT_STYLE_ELEMENT
-			an_error: XM_XPATH_ERROR_VALUE
-			finished: BOOLEAN
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_style_element: XM_XSLT_STYLE_ELEMENT
+			l_error: XM_XPATH_ERROR_VALUE
+			l_finished: BOOLEAN
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			from
-				a_child_iterator := new_axis_iterator (Child_axis); a_child_iterator.start
-			until finished or else a_child_iterator.after loop
-				a_style_element ?= a_child_iterator.item
-				if a_style_element /= Void then
-					if not a_style_element.is_fallback then
-						if a_style_element.is_matching_substring then
+				l_child_iterator := new_axis_iterator (Child_axis)
+				l_child_iterator.start
+			until l_finished or l_child_iterator.after loop
+				l_style_element ?= l_child_iterator.item
+				if l_style_element /= Void then
+					if not l_style_element.is_fallback then
+						if l_style_element.is_matching_substring then
 							if matching_substring /= Void then
-								create an_error.make_from_string ("xsl:matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error) 
-								report_compile_error (an_error); finished := True
+								create l_error.make_from_string ("xsl:matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error) 
+								report_compile_error (l_error); l_finished := True
 							elseif non_matching_substring /= Void then
-								create an_error.make_from_string ("xsl:matching-substring element must appear before xsl:non-matching-substring", Xpath_errors_uri, "XTSE0010", Static_error) 
-								report_compile_error (an_error); finished := True
+								create l_error.make_from_string ("xsl:matching-substring element must appear before xsl:non-matching-substring", Xpath_errors_uri, "XTSE0010", Static_error) 
+								report_compile_error (l_error); l_finished := True
 							else
-								matching_substring := a_style_element.as_matching_substring
+								matching_substring := l_style_element.as_matching_substring
 							end
-						elseif a_style_element.is_non_matching_substring then
+						elseif l_style_element.is_non_matching_substring then
 							if non_matching_substring /= Void then
-								create an_error.make_from_string ("xsl:non-matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error) 
-								report_compile_error (an_error); finished := True
+								create l_error.make_from_string ("xsl:non-matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error) 
+								report_compile_error (l_error); l_finished := True
 							else
-								non_matching_substring := a_style_element.as_non_matching_substring
+								non_matching_substring := l_style_element.as_non_matching_substring
 							end
 						else
-							create an_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error) 
-							report_compile_error (an_error); finished := True
+							create l_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error) 
+							report_compile_error (l_error); l_finished := True
 						end
 					end
-				elseif a_child_iterator.item.node_type = Text_node and then is_all_whitespace (a_child_iterator.item.string_value) then
+				elseif l_child_iterator.item.node_type = Text_node and then is_all_whitespace (l_child_iterator.item.string_value) then
 							-- do nothing, as xml:space="preserve" makes this legitimate
 				else
-					create an_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error) 
-					report_compile_error (an_error); finished := True
+					create l_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error) 
+					report_compile_error (l_error); l_finished := True
 				end
-				a_child_iterator.forth
+				l_child_iterator.forth
 			end
 			if non_matching_substring = Void and matching_substring = Void then
 				report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string ("At least one xsl:matching-substring or xsl:non-matching-substring element must be present",
@@ -169,6 +171,7 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			l_matching_block, l_non_matching_block: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if matching_substring /= Void then
 				matching_substring.compile_sequence_constructor (an_executable, matching_substring.new_axis_iterator (Child_axis), False)
@@ -189,16 +192,15 @@ feature -- Element change
 				end
 			end
 			create {XM_XSLT_COMPILED_ANALYZE_STRING} last_generated_expression.make (an_executable,
-																											 select_expression,
-																											 regex_expression,
-																											 flags_expression,
-																											 regexp_cache_entry,
-																											 l_matching_block,
-																											 l_non_matching_block)
-			last_generated_expression.simplify
-			if last_generated_expression.was_expression_replaced then
-				last_generated_expression := last_generated_expression.replacement_expression
-			end
+				select_expression,
+				regex_expression,
+				flags_expression,
+				regexp_cache_entry,
+				l_matching_block,
+				l_non_matching_block)
+			create l_replacement.make (Void)
+			last_generated_expression.simplify (l_replacement)
+			last_generated_expression := l_replacement.item
 		end
 
 feature {NONE} -- Implementation
@@ -272,55 +274,53 @@ feature {NONE} -- Implementation
 		require
 			nor_errors_yet: not any_compile_errors
 		local
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_single_string: XM_XPATH_SEQUENCE_TYPE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_single_string: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			type_check_expression ("select", select_expression)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-			end
+			create l_replacement.make (Void)
+			type_check_expression (l_replacement, "select", select_expression)
+			select_expression := l_replacement.item
 			if not any_compile_errors then
-				create a_single_string.make_single_string
-				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:analyze-string/select", 1, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (static_context, select_expression, a_single_string, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				create l_single_string.make_single_string
+				create l_type_checker
+				create l_role.make (Instruction_role, "xsl:analyze-string/select", 1, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (static_context, select_expression, l_single_string, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					select_expression := a_type_checker.checked_expression
+					select_expression := l_type_checker.checked_expression
 				end
 			end
 			if not any_compile_errors then
-				type_check_expression ("regex", regex_expression)
-				if regex_expression.was_expression_replaced then
-					regex_expression := regex_expression.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "regex", regex_expression)
+				regex_expression := l_replacement.item
 			end
 			if not any_compile_errors then
-				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:analyze-string/regex", 1, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (static_context, regex_expression, a_single_string, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				create l_type_checker
+				create l_role.make (Instruction_role, "xsl:analyze-string/regex", 1, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (static_context, regex_expression, l_single_string, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					regex_expression := a_type_checker.checked_expression
+					regex_expression := l_type_checker.checked_expression
 				end
 			end
 			if not any_compile_errors then
-				type_check_expression ("flags", flags_expression)
-				if flags_expression.was_expression_replaced then
-					flags_expression := flags_expression.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "flags", flags_expression)
+				flags_expression := l_replacement.item
 			end
 			if not any_compile_errors then
-				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:analyze-string/flags", 1, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (static_context, flags_expression, a_single_string, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				create l_type_checker
+				create l_role.make (Instruction_role, "xsl:analyze-string/flags", 1, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (static_context, flags_expression, l_single_string, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					flags_expression := a_type_checker.checked_expression
+					flags_expression := l_type_checker.checked_expression
 				end
 			end
 		end

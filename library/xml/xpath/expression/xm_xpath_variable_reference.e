@@ -147,44 +147,48 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			mark_unreplaced
 			if constant_value /= Void then
 				binding := Void
-				set_replacement (constant_value)
+				set_replacement (a_replacement, constant_value)
 			else
 				check
 					static_type_not_void: static_type /= Void
 				end
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			mark_unreplaced
-
 			-- Note that `set_static_type' might be called after type-checking, so:
 
 			if constant_value /= Void then
 				binding := Void
-				set_replacement (constant_value)
+				set_replacement (a_replacement, constant_value)
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_promotion: XM_XPATH_EXPRESSION
 		do
-			if an_offer.action = Inline_variable_references then
-				an_offer.accept (Current)
-				a_promotion := an_offer.accepted_expression
-				if a_promotion /= Void then
-					set_replacement (a_promotion)
+			if a_offer.action = Inline_variable_references then
+				a_offer.accept (Current)
+				l_promotion := a_offer.accepted_expression
+				if l_promotion /= Void then
+					set_replacement (a_replacement, l_promotion)
+				else
+					a_replacement.put (Current)
 				end
+			else
+				a_replacement.put (Current)
 			end
 		end
 
@@ -244,7 +248,6 @@ feature -- Evaluation
 			-- Evaluate variable
 		require
 			binding_not_void: binding /= Void
-			not_replaced: not was_expression_replaced
 		do
 			binding.evaluate_variable (a_context)
 			last_evaluated_binding := binding.last_evaluated_binding
@@ -261,7 +264,6 @@ feature -- Element change
 			--  for example whether it is an ordered node-set.
 		require
 			static_type_not_void: a_type /= Void
-			not_replaced: not was_expression_replaced
 		do
 			static_type := a_type
 			if are_static_properties_computed then
@@ -270,7 +272,7 @@ feature -- Element change
 			constant_value := a_constant_value
 			if	a_properties /= Void then
 				merge_dependencies (a_properties)
-				set_cardinality (a_type.merged_cardinalities (a_properties))
+				set_cardinality (add_cardinality (a_properties.cardinality, a_type.cardinality))			
 				clone_special_properties (a_properties)
 
 				-- Although the variable may be a context document node-set at the point it is defined,
@@ -284,7 +286,6 @@ feature -- Element change
 			-- Fix up this binding reference to a binding.
 		require
 			binding_not_void: a_required_binding /= Void
-			not_replaced: not was_expression_replaced
 		do
 			binding := a_required_binding
 			if are_static_properties_computed then reset_static_properties end
@@ -311,9 +312,24 @@ feature {NONE} -- Implementation
 
 	compute_cardinality is
 			-- Compute cardinality.
+		local
+			l_assignation: XM_XPATH_ASSIGNATION
 		do
 			if static_type = Void then
-				set_cardinality_zero_or_more
+				if binding = Void then
+					set_cardinality_zero_or_more
+				else
+					l_assignation ?= binding
+					if l_assignation /= Void then
+						if l_assignation.is_let_expression then
+							set_cardinality (binding.required_type.cardinality)
+						else
+							set_cardinality_exactly_one
+						end
+					else
+						set_cardinality (binding.required_type.cardinality)
+					end
+				end
 			else
 				set_cardinality (static_type.cardinality)
 			end

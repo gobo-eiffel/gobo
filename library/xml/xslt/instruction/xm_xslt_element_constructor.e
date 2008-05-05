@@ -85,71 +85,71 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-free optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
 			if content.is_error then
-				set_last_error (content.error_value)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (content.error_value))
 			else
-				content.simplify
+				create l_replacement.make (Void)
+				content.simplify (l_replacement)
+				set_content (l_replacement.item)
 				if content.is_error then
-					set_last_error (content.error_value)
-				elseif content.was_expression_replaced then
-					content := content.replacement_expression
-					adopt_child_expression (content)
+					set_replacement (a_replacement, content)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if content.is_error then
-				set_last_error (content.error_value)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (content.error_value))
 			else
-				content.check_static_type (a_context, a_context_item_type)
+				create l_replacement.make (Void)
+				content.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_content (l_replacement.item)
 				if content.is_error then
-					set_last_error (content.error_value)
-				elseif content.was_expression_replaced then
-					content := content.replacement_expression
-					adopt_child_expression (content)
-				end
-				if not is_error then
-					check_contents_for_attributes (a_context)
+					set_replacement (a_replacement, content)
+				else
+					check_contents_for_attributes (a_replacement, a_context)
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if content.is_error then
-				set_last_error (content.error_value)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (content.error_value))
 			else
-				content.optimize (a_context, a_context_item_type)
+				create l_replacement.make (Void)
+				content.optimize (l_replacement, a_context, a_context_item_type)
+				set_content (l_replacement.item)
 				if content.is_error then
-					set_last_error (content.error_value)
-				elseif content.was_expression_replaced then
-					content := content.replacement_expression
-					adopt_child_expression (content)
+					set_replacement (a_replacement, content)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			if content.is_error then
-				set_last_error (content.error_value)
-			else
-				content.promote (an_offer)
-				if content.is_error then
-					set_last_error (content.error_value)
-				elseif content.was_expression_replaced then
-					content := content.replacement_expression
-					adopt_child_expression (content)
-				end
-			end
+			create l_replacement.make (Void)
+			content.promote (l_replacement, a_offer)
+			set_content (l_replacement.item)
 		end
 
 feature -- Evaluation
@@ -335,10 +335,26 @@ feature {NONE} -- Implementation
 	content: XM_XPATH_EXPRESSION
 			-- Element content
 
-	check_contents_for_attributes (a_context: XM_XPATH_STATIC_CONTEXT) is
+	set_content (a_content: XM_XPATH_EXPRESSION) is
+			-- Ensure `content' = `a_content'.
+		require
+			content_not_void: a_content /= Void
+		do
+			if content /= a_content then
+				content := a_content
+				adopt_child_expression (content)
+				reset_static_properties
+			end
+		ensure
+			set: content = a_content
+		end
+
+	check_contents_for_attributes (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check no attributes or namespaces are created after child nodes.
 		require
 			a_context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		local
 			l_children: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			l_component: XM_XPATH_EXPRESSION
@@ -348,15 +364,14 @@ feature {NONE} -- Implementation
 			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if content.is_sequence_expression then
-				l_children := content.as_sequence_expression.children.new_cursor
 				from
+					l_children := content.as_sequence_expression.children.new_cursor					
 					l_children.start
 				until
 					l_children.after or l_finished
 				loop
 					l_component := l_children.item
-					-- Need to ignore a zero-length text node, which is included to prevent space-separation
-					-- in a construct like <a>{@x}{@y}</b>
+					-- Need to ignore a zero-length text node, which is included to prevent space-separation in a construct like <a>{@x}{@y}</b>
 					if l_component.is_value_of then
 						l_value_of ?= l_component
 						if l_value_of.select_expression.is_string_value and then l_value_of.select_expression.as_string_value.string_value.is_empty then
@@ -371,11 +386,9 @@ feature {NONE} -- Implementation
 							elseif l_found_child and l_mask = INTEGER_.bit_shift_left (1, Attribute_node) then
 								l_finished := True
 								create l_error.make_from_string ("May not create an attribute node after creating a child of the containing element", Xpath_errors_uri, "XTDE0410", Dynamic_error)
-								set_last_error (l_error)
 							elseif l_found_child and l_mask = INTEGER_.bit_shift_left (1, Namespace_node) then
 								l_finished := True
 								create l_error.make_from_string ("May not create a namespace node after creating a child of the containing element", Xpath_errors_uri, "XTDE0410", Dynamic_error)
-								set_last_error (l_error)
 							end
 						end
 					end
@@ -384,6 +397,13 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			if l_error = Void then
+				a_replacement.put (Current)
+			else
+				a_replacement.put (create {XM_XPATH_INVALID_VALUE}.make (l_error))
+			end
+		ensure
+			replaced: a_replacement.item /= Void			
 		end
 
 invariant

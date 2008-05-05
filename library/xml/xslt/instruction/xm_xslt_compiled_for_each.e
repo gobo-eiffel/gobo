@@ -121,124 +121,120 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
-		do
-			select_expression.simplify
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
-			end
-			action.simplify
-			if action.was_expression_replaced then
-				action := action.replacement_expression
-				adopt_child_expression (action)
-			end			
-		end
-
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			select_expression.check_static_type (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
-			end
-			an_empty_sequence ?= select_expression
-			if an_empty_sequence /= Void or select_expression.is_error then
-				set_replacement (select_expression)
-			else
-				action.check_static_type (a_context, select_expression.item_type)
-				if action.was_expression_replaced then
-					action := action.replacement_expression
-					adopt_child_expression (action)
-				end
-				an_empty_sequence ?= action
-				if an_empty_sequence /= Void or action.is_error then
-					set_replacement (action)
-				end
-			end
-		end
-
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
-			-- Perform optimization of `Current' and its subexpressions.
-		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			a_promotion_offer: XM_XPATH_PROMOTION_OFFER
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			an_expression: XM_XPATH_EXPRESSION
-		do
-			mark_unreplaced
-			select_expression.optimize (a_context, a_context_item_type)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
-				adopt_child_expression (select_expression)
-			end
-			an_empty_sequence ?= select_expression
-			if an_empty_sequence /= Void or select_expression.is_error then
-				set_replacement (select_expression)
-			else
-				action.optimize (a_context, select_expression.item_type)
-				if action.was_expression_replaced then
-					action := action.replacement_expression
-					adopt_child_expression (action)
-				end
-				an_empty_sequence ?= action
-				if an_empty_sequence /= Void or action.is_error then
-					set_replacement (action)
-				else
-
-					-- If any subexpressions within the body of the for-each are not dependent on the focus,
-					--  promote them: this causes them to be evaluated once, outside the for-each loop
-
-					create a_promotion_offer.make (Focus_independent, Void, Current, False, select_expression.context_document_nodeset)
-					a_promotion_offer.disallow_promoting_xslt_functions
-					action.promote (a_promotion_offer)
-					if action.was_expression_replaced then
-						action := action.replacement_expression
-						adopt_child_expression (action)
-						reset_static_properties
-					end
-					a_let_expression ?= a_promotion_offer.containing_expression
-					if a_let_expression /= Void then
-						a_let_expression.check_static_type (a_context, a_context_item_type)
-						if a_let_expression.was_expression_replaced then
-							an_expression := a_let_expression.replacement_expression
-						else
-							an_expression := a_let_expression
-						end
-						an_expression.optimize (a_context, a_context_item_type)
-						if an_expression.was_expression_replaced then
-							an_expression := an_expression.replacement_expression
-						end
-						a_promotion_offer.set_containing_expression (an_expression)
-					end
-					if a_promotion_offer.containing_expression /= Current then
-						if a_promotion_offer.containing_expression.was_expression_replaced then
-							set_replacement (a_promotion_offer.containing_expression.replacement_expression)
-						else
-							set_replacement (a_promotion_offer.containing_expression)
-						end
-					end
-				end
-			end
-		end
-
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Promote this instruction.
-		do
-			select_expression.promote (an_offer)
-			if select_expression.was_expression_replaced then
-				select_expression := select_expression.replacement_expression
+			create l_replacement.make (Void)
+			select_expression.simplify (l_replacement)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
 				adopt_child_expression (select_expression)
 				reset_static_properties
 			end
-			action.promote (an_offer)
-			if action.was_expression_replaced then
-				action := action.replacement_expression
+			if select_expression.is_error then
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (select_expression.error_value))
+			else
+				l_replacement.put (Void)
+				action.simplify (l_replacement)
+				if action /= l_replacement.item then
+					action := l_replacement.item
+					adopt_child_expression (action)
+					reset_static_properties
+				end
+				if action.is_error then
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (action.error_value))
+				else
+					a_replacement.put (Current)
+				end
+			end			
+		end
+
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			create l_replacement.make (Void)
+			select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
+				adopt_child_expression (select_expression)
+				reset_static_properties
+			end
+			if select_expression.is_error then
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (select_expression.error_value))
+			elseif select_expression.is_empty_sequence then
+				set_replacement (a_replacement, select_expression)
+			else
+				l_replacement.put (Void)
+				action.check_static_type (l_replacement, a_context, select_expression.item_type)
+				if action /= l_replacement.item then
+					action := l_replacement.item
+					adopt_child_expression (action)
+					reset_static_properties
+				end
+				if action.is_error then
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (action.error_value))
+				elseif action.is_empty_sequence then
+					set_replacement (a_replacement, action)
+				else
+					a_replacement.put (Current)
+				end
+			end
+		end
+
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			create l_replacement.make (Void)
+			select_expression.optimize (l_replacement, a_context, a_context_item_type)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
+				adopt_child_expression (select_expression)
+				reset_static_properties
+			end
+			if select_expression.is_error then
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (select_expression.error_value))
+			elseif select_expression.is_empty_sequence then
+				set_replacement (a_replacement, select_expression)
+			else
+				l_replacement.put (Void)
+				action.optimize (l_replacement, a_context, select_expression.item_type)
+				if action /= l_replacement.item then
+					action := l_replacement.item
+					adopt_child_expression (action)
+					reset_static_properties
+				end
+				if action.is_error then
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (action.error_value))
+				elseif action.is_empty_sequence then
+					set_replacement (a_replacement, action)
+				else
+					promote_sub_expressions (a_replacement, a_context, a_context_item_type)
+				end
+			end
+		end
+
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
+			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+		do
+			create l_replacement.make (Void)
+			select_expression.promote (l_replacement, a_offer)
+			if select_expression /= l_replacement.item then
+				select_expression := l_replacement.item
+				adopt_child_expression (select_expression)
+				reset_static_properties
+			end
+			l_replacement.put (Void)
+			action.promote (l_replacement, a_offer)
+			if action /= l_replacement.item then
+				action := l_replacement.item
 				adopt_child_expression (action)
 				reset_static_properties
 			end
@@ -365,6 +361,49 @@ feature {NONE} -- Implementation
 			-- Natively-supported evaluation routines
 		do
 				Result := Supports_process + Supports_iterator
+		end
+
+	promote_sub_expressions (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+			-- Promote any subexpressions within body which are not dependent on the focus,
+			--  This causes them to be evaluated once, outside the for-each loop
+		require
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
+			a_context_not_void: a_context /= Void
+		local
+			l_promotion_offer: XM_XPATH_PROMOTION_OFFER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_expression: XM_XPATH_EXPRESSION
+		do
+			create l_promotion_offer.make (Focus_independent, Void, Current, False, select_expression.context_document_nodeset)
+			l_promotion_offer.disallow_promoting_xslt_functions
+			create l_replacement.make (Void)
+			action.promote (l_replacement, l_promotion_offer)
+			if action /= l_replacement.item then
+				action := l_replacement.item
+				adopt_child_expression (action)
+				reset_static_properties
+			end
+			if l_promotion_offer.containing_expression.is_let_expression then
+				l_let_expression := l_promotion_offer.containing_expression.as_let_expression
+				l_replacement.put (Void)
+				l_let_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				l_expression := l_replacement.item
+				if not ANY_.same_objects (Current, l_let_expression.action) then
+					l_replacement.put (Void)
+					l_expression.optimize (l_replacement, a_context, a_context_item_type)
+				end
+				l_expression := l_replacement.item
+				l_promotion_offer.set_containing_expression (l_expression)
+			end
+			if l_promotion_offer.containing_expression /= Current then
+				set_replacement (a_replacement, l_promotion_offer.containing_expression)
+			else
+				a_replacement.put (Current)
+			end
+		ensure
+			replaced: a_replacement.item /= Void
 		end
 
 invariant

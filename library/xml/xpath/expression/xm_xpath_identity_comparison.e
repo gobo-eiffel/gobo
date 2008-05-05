@@ -53,42 +53,41 @@ feature -- Access
 
 feature -- Optimization	
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_role, another_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_single_node: XM_XPATH_SEQUENCE_TYPE
+			l_role, l_other_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_single_node: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			first_operand.check_static_type (a_context, a_context_item_type)
-			if first_operand.was_expression_replaced then
-				set_first_operand (first_operand.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			first_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+			set_first_operand (l_replacement.item)
 			if first_operand.is_error then
-				set_last_error (first_operand.error_value)
+				set_replacement (a_replacement, first_operand)
 			else
-				second_operand.check_static_type (a_context, a_context_item_type)
-				if second_operand.was_expression_replaced then
-					set_second_operand (second_operand.replacement_expression)
-				end
+				l_replacement.put (Void)
+				second_operand.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_second_operand (l_replacement.item)
 				if second_operand.is_error then
-					set_last_error (second_operand.error_value)
+					set_replacement (a_replacement, second_operand)
 				else
-					create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-					create a_type_checker
-					create a_single_node.make_optional_node
-					a_type_checker.static_type_check (a_context, first_operand, a_single_node, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
+					create l_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+					create l_type_checker
+					create l_single_node.make_optional_node
+					l_type_checker.static_type_check (a_context, first_operand, l_single_node, False, l_role)
+					if l_type_checker.is_static_type_check_error then
+						set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 					else
-						set_first_operand (a_type_checker.checked_expression)
-						create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-						a_type_checker.static_type_check (a_context, second_operand, a_single_node, False, another_role)
-						if a_type_checker.is_static_type_check_error then
-							set_last_error (a_type_checker.static_type_check_error)
+						set_first_operand (l_type_checker.checked_expression)
+						create l_other_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+						l_type_checker.static_type_check (a_context, second_operand, l_single_node, False, l_other_role)
+						if l_type_checker.is_static_type_check_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 						else
-							set_second_operand (a_type_checker.checked_expression)
+							set_second_operand (l_type_checker.checked_expression)
+							a_replacement.put (Current)
 						end
 					end
 				end

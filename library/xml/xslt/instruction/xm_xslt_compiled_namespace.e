@@ -92,38 +92,35 @@ feature -- Status setting
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		do
 			-- Do nothing.
 		end
 
-	simplify is
+	simplify  (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			name.simplify
-			if name.was_expression_replaced then
-				name := name.replacement_expression;  adopt_child_expression (name)
+			create l_replacement.make (Void)
+			name.simplify (l_replacement)
+			set_name (l_replacement.item)
+			if name.is_error then
+				set_replacement (a_replacement, name)
+			else
+				Precursor (a_replacement)
 			end
-			Precursor
 		end
 
 	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			if select_expression /= Void then
-				select_expression.promote (a_offer)
-				if select_expression.was_expression_replaced then
-					set_select_expression (select_expression.replacement_expression)
-					reset_static_properties					
-				end
-			end
-			name.promote (a_offer)
-			if name.was_expression_replaced then
-				name := name.replacement_expression;  adopt_child_expression (name)
-				reset_static_properties
-			end
-			Precursor (a_offer)
+			create l_replacement.make (Void)
+			name.promote (l_replacement, a_offer)
+			set_name (l_replacement.item)
 		end
 
 feature -- Evaluation
@@ -178,7 +175,21 @@ feature {NONE} -- Implementation
 
 	last_evaluated_prefix: STRING
 			-- Result from successful call to `evaluate_prefix
-	
+
+	set_name (a_name: XM_XPATH_EXPRESSION) is
+			-- Ensure `name' = `a_name'.
+		do
+			if name /= a_name then
+				name := a_name
+				if name /= Void then
+					adopt_child_expression (name)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: name = a_name
+		end
+
 	evaluate_prefix (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Evaluate namespace prefix.
 		require

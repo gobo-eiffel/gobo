@@ -64,43 +64,28 @@ feature -- Element change
 	fixup_references is
 			-- Fix up references from XPath expressions.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
-			a_constant_value: XM_XPATH_VALUE
-			a_binding_reference: XM_XPATH_VARIABLE_REFERENCE
-			a_relationship: INTEGER
+			l_constant_value: XM_XPATH_VALUE
+			l_relationship: INTEGER
 		do
-			a_constant_value := Void
+			l_constant_value := Void
 			if is_xslt_variable then
 				if select_expression /= Void and then select_expression.is_value
 					and then not select_expression.depends_upon_implicit_timezone then
-					a_constant_value := select_expression.as_value
+					l_constant_value := select_expression.as_value
 					
 					-- We can't rely on the constant value, as it hasn't been type-checked yet
 					--  (e.g. numeric promotion might change it).
 					-- So we do a quick check for now:
 					
-					a_relationship := type_relationship (select_expression.item_type, required_type.primary_type)
-					if a_relationship = Same_item_type or else a_relationship = Subsumed_type then
+					l_relationship := type_relationship (select_expression.item_type, required_type.primary_type)
+					if l_relationship = Same_item_type or l_relationship = Subsumed_type then
 						-- OK
 					else
-						a_constant_value := Void
+						l_constant_value := Void
 					end
 				end
 			end
-			from
-				a_cursor := references.new_cursor
-				a_cursor.start
-			variant
-				references.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				a_binding_reference := a_cursor.item
-				if not a_binding_reference.was_expression_replaced then
-					a_binding_reference.set_static_type (required_type, a_constant_value, select_expression)
-				end
-				a_cursor.forth
-			end
+			references.do_all (agent {XM_XPATH_VARIABLE_REFERENCE}.set_static_type (required_type, l_constant_value, select_expression))
 			Precursor
 		end
 
@@ -143,22 +128,8 @@ feature -- Element change
 			-- Notify all variable references of the Binding instruction.
 		require
 			binding_not_void: a_binding /= Void
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
 		do
-			from
-				a_cursor := references.new_cursor
-				a_cursor.start
-			variant
-				references.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				if not a_cursor.item.was_expression_replaced then
-					a_cursor.item.fix_up (a_binding)
-				end
-				a_cursor.forth
-			end
+			references.do_all (agent {XM_XPATH_VARIABLE_REFERENCE}.fix_up (a_binding))
 		end
 
 feature -- Conversion

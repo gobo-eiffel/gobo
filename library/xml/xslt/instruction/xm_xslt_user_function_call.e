@@ -137,11 +137,11 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			Precursor (a_context, a_context_item_type)
-			if not was_expression_replaced and function /= Void then
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if a_replacement.item = Current and function /= Void then
 				compute_argument_evaluation_modes
 				if static_type = Void or static_type.primary_type = any_item then
 					-- try and do better
@@ -151,11 +151,11 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			Precursor (a_context, a_context_item_type)
-			if not was_expression_replaced and function /= Void then
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if  a_replacement.item = Current and function /= Void then
 				compute_argument_evaluation_modes
 			end
 		end
@@ -242,10 +242,10 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--	do_nothing
+			a_replacement.put (Current)
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
@@ -347,7 +347,7 @@ feature -- Element change
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
 			-- These checks are in set_function, at the time when the function

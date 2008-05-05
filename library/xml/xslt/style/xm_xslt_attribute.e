@@ -127,33 +127,30 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			an_attribute_set: XM_XSLT_ATTRIBUTE_SET
+			l_attribute_set: XM_XSLT_ATTRIBUTE_SET
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_attribute_set ?= parent
-			if an_attribute_set = Void then
+			l_attribute_set ?= parent
+			if l_attribute_set = Void then
 				check_within_template
 			end
-			type_check_expression ("name", attribute_name)
-			if attribute_name.was_expression_replaced then
-				attribute_name := attribute_name.replacement_expression
-			end
+			create l_replacement.make (Void)
+			type_check_expression (l_replacement, "name", attribute_name)
+			attribute_name := l_replacement.item
 			if namespace /= Void then
-				type_check_expression ("namespace", namespace)
-				if namespace.was_expression_replaced then
-					namespace := namespace.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "namespace", namespace)
+				namespace := l_replacement.item
 			end
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 			end
 			if separator_expression /= Void then
-				type_check_expression ("separator", separator_expression)
-				if separator_expression.was_expression_replaced then
-					separator_expression := separator_expression.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "separator", separator_expression)
+				separator_expression := l_replacement.item
 			end
 			Precursor
 		end

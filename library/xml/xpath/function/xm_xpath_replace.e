@@ -72,15 +72,22 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		local
 			n: INTEGER
 		do
-			Precursor
-			if arguments.count = 4 then n := 4 end
-			try_to_compile (n, arguments)
-			if regexp_error_value /= Void then set_last_error (regexp_error_value) end
+			Precursor (a_replacement)
+			if a_replacement.item = Current then
+				if arguments.count = 4 then
+					n := 4
+				end
+				try_to_compile (n, arguments)
+				if regexp_error_value /= Void then
+					a_replacement.put (Void)
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (regexp_error_value))
+				end
+			end
 		end
 		
 feature -- Evaluation

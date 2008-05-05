@@ -118,12 +118,13 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_key_manager: XM_XSLT_KEY_MANAGER
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_role: XM_XPATH_ROLE_LOCATOR
-			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
-			a_collation_name: STRING
-			an_error: XM_XPATH_ERROR_VALUE
+			l_key_manager: XM_XSLT_KEY_MANAGER
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_atomic_type: XM_XPATH_SEQUENCE_TYPE
+			l_collation_name: STRING
+			l_error: XM_XPATH_ERROR_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_top_level (Void)
 			if use /= Void then
@@ -132,21 +133,20 @@ feature -- Element change
 				check_not_empty_missing_attribute ("use", "XTSE1205")
 			end
 			if not any_compile_errors and then use /= Void then
-				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:key/use", 1, Xpath_errors_uri, "XPTY0004")
-				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
-				a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				create l_type_checker
+				create l_role.make (Instruction_role, "xsl:key/use", 1, Xpath_errors_uri, "XPTY0004")
+				create l_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
+				l_type_checker.static_type_check (static_context, use, l_atomic_type, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					use := a_type_checker.checked_expression
+					use := l_type_checker.checked_expression
 				end
 			end
 			if not any_compile_errors and then use /= Void then
-				type_check_expression ("use", use)
-				if use.was_expression_replaced then
-					use := use.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "use", use)
+				use := l_replacement.item
 			end
 			if not any_compile_errors and then match /= Void then
 				type_check_pattern ("match", match)
@@ -155,12 +155,12 @@ feature -- Element change
 			if collation_uri = Void then
 				collation_uri := static_context.default_collation_name
 			end
-			a_key_manager := principal_stylesheet.key_manager
-			if a_key_manager.has_key (key_fingerprint) then
-				a_collation_name := a_key_manager.collation_uri (key_fingerprint)
-				if not STRING_.same_string (a_collation_name, collation_uri) then
-					create an_error.make_from_string (STRING_.concat("inconsistent collation names for key ", key_name), Xpath_errors_uri, "XTSE1220", Static_error)
-					report_compile_error (an_error)
+			l_key_manager := principal_stylesheet.key_manager
+			if l_key_manager.has_key (key_fingerprint) then
+				l_collation_name := l_key_manager.collation_uri (key_fingerprint)
+				if not STRING_.same_string (l_collation_name, collation_uri) then
+					create l_error.make_from_string (STRING_.concat("inconsistent collation names for key ", key_name), Xpath_errors_uri, "XTSE1220", Static_error)
+					report_compile_error (l_error)
 				end
 			end
 			validated := True
@@ -169,21 +169,21 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_key_manager: XM_XSLT_KEY_MANAGER
+			l_key_manager: XM_XSLT_KEY_MANAGER
 			a_key_definition: XM_XSLT_KEY_DEFINITION
 			a_collator: ST_COLLATOR
 			a_message: STRING
-			an_error: XM_XPATH_ERROR_VALUE
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_role: XM_XPATH_ROLE_LOCATOR
-			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
+			l_error: XM_XPATH_ERROR_VALUE
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_atomic_type: XM_XPATH_SEQUENCE_TYPE
 			l_primitive_type: INTEGER
 		do
 			if not principal_stylesheet.is_collator_defined (collation_uri) then
 				a_message := STRING_.concat ("The collation named '", collation_uri)
 				a_message := STRING_.appended_string (a_message, "' has not been defined")
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1210", Static_error)
-				report_compile_error (an_error)
+				create l_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1210", Static_error)
+				report_compile_error (l_error)
 			else
 				a_collator := principal_stylesheet.find_collator (collation_uri)
 			end
@@ -193,18 +193,18 @@ feature -- Element change
 
 					-- This really shouldn't occur
 
-					create an_error.make_from_string ("BUG: Sequence constructor must be present for xsl:key when use attribute is absent.", Xpath_errors_uri, "XTSE1205", Static_error)
-					report_compile_error (an_error)
+					create l_error.make_from_string ("BUG: Sequence constructor must be present for xsl:key when use attribute is absent.", Xpath_errors_uri, "XTSE1205", Static_error)
+					report_compile_error (l_error)
 				else
 					create {XM_XPATH_ATOMIZER_EXPRESSION} use.make (last_generated_expression, static_context.configuration.are_all_nodes_untyped)
-					create a_type_checker
-					create a_role.make (Instruction_role, "xsl:key/use", 1, Xpath_errors_uri, "XPTY0004")
-					create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
-					a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
-					if a_type_checker.is_static_type_check_error	then
-						report_compile_error (a_type_checker.static_type_check_error)
+					create l_type_checker
+					create l_role.make (Instruction_role, "xsl:key/use", 1, Xpath_errors_uri, "XPTY0004")
+					create l_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
+					l_type_checker.static_type_check (static_context, use, l_atomic_type, False, l_role)
+					if l_type_checker.is_static_type_check_error	then
+						report_compile_error (l_type_checker.static_type_check_error)
 					else
-						use := a_type_checker.checked_expression
+						use := l_type_checker.checked_expression
 					end
 					if is_backwards_compatible_processing_enabled then
 						l_primitive_type := use.item_type.primitive_type
@@ -215,12 +215,12 @@ feature -- Element change
 				end
 			end
 			if not any_compile_errors then
-				a_key_manager := principal_stylesheet.key_manager
+				l_key_manager := principal_stylesheet.key_manager
 				create a_key_definition.make (an_executable, match, use, a_collator, collation_uri, line_number, system_id, slot_manager)
 				if is_backwards_compatible_processing_enabled then
 					a_key_definition.set_backwards_compatible
 				end
-				a_key_manager.add_key_definition (a_key_definition, key_fingerprint)
+				l_key_manager.add_key_definition (a_key_definition, key_fingerprint)
 			end
 			last_generated_expression := Void
 		end

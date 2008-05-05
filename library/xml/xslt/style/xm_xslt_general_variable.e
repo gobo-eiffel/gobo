@@ -194,27 +194,28 @@ feature -- Status setting
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_message: STRING
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_first_node: XM_XPATH_NODE
-			an_error: XM_XPATH_ERROR_VALUE
+			l_message: STRING
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_first_node: XM_XPATH_NODE
+			l_error: XM_XPATH_ERROR_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void and then has_child_nodes then
-				a_message := STRING_.concat ("An ", node_name)
-				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
-				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0620", Static_error)
-				report_compile_error (an_error)
+				l_message := STRING_.concat ("An ", node_name)
+				l_message := STRING_.appended_string (l_message, " element with a select attribute must be empty")
+				create l_error.make_from_string (l_message, Xpath_errors_uri, "XTSE0620", Static_error)
+				report_compile_error (l_error)
 			elseif has_child_nodes and then not allows_value then
-				create an_error.make_from_string ("Function parameters must be empty", Xpath_errors_uri, "XTSE0760", Static_error)
-				report_compile_error (an_error)
+				create l_error.make_from_string ("Function parameters must be empty", Xpath_errors_uri, "XTSE0760", Static_error)
+				report_compile_error (l_error)
 			else
 				if as_type /= Void then check_against_required_type (as_type) end
 				if not any_compile_errors then
 					if select_expression = Void and then allows_value then
 						is_text_only := True
-						a_child_iterator := new_axis_iterator (Child_axis)
-						a_child_iterator.start
-						if a_child_iterator.after then
+						l_child_iterator := new_axis_iterator (Child_axis)
+						l_child_iterator.start
+						if l_child_iterator.after then
 							if as_type = Void then
 								create {XM_XPATH_STRING_VALUE} select_expression.make ("")
 							elseif is_param then
@@ -233,19 +234,19 @@ feature -- Status setting
 								if as_type.cardinality_allows_zero then
 									create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 								else
-									create an_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0570", Type_error)
-									report_compile_error (an_error)
+									create l_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0570", Type_error)
+									report_compile_error (l_error)
 								end
 							end
 						else -- at least one child node
-							a_first_node := a_child_iterator.item
-							a_child_iterator.forth
-							if a_child_iterator.after then
+							l_first_node := l_child_iterator.item
+							l_child_iterator.forth
+							if l_child_iterator.after then
 								
 								-- There is exactly one child node
 
-								if a_first_node.node_type = Text_node then
-									constant_text := a_first_node.string_value
+								if l_first_node.node_type = Text_node then
+									constant_text := l_first_node.string_value
 								end
 							end
 							
@@ -257,10 +258,9 @@ feature -- Status setting
 				end
 			end
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 			end
 		end
 
@@ -324,6 +324,7 @@ feature {NONE} -- Implementation
 			l_document: XM_XSLT_COMPILED_DOCUMENT
 			l_role: XM_XPATH_ROLE_LOCATOR
 			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			a_variable.initialize_variable (select_expression, as_type, variable_fingerprint)
 			a_variable.set_required_parameter (is_required_parameter)
@@ -350,8 +351,9 @@ feature {NONE} -- Implementation
 						select_expression := last_generated_expression
 					end
 					if as_type /= Void then
-						select_expression.simplify
-						if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+						create l_replacement.make (Void)
+						select_expression.simplify (l_replacement)
+						select_expression := l_replacement.item
 						if select_expression.is_error then
 							report_compile_error (select_expression.error_value)
 						else
@@ -379,50 +381,46 @@ feature {NONE} -- Implementation
 			global_variable: is_global_variable and then a_global_variable /= Void
 			executable_not_void: a_executable /= Void
 		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			l_expression: XM_XPATH_EXPRESSION
+			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			
 			if select_expression /= Void then
-				select_expression.simplify
-				if select_expression.was_expression_replaced then
-					an_expression := select_expression.replacement_expression
+				create l_replacement.make (Void)
+				select_expression.simplify (l_replacement)
+				l_expression := l_replacement.item
+				if l_expression.is_error then
+					report_compile_error (l_expression.error_value)
 				else
-					an_expression := select_expression
-				end
-				if an_expression.is_error then
-					report_compile_error (an_expression.error_value)
-				else
-					an_expression.check_static_type (static_context, any_node_test)
-					if  not an_expression.is_error and then an_expression.was_expression_replaced then
-						an_expression := an_expression.replacement_expression
+					l_replacement.put (Void)
+					l_expression.check_static_type (l_replacement, static_context, any_node_test)
+					l_expression := l_replacement.item
+					if not l_expression.is_error then
+						l_replacement.put (Void)
+						l_expression.optimize (l_replacement, static_context, any_node_test)
+						l_expression := l_replacement.item
 					end
-					if not an_expression.is_error then
-						an_expression.optimize (static_context, any_node_test)
-					end
-					if  not an_expression.is_error and then an_expression.was_expression_replaced then
-						an_expression := an_expression.replacement_expression
-					end
-					if an_expression.is_error then
-						report_compile_error (an_expression.error_value)
+					if l_expression.is_error then
+						report_compile_error (l_expression.error_value)
 					else
 						if configuration.is_tracing then
-							create a_trace_wrapper.make (an_expression, a_executable, Current)
-							a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
-							an_expression := a_trace_wrapper
+							create l_trace_wrapper.make (l_expression, a_executable, Current)
+							l_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+							l_expression := l_trace_wrapper
 						end
-						allocate_slots (an_expression, slot_manager)
+						allocate_slots (l_expression, slot_manager)
 						a_global_variable.set_slot_manager (slot_manager)
 					end
 				end
 			end
-			a_global_variable.set_selector (an_expression)
+			a_global_variable.set_selector (l_expression)
 		end
 
 	prepare_attributes_2 (a_required_attribute, a_tunnel_attribute, an_as_attribute: STRING) is
 			-- Prepare attributes - stage 2.
 		local
-			an_error: XM_XPATH_ERROR_VALUE
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if a_required_attribute /= Void then
 				if STRING_.same_string (a_required_attribute, "yes") then
@@ -430,8 +428,8 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_required_attribute, "no") then
 					is_required_parameter := False
 				else
-					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
-					report_compile_error (an_error)
+					create l_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					report_compile_error (l_error)
 				end
 			end
 			if a_tunnel_attribute /= Void then
@@ -440,8 +438,8 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_tunnel_attribute, "no") then
 					is_tunnel_parameter := False
 				else
-					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
-					report_compile_error (an_error)
+					create l_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
+					report_compile_error (l_error)
 				end
 			end
 			if an_as_attribute /= Void then

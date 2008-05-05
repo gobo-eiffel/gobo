@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			check_arguments, evaluate_item, calculate_effective_boolean_value
+			evaluate_item, calculate_effective_boolean_value
 		end
 
 create
@@ -80,13 +80,5 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_cardinality_exactly_one
 		end
 
-feature {XM_XPATH_FUNCTION_CALL} -- Local
-
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Check arguments during parsing, when all the argument expressions have been read.
-			-- Prevent sorting of the argument
-		do
-			Precursor (a_context)
-		end
 end
 	

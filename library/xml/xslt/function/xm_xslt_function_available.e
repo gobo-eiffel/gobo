@@ -135,7 +135,7 @@ feature -- Evaluation
 		end
 
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
 			l_arity, l_fingerprint: INTEGER
@@ -184,32 +184,35 @@ feature -- Evaluation
 						l_fingerprint := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
 						l_boolean := a_context.available_functions.is_function_available (l_fingerprint, l_arity, a_context.is_restricted)
 						create l_boolean_value.make (l_boolean)
-						set_replacement (l_boolean_value)
+						set_replacement (a_replacement, l_boolean_value)
 					end
 				end
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
+			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			if not checked then
-				Precursor (a_context)
+				Precursor (a_replacement, a_context)
 				if not arguments.item (1).is_value or else
 					(arguments.count = 2 and then not arguments.item (2).is_value) then
 					namespaces_needed := True
 				end
 				if namespaces_needed then
-					an_expression_context ?= a_context
+					l_expression_context ?= a_context
 					check
-						expression_context: an_expression_context /= Void
+						expression_context: l_expression_context /= Void
 						-- as this is XSLT
 					end
-					namespace_context := an_expression_context.namespace_context
+					namespace_context := l_expression_context.namespace_context
 				end
 				checked := True
 			end

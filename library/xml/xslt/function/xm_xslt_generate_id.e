@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		do
 			use_context_item_as_default
@@ -73,7 +73,10 @@ feature -- Optimization
 			-- rather than call `Precursor', we avoid having generate-id marked as non-creating
 			-- TODO: come back and review this
 
-			simplify_arguments
+			simplify_arguments (a_replacement)
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
 feature -- Evaluation

@@ -154,234 +154,342 @@ feature -- Status setting
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
 		do
+			create l_replacement.make (Void)
 			if select_expression /= Void then
-				select_expression.simplify
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+				select_expression.simplify (l_replacement)
+				set_select_expression (l_replacement.item)
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if value_expression /= Void then
-				value_expression.simplify
-				if value_expression.was_expression_replaced then
-					value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+			if a_replacement.item = Void and value_expression /= Void then
+				value_expression.simplify (l_replacement)
+				set_value_expression (l_replacement.item)
+				if value_expression.is_error then
+					set_replacement (a_replacement, value_expression)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if format /= Void then
-				format.simplify
-				if format.was_expression_replaced then
-					format := format.replacement_expression;	adopt_child_expression (format)
+			if a_replacement.item = Void and format /= Void then
+				format.simplify (l_replacement)
+				set_format (l_replacement.item)
+				if format.is_error then
+					set_replacement (a_replacement, format)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if grouping_size /= Void then
-				grouping_size.simplify
-				if grouping_size.was_expression_replaced then
-					grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+			if a_replacement.item = Void and grouping_size /= Void then
+				grouping_size.simplify (l_replacement)
+				set_grouping_size (l_replacement.item)
+				if grouping_size.is_error then
+					set_replacement (a_replacement, grouping_size)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if grouping_separator /= Void then
-				grouping_separator.simplify
-				if grouping_separator.was_expression_replaced then
-					grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+			if a_replacement.item = Void and grouping_separator /= Void then
+				grouping_separator.simplify (l_replacement)
+				set_grouping_separator (l_replacement.item)
+				if grouping_separator.is_error then
+					set_replacement (a_replacement, grouping_separator)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if letter_value /= Void then
-				letter_value.simplify
-				if letter_value.was_expression_replaced then
-					letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+			if a_replacement.item = Void and letter_value /= Void then
+				letter_value.simplify (l_replacement)
+				set_letter_value (l_replacement.item)
+				if letter_value.is_error then
+					set_replacement (a_replacement, letter_value)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if ordinal /= Void then
-				ordinal.simplify
-				if ordinal.was_expression_replaced then
-					ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+			if a_replacement.item = Void and ordinal /= Void then
+				ordinal.simplify (l_replacement)
+				set_ordinal (l_replacement.item)
+				if ordinal.is_error then
+					set_replacement (a_replacement, ordinal)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if language /= Void then
-				language.simplify
-				if language.was_expression_replaced then
-					language := language.replacement_expression;	adopt_child_expression (language)
+			if a_replacement.item = Void and language /= Void then
+				language.simplify (l_replacement)
+				set_language (l_replacement.item)
+				if language.is_error then
+					set_replacement (a_replacement, language)
+					-- TODO: simplify count_pattern and from_pattern,
+					--  in which case uncomment: l_replacement.put (Void)
 				end
 			end
-			-- TODO: simplify count_pattern and from_pattern
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
+			create l_replacement.make (Void)
 			if select_expression /= Void then
-				select_expression.check_static_type (a_context, a_context_item_type)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+				select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_select_expression (l_replacement.item)
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if value_expression /= Void then
-				value_expression.check_static_type (a_context, a_context_item_type)
-				if value_expression.was_expression_replaced then
-					value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+			if a_replacement.item = Void and value_expression /= Void then
+				value_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_value_expression (l_replacement.item)
+				if value_expression.is_error then
+					set_replacement (a_replacement, value_expression)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if format /= Void then
-				format.check_static_type (a_context, a_context_item_type)
-				if format.was_expression_replaced then
-					format := format.replacement_expression;	adopt_child_expression (format)
+			if a_replacement.item = Void and format /= Void then
+				format.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_format (l_replacement.item)
+				if format.is_error then
+					set_replacement (a_replacement, format)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if grouping_size /= Void then
-				grouping_size.check_static_type (a_context, a_context_item_type)
-				if grouping_size.was_expression_replaced then
-					grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+			if a_replacement.item = Void and grouping_size /= Void then
+				grouping_size.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_grouping_size (l_replacement.item)
+				if grouping_size.is_error then
+					set_replacement (a_replacement, grouping_size)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if grouping_separator /= Void then
-				grouping_separator.check_static_type (a_context, a_context_item_type)
-				if grouping_separator.was_expression_replaced then
-					grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+			if a_replacement.item = Void and grouping_separator /= Void then
+				grouping_separator.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_grouping_separator (l_replacement.item)
+				if grouping_separator.is_error then
+					set_replacement (a_replacement, grouping_separator)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if letter_value /= Void then
-				letter_value.check_static_type (a_context, a_context_item_type)
-				if letter_value.was_expression_replaced then
-					letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+			if a_replacement.item = Void and letter_value /= Void then
+				letter_value.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_letter_value (l_replacement.item)
+				if letter_value.is_error then
+					set_replacement (a_replacement, letter_value)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if ordinal /= Void then
-				ordinal.check_static_type (a_context, a_context_item_type)
-				if ordinal.was_expression_replaced then
-					ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+			if a_replacement.item = Void and ordinal /= Void then
+				ordinal.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_ordinal (l_replacement.item)
+				if ordinal.is_error then
+					set_replacement (a_replacement, ordinal)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if language /= Void then
-				language.check_static_type (a_context, a_context_item_type)
-				if language.was_expression_replaced then
-					language := language.replacement_expression;	adopt_child_expression (language)
+			if a_replacement.item = Void and language /= Void then
+				language.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_language (l_replacement.item)
+				if language.is_error then
+					set_replacement (a_replacement, language)
+					-- TODO: check count_pattern and from_pattern,
+					--  in which case uncomment: l_replacement.put (Void)
 				end
 			end
-			-- TODO: check count_pattern and from_pattern
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end			
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
+			create l_replacement.make (Void)
 			if select_expression /= Void then
-				select_expression.optimize (a_context, a_context_item_type)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+				select_expression.optimize (l_replacement, a_context, a_context_item_type)
+				set_select_expression (l_replacement.item)
+				if select_expression.is_error then
+					set_replacement (a_replacement, select_expression)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if value_expression /= Void then
-				value_expression.optimize (a_context, a_context_item_type)
-				if value_expression.was_expression_replaced then
-					value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+			if a_replacement.item = Void and value_expression /= Void then
+				value_expression.optimize (l_replacement, a_context, a_context_item_type)
+				set_value_expression (l_replacement.item)
+				if value_expression.is_error then
+					set_replacement (a_replacement, value_expression)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if format /= Void then
-				format.optimize (a_context, a_context_item_type)
-				if format.was_expression_replaced then
-					format := format.replacement_expression;	adopt_child_expression (format)
+			if a_replacement.item = Void and format /= Void then
+				format.optimize (l_replacement, a_context, a_context_item_type)
+				set_format (l_replacement.item)
+				if format.is_error then
+					set_replacement (a_replacement, format)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if grouping_size /= Void then
-				grouping_size.optimize (a_context, a_context_item_type)
-				if grouping_size.was_expression_replaced then
-					grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+			if a_replacement.item = Void and grouping_size /= Void then
+				grouping_size.optimize (l_replacement, a_context, a_context_item_type)
+				set_grouping_size (l_replacement.item)
+				if grouping_size.is_error then
+					set_replacement (a_replacement, grouping_size)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if grouping_separator /= Void then
-				grouping_separator.optimize (a_context, a_context_item_type)
-				if grouping_separator.was_expression_replaced then
-					grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+			if a_replacement.item = Void and grouping_separator /= Void then
+				grouping_separator.optimize (l_replacement, a_context, a_context_item_type)
+				set_grouping_separator (l_replacement.item)
+				if grouping_separator.is_error then
+					set_replacement (a_replacement, grouping_separator)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if letter_value /= Void then
-				letter_value.optimize (a_context, a_context_item_type)
-				if letter_value.was_expression_replaced then
-					letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+			if a_replacement.item = Void and letter_value /= Void then
+				letter_value.optimize (l_replacement, a_context, a_context_item_type)
+				set_letter_value (l_replacement.item)
+				if letter_value.is_error then
+					set_replacement (a_replacement, letter_value)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if ordinal /= Void then
-				ordinal.optimize (a_context, a_context_item_type)
-				if ordinal.was_expression_replaced then
-					ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+			if a_replacement.item = Void and ordinal /= Void then
+				ordinal.optimize (l_replacement, a_context, a_context_item_type)
+				set_ordinal (l_replacement.item)
+				if ordinal.is_error then
+					set_replacement (a_replacement, ordinal)
+				else
+					l_replacement.put (Void)
 				end
 			end
-			if language /= Void then
-				language.optimize (a_context, a_context_item_type)
-				if language.was_expression_replaced then
-					language := language.replacement_expression;	adopt_child_expression (language)
+			if a_replacement.item = Void and language /= Void then
+				language.optimize (l_replacement, a_context, a_context_item_type)
+				set_language (l_replacement.item)
+				if language.is_error then
+					set_replacement (a_replacement, language)
+					-- TODO: optimize count_pattern and from_pattern,
+					--  in which case uncomment: l_replacement.put (Void)
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end			
 		end
 
-	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
-			a_promotion: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
+			l_promotion: XM_XPATH_EXPRESSION
 		do
-			an_offer.accept (Current)
-			a_promotion := an_offer.accepted_expression
-			if a_promotion /= Void then
-				set_replacement (a_promotion)
+			a_offer.accept (Current)
+			l_promotion := a_offer.accepted_expression
+			if l_promotion /= Void then
+				set_replacement (a_replacement, l_promotion)
 			else
+				create l_replacement.make (Void)
 				if select_expression /= Void then
-					select_expression.promote (an_offer)
-					if select_expression.was_expression_replaced then
-						select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
-						reset_static_properties
+					select_expression.promote (l_replacement, a_offer)
+					set_select_expression (l_replacement.item)
+					if select_expression.is_error then
+						set_replacement (a_replacement, select_expression)
+					else
+						l_replacement.put (Void)
 					end
 				end
-				if value_expression /= Void then
-					value_expression.promote (an_offer)
-					if value_expression.was_expression_replaced then
-						value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
-						reset_static_properties
+				if a_replacement.item = Void and value_expression /= Void then
+					value_expression.promote (l_replacement, a_offer)
+					set_value_expression (l_replacement.item)
+					if value_expression.is_error then
+						set_replacement (a_replacement, value_expression)
+					else
+						l_replacement.put (Void)
 					end
 				end
-				if format /= Void then
-					format.promote (an_offer)
-					if format.was_expression_replaced then
-						format := format.replacement_expression;	adopt_child_expression (format)
-						reset_static_properties
+				if a_replacement.item = Void and format /= Void then
+					format.promote (l_replacement, a_offer)
+					set_format (l_replacement.item)
+					if format.is_error then
+						set_replacement (a_replacement, format)
+					else
+						l_replacement.put (Void)
 					end
 				end
-				if grouping_size /= Void then
-					grouping_size.promote (an_offer)
-					if grouping_size.was_expression_replaced then
-						grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
-						reset_static_properties
+				if a_replacement.item = Void and grouping_size /= Void then
+					grouping_size.promote (l_replacement, a_offer)
+					set_grouping_size (l_replacement.item)
+					if grouping_size.is_error then
+						set_replacement (a_replacement, grouping_size)
+					else
+						l_replacement.put (Void)
 					end
 				end
-				if grouping_separator /= Void then
-					grouping_separator.promote (an_offer)
-					if grouping_separator.was_expression_replaced then
-						grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
-						reset_static_properties
+				if a_replacement.item = Void and grouping_separator /= Void then
+					grouping_separator.promote (l_replacement, a_offer)
+					set_grouping_separator (l_replacement.item)
+					if grouping_separator.is_error then
+						set_replacement (a_replacement, grouping_separator)
+					else
+						l_replacement.put (Void)
 					end
 				end
-				if letter_value /= Void then
-					letter_value.promote (an_offer)
-					if letter_value.was_expression_replaced then
-						letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
-						reset_static_properties
+				if a_replacement.item = Void and letter_value /= Void then
+					letter_value.promote (l_replacement, a_offer)
+					set_letter_value (l_replacement.item)
+					if letter_value.is_error then
+						set_replacement (a_replacement, letter_value)
+					else
+						l_replacement.put (Void)
 					end
 				end
-				if ordinal /= Void then
-					ordinal.promote (an_offer)
-					if ordinal.was_expression_replaced then
-						ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
-						reset_static_properties
+				if a_replacement.item = Void and ordinal /= Void then
+					ordinal.promote (l_replacement, a_offer)
+					set_ordinal (l_replacement.item)
+					if ordinal.is_error then
+						set_replacement (a_replacement, ordinal)
+					else
+						l_replacement.put (Void)
 					end
 				end
-				if language /= Void then
-					language.promote (an_offer)
-					if language.was_expression_replaced then
-						language := language.replacement_expression;	adopt_child_expression (language)
-						reset_static_properties
+				if a_replacement.item = Void and language /= Void then
+					language.promote (l_replacement, a_offer)
+					set_language (l_replacement.item)
+					if language.is_error then
+						set_replacement (a_replacement, language)
+						-- TODO: promote count_pattern and from_pattern,
+						--  in which case uncomment: l_replacement.put (Void)
 					end
 				end
-				-- TODO: promote count_pattern and from_pattern
+			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
 			end
 		end
 
@@ -524,6 +632,119 @@ feature {NONE} -- Implementation
 	ordinal_value: STRING
 			-- Ordinal
 
+	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION) is
+			-- Ensure `select_expression' = `a_select_expression'.
+		do
+			if select_expression /= a_select_expression then
+				select_expression := a_select_expression
+				if select_expression /= Void then
+					adopt_child_expression (select_expression)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: select_expression = a_select_expression
+		end
+
+	set_value_expression (a_value_expression: XM_XPATH_EXPRESSION) is
+			-- Ensure `value_expression' = `a_value_expression'.
+		do
+			if value_expression /= a_value_expression then
+				value_expression := a_value_expression
+				if value_expression /= Void then
+					adopt_child_expression (value_expression)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: value_expression = a_value_expression
+		end
+
+	set_format (a_format: XM_XPATH_EXPRESSION) is
+			-- Ensure `format' = `a_format'.
+		do
+			if format /= a_format then
+				format := a_format
+				if format /= Void then
+					adopt_child_expression (format)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: format = a_format
+		end
+
+	set_grouping_size (a_grouping_size: XM_XPATH_EXPRESSION) is
+			-- Ensure `grouping_size' = `a_grouping_size'.
+		do
+			if grouping_size /= a_grouping_size then
+				grouping_size := a_grouping_size
+				if grouping_size /= Void then
+					adopt_child_expression (grouping_size)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: grouping_size = a_grouping_size
+		end
+
+	set_grouping_separator (a_grouping_separator: XM_XPATH_EXPRESSION) is
+			-- Ensure `grouping_separator' = `a_grouping_separator'.
+		do
+			if grouping_separator /= a_grouping_separator then
+				grouping_separator := a_grouping_separator
+				if grouping_separator /= Void then
+					adopt_child_expression (grouping_separator)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: grouping_separator = a_grouping_separator
+		end
+
+	set_language (a_language: XM_XPATH_EXPRESSION) is
+			-- Ensure `language' = `a_language'.
+		do
+			if language /= a_language then
+				language := a_language
+				if language /= Void then
+					adopt_child_expression (language)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: language = a_language
+		end
+
+	set_ordinal (a_ordinal: XM_XPATH_EXPRESSION) is
+			-- Ensure `ordinal' = `a_ordinal'.
+		do
+			if ordinal /= a_ordinal then
+				ordinal := a_ordinal
+				if ordinal /= Void then
+					adopt_child_expression (ordinal)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: ordinal = a_ordinal
+		end
+
+	set_letter_value (a_letter_value: XM_XPATH_EXPRESSION) is
+			-- Ensure `letter_value' = `a_letter_value'.
+		do
+			if letter_value /= a_letter_value then
+				letter_value := a_letter_value
+				if letter_value /= Void then
+					adopt_child_expression (letter_value)
+					reset_static_properties
+				end
+			end
+		ensure
+			set: letter_value = a_letter_value
+		end
+
+	
 	calculate_ordinal (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Calculate `ordinal_value'
 		require

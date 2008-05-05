@@ -122,12 +122,13 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_when: XM_XSLT_WHEN
-			an_otherwise: XM_XSLT_OTHERWISE
-			a_condition: XM_XPATH_EXPRESSION
-			an_action: XM_XPATH_EXPRESSION
-			a_trace_wrapper: XM_XSLT_TRACE_WRAPPER
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_when: XM_XSLT_WHEN
+			l_otherwise: XM_XSLT_OTHERWISE
+			l_condition: XM_XPATH_EXPRESSION
+			l_action: XM_XPATH_EXPRESSION
+			l_trace_wrapper: XM_XSLT_TRACE_WRAPPER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			top_stylesheet := principal_stylesheet
 			compiled_actions_count := number_of_whens
@@ -138,42 +139,43 @@ feature -- Element change
 			create compiled_actions.make (compiled_actions_count)
 			from
 				compiled_actions_count := 0
-				a_child_iterator := new_axis_iterator (Child_axis); a_child_iterator.start
+				l_child_iterator := new_axis_iterator (Child_axis); l_child_iterator.start
 			until
-				has_compile_loop_finished or else a_child_iterator.after
+				has_compile_loop_finished or else l_child_iterator.after
 			loop
-				a_when ?= a_child_iterator.item
-				if a_when /= Void then
-					compile_when (an_executable, a_when)
+				l_when ?= l_child_iterator.item
+				if l_when /= Void then
+					compile_when (an_executable, l_when)
 				else
-					an_otherwise ?= a_child_iterator.item
+					l_otherwise ?= l_child_iterator.item
 					check
-						otherwise: an_otherwise /= Void
+						otherwise: l_otherwise /= Void
 						-- validation has already checked for this
 					end
 					compiled_actions_count := compiled_actions_count + 1
-					create {XM_XPATH_BOOLEAN_VALUE} a_condition.make (True)
-					compiled_conditions.put_last (a_condition)
-					compile_sequence_constructor (an_executable, an_otherwise.new_axis_iterator (Child_axis), True)
-					an_action := last_generated_expression
-					if an_action = Void then
-						create {XM_XPATH_EMPTY_SEQUENCE} an_action.make
+					create {XM_XPATH_BOOLEAN_VALUE} l_condition.make (True)
+					compiled_conditions.put_last (l_condition)
+					compile_sequence_constructor (an_executable, l_otherwise.new_axis_iterator (Child_axis), True)
+					l_action := last_generated_expression
+					if l_action = Void then
+						create {XM_XPATH_EMPTY_SEQUENCE} l_action.make
 					end
-					an_action.simplify
-					if an_action.was_expression_replaced then an_action := an_action.replacement_expression end
-					if an_action.is_error then
-						report_compile_error (an_action.error_value)
+					create l_replacement.make (Void)
+					l_action.simplify (l_replacement)
+					l_action := l_replacement.item
+					if l_action.is_error then
+						report_compile_error (l_action.error_value)
 					else
 						if configuration.is_tracing then
-							a_trace_wrapper := new_trace_wrapper (an_action, an_executable, an_otherwise)
-							a_trace_wrapper.set_parent (an_otherwise)
-							an_action := a_trace_wrapper
+							l_trace_wrapper := new_trace_wrapper (l_action, an_executable, l_otherwise)
+							l_trace_wrapper.set_parent (l_otherwise)
+							l_action := l_trace_wrapper
 						end
-						compiled_actions.put_last (an_action)
+						compiled_actions.put_last (l_action)
 						has_compile_loop_finished := True
 					end
 				end
-				if not has_compile_loop_finished then a_child_iterator.forth end
+				if not has_compile_loop_finished then l_child_iterator.forth end
 			end
 			if compiled_actions_count = 0 then
 				last_generated_expression := Void
@@ -230,39 +232,41 @@ feature {NONE} -- Implementation
 	compiled_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Actions present in compiled instruction
 
-	compile_when (an_executable: XM_XSLT_EXECUTABLE; a_when: XM_XSLT_WHEN) is
+	compile_when (an_executable: XM_XSLT_EXECUTABLE; l_when: XM_XSLT_WHEN) is
 			-- Compile when clause.
 		require
 			executable_not_void: an_executable /= Void
-			when_clause_not_void: a_when /= Void
+			when_clause_not_void: l_when /= Void
 		local
-			a_condition, an_action: XM_XPATH_EXPRESSION
-			a_trace_wrapper: XM_XSLT_TRACE_WRAPPER
+			l_condition, l_action: XM_XPATH_EXPRESSION
+			l_trace_wrapper: XM_XSLT_TRACE_WRAPPER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			a_condition := a_when.condition
-			compile_sequence_constructor (an_executable, a_when.new_axis_iterator (Child_axis), True)
-			an_action := last_generated_expression
-			if an_action = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} an_action.make
+			l_condition := l_when.condition
+			compile_sequence_constructor (an_executable, l_when.new_axis_iterator (Child_axis), True)
+			l_action := last_generated_expression
+			if l_action = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} l_action.make
 			end
-			an_action.simplify
-			if an_action.was_expression_replaced then an_action := an_action.replacement_expression end
-			if an_action.is_error then
-				report_compile_error (an_action.error_value)
+			create l_replacement.make (Void)
+			l_action.simplify (l_replacement)
+			l_action := l_replacement.item
+			if l_action.is_error then
+				report_compile_error (l_action.error_value)
 			else
 				if configuration.is_tracing then
-					a_trace_wrapper := new_trace_wrapper (an_action, an_executable, a_when)
-					a_trace_wrapper.set_parent (a_when)
-					an_action := a_trace_wrapper
+					l_trace_wrapper := new_trace_wrapper (l_action, an_executable, l_when)
+					l_trace_wrapper.set_parent (l_when)
+					l_action := l_trace_wrapper
 				end
 
 				-- Optimize for constant conditions (true or false)
 				
-				if a_condition.is_boolean_value then
-					if a_condition.as_boolean_value.value then
+				if l_condition.is_boolean_value then
+					if l_condition.as_boolean_value.value then
 						compiled_actions_count := compiled_actions_count + 1
-						compiled_conditions.put_last (a_condition)
-						compiled_actions.put_last (an_action)
+						compiled_conditions.put_last (l_condition)
+						compiled_actions.put_last (l_action)
 						has_compile_loop_finished := True
 					else
 						
@@ -271,8 +275,8 @@ feature {NONE} -- Implementation
 					end
 				else
 					compiled_actions_count := compiled_actions_count + 1
-					compiled_conditions.put_last (a_condition)
-					compiled_actions.put_last (an_action)						
+					compiled_conditions.put_last (l_condition)
+					compiled_actions.put_last (l_action)						
 				end
 			end
 		end

@@ -506,46 +506,48 @@ feature {NONE} -- Implementation
 		require
 			stylesheet_not_void: a_stylesheet /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			an_alias, a_uri_code, another_uri_code, a_namespace_code: INTEGER
-			an_xml_prefix, a_local_name: STRING
-			an_expression: XM_XPATH_EXPRESSION
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_alias, l_uri_code, l_other_uri_code, l_namespace_code: INTEGER
+			l_xml_prefix, l_local_name: STRING
+			l_expression: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			from
-				a_cursor := attribute_name_codes.new_cursor
-				a_cursor.start
+				l_cursor := attribute_name_codes.new_cursor
+				l_cursor.start
 			variant
-				attribute_name_codes.count + 1 - a_cursor.index
+				attribute_name_codes.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				an_alias := a_cursor.item
-				a_uri_code := shared_name_pool.uri_code_from_name_code (an_alias)
-				if a_uri_code /= 0 then -- attribute has a namespace prefix
-					a_namespace_code := -1
+				l_alias := l_cursor.item
+				l_uri_code := shared_name_pool.uri_code_from_name_code (l_alias)
+				if l_uri_code /= 0 then -- attribute has a namespace prefix
+					l_namespace_code := -1
 					if a_stylesheet.has_namespace_aliases then
-						a_namespace_code := a_stylesheet.namespace_alias (a_uri_code)
+						l_namespace_code := a_stylesheet.namespace_alias (l_uri_code)
 					end
-					another_uri_code := uri_code_from_namespace_code (a_namespace_code)
-					if a_namespace_code /= -1 and then another_uri_code /= a_uri_code then
-						a_uri_code := another_uri_code
-						an_xml_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)
-						a_local_name := shared_name_pool.local_name_from_name_code (a_cursor.item)
-						if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name) then
-							an_alias := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_local_name)
+					l_other_uri_code := uri_code_from_namespace_code (l_namespace_code)
+					if l_namespace_code /= -1 and then l_other_uri_code /= l_uri_code then
+						l_uri_code := l_other_uri_code
+						l_xml_prefix := shared_name_pool.prefix_from_namespace_code (l_namespace_code)
+						l_local_name := shared_name_pool.local_name_from_name_code (l_cursor.item)
+						if shared_name_pool.is_name_code_allocated_using_uri_code (l_xml_prefix, l_uri_code, l_local_name) then
+							l_alias := shared_name_pool.name_code (l_xml_prefix, shared_name_pool.uri_from_uri_code (l_uri_code), l_local_name)
 						else
-							shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
-							an_alias := shared_name_pool.last_name_code
+							shared_name_pool.allocate_name_using_uri_code (l_xml_prefix, l_uri_code, l_local_name)
+							l_alias := shared_name_pool.last_name_code
 						end
 					end
 				end
-				a_cursor.replace (an_alias)
-				an_expression := attribute_values.item (a_cursor.index)
-				type_check_expression (shared_name_pool.display_name_from_name_code (an_alias), an_expression)
-				if an_expression.was_expression_replaced then
-					attribute_values.replace (an_expression.replacement_expression, a_cursor.index)
+				l_cursor.replace (l_alias)
+				l_expression := attribute_values.item (l_cursor.index)
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, shared_name_pool.display_name_from_name_code (l_alias), l_expression)
+				if l_expression /= l_replacement.item then
+					attribute_values.replace (l_replacement.item, l_cursor.index)
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 
@@ -559,27 +561,27 @@ feature {NONE} -- Implementation
 			no_namespaces_excluded_yet: excluded_namespace_count = 0
 			stylesheet_not_void: a_stylesheet /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_uri_code: INTEGER
+			l_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			l_uri_code: INTEGER
 		do
 			from
-				a_cursor := namespace_codes.new_cursor
-				a_cursor.start
+				l_cursor := namespace_codes.new_cursor
+				l_cursor.start
 			variant
-				namespace_codes.count + 1 - a_cursor.index
+				namespace_codes.count + 1 - l_cursor.index
 			until
-				a_cursor.after
+				l_cursor.after
 			loop
-				a_uri_code := uri_code_from_namespace_code (a_cursor.item)
-				if is_excluded_namespace (a_uri_code) and then
-					not a_stylesheet.is_alias_result_namespace (a_uri_code) then
+				l_uri_code := uri_code_from_namespace_code (l_cursor.item)
+				if is_excluded_namespace (l_uri_code) and then
+					not a_stylesheet.is_alias_result_namespace (l_uri_code) then
 
 					-- Exclude it from the output namespace list.
 
-					namespace_codes.replace (-1, a_cursor.index)
+					namespace_codes.replace (-1, l_cursor.index)
 					excluded_namespace_count := excluded_namespace_count + 1
 				end
-				a_cursor.forth
+				l_cursor.forth
 			end
 		end
 

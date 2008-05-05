@@ -88,68 +88,61 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_single_node: XM_XPATH_SEQUENCE_TYPE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_single_node: XM_XPATH_SEQUENCE_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_empty
+			create l_replacement.make (Void)
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
-				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:number/select", 1, Xpath_errors_uri, "XTTE1000")
-				create a_single_node.make_single_node
-				a_type_checker.static_type_check (static_context, select_expression, a_single_node, False, a_role)
-				if a_type_checker.is_static_type_check_error	then
-					report_compile_error (a_type_checker.static_type_check_error)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
+				create l_type_checker
+				create l_role.make (Instruction_role, "xsl:number/select", 1, Xpath_errors_uri, "XTTE1000")
+				create l_single_node.make_single_node
+				l_type_checker.static_type_check (static_context, select_expression, l_single_node, False, l_role)
+				if l_type_checker.is_static_type_check_error	then
+					report_compile_error (l_type_checker.static_type_check_error)
 				else
-					select_expression := a_type_checker.checked_expression
+					select_expression := l_type_checker.checked_expression
 				end
 			end
 			if value_expression /= Void then
-				type_check_expression ("value", value_expression)
-				if value_expression.was_expression_replaced then
-					value_expression := value_expression.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "value", value_expression)
+				value_expression := l_replacement.item
 			end
 			if format /= Void then
-				type_check_expression ("format", format)
-				if format.was_expression_replaced then
-					format := format.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "format", format)
+				format := l_replacement.item
 			end
 			if grouping_size /= Void then
-				type_check_expression ("grouping-size", grouping_size)
-				if grouping_size.was_expression_replaced then
-					grouping_size := grouping_size.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "grouping-size", grouping_size)
+				grouping_size := l_replacement.item
 			end
 			if grouping_separator /= Void then
-				type_check_expression ("grouping-separator", grouping_separator)
-				if grouping_separator.was_expression_replaced then
-					grouping_separator := grouping_separator.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "grouping-separator", grouping_separator)
+				grouping_separator := l_replacement.item
 			end
 			if letter_value /= Void then
-				type_check_expression ("letter-value", letter_value)
-				if letter_value.was_expression_replaced then
-					letter_value := letter_value.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "letter-value", letter_value)
+				letter_value := l_replacement.item
 			end
 			if ordinal /= Void then
-				type_check_expression ("ordinal", ordinal)
-				if ordinal.was_expression_replaced then
-					ordinal := ordinal.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "ordinal", ordinal)
+					ordinal := l_replacement.item
 			end
 			if language /= Void then
-				type_check_expression ("lang", language)
-				if language.was_expression_replaced then
-					language := language.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "lang", language)
+				language := l_replacement.item
 			end
 			if from_pattern /= Void then
 				type_check_pattern ("from", from_pattern)

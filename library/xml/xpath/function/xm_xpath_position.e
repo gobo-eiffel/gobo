@@ -100,10 +100,10 @@ feature -- Evaluation
 		end
 
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-
+			a_replacement.put (Current)
 			-- Forces pre-evaluation not to occur, as
 			--  the value of `Current' depends upon the dynamic context.
 

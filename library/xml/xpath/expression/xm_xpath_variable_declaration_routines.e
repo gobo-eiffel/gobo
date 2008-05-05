@@ -51,7 +51,7 @@ feature -- Access
 				a_cursor.before
 			loop
 				a_variable_reference := a_cursor.item
-				if not a_variable_reference.was_expression_replaced and then a_variable_reference.binding = Void then
+				if a_variable_reference.binding = Void then
 					a_cursor.remove
 				end
 				a_cursor.back
@@ -71,12 +71,7 @@ feature -- Access
 						--  for example in the predicate of a filter expression, then return `Many_references'.
 						
 						a_computed_expression := a_container.as_computed_expression
-						if a_computed_expression.was_expression_replaced then
-							
-							-- dodgy - give up attempting to optimize
-							
-							finished := True;	Result := Many_references
-						elseif a_computed_expression.is_assignation and then a_computed_expression.as_assignation = a_binding then
+						if a_computed_expression.is_assignation and then a_computed_expression.as_assignation = a_binding then
 							finished := True; Result := 1
 						elseif a_computed_expression.is_repeated_sub_expression (a_child) then
 							finished := True;	Result := Many_references

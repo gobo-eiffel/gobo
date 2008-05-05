@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			operator_set: operator = an_operator
 			range_variable_set: declaration = a_range_variable
 			sequence_set: sequence = a_sequence_expression
-			action_set: action_expression = an_action
+			action_set: action = an_action
 		end
 
 feature -- Access
@@ -75,7 +75,7 @@ feature -- Access
 	is_repeated_sub_expression (a_child: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `a_child' a repeatedly-evaluated sub-expression?
 		do
-			Result := a_child = action_expression
+			Result := a_child = action
 		end
 
 feature -- Status report
@@ -95,92 +95,88 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "satisfies")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			action_expression.display (a_level + 1)
+			action.display (a_level + 1)
 		end
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_declaration_type, a_sequence_type: XM_XPATH_SEQUENCE_TYPE
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			actual_item_type: XM_XPATH_ITEM_TYPE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_declaration_type, l_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_actual_item_type: XM_XPATH_ITEM_TYPE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			if	declaration = Void then
-				-- do nothing
-			else
-
+			if	declaration /= Void then
 				-- The order of events is critical here. First we ensure that the type of the
 				-- sequence expression is established. This is used to establish the type of the variable,
 				-- which in turn is required when type-checking the action part.
-				
-				sequence.check_static_type (a_context, a_context_item_type)
-				if sequence.was_expression_replaced then
-					set_sequence (sequence.replacement_expression)
-				end
+				create l_replacement.make (Void)
+				sequence.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_sequence (l_replacement.item)
 				if sequence.is_error then
-					set_last_error (sequence.error_value)
-				end
-				if not is_error then
+					set_replacement (a_replacement, sequence)
+				else
 					if sequence.is_empty_sequence then
-						create a_boolean_value.make (operator /= Some_token)
-						set_replacement (a_boolean_value)
+						create l_boolean_value.make (operator /= Some_token)
+						set_replacement (a_replacement, l_boolean_value)
 					else
-					
 						-- "some" and "every" have no ordering constraints
-						
-						sequence.set_unsorted (False)
-						if sequence.was_expression_replaced then
-							set_sequence (sequence.replacement_expression)
-						end
-						a_declaration_type := declaration.required_type
-						create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
-						create a_role.make (Variable_role, declaration.variable_name, 1, Xpath_errors_uri, "XPTY0004")
-						create a_type_checker
-						a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
-						if a_type_checker.is_static_type_check_error then
-							set_last_error (a_type_checker.static_type_check_error)
+						l_replacement.put (Void)
+						sequence.set_unsorted (l_replacement, False)
+						set_sequence (l_replacement.item)
+						l_declaration_type := declaration.required_type
+						create l_sequence_type.make (l_declaration_type.primary_type, Required_cardinality_zero_or_more)
+						create l_role.make (Variable_role, declaration.variable_name, 1, Xpath_errors_uri, "XPTY0004")
+						create l_type_checker
+						l_type_checker.static_type_check (a_context, sequence, l_sequence_type, False, l_role)
+						if l_type_checker.is_static_type_check_error then
+							set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (l_type_checker.static_type_check_error))
 						else
-							set_sequence (a_type_checker.checked_expression)
-							actual_item_type := sequence.item_type
-							declaration.refine_type_information (actual_item_type, Void, sequence)
+							set_sequence (l_type_checker.checked_expression)
+							l_actual_item_type := sequence.item_type
+							declaration.refine_type_information (l_actual_item_type, Void, sequence)
 							set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
-							action_expression.check_static_type (a_context, a_context_item_type)
-							if action_expression.was_expression_replaced then
-								replace_action (action_expression.replacement_expression)
+							l_replacement.put (Void)
+							action.check_static_type (l_replacement, a_context, a_context_item_type)
+							if action /= l_replacement.item then
+								replace_action (l_replacement.item)
 							end
-							if action_expression.is_error then
-								set_last_error (action_expression.error_value)
+							if action.is_error then
+								set_replacement (a_replacement, action)
 							end
 						end
 					end
 				end
 			end
+			if a_replacement.item = Void then
+				a_replacement.put (Current)
+			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			sequence.optimize (a_context, a_context_item_type)
-			if sequence.was_expression_replaced then
-				set_sequence (sequence.replacement_expression)
-			end
+			create l_replacement.make (Void)
+			sequence.optimize (l_replacement, a_context, a_context_item_type)
+			set_sequence (l_replacement.item)
 			if sequence.is_error then
-				set_last_error (sequence.error_value)
+				set_replacement (a_replacement, sequence)
 			else
-				action_expression.optimize (a_context, a_context_item_type)
-				if action_expression.was_expression_replaced then
-					replace_action (action_expression.replacement_expression)
+				l_replacement.put (Void)
+				action.optimize (l_replacement, a_context, a_context_item_type)
+				if action /= l_replacement.item then
+					replace_action (l_replacement.item)
 				end
-				if action_expression.is_error then
-					set_last_error (action_expression.error_value)
+				if action.is_error then
+					set_replacement (a_replacement, action)
 				else
-					promote_subexpressions (a_context, a_context_item_type)
+					promote_subexpressions (a_replacement, a_context, a_context_item_type)
 				end
 			end
 		end
@@ -192,7 +188,7 @@ feature -- Evaluation
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_value: XM_XPATH_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			some: BOOLEAN
 			found_a_match, finished: BOOLEAN
 			an_item: XM_XPATH_ITEM
@@ -228,12 +224,12 @@ feature -- Evaluation
 						a_value := an_item.as_item_value
 						a_context.set_local_variable (a_value, slot_number)
 						action.calculate_effective_boolean_value (a_context)
-						a_boolean_value := action.last_boolean_value
-						if a_boolean_value.is_error then
-							last_boolean_value := a_boolean_value
+						l_boolean_value := action.last_boolean_value
+						if l_boolean_value.is_error then
+							last_boolean_value := l_boolean_value
 							finished := True
 						else
-							if some = a_boolean_value.value then
+							if some = l_boolean_value.value then
 								create last_boolean_value.make (some); found_a_match := True
 							end
 						end
@@ -272,41 +268,42 @@ feature {NONE} -- Implementation
 			set_non_creating
 		end
 
-	promote_subexpressions (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	promote_subexpressions (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Extract subexpressions that don't depend on the range variable.
 		local
-			an_offer: XM_XPATH_PROMOTION_OFFER
-			a_binding_list: DS_LIST [XM_XPATH_BINDING]
-			a_let_expression: XM_XPATH_LET_EXPRESSION
+			l_offer: XM_XPATH_PROMOTION_OFFER
+			l_binding_list: DS_LIST [XM_XPATH_BINDING]
+			l_let_expression: XM_XPATH_LET_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_binding_list.make (1)
-			a_binding_list.put_last (Current)
-			create an_offer.make (Range_independent, a_binding_list, Current, False, False)
-			action_expression.mark_unreplaced
-			action_expression.promote (an_offer)
-			if action_expression.was_expression_replaced then
-				replace_action (action_expression.replacement_expression)
+			create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} l_binding_list.make (1)
+			l_binding_list.put_last (Current)
+			create l_offer.make (Range_independent, l_binding_list, Current, False, False)
+			create l_replacement.make (Void)
+			action.promote (l_replacement, l_offer)
+			if action /= l_replacement.item then
+				replace_action (l_replacement.item)
 				reset_static_properties
 			end
-			if an_offer.containing_expression.is_let_expression then
-				a_let_expression := an_offer.containing_expression.as_let_expression
-				a_let_expression.check_static_type (a_context, a_context_item_type)
-				if a_let_expression.is_error then
-					set_last_error (a_let_expression.error_value)
-				elseif a_let_expression.was_expression_replaced then
-					an_offer.set_containing_expression (a_let_expression.replacement_expression)
+			if l_offer.containing_expression.is_let_expression then
+				l_replacement.put (Void)
+				l_let_expression := l_offer.containing_expression.as_let_expression
+				l_let_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				if l_replacement.item.is_error then
+					set_replacement (a_replacement, l_replacement.item)
+				elseif l_let_expression /= l_replacement.item then
+					l_offer.set_containing_expression (l_replacement.item)
 				else
-					a_let_expression.optimize (a_context, a_context_item_type)
-					if a_let_expression.is_error then
-						set_last_error (a_let_expression.error_value)
-					elseif a_let_expression.was_expression_replaced then
-						an_offer.set_containing_expression (a_let_expression.replacement_expression)
-					end
+					l_let_expression.optimize (a_replacement, a_context, a_context_item_type)
 				end
 			end
-			if an_offer.containing_expression /= Current then
-				set_replacement (an_offer.containing_expression)
+			if l_offer.containing_expression = Current then
+				a_replacement.put (Current)
+			else
+				set_replacement (a_replacement, l_offer.containing_expression)
 			end
+		ensure
+			replaced: a_replacement.item /= Void			
 		end
 
 invariant

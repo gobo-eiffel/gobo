@@ -94,18 +94,18 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			an_xsl_choose: XM_XSLT_CHOOSE
-			an_error: XM_XPATH_ERROR_VALUE
+			l_xsl_choose: XM_XSLT_CHOOSE
+			l_error: XM_XPATH_ERROR_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_xsl_choose ?= parent
-			if an_xsl_choose = Void then
-				create an_error.make_from_string ("xsl:when must be immediately within xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
-				report_compile_error (an_error)
+			l_xsl_choose ?= parent
+			if l_xsl_choose = Void then
+				create l_error.make_from_string ("xsl:when must be immediately within xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
+				report_compile_error (l_error)
 			else
-				type_check_expression ("test", condition)
-				if condition.was_expression_replaced then
-					condition := condition.replacement_expression
-				end				
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "test", condition)
+				condition := l_replacement.item
 			end
 			validated := True
 		end

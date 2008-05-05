@@ -84,43 +84,44 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_sort: XM_XSLT_SORT
-			a_fallback: XM_XSLT_FALLBACK
-			finished: BOOLEAN
-			an_error: XM_XPATH_ERROR_VALUE
+			l_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			l_sort: XM_XSLT_SORT
+			l_fallback: XM_XSLT_FALLBACK
+			l_finished: BOOLEAN
+			l_error: XM_XPATH_ERROR_VALUE
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			check_sort_comes_first (True)
 			if select_expression /= Void then
-				type_check_expression ("select", select_expression)
-				if select_expression.was_expression_replaced then
-					select_expression := select_expression.replacement_expression
-				end
+				create l_replacement.make (Void)
+				type_check_expression (l_replacement, "select", select_expression)
+				select_expression := l_replacement.item
 				if has_child_nodes then
 					from
-						a_child_iterator := new_axis_iterator (Child_axis)
-						a_child_iterator.start
+						l_child_iterator := new_axis_iterator (Child_axis)
+						l_child_iterator.start
 					until
-						finished or else a_child_iterator.after
+						l_finished or else l_child_iterator.after
 					loop
-						a_sort ?= a_child_iterator.item
-						if a_sort = Void then
+						l_sort ?= l_child_iterator.item
+						if l_sort = Void then
 
 							-- may be a whitespace text node or xsl:fallback
 
-							if a_child_iterator.item.node_type = Text_node and then is_all_whitespace (a_child_iterator.item.string_value) then
+							if l_child_iterator.item.node_type = Text_node and then is_all_whitespace (l_child_iterator.item.string_value) then
 								-- do nothing
 							else
-								a_fallback ?= a_child_iterator.item
-								if a_fallback = Void then
-									create an_error.make_from_string (STRING_.concat (node_name, " may only have xsl:sort children or insignificant whaitespace"), Xpath_errors_uri, "XTSE1040", Static_error)
-									report_compile_error (an_error)
-									finished := True
+								l_fallback ?= l_child_iterator.item
+								if l_fallback = Void then
+									create l_error.make_from_string (STRING_.concat (node_name, " may only have xsl:sort children or insignificant whitespace"),
+										Xpath_errors_uri, "XTSE1040", Static_error)
+									report_compile_error (l_error)
+									l_finished := True
 								end
 							end
 						end
-						a_child_iterator.forth
+						l_child_iterator.forth
 					end
 				end
 			end
@@ -132,6 +133,7 @@ feature -- Element change
 		local
 			l_sort_key_list: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			l_content: XM_XPATH_EXPRESSION
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			assemble_sort_keys
 			if not any_compile_errors then
@@ -144,10 +146,9 @@ feature -- Element change
 					if l_content = Void then
 						create {XM_XPATH_EMPTY_SEQUENCE} l_content.make
 					end
-					l_content.simplify
-					if l_content.was_expression_replaced then
-						l_content := l_content.replacement_expression
-					end
+					create l_replacement.make (Void)
+					l_content.simplify (l_replacement)
+					l_content := l_replacement.item
 					create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (l_content, l_sort_key_list)
 				end
 			end

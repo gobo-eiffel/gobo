@@ -100,71 +100,82 @@ feature -- Status report
 
 feature -- Optimization	
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			base_expression.simplify
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-			if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
-				calculate_effective_boolean_value (Void)
-				set_replacement (last_boolean_value)
+			create l_replacement.make (Void)
+			base_expression.simplify (l_replacement)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
+			else
+				set_base_expression (l_replacement.item)
+				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
+					calculate_effective_boolean_value (Void)
+					set_replacement (a_replacement, last_boolean_value)
+				else
+					a_replacement.put (Current)
+				end
 			end
 		end
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
-			a_role: XM_XPATH_ROLE_LOCATOR
-			a_cardinality: INTEGER
+			l_type_checker: XM_XPATH_TYPE_CHECKER
+			l_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
+			l_role: XM_XPATH_ROLE_LOCATOR
+			l_cardinality: INTEGER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.check_static_type (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
+			create l_replacement.make (Void)
+			base_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
 			else
-				create a_type_checker
+				set_base_expression (l_replacement.item)
+				create l_type_checker
 				if is_empty_allowed then
-					a_cardinality := Required_cardinality_optional
+					l_cardinality := Required_cardinality_optional
 				else
-					a_cardinality := Required_cardinality_exactly_one
+					l_cardinality := Required_cardinality_exactly_one
 				end
-				create an_atomic_sequence.make (type_factory.any_atomic_type, a_cardinality)
-				create a_role.make (Type_operation_role, "castable as", 1, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (a_context, base_expression, an_atomic_sequence, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
+				create l_atomic_sequence.make (type_factory.any_atomic_type, l_cardinality)
+				create l_role.make (Type_operation_role, "castable as", 1, Xpath_errors_uri, "XPTY0004")
+				l_type_checker.static_type_check (a_context, base_expression, l_atomic_sequence, False, l_role)
+				if l_type_checker.is_static_type_check_error then
+					set_last_error (l_type_checker.static_type_check_error)
+					a_replacement.put (Current)
 				else
-					set_base_expression (a_type_checker.checked_expression)
+					set_base_expression (l_type_checker.checked_expression)
 					if base_expression.is_atomic_value then
 						calculate_effective_boolean_value (Void)
-						set_replacement (last_boolean_value)
+						set_replacement (a_replacement, last_boolean_value)
+					else
+						a_replacement.put (Current)
 					end
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			base_expression.optimize (a_context, a_context_item_type)
-			if base_expression.was_expression_replaced then
-				set_base_expression (base_expression.replacement_expression)
-			end
-			if base_expression.is_error then
-				set_last_error (base_expression.error_value)
-			elseif base_expression.is_atomic_value then
-				calculate_effective_boolean_value (Void)
-				set_replacement (last_boolean_value)
+			create l_replacement.make (Void)
+			base_expression.optimize (l_replacement, a_context, a_context_item_type)
+			if l_replacement.item.is_error then
+				set_replacement (a_replacement, l_replacement.item)
+			else
+				set_base_expression (l_replacement.item)
+				if base_expression.is_atomic_value then
+					calculate_effective_boolean_value (Void)
+					set_replacement (a_replacement, last_boolean_value)
+				else
+					a_replacement.put (Current)
+				end	
 			end
 		end
 

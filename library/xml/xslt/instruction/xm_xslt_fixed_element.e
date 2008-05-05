@@ -118,23 +118,23 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-free optimizations.
 		local
-			a_name_test: XM_XPATH_NAME_TEST
-			an_original_text: STRING
-			a_content_test: XM_XPATH_CONTENT_TYPE_TEST
+			l_name_test: XM_XPATH_NAME_TEST
+			l_original_text: STRING
+			l_content_test: XM_XPATH_CONTENT_TYPE_TEST
 		do
 			
 			-- The following code will need modifying for a schema-aware processor:
 
-			an_original_text := STRING_.concat ("element(", shared_name_pool.display_name_from_name_code (fixed_name_code))
-			an_original_text := STRING_.appended_string (an_original_text, ")")
-			create a_name_test.make (Element_node, fixed_name_code, an_original_text)
-			create a_content_test.make (Element_node, type_factory.untyped_type)
-			create {XM_XPATH_COMBINED_NODE_TEST} internal_item_type.make (a_name_test, Intersect_token, a_content_test)
+			l_original_text := STRING_.concat ("element(", shared_name_pool.display_name_from_name_code (fixed_name_code))
+			l_original_text := STRING_.appended_string (l_original_text, ")")
+			create l_name_test.make (Element_node, fixed_name_code, l_original_text)
+			create l_content_test.make (Element_node, type_factory.untyped_type)
+			create {XM_XPATH_COMBINED_NODE_TEST} internal_item_type.make (l_name_test, Intersect_token, l_content_test)
 			
-			Precursor
+			Precursor (a_replacement)
 		end
 
 feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local

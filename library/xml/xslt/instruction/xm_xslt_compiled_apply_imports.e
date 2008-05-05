@@ -76,32 +76,35 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
-			-- Preform context-independent static optimizations
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+			-- Perform context-independent static optimizations.
 		do
+			a_replacement.put (Current)
 			simplify_with_params (actual_parameters)
 			simplify_with_params (tunnel_parameters)
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
+			a_replacement.put (Current)
 			check_with_params (actual_parameters, a_context, a_context_item_type)
 			check_with_params (tunnel_parameters, a_context, a_context_item_type)
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
+			a_replacement.put (Current)
 			optimize_with_params (actual_parameters, a_context, a_context_item_type)
 			optimize_with_params (tunnel_parameters, a_context, a_context_item_type)
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			promote_with_params (actual_parameters, an_offer)
-			promote_with_params (tunnel_parameters, an_offer)
+			promote_with_params (actual_parameters, a_offer)
+			promote_with_params (tunnel_parameters, a_offer)
 		end
 
 feature -- Evaluation

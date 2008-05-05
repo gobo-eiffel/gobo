@@ -130,6 +130,8 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			if use_attribute_sets /= Void then
@@ -137,15 +139,13 @@ feature -- Element change
 			else
 				create used_attribute_sets.make (0)
 			end
-			type_check_expression ("name", element_name)
-			if element_name.was_expression_replaced then
-				element_name := element_name.replacement_expression
-			end
+			create l_replacement.make (Void)
+			type_check_expression (l_replacement, "name", element_name)
+			element_name := l_replacement.item
 			if namespace /= Void then
-				type_check_expression ("namespace", namespace)
-				if namespace.was_expression_replaced then
-					namespace := namespace.replacement_expression
-				end
+				l_replacement.put (Void)
+				type_check_expression (l_replacement, "namespace", namespace)
+				namespace := l_replacement.item
 			end
 			validated := True
 		end

@@ -77,11 +77,11 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			static_context ?= a_context
-			Precursor (a_context, a_context_item_type)
+			Precursor (a_replacement, a_context, a_context_item_type)
 		end
 
 feature -- Evaluation
@@ -117,10 +117,10 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--	do_nothing
+			a_replacement.put (Current)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

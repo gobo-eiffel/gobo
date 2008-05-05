@@ -61,25 +61,26 @@ feature -- Status setting
 			
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			mark_unreplaced
 			if a_context_item_type = Void then
-				set_last_error_from_string ("Cannot select a node here: the context item is undefined", Xpath_errors_uri, "XPDY0002", Type_error)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (
+					"Cannot select a node here: the context item is undefined", Xpath_errors_uri, "XPDY0002", Type_error))
 			elseif a_context_item_type.is_atomic_type then
-				set_last_error_from_string ("Cannot select a node here: the context item is an atomic value", Xpath_errors_uri, "XPTY0020", Type_error)
+				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make_from_string (
+					"Cannot select a node here: the context item is an atomic value", Xpath_errors_uri, "XPTY0020", Type_error))
+			else
+				a_replacement.put (Current)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			mark_unreplaced
-
 			-- Repeat the check: in XSLT insufficient information is available the first time.
 
-			check_static_type (a_context, a_context_item_type)
+			check_static_type (a_replacement, a_context, a_context_item_type)
 		end
 
 feature -- Evaluation

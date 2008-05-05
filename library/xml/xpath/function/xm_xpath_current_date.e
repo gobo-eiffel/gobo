@@ -70,10 +70,10 @@ feature -- Evaluation
 			a_result.put (create {XM_XPATH_DATE_VALUE}.make_from_zoned_date (l_zd))
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--	do_nothing
+			a_replacement.put (Current)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

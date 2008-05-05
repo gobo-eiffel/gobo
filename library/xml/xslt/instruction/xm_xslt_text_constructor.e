@@ -56,77 +56,86 @@ feature -- Status report
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	type_check (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		require
-			static_context_not_void: a_context /= Void
+			a_context_not_void: a_context /= Void
+			a_replacement_not_void: a_replacement /= Void
+			not_replaced: a_replacement.item = Void
 		deferred
 		end
 
-	simplify is
-			-- Preform context-independent static optimizations
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
+			-- Perform context-independent static optimizations.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void and then not select_expression.is_error then
-				select_expression.simplify
-				if select_expression.was_expression_replaced then
-					set_select_expression (select_expression.replacement_expression)
-				end
+				create l_replacement.make (Void)
+				select_expression.simplify (l_replacement)
+				set_select_expression (l_replacement.item)
 			end
+			a_replacement.put (Current)
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
-			an_atomic_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
+			l_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
+			l_atomic_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
-			type_check (a_context, a_context_item_type)
-			if select_expression /= Void and then not select_expression.is_error then
-				select_expression.check_static_type (a_context, a_context_item_type)
+			type_check (a_replacement, a_context, a_context_item_type)
+			if a_replacement.item /= Void then
+				-- type check failed
+			elseif select_expression /= Void and then not select_expression.is_error then
+				create l_replacement.make (Void)
+				select_expression.check_static_type (l_replacement, a_context, a_context_item_type)
+				set_select_expression (l_replacement.item)
 				if select_expression.is_error then
-					set_last_error (select_expression.error_value)
-				elseif select_expression.was_expression_replaced then
-					set_select_expression (select_expression.replacement_expression)
-				end
-				if not is_error then
+					set_replacement (a_replacement, select_expression)
+				else
+					a_replacement.put (Current)
 					if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
-						create an_atomizer.make (select_expression, a_context.configuration.are_all_nodes_untyped)
-						set_select_expression (an_atomizer)
+						create l_atomizer.make (select_expression, a_context.configuration.are_all_nodes_untyped)
+						set_select_expression (l_atomizer)
 					end
 					if not is_sub_type (select_expression.item_type, type_factory.string_type) then
-						create an_atomic_converter.make (select_expression, type_factory.string_type)
-						set_select_expression (an_atomic_converter)
+						create l_atomic_converter.make (select_expression, type_factory.string_type)
+						set_select_expression (l_atomic_converter)
 					end
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			mark_unreplaced
 			if select_expression /= Void and then not select_expression.is_error then
-				select_expression.optimize (a_context, a_context_item_type)
+				create l_replacement.make (Void)
+				select_expression.optimize (l_replacement, a_context, a_context_item_type)
+				set_select_expression (l_replacement.item)
 				if select_expression.is_error then
-					set_last_error (select_expression.error_value)
-				elseif select_expression.was_expression_replaced then
-					set_select_expression (select_expression.replacement_expression)
+					set_replacement (a_replacement, select_expression)
+				else
+					a_replacement.put (Current)
 				end
 			end
 		end
 
-	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_instruction (a_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
+		local
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if select_expression /= Void and then not select_expression.is_error then
-				select_expression.promote (an_offer)
-				if select_expression.was_expression_replaced then
-					set_select_expression (select_expression.replacement_expression)
-					reset_static_properties
-				end
+				create l_replacement.make (Void)
+				select_expression.promote (l_replacement, a_offer)
+				set_select_expression (l_replacement.item)
 			end
-			Precursor (an_offer)
+			Precursor (a_offer)
 		end
 
 feature -- Evaluation
@@ -220,12 +229,15 @@ feature -- Evaluation
 feature -- Element change
 
 	set_select_expression (a_select_expression: XM_XPATH_EXPRESSION) is
-			-- Set `select_expression'.
+			-- Ensure `select_expression' = `a_select_expression'.
 		require
 			select_expression_not_void: a_select_expression /= Void
 		do
-			select_expression := a_select_expression
-			adopt_child_expression (select_expression)
+			if select_expression /= a_select_expression then
+				select_expression := a_select_expression
+				adopt_child_expression (select_expression)
+				reset_static_properties
+			end
 		ensure
 			set: select_expression = a_select_expression
 		end

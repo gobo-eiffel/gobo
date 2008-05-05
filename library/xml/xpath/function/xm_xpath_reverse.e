@@ -59,14 +59,17 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		local
 			a_reverser: XM_XPATH_REVERSER
 		do
-			Precursor
-			create a_reverser.make (arguments.item (1))
-			set_replacement (a_reverser)
+			Precursor (a_replacement)
+			if a_replacement.item = Current then
+				create a_reverser.make (arguments.item (1))
+				a_replacement.put (Void)
+				set_replacement (a_replacement, a_reverser)
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

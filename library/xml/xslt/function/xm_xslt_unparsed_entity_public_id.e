@@ -63,14 +63,14 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		local
 			l_function: XM_XSLT_UNPARSED_ENTITY_PUBLIC_ID
 		do
-			Precursor
-			if was_expression_replaced then
-				l_function ?= replacement_expression
+			Precursor (a_replacement)
+			if a_replacement.item /= Current then
+				l_function ?= a_replacement.item
 				if l_function /= Void then
 					l_function.add_context_document_argument (1, "unparsed-entity-public-id+")
 				end
@@ -80,15 +80,17 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
+	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			Precursor (a_context, a_context_item_type)
-			if is_error then
-				if STRING_.same_string (error_value.namespace_uri, Xpath_errors_uri) and
-					STRING_.same_string (error_value.code, "XPDY0002") then
-					error_value := Void
-					set_last_error_from_string ("May not call fn:unparsed-entity-public-id() when there is no context node", Xpath_errors_uri, "XTDE1380", Static_error)
+			Precursor (a_replacement, a_context, a_context_item_type)
+			if a_replacement.item.is_error then
+				if STRING_.same_string (a_replacement.item.error_value.namespace_uri, Xpath_errors_uri) and
+					STRING_.same_string (a_replacement.item.error_value.code, "XPDY0002") then
+					a_replacement.item.clear_error
+					a_replacement.item.set_last_error_from_string (
+						"May not call fn:unparsed-entity-public-id() when there is no context node",
+						Xpath_errors_uri, "XTDE1380", Static_error)
 				end
 			end
 		end
@@ -128,9 +130,10 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
+			a_replacement.put (Current)
 			-- Suppress compile-time evaluation
 		end
 

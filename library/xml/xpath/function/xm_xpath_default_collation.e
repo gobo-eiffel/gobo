@@ -59,10 +59,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			set_replacement (create {XM_XPATH_STRING_VALUE}.make (a_context.default_collation_name))
+			set_replacement (a_replacement, create {XM_XPATH_STRING_VALUE}.make (a_context.default_collation_name))
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

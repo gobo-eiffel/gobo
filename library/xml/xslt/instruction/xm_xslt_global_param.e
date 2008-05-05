@@ -68,23 +68,24 @@ feature -- Evaluation
 	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
 			-- Evaluate variable
 		local
-			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
-			a_bindery: XM_XSLT_BINDERY
-			was_supplied: BOOLEAN
+			l_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			l_bindery: XM_XSLT_BINDERY
+			l_supplied: BOOLEAN
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			an_evaluation_context ?= a_context
+			l_evaluation_context ?= a_context
 			check
-				evaluation_context: an_evaluation_context /= Void
+				evaluation_context: l_evaluation_context /= Void
 				-- this is XSLT
 			end
-			a_bindery := an_evaluation_context.transformer.bindery
-			was_supplied := a_bindery.is_global_parameter_supplied (variable_fingerprint)
+			l_bindery := l_evaluation_context.transformer.bindery
+			l_supplied := l_bindery.is_global_parameter_supplied (variable_fingerprint)
 			check
-				slot_number_in_range: slot_number > 0 and then slot_number <= a_bindery. global_variable_count
+				slot_number_in_range: slot_number > 0 and then slot_number <= l_bindery. global_variable_count
 			end
-			last_evaluated_binding := a_bindery.global_variable_value (slot_number)
+			last_evaluated_binding := l_bindery.global_variable_value (slot_number)
 			if last_evaluated_binding = Void then
-				if not was_supplied and then (is_required_parameter or is_implicitly_required_parameter) then
+				if not l_supplied and then (is_required_parameter or is_implicitly_required_parameter) then
 					if is_implicitly_required_parameter then
 						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("No value supplied for implicitly required parameter: ", variable_name),
 																														 Xpath_errors_uri, "XTDE0610", Dynamic_error)
@@ -98,13 +99,13 @@ feature -- Evaluation
 					-- This is the first reference to a global parameter; try to evaluate it now.
 					-- But first set a flag to stop looping.
 
-					a_bindery.set_executing (slot_number, True)
-					if a_bindery.is_circularity_error then
+					l_bindery.set_executing (slot_number, True)
+					if l_bindery.is_circularity_error then
 						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("Circular definition of global parameter: ", variable_name),
 																														 Xpath_errors_uri, "XTDE0640", Dynamic_error)
 					else
-						if was_supplied then
-							select_expression := a_bindery.global_parameter_value (variable_fingerprint)
+						if l_supplied then
+							select_expression := l_bindery.global_parameter_value (variable_fingerprint)
 							check
 								static_context_not_void: static_context /= Void
 								-- set at compile time
@@ -115,10 +116,11 @@ feature -- Evaluation
 									select_expression := select_expression.as_atomic_value.converted_value
 									-- TODO: how to handle non-atomic types?
 								end
-								check_against_required_type (static_context)
-								if is_error then
-									error_value.set_location (system_id, line_number)
-									an_evaluation_context.transformer.report_fatal_error (error_value)
+								create l_replacement.make (Void)
+								check_against_required_type (l_replacement, static_context)
+								if l_replacement.item.is_error then
+									l_replacement.item.error_value.set_location (system_id, line_number)
+									l_evaluation_context.transformer.report_fatal_error (l_replacement.item.error_value)
 								end
 							end
 						end
@@ -126,12 +128,12 @@ feature -- Evaluation
 							select_expression_not_void: select_expression /= Void
 							-- either supplied parameter or default value or empty sequence has been assumed
 						end
-						last_evaluated_binding := select_value (an_evaluation_context)
-						if not a_bindery.is_evaluated (slot_number) then
-							a_bindery.define_global_variable (slot_number, last_evaluated_binding)
+						last_evaluated_binding := select_value (l_evaluation_context)
+						if not l_bindery.is_evaluated (slot_number) then
+							l_bindery.define_global_variable (slot_number, last_evaluated_binding)
 						end
 					end
-					a_bindery.set_executing (slot_number, False)
+					l_bindery.set_executing (slot_number, False)
 				end
 			end
 		end

@@ -92,10 +92,10 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			-- do_nothing
+			a_replacement.put (Current)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -117,10 +117,10 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		do
-			Precursor (a_context)
+			Precursor (a_replacement, a_context)
 			base_uri := a_context.base_uri
 		end
 

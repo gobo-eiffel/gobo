@@ -116,12 +116,7 @@ feature -- Cursor movement
 					if base_iterator.is_error then
 						set_last_error (base_iterator.error_value)
 					elseif not base_iterator.after then
-						if base_iterator.is_last_position_finder then
-							reservoir.resize (reservoir.capacity + base_iterator.last_position - base_iterator.index + 1)
-						else
-							reservoir.resize (2 * reservoir.capacity)
-						end
-						reservoir.put_last (base_iterator.item)
+						reservoir.force_last (base_iterator.item)
 					end
 				end
 			end
@@ -178,12 +173,7 @@ feature {NONE} -- Implementation
 			if base_iterator.before then
 				base_iterator.start
 				if not base_iterator.after then
-					if base_iterator.is_last_position_finder then
-						reservoir.resize (reservoir.capacity + base_iterator.last_position)
-					else
-						reservoir.resize (2 * reservoir.capacity)
-					end
-					reservoir.put_last (base_iterator.item)
+					reservoir.force_last (base_iterator.item)
 				end
 			end
 			from
@@ -192,12 +182,7 @@ feature {NONE} -- Implementation
 			loop
 				base_iterator.forth
 				if not base_iterator.after then
-					if base_iterator.is_last_position_finder then
-						reservoir.resize (reservoir.capacity + base_iterator.last_position - base_iterator.index + 1)
-					else
-						reservoir.resize (2 * reservoir.capacity)
-					end
-					reservoir.put_last (base_iterator.item)
+					reservoir.force_last (base_iterator.item)
 				end
 			end
 			if closure /= Void then

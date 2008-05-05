@@ -72,12 +72,14 @@ feature -- Status report
 
 feature -- Optimization
 
-	simplify is
+	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform context-independent static optimizations
 		do
-			Precursor
-			add_context_document_argument (1, "idref+")
-			merge_dependencies (arguments.item (2))
+			Precursor (a_replacement)
+			if a_replacement.item = Current then
+				add_context_document_argument (1, "idref+")
+				merge_dependencies (arguments.item (2))
+			end
 		end
 
 feature -- Evaluation
@@ -174,23 +176,26 @@ feature -- Evaluation
 			end
 		end
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
+	pre_evaluate (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			-- Suppress compile-time evaluation
+			a_replacement.put (Current)
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
-	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			Precursor (a_context)
-			arguments.item (1).set_unsorted (False)
-			if arguments.item (1).was_expression_replaced then
-				arguments.replace (arguments.item (1).replacement_expression, 1)
+			Precursor (a_replacement, a_context)
+			if a_replacement.item = Void then
+				create l_replacement.make (Void)
+				arguments.item (1).set_unsorted (l_replacement, False)
+				if arguments.item (1) /= l_replacement.item then
+					arguments.replace (l_replacement.item, 1)
+				end
 			end
 		end
 
