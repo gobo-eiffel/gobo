@@ -107,11 +107,6 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been run on all
 			-- these classes that have been marked as being part of the
 			-- system.
-			--
-			-- The iteration over the dependent features will be interrupted if
-			-- the surrounding Eiffel system has been marked as stoppable and
-			-- it received a stop request. See `is_stoppable', `stop_requested'
-			-- and `was_stopped' in class ET_SYSTEM for more details.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -127,19 +122,14 @@ feature -- Processing
 			used_features.wipe_out
 			used_features.force_last (a_feature.implementation_feature)
 			from used_features.start until used_features.after loop
-				if l_system.is_stoppable and then l_system.stop_requested then
-					l_system.set_stopped
-					used_features.go_after
-				else
-					l_feature := used_features.item_for_iteration
-					l_feature := l_feature.implementation_feature
-					l_class := l_feature.implementation_class
-					l_feature.set_used (True)
-					if l_class.is_preparsed then
-						check_feature_validity (l_feature, l_class)
-					end
-					used_features.forth
+				l_feature := used_features.item_for_iteration
+				l_feature := l_feature.implementation_feature
+				l_class := l_feature.implementation_class
+				l_feature.set_used (True)
+				if l_class.is_preparsed then
+					check_feature_validity (l_feature, l_class)
 				end
+				used_features.forth
 			end
 			descendants_cache.wipe_out
 		ensure
@@ -223,13 +213,8 @@ feature -- Processing
 			-- Unmark all features of `a_system' as if none of them was in the system.
 		require
 			a_system_not_void: a_system /= Void
-		local
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := a_system.is_stoppable
-			a_system.set_stoppable (False)
 			a_system.classes_do_recursive (agent {ET_CLASS}.features_do_declared (agent {ET_FEATURE}.set_used (False)))
-			a_system.set_stoppable (l_old_stoppable)
 		end
 
 feature {NONE} -- Event handling
@@ -479,7 +464,6 @@ feature {NONE} -- Descendants cache
 		require
 			a_class_not_void: a_class /= Void
 		local
-			l_old_stoppable: BOOLEAN
 			l_system: ET_SYSTEM
 		do
 			descendants_cache.search (a_class)
@@ -490,10 +474,7 @@ feature {NONE} -- Descendants cache
 				descendants_cache.force_last (Result, a_class)
 				if a_class.is_preparsed then
 					l_system := a_class.current_system
-					l_old_stoppable := l_system.is_stoppable
-					l_system.set_stoppable (False)
 					l_system.classes_do_recursive (agent add_to_descendants (a_class, ?, Result))
-					l_system.set_stoppable (l_old_stoppable)
 				end
 			end
 		ensure

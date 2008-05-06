@@ -231,11 +231,7 @@ feature -- Parsing
 			-- for more details.
 			--
 			-- `classes_modified' and `classes_added' will be updated.
-		local
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			classes_modified := False
 			classes_added := False
 			if not is_preparsed then
@@ -260,7 +256,6 @@ feature -- Parsing
 					reset_classes_incremental
 				end
 			end
-			current_system.set_stoppable (l_old_stoppable)
 		end
 
 	preparse_recursive is
@@ -307,11 +302,7 @@ feature -- Parsing
 			-- for more details.
 			--
 			-- `classes_modified' and `classes_added' will be updated.
-		local
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			classes_modified := False
 			classes_added := False
 			if not is_preparsed then
@@ -336,7 +327,6 @@ feature -- Parsing
 					reset_classes_incremental
 				end
 			end
-			current_system.set_stoppable (l_old_stoppable)
 		end
 
 	parse_all_recursive is

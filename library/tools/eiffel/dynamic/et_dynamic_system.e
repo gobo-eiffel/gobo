@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			a_system_not_void: a_system /= Void
 		local
 			nb: INTEGER
-			l_old_stoppable: BOOLEAN
 		do
 			catcall_error_mode := True
 			current_system := a_system
@@ -43,10 +42,7 @@ feature {NONE} -- Initialization
 			set_dynamic_type_set_builder (null_dynamic_type_set_builder)
 			create dynamic_types.make (nb)
 				-- Reset the index of classes so that `dynamic_type' can work properly.
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			current_system.classes_do_recursive (agent {ET_CLASS}.set_index (0))
-			current_system.set_stoppable (l_old_stoppable)
 			make_basic_types
 		ensure
 			current_system_set: current_system = a_system
@@ -856,10 +852,9 @@ feature -- Compilation
 			-- Compile current system.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `current_system.stop_request' starts returning
+			-- True. No interruption if `current_system.stop_request' is Void.
 		local
 			l_class: ET_CLASS
 		do
@@ -875,10 +870,9 @@ feature -- Compilation
 			-- Compile all classes reachable from the root class.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `current_system.stop_request' starts returning
+			-- True. No interruption if `current_system.stop_request' is Void.
 		local
 			l_class: ET_CLASS
 			l_name: ET_FEATURE_NAME
@@ -899,9 +893,7 @@ feature -- Compilation
 				current_system.print_time (dt1, "Degree 6")
 			end
 			compile_kernel
-			if current_system.is_stoppable and then current_system.stop_requested then
-				current_system.set_stopped
-			else
+			if not current_system.stop_requested then
 				l_class := current_system.root_class
 				if l_class = Void then
 						-- Error: missing root class.
@@ -984,10 +976,9 @@ feature -- Compilation
 			-- Compile all classes in the Eiffel system.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `current_system.stop_request' starts returning
+			-- True. No interruption if `current_system.stop_request' is Void.
 		local
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
@@ -1015,7 +1006,7 @@ feature -- Compilation
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_kernel
-			current_system.classes_do_recursive (agent compile_all_features)
+			current_system.classes_do_recursive_until (agent compile_all_features, current_system.stop_request)
 			build_dynamic_type_sets
 			if error_handler.benchmark_shown then
 				current_system.print_time (dt1, "Degree Dynamic Type Set")
@@ -1027,10 +1018,9 @@ feature {NONE} -- Compilation
 	compile_kernel is
 			-- Compile kernel classes.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `current_system.stop_request' starts returning
+			-- True. No interruption if `current_system.stop_request' is Void.
 		local
 			l_any: ET_CLASS_TYPE
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -1043,9 +1033,7 @@ feature {NONE} -- Compilation
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_external_function: ET_EXTERNAL_FUNCTION
 		do
-			if current_system.is_stoppable and then current_system.stop_requested then
-				current_system.set_stopped
-			else
+			if not current_system.stop_requested then
 				dynamic_types.wipe_out
 				l_any := current_system.any_class
 					-- Type "BOOLEAN".
@@ -1518,16 +1506,13 @@ feature {NONE} -- Compilation
 	build_dynamic_type_sets is
 			-- Build dynamic type sets for current system.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `current_system.stop_request' starts returning
+			-- True. No interruption if `current_system.stop_request' is Void.
 		local
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
-			if current_system.is_stoppable and then current_system.stop_requested then
-				current_system.set_stopped
-			else
+			if not current_system.stop_requested then
 				l_builder := dynamic_type_set_builder
 				l_builder.set_no_debug (True)
 				l_builder.set_no_assertion (True)

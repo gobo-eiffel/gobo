@@ -419,14 +419,10 @@ feature -- Measurement
 			-- Number of classes declared locally in current universe
 		local
 			l_counter: UT_COUNTER
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			create l_counter.make (0)
 			classes_do_local (agent {ET_CLASS}.increment_counter (l_counter))
 			Result := l_counter.item
-			current_system.set_stoppable (l_old_stoppable)
 		ensure
 			class_count_not_negative: Result >= 0
 		end
@@ -436,14 +432,10 @@ feature -- Measurement
 			-- and recursively in the universes it depends on
 		local
 			l_counter: UT_COUNTER
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			create l_counter.make (0)
 			classes_do_recursive (agent {ET_CLASS}.increment_counter (l_counter))
 			Result := l_counter.item
-			current_system.set_stoppable (l_old_stoppable)
 		ensure
 			class_count_not_negative: Result >= 0
 		end
@@ -461,14 +453,10 @@ feature -- Measurement
 			-- Number of classes parsed locally in current universe
 		local
 			l_counter: UT_COUNTER
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			create l_counter.make (0)
 			classes_do_if_local (agent {ET_CLASS}.increment_counter (l_counter), agent {ET_CLASS}.is_parsed)
 			Result := l_counter.item
-			current_system.set_stoppable (l_old_stoppable)
 		ensure
 			parsed_class_count_not_negative: Result >= 0
 		end
@@ -478,14 +466,10 @@ feature -- Measurement
 			-- and recursively in the universes it depends on
 		local
 			l_counter: UT_COUNTER
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			create l_counter.make (0)
 			classes_do_if_recursive (agent {ET_CLASS}.increment_counter (l_counter), agent {ET_CLASS}.is_parsed)
 			Result := l_counter.item
-			current_system.set_stoppable (l_old_stoppable)
 		ensure
 			parsed_class_count_not_negative: Result >= 0
 		end
@@ -655,26 +639,30 @@ feature -- Iteration
 
 	classes_do_local (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
 			-- Apply `an_action' on all classes declared locally in current universe.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			classes.do_if (an_action, agent {ET_CLASS}.is_in_universe (Current))
+		end
+
+	classes_do_local_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes declared locally in current universe.
 			--
-			-- The iteration will be interrupted if the surrounding Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
 		require
 			an_action_not_void: an_action /= Void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
 		do
-			if current_system.is_stoppable and then current_system.stop_requested then
-				current_system.set_stopped
-			elseif not current_system.is_stoppable then
-				classes.do_if (an_action, agent {ET_CLASS}.is_in_universe (Current))
-			else
+			if a_stop_request = Void then
+				classes_do_local (an_action)
+			elseif not a_stop_request.item ([]) then
 				l_cursor := classes.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					if current_system.stop_requested then
-						current_system.set_stopped
+					if a_stop_request.item ([]) then
 						l_cursor.go_after
 					else
 						l_class := l_cursor.item
@@ -690,11 +678,6 @@ feature -- Iteration
 	classes_do_if_local (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- that satisfy `a_test'.
-			--
-			-- The iteration will be interrupted if the surrounding Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
 		require
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
@@ -702,13 +685,38 @@ feature -- Iteration
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
 		do
-			if current_system.is_stoppable and then current_system.stop_requested then
-				current_system.set_stopped
-			else
+			l_cursor := classes.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_class := l_cursor.item
+				if l_class.universe = Current then
+					if a_test.item ([l_class]) then
+						an_action.call ([l_class])
+					end
+				end
+				l_cursor.forth
+			end
+		end
+
+	classes_do_if_local_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes declared locally in current universe
+			-- that satisfy `a_test'.
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			l_class: ET_CLASS
+		do
+			if a_stop_request = Void then
+				classes_do_if_local (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
 				l_cursor := classes.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					if current_system.is_stoppable and then current_system.stop_requested then
-						current_system.set_stopped
+					if a_stop_request.item ([]) then
 						l_cursor.go_after
 					else
 						l_class := l_cursor.item
@@ -727,26 +735,34 @@ feature -- Iteration
 			-- Apply `an_action' on all classes declared locally in current universe
 			-- as well as on the classes that are declared in the universes it depends
 			-- on recursively.
-			--
-			-- The iteration will be interrupted if the surrounding Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
 		require
 			an_action_not_void: an_action /= Void
 		do
 			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_local (an_action))
 		end
 
+	classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes declared locally in current universe
+			-- as well as on the classes that are declared in the universes it depends
+			-- on recursively.
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		do
+			if a_stop_request = Void then
+				universes_do_recursive (agent {ET_UNIVERSE}.classes_do_local (an_action))
+			else
+				universes_do_recursive_until (agent {ET_UNIVERSE}.classes_do_local_until (an_action, a_stop_request), a_stop_request)
+			end
+		end
+
 	classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]) is
 			-- Apply `an_action' on all classes that satisfy `a_test', declared
 			-- locally in current universe as well as on the classes that are
 			-- declared in the universes it depends on recursively.
-			--
-			-- The iteration will be interrupted if the surrounding Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
 		require
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
@@ -754,35 +770,61 @@ feature -- Iteration
 			universes_do_recursive (agent {ET_UNIVERSE}.classes_do_if_local (an_action, a_test))
 		end
 
+	classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes that satisfy `a_test', declared
+			-- locally in current universe as well as on the classes that are
+			-- declared in the universes it depends on recursively.
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			if a_stop_request = Void then
+				universes_do_recursive (agent {ET_UNIVERSE}.classes_do_if_local (an_action, a_test))
+			else
+				universes_do_recursive_until (agent {ET_UNIVERSE}.classes_do_if_local_until (an_action, a_test, a_stop_request), a_stop_request)
+			end
+		end
+
 	universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
 			-- Apply `an_action' on current universe and recursively on
 			-- the universes it depends on.
-			--
-			-- The iteration will be interrupted if the surrounding Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
 		require
 			an_action_not_void: an_action /= Void
 		local
 			l_visited: DS_HASH_SET [ET_UNIVERSE]
 		do
-			if current_system.is_stoppable and then current_system.stop_requested then
-				current_system.set_stopped
-			else
+			create l_visited.make (10)
+			add_universe_recursive (l_visited)
+			l_visited.do_all (an_action)
+		end
+
+	universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on current universe and recursively on
+			-- the universes it depends on.
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			l_visited: DS_HASH_SET [ET_UNIVERSE]
+		do
+			if a_stop_request = Void then
+				universes_do_recursive (an_action)
+			elseif not a_stop_request.item ([]) then
 				create l_visited.make (10)
 				add_universe_recursive (l_visited)
-				if not current_system.is_stoppable then
-					l_visited.do_all (an_action)
-				else
-					from l_visited.start until l_visited.after loop
-						if current_system.stop_requested then
-							current_system.set_stopped
-							l_visited.go_after
-						else
-							an_action.call ([l_visited.item_for_iteration])
-							l_visited.forth
-						end
+				from l_visited.start until l_visited.after loop
+					if a_stop_request.item ([]) then
+						l_visited.go_after
+					else
+						an_action.call ([l_visited.item_for_iteration])
+						l_visited.forth
 					end
 				end
 			end

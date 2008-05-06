@@ -184,13 +184,8 @@ feature -- Processing
 	unmark_all is
 			-- Unmark all classes of `current_system' as if none of them
 			-- was in the system.
-		local
-			l_old_stoppable: BOOLEAN
 		do
-			l_old_stoppable := current_system.is_stoppable
-			current_system.set_stoppable (False)
 			current_system.classes_do_recursive (agent {ET_CLASS}.set_in_system (False))
-			current_system.set_stoppable (l_old_stoppable)
 		end
 
 feature {ET_AST_NODE} -- Processing

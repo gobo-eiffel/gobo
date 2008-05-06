@@ -1341,10 +1341,9 @@ feature -- Parsing
 			-- Parse all classes reachable from the root class.
 			-- The Eiffel system needs to have been preparsed beforehand.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		local
 			l_parsed_class_count: INTEGER
 			l_old_parsed_class_count: INTEGER
@@ -1361,11 +1360,10 @@ feature -- Parsing
 					l_done := False
 					l_old_parsed_class_count := parsed_class_count
 					from until l_done loop
-						if is_stoppable and then stop_requested then
-							set_stopped
+						if stop_requested then
 							l_done := True
 						else
-							classes_do_if_recursive (agent parse_class, agent {ET_CLASS}.in_system)
+							classes_do_if_recursive_until (agent parse_class, agent {ET_CLASS}.in_system, stop_request)
 							l_parsed_class_count := parsed_class_count
 							l_done := (l_parsed_class_count = l_old_parsed_class_count)
 							l_old_parsed_class_count := l_parsed_class_count
@@ -1444,10 +1442,9 @@ feature -- Compilation
 			-- `flat_dbc_mode' means that the inherited pre- and postconditions
 			-- are checked again in the redeclaration of features during Degree 3.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		do
 			if root_class = Void or root_class = none_class or root_class = any_class then
 				compile_all
@@ -1463,10 +1460,9 @@ feature -- Compilation
 			-- `flat_dbc_mode' means that the inherited pre- and postconditions
 			-- are checked again in the redeclaration of features during Degree 3.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		local
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
@@ -1482,7 +1478,7 @@ feature -- Compilation
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			parse_system
-			if (not is_stoppable or else not was_stopped) and then error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Preparsed ")
 				error_handler.info_file.put_integer (class_count)
 				error_handler.info_file.put_line (" classes")
@@ -1514,10 +1510,9 @@ feature -- Compilation
 			-- `flat_dbc_mode' means that the inherited pre- and postconditions
 			-- are checked again in the redeclaration of features during Degree 3.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		local
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
@@ -1553,15 +1548,14 @@ feature -- Compilation
 	compile_degree_5 is
 			-- Equivalent of ISE's Degree 5.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		do
 				-- Parse classes.
-			classes_do_if_recursive (agent parse_class, agent {ET_CLASS}.is_preparsed)
+			classes_do_if_recursive_until (agent parse_class, agent {ET_CLASS}.is_preparsed, stop_request)
 			check_provider_validity
-			if (not is_stoppable or else not was_stopped) and then error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Parsed ")
 				error_handler.info_file.put_integer (parsed_class_count)
 				error_handler.info_file.put_line (" classes")
@@ -1573,18 +1567,17 @@ feature -- Compilation
 	compile_degree_4 is
 			-- Equivalent of ISE Eiffel's Degree 4.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		do
 				-- Build ancestors.
-			classes_do_if_recursive (agent build_ancestors, agent {ET_CLASS}.is_parsed)
+			classes_do_if_recursive_until (agent build_ancestors, agent {ET_CLASS}.is_parsed, stop_request)
 				-- Flatten features.
-			classes_do_if_recursive (agent flatten_features, agent {ET_CLASS}.ancestors_built)
+			classes_do_if_recursive_until (agent flatten_features, agent {ET_CLASS}.ancestors_built, stop_request)
 				-- Check interface.
-			classes_do_if_recursive (agent check_interface, agent {ET_CLASS}.features_flattened)
-			if (not is_stoppable or else not was_stopped) and then error_handler.benchmark_shown then
+			classes_do_if_recursive_until (agent check_interface, agent {ET_CLASS}.features_flattened, stop_request)
+			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Flattened ")
 				error_handler.info_file.put_integer (parsed_class_count)
 				error_handler.info_file.put_line (" classes")
@@ -1600,25 +1593,23 @@ feature -- Compilation
 			-- `flat_dbc_mode' means that the inherited pre- and postconditions
 			-- are checked again in the redeclaration of features.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		do
 				-- Check implementation.
-			classes_do_if_recursive (agent check_implementation, agent {ET_CLASS}.interface_checked)
+			classes_do_if_recursive_until (agent check_implementation, agent {ET_CLASS}.interface_checked, stop_request)
 		end
 
 	check_provider_validity is
 			-- Check cluster dependence constraints.
 			--
-			-- Note that this operation will be interrupted if the Eiffel system
-			-- has been marked as stoppable and it received a stop request.
-			-- See `is_stoppable', `stop_requested' and `was_stopped' in class
-			-- ET_SYSTEM for more details.
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
 		do
 			if cluster_dependence_enabled then
-				classes_do_if_recursive (agent check_providers, agent {ET_CLASS}.is_parsed)
+				classes_do_if_recursive_until (agent check_providers, agent {ET_CLASS}.is_parsed, stop_request)
 			end
 		end
 
@@ -1852,55 +1843,27 @@ feature -- Processors
 
 feature -- Stop
 
-	stop_requested: BOOLEAN
+	stop_requested: BOOLEAN is
 			-- Has the interruption of the current operation
 			-- been requested? The operation will therefore be
-			-- interrupted at the earliest possible time if
-			-- `is_stoppable' is True. If it was possible to
-			-- interrupt the current operation, then `was_stopped'
-			-- will be set to True.
-
-	is_stoppable: BOOLEAN
-			-- Can the current operation be interrupted?
-
-	was_stopped: BOOLEAN
-			-- Has an operation been interrupted?
-			-- Only makes sense when `stop_requested' is True. However,
-			-- because non-stoppable operations may be mingled in the
-			-- middle of stoppable operations, `stop_requested' and
-			-- `was_stopped' may be set to True (from the outer-operation)
-			-- even if `is_stoppable' is False (in the inner-operation).
-
-	set_stop_requested (b: BOOLEAN) is
-			-- Set `stop_requested' to `b'.
+			-- interrupted at the earliest possible time.
 		do
-			if not b or not stop_requested then
-				was_stopped := False
+			if stop_request /= Void then
+				Result := stop_request.item ([])
 			end
-			stop_requested := b
-		ensure
-			stop_requested_set: stop_requested = b
-			not_stopped_yet: (not b or not stop_requested) implies not was_stopped
-			stopped_not_changed: (b and stop_requested) implies was_stopped = old was_stopped
 		end
 
-	set_stoppable (b: BOOLEAN) is
-			-- Set `is_stoppable' to `b'.
-		do
-			is_stoppable := b
-		ensure
-			stoppable_set: is_stoppable = b
-		end
+	stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]
+			-- Agent used to figure out whether there has been
+			-- a request to interrupt the current operation;
+			-- No interruption if Void
 
-	set_stopped is
-			-- Set `was_stopped' to True.
-		require
-			stoppable: is_stoppable
-			stop_requested: stop_requested
+	set_stop_request (a_stop_request: like stop_request) is
+			-- Set `stop_request' to `a_stop_request'.
 		do
-			was_stopped := True
+			stop_request := a_stop_request
 		ensure
-			stopped_set: was_stopped
+			stop_request_set: stop_request = a_stop_request
 		end
 
 feature -- Timing
@@ -1915,7 +1878,7 @@ feature -- Timing
 			dt2: DT_DATE_TIME
 			dtd: DT_DATE_TIME_DURATION
 		do
-			if not is_stoppable or else not was_stopped then
+			if not stop_requested then
 				create l_clock
 				dt2 := l_clock.system_clock.date_time_now
 				dtd := dt2 - a_start
