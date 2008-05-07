@@ -4,7 +4,7 @@ indexing
 
 		"Version of Gobo"
 
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,6 @@ inherit
 
 feature -- Constants
 
-	Version_number: STRING is "3.7"
+	Version_number: STRING is "3.8"
 
 end

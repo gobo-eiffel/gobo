@@ -32,15 +32,9 @@ ISE 5.7 (ISE Eiffel)
 	    geant clobber
 	    geant install
 
-SE 1.2r7 (SmartEiffel)
+SE (SmartEiffel)
 
-	* MA_DECIMAL.hash_code may violate a precondition in INTEGER.infix "+".
-
-	* 'short' crashes when running 'geant test_se' in $GOBO/test/precomp.
-
-SE 2.* (SmartEiffel)
-
-	* This version of the SmartEiffel compiler is not supported anymore.
+	* The SmartEiffel compiler is not supported anymore.
 
 VE (Visual Eiffel)
 

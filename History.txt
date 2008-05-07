@@ -1,4 +1,4 @@
-Version 3.8 - ?
+Version 3.8 - 11 May 2008
 
 	geant:
 
@@ -72,9 +72,16 @@ Version 3.8 - ?
 	  to a class that has a syntax error or for which the ancestors could
 	  not be computed.
 	* Added support for the notion of libraries as specified in ECF.
+	  This introduced some breaking changes if you are using the code of
+	  gelint in your own applications. For example what was known as
+	  ET_UNIVERSE is now called ET_SYSTEM and ET_UNIVERSE is now an
+	  ancestor of this class (and of the new class ET_LIBRARY).
 	* Added type-marks '!' and '?' (part of void-safety mechanism) in the
 	  parser. But do not check validity rules yet.
 	* Implemented Object-Test as specified in ECMA 367-2.
+	* Do not accept the obsolete syntax for Agents using '~'. ECMA Eiffel
+	  uses the operator for object equality, and this new construct is
+	  now implemented in ISE 6.2.
 
 	getest:
 
