@@ -62,7 +62,7 @@ feature -- Element change
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
 				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -79,7 +79,7 @@ feature -- Element change
 					elseif STRING_.same_string (an_expanded_name, Flags_attribute) then
 						a_flags_attribute := attribute_value_by_index (a_cursor.index)
 						STRING_.left_adjust (a_flags_attribute)
-						STRING_.right_adjust (a_flags_attribute)					
+						STRING_.right_adjust (a_flags_attribute)
 					else
 						check_unknown_attribute (a_name_code)
 					end
@@ -117,7 +117,6 @@ feature -- Element change
 			l_style_element: XM_XSLT_STYLE_ELEMENT
 			l_error: XM_XPATH_ERROR_VALUE
 			l_finished: BOOLEAN
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			check_within_template
 			from
@@ -129,30 +128,30 @@ feature -- Element change
 					if not l_style_element.is_fallback then
 						if l_style_element.is_matching_substring then
 							if matching_substring /= Void then
-								create l_error.make_from_string ("xsl:matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error) 
+								create l_error.make_from_string ("xsl:matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error)
 								report_compile_error (l_error); l_finished := True
 							elseif non_matching_substring /= Void then
-								create l_error.make_from_string ("xsl:matching-substring element must appear before xsl:non-matching-substring", Xpath_errors_uri, "XTSE0010", Static_error) 
+								create l_error.make_from_string ("xsl:matching-substring element must appear before xsl:non-matching-substring", Xpath_errors_uri, "XTSE0010", Static_error)
 								report_compile_error (l_error); l_finished := True
 							else
 								matching_substring := l_style_element.as_matching_substring
 							end
 						elseif l_style_element.is_non_matching_substring then
 							if non_matching_substring /= Void then
-								create l_error.make_from_string ("xsl:non-matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error) 
+								create l_error.make_from_string ("xsl:non-matching-substring element may only appear once", Xpath_errors_uri, "XTSE0010", Static_error)
 								report_compile_error (l_error); l_finished := True
 							else
 								non_matching_substring := l_style_element.as_non_matching_substring
 							end
 						else
-							create l_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error) 
+							create l_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error)
 							report_compile_error (l_error); l_finished := True
 						end
 					end
 				elseif l_child_iterator.item.node_type = Text_node and then is_all_whitespace (l_child_iterator.item.string_value) then
 							-- do nothing, as xml:space="preserve" makes this legitimate
 				else
-					create l_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error) 
+					create l_error.make_from_string ("Only xsl:matching-substring, xsl:non-matching-substring and xsl:fallback are allowed here", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (l_error); l_finished := True
 				end
 				l_child_iterator.forth
@@ -219,10 +218,10 @@ feature {NONE} -- Implementation
 
 	matching_substring: XM_XSLT_MATCHING_SUBSTRING
 			-- Matching substring child
-	
+
 	non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING
 			-- Non-matching substring child
-	
+
 	check_regex_and_flags is
 			-- Check constraints upon `regex_expression' and `flags_expression'.
 		require
@@ -259,9 +258,9 @@ feature {NONE} -- Implementation
 			end
 			if l_error /= Void then
 				if is_forwards_compatible_processing_enabled then
-					
+
 					-- Defer error until evaluation time
-	
+
 					regexp_cache_entry := Void
 				else
 					report_compile_error (l_error)
