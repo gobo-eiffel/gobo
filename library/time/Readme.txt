@@ -19,8 +19,6 @@ clock
     Clocks, system clock, customizable clocks.
 date
     Date, time and duration classes.
-format
-    Formatting and parsing. (STILL UNDER DEVELOPMENT)
 time_zone
     Time zones, date/time conversions. (STILL UNDER DEVELOPMENT)
 
