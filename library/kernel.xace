@@ -28,11 +28,6 @@
 			<option name="exclude" value="event" if="${GOBO_EIFFELBASE}"/>
 			<option name="exclude" value="serialization" if="${GOBO_EIFFELBASE}"/>
 		</cluster>
-		<cluster name="base_net" location="${ISE_EIFFEL}/library.net/base" if="${GOBO_DOTNET}">
-			<option name="recursive" value="true"/>
-			<option name="read_only" value="true"/>
-			<option name="exclude" value="serialization" if="${GOBO_EIFFELBASE}"/>
-		</cluster>
 		<cluster name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
 			<option name="assembly" value="mscorlib"/>
