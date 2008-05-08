@@ -23,6 +23,7 @@ create
 feature -- Access
 
 	value: BOOLEAN is
+			-- Boolean value
 		do
 			Result := boolean_value (string_value)
 		end

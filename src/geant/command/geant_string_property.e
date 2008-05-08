@@ -23,6 +23,7 @@ create
 feature -- Access
 
 	value: STRING is
+			-- String value
 		do
 			Result := string_value
 		end
