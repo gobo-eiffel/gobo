@@ -885,6 +885,7 @@ feature {NONE} -- Feature generation
 				nb := current_object_tests.count
 				from i := 1 until i > nb loop
 					print_object_test_function (i, current_object_tests.item (i))
+					i := i + 1
 				end
 				current_object_tests.wipe_out
 				current_dynamic_type_sets := old_dynamic_type_sets
@@ -10145,6 +10146,11 @@ feature {NONE} -- Object-test generation
 					current_file.put_new_line
 				end
 			end
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file.put_new_line
 			l_conforming_types.wipe_out
 			l_non_conforming_types.wipe_out
 			current_file := old_file
