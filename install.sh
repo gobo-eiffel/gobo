@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel package"
-# copyright: "Copyright (c) 2007, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -162,14 +162,14 @@ if [ "$EIF" = "ge" ]; then
 	GOBO_EIFFEL=ge
 	export GOBO_EIFFEL
 	cd $BIN_DIR
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/geant/ge.ace
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexace/ge.ace
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelex/ge.ace
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/geyacc/ge.ace
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gepp/ge.ace
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/getest/ge.ace
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelint/ge.ace
-	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexslt/ge.ace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/geant/ge.xace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexace/ge.xace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelex/ge.xace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/geyacc/ge.xace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/gepp/ge.xace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/getest/ge.xace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelint/ge.xace
+	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexslt/ge.xace
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1

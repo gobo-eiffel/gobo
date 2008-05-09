@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel package"
-rem copyright: "Copyright (c) 2007, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -178,14 +178,14 @@ goto exit
 :ge
 	set GOBO_EIFFEL=ge
 	cd %BIN_DIR%
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\geant\ge.ace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gexace\ge.ace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gelex\ge.ace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\geyacc\ge.ace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gepp\ge.ace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\getest\ge.ace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gelint\ge.ace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gexslt\ge.ace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\geant\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gexace\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gelex\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\geyacc\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gepp\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\getest\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gelint\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize %GOBO%\src\gexslt\ge.xace
 	goto clean
 
 :clean
