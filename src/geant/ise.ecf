@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="geant">
+	<target name="geant">
+		<root class="GEANT" feature="make"/>
+		<option trace="false" profile="false" debug="false" warning="true">
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="${ISE_EIFFEL}/library/base/base.ecf" readonly="true"/>
+		<library name="time" location="${ISE_EIFFEL}/library/time/time.ecf" readonly="true"/>
+		<cluster name="geant" location="${GOBO}/src/geant">
+			<cluster name="command" location="$|command"/>
+			<cluster name="task" location="$|task"/>
+			<cluster name="parser" location="$|parser"/>
+		</cluster>
+		<cluster name="ap_argument" location="${GOBO}/library/argument"/>
+		<cluster name="kl_kernel" location="${GOBO}/library/kernel">
+			<cluster name="kl_basic" location="$|basic"/>
+			<cluster name="kl_elks" location="$|elks"/>
+			<cluster name="kl_io" location="$|io"/>
+			<cluster name="kl_misc" location="$|misc"/>
+			<cluster name="kl_unicode" location="$|unicode"/>
+			<cluster name="kl_support" location="$|support"/>
+			<cluster name="kl_spec" location="$|spec">
+				<cluster name="kl_spec_ise" location="$|ise"/>
+			</cluster>
+		</cluster>
+		<cluster name="lx_lexical" location="${GOBO}/library/lexical">
+			<cluster name="lx_automaton" location="$|automaton"/>
+			<cluster name="lx_error" location="$|error"/>
+			<cluster name="lx_generation" location="$|generation"/>
+			<cluster name="lx_lex" location="$|lex"/>
+			<cluster name="lx_regexp" location="$|regexp"/>
+			<cluster name="lx_scanner" location="$|scanner"/>
+			<cluster name="lx_skeleton" location="$|skeleton"/>
+			<cluster name="lx_support" location="$|support"/>
+		</cluster>
+		<cluster name="ma_math" location="${GOBO}/library/math">
+			<cluster name="ma_decimal" location="$|decimal"/>
+		</cluster>
+		<cluster name="pr_parse" location="${GOBO}/library/parse">
+			<cluster name="pr_error" location="$|error"/>
+			<cluster name="pr_fsm" location="$|fsm"/>
+			<cluster name="pr_generation" location="$|generation"/>
+			<cluster name="pr_grammar" location="$|grammar"/>
+			<cluster name="pr_parser" location="$|parser"/>
+			<cluster name="pr_skeleton" location="$|skeleton"/>
+			<cluster name="pr_support" location="$|support"/>
+			<cluster name="pr_yacc" location="$|yacc"/>
+		</cluster>
+		<cluster name="dp_pattern" location="${GOBO}/library/pattern">
+			<cluster name="dp_bridge" location="$|bridge"/>
+			<cluster name="dp_command" location="$|command"/>
+		</cluster>
+		<cluster name="rx_regexp" location="${GOBO}/library/regexp">
+			<cluster name="rx_interface" location="$|interface"/>
+			<cluster name="rx_pcre" location="$|pcre"/>
+			<cluster name="rx_support" location="$|support"/>
+		</cluster>
+		<cluster name="st_string" location="${GOBO}/library/string">
+			<cluster name="st_collation" location="$|collation"/>
+			<cluster name="st_unicode" location="$|unicode"/>
+			<cluster name="st_support" location="$|support"/>
+			<cluster name="st_date" location="$|date"/>
+			<cluster name="st_formatter" location="$|formatter">
+				<cluster name="st_general" location="$|general"/>
+				<cluster name="st_parameter" location="$|parameter"/>
+			</cluster>
+		</cluster>
+		<cluster name="ds_structure" location="${GOBO}/library/structure">
+			<cluster name="ds_container" location="$|container"/>
+			<cluster name="ds_dispenser" location="$|dispenser"/>
+			<cluster name="ds_list" location="$|list"/>
+			<cluster name="ds_set" location="$|set"/>
+			<cluster name="ds_sort" location="$|sort"/>
+			<cluster name="ds_support" location="$|support"/>
+			<cluster name="ds_table" location="$|table"/>
+		</cluster>
+		<cluster name="ts_test" location="${GOBO}/library/test">
+			<cluster name="ts_generation" location="$|generation"/>
+			<cluster name="ts_harness" location="$|harness"/>
+		</cluster>
+		<cluster name="dt_time" location="${GOBO}/library/time">
+			<cluster name="dt_clock" location="$|clock"/>
+			<cluster name="dt_date" location="$|date"/>
+			<cluster name="dt_time_zone" location="$|time_zone"/>
+		</cluster>
+		<cluster name="et_tools" location="${GOBO}/library/tools">
+			<cluster name="et_eiffel_eiffel" location="$|eiffel">
+				<cluster name="et_eiffel_ast" location="$|ast">
+					<cluster name="et_eiffel_agent" location="$|agent"/>
+					<cluster name="et_eiffel_assertion" location="$|assertion"/>
+					<cluster name="et_eiffel_class" location="$|class"/>
+					<cluster name="et_eiffel_constant" location="$|constant"/>
+					<cluster name="et_eiffel_expression" location="$|expression"/>
+					<cluster name="et_eiffel_feature" location="$|feature"/>
+					<cluster name="et_eiffel_group" location="$|group"/>
+					<cluster name="et_eiffel_instruction" location="$|instruction"/>
+					<cluster name="et_eiffel_misc" location="$|misc"/>
+					<cluster name="et_eiffel_name" location="$|name"/>
+					<cluster name="et_eiffel_type" location="$|type"/>
+				</cluster>
+				<cluster name="et_eiffel_compilation" location="$|compilation"/>
+				<cluster name="et_eiffel_dynamic" location="$|dynamic"/>
+				<cluster name="et_eiffel_error" location="$|error"/>
+				<cluster name="et_eiffel_generation" location="$|generation"/>
+				<cluster name="et_eiffel_parser" location="$|parser"/>
+				<cluster name="et_eiffel_processor" location="$|processor"/>
+			</cluster>
+			<cluster name="et_lace_lace" location="$|lace">
+				<cluster name="et_lace_ast" location="$|ast"/>
+				<cluster name="et_lace_error" location="$|error"/>
+				<cluster name="et_lace_parser" location="$|parser"/>
+			</cluster>
+			<cluster name="et_ecf_ecf" location="$|ecf">
+				<cluster name="et_ecf_ast" location="$|ast"/>
+				<cluster name="et_ecf_error" location="$|error"/>
+			</cluster>
+			<cluster name="et_xace_xace" location="$|xace">
+				<cluster name="et_xace_ast" location="$|ast"/>
+				<cluster name="et_xace_error" location="$|error"/>
+				<cluster name="et_xace_generator" location="$|generator"/>
+				<cluster name="et_xace_parser" location="$|parser"/>
+				<cluster name="et_xace_support" location="$|support"/>
+			</cluster>
+		</cluster>
+		<cluster name="ut_utility" location="${GOBO}/library/utility">
+			<cluster name="ut_error" location="$|error"/>
+			<cluster name="ut_formatter" location="$|formatter"/>
+			<cluster name="ut_command" location="$|command"/>
+			<cluster name="ut_config" location="$|config"/>
+			<cluster name="ut_support" location="$|support"/>
+			<cluster name="ut_transcoder" location="$|transcoder"/>
+			<cluster name="ut_uri" location="$|uri"/>
+		</cluster>
+		<cluster name="xm_xml" location="${GOBO}/library/xml">
+			<cluster name="xm_position" location="$|position"/>
+			<cluster name="xm_source" location="$|source"/>
+			<cluster name="xm_general" location="$|general"/>
+			<cluster name="xm_event" location="$|event"/>
+			<cluster name="xm_tree" location="$|tree"/>
+			<cluster name="xm_formatter" location="$|formatter"/>
+			<cluster name="xm_resolver" location="$|resolver">
+				<cluster name="xm_resolver_interface" location="$|interface"/>
+				<cluster name="xm_catalog" location="$|catalog"/>
+				<cluster name="xm_simple" location="$|simple"/>
+				<cluster name="xm_uri" location="$|uri"/>
+			</cluster>
+			<cluster name="xm_parser" location="$|parser">
+				<cluster name="xm_interface" location="$|interface"/>
+				<cluster name="xm_eiffel" location="$|eiffel"/>
+				<cluster name="xm_no_expat" location="$|no_expat"/>
+			</cluster>
+			<cluster name="xm_xml_xpointer" location="${GOBO}/library/xml/xpointer">
+				<cluster name="xm_xpointer_common" location="$|common"/>
+				<cluster name="xm_xpointer_event" location="$|event"/>
+			</cluster>
+		</cluster>
+		<cluster name="xm_xml_xslt" location="${GOBO}/library/xml/xslt">
+			<cluster name="xm_pattern" location="$|pattern"/>
+			<cluster name="xm_xslt_function" location="$|function"/>
+			<cluster name="xm_instruction" location="$|instruction"/>
+			<cluster name="xm_style" location="$|style"/>
+			<cluster name="xm_tracing" location="$|tracing"/>
+			<cluster name="xm_number" location="$|number"/>
+			<cluster name="xm_xslt_sort" location="$|sort"/>
+			<cluster name="xm_xslt_event" location="$|event"/>
+			<cluster name="xm_runtime" location="$|runtime"/>
+			<cluster name="xm_xslt_core" location="$|core"/>
+			<cluster name="xm_xslt_serializer" location="$|serializer"/>
+		</cluster>
+		<cluster name="xm_xml_xpath" location="${GOBO}/library/xml/xpath">
+			<cluster name="xm_data_model" location="$|data_model"/>
+			<cluster name="xm_tinytree" location="$|tinytree"/>
+			<cluster name="xm_xpath_tree" location="$|tree"/>
+			<cluster name="xm_value" location="$|value"/>
+			<cluster name="xm_expression" location="$|expression"/>
+			<cluster name="xm_xpath_event" location="$|event"/>
+			<cluster name="xm_function" location="$|function"/>
+			<cluster name="xm_sort" location="$|sort"/>
+			<cluster name="xm_stand_alone" location="$|stand_alone"/>
+			<cluster name="xm_node_test" location="$|node_test"/>
+			<cluster name="xm_type" location="$|type"/>
+			<cluster name="xm_xpath_xpointer" location="$|xpointer"/>
+			<cluster name="xm_core" location="$|core"/>
+		</cluster>
+	</target>
+</system>
