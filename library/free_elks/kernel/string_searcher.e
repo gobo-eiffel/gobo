@@ -157,6 +157,7 @@ feature -- Search
 			l_pattern_count, l_nb_mismatched: INTEGER
 			l_matched: BOOLEAN
 			l_char_code: INTEGER
+			l_deltas_array: like deltas_array
 		do
 			if fuzzy = a_pattern.count then
 					-- More mismatches than the pattern length.
@@ -166,7 +167,8 @@ feature -- Search
 					Result := substring_index (a_string, a_pattern, start_pos, end_pos)
 				else
 					initialize_fuzzy_deltas (a_pattern, fuzzy)
-					if {l_deltas_array: SPECIAL [like deltas]} deltas_array then
+					l_deltas_array := deltas_array
+					if l_deltas_array /= Void then
 						from
 							l_pattern_count := a_pattern.count
 							i := start_pos
@@ -302,7 +304,7 @@ feature {NONE} -- Implementation
 			deltas_array := l_deltas_array
 		ensure
 			deltas_array_not_void: deltas_array /= Void
-			deltas_array_count_set: deltas_array.count = fuzzy + 1
+			deltas_array_count_set:  {delta: SPECIAL [like deltas]} deltas_array and then delta.count = fuzzy + 1
 		end
 
 invariant

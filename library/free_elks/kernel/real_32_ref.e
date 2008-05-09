@@ -285,9 +285,8 @@ feature {NONE} -- Implementation
 	abs_ref: like Current is
 			-- Absolute value
 		do
-			Result := Current
 			if item >= 0.0 then
-				-- Result := Current
+				Result := Current
 			else
 				Result := -Current
 			end

@@ -25,7 +25,7 @@ feature -- Initialization
 	set (s: like target) is
 			-- Make `s' the new target of iterations.
 		do
-			Precursor (s)
+			target := s
 			create internal_item_tuple
 		end
 
@@ -316,7 +316,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -325,10 +325,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end -- LINEAR_ITERATOR

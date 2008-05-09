@@ -1193,6 +1193,7 @@ feature {NONE} -- Implementation
 			stop: BOOLEAN
 			l_keys: like keys
 			l_deleted_marks: like deleted_marks
+			l_key: H
 		do
 			first_deleted_position := impossible_position
 			if key = l_default_key or else key = Void then
@@ -1215,7 +1216,8 @@ feature {NONE} -- Implementation
 				loop
 						-- Go to next increment.
 					l_pos := (l_pos + increment) \\ l_capacity
-					if not {l_key: H} l_keys.item (l_pos) or else l_key = l_default_key then
+					l_key := l_keys.item (l_pos)
+					if l_key = Void or else l_key = l_default_key then
 						if not l_deleted_marks.item (l_pos) then
 							stop := True
 							control := not_found_constant

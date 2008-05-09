@@ -119,7 +119,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: LINKED_TREE [G]
+	parent: ?like new_cell
 			-- Parent of current node
 
 	first_child: like parent
@@ -127,10 +127,13 @@ feature -- Access
 
 	left_sibling: like parent is
 			-- Left neighbor (if any)
+		local
+			p: like parent
 		do
-			if parent /= Void then
+			p := parent
+			if p /= Void then
 				from
-					Result := parent.first_child
+					Result := p.first_child
 				until
 					Result = Void or else Result.right_sibling = Current
 				loop
@@ -157,9 +160,11 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 feature -- Element change
 
-	put_child (n: like parent) is
+	put_child (n: like new_cell) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
+		local
+			c: like last_child
 		do
 			if object_comparison then
 				n.compare_objects
@@ -170,7 +175,10 @@ feature -- Element change
 				first_child := n
 				child := n
 			else
-				last_child.l_put_right (n)
+				c := last_child
+				if c /= Void then
+					c.l_put_right (n)
+				end
 				if child_after then
 					child := n
 				end
@@ -179,14 +187,14 @@ feature -- Element change
 			arity := arity + 1
 		end
 
-	replace_child (n: like parent) is
+	replace_child (n: like new_cell) is
 			-- Replace current child by `n'.
 		do
 			put_child_right (n)
 			remove_child
 		end
 
-	put_child_left (n: like parent) is
+	put_child_left (n: like new_cell) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -196,9 +204,11 @@ feature -- Element change
 			child_forth
 		end
 
-	put_child_right (n: like parent) is
+	put_child_right (n: like new_cell) is
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
+		local
+			c: like child
 		do
 			if object_comparison then
 				n.compare_objects
@@ -209,14 +219,17 @@ feature -- Element change
 				n.l_put_right (first_child)
 				first_child := n
 			else
-				n.l_put_right (child.right_sibling)
-				child.l_put_right (n)
+				c := child
+				if c /= Void then
+					n.l_put_right (c.right_sibling)
+					c.l_put_right (n)
+				end
 			end
 			n.attach_to_parent (Current)
 			arity := arity + 1
 		end
 
-	merge_tree_before (other: like first_child) is
+	merge_tree_before (other: like new_cell) is
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -225,7 +238,7 @@ feature -- Element change
 			ll_merge_left (other)
 		end
 
-	merge_tree_after (other: like first_child) is
+	merge_tree_after (other: like new_cell) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -236,11 +249,12 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (n: like first_child) is
+	prune (n: like new_cell) is
 			-- Prune `n' from children.
 		local
 			l_child: like first_child
 			left_child: like first_child
+			c: like first_child
 		do
 			from
 				l_child := first_child
@@ -252,14 +266,17 @@ feature -- Removal
 			end
 			if l_child /= Void then
 				if left_child /= Void then
-					-- when `n' is after the first item.
+						-- when `n' is after the first item.
 					left_child.l_put_right (l_child.right_sibling)
 					if child = n then
 						child := left_child
 					end
 				else
-					-- when `n' is the first item.
-					first_child := first_child.right_sibling
+						-- when `n' is the first item.
+					c := first_child
+					if c /= Void then
+						first_child := c.right_sibling
+					end
 					if n = child then
 						child := first_child
 					end
@@ -285,7 +302,7 @@ feature {NONE} -- Inapplicable
 feature {LINKED_TREE} -- Implementation
 
 
-	new_cell (v: like item): like first_child is
+	new_cell (v: like item): LINKED_TREE [G] is
 			-- New cell containing `v'
 		do
 			create Result.make (v)
@@ -325,10 +342,11 @@ feature {LINKED_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	attach (other: like first_child) is
+	attach (other: like new_cell) is
 				-- Attach all children of `other' to current node.
 		local
 			cursor: CURSOR
+			c: like child
 		do
 			cursor := other.child_cursor
 			from
@@ -336,7 +354,10 @@ feature {NONE} -- Implementation
 			until
 				other.child_off
 			loop
-				other.child.attach_to_parent (Current)
+				c := other.child
+				if c /= Void then
+					c.attach_to_parent (Current)
+				end
 				other.child_forth
 			end
 			other.child_go_to (cursor)
@@ -348,7 +369,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -357,11 +378,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class LINKED_TREE

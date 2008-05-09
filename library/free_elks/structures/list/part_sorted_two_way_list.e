@@ -31,7 +31,7 @@ class PART_SORTED_TWO_WAY_LIST [G -> PART_COMPARABLE] inherit
 
 create
 	make
-	
+
 create {PART_SORTED_TWO_WAY_LIST}
 	make_sublist
 
@@ -126,15 +126,17 @@ feature -- Transformation
 						until
 							cell = Void
 						loop
-							left_cell_item := left_cell.item
-							cell_item := cell.item
-							if cell_item < left_cell_item then
-									-- Swap `left_cell_item' with `cell_item'
-								no_change := False
-								cell.put (left_cell_item)
-								left_cell.put (cell_item)
+							if left_cell /= Void then
+								left_cell_item := left_cell.item
+								cell_item := cell.item
+								if cell_item < left_cell_item then
+										-- Swap `left_cell_item' with `cell_item'
+									no_change := False
+									cell.put (left_cell_item)
+									left_cell.put (cell_item)
+								end
+								left_cell := left_cell.right
 							end
-							left_cell := left_cell.right
 							cell := cell.right
 						end
 					end
@@ -155,7 +157,7 @@ feature {PART_SORTED_TWO_WAY_LIST} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -164,12 +166,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class PART_SORTED_TWO_WAY_LIST
 

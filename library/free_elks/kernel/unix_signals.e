@@ -5,7 +5,7 @@ indexing
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@ class
 
 feature -- Access
 
-	meaning (sig: INTEGER): STRING is
+	meaning (sig: INTEGER): ?STRING is
 			-- A message in English describing what `sig' is
 		do
 			if is_defined (sig) then

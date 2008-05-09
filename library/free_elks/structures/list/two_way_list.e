@@ -49,20 +49,20 @@ class TWO_WAY_LIST [G] inherit
 
 create
 	make
-	
+
 create {TWO_WAY_LIST}
 	make_sublist
 
 feature -- Access
 
-	first_element: BI_LINKABLE [G]
+	first_element: ?like new_cell
 			-- Head of list
 			-- (Anchor redefinition)
 
 	last_element: like first_element
 			-- Tail of the list
 
-	sublist: like Current
+	sublist: ?like Current
 			-- Result produced by last `split'
 
 	cursor: TWO_WAY_LIST_CURSOR [G] is
@@ -70,7 +70,7 @@ feature -- Access
 		do
 			create Result.make (active, after, before)
 		end
-		
+
 feature -- Status report
 
 	islast: BOOLEAN is
@@ -85,6 +85,8 @@ feature -- Cursor movement
 
 	forth is
 			-- Move cursor to next position, if any.
+		local
+			a: like active
 		do
 			if before then
 				before := False
@@ -92,16 +94,23 @@ feature -- Cursor movement
 					after := True
 				end
 			else
-				active := active.right
-				if active = Void then
-					active := last_element
-					after := True
+				a := active
+				if a /= Void then
+					a := a.right
+					if a = Void then
+						active := last_element
+						after := True
+					else
+						active := a
+					end
 				end
 			end
 		end
 
 	back is
 			-- Move cursor to previous position, if any.
+		local
+			a: like active
 		do
 			if after then
 				after := False
@@ -109,10 +118,15 @@ feature -- Cursor movement
 					before := True
 				end
 			else
-				active := active.left
-				if active = Void then
-					active := first_element
-					before := True
+				a := active
+				if a /= Void then
+					a := a.left
+					if a = Void then
+						active := first_element
+						before := True
+					else
+						active := a
+					end
 				end
 			end
 		end
@@ -201,6 +215,7 @@ feature -- Element change
 			-- Do not move cursor.
 		local
 			p: like first_element
+			a: like active
 		do
 			p := new_cell (v)
 			if is_empty then
@@ -216,7 +231,10 @@ feature -- Element change
 				p.put_right (active)
 				first_element := p
 			else
-				p.put_left (active.left)
+				a := active
+				if a /= Void then
+					p.put_left (a.left)
+				end
 				p.put_right (active)
 			End
 			count := count + 1
@@ -227,6 +245,7 @@ feature -- Element change
 			-- Do not move cursor.
 		local
 			was_last: BOOLEAN
+			a: like active
 		do
 			was_last := islast
 			ll_put_right (v)
@@ -235,7 +254,10 @@ feature -- Element change
 				last_element := active
 			elseif was_last then
 					-- `p' is last element in list
-				last_element := active.right
+				a := active
+				if a /= Void then
+					last_element := a.right
+				end
 			end
 		end
 
@@ -246,6 +268,7 @@ feature -- Element change
 			other_first_element: like first_element
 			other_last_element: like first_element
 			other_count: INTEGER
+			a: like active
 		do
 			if not other.is_empty then
 				other_first_element := other.first_element
@@ -271,8 +294,11 @@ feature -- Element change
 					last_element := other_last_element
 					active := last_element
 				else
-					other_first_element.put_left (active.left)
-					active.put_left (other_last_element)
+					a := active
+					if a /= Void then
+						other_first_element.put_left (a.left)
+						a.put_left (other_last_element)
+					end
 				end
 				count := count + other_count
 				other.wipe_out
@@ -297,11 +323,15 @@ feature -- Removal
 			-- (or `after' if no right neighbor).
 		local
 			succ, pred, removed: like first_element
+			a: like active
 		do
 			removed := active
 			if isfirst then
-				active := first_element.right
-				first_element.forget_right
+				a := first_element
+				if a /= Void then
+					active := a.right
+					a.forget_right
+				end
 				first_element := active
 				if count = 1 then
 					check
@@ -311,16 +341,24 @@ feature -- Removal
 					last_element := Void
 				end
 			elseif islast then
-				active := last_element.left
-				last_element.forget_left
+				a := last_element
+				if a /= Void then
+					active := a.left
+					a.forget_left
+				end
 				last_element := active
 				after := True
 			else
-				pred := active.left
-				succ := active.right
-				pred.forget_right
-				succ.forget_left
-				pred.put_right (succ)
+				a := active
+				if a /= Void then
+					pred := a.left
+					succ := a.right
+				end
+				if pred /= Void and then succ /= Void then
+					pred.forget_right
+					succ.forget_left
+					pred.put_right (succ)
+				end
 				active := succ
 			end
 			count := count - 1
@@ -380,8 +418,12 @@ feature -- Removal
 				e_elem := active
 				n_elem := next
 					-- make sublist
-				s_elem.forget_left
-				e_elem.forget_right
+				if s_elem /= Void then
+					s_elem.forget_left
+				end
+				if e_elem /= Void then
+					e_elem.forget_right
+				end
 				create sublist.make_sublist (s_elem, e_elem, actual_number)
 					-- fix `Current'
 				count := count - actual_number
@@ -425,7 +467,7 @@ feature {TWO_WAY_LIST} -- Implementation
 			create Result.make
 		end
 
-	new_cell (v: like item): like first_element is
+	new_cell (v: like item): BI_LINKABLE [G] is
 			-- A newly created instance of the type of `first_element'.
 		do
 			create Result
@@ -434,11 +476,16 @@ feature {TWO_WAY_LIST} -- Implementation
 
 	previous: like first_element is
 			-- Element left of cursor
+		local
+			a: like active
 		do
 			if after then
 				Result := active
-			elseif active /= Void then
-				Result := active.left
+			else
+				a := active
+				if a /= Void then
+					Result := a.left
+				end
 			end
 		end
 
@@ -446,14 +493,14 @@ invariant
 
 	non_empty_list_has_two_endpoints: not is_empty implies
 				(first_element /= Void and last_element /= Void)
-	first_element_constraint: first_element /= Void implies 
-				first_element.left = Void
-	last_element_constraint: last_element /= Void implies 
-				last_element.right = Void
+	first_element_constraint: {f: like first_element} first_element implies
+				f.left = Void
+	last_element_constraint: {l: like last_element} last_element implies
+				l.right = Void
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -462,12 +509,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class TWO_WAY_LIST
 

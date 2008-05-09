@@ -105,16 +105,12 @@ feature -- Status report
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
-		local
-			al_c: MULTAR_LIST_CURSOR [G]
 		do
-			al_c ?= p
-				check
-					al_c /= Void
-				end
-			Result := (al_c /= Void)
-				and then valid_cursor_index (al_c.index)
-				and then al_c.active.item.valid_cursor_index (al_c.active_index)
+			if {al_c: MULTAR_LIST_CURSOR [G]} p then
+				Result := (al_c /= Void)
+					and then valid_cursor_index (al_c.index)
+					and then al_c.active.item.valid_cursor_index (al_c.active_index)
+			end
 		end
 
 feature -- Cursor movement
@@ -141,13 +137,17 @@ feature -- Cursor movement
 			-- Move cursor to next position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
+			a: ?like active
 		do
 			if not is_empty then
 				current_array := active.item
 				current_array.forth
 				if current_array.after then
 					if active /= last_element then
-						active := active.right
+						a := active.right
+						if a /= Void then
+							active := a
+						end
 						active.item.start
 					end
 				end
@@ -159,13 +159,17 @@ feature -- Cursor movement
 			-- Move cursor to previous position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
+			a: ?like active
 		do
 			if not is_empty then
 				current_array := active.item
 				current_array.back
 				if current_array.before then
 					if active /= first_element then
-						active := active.left
+						a := active.left
+						if a /= Void then
+							active := a
+						end
 						active.item.finish
 					end
 				end
@@ -178,7 +182,7 @@ feature -- Cursor movement
 			-- may end up `off' if the offset is too big.
 		local
 			counter: INTEGER
-			cell: like active
+			cell: ?like active
 			current_array: ARRAYED_LIST [G]
 		do
 			cell := active
@@ -217,9 +221,11 @@ feature -- Cursor movement
 				end
 				if counter = current_array.count then
 					counter := 0
-					cell := cell.left
 					if cell /= Void then
-						current_array := cell.item
+						cell := cell.left
+						if cell /= Void then
+							current_array := cell.item
+						end
 					end
 				end
 				if cell = Void then
@@ -243,16 +249,12 @@ feature -- Cursor movement
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'
-		local
-			al_c: MULTAR_LIST_CURSOR [G]
 		do
-			al_c ?= p
-				check
-					al_c /= Void
-				end
-			active := al_c.active
-			active.item.go_i_th (al_c.active_index)
-			index := al_c.index
+			if {al_c: MULTAR_LIST_CURSOR [G]} p then
+				active := al_c.active
+				active.item.go_i_th (al_c.active_index)
+				index := al_c.index
+			end
 		end
 
 	search (v: like item) is
@@ -263,7 +265,7 @@ feature -- Cursor movement
 		local
 			current_array: ARRAYED_LIST [G]
 			old_index: INTEGER
-			cell: like active
+			cell: ?like active
 		do
 			cell := active
 			current_array := cell.item
@@ -320,12 +322,14 @@ feature -- Element change
 			-- Add `v' to end.
 		local
 			current_array: ARRAYED_LIST [G]
+			n: like new_cell
 		do
 			current_array := last_element.item
 			if current_array.count = block_size then
 				create current_array.make (block_size)
-				last_element.put_right (new_cell (current_array))
-				last_element := last_element.right
+				n := new_cell (current_array)
+				last_element.put_right (n)
+				last_element := n
 			end
 			current_array.extend (v)
 			count := count + 1
@@ -364,40 +368,43 @@ feature -- Element change
 			cell: like first_element
 			current_array: ARRAYED_LIST [G]
 			pos, cut: INTEGER
+			l: ?like first_element
 		do
 			current_array := active_array
 				check is_empty implies after end
 			if after then
 				extend (v)
-			elseif
-				active /= first_element
-				and then not active.left.item.full
-			then
-				active.left.item.extend (v)
-			elseif current_array.count <= block_size then
-				current_array.put_left (v)
 			else
-				pos := current_array.index
-				current_array.go_i_th (block_size // 2 + 1)
-				cut := index
-				cell := new_cell (current_array.duplicate (count))
-				cell.put_right (active.right)
-				cell.put_left (active)
-				if last_element = active then
-					last_element := cell
+				if active /= first_element then
+					l := active.left
 				end
-				if pos < cut then
-					current_array.go_i_th (pos)
+				if l /= Void and then not l.item.full then
+					l.item.extend (v)
+				elseif current_array.count <= block_size then
 					current_array.put_left (v)
-				elseif pos = cut then
-					current_array.extend (v)
-					active := cell
-					active.item.start
 				else
-					active := cell
-					current_array := cell.item
-					current_array.go_i_th (pos - cut + 1)
-					current_array.put_left (v)
+					pos := current_array.index
+					current_array.go_i_th (block_size // 2 + 1)
+					cut := index
+					cell := new_cell (current_array.duplicate (count))
+					cell.put_right (active.right)
+					cell.put_left (active)
+					if last_element = active then
+						last_element := cell
+					end
+					if pos < cut then
+						current_array.go_i_th (pos)
+						current_array.put_left (v)
+					elseif pos = cut then
+						current_array.extend (v)
+						active := cell
+						active.item.start
+					else
+						active := cell
+						current_array := cell.item
+						current_array.go_i_th (pos - cut + 1)
+						current_array.put_left (v)
+					end
 				end
 			end
 			index := index + 1
@@ -432,34 +439,49 @@ feature -- Removal
 			-- Remove current item
 		local
 			current_array: ARRAYED_LIST [G]
-			new_active:  like active
+			new_active: ?like active
+			e: ?like first_element
 		do
 			current_array := active.item
 			current_array.remove
 			if current_array.is_empty then
 				if active = first_element then
 					if active /= last_element then
-						first_element := active.right
-						first_element.forget_left
+						e := active.right
+						if e /= Void then
+							first_element := e
+							e.forget_left
+						end
 						active := first_element
 						active.item.start
 					end
 				elseif active = last_element then
-					last_element := active.left
-					last_element.forget_right
+					e := active.left
+					if e /= Void then
+						last_element := e
+						e.forget_right
+					end
 					active := last_element
 					active.item.finish
 				else
 						-- `put_left' modifies `active.right', so we need to remeber it
 						-- as it will become the new value for `active'.
 					new_active := active.right
-					active.right.put_left (active.left)
-					active := new_active
+					if new_active /= Void then
+						e := active.left
+						if e /= Void then
+							new_active.put_left (e)
+						end
+						active := new_active
+					end
 					active.item.start
 				end
 			elseif current_array.after then
 				if active /= last_element then
-					active := active.right
+					e := active.right
+					if e /= Void then
+						active := e
+					end
 					active.item.start
 				end
 			end
@@ -481,9 +503,10 @@ feature -- Removal
 
 	prune_all (v: like item) is
 		local
-			cell: like active
-			new_active: like active
+			cell: ?like active
+			new_active: ?like active
 			array: ARRAYED_LIST [G]
+			e: ?like first_element
 		do
 			from
 				cell := first_element
@@ -502,21 +525,32 @@ feature -- Removal
 				if array.is_empty then
 					if cell = first_element then
 						if cell /= last_element then
-							first_element := cell.right
+							e := cell.right
+							if e /= Void then
+								first_element := e
+							end
 							cell := first_element
 							cell.forget_left
 						else
 							cell := Void
 						end
 					elseif cell = last_element then
-						last_element := cell.left
+						e := cell.left
+						if e /= Void then
+							last_element := e
+						end
 						last_element.forget_right
 						cell := Void
 					else
 							-- `put_left' modifies `cell.right', so we need to remeber it
 							-- as it will become the new value for `cell'.
 						new_active := cell.right
-						cell.right.put_left (cell.left)
+						if new_active /= Void then
+							e := cell.left
+							if e /= Void then
+								new_active.put_left (e)
+							end
+						end
 						cell := new_active
 					end
 				else
@@ -573,15 +607,6 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 
 feature {NONE} -- Implementation
 
-	go_before is
-			-- Move the cursor before first position.
-		do
-			active := Void
-			index := 0
-		ensure
-			is_before: before
-		end
-
 	new_cell (a: ARRAYED_LIST [G]): like first_element is
 		do
 			create Result
@@ -596,7 +621,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -605,12 +630,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class MULTI_ARRAY_LIST
 

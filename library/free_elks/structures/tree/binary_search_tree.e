@@ -51,47 +51,63 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: BINARY_SEARCH_TREE [G]
+	parent: ?BINARY_SEARCH_TREE [G]
 			-- Parent of current node
 
  	has (v: like item): BOOLEAN is
 			-- Does tree contain a node whose item
 			-- is equal to `v' (object comparison)?
+		local
+			c: like left_child
+			i: like item
 		do
 			if v /= Void then
 				if items_equal (item, v) then
 					Result := True
-				elseif v < item then
-					if left_child /= Void then
-						set_comparison_mode (left_child)
-						Result := left_child.has (v)
-					end
 				else
-					if right_child /= Void then
-						set_comparison_mode (right_child)
-						Result := right_child.has (v)
+					i := item
+					if i /= Void then
+						if v < i then
+							c := left_child
+						else
+							c := right_child
+						end
+						if c /= Void then
+							set_comparison_mode (c)
+							Result := c.has (v)
+						end
 					end
 				end
 			end
 		end
 
-	tree_item (v: like item): like Current is
+	tree_item (v: like item): ?like Current is
 			-- Node whose item is equal to `v' (object_comparison)
 			-- otherwise default value.
 		require
 			v_not_void: v /= Void
+		local
+			c: like left_child
+			i: like item
 		do
 			if items_equal (item, v) then
 				Result := Current
-			elseif v < item then
-				if left_child /= Void then
-					set_comparison_mode (left_child)
-					Result := left_child.tree_item (v)
-				end
 			else
-				if right_child /= Void then
-					set_comparison_mode (right_child)
-					Result := right_child.tree_item (v)
+				i := item
+				if i /= Void then
+					if v < i then
+						c := left_child
+						if c /= Void then
+							set_comparison_mode (c)
+							Result := c.tree_item (v)
+						end
+					else
+						c := right_child
+						if c /= Void then
+							set_comparison_mode (c)
+							Result := c.tree_item (v)
+						end
+					end
 				end
 			end
 		end
@@ -100,9 +116,12 @@ feature -- Measurement
 
 	min: like item is
 			-- Minimum item in tree
+		local
+			l: like left_child
 		do
-			if has_left then
-				Result := left_child.min
+			l := left_child
+			if l /= Void then
+				Result := l.min
 			else
 				Result := item
 			end
@@ -113,9 +132,12 @@ feature -- Measurement
 
 	max: like item is
 			-- Maximum item in tree
+		local
+			r: like right_child
 		do
-			if has_right then
-				Result := right_child.max
+			r := right_child
+			if r /= Void then
+				Result := r.max
 			else
 				Result := item
 			end
@@ -128,6 +150,8 @@ feature	-- Status report
 
 	sorted: BOOLEAN is
 			-- Is tree sorted?
+		local
+			c: like left_child
 		do
 			Result := True
 			if
@@ -136,17 +160,21 @@ feature	-- Status report
 			then
 				Result := False
 			else
-				if has_left then
-					Result := left_child.sorted_and_less (item)
+				c := left_child
+				if c /= Void then
+					Result := c.sorted_and_less (item)
 				end
-				if has_right and Result then
-					Result := right_child.sorted
+				c := right_child
+				if c /= Void and Result then
+					Result := c.sorted
 				end
 			end
 		end
 
 	sorted_and_less (i: like item): BOOLEAN is
 			-- Is tree sorted and all its elements less then i
+		local
+			c: like left_child
 		do
 			Result := True
 			if
@@ -155,11 +183,13 @@ feature	-- Status report
 			then
 				Result := False
 			else
-				if has_left then
-					Result := left_child.sorted_and_less (item)
+				c := left_child
+				if c /= Void then
+					Result := c.sorted_and_less (item)
 				end
-				if has_right and Result then
-					Result := right_child.sorted_and_less (i)
+				c := right_child
+				if c /= Void and Result then
+					Result := c.sorted_and_less (i)
 				end
 			end
 		end
@@ -179,38 +209,50 @@ feature -- Cursor movement
 	preorder is
 			-- Apply `node_action' to every node's item
 			-- in tree, using pre-order.
+		local
+			c: like left_child
 		do
 			node_action (item)
-			if left_child /= Void then
-				left_child.preorder
+			c := left_child
+			if c /= Void then
+				c.preorder
 			end
-			if right_child /= Void then
-				right_child.preorder
+			c := right_child
+			if c /= Void then
+				c.preorder
 			end
 		end
 
 	i_infix is
 			-- Apply node_action to every node's item
 			-- in tree, using infix order.
+		local
+			c: like left_child
 		do
-			if left_child /= Void then
-				left_child.i_infix
+			c := left_child
+			if c /= Void then
+				c.i_infix
 			end
 			node_action (item)
-			if right_child /= Void then
-				right_child.i_infix
+			c := right_child
+			if c /= Void then
+				c.i_infix
 			end
 		end
 
 	postorder is
 			-- Apply node_action to every node's item
 			-- in tree, using post-order.
+		local
+			c: like left_child
 		do
-			if left_child /= Void then
-				left_child.postorder
+			c := left_child
+			if c /= Void then
+				c.postorder
 			end
-			if right_child /= Void then
-				right_child.postorder
+			c := right_child
+			if c /= Void then
+				c.postorder
 			end
 			node_action (item)
 		end
@@ -224,21 +266,29 @@ feature -- Element change
 			-- based on `object_comparison'.)
 		require
 			new_item_exists: v /= Void
+		local
+			c: like left_child
+			i: like item
 		do
 			if not items_equal (v, item) then
-				if v < item then
-					if left_child = Void then
-						put_left_child (new_tree)
-						left_child.replace (v)
+				i := item
+				if i /= Void and then v < i then
+					c := left_child
+					if c = Void then
+						c := new_tree
+						put_left_child (c)
+						c.replace (v)
 					else
-						left_child.put (v)
+						c.put (v)
 					end
 				else
-					if right_child = Void then
-						put_right_child (new_tree)
-						right_child.replace (v)
+					c := right_child
+					if c = Void then
+						c := new_tree
+						put_right_child (c)
+						c.replace (v)
 					else
-						right_child.put (v)
+						c.put (v)
 					end
 				end
 			end
@@ -294,24 +344,36 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 	is_subset (other: like Current): BOOLEAN is
 			-- Is Current a subset of other
+		local
+			c: like left_child
 		do
 			Result := other.has (item)
-			if Result and left_child /= Void then
-				Result := left_child.is_subset (other)
+			if Result then
+				c := left_child
+				if c /= Void then
+					Result := c.is_subset (other)
+				end
 			end
-			if Result and right_child /= Void then
-				Result := right_child.is_subset (other)
+			if Result then
+				c := right_child
+				if c /= Void then
+					Result := c.is_subset (other)
+				end
 			end
 		end
 
 	intersect (other: BINARY_SEARCH_TREE [G]) is
 			-- Remove all items not in `other'.
+		local
+			c: like left_child
 		do
-			if right_child /= Void then
-				right_child.intersect (other)
+			c := right_child
+			if c /= Void then
+				c.intersect (other)
 			end
-			if left_child /= Void then
-				left_child.intersect (other)
+			c := left_child
+			if c /= Void then
+				c.intersect (other)
 			end
 			if not other.has (item) then
 				remove_node
@@ -322,12 +384,16 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			-- Remove all items also in `other'.
 		require
 			set_exists: other /= Void
+		local
+			c: like left_child
 		do
-			if right_child /= Void then
-				right_child.subtract (other)
+			c := right_child
+			if c /= Void then
+				c.subtract (other)
 			end
-			if left_child /= Void then
-				left_child.subtract (other)
+			c := left_child
+			if c /= Void then
+				c.subtract (other)
 			end
 			if other.has (item) then
 				remove_node
@@ -336,12 +402,16 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 	merge (other: like Current) is
 			-- Add all items of `other'.
+		local
+			c: like left_child
 		do
-			if other.right_child /= Void then
-				merge (other.right_child)
+			c := other.right_child
+			if c /= Void then
+				merge (c)
 			end
-			if other.left_child /= Void then
-				merge (other.left_child)
+			c := other.left_child
+			if c /= Void then
+				merge (c)
 			end
 			extend (other.item)
 		end
@@ -353,66 +423,81 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 		local
 			is_left_child: BOOLEAN
 			m: like Current
+			p: like parent
+			c: like left_child
 		do
-			is_left_child := Current = parent.left_child
-			if not has_right then
-				if left_child /= Void then
-					left_child.attach_to_parent (Void)
-				end
-				if is_left_child then
-					parent.put_left_child (left_child)
+			p := parent
+			if p /= Void then
+				is_left_child := Current = p.left_child
+				c := right_child
+				if c = Void then
+					c := left_child
+					if c /= Void then
+						c.attach_to_parent (Void)
+					end
+					if is_left_child then
+						p.put_left_child (c)
+					else
+						p.put_right_child (c)
+					end
+					parent := Void
+				elseif not has_left then
+					c.attach_to_parent (Void)
+					if is_left_child then
+						p.put_left_child (c)
+					else
+						p.put_right_child (c)
+					end
+					parent := Void
 				else
-					parent.put_right_child (left_child)
+					m := c.min_node
+					m.remove_node
+					item := m.item
 				end
-				parent := Void
-			elseif not has_left then
-				if right_child /= Void then
-					right_child.attach_to_parent (Void)
-				end
-				if is_left_child then
-					parent.put_left_child (right_child)
-				else
-					parent.put_right_child (right_child)
-				end
-				parent := Void
-			else
-				m := right_child.min_node
-				m.remove_node
-				item := m.item
 			end
 		end
 
-	pruned (v: like item; par: like Current): like Current is
+	pruned (v: like item; par: ?like Current): ?like Current is
 			-- Prune `v'.
 			-- (`par' is the parent node of the current node, needed to update
 			-- `parent' correctly.)
 		local
 			m: like Current
+			c: like left_child
 		do
 			if items_equal (item, v) then
 				if has_none then
 					-- Do nothing: Void Result
-				elseif not has_right then
-					left_child.attach_to_parent (par)
-					Result := left_child
-				elseif not has_left then
-					right_child.attach_to_parent (par)
-					Result := right_child
 				else
-					m := right_child.min_node
-					m.remove_node
-					item := m.item
-					Result := Current
+					Result := right_child
+					if Result = Void then
+						Result := left_child
+						if Result /= Void then
+							Result.attach_to_parent (par)
+						end
+					elseif not has_left then
+						Result.attach_to_parent (par)
+					else
+						c := right_child
+						if c /= Void then
+							m := c.min_node
+							m.remove_node
+							item := m.item
+						end
+						Result := Current
+					end
 				end
 			else
 				Result := Current
 				if v < item then
-					if left_child /= Void then
-						left_child := left_child.pruned (v, Current)
+					c := left_child
+					if c /= Void then
+						left_child := c.pruned (v, Current)
 					end
 				else
-					if right_child /= Void then
-						right_child := right_child.pruned (v, Current)
+					c := right_child
+					if c /= Void then
+						right_child := c.pruned (v, Current)
 					end
 				end
 			end
@@ -420,9 +505,12 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 	min_node: like Current is
 			-- Node containing min
+		local
+			l: like left_child
 		do
-			if has_left then
-				Result := left_child.min_node
+			l := left_child
+			if l /= Void then
+				Result := l.min_node
 			else
 				Result := Current
 			end
@@ -430,9 +518,12 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 
 	max_node: like Current is
 			-- Node containing max
+		local
+			r: like right_child
 		do
-			if has_right then
-				Result := right_child.max_node
+			r := right_child
+			if r /= Void then
+				Result := r.max_node
 			else
 				Result := Current
 			end
@@ -483,7 +574,7 @@ feature {NONE} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -492,12 +583,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class BINARY_SEARCH_TREE
 

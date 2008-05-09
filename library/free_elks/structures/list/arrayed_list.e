@@ -151,6 +151,7 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
+			l_item: like item
 			i, nb: INTEGER
 		do
 			l_area := area
@@ -160,7 +161,8 @@ feature -- Access
 				until
 					i > nb or Result
 				loop
-					Result := {l_item: like item} l_area.item (i) and then v.is_equal (l_item)
+					l_item := l_area.item (i)
+					Result := l_item /= Void and then v.is_equal (l_item)
 					i := i + 1
 				end
 			else
@@ -293,6 +295,7 @@ feature -- Cursor movement
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
+			l_item: like item
 			i, nb: INTEGER
 			l_found: BOOLEAN
 		do
@@ -306,7 +309,8 @@ feature -- Cursor movement
 				until
 					i > nb or l_found
 				loop
-					l_found := {l_item: like item} l_area.item (i) and then v.is_equal (l_item)
+					l_item := l_area.item (i)
+					l_found := l_item /= Void and then v.is_equal (l_item)
 					i := i + 1
 				end
 			else
@@ -453,15 +457,21 @@ feature -- Removal
 			-- after cursor position.
 			-- Move cursor to right neighbor.
 			-- (or `after' if no right neighbor or `v' does not occur)
+		local
+			i: like item
 		do
 			if before then index := 1 end
 			if object_comparison then
-				if v /= Void then
+				if v /= Void and then not after then
 					from
+						i := item
 					until
-						after or else ({i: like item} item and then v.is_equal (i))
+						after or else (i /= Void and then v.is_equal (i))
 					loop
 						forth
+						if not after then
+							i := item
+						end
 					end
 				end
 			else

@@ -24,6 +24,7 @@ feature -- Status report
 			l_type_name: STRING
 			l_start_pos, l_end_pos: INTEGER
 			l_class_type_name: STRING
+			l_parameters: ?ARRAYED_LIST [STRING]
 		do
 			if s /= Void and then not s.is_empty then
 				l_class_type_name := s.twin
@@ -48,19 +49,19 @@ feature -- Status report
 						l_type_name.left_adjust
 						l_type_name.right_adjust
 
-						if
-							is_valid_identifier (l_type_name) and then
-							{l_parameters: ARRAYED_LIST [STRING]} parameters_decomposition (
+						if is_valid_identifier (l_type_name) then
+							l_parameters := parameters_decomposition (
 								l_class_type_name.substring (l_start_pos + 1, l_end_pos - 1))
-						then
-							from
-								Result := True
-								l_parameters.start
-							until
-								l_parameters.after or not Result
-							loop
-								Result := is_valid_type_string (l_parameters.item)
-								l_parameters.forth
+							if l_parameters /= Void then
+								from
+									Result := True
+									l_parameters.start
+								until
+									l_parameters.after or not Result
+								loop
+									Result := is_valid_type_string (l_parameters.item)
+									l_parameters.forth
+								end
 							end
 						end
 					end

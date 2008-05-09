@@ -4,7 +4,7 @@ indexing
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -136,11 +136,13 @@ feature -- Input
 			read: INTEGER -- Amount of bytes already read
 			str_area: ANY
 			done: BOOLEAN
+			l: like last_string
 		do
 			if last_string = Void then
 				create_last_string (0)
 			end
-			if {l: like last_string} last_string then
+			l := last_string
+			if l /= Void then
 				from
 					str_area := l.area
 					str_cap := l.capacity
@@ -183,11 +185,13 @@ feature -- Input
 		local
 			new_count: INTEGER
 			str_area: ANY
+			l: like last_string
 		do
 			if last_string = Void then
 				create_last_string (nb_char)
 			end
-			if {l: like last_string} last_string then
+			l := last_string
+			if l /= Void then
 				l.grow (nb_char)
 				str_area := l.area
 				new_count := console_readstream (file_pointer, $str_area, nb_char)
@@ -203,11 +207,13 @@ feature -- Input
 			str_cap: INTEGER
 			done: BOOLEAN
 			read: INTEGER
+			l: like last_string
 		do
 			if last_string = Void then
 				create_last_string (0)
 			end
-			if {l: like last_string} last_string then
+			l := last_string
+			if l /= Void then
 				from
 					str_area := l.area
 					str_cap := l.capacity

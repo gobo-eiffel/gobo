@@ -21,7 +21,7 @@ deferred class DYNAMIC_TREE [G] inherit
 
 feature -- Access
 
-	parent: DYNAMIC_TREE [G]
+	parent: ?DYNAMIC_TREE [G]
 			-- Parent of current node.
 
 feature -- Status report
@@ -34,7 +34,7 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 	set_child (n: like parent) is
 			-- Set the child of parent to `n'.
 		require
-			non_void_argument: n /= Void		
+			non_void_argument: n /= Void
 		deferred
 		end
 
@@ -153,7 +153,8 @@ feature -- Conversion
 			-- Right child becomes right sibling.
 			-- Any right child of `b' is ignored.
 		local
-			current_node: BINARY_TREE [G]
+			current_node: ?BINARY_TREE [G]
+			c: like child
 		do
 			replace (b.item)
 			wipe_out
@@ -165,7 +166,10 @@ feature -- Conversion
 				loop
 					child_put_right (current_node.item)
 					child_forth
-					child.fill_from_binary (current_node)
+					c := child
+					if c /= Void then
+						c.fill_from_binary (current_node)
+					end
 					current_node := current_node.right_child
 				end
 			end
@@ -180,6 +184,7 @@ feature -- Duplication
 		local
 			pos: CURSOR
 			counter: INTEGER
+			c: like child
 		do
 			from
 				Result := new_tree
@@ -187,7 +192,10 @@ feature -- Duplication
 			until
 				child_after or else (counter = n)
 			loop
-				Result.put_child (child.duplicate_all)
+				c := child
+				if c /= Void then
+					Result.put_child (c.duplicate_all)
+				end
 				child_forth
 				counter := counter + 1
 			end
@@ -210,6 +218,7 @@ feature {DYNAMIC_TREE} -- Implementation
 			-- Copy of sub-tree including all children
 		local
 			pos: CURSOR
+			c: like child
 		do
 			from
 				Result := new_tree
@@ -218,7 +227,10 @@ feature {DYNAMIC_TREE} -- Implementation
 			until
 				child_off
 			loop
-				Result.put_child (child.duplicate_all)
+				c := child
+				if c /= Void then
+					Result.put_child (c.duplicate_all)
+				end
 				Result.child_forth
 				child_forth
 			end
@@ -227,6 +239,9 @@ feature {DYNAMIC_TREE} -- Implementation
 
 	fill_subtree (other: TREE [G]) is
 			-- Fill children with children of `other'.
+		local
+			c: like child
+			o: ?TREE [G]
 		do
 			from
 				other.child_start
@@ -242,7 +257,11 @@ feature {DYNAMIC_TREE} -- Implementation
 			until
 				child_off
 			loop
-				child.fill_subtree (other.child)
+				c := child
+				o := other.child
+				if c /= Void and then o /= Void then
+					c.fill_subtree (o)
+				end
 				other.child_forth
 				child_forth
 			end
@@ -255,7 +274,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -264,12 +283,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class DYNAMIC_TREE
 

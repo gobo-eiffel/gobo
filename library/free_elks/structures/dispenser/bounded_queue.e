@@ -49,7 +49,7 @@ feature -- Access
 		do
 			Result := fl.item (out_index)
 		end
-		
+
 	item_for_iteration: G is
 			-- Element at current iteration position
 		require
@@ -64,6 +64,7 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
+			w: G
 		do
 			if object_comparison then
 				if v /= Void then
@@ -73,7 +74,8 @@ feature -- Access
 						until
 							Result or i >= fl.count
 						loop
-							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i))
+							w := fl.item (i)
+							Result := w /= Void and then v.is_equal (w)
 							i := i + 1
 						end
 						from
@@ -81,7 +83,8 @@ feature -- Access
 						until
 							Result or i >= in_index
 						loop
-							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i))
+							w := fl.item (i)
+							Result := w /= Void and then v.is_equal (w)
 							i := i + 1
 						end
 					else
@@ -90,7 +93,8 @@ feature -- Access
 						until
 							Result or i >= in_index
 						loop
-							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i))
+							w := fl.item (i)
+							Result := w /= Void and then v.is_equal (w)
 							i := i + 1
 						end
 					end
@@ -300,7 +304,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -309,12 +313,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class BOUNDED_QUEUE
 

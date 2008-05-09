@@ -102,23 +102,22 @@ feature -- Element change
 	merge (other: CONTAINER [G]) is
 			-- Add all items of `other'.
 		local
-			lin_rep: ?LINEAR [G]
+			l: LINEAR [G]
 		do
-			lin_rep ?= other
-			if lin_rep = Void then
+			if {lin_rep: LINEAR [G]} other then
+				l := lin_rep
+			else
 					-- `other' is not a descendant of LINEAR, therefore  we
 					-- must convert its contents into a linear representation.
-				lin_rep := other.linear_representation
+				l := other.linear_representation
 			end
-			if {l: LINEAR [G]} lin_rep then
-				from
-					l.start
-				until
-					l.off
-				loop
-					extend (l.item)
-					l.forth
-				end
+			from
+				l.start
+			until
+				l.off
+			loop
+				extend (l.item)
+				l.forth
 			end
 		end
 

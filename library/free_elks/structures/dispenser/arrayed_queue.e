@@ -78,17 +78,24 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
+			t: like i_th
 		do
 			if object_comparison then
 				if v /= Void then
 					from
 						i := out_index
+						if i /= in_index then
+							t := i_th (i)
+						end
 					until
-						i = in_index or (i_th (i) /= Void and then v.is_equal (i_th (i)))
+						i = in_index or (t /= Void and then v.is_equal (t))
 					loop
 						i := i + 1
 						if i > capacity then
 							i := 1
+						end
+						if i /= in_index then
+							t := i_th (i)
 						end
 					end
 				end
@@ -164,7 +171,7 @@ feature -- Element change
 			l_capacity: like capacity
 		do
 			l_capacity := capacity
-			l_in_index := in_index			
+			l_in_index := in_index
 			if l_capacity = 0 or ((l_in_index - out_index + l_capacity) \\ l_capacity + 1 >= l_capacity) then
 				grow
 				l_capacity := capacity
@@ -197,7 +204,7 @@ feature -- Removal
 			area.put (default_value, l_out_index - lower)
 			l_out_index := (l_out_index + 1) \\ l_capacity
 			if l_out_index = 0 then
-				l_out_index := l_capacity 
+				l_out_index := l_capacity
 			end
 			out_index := l_out_index
 		end
@@ -295,7 +302,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -304,12 +311,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class ARRAYED_QUEUE
 

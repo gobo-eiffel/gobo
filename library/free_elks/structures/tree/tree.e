@@ -21,7 +21,7 @@ deferred class TREE [G] inherit
 
 feature -- Access
 
-	parent: TREE [G]
+	parent: ?TREE [G]
 			-- Parent of current node
 
 	child: like parent is
@@ -40,8 +40,13 @@ feature -- Access
 			-- Item in current child node
 		require
 			readable: child_readable
+		local
+			c: like child
 		do
-			Result := child.item
+			c := child
+			if c /= Void then
+				Result := c.item
+			end
 		end
 
 	child_cursor: CURSOR is
@@ -236,9 +241,12 @@ feature -- Status report
 			-- Does subtree include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
+		local
+			i: G
 		do
 			if object_comparison then
-				Result := (v /= Void) and then (item /= Void) and then (v.is_equal (item) or else subtree_has (v))
+				i := item
+				Result := v /= Void and then i /= Void and then (v.is_equal (i) or else subtree_has (v))
 			else
 				Result := v = item or else subtree_has (v)
 			end
@@ -294,9 +302,12 @@ feature -- Element change
 
 	sprout is
 			-- Make current node a root.
+		local
+			p: like parent
 		do
-			if parent /= Void then
-				parent.prune (Current)
+			p := parent
+			if p /= Void then
+				p.prune (Current)
 			end
 		end
 
@@ -336,7 +347,7 @@ feature -- Element change
 			child_replaced: child = n
 		end
 
-	prune (n: like parent) is
+	prune (n: like Current) is
 			-- Remove `n' from the children.
 		require
 			is_child: n.parent = Current
@@ -392,11 +403,15 @@ feature -- Conversion
 			-- first child becomes left child,
 			-- right sibling becomes right child.
 		local
-			current_sibling: BINARY_TREE [G]
+			current_sibling: ?BINARY_TREE [G]
+			c: like first_child
 		do
 			create Result.make (item)
 			if not is_leaf then
-				Result.put_left_child (first_child.binary_representation)
+				c := first_child
+				if c /= Void then
+					Result.put_left_child (c.binary_representation)
+				end
 				from
 					child_start
 					child_forth
@@ -404,8 +419,13 @@ feature -- Conversion
 				until
 					child_after
 				loop
-					current_sibling.put_right_child (child.binary_representation)
-					current_sibling := current_sibling.right_child
+					if current_sibling /= Void then
+						c := child
+						if c /= Void then
+							current_sibling.put_right_child (c.binary_representation)
+						end
+						current_sibling := current_sibling.right_child
+					end
 					child_forth
 				end
 			end
@@ -422,6 +442,7 @@ feature -- Duplication
 			i: INTEGER
 			old_idx: INTEGER
 			tmp_tree: like Current
+			c: like child
 		do
 			tmp_tree := clone_node (other)
 			if not other.is_leaf then
@@ -435,8 +456,9 @@ feature -- Duplication
 				i > child_capacity
 			loop
 				child_go_i_th (i)
-				if child /= Void then
-					child.attach_to_parent (Current)
+				c := child
+				if c /= Void then
+					c.attach_to_parent (Current)
 				end
 				i := i + 1
 			end
@@ -461,6 +483,8 @@ feature {TREE} -- Implementation
 			-- based on `object_comparison'.)
 		local
 			cursor: CURSOR
+			c: like child
+			i: G
 		do
 			cursor := child_cursor
 			from
@@ -470,7 +494,8 @@ feature {TREE} -- Implementation
 			loop
 				if child /= Void then
 					if object_comparison then
-						Result := (v /= Void) and then (child_item /= Void) and then v.is_equal (child_item)
+						i := child_item
+						Result := (v /= Void) and then (i /= Void) and then v.is_equal (i)
 					else
 						Result := v = child_item
 					end
@@ -482,8 +507,9 @@ feature {TREE} -- Implementation
 			until
 				child_off or else Result
 			loop
-				if child /= Void then
-					Result := child.subtree_has (v)
+				c := child
+				if c /= Void then
+					Result := c.subtree_has (v)
 				end
 				child_forth
 			end
@@ -494,6 +520,7 @@ feature {TREE} -- Implementation
 			-- Number of items in children
 		local
 			pos: CURSOR
+			c: like child
 		do
 			Result := arity
 			from
@@ -502,8 +529,9 @@ feature {TREE} -- Implementation
 			until
 				child_off
 			loop
-				if child /= Void then
-					Result := Result + child.subtree_count
+				c := child
+				if c /= Void then
+					Result := Result + c.subtree_count
 				end
 				child_forth
 			end
@@ -512,15 +540,18 @@ feature {TREE} -- Implementation
 
 	fill_list (al: ARRAYED_LIST [G]) is
 			-- Fill `al' with all the children's items.
+		local
+			c: like child
 		do
 			from
 				child_start
 			until
 				child_off
 			loop
-				if child /= Void then
+				c := child
+				if c /= Void then
 					al.extend (child_item)
-					child.fill_list (al)
+					c.fill_list (al)
 				end
 				child_forth
 			end
@@ -559,6 +590,7 @@ feature {NONE} -- Implementation
 			same_rule: t1.object_comparison = t2.object_comparison
 		local
 			p1, p2: like Current
+			c1, c2: like child
 			t1_stack, t2_stack: LINKED_STACK [like Current]
 			orgidx1_stack, orgidx2_stack: LINKED_STACK [INTEGER]
 			l_current_cursor, l_other_cursor: like child_cursor
@@ -589,29 +621,37 @@ feature {NONE} -- Implementation
 					not Result or else
 						p1.child_after and t1_stack.is_empty
 				loop
-						check
-							p1_not_void: p1 /= Void
-							p2_not_void: p2 /= Void
-								-- Because the loop is always terminated before a
-								-- node pointer becomes Void.
-						end
+					check
+						p1_not_void: p1 /= Void
+						p2_not_void: p2 /= Void
+							-- Because the loop is always terminated before a
+							-- node pointer becomes Void.
+					end
 					if p1.child_readable and p2.child_readable and
 						p1.child_capacity = p2.child_capacity then
 						Result := p1.node_is_equal (p2)
-						if not (p1.child.is_leaf or p2.child.is_leaf) then
-							t1_stack.put (p1)
-							t2_stack.put (p2)
-							p1 := p1.child
-							p2 := p2.child
-							Result := p1.node_is_equal (p2)
-							orgidx1_stack.put (p1.child_index)
-							orgidx2_stack.put (p2.child_index)
-							p1.child_start
-							p2.child_start
-						elseif p1.child.is_leaf xor p2.child.is_leaf then
-							Result := False
+						c1 := p1.child
+						c2 := p2.child
+						if c1 = Void or else c2 = Void then
+							check
+								False
+							end
 						else
-							Result := p1.child.node_is_equal (p2.child)
+							if not (c1.is_leaf or c2.is_leaf) then
+								t1_stack.put (p1)
+								t2_stack.put (p2)
+								p1 := c1
+								p2 := c2
+								Result := p1.node_is_equal (p2)
+								orgidx1_stack.put (p1.child_index)
+								orgidx2_stack.put (p2.child_index)
+								p1.child_start
+								p2.child_start
+							elseif c1.is_leaf xor c2.is_leaf then
+								Result := False
+							else
+								Result := c1.node_is_equal (c2)
+							end
 						end
 					elseif p1.child_capacity /= p2.child_capacity or else
 							(p1.child_readable xor p2.child_readable) then
@@ -701,6 +741,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			p1, p2, node: like Current
+			c1: like child
 			other_stack, tmp_stack: LINKED_STACK [like Current]
 			idx_stack, orgidx_stack: LINKED_STACK [INTEGER]
 		do
@@ -736,31 +777,40 @@ feature {NONE} -- Implementation
 							-- Because the target child has not been copied
 							-- yet.
 					end
-					node := clone_node (p1.child)
+					c1 := p1.child
+					if c1 = Void then
 						check
-								-- Because `node' has been cloned.
-							not_the_same: node /= p1.child
+							source_child_not_void: p1.child /= Void
+								-- Because we only get here when the child is
+								-- readable.
 						end
-					p2.put_child (node)
-						check
-							node_is_child: node = p2.child
-								-- Because we inserted `node' as child.
-							comparison_mode_ok: p2.child.object_comparison =
-										p1.child.object_comparison
-								-- Because the comparson mode flag must be copied
-								-- correctly, too.
-							p1_consistent: p1.child.parent = p1
-							p2_consistent: p2.child.parent = p2
-								-- Because the tree has to be consistent.
+					else
+						node := clone_node (c1)
+							check
+									-- Because `node' has been cloned.
+								not_the_same: node /= p1.child
+							end
+						p2.put_child (node)
+							check
+								node_is_child: node = p2.child
+									-- Because we inserted `node' as child.
+								comparison_mode_ok: node.object_comparison =
+											c1.object_comparison
+									-- Because the comparson mode flag must be copied
+									-- correctly, too.
+								p1_consistent: c1.parent = p1
+								p2_consistent: node.parent = p2
+									-- Because the tree has to be consistent.
+							end
+						if not c1.is_leaf then
+							other_stack.put (p1)
+							tmp_stack.put (p2)
+							idx_stack.put (i + 1)
+							p1 := c1
+							p2 := node
+							orgidx_stack.put (p1.child_index)
+							i := 0
 						end
-					if not p1.child.is_leaf then
-						other_stack.put (p1)
-						tmp_stack.put (p2)
-						idx_stack.put (i + 1)
-						p1 := p1.child
-						p2 := p2.child
-						orgidx_stack.put (p1.child_index)
-						i := 0
 					end
 				end
 				if i <= p1.child_capacity then
@@ -842,7 +892,7 @@ feature {TREE} -- Implementation
 
 invariant
 
-	tree_consistency: child_readable implies child.parent = Current
+	tree_consistency: child_readable implies ({c: like child} child and then c.parent = Current)
 	leaf_definition: is_leaf = (arity = 0)
 	child_off_definition: child_off = child_before or child_after
 	child_before_definition: child_before = (child_index = 0)
@@ -853,7 +903,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -862,11 +912,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class TREE

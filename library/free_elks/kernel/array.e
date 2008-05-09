@@ -110,6 +110,7 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			l_area: like area
+			l_item: G
 		do
 			l_area := area
 			nb := upper - lower
@@ -118,7 +119,8 @@ feature -- Access
 				until
 					i > nb or Result
 				loop
-					Result := {l_item: G} l_area.item (i) and then l_item.is_equal (v)
+					l_item := l_area.item (i)
+					Result := l_item /= Void and then l_item.is_equal (v)
 					i := i + 1
 				end
 			else
@@ -152,6 +154,7 @@ feature -- Measurement
 			-- Number of times `v' appears in structure
 		local
 			i: INTEGER
+			x: G
 		do
 			if object_comparison and then v /= Void then
 				from
@@ -159,7 +162,8 @@ feature -- Measurement
 				until
 					i > upper
 				loop
-					if {x: like item} item (i) and then v.is_equal (x) then
+					x := item (i)
+					if x /= Void and then v.is_equal (x) then
 						Result := Result + 1
 					end
 					i := i + 1

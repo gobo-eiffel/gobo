@@ -41,6 +41,7 @@ feature -- Access
 			positive_occurrences: i > 0
 		local
 			occur, pos: INTEGER
+			w: like item
 		do
 			if object_comparison and v /= Void then
 				from
@@ -49,7 +50,8 @@ feature -- Access
 				until
 					exhausted or (occur = i)
 				loop
-					if {w: like item} item and then v.is_equal (w) then
+					w := item
+					if w /= Void and then v.is_equal (w) then
 						occur := occur + 1
 					end
 					forth
@@ -82,13 +84,21 @@ feature -- Access
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 			-- If no such position ensure that `exhausted' will be true.
+		local
+			i: like item
 		do
 			if object_comparison and v /= Void then
-				from
-				until
-					exhausted or else ({i: like item} item and then v.is_equal (i))
-				loop
-					forth
+				if not exhausted then
+					from
+						i := item
+					until
+						exhausted or else (i /= Void and then v.is_equal (i))
+					loop
+						forth
+						if not exhausted then
+							i := item
+						end
+					end
 				end
 			else
 				from
@@ -182,8 +192,10 @@ feature -- Iteration
 		local
 			t: TUPLE [G]
 			c: ?CURSOR
+			cs: ?CURSOR_STRUCTURE [G]
 		do
 			if {acs: CURSOR_STRUCTURE [G]} Current then
+				cs := acs
 				c := acs.cursor
 			end
 
@@ -198,8 +210,8 @@ feature -- Iteration
 				forth
 			end
 
-			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
-				cs.go_to (ac)
+			if cs /= Void and c /= Void then
+				cs.go_to (c)
 			end
 		end
 
@@ -210,8 +222,10 @@ feature -- Iteration
 		local
 			t: TUPLE [G]
 			c: ?CURSOR
+			cs: ?CURSOR_STRUCTURE [G]
 		do
 			if {acs: CURSOR_STRUCTURE [G]} Current then
+				cs := acs
 				c := acs.cursor
 			end
 
@@ -228,8 +242,8 @@ feature -- Iteration
 				forth
 			end
 
-			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
-				cs.go_to (ac)
+			if cs /= Void and c /= Void then
+				cs.go_to (c)
 			end
 		end
 
@@ -239,11 +253,13 @@ feature -- Iteration
 			-- in such a case, apply iterator to clone of structure instead.
 		local
 			c: ?CURSOR
+			cs: ? CURSOR_STRUCTURE [G]
 			t: TUPLE [G]
 		do
 			create t
 
 			if {acs: CURSOR_STRUCTURE [G]} Current then
+				cs := acs
 				c := acs.cursor
 			end
 
@@ -257,8 +273,8 @@ feature -- Iteration
 				forth
 			end
 
-			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
-				cs.go_to (ac)
+			if cs /= Void and c /=Void then
+				cs.go_to (c)
 			end
 		end
 
@@ -268,11 +284,13 @@ feature -- Iteration
 			-- in such a case, apply iterator to clone of structure instead.
 		local
 			c: ?CURSOR
+			cs: ? CURSOR_STRUCTURE [G]
 			t: TUPLE [G]
 		do
 			create t
 
 			if {acs: CURSOR_STRUCTURE [G]} Current then
+				cs := acs
 				c := acs.cursor
 			end
 
@@ -287,8 +305,8 @@ feature -- Iteration
 				forth
 			end
 
-			if c /= Void and then {cs: CURSOR_STRUCTURE [G]} Current and then {ac: CURSOR} c then
-				cs.go_to (ac)
+			if cs /= Void and c /= Void then
+				cs.go_to (c)
 			end
 		ensure then
 			empty: is_empty implies Result

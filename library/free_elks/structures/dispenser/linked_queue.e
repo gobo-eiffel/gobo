@@ -68,8 +68,13 @@ feature -- Access
 
 	item: G is
 			-- Oldest item
+		local
+			a: like active
 		do
-			Result := active.item
+			a := active
+			if a /= Void then
+				Result := a.item
+			end
 		ensure then
 			last_element_if_not_empty:
 				not is_empty implies (active = last_element)
@@ -131,14 +136,16 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
-			cur: like cursor
+			cur: ?like cursor
 			obj_comparison: BOOLEAN
 		do
 			obj_comparison := other.object_comparison
 			standard_copy (other)
 			if not other.is_empty then
 				internal_wipe_out
-				cur ?= other.cursor
+				if {l_cur: like cursor} other.cursor then
+					cur := l_cur
+				end
 				from
 					other.start
 				until
@@ -151,7 +158,9 @@ feature -- Duplication
 					forth
 					other.forth
 				end
-				other.go_to (cur)
+				if cur /= Void then
+					other.go_to (cur)
+				end
 			end
 			object_comparison := obj_comparison
 			after := True
@@ -180,7 +189,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -189,12 +198,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class LINKED_QUEUE
 

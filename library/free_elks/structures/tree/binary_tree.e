@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: BINARY_TREE [G]
+	parent: ?BINARY_TREE [G]
 			-- Parent of current node
 
 	child_index: INTEGER
@@ -69,16 +69,26 @@ feature -- Access
 			-- Value of left child
 		require
 			has_left: left_child /= Void
+		local
+			l: like left_child
 		do
-			Result := left_child.item
+			l := left_child
+			if l /= Void then
+				Result := l.item
+			end
 		end
 
 	right_item: like item is
 			-- Value of right child
 		require
 			has_right: right_child /= Void
+		local
+			r: like right_child
 		do
-			Result := right_child.item
+			r := right_child
+			if r /= Void then
+				Result := r.item
+			end
 		end
 
 	first_child: like parent is
@@ -115,17 +125,23 @@ feature -- Access
 
 	left_sibling: like parent is
 			-- Left neighbor, if any
+		local
+			p: like parent
 		do
-			if parent.right_child = Current then
-				Result := parent.left_child
+			p := parent
+			if p /= Void and then p.right_child = Current then
+				Result := p.left_child
 			end
 		end
 
 	right_sibling: like parent is
 			-- Right neighbor, if any
+		local
+			p: like parent
 		do
-			if parent.left_child = Current then
-				Result := parent.right_child
+			p := parent
+			if p /= Void and then p.left_child = Current then
+				Result := p.right_child
 			end
 		end
 
@@ -235,6 +251,8 @@ feature -- Element change
 			-- Set `left_child' to `n'.
 		require
 			no_parent: n = Void or else n.is_root
+		local
+			l: like left_child
 		do
 			if n /= Void then
 				if object_comparison then
@@ -243,8 +261,9 @@ feature -- Element change
 					n.compare_references
 				end
 			end
-			if left_child /= Void then
-				left_child.attach_to_parent (Void)
+			l := left_child
+			if l /= Void then
+				l.attach_to_parent (Void)
 			end
 			if n /= Void then
 				n.attach_to_parent (Current)
@@ -256,6 +275,8 @@ feature -- Element change
 			-- Set `right_child' to `n'.
 		require
 			no_parent: n = Void or else n.is_root
+		local
+			c: like right_child
 		do
 			if n /= Void then
 				if object_comparison then
@@ -264,8 +285,9 @@ feature -- Element change
 					n.compare_references
 				end
 			end
-			if right_child /= Void then
-				right_child.attach_to_parent (Void)
+			c := right_child
+			if c /= Void then
+				c.attach_to_parent (Void)
 			end
 			if n /= Void then
 				n.attach_to_parent (Current)
@@ -277,14 +299,16 @@ feature -- Element change
 			-- Put `v' at current child position.
 		local
 			node: like Current
+			c: like child
 		do
-			if child /= Void then
+			c := child
+			if c /= Void then
 				if object_comparison then
-					child.compare_objects
+					c.compare_objects
 				else
-					child.compare_references
+					c.compare_references
 				end
-				child.put (v)
+				c.put (v)
 			else
 				create node.make (v)
 				if object_comparison then
@@ -294,7 +318,7 @@ feature -- Element change
 			end
 		end
 
-	put_child, replace_child (n: like parent) is
+	put_child, replace_child (n: like new_tree) is
 			-- Put `n' at current child position.
 		do
 			if object_comparison then
@@ -320,9 +344,12 @@ feature -- Removal
 
 	remove_left_child is
 			-- Remove left child.
+		local
+			l: like left_child
 		do
-			if left_child /= Void then
-				left_child.attach_to_parent (Void)
+			l := left_child
+			if l /= Void then
+				l.attach_to_parent (Void)
 			end
 			left_child := Void
 		ensure
@@ -331,9 +358,12 @@ feature -- Removal
 
 	remove_right_child is
 			-- Remove right child.
+		local
+			r: like right_child
 		do
-			if right_child /= Void then
-				right_child.attach_to_parent (Void)
+			r := right_child
+			if r /= Void then
+				r.attach_to_parent (Void)
 			end
 			right_child := Void
 		ensure
@@ -342,19 +372,27 @@ feature -- Removal
 
 	child_remove is
 			-- Remove current child.
+		local
+			c: like left_child
 		do
 			inspect
 		 		child_index
 			when 1 then
-				left_child.attach_to_parent (Void)
+				c := left_child
+				if c /= Void then
+					c.attach_to_parent (Void)
+				end
 				left_child := Void
 			when 2 then
-				right_child.attach_to_parent (Void)
+				c := right_child
+				if c /= Void then
+					c.attach_to_parent (Void)
+				end
 				right_child := Void
 			end
 		end
 
-	prune (n: like parent) is
+	prune (n: like new_tree) is
 			-- Prune `n' from child nodes.
 		do
 			if left_child = n then
@@ -373,17 +411,23 @@ feature -- Removal
 
 	forget_left is
 			-- Forget left sibling.
+		local
+			p: like parent
 		do
-			if not is_root and then parent.right_child = Current then
-				parent.remove_left_child
+			p := parent
+			if p /= Void and then p.right_child = Current then
+				p.remove_left_child
 			end
 		end
 
 	forget_right is
 			-- Forget right sibling.
+		local
+			p: like parent
 		do
-			if not is_root and then parent.left_child = Current then
-				parent.remove_right_child
+			p := parent
+			if p /= Void and then p.left_child = Current then
+				p.remove_right_child
 			end
 		end
 
@@ -393,24 +437,32 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
+		local
+			c: like left_child
 		do
 			Result := new_tree
-			if child_index <= 1 and child_index + n >= 1 and has_left then
-				Result.put_left_child (left_child.duplicate_all)
+			c := left_child
+			if child_index <= 1 and child_index + n >= 1 and c /= Void then
+				Result.put_left_child (c.duplicate_all)
 			end
-			if child_index <= 2 and child_index + n >= 2 and has_right then
-				Result.put_right_child (right_child.duplicate_all)
+			c := right_child
+			if child_index <= 2 and child_index + n >= 2 and c /= Void then
+				Result.put_right_child (c.duplicate_all)
 			end
 		end
 
 	duplicate_all: like Current is
+		local
+			c: like child
 		do
 			Result := new_tree
-			if has_left then
-				Result.put_left_child (left_child.duplicate_all)
+			c := left_child
+			if c /= Void then
+				Result.put_left_child (c.duplicate_all)
 			end
-			if has_right then
-				Result.put_right_child (right_child.duplicate_all)
+			c := right_child
+			if c /= Void then
+				Result.put_right_child (c.duplicate_all)
 			end
 		end
 
@@ -418,14 +470,18 @@ feature {BINARY_TREE} -- Implementation
 
 	fill_list (al: ARRAYED_LIST [G]) is
 			-- Fill `al' with all the children's items.
+		local
+			c: like left_child
 		do
-			if left_child /= Void then
-				al.extend (left_child.item)
-				left_child.fill_list (al)
+			c := left_child
+			if c /= Void then
+				al.extend (c.item)
+				c.fill_list (al)
 			end
-			if right_child /= Void then
-				al.extend (right_child.item)
-				right_child.fill_list (al)
+			c := right_child
+			if c /= Void then
+				al.extend (c.item)
+				c.fill_list (al)
 			end
 		end
 
@@ -452,38 +508,51 @@ feature {NONE} -- Implementation
 
 	subtree_has (v: G): BOOLEAN is
 			-- Does subtree contain `v'?
+		local
+			c: like left_child
 		do
-			if left_child /= Void then
-				Result := left_child.has (v)
+			c := left_child
+			if c /= Void then
+				Result := c.has (v)
 			end
-			if right_child /= Void and not Result then
-				Result := right_child.has (v)
+			c := right_child
+			if c /= Void and not Result then
+				Result := c.has (v)
 			end
 		end
 
 	subtree_count: INTEGER is
 			-- Number of items in subtree
+		local
+			c: like left_child
 		do
-			if left_child /= Void then
-				Result := left_child.count
+			c := left_child
+			if c /= Void then
+				Result := c.count
 			end
-			if right_child /= Void then
-				Result := Result + right_child.count
+			c := right_child
+			if c /= Void then
+				Result := Result + c.count
 			end
 		end
 
 	fill_subtree (other: TREE [G]) is
 			-- Copy `other' to subtree.
 		local
-			l_other: like Current
+			c: like left_child
 		do
-			l_other ?= other
-			if l_other /= Void then
+			if {l_other: like Current} other then
 				if not l_other.is_leaf then
-					put_left_child (l_other.left_child.duplicate_all)
+					c := l_other.left_child
+					if c /= Void then
+						put_left_child (c.duplicate_all)
+					end
 				end
 				if l_other.arity >= 2 then
-					put_right_child (l_other.right_child.duplicate_all)
+					c := l_other.right_child
+					if c /= Void then
+						put_right_child (c.duplicate_all)
+					end
 				end
 			end
 		end
@@ -503,7 +572,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -512,11 +581,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class BINARY_TREE

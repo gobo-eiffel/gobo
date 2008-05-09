@@ -1256,13 +1256,16 @@ feature -- Removal
 			-- file descriptor and all information.
 		require
 			valid_file_name: fn /= Void
+		local
+			l: like last_string
 		do
 			name := fn
 			if mode /= Closed_file then
 				close
 			end
 			last_integer := 0
-			if {l: like last_string} last_string then
+			l := last_string
+			if l /= Void then
 				l.wipe_out
 			end
 			last_real := 0.0
@@ -1319,11 +1322,13 @@ feature -- Input
 			read: INTEGER	-- Amount of bytes already read
 			str_area: ANY
 			done: BOOLEAN
+			l: like last_string
 		do
 			if last_string = Void then
 				create_last_string (0)
 			end
-			if {l: like last_string} last_string then
+			l := last_string
+			if l /= Void then
 				from
 					str_area := l.area
 					str_cap := l.capacity
@@ -1363,11 +1368,13 @@ feature -- Input
 		local
 			new_count: INTEGER
 			str_area: ANY
+			l: like last_string
 		do
 			if last_string = Void then
 				create_last_string (nb_char)
 			end
-			if {l: like last_string} last_string then
+			l := last_string
+			if l /= Void then
 				l.grow (nb_char)
 				str_area := l.area
 				new_count := file_gss (file_pointer, $str_area, nb_char)
@@ -1398,11 +1405,13 @@ feature -- Input
 			str_area: ANY
 			str_cap: INTEGER
 			read: INTEGER	-- Amount of bytes already read
+			l: like last_string
 		do
 			if last_string = Void then
 				create_last_string (0)
 			end
-			if {l: like last_string} last_string then
+			l := last_string
+			if l /= Void then
 				from
 					str_area := l.area
 					str_cap := l.capacity
@@ -1448,6 +1457,7 @@ feature -- Convenience
 			l_modulo, l_read, nb: INTEGER
 			l_pos: INTEGER
 			l_old_last_string: like last_string
+			l: like last_string
 		do
 			from
 				l_read := 0
@@ -1463,7 +1473,8 @@ feature -- Convenience
 				l_read >= nb
 			loop
 				read_stream (l_modulo)
-				if {l: like last_string} last_string then
+				l := last_string
+				if l /= Void then
 					file.put_string (l)
 				end
 				l_read := l_read + l_modulo

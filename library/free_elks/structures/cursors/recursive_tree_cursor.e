@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {RECURSIVE_CURSOR_TREE} -- Access
 
-	active: DYNAMIC_TREE [G]
+	active: ?DYNAMIC_TREE [G]
 			-- Current node
 
 	active_parent: like active
@@ -51,7 +51,7 @@ feature {RECURSIVE_CURSOR_TREE} -- Status report
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -60,12 +60,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class RECURSIVE_TREE_CURSOR
 

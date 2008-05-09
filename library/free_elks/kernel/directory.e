@@ -1,7 +1,7 @@
 indexing
 	description: "Directories, in the Unix sense, with creation and exploration features"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,15 +71,18 @@ feature -- Access
 			string_exists: entry_name /= Void
 		local
 			dir_temp: DIRECTORY
+			e: ?STRING
 		do
 			create dir_temp.make_open_read (name)
 			from
 				dir_temp.readentry
+				e := dir_temp.lastentry
 			until
-				Result or dir_temp.lastentry = Void
+				Result or e = Void
 			loop
-				Result := dir_temp.lastentry.is_equal (entry_name)
+				Result := e.is_equal (entry_name)
 				dir_temp.readentry
+				e := dir_temp.lastentry
 			end
 			dir_temp.close
 		end
@@ -158,6 +161,7 @@ feature -- Conversion
 			-- The entries, in sequential format.
 		local
 			dir_temp: DIRECTORY
+			e: ?STRING
 		do
 			create dir_temp.make_open_read (name)
 				-- Arbitrary size for arrayed_list creation to avoid
@@ -168,18 +172,20 @@ feature -- Conversion
 			from
 				dir_temp.start
 				dir_temp.readentry
+				e := dir_temp.lastentry
 			until
-				dir_temp.lastentry = Void
+				e = Void
 			loop
-				Result.extend (dir_temp.lastentry)
+				Result.extend (e)
 				dir_temp.readentry
+				e := dir_temp.lastentry
 			end
 			dir_temp.close
 		end
 
 feature -- Status report
 
-	lastentry: STRING
+	lastentry: ?STRING
 			-- Last entry read by `readentry'
 
 	is_closed: BOOLEAN is
@@ -481,7 +487,7 @@ feature {NONE} -- Implementation
 			"C use %"eif_dir.h%""
 		end
 
-	dir_next (dir_ptr: POINTER): STRING is
+	dir_next (dir_ptr: POINTER): ?STRING is
 			-- Return the next entry for directory 'dir_ptr'.
 		external
 			"C use %"eif_dir.h%""

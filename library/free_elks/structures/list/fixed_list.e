@@ -159,11 +159,8 @@ feature -- Status report
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Is `p' a valid cursor?
-		local
-			fl_c: ARRAYED_LIST_CURSOR
 		do
-			fl_c ?= p
-			if fl_c /= Void then
+			if {fl_c: ARRAYED_LIST_CURSOR} p then
 				Result := valid_cursor_index (fl_c.index)
 			end
 		end
@@ -213,14 +210,10 @@ feature -- Cursor movement
 
 	go_to (p: CURSOR) is
 			-- Move cursor to element remembered in `p'.
-		local
-			fl_c: ARRAYED_LIST_CURSOR
 		do
-			fl_c ?= p
-			check
-				fl_c /= Void
+			if {fl_c: ARRAYED_LIST_CURSOR} p then
+				index := fl_c.index
 			end
-			index := fl_c.index
 		end
 
 feature -- Element change
@@ -318,10 +311,10 @@ feature {NONE} -- Implementation
 invariant
 
 	empty_means_storage_empty: is_empty implies all_default
-	
+
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

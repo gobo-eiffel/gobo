@@ -1,7 +1,7 @@
 indexing
 	description: "Path name abstraction"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -190,12 +190,12 @@ feature {NONE} -- Externals
 			"C signature (EIF_CHARACTER *, EIF_CHARACTER *, EIF_INTEGER): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	eif_volume_name (s: POINTER): STRING is
+	eif_volume_name (s: POINTER): ?STRING is
 		external
 			"C signature (EIF_CHARACTER *): EIF_REFERENCE use %"eif_path_name.h%""
 		end
 
-	eif_extracted_paths (s: POINTER): ARRAY [STRING] is
+	eif_extracted_paths (s: POINTER): ?ARRAY [STRING] is
 		external
 			"C signature (EIF_CHARACTER *): EIF_REFERENCE use %"eif_path_name.h%""
 		end

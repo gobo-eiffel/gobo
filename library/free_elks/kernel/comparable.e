@@ -85,9 +85,8 @@ feature -- Comparison
 		require
 			other_exists: other /= Void
 		do
-			Result := Current
 			if Current >= other then
-				-- Result := Current
+				Result := Current
 			else
 				Result := other
 			end
@@ -101,9 +100,8 @@ feature -- Comparison
 		require
 			other_exists: other /= Void
 		do
-			Result := Current
 			if Current <= other then
-				-- Result := Current
+				Result := Current
 			else
 				Result := other
 			end

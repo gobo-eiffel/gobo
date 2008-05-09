@@ -1,7 +1,7 @@
 indexing
 	description: "Common ancestors to all STRING classes."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -201,8 +201,8 @@ feature -- Conversion
 			i, nb: INTEGER
 			l_code: like code
 		do
-			if is_string_8 then
-				Result ?= Current
+			if is_string_8 and then {l_result: STRING} Current then
+				Result := l_result
 			else
 				nb := count
 				create Result.make (nb)
@@ -231,8 +231,8 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			if is_string_32 then
-				Result ?= Current
+			if is_string_32 and then {l_result: STRING_32} Current then
+				Result := l_result
 			else
 				nb := count
 				create Result.make (nb)

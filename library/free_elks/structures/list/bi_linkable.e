@@ -20,31 +20,39 @@ class BI_LINKABLE [G] inherit
 
 feature -- Access
 
-	left: like Current
+	left: ?like Current
 			-- Left neighbor
 
 feature {CELL, CHAIN} -- Implementation
 
-	put_right (other: like Current) is
+	put_right (other: ?like Current) is
 			-- Put `other' to the right of current cell.
+		local
+			l_right: like right
+			l_other: like other
 		do
-			if right /= Void then
-				right.simple_forget_left
+			l_right := right
+			if l_right /= Void then
+				l_right.simple_forget_left
 			end
 			right := other
-			if (other /= Void) then
-				other.simple_put_left (Current)
+			l_other := other
+			if l_other /= Void then
+				l_other.simple_put_left (Current)
 			end
 		end
 
-	put_left (other: like Current) is
+	put_left (other: ?like Current) is
 			-- Put `other' to the left of current cell.
+		local
+			l: like left
 		do
-			if left /= Void then
-				left.simple_forget_right
+			l := left
+			if l /= Void then
+				l.simple_forget_right
 			end
 			left := other
-			if (other /= Void) then
+			if other /= Void then
 				other.simple_put_right (Current)
 			end
 		ensure
@@ -53,45 +61,57 @@ feature {CELL, CHAIN} -- Implementation
 
 	forget_right is
 			-- Remove links with right neighbor.
+		local
+			l_right: like right
 		do
-			if right /= Void then
-				right.simple_forget_left
+			l_right := right
+			if l_right /= Void then
+				l_right.simple_forget_left
 				right := Void
 			end
 		ensure then
 	 		right_not_chained:
-	 			(old right /= Void) implies ((old right).left = Void)
+	 			({r: like right} old right) implies r.left = Void
 		end
 
 	forget_left is
 			-- Remove links with left neighbor.
+		local
+			l: like left
 		do
-			if left /= Void then
-				left.simple_forget_right
+			l := left
+			if l /= Void then
+				l.simple_forget_right
 				left := Void
 			end
 		ensure
 			left_not_chained:
 			left = Void or else
-	 			(old left /= Void) implies ((old left).right = Void)
+				({p: like left} old left implies p.right = Void)
 		end
 
 feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 
-	simple_put_right (other: like Current) is
-			-- set `right' to `other'
+	simple_put_right (other: ?like Current) is
+			-- Set `right' to `other'
+		local
+			l_right: like right
 		do
-			if right /= Void then
-				right.simple_forget_left
+			l_right := right
+			if l_right /= Void then
+				l_right.simple_forget_left
 			end
 			right := other
 		end
 
-	simple_put_left (other: like Current) is
-			-- set `left' to `other' is
+	simple_put_left (other: ?like Current) is
+			-- Set `left' to `other' is
+		local
+			l: like left
 		do
-			if left /= Void then
-				left.simple_forget_right
+			l := left
+			if l /= Void then
+				l.simple_forget_right
 			end
 			left := other
 		end
@@ -113,13 +133,13 @@ feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 invariant
 
 	right_symmetry:
-		(right /= Void) implies (right.left = Current)
+		{r: like right} right implies (r.left = Current)
 	left_symmetry:
-		(left /= Void) implies (left.right = Current)
+		{l: like left} left implies (l.right = Current)
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -128,12 +148,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class BI_LINKABLE
 

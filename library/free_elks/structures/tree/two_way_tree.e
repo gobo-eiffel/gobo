@@ -117,7 +117,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: TWO_WAY_TREE [G]
+	parent: ?like new_cell
 			-- Parent node
 
 	first_child: like parent
@@ -151,9 +151,11 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 feature -- Element change
 
-	put_child (n: like parent) is
+	put_child (n: like new_cell) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
+		local
+			c: like last_child
 		do
 			if object_comparison then
 				n.compare_objects
@@ -164,7 +166,10 @@ feature -- Element change
 				first_child := n
 				child := n
 			else
-				last_child.bl_put_right (n)
+				c := last_child
+				if c /= Void then
+					c.bl_put_right (n)
+				end
 				if child_after then
 					child := n
 				end
@@ -174,14 +179,14 @@ feature -- Element change
 			arity := arity + 1
 		end
 
-	replace_child (n: like parent) is
+	replace_child (n: like new_cell) is
 			-- Replace current child by `n'.
 		do
 			remove_child
 			put_child_right (n)
 		end
 
-	put_child_left (n: like parent) is
+	put_child_left (n: like new_cell) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -190,9 +195,11 @@ feature -- Element change
 			child_forth; child_forth
 		end
 
-	put_child_right (n: like parent) is
+	put_child_right (n: like new_cell) is
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
+		local
+			c: like child
 		do
 			if object_comparison then
 				n.compare_objects
@@ -207,17 +214,23 @@ feature -- Element change
 				first_child := n
 				child := n
 			elseif child_islast then
-				child.bl_put_right (n)
+				c := child
+				if c /= Void then
+					c.bl_put_right (n)
+				end
 				last_child := n
 			else
-				n.bl_put_right (child.right_sibling)
-				n.bl_put_left (child)
+				c := child
+				if c /= Void then
+					n.bl_put_right (c.right_sibling)
+				end
+				n.bl_put_left (c)
 			end
 			n.attach_to_parent (Current)
 			arity := arity + 1
 		end
 
-	merge_tree_before (other: like first_child) is
+	merge_tree_before (other: like new_cell) is
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -226,7 +239,7 @@ feature -- Element change
 			twl_merge_left (other)
 		end
 
-	merge_tree_after (other: like first_child) is
+	merge_tree_after (other: like new_cell) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -235,10 +248,11 @@ feature -- Element change
 			twl_merge_right (other)
 		end
 
-	prune (n: like first_child) is
+	prune (n: like new_cell) is
 			-- Prune `n' from children.
 		local
 			l_child: like first_child
+			c: like child
 		do
 			from
 				l_child := first_child
@@ -250,20 +264,23 @@ feature -- Element change
 
 			if l_child /= Void then
 				if l_child = first_child then
-					first_child := first_child.right_sibling
+					first_child := l_child.right_sibling
 					if child = n then
 						child := first_child
 					end
 					if l_child = last_child then
-						last_child := last_child.left_sibling
+						last_child := l_child.left_sibling
 					end
 				elseif l_child = last_child then
-					last_child := last_child.left_sibling
+					last_child := l_child.left_sibling
 					if child = n then
 						child := last_child
 					end
 				else
-					l_child.right_sibling.bl_put_left (l_child.left_sibling)
+					c := l_child.right_sibling
+					if c /= Void then
+						c.bl_put_left (l_child.left_sibling)
+					end
 					if child = n then
 						child := l_child.left_sibling
 					end
@@ -284,7 +301,7 @@ feature -- Element change
 
 feature {TWO_WAY_TREE} -- Implementation
 
-	new_cell (v: like item): like first_child is
+	new_cell (v: like item): TWO_WAY_TREE [G] is
 			-- New cell containing `v'
 		do
 			create Result.make (v)
@@ -328,17 +345,22 @@ feature {TWO_WAY_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	attach (other: like first_child) is
+	attach (other: like new_cell) is
 				-- Attach all children of `other' to current node.
 		local
-			cursor: CURSOR
+			cursor: like child_cursor
+			c: like child
 		do
+			cursor := other.child_cursor
 			from
 				other.child_start
 			until
 				other.child_off
 			loop
-				other.child.attach_to_parent (Current)
+				c := other.child
+				if c /= Void then
+					c.attach_to_parent (Current)
+				end
 				other.child_forth
 			end
 			other.child_go_to (cursor)
@@ -350,7 +372,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -359,12 +381,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class TWO_WAY_TREE
 

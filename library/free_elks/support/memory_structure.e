@@ -1,7 +1,7 @@
 indexing
 	description: "Representation of a memory structure."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature -- Initialization
 		ensure
 			shared: shared
 		end
-	
+
 feature -- Access
 
 	shared: BOOLEAN
@@ -42,11 +42,16 @@ feature -- Access
 
 	item: POINTER is
 			-- Access to memory area.
+		local
+			m: like managed_pointer
 		do
 			if shared then
 				Result := internal_item
 			else
-				Result := managed_pointer.item
+				m :=managed_pointer
+				if m /= Void then
+					Result := m.item
+				end
 			end
 		end
 
@@ -58,13 +63,13 @@ feature -- Measurement
 		ensure
 			positive_result: Result > 0
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_item: POINTER
 			-- Pointer holding value when shared.
 
-	managed_pointer: MANAGED_POINTER
+	managed_pointer: ?MANAGED_POINTER
 			-- Hold memory area in a managed way.
 
 invariant

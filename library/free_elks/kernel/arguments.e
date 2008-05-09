@@ -6,7 +6,7 @@ indexing
 		]"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -154,7 +154,7 @@ feature -- Status report
 			if i <= argument_count then Result := i end
 		end
 
-	separate_character_option_value (o: CHARACTER): STRING is
+	separate_character_option_value (o: CHARACTER): ?STRING is
 			-- The value, if any, specified after character option `o' on
 			-- the command line.
 			-- This is one of the following (where `X' is the current
@@ -182,7 +182,7 @@ feature -- Status report
 			end
 		end
 
-	separate_word_option_value (opt: STRING): STRING is
+	separate_word_option_value (opt: STRING): ?STRING is
 			-- The value, if any, specified after word option `opt' on the
 			-- command line.
 			-- This is one of the following (where `X' is the current `option_sign'):
@@ -209,13 +209,13 @@ feature -- Status report
 			end
 		end
 
-	coalesced_option_character_value (o: CHARACTER): STRING is
+	coalesced_option_character_value (o: CHARACTER): ?STRING is
 		obsolete "Use coalesced_character_option_value instead."
 		do
 			Result := coalesced_character_option_value (o)
 		end
 
-	coalesced_character_option_value (o: CHARACTER): STRING is
+	coalesced_character_option_value (o: CHARACTER): ?STRING is
 			-- The value, if any, specified for character option `o' on
 			-- the command line.
 			-- Defined as follows (where 'X' is the current 'option_sign' and
@@ -239,13 +239,13 @@ feature -- Status report
 			end
 		end
 
-	coalesced_option_word_value (opt: STRING): STRING is
+	coalesced_option_word_value (opt: STRING): ?STRING is
 		obsolete "Use coalesced_word_option_value instead."
 		do
 			Result := coalesced_word_option_value (opt)
 		end
 
-	coalesced_word_option_value (opt: STRING): STRING is
+	coalesced_word_option_value (opt: STRING): ?STRING is
 			-- The value, if any, specified for word option `opt' on the
 			-- command line.
 			-- Defined as follows (where X is the current `option_sign'):

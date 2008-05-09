@@ -80,28 +80,41 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: FIXED_TREE [G]
+	parent: ?FIXED_TREE [G]
 			-- Parent of current node
 
 	child_item: like item is
 			-- Item of active child
+		local
+			c: like child
 		do
-			Result := child.item
+			c := child
+			if c /= Void then
+				Result := c.item
+			end
 		end
 
 	left_sibling: like parent is
 			-- Left neighbor, if any
+		local
+			p: like parent
 		do
 			if position_in_parent > 1 then
-				Result := parent.array_item (position_in_parent - 1)
+				p := parent
+				if p /= Void then
+					Result := p.array_item (position_in_parent - 1)
+				end
 			end
 		end
 
 	right_sibling: like parent is
 			-- Right neighbor, if any
+		local
+			p: like parent
 		do
-			if position_in_parent < parent.arity then
-				Result := parent.array_item (position_in_parent + 1)
+			p := parent
+			if p /= Void and then position_in_parent < p.arity then
+				Result := p.array_item (position_in_parent + 1)
 			end
 		end
 
@@ -122,13 +135,18 @@ feature -- Element change
 
 	child_put, child_replace (v: like item) is
 			-- Replace current child item with `v'
+		local
+			c: like child
 		do
-			if object_comparison then
-				child.compare_objects
-			else
-				child.compare_references
+			c := child
+			if c /= Void then
+				if object_comparison then
+					c.compare_objects
+				else
+					c.compare_references
+				end
+				c.replace (v)
 			end
-			child.replace (v)
 		end
 
 	put_left (v: like item) is
@@ -136,11 +154,16 @@ feature -- Element change
 		require
 			is_not_root: not is_root
 			has_left_sibling: left_sibling /= Void
+		local
+			p: like parent
 		do
-			parent.child_go_i_th (position_in_parent - 1)
-			parent.child_replace (v)
+			p := parent
+			if p /= Void then
+				p.child_go_i_th (position_in_parent - 1)
+				p.child_replace (v)
+			end
 		ensure
-			item_put: left_sibling.item = v
+			item_put: {l: like left_sibling} left_sibling and then l.item = v
 		end
 
 	put_right (v: like item) is
@@ -148,14 +171,19 @@ feature -- Element change
 		require
 			is_not_root: not is_root
 			has_right_sibling: right_sibling /= Void
+		local
+			p: like parent
 		do
-			parent.child_go_i_th (position_in_parent + 1)
-			parent.child_replace (v)
+			p := parent
+			if p /= Void then
+				p.child_go_i_th (position_in_parent + 1)
+				p.child_replace (v)
+			end
 		ensure
-			item_put: right_sibling.item = v
+			item_put: {r: like right_sibling} right_sibling and then r.item = v
 		end
 
-	put_child (n: like parent) is
+	put_child (n: like new_node) is
 			-- Make `n' the node's child.
 		require else
 			not_full: arity < capacity
@@ -172,7 +200,7 @@ feature -- Element change
 			child_replaced: n.parent = Current
 		end
 
-	replace_child (n: like parent) is
+	replace_child (n: like new_node) is
 			-- Make `n' the node's child.
 		do
 			if object_comparison then
@@ -186,26 +214,36 @@ feature -- Element change
 			child_replaced: n.parent = Current
 		end
 
-	put_left_sibling (other: like parent) is
+	put_left_sibling (other: like new_node) is
 			-- Make `other' the left sibling of current node.
 		require
 			is_not_root: not is_root
 			has_left_sibling: left_sibling /= Void
+		local
+			p: like parent
 		do
-			parent.child_go_i_th (position_in_parent - 1)
-			parent.replace_child (other)
+			p := parent
+			if p /= Void then
+				p.child_go_i_th (position_in_parent - 1)
+				p.replace_child (other)
+			end
 		ensure
 			left_sibling_replaced: left_sibling = other
 		end
 
-	put_right_sibling (other: like parent) is
+	put_right_sibling (other: like new_node) is
 			-- Make `other' the right sibling of current node.
 		require
 			is_not_root: not is_root
 			has_right_sibling: right_sibling /= Void
+		local
+			p: like parent
 		do
-			parent.child_go_i_th (position_in_parent + 1)
-			parent.replace_child (other)
+			p := parent
+			if p /= Void then
+				p.child_go_i_th (position_in_parent + 1)
+				p.replace_child (other)
+			end
 		ensure
 			right_sibling_replaced: right_sibling = other
 		end
@@ -225,19 +263,21 @@ feature -- Removal
 		local
 			i: INTEGER
 			old_idx: INTEGER
+			p: like parent
 		do
-			if not is_root and then position_in_parent < parent.arity then
-				old_idx := parent.child_index
+			p := parent
+			if p /= Void and then position_in_parent < p.arity then
+				old_idx := p.child_index
 				from
 					i := 1
 				until
 					i = position_in_parent
 				loop
-					parent.child_go_i_th (i)
-					parent.remove_child
+					p.child_go_i_th (i)
+					p.remove_child
 					i := i + 1
 				end
-				parent.child_go_i_th (old_idx)
+				p.child_go_i_th (old_idx)
 			end
 		end
 
@@ -246,19 +286,21 @@ feature -- Removal
 		local
 			i: INTEGER
 			old_idx: INTEGER
+			p: like parent
 		do
-			if not is_root and then position_in_parent < parent.arity then
-				old_idx := parent.child_index
+			p := parent
+			if p /= Void and then position_in_parent < p.arity then
+				old_idx := p.child_index
 				from
 					i := position_in_parent + 1
 				until
-					i > parent.arity
+					i > p.arity
 				loop
-					parent.child_go_i_th (i)
-					parent.remove_child
+					p.child_go_i_th (i)
+					p.remove_child
 					i := i + 1
 				end
-				parent.child_go_i_th (old_idx)
+				p.child_go_i_th (old_idx)
 			end
 		end
 
@@ -271,6 +313,7 @@ feature -- Duplication
 		local
 			counter: INTEGER
 			pos: CURSOR
+			c: like child
 		do
 			from
 				Result := new_node
@@ -279,8 +322,9 @@ feature -- Duplication
 			until
 				child_after or else (counter = n)
 			loop
-				if child /= Void then
-					Result.replace_child (child.duplicate_all)
+				c := child
+				if c /= Void then
+					Result.replace_child (c.duplicate_all)
 				end
 				Result.child_forth
 				child_forth
@@ -303,6 +347,7 @@ feature {FIXED_TREE} -- Implementation
 			-- Copy of sub-tree including all children
 		local
 			pos: CURSOR
+			c: like child
 		do
 			from
 				Result := new_node
@@ -312,8 +357,9 @@ feature {FIXED_TREE} -- Implementation
 			until
 				child_off
 			loop
-				if child /= Void then
-					Result.replace_child (child.duplicate_all)
+				c := child
+				if c /= Void then
+					Result.replace_child (c.duplicate_all)
 				end
 				Result.child_forth
 				child_forth
@@ -325,6 +371,7 @@ feature {FIXED_TREE} -- Implementation
 			-- Fill children with children of `other'
 		local
 			temp: like parent
+			c: ?TREE [G]
 		do
 			from
 				other.child_start
@@ -332,11 +379,12 @@ feature {FIXED_TREE} -- Implementation
 			until
 				child_after
 			loop
-				if other.child /= Void then
+				c := other.child
+				if c /= Void then
 					create temp.make (other.arity, other.child_item)
-					temp.fill_subtree (other.child)
+					temp.fill_subtree (c)
+					replace_child (temp)
 				end
-				replace_child (temp)
 				child_forth
 				other.child_forth
 			end
@@ -364,7 +412,7 @@ feature {NONE} -- Implementation
 
 feature {FIXED_TREE} -- Implementation
 
-	fixed_list: FIXED_LIST [FIXED_TREE [G]]
+	fixed_list: FIXED_LIST [?FIXED_TREE [G]]
 
 	set_fixed_list (a_list: like fixed_list) is
 			-- Set `fixed_list' with `a_list'
@@ -416,7 +464,7 @@ feature -- Access
 			Result := fixed_list.item
 		end
 
-	array_item (n: INTEGER): FIXED_TREE [G] is
+	array_item (n: INTEGER): ?FIXED_TREE [G] is
 		do
 			Result := fixed_list.i_th (n)
 		end
@@ -498,7 +546,7 @@ feature -- Access
 			Result := fixed_list.index_of (v, i)
 		end
 
-	prune (n: like parent) is
+	prune (n: like new_node) is
 		do
 		end
 
@@ -539,7 +587,7 @@ feature {NONE} -- private access fixed_list
 			fixed_list.extend (v)
 		end
 
-	fl_duplicate (n: INTEGER): FIXED_LIST [like Current] is
+	fl_duplicate (n: INTEGER): FIXED_LIST [?like Current] is
 		do
 			Result := fixed_list.duplicate (n)
 		end
@@ -569,7 +617,7 @@ feature {NONE} -- private access fixed_list
 			fixed_list.put (v)
 		end
 
-	fl_replace (v: FIXED_TREE [G]) is
+	fl_replace (v: ?FIXED_TREE [G]) is
 		do
 			fixed_list.replace (v)
 		end
@@ -579,7 +627,7 @@ feature {NONE} -- private access fixed_list
 			--fixed_list.fill (other)
 		end
 
-	fl_lin_rep: LINEAR [FIXED_TREE [G]] is
+	fl_lin_rep: LINEAR [?FIXED_TREE [G]] is
 		do
 			Result := fixed_list.linear_representation
 		end
@@ -591,7 +639,7 @@ feature {NONE} -- private access fixed_list
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -600,11 +648,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class FIXED_TREE

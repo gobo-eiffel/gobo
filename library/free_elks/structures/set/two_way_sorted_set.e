@@ -73,9 +73,16 @@ feature -- Element change
 			-- Ensure that structure includes `v'.
 		local
 			found: BOOLEAN
+			b: BOOLEAN
+			i: like item
 		do
 			search_after (v)
-			if after or else not item.is_equal (v) then
+			b := after
+			if not b then
+				i := item
+				b := i /= Void and then v /= Void and then not i.is_equal (v)
+			end
+			if b then
 				put_left (v)
 				back
 			end
@@ -104,6 +111,8 @@ feature -- Element change
 		local
 			mode: BOOLEAN
 			other_item: like item
+			b: BOOLEAN
+			l_item: like item
 		do
 			from
 				mode := object_comparison
@@ -117,11 +126,12 @@ feature -- Element change
 					search_after (other_item)
 				end
 				if not after then
-					if
-						(not mode and then item = other_item)
-					or else
-						(mode and then item.is_equal (other_item))
-					then
+					b := not mode and then item = other_item
+					if not b and then mode then
+						l_item := item
+						b := l_item /= Void and then other_item /= Void and then l_item.is_equal (other_item)
+					end
+					if b then
 						forth
 						other.forth
 					else
@@ -181,6 +191,9 @@ feature -- Basic operations
 
 	intersect (other: like Current) is
 			-- Remove all items not in `other'.
+		local
+			l_item: like item
+			i: like item
 		do
 			from
 				start
@@ -204,10 +217,13 @@ feature -- Basic operations
 					end
 					if
 						not other.after
-						and then other.item.is_equal (item)
 					then
-						forth
-						other.forth
+						l_item := other.item
+						i := item
+						if l_item /= Void and then i /= Void and then l_item.is_equal (i) then
+							forth
+							other.forth
+						end
 					end
 				end
 			end
@@ -225,6 +241,7 @@ feature -- Basic operations
 			-- Remove all items also in `other'.
 		local
 			other_item: like item
+			i: like item
 		do
 			from
 				start
@@ -236,8 +253,11 @@ feature -- Basic operations
 				if item < other_item then
 					search_after (other_item)
 				end
-				if not after and then other_item.is_equal (item) then
-					remove
+				if not after and then other_item /= Void then
+					i := item
+					if i /= Void and then other_item.is_equal (i) then
+						remove
+					end
 				end
 				other.forth
 			end
@@ -252,7 +272,7 @@ feature {NONE} -- Inapplicable
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -261,12 +281,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class TWO_WAY_SORTED_SET
 

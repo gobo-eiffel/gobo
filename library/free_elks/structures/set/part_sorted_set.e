@@ -43,7 +43,7 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 
 create
 	make
-	
+
 create {PART_SORTED_SET}
 	make_sublist
 
@@ -51,15 +51,25 @@ feature -- Element change
 
 	extend, put (v: G) is
 			-- Ensure that structure includes `v'.
+		local
+			l_item: like item
 		do
 			search_after (v)
-			if after or else not item.is_equal (v) then
+			if after then
 				put_left (v)
+			else
+				l_item := item
+				if l_item /= Void and then v /= Void and then l_item.is_equal (v) then
+					put_left (v)
+				end
 			end
 		end
 
 	merge (other: TRAVERSABLE_SUBSET [G]) is
 			-- Add all items of `other'.
+		local
+			i: like item
+			o: like item
 		do
 			from
 				start
@@ -67,14 +77,18 @@ feature -- Element change
 			until
 				other.after or else after
 			loop
-				if item < other.item then
+				i := item
+				o := other.item
+				if i /= Void and then o /= Void then
+				if i < o then
 					forth
-				elseif item.is_equal (other.item) then
+				elseif i.is_equal (o) then
 					forth
 					other.forth
-				else -- item > other.item
-					put_left (other.item)
+				else -- i > o
+					put_left (o)
 					other.forth
+				end
 				end
 			end
 			if after then
@@ -122,7 +136,7 @@ feature -- Duplication
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

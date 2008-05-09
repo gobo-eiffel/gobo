@@ -37,28 +37,46 @@ feature -- Measurement
 
 	count: INTEGER is
 			-- Number of items in tree
+		local
+			t: like tree
 		do
-			if tree /= Void then
-				Result := tree.count
+			t := tree
+			if t /= Void then
+				Result := t.count
 			end
 		end
 
 	min: like item is
 			-- Minimum item in tree
+		local
+			t: like tree
 		do
-			Result := tree.min
+			t := tree
+			if t /= Void then
+				Result := t.min
+			end
 		end
 
 	max: like item is
 			-- Maximum item in tree
+		local
+			t: like tree
 		do
-			Result := tree.max
+			t := tree
+			if t /= Void then
+				Result := t.max
+			end
 		end
 
 	item: G is
 			-- Current item
+		local
+			a: like active_node
 		do
-			Result := active_node.item
+			a := active_node
+			if a /= Void then
+				Result := a.item
+			end
 		end
 
 feature -- Status report
@@ -85,9 +103,12 @@ feature -- Status report
 			-- Is there a node with item `v' in tree?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
+		local
+			t: like tree
 		do
-			if tree /= Void then
-				Result := tree.has (v)
+			t := tree
+			if t /= Void then
+				Result := t.has (v)
 			end
 		end
 
@@ -103,25 +124,31 @@ feature -- Cursor movement
 
 	start is
 			-- Move cursor to first node.
+		local
+			t: like tree
 		do
 			before := False
-			if tree = Void then
+			t := tree
+			if t = Void then
 				after := True
 			else
 				after := False
-				active_node := tree.min_node
+				active_node := t.min_node
 			end
 		end
 
 	finish is
 			-- Move cursor to last node.
+		local
+			t: like tree
 		do
 			after := False
-			if tree = Void then
+			t := tree
+			if t = Void then
 				before := True
 			else
 				before := False
-				active_node := tree.max_node
+				active_node := t.max_node
 			end
 		end
 
@@ -129,6 +156,8 @@ feature -- Cursor movement
 			-- Move cursor to next node.
 		local
 			prev_node: like tree
+			a: like active_node
+			r: like active_node
 		do
 			if before then
 				before := False
@@ -136,22 +165,28 @@ feature -- Cursor movement
 					after:= True
 				end
 			else
-				if active_node.has_right then
-					active_node := 	active_node.right_child.min_node
-				else
-					prev_node := active_node
-					active_node := active_node.parent
-					from
-					until
-						active_node = Void
-						or else prev_node = active_node.left_child
-					loop
-						prev_node := active_node
-						active_node := active_node.parent
-					end
-					if active_node = Void then
-						active_node := tree
-						after := True
+				a := active_node
+				if a /= Void then
+					r := a.right_child
+					if r /= Void then
+						active_node := r.min_node
+					else
+						from
+							prev_node := a
+							a := a.parent
+						until
+							a = Void
+							or else prev_node = a.left_child
+						loop
+							prev_node := a
+							a := a.parent
+						end
+						if a = Void then
+							active_node := tree
+							after := True
+						else
+							active_node := a
+						end
 					end
 				end
 			end
@@ -161,6 +196,8 @@ feature -- Cursor movement
 			-- Move cursor to previous node.
 		local
 			prev_node: like tree
+			a: like active_node
+			l: like active_node
 		do
 			if after then
 				after := False
@@ -168,22 +205,28 @@ feature -- Cursor movement
 					before:= True
 				end
 			else
-				if active_node.has_left then
-					active_node := 	active_node.left_child.max_node
-				else
-					prev_node := active_node
-					active_node := active_node.parent
-					from
-					until
-						active_node = Void
-						or else prev_node = active_node.right_child
-					loop
-						prev_node := active_node
-						active_node := active_node.parent
-					end
-					if active_node = Void then
-						active_node := tree
-						before := True
+				a := active_node
+				if a /= Void then
+					l := a.left_child
+					if l /= Void then
+						active_node := l.max_node
+					else
+						from
+							prev_node := a
+							a := a.parent
+						until
+							a = Void
+							or else prev_node = a.right_child
+						loop
+							prev_node := a
+							a := a.parent
+						end
+						if a = Void then
+							active_node := tree
+							before := True
+						else
+							active_node := a
+						end
 					end
 				end
 			end
@@ -196,13 +239,14 @@ feature -- Element change
 			-- (unless one already exists).
 		require else
 			item_exists: v /= Void
+		local
+			t: like tree
 		do
-			if tree = Void then
+			t := tree
+			if t = Void then
 				tree := new_tree (v)
-			else
-				if not has (v) then
-					tree.extend (v)
-				end
+			elseif not has (v) then
+				t.extend (v)
 			end
 		end
 
@@ -216,9 +260,12 @@ feature -- Removal
 
 	prune (v: like item) is
 			-- Remove `v'.
+		local
+			t: like tree
 		do
-			if tree /= Void then
-				tree := tree.pruned (v, tree.parent)
+			t := tree
+			if t /= Void then
+				t := t.pruned (v, t.parent)
 			end
 		end
 
@@ -233,14 +280,19 @@ feature -- Duplication
 	duplicate (n: INTEGER): BINARY_SEARCH_TREE_SET [G] is
 			-- New structure containing min (`n', `count')
 			-- items from current structure
+		local
+			t: like tree
 		do
 			create Result.make
-			Result.set_tree (tree.duplicate (n))
+			t := tree
+			if t /= Void then
+				Result.set_tree (t.duplicate (n))
+			end
 		end
 
 feature {BINARY_SEARCH_TREE_SET} -- Implementation
 
-	tree: BINARY_SEARCH_TREE [G]
+	tree: ?BINARY_SEARCH_TREE [G]
 
 	active_node: like tree
 
@@ -262,15 +314,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]): 
+	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]):
 								SUBSET_STRATEGY [G] is
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
-		local
-			h: HASHABLE
 		do
-			h ?= v
-			if h /= Void then
+			if {h: HASHABLE} v then
 				create {SUBSET_STRATEGY_HASHABLE [G]} Result
 			elseif object_comparison and same_type (other) then
 				create {SUBSET_STRATEGY_TREE [G]} Result
@@ -281,12 +330,12 @@ feature {NONE} -- Implementation
 
 invariant
 
-	comparison_mode_equal: tree /= Void implies
-				object_comparison = tree.object_comparison
+	comparison_mode_equal: {t: like tree} tree implies
+				object_comparison = t.object_comparison
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -295,11 +344,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class BINARY_SEARCH_TREE_SET

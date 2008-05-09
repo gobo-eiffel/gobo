@@ -145,11 +145,8 @@ feature -- Status report
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
-		local
-			c_c: CIRCULAR_CURSOR
 		do
-			c_c ?= p
-			if c_c /= Void then
+			if {c_c: CIRCULAR_CURSOR} p then
 				Result := list.valid_cursor (c_c.cursor)
 			end
 		end
@@ -188,11 +185,8 @@ feature -- Cursor movement
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
-		local
-			c_c: CIRCULAR_CURSOR
 		do
-			c_c ?= p
-			if c_c /= Void then
+			if {c_c: CIRCULAR_CURSOR} p then
 				list.go_to (c_c.cursor)
 				internal_exhausted := c_c.internal_exhausted
 				starter := c_c.starter
@@ -366,7 +360,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

@@ -40,8 +40,11 @@ feature -- Initialization
 
 	make_root (v: G) is
 			-- Create a tree with `v' as root.
+		local
+			dummy: G
 		do
-			make
+			create above_node.make (dummy)
+			active := above_node
 			put_root (v)
 		end
 
@@ -66,24 +69,42 @@ feature -- Access
 		do
 			create Result.make (active, active_parent, after, before, below)
 		end
-		
+
 feature -- Element change
 
 	put_right (v: G) is
 			-- Add `v' to the right of cursor position.
+		local
+			a: ?like active
+			c: ?like active
 		do
 			if below then
-				active.child_put_right (v)
-				active.child_forth
-				active_parent := active
-				active := active_parent.child
+				a := active
+				if a /= Void then
+					a.child_put_right (v)
+					a.child_forth
+					c := a.child
+					if c /= Void then
+						active := c
+					end
+				end
+				active_parent := a
 				below := False
 			elseif before then
-				active_parent.child_put_left (v)
-				active_parent.child_back
-				active := active_parent.child
+				a := active_parent
+				if a /= Void then
+					a.child_put_left (v)
+					a.child_back
+					c := a.child
+					if c /= Void then
+						active := c
+					end
+				end
 			else
-				active_parent.child_put_right (v)
+				a := active_parent
+				if a /= Void then
+					a.child_put_right (v)
+				end
 			end
 		end
 
@@ -91,10 +112,19 @@ feature -- Element change
 			-- Put `v' as root of an empty tree.
 		require
 			is_empty: is_empty
+		local
+			a: like active
+			c: ?like active
 		do
-			above_node.child_put_right (v)
-			active_parent := above_node
-			active := active_parent.child
+			a := above_node
+			if a /= Void then
+				a.child_put_right (v)
+				c := a.child
+				if c /= Void then
+					active := c
+				end
+			end
+			active_parent := a
 		ensure
 			is_root: is_root
 			count = 1
@@ -135,7 +165,7 @@ feature {NONE} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -144,12 +174,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class TWO_WAY_CURSOR_TREE
 

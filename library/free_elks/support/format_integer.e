@@ -4,7 +4,7 @@ indexing
 		"Formatter for integral numbers"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
+	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	names: format_integer;
 	date: "$Date$"
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 	process_sign (s: STRING; sn: INTEGER): STRING is
 			-- Process sign related values.
 		local
-			sstring: STRING
+			sstring: ?STRING
 		do
 			Result := s
 			if bracketted_negative and sn = -1 then

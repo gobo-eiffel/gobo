@@ -1,7 +1,7 @@
 indexing
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,11 +34,13 @@ feature -- Access
 			valid_id: Result > 0 implies id_object (Result) = Current
 		end
 
-	frozen id_object (an_id: INTEGER): IDENTIFIED is
+	frozen id_object (an_id: INTEGER): ?IDENTIFIED is
 			-- Object associated with `an_id' (void if no such object)
 		do
 			if an_id > 0 then
-				Result ?= eif_id_object (an_id)
+				if {l_result: IDENTIFIED} eif_id_object (an_id) then
+					Result := l_result
+				end
 			end
 		ensure
 			consistent: Result = Void or else Result.object_id = an_id

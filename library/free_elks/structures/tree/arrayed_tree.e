@@ -53,22 +53,28 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: ARRAYED_TREE [G]
+	parent: ?ARRAYED_TREE [G]
 			-- Parent of current node
 
 	left_sibling: like parent is
 			-- Left neighbor if any
+		local
+			p: like parent
 		do
-			if position_in_parent > 1 then
-				Result := parent.array_item (position_in_parent - 1)
+			p := parent
+			if p /= Void and then position_in_parent > 1 then
+				Result := p.array_item (position_in_parent - 1)
 			end
 		end
 
 	right_sibling: like parent is
 			-- Right neighbor if any
+		local
+			p: like parent
 		do
-			if position_in_parent < parent.arity then
-				Result := parent.array_item (position_in_parent + 1)
+			p := parent
+			if p /= Void and then position_in_parent < p.arity then
+				Result := p.array_item (position_in_parent + 1)
 			end
 		end
 
@@ -76,16 +82,21 @@ feature -- Element change
 
 	child_put, child_replace (v: like item) is
 			-- Replace current child item with `v'.
+		local
+			c: like child
 		do
-			if object_comparison then
-				child.compare_objects
-			else
-				child.compare_references
+			c := child
+			if c /= Void then
+				if object_comparison then
+					c.compare_objects
+				else
+					c.compare_references
+				end
+				c.replace (v)
 			end
-			child.replace (v)
 		end
 
-	replace_child (n: like parent) is
+	replace_child (n: like new_cell) is
 			-- Make `n' the node's current child.
 		do
 			if object_comparison then
@@ -148,7 +159,7 @@ feature -- Element change
 			al_put_right (n)
 		end
 
-	put_child_left (n: like parent) is
+	put_child_left (n: like new_cell) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -161,7 +172,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	put_child_right (n: like parent) is
+	put_child_right (n: like new_cell) is
 			-- Add `n' to the right of the cursor position.
 			-- Do not move cursor.
 		do
@@ -174,7 +185,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	put_child (n: like parent) is
+	put_child (n: like new_cell) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
@@ -218,8 +229,13 @@ feature -- Removal
 	remove_child is
 			-- Remove child at cursor position.
 			-- Move cursor to the next sibling, or `after' if none.
+		local
+			c: like child
 		do
-			child.attach_to_parent (Void)
+			c := child
+			if c /= Void then
+				c.attach_to_parent (Void)
+			end
 			al_remove
 		end
 
@@ -245,19 +261,21 @@ feature -- Removal
 		local
 			i: INTEGER
 			old_idx: INTEGER
+			p: like parent
 		do
-			if not is_root and then position_in_parent < parent.arity then
-				old_idx := parent.child_index
+			p := parent
+			if p /= Void and then position_in_parent < p.arity then
+				old_idx := p.child_index
 				from
 					i := 1
 				until
 					i = position_in_parent
 				loop
-					parent.child_go_i_th (i)
-					parent.remove_child
+					p.child_go_i_th (i)
+					p.remove_child
 					i := i + 1
 				end
-				parent.child_go_i_th (old_idx)
+				p.child_go_i_th (old_idx)
 			end
 		end
 
@@ -266,19 +284,21 @@ feature -- Removal
 		local
 			i: INTEGER
 			old_idx: INTEGER
+			p: like parent
 		do
-			if not is_root and then position_in_parent < parent.arity then
-				old_idx := parent.child_index
+			p := parent
+			if p /= Void and then position_in_parent < p.arity then
+				old_idx := p.child_index
 				from
 					i := position_in_parent + 1
 				until
-					i > parent.arity
+					i > p.arity
 				loop
-					parent.child_go_i_th (i)
-					parent.remove_child
+					p.child_go_i_th (i)
+					p.remove_child
 					i := i + 1
 				end
-				parent.child_go_i_th (old_idx)
+				p.child_go_i_th (old_idx)
 			end
 		end
 
@@ -291,6 +311,7 @@ feature -- Duplication
 		local
 			counter: INTEGER
 			pos: CURSOR
+			c: like child
 		do
 			from
 				Result := new_node
@@ -299,8 +320,9 @@ feature -- Duplication
 			until
 				child_after or else (counter = n)
 			loop
-				if child /= Void then
-					Result.replace_child (child.duplicate_all)
+				c := child
+				if c /= Void then
+					Result.replace_child (c.duplicate_all)
 				end
 				Result.child_forth
 				child_forth
@@ -336,6 +358,7 @@ feature {ARRAYED_TREE} -- Implementation
 			-- Copy of sub-tree including all children
 		local
 			pos: CURSOR
+			c: like child
 		do
 			from
 				Result := new_node
@@ -345,8 +368,9 @@ feature {ARRAYED_TREE} -- Implementation
 			until
 				child_off
 			loop
-				if child /= Void then
-					Result.replace_child (child.duplicate_all)
+				c := child
+				if c /= Void then
+					Result.replace_child (c.duplicate_all)
 				end
 				Result.child_forth
 				child_forth
@@ -358,6 +382,7 @@ feature {ARRAYED_TREE} -- Implementation
 			-- Fill children with children of `other'
 		local
 			temp: like parent
+			c: ?TREE [G]
 		do
 			from
 				other.child_start
@@ -365,11 +390,12 @@ feature {ARRAYED_TREE} -- Implementation
 			until
 				child_after
 			loop
-				if other.child /= Void then
+				c := other.child
+				if c /= Void then
 					create temp.make (other.arity, other.child_item)
-					temp.fill_subtree (other.child)
+					temp.fill_subtree (c)
+					replace_child (temp)
 				end
-				replace_child (temp)
 				child_forth
 				other.child_forth
 			end
@@ -422,9 +448,12 @@ feature {NONE} -- Implementation
 
 	position_in_parent: INTEGER is
 			-- Position of current node in parent
+		local
+			p: like parent
 		do
-			if parent /= Void then
-				Result := parent.index_of (Current, 1)
+			p := parent
+			if p /= Void then
+				Result := p.index_of (Current, 1)
 			end
 		end
 
@@ -441,7 +470,9 @@ feature {NONE} -- Implementation
 			loop
 				c := other.child
 				other.child_forth
-				c.attach_to_parent (Current)
+				if c /= Void then
+					c.attach_to_parent (Current)
+				end
 			end
 		end
 
@@ -450,6 +481,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_agent: an_agent /= Void
 			non_void_tree_node: a_tree_node /= Void
+		local
+			c: like child
 		do
 			an_agent.call ([a_tree_node.item])
 			from
@@ -457,7 +490,10 @@ feature {NONE} -- Implementation
 			until
 				a_tree_node.child_off
 			loop
-				do_all_internal (an_agent, a_tree_node.child)
+				c := a_tree_node.child
+				if c /= Void then
+					do_all_internal (an_agent, c)
+				end
 				a_tree_node.child_forth
 			end
 		end
@@ -564,7 +600,7 @@ feature -- Access
 			Result := arrayed_list.index_of (v, i)
 		end
 
-	prune (n: like parent) is
+	prune (n: like new_cell) is
 		do
 			arrayed_list.prune (n)
 		end
@@ -687,7 +723,7 @@ feature {NONE} -- private access arrayed_list
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -696,11 +732,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class ARRAYED_TREE

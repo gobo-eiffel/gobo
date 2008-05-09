@@ -167,11 +167,8 @@ feature -- Status report
 
 	valid_cursor (p: CURSOR): BOOLEAN is
 			-- Can the cursor be moved to position `p'?
-		local
-			temp: COMPACT_TREE_CURSOR
 		do
-			temp ?= p
-			if temp /= Void then
+			if {temp: COMPACT_TREE_CURSOR} p then
 				Result := (first_child_table.item (temp.active) /= Removed_mark)
 			end
 		end
@@ -317,18 +314,18 @@ feature -- Cursor movement
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
-		local
-			temp: COMPACT_TREE_CURSOR
 		do
-			temp ?= p
-			check
-				temp /= Void
+			if {temp: COMPACT_TREE_CURSOR} p then
+				active := temp.active
+				after := temp.after
+				before := temp.before
+				below := temp.below
+				above := temp.above
+			else
+				check
+					False
+				end
 			end
-			active := temp.active
-			after := temp.after
-			before := temp.before
-			below := temp.below
-			above := temp.above
 		end
 
 feature -- Element change
@@ -681,7 +678,7 @@ feature {NONE} -- Implementation
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -690,12 +687,6 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class COMPACT_CURSOR_TREE
 

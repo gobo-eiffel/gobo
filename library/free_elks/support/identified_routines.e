@@ -2,7 +2,7 @@ indexing
 
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ class IDENTIFIED_ROUTINES
 
 feature -- Basic operations
 
-	eif_id_object (an_id: INTEGER): ANY is
+	eif_id_object (an_id: INTEGER): ?ANY is
 			-- Object associated with `an_id'
 		require
 			an_id_non_negative: an_id >= 0

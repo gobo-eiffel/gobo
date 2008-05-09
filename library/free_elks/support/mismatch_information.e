@@ -46,7 +46,9 @@ feature -- Access
 			check
 				has_class_entry: has (Class_key)
 			end
-			Result ?= item (Class_key)
+			if {l_result: STRING} item (Class_key) then
+				Result := l_result
+			end
 		ensure
 			result_exists: Result /= Void
 		end

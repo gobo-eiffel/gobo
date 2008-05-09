@@ -4,7 +4,7 @@ indexing
 		"The objects available from the environment at time of execution"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
+	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,14 +32,18 @@ feature -- Access
 
 	default_shell: STRING is
 			-- Default shell
+		local
+			s: ?STRING
 		once
-			Result := get ("SHELL")
-			if Result = Void then
+			s := get ("SHELL")
+			if s = Void then
 				Result := ""
+			else
+				Result := s
 			end
 		end
 
-	get (s: STRING): STRING is
+	get (s: STRING): ?STRING is
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
 		require
@@ -57,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	home_directory_name: STRING is
+	home_directory_name: ?STRING is
 			-- Directory name corresponding to the home directory.
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
@@ -81,7 +85,7 @@ feature -- Access
 		local
 			l_ptr: POINTER
 			i: INTEGER
-			l_curr_var: TUPLE [value: STRING; key: STRING]
+			l_curr_var: ?TUPLE [value: STRING; key: STRING]
 		do
 			create Result.make (40)
 			from
@@ -212,7 +216,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	separated_variables (a_var: STRING): TUPLE [value: STRING; key: STRING] is
+	separated_variables (a_var: STRING): ?TUPLE [value: STRING; key: STRING] is
 			-- Given an environment variable `a_var' in form of "key=value",
 			-- return separated key and value.
 			-- Return Void if `a_var' is in incorrect format.
@@ -279,7 +283,7 @@ feature {NONE} -- External
 			"eif_system_asynchronous"
 		end
 
-	eif_home_directory_name: STRING is
+	eif_home_directory_name: ?STRING is
 			-- Directory name corresponding to the home directory
 		external
 			"C use %"eif_path_name.h%""
