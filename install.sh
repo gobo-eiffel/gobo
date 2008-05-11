@@ -55,6 +55,7 @@ c_compilation() {
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec2.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec1.c
 	$LD $LFLAGS ${LFLAG_OUT}gec$EXE gec*$OBJ
+	strip gec${EXE}
 	$RM gec*$OBJ
 }
 
@@ -163,13 +164,21 @@ if [ "$EIF" = "ge" ]; then
 	export GOBO_EIFFEL
 	cd $BIN_DIR
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/geant/ge.xace
+	strip geant$EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexace/ge.xace
+	strip gexace${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelex/ge.xace
+	strip gelex${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/geyacc/ge.xace
+	strip geyacc${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gepp/ge.xace
+	strip gepp${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/getest/ge.xace
+	strip getest${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gelint/ge.xace
+	strip gelint${EXE}
 	$BIN_DIR/gec$EXE --finalize $GOBO/src/gexslt/ge.xace
+	strip gexslt${EXE}
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1
