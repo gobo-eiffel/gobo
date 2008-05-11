@@ -171,6 +171,9 @@ feature -- Status setting
 			if filter.depends_upon_user_functions then
 				set_depends_upon_user_functions
 			end
+			if filter.depends_upon_local_variables then
+				set_depends_upon_local_variables
+			end
 			are_dependencies_computed := True
 		end
 
@@ -224,9 +227,8 @@ feature -- Optimization
 							if filter.is_last_function then
 								create l_is_last_expression.make (True)
 								set_filter (l_is_last_expression)
-							else
-								a_replacement.put (Current)
 							end
+							a_replacement.put (Current)
 						end
 					end
 				end

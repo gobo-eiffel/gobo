@@ -217,9 +217,9 @@ feature -- Optimization
 						adopt_child_expression (namespace)
 						reset_static_properties
 					end
-				end
-				if namespace.is_error then
-					set_replacement (a_replacement, namespace)
+					if namespace.is_error then
+						set_replacement (a_replacement, namespace)
+					end
 				end
 			end
 

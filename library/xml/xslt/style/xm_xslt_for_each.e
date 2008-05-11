@@ -67,12 +67,12 @@ feature -- Element change
 					end
 					a_cursor.forth
 				end
-				if a_select_attribute /= Void then
-					generate_expression (a_select_attribute)
-					select_expression := last_generated_expression
-				else
-					report_absence ("select")
-				end
+			end
+			if a_select_attribute /= Void then
+				generate_expression (a_select_attribute)
+				select_expression := last_generated_expression
+			else
+				report_absence ("select")
 			end
 			attributes_prepared := True
 		end

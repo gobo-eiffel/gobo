@@ -219,10 +219,10 @@ feature -- Evaluation
 					l_receiver.append_item (l_item)
 				end
 				l_sequence_iterator.forth
-				if l_sequence_iterator.is_error then
-					l_receiver.on_error (l_sequence_iterator.error_value.error_message)
-				end
 			end
+			if l_sequence_iterator.is_error then
+				l_receiver.on_error (l_sequence_iterator.error_value.error_message)
+			end			
 		end
 
 	

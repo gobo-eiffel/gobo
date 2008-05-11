@@ -202,17 +202,19 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 		do
 			if not checked then
 				Precursor (a_replacement, a_context)
-				if not arguments.item (1).is_value or else
-					(arguments.count = 2 and then not arguments.item (2).is_value) then
-					namespaces_needed := True
-				end
-				if namespaces_needed then
-					l_expression_context ?= a_context
-					check
-						expression_context: l_expression_context /= Void
-						-- as this is XSLT
+				if a_replacement.item = Void then
+					if not arguments.item (1).is_value or else
+						(arguments.count = 2 and then not arguments.item (2).is_value) then
+						namespaces_needed := True
 					end
-					namespace_context := l_expression_context.namespace_context
+					if namespaces_needed then
+						l_expression_context ?= a_context
+						check
+							expression_context: l_expression_context /= Void
+							-- as this is XSLT
+						end
+						namespace_context := l_expression_context.namespace_context
+					end
 				end
 				checked := True
 			end

@@ -1907,7 +1907,7 @@ feature -- Element change
 					a_line_number := a_style_element.line_number -- for next text node
 				end
 				if a_node.node_type = Text_node then
-					create a_string_value.make (a_node.string_value)
+					create a_string_value.make_untyped_atomic (a_node.string_value)
 					create a_text.make (an_executable, a_string_value, False, principal_stylesheet.module_number (a_node.system_id), a_line_number)
 					if not is_error and then not any_compile_errors then
 						compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)

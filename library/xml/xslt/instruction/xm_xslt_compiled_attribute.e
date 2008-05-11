@@ -170,6 +170,8 @@ feature -- Optimization
 					else
 						Precursor (a_replacement)
 					end
+				else
+					Precursor (a_replacement)
 				end
 			end
 		end

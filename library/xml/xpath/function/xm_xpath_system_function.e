@@ -170,7 +170,11 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 				until
 					is_error or a_replacement.item /= Void or l_counter > supplied_argument_count
 				loop
-					check_argument (a_replacement, l_counter, a_context)
+					if arguments.item (l_counter).is_error then
+						set_replacement (a_replacement, arguments.item (l_counter))
+					else
+						check_argument (a_replacement, l_counter, a_context)
+					end
 					l_counter := l_counter + 1
 				end
 			end

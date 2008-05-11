@@ -119,7 +119,7 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_replacement (a_replacement, base_expression)
 			else
-				set_replacement (a_replacement, Current)
+				a_replacement.put (Current)
 			end
 		end
 
@@ -133,7 +133,7 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_replacement (a_replacement, base_expression)
 			else
-				set_replacement (a_replacement, Current)
+				a_replacement.put (Current)
 			end
 		end
 
@@ -149,7 +149,7 @@ feature -- Optimization
 			if l_promotion /= Void then
 				set_replacement (a_replacement, l_promotion)
 			else
-				set_replacement (a_replacement, Current)
+				a_replacement.put (Current)
 				if not (a_offer.action = Unordered) then
 					create l_replacement.make (Void)
 					base_expression.promote (l_replacement, a_offer)

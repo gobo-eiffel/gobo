@@ -289,10 +289,10 @@ feature -- Optimization
 					end
 					l_step.set_source_location (l_context.style_element.containing_stylesheet.module_number (a_context.system_id), line_number)
 					create l_replacement.make (Void)
-					l_step.check_static_type (l_replacement, a_context, a_context_item_type)
+					l_step.check_static_type (l_replacement, a_context, parent_pattern.node_test)
 					l_expression := l_replacement.item
-					if l_step.is_error then
-						set_error_value (l_step.error_value)
+					if l_expression.is_error then
+						set_error_value (l_expression.error_value)
 					end
 					if not is_error and then l_expression.item_type.is_node_test then
 						create l_routines
@@ -405,11 +405,16 @@ feature -- Optimization
 				ancestor_pattern.promote (a_offer)
 			end
 			if filters /= Void then
-				from l_cursor := filters.new_cursor; l_cursor.start until l_cursor.after loop
+				from
+					l_cursor := filters.new_cursor
+					l_cursor.start
+					create l_replacement.make (Void)
+				until l_cursor.after loop
 					l_cursor.item.promote (l_replacement, a_offer)
 					if l_cursor.item /= l_replacement.item then
 						l_cursor.replace (l_replacement.item)
 					end
+					l_replacement.put (Void)
 					l_cursor.forth
 				end
 			end

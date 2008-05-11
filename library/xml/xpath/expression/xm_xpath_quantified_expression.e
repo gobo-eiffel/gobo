@@ -297,10 +297,12 @@ feature {NONE} -- Implementation
 					l_let_expression.optimize (a_replacement, a_context, a_context_item_type)
 				end
 			end
-			if l_offer.containing_expression = Current then
-				a_replacement.put (Current)
-			else
-				set_replacement (a_replacement, l_offer.containing_expression)
+			if a_replacement.item = Void then
+				if l_offer.containing_expression = Current then
+					a_replacement.put (Current)
+				else
+					set_replacement (a_replacement, l_offer.containing_expression)
+				end
 			end
 		ensure
 			replaced: a_replacement.item /= Void			

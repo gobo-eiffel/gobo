@@ -298,6 +298,7 @@ feature -- Optimization
 							l_cursor.go_after
 						else
 							-- if condition is false, skip this test
+							l_replacement.put (Void)
 							l_cursor.remove
 							actions.remove (l_index)
 						end

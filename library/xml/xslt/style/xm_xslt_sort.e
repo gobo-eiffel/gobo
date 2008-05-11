@@ -266,8 +266,8 @@ feature {NONE} -- Implementation
 			l_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
+			create l_replacement.make (Void)
 			if select_expression /= Void then
-				create l_replacement.make (Void)
 				type_check_expression (l_replacement, "select", select_expression)
 				select_expression := l_replacement.item
 				if select_expression.is_error then

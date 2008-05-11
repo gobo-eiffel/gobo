@@ -57,14 +57,14 @@ feature {NONE} -- Initialization
 			not_nan: not is_nan
 		end
 
-	make (an_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+	make (a_atomic_value: XM_XPATH_ATOMIC_VALUE) is
 		require
-			value_not_void: an_atomic_value /= Void
+			value_not_void: a_atomic_value /= Void
 		do
-			category := an_atomic_value.item_type.primitive_type
-			value := an_atomic_value
+			category := a_atomic_value.item_type.primitive_type
+			value := a_atomic_value
 		ensure
-			value_set: value = an_atomic_value
+			value_set: value = a_atomic_value
 			not_nan: not is_nan
 		end
 
@@ -94,7 +94,7 @@ feature -- Comparison
 			elseif collation_key /= Void then
 				Result := other.collation_key /= Void and then collation_key.three_way_comparison (other.collation_key) = 0
 			elseif category = other.category then
-				Result := value.same_expression (other.value)
+				Result := value.same_atomic_value (other.value)
 			end
 		end
 

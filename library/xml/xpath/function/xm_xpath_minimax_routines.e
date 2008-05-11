@@ -117,10 +117,12 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context)
-			create l_replacement.make (Void)
-			arguments.item (1).set_unsorted (l_replacement, False)
-			if arguments.item (1) /= l_replacement.item then
-				arguments.put (l_replacement.item, 1)
+			if a_replacement.item = Void then
+				create l_replacement.make (Void)
+				arguments.item (1).set_unsorted (l_replacement, False)
+				if arguments.item (1) /= l_replacement.item then
+					arguments.put (l_replacement.item, 1)
+				end
 			end
 		end
 

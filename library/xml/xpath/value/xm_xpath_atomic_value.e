@@ -90,23 +90,23 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
-			-- Compare `Current' to `other'
+	three_way_comparison (a_other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
+			-- Compare `Current' to `a_other'
 		require
-			comparable_other: other /= Void and then is_comparable (other)
-			dynamic_context_not_void: (depends_upon_implicit_timezone or else other.depends_upon_implicit_timezone) implies a_context /= Void
+			comparable_a_other: a_other /= Void and then is_comparable (a_other)
+			dynamic_context_not_void: (depends_upon_implicit_timezone or else a_other.depends_upon_implicit_timezone) implies a_context /= Void
 		deferred
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
 
-	same_atomic_value (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
-			-- Are `Current' and `other' the same value?
+	same_atomic_value (a_other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Are `Current' and `a_other' the same value?
 		require
-			other_not_void: other /= Void
+			a_other_not_void: a_other /= Void
 		do
-			Result := same_expression (other)
+			Result := same_expression (a_other)
 		end
 
 feature -- Status report
@@ -117,10 +117,10 @@ feature -- Status report
 			Result := True
 		end
 
-	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
-			-- Is `other' comparable to `Current'?
+	is_comparable (a_other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Is `a_other' comparable to `Current'?
 		require
-			other_not_void: other /= Void
+			a_other_not_void: a_other /= Void
 		deferred
 		end
 

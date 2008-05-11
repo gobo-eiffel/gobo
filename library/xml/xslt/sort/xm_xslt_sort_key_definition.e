@@ -101,7 +101,7 @@ feature -- Access
 			if collation_name /= Void then
 				a_collator := a_context.collator (collation_name)
 			end
-			create Result.make (sort_key, order, data_type, case_order, language, a_collator, a_context)
+			create Result.make (sort_key, order, data_type, case_order, language, a_collator)
 		ensure
 			reduced_definition_not_void: Result /= Void
 		end

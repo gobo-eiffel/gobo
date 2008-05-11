@@ -331,7 +331,6 @@ feature {NONE} -- Agents
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
 		local
-			l_child: XM_XPATH_EXPRESSION
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
@@ -339,12 +338,11 @@ feature {NONE} -- Agents
 			if a_child /= l_replacement.item then
 				children.replace (l_replacement.item, a_index)
 			else
-				l_child := a_child
-				if not l_child.is_atomic_value then
+				if not a_child.is_atomic_value then
 					a_all_atomic.put (False)
 				end
 			end
-			if l_child.is_sequence_expression or l_child.is_empty_sequence then
+			if a_child.is_sequence_expression or a_child.is_empty_sequence then
 				a_nested.put (True)
 			end
 		end

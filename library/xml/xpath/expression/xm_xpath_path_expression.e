@@ -699,7 +699,7 @@ feature {NONE} -- Implementation
 				copy_location_identifier (l_path)
 				set_replacement (a_replacement, l_path)
 			else
-				set_replacement (a_replacement, Current)
+				a_replacement.put (Current)
 			end
 		ensure
 			replaced: a_replacement.item /= Void

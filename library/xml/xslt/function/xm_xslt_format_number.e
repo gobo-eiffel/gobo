@@ -218,59 +218,61 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			if not are_arguments_checked then
 				are_arguments_checked := True
 				Precursor (a_replacement, a_context)
-				if arguments.item (2).is_string_value then
-					
-					-- picture is known statically - optimize for this common case
-					
-					picture := arguments.item (2).as_string_value.string_value
-				end
-				l_expression_context ?= a_context
-				check
-					expression_context: l_expression_context /= Void
-				end
-				if arguments.count = 3 and a_replacement.item = Current then
-					if arguments.item (3).is_string_value then
+				if a_replacement.item = Void then
+					if arguments.item (2).is_string_value then
 						
-						-- common case, decimal format name is supplied as a string literal
+						-- picture is known statically - optimize for this common case
 						
-						create l_parser.make (arguments.item (3).as_string_value.string_value)
-						if l_parser.is_valid then
-							l_dfm := l_expression_context.style_sheet.decimal_format_manager
-							is_fixup_required := True
+						picture := arguments.item (2).as_string_value.string_value
+					end
+					l_expression_context ?= a_context
+					check
+						expression_context: l_expression_context /= Void
+					end
+					if arguments.count = 3 then
+						if arguments.item (3).is_string_value then
 							
-							if l_parser.is_prefix_present then
-								if a_context.is_prefix_declared (l_parser.optional_prefix) then
-									l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
+							-- common case, decimal format name is supplied as a string literal
+							
+							create l_parser.make (arguments.item (3).as_string_value.string_value)
+							if l_parser.is_valid then
+								l_dfm := l_expression_context.style_sheet.decimal_format_manager
+								is_fixup_required := True
+								
+								if l_parser.is_prefix_present then
+									if a_context.is_prefix_declared (l_parser.optional_prefix) then
+										l_uri := a_context.uri_for_prefix (l_parser.optional_prefix)
+									else
+										set_last_error_from_string ("Prefix of decimal-format-name has not been declared",
+											Xpath_errors_uri, "XTDE1280", Static_error)
+									end
 								else
-									set_last_error_from_string ("Prefix of decimal-format-name has not been declared",
-										Xpath_errors_uri, "XTDE1280", Static_error)
+									l_uri := Null_uri
+								end
+								if not is_error then
+									if not shared_name_pool.is_name_code_allocated (l_parser.optional_prefix, l_uri, l_parser.local_name) then
+										shared_name_pool.allocate_name (l_parser.optional_prefix, l_uri, l_parser.local_name)
+									end
+									l_fingerprint := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
+									l_dfm.register_usage (l_fingerprint, Current)
 								end
 							else
-								l_uri := Null_uri
-							end
-							if not is_error then
-								if not shared_name_pool.is_name_code_allocated (l_parser.optional_prefix, l_uri, l_parser.local_name) then
-									shared_name_pool.allocate_name (l_parser.optional_prefix, l_uri, l_parser.local_name)
-								end
-								l_fingerprint := shared_name_pool.fingerprint (l_uri, l_parser.local_name)
-								l_dfm.register_usage (l_fingerprint, Current)
+								set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
+									Xpath_errors_uri, "XTDE1280", Static_error)
 							end
 						else
-							set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
-								Xpath_errors_uri, "XTDE1280", Static_error)
+							
+							-- we need to save the namespace context
+							
+							namespace_resolver := a_context.namespace_resolver
 						end
 					else
 						
-						-- we need to save the namespace context
+						-- two arguments only: it uses the default decimal format
 						
-						namespace_resolver := a_context.namespace_resolver
+						l_dfm := l_expression_context.style_sheet.decimal_format_manager
+						l_dfm.register_usage (-1, Current)
 					end
-				else
-					
-					-- two arguments only: it uses the default decimal format
-					
-					l_dfm := l_expression_context.style_sheet.decimal_format_manager
-					l_dfm.register_usage (-1, Current)
 				end
 			end
 		end

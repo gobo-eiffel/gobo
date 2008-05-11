@@ -939,18 +939,18 @@ feature -- Setting cardinality
 		end
 
 	set_cardinality_many is
-			-- Allow only more than one item only.
+			-- Allow more than one item.
 		do
 			if not are_cardinalities_computed then
 				are_cardinalities_computed := True
 			end
-			cardinality_allows_zero := False
-			cardinality_allows_one := False
+			cardinality_allows_zero := True
+			cardinality_allows_one := True
 			cardinality_allows_many := True
 		ensure
 			cardinalities_computed: are_cardinalities_computed
-			zero_disallowed: cardinality_allows_zero = False
-			one_allowed: cardinality_allows_one = False
+			zero_disallowed: cardinality_allows_zero = True
+			one_allowed: cardinality_allows_one = True
 			many_allowed: cardinality_allows_many = True
 		end
 

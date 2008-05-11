@@ -17,6 +17,10 @@ inherit
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	XM_XPATH_FILTER_TEST [XM_XPATH_ITEM]
+		export {NONE} all end
 
 create
 
@@ -64,9 +68,6 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	is_singleton_boolean_filter: BOOLEAN
-			-- `True' if `filter' returns exactly one boolean
-	
 	item: XM_XPATH_ITEM is
 			-- Value or node at the current position
 		do
@@ -104,23 +105,8 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	non_numeric: BOOLEAN
-			-- Is statically known numeric result not possible?
-
 	current_item: like item
 			-- Current item
-
-	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			-- The underlying iterator
-
-	filter: XM_XPATH_EXPRESSION
-			-- Filter to apply to `base_iterator'
-
-	filter_context: XM_XPATH_CONTEXT
-			-- Evaluation context for the filter
-
-	last_match_test: BOOLEAN
-			-- Result from `test_match'
 
 	advance is
 			-- Move to next matching node.
@@ -156,73 +142,5 @@ feature {NONE} -- Implementation
 				current_item := Void
 			end
 		end
-
-	test_match is
-			-- Test if the context item match the filter predicate?
-		require
-			filter_not_in_error: not filter.is_error
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: like item
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_integer_value: XM_XPATH_MACHINE_INTEGER_VALUE
-		do
-			last_match_test := False
-			if non_numeric or is_singleton_boolean_filter then
-				filter.calculate_effective_boolean_value (filter_context)
-				a_boolean_value := filter.last_boolean_value
-				if a_boolean_value.is_error then
-					set_last_error (a_boolean_value.error_value)
-				else
-					last_match_test := a_boolean_value.value
-				end
-			else
-
-				-- This code is carefully designed to avoid reading more items from the
-				-- iteration of the filter expression than are absolutely essential.
-
-				filter.create_iterator (filter_context)
-				an_iterator := filter.last_iterator
-				if not an_iterator.is_error then
-					an_iterator.start
-					if an_iterator.is_error then
-						last_match_test := False
-						set_last_error (an_iterator.error_value)
-					elseif not an_iterator.after then
-						an_item := an_iterator.item
-						if an_item.is_node then
-							last_match_test := True
-						elseif an_item.is_boolean_value then
-							if an_item.as_boolean_value.value then	last_match_test := True	else an_iterator.forth; last_match_test := not an_iterator.after end
-						elseif an_item.is_machine_integer_value and then an_item.as_machine_integer_value.is_platform_integer then
-							if an_item.as_machine_integer_value.as_integer = base_iterator.index then last_match_test := True else an_iterator.forth; last_match_test := not an_iterator.after end
-						elseif an_item.is_numeric_value then
-							create an_integer_value.make (base_iterator.index)
-							last_match_test := an_item.as_numeric_value.same_expression (an_integer_value)
-							if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
-						else
-							if an_item.is_string_value then
-								last_match_test := STRING_.same_string (an_item.as_string_value.string_value, "")
-								if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
-							else
-								last_match_test := True
-							end
-						end
-					end
-				else
-					
-					-- We are in error
-					
-					last_match_test := False
-					set_last_error (an_iterator.error_value)
-				end
-			end
-		end
-
-invariant
-
-	base_iterator_not_void: base_iterator /= Void
-	filter_not_void: filter /= Void
-	filter_context_not_void: filter_context /= Void
 
 end

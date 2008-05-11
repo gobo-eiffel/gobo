@@ -75,12 +75,15 @@ feature -- Optimization
 			n: INTEGER
 		do
 			Precursor (a_replacement)
-			if arguments.count = 3 then
-				n := 3
-			end
-			try_to_compile (n, arguments)
-			if regexp_error_value /= Void then
-				set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (regexp_error_value))
+			if a_replacement.item = Current then
+				if arguments.count = 3 then
+					n := 3
+				end
+				try_to_compile (n, arguments)
+				if regexp_error_value /= Void then
+					a_replacement.put (Void)
+					set_replacement (a_replacement, create {XM_XPATH_INVALID_VALUE}.make (regexp_error_value))
+				end
 			end
 		end
 		

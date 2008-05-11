@@ -99,6 +99,7 @@ feature -- Optimization
 			l_required_type: XM_XPATH_SEQUENCE_TYPE
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
+			create l_replacement.make (Void)
 			name.check_static_type (l_replacement, a_context, a_context_item_type)
 			set_name (l_replacement.item)
 			if name.is_error then

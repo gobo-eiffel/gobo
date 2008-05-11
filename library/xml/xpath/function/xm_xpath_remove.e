@@ -80,6 +80,7 @@ feature -- Optimization
 				if arguments.item (2).is_numeric_value and then arguments.item (2).as_numeric_value.is_platform_integer and then
 					arguments.item (2).as_numeric_value.as_integer = 1 then
 					create l_tail_expression.make (arguments.item (1), 2)
+					a_replacement.put (Void)
 					set_replacement (a_replacement, l_tail_expression)
 				end
 			end

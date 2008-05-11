@@ -167,7 +167,7 @@ feature -- Evaluation
 			-- Evaluate as a single item to `a_result'.
 		local
 			l_text_value, l_error: STRING
-			l_builder: XM_XPATH_TREE_BUILDER
+			l_builder: XM_XPATH_TINY_BUILDER
 			l_result: XM_XSLT_TRANSFORMATION_RESULT
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			l_new_context: XM_XSLT_EVALUATION_CONTEXT
@@ -203,7 +203,7 @@ feature -- Evaluation
 				end
 			else
 				l_new_context ?= a_context.new_minor_context
-				create l_builder.make (Current , base_uri, Void)
+				create l_builder.make (base_uri, Void)
 				create l_result.make_receiver (l_builder)
 				l_new_context.change_output_destination (Void, l_result, False, Validation_strip, Void)
 				l_receiver := l_new_context.current_receiver

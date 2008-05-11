@@ -148,7 +148,7 @@ feature -- Status setting
 		do
 			initialize_intrinsic_dependencies
 			if select_expression = Void then
-				set_intrinsically_depends_upon_current_item
+				set_intrinsically_depends_upon_context_item
 			end
 		end
 

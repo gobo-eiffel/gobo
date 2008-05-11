@@ -138,10 +138,10 @@ feature -- Access
 		do
 			inspect
 				node_type
-			when Comment_node, Processing_instruction_node then
+			when Comment_node, Processing_instruction_node, Namespace_node then
 				create l_string_value.make (string_value)
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_string_value)
-			when Text_node, Namespace_node then
+			when Text_node then
 				create l_string_value.make_untyped_atomic (string_value)
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (l_string_value)
 			else
@@ -160,9 +160,9 @@ feature -- Access
 		do
 			inspect
 				node_type
-			when Comment_node, Processing_instruction_node then
+			when Comment_node, Processing_instruction_node, Namespace_node then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
-			when Text_node, Namespace_node then
+			when Text_node then
 				create {XM_XPATH_STRING_VALUE} Result.make_untyped_atomic (string_value)
 			else
 				if type_annotation = type_factory.untyped_type.fingerprint or type_annotation = type_factory.untyped_atomic_type.fingerprint then

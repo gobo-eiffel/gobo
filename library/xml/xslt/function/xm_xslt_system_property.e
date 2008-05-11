@@ -152,16 +152,18 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			l_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			Precursor (a_replacement, a_context)
-			if not arguments.item (1).is_string_value then
-
-				-- we need to save the namespace context
-
-				l_expression_context ?= a_context
-				check
-					expression_context: l_expression_context /= Void
-					-- as this is XSLT
+			if a_replacement.item = Void then
+				if not arguments.item (1).is_string_value then
+					
+					-- we need to save the namespace context
+					
+					l_expression_context ?= a_context
+					check
+						expression_context: l_expression_context /= Void
+						-- as this is XSLT
+					end
+					namespace_context := l_expression_context.namespace_context
 				end
-				namespace_context := l_expression_context.namespace_context
 			end
 		end
 

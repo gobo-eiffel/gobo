@@ -21,8 +21,13 @@ inherit
 		end
 
 	XM_XPATH_AXIS
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_TYPE
+		export {NONE} all end
+
+	XM_XPATH_TOKENS
+		export {NONE} all end
 
 create
 
@@ -74,16 +79,14 @@ feature -- Access
 			else
 				principal_axis := axis_principal_node_type (axis)
 				if principal_axis = Attribute_node then
-					create {XM_XPATH_NODE_KIND_TEST} Result.make_attribute_test
-				elseif node_test = Void or else node_test.node_kind = Any_node then
+					create {XM_XPATH_COMBINED_NODE_TEST} Result.make (create {XM_XPATH_NODE_KIND_TEST}.make_attribute_test, intersect_token, node_test)
+				elseif principal_axis = Namespace_node then
+					create {XM_XPATH_COMBINED_NODE_TEST} Result.make (create {XM_XPATH_NODE_KIND_TEST}.make_namespace_test, intersect_token, node_test)
+				elseif node_test = Void then
 					Result := any_node_test
 				else
-					create {XM_XPATH_NODE_KIND_TEST} Result.make (node_test.node_kind)
+					Result := node_test
 				end
-			end
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
 			end
 		end
 
@@ -285,7 +288,8 @@ feature {NONE} -- Implementation
 		local
 			l_origin, l_kind: INTEGER
 			l_message, l_article: STRING
-			--	a_schema_type: XM_XPATH_SCHEMA_TYPE
+			l_element_test: XM_XPATH_NODE_TEST
+			l_names, l_selected_names: DS_SET [INTEGER]
 		do
 			l_origin := a_node_test.primitive_type
 			if l_origin /= Any_node and then is_axis_always_empty (axis, l_origin) then
@@ -303,14 +307,14 @@ feature {NONE} -- Implementation
 				a_context.issue_warning (l_message)
 			elseif node_test /= Void then
 				l_kind := node_test.primitive_type
-				if l_kind /= Any_node and then not axis_contains_node_kind (axis, l_kind) then
+				if l_kind /= Any_node and not axis_contains_node_kind (axis, l_kind) then
 					set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 					l_message := STRING_.concat ("The ", axis_name (axis))
 					l_message := STRING_.appended_string (l_message, " axis will never select any ")
 					l_message := STRING_.appended_string (l_message, node_kind_description (l_kind))
 					l_message := STRING_.appended_string (l_message, " nodes")
 					a_context.issue_warning (l_message)
-				elseif axis = Self_axis and then l_kind /= Any_node and then l_origin /= Any_node and then l_kind /= l_origin then
+				elseif axis = Self_axis and l_kind /= Any_node and l_origin /= Any_node and l_kind /= l_origin then
 					set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
 					l_message := STRING_.concat ("The self axis will never select any ", node_kind_description (l_origin))
 					l_message := STRING_.appended_string (l_message, " nodes when starting at ")
@@ -323,7 +327,24 @@ feature {NONE} -- Implementation
 					l_message := STRING_.appended_string (l_message, " node")
 					a_context.issue_warning (l_message)
 				else
-					a_replacement.put (Current)
+					if axis = Self_axis then
+						create {XM_XPATH_COMBINED_NODE_TEST} known_item_type.make (a_node_test, Intersect_token, node_test)
+					end
+					if a_node_test.is_document_node_test and axis = Child_axis and l_kind = Element_node then
+						l_element_test := a_node_test.as_document_node_test.element_test
+						l_names := l_element_test.constraining_node_names
+						if l_names /= Void then
+							l_selected_names := node_test.constraining_node_names
+							if l_selected_names /= Void and then l_selected_names.intersection (l_names).is_empty then
+								set_replacement (a_replacement, create {XM_XPATH_EMPTY_SEQUENCE}.make)
+								a_context.issue_warning ("Step from document node selects only invalid element names.")
+							end
+						end
+						known_item_type := l_element_test
+					end
+					if a_replacement.item = Void then
+						a_replacement.put (Current)
+					end
 					--a_schema_type := a_node_test.content_type
 					-- TODO: schema-aware version
 				end

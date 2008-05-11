@@ -74,6 +74,7 @@ feature -- Optimization
 			if not is_error and a_replacement.item = Current then
 				l_expression := simplified_singleton
 				if l_expression /= Current then
+					a_replacement.put (Void)
 					set_replacement (a_replacement, l_expression)
 				end
 			end

@@ -149,7 +149,7 @@ feature -- Comparison
 				Result := Precursor (a_other)
 			end
 		end
-
+	
 feature -- Status report
 
 	is_comparable (a_other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
@@ -315,12 +315,10 @@ feature -- Conversion
 			if a_required_type = type_factory.string_type or
 				a_required_type = type_factory.any_atomic_type or
 				a_required_type = any_item then
-				is_untyped_atomic := False
-				converted_value := Current
+				create {XM_XPATH_STRING_VALUE} converted_value.make (value)
 			elseif a_required_type = type_factory.untyped_atomic_type or
 				a_required_type = type_factory.any_simple_type then
-				is_untyped_atomic := True
-				converted_value := Current
+				create {XM_XPATH_STRING_VALUE} converted_value.make_untyped_atomic (value)
 			else
 				l_value := STRING_.cloned_string (value)
 				STRING_.left_adjust (l_value)

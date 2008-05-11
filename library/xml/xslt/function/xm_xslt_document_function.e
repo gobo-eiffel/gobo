@@ -205,15 +205,17 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			Precursor (a_replacement, a_context)
-			-- the not-void test is to avoid the correct value being overridden
-			-- when compiling a template - see W3C test case mdocs21
-			if stylesheet_base_uri = Void then
-				stylesheet_base_uri := a_context.base_uri
-			end
-			create l_replacement.make (Void)
-			arguments.item (1).set_unsorted (l_replacement, False)
-			if arguments.item (1) /= l_replacement.item then
-				arguments.replace (l_replacement.item, 1)
+			if a_replacement.item = Void then
+				-- the not-void test is to avoid the correct value being overridden
+				-- when compiling a template - see W3C test case mdocs21
+				if stylesheet_base_uri = Void then
+					stylesheet_base_uri := a_context.base_uri
+				end
+				create l_replacement.make (Void)
+				arguments.item (1).set_unsorted (l_replacement, False)
+				if arguments.item (1) /= l_replacement.item then
+					arguments.replace (l_replacement.item, 1)
+				end
 			end
 		end
 

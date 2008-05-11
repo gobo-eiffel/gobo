@@ -85,6 +85,7 @@ feature -- Optimization
 			if a_replacement.item = Current then
 				if arguments.item (1).item_type.is_same_type (type_factory.string_type) and
 					arguments.item (1).cardinality_exactly_one then
+					a_replacement.put (Void)
 					set_replacement (a_replacement, arguments.item (1))
 				end
 			end

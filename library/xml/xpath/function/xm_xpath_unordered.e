@@ -75,10 +75,11 @@ feature -- Optimization
 				if arguments.item (1) /= l_replacement.item then
 					arguments.replace (l_replacement.item, 1)
 				end
-			elseif l_replacement.item.is_unordered_function then
-				l_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
+			elseif a_replacement.item.is_unordered_function then
+				a_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
 			end
 			if a_replacement.item /= Void then
+				a_replacement.put (Void)
 				set_replacement (a_replacement, arguments.item (1))
 			else
 				a_replacement.put (Current)
@@ -97,8 +98,8 @@ feature -- Optimization
 				if arguments.item (1) /= l_replacement.item then
 					arguments.replace (l_replacement.item, 1)
 				end
-			elseif l_replacement.item.is_unordered_function then
-				l_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
+			elseif a_replacement.item.is_unordered_function then
+				a_replacement.item.as_unordered_function.arguments.item (1).set_unsorted (a_replacement, True)
 			end
 			if a_replacement.item /= Void then
 				set_replacement (a_replacement, arguments.item (1))

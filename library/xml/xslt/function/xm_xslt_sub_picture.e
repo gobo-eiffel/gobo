@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 				end
 				l_index := l_index + 1
 			end
-			if not is_digit then
+			if not is_error and not is_digit then
 				set_last_error_from_string ("Sub-picture must contain at least one digit sign or zero digit sign?",
 													 Xpath_errors_uri, "XTDE1310", Dynamic_error)
 			end
@@ -619,26 +619,26 @@ feature {NONE} -- Implementation
 			value_not_void: a_value /= Void
 			decimal_format_not_void: a_decimal_format /= Void
 		local
-			l_index, a_point, a_grouping_index, a_grouping_position: INTEGER
-			a_string: STRING
+			l_index, l_point, l_grouping_index, l_grouping_position: INTEGER
+			l_string: STRING
 		do
-			a_point := a_value.index_of (a_decimal_format.decimal_separator.item (1), 1)
+			l_point := a_value.index_of (a_decimal_format.decimal_separator.item (1), 1)
 			if fractional_grouping_separator_positions /= Void then
 				from
-					l_index := 1; a_grouping_index := 1
-					a_string := ""
+					l_index := 1; l_grouping_index := 1
+					l_string := ""
 				until
 					l_index > a_value.count
 				loop
-					a_grouping_position := fractional_grouping_separator_positions.item (a_grouping_index) + a_point
-					if l_index = a_grouping_position then
-						a_string := STRING_.appended_string (a_string, a_decimal_format.grouping_separator)
-						a_grouping_position := a_grouping_position + 1
+					l_grouping_position := fractional_grouping_separator_positions.item (l_grouping_index) + l_point
+					if l_index = l_grouping_position then
+						l_string := STRING_.appended_string (l_string, a_decimal_format.grouping_separator)
+						l_grouping_position := l_grouping_position + 1
 					end
-					a_string := STRING_.appended_string (a_string, Result.substring (l_index, l_index))
+					l_string := STRING_.appended_string (l_string, a_value.substring (l_index, l_index))
 					l_index := l_index + 1
 				end
-				Result := a_string
+				Result := l_string
 			else
 				Result := a_value
 			end

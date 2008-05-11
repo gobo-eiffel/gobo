@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			string_not_void: a_string /= Void and then a_string.count > 0
 		do
+			make_value
 			set_last_error_from_string (a_string, a_namespace_uri, an_error_code, an_error_type)
 		ensure
 			description_set: error_value /= Void and then error_value.description /= Void and then STRING_.same_string (error_value.description, a_string)

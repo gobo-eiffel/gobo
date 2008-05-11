@@ -253,8 +253,13 @@ feature -- Evaluation
 						--end
 						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
 							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
-							l_reduced_sort_keys.put_last (l_reduced)
-							l_cursor.forth
+							if l_reduced.is_error then
+								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_reduced.error_value)
+								l_cursor.go_after
+							else
+								l_reduced_sort_keys.put_last (l_reduced)
+								l_cursor.forth
+							end
 						else
 							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
 							l_cursor.go_after
@@ -310,8 +315,13 @@ feature -- Evaluation
 						--end
 						if l_sort_key.collation_name = Void or else l_evaluation_context.is_known_collation (l_sort_key.collation_name) then
 							l_reduced := l_sort_key.reduced_definition (l_evaluation_context)
-							l_reduced_sort_keys.put_last (l_reduced)
-							l_cursor.forth
+							if l_reduced.is_error then
+								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_reduced.error_value)
+								l_cursor.go_after
+							else
+								l_reduced_sort_keys.put_last (l_reduced)
+								l_cursor.forth
+							end
 						else
 							create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
 							l_cursor.go_after
