@@ -485,6 +485,7 @@ feature {NONE} -- Generation
 			pointer_index.put (0)
 			none_index.put (0)
 			string_8_index.put (0)
+			string_32_index.put (0)
 			dynamic_type_sets.wipe_out
 			current_dynamic_feature := old_feature
 			current_dynamic_type := old_type
