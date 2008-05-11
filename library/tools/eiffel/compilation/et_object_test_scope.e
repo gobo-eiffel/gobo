@@ -33,19 +33,18 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_local (a_local: ET_IDENTIFIER): BOOLEAN is
-			-- Are we currently in the scope of `a_local'?
+	has_local (a_name: ET_IDENTIFIER): BOOLEAN is
+			-- Are we currently in the scope of object-test local `a_name'?
 			-- (Ignore hidden object-test locals.)
 		require
-			a_local_not_void: a_local /= Void
-			a_object_test_local: a_local.is_object_test_local
+			a_name_not_void: a_name /= Void
 		local
 			i, nb: INTEGER
 		do
 			i := object_tests.count
 			nb := hidden_count + 1
 			from until i < nb loop
-				if object_tests.item (i).name.same_identifier (a_local) then
+				if object_tests.item (i).name.same_identifier (a_name) then
 					Result := True
 					i := 0 -- Jump out of the loop
 				else
@@ -54,19 +53,18 @@ feature -- Status report
 			end
 		end
 
-	has_hidden_local (a_local: ET_IDENTIFIER): BOOLEAN is
-			-- Are we currently in the scope of `a_local', although it has been hidden?
-			-- (We are probably currently analyzing an inline agent and `a_local' has
+	has_hidden_local (a_name: ET_IDENTIFIER): BOOLEAN is
+			-- Are we currently in the scope of object-test local `a_name', although it has been hidden?
+			-- (We are probably currently analyzing an inline agent and `a_name' has
 			-- been declared in an enclosing feature or inline agent.)
 		require
-			a_local_not_void: a_local /= Void
-			a_object_test_local: a_local.is_object_test_local
+			a_name_not_void: a_name /= Void
 		local
 			i: INTEGER
 		do
 			i := hidden_count
 			from until i < 1 loop
-				if object_tests.item (i).name.same_identifier (a_local) then
+				if object_tests.item (i).name.same_identifier (a_name) then
 					Result := True
 					i := 0 -- Jump out of the loop
 				else
@@ -77,13 +75,12 @@ feature -- Status report
 
 feature -- Access
 
-	object_test (a_local: ET_IDENTIFIER): ET_OBJECT_TEST is
-			-- If we are currently in the scope of `a_local', then
-			-- return its associated object-test, otherwise Void
+	object_test (a_name: ET_IDENTIFIER): ET_OBJECT_TEST is
+			-- If we are currently in the scope of object-test local `a_name',
+			-- then return its associated object-test, otherwise Void
 			-- (Ignore hidden object-test locals.)
 		require
-			a_local_not_void: a_local /= Void
-			a_object_test_local: a_local.is_object_test_local
+			a_name_not_void: a_name /= Void
 		local
 			i, nb: INTEGER
 			l_object_test: ET_OBJECT_TEST
@@ -92,7 +89,7 @@ feature -- Access
 			nb := hidden_count + 1
 			from until i < nb loop
 				l_object_test := object_tests.item (i)
-				if l_object_test.name.same_identifier (a_local) then
+				if l_object_test.name.same_identifier (a_name) then
 					Result := l_object_test
 					i := 0 -- Jump out of the loop
 				else
@@ -100,17 +97,16 @@ feature -- Access
 				end
 			end
 		ensure
-			object_test_not_void: has_local (a_local) = (Result /= Void)
+			object_test_not_void: has_local (a_name) = (Result /= Void)
 		end
 
-	hidden_object_test (a_local: ET_IDENTIFIER): ET_OBJECT_TEST is
-			-- If we are currently in the scope of `a_local' although it has been
-			-- hidden, then return its associated object-test, otherwise Void
-			-- (We are probably currently analyzing an inline agent and `a_local'
+	hidden_object_test (a_name: ET_IDENTIFIER): ET_OBJECT_TEST is
+			-- If we are currently in the scope of object-test local `a_name' although
+			-- it has been hidden, then return its associated object-test, otherwise Void
+			-- (We are probably currently analyzing an inline agent and `a_name'
 			-- has been declared in an enclosing feature or inline agent.)
 		require
-			a_local_not_void: a_local /= Void
-			a_object_test_local: a_local.is_object_test_local
+			a_name_not_void: a_name /= Void
 		local
 			i: INTEGER
 			l_object_test: ET_OBJECT_TEST
@@ -118,7 +114,7 @@ feature -- Access
 			i := hidden_count
 			from until i < 1 loop
 				l_object_test := object_tests.item (i)
-				if l_object_test.name.same_identifier (a_local) then
+				if l_object_test.name.same_identifier (a_name) then
 					Result := l_object_test
 					i := 0 -- Jump out of the loop
 				else
@@ -126,7 +122,7 @@ feature -- Access
 				end
 			end
 		ensure
-			object_test_not_void: has_hidden_local (a_local) = (Result /= Void)
+			object_test_not_void: has_hidden_local (a_name) = (Result /= Void)
 		end
 
 	object_tests: DS_ARRAYED_LIST [ET_OBJECT_TEST]
