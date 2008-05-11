@@ -16,22 +16,18 @@ inherit
 
 	XM_XSLT_GROUP_NODE_ITERATOR
 		undefine
-			is_array_iterator, as_array_iterator, 
+			is_array_iterator, as_array_iterator,
 			is_last_position_finder, last_position,
 			is_realizable_iterator,
 			is_reversible_iterator,
 			is_singleton_iterator, as_singleton_iterator
 		redefine
-			current_group_iterator
-		select
+			current_group_iterator,
 			is_error, error_value, index
 		end
 
 	XM_XSLT_SORTED_NODE_ITERATOR
 		rename
-			is_error as is_sorted_error,
-			error_value as sorted_error_value,
-			index as sorted_index,
 			make as old_make
 		undefine
 			set_last_error,
@@ -41,7 +37,8 @@ inherit
 			is_invulnerable,
 			before, start, off
 		redefine
-			build_array, another
+			build_array, another,
+			is_error, error_value, index
 		end
 
 create
@@ -82,7 +79,19 @@ feature {NONE} -- Initialization
 			sort_keys_set: sort_keys = some_sort_keys
 		end
 
+feature -- Status report
+
+	is_error: BOOLEAN
+			-- Is `Current' in error?
+
 feature -- Access
+
+	index: INTEGER
+			-- The position of the current item;
+			-- This will be zero after creation of the iterator
+
+	error_value: XM_XPATH_ERROR_VALUE
+			-- Last error
 
 	current_grouping_key: XM_XPATH_ATOMIC_VALUE is
 			-- Grouping key for current group;
@@ -121,7 +130,7 @@ feature -- Duplication
 			Result.set_count (count)
 			Result.set_node_keys (node_keys)
 		ensure then
-			not is_error implies count_determined			
+			not is_error implies count_determined
 		end
 
 feature {NONE} -- Implementation
@@ -147,7 +156,7 @@ feature {NONE} -- Implementation
 			l_new_context := context.new_context
 			l_new_context.set_current_iterator (base_iterator)
 			l_new_context.set_current_group_iterator (group_iterator)
-			
+
 			-- Initialize the array with data.
 
 			from
@@ -199,4 +208,4 @@ invariant
 	group_iterator: group_iterator = base_iterator
 
 end
-	
+

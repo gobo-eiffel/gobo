@@ -21,27 +21,26 @@ inherit
 			is_node_iterator, as_node_iterator,
 			is_reversible_iterator,
 			is_singleton_iterator, as_singleton_iterator,
-			is_array_iterator, as_array_iterator,			
+			is_array_iterator, as_array_iterator,
 			is_empty_iterator, as_empty_iterator
 		redefine
-			is_group_node_iterator, as_group_node_iterator
-		select
+			is_group_node_iterator, as_group_node_iterator,
 			error_value, index, is_error
 		end
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-		rename
-			error_value as node_sequence_error_value,
-			index as node_sequence_index,
-			is_error as is_node_sequence_error
 		undefine
 			set_last_error, is_invulnerable,
 			before, off, start, is_last_position_finder, last_position
 		redefine
-			is_node_iterator, as_node_iterator
+			is_node_iterator, as_node_iterator,
+			error_value, index, is_error
 		end
 
 feature -- Status report
+
+	is_error: BOOLEAN
+			-- Is `Current' in error?
 
 	is_node_iterator: BOOLEAN is
 			-- Does `Current' yield a node sequence?
@@ -54,6 +53,15 @@ feature -- Status report
 		do
 			Result := True
 		end
+
+feature -- Access
+
+	index: INTEGER
+			-- The position of the current item;
+			-- This will be zero after creation of the iterator
+
+	error_value: XM_XPATH_ERROR_VALUE
+			-- Last error
 
 feature -- Conversion
 
@@ -68,6 +76,6 @@ feature -- Conversion
 		do
 			Result := Current
 		end
-	
+
 end
-	
+
