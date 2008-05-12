@@ -4169,6 +4169,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			locals_written := locals_written_in_rescue
 			locals_read := locals_read_in_rescue
 			if l_rescue /= Void then
+				has_rescue := True
 				print_indentation
 				current_file.put_string (c_if)
 				current_file.put_character (' ')
@@ -4244,7 +4245,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				-- Variable for 'Result' entity.
 			if a_result_type /= Void then
 				print_indentation
-				if (l_result_read_in_rescue or (has_retry and then l_result_read_in_body)) and then l_result_written_in_body then
+				if has_rescue and then (l_result_read_in_rescue or (has_retry and then l_result_read_in_body)) and then l_result_written_in_body then
 						-- The implementation of the rescue mechanism in C uses 'setjmp'
 						-- and 'longjmp'. The use of these two C functions requires that
 						-- any local variable modified between the call to 'setjmp' and
@@ -4276,7 +4277,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					l_local_type_set := dynamic_type_set (l_name)
 					l_local_type := l_local_type_set.static_type
 					print_indentation
-					if (locals_read_in_rescue.has (l_name) or (has_retry and then locals_read_in_body.has (l_name))) and then locals_written_in_body.has (l_name) then
+					if has_rescue and then (locals_read_in_rescue.has (l_name) or (has_retry and then locals_read_in_body.has (l_name))) and then locals_written_in_body.has (l_name) then
 							-- The implementation of the rescue mechanism in C uses 'setjmp'
 							-- and 'longjmp'. The use of these two C functions requires that
 							-- any local variable modified between the call to 'setjmp' and
@@ -7309,10 +7310,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				if l_name.is_argument then
 					l_name_expression := l_name.argument_name
 				elseif l_name.is_local then
-						-- Keep track of the fact that the value of this local variable can
-						-- possibly be modified. Useful to determine the 'volatile' status
-						-- of the local variable when current feature has a rescue clause.
-					locals_written.force_last (l_name.local_name.identifier)
+					if has_rescue then
+							-- Keep track of the fact that the value of this local variable can
+							-- possibly be modified. Useful to determine the 'volatile' status
+							-- of the local variable when current feature has a rescue clause.
+						locals_written.force_last (l_name.local_name.identifier)
+					end
 					l_name_expression := l_name.local_name
 				elseif l_name.is_object_test_local then
 					l_name_expression := l_name.object_test_local_name
@@ -7569,17 +7572,26 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			if in_operand then
 				operand_stack.force (a_name)
 			else
+				if has_rescue then
 					-- Keep track of the fact that this local variable has been
 					-- read. Useful to determine the 'volatile' status of the local
 					-- variable when current feature has a rescue clause.
-				locals_read.force_last (a_name)
+					locals_read.force_last (a_name)
+				end
 				if in_target then
 					l_dynamic_type_set := dynamic_type_set (a_name)
 					l_static_type := l_dynamic_type_set.static_type
 					if l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
+						current_file.put_character ('(')
+						if has_rescue then
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character (')')
+						end
 						print_local_name (a_name, current_file)
+						current_file.put_character (')')
 					elseif call_target_type.is_expanded and not call_target_type.is_generic then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
@@ -7587,9 +7599,21 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						print_boxed_attribute_item_access (a_name, call_target_type, call_target_check_void)
 						current_file.put_character (')')
 					else
+						if has_rescue then
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character (')')
+						end
 						print_local_name (a_name, current_file)
 					end
 				else
+					if has_rescue then
+						l_dynamic_type_set := dynamic_type_set (a_name)
+						l_static_type := l_dynamic_type_set.static_type
+						current_file.put_character ('(')
+						print_type_declaration (l_static_type, current_file)
+						current_file.put_character (')')
+					end
 					print_local_name (a_name, current_file)
 				end
 			end
@@ -8796,16 +8820,25 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 				operand_stack.force (an_expression)
 			else
 				if in_target then
-						-- Keep track of the fact that the value of the 'Result' entity has
-						-- been read. Useful to determine the 'volatile'status of the 'Result'
-						-- entity when current feature has a rescue clause.
-					result_read := True
+					if has_rescue then
+							-- Keep track of the fact that the value of the 'Result' entity has
+							-- been read. Useful to determine the 'volatile'status of the 'Result'
+							-- entity when current feature has a rescue clause.
+						result_read := True
+					end
 					l_dynamic_type_set := dynamic_type_set (an_expression)
 					l_static_type := l_dynamic_type_set.static_type
 					if l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
 						current_file.put_character ('&')
+						current_file.put_character ('(')
+						if has_rescue then
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character (')')
+						end
 						print_result_name (current_file)
+						current_file.put_character (')')
 					elseif call_target_type.is_expanded and not call_target_type.is_generic then
 							-- We need to unbox the object and then pass its address.
 						current_file.put_character ('&')
@@ -8813,9 +8846,21 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 						print_boxed_attribute_item_access (an_expression, call_target_type, call_target_check_void)
 						current_file.put_character (')')
 					else
+						if has_rescue then
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character (')')
+						end
 						print_result_name (current_file)
 					end
 				else
+					if has_rescue then
+						l_dynamic_type_set := dynamic_type_set (an_expression)
+						l_static_type := l_dynamic_type_set.static_type
+						current_file.put_character ('(')
+						print_type_declaration (l_static_type, current_file)
+						current_file.put_character (')')
+					end
 					print_result_name (current_file)
 				end
 			end
@@ -8834,11 +8879,13 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_temp: ET_IDENTIFIER
 			l_pointer: BOOLEAN
 		do
-				-- Keep track of the fact that the value of the 'Result' entity can
-				-- possibly be modified and read. Useful to determine the 'volatile'
-				-- status of the 'Result' entity when current feature has a rescue clause.
-			result_read := True
-			result_written := True
+			if has_rescue then
+					-- Keep track of the fact that the value of the 'Result' entity can
+					-- possibly be modified and read. Useful to determine the 'volatile'
+					-- status of the 'Result' entity when current feature has a rescue clause.
+				result_read := True
+				result_written := True
+			end
 			l_dynamic_type_set := dynamic_type_set (an_expression)
 			l_dynamic_type := l_dynamic_type_set.static_type
 			l_pointer := (l_dynamic_type = current_dynamic_system.pointer_type)
@@ -9832,14 +9879,25 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				elseif l_identifier.is_temporary then
 					print_temporary_variable (l_identifier)
 				elseif l_identifier.is_local then
-						-- Keep track of the fact that the value of this local variable
-						-- has been modified. Useful to determine the 'volatile' status
-						-- of the local variable when current feature has a rescue clause.
-					locals_written.force_last (l_identifier)
-					l_was_read := locals_read.has (l_identifier)
-					print_local_variable (l_identifier)
-					if not l_was_read and locals_read.has (l_identifier) then
-						locals_read.remove (l_identifier)
+					if has_rescue then
+							-- Keep track of the fact that the value of this local variable
+							-- has been modified. Useful to determine the 'volatile' status
+							-- of the local variable when current feature or inline agent
+							-- has a rescue clause.
+							--
+							-- Set `has_rescue' to False before calling `print_local_variable'
+							-- because the fact that we are in a rescue clause has already
+							-- been taken into account.
+						locals_written.force_last (l_identifier)
+						l_was_read := locals_read.has (l_identifier)
+						has_rescue := False
+						print_local_variable (l_identifier)
+						has_rescue := True
+						if not l_was_read and locals_read.has (l_identifier) then
+							locals_read.remove (l_identifier)
+						end
+					else
+						print_local_variable (l_identifier)
 					end
 				else
 					l_seed := l_identifier.seed
@@ -9857,13 +9915,24 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 				check
 					is_result: a_writable.is_result
 				end
-					-- Keep track of the fact that the value of the 'Result' entity
-					-- has been modified. Useful to determine the 'volatile' status
-					-- of the 'Result' entity when current feature has a rescue clause.
-				result_written := True
-				l_was_read := result_read
-				a_writable.process (Current)
-				result_read := l_was_read
+				if has_rescue then
+						-- Keep track of the fact that the value of the 'Result' entity
+						-- has been modified. Useful to determine the 'volatile' status
+						-- of the 'Result' entity when current feature or inline agent
+						-- has a rescue clause.
+						--
+						-- Set `has_rescue' to False before calling `print_local_variable'
+						-- because the fact that we are in a rescue clause has already
+						-- been taken into account.
+					result_written := True
+					l_was_read := result_read
+					has_rescue := False
+					a_writable.process (Current)
+					has_rescue := True
+					result_read := l_was_read
+				else
+					a_writable.process (Current)
+				end
 			end
 			call_target_type := old_target_type
 			in_operand := old_in_operand
@@ -25319,40 +25388,54 @@ feature {NONE} -- Tuple arguments in agent routines (Implementation)
 
 feature {NONE} -- Rescue clauses
 
+	has_rescue: BOOLEAN
+			-- Does current feature or inline agent have a rescue clause?
+
 	has_retry: BOOLEAN
-			-- Is 'retry' being called in the rescue clause of current feature?
+			-- Is 'retry' being called in the rescue clause of current feature or inline agent?
 
 	locals_written: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are written in the code of current feature being processed
-			-- (Can be either in the body or the rescue clause of the current feature)
+			-- Local variables which are written in the code of current feature
+			-- or inline agent being processed
+			-- (Can be either in the body or the rescue clause of the
+			-- current feature or inline agent.)
 
 	locals_written_in_body: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are written in the body of current feature
+			-- Local variables which are written in the body of
+			-- current feature or inline agent
 
 	locals_written_in_rescue: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are written in the rescue clause of current feature
+			-- Local variables which are written in the rescue clause of
+			-- current feature or inline agent
 
 	locals_read: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are read in the code of current feature being processed
-			-- (Can be either in the body or the rescue clause of the current feature)
+			-- Local variables which are read in the code of current feature
+			-- or inline agent being processed
+			-- (Can be either in the body or the rescue clause of the
+			-- current feature or inline agent.)
 
 	locals_read_in_body: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are read in the body of current feature
+			-- Local variables which are read in the body of current feature or inline agent
 
 	locals_read_in_rescue: DS_HASH_SET [ET_IDENTIFIER]
-			-- Local variables which are read in the rescue clause of current feature
+			-- Local variables which are read in the rescue clause of
+			-- current feature or inline agent
 
 	result_written: BOOLEAN
-			-- Is the Result entity written in the code of current feature being processed?
-			-- (Can be either in the body or the rescue clause of the current feature)
+			-- Is the Result entity written in the code of current feature
+			-- or inline agent being processed?
+			-- (Can be either in the body or the rescue clause of the
+			-- current feature or inline agent.)
 
 	result_read: BOOLEAN
-			-- Is the Result entity read in the code of current feature being processed?
-			-- (Can be either in the body or the rescue clause of the current feature)
+			-- Is the Result entity read in the code of current feature
+			-- or inline agent being processed?
+			-- (Can be either in the body or the rescue clause of the
+			-- current feature or inline agent.)
 
 	make_rescue_data is
 			-- Create data to determine the 'volatile' status of local variables
-			-- in features with a rescue clause.
+			-- in features or inline agents with a rescue clause.
 		do
 			create locals_written_in_body.make (50)
 			locals_written_in_body.set_equality_tester (identifier_tester)
@@ -25368,7 +25451,7 @@ feature {NONE} -- Rescue clauses
 
 	reset_rescue_data is
 			-- Reset data to determine the 'volatile' status of local variables
-			-- in features with a rescue clause.
+			-- in features or inline agents with a rescue clause.
 		do
 			locals_written_in_body.wipe_out
 			locals_read_in_body.wipe_out
@@ -25377,6 +25460,7 @@ feature {NONE} -- Rescue clauses
 			result_written := False
 			result_read := False
 			has_retry := False
+			has_rescue := False
 		end
 
 feature {NONE} -- Implementation
