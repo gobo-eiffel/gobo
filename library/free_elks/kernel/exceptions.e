@@ -15,6 +15,8 @@ inherit
 
 	EXCEP_CONST
 
+	EXCEPTION_MANAGER_FACTORY
+
 feature -- Status report
 
 	meaning (except: INTEGER): STRING is

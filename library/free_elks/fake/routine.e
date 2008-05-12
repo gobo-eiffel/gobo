@@ -47,6 +47,14 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
+	empty_operands: OPEN_ARGS is
+			-- Empty tuple matching open operands
+		do
+			create Result
+		ensure
+			empty_operands_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	callable: BOOLEAN is
