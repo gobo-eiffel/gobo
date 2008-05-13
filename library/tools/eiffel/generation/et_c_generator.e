@@ -640,7 +640,10 @@ feature {NONE} -- C code Generation
 				current_file.put_new_line
 				flush_to_c_file
 				header_file.put_new_line
-				print_manifest_string_function
+				print_manifest_string_8_function
+				current_file.put_new_line
+				flush_to_c_file
+				print_manifest_string_32_function
 				current_file.put_new_line
 				flush_to_c_file
 					-- Print polymorphic call functions.
@@ -19984,9 +19987,9 @@ feature {NONE} -- C function generation
 			current_call_info := old_call_info
 		end
 
-	print_manifest_string_function is
-			-- Print 'GE_ms' function to `current_file' and its signature to `header_file'.
-			-- 'GE_ms' is used to create manifest strings.
+	print_manifest_string_8_function is
+			-- Print 'GE_ms8' function to `current_file' and its signature to `header_file'.
+			-- 'GE_ms8' is used to create manifest strings of type "STRING_8".
 		local
 			l_string_type: ET_DYNAMIC_TYPE
 			l_area_type: ET_DYNAMIC_TYPE
@@ -19994,6 +19997,7 @@ feature {NONE} -- C function generation
 			l_temp: ET_IDENTIFIER
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_string_universe: ET_UNIVERSE
+			old_file: KI_TEXT_OUTPUT_STREAM
 		do
 			l_string_type := current_dynamic_system.string_8_type
 			l_area_type := current_dynamic_system.special_character_8_type
@@ -20007,6 +20011,8 @@ feature {NONE} -- C function generation
 				l_count_type := current_dynamic_system.integer_type (l_string_universe)
 			end
 				-- Print signature to `header_file' and `current_file'.
+			old_file := current_file
+			current_file := current_function_header_buffer
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
 			print_type_declaration (l_string_type, header_file)
@@ -20038,14 +20044,9 @@ feature {NONE} -- C function generation
 			print_result_name (current_file)
 			current_file.put_character (';')
 			current_file.put_new_line
+			current_file := current_function_body_buffer
 			if l_string_type.is_alive then
-				l_temp := temp_variable
-				print_indentation
-				print_type_declaration (l_area_type, current_file)
-				current_file.put_character (' ')
-				print_temp_name (l_temp, current_file)
-				current_file.put_character (';')
-				current_file.put_new_line
+				l_temp := new_temp_variable (l_area_type)
 					-- Create 'area'.
 				print_indentation
 				print_temp_name (l_temp, current_file)
@@ -20127,7 +20128,7 @@ feature {NONE} -- C function generation
 				current_file.put_character (';')
 				current_file.put_new_line
 				if l_string_type.attribute_count < 2 then
-						-- Internal error: the STRING type should have at least
+						-- Internal error: the "STRING_8" type should have at least
 						-- the attributes 'area' and 'count' as first features.
 					set_fatal_error
 					error_handler.report_giaaa_error
@@ -20153,6 +20154,7 @@ feature {NONE} -- C function generation
 					current_file.put_character (';')
 					current_file.put_new_line
 				end
+				mark_temp_variable_free (l_temp)
 			else
 				print_indentation
 				print_result_name (current_file)
@@ -20173,6 +20175,248 @@ feature {NONE} -- C function generation
 			dedent
 			current_file.put_character ('}')
 			current_file.put_new_line
+			current_file := old_file
+			reset_temp_variables
+		end
+
+	print_manifest_string_32_function is
+			-- Print 'GE_ms32' function to `current_file' and its signature to `header_file'.
+			-- 'GE_ms32' is used to create manifest strings of type "STRING_32".
+		local
+			l_string_type: ET_DYNAMIC_TYPE
+			l_area_type: ET_DYNAMIC_TYPE
+			l_count_type: ET_DYNAMIC_TYPE
+			l_temp: ET_IDENTIFIER
+			l_index: ET_IDENTIFIER
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_string_universe: ET_UNIVERSE
+			l_character_type: ET_DYNAMIC_TYPE
+			old_file: KI_TEXT_OUTPUT_STREAM
+		do
+			l_string_type := current_dynamic_system.string_32_type
+			l_area_type := current_dynamic_system.special_character_32_type
+			l_character_type := current_dynamic_system.character_32_type
+			l_string_universe := current_system.string_32_class.universe
+			if l_string_universe = Void then
+					-- Internal error: class "STRING_32" should be known at this stage!
+				set_fatal_error
+				error_handler.report_giaaa_error
+				l_count_type := current_dynamic_system.integer_32_type
+			else
+				l_count_type := current_dynamic_system.integer_type (l_string_universe)
+			end
+				-- Print signature to `header_file' and `current_file'.
+			old_file := current_file
+			current_file := current_function_header_buffer
+			header_file.put_string (c_extern)
+			header_file.put_character (' ')
+			print_type_declaration (l_string_type, header_file)
+			print_type_declaration (l_string_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			header_file.put_string (c_ge_ms32)
+			current_file.put_string (c_ge_ms32)
+			header_file.put_string ("(char* s, ")
+			current_file.put_string ("(char* s, ")
+			print_type_declaration (l_count_type, header_file)
+			print_type_declaration (l_count_type, current_file)
+			header_file.put_character (' ')
+			current_file.put_character (' ')
+			header_file.put_character ('c')
+			current_file.put_character ('c')
+			header_file.put_character (')')
+			current_file.put_character (')')
+			header_file.put_character (';')
+			header_file.put_new_line
+			current_file.put_new_line
+				-- Print body to `current_file'.
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			print_type_declaration (l_string_type, current_file)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file := current_function_body_buffer
+			if l_string_type.is_alive then
+				l_temp := new_temp_variable (l_area_type)
+					-- Create 'area'.
+				print_indentation
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_new)
+				current_file.put_integer (l_area_type.id)
+				current_file.put_character ('(')
+				current_file.put_character ('c')
+				current_file.put_character ('+')
+				current_file.put_character ('1')
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_false)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Default initialization of header part of 'area'.
+				print_indentation
+				current_file.put_character ('*')
+				print_type_cast (l_area_type, current_file)
+				print_temp_name (l_temp, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_default_name (l_area_type, current_file)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set 'count' of 'area'.
+				print_indentation
+				print_attribute_special_count_access (l_temp, l_area_type, False)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				current_file.put_character ('c')
+				current_file.put_character ('+')
+				current_file.put_character ('1')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Copy characters to 'area'.
+				l_index := new_temp_variable (l_count_type)
+				print_indentation
+				current_file.put_string (c_for)
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_temp_name (l_index, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('0')
+				current_file.put_character (';')
+				current_file.put_character (' ')
+				print_temp_name (l_index, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('<')
+				current_file.put_character (' ')
+				current_file.put_character ('c')
+				current_file.put_character (';')
+				current_file.put_character (' ')
+				print_temp_name (l_index, current_file)
+				current_file.put_character ('+')
+				current_file.put_character ('+')
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				print_attribute_special_item_access (l_temp, l_area_type, False)
+				current_file.put_character ('[')
+				print_temp_name (l_index, current_file)
+				current_file.put_character (']')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_type_cast (l_character_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('s')
+				current_file.put_character ('[')
+				print_temp_name (l_index, current_file)
+				current_file.put_character (']')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				mark_temp_variable_free (l_index)
+					-- Don't forget terminating null character.
+				current_file.put_string (c_ifndef)
+				current_file.put_character (' ')
+				current_file.put_line (c_ge_alloc_atomic_cleared)
+				print_indentation
+				print_attribute_special_item_access (l_temp, l_area_type, False)
+				current_file.put_character ('[')
+				current_file.put_character ('c')
+				current_file.put_character (']')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_type_cast (l_character_type, current_file)
+				current_file.put_character ('%'')
+				current_file.put_character ('\')
+				current_file.put_character ('0')
+				current_file.put_character ('%'')
+				current_file.put_character (';')
+				current_file.put_new_line
+				current_file.put_line (c_endif)
+					-- Create string object.
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_ge_new)
+				current_file.put_integer (l_string_type.id)
+				current_file.put_character ('(')
+				current_file.put_string (c_eif_true)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				if l_string_type.attribute_count < 2 then
+						-- Internal error: the "STRING_32" type should have at least
+						-- the attributes 'area' and 'count' as first features.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_queries := l_string_type.queries
+						-- Set 'area'.
+					print_indentation
+					print_attribute_access (l_queries.first, tokens.result_keyword, l_string_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (';')
+					current_file.put_new_line
+						-- Set 'count'.
+					print_indentation
+					print_attribute_access (l_queries.item (2), tokens.result_keyword, l_string_type, False)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_type_cast (l_count_type, current_file)
+					current_file.put_character ('c')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				mark_temp_variable_free (l_temp)
+			else
+				print_indentation
+				print_result_name (current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_string (c_eif_void)
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+				-- Return the string.
+			print_indentation
+			current_file.put_string (c_return)
+			current_file.put_character (' ')
+			print_result_name (current_file)
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			current_file.put_character ('}')
+			current_file.put_new_line
+			current_file := old_file
+			reset_temp_variables
 		end
 
 	print_manifest_array_function (an_array_type: ET_DYNAMIC_TYPE) is
