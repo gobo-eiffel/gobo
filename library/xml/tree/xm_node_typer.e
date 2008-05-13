@@ -1,19 +1,19 @@
 indexing
 
 	description:
-	
+
 		"Get static type of an XML node object without a reverse assignment"
-		
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_NODE_TYPER
 
 inherit
-	
+
 	XM_NODE_PROCESSOR
 		redefine
 			process_element,
@@ -33,21 +33,21 @@ feature
 			element := a
 			composite := a
 		end
-		
+
 	process_character_data (a: XM_CHARACTER_DATA) is
 			-- Character data.
 		do
 			reset
 			character_data := a
 		end
-		
+
 	process_processing_instruction (a: XM_PROCESSING_INSTRUCTION) is
 			-- Processing instruction.
 		do
 			reset
 			processing_instruction := a
 		end
-		
+
 	process_document (a: XM_DOCUMENT) is
 			-- Root.	
 		do
@@ -55,21 +55,21 @@ feature
 			document := a
 			composite := a
 		end
-		
+
 	process_comment (a: XM_COMMENT) is
 			-- Comment.
 		do
 			reset
 			comment := a
 		end
-		
+
 	process_attribute (a: XM_ATTRIBUTE) is
 			-- Attribute.
 		do
 			reset
 			xml_attribute := a
 		end
-		
+
 feature -- Status report
 
 	is_element: BOOLEAN is
@@ -77,31 +77,31 @@ feature -- Status report
 		do
 			Result := element /= Void
 		end
-		
+
 	is_character_data: BOOLEAN is
 			-- Character data?
 		do
 			Result := character_data /= Void
 		end
-		
+
 	is_processing_instruction: BOOLEAN is
 			-- Processing instruction?
 		do
 			Result := processing_instruction /= Void
 		end
-		
+
 	is_document: BOOLEAN is
 			-- Document?
 		do
 			Result := document /= Void
 		end
-	
+
 	is_comment: BOOLEAN is
 			-- Comment?
 		do
 			Result := comment /= Void
 		end
-		
+
 	is_attribute: BOOLEAN is
 			-- Attribute?
 		do
@@ -111,43 +111,34 @@ feature -- Status report
 feature -- Access
 
 	element: XM_ELEMENT
-		-- Element
-		-- require type_ok: is_element
-		-- ensure not_void: Result /= Void
-	
-	character_data: XM_CHARACTER_DATA
-		-- Character data
-		-- require type_ok: is_character_data
-		-- ensure not_void: Result /= Void
-	
-	processing_instruction: XM_PROCESSING_INSTRUCTION
-		-- Processing instruction
-		-- require type_ok: is_processing_instruction
-		-- ensure not_void: Result /= Void
-		
-	document: XM_DOCUMENT
-		-- Document
-		-- require type_ok: is_document
-		-- ensure not_void: Result /= Void
-		
-	comment: XM_COMMENT
-		-- Comment
-		-- require type_ok: is_comment
-		-- ensure not_void: Result /= Void
-	
-	xml_attribute: XM_ATTRIBUTE
-		-- Attribute
-		-- require type_ok: is_attribute
-		-- ensure not_void: Result /= Void
+			-- Element
+			-- require type_ok: is_element
+			-- ensure not_void: Result /= Void
 
-	attribute: XM_ATTRIBUTE is
-		-- `xml_attribute' alias.
-		obsolete "renamed to xml_attribute to avoid conflict with future Eiffel keyword"
-		do
-			Result := xml_attribute
-		ensure
-			synonym: Result = xml_attribute
-		end
+	character_data: XM_CHARACTER_DATA
+			-- Character data
+			-- require type_ok: is_character_data
+			-- ensure not_void: Result /= Void
+
+	processing_instruction: XM_PROCESSING_INSTRUCTION
+			-- Processing instruction
+			-- require type_ok: is_processing_instruction
+			-- ensure not_void: Result /= Void
+
+	document: XM_DOCUMENT
+			-- Document
+			-- require type_ok: is_document
+			-- ensure not_void: Result /= Void
+
+	comment: XM_COMMENT
+			-- Comment
+			-- require type_ok: is_comment
+			-- ensure not_void: Result /= Void
+
+	xml_attribute: XM_ATTRIBUTE
+			-- Attribute
+			-- require type_ok: is_attribute
+			-- ensure not_void: Result /= Void
 
 feature -- Status report
 
@@ -158,14 +149,14 @@ feature -- Status report
 		ensure
 			consistent: Result = (is_element or is_document)
 		end
-		
+
 feature -- Access
 
 	composite: XM_COMPOSITE
 			-- Composite
 			-- require type_ok: is_composite
 			-- ensure not_void: Result /= Void
-			
+
 feature {NONE} -- Implementation
 
 	reset is
@@ -177,8 +168,8 @@ feature {NONE} -- Implementation
 			document := Void
 			comment := Void
 			xml_attribute := Void
-		
+
 			composite := Void
 		end
-		
+
 end
