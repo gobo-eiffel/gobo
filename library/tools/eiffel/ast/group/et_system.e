@@ -319,8 +319,12 @@ feature -- Basic classes
 			register_class (bit_class)
 			bit_class.set_in_system (True)
 				-- Class "BOOLEAN".
+			if boolean_class /= Void then
+				boolean_class.set_basic (False)
+			end
 			boolean_class := ast_factory.new_class (tokens.boolean_class_name)
 			register_class (boolean_class)
+			boolean_class.set_basic (True)
 			boolean_class.set_in_system (True)
 				-- Class "BOOLEAN_REF".
 			boolean_ref_class := ast_factory.new_class (tokens.boolean_ref_class_name)
@@ -430,8 +434,12 @@ feature -- Basic classes
 			platform_class := ast_factory.new_class (tokens.platform_class_name)
 			register_class (platform_class)
 				-- Class "POINTER".
+			if pointer_class /= Void then
+				pointer_class.set_basic (False)
+			end
 			pointer_class := ast_factory.new_class (tokens.pointer_class_name)
 			register_class (pointer_class)
+			pointer_class.set_basic (True)
 			pointer_class.set_in_system (True)
 				-- Class "POINTER_REF".
 			pointer_ref_class := ast_factory.new_class (tokens.pointer_ref_class_name)
@@ -556,7 +564,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if character_8_class /= Void then
+				character_8_class.set_basic (False)
+			end
 			character_8_class := a_class
+			character_8_class.set_basic (True)
 				-- Built-in conversion features.
 			create character_8_convert_feature.make (character_8_class)
 		ensure
@@ -569,7 +581,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if character_32_class /= Void then
+				character_32_class.set_basic (False)
+			end
 			character_32_class := a_class
+			character_32_class.set_basic (True)
 				-- Built-in conversion features.
 			create character_32_convert_feature.make (character_32_class)
 		ensure
@@ -582,7 +598,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if integer_8_class /= Void then
+				integer_8_class.set_basic (False)
+			end
 			integer_8_class := a_class
+			integer_8_class.set_basic (True)
 				-- Built-in conversion features.
 			create integer_8_convert_feature.make (integer_8_class)
 		ensure
@@ -595,7 +615,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if integer_16_class /= Void then
+				integer_16_class.set_basic (False)
+			end
 			integer_16_class := a_class
+			integer_16_class.set_basic (True)
 				-- Built-in conversion features.
 			create integer_16_convert_feature.make (integer_16_class)
 		ensure
@@ -608,7 +632,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if integer_32_class /= Void then
+				integer_32_class.set_basic (False)
+			end
 			integer_32_class := a_class
+			integer_32_class.set_basic (True)
 				-- Built-in conversion features.
 			create integer_32_convert_feature.make (integer_32_class)
 		ensure
@@ -621,7 +649,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if integer_64_class /= Void then
+				integer_64_class.set_basic (False)
+			end
 			integer_64_class := a_class
+			integer_64_class.set_basic (true)
 				-- Built-in conversion features.
 			create integer_64_convert_feature.make (integer_64_class)
 		ensure
@@ -634,7 +666,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if natural_8_class /= Void then
+				natural_8_class.set_basic (False)
+			end
 			natural_8_class := a_class
+			natural_8_class.set_basic (True)
 				-- Built-in conversion features.
 			create natural_8_convert_feature.make (natural_8_class)
 		ensure
@@ -647,7 +683,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if natural_16_class /= Void then
+				natural_16_class.set_basic (False)
+			end
 			natural_16_class := a_class
+			natural_16_class.set_basic (True)
 				-- Built-in conversion features.
 			create natural_16_convert_feature.make (natural_16_class)
 		ensure
@@ -660,7 +700,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if natural_32_class /= Void then
+				natural_32_class.set_basic (False)
+			end
 			natural_32_class := a_class
+			natural_32_class.set_basic (True)
 				-- Built-in conversion features.
 			create natural_32_convert_feature.make (natural_32_class)
 		ensure
@@ -673,7 +717,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if natural_64_class /= Void then
+				natural_64_class.set_basic (False)
+			end
 			natural_64_class := a_class
+			natural_64_class.set_basic (True)
 				-- Built-in conversion features.
 			create natural_64_convert_feature.make (natural_64_class)
 		ensure
@@ -705,7 +753,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if real_32_class /= Void then
+				real_32_class.set_basic (False)
+			end
 			real_32_class := a_class
+			real_32_class.set_basic (True)
 				-- Built-in conversion features.
 			create real_32_convert_feature.make (real_32_class)
 		ensure
@@ -718,7 +770,11 @@ feature -- Basic classes
 		require
 			a_class_not_void: a_class /= Void
 		do
+			if real_64_class /= Void then
+				real_64_class.set_basic (False)
+			end
 			real_64_class := a_class
+			real_64_class.set_basic (True)
 				-- Built-in conversion features.
 			create real_64_convert_feature.make (real_64_class)
 		ensure

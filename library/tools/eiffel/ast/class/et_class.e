@@ -281,6 +281,12 @@ feature -- Status report
 			definition: Result = (group /= Void and then group.is_none)
 		end
 
+	is_basic: BOOLEAN
+			-- Is current class one of "BOOLEAN", "CHARACTER_8", "CHARACTER_32",
+			-- "INTEGER_8", "INTEGER_16", "INTEGER_32", "INTEGER_64",
+			-- "NATURAL_8", "NATURAL_16", "NATURAL_32", "NATURAL_64",
+			-- "POINTER", "REAL_32", "REAL_64"?
+
 	is_unknown: BOOLEAN is
 			-- Is current class the "*UNKNOWN*" class?
 			-- This class does not conform to any other class,
@@ -289,6 +295,16 @@ feature -- Status report
 			Result := (Current = tokens.unknown_class)
 		ensure
 			definition: Result = (Current = tokens.unknown_class)
+		end
+
+feature {ET_SYSTEM} -- Status setting
+
+	set_basic (b: BOOLEAN) is
+			-- Set `is_basic' to `b'.
+		do
+			is_basic := b
+		ensure
+			basic_set: is_basic = b
 		end
 
 feature -- Access

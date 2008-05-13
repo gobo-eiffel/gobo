@@ -106,6 +106,17 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_basic: BOOLEAN is
+			-- Is current type one of "BOOLEAN", "CHARACTER_8", "CHARACTER_32",
+			-- "INTEGER_8", "INTEGER_16", "INTEGER_32", "INTEGER_64",
+			-- "NATURAL_8", "NATURAL_16", "NATURAL_32", "NATURAL_64",
+			-- "POINTER", "REAL_32", "REAL_64"?
+		do
+			Result := base_class.is_basic
+		ensure
+			definition: Result = base_class.is_basic
+		end
+
 	has_static: BOOLEAN
 			-- Does current type contain features that are used as static features?
 

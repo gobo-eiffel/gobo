@@ -7586,13 +7586,14 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					l_static_type := l_dynamic_type_set.static_type
 					if l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
-						current_file.put_character ('&')
 						current_file.put_character ('(')
 						if has_rescue then
 							current_file.put_character ('(')
 							print_type_declaration (l_static_type, current_file)
+							current_file.put_character ('*')
 							current_file.put_character (')')
 						end
+						current_file.put_character ('&')
 						print_local_name (a_name, current_file)
 						current_file.put_character (')')
 					elseif call_target_type.is_expanded and not call_target_type.is_generic then
@@ -7613,11 +7614,27 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					if has_rescue then
 						l_dynamic_type_set := dynamic_type_set (a_name)
 						l_static_type := l_dynamic_type_set.static_type
-						current_file.put_character ('(')
-						print_type_declaration (l_static_type, current_file)
-						current_file.put_character (')')
+						if l_static_type.is_basic then
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character (')')
+							print_local_name (a_name, current_file)
+						else
+							current_file.put_character ('*')
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+							current_file.put_character ('(')
+							current_file.put_character ('&')
+							print_local_name (a_name, current_file)
+							current_file.put_character (')')
+							current_file.put_character (')')
+						end
+					else
+						print_local_name (a_name, current_file)
 					end
-					print_local_name (a_name, current_file)
 				end
 			end
 		end
@@ -8833,13 +8850,14 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					l_static_type := l_dynamic_type_set.static_type
 					if l_static_type.is_expanded then
 							-- Pass the address of the expanded object.
-						current_file.put_character ('&')
 						current_file.put_character ('(')
 						if has_rescue then
 							current_file.put_character ('(')
 							print_type_declaration (l_static_type, current_file)
+							current_file.put_character ('*')
 							current_file.put_character (')')
 						end
+						current_file.put_character ('&')
 						print_result_name (current_file)
 						current_file.put_character (')')
 					elseif call_target_type.is_expanded and not call_target_type.is_generic then
@@ -8860,11 +8878,27 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 					if has_rescue then
 						l_dynamic_type_set := dynamic_type_set (an_expression)
 						l_static_type := l_dynamic_type_set.static_type
-						current_file.put_character ('(')
-						print_type_declaration (l_static_type, current_file)
-						current_file.put_character (')')
+						if l_static_type.is_basic then
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character (')')
+							print_result_name (current_file)
+						else
+							current_file.put_character ('*')
+							current_file.put_character ('(')
+							current_file.put_character ('(')
+							print_type_declaration (l_static_type, current_file)
+							current_file.put_character ('*')
+							current_file.put_character (')')
+							current_file.put_character ('(')
+							current_file.put_character ('&')
+							print_result_name (current_file)
+							current_file.put_character (')')
+							current_file.put_character (')')
+						end
+					else
+						print_result_name (current_file)
 					end
-					print_result_name (current_file)
 				end
 			end
 		end
