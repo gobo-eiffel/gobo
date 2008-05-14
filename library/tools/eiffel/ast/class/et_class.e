@@ -109,6 +109,26 @@ feature -- Initialization
 			same_id: id = old id
 		end
 
+	reset_after_preparsed is
+			-- Reset current class as it was just after it was last preparsed.
+			-- (Do not alter `overridden_class' and `master_class'.)
+		do
+			reset_implementation_checked
+			reset_interface_checked
+			reset_features_flattened
+			reset_ancestors_built
+			reset_parsed
+		ensure
+			same_name: name = old name
+			same_id: id = old id
+			same_preparsed: is_preparsed = old is_preparsed
+			not_parsed: not is_parsed
+			ancestors_not_built: not ancestors_built
+			features_not_flattened: not features_flattened
+			interface_not_checked: not interface_checked
+			implementation_not_checked: not implementation_checked
+		end
+
 	reset_after_parsed is
 			-- Reset current class as it was just after it was last parsed.
 			-- Do nothing if not parsed.

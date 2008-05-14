@@ -359,7 +359,7 @@ feature -- AST processing
 					if current_class.is_in_cluster then
 						a_filename := current_class.filename
 						a_cluster := current_class.group.cluster
-						current_class.reset
+						current_class.reset_after_preparsed
 						a_file := tmp_file
 						a_file.reset (a_filename)
 						if eiffel_compiler.is_se then
@@ -370,22 +370,26 @@ feature -- AST processing
 						end
 						a_file.open_read
 						if a_file.is_open_read then
-								-- Set `current_class' to unknown_class when calling `parse_file' to
-								-- make sure that the invariant 'current_class.is_preparsed' is not
-								-- violated by callbacks to current object.
-							current_class := tokens.unknown_class
+--								-- Set `current_class' to unknown_class when calling `parse_file' to
+--								-- make sure that the invariant 'current_class.is_preparsed' is not
+--								-- violated by callbacks to current object.
+--							current_class := tokens.unknown_class
+								-- Note that `parse_file' may change the value of `current_class'
+								-- if `a_file' contains a class other than `a_class'.
 							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
-							current_class := a_class
+--							current_class := a_class
 							a_file.close
-							if not current_class.is_preparsed then
+							if not a_class.is_preparsed then
 									-- Make sure that `current_class' is as it was
 									-- after it was last preparsed when the file
 									-- does not contain this class anymore.
-								current_class.set_filename (a_filename)
-								current_class.set_group (a_cluster)
+								a_class.set_filename (a_filename)
+								a_class.set_group (a_cluster)
+							end
+							if not a_class.is_parsed then
 								if not syntax_error and current_system.preparse_multiple_mode then
 -- TODO: ERROR: the file contains other classes, but not `current_class'.
-									set_fatal_error (current_class)
+									set_fatal_error (a_class)
 								end
 							end
 						else
@@ -400,8 +404,8 @@ feature -- AST processing
 					elseif current_class.is_in_dotnet_assembly then
 						current_system.dotnet_assembly_consumer.consume_class (current_class)
 					end
-					if not current_class.is_parsed then
-						set_fatal_error (current_class)
+					if not a_class.is_parsed then
+						set_fatal_error (a_class)
 					end
 				end
 				current_class := old_class
