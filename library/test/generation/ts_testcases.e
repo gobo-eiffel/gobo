@@ -16,6 +16,7 @@ inherit
 
 	ANY -- Export features of ANY.
 
+	KL_GOBO_VERSION
 	KL_SHARED_FILE_SYSTEM
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_IMPORTED_STRING_ROUTINES
@@ -35,6 +36,7 @@ feature {NONE} -- Initialization
 			testgen := a_testgen
 			error_handler := an_error_handler
 			tester_parent := default_tester_parent
+			version := Version_number
 		ensure
 			testgen_set: testgen = a_testgen
 			error_handler_set: error_handler = an_error_handler
@@ -114,6 +116,17 @@ feature -- Generation
 			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
+				a_file.put_line ("indexing")
+				a_file.put_new_line
+				a_file.put_string ("%Tdescription: %"Executable test case derived from class")
+				a_file.put_string (a_class_name)
+				a_file.put_character ('%"')
+				a_file.put_new_line
+				a_file.put_string ("%Tgenerator: %"getest version ")
+				a_file.put_string (version)
+				a_file.put_character ('%"')
+				a_file.put_new_line
+				a_file.put_new_line
 				a_file.put_string ("class ")
 				a_file.put_line (new_name)
 				a_file.put_new_line
@@ -173,6 +186,14 @@ feature -- Generation
 			a_file.open_write
 			if a_file.is_open_write then
 				upper_class_name := class_name.as_upper
+				a_file.put_line ("indexing")
+				a_file.put_new_line
+				a_file.put_line ("%Tdescription: %"Test harness root class%"")
+				a_file.put_string ("%Tgenerator: %"getest version ")
+				a_file.put_string (version)
+				a_file.put_character ('%"')
+				a_file.put_new_line
+				a_file.put_new_line
 				a_file.put_string ("class ")
 				a_file.put_line (upper_class_name)
 				a_file.put_new_line
@@ -279,6 +300,9 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
+	version: STRING
+			-- Version of generating tool
+
 feature -- Setting
 
 	set_tester_parent (a_parent: like tester_parent) is
@@ -289,6 +313,16 @@ feature -- Setting
 			tester_parent := a_parent
 		ensure
 			tester_parent_set: tester_parent = a_parent
+		end
+
+	set_version (a_version: like version) is
+			-- Set `version' to `a_version'.
+		require
+			a_version_not_void: a_version /= Void
+		do
+			version := a_version
+		ensure
+			version_set: version = a_version
 		end
 
 feature -- Measurement
@@ -330,5 +364,6 @@ invariant
 	-- class_prefix_not_void: forall item in testcases, item.second /= Void
 	error_handler_not_void: error_handler /= Void
 	tester_parent_not_void: tester_parent /= Void
+	version_not_void: version /= Void
 
 end

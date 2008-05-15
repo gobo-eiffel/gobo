@@ -109,6 +109,7 @@ feature -- Processing
 					std.output.put_line ("Preparing Test Cases")
 				end
 				create testcases.make (a_config.testgen, error_handler)
+				testcases.set_version (Version_number)
 				a_config.process (testcases, error_handler)
 				testcases.generate_test_classes
 				testcases.generate_root_class (a_config.root_class)
