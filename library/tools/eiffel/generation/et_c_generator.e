@@ -22903,7 +22903,14 @@ feature {NONE} -- Type generation
 			a_file.put_character (';')
 			a_file.put_new_line
 			a_file.put_character ('%T')
-			a_file.put_string ("void (*dispose) (EIF_REFERENCE)")
+			a_file.put_string ("void (*dispose) (")
+			if exception_trace_mode then
+				a_file.put_string (c_ge_call)
+				a_file.put_character ('*')
+				a_file.put_character (',')
+				a_file.put_character (' ')
+			end
+			a_file.put_string ("EIF_REFERENCE)")
 			a_file.put_character (';')
 			a_file.put_new_line
 			a_file.put_character ('}')
