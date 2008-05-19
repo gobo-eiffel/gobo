@@ -1,5 +1,10 @@
 Version 3.9 - ?
 
+	gec:
+
+	* Fixed some C compilation warnings when using gcc as back-end C compiler.
+	  See bug#1961462.
+
 	getest:
 
 	* Added an indexing clause "generator" to the generated classes.
