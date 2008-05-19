@@ -10193,7 +10193,7 @@ feature {NONE} -- Object-test generation
 					else
 						nb := l_conforming_types.count
 						from j := 1 until j > nb loop
-							l_dynamic_type := l_conforming_types.dynamic_type (i)
+							l_dynamic_type := l_conforming_types.dynamic_type (j)
 							print_indentation
 							current_file.put_string (c_case)
 							current_file.put_character (' ')
