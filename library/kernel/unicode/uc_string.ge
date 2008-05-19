@@ -287,7 +287,8 @@ create
 	make, make_empty, make_from_string, make_from_utf8,
 	make_filled, make_filled_code, make_filled_unicode,
 	make_from_substring, make_from_utf16, make_from_utf16le,
-	make_from_utf16be
+	make_from_utf16be, make_from_string_general,
+	make_from_substring_general
 
 feature -- Initialization
 
@@ -323,9 +324,7 @@ feature -- Initialization
 			-- Initialize from the character sequence of `a_string'.
 			-- (ELKS 2001 STRING)
 		do
-			if a_string /= Current then
-				make_from_substring (a_string, 1, a_string.count)
-			end
+			make_from_string_general (a_string)
 		ensure then
 			same_unicode: same_unicode_string (a_string)
 		end
@@ -339,7 +338,33 @@ feature {NONE} -- Initialization
 			make (0)
 		end
 
+	make_from_string_general (a_string: STRING_GENERAL) is
+			-- Initialize from the character sequence of `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			if a_string /= Current then
+				make_from_substring_general (a_string, 1, a_string.count)
+			end
+		ensure
+			same_unicode: same_unicode_string (a_string)
+		end
+
 	make_from_substring (a_string: STRING; start_index, end_index: INTEGER) is
+			-- Initialize from the character sequence of `a_string'
+			-- between `start_index' and `end_index' inclusive.
+		require
+			a_string_not_void: a_string /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= a_string.count
+			meaningful_interval: start_index <= end_index + 1
+		do
+			make_from_substring_general (a_string, start_index, end_index)
+		ensure
+			initialized: same_unicode_string (a_string.substring (start_index, end_index))
+		end
+
+	make_from_substring_general (a_string: STRING_GENERAL; start_index, end_index: INTEGER) is
 			-- Initialize from the character sequence of `a_string'
 			-- between `start_index' and `end_index' inclusive.
 		require
@@ -349,7 +374,7 @@ feature {NONE} -- Initialization
 			meaningful_interval: start_index <= end_index + 1
 		local
 			nb: INTEGER
-			str: STRING
+			str: STRING_GENERAL
 		do
 			if a_string /= Current or else start_index /= 1 or else end_index /= count then
 				if end_index < start_index then
@@ -368,8 +393,7 @@ feature {NONE} -- Initialization
 				end
 			end
 		ensure
-			-- Note: Too memory and time consumming with SmartEiffel:
-			-- initialized: same_unicode_string (a_string.substring (start_index, end_index))
+			initialized: same_unicode_string (a_string.substring (start_index, end_index))
 		end
 
 	make_filled_unicode (c: UC_CHARACTER; n: INTEGER) is
@@ -551,7 +575,7 @@ feature -- Access
 			first_unicode_item: Result.count > 0 implies Result.item_code (1) = item_code (start_index)
 		end
 
-	unicode_substring_index (other: STRING; start_index: INTEGER): INTEGER is
+	unicode_substring_index (other: STRING_GENERAL; start_index: INTEGER): INTEGER is
 			-- Index of first occurrence of `other' at or after `start_index';
 			-- 0 if none
 		require
@@ -606,7 +630,7 @@ feature -- Access
 									j := k
 									found := True
 									from i := 1 until i > nb loop
-										if byte_item (j).code /= other.item_code (i) then
+										if byte_item (j).code /= other.code (i).to_integer_32 then
 											found := False
 											i := nb + 1 -- Jump out of the loop.
 										else
@@ -656,7 +680,7 @@ feature -- Access
 									found := True
 									from i := 1 until i > nb loop
 										a_code := item_code_at_byte_index (j)
-										if a_code /= other.item_code (i) then
+										if a_code /= other.code (i).to_integer_32 then
 											found := False
 											i := nb + 1 -- Jump out of the loop.
 										else
@@ -1162,7 +1186,7 @@ feature -- Status report
 			Result := (index_of (c, 1) /= 0)
 		end
 
-	has_unicode_substring (other: STRING): BOOLEAN is
+	has_unicode_substring (other: STRING_GENERAL): BOOLEAN is
 			-- Does `Current' contain `other'?
 		require
 			other_not_void: other /= Void
@@ -1176,7 +1200,8 @@ feature -- Status report
 			false_if_too_small: count < other.count implies not Result
 			true_if_initial: (count >= other.count and then substring (1, other.count).same_unicode_string (other)) implies Result
 			recurse: (count >= other.count and then not substring (1, other.count).same_unicode_string (other)) implies (Result = substring (2, count).has_unicode_substring (other))
-			has_substring: Result implies has_substring (other)
+-- TODO: Wrong signature in `has_substring':			
+--			has_substring: Result implies has_substring (other)
 		end
 
 	has_substring (other: STRING): BOOLEAN is
@@ -1262,7 +1287,7 @@ feature -- Comparison
 			end
 		end
 
-	same_unicode_string (other: STRING): BOOLEAN is
+	same_unicode_string (other: STRING_GENERAL): BOOLEAN is
 			-- Do `Current' and `other' have the same unicode character sequence?
 		require
 			other_not_void: other /= Void
@@ -1274,9 +1299,10 @@ feature -- Comparison
 			end
 		ensure
 			definition: Result = (count = other.count and then
-				(count > 0 implies (item_code (1) = other.item_code (1) and
+				(count > 0 implies (code (1) = other.code (1) and
 				(count >= 2 implies substring (2, count).same_unicode_string (other.substring (2, count))))))
-			same_string: Result implies same_string (other)
+-- TODO: wrong signature for `same_string':
+--			same_string: Result implies same_string (other)
 		end
 
 	three_way_comparison (other: like Current): INTEGER is
@@ -3141,7 +3167,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_substring_at_byte_index (a_string: STRING; start_index, end_index, b: INTEGER; i: INTEGER) is
+	put_substring_at_byte_index (a_string: STRING_GENERAL; start_index, end_index, b: INTEGER; i: INTEGER) is
 			-- Put characters of `a_string' between `start_index'
 			-- and `end_index' at byte index `i'. `b' is the number
 			-- of bytes necessary to encode these characters.
@@ -3160,24 +3186,27 @@ feature {NONE} -- Implementation
 			a_code: INTEGER
 			a_utf8_string: UC_UTF8_STRING
 			a_uc_string: UC_STRING
+			l_string_8: STRING
 		do
 			check
 				valid_utf8: b = utf8.substring_byte_count (a_string, start_index, end_index)
 			end
 			if b > 0 then
 				if ANY_.same_types (a_string, dummy_string) then
+					l_string_8 ?= a_string
+					check is_string_8: l_string_8 /= Void end
 					nb := end_index - start_index + 1
 					if nb = b then
 						k := i
 						from j := start_index until j > end_index loop
-							put_byte (a_string.item (j), k)
+							put_byte (l_string_8.item (j), k)
 							k := k + 1
 							j := j + 1
 						end
 					else
 						k := i
 						from j := start_index until j > end_index loop
-							c := a_string.item (j)
+							c := l_string_8.item (j)
 							z := utf8.character_byte_count (c)
 							put_character_at_byte_index (c, z, k)
 							k := k + z
@@ -3222,7 +3251,7 @@ feature {NONE} -- Implementation
 						else
 							k := i
 							from j := start_index until j > end_index loop
-								a_code := a_string.item_code (j)
+								a_code := a_string.code (j).to_integer_32
 								z := utf8.code_byte_count (a_code)
 								put_code_at_byte_index (a_code, z, k)
 								k := k + z

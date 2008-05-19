@@ -201,7 +201,7 @@ feature -- Measurement
 			encoded_byte_code_small_enough: Result <= 4
 		end
 
-	substring_byte_count (a_string: STRING; start_index, end_index: INTEGER): INTEGER is
+	substring_byte_count (a_string: STRING_GENERAL; start_index, end_index: INTEGER): INTEGER is
 			-- Number of bytes needed to encode characters  of
 			-- `a_string' between `start_index' and `end_index'
 			-- inclusive with the UTF-8 encoding
@@ -217,19 +217,22 @@ feature -- Measurement
 			i: INTEGER
 			even_end_index: INTEGER
 			c: CHARACTER
+			l_string_8: STRING
 		do
 			if start_index <= end_index then
 				if ANY_.same_types (a_string, dummy_string) then
+					l_string_8 ?= a_string
+					check is_string_8: l_string_8 /= Void end
 						-- This is the original code
 -- 					from i := start_index until i > end_index loop
--- 						Result := Result + character_byte_count (a_string.item (i))
+-- 						Result := Result + character_byte_count (l_string_8.item (i))
 -- 						i := i + 1
 -- 					end
 						-- This loop has been unrolled to get a more than
 						-- 50% improvement in performance (measured with ISE
 						-- Eiffel 5.5, Borland C, array optimisations and
 						-- inlining (4) enabled). It assumes that ASCII
-						-- characters are far more common in STRINGs then other
+						-- characters are far more common in STRINGs than other
 						-- characters.
 					if end_index \\ 2 = 0 then
 						even_end_index := end_index
@@ -237,13 +240,13 @@ feature -- Measurement
 						even_end_index := end_index - 1
 					end
 					from i := start_index until i > even_end_index loop
-						c := a_string.item (i)
+						c := l_string_8.item (i)
 						if c <= byte_127 then
 							Result := Result + 1
 						else
 							Result := Result + character_byte_count (c)
 						end
-						c := a_string.item (i + 1)
+						c := l_string_8.item (i + 1)
 						if c <= byte_127 then
 							Result := Result + 1
 						else
@@ -252,7 +255,7 @@ feature -- Measurement
 						i := i + 2
 					end
 					if even_end_index < end_index then
-						Result := Result + character_byte_count (a_string.item (end_index))
+						Result := Result + character_byte_count (l_string_8.item (end_index))
 					end
 				elseif ANY_.same_types (a_string, dummy_uc_string) then
 					a_uc_string ?= a_string
@@ -284,7 +287,7 @@ feature -- Measurement
 						end
 					else
 						from i := start_index until i > end_index loop
-							Result := Result + code_byte_count (a_string.item_code (i))
+							Result := Result + code_byte_count (a_string.code (i).to_integer_32)
 							i := i + 1
 						end
 					end
