@@ -45,11 +45,12 @@ feature {NONE} -- Initialization
 			base_class := a_class
 			queries := empty_features
 			procedures := empty_features
-			create conforming_dynamic_types.make (Current)
-			create all_conforming_dynamic_types.make (Current)
+			create conforming_dynamic_types.make_empty (Current)
+			create all_conforming_dynamic_types.make_empty (Current)
 			all_conforming_dynamic_types.put_type (Current)
 			if is_expanded then
 				set_alive
+				conforming_dynamic_types.put_type (Current)
 				conforming_dynamic_types.set_never_void
 				all_conforming_dynamic_types.set_never_void
 			end
@@ -621,7 +622,7 @@ feature {NONE} -- Fetaures
 				has_generic_expanded_attributes := True
 			end
 		ensure
-			one_more: attribute_count = attribute_count + 1
+			one_more: attribute_count = old attribute_count + 1
 			reference_attribute: not an_attribute.result_type_set.is_expanded implies has_reference_attributes
 			generic_expanded_attribute: (an_attribute.result_type_set.is_expanded and then an_attribute.result_type_set.static_type.is_generic) implies has_generic_expanded_attributes
 		end

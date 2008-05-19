@@ -600,6 +600,7 @@ feature {NONE} -- C code Generation
 				open_cpp_file
 				old_header_file := header_file
 				header_file := l_header_file
+				old_file := current_file
 				current_file := current_function_body_buffer
 				generate_ids
 				if trace_mode then
@@ -26083,7 +26084,7 @@ invariant
 	target_dynamic_types_not_void: target_dynamic_types /= Void
 	no_void_target_dynamic_type: not target_dynamic_types.has_item (Void)
 	standalone_type_sets_not_void: standalone_type_sets /= Void
-	no_void_standalone_type_set: standalone_type_sets.has (Void)
+	no_void_standalone_type_set: not standalone_type_sets.has (Void)
 	deep_twin_types_not_void: deep_twin_types /= Void
 	no_void_deep_twin_type: not deep_twin_types.has (Void)
 	deep_equal_types_not_void: deep_equal_types /= Void

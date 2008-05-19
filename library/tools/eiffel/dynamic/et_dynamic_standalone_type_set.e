@@ -23,7 +23,7 @@ inherit
 
 create
 
-	make
+	make, make_empty
 
 feature {NONE} -- Initialization
 
@@ -40,6 +40,16 @@ feature {NONE} -- Initialization
 		ensure
 			static_type_set: static_type = a_type
 			first_expanded_type: a_type.is_expanded implies (count = 1 and then dynamic_type (1) = a_type)
+		end
+
+	make_empty (a_type: like static_type) is
+			-- Create a new empty dynamic type set.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			static_type := a_type
+		ensure
+			static_type_set: static_type = a_type
 		end
 
 feature -- Initialization
@@ -127,7 +137,6 @@ feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 invariant
 
 	dynamic_types_not_readonly: not is_dynamic_types_readonly
-	dynamic_types_not_void: dynamic_types /= Void
 	consistent_count: dynamic_types /= Void implies count = dynamic_types.count
 	empty: dynamic_types = Void implies count = 0
 
