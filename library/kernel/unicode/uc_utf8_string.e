@@ -13,7 +13,7 @@ indexing
 		%Latin-1 character set."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,7 @@ create
 	make, make_empty, make_from_string, make_from_utf8,
 	make_filled, make_filled_code, make_filled_unicode,
 	make_from_substring, make_from_utf16, make_from_utf16le,
-	make_from_utf16be
+	make_from_utf16be, make_from_string_general,
+	make_from_substring_general
 
 end
