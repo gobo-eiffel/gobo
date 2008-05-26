@@ -40,9 +40,9 @@ struct gacstat {
 
 struct emallinfo {
 	int ml_chunk;
-	long ml_total;
-	long ml_used;
-	long ml_over;
+	uint64_t ml_total;
+	uint64_t ml_used;
+	uint64_t ml_over;
 };
 
 /* TODO */

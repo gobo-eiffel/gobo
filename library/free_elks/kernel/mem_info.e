@@ -59,14 +59,14 @@ feature -- Measurement
 			-- Total number of bytes allocated for `type'
 			-- before last call to `update'
 		do
-			Result := c_ml_total (item)
+			Result := c_ml_total (item).as_integer_32
 		end
 
 	used: INTEGER is
 			-- Number of bytes used for `type'
 			-- before last call to `update'
 		do
-			Result := c_ml_used (item)
+			Result := c_ml_used (item).as_integer_32
 		end
 
 	free: INTEGER is
@@ -82,13 +82,43 @@ feature -- Measurement
 			-- Number of bytes used by memory management
 			-- scheme for `type' before last call to `update'
 		do
-			Result := c_ml_over (item)
+			Result := c_ml_over (item).as_integer_32
 		end
 
 	chunk: INTEGER is
 			-- Number of allocated memory chunks
 		do
 			Result := c_ml_chunk (item)
+		end
+
+feature -- Extended measurement
+
+	total64: NATURAL_64 is
+			-- Total number of bytes allocated for `type'
+			-- before last call to `update'
+		do
+			Result := c_ml_total (item)
+		end
+
+	used64: NATURAL_64 is
+			-- Number of bytes used for `type'
+			-- before last call to `update'
+		do
+			Result := c_ml_used (item)
+		end
+
+	free64: NATURAL_64 is
+			-- Number of bytes still free for `type'
+			-- before last call to `update'
+		do
+			Result := total64 - used64 - overhead64
+		end
+
+	overhead64: NATURAL_64 is
+			-- Number of bytes used by memory management
+			-- scheme for `type' before last call to `update'
+		do
+			Result := c_ml_over (item)
 		end
 
 feature {NONE} -- Implementation
@@ -110,28 +140,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C externals
 
-	c_ml_total (a_ptr: POINTER): INTEGER is
+	c_ml_total (a_ptr: POINTER): NATURAL_64 is
 			-- Access `ml_total' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return (EIF_INTEGER) ((struct emallinfo *) $a_ptr)->ml_total;"
+			"return (EIF_NATURAL_64) ((struct emallinfo *) $a_ptr)->ml_total;"
 		end
 
-	c_ml_used (a_ptr: POINTER): INTEGER is
+	c_ml_used (a_ptr: POINTER): NATURAL_64 is
 			-- Access `ml_used' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return (EIF_INTEGER) ((struct emallinfo *) $a_ptr)->ml_used;"
+			"return (EIF_NATURAL_64) ((struct emallinfo *) $a_ptr)->ml_used;"
 		end
 
-	c_ml_over (a_ptr: POINTER): INTEGER is
+	c_ml_over (a_ptr: POINTER): NATURAL_64 is
 			-- Access `ml_over' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_memory.h%""
 		alias
-			"return (EIF_INTEGER) ((struct emallinfo *) $a_ptr)->ml_over;"
+			"return (EIF_NATURAL_64) ((struct emallinfo *) $a_ptr)->ml_over;"
 		end
 
 	c_ml_chunk (a_ptr: POINTER): INTEGER is
@@ -151,7 +181,6 @@ feature {NONE} -- C externals
 		end
 
 invariant
-
-	consistent_memory: total = free + used + overhead
+	consistent_memory: total64 = free64 + used64 + overhead64
 
 end
