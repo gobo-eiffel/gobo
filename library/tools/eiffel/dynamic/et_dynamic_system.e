@@ -867,7 +867,7 @@ feature -- Compilation
 		end
 
 	compile_system is
-			-- Compile all classes reachable from the root class.
+			-- Compile all code reachable from the root creation procedure of the root class.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that this operation will be interrupted if a stop request
@@ -1010,6 +1010,80 @@ feature -- Compilation
 			build_dynamic_type_sets
 			if error_handler.benchmark_shown then
 				current_system.print_time (dt1, "Degree Dynamic Type Set")
+			end
+		end
+
+	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS) is
+			-- Compile all code reachable from the feature `a_feature_name' from `a_class'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `current_system.stop_request' starts returning
+			-- True. No interruption if `current_system.stop_request' is Void.
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+			a_class_not_void: a_class /= Void
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_procedure: ET_PROCEDURE
+			l_query: ET_QUERY
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+			dt1: DT_DATE_TIME
+		do
+			has_fatal_error := False
+			current_system.activate_processors
+			activate_dynamic_type_set_builder
+			if error_handler.benchmark_shown then
+				create l_clock
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			current_system.preparse
+			if error_handler.benchmark_shown then
+				current_system.print_time (dt1, "Degree 6")
+			end
+			compile_kernel
+			if not current_system.stop_requested then
+				if not a_class.is_preparsed then
+						-- Error: unknown class.
+					set_fatal_error
+					error_handler.report_gvsrc4a_error (a_class)
+				else
+					a_class.process (current_system.eiffel_parser)
+					if not a_class.is_parsed or else a_class.has_syntax_error then
+							-- Error already reported.
+						set_fatal_error
+					elseif a_class.is_generic then
+							-- Error: the root class should not be generic.
+						set_fatal_error
+						error_handler.report_vsrc1a_error (a_class)
+					else
+						l_dynamic_type := dynamic_type (a_class, a_class)
+						if a_class.has_interface_error then
+								-- Error already reported.
+							set_fatal_error
+						else
+							l_procedure := a_class.named_procedure (a_feature_name)
+							if l_procedure /= Void then
+								l_dynamic_feature := l_dynamic_type.dynamic_procedure (l_procedure, Current)
+								dynamic_type_set_builder.mark_type_alive (l_dynamic_type)
+								build_dynamic_type_sets
+							else
+								l_query := a_class.named_query (a_feature_name)
+								if l_query = Void then
+										-- Error: the feature `a_feature_name' is not
+										-- a feature of the `a_class'.
+									set_fatal_error
+									error_handler.report_gvsrc5a_error (a_class, a_feature_name)
+								else
+									l_dynamic_feature := l_dynamic_type.dynamic_query (l_query, Current)
+									dynamic_type_set_builder.mark_type_alive (l_dynamic_type)
+									build_dynamic_type_sets
+								end
+							end
+						end
+					end
+				end
 			end
 		end
 

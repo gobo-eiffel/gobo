@@ -5,29 +5,57 @@ indexing
 		"Eiffel system feature markers"
 
 	remark: "[
-		Note that using ET_SYSTEM_TARGETED_FEATURE_MARKER may give more
-		accurate result (i.e. will mark less features as used) than with
-		ET_SYSTEM_FEATURE_MARKER because it traverses the dependent features
-		in the context of the base class of the target types instead of
-		in the context of the class they have been written in when using
-		ET_SYSTEM_FEATURE_MARKER. The drawback is that
-		ET_SYSTEM_TARGETED_FEATURE_MARKER will use more memory and take more
-		time to execute than with ET_SYSTEM_FEATURE_MARKER because it will
-		need to traverse the body of the features several times for each
-		possible target type.
+		There are different ways to mark the features that a given feature
+		recursively depends on (i.e. features that might be executed if
+		the given feature is itself executed). Some may give more accurate
+		result (i.e. will mark less features as used) but may use more
+		memory or take longer to complete. There are currently three feature
+		marker algorithms available:
 
-		Benchmarks (compiled with gec with no GC) when using the root
-		creation procedure of gelint:
-		With ET_SYSTEM_FEATURE_MARKER.mark_system:
-			memory: 5 MB (+ 205 MB before calling this feature)
-			time: 0.7 seconds
-			traversed features: 13,142
-			marked features: 13,142
-		With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
-			memory: 22 MB (+ 205 MB before calling this feature)
-			time: 1.6 seconds
-			traversed features: 35,898
-			marked features: 12,940
+		* ET_SYSTEM_FEATURE_MARKER: traverses the dependent features in the
+		  context of the class they have been written in.
+
+		* ET_SYSTEM_TARGETED_FEATURE_MARKER: traverses the dependent features
+		  in the context of the base class of the target types of the calls.
+		  This algorithm is more accurate than the previous one, but uses
+		  more memory and is slower because it will need to traverse the body
+		  of the features several times for each possible target type.
+
+		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
+		  implemented in the Gobo Eiffel compiler to determine which features
+		  are to be part of the resulting executable should the given feature
+		  be used as root creation procedure. This algorithm in the most accurate
+		  of the three, but is slower.
+
+		Benchmarks when using the root creation procedure of gelint's source code:
+
+		When using gec with no GC:
+			With ET_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 16 MB (+ 165 MB before calling this feature)
+				time: 0.7 seconds
+				marked features: 13,174
+			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
+				memory: 31 MB (+ 165 MB before calling this feature)
+				time: 1.5 seconds
+				marked features: 12,970
+			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 19 MB (+ 165 MB before calling this feature)
+				time: 3.7 seconds
+				marked features: 11,892
+		When using ISE 6.2 with GC:
+			With ET_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 13 MB (+ 180 MB before calling this feature)
+				time: 2.2 seconds
+				marked features: 13,174
+			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
+				memory: 13 MB (+ 180 MB before calling this feature)
+				time: 5.8 seconds
+				marked features: 12,970
+			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 17 MB (+ 180 MB before calling this feature)
+				time: 6.0 seconds
+				marked features: 11,892
+		Number of features compiled with ISE 6.2: 12,111
 	]"
 
 	library: "Gobo Eiffel Tools Library"

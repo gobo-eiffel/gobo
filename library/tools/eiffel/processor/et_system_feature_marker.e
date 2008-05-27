@@ -5,29 +5,57 @@ indexing
 		"Eiffel system feature markers"
 
 	remark: "[
-		Note that using ET_SYSTEM_TARGETED_FEATURE_MARKER may give more
-		accurate result (i.e. will mark less features as used) than with
-		ET_SYSTEM_FEATURE_MARKER because it traverses the dependent features
-		in the context of the base class of the target types instead of
-		in the context of the class they have been written in when using
-		ET_SYSTEM_FEATURE_MARKER. The drawback is that
-		ET_SYSTEM_TARGETED_FEATURE_MARKER will use more memory and take more
-		time to execute than with ET_SYSTEM_FEATURE_MARKER because it will
-		need to traverse the body of the features several times for each
-		possible target type.
+		There are different ways to mark the features that a given feature
+		recursively depends on (i.e. features that might be executed if
+		the given feature is itself executed). Some may give more accurate
+		result (i.e. will mark less features as used) but may use more
+		memory or take longer to complete. There are currently three feature
+		marker algorithms available:
 
-		Benchmarks (compiled with gec with no GC) when using the root
-		creation procedure of gelint:
-		With ET_SYSTEM_FEATURE_MARKER.mark_system:
-			memory: 5 MB (+ 205 MB before calling this feature)
-			time: 0.7 seconds
-			traversed features: 13,142
-			marked features: 13,142
-		With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
-			memory: 22 MB (+ 205 MB before calling this feature)
-			time: 1.6 seconds
-			traversed features: 35,898
-			marked features: 12,940
+		* ET_SYSTEM_FEATURE_MARKER: traverses the dependent features in the
+		  context of the class they have been written in.
+
+		* ET_SYSTEM_TARGETED_FEATURE_MARKER: traverses the dependent features
+		  in the context of the base class of the target types of the calls.
+		  This algorithm is more accurate than the previous one, but uses
+		  more memory and is slower because it will need to traverse the body
+		  of the features several times for each possible target type.
+
+		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
+		  implemented in the Gobo Eiffel compiler to determine which features
+		  are to be part of the resulting executable should the given feature
+		  be used as root creation procedure. This algorithm in the most accurate
+		  of the three, but is slower.
+
+		Benchmarks when using the root creation procedure of gelint's source code:
+
+		When using gec with no GC:
+			With ET_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 16 MB (+ 165 MB before calling this feature)
+				time: 0.7 seconds
+				marked features: 13,174
+			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
+				memory: 31 MB (+ 165 MB before calling this feature)
+				time: 1.5 seconds
+				marked features: 12,970
+			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 19 MB (+ 165 MB before calling this feature)
+				time: 3.7 seconds
+				marked features: 11,892
+		When using ISE 6.2 with GC:
+			With ET_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 13 MB (+ 180 MB before calling this feature)
+				time: 2.2 seconds
+				marked features: 13,174
+			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
+				memory: 13 MB (+ 180 MB before calling this feature)
+				time: 5.8 seconds
+				marked features: 12,970
+			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
+				memory: 17 MB (+ 180 MB before calling this feature)
+				time: 6.0 seconds
+				marked features: 11,892
+		Number of features compiled with ISE 6.2: 12,111
 	]"
 
 	library: "Gobo Eiffel Tools Library"
@@ -77,14 +105,6 @@ feature {NONE} -- Initialization
 			make_feature_checker
 		end
 
-feature -- Access
-
-	used_features: DS_HASH_SET [ET_FEATURE]
-			-- Features which have been traversed so far
-			--
-			-- Their 'implementation_feature' will be marked as used as
-			-- indicated in the header comment of the 'mark_...' features.
-
 feature -- Processing
 
 	mark_system (a_feature: ET_FEATURE) is
@@ -120,16 +140,17 @@ feature -- Processing
 			unmark_all (l_system)
 			descendants_cache.wipe_out
 			used_features.wipe_out
-			used_features.force_last (a_feature.implementation_feature)
-			from used_features.start until used_features.after loop
-				l_feature := used_features.item_for_iteration
+			l_feature := a_feature.implementation_feature
+			l_feature.set_used (True)
+			used_features.force (l_feature)
+			from until used_features.is_empty loop
+				l_feature := used_features.item
+				used_features.remove
 				l_feature := l_feature.implementation_feature
 				l_class := l_feature.implementation_class
-				l_feature.set_used (True)
 				if l_class.is_preparsed then
 					check_feature_validity (l_feature, l_class)
 				end
-				used_features.forth
 			end
 			descendants_cache.wipe_out
 		ensure
@@ -201,12 +222,6 @@ feature -- Processing
 			l_class := l_feature.implementation_class
 			check_feature_validity (l_feature, l_class)
 			descendants_cache.wipe_out
-			from used_features.start until used_features.after loop
-				l_feature := used_features.item_for_iteration
-				l_feature := l_feature.implementation_feature
-				l_feature.set_used (True)
-				used_features.forth
-			end
 		end
 
 	unmark_all (a_system: ET_SYSTEM) is
@@ -231,9 +246,14 @@ feature {NONE} -- Event handling
 			a_descendant_not_void: a_descendant /= Void
 		local
 			l_other_feature: ET_FEATURE
+			l_feature_impl: ET_FEATURE
 		do
 			if a_descendant = a_base_class then
-				used_features.force_last (a_feature.implementation_feature)
+				l_feature_impl := a_feature.implementation_feature
+				if not l_feature_impl.is_used then
+					l_feature_impl.set_used (True)
+					used_features.force (l_feature_impl)
+				end
 			else
 				if a_feature.is_query then
 					l_other_feature := a_descendant.seeded_query (a_feature.first_seed)
@@ -248,7 +268,11 @@ feature {NONE} -- Event handling
 						error_handler.report_giaaa_error
 					end
 				else
-					used_features.force_last (l_other_feature.implementation_feature)
+					l_feature_impl := l_other_feature.implementation_feature
+					if not l_feature_impl.is_used then
+						l_feature_impl.set_used (True)
+						used_features.force (l_feature_impl)
+					end
 				end
 			end
 		end
@@ -284,10 +308,14 @@ feature {NONE} -- Event handling
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_query' is the precursor feature.
 		local
+			l_feature_impl: ET_FEATURE
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_parent_type.base_class
-			used_features.force_last (a_query.implementation_feature)
+			l_feature_impl := a_query.implementation_feature
+			if not l_feature_impl.is_used then
+				l_feature_impl.set_used (True)
+				used_features.force (l_feature_impl)
+			end
 		end
 
 	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
@@ -295,10 +323,14 @@ feature {NONE} -- Event handling
 			-- `a_parent_type' is viewed in the context of `current_type'
 			-- and `a_procedure' is the precursor feature.
 		local
+			l_feature_impl: ET_FEATURE
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_parent_type.base_class
-			used_features.force_last (a_procedure.implementation_feature)
+			l_feature_impl := a_procedure.implementation_feature
+			if not l_feature_impl.is_used then
+				l_feature_impl.set_used (True)
+				used_features.force (l_feature_impl)
+			end
 		end
 
 	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
@@ -509,6 +541,12 @@ feature {NONE} -- Descendants cache
 		ensure
 			no_void_descendants: not a_descendants.has (Void)
 		end
+
+feature -- Access
+
+	used_features: DS_ARRAYED_STACK [ET_FEATURE]
+			-- Features which have already been marked as used but
+			-- have not been traversed yet
 
 invariant
 
