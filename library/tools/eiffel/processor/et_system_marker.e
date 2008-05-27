@@ -148,6 +148,19 @@ feature -- Processing
 			a_class_not_void: a_class /= Void
 		do
 			unmark_all
+			mark_system_no_unmark (a_class)
+		ensure
+			a_class_in_system: a_class.in_system
+		end
+
+	mark_system_no_unmark (a_class: ET_CLASS) is
+			-- Identify the classes that `a_class' recursively depends on
+			-- (see definition in ETL page 35) and mark them as being part
+			-- of the system. Mark `a_class' as well. (Do not call `unmark_all'
+			-- before marking the classes.)
+		require
+			a_class_not_void: a_class /= Void
+		do
 			is_recursive := True
 			a_class.set_in_system (True)
 			process_class (a_class)
@@ -164,8 +177,7 @@ feature -- Processing
 			a_class_not_void: a_class /= Void
 		do
 			unmark_all
-			is_recursive := False
-			process_class (a_class)
+			mark_shallow_no_unmark (a_class)
 		end
 
 	mark_shallow_no_unmark (a_class: ET_CLASS) is
