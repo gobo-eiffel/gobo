@@ -151,7 +151,7 @@ feature -- Access
 feature -- Status report
 
 	is_definite: BOOLEAN is
-			-- Is current duration independant of the date
+			-- Is current duration independent of the date
 			-- on which it applies (use of `day' only)
 			-- or not (use of `year', `month' and `day')?
 		do
@@ -324,7 +324,7 @@ feature -- Basic operations
 			Result := cloned_object
 			Result.add_years_months_days (other.year, other.month, other.day)
 		end
-	
+
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
