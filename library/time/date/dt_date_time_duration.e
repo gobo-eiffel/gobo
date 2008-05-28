@@ -5,7 +5,7 @@ indexing
 		"Date/time durations (Gregorian calendar)"
 
 	note1: "year 0 means 1 BCE, year -1 means 2 BCE, etc."
-	note2: "Do not take leap seconds into account"
+	note2: "Does not take leap seconds into account"
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2000, Eric Bezault and others"
 	license: "MIT License"
