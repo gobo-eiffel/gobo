@@ -559,8 +559,10 @@ feature {NONE} -- Entities
 			debug ("xml_parser")
 				std.error.put_string ("Entity declared: ")
 				std.error.put_string (a_name)
-				std.error.put_string (" value: ")
-				std.error.put_string (a_def.value)
+				if a_def /= Void and then a_def.value /= Void then
+					std.error.put_string (" value: ")
+					std.error.put_string (a_def.value)
+				end
 				std.error.put_new_line
 			end
 				-- 4.2: when multiple declaration first one is binding.
