@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="gelint" default="help">
+<project name="semantics" default="help">
 
 	<description>
-		system: "Gobo Eiffel Lint Tester"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		description: "Eiffel Ant file for gelint semantics tests"
+		copyright: "Copyright (c) 2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -138,10 +138,12 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="semantics"/>
-		<geant file="build.eant" target="clean" dir="semantics" if="${do_clean}=true"/>
-		<geant file="build.eant" target="${target}" dir="validity"/>
-		<geant file="build.eant" target="clean" dir="validity" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="object_test"/>
+		<geant file="build.eant" target="clean" dir="object_test" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="once"/>
+		<geant file="build.eant" target="clean" dir="once" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="precursor"/>
+		<geant file="build.eant" target="clean" dir="precursor" if="${do_clean}=true"/>
 	</target>
 
 </project>
