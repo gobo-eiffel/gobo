@@ -81,6 +81,59 @@ void eif_system_asynchronous(char* cmd) {
 #endif
 }
 
+void eif_sleep(EIF_INTEGER_64 nanoseconds)
+{
+	/*
+	 * Suspend thread execution for interval specified by `nanoseconds'.
+	 * Use the most precise sleep function if possible.
+	 */
+
+#ifdef HAS_NANOSLEEP
+	struct timespec req;
+	struct timespec rem;
+	req.tv_sec = nanoseconds / 1000000000;
+	req.tv_nsec = nanoseconds % 1000000000;
+	while ((nanosleep (&req, &rem) == -1) && (errno == EINTR)) {
+			/* Function is interrupted by a signal.   */
+			/* Let's call it again to complete pause. */
+		req = rem;
+	}
+#else
+#	ifdef HAS_USLEEP
+#		define EIF_SLEEP_PRECISION 1000
+#		define EIF_SLEEP_TYPE      unsigned long
+#		define EIF_SLEEP_FUNCTION  usleep
+#	elif defined EIF_WINDOWS
+#		define EIF_SLEEP_PRECISION 1000000
+#		define EIF_SLEEP_TYPE      DWORD
+#		define EIF_SLEEP_FUNCTION  Sleep
+#	else
+#		define EIF_SLEEP_PRECISION 1000000000
+#		define EIF_SLEEP_TYPE      unsigned int
+#		define EIF_SLEEP_FUNCTION  sleep
+#	endif
+		/* Set total delay time */
+	EIF_INTEGER_64 total_time = nanoseconds / EIF_SLEEP_PRECISION;
+		/* Set maximum timeout that can be handled by one API call */
+	EIF_SLEEP_TYPE timeout = ~((~ (EIF_SLEEP_TYPE) 0) << (sizeof timeout * 8 - 1));
+	if ((nanoseconds % EIF_SLEEP_PRECISION) > 0) {
+			/* Increase delay to handle underflow */
+		total_time++;
+	}
+	while (total_time > 0) {
+			/* Sleep for maximum timeout not exceeding time left */
+		if (timeout > total_time) {
+			timeout = (EIF_SLEEP_TYPE) total_time;
+		}
+		EIF_SLEEP_FUNCTION(timeout);
+		total_time -= timeout;
+	}
+#  undef EIF_SLEEP_PRECISION
+#  undef EIF_SLEEP_TYPE
+#  undef EIF_SLEEP_FUNCTION
+#endif
+}
+
 #ifdef __cplusplus
 }
 #endif

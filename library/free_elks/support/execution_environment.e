@@ -178,6 +178,15 @@ feature -- Status setting
 			asynchronous_system_call ($ext)
 		end
 
+	sleep (nanoseconds: INTEGER_64) is
+			-- Suspend thread execution for interval specified in
+			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			non_negative_nanoseconds: nanoseconds >= 0
+		do
+			eif_sleep (nanoseconds)
+		end
+
 feature {NONE} -- Implementation
 
 	environ: HASH_TABLE [C_STRING, STRING] is
@@ -293,6 +302,15 @@ feature {NONE} -- External
 			-- Directory name corresponding to the root directory
 		external
 			"C use %"eif_path_name.h%""
+		end
+
+	eif_sleep (nanoseconds: INTEGER_64) is
+			-- Suspend thread execution for interval specified in
+			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			non_negative_nanoseconds: nanoseconds >= 0
+		external
+			"C blocking use %"eif_misc.h%""
 		end
 
 end

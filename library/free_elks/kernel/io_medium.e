@@ -438,6 +438,22 @@ feature -- Input
 			last_string_not_void: last_string /= Void
 		end
 
+	read_stream_thread_aware (nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of medium is encountered.
+			-- Make result available in `last_string'.
+			-- Functionally identical to `read_stream' but
+			-- won't prevent garbage collection from occurring
+			-- while blocked waiting for data, though data must
+			-- be copied an extra time.			
+		require
+			is_readable: readable
+		do
+			read_stream (nb_char)
+		ensure
+			last_string_not_void: last_string /= Void
+		end
+
 	read_line, readline is
 			-- Read characters until a new line or
 			-- end of medium.
@@ -445,6 +461,22 @@ feature -- Input
 		require
 			is_readable: readable
 		deferred
+		ensure
+			last_string_not_void: last_string /= Void
+		end
+
+	read_line_thread_aware is
+			-- Read characters until a new line or
+			-- end of medium.
+			-- Make result available in `last_string'.
+			-- Functionally identical to `read_line' but
+			-- won't prevent garbage collection from occurring
+			-- while blocked waiting for data, though data must
+			-- be copied an extra time.			
+		require
+			is_readable: readable
+		do
+			read_line
 		ensure
 			last_string_not_void: last_string /= Void
 		end

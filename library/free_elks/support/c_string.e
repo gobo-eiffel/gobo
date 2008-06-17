@@ -114,6 +114,34 @@ feature -- Access
 			string_not_void: Result /= Void
 		end
 
+	copy_to_string (a_string: STRING_GENERAL; source_index, destination_index, n: INTEGER) is
+			-- Copy `n' characters of `Current' from `source_index' position to `a_string' at
+			-- `destination_index'. Other characters of `a_string' remain unchanged.
+		require
+			a_string_not_void: a_string /= Void
+			source_index_positive: source_index >= 1
+			destination_index_positive: destination_index >= 1
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + (n - 1) <= capacity
+			n_is_small_enough_for_destination: destination_index + (n - 1) <= a_string.count
+		local
+			l_data: like managed_data
+			i, j, nb: INTEGER
+		do
+			from
+				i := source_index - 1
+				j := destination_index
+				nb := source_index + (n - 1)
+				l_data := managed_data
+			until
+				i = nb
+			loop
+				a_string.put_code (l_data.read_natural_8 (i), j)
+				i := i + 1
+				j := j + 1
+			end
+		end
+
 	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string'.

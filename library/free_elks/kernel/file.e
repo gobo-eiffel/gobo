@@ -22,6 +22,9 @@ deferred class FILE inherit
 		rename
 			handle as descriptor,
 			handle_available as descriptor_available
+		redefine
+			read_stream_thread_aware,
+			read_line_thread_aware
 		end
 
 feature -- Initialization
@@ -1359,6 +1362,41 @@ feature -- Input
 			end
 		end
 
+	read_line_thread_aware is
+			-- <Precursor>
+		require else
+			is_readable: file_readable
+		local
+			str_cap: INTEGER
+			read: INTEGER	-- Amount of bytes already read
+			done: BOOLEAN
+			l: like last_string
+			l_old_count, l_new_count: INTEGER
+			l_buffer: C_STRING
+		do
+			if last_string = Void then
+				create_last_string (0)
+			end
+			l := last_string
+			l_buffer := read_data_buffer
+			if l /= Void and l_buffer /= Void then
+				from
+					l.clear_all
+					str_cap := l_buffer.capacity
+				until
+					done
+				loop
+					read := file_gs_ta (file_pointer, l_buffer.item, str_cap, 0)
+					l_old_count := l.count
+					l_new_count := l_old_count + read.min (str_cap)
+					done := read <= str_cap
+					l.grow (l_new_count)
+					l.set_count (l_new_count)
+					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
+				end
+			end
+		end
+
 	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
@@ -1379,6 +1417,31 @@ feature -- Input
 				str_area := l.area
 				new_count := file_gss (file_pointer, $str_area, nb_char)
 				l.set_count (new_count)
+			end
+		end
+
+	read_stream_thread_aware (nb_char: INTEGER) is
+			-- <Precursor>
+		require else
+			is_readable: file_readable
+		local
+			new_count: INTEGER
+			l_buffer: C_STRING
+			l_str: like last_string
+		do
+			l_str := last_string
+			if l_str = Void then
+				create_last_string (nb_char)
+				l_str := last_string
+			end
+			l_buffer := read_data_buffer
+			if l_buffer /= Void and l_str /= Void then
+				l_buffer.set_count (nb_char)
+				new_count := file_gss_ta (file_pointer, l_buffer.item, nb_char)
+				l_buffer.set_count (new_count)
+				l_str.grow (new_count)
+				l_str.set_count (new_count)
+				l_buffer.read_string_into (l_str)
 			end
 		end
 
@@ -1436,6 +1499,48 @@ feature -- Input
 						l.set_count (read)
 						read := str_cap + 1	-- End of loop
 					end
+				end
+			end
+			separator := file_lh (file_pointer) -- Look ahead
+		ensure
+			last_string_not_void: last_string /= Void
+		end
+
+	read_word_thread_aware is
+			-- Read a string, excluding white space and stripping
+			-- leading white space.
+			-- Make result available in `last_string'.
+			-- White space characters are: blank, new_line, tab,
+			-- vertical tab, formfeed, end of file.
+		require
+			is_readable: file_readable
+		local
+			str_cap: INTEGER
+			read: INTEGER	-- Amount of bytes already read
+			done: BOOLEAN
+			l: like last_string
+			l_old_count, l_new_count: INTEGER
+			l_buffer: C_STRING
+		do
+			if last_string = Void then
+				create_last_string (0)
+			end
+			l := last_string
+			l_buffer := read_data_buffer
+			if l /= Void and then l_buffer /= Void then
+				from
+					l.clear_all
+					str_cap := l_buffer.capacity
+				until
+					done
+				loop
+					read := file_gw_ta (file_pointer, l_buffer.item, str_cap, 0)
+					l_old_count := l.count
+					l_new_count := l_old_count + read.min (str_cap)
+					done := read <= str_cap
+					l.grow (l_new_count)
+					l.set_count (l_new_count)
+					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
 				end
 			end
 			separator := file_lh (file_pointer) -- Look ahead
@@ -1540,6 +1645,14 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
+	read_data_buffer: C_STRING is
+			-- Buffer to read data in a thread aware context.
+		once
+			create Result.make_empty (default_last_string_size)
+		ensure
+			read_data_buffer_not_void: Result /= Void
+		end
+
 	set_buffer is
 			-- Resynchronizes information on file
 		require
@@ -1601,7 +1714,7 @@ feature {NONE} -- Implementation
 	file_gc (file: POINTER): CHARACTER is
 			-- Access the next character
 		external
-			"C signature (FILE *): EIF_CHARACTER use %"eif_file.h%""
+			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_file.h%""
 		end
 
 	file_gs (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -1630,6 +1743,34 @@ feature {NONE} -- Implementation
 			-- otherwise result is number of characters read.
 		external
 			"C signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
+		end
+
+	file_gs_ta (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
+			-- Same as `file_gs' but it won't prevent garbage collection from occurring
+			-- while blocked waiting for data.			
+		external
+			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"file_gs"
+		end
+
+	file_gss_ta (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
+			-- Same as `file_gss' but it won't prevent garbage collection from occurring
+			-- while blocked waiting for data.			
+
+		external
+			"C blocking signature (FILE *, char *, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"file_gss"
+		end
+
+	file_gw_ta (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
+			-- Same as `file_gw' but it won't prevent garbage collection from occurring
+			-- while blocked waiting for data.			
+		external
+			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_file.h%""
+		alias
+			"file_gw"
 		end
 
 	file_lh (file: POINTER): CHARACTER is

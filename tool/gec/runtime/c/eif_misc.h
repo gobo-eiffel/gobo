@@ -19,6 +19,7 @@ extern "C" {
 
 extern EIF_INTEGER eif_system(char* s);
 extern void eif_system_asynchronous(char* cmd);
+extern void eif_sleep(EIF_INTEGER_64);
 
 #ifdef EIF_WINDOWS
 /* DLL declarations */
