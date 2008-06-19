@@ -919,7 +919,7 @@ feature -- Parsing
 	parse_all is
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
-			-- depends on. There is not need to call one of the preparse
+			-- depends on. There is no need to call one of the preparse
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
@@ -943,7 +943,7 @@ feature -- Parsing
 
 	parse_all_local is
 			-- Parse all classes declared locally in the current universe.
-			-- There is not need to call one of the preparse routines
+			-- There is no need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
@@ -970,7 +970,7 @@ feature -- Parsing
 	parse_all_recursive is
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
-			-- depends on. There is not need to call one of the preparse
+			-- depends on. There is no need to call one of the preparse
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
