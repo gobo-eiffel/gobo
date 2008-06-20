@@ -271,82 +271,88 @@ void file_unlink(char *name) {
 }
 
 static char* file_open_mode(int how) {
+/* Under Windows we add the mode "N". This is to make sure that
+ * files created in Eiffel are not inheritable by default as otherwise
+ * it makes things too complicated for the end user when spawning
+ * child processes in multithreaded mode.
+ * This follows the change in EiffelStudio svn#73874.
+ */
 	switch (how) {
 	case 0: 
 #ifdef EIF_WINDOWS
-		return "rt";
+		return "rtN";
 #else
 		return "r";
 #endif
 	case 1:
 #ifdef EIF_WINDOWS
-		return "wt";
+		return "wtN";
 #else
 		return "w";
 #endif
 	case 2:
 #ifdef EIF_WINDOWS
-		return "at";
+		return "atN";
 #else
 		return "a";
 #endif
 	case 3:
 #ifdef EIF_WINDOWS
-		return "rt+";
+		return "rt+N";
 #else
 		return "r+";
 #endif
 	case 4:
 #ifdef EIF_WINDOWS
-		return "wt+";
+		return "wt+N";
 #else
 		return "w+";
 #endif
 	case 5:
 #ifdef EIF_WINDOWS
-		return "at+";
+		return "at+N";
 #else
 		return "a+";
 #endif
 	case 10: 
 #ifdef EIF_WINDOWS
-		return "rb";
+		return "rbN";
 #else
 		return "r";
 #endif
 	case 11:
 #ifdef EIF_WINDOWS
-		return "wb";
+		return "wbN";
 #else
 		return "w";
 #endif
 	case 12:
 #ifdef EIF_WINDOWS
-		return "ab";
+		return "abN";
 #else
 		return "a";
 #endif
 	case 13:
 #ifdef EIF_WINDOWS
-		return "rb+";
+		return "rb+N";
 #else
 		return "r+";
 #endif
 	case 14:
 #ifdef EIF_WINDOWS
-		return "wb+";
+		return "wb+N";
 #else
 		return "w+";
 #endif
 	case 15:
 #ifdef EIF_WINDOWS
-		return "ab+";
+		return "ab+N";
 #else
 		return "a+";
 #endif
 	default:
 #ifdef EIF_WINDOWS
-		return "rt";
+		return "rtN";
 #else
 		return "r";
 #endif
