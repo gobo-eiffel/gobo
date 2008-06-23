@@ -1423,7 +1423,7 @@ feature -- Conversion: C Strings to STRING
 #ifdef SE
 			create Result.from_external_copy (psz)
 #else
-			Result.from_c (psz)
+			create Result.make_from_c (psz)
 #endif
 		ensure
 			string_not_void: Result /= Void
