@@ -2779,6 +2779,52 @@ feature -- Validity errors
 			end
 		end
 
+	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
+			-- Report VGCC-1 error: the creation expression appearing in
+			-- `a_class_impl' at position `a_position' and viewed from one
+			-- of its descendants `a_class' (possibly itself), has no
+			-- Creation_call part but the base class `a_target' of the
+			-- creation type is deferred.
+			--
+			-- ECMA 367-2: p.109
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc1_error (a_class) then
+				create an_error.make_vgcc1a (a_class, a_class_impl, a_position, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcc1b_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+			-- Report VGCC-1 error: the creation instruction `a_creation',
+			-- appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' (possibly itself), has no Creation_call
+			-- part but the base class `a_target' of the creation type
+			-- is deferred.
+			--
+			-- ECMA 367-2: p.109
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc1_error (a_class) then
+				create an_error.make_vgcc1b (a_class, a_class_impl, a_creation, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vgcc3a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
 			-- Report VGCC-3 error: the explicit creation type in creation instruction
 			-- `a_creation' appearing in `a_class_impl' does not conform to the declared
@@ -6586,6 +6632,16 @@ feature -- Validity error status
 
 	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VFFD-7 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgcc1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCC-1 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

@@ -2718,22 +2718,19 @@ feature {NONE} -- Instruction validity
 									if l_procedure = Void and not has_fatal_error then
 										l_procedure := l_class.named_procedure (l_name)
 										if l_procedure /= Void then
-											l_procedure := l_class.named_procedure (l_name)
-											if l_procedure /= Void then
-												l_seed := l_procedure.first_seed
-												l_name.set_seed (l_seed)
+											l_seed := l_procedure.first_seed
+											l_name.set_seed (l_seed)
+										else
+											l_query := l_class.named_query (l_name)
+											if l_query /= Void then
+													-- This is not a procedure.
+												set_fatal_error
+												error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
 											else
-												l_query := l_class.named_query (l_name)
-												if l_query /= Void then
-														-- This is not a procedure.
-													set_fatal_error
-													error_handler.report_vgcc6d_error (current_class, l_name, l_query, l_class)
-												else
-													set_fatal_error
-														-- ISE Eiffel 5.4 reports this error as a VEEN,
-														-- but it is in fact a VUEX-2 (ETL2 p.368).
-													error_handler.report_vuex2a_error (current_class_impl, l_name, l_class)
-												end
+												set_fatal_error
+													-- ISE Eiffel 5.4 reports this error as a VEEN,
+													-- but it is in fact a VUEX-2 (ETL2 p.368).
+												error_handler.report_vuex2a_error (current_class_impl, l_name, l_class)
 											end
 										end
 									end
@@ -2810,8 +2807,14 @@ feature {NONE} -- Instruction validity
 						no_default_create: current_system.default_create_seed = 0
 					end
 					if l_class.creators /= Void then
+							-- The class explicitly declares creation procedures,
+							-- so the creation call was required.
 						set_fatal_error
 						error_handler.report_vgcc5b_error (current_class, current_class_impl, an_instruction, l_class)
+					elseif l_class.is_deferred then
+							-- The class is deferred, so the creation is invalid.
+						set_fatal_error
+						error_handler.report_vgcc1b_error (current_class, current_class_impl, an_instruction, l_class)
 					end
 				else
 					l_formal_parameter_type ?= l_creation_named_type
@@ -4420,10 +4423,14 @@ feature {NONE} -- Expression validity
 						no_default_create: current_system.default_create_seed = 0
 					end
 					if l_class.creators /= Void then
-							-- The class explicit declares creation procedures,
+							-- The class explicitly declares creation procedures,
 							-- so the creation call was required.
 						set_fatal_error
 						error_handler.report_vgcc5a_error (current_class, current_class_impl, a_type_position, l_class)
+					elseif l_class.is_deferred then
+							-- The class is deferred, so the creation is invalid.
+						set_fatal_error
+						error_handler.report_vgcc1a_error (current_class, current_class_impl, a_type_position, l_class)
 					end
 				else
 					l_formal_parameter_type ?= l_named_creation_type

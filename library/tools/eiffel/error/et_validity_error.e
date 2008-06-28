@@ -115,6 +115,8 @@ create
 	make_vffd6a,
 	make_vffd7a,
 	make_vffd7b,
+	make_vgcc1a,
+	make_vgcc1b,
 	make_vgcc3a,
 	make_vgcc5a,
 	make_vgcc5b,
@@ -4607,6 +4609,96 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
+		end
+
+	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
+			-- Create a new VGCC-1 error: the creation expression appearing
+			-- in `a_class_impl' at position `a_position' and viewed from one
+			-- of its descendants `a_class' (possibly iteself), has no
+			-- Creation_call part but the- base class `a_target' of the
+			-- creation type is deferred.
+			--
+			-- ECMA 367-2: p.109
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_position_not_void: a_position /= Void
+			a_target_not_void: a_target /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_position
+			code := template_code (vgcc1a_template_code)
+			etl_code := vgcc1_etl_code
+			default_template := default_message_template (vgcc1a_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_target.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation type base class name
+		end
+
+	make_vgcc1b (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS) is
+			-- Create a new VGCC-1 error: the creation instruction `a_creation',
+			-- appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' (possibly itself), has no Creation_call
+			-- part but the base class `a_target' of the creation type
+			-- is deferred.
+			--
+			-- ECMA 367-2: p.109
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_creation_not_void: a_creation /= Void
+			a_target_not_void: a_target /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_creation.position
+			code := template_code (vgcc1b_template_code)
+			etl_code := vgcc1_etl_code
+			default_template := default_message_template (vgcc1b_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_target.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation type base class name
 		end
 
 	make_vgcc3a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_creation_named_type, a_target_named_type: ET_NAMED_TYPE) is
@@ -12235,6 +12327,8 @@ feature {NONE} -- Implementation
 	vffd6a_default_template: STRING is "feature `$7' has an Infix name but is not a function with exactly one argument."
 	vffd7a_default_template: STRING is "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING is "feature `$7' is a once funtion but its type contains a formal generic parameter."
+	vgcc1a_default_template: STRING is "creation expression with no Creation_call part, but $7 is deferred."
+	vgcc1b_default_template: STRING is "creation instruction with no Creation_call part, but $7 is deferred."
 	vgcc3a_default_template: STRING is "explicit creation type '$7' does not conform to target entity type '$8'."
 	vgcc5a_default_template: STRING is "creation expression with no Creation_call part, but $7 has a Creators part."
 	vgcc5b_default_template: STRING is "creation instruction with no Creation_call part, but $7 has a Creators part."
@@ -12445,6 +12539,7 @@ feature {NONE} -- Implementation
 	vffd6_etl_code: STRING is "VFFD-6"
 	vffd7_etl_code: STRING is "VFFD-7"
 	vhpr1_etl_code: STRING is "VHPR-1"
+	vgcc1_etl_code: STRING is "VGCC-1"
 	vgcc3_etl_code: STRING is "VGCC-3"
 	vgcc5_etl_code: STRING is "VGCC-5"
 	vgcc6_etl_code: STRING is "VGCC-6"
@@ -12648,6 +12743,8 @@ feature {NONE} -- Implementation
 	vffd6a_template_code: STRING is "vffd6a"
 	vffd7a_template_code: STRING is "vffd7a"
 	vffd7b_template_code: STRING is "vffd7b"
+	vgcc1a_template_code: STRING is "vgcc1a"
+	vgcc1b_template_code: STRING is "vgcc1b"
 	vgcc3a_template_code: STRING is "vgcc3a"
 	vgcc5a_template_code: STRING is "vgcc5a"
 	vgcc5b_template_code: STRING is "vgcc5b"
