@@ -5,7 +5,7 @@ indexing
 		"Xace option clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -591,9 +591,9 @@ feature -- Status report
 	is_override_cluster_declared: BOOLEAN is
 			-- Has 'override_cluster' option been declared?
 		do
-			Result := declared_override_cluster /= Void
+			Result := declared_override_cluster /= Void and then not declared_override_cluster.is_empty
 		ensure
-			definition: Result = (declared_override_cluster /= Void)
+			definition: Result = (declared_override_cluster /= Void and then not declared_override_cluster.is_empty)
 		end
 
 	is_portable_code_generation_declared: BOOLEAN is
@@ -1517,7 +1517,7 @@ feature -- Option values
 			end
 		end
 
-	override_cluster: STRING is
+	override_cluster: DS_HASH_SET [STRING] is
 			-- 'override_cluster' option
 		do
 			if is_override_cluster_declared then
@@ -1525,6 +1525,9 @@ feature -- Option values
 			else
 				Result := default_override_cluster
 			end
+		ensure
+			override_cluster_not_void: Result /= Void
+			no_void_override_cluster: not Result.has (Void)
 		end
 
 	portable_code_generation: BOOLEAN is
@@ -2754,10 +2757,15 @@ feature -- Modification
 		require
 			a_value_not_void: a_value /= Void
 		do
-			declared_override_cluster := a_value
+			if declared_override_cluster = Void then
+				create declared_override_cluster.make (10)
+				declared_override_cluster.set_equality_tester (string_equality_tester)
+			end
+			declared_override_cluster.force_last (a_value)
 		ensure
 			override_cluster_declared: is_override_cluster_declared
-			override_cluster_set: override_cluster = a_value
+			override_cluster_set: override_cluster.has (a_value)
+
 		end
 
 	set_portable_code_generation (b: BOOLEAN) is
@@ -4193,7 +4201,7 @@ feature -- Declared values
 	declared_old_verbatim_strings: UT_TRISTATE
 			-- Declared value for 'old_verbatim_strings' option
 
-	declared_override_cluster: STRING
+	declared_override_cluster: DS_HASH_SET [STRING]
 			-- Declared value for 'override_cluster' option
 
 	declared_portable_code_generation: UT_TRISTATE
@@ -4609,10 +4617,14 @@ feature -- Default values
 	default_old_verbatim_strings: BOOLEAN is False
 			-- Default value for 'old_verbatim_strings' option
 
-	default_override_cluster: STRING is
+	default_override_cluster: DS_HASH_SET [STRING] is
 			-- Default value for 'override_cluster' option
 		once
-			Result := Void
+			create Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
+		ensure
+			default_override_cluster_not_void: Result /= Void
+			no_void_override_cluster: not Result.has (Void)
 		end
 
 	default_portable_code_generation: BOOLEAN is False

@@ -593,10 +593,14 @@ feature {NONE} -- Output
 				end
 			end
 			if an_option.is_override_cluster_declared then
-				print_indentation (indent, a_file)
-				a_file.put_string ("<option name=%"override_cluster%" value=%"")
-				print_quote_escaped_string (an_option.override_cluster, a_file)
-				a_file.put_line ("%"/>")
+				a_cursor := an_option.override_cluster.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent, a_file)
+					a_file.put_string ("<option name=%"override_cluster%" value=%"")
+					print_quote_escaped_string (a_cursor.item, a_file)
+					a_file.put_line ("%"/>")
+					a_cursor.forth
+				end
 			end
 			if an_option.is_portable_code_generation_declared then
 				print_indentation (indent, a_file)

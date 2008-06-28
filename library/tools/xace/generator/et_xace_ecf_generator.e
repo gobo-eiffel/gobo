@@ -821,7 +821,7 @@ feature {NONE} -- Output
 			nb := cluster_list.count
 			from i := 1 until i > nb loop
 				a_cluster := cluster_list.item (i)
-				if not a_cluster.is_implicit then
+				if not a_cluster.is_implicit and not a_cluster.is_override then
 						-- This cluster has been explicitly declared.
 					print_cluster (a_cluster, indent, a_file)
 				end

@@ -242,7 +242,7 @@ feature {NONE} -- Output
 			an_arguments_cursor: DS_HASH_SET_CURSOR [STRING]
 			an_assertion: DS_HASH_SET [STRING]
 			a_dead_code_removal: DS_HASH_SET [STRING]
-			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
 			an_inlining: DS_HASH_SET [STRING]
 			a_target: STRING
 		do
@@ -344,13 +344,15 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("debug (no)")
 			end
-			a_debug_tag_cursor := an_option.debug_tag.new_cursor
-			from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
-				print_indentation (indent, a_file)
-				a_file.put_string ("debug (%"")
-				a_file.put_string (a_debug_tag_cursor.item)
-				a_file.put_line ("%")")
-				a_debug_tag_cursor.forth
+			if an_option.is_debug_tag_declared then
+				a_cursor := an_option.debug_tag.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent, a_file)
+					a_file.put_string ("debug (%"")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line ("%")")
+					a_cursor.forth
+				end
 			end
 			if an_option.is_document_declared then
 				print_indentation (indent, a_file)
@@ -453,10 +455,14 @@ feature {NONE} -- Output
 				a_file.put_line ("multithreaded (no)")
 			end
 			if an_option.is_override_cluster_declared then
-				print_indentation (indent, a_file)
-				a_file.put_string ("override_cluster (")
-				a_file.put_string (an_option.override_cluster)
-				a_file.put_line (")")
+				a_cursor := an_option.override_cluster.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					print_indentation (indent, a_file)
+					a_file.put_string ("override_cluster (")
+					a_file.put_string (a_cursor.item)
+					a_file.put_line (")")
+					a_cursor.forth
+				end
 			end
 			if an_option.is_precompiled_declared then
 				print_indentation (indent, a_file)

@@ -1315,6 +1315,7 @@ VALUES: <cluster_name>
 DEFAULT: no default
 DESCRIPTION: Enable all classes of <cluster_name> to override
   the classes with the same names located in other clusters.
+NOTE: There can be several of these options.
 
 ISE Ace:
   <cluster_name> -> override_cluster (<cluster_name>)

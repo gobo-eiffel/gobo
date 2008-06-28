@@ -499,6 +499,8 @@ feature {NONE} -- Element change
 			i, nb: INTEGER
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 			l_other_library: ET_XACE_MOUNTED_LIBRARY
+			l_cursor: DS_HASH_SET_CURSOR [STRING]
+			l_override_cluster: ET_CLUSTER
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_name := an_element.attribute_by_name (uc_name).value
@@ -603,6 +605,19 @@ feature {NONE} -- Element change
 				a_cursor.forth
 			end
 			if a_clusters /= Void then
+				if an_option /= Void then
+						-- Set override clusters.
+					if an_option.is_override_cluster_declared then
+						l_cursor := an_option.override_cluster.new_cursor
+						from l_cursor.start until l_cursor.after loop
+							l_override_cluster := a_clusters.cluster_by_name (l_cursor.item)
+							if l_override_cluster /= Void then
+								l_override_cluster.set_override (True)
+							end
+							l_cursor.forth
+						end
+					end
+				end
 				if a_mounts = Void then
 					a_mounts := ast_factory.new_mounted_libraries
 				end
@@ -657,6 +672,8 @@ feature {NONE} -- Element change
 			i, nb: INTEGER
 			a_library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 			l_other_library: ET_XACE_MOUNTED_LIBRARY
+			l_cursor: DS_HASH_SET_CURSOR [STRING]
+			l_override_cluster: ET_CLUSTER
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_name := an_element.attribute_by_name (uc_name).value
@@ -731,6 +748,19 @@ feature {NONE} -- Element change
 				end
 			end
 			if a_clusters /= Void then
+				if an_option /= Void then
+						-- Set override clusters.
+					if an_option.is_override_cluster_declared then
+						l_cursor := an_option.override_cluster.new_cursor
+						from l_cursor.start until l_cursor.after loop
+							l_override_cluster := a_clusters.cluster_by_name (l_cursor.item)
+							if l_override_cluster /= Void then
+								l_override_cluster.set_override (True)
+							end
+							l_cursor.forth
+						end
+					end
+				end
 				if a_mounts = Void then
 					a_mounts := ast_factory.new_mounted_libraries
 				end
