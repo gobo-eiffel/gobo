@@ -5,10 +5,23 @@ Version 3.9 - ?
 	* Fixed some C compilation warnings when using gcc as back-end C compiler.
 	  See bug#1961462.
 
+	gelint:
+
+	* Fixed bug where no validity error was reported when a creation procedure
+	  of a creation instruction did not exist in the base class of the creation
+	  type.
+
 	getest:
 
 	* Added an indexing clause "generator" to the generated classes.
 	  See feature request bug#1961466.
+
+	gexace:
+
+	* Made sure that several options 'override_cluster' can be specified
+	  in Xace files.
+	* Fixed bug when generating ECF files from Xace files: the override
+	  clusters were not marked as such.
 
 Version 3.8 - 11 May 2008
 
