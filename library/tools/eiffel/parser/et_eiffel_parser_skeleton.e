@@ -802,7 +802,7 @@ feature {NONE} -- Basic operations
 
 	set_end_closure is
 			-- Indicate that the end of the closure (i.e. feature, invariant
-			-- or inline agent) being parsed has been reached. Restore 
+			-- or inline agent) being parsed has been reached. Restore
 			-- `last_formal_arguments', `last_local_variables' and
 			-- `last_object_tests' for the enclosing closure if any.
 		do
@@ -1072,14 +1072,28 @@ feature {NONE} -- AST factory
 
 	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER): ET_BIT_FEATURE is
 			-- New 'BIT Identifier' type
+		local
+			a_class: ET_CLASS
 		do
-			Result := ast_factory.new_bit_feature (a_bit, an_id, current_system.bit_class)
+			a_class := current_system.bit_class
+			if providers_enabled then
+				providers.force_last (a_class)
+			end
+			a_class.set_in_system (True)
+			Result := ast_factory.new_bit_feature (a_bit, an_id, a_class)
 		end
 
 	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
 			-- New 'BIT N' type
+		local
+			a_class: ET_CLASS
 		do
-			Result := ast_factory.new_bit_n (a_bit, an_int, current_system.bit_class)
+			a_class := current_system.bit_class
+			if providers_enabled then
+				providers.force_last (a_class)
+			end
+			a_class.set_in_system (True)
+			Result := ast_factory.new_bit_n (a_bit, an_int, a_class)
 			if Result /= Void then
 				Result.compute_size
 				if Result.has_size_error then
@@ -1528,8 +1542,15 @@ feature {NONE} -- AST factory
 
 	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
 			-- New 'TUPLE' type
+		local
+			a_class: ET_CLASS
 		do
-			Result := ast_factory.new_tuple_type (a_type_mark, a_tuple, a_generics, current_system.tuple_class)
+			a_class := current_system.tuple_class
+			if providers_enabled then
+				providers.force_last (a_class)
+			end
+			a_class.set_in_system (True)
+			Result := ast_factory.new_tuple_type (a_type_mark, a_tuple, a_generics, a_class)
 		end
 
 	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION is
