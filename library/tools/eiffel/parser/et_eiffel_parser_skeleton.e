@@ -438,6 +438,9 @@ feature {NONE} -- Basic operations
 				current_system.register_feature (a_query)
 				queries.force_last (a_query)
 				queries.finish
+				if last_object_tests /= Void then
+					a_query.set_object_tests (last_object_tests.cloned_object_test_list)
+				end
 			end
 				-- Reset local variables, formal arguments and
 				-- object-tests before reading the next feature.
@@ -466,6 +469,9 @@ feature {NONE} -- Basic operations
 				current_system.register_feature (a_procedure)
 				procedures.force_last (a_procedure)
 				procedures.finish
+				if last_object_tests /= Void then
+					a_procedure.set_object_tests (last_object_tests.cloned_object_test_list)
+				end
 			end
 				-- Reset local variables, formal arguments and
 				-- object-tests before reading the next feature.
@@ -1283,6 +1289,14 @@ feature {NONE} -- AST factory
 				end
 				assertions.wipe_out
 			end
+			if Result /= Void and last_object_tests /= Void then
+				Result.set_object_tests (last_object_tests.cloned_object_test_list)
+			end
+				-- Reset local variables, formal arguments and
+				-- object-tests before reading the next closure.
+			wipe_out_last_formal_arguments_stack
+			wipe_out_last_local_variables_stack
+			wipe_out_last_object_tests_stack
 		end
 
 	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST is

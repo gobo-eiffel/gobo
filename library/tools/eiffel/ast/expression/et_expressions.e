@@ -30,7 +30,7 @@ feature -- Measurement
 			-- Number of expressions
 		deferred
 		ensure
-			count_non_negative: Result >= 0
+			count_not_negative: Result >= 0
 		end
 
 end

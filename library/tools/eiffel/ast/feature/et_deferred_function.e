@@ -57,6 +57,7 @@ feature -- Duplication
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
+			Result.set_object_tests (object_tests)
 			Result.set_synonym (Current)
 		end
 
@@ -82,6 +83,7 @@ feature -- Conversion
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
+			Result.set_object_tests (object_tests)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end

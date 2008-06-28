@@ -22,6 +22,11 @@ inherit
 		end
 
 	ET_INTERNAL_ROUTINE_CLOSURE
+		rename
+			implementation_closure as implementation_feature
+		undefine
+			implementation_feature
+		end
 
 feature -- Initialization
 

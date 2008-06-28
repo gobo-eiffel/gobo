@@ -17,6 +17,11 @@ inherit
 	ET_ROUTINE
 
 	ET_EXTERNAL_ROUTINE_CLOSURE
+		rename
+			implementation_closure as implementation_feature
+		undefine
+			implementation_feature
+		end
 
 feature -- Built-in
 

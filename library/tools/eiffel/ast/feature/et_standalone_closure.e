@@ -5,7 +5,7 @@ indexing
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,13 @@ deferred class ET_STANDALONE_CLOSURE
 inherit
 
 	ET_CLOSURE
+		rename
+			implementation_closure as implementation_feature
+		undefine
+			implementation_feature
+		redefine
+			implementation_feature
+		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
@@ -52,6 +59,8 @@ feature -- Access
 			-- Note that the signature has already been resolved
 			-- in the context of the current class.
 		deferred
+		ensure
+			implementation_class_not_void: Result /= Void
 		end
 
 	implementation_feature: ET_STANDALONE_CLOSURE is
@@ -69,6 +78,8 @@ feature -- Export status
 	clients: ET_CLIENT_LIST is
 			-- Clients to which feature is exported
 		deferred
+		ensure
+			clients_not_void: Result /= Void
 		end
 
 feature -- Implementation checking status

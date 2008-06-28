@@ -1473,6 +1473,17 @@ feature -- Features
 			procedures.features_do_declared (an_action)
 		end
 
+	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in current class that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' changes the list of features.)
+		require
+			an_action_not_void: an_action /= Void
+		do
+			queries.features_do_inherited (an_action)
+			procedures.features_do_inherited (an_action)
+		end
+
 	features_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
 			-- Apply `an_action' to every feature of current class that satisfies `a_test'.
 			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
@@ -1495,6 +1506,43 @@ feature -- Features
 		do
 			queries.features_do_declared_if (an_action, a_test)
 			procedures.features_do_declared_if (an_action, a_test)
+		end
+
+	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in current class that satisfies `a_test'.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list of features.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			queries.features_do_inherited_if (an_action, a_test)
+			procedures.features_do_inherited_if (an_action, a_test)
+		end
+
+	has_declared_feature (a_feature: ET_FEATURE): BOOLEAN is
+			-- Is `a_feature' part of features declared in current class?
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			if a_feature.is_query then
+				Result := queries.has_declared_feature (a_feature)
+			else
+				Result := procedures.has_declared_feature (a_feature)
+			end
+		end
+
+	has_inherited_feature (a_feature: ET_FEATURE): BOOLEAN is
+			-- Is `a_feature' part of the features inherited without
+			-- being explicitly redeclared in current class?
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			if a_feature.is_query then
+				Result := queries.has_inherited_feature (a_feature)
+			else
+				Result := procedures.has_inherited_feature (a_feature)
+			end
 		end
 
 feature -- Feature flattening status

@@ -28,7 +28,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i)
+			Result := storage.item (i)
 		ensure
 			object_test_not_void: Result /= Void
 		end
@@ -52,6 +52,25 @@ feature -- Access
 		ensure
 			index_large_enough: Result >= 0
 			index_small_enough: Result <= count
+		end
+
+feature -- Duplication
+
+	cloned_object_test_list: ET_OBJECT_TEST_LIST is
+			-- Cloned version of current list
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			create Result.make_with_capacity (nb)
+			from i := 1 until i > nb loop
+				Result.put_last (storage.item (i))
+				i := i + 1
+			end
+		ensure
+			cloned_not_void: Result /= Void
+			count_set: Result.count = count
+			capacity_set: Result.capacity = count
 		end
 
 feature {NONE} -- Implementation

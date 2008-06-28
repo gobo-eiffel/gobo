@@ -175,6 +175,45 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	has_declared_feature (a_feature: ET_FEATURE): BOOLEAN is
+			-- Is `a_feature' part of the declared features?
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			i := count - declared_count
+			from until i > nb loop
+				if storage.item (i) = a_feature then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_inherited_feature (a_feature: ET_FEATURE): BOOLEAN is
+			-- Is `a_feature' part of the (non_redeclared) inherited features?
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count - declared_count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i) = a_feature then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Measurement
 
 	declared_count: INTEGER
@@ -298,6 +337,51 @@ feature -- Iteration
 			end
 		end
 
+	do_inherited (an_action: PROCEDURE [ANY, TUPLE [like item]]) is
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := count - declared_count - 1
+				nb := 0
+			until
+				i < nb
+			loop
+				an_action.call ([storage.item (i)])
+				i := i - 1
+			end
+		end
+
+	do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [like item]]; a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]) is
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			from
+				i := count - declared_count - 1
+				nb := 0
+			until
+				i < nb
+			loop
+				l_item := storage.item (i)
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				i := i - 1
+			end
+		end
+
 	features_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
 			-- Apply `an_action' to every feature, from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)
@@ -373,6 +457,51 @@ feature -- Iteration
 			from
 				i := count - 1
 				nb := count - declared_count
+			until
+				i < nb
+			loop
+				l_item := storage.item (i)
+				if a_test.item ([l_item]) then
+					an_action.call ([l_item])
+				end
+				i := i - 1
+			end
+		end
+
+	features_do_inherited (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]) is
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := count - declared_count - 1
+				nb := 0
+			until
+				i < nb
+			loop
+				an_action.call ([storage.item (i)])
+				i := i - 1
+			end
+		end
+
+	features_do_inherited_if (an_action: PROCEDURE [ANY, TUPLE [ET_FEATURE]]; a_test: FUNCTION [ANY, TUPLE [ET_FEATURE], BOOLEAN]) is
+			-- Apply `an_action' to every feature inherited without being explicitly
+			-- redeclared in the corresponding class that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_item: like item
+		do
+			from
+				i := count - declared_count - 1
+				nb := 0
 			until
 				i < nb
 			loop

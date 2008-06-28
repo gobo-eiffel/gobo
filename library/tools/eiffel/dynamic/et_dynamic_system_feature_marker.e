@@ -8,54 +8,114 @@ indexing
 		There are different ways to mark the features that a given feature
 		recursively depends on (i.e. features that might be executed if
 		the given feature is itself executed). Some may give more accurate
-		result (i.e. will mark less features as used) but may use more
-		memory or take longer to complete. There are currently three feature
+		results (i.e. will mark less features as used) but may use more
+		memory or take longer to complete. There are currently four feature
 		marker algorithms available:
 
 		* ET_SYSTEM_FEATURE_MARKER: traverses the dependent features in the
-		  context of the class they have been written in.
+		  context of the class they have been written in. For each feature
+		  call, mark the redeclarations of this feature in the descendant
+		  classes of the base class of the target as well.
+
+		  Note that assertions are not traversed, and features used as
+		  anchor of anchored types as not marked.
+
+		* ET_SYSTEM_FEATURE_FUZZY_MARKER: it also traverses the dependent
+		  features in the context of the class they have been written in.
+		  The main difference with ET_SYSTEM_FEATURE_MARKER is that the
+		  redeclarations of features are not marked when the feature call
+		  is traversed. Instead of that, the traversal only marks the feature
+		  corresponding to the static type of its target (dynamic binding is
+		  not taken into account). Then only when there are no more features
+		  to be traversed, mark all redeclarations of features that have been
+		  marked as used during the first pass and traverse them. This avoids
+		  having to traverse the descendant classes again and again for each
+		  call and search for the version of the feature in these classes
+		  (even when the feature was not redeclared). On the other hand it
+		  will mark more features because some features may be the redeclaration
+		  of a feature but in a class that is not a descendant of the base
+		  class of the target. For example
+		      b: B
+		      b.f
+		      class A feature f do ... end end
+		      class B inherit A end
+		      class C inherit A redefine f end feature f do ... end end
+		  feature C.f will marked even though C is not a descendant of B.
+		  Also replication might produce false positives because even through
+		  there might be redeclaration, this is not necessarily the version
+		  that has been selected in the inheritance clause.
+
+		  Note that assertions are not traversed, and features used as
+		  anchor of anchored types as not marked.
 
 		* ET_SYSTEM_TARGETED_FEATURE_MARKER: traverses the dependent features
 		  in the context of the base class of the target types of the calls.
-		  This algorithm is more accurate than the previous one, but uses
-		  more memory and is slower because it will need to traverse the body
-		  of the features several times for each possible target type.
+		  For each feature call, mark the redeclarations of this feature in
+		  the descendant classes of the base class of the target as well.
+		  This algorithm is more accurate than the one in ET_SYSTEM_FEATURE_MARKER,
+		  but uses more memory and is slower because it will need to traverse
+		  the body of the features several times for each possible target type.
+
+		  Note that assertions are not traversed, and features used as
+		  anchor of anchored types as not marked.
 
 		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
 		  implemented in the Gobo Eiffel compiler to determine which features
 		  are to be part of the resulting executable should the given feature
 		  be used as root creation procedure. This algorithm in the most accurate
-		  of the three, but is slower.
+		  of the four, but is slower.
+
+		  Note that assertions and debug instructions are not traversed, and
+		  features used as anchor of anchored types as not marked.
 
 		Benchmarks when using the root creation procedure of gelint's source code:
 
 		When using gec with no GC:
 			With ET_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 16 MB (+ 165 MB before calling this feature)
-				time: 0.7 seconds
-				marked features: 13,174
+				memory: 10 MB (+ 166 MB before calling this feature)
+				time: 0.485 seconds
+				marked features: 13,127
+				marked non-deferred features: 13,127
+			With ET_SYSTEM_FEATURE_FUZZY_MARKER.mark_system:
+				memory: 4 MB (+ 166 MB before calling this feature)
+				time: 0.188 seconds
+				marked features: 14,147
+				marked non-deferred features: 13,552
 			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
-				memory: 31 MB (+ 165 MB before calling this feature)
-				time: 1.5 seconds
-				marked features: 12,970
+				memory: 29 MB (+ 166 MB before calling this feature)
+				time: 1.187 seconds
+				marked features: 12,903
+				marked non-deferred features: 12,903
 			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 19 MB (+ 165 MB before calling this feature)
-				time: 3.7 seconds
-				marked features: 11,892
+				memory: 18 MB (+ 166 MB before calling this feature)
+				time: 3.375 seconds
+				marked features: 12,021
+				marked non-deferred features: 12,021
 		When using ISE 6.2 with GC:
 			With ET_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 13 MB (+ 180 MB before calling this feature)
-				time: 2.2 seconds
-				marked features: 13,174
+				memory: 3 MB (+ 179 MB before calling this feature)
+				time: 1.235 seconds
+				marked features: 13,127
+				marked non-deferred features: 13,127
+			With ET_SYSTEM_FEATURE_FUZZY_MARKER.mark_system:
+				memory: 2 MB (+ 179 MB before calling this feature)
+				time: 0.610 seconds
+				marked features: 14,147
+				marked non-deferred features: 13,552
 			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
-				memory: 13 MB (+ 180 MB before calling this feature)
-				time: 5.8 seconds
-				marked features: 12,970
+				memory: 10 MB (+ 179 MB before calling this feature)
+				time: 4.453 seconds
+				marked features: 12,903
+				marked non-deferred features: 12,903
 			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 17 MB (+ 180 MB before calling this feature)
-				time: 6.0 seconds
-				marked features: 11,892
-		Number of features compiled with ISE 6.2: 12,111
+				memory: 19 MB (+ 179 MB before calling this feature)
+				time: 5.718 seconds
+				marked features: 12,021
+				marked non-deferred features: 12,021
+		Number of non-deferred routines compiled with ISE 6.2: 12,276
+		(This does not take into account attributes, but there are some
+		duplicates for routines in generic classes with expanded actual
+		generic parameters.)
 	]"
 
 	library: "Gobo Eiffel Tools Library"

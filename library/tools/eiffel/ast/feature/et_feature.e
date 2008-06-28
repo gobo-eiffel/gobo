@@ -17,9 +17,18 @@ inherit
 	ET_AST_NODE
 
 	ET_FLATTENED_FEATURE
+		rename
+			is_immediate as is_flattened_immediate,
+			is_redeclared as is_flattened_redeclared,
+			is_adapted as is_flattened_adapted,
+			is_inherited as is_flattened_inherited,
+			immediate_feature as flattened_immediate_feature,
+			redeclared_feature as flattened_redeclared_feature,
+			adapted_feature as flattened_adapted_feature,
+			inherited_feature as flattened_inherited_feature
 		redefine
-			is_immediate,
-			immediate_feature
+			is_flattened_immediate,
+			flattened_immediate_feature
 		end
 
 	ET_STANDALONE_CLOSURE
@@ -174,7 +183,7 @@ feature -- Access
 			-- feature gets parts of its preconditions and
 			-- postconditions from its parents. Note that because
 			-- of replication all the seeds of the precursors are not
-			-- necessarily a subset of the seeds of current feature.);
+			-- necessarily a subset of the seeds of current feature;
 			-- May be Void if there is only one precursor (which is
 			-- then accessible through `first_precursor') or no
 			-- precursor. There can be several precursors if the
@@ -363,8 +372,58 @@ feature -- Status report
 			definition: Result = (type /= Void and (arguments /= Void and then arguments.count > 0))
 		end
 
-	is_immediate: BOOLEAN is True
+	is_flattened_immediate: BOOLEAN is True
 			-- Is current feature immediate?
+			--
+			-- Note that this feature only make sense when flattening the features.
+			-- Otherwise, features that are declared or redeclared in a class
+			-- are available in ET_CLASS.queries and ET_CLASS.procedures from
+			-- range 1 to `declared_count', and (non-redeclared) inherited features
+			-- from range `declared_count' + 1 to `count'.
+
+	is_redeclaration (a_class: ET_CLASS): BOOLEAN is
+			-- Assuming that the current feature has been declared in `a_class'
+			-- (i.e. it appears in range 1 to 'declared_count' in 'a_class.queries'
+			-- or 'a_class.procedures'), is current feature the redeclaration
+			-- of a feature from a parent class of `a_class'?
+			--
+			-- Note that features that are declared or redeclared in a class
+			-- are available in ET_CLASS.queries and ET_CLASS.procedures from
+			-- range 1 to 'declared_count', and (non-redeclared) inherited features
+			-- from range 'declared_count' + 1 to `count'.
+		require
+			a_class_not_void: a_class /= Void
+			declared_in_class: a_class.has_declared_feature (Current)
+		do
+			Result := (first_precursor /= Void)
+		end
+
+	is_join (a_class: ET_CLASS): BOOLEAN is
+			-- Assuming that the current feature has been inherited without being
+			-- redefined (i.e. it appears in range 'declared_count' + 1 to 'count'
+			-- in 'a_class.queries' or 'a_class.procedures'), is current feature the
+			-- result of a join of two or more features from the parents of `a_class'?
+			--
+			-- Note that features that are declared or redeclared in a class
+			-- are available in ET_CLASS.queries and ET_CLASS.procedures from
+			-- range 1 to 'declared_count', and (non-redeclared) inherited features
+			-- from range 'declared_count' + 1 to `count'.
+			--
+			-- Note this may give wrong results when the current feature has been
+			-- inherited from an ancestor of `a_class' without being adapted
+			-- (e.g. no renaming, no join, no redeclaration, ...) and it was the
+			-- result of a join in that ancestor. We will get True in that case
+			-- despite the fact that there is no join in `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+			inherited_in_class: a_class.has_inherited_feature (Current)
+		do
+			if first_precursor /= Void then
+				if implementation_feature /= Current then
+					Result := other_precursors /= Void and then not other_precursors.is_empty
+				end
+			end
+		end
 
 	is_feature: BOOLEAN is True
 			-- Is `Current' a feature?
@@ -683,7 +742,7 @@ feature -- Inheritance
 			definition: Result = Current
 		end
 
-	immediate_feature: ET_FEATURE is
+	flattened_immediate_feature: ET_FEATURE is
 			-- Current feature viewed as an immediate feature
 		do
 			Result := Current
@@ -713,6 +772,6 @@ invariant
 	first_seed_positive: is_registered implies first_seed > 0
 	implementation_class_not_void: implementation_class /= Void
 	implementation_feature_not_void: implementation_feature /= Void
-	is_immediate: is_immediate
+	is_flattened_immediate: is_flattened_immediate
 
 end

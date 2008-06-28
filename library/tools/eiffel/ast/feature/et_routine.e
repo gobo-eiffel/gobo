@@ -26,6 +26,11 @@ inherit
 		end
 
 	ET_ROUTINE_CLOSURE
+		rename
+			implementation_closure as implementation_feature
+		undefine
+			implementation_feature
+		end
 
 feature -- Access
 

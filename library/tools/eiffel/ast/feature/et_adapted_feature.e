@@ -28,9 +28,19 @@ feature -- Status report
 
 	is_adapted: BOOLEAN is True
 			-- Is current feature being either inherited or redeclared?
+			-- Note that this feature only make sense when flattening the features.
+			-- Otherwise, features that are declared or redeclared in a class
+			-- are available in ET_CLASS.queries and ET_CLASS.procedures from
+			-- range 1 to `declared_count', and (non-redeclared) inherited features
+			-- from range `declared_count' + 1 to `count'.
 
 	is_immediate: BOOLEAN is False
 			-- Is current feature immediate?
+			-- Note that this feature only make sense when flattening the features.
+			-- Otherwise, features that are declared or redeclared in a class
+			-- are available in ET_CLASS.queries and ET_CLASS.procedures from
+			-- range 1 to `declared_count', and (non-redeclared) inherited features
+			-- from range `declared_count' + 1 to `count'.
 
 	is_dotnet: BOOLEAN is
 			-- Is current feature a .NET feature?

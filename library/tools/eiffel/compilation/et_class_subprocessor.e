@@ -29,4 +29,12 @@ feature -- Error handling
 			has_fatal_error: has_fatal_error
 		end
 
+	reset_fatal_error (b: BOOLEAN) is
+			-- Set `has_fatal_error' to `b'.
+		do
+			has_fatal_error := b
+		ensure
+			fatal_error_set: has_fatal_error = b
+		end
+
 end

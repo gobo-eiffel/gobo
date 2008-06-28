@@ -8,54 +8,114 @@ indexing
 		There are different ways to mark the features that a given feature
 		recursively depends on (i.e. features that might be executed if
 		the given feature is itself executed). Some may give more accurate
-		result (i.e. will mark less features as used) but may use more
-		memory or take longer to complete. There are currently three feature
+		results (i.e. will mark less features as used) but may use more
+		memory or take longer to complete. There are currently four feature
 		marker algorithms available:
 
 		* ET_SYSTEM_FEATURE_MARKER: traverses the dependent features in the
-		  context of the class they have been written in.
+		  context of the class they have been written in. For each feature
+		  call, mark the redeclarations of this feature in the descendant
+		  classes of the base class of the target as well.
+
+		  Note that assertions are not traversed, and features used as
+		  anchor of anchored types as not marked.
+
+		* ET_SYSTEM_FEATURE_FUZZY_MARKER: it also traverses the dependent
+		  features in the context of the class they have been written in.
+		  The main difference with ET_SYSTEM_FEATURE_MARKER is that the
+		  redeclarations of features are not marked when the feature call
+		  is traversed. Instead of that, the traversal only marks the feature
+		  corresponding to the static type of its target (dynamic binding is
+		  not taken into account). Then only when there are no more features
+		  to be traversed, mark all redeclarations of features that have been
+		  marked as used during the first pass and traverse them. This avoids
+		  having to traverse the descendant classes again and again for each
+		  call and search for the version of the feature in these classes
+		  (even when the feature was not redeclared). On the other hand it
+		  will mark more features because some features may be the redeclaration
+		  of a feature but in a class that is not a descendant of the base
+		  class of the target. For example
+		      b: B
+		      b.f
+		      class A feature f do ... end end
+		      class B inherit A end
+		      class C inherit A redefine f end feature f do ... end end
+		  feature C.f will marked even though C is not a descendant of B.
+		  Also replication might produce false positives because even through
+		  there might be redeclaration, this is not necessarily the version
+		  that has been selected in the inheritance clause.
+
+		  Note that assertions are not traversed, and features used as
+		  anchor of anchored types as not marked.
 
 		* ET_SYSTEM_TARGETED_FEATURE_MARKER: traverses the dependent features
 		  in the context of the base class of the target types of the calls.
-		  This algorithm is more accurate than the previous one, but uses
-		  more memory and is slower because it will need to traverse the body
-		  of the features several times for each possible target type.
+		  For each feature call, mark the redeclarations of this feature in
+		  the descendant classes of the base class of the target as well.
+		  This algorithm is more accurate than the one in ET_SYSTEM_FEATURE_MARKER,
+		  but uses more memory and is slower because it will need to traverse
+		  the body of the features several times for each possible target type.
+
+		  Note that assertions are not traversed, and features used as
+		  anchor of anchored types as not marked.
 
 		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
 		  implemented in the Gobo Eiffel compiler to determine which features
 		  are to be part of the resulting executable should the given feature
 		  be used as root creation procedure. This algorithm in the most accurate
-		  of the three, but is slower.
+		  of the four, but is slower.
+
+		  Note that assertions and debug instructions are not traversed, and
+		  features used as anchor of anchored types as not marked.
 
 		Benchmarks when using the root creation procedure of gelint's source code:
 
 		When using gec with no GC:
 			With ET_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 16 MB (+ 165 MB before calling this feature)
-				time: 0.7 seconds
-				marked features: 13,174
+				memory: 10 MB (+ 166 MB before calling this feature)
+				time: 0.485 seconds
+				marked features: 13,127
+				marked non-deferred features: 13,127
+			With ET_SYSTEM_FEATURE_FUZZY_MARKER.mark_system:
+				memory: 4 MB (+ 166 MB before calling this feature)
+				time: 0.188 seconds
+				marked features: 14,147
+				marked non-deferred features: 13,552
 			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
-				memory: 31 MB (+ 165 MB before calling this feature)
-				time: 1.5 seconds
-				marked features: 12,970
+				memory: 29 MB (+ 166 MB before calling this feature)
+				time: 1.187 seconds
+				marked features: 12,903
+				marked non-deferred features: 12,903
 			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 19 MB (+ 165 MB before calling this feature)
-				time: 3.7 seconds
-				marked features: 11,892
+				memory: 18 MB (+ 166 MB before calling this feature)
+				time: 3.375 seconds
+				marked features: 12,021
+				marked non-deferred features: 12,021
 		When using ISE 6.2 with GC:
 			With ET_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 13 MB (+ 180 MB before calling this feature)
-				time: 2.2 seconds
-				marked features: 13,174
+				memory: 3 MB (+ 179 MB before calling this feature)
+				time: 1.235 seconds
+				marked features: 13,127
+				marked non-deferred features: 13,127
+			With ET_SYSTEM_FEATURE_FUZZY_MARKER.mark_system:
+				memory: 2 MB (+ 179 MB before calling this feature)
+				time: 0.610 seconds
+				marked features: 14,147
+				marked non-deferred features: 13,552
 			With ET_SYSTEM_TARGETED_FEATURE_MARKER.mark_system:
-				memory: 13 MB (+ 180 MB before calling this feature)
-				time: 5.8 seconds
-				marked features: 12,970
+				memory: 10 MB (+ 179 MB before calling this feature)
+				time: 4.453 seconds
+				marked features: 12,903
+				marked non-deferred features: 12,903
 			With ET_DYNAMIC_SYSTEM_FEATURE_MARKER.mark_system:
-				memory: 17 MB (+ 180 MB before calling this feature)
-				time: 6.0 seconds
-				marked features: 11,892
-		Number of features compiled with ISE 6.2: 12,111
+				memory: 19 MB (+ 179 MB before calling this feature)
+				time: 5.718 seconds
+				marked features: 12,021
+				marked non-deferred features: 12,021
+		Number of non-deferred routines compiled with ISE 6.2: 12,276
+		(This does not take into account attributes, but there are some
+		duplicates for routines in generic classes with expanded actual
+		generic parameters.)
 	]"
 
 	library: "Gobo Eiffel Tools Library"
@@ -68,10 +128,11 @@ class ET_SYSTEM_TARGETED_FEATURE_MARKER
 
 inherit
 
-	ET_FEATURE_CHECKER
+	ET_FEATURE_CALL_HANDLER
 		rename
-			make as make_feature_checker
+			make as make_feature_call_handler
 		redefine
+			report_attribute_address,
 			report_attribute_assignment_target,
 			report_creation_expression,
 			report_creation_instruction,
@@ -106,7 +167,7 @@ feature {NONE} -- Initialization
 			create used_features.make (500000)
 			used_features.set_equality_tester (targeted_feature_tester)
 			create descendants_cache.make (50000)
-			make_feature_checker
+			make_feature_call_handler
 		end
 
 feature -- Access
@@ -135,9 +196,10 @@ feature -- Processing
 			-- from class ET_SYSTEM_MARKER for that.
 			-- It is also assumed that the implementation checker (equivalent
 			-- of ISE's Degree 3 -- see ET_SYSTEM.implementation_checker
-			-- and ET_CLASS.implementation_checked) has been run on all
-			-- these classes that have been marked as being part of the
-			-- system.
+			-- and ET_CLASS.implementation_checked) has been successfully
+			-- run on all these classes that have been marked as being part
+			-- of the system. Otherwise internal errors may be reported
+			-- (using ET_ERROR_HANDLER.report_giaaa_error).
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
@@ -162,7 +224,7 @@ feature -- Processing
 				l_class := l_targeted_feature.target_type.base_class
 				l_feature.implementation_feature.set_used (True)
 				if l_class.is_preparsed then
-					check_feature_validity (l_feature, l_class)
+					process_feature (l_feature, l_class)
 				end
 				used_features.forth
 			end
@@ -183,13 +245,14 @@ feature -- Processing
 			--
 			-- It is assumed that the classes that the base class of
 			-- `a_target_type' recursively depends on have already been
-			-- marked as being part of the system. Use feature `mark_system'
+			-- marked as being part of the system. Use feature 'mark_system'
 			-- from class ET_SYSTEM_MARKER for that.
 			-- It is also assumed that the implementation checker (equivalent
 			-- of ISE's Degree 3 -- see ET_SYSTEM.implementation_checker
-			-- and ET_CLASS.implementation_checked) has been run on all
-			-- these classes that have been marked as being part of the
-			-- system.
+			-- and ET_CLASS.implementation_checked) has been successfully
+			-- run on all these classes that have been marked as being part
+			-- of the system. Otherwise internal errors may be reported
+			-- (using ET_ERROR_HANDLER.report_giaaa_error).
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
@@ -216,13 +279,14 @@ feature -- Processing
 			--
 			-- It is assumed that the classes that the base class of
 			-- `a_target_type' recursively depends on have already been
-			-- marked as being part of the system. Use feature `mark_system'
+			-- marked as being part of the system. Use feature 'mark_system'
 			-- from class ET_SYSTEM_MARKER for that.
 			-- It is also assumed that the implementation checker (equivalent
 			-- of ISE's Degree 3 -- see ET_SYSTEM.implementation_checker
-			-- and ET_CLASS.implementation_checked) has been run on all
-			-- these classes that have been marked as being part of the
-			-- system.
+			-- and ET_CLASS.implementation_checked) has been successfully
+			-- run on all these classes that have been marked as being part
+			-- of the system. Otherwise internal errors may be reported
+			-- (using ET_ERROR_HANDLER.report_giaaa_error).
 		require
 			a_feature_not_void: a_feature /= Void
 			a_target_type_not_void: a_target_type /= Void
@@ -236,7 +300,7 @@ feature -- Processing
 			descendants_cache.wipe_out
 			used_features.wipe_out
 			l_class := a_target_type.base_class
-			check_feature_validity (a_feature, l_class)
+			process_feature (a_feature, l_class)
 			descendants_cache.wipe_out
 			from used_features.start until used_features.after loop
 				l_targeted_feature := used_features.item_for_iteration
@@ -247,7 +311,7 @@ feature -- Processing
 		end
 
 	unmark_all (a_system: ET_SYSTEM) is
-			-- Unmark all features of `a_system' as if none of them was in the system.
+			-- Unmark all features of `a_system' as if none of them was used.
 		require
 			a_system_not_void: a_system /= Void
 		do
@@ -293,30 +357,46 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
-			-- Report that attribute `a_writable' has been processed
-			-- as target of an assignment (attempt).
+	report_attribute_address (an_expression: ET_FEATURE_ADDRESS; an_attribute: ET_QUERY) is
+			-- Report that attribute `an_attribute' has been processed
+			-- as target of feature address `an_expression'.
 		do
 			descendants (current_class).do_all (agent report_feature_called (an_attribute, current_class, ?))
 		end
 
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_NAMED_TYPE;
+	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
+			-- Report that attribute `an_attribute' has been processed
+			-- as target `a_writable' of an assignment (attempt).
+		do
+			descendants (current_class).do_all (agent report_feature_called (an_attribute, current_class, ?))
+		end
+
+	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE_CONTEXT;
 		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
-			-- Report that a creation expression has been processed.
+			-- Report that a creation expression `an_expression' has been processed,
+			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_creation_type.base_class (current_class)
+			l_base_class := a_creation_type.base_class
 			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_NAMED_TYPE; a_procedure: ET_PROCEDURE) is
-			-- Report that a creation instruction has been processed.
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+			-- Report that a creation instruction `an_instruction' has been processed,
+			-- where `a_creation_type' is the creation type and `a_procedure' is the creation procedure.
 		local
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_creation_type.base_class (current_class)
+			l_base_class := a_creation_type.base_class
 			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
+		end
+
+	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
+			-- Report that function `a_query' has been processed
+			-- as target of feature address `an_expression'.
+		do
+			descendants (current_class).do_all (agent report_feature_called (a_query, current_class, ?))
 		end
 
 	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
@@ -345,15 +425,17 @@ feature {NONE} -- Event handling
 			used_features.force_last (l_targeted_feature)
 		end
 
-	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
-			-- Report that function `a_procedure' has been processed
+		report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
+			-- Report that procedure `a_procedure' has been processed
 			-- as target of feature address `an_expression'.
 		do
 			descendants (current_class).do_all (agent report_feature_called (a_procedure, current_class, ?))
 		end
 
 	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
-			-- Report that a qualified call expression has been processed.
+			-- Report that a qualified call expression `an_expression' has been processed,
+			-- where `a_target_type' is the type of the target and `a_query' is the
+			-- query being called.
 		local
 			l_base_class: ET_CLASS
 		do
@@ -362,7 +444,9 @@ feature {NONE} -- Event handling
 		end
 
 	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
-			-- Report that a qualified call instruction has been processed.
+			-- Report that a qualified call instruction `an_instruction' has been processed,
+			-- where `a_target_type' is the type of the target and `a_procedure' is the
+			-- procedure being called.
 		local
 			l_base_class: ET_CLASS
 		do
@@ -370,51 +454,32 @@ feature {NONE} -- Event handling
 			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
 		end
 
-	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a qualified procedure call (to `a_procedure') agent
-			-- of type `a_type' in `a_context' has been processed.
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+			-- Report that a qualified procedure call agent `an_agent' has been processed,
+			-- where `a_procedure' is the procedure being called by the agent and
+			-- `a_target_type' is the type of the target of that call.
 		local
-			l_class_type: ET_CLASS_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_base_class: ET_CLASS
 		do
-			l_class_type ?= a_type.base_type (a_context)
-			if l_class_type /= Void then
-				l_parameters := l_class_type.actual_parameters
-				if l_parameters /= Void and then l_parameters.count >= 1 then
-					l_base_class := l_parameters.type (1).base_class (current_class)
-					descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
-				end
-			end
+			l_base_class := a_target_type.base_class
+			descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
 		end
 
-	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a qualified query call (to `a_query') agent
-			-- of type `a_type' in `a_context' has been processed.
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+			-- Report that a qualified query call agent `an_expression' has been processed.
+			-- where `a_query' is the query being called by the agent and
+			-- `a_target_type' is the type of the target of that call.
 		local
-			l_class_type: ET_CLASS_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_base_class: ET_CLASS
 		do
-			l_class_type ?= a_type.base_type (a_context)
-			if l_class_type /= Void then
-				l_parameters := l_class_type.actual_parameters
-				if l_parameters /= Void and then l_parameters.count >= 1 then
-					l_base_class := l_parameters.type (1).base_class (current_class)
-					descendants (l_base_class).do_all (agent report_feature_called (a_query, l_base_class, ?))
-				end
-			end
-		end
-
-	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
-			-- Report that function `a_query' has been processed
-			-- as target of feature address `an_expression'.
-		do
-			descendants (current_class).do_all (agent report_feature_called (a_query, current_class, ?))
+			l_base_class := a_target_type.base_class
+			descendants (l_base_class).do_all (agent report_feature_called (a_query, l_base_class, ?))
 		end
 
 	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
-			-- Report that a static call expression has been processed.
+			-- Report that a static call expression `an_expression' has been processed,
+			-- where `a_query' is the query being called anf `a_type' is the type
+			-- as declared in the class where `an_expression' was written.
 		local
 			l_base_class: ET_CLASS
 		do
@@ -423,7 +488,9 @@ feature {NONE} -- Event handling
 		end
 
 	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
-			-- Report that a static call instruction has been processed.
+			-- Report that a static call instruction `an_instruction' has been processed,
+			-- where `a_procedure' is the procedure being called anf `a_type' is the type
+			-- as declared in the class where `an_expression' was written.
 		local
 			l_base_class: ET_CLASS
 		do
@@ -432,51 +499,31 @@ feature {NONE} -- Event handling
 		end
 
 	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
-			-- Report that an unqualified call expression has been processed.
+			-- Report that an unqualified call expression `an_expression' has been processed,
+			-- where `a_query' is the query being called.
 		do
 			descendants (current_class).do_all (agent report_feature_called (a_query, current_class, ?))
 		end
 
 	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
-			-- Report that an unqualified call instruction has been processed.
+			-- Report that an unqualified call instruction `an_instruction' has been processed,
+			-- where `a_procedure' is the procedure being called.
 		do
 			descendants (current_class).do_all (agent report_feature_called (a_procedure, current_class, ?))
 		end
 
-	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified procedure call (to `a_procedure') agent
-			-- of type `a_type' in `a_context' has been processed.
-		local
-			l_class_type: ET_CLASS_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_base_class: ET_CLASS
+	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE) is
+			-- Report that an unqualified procedure call agent `an_expression' has been processed,
+			-- where `a_procedure' is the procedure being called by the agent.
 		do
-			l_class_type ?= a_type.base_type (a_context)
-			if l_class_type /= Void then
-				l_parameters := l_class_type.actual_parameters
-				if l_parameters /= Void and then l_parameters.count >= 1 then
-					l_base_class := l_parameters.type (1).base_class (current_class)
-					descendants (l_base_class).do_all (agent report_feature_called (a_procedure, l_base_class, ?))
-				end
-			end
+			descendants (current_class).do_all (agent report_feature_called (a_procedure, current_class, ?))
 		end
 
-	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified query call (to `a_query') agent
-			-- of type `a_type' in `a_context' has been processed.
-		local
-			l_class_type: ET_CLASS_TYPE
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_base_class: ET_CLASS
+	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY) is
+			-- Report that an unqualified query call agent `an_expression' has been processed,
+			-- where `a_query' is the query being called by the agent.
 		do
-			l_class_type ?= a_type.base_type (a_context)
-			if l_class_type /= Void then
-				l_parameters := l_class_type.actual_parameters
-				if l_parameters /= Void and then l_parameters.count >= 1 then
-					l_base_class := l_parameters.type (1).base_class (current_class)
-					descendants (l_base_class).do_all (agent report_feature_called (a_query, l_base_class, ?))
-				end
-			end
+			descendants (current_class).do_all (agent report_feature_called (a_query, current_class, ?))
 		end
 
 feature {NONE} -- Descendants cache

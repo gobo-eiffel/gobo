@@ -146,8 +146,6 @@ feature {NONE} -- Initialization
 				-- Object-tests.
 			create current_object_test_scope.make
 			create object_test_scope_builder.make
-			create current_object_tests.make
-			create object_test_finder.make
 		end
 
 feature -- Status report
@@ -197,8 +195,6 @@ feature -- Validity checking
 			old_type: ET_BASE_TYPE
 			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
-			l_preconditions: ET_PRECONDITIONS
-			l_postconditions: ET_POSTCONDITIONS
 		do
 			has_fatal_error := False
 			l_feature_impl := a_feature.implementation_feature
@@ -238,22 +234,6 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
-							-- ISE has a validity rule VUOT-3 which forbids two object-tests
-							-- in the same feature to have the same local name.
-							-- (See `check_object_test_validity'.)
-						if current_class = current_class_impl then
-								-- Find object-tests in assertions.
-							l_preconditions := a_feature.preconditions
-							if l_preconditions /= Void then
-								object_test_finder.find_object_tests (l_preconditions, current_object_tests)
-							end
-							l_postconditions := a_feature.postconditions
-							if l_postconditions /= Void then
-								object_test_finder.find_object_tests (l_postconditions, current_object_tests)
-							end
-						end
-					end
 					a_feature.process (Current)
 					if current_type = current_class_impl then
 						a_feature.set_implementation_checked
@@ -262,7 +242,6 @@ feature -- Validity checking
 						end
 					end
 				end
-				current_object_tests.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -384,7 +363,6 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_precondition := old_in_precondition
-				current_object_tests.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -423,7 +401,6 @@ feature -- Validity checking
 			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
 			l_current_class: ET_CLASS
-			l_preconditions: ET_PRECONDITIONS
 		do
 			has_fatal_error := False
 			l_feature_impl := a_current_feature_impl.implementation_feature
@@ -466,21 +443,6 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
-							-- ISE has a validity rule VUOT-3 which forbids two object-tests
-							-- in the same feature to have the same local name.
-							-- (See `check_object_test_validity'.)
-						if current_class = current_class_impl then
-								-- Find object-tests in preconditions.
-								-- Name clashes between object-test locals in the body
-								-- of the feature and its postconditions are already
-								-- handled in `check_feature_validity'.
-							l_preconditions := a_current_feature.preconditions
-							if l_preconditions /= Void then
-								object_test_finder.find_object_tests (l_preconditions, current_object_tests)
-							end
-						end
-					end
 					boolean_type := current_system.boolean_class
 					l_assertion_context := new_context (current_type)
 					nb := a_postconditions.count
@@ -505,7 +467,6 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_postcondition := old_in_postcondition
-				current_object_tests.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -610,7 +571,6 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_invariant := old_in_invariant
-				current_object_tests.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -629,7 +589,9 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 			consistent: a_feature = current_feature
 		local
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_type: ET_TYPE
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_type := a_feature.type
@@ -638,6 +600,13 @@ feature {NONE} -- Feature validity
 				report_current_type_needed
 				report_result_supplier (l_type, current_class, a_feature)
 			end
+			had_error := has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			has_fatal_error := had_error
 		end
 
 	check_constant_attribute_validity (a_feature: ET_CONSTANT_ATTRIBUTE) is
@@ -647,17 +616,27 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 			consistent: a_feature = current_feature
 		local
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_type: ET_TYPE
 			l_constant: ET_CONSTANT
 			l_bit_type: ET_BIT_TYPE
 			l_integer_constant: ET_INTEGER_CONSTANT
 			l_real_constant: ET_REAL_CONSTANT
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_type := a_feature.type
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_supplier (l_type, current_class, a_feature)
+			end
+			had_error := has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			if not had_error then
 				l_constant := a_feature.constant
 				if l_constant.is_boolean_constant then
 					if not l_type.same_named_type (current_system.boolean_class, current_type, current_type) then
@@ -742,6 +721,7 @@ feature {NONE} -- Feature validity
 					error_handler.report_giaaa_error
 				end
 			end
+			has_fatal_error := has_fatal_error or had_error
 		end
 
 	check_deferred_function_validity (a_feature: ET_DEFERRED_FUNCTION) is
@@ -752,6 +732,7 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_type: ET_TYPE
 			had_error: BOOLEAN
 		do
@@ -767,7 +748,13 @@ feature {NONE} -- Feature validity
 				report_result_declaration (l_type)
 				report_result_supplier (l_type, current_class, a_feature)
 			end
-			has_fatal_error := has_fatal_error or had_error
+			had_error := had_error or has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			has_fatal_error := had_error
 		end
 
 	check_deferred_procedure_validity (a_feature: ET_DEFERRED_PROCEDURE) is
@@ -778,12 +765,21 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_arguments := a_feature.arguments
 			if l_arguments /= Void then
 				check_formal_arguments_validity (l_arguments, a_feature)
+				had_error := has_fatal_error
 			end
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			has_fatal_error := had_error
 		end
 
 	check_do_function_validity (a_feature: ET_DO_FUNCTION) is
@@ -795,6 +791,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
@@ -812,6 +809,11 @@ feature {NONE} -- Feature validity
 				report_result_supplier (l_type, current_class, a_feature)
 			end
 			had_error := had_error or has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
 				check_locals_validity (l_locals, a_feature)
@@ -840,6 +842,7 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
@@ -849,6 +852,11 @@ feature {NONE} -- Feature validity
 			if l_arguments /= Void then
 				check_formal_arguments_validity (l_arguments, a_feature)
 				had_error := has_fatal_error
+			end
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
 			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
@@ -898,6 +906,7 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_type: ET_TYPE
 			had_error: BOOLEAN
 		do
@@ -913,7 +922,13 @@ feature {NONE} -- Feature validity
 				report_result_declaration (l_type)
 				report_result_supplier (l_type, current_class, a_feature)
 			end
-			has_fatal_error := has_fatal_error or had_error
+			had_error := had_error or has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			has_fatal_error := had_error
 		end
 
 	check_dotnet_procedure_validity (a_feature: ET_DOTNET_PROCEDURE) is
@@ -924,12 +939,21 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_arguments := a_feature.arguments
 			if l_arguments /= Void then
 				check_formal_arguments_validity (l_arguments, a_feature)
+				had_error := has_fatal_error
 			end
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			has_fatal_error := had_error
 		end
 
 	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
@@ -941,6 +965,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -955,7 +980,13 @@ feature {NONE} -- Feature validity
 				report_result_declaration (l_type)
 				report_result_supplier (l_type, current_class, a_feature)
 			end
-			has_fatal_error := has_fatal_error or had_error
+			had_error := had_error or has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			has_fatal_error := had_error
 		end
 
 	check_external_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
@@ -966,12 +997,21 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_arguments := a_feature.arguments
 			if l_arguments /= Void then
 				check_formal_arguments_validity (l_arguments, a_feature)
+				had_error := has_fatal_error
 			end
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			has_fatal_error := had_error
 		end
 
 	check_once_function_validity (a_feature: ET_ONCE_FUNCTION) is
@@ -983,6 +1023,7 @@ feature {NONE} -- Feature validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
@@ -1000,6 +1041,11 @@ feature {NONE} -- Feature validity
 				report_result_supplier (l_type, current_class, a_feature)
 			end
 			had_error := had_error or has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
 				check_locals_validity (l_locals, a_feature)
@@ -1028,6 +1074,7 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			had_error: BOOLEAN
@@ -1037,6 +1084,11 @@ feature {NONE} -- Feature validity
 			if l_arguments /= Void then
 				check_formal_arguments_validity (l_arguments, a_feature)
 				had_error := has_fatal_error
+			end
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
 			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
@@ -1066,12 +1118,22 @@ feature {NONE} -- Feature validity
 			consistent: a_feature = current_feature
 		local
 			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
 			l_type := a_feature.type
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_supplier (l_type, current_class, a_feature)
+			end
+			had_error := has_fatal_error
+			l_object_tests := a_feature.object_tests
+			if l_object_tests /= Void then
+				check_object_tests_validity (l_object_tests, a_feature)
+				had_error := had_error or has_fatal_error
+			end
+			if not had_error then
 				if l_type.same_named_type (current_system.integer_8_class, current_type, current_type) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
 				elseif l_type.same_named_type (current_system.integer_16_class, current_type, current_type) then
@@ -1093,6 +1155,7 @@ feature {NONE} -- Feature validity
 					error_handler.report_vqui0a_error (current_class, current_class_impl, a_feature)
 				end
 			end
+			has_fatal_error := has_fatal_error or had_error
 		end
 
 feature {NONE} -- Locals/Formal arguments validity
@@ -1496,6 +1559,96 @@ feature {NONE} -- Locals/Formal arguments validity
 				end
 			end
 			has_fatal_error := has_fatal_error or had_error
+		end
+
+	check_object_tests_validity (a_object_tests: ET_OBJECT_TEST_LIST; a_feature: ET_FEATURE) is
+			-- Check validity of `a_object_tests' of `a_feature'.
+			-- These are all the object-tests declared in `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- Note that the validity of the declared types of the object-test
+			-- locals and scope intersections will be checked when it appears
+			-- in the class text.
+		require
+			a_object_tests_not_void: a_object_tests /= Void
+			a_feature_not_void: a_feature /= Void
+			consistent: a_feature = current_feature
+		local
+			i, j, nb: INTEGER
+			l_object_test: ET_OBJECT_TEST
+			l_other_object_test: ET_OBJECT_TEST
+			l_name: ET_IDENTIFIER
+		do
+			has_fatal_error := False
+			if current_class = current_class_impl then
+				nb := a_object_tests.count
+				from i := 1 until i > nb loop
+					l_object_test := a_object_tests.object_test (i)
+					l_name := l_object_test.name
+					l_name.set_object_test_local (True)
+					l_name.set_seed (i)
+					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
+							-- ISE has a validity rule VUOT-3 which forbids two object-tests
+							-- in the same feature (or in the same inline agent) to have the
+							-- same local name.
+						from j := 1 until j >= i loop
+							l_other_object_test := a_object_tests.object_test (j)
+							if l_other_object_test.name.same_identifier (l_name) then
+									-- Two object-test-locals with the same name.
+								set_fatal_error
+								error_handler.report_vuot3a_error (current_class, l_object_test, l_other_object_test, a_feature)
+							end
+							j := j + 1
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	check_inline_agent_object_tests_validity (a_object_tests: ET_OBJECT_TEST_LIST; an_agent: ET_INLINE_AGENT) is
+			-- Check validity of `a_object_tests' of `an_agent'.
+			-- These are all the object-tests declared in `an_agent'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- Note that the validity of the declared types of the object-test
+			-- locals and scope intersections will be checked when it appears
+			-- in the class text.
+		require
+			a_object_tests_not_void: a_object_tests /= Void
+			an_agent_not_void: an_agent /= Void
+			consistent: an_agent = current_inline_agent
+		local
+			i, j, nb: INTEGER
+			l_object_test: ET_OBJECT_TEST
+			l_other_object_test: ET_OBJECT_TEST
+			l_name: ET_IDENTIFIER
+		do
+			has_fatal_error := False
+			if current_class = current_class_impl then
+				nb := a_object_tests.count
+				from i := 1 until i > nb loop
+					l_object_test := a_object_tests.object_test (i)
+					l_name := l_object_test.name
+					l_name.set_object_test_local (True)
+					l_name.set_seed (i)
+					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
+							-- ISE has a validity rule VUOT-3 which forbids two object-tests
+							-- in the same feature (or in the same inline agent) to have the
+							-- same local name.
+						from j := 1 until j >= i loop
+							l_other_object_test := a_object_tests.object_test (j)
+							if l_other_object_test.name.same_identifier (l_name) then
+									-- Two object-test-locals with the same name.
+								set_fatal_error
+								error_handler.report_vuot3b_error (current_class, l_object_test, l_other_object_test)
+							end
+							j := j + 1
+						end
+					end
+					i := i + 1
+				end
+			end
 		end
 
 feature {NONE} -- Type checking
@@ -2345,16 +2498,18 @@ feature {NONE} -- Instruction validity
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				l_expression := an_instruction.assertion (i).expression
-				check_expression_validity (l_expression, l_assertion_context, boolean_type)
-				if has_fatal_error then
-					had_error := True
-				elseif not l_assertion_context.same_named_type (boolean_type, current_type) then
-					set_fatal_error
-					had_error := True
-					l_named_type := l_assertion_context.named_type
-					error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
+				if l_expression /= Void then
+					check_expression_validity (l_expression, l_assertion_context, boolean_type)
+					if has_fatal_error then
+						had_error := True
+					elseif not l_assertion_context.same_named_type (boolean_type, current_type) then
+						set_fatal_error
+						had_error := True
+						l_named_type := l_assertion_context.named_type
+						error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
+					end
+					l_assertion_context.wipe_out
 				end
-				l_assertion_context.wipe_out
 				i := i + 1
 			end
 			if had_error then
@@ -4579,6 +4734,7 @@ feature {NONE} -- Expression validity
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_class_impl: ET_CLASS
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_object_test: ET_OBJECT_TEST
 		do
 			has_fatal_error := False
@@ -4606,20 +4762,55 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 						error_handler.report_giaaa_error
 					elseif l_name.is_object_test_local then
-						l_identifier ?= l_name
-						check is_object_test_local: l_identifier /= Void end
-						l_object_test := current_object_test_scope.object_test (l_identifier)
-						if l_object_test = Void then
-								-- Error: `l_identifier' is an object-test local that is used outside of its scope.
+							-- We need to resolve `a_name' in the implementation
+							-- class of `current_feature_impl' first.
+						if current_class_impl /= current_class then
 							set_fatal_error
-							if current_feature_impl.is_feature then
-								error_handler.report_veen8a_error (current_class, l_identifier, current_feature_impl.as_feature)
-							else
-								error_handler.report_veen8b_error (current_class, l_identifier)
+							if not has_implementation_error (current_feature_impl) then
+									-- Internal error: `a_name' should have been resolved in
+									-- the implementation feature.
+								error_handler.report_giaaa_error
 							end
 						else
-							l_seed := l_object_test.name.seed
-							l_identifier.set_seed (l_seed)
+							l_identifier ?= l_name
+							check is_object_test_local: l_identifier /= Void end
+							l_object_test := current_object_test_scope.object_test (l_identifier)
+							if l_object_test = Void then
+									-- Error: `l_identifier' is an object-test local that is used outside of its scope.
+								set_fatal_error
+								if current_feature_impl.is_feature then
+									error_handler.report_veen8a_error (current_class, l_identifier, current_feature_impl.as_feature)
+								else
+									error_handler.report_veen8b_error (current_class, l_identifier)
+								end
+							else
+								report_object_test_local (l_identifier, l_object_test)
+								l_seed := l_object_test.name.seed
+								l_identifier.set_seed (l_seed)
+								l_typed_pointer_class := current_system.typed_pointer_class
+								if l_typed_pointer_class.is_preparsed then
+										-- Class TYPED_POINTER has been found in the universe.
+										-- Use ISE's implementation: the type of '$object_test_local' is
+										-- 'TYPED_POINTER [<type-of-object_test_local>]'.
+									l_type := l_object_test.type
+									create l_actuals.make_with_capacity (1)
+									l_actuals.put_first (l_type)
+									create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+									report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+									a_context.force_last (l_typed_pointer_type)
+									if not l_type.is_base_type then
+											-- The type of the object-test local contains formal generic parameters
+											-- or anchored types whose resolved value may vary in various
+											-- descendant classes/types.
+										report_current_type_needed
+									end
+								else
+										-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
+									a_context.force_last (current_system.pointer_class)
+									report_pointer_expression (an_expression)
+								end
+								already_checked := True
+							end
 						end
 					else
 							-- Try to see if it is of the form '$feature_name'.
@@ -4845,23 +5036,19 @@ feature {NONE} -- Expression validity
 						end
 					end
 				elseif l_name.is_object_test_local then
-					l_identifier ?= l_name
-					check is_object_test_local: l_identifier /= Void end
-					l_object_test := current_object_test_scope.object_test (l_identifier)
-					if l_object_test = Void then
-							-- Error: `l_identifier' is an object-test local that is used outside of its scope.
+					l_object_tests := current_closure_impl.object_tests
+					if l_object_tests = Void then
+							-- Internal error.
 						set_fatal_error
-						if current_feature_impl.is_feature then
-							error_handler.report_veen8a_error (current_class, l_identifier, current_feature_impl.as_feature)
-						else
-							error_handler.report_veen8b_error (current_class, l_identifier)
-						end
-					elseif l_object_test.name.seed /= l_seed then
-							-- Internal error: the local should have the same
-							-- seed as its associated object-test.
+						error_handler.report_giaaa_error
+					elseif l_seed < 1 or l_seed > l_object_tests.count then
+							-- Internal error.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
+						l_object_test := l_object_tests.object_test (l_seed)
+						l_identifier ?= l_name
+						check is_object_test_local: l_identifier /= Void end
 						report_object_test_local (l_identifier, l_object_test)
 						l_typed_pointer_class := current_system.typed_pointer_class
 						if l_typed_pointer_class.is_preparsed then
@@ -4941,8 +5128,7 @@ feature {NONE} -- Expression validity
 									report_pointer_expression (an_expression)
 								end
 							else
-									-- Report internal error: if we got a seed, the
-									-- `a_feature' should not be void.
+									-- Internal error: if we got a seed, `l_query' should not be void.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							end
@@ -6077,6 +6263,8 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			l_type := an_expression.type
+-- TODO: I think that the formal generic parameters of `l_type' need to
+-- be resolved in the context of `current_type'.
 			check_type_validity (l_type)
 			if not has_fatal_error then
 				if not l_type.is_base_type then
@@ -6206,21 +6394,9 @@ feature {NONE} -- Expression validity
 					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
 				end
 				if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
-						-- ISE has a validity rule VUOT-3 which forbids two object-tests
-						-- in the same feature (or in the same inline agent) to have the
-						-- same local name.
-					l_other_object_test := current_object_tests.object_test (l_name)
-					if l_other_object_test /= Void then
-						set_fatal_error
-						if current_feature_impl.is_feature then
-							error_handler.report_vuot3a_error (current_class, an_expression, l_other_object_test, current_feature_impl.as_feature)
-						else
-							error_handler.report_vuot3b_error (current_class, an_expression, l_other_object_test)
-						end
-					end
-					current_object_tests.add_object_test (an_expression)
 						-- ISE does not support object-tests in preconditions.
-					if in_precondition then
+					if current_inline_agent = Void and in_precondition then
+-- TODO: check the case where we are in the precondition of an inline agent.
 						set_fatal_error
 						error_handler.report_vuot4a_error (current_class, an_expression)
 					end
@@ -6248,29 +6424,50 @@ feature {NONE} -- Expression validity
 		local
 			l_seed: INTEGER
 			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_object_test: ET_OBJECT_TEST
 		do
 			has_fatal_error := False
-			l_object_test := current_object_test_scope.object_test (a_name)
-			if l_object_test = Void then
-					-- Error: `a_name' is an object-test local that is used outside of its scope.
-				set_fatal_error
-				if current_feature_impl.is_feature then
-					error_handler.report_veen8a_error (current_class, a_name, current_feature_impl.as_feature)
+			l_seed := a_name.seed
+			if l_seed = 0 then
+					-- We need to resolve `a_name' in the implementation
+					-- class of `current_feature_impl' first.
+				if current_class_impl /= current_class then
+					set_fatal_error
+					if not has_implementation_error (current_feature_impl) then
+							-- Internal error: `a_name' should have been resolved in
+							-- the implementation feature.
+						error_handler.report_giaaa_error
+					end
 				else
-					error_handler.report_veen8b_error (current_class, a_name)
+					l_object_test := current_object_test_scope.object_test (a_name)
+					if l_object_test = Void then
+							-- Error: `a_name' is an object-test local that is used outside of its scope.
+						set_fatal_error
+						if current_feature_impl.is_feature then
+							error_handler.report_veen8a_error (current_class, a_name, current_feature_impl.as_feature)
+						else
+							error_handler.report_veen8b_error (current_class, a_name)
+						end
+					else
+						l_seed := l_object_test.name.seed
+						a_name.set_seed (l_seed)
+						a_context.force_last (l_object_test.type)
+						report_object_test_local (a_name, l_object_test)
+					end
 				end
 			else
-				l_seed := l_object_test.name.seed
-				if a_name.seed = 0 then
-					a_name.set_seed (l_seed)
-				elseif a_name.seed /= l_seed then
-						-- Internal error: the local should have the same
-						-- seed as its associated object-test.
+				l_object_tests := current_closure_impl.object_tests
+				if l_object_tests = Void then
+						-- Internal error.
 					set_fatal_error
 					error_handler.report_giaaa_error
-				end
-				if not has_fatal_error then
+				elseif l_seed < 1 or l_seed > l_object_tests.count then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_object_test := l_object_tests.object_test (l_seed)
 						-- Contrary to the types appearing in the signatures, types of
 						-- object-test locals in the AST are those found in the implementation
 						-- class of `current_feature', and hence need to be resolved in
@@ -6724,8 +6921,7 @@ feature {NONE} -- Expression validity
 						else
 							l_query := l_class.seeded_query (l_seed)
 							if l_query = Void then
-									-- Report internal error: if we got a seed, the
-									-- `l_query' should not be void.
+									-- Internal error: if we got a seed, `l_query' should not be void.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							end
@@ -7260,7 +7456,7 @@ feature {NONE} -- Expression validity
 							else
 								l_query := l_class.seeded_query (l_seed)
 								if l_query = Void then
-										-- Internal error: if we got a seed, the `l_query' should not be void.
+										-- Internal error: if we got a seed, `l_query' should not be void.
 									set_fatal_error
 									error_handler.report_giaaa_error
 								end
@@ -8333,8 +8529,7 @@ feature {NONE} -- Agent validity
 				else
 					l_procedure := current_class.seeded_procedure (a_seed)
 					if l_procedure = Void then
-							-- Report internal error: if we got a seed, the
-							-- `l_procedure' should not be void.
+							-- Report internal error: if we got a seed, `l_procedure' should not be void.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
@@ -8349,8 +8544,7 @@ feature {NONE} -- Agent validity
 				else
 					l_query := current_class.seeded_query (a_seed)
 					if l_query = Void then
-							-- Report internal error: if we got a seed, the
-							-- `l_query' should not be void.
+							-- Report internal error: if we got a seed, `l_query' should not be void.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
@@ -8625,8 +8819,7 @@ feature {NONE} -- Agent validity
 					else
 						l_procedure := a_class.seeded_procedure (a_seed)
 						if l_procedure = Void then
-								-- Report internal error: if we got a seed, the
-								-- `l_procedure' should not be void.
+								-- Internal error: if we got a seed, `l_procedure' should not be void.
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
@@ -8649,8 +8842,7 @@ feature {NONE} -- Agent validity
 					else
 						l_query := a_class.seeded_query (a_seed)
 						if l_query = Void then
-								-- Report internal error: if we got a seed, the
-								-- `l_query' should not be void.
+								-- Internal error: if we got a seed, `l_query' should not be void.
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
@@ -9019,8 +9211,7 @@ feature {NONE} -- Agent validity
 						else
 							l_procedure := a_class.seeded_procedure (a_seed)
 							if l_procedure = Void then
-									-- Report internal error: if we got a seed, the
-									-- `l_procedure' should not be void.
+									-- Internal error: if we got a seed, `l_procedure' should not be void.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
@@ -9042,8 +9233,7 @@ feature {NONE} -- Agent validity
 						else
 							l_query := a_class.seeded_query (a_seed)
 							if l_query = Void then
-									-- Report internal error: if we got a seed, the
-									-- `l_query' should not be void.
+									-- Internal error: if we got a seed, `l_query' should not be void.
 								set_fatal_error
 								error_handler.report_giaaa_error
 							else
@@ -9276,10 +9466,10 @@ feature {NONE} -- Agent validity
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_object_tests: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9292,8 +9482,6 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-			l_old_hidden_object_tests := current_object_tests.hidden_count
-			current_object_tests.hide_object_tests (current_object_tests.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
@@ -9307,6 +9495,11 @@ feature {NONE} -- Agent validity
 				report_inline_agent_result_supplier (l_type, current_class, current_feature)
 			end
 			had_error := had_error or has_fatal_error
+			l_object_tests := an_expression.object_tests
+			if l_object_tests /= Void then
+				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
 				check_inline_agent_locals_validity (l_locals, an_expression)
@@ -9327,7 +9520,6 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-			current_object_tests.hide_object_tests (l_old_hidden_object_tests)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9348,10 +9540,10 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_object_tests: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9364,13 +9556,16 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-			l_old_hidden_object_tests := current_object_tests.hidden_count
-			current_object_tests.hide_object_tests (current_object_tests.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
 				check_inline_agent_formal_arguments_validity (l_formal_arguments, an_expression)
 				had_error := has_fatal_error
+			end
+			l_object_tests := an_expression.object_tests
+			if l_object_tests /= Void then
+				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
 			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
@@ -9392,7 +9587,6 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-			current_object_tests.hide_object_tests (l_old_hidden_object_tests)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9414,8 +9608,8 @@ feature {NONE} -- Agent validity
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_type: ET_TYPE
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_object_tests: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9428,8 +9622,6 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-			l_old_hidden_object_tests := current_object_tests.hidden_count
-			current_object_tests.hide_object_tests (current_object_tests.count)
 				-- Check the associated feature's declaration.
 			l_arguments := an_expression.formal_arguments
 			if l_arguments /= Void then
@@ -9442,10 +9634,15 @@ feature {NONE} -- Agent validity
 				report_inline_agent_result_declaration (l_type)
 				report_inline_agent_result_supplier (l_type, current_class, current_feature)
 			end
+			had_error := had_error or has_fatal_error
+			l_object_tests := an_expression.object_tests
+			if l_object_tests /= Void then
+				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-			current_object_tests.hide_object_tests (l_old_hidden_object_tests)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9466,8 +9663,8 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_object_tests: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9480,18 +9677,20 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-			l_old_hidden_object_tests := current_object_tests.hidden_count
-			current_object_tests.hide_object_tests (current_object_tests.count)
 				-- Check the associated feature's declaration.
 			l_arguments := an_expression.formal_arguments
 			if l_arguments /= Void then
 				check_inline_agent_formal_arguments_validity (l_arguments, an_expression)
 				had_error := has_fatal_error
 			end
+			l_object_tests := an_expression.object_tests
+			if l_object_tests /= Void then
+				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-			current_object_tests.hide_object_tests (l_old_hidden_object_tests)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9512,11 +9711,11 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_type: ET_TYPE
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_object_tests: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9529,8 +9728,6 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-			l_old_hidden_object_tests := current_object_tests.hidden_count
-			current_object_tests.hide_object_tests (current_object_tests.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
@@ -9544,6 +9741,11 @@ feature {NONE} -- Agent validity
 				report_inline_agent_result_supplier (l_type, current_class, current_feature)
 			end
 			had_error := had_error or has_fatal_error
+			l_object_tests := an_expression.object_tests
+			if l_object_tests /= Void then
+				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
+			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
 				check_inline_agent_locals_validity (l_locals, an_expression)
@@ -9564,7 +9766,6 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-			current_object_tests.hide_object_tests (l_old_hidden_object_tests)
 				-- Manage enclosing inline agents stack.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -9585,10 +9786,10 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			l_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_object_tests: ET_OBJECT_TEST_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_compound: ET_COMPOUND
 			l_old_hidden_object_test_scope: INTEGER
-			l_old_hidden_object_tests: INTEGER
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9601,13 +9802,16 @@ feature {NONE} -- Agent validity
 				-- in an enclosing feature or inline agent.
 			l_old_hidden_object_test_scope := current_object_test_scope.hidden_count
 			current_object_test_scope.hide_object_tests (current_object_test_scope.count)
-			l_old_hidden_object_tests := current_object_tests.hidden_count
-			current_object_tests.hide_object_tests (current_object_tests.count)
 				-- Check the associated feature's declaration.
 			l_formal_arguments := an_expression.formal_arguments
 			if l_formal_arguments /= Void then
 				check_inline_agent_formal_arguments_validity (l_formal_arguments, an_expression)
 				had_error := has_fatal_error
+			end
+			l_object_tests := an_expression.object_tests
+			if l_object_tests /= Void then
+				check_inline_agent_object_tests_validity (l_object_tests, an_expression)
+				had_error := had_error or has_fatal_error
 			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
@@ -9629,7 +9833,6 @@ feature {NONE} -- Agent validity
 				-- Restore the scope object-test locals declared
 				-- in the enclosing feature or inline agent.
 			current_object_test_scope.hide_object_tests (l_old_hidden_object_test_scope)
-			current_object_tests.hide_object_tests (l_old_hidden_object_tests)
 				-- Manage enclosing inline agents.
 			if not enclosing_inline_agents.is_empty then
 				current_inline_agent := enclosing_inline_agents.last
@@ -11447,15 +11650,6 @@ feature {NONE} -- Object-tests
 	object_test_scope_builder: ET_OBJECT_TEST_SCOPE_BUILDER
 			-- Object-tests local scope builder
 
-	current_object_tests: ET_OBJECT_TEST_SCOPE
-			-- Object-tests already found in `current_feature' (or in `current_inline_agent');
-			-- ISE has a validity rule VUOT-3 which forbids two object-tests
-			-- in the same feature (or in the same inline agent) to have the
-			-- same local name.
-
-	object_test_finder: ET_OBJECT_TEST_FINDER
-			-- Object-test finder
-
 feature {NONE} -- Status report
 
 	in_rescue: BOOLEAN
@@ -11884,7 +12078,5 @@ invariant
 		-- Object-tests
 	current_object_test_scope_not_void: current_object_test_scope /= Void
 	object_test_scope_builder_not_void: object_test_scope_builder /= Void
-	current_object_tests_not_void: current_object_tests /= Void
-	object_test_finder_not_void: object_test_finder /= Void
 
 end

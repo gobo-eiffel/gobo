@@ -68,6 +68,7 @@ feature -- Duplication
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
+			Result.set_object_tests (object_tests)
 			Result.set_synonym (Current)
 			if is_builtin then
 					-- Reset the built-in marker because they are
@@ -98,6 +99,7 @@ feature -- Conversion
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
+			Result.set_object_tests (object_tests)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 			Result.set_builtin_code (builtin_code)

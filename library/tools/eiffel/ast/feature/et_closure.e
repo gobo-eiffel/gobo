@@ -36,4 +36,29 @@ feature -- Access
 		do
 		end
 
+	object_tests: ET_OBJECT_TEST_LIST
+			-- Object-tests declared in current closure;
+			-- Void if none
+
+	implementation_closure: ET_CLOSURE is
+			-- Current closure viewed from the class where it has been implemented
+			--
+			-- Useful for interpreting feature calls and type anchors (that might
+			-- be renamed in descendant classes) when features are inherited as-is.
+		do
+			Result := Current
+		ensure
+			implementation_closure_not_void: Result /= Void
+		end
+
+feature -- Setting
+
+	set_object_tests (a_object_tests: like object_tests) is
+			-- Set `object_tests' to `a_object_tests'.
+		do
+			object_tests := a_object_tests
+		ensure
+			object_tests_set: object_tests = a_object_tests
+		end
+
 end
