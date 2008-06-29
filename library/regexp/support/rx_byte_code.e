@@ -5,7 +5,7 @@ indexing
 		"Byte codes"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -146,12 +146,8 @@ feature -- Element Change
 			i_large_enough: i >= 0
 			i_small_enough: i < count
 			a_code_positive: a_code >= 0
-		local
-			c: INTEGER
 		do
-			-- TODO: handle unicode.
-			c := a_code \\ 256
-			byte_code.put (c, i)
+			byte_code.put (a_code, i)
 		ensure
 			character_set: character_item (i) = a_code
 		end

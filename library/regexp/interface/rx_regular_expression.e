@@ -5,7 +5,7 @@ indexing
 		"Regular expressions"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,12 +49,12 @@ feature -- Replacement
 			a_string_same_type: ANY_.same_types (a_string, a_replacement)
 		local
 			i, j, nb, ref: INTEGER
-			c: CHARACTER
+			c: INTEGER
 		do
 			nb := a_replacement.count
 			from i := 1 until i > nb loop
-				c := a_replacement.item (i)
-				if c = '\' then
+				c := a_replacement.item_code (i)
+				if c = Backslash_code then
 					from
 						i := i + 1
 						j := i
@@ -63,13 +63,13 @@ feature -- Replacement
 						i > nb or else
 						(a_replacement.item_code (i) < Zero_code or a_replacement.item_code (i) > Nine_code)
 					loop
-						c := a_replacement.item (i)
-						ref := ref * 10 + c.code - Zero_code
+						c := a_replacement.item_code (i)
+						ref := ref * 10 + c - Zero_code
 						i := i + 1
 					end
 					if i <= nb then
-						c := a_replacement.item (i)
-						if c = '\' then
+						c := a_replacement.item_code (i)
+						if c = Backslash_code then
 							if i > j then
 									-- Minimal one digit readed,
 								if ref < match_count then
@@ -77,7 +77,7 @@ feature -- Replacement
 								end
 							else
 									-- Double backslash means one \\ => \.
-								a_string.append_character (c)
+								a_string.append_code (c.as_natural_32)
 							end
 							i := i + 1
 						else
@@ -95,7 +95,7 @@ feature -- Replacement
 					end
 				else
 						-- Simply put the character in.
-					a_string.append_character (c)
+					a_string.append_code (c.as_natural_32)
 					i := i + 1
 				end
 			end
@@ -255,7 +255,7 @@ feature -- Splitting
 							-- a string (i.e. the empty string) which itself can
 							-- be matched by the current regexp.
 						nb := nb + 1
-						an_array.force ("", nb)
+						an_array.force (STRING_.new_empty_string (subject, 0), nb)
 					end
 					l_last_char_matched := k
 					i := k + 1

@@ -5,7 +5,7 @@ indexing
 		"PCRE regexp compilers"
 
 	library: "Gobo Eiffel Regexp Library"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2008, Harald Erdbruegger and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -377,8 +377,7 @@ feature -- Compilation
 		local
 			an_option: INTEGER
 		do
-			STRING_.wipe_out (pattern)
-			pattern.append_string (a_pattern)
+			pattern := a_pattern.twin
 			pattern.append_character ('%U')
 			pattern_count := a_pattern.count
 			pattern_position := 1
