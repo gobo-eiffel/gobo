@@ -10160,10 +10160,6 @@ feature {NONE} -- Object-test generation
 						current_file.put_string (c_eif_false)
 						current_file.put_character (';')
 						current_file.put_new_line
-						print_indentation
-						current_file.put_string (c_break)
-						current_file.put_character (';')
-						current_file.put_new_line
 						dedent
 						print_indentation
 						current_file.put_string (c_default)
@@ -10216,10 +10212,6 @@ feature {NONE} -- Object-test generation
 						end
 						print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
 						conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
-						current_file.put_character (';')
-						current_file.put_new_line
-						print_indentation
-						current_file.put_string (c_break)
 						current_file.put_character (';')
 						current_file.put_new_line
 						print_indentation
