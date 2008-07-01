@@ -4611,11 +4611,11 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
-	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
-			-- Create a new VGCC-1 error: the creation expression appearing
-			-- in `a_class_impl' at position `a_position' and viewed from one
+	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS) is
+			-- Create a new VGCC-1 error: the creation expression `a_creation',
+			-- appearing in `a_class_impl' and viewed from one
 			-- of its descendants `a_class' (possibly iteself), has no
-			-- Creation_call part but the- base class `a_target' of the
+			-- Creation_call part but the base class `a_target' of the
 			-- creation type is deferred.
 			--
 			-- ECMA 367-2: p.109
@@ -4623,12 +4623,12 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
 			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_position_not_void: a_position /= Void
+			a_creation_not_void: a_creation /= Void
 			a_target_not_void: a_target /= Void
 		do
 			current_class := a_class
 			class_impl := a_class_impl
-			position := a_position
+			position := a_creation.position
 			code := template_code (vgcc1a_template_code)
 			etl_code := vgcc1_etl_code
 			default_template := default_message_template (vgcc1a_default_template)
@@ -4751,11 +4751,11 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = target type (named type)
 		end
 
-	make_vgcc5a (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
-			-- Create a new VGCC-5 error: the creation expression appearing
-			-- in `a_class_impl' at position `a_position' and viewed from one
+	make_vgcc5a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS) is
+			-- Create a new VGCC-5 error: the creation expression `a_creation',
+			-- appearing in `a_class_impl' and viewed from one
 			-- of its descendants `a_class' (possibly iteself), has no
-			-- Creation_call part but the- base class `a_target' of the
+			-- Creation_call part but the base class `a_target' of the
 			-- creation type has a Creators part.
 			--
 			-- ETL2: p.286
@@ -4763,12 +4763,12 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
 			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_position_not_void: a_position /= Void
+			a_creation_not_void: a_creation /= Void
 			a_target_not_void: a_target /= Void
 		do
 			current_class := a_class
 			class_impl := a_class_impl
-			position := a_position
+			position := a_creation.position
 			code := template_code (vgcc5a_template_code)
 			etl_code := vgcc5_etl_code
 			default_template := default_message_template (vgcc5a_default_template)

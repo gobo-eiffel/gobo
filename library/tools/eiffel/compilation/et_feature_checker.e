@@ -38,7 +38,8 @@ inherit
 			process_call_instruction,
 			process_check_instruction,
 			process_constant_attribute,
-			process_convert_expression,
+			process_convert_builtin_expression,
+			process_convert_from_expression,
 			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
@@ -1818,11 +1819,14 @@ feature {NONE} -- Instruction validity
 			l_conversion_query: ET_QUERY
 			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
+			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
+			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
 			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 			l_convert_class: ET_CLASS
 			l_convert_name: ET_FEATURE_NAME
 			l_source_named_type: ET_NAMED_TYPE
 			l_target_named_type: ET_NAMED_TYPE
+			l_call_named_type: ET_NAMED_TYPE
 			any_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
 		do
@@ -2140,20 +2144,24 @@ feature {NONE} -- Instruction validity
 										error_handler.report_giaaa_error
 									end
 								elseif l_convert_feature.is_convert_from then
-									create l_convert_expression.make (l_source, l_convert_feature)
+									l_call_named_type := l_call_context.named_type
+									create l_convert_from_expression.make (l_call_named_type, l_convert_feature, l_source)
+									l_convert_expression := l_convert_from_expression
 									l_convert_name := l_convert_feature.name
 									l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 									if l_conversion_procedure /= Void then
-										report_creation_expression (l_convert_expression, l_call_context.named_type, l_conversion_procedure, l_source)
+										report_creation_expression (l_convert_from_expression, l_call_named_type, l_conversion_procedure)
 									else
 											-- Internal error: the seed of the convert feature should correspond
-											-- to a procedure of `a_convert_class'.
+											-- to a procedure of `l_convert_class'.
 										set_fatal_error
 										error_handler.report_giaaa_error
 									end
 								else
-									create l_convert_expression.make (l_source, l_convert_feature)
-									report_builtin_conversion (l_convert_expression, l_call_context)
+									l_call_named_type := l_call_context.named_type
+									create l_convert_builtin_expression.make (l_call_named_type, l_convert_feature, l_source)
+									l_convert_expression := l_convert_builtin_expression
+									report_builtin_conversion (l_convert_builtin_expression, l_call_named_type)
 								end
 								an_instruction.set_source (l_convert_expression)
 							end
@@ -2250,6 +2258,8 @@ feature {NONE} -- Instruction validity
 			l_conversion_query: ET_QUERY
 			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
+			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
+			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
 			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 			l_convert_class: ET_CLASS
 			l_convert_name: ET_FEATURE_NAME
@@ -2325,20 +2335,24 @@ feature {NONE} -- Instruction validity
 									error_handler.report_giaaa_error
 								end
 							elseif l_convert_feature.is_convert_from then
-								create l_convert_expression.make (l_source, l_convert_feature)
+								l_target_named_type := l_target_context.named_type
+								create l_convert_from_expression.make (l_target_named_type, l_convert_feature, l_source)
+								l_convert_expression := l_convert_from_expression
 								l_convert_name := l_convert_feature.name
 								l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 								if l_conversion_procedure /= Void then
-									report_creation_expression (l_convert_expression, l_target_context.named_type, l_conversion_procedure, l_source)
+									report_creation_expression (l_convert_from_expression, l_target_named_type, l_conversion_procedure)
 								else
 										-- Internal error: the seed of the convert feature should correspond
-										-- to a procedure of `a_convert_class'.
+										-- to a procedure of `l_convert_class'.
 									set_fatal_error
 									error_handler.report_giaaa_error
 								end
 							else
-								create l_convert_expression.make (l_source, l_convert_feature)
-								report_builtin_conversion (l_convert_expression, l_target_context)
+								l_target_named_type := l_target_context.named_type
+								create l_convert_builtin_expression.make (l_target_named_type, l_convert_feature, l_source)
+								l_convert_expression := l_convert_builtin_expression
+								report_builtin_conversion (l_convert_builtin_expression, l_target_named_type)
 							end
 							an_instruction.set_source (l_convert_expression)
 							if not has_fatal_error then
@@ -4179,7 +4193,7 @@ feature {NONE} -- Expression validity
 			a_context.force_last (l_type)
 		end
 
-	check_convert_expression_validity (an_expression: ET_CONVERT_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_convert_builtin_expression_validity (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
@@ -4188,20 +4202,27 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_convert_feature: ET_CONVERT_FEATURE
-			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_target_type: ET_TYPE
 		do
-			l_convert_feature := an_expression.convert_feature
-			if l_convert_feature.is_convert_from then
-				l_actuals := an_expression.expression
-				check_creation_expression_validity (an_expression, current_target_type.named_type,
-					l_convert_feature.name, l_actuals, an_expression.position, a_context)
-			else
-				check_expression_validity (an_expression.expression, a_context, current_target_type)
-				report_builtin_conversion (an_expression, current_target_type)
+			check_expression_validity (an_expression.expression, a_context, current_target_type)
+			l_target_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
+			if not has_fatal_error then
+				report_builtin_conversion (an_expression, l_target_type)
 				a_context.reset (current_type)
-				a_context.force_last (current_target_type.named_type)
+				a_context.force_last (l_target_type)
 			end
+		end
+
+	check_convert_from_expression_validity (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			check_creation_expression_validity (an_expression, a_context)
 		end
 
 	check_convert_to_expression_validity (an_expression: ET_CONVERT_TO_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -4224,30 +4245,17 @@ feature {NONE} -- Expression validity
 		require
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_type: ET_TYPE
-			l_call: ET_QUALIFIED_CALL
 		do
-			l_type := an_expression.type
-			l_call := an_expression.creation_call
-			if l_call /= Void then
-				check_creation_expression_validity (an_expression, l_type, l_call.name, l_call.arguments, l_type.position, a_context)
-			else
-				check_creation_expression_validity (an_expression, l_type, Void, Void, l_type.position, a_context)
-			end
+			check_creation_expression_validity (an_expression, a_context)
 		end
 
-	check_creation_expression_validity (an_expression: ET_EXPRESSION; a_type: ET_TYPE; a_name: ET_FEATURE_NAME;
-		an_actuals: ET_ACTUAL_ARGUMENTS; a_type_position: ET_POSITION; a_context: ET_NESTED_TYPE_CONTEXT) is
-			-- Check validity of creation expression.
+	check_creation_expression_validity (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
-			a_type_not_void: a_type /= Void
-			no_call: a_name = Void implies an_actuals = Void
-			a_type_position_not_void: a_type_position /= Void
 			a_context_not_void: a_context /= Void
 		local
 			l_class: ET_CLASS
@@ -4268,9 +4276,10 @@ feature {NONE} -- Expression validity
 			l_name_position: ET_POSITION
 			i, nb: INTEGER
 			nb_args: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENTS
 		do
 			has_fatal_error := False
-			l_creation_type := a_type
+			l_creation_type := an_expression.type
 			check_type_validity (l_creation_type)
 			if not has_fatal_error then
 				if not l_creation_type.is_base_type then
@@ -4279,9 +4288,10 @@ feature {NONE} -- Expression validity
 						-- descendant classes/types.
 					report_current_type_needed
 				end
-				if a_name /= Void then
+				l_name := an_expression.name
+				if l_name /= Void then
 						-- There is an explicit creation call.
-					l_name := a_name
+					l_actuals := an_expression.arguments
 					l_seed := l_name.seed
 					if l_seed = 0 then
 							-- We need to resolve `l_name' in the implementation
@@ -4313,8 +4323,8 @@ feature {NONE} -- Expression validity
 											-- More than one procedure with that name.
 											-- Start to remove those with the wrong number of arguments
 											-- or which are not creators.
-										if an_actuals /= Void then
-											nb_args := an_actuals.count
+										if l_actuals /= Void then
+											nb_args := l_actuals.count
 										end
 										from i := nb until i < 1 loop
 -- TODO: remove non-creators
@@ -4334,7 +4344,7 @@ feature {NONE} -- Expression validity
 												-- Ambiguity in overloaded procedures.
 -- TODO: report VIOF
 										else
-											keep_best_overloaded_features (overloaded_procedures, an_actuals, a_context)
+											keep_best_overloaded_features (overloaded_procedures, l_actuals, a_context)
 											if not has_fatal_error then
 												nb := overloaded_procedures.count
 												if nb = 0 then
@@ -4413,24 +4423,24 @@ feature {NONE} -- Expression validity
 				l_named_creation_type := l_creation_type.shallow_named_type (current_type)
 				l_class_type ?= l_named_creation_type
 				if l_class_type /= Void then
-					check_creation_type_validity (l_class_type, a_type_position)
+					check_creation_type_validity (l_class_type, an_expression.type_position)
 				end
 				if l_procedure = Void then
 						-- No creation call, and feature 'default_create' not
 						-- supported by the underlying Eiffel compiler.
 					check
-						no_call: a_name = Void
+						no_call: an_expression.name = Void
 						no_default_create: current_system.default_create_seed = 0
 					end
 					if l_class.creators /= Void then
 							-- The class explicitly declares creation procedures,
 							-- so the creation call was required.
 						set_fatal_error
-						error_handler.report_vgcc5a_error (current_class, current_class_impl, a_type_position, l_class)
+						error_handler.report_vgcc5a_error (current_class, current_class_impl, an_expression, l_class)
 					elseif l_class.is_deferred then
 							-- The class is deferred, so the creation is invalid.
 						set_fatal_error
-						error_handler.report_vgcc1a_error (current_class, current_class_impl, a_type_position, l_class)
+						error_handler.report_vgcc1a_error (current_class, current_class_impl, an_expression, l_class)
 					end
 				else
 					l_formal_parameter_type ?= l_named_creation_type
@@ -4484,15 +4494,15 @@ feature {NONE} -- Expression validity
 						end
 					end
 					had_error := has_fatal_error
--- TODO: When `a_name' is Void, then `l_name' is "default_create". It may be a shared identifier
+-- TODO: When `an_expression.name' is Void, then `l_name' is "default_create". It may be a shared identifier
 -- not holding the correct position! A solution could be to inline `check_actual_arguments_validity'
 -- here. It's not a big deal: just checking that `l_procedure' has no formal arguments.
-					check_actual_arguments_validity (an_actuals, a_context, l_name, l_procedure, l_class)
+					check_actual_arguments_validity (l_actuals, a_context, l_name, l_procedure, l_class)
 					if had_error then
 						set_fatal_error
 					end
 					if not has_fatal_error then
-						report_creation_expression (an_expression, l_named_creation_type, l_procedure, an_actuals)
+						report_creation_expression (an_expression, l_named_creation_type, l_procedure)
 					end
 				end
 			end
@@ -5371,9 +5381,10 @@ feature {NONE} -- Expression validity
 			l_convert_feature: ET_CONVERT_FEATURE
 			l_convert_class: ET_CLASS
 			l_convert_expression: ET_CONVERT_EXPRESSION
+			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
+			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
 			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 			l_convert_name: ET_FEATURE_NAME
-			l_convert_type: ET_NAMED_TYPE
 			l_conversion_query: ET_QUERY
 			l_conversion_procedure: ET_PROCEDURE
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
@@ -5383,6 +5394,8 @@ feature {NONE} -- Expression validity
 			l_cast_expression: ET_INFIX_CAST_EXPRESSION
 			l_builtin: ET_BUILTIN_CONVERT_FEATURE
 			l_old_scope: INTEGER
+			l_actual_named_type: ET_NAMED_TYPE
+			l_formal_named_type: ET_NAMED_TYPE
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -5561,26 +5574,30 @@ feature {NONE} -- Expression validity
 											if l_conversion_query /= Void then
 												report_qualified_call_expression (l_convert_to_expression, l_actual_context, l_conversion_query)
 											else
-													-- Internal error: the seed of the convert function should correspond
-													-- to a feature of `l_convert_class'.
+													-- Internal error: the seed of the convert feature should correspond
+													-- to a query of `l_convert_class'.
 												set_fatal_error
 												error_handler.report_giaaa_error
 											end
 										elseif l_convert_feature.is_convert_from then
-											create l_convert_expression.make (l_actual, l_convert_feature)
+											l_formal_named_type := l_formal_context.named_type
+											create l_convert_from_expression.make (l_formal_named_type, l_convert_feature, l_actual)
+											l_convert_expression := l_convert_from_expression
 											l_convert_name := l_convert_feature.name
 											l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 											if l_conversion_procedure /= Void then
-												report_creation_expression (l_convert_expression, l_formal_context.named_type, l_conversion_procedure, l_actual)
+												report_creation_expression (l_convert_from_expression, l_formal_named_type, l_conversion_procedure)
 											else
-													-- Internal error: the seed of the convert procedure should correspond
-													-- to a feature of `l_convert_class'.
+													-- Internal error: the seed of the convert feature should correspond
+													-- to a procedure of `l_convert_class'.
 												set_fatal_error
 												error_handler.report_giaaa_error
 											end
 										else
-											create l_convert_expression.make (l_actual, l_convert_feature)
-											report_builtin_conversion (l_convert_expression, l_formal_context)
+											l_formal_named_type := l_formal_context.named_type
+											create l_convert_builtin_expression.make (l_formal_named_type, l_convert_feature, l_actual)
+											l_convert_expression := l_convert_builtin_expression
+											report_builtin_conversion (l_convert_builtin_expression, l_formal_named_type)
 										end
 										an_expression.set_right (l_convert_expression)
 										l_actual := l_convert_expression
@@ -5645,6 +5662,7 @@ feature {NONE} -- Expression validity
 													if l_convert_feature /= Void then
 														if l_convert_feature.is_convert_to then
 															create l_convert_to_expression.make (l_target, l_convert_feature)
+															l_convert_expression := l_convert_to_expression
 															l_convert_name := l_convert_feature.name
 															l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
 															if l_conversion_query /= Void then
@@ -5652,30 +5670,33 @@ feature {NONE} -- Expression validity
 																create l_cast_expression.make (l_convert_to_expression, l_actual_context.named_type)
 																l_cast_expression.set_index (l_convert_to_expression.index)
 															else
-																	-- Internal error: the seed of the convert function should correspond
-																	-- to a feature of `l_convert_class'.
+																	-- Internal error: the seed of the convert feature should correspond
+																	-- to a query of `l_convert_class'.
 																set_fatal_error
 																error_handler.report_giaaa_error
 															end
 														elseif l_convert_feature.is_convert_from then
-															create l_convert_expression.make (l_target, l_convert_feature)
+															l_actual_named_type := l_actual_context.named_type
+															create l_convert_from_expression.make (l_actual_named_type, l_convert_feature, l_target)
+															l_convert_expression := l_convert_from_expression
 															l_convert_name := l_convert_feature.name
 															l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 															if l_conversion_procedure /= Void then
-																l_convert_type := l_actual_context.named_type
-																report_creation_expression (l_convert_expression, l_convert_type, l_conversion_procedure, l_target)
-																create l_cast_expression.make (l_convert_expression, l_convert_type)
+																report_creation_expression (l_convert_from_expression, l_actual_named_type, l_conversion_procedure)
+																create l_cast_expression.make (l_convert_expression, l_actual_named_type)
 																l_cast_expression.set_index (l_convert_expression.index)
 															else
-																	-- Internal error: the seed of the convert procedure should correspond
-																	-- to a feature of `a_convert_class'.
+																	-- Internal error: the seed of the convert feature should correspond
+																	-- to a procedure of `l_convert_class'.
 																set_fatal_error
 																error_handler.report_giaaa_error
 															end
 														else
-															create l_convert_expression.make (l_target, l_convert_feature)
-															report_builtin_conversion (l_convert_expression, l_actual_context)
-															create l_cast_expression.make (l_convert_expression, l_actual_context.named_type)
+															l_actual_named_type := l_actual_context.named_type
+															create l_convert_builtin_expression.make (l_actual_named_type, l_convert_feature, l_target)
+															l_convert_expression := l_convert_builtin_expression
+															report_builtin_conversion (l_convert_builtin_expression, l_actual_named_type)
+															create l_cast_expression.make (l_convert_expression, l_actual_named_type)
 															l_cast_expression.set_index (l_convert_expression.index)
 														end
 													end
@@ -8240,7 +8261,9 @@ feature {NONE} -- Expression validity
 			l_conversion_query: ET_QUERY
 			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
+			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
 			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
+			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
 			l_convert_class: ET_CLASS
 			l_convert_name: ET_FEATURE_NAME
 			l_expression_comma: ET_EXPRESSION_COMMA
@@ -8352,11 +8375,13 @@ feature {NONE} -- Expression validity
 										error_handler.report_giaaa_error
 									end
 								elseif l_convert_feature.is_convert_from then
-									create l_convert_expression.make (l_actual, l_convert_feature)
+									l_formal_named_type := l_formal_context.named_type
+									create l_convert_from_expression.make (l_formal_named_type, l_convert_feature, l_actual)
+									l_convert_expression := l_convert_from_expression
 									l_convert_name := l_convert_feature.name
 									l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 									if l_conversion_procedure /= Void then
-										report_creation_expression (l_convert_expression, l_formal_context.named_type, l_conversion_procedure, l_actual)
+										report_creation_expression (l_convert_from_expression, l_formal_named_type, l_conversion_procedure)
 									else
 											-- Internal error: the seed of the convert feature should correspond
 											-- to a procedure of `l_convert_class'.
@@ -8364,8 +8389,10 @@ feature {NONE} -- Expression validity
 										error_handler.report_giaaa_error
 									end
 								else
-									create l_convert_expression.make (l_actual, l_convert_feature)
-									report_builtin_conversion (l_convert_expression, l_formal_context)
+									l_formal_named_type := l_formal_context.named_type
+									create l_convert_builtin_expression.make (l_formal_named_type, l_convert_feature, l_actual)
+									l_convert_expression := l_convert_builtin_expression
+									report_builtin_conversion (l_convert_builtin_expression, l_formal_named_type)
 								end
 								l_expression_comma ?= l_actual_list.item (i)
 								if l_expression_comma /= Void then
@@ -10003,6 +10030,8 @@ feature {NONE} -- Agent validity
 			l_conversion_query: ET_QUERY
 			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
+			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
+			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
 			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 			l_convert_class: ET_CLASS
 			l_argument_comma: ET_AGENT_ARGUMENT_OPERAND_COMMA
@@ -10133,25 +10162,29 @@ feature {NONE} -- Agent validity
 												report_qualified_call_expression (l_convert_to_expression, l_actual_context, l_conversion_query)
 											else
 													-- Internal error: the seed of the convert feature should correspond
-													-- to a feature of `l_convert_class'.
+													-- to a query of `l_convert_class'.
 												set_fatal_error
 												error_handler.report_giaaa_error
 											end
 										elseif l_convert_feature.is_convert_from then
-											create l_convert_expression.make (l_actual, l_convert_feature)
+											l_formal_named_type := l_formal_context.named_type
+											create l_convert_from_expression.make (l_formal_named_type, l_convert_feature, l_actual)
+											l_convert_expression := l_convert_from_expression
 											l_convert_name := l_convert_feature.name
 											l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
 											if l_conversion_procedure /= Void then
-												report_creation_expression (l_convert_expression, l_formal_context.named_type, l_conversion_procedure, l_actual)
+												report_creation_expression (l_convert_from_expression, l_formal_named_type, l_conversion_procedure)
 											else
 													-- Internal error: the seed of the convert feature should correspond
-													-- to a feature of `l_convert_class'.
+													-- to a procedure of `l_convert_class'.
 												set_fatal_error
 												error_handler.report_giaaa_error
 											end
 										else
-											create l_convert_expression.make (l_actual, l_convert_feature)
-											report_builtin_conversion (l_convert_expression, l_formal_context)
+											l_formal_named_type := l_formal_context.named_type
+											create l_convert_builtin_expression.make (l_formal_named_type, l_convert_feature, l_actual)
+											l_convert_expression := l_convert_builtin_expression
+											report_builtin_conversion (l_convert_builtin_expression, l_formal_named_type)
 										end
 										l_argument_comma ?= l_actual_list.item (i)
 										if l_argument_comma /= Void then
@@ -10313,18 +10346,18 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_builtin_conversion (an_expression: ET_CONVERT_EXPRESSION; a_target_type: ET_TYPE_CONTEXT) is
-			-- Report that a built-in convert expression has been processed.
+	report_builtin_conversion (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_target_type: ET_TYPE) is
+			-- Report that a built-in convert expression has been processed,
+			-- where `a_target_type' in  the context of `current_type' is
+			-- the type of the expression after the conversion occurred.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_target_type_not_void: a_target_type /= Void
-			a_target_type_valid: a_target_type.is_valid_context
 		do
 		end
 
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
 			-- Report that a creation expression, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -11170,10 +11203,16 @@ feature {ET_AST_NODE} -- Processing
 			check_constant_attribute_validity (a_feature)
 		end
 
-	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			check_convert_expression_validity (an_expression, current_context)
+			check_convert_builtin_expression_validity (an_expression, current_context)
+		end
+
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			check_convert_from_expression_validity (an_expression, current_context)
 		end
 
 	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is

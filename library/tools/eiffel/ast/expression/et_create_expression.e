@@ -5,7 +5,7 @@ indexing
 		"Eiffel create expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,9 @@ class ET_CREATE_EXPRESSION
 
 inherit
 
-	ET_EXPRESSION
+	ET_CREATION_EXPRESSION
 		redefine
-			reset, is_never_void
+			reset
 		end
 
 create
@@ -61,12 +61,26 @@ feature -- Access
 			-- Creation type
 		do
 			Result := creation_type.type
-		ensure
-			type_not_void: Result /= Void
 		end
 
 	creation_call: ET_QUALIFIED_CALL
 			-- Call to creation procedure
+
+	name: ET_FEATURE_NAME is
+			-- Creation procedure name
+		do
+			if creation_call /= Void then
+				Result := creation_call.name
+			end
+		end
+
+	arguments: ET_ACTUAL_ARGUMENTS is
+			-- Arguments of creation call
+		do
+			if creation_call /= Void then
+				Result := creation_call.arguments
+			end
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -77,6 +91,12 @@ feature -- Access
 			else
 				Result := creation_type.position
 			end
+		end
+
+	type_position: ET_POSITION is
+			-- Position of `type'
+		do
+			Result := type.position
 		end
 
 	first_leaf: ET_AST_LEAF is
@@ -105,11 +125,6 @@ feature -- Access
 			end
 		end
 
-feature -- Status report
-
-	is_never_void: BOOLEAN is True
-			-- Can current expression never be void?
-
 feature -- Setting
 
 	set_create_keyword (a_create: like create_keyword) is
@@ -132,7 +147,7 @@ feature -- Processing
 
 invariant
 
-	crete_keyword_not_void: create_keyword /= Void
+	create_keyword_not_void: create_keyword /= Void
 	creation_type_not_void: creation_type /= Void
 
 end

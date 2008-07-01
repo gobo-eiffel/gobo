@@ -1792,16 +1792,14 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_builtin_conversion (an_expression: ET_CONVERT_EXPRESSION; a_target_type: ET_TYPE_CONTEXT) is
-			-- Report that a built-in convert expression has been processed.
+	report_builtin_conversion (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_target_type: ET_TYPE) is
+			-- Report that a built-in convert expression has been processed,
+			-- where `a_target_type' in  the context of `current_type' is
+			-- the type of the expression after the conversion occurred.
 		local
-			l_procedure: ET_PROCEDURE
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_source_type: ET_DYNAMIC_TYPE
-			l_convert_feature: ET_CONVERT_FEATURE
-			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
-			l_query: ET_QUERY
-			l_seed: INTEGER
+			l_target_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_source_type_set := dynamic_type_set (an_expression.expression)
@@ -1812,53 +1810,19 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					l_source_type := l_source_type_set.static_type
-					if l_source_type.base_type.conforms_to_context (a_target_type) then
+					if l_source_type.base_type.conforms_to_type (a_target_type, current_type, current_type) then
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
 						set_dynamic_type_set (l_source_type_set, an_expression)
 					else
-						l_convert_feature := type_checker.convert_feature (l_source_type.base_type, a_target_type)
-						if l_convert_feature = Void then
-								-- Internal error: no convert feature found.
--- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
-							set_dynamic_type_set (l_source_type_set, an_expression)
-						elseif l_convert_feature.is_convert_to then
-							l_seed := l_convert_feature.name.seed
-							l_query := l_source_type.base_class.seeded_query (l_seed)
-							if l_query /= Void then
--- TODO: can we avoid creating this intermediary 'convert_to_expression'?
-								create l_convert_to_expression.make (an_expression.expression, l_convert_feature)
-								report_qualified_call_expression (l_convert_to_expression, l_source_type.base_type, l_query)
-								an_expression.set_index (l_convert_to_expression.index)
-							else
-									-- Internal error: there should be a query with `l_seed'.
-									-- It has been computed in ET_FEATURE_FLATTENER or else an
-									-- error should have already been reported.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							end
-						elseif l_convert_feature.is_convert_from then
-							l_seed := l_convert_feature.name.seed
-							l_procedure := a_target_type.base_class.seeded_procedure (l_seed)
-							if l_procedure = Void then
-									-- Internal error: there should be a procedure with `l_seed'.
-									-- It has been computed in ET_FEATURE_FLATTENER or else an
-									-- error should have already been reported.
-								set_fatal_error
-								error_handler.report_giaaa_error
-							else
-								report_creation_expression (an_expression, a_target_type.named_type, l_procedure, an_expression.expression)
-							end
-						else
 -- TODO: built-in feature between basic types? Should not be needed with ECMA Eiffel.
-							set_dynamic_type_set (l_source_type_set, an_expression)
-						end
+						l_target_type := current_dynamic_system.dynamic_type (a_target_type, current_type)
+						set_dynamic_type_set (l_target_type, an_expression)
 					end
 				end
 			end
 		end
 
-	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_TYPE;
-		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
 			-- Report that a creation expression, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -1866,6 +1830,7 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
+			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -1873,10 +1838,11 @@ feature {NONE} -- Event handling
 				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_procedure.set_creation (True)
 				mark_type_alive (l_dynamic_creation_type)
-				if an_actuals /= Void then
-					nb := an_actuals.count
+				l_actuals := an_expression.arguments
+				if l_actuals /= Void then
+					nb := l_actuals.count
 					from i := 1 until i > nb loop
-						l_actual := an_actuals.actual_argument (i)
+						l_actual := l_actuals.actual_argument (i)
 						propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
 						i := i + 1
 					end

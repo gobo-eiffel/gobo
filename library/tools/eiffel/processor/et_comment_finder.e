@@ -64,10 +64,11 @@ inherit
 			process_constant_attribute,
 			process_constrained_formal_parameter,
 			process_constraint_creator,
-			process_convert_expression,
+			process_convert_builtin_expression,
 			process_convert_feature_comma,
 			process_convert_feature_list,
 			process_convert_function,
+			process_convert_from_expression,
 			process_convert_procedure,
 			process_convert_to_expression,
 			process_create_expression,
@@ -636,7 +637,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (a_convert_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `a_convert_expression'.
 		do
 			if not excluded_nodes.has (a_convert_expression) then
@@ -665,6 +666,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_convert_function) then
 				precursor (a_convert_function)
+			end
+		end
+
+	process_convert_from_expression (a_convert_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		do
+			if not excluded_nodes.has (a_convert_expression) then
+				precursor (a_convert_expression)
 			end
 		end
 

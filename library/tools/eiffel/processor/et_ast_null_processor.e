@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -272,7 +272,7 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (a_convert_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `a_convert_expression'.
 		do
 		end
@@ -289,6 +289,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_convert_function (a_convert_function: ET_CONVERT_FUNCTION) is
 			-- Process `a_convert_function'.
+		do
+		end
+
+	process_convert_from_expression (a_convert_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `a_convert_expression'.
 		do
 		end
 

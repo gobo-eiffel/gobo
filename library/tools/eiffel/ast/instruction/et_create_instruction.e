@@ -114,6 +114,6 @@ feature -- Processing
 
 invariant
 
-	crete_keyword_not_void: create_keyword /= Void
+	create_keyword_not_void: create_keyword /= Void
 
 end

@@ -30,7 +30,8 @@ inherit
 			process_c3_character_constant,
 			process_call_agent,
 			process_call_expression,
-			process_convert_expression,
+			process_convert_builtin_expression,
+			process_convert_from_expression,
 			process_convert_to_expression,
 			process_create_expression,
 			process_current,
@@ -486,7 +487,24 @@ feature {NONE} -- Expression processing
 			a_context.force_last (l_type)
 		end
 
-	find_convert_expression_type (an_expression: ET_CONVERT_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_convert_builtin_expression_type (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_type: ET_TYPE
+		do
+			reset_fatal_error (False)
+			l_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
+			if not has_fatal_error then
+				a_context.force_last (l_type)
+			end
+		end
+
+	find_convert_from_expression_type (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -494,8 +512,7 @@ feature {NONE} -- Expression processing
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		do
-			reset_fatal_error (False)
-			a_context.force_last (current_target_type.named_type)
+			find_creation_expression_type (an_expression, a_context)
 		end
 
 	find_convert_to_expression_type (an_expression: ET_CONVERT_TO_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -509,7 +526,18 @@ feature {NONE} -- Expression processing
 			find_qualified_call_expression_type (an_expression, a_context)
 		end
 
-	find_create_expression_type (an_expression: ET_CREATE_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	find_create_expression_type (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			find_creation_expression_type (an_expression, a_context)
+		end
+
+	find_creation_expression_type (an_expression: ET_CREATION_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- `a_context' represents the type in which `an_expression' appears.
 			-- It will be altered on exit to represent the type of `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2917,10 +2945,16 @@ feature {ET_AST_NODE} -- Processing
 			find_call_expression_type (an_expression, current_context)
 		end
 
-	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			find_convert_expression_type (an_expression, current_context)
+			find_convert_builtin_expression_type (an_expression, current_context)
+		end
+
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			find_convert_from_expression_type (an_expression, current_context)
 		end
 
 	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is

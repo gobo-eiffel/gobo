@@ -630,7 +630,7 @@ feature {ET_AST_NODE} -- Processing
 			a_list.end_keyword.process (Current)
 		end
 
-	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (a_convert_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `a_convert_expression'.
 		do
 			a_convert_expression.expression.process (Current)
@@ -662,6 +662,12 @@ feature {ET_AST_NODE} -- Processing
 			a_convert_function.name.process (Current)
 			a_convert_function.colon.process (Current)
 			a_convert_function.types.process (Current)
+		end
+
+	process_convert_from_expression (a_convert_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
 		end
 
 	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE) is

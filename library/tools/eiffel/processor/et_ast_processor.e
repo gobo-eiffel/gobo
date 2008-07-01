@@ -375,7 +375,7 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (a_convert_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `a_convert_expression'.
 		require
 			a_convert_expression_not_void: a_convert_expression /= Void
@@ -400,6 +400,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_convert_function'.
 		require
 			a_convert_function_not_void: a_convert_function /= Void
+		deferred
+		end
+
+	process_convert_from_expression (a_convert_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		require
+			a_convert_expression_not_void: a_convert_expression /= Void
 		deferred
 		end
 

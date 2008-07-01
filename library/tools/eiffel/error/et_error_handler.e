@@ -2779,9 +2779,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
-			-- Report VGCC-1 error: the creation expression appearing in
-			-- `a_class_impl' at position `a_position' and viewed from one
+	report_vgcc1a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS) is
+			-- Report VGCC-1 error: the creation expression `a_creation',
+			-- appearing in `a_class_impl' and viewed from one
 			-- of its descendants `a_class' (possibly itself), has no
 			-- Creation_call part but the base class `a_target' of the
 			-- creation type is deferred.
@@ -2791,13 +2791,13 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
 			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_position_not_void: a_position /= Void
+			a_creation_not_void: a_creation /= Void
 			a_target_not_void: a_target /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vgcc1_error (a_class) then
-				create an_error.make_vgcc1a (a_class, a_class_impl, a_position, a_target)
+				create an_error.make_vgcc1a (a_class, a_class_impl, a_creation, a_target)
 				report_validity_error (an_error)
 			end
 		end
@@ -2851,9 +2851,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vgcc5a_error (a_class, a_class_impl: ET_CLASS; a_position: ET_POSITION; a_target: ET_CLASS) is
-			-- Report VGCC-5 error: the creation expression appearing in
-			-- `a_class_impl' at position `a_position' and viewed from one
+	report_vgcc5a_error (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS) is
+			-- Report VGCC-5 error: the creation expression `a_creation',
+			-- appearing in  `a_class_impl' and viewed from one
 			-- of its descendants `a_class' (possibly itself), has no
 			-- Creation_call part but the base class `a_target' of the
 			-- creation type has a Creators part.
@@ -2863,13 +2863,13 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
 			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_position_not_void: a_position /= Void
+			a_creation_not_void: a_creation /= Void
 			a_target_not_void: a_target /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vgcc5_error (a_class) then
-				create an_error.make_vgcc5a (a_class, a_class_impl, a_position, a_target)
+				create an_error.make_vgcc5a (a_class, a_class_impl, a_creation, a_target)
 				report_validity_error (an_error)
 			end
 		end

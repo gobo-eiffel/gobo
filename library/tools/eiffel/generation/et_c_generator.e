@@ -33,7 +33,8 @@ inherit
 			process_call_instruction,
 			process_check_instruction,
 			process_constant_attribute,
-			process_convert_expression,
+			process_convert_builtin_expression,
+			process_convert_from_expression,
 			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
@@ -6829,74 +6830,37 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			end
 		end
 
-	print_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
+	print_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
 		local
 			l_convert_feature: ET_CONVERT_FEATURE
-			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_target_type: ET_DYNAMIC_TYPE
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_source_type: ET_DYNAMIC_TYPE
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
-			l_seed: INTEGER
-			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
 		do
 			l_convert_feature := an_expression.convert_feature
 			l_target_type_set := dynamic_type_set (an_expression)
 			l_target_type := l_target_type_set.static_type
-			if l_convert_feature.is_convert_from then
-				l_seed := l_convert_feature.name.seed
-				l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
-				if l_dynamic_procedure = Void then
-						-- Internal error: there should be a procedure with `l_seed'.
-						-- It has been computed in ET_FEATURE_FLATTENER or else an
-						-- error should have already been reported.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					print_creation_expression (an_expression, l_target_type, l_dynamic_procedure, an_expression.expression)
-				end
+			l_source_type_set := dynamic_type_set (an_expression.expression)
+			l_source_type := l_source_type_set.static_type
+			if l_source_type.conforms_to_type (l_target_type) then
+-- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
+				an_expression.expression.process (Current)
 			else
-					-- This is a built-in conversion.
-				l_source_type_set := dynamic_type_set (an_expression.expression)
-				l_source_type := l_source_type_set.static_type
-				if l_source_type.conforms_to_type (l_target_type) then
--- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
-					an_expression.expression.process (Current)
-				else
-					l_convert_feature := type_checker.convert_feature (l_source_type.base_type, l_target_type.base_type)
-					if l_convert_feature = Void then
-							-- Internal error: no convert feature found.
--- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
-print ("ET_C_GENERATOR.print_convert_expression%N")
-						an_expression.expression.process (Current)
-					elseif l_convert_feature.is_convert_to then
--- TODO: can we avoid creating this intermediary 'convert_to_expression'?
-						create l_convert_to_expression.make (an_expression.expression, l_convert_feature)
-						l_convert_to_expression.set_index (an_expression.index)
-						print_convert_to_expression (l_convert_to_expression)
-					elseif l_convert_feature.is_convert_from then
-						l_seed := l_convert_feature.name.seed
-						l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
-						if l_dynamic_procedure = Void then
-								-- Internal error: there should be a procedure with `l_seed'.
-								-- It has been computed in ET_FEATURE_FLATTENER or else an
-								-- error should have already been reported.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							print_creation_expression (an_expression, l_target_type, l_dynamic_procedure, an_expression.expression)
-						end
-					else
-							-- Built-in convert feature.
-print ("ET_C_GENERATOR.print_convert_expression%N")
 -- TODO: built-in feature between basic types? Should not be needed with ECMA Eiffel.
-						an_expression.expression.process (Current)
-					end
-				end
+				an_expression.expression.process (Current)
 			end
+		end
+
+	print_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+			print_creation_expression (an_expression)
 		end
 
 	print_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
@@ -6911,49 +6875,21 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_call: ET_QUALIFIED_CALL
-			l_seed: INTEGER
-			l_actuals: ET_ACTUAL_ARGUMENT_LIST
-			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 		do
-			l_dynamic_type_set := dynamic_type_set (an_expression)
-			l_dynamic_type := l_dynamic_type_set.static_type
-			l_call := an_expression.creation_call
-			if l_call /= Void then
-				l_seed := l_call.name.seed
-				l_actuals := l_call.arguments
-			else
-				l_seed := current_system.default_create_seed
-				l_actuals := Void
-			end
-			l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
-			if l_dynamic_procedure = Void then
-					-- Internal error: there should be a procedure with `l_seed'.
-					-- It has been computed in ET_FEATURE_CHECKER or else an
-					-- error should have already been reported.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				print_creation_expression (an_expression, l_dynamic_type, l_dynamic_procedure, l_actuals)
-			end
+			print_creation_expression (an_expression)
 		end
 
-	print_creation_expression (an_expression: ET_EXPRESSION; a_type: ET_DYNAMIC_TYPE; a_procedure: ET_DYNAMIC_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
-			-- Print a creation expression.
-			-- `an_expression' is the expression which triggers the creation.
-			-- It might be a create-expression or a convert-expression.
-			-- `a_type' is the type of object to be created, `a_procedure'
-			-- is the creation procedure to be used and `an_actuals' are
-			-- the arguments to be passed to `a_procedure'.
+	print_creation_expression (an_expression: ET_CREATION_EXPRESSION) is
+			-- Print `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-			a_type_not_void: a_type /= Void
-			a_procedure_not_void: a_procedure /= Void
-			is_procedure: a_procedure.is_procedure
 		local
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type: ET_DYNAMIC_TYPE
+			l_name: ET_FEATURE_NAME
+			l_seed: INTEGER
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_procedure: ET_DYNAMIC_FEATURE
 			i, nb: INTEGER
 			l_temp: ET_IDENTIFIER
 			l_temp_index: INTEGER
@@ -6964,67 +6900,85 @@ print ("ET_C_GENERATOR.print_convert_expression%N")
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
-			if an_actuals /= Void then
-				nb := an_actuals.count
-				from i := 1 until i > nb loop
-					print_operand (an_actuals.actual_argument (i))
-					i := i + 1
+			l_target_type_set := dynamic_type_set (an_expression)
+			l_target_type := l_target_type_set.static_type
+			l_name := an_expression.name
+			if l_name /= Void then
+				l_seed := l_name.seed
+			else
+				l_seed := current_system.default_create_seed
+			end
+			l_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
+			if l_procedure = Void then
+					-- Internal error: there should be a procedure with `l_seed'.
+					-- It has been computed in ET_FEATURE_CHECKER or else an
+					-- error should have already been reported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_actuals := an_expression.arguments
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					from i := 1 until i > nb loop
+						print_operand (l_actuals.actual_argument (i))
+						i := i + 1
+					end
 				end
-			end
-			fill_call_operands (nb)
-			if in_operand then
-				if l_assignment_target /= Void then
-					operand_stack.force (l_assignment_target)
-					print_indentation
-					print_writable (l_assignment_target)
-				else
-					l_temp := new_temp_variable (a_type)
-						-- We will set the index of `l_temp' later because
-						-- it could still be used in `call_operands'.
-					l_temp_index := an_expression.index
-					operand_stack.force (l_temp)
-					print_indentation
-					print_temp_name (l_temp, current_file)
-				end
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-			end
-			if not a_procedure.is_generated then
-				a_procedure.set_generated (True)
-				called_features.force_last (a_procedure)
-			end
-			print_creation_procedure_name (a_procedure, a_type, current_file)
-			current_file.put_character ('(')
-			if exception_trace_mode then
-				current_file.put_string (current_call_info)
-				l_comma := True
-			end
-			from i := 1 until i > nb loop
-				if l_comma then
-					current_file.put_character (',')
+				fill_call_operands (nb)
+				if in_operand then
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_indentation
+						print_writable (l_assignment_target)
+					else
+						l_temp := new_temp_variable (l_target_type)
+							-- We will set the index of `l_temp' later because
+							-- it could still be used in `call_operands'.
+						l_temp_index := an_expression.index
+						operand_stack.force (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
+					end
 					current_file.put_character (' ')
-				else
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+				end
+				if not l_procedure.is_generated then
+					l_procedure.set_generated (True)
+					called_features.force_last (l_procedure)
+				end
+				print_creation_procedure_name (l_procedure, l_target_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
 					l_comma := True
 				end
-				l_actual_type_set := dynamic_type_set (call_operands.item (i))
-				l_formal_type_set := argument_type_set_in_feature (i, a_procedure)
-				print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-				i := i + 1
-			end
-			current_file.put_character (')')
-			if in_operand then
+				from i := 1 until i > nb loop
+					if l_comma then
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					else
+						l_comma := True
+					end
+					l_actual_type_set := dynamic_type_set (call_operands.item (i))
+					l_formal_type_set := argument_type_set_in_feature (i, l_procedure)
+					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+					i := i + 1
+				end
 				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-			call_operands.wipe_out
-			if l_temp_index /= 0 then
-					-- We had to wait until this stage to set the index of `l_temp'
-					-- because it could have still been used in `call_operands'.
-				check l_temp_not_void: l_temp /= Void end
-				l_temp.set_index (l_temp_index)
+				if in_operand then
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				call_operands.wipe_out
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					check l_temp_not_void: l_temp /= Void end
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 
@@ -19940,7 +19894,9 @@ feature {NONE} -- C function generation
 			-- Print 'main' function to `current_file'.
 		local
 			l_root_type: ET_DYNAMIC_TYPE
-			l_root_creation: ET_DYNAMIC_FEATURE
+			l_root_creation_procedure: ET_DYNAMIC_FEATURE
+			l_root_creation: ET_CREATE_EXPRESSION
+			l_root_call: ET_QUALIFIED_CALL
 			l_temp: ET_IDENTIFIER
 			old_call_info: STRING
 		do
@@ -19949,8 +19905,8 @@ feature {NONE} -- C function generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			l_root_type := current_dynamic_system.root_type
-			l_root_creation := current_dynamic_system.root_creation_procedure
-			if l_root_type /= Void and l_root_creation /= Void then
+			l_root_creation_procedure := current_dynamic_system.root_creation_procedure
+			if l_root_type /= Void and l_root_creation_procedure /= Void then
 				indent
 				if exception_trace_mode then
 						-- There is no caller for the root creation procedure.
@@ -19998,7 +19954,15 @@ feature {NONE} -- C function generation
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
-				print_creation_expression (l_temp, l_root_type, l_root_creation, Void)
+				create l_root_call.make (l_root_creation_procedure.static_feature.name, Void)
+				l_root_call.name.set_seed (l_root_creation_procedure.static_feature.first_seed)
+				create l_root_creation.make (l_root_type.base_type, l_root_call)
+					-- Prepare dynamic type sets of the root creation expression.
+				extra_dynamic_type_sets.force_last (l_root_type)
+				l_root_creation.set_index (current_dynamic_type_sets.count + extra_dynamic_type_sets.count)
+				print_creation_expression (l_root_creation)
+					-- Clean up.
+				extra_dynamic_type_sets.remove_last
 				current_file.put_character (';')
 				current_file.put_new_line
 				print_indentation
@@ -24592,10 +24556,16 @@ feature {ET_AST_NODE} -- Processing
 			print_constant_attribute (a_feature)
 		end
 
-	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			print_convert_expression (an_expression)
+			print_convert_builtin_expression (an_expression)
+		end
+
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			print_convert_from_expression (an_expression)
 		end
 
 	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is

@@ -36,7 +36,9 @@ inherit
 			process_call_instruction,
 			process_check_instruction,
 			process_compound,
-			process_convert_expression,
+			process_convert_builtin_expression,
+			process_convert_from_expression,
+			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
 			process_debug_instruction,
@@ -473,7 +475,19 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (a_convert_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
+	process_convert_from_expression (a_convert_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `a_convert_expression'.
+		do
+			a_convert_expression.expression.process (Current)
+		end
+
+	process_convert_to_expression (a_convert_expression: ET_CONVERT_TO_EXPRESSION) is
 			-- Process `a_convert_expression'.
 		do
 			a_convert_expression.expression.process (Current)

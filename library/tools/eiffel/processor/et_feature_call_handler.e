@@ -45,7 +45,8 @@ inherit
 			process_choice_range,
 			process_compound,
 			process_constant_attribute,
-			process_convert_expression,
+			process_convert_builtin_expression,
+			process_convert_from_expression,
 			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
@@ -833,24 +834,18 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			l_convert_feature: ET_CONVERT_FEATURE
---			l_actuals: ET_ACTUAL_ARGUMENTS
 		do
-			l_convert_feature := an_expression.convert_feature
-			if l_convert_feature.is_convert_from then
--- TODO:
---				l_actuals := an_expression.expression
---				check_creation_expression_validity (an_expression, current_target_type.named_type,
---					l_convert_feature.name, l_actuals, an_expression.position, a_context)
-				process_expression (an_expression.expression)
-			else
-					-- Built-in conversion.
-				process_expression (an_expression.expression)
-			end
+			process_expression (an_expression.expression)
+		end
+
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_creation_expression (an_expression)
 		end
 
 	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
@@ -863,10 +858,19 @@ feature {ET_AST_NODE} -- Processing
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_creation_expression (an_expression)
+		end
+
+	process_creation_expression (an_expression: ET_CREATION_EXPRESSION) is
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
 		local
 			l_type: ET_TYPE
-			l_call: ET_QUALIFIED_CALL
-			l_arguments: ET_ACTUAL_ARGUMENT_LIST
+			l_name: ET_FEATURE_NAME
+			l_arguments: ET_ACTUAL_ARGUMENTS
 			l_seed: INTEGER
 			l_procedure: ET_PROCEDURE
 			l_context: ET_NESTED_TYPE_CONTEXT
@@ -879,14 +883,14 @@ feature {ET_AST_NODE} -- Processing
 				process_type (l_type)
 				had_error := has_fatal_error
 			end
-			l_call := an_expression.creation_call
-			if l_call /= Void then
-				l_arguments := l_call.arguments
+			l_name := an_expression.name
+			if l_name /= Void then
+				l_arguments := an_expression.arguments
 				if l_arguments /= Void then
 					process_actual_arguments (l_arguments)
 					had_error := had_error or has_fatal_error
 				end
-				l_seed := l_call.name.seed
+				l_seed := l_name.seed
 			else
 				l_seed := current_system.default_create_seed
 			end

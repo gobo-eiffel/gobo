@@ -43,9 +43,10 @@ inherit
 			process_compound,
 			process_constant_attribute,
 			process_constrained_formal_parameter,
-			process_convert_expression,
+			process_convert_builtin_expression,
 			process_convert_feature_list,
 			process_convert_function,
+			process_convert_from_expression,
 			process_convert_procedure,
 			process_convert_to_expression,
 			process_create_expression,
@@ -493,7 +494,7 @@ feature {ET_AST_NODE} -- Processing
 			process_type  (a_parameter.constraint)
 		end
 
-	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
+	process_convert_builtin_expression (an_expression: ET_CONVERT_BUILTIN_EXPRESSION) is
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
@@ -515,6 +516,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_convert_function'.
 		do
 			a_convert_function.types.process (Current)
+		end
+
+	process_convert_from_expression (an_expression: ET_CONVERT_FROM_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			process_expression (an_expression.expression)
 		end
 
 	process_convert_procedure (a_convert_procedure: ET_CONVERT_PROCEDURE) is
