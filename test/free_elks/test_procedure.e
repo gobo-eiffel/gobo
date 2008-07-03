@@ -427,15 +427,15 @@ feature -- Test
 			-- Test feature 'set_target'.
 		local
 			s1, s2: STRING
-			p: PROCEDURE [ANY, TUPLE [STRING]]
+			p: PROCEDURE [ANY, TUPLE [CHARACTER]]
 		do
 			s1 := "gobo"
-			p := agent s1.append_string
+			p := agent s1.append_character
 			s2 := "foo"
 			p.set_target (s2)
-			p.call (["bar"])
+			p.call (['Z'])
 			assert_strings_equal ("s1", "gobo", s1)
-			assert_strings_equal ("s2", "foobar", s2)
+			assert_strings_equal ("s2", "fooZ", s2)
 		end
 
 	test_boxed_operands is
