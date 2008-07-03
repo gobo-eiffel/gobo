@@ -120,21 +120,27 @@ feature -- Setting
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_system: ET_SYSTEM): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when there is no explicit type case and the value of the
-			-- constant can be represented in `a_target_type.
+			-- constant can be represented in `a_target_type'.
 			-- Void if no such feature or when not possible.
 		local
-			a_target_base_class: ET_CLASS
+			l_target_base_class: ET_CLASS
+			l_system: ET_SYSTEM
 		do
 			if cast_type = Void then
 -- TODO: check that the value of `Current' can be represented in `a_target_type'.
-				a_target_base_class := a_target_type.base_class
-				if a_target_base_class = a_system.character_8_class then
-					Result := a_system.character_8_convert_feature
-				elseif a_target_base_class = a_system.character_32_class then
-					Result := a_system.character_32_convert_feature
+				l_target_base_class := a_target_type.base_class
+				if not l_target_base_class.is_preparsed then
+					-- No conversion to non-existing type.
+				else
+					l_system := l_target_base_class.current_system
+					if l_target_base_class = l_system.character_8_class then
+						Result := l_system.character_8_convert_feature
+					elseif l_target_base_class = l_system.character_32_class then
+						Result := l_system.character_32_convert_feature
+					end
 				end
 			end
 		end

@@ -1815,18 +1815,7 @@ feature {NONE} -- Instruction validity
 			l_seed: INTEGER
 			i, nb: INTEGER
 			nb_args: INTEGER
-			l_convert_feature: ET_CONVERT_FEATURE
-			l_conversion_query: ET_QUERY
-			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
-			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
-			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
-			l_convert_class: ET_CLASS
-			l_convert_name: ET_FEATURE_NAME
-			l_source_named_type: ET_NAMED_TYPE
-			l_target_named_type: ET_NAMED_TYPE
-			l_call_named_type: ET_NAMED_TYPE
 			any_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
 		do
@@ -2106,72 +2095,19 @@ feature {NONE} -- Instruction validity
 					if not l_source_context.conforms_to_context (l_call_context) then
 							-- The source does not conform to the call.
 							-- Try to find out whether it converts to it.
-						if current_class = current_class_impl then
-							l_convert_feature := type_checker.convert_feature (l_source_context, l_call_context)
-						else
-								-- Convertibility should be resolved in class where the code has been written.
-							l_convert_feature := Void
-						end
-						if l_convert_feature /= Void then
-							if l_convert_feature.is_convert_from then
-								l_convert_class := l_call_context.base_class
-							elseif l_convert_feature.is_convert_to then
-								l_convert_class := l_source_context.base_class
-							else
-								l_convert_class := Void
-							end
-							if l_convert_class /= Void then
-								l_convert_class.process (current_system.feature_flattener)
-								if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
-										-- Error already reported by the feature flattener.
-									set_fatal_error
-									l_convert_feature := Void
-								end
-							end
-							if l_convert_feature /= Void then
-									-- Insert the conversion feature call in the AST.
-								if l_convert_feature.is_convert_to then
-									create l_convert_to_expression.make (l_source, l_convert_feature)
-									l_convert_expression := l_convert_to_expression
-									l_convert_name := l_convert_feature.name
-									l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
-									if l_conversion_query /= Void then
-										report_qualified_call_expression (l_convert_to_expression, l_source_context, l_conversion_query)
-									else
-											-- Internal error: the seed of the convert feature should correspond
-											-- to a query of `a_convert_class'.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									end
-								elseif l_convert_feature.is_convert_from then
-									l_call_named_type := l_call_context.named_type
-									create l_convert_from_expression.make (l_call_named_type, l_convert_feature, l_source)
-									l_convert_expression := l_convert_from_expression
-									l_convert_name := l_convert_feature.name
-									l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
-									if l_conversion_procedure /= Void then
-										report_creation_expression (l_convert_from_expression, l_call_named_type, l_conversion_procedure)
-									else
-											-- Internal error: the seed of the convert feature should correspond
-											-- to a procedure of `l_convert_class'.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									end
-								else
-									l_call_named_type := l_call_context.named_type
-									create l_convert_builtin_expression.make (l_call_named_type, l_convert_feature, l_source)
-									l_convert_expression := l_convert_builtin_expression
-									report_builtin_conversion (l_convert_builtin_expression, l_call_named_type)
-								end
-								an_instruction.set_source (l_convert_expression)
-							end
+						l_convert_expression := convert_expression (l_source, l_source_context, l_call_context)
+						if has_fatal_error then
+							-- Nothing to be done.
+						elseif l_convert_expression /= Void then
+								-- Insert the conversion feature call in the AST.
+								-- Convertibility should be resolved in the implementation class.
+							check implementation_class: current_class = current_class_impl end
+							an_instruction.set_source (l_convert_expression)
 						else
 								-- Report error: the type of the source does not conform nor convert
 								-- to the type of the call. See VBAC-1, ECMA 367-2 p.119.
 							set_fatal_error
-							l_source_named_type := l_source_context.named_type
-							l_target_named_type := l_target_context.named_type
-							error_handler.report_vbac1a_error (current_class, current_class_impl, an_instruction, l_source_named_type, l_target_named_type)
+							error_handler.report_vbac1a_error (current_class, current_class_impl, an_instruction, l_source_context.named_type, l_target_context.named_type)
 						end
 					end
 				end
@@ -2252,17 +2188,7 @@ feature {NONE} -- Instruction validity
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 			l_source: ET_EXPRESSION
 			l_source_context: ET_NESTED_TYPE_CONTEXT
-			l_source_named_type: ET_NAMED_TYPE
-			l_target_named_type: ET_NAMED_TYPE
-			l_convert_feature: ET_CONVERT_FEATURE
-			l_conversion_query: ET_QUERY
-			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
-			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
-			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
-			l_convert_class: ET_CLASS
-			l_convert_name: ET_FEATURE_NAME
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -2297,68 +2223,15 @@ feature {NONE} -- Instruction validity
 				if not l_source_context.conforms_to_context (l_target_context) then
 						-- The source does not conform to the target.
 						-- Try to find out whether it converts to it.
-					if current_class = current_class_impl then
-						l_convert_feature := type_checker.convert_feature (l_source_context, l_target_context)
-					else
+					l_convert_expression := convert_expression (l_source, l_source_context, l_target_context)
+					if has_fatal_error then
+						-- Nothing to be done.
+					elseif l_convert_expression /= Void then
+							-- Insert the conversion feature call in the AST.
 							-- Convertibility should be resolved in the implementation class.
-						l_convert_feature := Void
-					end
-					if l_convert_feature /= Void then
-						if l_convert_feature.is_convert_from then
-							l_convert_class := l_target_context.base_class
-						elseif l_convert_feature.is_convert_to then
-							l_convert_class := l_source_context.base_class
-						else
-							l_convert_class := Void
-						end
-						if l_convert_class /= Void then
-							l_convert_class.process (current_system.feature_flattener)
-							if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
-									-- Error already reported by the feature flattener.
-								set_fatal_error
-								l_convert_feature := Void
-							end
-						end
-						if l_convert_feature /= Void then
-								-- Insert the conversion feature call in the AST.
-							if l_convert_feature.is_convert_to then
-								create l_convert_to_expression.make (l_source, l_convert_feature)
-								l_convert_expression := l_convert_to_expression
-								l_convert_name := l_convert_feature.name
-								l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
-								if l_conversion_query /= Void then
-									report_qualified_call_expression (l_convert_to_expression, l_source_context, l_conversion_query)
-								else
-										-- Internal error: the seed of the convert feature should correspond
-										-- to a query of `a_convert_class'.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								end
-							elseif l_convert_feature.is_convert_from then
-								l_target_named_type := l_target_context.named_type
-								create l_convert_from_expression.make (l_target_named_type, l_convert_feature, l_source)
-								l_convert_expression := l_convert_from_expression
-								l_convert_name := l_convert_feature.name
-								l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
-								if l_conversion_procedure /= Void then
-									report_creation_expression (l_convert_from_expression, l_target_named_type, l_conversion_procedure)
-								else
-										-- Internal error: the seed of the convert feature should correspond
-										-- to a procedure of `l_convert_class'.
-									set_fatal_error
-									error_handler.report_giaaa_error
-								end
-							else
-								l_target_named_type := l_target_context.named_type
-								create l_convert_builtin_expression.make (l_target_named_type, l_convert_feature, l_source)
-								l_convert_expression := l_convert_builtin_expression
-								report_builtin_conversion (l_convert_builtin_expression, l_target_named_type)
-							end
-							an_instruction.set_source (l_convert_expression)
-							if not has_fatal_error then
-								report_assignment (an_instruction)
-							end
-						end
+						check implementation_class: current_class = current_class_impl end
+						an_instruction.set_source (l_convert_expression)
+						report_assignment (an_instruction)
 					elseif
 						current_system.is_ise and current_class /= current_class_impl and
 						(current_class = current_system.boolean_class or
@@ -2377,14 +2250,12 @@ feature {NONE} -- Instruction validity
 						current_class = current_system.pointer_class or
 						current_class = current_system.typed_pointer_class)
 					then
-						-- Compatibility with ISE 5.6.0610.
+							-- Compatibility with ISE 5.6.0610.
+						report_assignment (an_instruction)
 					else
-							-- The type of the source does not conform nor convert
-							-- to the type of the target.
+							-- The type of the source does not conform nor convert to the type of the target.
 						set_fatal_error
-						l_source_named_type := l_source_context.named_type
-						l_target_named_type := l_target_context.named_type
-						error_handler.report_vjar0a_error (current_class, current_class_impl, an_instruction, l_source_named_type, l_target_named_type)
+						error_handler.report_vjar0a_error (current_class, current_class_impl, an_instruction, l_source_context.named_type, l_target_context.named_type)
 					end
 				else
 					report_assignment (an_instruction)
@@ -4205,11 +4076,13 @@ feature {NONE} -- Expression validity
 			l_target_type: ET_TYPE
 		do
 			check_expression_validity (an_expression.expression, a_context, current_target_type)
-			l_target_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
 			if not has_fatal_error then
-				report_builtin_conversion (an_expression, l_target_type)
-				a_context.reset (current_type)
-				a_context.force_last (l_target_type)
+				l_target_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
+				if not has_fatal_error then
+					report_builtin_conversion (an_expression, l_target_type)
+					a_context.reset (current_type)
+					a_context.force_last (l_target_type)
+				end
 			end
 		end
 
@@ -5337,17 +5210,17 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_type: ET_TYPE
-			l_formal_context: ET_NESTED_TYPE_CONTEXT
+			l_target_type: ET_TYPE
 		do
-			has_fatal_error := False
-			l_type := an_expression.type
-			l_formal_context := new_context (current_type)
-			l_formal_context.force_last (l_type)
-			check_expression_validity (an_expression.expression, a_context, l_formal_context)
-			free_context (l_formal_context)
-			an_expression.set_index (an_expression.expression.index)
-			a_context.force_last (l_type)
+			check_expression_validity (an_expression.expression, a_context, current_target_type)
+			if not has_fatal_error then
+				an_expression.set_index (an_expression.expression.index)
+				l_target_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
+				if not has_fatal_error then
+					a_context.reset (current_type)
+					a_context.force_last (l_target_type)
+				end
+			end
 		end
 
 	check_infix_expression_validity (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -5378,15 +5251,7 @@ feature {NONE} -- Expression validity
 			had_error: BOOLEAN
 			l_named_actual_type, l_named_formal_type: ET_NAMED_TYPE
 			l_like: ET_LIKE_FEATURE
-			l_convert_feature: ET_CONVERT_FEATURE
-			l_convert_class: ET_CLASS
 			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
-			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
-			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
-			l_convert_name: ET_FEATURE_NAME
-			l_conversion_query: ET_QUERY
-			l_conversion_procedure: ET_PROCEDURE
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_type: ET_TYPE
@@ -5394,8 +5259,6 @@ feature {NONE} -- Expression validity
 			l_cast_expression: ET_INFIX_CAST_EXPRESSION
 			l_builtin: ET_BUILTIN_CONVERT_FEATURE
 			l_old_scope: INTEGER
-			l_actual_named_type: ET_NAMED_TYPE
-			l_formal_named_type: ET_NAMED_TYPE
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -5539,69 +5402,17 @@ feature {NONE} -- Expression validity
 							if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context) then
 									-- The actual argument does not conform to the formal argument.
 									-- Try to see if it converts to it.
-								if current_class = current_class_impl then
-									l_formal_context.force_last (l_formal_type)
-									l_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
-									l_formal_context.remove_last
-								else
+								l_formal_context.force_last (l_formal_type)
+								l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
+								l_formal_context.remove_last
+								if has_fatal_error then
+									had_error := True
+								elseif l_convert_expression /= Void then
+										-- Insert the conversion feature call in the AST.
 										-- Convertibility should be resolved in the implementation class.
-									l_convert_feature := Void
-								end
-								if l_convert_feature /= Void then
-									if l_convert_feature.is_convert_from then
-										l_convert_class := l_formal_context.base_class
-									elseif l_convert_feature.is_convert_to then
-										l_convert_class := l_actual_context.base_class
-									else
-										l_convert_class := Void
-									end
-									if l_convert_class /= Void then
-										l_convert_class.process (current_system.feature_flattener)
-										if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
-												-- Error already reported by the feature flattener.
-											had_error := True
-											set_fatal_error
-											l_convert_feature := Void
-										end
-									end
-									if l_convert_feature /= Void then
-											-- Insert the conversion feature call in the AST.
-										if l_convert_feature.is_convert_to then
-											create l_convert_to_expression.make (l_actual, l_convert_feature)
-											l_convert_expression := l_convert_to_expression
-											l_convert_name := l_convert_feature.name
-											l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
-											if l_conversion_query /= Void then
-												report_qualified_call_expression (l_convert_to_expression, l_actual_context, l_conversion_query)
-											else
-													-- Internal error: the seed of the convert feature should correspond
-													-- to a query of `l_convert_class'.
-												set_fatal_error
-												error_handler.report_giaaa_error
-											end
-										elseif l_convert_feature.is_convert_from then
-											l_formal_named_type := l_formal_context.named_type
-											create l_convert_from_expression.make (l_formal_named_type, l_convert_feature, l_actual)
-											l_convert_expression := l_convert_from_expression
-											l_convert_name := l_convert_feature.name
-											l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
-											if l_conversion_procedure /= Void then
-												report_creation_expression (l_convert_from_expression, l_formal_named_type, l_conversion_procedure)
-											else
-													-- Internal error: the seed of the convert feature should correspond
-													-- to a procedure of `l_convert_class'.
-												set_fatal_error
-												error_handler.report_giaaa_error
-											end
-										else
-											l_formal_named_type := l_formal_context.named_type
-											create l_convert_builtin_expression.make (l_formal_named_type, l_convert_feature, l_actual)
-											l_convert_expression := l_convert_builtin_expression
-											report_builtin_conversion (l_convert_builtin_expression, l_formal_named_type)
-										end
-										an_expression.set_right (l_convert_expression)
-										l_actual := l_convert_expression
-									end
+									check implementation_class: current_class = current_class_impl end
+									an_expression.set_right (l_convert_expression)
+									l_actual := l_convert_expression
 								else
 									had_error := True
 										-- Infix feature convertibility: try to convert
@@ -5639,67 +5450,15 @@ feature {NONE} -- Expression validity
 													-- Now we need to find out whether it is possible to
 													-- convert the left-hand-side to the type of the right-
 													-- hand-side.
-												l_convert_feature := l_target.manifest_constant_convert_feature (l_formal_context, l_actual_context, current_system)
-												if l_convert_feature = Void then
-													l_convert_feature := type_checker.convert_feature (l_formal_context, l_actual_context)
-												end
-												if l_convert_feature /= Void then
-													if l_convert_feature.is_convert_from then
-														l_convert_class := l_actual_context.base_class
-													elseif l_convert_feature.is_convert_to then
-														l_convert_class := l_formal_context.base_class
-													else
-														l_convert_class := Void
-													end
-													if l_convert_class /= Void then
-														l_convert_class.process (current_system.feature_flattener)
-														if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
-																-- Error already reported by the feature flattener.
-															set_fatal_error
-															l_convert_feature := Void
-														end
-													end
-													if l_convert_feature /= Void then
-														if l_convert_feature.is_convert_to then
-															create l_convert_to_expression.make (l_target, l_convert_feature)
-															l_convert_expression := l_convert_to_expression
-															l_convert_name := l_convert_feature.name
-															l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
-															if l_conversion_query /= Void then
-																report_qualified_call_expression (l_convert_to_expression, l_formal_context, l_conversion_query)
-																create l_cast_expression.make (l_convert_to_expression, l_actual_context.named_type)
-																l_cast_expression.set_index (l_convert_to_expression.index)
-															else
-																	-- Internal error: the seed of the convert feature should correspond
-																	-- to a query of `l_convert_class'.
-																set_fatal_error
-																error_handler.report_giaaa_error
-															end
-														elseif l_convert_feature.is_convert_from then
-															l_actual_named_type := l_actual_context.named_type
-															create l_convert_from_expression.make (l_actual_named_type, l_convert_feature, l_target)
-															l_convert_expression := l_convert_from_expression
-															l_convert_name := l_convert_feature.name
-															l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
-															if l_conversion_procedure /= Void then
-																report_creation_expression (l_convert_from_expression, l_actual_named_type, l_conversion_procedure)
-																create l_cast_expression.make (l_convert_expression, l_actual_named_type)
-																l_cast_expression.set_index (l_convert_expression.index)
-															else
-																	-- Internal error: the seed of the convert feature should correspond
-																	-- to a procedure of `l_convert_class'.
-																set_fatal_error
-																error_handler.report_giaaa_error
-															end
-														else
-															l_actual_named_type := l_actual_context.named_type
-															create l_convert_builtin_expression.make (l_actual_named_type, l_convert_feature, l_target)
-															l_convert_expression := l_convert_builtin_expression
-															report_builtin_conversion (l_convert_builtin_expression, l_actual_named_type)
-															create l_cast_expression.make (l_convert_expression, l_actual_named_type)
-															l_cast_expression.set_index (l_convert_expression.index)
-														end
-													end
+												l_convert_expression := convert_expression (l_target, l_formal_context, l_actual_context)
+												if has_fatal_error then
+													had_error := True
+												elseif l_convert_expression /= Void then
+														-- Insert the conversion feature call in the AST.
+														-- Convertibility should be resolved in the implementation class.
+													check implementation_class: current_class = current_class_impl end
+													create l_cast_expression.make (l_convert_expression, l_actual_context.named_type)
+													l_cast_expression.set_index (l_convert_expression.index)
 												else
 														-- If the left-hand-side does not convert to the type
 														-- of the right-hand-side, it might conform!
@@ -8257,15 +8016,7 @@ feature {NONE} -- Expression validity
 			i, nb: INTEGER
 			l_actual_named_type: ET_NAMED_TYPE
 			l_formal_named_type: ET_NAMED_TYPE
-			l_convert_feature: ET_CONVERT_FEATURE
-			l_conversion_query: ET_QUERY
-			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
-			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
-			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
-			l_convert_class: ET_CLASS
-			l_convert_name: ET_FEATURE_NAME
 			l_expression_comma: ET_EXPRESSION_COMMA
 			l_formal_context: ET_NESTED_TYPE_CONTEXT
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
@@ -8320,6 +8071,7 @@ feature {NONE} -- Expression validity
 			else
 				l_actual_context := new_context (current_type)
 				l_formal_context := a_context
+				l_actual_list ?= an_actuals
 				nb := an_actuals.count
 				from i := 1 until i > nb loop
 					l_actual := an_actuals.actual_argument (i)
@@ -8331,75 +8083,21 @@ feature {NONE} -- Expression validity
 					elseif not l_actual_context.conforms_to_context (l_formal_context) then
 							-- The actual type does not conform to the format type.
 							-- Try to find out whether it converts to it.
-						if current_class /= current_class_impl then
-								-- Convertibility should be resolved in the implementation class.
-							l_convert_feature := Void
-						elseif l_actual_list /= Void then
-							l_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
-						else
-							l_actual_list ?= an_actuals
-							if l_actual_list /= Void then
-								l_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
-							end
+						l_convert_expression := Void
+						if l_actual_list /= Void then
+							l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
 						end
-						if l_convert_feature /= Void then
-							if l_convert_feature.is_convert_from then
-								l_convert_class := l_formal_context.base_class
-							elseif l_convert_feature.is_convert_to then
-								l_convert_class := l_actual_context.base_class
+						if has_fatal_error then
+							had_error := True
+						elseif l_convert_expression /= Void then
+								-- Insert the conversion feature call in the AST.
+								-- Convertibility should be resolved in the implementation class.
+							check implementation_class: current_class = current_class_impl end
+							l_expression_comma ?= l_actual_list.item (i)
+							if l_expression_comma /= Void then
+								l_expression_comma.set_expression (l_convert_expression)
 							else
-								l_convert_class := Void
-							end
-							if l_convert_class /= Void then
-								l_convert_class.process (current_system.feature_flattener)
-								if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
-										-- Error already reported by the feature flattener.
-									had_error := True
-									set_fatal_error
-									l_convert_feature := Void
-								end
-							end
-							if l_convert_feature /= Void then
-									-- Insert the conversion feature call in the AST.
-								if l_convert_feature.is_convert_to then
-									create l_convert_to_expression.make (l_actual, l_convert_feature)
-									l_convert_expression := l_convert_to_expression
-									l_convert_name := l_convert_feature.name
-									l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
-									if l_conversion_query /= Void then
-										report_qualified_call_expression (l_convert_to_expression, l_actual_context, l_conversion_query)
-									else
-											-- Internal error: the seed of the convert feature should correspond
-											-- to a query of `a_convert_class'.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									end
-								elseif l_convert_feature.is_convert_from then
-									l_formal_named_type := l_formal_context.named_type
-									create l_convert_from_expression.make (l_formal_named_type, l_convert_feature, l_actual)
-									l_convert_expression := l_convert_from_expression
-									l_convert_name := l_convert_feature.name
-									l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
-									if l_conversion_procedure /= Void then
-										report_creation_expression (l_convert_from_expression, l_formal_named_type, l_conversion_procedure)
-									else
-											-- Internal error: the seed of the convert feature should correspond
-											-- to a procedure of `l_convert_class'.
-										set_fatal_error
-										error_handler.report_giaaa_error
-									end
-								else
-									l_formal_named_type := l_formal_context.named_type
-									create l_convert_builtin_expression.make (l_formal_named_type, l_convert_feature, l_actual)
-									l_convert_expression := l_convert_builtin_expression
-									report_builtin_conversion (l_convert_builtin_expression, l_formal_named_type)
-								end
-								l_expression_comma ?= l_actual_list.item (i)
-								if l_expression_comma /= Void then
-									l_expression_comma.set_expression (l_convert_expression)
-								else
-									l_actual_list.put (l_convert_expression, i)
-								end
+								l_actual_list.put (l_convert_expression, i)
 							end
 						elseif
 							current_system.is_ise and current_class /= current_class_impl and
@@ -10025,15 +9723,7 @@ feature {NONE} -- Agent validity
 			had_error, had_type_error: BOOLEAN
 			l_actual_named_type: ET_NAMED_TYPE
 			l_formal_named_type: ET_NAMED_TYPE
-			l_convert_feature: ET_CONVERT_FEATURE
-			l_convert_name: ET_FEATURE_NAME
-			l_conversion_query: ET_QUERY
-			l_conversion_procedure: ET_PROCEDURE
 			l_convert_expression: ET_CONVERT_EXPRESSION
-			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
-			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
-			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
-			l_convert_class: ET_CLASS
 			l_argument_comma: ET_AGENT_ARGUMENT_OPERAND_COMMA
 			l_agent_type: ET_AGENT_TYPED_OPEN_ARGUMENT
 			l_actual_type: ET_TYPE
@@ -10129,69 +9819,20 @@ feature {NONE} -- Agent validity
 							if has_fatal_error then
 								-- Do nothing.
 							elseif not l_actual_context.conforms_to_context (l_formal_context) then
-								if current_class = current_class_impl then
-									l_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
-								else
+									-- The actual type does not conform to the format type.
+									-- Try to find out whether it converts to it.
+								l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
+								if has_fatal_error then
+									-- Nothing to be done.
+								elseif l_convert_expression /= Void then
+										-- Insert the conversion feature call in the AST.
 										-- Convertibility should be resolved in the implementation class.
-									l_convert_feature := Void
-								end
-								if l_convert_feature /= Void then
-									if l_convert_feature.is_convert_from then
-										l_convert_class := l_formal_context.base_class
-									elseif l_convert_feature.is_convert_to then
-										l_convert_class := l_actual_context.base_class
+									check implementation_class: current_class = current_class_impl end
+									l_argument_comma ?= l_actual_list.item (i)
+									if l_argument_comma /= Void then
+										l_argument_comma.set_agent_actual_argument (l_convert_expression)
 									else
-										l_convert_class := Void
-									end
-									if l_convert_class /= Void then
-										l_convert_class.process (current_system.feature_flattener)
-										if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
-												-- Error already reported by the feature flattener.
-											set_fatal_error
-											l_convert_feature := Void
-										end
-									end
-									if l_convert_feature /= Void then
-											-- Insert the conversion feature call in the AST.
-										if l_convert_feature.is_convert_to then
-											create l_convert_to_expression.make (l_actual, l_convert_feature)
-											l_convert_expression := l_convert_to_expression
-											l_convert_name := l_convert_feature.name
-											l_conversion_query := l_convert_class.seeded_query (l_convert_name.seed)
-											if l_conversion_query /= Void then
-												report_qualified_call_expression (l_convert_to_expression, l_actual_context, l_conversion_query)
-											else
-													-- Internal error: the seed of the convert feature should correspond
-													-- to a query of `l_convert_class'.
-												set_fatal_error
-												error_handler.report_giaaa_error
-											end
-										elseif l_convert_feature.is_convert_from then
-											l_formal_named_type := l_formal_context.named_type
-											create l_convert_from_expression.make (l_formal_named_type, l_convert_feature, l_actual)
-											l_convert_expression := l_convert_from_expression
-											l_convert_name := l_convert_feature.name
-											l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_name.seed)
-											if l_conversion_procedure /= Void then
-												report_creation_expression (l_convert_from_expression, l_formal_named_type, l_conversion_procedure)
-											else
-													-- Internal error: the seed of the convert feature should correspond
-													-- to a procedure of `l_convert_class'.
-												set_fatal_error
-												error_handler.report_giaaa_error
-											end
-										else
-											l_formal_named_type := l_formal_context.named_type
-											create l_convert_builtin_expression.make (l_formal_named_type, l_convert_feature, l_actual)
-											l_convert_expression := l_convert_builtin_expression
-											report_builtin_conversion (l_convert_builtin_expression, l_formal_named_type)
-										end
-										l_argument_comma ?= l_actual_list.item (i)
-										if l_argument_comma /= Void then
-											l_argument_comma.set_agent_actual_argument (l_convert_expression)
-										else
-											l_actual_list.put (l_convert_expression, i)
-										end
+										l_actual_list.put (l_convert_expression, i)
 									end
 								else
 									set_fatal_error
@@ -11109,6 +10750,92 @@ feature {NONE} -- Client/Supplier relationship
 			if supplier_handler /= Void then
 				supplier_handler.report_inline_agent_result_supplier (a_supplier, a_client, a_feature)
 			end
+		end
+
+feature {NONE} -- Conversion
+
+	convert_expression (a_source: ET_EXPRESSION; a_source_type, a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_EXPRESSION is
+			-- Conversion expresion to convert `a_source' of type `a_source_type' to `a_target_type';
+			-- Void if no such conversion expression.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_source_not_void: a_source /= Void
+			a_source_type_not_void: a_source_type /= Void
+			a_source_context_valid: a_source_type.is_valid_context
+			a_target_type_not_void: a_target_type /= Void
+			a_target_context_valid: a_target_type.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			l_convert_feature: ET_CONVERT_FEATURE
+			l_convert_class: ET_CLASS
+			l_convert_builtin_expression: ET_CONVERT_BUILTIN_EXPRESSION
+			l_convert_from_expression: ET_CONVERT_FROM_EXPRESSION
+			l_convert_to_expression: ET_CONVERT_TO_EXPRESSION
+			l_target_named_type: ET_NAMED_TYPE
+			l_conversion_procedure: ET_PROCEDURE
+			l_conversion_query: ET_QUERY
+		do
+			has_fatal_error := False
+			if current_class = current_class_impl then
+					-- Convertibility should be resolved in the implementation class.
+				l_convert_feature := type_checker.convert_feature (a_source_type, a_target_type)
+				if l_convert_feature = Void then
+						-- Check whether `a_source' is a non-explicitly typed manifest constant which
+						-- has a valid value for `a_target_type'. Useful when trying to convert the
+						-- left-and-side of a binary expression.
+					l_convert_feature := a_source.manifest_constant_convert_feature (a_source_type, a_target_type)
+				end
+				if l_convert_feature /= Void then
+					if l_convert_feature.is_convert_from then
+						l_convert_class := a_target_type.base_class
+						l_convert_class.process (current_system.feature_flattener)
+						if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
+								-- Error already reported by the feature flattener.
+							set_fatal_error
+						else
+							l_target_named_type := a_target_type.named_type
+							create l_convert_from_expression.make (l_target_named_type, l_convert_feature, a_source)
+							l_conversion_procedure := l_convert_class.seeded_procedure (l_convert_feature.name.seed)
+							if l_conversion_procedure /= Void then
+								report_creation_expression (l_convert_from_expression, l_target_named_type, l_conversion_procedure)
+								Result := l_convert_from_expression
+							else
+									-- Internal error: the seed of the convert feature should correspond
+									-- to a procedure of `l_convert_class'.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							end
+						end
+					elseif l_convert_feature.is_convert_to then
+						l_convert_class := a_source_type.base_class
+						l_convert_class.process (current_system.feature_flattener)
+						if not l_convert_class.features_flattened or else l_convert_class.has_flattening_error then
+								-- Error already reported by the feature flattener.
+							set_fatal_error
+						else
+							create l_convert_to_expression.make (a_source, l_convert_feature)
+							l_conversion_query := l_convert_class.seeded_query (l_convert_feature.name.seed)
+							if l_conversion_query /= Void then
+								report_qualified_call_expression (l_convert_to_expression, a_source_type, l_conversion_query)
+								Result := l_convert_to_expression
+							else
+									-- Internal error: the seed of the convert feature should correspond
+									-- to a query of `l_convert_class'.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							end
+						end
+					else
+							-- Built-in conversion.
+						l_target_named_type := a_target_type.named_type
+						create l_convert_builtin_expression.make (l_target_named_type, l_convert_feature, a_source)
+						report_builtin_conversion (l_convert_builtin_expression, l_target_named_type)
+						Result := l_convert_builtin_expression
+					end
+				end
+			end
+		ensure
+			implementation_class: Result /= Void implies (current_class = current_class_impl)
 		end
 
 feature {ET_AST_NODE} -- Processing

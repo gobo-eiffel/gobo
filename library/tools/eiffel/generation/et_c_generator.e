@@ -6854,6 +6854,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_source_type: ET_DYNAMIC_TYPE
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_temp: ET_IDENTIFIER
+			l_temp_index: INTEGER
+			l_assignment_target: ET_WRITABLE
 		do
 			l_convert_feature := an_expression.convert_feature
 			l_target_type_set := dynamic_type_set (an_expression)
@@ -6865,7 +6868,45 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 				an_expression.expression.process (Current)
 			else
 -- TODO: built-in feature between basic types? Should not be needed with ECMA Eiffel.
-				an_expression.expression.process (Current)
+				l_assignment_target := assignment_target
+				assignment_target := Void
+				print_operand (an_expression.expression)
+				fill_call_operands (1)
+				if in_operand then
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_indentation
+						print_writable (l_assignment_target)
+					else
+						l_temp := new_temp_variable (l_target_type)
+							-- We will set the index of `l_temp' later because
+							-- it could still be used in `call_operands'.
+						l_temp_index := an_expression.index
+						operand_stack.force (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
+					end
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+				end
+				print_type_cast (l_target_type, current_file)
+				current_file.put_character ('(')
+				print_expression (call_operands.item (1))
+				current_file.put_character (')')
+				if in_operand then
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
+				call_operands.wipe_out
+				if l_temp_index /= 0 then
+						-- We had to wait until this stage to set the index of `l_temp'
+						-- because it could have still been used in `call_operands'.
+					check l_temp_not_void: l_temp /= Void end
+					l_temp.set_index (l_temp_index)
+				end
 			end
 		end
 

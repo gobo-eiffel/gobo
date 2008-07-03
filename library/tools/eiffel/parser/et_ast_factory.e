@@ -2315,14 +2315,6 @@ feature -- AST nodes
 			-- Do nothing.
 		end
 
-	new_infix_cast_expression (an_expression: ET_EXPRESSION; a_type: ET_TYPE): ET_INFIX_CAST_EXPRESSION is
-			-- New infix cast expression
-		do
-			if an_expression /= Void and a_type /= Void then
-				create Result.make (an_expression, a_type)
-			end
-		end
-
 	new_infix_and_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_NAME is
 			-- New infix "and" feature name
 		do

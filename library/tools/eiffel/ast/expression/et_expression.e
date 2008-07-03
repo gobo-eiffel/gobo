@@ -107,13 +107,12 @@ feature -- Measurement
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_system: ET_SYSTEM): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when `Current' is a manifest constant with no explicit
-			-- type case and the value of the constant can be represented in `a_target_type.
+			-- type case and the value of the constant can be represented in `a_target_type'.
 			-- Void if no such feature or when not possible.	
 		require
-			a_system_not_void: a_system /= Void
 			a_source_type_not_void: a_source_type /= Void
 			a_source_context_valid: a_source_type.is_valid_context
 			a_target_type_not_void: a_target_type /= Void

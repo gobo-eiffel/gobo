@@ -977,8 +977,10 @@ feature {NONE} -- Expression processing
 			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			l_type := an_expression.type
-			a_context.force_last (l_type)
+			l_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
+			if not has_fatal_error then
+				a_context.force_last (l_type)
+			end
 		end
 
 	find_infix_expression_type (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is

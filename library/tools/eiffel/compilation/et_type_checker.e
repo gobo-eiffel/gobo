@@ -436,39 +436,6 @@ feature -- Type conversion
 				if a_target_base_class.is_preparsed and then a_target_base_class.current_system.is_dotnet and a_target_base_class = a_target_base_class.current_system.system_object_class then
 						-- Needed for Eiffel for .NET.
 					create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_source_named_type)
---				else
---						-- Needed for compatibility with ISE 5.6.0610:
---						-- a formal generic parameter either conforms or converts to its constraint,
---						-- then the converted version can still be chained with a conformance to
---						-- `a_target_type'.
---					a_formal_type ?= a_source_named_type
---					if a_formal_type /= Void then
---						an_index := a_formal_type.index
---						a_class := a_source_type.root_context.base_class
---						a_formals := a_class.formal_parameters
---						if a_formals /= Void and then an_index <= a_formals.count then
---							a_formal := a_formals.formal_parameter (an_index)
---							a_constraint := a_formal.constraint
---							if a_constraint /= Void then
---									-- We know that there is a constraint.
---								a_base_type := a_formal.constraint_base_type
---								if a_base_type /= Void then
---										-- There is no cycle of the form
---										-- "[G -> G]" or "[G -> H, H -> G]".
---									a_target_named_type := a_target_type.named_type
---									if a_base_type.conforms_to_type (a_target_named_type, a_target_type.root_context, a_source_type.root_context) then
---										create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_formal_type)
---									end
---								end
---							else
---								a_base_type := universe.any_class
---								a_target_named_type := a_target_type.named_type
---								if a_base_type.conforms_to_type (a_target_named_type, a_target_type.root_context, a_base_type) then
---									create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_formal_type)
---								end
---							end
---						end
---					end
 				end
 			end
 		end

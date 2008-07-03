@@ -5,7 +5,7 @@ indexing
 		"Test features of class KL_DOUBLE_ROUTINES"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,7 +54,7 @@ feature -- Test
 				-- Use values truncated to integer to avoid possible
 				-- precision problems when comparing double values.
 			assert_integers_equal ("log2_1", 1, r.truncated_to_integer (r.log2 (2.0)))
-			assert_integers_equal ("log2_2", 10, r.truncated_to_integer (r.log2 (1024)))
+			assert_integers_equal ("log2_2", 10, r.truncated_to_integer (r.log2 (1024.0)))
 		end
 
 	test_log10 is
@@ -105,8 +105,8 @@ feature -- Test
 			r: KL_DOUBLE_ROUTINES
 		do
 			create r
-			assert ("positive", r.plus_infinity > 0)
-			assert ("infinity1", r.plus_infinity - 1 = r.plus_infinity)
+			assert ("positive", r.plus_infinity > 0.0)
+			assert ("infinity1", r.plus_infinity - 0.1 = r.plus_infinity)
 		end
 
 	test_minus_infinity is
@@ -115,8 +115,8 @@ feature -- Test
 			r: KL_DOUBLE_ROUTINES
 		do
 			create r
-			assert ("negative", r.minus_infinity < 0)
-			assert ("infinity1", r.minus_infinity + 1 = r.minus_infinity)
+			assert ("negative", r.minus_infinity < 0.0)
+			assert ("infinity1", r.minus_infinity + 1.0 = r.minus_infinity)
 		end
 
 end
