@@ -1457,6 +1457,20 @@ feature {NONE} -- Feature generation
 					l_signature_result := external_dllwin_regexp.captured_substring (11)
 				end
 				print_external_dllwin_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_dll_file, l_signature_arguments, l_signature_result, a_feature.alias_clause)
+			elseif old_external_dllwin32_regexp.recognizes (l_language_string) then
+					-- Regexp: C "[" dllwin32 <dll_file> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+					-- \1: dll file
+					-- \2: has signature arguments
+					-- \3: signature arguments
+					-- \5: signature result
+				l_dll_file := old_external_dllwin32_regexp.captured_substring (1)
+				if old_external_dllwin32_regexp.match_count > 2 and then old_external_dllwin32_regexp.captured_substring_count (2) > 0 then
+					l_signature_arguments := old_external_dllwin32_regexp.captured_substring (3)
+					if old_external_dllwin32_regexp.match_count > 5 and then old_external_dllwin32_regexp.captured_substring_count (5) > 0 then
+						l_signature_result := old_external_dllwin32_regexp.captured_substring (5)
+					end
+				end
+				print_external_dllwin_body (a_feature.implementation_feature.name, l_arguments, l_result_type_set, l_dll_file, l_signature_arguments, l_signature_result, a_feature.alias_clause)
 			else
 print ("**** language not recognized: " + l_language_string + "%N")
 			end
@@ -25829,6 +25843,13 @@ feature {NONE} -- External regexp
 			-- \11: signature result
 			-- \18: include files
 
+	old_external_dllwin32_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- Regexp: C "[" dllwin32 <dll_file> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+			-- \1: dll file
+			-- \2: has signature arguments
+			-- \3: signature arguments
+			-- \5: signature result
+
 	make_external_regexps is
 			-- Create external regular expressions.
 		do
@@ -25862,6 +25883,9 @@ feature {NONE} -- External regexp
 				-- Regexp: [blocking] dllwin <dll_file> [signature ["(" {<type> "," ...}* ")"] [":" <type>]] [use {<include> "," ...}+]
 			create external_dllwin_regexp.make
 			external_dllwin_regexp.compile ("[ \t\r\n]*(blocking[ \t\r\n]+)?[Dd][Ll][Ll][Ww][Ii][Nn][ \t\r\n]+([^ \t\r\n]+)([ \t\r\n]+|$)(signature[ \t\r\n]*(\((([ \t\r\n]*[^ \t\r\n,)])+([ \t\r\n]*,([ \t\r\n]*[^ \t\r\n,)])+)*)?[ \t\r\n]*\))[ \t\r\n]*(:[ \t\r\n]*((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$)((u|us|use[^ \t\r\n<%"]+|[^u \t\r\n][^ \t\r\n]*|u[^s \t\r\n][^ \t\r\n]*|us[^e \t\r\n][^ \t\r\n]*)([ \t\r\n]+|$))*))?)?(use[ \t\r\n]*((.|\n)+))?")
+				-- Regexp: C "[" dllwin32 <dll_file> "]" ["(" {<type> "," ...}* ")"] [":" <type>]
+			create old_external_dllwin32_regexp.make
+			old_external_dllwin32_regexp.compile ("[ \t\r\n]*[Cc][ \t\r\n]*\[[ \t\r\n]*dllwin32[ \t\r\n]*([^]]+)\][ \t\r\n]*(\(([^)]*)\))?[ \t\r\n]*(:[ \t\r\n]*((.|\n)+))?")
 		ensure
 			external_c_regexp_not_void: external_c_regexp /= Void
 			external_c_regexp_compiled: external_c_regexp.is_compiled
@@ -25883,6 +25907,8 @@ feature {NONE} -- External regexp
 			external_cpp_inline_regexp_compiled: external_cpp_inline_regexp.is_compiled
 			external_dllwin_regexp_not_void: external_dllwin_regexp /= Void
 			external_dllwin_regexp_compiled: external_dllwin_regexp.is_compiled
+			old_external_dllwin32_regexp_not_void: old_external_dllwin32_regexp /= Void
+			old_external_dllwin32_regexp_compiled: old_external_dllwin32_regexp.is_compiled
 		end
 
 feature {NONE} -- Constants
@@ -26138,6 +26164,8 @@ invariant
 	external_cpp_inline_regexp_compiled: external_cpp_inline_regexp.is_compiled
 	external_dllwin_regexp_not_void: external_dllwin_regexp /= Void
 	external_dllwin_regexp_compiled: external_dllwin_regexp.is_compiled
+	old_external_dllwin32_regexp_not_void: old_external_dllwin32_regexp /= Void
+	old_external_dllwin32_regexp_compiled: old_external_dllwin32_regexp.is_compiled
 		--
 	split_threshold_positive: split_threshold > 0
 	system_name_not_void: system_name /= Void
