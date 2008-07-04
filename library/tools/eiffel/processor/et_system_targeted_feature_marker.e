@@ -318,6 +318,68 @@ feature -- Processing
 			a_system.classes_do_recursive (agent {ET_CLASS}.features_do_declared (agent {ET_FEATURE}.set_used (False)))
 		end
 
+	is_dependent_recursive (a_caller_feature: ET_FEATURE; a_caller_target_type: ET_BASE_TYPE; a_callee_feature: ET_FEATURE): BOOLEAN is
+			-- Does `a_caller_feature' from `a_caller_target_type' recursively depend
+			-- on `a_callee_feature' (either viewed from the class it has been
+			-- written in or one of its descendants that does not redefine it)?
+			--
+			-- A feature recursively depends on another feature if the latter might
+			-- be executed if the former is itself executed.
+			--
+			-- Side-effect: Features traversed during this process will be marked
+			-- as used. Note that marking a feature means that the query 'is_used'
+			-- of its 'implementation_feature' (i.e. feature in the class
+			-- it has been written) will be set to True.
+			--
+			-- It is assumed that the classes that the base class of
+			-- `a_target_type' recursively depends on have already been
+			-- marked as being part of the system. Use feature 'mark_system'
+			-- from class ET_SYSTEM_MARKER for that.
+			-- It is also assumed that the implementation checker (equivalent
+			-- of ISE's Degree 3 -- see ET_SYSTEM.implementation_checker
+			-- and ET_CLASS.implementation_checked) has been successfully
+			-- run on all these classes that have been marked as being part
+			-- of the system. Otherwise internal errors may be reported
+			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+		require
+			a_caller_feature_not_void: a_caller_feature /= Void
+			a_caller_target_type_not_void: a_caller_target_type /= Void
+			a_caller_target_type_valid: a_caller_target_type.is_valid_context
+			a_caller_target_class_preparsed: a_caller_target_type.base_class.is_preparsed
+			a_callee_feature_not_void: a_callee_feature /= Void
+		local
+			l_feature: ET_FEATURE
+			l_class: ET_CLASS
+			l_targeted_feature: ET_TARGETED_FEATURE
+			l_system: ET_SYSTEM
+			l_callee_feature_impl: ET_FEATURE
+		do
+			if not a_callee_feature.implementation_class.in_system then
+				Result := False
+			else
+				l_callee_feature_impl := a_callee_feature.implementation_feature
+				l_class := a_caller_target_type.base_class
+				l_system := l_class.current_system
+				unmark_all (l_system)
+				descendants_cache.wipe_out
+				used_features.wipe_out
+				create l_targeted_feature.make (a_caller_feature, l_class)
+				used_features.force_last (l_targeted_feature)
+				from used_features.start until used_features.after loop
+					l_targeted_feature := used_features.item_for_iteration
+					l_feature := l_targeted_feature.current_feature
+					l_class := l_targeted_feature.target_type.base_class
+					l_feature.implementation_feature.set_used (True)
+					if l_class.is_preparsed then
+						process_feature (l_feature, l_class)
+						Result := l_callee_feature_impl.is_used
+					end
+					used_features.forth
+				end
+				descendants_cache.wipe_out
+			end
+		end
+
 feature {NONE} -- Event handling
 
 	report_feature_called (a_feature: ET_FEATURE; a_base_class, a_descendant: ET_CLASS) is

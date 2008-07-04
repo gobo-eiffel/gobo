@@ -178,8 +178,8 @@ feature -- Processing
 			-- of its 'implementation_feature' (i.e. feature in the class
 			-- it has been written) will be set to True.
 			--
-			-- It is assumed that the classes that the base class of
-			-- `a_target_type' recursively depends on have already been
+			-- It is assumed that the classes that the 'implementation_class'
+			-- of `a_feature' recursively depends on have already been
 			-- marked as being part of the system. Use feature 'mark_system'
 			-- from class ET_SYSTEM_MARKER for that.
 			-- It is also assumed that the implementation checker (equivalent
@@ -269,8 +269,8 @@ feature -- Processing
 			-- of its 'implementation_feature' (i.e. feature in the class
 			-- it has been written) will be set to True.
 			--
-			-- It is assumed that the classes that the base class of
-			-- `a_target_type' recursively depends on have already been
+			-- It is assumed that the classes that the 'implementation_class'
+			-- of `a_feature' recursively depends on have already been
 			-- marked as being part of the system. Use feature 'mark_system'
 			-- from class ET_SYSTEM_MARKER for that.
 			-- It is also assumed that the implementation checker (equivalent
@@ -307,8 +307,8 @@ feature -- Processing
 			-- of its 'implementation_feature' (i.e. feature in the class
 			-- it has been written) will be set to True.
 			--
-			-- It is assumed that the classes that the base class of
-			-- `a_target_type' recursively depends on have already been
+			-- It is assumed that the classes that the 'implementation_class'
+			-- of `a_feature' recursively depends on have already been
 			-- marked as being part of the system. Use feature 'mark_system'
 			-- from class ET_SYSTEM_MARKER for that.
 			-- It is also assumed that the implementation checker (equivalent
@@ -328,6 +328,7 @@ feature -- Processing
 			l_feature := a_feature.implementation_feature
 			l_class := l_feature.implementation_class
 			process_feature (l_feature, l_class)
+			used_features.wipe_out
 		end
 
 	unmark_all (a_system: ET_SYSTEM) is
@@ -338,11 +339,108 @@ feature -- Processing
 			a_system.classes_do_recursive (agent {ET_CLASS}.features_do_declared (agent {ET_FEATURE}.set_used (False)))
 		end
 
-feature {NONE} -- Access
-
-	used_features: DS_ARRAYED_STACK [ET_FEATURE]
-			-- Features which have already been marked as used but
-			-- have not been traversed yet
+	is_dependent_recursive (a_caller_feature, a_callee_feature: ET_FEATURE): BOOLEAN is
+			-- Does `a_caller_feature' (when viewed from the class it has been
+			-- written in -- its 'implementation_class') recursively depend on
+			-- `a_callee_feature' (either viewed from the class it has been
+			-- written in or one of its descendants that does not redefine it)?
+			--
+			-- A feature recursively depends on another feature if the latter might
+			-- be executed if the former is itself executed.
+			--
+			-- Side-effect: Features traversed during this process will be marked
+			-- as used. Note that marking a feature means that the query 'is_used'
+			-- of its 'implementation_feature' (i.e. feature in the class
+			-- it has been written) will be set to True.
+			--
+			-- It is assumed that the classes that the 'implementation_class'
+			-- of `a_feature' recursively depends on have already been
+			-- marked as being part of the system. Use feature 'mark_system'
+			-- from class ET_SYSTEM_MARKER for that.
+			-- It is also assumed that the implementation checker (equivalent
+			-- of ISE's Degree 3 -- see ET_SYSTEM.implementation_checker
+			-- and ET_CLASS.implementation_checked) has been successfully
+			-- run on all these classes that have been marked as being part
+			-- of the system. Otherwise internal errors may be reported
+			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+		require
+			a_caller_feature_not_void: a_caller_feature /= Void
+			caller_implementation_class_preparsed: a_caller_feature.implementation_class.is_preparsed
+			a_callee_feature_not_void: a_callee_feature /= Void
+		local
+			l_feature: ET_FEATURE
+			l_callee_feature_impl: ET_FEATURE
+			l_class: ET_CLASS
+			l_system: ET_SYSTEM
+			i, nb: INTEGER
+			l_other_precursors: ET_FEATURE_LIST
+			j, nb2: INTEGER
+			l_redeclared_features: DS_ARRAYED_LIST [ET_FEATURE]
+		do
+			if not a_callee_feature.implementation_class.in_system then
+				Result := False
+			else
+				l_callee_feature_impl := a_callee_feature.implementation_feature
+				l_class := a_caller_feature.implementation_class
+				l_system := l_class.current_system
+				unmark_all (l_system)
+				used_features.wipe_out
+				l_feature := a_caller_feature.implementation_feature
+				l_feature.set_used (True)
+				used_features.force (l_feature)
+				from until used_features.is_empty or Result loop
+						-- Process features that have been marked but have not been traversed yet.
+					from until used_features.is_empty or l_callee_feature_impl.is_used loop
+						l_feature := used_features.item
+						used_features.remove
+						l_feature := l_feature.implementation_feature
+						l_class := l_feature.implementation_class
+						if l_class.is_preparsed then
+							process_feature (l_feature, l_class)
+							Result := l_callee_feature_impl.is_used
+						end
+					end
+					if not Result then
+							-- Mark as used the features that are redeclarations of features
+							-- which have themselves already been marked.
+						if l_redeclared_features = Void then
+							create l_redeclared_features.make (500000)
+							l_system.classes_do_if_recursive (agent add_redeclarations (?, l_redeclared_features), agent {ET_CLASS}.in_system)
+							nb := l_redeclared_features.count
+						end
+						from i := 1 until i > nb or Result loop
+							l_feature := l_redeclared_features.item (i)
+							if not l_feature.implementation_feature.is_used then
+								if l_feature.first_precursor.implementation_feature.is_used then
+									l_feature := l_feature.implementation_feature
+									l_feature.set_used (True)
+									used_features.force (l_feature)
+									Result := (l_feature = l_callee_feature_impl)
+								else
+									l_other_precursors := l_feature.other_precursors
+									if l_other_precursors /= Void or Result then
+										nb2 := l_other_precursors.count
+										from j := 1 until j > nb2 loop
+											if l_other_precursors.item (j).implementation_feature.is_used then
+												l_feature := l_feature.implementation_feature
+												l_feature.set_used (True)
+												used_features.force (l_feature)
+												Result := (l_feature = l_callee_feature_impl)
+												j := nb2 + 1
+											else
+												j := j + 1
+											end
+										end
+									end
+								end
+							end
+							i := i + 1
+						end
+					end
+				end
+				used_features.wipe_out
+			end
+		end
 
 feature {NONE} -- Event handling
 
@@ -496,6 +594,12 @@ feature {NONE} -- Event handling
 		do
 			report_feature_called (a_query)
 		end
+
+feature {NONE} -- Access
+
+	used_features: DS_ARRAYED_STACK [ET_FEATURE]
+			-- Features which have already been marked as used but
+			-- have not been traversed yet
 
 feature {NONE} -- Implementation
 
