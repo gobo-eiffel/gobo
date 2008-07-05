@@ -2091,6 +2091,7 @@ feature {ET_AST_NODE} -- Processing
 			l_class: ET_CLASS
 			l_procedure: ET_PROCEDURE
 			l_context: ET_NESTED_TYPE_CONTEXT
+			l_name: ET_CALL_NAME
 			had_error: BOOLEAN
 		do
 			reset_fatal_error (False)
@@ -2102,20 +2103,23 @@ feature {ET_AST_NODE} -- Processing
 				process_actual_arguments (l_arguments)
 				had_error := had_error or has_fatal_error
 			end
-			l_context := current_context
-			l_context.reset (current_type)
-			find_expression_type (l_target, l_context)
-			if not has_fatal_error then
-				l_class := l_context.base_class
-				l_seed := a_call.name.seed
-				l_procedure := l_class.seeded_procedure (l_seed)
-				if l_procedure = Void then
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					report_qualified_call_instruction (a_call, l_context, l_procedure)
+			l_name := a_call.name
+			if not l_name.is_tuple_label then
+				l_context := current_context
+				l_context.reset (current_type)
+				find_expression_type (l_target, l_context)
+				if not has_fatal_error then
+					l_class := l_context.base_class
+					l_seed := a_call.name.seed
+					l_procedure := l_class.seeded_procedure (l_seed)
+					if l_procedure = Void then
+							-- This error should have already been reported when checking
+							-- `current_feature' (using ET_FEATURE_CHECKER for example).
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						report_qualified_call_instruction (a_call, l_context, l_procedure)
+					end
 				end
 			end
 			reset_fatal_error (had_error or has_fatal_error)
