@@ -59,7 +59,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_configuration: like configuration; a_executable: like executable; a_factory: like transformer_factory) is
+	make (a_configuration: like configuration; a_executable: like executable; a_factory: like transformer_factory; a_timer: like timer) is
 			-- Establish invariant.
 		require
 			a_configuration_not_void: a_configuration /= Void
@@ -88,10 +88,12 @@ feature {NONE} -- Initialization
 			create current_date_time.make (l_date_time, l_time_zone)
 			create remembered_numbers.make_default
 			create response_streams.make_with_equality_testers (7, Void, string_equality_tester)
+			timer := a_timer
 		ensure
 			configuration_set: configuration = a_configuration
 			executable_set: executable = a_executable
 			transformer_factory_set: transformer_factory = a_factory
+			timer_set: timer = a_timer
 		end
 
 feature -- Access
@@ -104,6 +106,9 @@ feature -- Access
 
 	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			-- Transformer factory
+	
+	timer: XM_XSLT_TIMING
+			-- Timing facility
 
 	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
 
@@ -648,8 +653,15 @@ feature -- Transformation
 					l_parser := new_parser
 					create a_uri.make (a_source.uri_reference)
 					l_builder := new_builder (l_parser, a_source.uri_reference, a_uri)
+					if timer /= Void then
+						timer.time_document_building
+					end
 					a_source.send (l_parser, new_stripper (l_builder), a_uri, False)
 					l_media_type := a_source.media_type
+					if timer /= Void then
+						timer.mark_document_built
+						configuration.error_reporter.report_error_message ("Time to build " + a_uri.full_reference + " was " + timer.document_build_time.precise_out + " seconds")
+					end
 					if l_builder.has_error then
 						create l_error.make_from_string (l_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
 						report_fatal_error (l_error)
@@ -696,6 +708,10 @@ feature -- Transformation
 			end
 			if not is_error and then configuration.final_execution_phase = Run_to_completion then
 				transform_document (l_start_node, a_result)
+				if timer /= Void then
+					timer.mark_transformation_finished
+					configuration.error_reporter.report_error_message ("Time to transform " + a_uri.full_reference + " was " + timer.transformation_time.precise_out + " seconds")
+				end
 			end
 			configuration.reset_entity_resolver
 		end

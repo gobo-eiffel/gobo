@@ -574,6 +574,9 @@ feature -- Element change
 			l_executable: XM_XSLT_EXECUTABLE
 			l_uri: UT_URI
 		do
+			if transformer.timer /= Void then
+				transformer.timer.time_document_building
+			end
 			is_build_document_error := False
 			last_parsed_document := Void
 			last_parsed_media_type := Void
@@ -598,6 +601,10 @@ feature -- Element change
 						l_executable := transformer.executable
 					end
 				end
+			end
+			if transformer.timer /= Void then
+				transformer.timer.mark_document_built
+				transformer.configuration.error_reporter.report_error_message ("Time to build " + a_uri_reference + " was " + transformer.timer.document_build_time.precise_out + " seconds")
 			end
 			transformer.configuration.reset_entity_resolver
 		end

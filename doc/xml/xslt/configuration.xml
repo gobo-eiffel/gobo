@@ -143,6 +143,19 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
+      	<varlistentry>
+	  <term><featurename>set_timing (on_or_off: BOOLEAN)</featurename></term>
+	  <listitem>
+	    <para>
+	      Turns the timing facility on or off.
+	    </para>
+	    <para>
+	      If the timing facility is on, then each execution phase
+	      and build of a document tree prints timing information
+	      on the standard error stream.
+	    </para>
+	  </listitem>
+	</varlistentry>
      	<varlistentry>
 	  <term><featurename>use_tiny_tree_model (true_or_false: BOOLEAN)</featurename></term>
 	  <listitem>

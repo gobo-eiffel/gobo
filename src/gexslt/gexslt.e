@@ -165,6 +165,9 @@ feature -- Status report
 
 	is_timed_tracing: BOOLEAN
 			-- Are trace timings requested?
+	
+	is_timing: BOOLEAN
+			-- Is timing requested?
 
 feature -- Setting
 
@@ -689,6 +692,8 @@ feature {NONE} -- Implementation
 				end
 			elseif an_option.substring_index ("suppress-xpath-tracing", 1) = 1 then
 				configuration.suppress_trace_output (True)
+			elseif an_option.substring_index ("time", 1) = 1 then
+				is_timing := True
 			elseif an_option.substring_index ("trace", 1) = 1 then
 				is_tracing := True
 				is_timed_tracing := False
@@ -795,6 +800,9 @@ feature {NONE} -- Implementation
 				configuration.set_tiny_tree_estimates (estimated_nodes, estimated_attributes, estimated_namespaces, estimated_characters)
 			end
 			configuration.set_line_numbering (is_line_numbering)
+			if is_timing then
+				configuration.set_timing (True)
+			end
 			if is_tracing then set_trace_handler end
 			if highly_secure then configuration.output_resolver.security_manager.set_high_security (True) end
 			if not suppress_output_extensions then

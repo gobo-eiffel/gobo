@@ -645,6 +645,14 @@
     <title>Miscellaneous</title>
     <variablelist>
       <varlistentry>
+	<term>--time</term>
+	<listitem>
+	  <para>
+	   Print timing information for each phase on standard error stream.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
 	<term>--suppress-dtd</term>
 	<listitem>
 	  <para>

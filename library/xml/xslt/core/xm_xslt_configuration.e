@@ -118,6 +118,9 @@ feature -- Access
 
 	is_reporting_tiny_tree_statistics: BOOLEAN
 			-- Do we report statistics on tiny-tree source documents?
+	
+	is_timing: BOOLEAN
+			-- Should timings be written to standard error cstream?
 
 	recovery_policy: INTEGER is
 			-- Recovery policy when warnings or errors are encountered
@@ -390,6 +393,14 @@ feature -- Element change
 			is_dtd_suppressed := True
 		ensure
 			dtd_suppressed: is_dtd_suppressed
+		end
+	
+	set_timing (a_status: BOOLEAN) is
+			-- Set `is_timing' to `a_status'.
+		do
+			is_timing := a_status
+		ensure
+			is_timing_set: is_timing = a_status
 		end
 
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation

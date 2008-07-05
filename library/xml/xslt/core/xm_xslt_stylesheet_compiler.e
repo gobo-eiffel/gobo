@@ -292,13 +292,13 @@ feature -- Compilation
 
 feature -- Creation
 
-	new_transformer (a_factory: XM_XSLT_TRANSFORMER_FACTORY): XM_XSLT_TRANSFORMER is
+	new_transformer (a_factory: XM_XSLT_TRANSFORMER_FACTORY; a_timer: XM_XSLT_TIMING): XM_XSLT_TRANSFORMER is
 			-- New transformer for this stylesheet
 		require
 			executable: executable /= Void
 			a_factory_not_void: a_factory /= Void
 		do
-			create Result.make (configuration, executable, a_factory)
+			create Result.make (configuration, executable, a_factory, a_timer)
 		ensure
 			result_not_void: Result /= Void
 		end

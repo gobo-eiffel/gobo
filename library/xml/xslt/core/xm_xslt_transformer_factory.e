@@ -102,11 +102,18 @@ feature -- Creation
 		local
 			l_compiler: XM_XSLT_STYLESHEET_COMPILER
 			l_uri: UT_URI
+			l_timer: XM_XSLT_TIMING
 		do
 			was_error := False
 			create l_uri.make_resolve (a_uri, a_source.uri_reference)
+			if configuration.is_timing then
+				create l_timer.make
+			end
 			if is_stylesheet_cached (l_uri.full_reference) then
-				create created_transformer.make (configuration, cached_stylesheet (l_uri.full_reference), Current)
+				if l_timer /= Void then
+					l_timer.mark_compilation_finished
+				end
+				create created_transformer.make (configuration, cached_stylesheet (l_uri.full_reference), Current, l_timer)
 			else
 				create l_compiler.make (configuration)
 				l_compiler.prepare (a_source, a_uri)
@@ -117,8 +124,14 @@ feature -- Creation
 					if is_caching then
 						stylesheet_cache.force_new (l_compiler.executable, l_uri.full_reference)
 					end
-					created_transformer := l_compiler.new_transformer (Current)
+					created_transformer := l_compiler.new_transformer (Current, l_timer)
 				end
+				if l_timer /= Void then
+					l_timer.mark_compilation_finished
+				end
+			end
+			if l_timer /= Void then
+				configuration.error_reporter.report_error_message ("Compiling all modules lasted for " + l_timer.compile_time.precise_out + "seconds")
 			end
 		ensure
 			error_or_transformer_not_void: not was_error implies created_transformer /= Void
