@@ -127,7 +127,7 @@ feature -- Test
 			assert ("title 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "title"))
 			l_text ?= l_literal_result.first_child
 			assert ("xsl:text", l_text /= Void and then STRING_.same_string (l_text.string_value, "Untitled"))
-			
+
 			l_template ?= l_template.next_sibling
 			assert ("xsl:template 3", l_template /= Void)
 			l_literal_result ?= l_template.first_child
@@ -181,7 +181,7 @@ feature -- Test
 			l_literal_result ?= l_apply_templates.next_sibling
 			assert ("h2 3", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "h2"))
 			l_text ?= l_literal_result.first_child
-			assert ("xsl:text 8", l_text /= Void and then STRING_.same_string (l_text.string_value, "A complete list of books, grouped by category"))			
+			assert ("xsl:text 8", l_text /= Void and then STRING_.same_string (l_text.string_value, "A complete list of books, grouped by category"))
 			l_apply_templates ?= l_literal_result.next_sibling
 			assert ("xsl:apply-templates 3", l_apply_templates /= Void)
 			l_literal_result ?= l_apply_templates.next_sibling
@@ -212,7 +212,7 @@ feature -- Test
 			l_value_of ?= l_text.next_sibling
 			assert ("xsl:value-of 7", l_value_of /= Void)
 			l_literal_result ?= l_literal_result.next_sibling
-			assert ("table", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "table"))			
+			assert ("table", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "table"))
 			l_for_each ?= l_literal_result.first_child
 			assert ("xsl:for-each 3", l_for_each /= Void)
 			l_second_literal_result ?= l_for_each.first_child
@@ -255,7 +255,7 @@ feature -- Test
 			l_second_literal_result ?= l_value_of.next_sibling
 			assert ("br", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "br"))
 			l_text ?= l_second_literal_result.next_sibling
-			assert ("xsl:text 12", l_text /= Void and then STRING_.same_string (l_text.string_value, "%N                TITLE: "))			
+			assert ("xsl:text 12", l_text /= Void and then STRING_.same_string (l_text.string_value, "%N                TITLE: "))
 			l_literal_result ?= l_literal_result.next_sibling
 			assert ("hr 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "hr"))
 
@@ -268,7 +268,7 @@ feature -- Test
 			l_number ?= l_text.next_sibling
 			assert ("xsl:number 2", l_number /= Void)
 			l_literal_result ?= l_literal_result.next_sibling
-			assert ("table 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "table"))			
+			assert ("table 2", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "table"))
 			l_for_each ?= l_literal_result.first_child
 			assert ("xsl:for-each 5", l_for_each /= Void)
 			l_second_literal_result ?= l_for_each.first_child
@@ -280,10 +280,10 @@ feature -- Test
 			l_second_literal_result ?= l_second_literal_result.next_sibling
 			assert ("td 4", l_second_literal_result /= Void and then STRING_.same_string (l_second_literal_result.node_name, "td"))
 			l_value_of ?= l_second_literal_result.first_child
-			assert ("xsl:value-of 11", l_value_of /= Void)			
+			assert ("xsl:value-of 11", l_value_of /= Void)
 			l_literal_result ?= l_literal_result.next_sibling
 			assert ("hr 3", l_literal_result /= Void and then STRING_.same_string (l_literal_result.node_name, "hr"))
-			l_transformer := l_stylesheet_compiler.new_transformer (l_transformer_factory)
+			l_transformer := l_stylesheet_compiler.new_transformer (l_transformer_factory, Void)
 			assert ("transformer", l_transformer /= Void)
 		end
 
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
+
 	books_xsl_uri: UT_URI is
 			-- URI of file 'books.xsl'
 		local
