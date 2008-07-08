@@ -390,7 +390,7 @@ feature -- Processing
 				used_features.force (l_feature)
 				from until used_features.is_empty or Result loop
 						-- Process features that have been marked but have not been traversed yet.
-					from until used_features.is_empty or l_callee_feature_impl.is_used loop
+					from until used_features.is_empty or Result loop
 						l_feature := used_features.item
 						used_features.remove
 						l_feature := l_feature.implementation_feature
@@ -418,9 +418,9 @@ feature -- Processing
 									Result := (l_feature = l_callee_feature_impl)
 								else
 									l_other_precursors := l_feature.other_precursors
-									if l_other_precursors /= Void or Result then
+									if l_other_precursors /= Void then
 										nb2 := l_other_precursors.count
-										from j := 1 until j > nb2 loop
+										from j := 1 until j > nb2 or Result loop
 											if l_other_precursors.item (j).implementation_feature.is_used then
 												l_feature := l_feature.implementation_feature
 												l_feature.set_used (True)
