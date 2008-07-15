@@ -214,7 +214,8 @@ feature -- Test
 			name_sorter: DS_QUICK_SORTER [STRING]
 			expected_entries: ARRAY [STRING]
 			an_entry: STRING
-			dot_svn: STRING
+			svn_directory: STRING
+			vss_extension: STRING
 		do
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
@@ -222,7 +223,8 @@ feature -- Test
 			a_directory.open_read
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
-				dot_svn := ".svn"
+				svn_directory := ".svn"
+				vss_extension := ".scc"
 				from
 					create filenames.make (10)
 				until
@@ -232,9 +234,10 @@ feature -- Test
 					if not a_directory.end_of_input then
 						an_entry := a_directory.last_entry
 						if
-							not STRING_.same_string (an_entry, dot_svn) and
 							not STRING_.same_string (an_entry, file_system.relative_current_directory) and
-							not STRING_.same_string (an_entry, file_system.relative_parent_directory)
+							not STRING_.same_string (an_entry, file_system.relative_parent_directory) and
+							not STRING_.same_string (an_entry, svn_directory) and
+							not file_system.has_extension (an_entry, vss_extension)
 						then
 							filenames.force_last (an_entry)
 						end
@@ -529,16 +532,22 @@ feature -- Test
 			name_sorter: DS_QUICK_SORTER [STRING]
 			expected_entries: ARRAY [STRING]
 			i, nb: INTEGER
+			l_filename: STRING
+			vss_extension: STRING
 		do
 			a_name := data_dirname
 			a_name := Execution_environment.interpreted_string (a_name)
 			create a_directory.make (a_name)
 			filenames := a_directory.filenames
 			create filenames_list.make (filenames.count)
+			vss_extension := ".scc"
 			i := filenames.lower
 			nb := filenames.upper
 			from until i > nb loop
-				filenames_list.put_last (filenames.item (i))
+				l_filename := filenames.item (i)
+				if not file_system.has_extension (l_filename, vss_extension) then
+					filenames_list.put_last (l_filename)
+				end
 				i := i + 1
 			end
 			create name_sorter.make (string_comparator)
