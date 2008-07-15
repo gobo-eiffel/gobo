@@ -839,6 +839,7 @@ feature {NONE} -- Input
 		end
 
 	skip_after_blank_lines (a_file: KI_TEXT_INPUT_STREAM; a_text: STRING) is
+			-- Skip to end of line and following blank lines in `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
