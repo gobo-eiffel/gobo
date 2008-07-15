@@ -4,7 +4,8 @@ indexing
 
 		"Run 'pcretest'"
 
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	library: "Gobo Eiffel Regexp Library"
+	copyright: "Copyright (c) 2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,7 +14,13 @@ class RX_TEST_PCRETEST
 
 inherit
 
-	PROGRAM_TEST_CASE
+	TS_TEST_CASE
+		redefine
+			set_up, tear_down
+		end
+
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
 
 create
 
@@ -21,38 +28,70 @@ create
 
 feature -- Test
 
-	test_pcretest is
-			-- Run 'pcretest'.
+	test_test1 is
+			-- Run first test.
+		local
+			l_tester: PCRETEST
 		do
-			compile_program
-			assert_execute (program_exe + output_log)
-			if file_system.file_count (output_log_filename) = 0 then
-				assert ("no_output_log", True)
-			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
-					-- Free version of ISE Eiffel?
-				assert ("freeise_no_output_log", True)
-			else
-				assert_integers_equal ("no_output_log2", 0, file_system.file_count (output_log_filename))
-			end
-			assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+			create l_tester.make_tester
+			l_tester.execute_test (testinput1_filename, "out1", False)
 			assert_files_equal ("diff1", testoutput1_filename, "out1")
+		end
+
+	test_test2 is
+			-- Run second test.
+		local
+			l_tester: PCRETEST
+		do
+			create l_tester.make_tester
+			l_tester.execute_test (testinput2_filename, "out2", True)
 			assert_files_equal ("diff2", testoutput2_filename, "out2")
+		end
+
+	test_test3 is
+			-- Run third test.
+		local
+			l_tester: PCRETEST
+		do
+			create l_tester.make_tester
+			l_tester.execute_test (testinput3_filename, "out3", False)
 			assert_files_equal ("diff3", testoutput3_filename, "out3")
 		end
 
-feature -- Access
+feature -- Execution
 
-	program_name: STRING is "pcretest"
-			-- Program name
+	set_up is
+			-- Setup for a test.
+		local
+			a_testdir: STRING
+		do
+			a_testdir := testdir
+			-- assert (a_testdir + "_not_exists", not file_system.directory_exists (a_testdir))
+			old_cwd := file_system.cwd
+			file_system.create_directory (a_testdir)
+			assert (a_testdir + "_exists", file_system.directory_exists (a_testdir))
+			file_system.cd (a_testdir)
+		end
+
+	tear_down is
+			-- Tear down after a test.
+		do
+			if old_cwd /= Void then
+				file_system.cd (old_cwd)
+				-- file_system.recursive_delete_directory (testdir)
+				old_cwd := Void
+			end
+		end
+
+	old_cwd: STRING
+			-- Initial current working directory
+
+feature {NONE} -- Implementation
+
+	testdir: STRING is "Tpcretest"
+			-- Name of temporary directory where to run the test
 
 feature {NONE} -- Filenames
-
-	program_dirname: STRING is
-			-- Name of program source directory
-		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"test", "regexp", program_name>>)
-			Result := Execution_environment.interpreted_string (Result)
-		end
 
 	data_dirname: STRING is
 			-- Name of directory containing expected output files
@@ -62,6 +101,60 @@ feature {NONE} -- Filenames
 		ensure
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: Result.count > 0
+		end
+
+	testinput1_filename: STRING is
+			-- Name of first test input file
+		once
+			Result := file_system.pathname (data_dirname, "testinput1")
+		ensure
+			testinput1_filename_not_void: Result /= Void
+			testinput1_filename_not_empty: Result.count > 0
+		end
+
+	testinput2_filename: STRING is
+			-- Name of second test input file
+		once
+			Result := file_system.pathname (data_dirname, "testinput2")
+		ensure
+			testinput2_filename_not_void: Result /= Void
+			testinput2_filename_not_empty: Result.count > 0
+		end
+
+	testinput3_filename: STRING is
+			-- Name of third test input file
+		once
+			Result := file_system.pathname (data_dirname, "testinput3")
+		ensure
+			testinput3_filename_not_void: Result /= Void
+			testinput3_filename_not_empty: Result.count > 0
+		end
+
+	testinput4_filename: STRING is
+			-- Name of forth test input file
+		once
+			Result := file_system.pathname (data_dirname, "testinput4")
+		ensure
+			testinput4_filename_not_void: Result /= Void
+			testinput4_filename_not_empty: Result.count > 0
+		end
+
+	testinput5_filename: STRING is
+			-- Name of fifth test input file
+		once
+			Result := file_system.pathname (data_dirname, "testinput5")
+		ensure
+			testinput5_filename_not_void: Result /= Void
+			testinput5_filename_not_empty: Result.count > 0
+		end
+
+	testinput6_filename: STRING is
+			-- Name of sixth test input file
+		once
+			Result := file_system.pathname (data_dirname, "testinput6")
+		ensure
+			testinput6_filename_not_void: Result /= Void
+			testinput6_filename_not_empty: Result.count > 0
 		end
 
 	testoutput1_filename: STRING is

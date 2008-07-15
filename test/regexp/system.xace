@@ -30,7 +30,9 @@
 		<option name="case_insensitive" value="false"/>
 	</option>
 
-	<cluster name="rx_tester" location="${GOBO}/test/regexp"/>
+	<cluster name="rx_tester" location="${GOBO}/test/regexp">
+		<cluster name="pcretest"/>
+	</cluster>
 	<cluster name="rx_testgen" location="TESTGEN"/>
 	<cluster name="test_common" location="${GOBO}/test/common"/>
 	<mount location="${GOBO}/library/test/library.xace"/>

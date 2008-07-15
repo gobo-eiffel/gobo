@@ -28,17 +28,23 @@ inherit
 
 create
 
-	make
+	make, make_tester
 
 feature {NONE} -- Initialization
+
+	make_tester is
+			-- Create a new PCRE tester.
+		do
+			create error_handler.make_standard
+			create copy_string_mask.make (1, 32)
+			create get_string_mask.make (1, 32)
+		end
 
 	make is
 			-- Create a new PCRE tester and execute it.
 		do
 			Arguments.set_program_name ("pcretest")
-			create error_handler.make_standard
-			create copy_string_mask.make (1, 32)
-			create get_string_mask.make (1, 32)
+			make_tester
 			if Arguments.argument_count = 0 then
 				execute_test (testinput1_filename, "out1", False) -- 100% fits
 				execute_test (testinput2_filename, "out2", True)  -- 100% fits
