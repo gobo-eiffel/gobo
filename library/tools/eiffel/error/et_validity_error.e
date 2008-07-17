@@ -3240,7 +3240,7 @@ feature {NONE} -- Initialization
 			code := template_code (veen2b_template_code)
 			etl_code := veen2_etl_code
 			default_template := default_message_template (veen2b_default_template)
-			create parameters.make (1, 6)
+			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
