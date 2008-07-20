@@ -16,6 +16,11 @@ inherit
 
 	KL_PART_COMPARATOR [G]
 
+	KL_EQUALITY_TESTER [G]
+		redefine
+			test
+		end
+
 feature -- Status report
 
 	order_equal (u, v: G): BOOLEAN is
@@ -49,6 +54,20 @@ feature -- Status report
 			Result := not less_than (u, v)
 		ensure
 			definition: Result = (greater_than (u, v) or order_equal (u, v))
+		end
+
+	test (v, u: G): BOOLEAN is
+			-- Are `v' and `u' considered equal?
+		do
+			if v = u then
+				Result := True
+			elseif v = Void then
+				Result := False
+			elseif u = Void then
+				Result := False
+			else
+				Result := order_equal (u, v)
+			end
 		end
 
 end

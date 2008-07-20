@@ -5,7 +5,7 @@ indexing
 		"Cursors for sparse table traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,11 @@ class DS_SPARSE_TABLE_CURSOR [G, K]
 inherit
 
 	DS_SPARSE_CONTAINER_CURSOR [G, K]
+		redefine
+			container, next_cursor
+		end
+
+	DS_BILINEAR_TABLE_CURSOR [G, K]
 		redefine
 			container, next_cursor
 		end
@@ -32,8 +37,6 @@ feature -- Access
 
 	key: K is
 			-- Key at cursor position
-		require
-			not_off: not off
 		do
 			Result := container.cursor_key (Current)
 		end

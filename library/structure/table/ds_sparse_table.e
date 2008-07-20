@@ -6,7 +6,7 @@ indexing
 		%which should supply their hashing mechanisms."
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,13 @@ deferred class DS_SPARSE_TABLE [G, K]
 
 inherit
 
-	DS_TABLE [G, K]
+	DS_BILINEAR_TABLE [G, K]
 		rename
 			put as force,
 			put_new as force_new
+		undefine
+			has_item, occurrences, cursor_off,
+			key_for_iteration, initialized
 		end
 
 	DS_SPARSE_CONTAINER [G, K]
@@ -172,8 +175,6 @@ feature -- Access
 
 	key_for_iteration: K is
 			-- Key at internal cursor position
-		require
-			not_off: not off
 		do
 			Result := cursor_key (internal_cursor)
 		end
@@ -573,10 +574,6 @@ feature {DS_SPARSE_TABLE_CURSOR} -- Cursor implementation
 
 	cursor_key (a_cursor: like new_cursor): K is
 			-- Key at `a_cursor' position
-		require
-			a_cursor_not_void: a_cursor /= Void
-			a_cursor_valid: valid_cursor (a_cursor)
-			a_cursor_not_off: not cursor_off (a_cursor)
 		do
 			Result := key_storage_item (a_cursor.position)
 		end

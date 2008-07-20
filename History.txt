@@ -23,6 +23,11 @@ Version 3.9 - ?
 	* Fixed bug when generating ECF files from Xace files: the override
 	  clusters were not marked as such.
 
+	Gobo Eiffel Structure Library:
+
+	* Added set and table classes using binary search tree, AVL tree,
+	  red-black tree and left-leaning red-black tree algorithms.
+
 Version 3.8 - 11 May 2008
 
 	geant:
