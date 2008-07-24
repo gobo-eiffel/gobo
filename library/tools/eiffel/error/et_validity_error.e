@@ -269,6 +269,8 @@ create
 	make_gvkfe3a,
 	make_gvkfe4a,
 	make_gvkfe5a,
+	make_gvscn1a,
+	make_gvscn1b,
 	make_gvtcg5a,
 	make_gvtcg5b,
 	make_gvuaa0a,
@@ -11727,6 +11729,93 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
+	make_gvscn1a (a_class: ET_CLASS; a_name: ET_CLASS_NAME) is
+			-- Create a new GVSCN-1 error: the file `a_class.filename' is
+			-- supposed to contain a class of name `a_class.name', but it
+			-- actually contains a class of name `a_name'.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_in_cluster
+			a_name_not_void: a_name /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (gvscn1a_template_code)
+			etl_code := gvscn1_etl_code
+			default_template := default_message_template (gvscn1a_default_template)
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_class.group.full_lower_name ('/'), 7)
+			parameters.put (a_class.filename, 8)
+			parameters.put (a_name.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = group name
+			-- dollar8: $8 = filename
+			-- dollar9: $9 = name of class actually found in that file
+		end
+
+	make_gvscn1b (a_class: ET_CLASS) is
+			-- Create a new GVSCN-1 error: the file `a_class.filename' is
+			-- supposed to contain a class of name `a_class.name', but it
+			-- does not.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_in_cluster
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := null_position
+			code := template_code (gvscn1b_template_code)
+			etl_code := gvscn1_etl_code
+			default_template := default_message_template (gvscn1b_default_template)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_class.group.full_lower_name ('/'), 7)
+			parameters.put (a_class.filename, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = group name
+			-- dollar8: $8 = filename
+		end
+
 	make_gvtcg5a (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
 			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
@@ -12481,6 +12570,8 @@ feature {NONE} -- Implementation
 	gvkfe3a_default_template: STRING is "attribute `$7' in kernel class $5 has not the expected type '$8'."
 	gvkfe4a_default_template: STRING is "feature `$7' in kernel class $5 is not a procedure."
 	gvkfe5a_default_template: STRING is "feature `$7' in kernel class $5 is not a query."
+	gvscn1a_default_template: STRING is "file '$8' contains class $9 instead of the expected class $5."
+	gvscn1b_default_template: STRING is "file '$8' does not contain the expected class $5."
 	gvtcg5a_default_template: STRING is "actual generic parameter '$7' in type '$8' is not a reference type but the corresponding formal parameter is marked as reference."
 	gvtcg5b_default_template: STRING is "actual generic parameter '$7' in type '$8' is not expanded type but the corresponding formal parameter is marked as expanded."
 	gvuaa0a_default_template: STRING is "`$7' is a formal argument of feature `$8' and hence cannot have actual arguments."
@@ -12624,6 +12715,7 @@ feature {NONE} -- Implementation
 	gvkfe3_etl_code: STRING is "GVKFE-3"
 	gvkfe4_etl_code: STRING is "GVKFE-4"
 	gvkfe5_etl_code: STRING is "GVKFE-5"
+	gvscn1_etl_code: STRING is "GVSCN-1"
 	gvtcg5_etl_code: STRING is "GVTCG-5"
 	gvuaa_etl_code: STRING is "GVUAA"
 	gvual_etl_code: STRING is "GVUAL"
@@ -12897,6 +12989,8 @@ feature {NONE} -- Implementation
 	gvkfe3a_template_code: STRING is "gvkfe3a"
 	gvkfe4a_template_code: STRING is "gvkfe4a"
 	gvkfe5a_template_code: STRING is "gvkfe5a"
+	gvscn1a_template_code: STRING is "gvscn1a"
+	gvscn1b_template_code: STRING is "gvscn1b"
 	gvtcg5a_template_code: STRING is "gvtcg5a"
 	gvtcg5b_template_code: STRING is "gvtcg5b"
 	gvuaa0a_template_code: STRING is "gvuaa0a"

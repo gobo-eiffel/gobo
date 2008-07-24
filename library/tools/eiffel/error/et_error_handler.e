@@ -6002,6 +6002,43 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvscn1a_error (a_class: ET_CLASS; a_name: ET_CLASS_NAME) is
+			-- Report GVSCN-1 error: the file `a_class.filename' is
+			-- supposed to contain a class of name `a_class.name', but it
+			-- actually contains a class of name `a_name'.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_in_cluster
+			a_name_not_void: a_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvscn1_error (a_class) then
+				create an_error.make_gvscn1a (a_class, a_name)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvscn1b_error (a_class: ET_CLASS) is
+			-- Report GVSCN-1 error: the file `a_class.filename' is
+			-- supposed to contain a class of name `a_class.name', but it
+			-- does not.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_in_cluster
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvscn1_error (a_class) then
+				create an_error.make_gvscn1b (a_class)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvtcg5a_error (a_class: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
 			-- Report GVTCG-5 error: actual generic paramater `an_actual' of `a_type' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
@@ -7482,6 +7519,16 @@ feature -- Validity error status
 
 	reportable_gvkfe5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVKFE-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvscn1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVSCN-1 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

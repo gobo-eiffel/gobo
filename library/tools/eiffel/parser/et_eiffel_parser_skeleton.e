@@ -370,14 +370,9 @@ feature -- AST processing
 						end
 						a_file.open_read
 						if a_file.is_open_read then
---								-- Set `current_class' to unknown_class when calling `parse_file' to
---								-- make sure that the invariant 'current_class.is_preparsed' is not
---								-- violated by callbacks to current object.
---							current_class := tokens.unknown_class
 								-- Note that `parse_file' may change the value of `current_class'
 								-- if `a_file' contains a class other than `a_class'.
 							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
---							current_class := a_class
 							a_file.close
 							if not a_class.is_preparsed then
 									-- Make sure that `current_class' is as it was
@@ -388,8 +383,9 @@ feature -- AST processing
 							end
 							if not a_class.is_parsed then
 								if not syntax_error and current_system.preparse_multiple_mode then
--- TODO: ERROR: the file contains other classes, but not `current_class'.
+										-- The file contains other classes, but not `current_class'.
 									set_fatal_error (a_class)
+									error_handler.report_gvscn1b_error (a_class)
 								end
 							end
 						else
@@ -1621,6 +1617,8 @@ feature {NONE} -- AST factory
 		local
 			old_class: ET_CLASS
 			l_other_class: ET_CLASS
+			l_basename: STRING
+			l_class_name: ET_IDENTIFIER
 		do
 			if a_name /= Void then
 				Result := universe.eiffel_class (a_name)
@@ -1630,12 +1628,23 @@ feature {NONE} -- AST factory
 					Result := current_class
 				end
 				if not current_system.preparse_multiple_mode and then not current_class.is_unknown and then Result /= current_class then
--- TODO: ERROR: we are parsing another class.
+						-- We are parsing another class than the one we want to parse.
 					set_fatal_error (current_class)
+					error_handler.report_gvscn1a_error (current_class, a_name)
 						-- Stop the parsing.
 					accept
 				elseif current_system.preparse_shallow_mode and then current_class.is_unknown and then not file_system.basename (filename).as_lower.same_string (a_name.lower_name + ".e") then
--- TODO: ERROR: we are parsing another class.
+						-- The file does not contain the expected class
+						-- (whose name is supposed to match the filename).
+					l_other_class := Result.cloned_class
+					l_other_class.reset
+					l_other_class.set_filename (filename)
+					l_other_class.set_group (group)
+					l_basename := file_system.basename (filename)
+					create l_class_name.make (l_basename.substring (1, l_basename.count - 2))
+					l_other_class.set_name (l_class_name)
+					set_fatal_error (l_other_class)
+					error_handler.report_gvscn1a_error (l_other_class, a_name)
 						-- Stop the parsing.
 					accept
 				elseif Result.is_none then
