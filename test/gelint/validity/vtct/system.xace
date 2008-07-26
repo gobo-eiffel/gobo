@@ -25,10 +25,6 @@
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
 	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
-	</option>
 
 	<cluster name="vjar_tester" location="${GOBO}/test/gelint/validity/vtct"/>
 	<cluster name="vjar_testgen" location="TESTGEN"/>

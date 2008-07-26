@@ -20,11 +20,9 @@
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
-		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -48,10 +46,6 @@
 			<argument name="a_output" value=""/>
 		</geant>
 		<unset name="xace_format" if="${ISE_5_7}"/>
-		<geant target="xace">
-			<argument name="a_compiler" value="se"/>
-			<argument name="a_output" value=""/>
-		</geant>
 		<geant target="other_install"/>
 	</target>
 
@@ -134,21 +128,6 @@
 		</copy>
 	</target>
 
-	<target name="compile_se" depend="prepare_compile">
-		<description>
-			Compile '${system}' with SmartEiffel.
-			Compile in debug mode if ${debug} is defined.
-		</description>
-
-		<set name="eiffel" value="se"/>
-		<geant target="xace">
-			<argument name="a_compiler" value="se"/>
-			<argument name="a_output" value="compile_se.ace"/>
-		</geant>
-		<delete file="${system}${exe}"/>
-		<se ace="compile_se.ace"/>
-	</target>
-
 	<target name="compile_debug" depend="prepare_compile">
 		<description>
 			Compile '${system}' in debug mode.
@@ -176,16 +155,6 @@
 		</description>
 
 		<set name="eiffel" value="ise"/>
-		<set name="debug" value="true"/>
-		<geant target="compile"/>
-	</target>
-
-	<target name="compile_debug_se" depend="prepare_compile">
-		<description>
-			Compile '${system}' with SmartEiffel in debug mode.
-		</description>
-
-		<set name="eiffel" value="se"/>
 		<set name="debug" value="true"/>
 		<geant target="compile"/>
 	</target>
@@ -221,7 +190,6 @@
 		<delete file="ge.xace"/>
 		<delete file="ise.ace"/>
 		<delete file="ise.ecf"/>
-		<delete file="se.ace"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>

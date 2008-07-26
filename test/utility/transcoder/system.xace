@@ -3,7 +3,7 @@
 <system name="xtranscoder">
 	<description>
 		system: "Gobo Eiffel Utility Library Tester: Transcoder test suite"
-		copyright: "Copyright (c) 2005, colin Adams and others"
+		copyright: "Copyright (c) 2005-2008, colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -22,10 +22,6 @@
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
-	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
 	</option>
 
 	<cluster name="transcoder_tester" location="${GOBO}/test/utility/transcoder"/>

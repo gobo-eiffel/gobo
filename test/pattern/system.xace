@@ -3,7 +3,7 @@
 <system name="xpattern">
 	<description>
 		system: "Pattern tester"
-		copyright: "Copyright (c) 2002, Berend de Boer and others"
+		copyright: "Copyright (c) 2002-2008, Berend de Boer and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -24,10 +24,6 @@
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
-	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
 	</option>
 
 	<cluster name="dp_tester" location="${GOBO}/test/pattern"/>

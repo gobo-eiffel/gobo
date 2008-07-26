@@ -48,8 +48,6 @@
 		<geant target="gepp_deep"/>
 		<set name="eiffelcomp" value="ge"/>
 		<geant target="gepp_deep"/>
-		<set name="eiffelcomp" value="se"/>
-		<geant target="gepp_deep"/>
 	</target>
 
 	<target name="clean" depend="prepare">
@@ -88,4 +86,3 @@
 	</target>
 
 </project>
-

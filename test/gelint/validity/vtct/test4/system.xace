@@ -25,10 +25,6 @@
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
 	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
-	</option>
 
 	<cluster name="vtct_test4" location="${GOBO}/test/gelint/validity/vtct/test4"/>
 	<mount location="${GOBO}/library/kernel.xace"/>

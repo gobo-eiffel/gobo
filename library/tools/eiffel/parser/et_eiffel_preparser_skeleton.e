@@ -201,12 +201,7 @@ feature {NONE} -- Parsing
 				l_file := tmp_file
 				l_file.reset (a_filename)
 					-- Get time-stamp of the file.
-				if eiffel_compiler.is_se then
-						-- KL_FILE.time_stamp is too slow with SE.
-					l_time_stamp := -1
-				else
-					l_time_stamp := l_file.time_stamp
-				end
+				l_time_stamp := l_file.time_stamp
 					-- Scan Eiffel file `l_file' to find the name of the class it
 					-- contains. The file is supposed to contain exactly one class
 					-- unless `current_system.preparse_multiple_mode' is set.

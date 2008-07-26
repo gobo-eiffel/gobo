@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel package"
-# copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
+# copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -13,7 +13,7 @@
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v][--delivery] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | mingw | cc | icc | tcc | no_c"
-	echo "   eiffel_compiler:  ge | ise | se"
+	echo "   eiffel_compiler:  ge | ise"
 }
 
 if [ "$1" = "-v" ]; then
@@ -209,9 +209,6 @@ if [ "$EIF" = "ge" ]; then
 	export GOBO_EIFFEL
 elif [ "$EIF" = "ise" ]; then
 	GOBO_EIFFEL=ise
-	export GOBO_EIFFEL
-elif [ "$EIF" = "se" ]; then
-	GOBO_EIFFEL=se
 	export GOBO_EIFFEL
 else
 	echo "Unknown Eiffel compiler: $EIF"

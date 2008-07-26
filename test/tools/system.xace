@@ -19,17 +19,11 @@
 	<option if="${DEBUG}">
 		<option name="assertion" value="all"/>
 		<option name="garbage_collector" value="internal"/>
-			<!-- Generate too big C file with SmartEiffel -->
-		<option name="split" value="true" if="${GOBO_EIFFEL}=se"/>
 		<option name="finalize" value="false"/>
 	</option>
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
-	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
 	</option>
 
 	<cluster name="et_tester" location="${GOBO}/test/tools"/>

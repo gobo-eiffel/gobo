@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Infix Notation Calculator"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -26,13 +26,9 @@
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_se"/>
-		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
-		<echo message="   geant compile_debug_se"/>
-		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>

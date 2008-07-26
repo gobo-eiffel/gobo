@@ -8,7 +8,7 @@ To compile Gexace:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 'ge' or 'se'.
+   where <compiler> is either 'ise' or 'ge'.
 
 2. Run Gexace using:
 

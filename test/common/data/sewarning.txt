@@ -1,3 +1,0 @@
-****** Warning: Style warnings disabled. Note that some of these
-will be fatal errors in version 2.2
-------

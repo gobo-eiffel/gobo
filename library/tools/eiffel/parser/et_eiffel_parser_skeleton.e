@@ -240,12 +240,7 @@ feature -- Parsing
 									-- or has not been parsed yet. Let's parse it now.
 								a_file := tmp_file
 								a_file.reset (a_filename)
-								if eiffel_compiler.is_se then
-										-- KL_FILE.time_stamp is too slow with SE.
-									a_time_stamp := -1
-								else
-									a_time_stamp := a_file.time_stamp
-								end
+								a_time_stamp := a_file.time_stamp
 								a_file.open_read
 								if a_file.is_open_read then
 									parse_file (a_file, a_filename, a_time_stamp, a_cluster)
@@ -362,12 +357,7 @@ feature -- AST processing
 						current_class.reset_after_preparsed
 						a_file := tmp_file
 						a_file.reset (a_filename)
-						if eiffel_compiler.is_se then
-								-- KL_FILE.time_stamp is too slow with SE.
-							a_time_stamp := -1
-						else
-							a_time_stamp := a_file.time_stamp
-						end
+						a_time_stamp := a_file.time_stamp
 						a_file.open_read
 						if a_file.is_open_read then
 								-- Note that `parse_file' may change the value of `current_class'

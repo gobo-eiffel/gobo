@@ -25,10 +25,6 @@
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
 	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
-	</option>
 
 	<cluster name="vuex1_test1" location="${GOBO}/test/gelint/validity/vuex1/test2"/>
 	<mount location="${GOBO}/library/kernel.xace"/>

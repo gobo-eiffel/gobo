@@ -3,7 +3,7 @@
 <system name="xuri">
 	<description>
 		system: "Gobo Eiffel Utility Library Tester: URI test suite"
-		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -22,10 +22,6 @@
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
-	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
 	</option>
 
 	<cluster name="uri_tester" location="${GOBO}/test/utility/uri"/>

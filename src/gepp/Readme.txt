@@ -16,7 +16,7 @@ To compile this program:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 'ge' or 'se'.
+   where <compiler> is either 'ise' or 'ge'.
 
 3. Run Gepp using:
 

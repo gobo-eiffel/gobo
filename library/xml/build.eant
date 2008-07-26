@@ -5,7 +5,7 @@
 	<description>
 		description: "Eiffel Ant file for the Gobo Eiffel XML Library"
 		library: "Gobo Eiffel XML Library"
-		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -31,7 +31,6 @@
 
 		<geant target="xm_eiffel_scanner"/>
 		<geant target="xm_eiffel_parser"/>
-		<geant target="install_expat"/>
 	</target>
 
 	<target name="clean">
@@ -50,7 +49,6 @@
 		<delete file="parser/eiffel/xm_eiffel_scanner.e"/>
 		<delete file="parser/eiffel/xm_eiffel_parser.e"/>
 		<delete file="parser/eiffel/xm_eiffel_tokens.e"/>
-		<delete directory="parser/expat/spec"/>
 	</target>
 
 
@@ -62,14 +60,6 @@
 	
 	<target name="xm_eiffel_parser" dir="parser/eiffel">
 		<geyacc new_typing="true" input="xm_eiffel_parser.y" tokens="XM_EIFFEL_TOKENS" output="xm_eiffel_parser.e"/>
-	</target>
-
-	<target name="install_expat">
-		<geant target="ge2e">
-			<argument name="spec_dir" value="parser/expat/spec"/>
-			<argument name="gepp_dir" value="parser/expat"/>
-			<argument name="gepp_file" value="xm_expat_api"/>
-		</geant>
 	</target>
 
 </project>

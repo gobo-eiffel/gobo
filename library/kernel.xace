@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Xace file for the Eiffel compilers' kernel libraries"
-		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -69,22 +69,6 @@
 			<option name="exclude" value="german"/>
 			<option name="exclude" value="classic" if="${GOBO_DOTNET}"/>
 			<option name="exclude" value="dotnet" unless="${GOBO_DOTNET}"/>
-		</cluster>
-	</cluster>
-
-	<cluster name="se" if="${GOBO_EIFFEL}=se">
-		<option name="abstract" value="true"/>
-		<cluster name="se" location="${SmartEiffelDirectory}/lib">
-			<option name="abstract" value="true"/>
-			<cluster name="base"/>
-			<cluster name="io"/>
-			<cluster name="iterator"/>
-			<cluster name="kernel"/>
-			<cluster name="misc"/>
-			<cluster name="number"/>
-			<cluster name="random"/>
-			<cluster name="sorting"/>
-			<cluster name="time"/>
 		</cluster>
 	</cluster>
 

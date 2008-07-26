@@ -3,7 +3,7 @@
 <system name="xslt">
 	<description>
 		system: "Gobo Eiffel XSLT Library Tester: Eiffel XSLT test suite"
-		copyright: "Copyright (c) 2004, Colin Adams and others"
+		copyright: "Copyright (c) 2004-2008, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -37,12 +37,6 @@
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
-	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
-		<option name="c_compiler_options" value="-Od" if="${GOBO_OS}=windows"/>
-		<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
 	</option>
 	<!-- <option name="debug_tag" value="xml_parser"/> -->
 	<!-- <option name="debug_tag" value="XSLT content output"/> -->

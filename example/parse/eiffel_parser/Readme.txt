@@ -31,7 +31,7 @@ To compile this example:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 'ge' or 'se'.
+   where <compiler> is either 'ise' or 'ge'.
 
 5. Execute the Eiffel parser using
 

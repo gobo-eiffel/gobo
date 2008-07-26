@@ -24,19 +24,15 @@
 		<echo message="   geant test"/>
 		<echo message="   geant test_ge"/>
 		<echo message="   geant test_ise"/>
-		<echo message="   geant test_se"/>
 		<echo message="   geant test_debug"/>
 		<echo message="   geant test_debug_ge"/>
 		<echo message="   geant test_debug_ise"/>
-		<echo message="   geant test_debug_se"/>
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ge"/>
 		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ge"/>
 		<echo message="   geant compile_debug_ise"/>
-		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -89,16 +85,6 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_se" depend="init">
-		<description>
-			Test '${system}' with SmartEiffel.
-			Compile in debug mode if ${debug} is defined.
-		</description>
-
-		<set name="eiffel" value="se"/>
-		<geant target="test"/>
-	</target>
-
 	<target name="test_debug" depend="init">
 		<description>
 			Test '${system}' in debug mode.
@@ -130,16 +116,6 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug_se" depend="init">
-		<description>
-			Test '${system}' with SmartEiffel in debug mode.
-		</description>
-
-		<set name="eiffel" value="se"/>
-		<set name="debug" value="true"/>
-		<geant target="test"/>
-	</target>
-
 	<target name="clean" depend="init">
 		<description>
 			Remove intermediary generated files.
@@ -152,7 +128,6 @@
 		<delete file="compile_ge.xace"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
-		<delete file="compile_se.ace"/>
 		<delete>
 			<fileset include="vc*.pdb"/>
 		</delete>

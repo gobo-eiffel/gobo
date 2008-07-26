@@ -9,7 +9,7 @@ indexing
 		%are able to recognize '%%N', '%%R%%N' and '%%R' as line separators."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,15 +25,12 @@ inherit
 		end
 
 	KL_INPUT_FILE
-#ifdef ISE
 		redefine
 			string_name,
 			last_character,
 			last_string
 		end
-#endif
 
-#ifdef ISE
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
@@ -77,32 +74,11 @@ inherit
 			last_string
 		end
 
-#endif
-#ifdef SE
-	TEXT_FILE_READ
-		rename
-			make as old_make,
-			is_connected as old_is_open_read,
-			end_of_input as old_end_of_file,
-			last_character as old_last_character,
-			read_character as old_read_character,
-			unread_character as old_unread_character,
-			read_line as old_read_line,
-			disconnect as old_close
-		export
-			{TEXT_FILE_READ} old_close, old_is_open_read, end_reached, buffer, fill_buffer, buffer_size, old_read_character, old_end_of_file, old_last_character;
-			{NONE} all
-		undefine
-			last_string
-		end
-
-#endif
 create
 
 	make
 
 feature -- Access
-#ifdef ISE
 
 	last_character: CHARACTER
 			-- Last character read
@@ -113,7 +89,6 @@ feature -- Access
 			-- Therefore a clone should be used if the result
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
-#endif
 
 	eol: STRING is "%N"
 			-- Line separator
@@ -137,12 +112,7 @@ feature -- Input
 			if last_string = Void then
 				create last_string.make (256)
 			else
-#ifdef ISE
 				last_string.clear_all
-#endif
-#ifdef SE
-				last_string.wipe_out
-#endif
 			end
 			is_eof := True
 			a_target := last_string
@@ -185,12 +155,7 @@ feature -- Input
 			if last_string = Void then
 				create last_string.make (256)
 			else
-#ifdef ISE
 				last_string.clear_all
-#endif
-#ifdef SE
-				last_string.wipe_out
-#endif
 			end
 			read_character
 			if not end_of_file then
@@ -218,21 +183,9 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-#ifdef SE
-	old_open_read is
-			-- Open file in read-only mode.
-		do
-			if string_name /= Empty_name then
-				connect_to (string_name)
-			end
-		end
-
-#endif
-#ifdef ISE
 	string_name: STRING
 			-- Name of file (STRING version)
 
-#endif
 #ifdef GE
 feature {PLAIN_TEXT_FILE} -- Implementation
 

@@ -3,7 +3,7 @@
 <system name="xpath">
 	<description>
 		system: "Gobo Eiffel XPath Library Tester: Eiffel XPath test suite"
-		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -61,12 +61,6 @@
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
-	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
-		<option name="c_compiler_options" value="-Od" if="${GOBO_OS}=windows"/>
-		<option name="c_compiler_options" value="-O0" if="${GOBO_OS}=unix"/>
 	</option>
 
 	<cluster name="xpath_tester" location="${GOBO}/test/xml/xpath"/>

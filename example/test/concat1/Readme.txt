@@ -6,8 +6,8 @@ To run this test example:
 
     getest getest.<compiler>
 
-where <compiler> is either 'ge', 'ise' or 'se' depending
-on the Eiffel compiler used to compile the test suite. Alternatively
+where <compiler> is either 'ge' or 'ise' depending on the
+Eiffel compiler used to compile the test suite. Alternatively
 you can use the following shorthand:
 
      getest --<compiler>

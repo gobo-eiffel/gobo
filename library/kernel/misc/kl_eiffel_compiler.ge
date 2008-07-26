@@ -5,7 +5,7 @@ indexing
 		"Eiffel compiler used to compile this program"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,9 +26,8 @@ feature -- Access
 #else
 #ifdef ISE
 			Result := ise_vendor
-#endif
-#ifdef SE
-			Result := se_vendor
+#else
+			Result := unknown_vendor
 #endif
 #endif
 		ensure
@@ -41,6 +40,9 @@ feature -- Access
 	ise_vendor: STRING is "ise"
 			-- ISE Eiffel vendor
 
+	unknown_vendor: STRING is "unknown"
+			-- Unknown Eiffel vendor
+
 	hact_vendor: STRING is
 			-- Halstenbach vendor
 		obsolete
@@ -51,8 +53,15 @@ feature -- Access
 			vendor_not_void: Result /= Void
 		end
 
-	se_vendor: STRING is "se"
+	se_vendor: STRING is
 			-- SmartEiffel vendor
+		obsolete
+			"[080724] SE not supported anymore."
+		once
+			Result := "se"
+		ensure
+			vendor_not_void: Result /= Void
+		end
 
 	ve_vendor: STRING is
 			-- Visual Eiffel vendor
@@ -94,16 +103,18 @@ feature -- Status report
 
 	is_se: BOOLEAN is
 			-- Has this program been compiled with SmartEiffel?
+		obsolete
+			"[080724] SE not supported anymore."
 		once
-			Result := (vendor = se_vendor)
+			Result := False
 		ensure
-			definition: Result = (vendor = se_vendor)
+			definition: not Result
 		end
 
 	is_ve: BOOLEAN is
 			-- Has this program been compiled with Visual Eiffel?
 		obsolete
-			"[040922] VE not supported anymore."
+			"[080419] VE not supported anymore."
 		once
 			Result := False
 		ensure

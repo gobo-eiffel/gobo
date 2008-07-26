@@ -29,14 +29,12 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ANY_ROUTINES
 
-#ifdef ISE
 #ifdef GE
 	GE_EXECUTION_ENVIRONMENT
 
 #else
 	EXECUTION_ENVIRONMENT
 
-#endif
 #endif
 feature -- Access
 
@@ -46,14 +44,8 @@ feature -- Access
 			-- Note: If `a_variable' is a UC_STRING or descendant, then
 			-- the bytes of its associated UTF unicode encoding will
 			-- be used to query its value to the environment.
-#ifdef ISE
 		do
 			Result := environment_impl.get (STRING_.as_string (a_variable))
-#endif
-#ifdef SE
-		do
-			Result := environment_impl.get_environment_variable (STRING_.as_string (a_variable))
-#endif
 		end
 
 feature -- Setting
@@ -68,14 +60,8 @@ feature -- Setting
 			a_variable_not_void: a_variable /= Void
 			a_variable_not_empty: a_variable.count > 0
 			a_value_not_void: a_value /= Void
-#ifdef ISE
 		do
 			put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
-#endif
-#ifdef SE
-		do
-			environment_impl.set_environment_variable (STRING_.as_string (a_variable), STRING_.as_string (a_value))
-#endif
 		ensure
 			-- This setting may fail on certain platforms, hence the
 			-- following commented postcondition:
@@ -180,7 +166,6 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-#ifdef ISE
 	environment_impl: EXECUTION_ENVIRONMENT is
 			-- Execution environment impl
 		once
@@ -189,10 +174,4 @@ feature {NONE} -- Implementation
 			environment_impl_not_void: Result /= Void
 		end
 
-#endif
-#ifdef SE
-	environment_impl: SYSTEM
-			-- Execution environment impl
-
-#endif
 end

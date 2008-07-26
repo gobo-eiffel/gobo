@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Generate Eiffel files from .ge files"
-		copyright: "Copyright (c) 2001-2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -17,19 +17,15 @@
 		<description>
 			Generate Eiffel files to directory '${spec_dir}/[compiler]'
 			from '${gepp_dir}/${gepp_file}.ge', where [compiler] is
-			'ise', 'se' and 'ge'. Create spec directories if necessary.
+			'ise' and 'ge'. Create spec directories if necessary.
 		</description>
 
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ge/${gepp_file}.e" lines="true">
 			<define name="GE"/>
-			<define name="ISE"/>
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ise/${gepp_file}.e" lines="true">
 			<define name="ISE"/>
 			<define name="GOBO_DOTNET" if="${GOBO_DOTNET}"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/se/${gepp_file}.e" lines="true">
-			<define name="SE"/>
 		</gepp>
 	</target>
 

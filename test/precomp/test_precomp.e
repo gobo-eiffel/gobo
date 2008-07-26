@@ -66,14 +66,6 @@ feature -- Test
 			end
 		end
 
-	test_se is
-			-- Test precompilation with SmartEiffel.
-		do
-			if eiffel_compiler.is_se then
-				precomp_se
-			end
-		end
-
 feature -- Execution
 
 	tear_down is
@@ -142,64 +134,6 @@ feature {NONE} -- Precompilation
 			file_system.recursive_delete_directory (testdir)
 		end
 
-	precomp_se is
-			-- Test precompilation with SmartEiffel.
-		local
-			a_file: KL_TEXT_INPUT_FILE
-			a_line: STRING
-			a_dir: KL_DIRECTORY
-			a_dirname, a_filename: STRING
-		do
-			old_cwd := file_system.cwd
-			file_system.create_directory (testdir)
-			assert (testdir + "_exists", file_system.directory_exists (testdir))
-			file_system.cd (testdir)
-				-- Generate loadpath file.
-			assert_execute ("gexace --library=se " + xace_filename + output_log)
-				-- Eiffel precompilation.
-			create a_file.make ("loadpath.se")
-			a_file.open_read
-			if a_file.is_open_read then
-				from
-					a_file.read_line
-				until
-					a_file.end_of_file
-				loop
-					a_line := a_file.last_string
-					if a_line.has_substring ("GOBO") then
-						a_dirname := file_system.pathname_from_file_system (a_line, unix_file_system)
-						a_dirname := Execution_environment.interpreted_string (a_dirname)
-						create a_dir.make (a_dirname)
-						a_dir.open_read
-						if a_dir.is_open_read then
-							from
-								a_dir.read_entry
-							until
-								a_dir.end_of_input
-							loop
-								a_filename := a_dir.last_entry
-								if file_system.has_extension (a_filename, ".e") then
-									a_filename := file_system.pathname (a_dirname, a_filename)
-									assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
-									if file_system.file_count (error_log_filename) /= 0 then
-										assert_files_equal ("error_log_diff", se_warning_filename, error_log_filename)
-									end
-								end
-								a_dir.read_entry
-							end
-							a_dir.close
-						else
-							assert (a_dirname + "_open_read", False)
-						end
-					end
-					a_file.read_line
-				end
-				a_file.close
-			else
-				assert ("open_read1", False)
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	xace_filename: STRING is
@@ -210,16 +144,6 @@ feature {NONE} -- Implementation
 		ensure
 			xace_filename_not_void: Result /= Void
 			xace_filename_not_empty: Result.count > 0
-		end
-
-	se_warning_filename: STRING is
-			-- Name of file containing SE 1.2 warning
-		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"test", "common", "data", "sewarning.txt">>)
-			Result := Execution_environment.interpreted_string (Result)
-		ensure
-			se_warning_filename_not_void: Result /= Void
-			se_warning_filename_not_empty: Result.count > 0
 		end
 
 	testdir: STRING is "Tprecomp"

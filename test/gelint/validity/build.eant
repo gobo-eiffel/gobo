@@ -16,11 +16,9 @@
 		<echo message="   geant test"/>
 		<echo message="   geant test_ge"/>
 		<echo message="   geant test_ise"/>
-		<echo message="   geant test_se"/>
 		<echo message="   geant test_debug"/>
 		<echo message="   geant test_debug_ge"/>
 		<echo message="   geant test_debug_ise"/>
-		<echo message="   geant test_debug_se"/>
 		<echo message="   geant clean"/>
 		<echo message="   geant clobber"/>
 	</target>
@@ -37,7 +35,7 @@
 		<description>
 			Run Gobo tests.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'se' if this variable is not defined.
+			or 'ge' if this variable is not defined.
 		</description>
 
 		<geant target="do_all" arguments="test,true"/>
@@ -59,19 +57,11 @@
 		<geant target="do_all" arguments="test_ise,true"/>
 	</target>
 
-	<target name="test_se" depend="init">
-		<description>
-			Run Gobo tests with SmartEiffel.
-		</description>
-
-		<geant target="do_all" arguments="test_se,true"/>
-	</target>
-
 	<target name="test_debug" depend="init">
 		<description>
 			Run Gobo tests in debug mode.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'se' if this variable is not defined.
+			or 'ge' if this variable is not defined.
 		</description>
 
 		<geant target="do_all" arguments="test_debug,true"/>
@@ -91,14 +81,6 @@
 		</description>
 
 		<geant target="do_all" arguments="test_debug_ise,true"/>
-	</target>
-
-	<target name="test_debug_se" depend="init">
-		<description>
-			Run Gobo tests with SmartEiffel in debug mode.
-		</description>
-
-		<geant target="do_all" arguments="test_debug_se,true"/>
 	</target>
 
 	<target name="clean" depend="init">

@@ -29,26 +29,15 @@ inherit
 
 	KS_STRING
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory
-#endif
-#ifdef ISE
 		select
 				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from ANY instead.
 			is_equal
-#endif
 		end
 
 	STRING
 		rename
-#ifdef SE
-			prepend as old_prepend,
-			remove_prefix as old_remove_prefix,
-#endif
-#ifdef ISE
 			capacity as byte_capacity,
 			clear_all as old_clear_all,
 			left_adjust as old_left_adjust,
@@ -67,23 +56,14 @@ inherit
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
-#endif
 			set_count as old_set_count,
 			is_empty as old_is_empty
 		export
-#ifdef SE
-			{UC_STRING_HANDLER} storage, compare;
-#endif
-#ifdef ISE
 			{STRING}
 				share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal,
 				valid_code, to_string_32;
-#endif
 			{NONE} all
 		undefine
-#ifdef SE
-			compare,
-#endif
 			infix ">", infix "<=", infix ">=", max, min
 		redefine
 			make, make_from_string, make_empty, make_filled,
@@ -92,9 +72,7 @@ inherit
 			index_of, has, occurrences,
 			hash_code, remove, to_lower, to_upper,
 			three_way_comparison, item_code,
-#ifdef ISE
 			byte_capacity,
-#endif
 			has_substring, insert_character,
 			string, same_string, insert_string,
 			keep_head, keep_tail,
@@ -102,33 +80,21 @@ inherit
 			remove_substring,
 			as_lower, as_upper,
 			out, fill_with,
-#ifdef SE
-			is_equal, infix "<",
-			old_prepend, old_remove_prefix,
-#else
 			head, tail,
-#endif
 			infix "@",
-#ifdef ISE
 			count,
 			old_clear_all,
 			old_left_adjust,
 			old_right_adjust,
 			old_wipe_out,
 			code, append_code, put_code, has_code, index_of_code,
-#else
-			wipe_out,
-#endif
 			substring_index,
 			infix "+",
 			copy
-#ifdef ISE
 		select
 			put, item
-#endif
 		end
 
-#ifdef ISE
 	STRING
 		rename
 			item as old_item,
@@ -181,24 +147,17 @@ inherit
 			copy, infix "@"
 		end
 
-#endif
 	COMPARABLE
 		export
 			{NONE} all
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			three_way_comparison,
 			is_equal, copy, out
-#ifdef ISE
 		select
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			infix "<"
-#endif
 		end
 
 	KI_TEXT_OUTPUT_STREAM
@@ -210,10 +169,6 @@ inherit
 			True_constant as stream_true_constant,
 			False_constant as stream_false_constant
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		redefine
 			append_substring
@@ -221,64 +176,36 @@ inherit
 
 	UC_STRING_HANDLER
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		end
 
 	UC_IMPORTED_UNICODE_ROUTINES
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		end
 
 	UC_IMPORTED_UTF8_ROUTINES
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		end
 
 	UC_IMPORTED_UTF16_ROUTINES
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		end
 
 	UC_IMPORTED_UTF32_ROUTINES
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		end
 
 	DEBUG_OUTPUT
 		undefine
-#ifdef SE
-			out_in_tagged_out_memory,
-			fill_tagged_out_memory,
-#endif
 			is_equal, copy, out
 		end
 
@@ -298,7 +225,6 @@ feature -- Initialization
 			-- (Extended from ELKS 2001 STRING)
 		do
 			reset_byte_index_cache
-#ifdef ISE
 			count := 0
 			if suggested_capacity = 0 then
 					-- Make sure that the `area' is not shared.
@@ -306,14 +232,9 @@ feature -- Initialization
 			else
 				precursor (suggested_capacity)
 			end
-#else
-			precursor (suggested_capacity)
-#endif
-#ifdef ISE
 			set_count (byte_capacity)
 			old_set_count (byte_capacity)
 			set_count (0)
-#endif
 			byte_count := 0
 		ensure then
 			byte_count_set: byte_count = 0
@@ -1023,11 +944,7 @@ feature -- Access
 					i := next_byte_index (i)
 				end
 				if fit_in_string then
-#ifdef ISE
 					Result := string.hash_code
-#else
-					Result := precursor
-#endif
 				end
 			end
 			if Result < 0 then
@@ -1133,12 +1050,10 @@ feature -- Measurement
 			end
 		end
 
-#ifdef ISE
 	count: INTEGER
 			-- Number of characters
 			-- (ELKS 2001 STRING)
 
-#endif
 	byte_count: INTEGER
 			-- Number of bytes in internal storage
 
@@ -1146,11 +1061,7 @@ feature -- Measurement
 			-- Maximum number of bytes that can be put in
 			-- internal storage
 		do
-#ifdef SE
-			Result := capacity
-#else
 			Result := precursor
-#endif
 		end
 
 feature -- Status report
@@ -1200,7 +1111,7 @@ feature -- Status report
 			false_if_too_small: count < other.count implies not Result
 			true_if_initial: (count >= other.count and then substring (1, other.count).same_unicode_string (other)) implies Result
 			recurse: (count >= other.count and then not substring (1, other.count).same_unicode_string (other)) implies (Result = substring (2, count).has_unicode_substring (other))
--- TODO: Wrong signature in `has_substring':			
+-- TODO: Wrong signature in `has_substring':
 --			has_substring: Result implies has_substring (other)
 		end
 
@@ -1603,12 +1514,7 @@ feature -- Element change
 			if nb = 1 then
 				new_count := count + 1
 				set_count (byte_count)
-#ifdef ISE
 				old_put (c, k)
-#endif
-#ifdef SE
-				storage.put (c, k - 1)
-#endif
 				set_count (new_count)
 			else
 				set_count (count + 1)
@@ -1629,9 +1535,7 @@ feature -- Element change
 			new_count: INTEGER
 			a_utf8_string: UC_UTF8_STRING
 			a_uc_string: UC_STRING
-#ifdef ISE
 			b: BOOLEAN
-#endif
 		do
 			if ANY_.same_types (a_string, dummy_string) then
 					-- Check if string does not contain non-ascii characters.
@@ -1643,16 +1547,12 @@ feature -- Element change
 					new_byte_count := byte_count + nb
 					new_count := count + nb
 					set_count (byte_count)
-#ifdef ISE
 					old_set_count (byte_count)
 					b := {ISE_RUNTIME}.check_assert (False)
-#endif
 					precursor (a_string)
-#ifdef ISE
 					b := {ISE_RUNTIME}.check_assert (b)
 					set_count (byte_capacity)
 					old_set_count (byte_capacity)
-#endif
 					set_count (new_count)
 					byte_count := new_byte_count
 				else
@@ -1669,16 +1569,12 @@ feature -- Element change
 							new_byte_count := 2 * byte_count
 							new_count := 2 * count
 							set_count (byte_count)
-#ifdef ISE
 							old_set_count (byte_count)
 							b := {ISE_RUNTIME}.check_assert (False)
-#endif
 							precursor (a_string)
-#ifdef ISE
 							b := {ISE_RUNTIME}.check_assert (b)
 							set_count (byte_capacity)
 							old_set_count (byte_capacity)
-#endif
 							set_count (new_count)
 							byte_count := new_byte_count
 						else
@@ -1688,16 +1584,12 @@ feature -- Element change
 							new_count := count + old_a_string_count
 							a_uc_string.set_count (old_a_string_byte_count)
 							set_count (byte_count)
-#ifdef ISE
 							old_set_count (byte_count)
 							b := {ISE_RUNTIME}.check_assert (False)
-#endif
 							precursor (a_string)
-#ifdef ISE
 							b := {ISE_RUNTIME}.check_assert (b)
 							set_count (byte_capacity)
 							old_set_count (byte_capacity)
-#endif
 							set_count (new_count)
 							a_uc_string.set_count (old_a_string_count)
 							byte_count := new_byte_count
@@ -2281,35 +2173,14 @@ feature -- Duplication
 			-- (This is also used by clone.)
 			-- (ELKS 2001 STRING)
 		local
-#ifdef ISE
 			other_count: INTEGER
-#endif
-#ifdef SE
-			c: INTEGER
-#endif
 		do
 			if other /= Current then
-#ifdef ISE
 				other_count := other.count
 				other.set_count (other.byte_count)
 				precursor {STRING} (other)
 				set_count (other_count)
 				other.set_count (other_count)
-#endif
-#ifdef SE
-				c := other.byte_count
-				if c > 0 then
-					if byte_capacity < c then
-						storage := storage.calloc (c)
-						capacity := c
-					end
-					storage.copy_from (other.storage, c - 1)
-				end
-				count := other.count
-				byte_count := other.byte_count
-				last_byte_index_input := other.last_byte_index_input
-				last_byte_index_result := other.last_byte_index_result
-#endif
 			end
 		end
 
@@ -2832,7 +2703,6 @@ feature -- Obsolete
 			Result := is_empty
 		end
 
-#ifndef SE
 	head (n: INTEGER) is
 			-- Remove all the characters except for the first `n';
 			-- if `n' > `count', do nothing.
@@ -2851,7 +2721,6 @@ feature -- Obsolete
 			keep_tail (n)
 		end
 
-#endif
 	append_uc_string (a_string: UC_STRING) is
 			-- Append a copy of `a_string' at end.
 		obsolete
@@ -2896,20 +2765,13 @@ feature {UC_STRING_HANDLER} -- Implementation
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= byte_count
-#ifdef ISE
 		local
 			old_count: INTEGER
-#endif
 		do
-#ifdef ISE
 			old_count := count
 			set_count (byte_count)
 			Result := old_item (i)
 			set_count (old_count)
-#endif
-#ifdef SE
-			Result := storage.item (i - 1)
-#endif
 		end
 
 	put_byte (c: CHARACTER; i: INTEGER) is
@@ -2917,20 +2779,13 @@ feature {UC_STRING_HANDLER} -- Implementation
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= byte_count
-#ifdef ISE
 		local
 			old_count: INTEGER
-#endif
 		do
-#ifdef ISE
 			old_count := count
 			set_count (byte_count)
 			old_put (c, i)
 			set_count (old_count)
-#endif
-#ifdef SE
-			storage.put (c, i - 1)
-#endif
 		end
 
 	resize_byte_storage (n: INTEGER) is
@@ -2938,27 +2793,15 @@ feature {UC_STRING_HANDLER} -- Implementation
 			-- Do not lose previously stored bytes.
 		require
 			n_large_enough: n >= byte_capacity
-#ifdef ISE
 		local
 			old_count: INTEGER
-#endif
 		do
 			if n > byte_capacity then
-#ifdef ISE
 				resize (n)
 				old_count := count
 				set_count (n)
 				old_set_count (n)
 				set_count (old_count)
-#endif
-#ifdef SE
-				if byte_capacity = 0 then
-					storage := storage.calloc (n)
-				else
-					storage := storage.realloc (byte_capacity, n)
-				end
-				capacity := n
-#endif
 			end
 		ensure
 			byte_capacity_set: byte_capacity = n
@@ -2973,40 +2816,24 @@ feature {UC_STRING_HANDLER} -- Implementation
 			offset_small_enough: offset <= (byte_capacity - byte_count)
 		local
 			j, nb: INTEGER
-#ifdef ISE
 			old_count: INTEGER
-#endif
 		do
 			if last_byte_index_result > i then
 				reset_byte_index_cache
 			end
 			from
-#ifdef ISE
 				j := byte_count
 				nb := i
-#else
-				j := byte_count - 1
-				nb := i - 1
-#endif
 				byte_count := byte_count + offset
-#ifdef ISE
 				old_count := count
 				set_count (byte_count)
-#endif
 			until
 				j < nb
 			loop
-#ifdef ISE
 				old_put (old_item (j), j + offset)
-#endif
-#ifdef SE
-				storage.put (storage.item (j), j + offset)
-#endif
 				j := j - 1
 			end
-#ifdef ISE
 			set_count (old_count)
-#endif
 		ensure
 			byte_count_set: byte_count = old byte_count + offset
 		end
@@ -3020,39 +2847,23 @@ feature {UC_STRING_HANDLER} -- Implementation
 			constraint: offset < i
 		local
 			j, nb: INTEGER
-#ifdef ISE
 			old_count: INTEGER
-#endif
 		do
 			if last_byte_index_result > i - offset then
 				reset_byte_index_cache
 			end
 			from
-#ifdef ISE
 				j := i
 				nb := byte_count
-#else
-				j := i - 1
-				nb := byte_count - 1
-#endif
-#ifdef ISE
 				old_count := count
 				set_count (byte_count)
-#endif
 			until
 				j > nb
 			loop
-#ifdef ISE
 				old_put (old_item (j), j - offset)
-#endif
-#ifdef SE
-				storage.put (storage.item (j), j - offset)
-#endif
 				j := j + 1
 			end
-#ifdef ISE
 			set_count (old_count)
-#endif
 			byte_count := byte_count - offset
 		ensure
 			byte_count_set: byte_count = old byte_count - offset
@@ -3276,38 +3087,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-#ifdef SE
-	old_prepend (other: like Current) is
-			-- Prepend `other' to `Current'.
-			-- (Changed the signature (`other' is declared of type
-			-- STRING in class STRING) so that the inherited
-			-- postcondition does not break the type system
-			-- in SmallEiffel -0.74b21 (otherwise the argument
-			-- of 'Current.is_equal' would be of type STRING,
-			-- which does not conform to 'like Current').)
-		local
-			a_string: UC_STRING
-		do
-			a_string := twin
-			wipe_out
-			append_string (other)
-			append_string (a_string)
-		end
-
-	old_remove_prefix (s: like Current) is
-			-- Remove the prefix `s' of current string.
-			-- (Changed the signature (`s' is declared of type
-			-- STRING in class STRING) so that the inherited
-			-- postcondition does not break the type system
-			-- in SmallEiffel -0.74b21 (otherwise the argument
-			-- of 'Current.is_equal' would be of type STRING,
-			-- which does not conform to 'like Current').)
-		do
-			remove_head (s.count)
-		end
-
-#endif
-#ifdef ISE
 	old_wipe_out is
 			-- Remove all characters.
 			-- (ELKS 2001 STRING)
@@ -3393,7 +3172,6 @@ feature {UC_STRING} -- Inapplicable
 			Result := has_item_code (c.as_integer_32)
 		end
 
-#endif
 invariant
 
 	non_negative_byte_count: byte_count >= 0

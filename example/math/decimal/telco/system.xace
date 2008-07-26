@@ -8,7 +8,7 @@
 			(http://www2.hursleyibm.com/decimal/telcoSpec.html) v0.52.
 			The specification is Copyright (c) IBM Corporation, 2002.
 
-		copyright: "Copyright (c) 2005, Paul G. Crismer and others"
+		copyright: "Copyright (c) 2005-2008, Paul G. Crismer and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -29,10 +29,6 @@
 	<option if="${GOBO_DOTNET}">
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
-	</option>
-	<option if="${GOBO_EIFFEL}=se">
-		<option name="warning" value="none"/>
-		<option name="case_insensitive" value="false"/>
 	</option>
 
 	<cluster name="telco" location="${GOBO}/example/math/decimal/telco"/>

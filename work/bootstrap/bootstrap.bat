@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel package"
-rem copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
+rem copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -228,7 +228,6 @@ goto exit
 :install
 	if .%EIF%. == .ge. goto ge
 	if .%EIF%. == .ise. goto ise
-	if .%EIF%. == .se. goto se
 	echo Unknown Eiffel compiler: %EIF%
 	goto exit
 
@@ -238,10 +237,6 @@ goto exit
 
 :ise
 	set GOBO_EIFFEL=ise
-	goto bootstrap
-
-:se
-	set GOBO_EIFFEL=se
 	goto bootstrap
 
 :bootstrap
@@ -275,7 +270,7 @@ goto exit
 :usage
 	echo usage: bootstrap.bat [-v][--delivery] ^<c_compiler^> ^<eiffel_compiler^>
 	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
-	echo    eiffel_compiler:  ge ^| ise ^| se
+	echo    eiffel_compiler:  ge ^| ise
 	goto exit
 
 :exit

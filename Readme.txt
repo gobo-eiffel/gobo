@@ -1,4 +1,4 @@
-Gobo Eiffel, version 3.8
+Gobo Eiffel, version 3.9
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
