@@ -5,7 +5,7 @@ indexing
 		"Geant interpreting elements"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2004, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,11 +19,9 @@ inherit
 			make as element_make
 		redefine
 			attribute_value,
-			attribute_value_or_default
+			attribute_value_or_default,
+			content
 		end
-
-	GEANT_SHARED_PROPERTIES
-		export {NONE} all end
 
 create
 
@@ -99,20 +97,24 @@ feature -- Setting
 			project_set: project = a_project
 		end
 
-feature -- Access/XML attribute values
+feature -- Access/XML attribute and content values
 
 	attribute_value (an_attr_name: STRING): STRING is
 			-- Value of attribue `an_attr_name'
 		local
 			a_string_interpreter: GEANT_STRING_INTERPRETER
+			a_attribute: XM_ATTRIBUTE
 		do
-			Result := xml_element.attribute_by_name (an_attr_name).value
-			if Result.count > 0 then
-				create a_string_interpreter.make
-					-- Resolve possible variables:
-				Project_variables_resolver.set_variables (project.variables)
-				a_string_interpreter.set_variable_resolver (Project_variables_resolver)
-				Result := a_string_interpreter.interpreted_string (Result)
+			a_attribute := xml_element.attribute_by_name (an_attr_name)
+			if a_attribute /= Void then
+				Result := a_attribute.value
+				if Result /= Void and then Result.count > 0 then
+					create a_string_interpreter.make
+						-- Resolve possible variables:
+					Project_variables_resolver.set_variables (project.variables)
+					a_string_interpreter.set_variable_resolver (Project_variables_resolver)
+					Result := a_string_interpreter.interpreted_string (Result)
+				end
 			end
 		end
 
@@ -124,6 +126,23 @@ feature -- Access/XML attribute values
 				Result := attribute_value (an_attr_name)
 			else
 				Result := a_default_value
+			end
+		end
+
+	content: STRING is
+			-- Content of element if any; Void otherwise
+		local
+			a_string_interpreter: GEANT_STRING_INTERPRETER
+		do
+			Result := xml_element.text
+			if Result /= Void then
+				if  not Result.is_empty then
+					create a_string_interpreter.make
+						-- Resolve possible variables:
+					Project_variables_resolver.set_variables (project.variables)
+					a_string_interpreter.set_variable_resolver (Project_variables_resolver)
+					Result := a_string_interpreter.interpreted_string (Result)
+				end
 			end
 		end
 

@@ -22,7 +22,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make is
-			-- Create new  GEANT_PROPERTY object.
+			-- Create new GEANT_PROPERTY object.
 		do
 		end
 
@@ -30,6 +30,8 @@ feature -- Access
 
 	string_value: STRING is
 			-- String value of property or Void if not available
+		require
+			is_defined: is_defined
 		do
 			if not has_been_retrieved then
 				retrieved_string_value := string_value_agent.item ([])
@@ -50,9 +52,7 @@ feature -- Status report
 	is_defined: BOOLEAN is
 			-- Is a string value for this property available?
 		do
-			Result := string_value /= Void
-		ensure
-			string_value_valid: Result implies string_value /= Void
+			Result := string_value_agent /= Void and then string_value_agent.item ([]) /= Void
 		end
 
 feature -- Setting
@@ -74,6 +74,6 @@ feature {NONE} -- Implementation
 			-- string value retrieved through `string_value_agent' if `string_value' has been called before
 
 	string_value_agent: FUNCTION [ANY, TUPLE, STRING]
-			-- String value agent
+			-- string value agent
 
 end

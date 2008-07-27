@@ -5,7 +5,7 @@ indexing
 		"Geant Tasks using a XML definitions"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,9 +25,21 @@ inherit
 feature {NONE} -- Initialization
 
 	make (a_project: like project; an_xml_element: XM_ELEMENT) is
+			-- Create new GEANT_INTERPRETING_ELEMENT from `a_project' and `an_xml_element'.
+		require
+			a_project_not_void: a_project /= Void
+			an_xml_element_not_void: an_xml_element /= Void
 		do
 			build_command (a_project)
 			make_with_command (command, an_xml_element)
+		end
+
+	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
+			-- Create new GEANT_INTERPRETING_ELEMENT from `a_ie'.
+		require
+			a_ie_not_void: a_ie /= Void
+		do
+			make (a_ie.project, a_ie.xml_element)
 		end
 
 	make_with_command (a_command: like command; a_xml_element: XM_ELEMENT) is
@@ -42,6 +54,8 @@ feature {NONE} -- Initialization
 
 	build_command (a_project: GEANT_PROJECT) is
 			-- Create instance of `command'
+		require
+			a_project_not_void: a_project /= Void
 		do
 			-- To be implemented
 			check not_yet_implemented: False end

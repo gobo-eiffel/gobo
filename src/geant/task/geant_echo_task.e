@@ -5,7 +5,7 @@ indexing
 		"Echo tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,39 +16,25 @@ inherit
 
 	GEANT_TASK
 		redefine
-			make,
+			make_from_interpreting_element,
 			build_command,
 			command
 		end
 
 create
 
-	make
+	make_from_interpreting_element
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
-			-- Create new task with information held in `an_element'.
-		local
-			a_sp: GEANT_STRING_PROPERTY
-			a_bp: GEANT_BOOLEAN_PROPERTY
-			a_message_property: GEANT_XML_ATTRIBUTE_OR_CONTENT_PROPERTY [STRING]
-			a_string_xml_attribute: GEANT_XML_ATTRIBUTE_PROPERTY [STRING]
-			a_boolean_xml_attribute: GEANT_XML_ATTRIBUTE_PROPERTY [BOOLEAN]
+	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
+			-- Create new task with information held in `a_ie'.
 		do
-			Precursor {GEANT_TASK} (a_project, an_xml_element)
+			Precursor {GEANT_TASK} (a_ie)
 
-			create a_sp.make
-			create a_message_property.make ("message", a_sp, a_project, an_xml_element)
-			command.set_message_property (a_sp)
-
-			create a_sp.make
-			create a_string_xml_attribute.make ("to_file", a_sp, a_project, an_xml_element)
-			command.set_to_file_property (a_sp)
-
-			create a_bp.make
-			create a_boolean_xml_attribute.make ("append", a_bp, a_project, an_xml_element)
-			command.set_append_property (a_bp)
+			command.message_property.set_string_value_agent (agent a_ie.attribute_or_content_value ("message"))
+			command.to_file_property.set_string_value_agent (agent a_ie.attribute_value_if_existing ("to_file"))
+			command.append_property.set_string_value_agent (agent a_ie.attribute_value_if_existing ("append"))
 		end
 
 	build_command (a_project: GEANT_PROJECT) is

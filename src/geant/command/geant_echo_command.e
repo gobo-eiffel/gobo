@@ -5,7 +5,7 @@ indexing
 		"Echo commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,9 +30,15 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_project)
 			is_executable_flag := True
-				-- Default agents:
-			message_only_agent := agent execute_with_message_only
-			message_with_file_agent := agent execute_with_file
+
+				-- Create properties:
+			create message_property.make
+			create to_file_property.make
+			create append_property.make
+
+				-- Set default agents:
+			create message_only_agent_cell.make (agent log_message)
+			create message_with_file_agent_cell.make (agent write_message_to_file)
 			is_not_executable_agent := agent set_is_executable_flag_to_false
 		end
 
@@ -47,82 +53,35 @@ feature -- Status report
 
 feature -- Access
 
-	message_only_agent: PROCEDURE [ANY, TUPLE [STRING]]
-			-- Message only agent
+	message_property: GEANT_STRING_PROPERTY
+			-- Message property
 
-	message_with_file_agent: PROCEDURE [ANY, TUPLE [STRING, STRING, BOOLEAN]]
-			-- Message with file agent
+	to_file_property: GEANT_STRING_PROPERTY
+			-- to_file property
 
-	message_property: GEANT_PROPERTY [STRING]
-			-- Message
+	append_property: GEANT_BOOLEAN_PROPERTY
+			-- append property
 
-	to_file_property: GEANT_PROPERTY [STRING]
-			-- Name of destination file
+	message_only_agent_cell: DS_CELL [PROCEDURE [ANY, TUPLE [STRING]]]
+			-- Agent cell for Message only
+			-- NOTE: using a DS_CELL here and for the other agents makes it possible to set the underlying agent from outside
+			-- without having to provide individual setters for each agent.
 
-	append_property: GEANT_PROPERTY [BOOLEAN]
-			-- Append
-
-feature -- Setting
-
-	set_message_property (a_message_property: like message_property) is
-			-- Set `message_property' to `a_message_property'.
-		require
-			a_message_property_not_void: a_message_property /= Void
-		do
-			message_property := a_message_property
-		ensure
-			message_property_set: message_property = a_message_property
-		end
-
-	set_to_file_property (a_to_file_property: like to_file_property) is
-			-- Set `to_file_property' to `a_to_file_property'.
-		require
-			a_to_file_property_not_void: a_to_file_property /= Void
-		do
-			to_file_property := a_to_file_property
-		ensure
-			to_file_property_set: to_file_property = a_to_file_property
-		end
-
-	set_append_property (a_append_property: like append_property) is
-			-- Set `append_property' to `a_append_property'.
-		require
-			a_append_property_not_void: a_append_property /= Void
-		do
-			append_property := a_append_property
-		ensure
-			append_property_set: append_property = a_append_property
-		end
-
-	set_message_only_agent (a_agent: like message_only_agent) is
-			-- Set `message_only_agent' to `a_message_only_agent'.
-		require
-			a_agent_not_void: a_agent /= Void
-		do
-			message_only_agent := a_agent
-		ensure
-			message_only_agent_set: message_only_agent = a_agent
-		end
-
-	set_message_with_file_agent (a_agent: like message_with_file_agent) is
-			-- Set `message_with_file_agent' to `a_message_with_file_agent'.
-		require
-			a_agent_not_void: a_agent /= Void
-		do
-			message_with_file_agent := a_agent
-		ensure
-			message_with_file_agent_set: message_with_file_agent = a_agent
-		end
+	message_with_file_agent_cell: DS_CELL [PROCEDURE [ANY, TUPLE [STRING, KL_TEXT_OUTPUT_FILE, BOOLEAN]]]
+			-- Agent cell for Message with file
 
 feature -- Execution
 
 	execute is
 			-- Execute command.
 		do
-			execute_with_agents (message_only_agent, message_with_file_agent)
+			execute_with_agents (message_only_agent_cell, message_with_file_agent_cell)
 		end
 
-	execute_with_message_only (a_message: STRING) is
+feature {NONE} -- Implementation
+
+	log_message (a_message: STRING) is
+			-- Log `a_message' to `project.log'
 		require
 			a_message_not_void: a_message /= Void
 		do
@@ -131,60 +90,62 @@ feature -- Execution
 			exit_code := 0
 		end
 
-	execute_with_file (a_message, a_to_file: STRING; a_append: BOOLEAN) is
+	write_message_to_file (a_message: STRING; a_file: KL_TEXT_OUTPUT_FILE; a_append: BOOLEAN) is
+			-- Write `a_message' to `a_file'.
+			-- Note: `a_append' = True implies that `a_file' has been opened in append mode, otherwise
+			-- in normal write mode. `a_append' is passed in only as information in case
+			-- append/write-mode dependent actions need to be performed.
+			-- TODO: shouldn't `KL_OUTPUT_FILE.is_open_append' be exported so that this information is  directly available?
 		require
 			a_message_not_void: a_message /= Void
-			a_to_file_not_void: a_to_file /= Void
-			a_to_file_not_empty: not a_to_file.is_empty
-		local
-			a_file: KL_TEXT_OUTPUT_FILE
+			a_file_not_void: a_file /= Void
 		do
-			create a_file.make (a_to_file)
-			if a_append then
-				project.trace (<<"  [echo] Appending '", a_message, "' to file '", a_to_file, "'">>)
-				a_file.open_append
-			else
-				project.trace (<<"  [echo] Writing '", a_message, "' to file '", a_to_file, "'">>)
-				a_file.open_write
-			end
 			if a_file.is_open_write then
 				a_file.put_line (a_message)
-				a_file.close
 				exit_code := 0
 			else
-				project.log (<<"  [echo] error: cannot write to file", a_to_file, "'">>)
+				project.log (<<"  [echo] error: cannot write to file", a_file.name, "'">>)
 				exit_code := 1
 			end
 		end
 
-
-feature {NONE} -- Implementation
-
 	is_not_executable_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent called when command is not executable
 
-	execute_with_agents (a_message_only_agent: like message_only_agent; a_message_with_file_agent: like message_with_file_agent) is
+	execute_with_agents (a_message_only_agent_cell: like message_only_agent_cell; a_message_with_file_agent_cell: like message_with_file_agent_cell) is
 			-- Execute command.
 		local
 			a_message: STRING
 			a_to_file: STRING
 			a_append: BOOLEAN
+			a_file: KL_TEXT_OUTPUT_FILE
 		do
 			if message_property.is_defined then
 	  			a_message := message_property.value
 				if to_file_property.is_defined then
 		  			a_to_file := to_file_property.value
-					if a_message_with_file_agent /= Void then
+					if a_message_with_file_agent_cell /= Void then
+						check item_set: a_message_with_file_agent_cell.item /= Void end
+						create a_file.make (a_to_file)
 						if append_property.is_defined then
 			  				a_append := append_property.value
-							a_message_with_file_agent.call ([a_message, a_to_file, a_append])
 						else
-							a_message_with_file_agent.call ([a_message, a_to_file, False])
+			  				a_append := False
 						end
+						if a_append then
+							project.trace (<<"  [echo] Appending '", a_message, "' to file '", a_to_file, "'">>)
+							a_file.open_append
+						else
+							project.trace (<<"  [echo] Writing '", a_message, "' to file '", a_to_file, "'">>)
+							a_file.open_write
+						end
+						a_message_with_file_agent_cell.item.call ([a_message, a_file, a_append])
+						a_file.close
 					end
 				else
-					if a_message_only_agent /= Void then
-						a_message_only_agent.call ([a_message])
+					if a_message_only_agent_cell /= Void then
+						check item_set: a_message_only_agent_cell.item /= Void end
+						a_message_only_agent_cell.item.call ([a_message])
 					end
 				end
 			else

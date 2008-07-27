@@ -21,7 +21,8 @@ inherit
 			make as element_make
 		undefine
 			attribute_value,
-			attribute_value_or_default
+			attribute_value_or_default,
+			content
 		end
 
 create
