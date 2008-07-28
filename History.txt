@@ -15,6 +15,7 @@ Version 3.9 - ?
 
 	* Added an indexing clause "generator" to the generated classes.
 	  See feature request bug#1961466.
+	* Provided programmatic access to test results.
 
 	gexace:
 

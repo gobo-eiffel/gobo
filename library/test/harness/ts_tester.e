@@ -161,19 +161,32 @@ feature -- Execution
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_suite: like suite
 			a_summary: TS_SUMMARY
 		do
-			a_suite := suite
 			if progress_status then
 				a_file.put_character ('@')
-				a_file.put_integer (a_suite.count)
+				a_file.put_integer (suite.count)
 				a_file.put_new_line
 				a_file.flush
 				create {TS_PROGRESS_SUMMARY} a_summary.make (a_file)
 			else
 				create a_summary.make
 			end
+			execute_with_summary (a_summary, a_file)
+		end
+
+	execute_with_summary (a_summary: TS_SUMMARY; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Execute the tests.
+			-- Test results will be recorded in `a_summary'
+			-- and output messages will be printed to `a_file'.
+		require
+			a_summary_not_void: a_summary /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			a_suite: like suite
+		do
+			a_suite := suite
 			a_summary.set_fail_on_rescue (fail_on_rescue)
 			a_suite.execute (a_summary)
 			a_summary.print_summary (a_suite, a_file)

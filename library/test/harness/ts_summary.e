@@ -28,6 +28,11 @@ feature {NONE} -- Initialization
 			create results.make
 		end
 
+feature -- Access
+
+	results: DS_LINKED_LIST [TS_RESULT]
+			-- List of results
+
 feature -- Status report
 
 	is_successful: BOOLEAN is
@@ -124,7 +129,7 @@ feature -- Element change
 		end
 
 	end_test (a_test: TS_TEST; asserts: INTEGER) is
-			-- Inform Current that a test was completed with 
+			-- Inform Current that a test was completed with
 			-- `asserts' assertions run.
 		do
 			assertion_count := assertion_count + asserts
@@ -231,11 +236,6 @@ feature -- Output
 				end
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	results: DS_LINKED_LIST [TS_RESULT]
-			-- List of results
 
 invariant
 
