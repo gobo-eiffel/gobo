@@ -175,6 +175,9 @@ feature -- Access
 	default_target_name: STRING
 			-- Name of default target if set
 
+	position_table: XM_POSITION_TABLE
+			-- Position table for XM_NODES
+
 feature -- Status report
 
 	has_parent_with_name (a_name: STRING): BOOLEAN is
@@ -310,6 +313,16 @@ feature -- Setting
 			old_inherit := a_old_inherit
 		ensure
 			old_inherit_set: old_inherit = a_old_inherit
+		end
+
+	set_position_table (a_position_table: like position_table) is
+			-- Set `position_table' to `a_position_table'.
+		require
+			a_position_table_not_void: a_position_table /= Void
+		do
+			position_table := a_position_table
+		ensure
+			position_table_set: position_table = a_position_table
 		end
 
 feature {GEANT_GROUP, GEANT_TARGET} -- Task factory

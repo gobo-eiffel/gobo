@@ -235,6 +235,7 @@ feature {NONE} -- Execution implementation
 				exit_application (1, <<"unknown task : ", a_xml_element.name>>)
 			end
 			if not a_task.is_executable then
+				a_task.log_validation_messages
 				exit_application (1, <<"cannot execute task : ", a_xml_element.name>>)
 			end
 			if a_task.is_enabled then

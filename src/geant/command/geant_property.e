@@ -43,8 +43,18 @@ feature -- Access
 	value: G is
 			-- Value of property
 		require
-			string_value_defined: is_defined
+			is_defined: is_defined
 		deferred
+		end
+
+	value_or_else (a_default: G): G is
+			-- `value' if `is_defined', `a_default' otherwise
+		do
+			if is_defined then
+				Result := value
+			else
+				Result := a_default
+			end
 		end
 
 feature -- Status report

@@ -41,6 +41,7 @@ feature {NONE} -- Implementation
             elseif STRING_.same_string (False_attribute_value, a_value) then
                 Result := False
             else
+					-- TODO: issue a warning instead of just using False:
                 Result := False
             end
 		end

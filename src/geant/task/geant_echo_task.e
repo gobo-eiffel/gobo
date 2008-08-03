@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			-- Create new task with information held in `a_ie'.
 		do
 			Precursor {GEANT_TASK} (a_ie)
-
 			command.message_property.set_string_value_agent (agent a_ie.attribute_or_content_value ("message"))
 			command.to_file_property.set_string_value_agent (agent a_ie.attribute_value_if_existing ("to_file"))
 			command.append_property.set_string_value_agent (agent a_ie.attribute_value_if_existing ("append"))

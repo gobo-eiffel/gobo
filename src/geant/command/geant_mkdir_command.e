@@ -15,39 +15,49 @@ class GEANT_MKDIR_COMMAND
 inherit
 
 	GEANT_COMMAND
+ 		redefine
+ 			make
+ 		end
 
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT) is
+			-- Initialize command.
+		do
+			Precursor (a_project)
+
+				-- Create properties:
+			create directory.make
+
+				-- Set default agents:
+			create mkdir_agent_cell.make (agent create_directory)
+		end
 
 feature -- Status report
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := directory /= Void and then directory.count > 0
-		ensure then
-			directory_not_void: Result implies directory /= Void
-			directory_not_empty: Result implies directory.count > 0
+ 			validate_condition (directory.is_defined, "  [mkdir] error: 'directory' is not defined")
+				-- Prevent 'Call on Void target' for `directory.value' by checking `is_executable_flag' first. TODO: find better solution:
+  			validate_condition (is_valid and then not directory.value.is_empty, "  [mkdir] error: 'directory' is empty")
+			Result := is_valid
+ 		ensure then
+ 			directory_defined: Result implies directory.is_defined
+ 			directory_not_empty: Result implies not directory.value.empty
 		end
 
 feature -- Access
 
-	directory: STRING
+	directory: GEANT_STRING_PROPERTY
 			-- Directory to create
 
-feature -- Setting
-
-	set_directory (a_directory: like directory) is
-			-- Set `directory' to `a_directory'.
-		require
-			a_directory_not_void: a_directory /= Void
-			a_directory_not_empty: a_directory.count > 0
-		do
-			directory := a_directory
-		ensure
-			directory_set: directory = a_directory
-		end
+	mkdir_agent_cell: DS_CELL [PROCEDURE [ANY, TUPLE [STRING]]]
+			-- Agent cell to create directory
 
 feature -- Execution
 
@@ -56,8 +66,20 @@ feature -- Execution
 		local
 			a_name: STRING
 		do
+			mkdir_agent_cell.item.call ([directory.value])
+		end
+
+feature {NONE} -- Implementation
+
+	create_directory (a_directory_name: STRING) is
+			-- Create directory named `a_directory'.
+		require
+			a_directory_name_not_void: a_directory_name /= Void
+		local
+			a_name: STRING
+		do
 			exit_code := 0
-			a_name := file_system.pathname_from_file_system (directory, unix_file_system)
+			a_name := file_system.pathname_from_file_system (a_directory_name, unix_file_system)
 			project.trace (<<"  [mkdir] ", a_name>>)
 			if not project.options.no_exec then
 				file_system.recursive_create_directory (a_name)
@@ -67,5 +89,11 @@ feature -- Execution
 				end
 			end
 		end
+
+invariant
+
+	directory_not_void: directory /= Void
+	mkdir_agent_cell_not_void: mkdir_agent_cell /= Void
+	mkdir_agent_cell_item_not_void: mkdir_agent_cell.item /= Void
 
 end

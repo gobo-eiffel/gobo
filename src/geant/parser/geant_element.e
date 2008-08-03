@@ -47,6 +47,9 @@ feature -- Access
 	xml_element: XM_ELEMENT
 			-- XML Element defining current element
 
+	position: XM_POSITION
+			-- Position of element in source document
+
 	elements_by_name (a_name: STRING): DS_LINKED_LIST [XM_ELEMENT] is
 			-- Direct children elements with name `a_name'
 		require
@@ -91,6 +94,16 @@ feature -- Setting
 			xml_element := a_xml_element
 		ensure
 			xml_element_set: xml_element = a_xml_element
+		end
+
+	set_position (a_position: like position) is
+			-- Set `position' to `a_position'.
+		require
+			a_position_not_void: a_position /= Void
+		do
+			position := a_position
+		ensure
+			position_set: position = a_position
 		end
 
 feature -- Access/XML attribute values
@@ -158,17 +171,29 @@ feature -- Access/XML attribute values
 		do
 				-- Content of element if any (take snapshot of `content' into `a_content_text' to avoid recalculation):
 			a_content_text := content
-			a_has_content_text := not (a_content_text = Void or else a_content_text.is_empty)
+			a_has_content_text := a_content_text /= Void and then not a_content_text.is_empty
 
 				-- Make sure not both, attribute and element content have been specified:
 			a_has_attribute := has_attribute (a_attribute_name)
 			if a_has_content_text and a_has_attribute then
-				exit_application (1, <<"  [", xml_element.name, "] error: Usage of both, attribute %'", a_attribute_name,
+				if position /= Void then
+					log_messages (<<"  [", xml_element.name, "] ERROR (", position.source_name,
+						", ", position.row.out, ":", position.column.out, "):">>)
+				else
+					log_messages (<<"  [", xml_element.name, "]", " ERROR:">>)
+				end
+				exit_application (1, <<"  Usage of both, attribute %'", a_attribute_name,
 					"%' and text content within element %'", xml_element.name, "%' is not allowed.">>)
 			end
 				-- Make sure either attribute 'message' or element content text have been specified:
  			if not a_has_content_text and not a_has_attribute then
- 				exit_application (1, <<"  [", xml_element.name, "] error: You have to specify either attribute %'",
+				if position /= Void then
+					log_messages (<<"  [", xml_element.name, "] ERROR (", position.source_name,
+						", ", position.row.out, ":", position.column.out, "):">>)
+				else
+					log_messages (<<"  [", xml_element.name, "]", " ERROR:">>)
+				end
+				exit_application (1, <<"  You have to specify either attribute %'",
 					a_attribute_name, "%' or text content within the element %'", xml_element.name, "%'.">>)
  			end
 

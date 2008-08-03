@@ -38,6 +38,9 @@ feature {NONE} -- Initialization
 			project_not_void: a_project /= Void
 		do
 			set_project (a_project)
+				-- Assume command is executable by default:
+			is_valid := True
+			create log_validation_messages_agent_cell.make (Void)
 		ensure
 			project_set: project = a_project
 		end
@@ -57,6 +60,9 @@ feature -- Access
 
 	project: GEANT_PROJECT
 			-- Project to which this command belongs to
+
+	log_validation_messages_agent_cell: DS_CELL [PROCEDURE [ANY, TUPLE]]
+			-- Agent cell to log validation messages
 
 feature -- Setting
 
@@ -80,6 +86,24 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
+	validate_condition (a_condition: BOOLEAN; a_message: STRING) is
+			-- If `is_valid' and then `a_condition' add `a_message' to `validation_messages' and set `is_executable_flag' to False.
+		require
+			a_message_not_void: a_message /= Void
+			a_message_not_empty: not a_message.is_empty
+		do
+				-- Do not continue with validation if `is_executable_flag' is already False:
+			if is_valid then
+				if not a_condition then
+					is_valid := False
+					validation_messages.force_last (a_message)
+				end
+			end
+ 		ensure
+ 			not_executable_if_condition_false: not a_condition implies is_executable_flag = False
+ 			validation_message_set_if_condition_false: not a_condition implies validation_messages.last = a_message
+		end
+
 	execute_shell (a_command: STRING) is
 			-- Execute shell command `a_command'.
 		require
@@ -94,6 +118,9 @@ feature {NONE} -- Implementation
 				exit_code := shell_command.exit_code
 			end
 		end
+
+	is_valid: BOOLEAN
+			-- Temporary internal flag to store validation state
 
 invariant
 

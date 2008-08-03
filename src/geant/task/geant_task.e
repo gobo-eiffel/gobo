@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		do
 			build_command (a_project)
 			make_with_command (command, an_xml_element)
+			command.log_validation_messages_agent_cell.put (agent log_validation_messages)
 		end
 
 	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
@@ -128,6 +129,25 @@ feature -- Execution
 				-- the current working directory:
 			project.trace_debug (<<"changing to directory: '", a_old_task_cwd, "%'">>)
 			file_system.set_current_working_directory (a_old_task_cwd)
+		end
+
+feature -- Errorhandling
+
+	log_validation_messages is
+			-- Log entries in validation_messages'.
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+		do
+			if position /= Void then
+				project.log (<<"ERROR AT: ", position.source_name, " (", position.row.out, ":", position.column.out, ")">>)
+			else
+				project.log (<<"ERROR:%N">>)
+			end
+			a_cursor := validation_messages.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				project.log (<<"  ", a_cursor.item>>)
+				a_cursor.forth
+			end
 		end
 
 end

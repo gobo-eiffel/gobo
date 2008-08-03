@@ -76,6 +76,7 @@ feature -- Parsing
 					a_document := tree_pipe.document
 					a_root_element := a_document.root_element
 					create last_project_element.make (a_root_element, variables, options, build_filename)
+					last_project_element.project.set_position_table (tree_pipe.tree.last_position_table)
 				else
 					std.error.put_string (tree_pipe.last_error)
 					std.error.flush

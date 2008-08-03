@@ -39,6 +39,15 @@ feature {NONE} -- Initialization
 		do
 			element_make (a_xml_element)
 			set_project (a_project)
+			if project.position_table /= Void then
+				if project.position_table.has (xml_element) then
+					position := project.position_table.item (xml_element)
+				else
+					project.trace_debug (<<"  [*GEANT_INTERPRETING_ELEMENT] position Void for element '", xml_element.name, "'">>)
+				end
+			else
+				project.trace_debug (<<"  [*GEANT_INTERPRETING_ELEMENT] project.position_table is Void">>)
+			end
 		ensure
 			project_set: project = a_project
 			xml_element_set: xml_element = a_xml_element
@@ -48,6 +57,7 @@ feature -- Access
 
 	project: GEANT_PROJECT
 			-- Project to which Current belongs to
+			-- TODO: move this to GEANT_ELEMENT
 
 feature -- Status report
 

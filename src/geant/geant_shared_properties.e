@@ -28,9 +28,6 @@ inherit
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 
-	KL_SHARED_EXECUTION_ENVIRONMENT
-		export {NONE} all end
-
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
@@ -112,6 +109,12 @@ feature -- Access
 			create Result.make
 		ensure
 			Project_variables_resolver_not_void: Result /= Void
+		end
+
+	validation_messages: DS_ARRAYED_LIST [STRING] is
+			-- Validation messages containing messages if tasks have been defined incorrectly
+		once
+			create Result.make (5)
 		end
 
 feature {GEANT_INTERPRETING_ELEMENT} -- Access
@@ -203,18 +206,8 @@ feature -- Processing
 		require
 			-- Note: ARRAY.has is not portable:
 			-- no_void_message: a_message /= Void implies not a_message.has (Void)
-		local
-			i, nb: INTEGER
 		do
-			if a_message /= Void then
-				i := a_message.lower
-				nb := a_message.upper
-				from until i > nb loop
-					std.error.put_string (a_message.item (i))
-					i := i + 1
-				end
-				std.error.put_new_line
-			end
+			log_messages (a_message)
 			if a_code /= 0 then
 				std.error.put_new_line
 				std.error.put_line ("BUILD FAILED!")
@@ -428,6 +421,27 @@ feature -- Processing
 			has_star: (a_star_string.index_of ('*', 1) > 0) implies
 				Result.is_equal (a_star_string.substring (a_star_string.index_of ('*', 1) + 1, a_star_string.count))
 			not_has_start: (a_star_string.index_of ('*', 1) = 0) implies Result.is_equal (a_star_string)
+		end
+
+feature {NONE} -- Implemenation
+
+	log_messages (a_message: ARRAY [STRING]) is
+			-- if a_message /= Void log it.
+		require
+			-- Note: ARRAY.has is not portable:
+			-- no_void_message: a_message /= Void implies not a_message.has (Void)
+		local
+			i, nb: INTEGER
+		do
+			if a_message /= Void then
+				i := a_message.lower
+				nb := a_message.upper
+				from until i > nb loop
+					std.error.put_string (a_message.item (i))
+					i := i + 1
+				end
+				std.error.put_new_line
+			end
 		end
 
 end
