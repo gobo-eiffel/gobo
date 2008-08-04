@@ -43,12 +43,12 @@ feature -- Status report
 			-- Can command be executed?
 		do
  			validate_condition (directory.is_defined, "  [mkdir] error: 'directory' is not defined")
-				-- Prevent 'Call on Void target' for `directory.value' by checking `is_executable_flag' first. TODO: find better solution:
+				-- Prevent 'Call on Void target' for `directory.value' by checking `is_valid' first. TODO: find better solution:
   			validate_condition (is_valid and then not directory.value.is_empty, "  [mkdir] error: 'directory' is empty")
 			Result := is_valid
  		ensure then
  			directory_defined: Result implies directory.is_defined
- 			directory_not_empty: Result implies not directory.value.empty
+ 			directory_not_empty: Result implies not directory.value.is_empty
 		end
 
 feature -- Access
@@ -63,8 +63,6 @@ feature -- Execution
 
 	execute is
 			-- Execute command.
-		local
-			a_name: STRING
 		do
 			mkdir_agent_cell.item.call ([directory.value])
 		end

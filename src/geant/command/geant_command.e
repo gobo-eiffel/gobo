@@ -87,12 +87,12 @@ feature -- Setting
 feature {NONE} -- Implementation
 
 	validate_condition (a_condition: BOOLEAN; a_message: STRING) is
-			-- If `is_valid' and then `a_condition' add `a_message' to `validation_messages' and set `is_executable_flag' to False.
+			-- If `is_valid' and then `a_condition' add `a_message' to `validation_messages' and set `is_valid' to False.
 		require
 			a_message_not_void: a_message /= Void
 			a_message_not_empty: not a_message.is_empty
 		do
-				-- Do not continue with validation if `is_executable_flag' is already False:
+				-- Do not continue with validation if `is_valid' is already False:
 			if is_valid then
 				if not a_condition then
 					is_valid := False
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 				end
 			end
  		ensure
- 			not_executable_if_condition_false: not a_condition implies is_executable_flag = False
+ 			not_executable_if_condition_false: not a_condition implies not is_valid
  			validation_message_set_if_condition_false: not a_condition implies validation_messages.last = a_message
 		end
 
