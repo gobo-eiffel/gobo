@@ -365,8 +365,8 @@ ___________________________________________________________
 
 	<target name="compile" depend="init">
 		<description>compiles HELLO</description>
-		<gexace system="se" xace="${system}.xace"/>
-		<se ace="se.ace"/>
+		<gexace system="ge" xace="${system}.xace"/>
+		<gec ace="ge.xace"/>
 	</target>
 
 	<target name="run" depend="init">
@@ -376,7 +376,7 @@ ___________________________________________________________
 
 	<target name="clean" depend="init">
 		<description>deletes generated files</description>
-		<se clean="${system}"/>
+		<gec clean="${system}"/>
 		<delete file="${system}${exe}"/>
 	</target>
 </project>

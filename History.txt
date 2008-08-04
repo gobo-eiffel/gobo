@@ -1,5 +1,9 @@
 Version 3.9 - ?
 
+	geant:
+
+	* Removed support for SmartEiffel task <se>.
+
 	gec:
 
 	* Fixed some C compilation warnings when using gcc as back-end C compiler.
@@ -19,6 +23,7 @@ Version 3.9 - ?
 	* Added an indexing clause "generator" to the generated classes.
 	  See feature request bug#1961466.
 	* Provided programmatic access to test results.
+	* Removed support for config file 'getest.se' and option --se.
 
 	gexace:
 
@@ -26,6 +31,7 @@ Version 3.9 - ?
 	  in Xace files.
 	* Fixed bug when generating ECF files from Xace files: the override
 	  clusters were not marked as such.
+	* Removed support for SmartEiffel config files.
 
 	Gobo Eiffel Structure Library:
 

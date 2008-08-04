@@ -57,7 +57,7 @@
 					<para><emphasis>Description: </emphasis>System</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>ise|ge|se</para>
+					<para><emphasis>Domain: </emphasis>ise|ge</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -70,7 +70,7 @@
 					<para><emphasis>Description: </emphasis>library</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>ise|ge|se</para>
+					<para><emphasis>Domain: </emphasis>ise|ge</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -83,7 +83,7 @@
 					<para><emphasis>Description: </emphasis>format</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>ace|ecf|xace|loadpath</para>
+					<para><emphasis>Domain: </emphasis>ace|ecf|xace</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -146,7 +146,6 @@
           <choice>
             <value>ise</value>
             <value>ge</value>
-            <value>se</value>
           </choice>
           -->
         </attribute>
@@ -155,7 +154,6 @@
           <choice>
             <value>ise</value>
             <value>ge</value>
-            <value>se</value>
           </choice>
           -->
         </attribute>
@@ -165,7 +163,6 @@
             <value>ace</value>
             <value>ecf</value>
             <value>xace</value>
-            <value>loadpath</value>
           </choice>
           -->
         </attribute>

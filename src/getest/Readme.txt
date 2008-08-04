@@ -16,7 +16,7 @@ To compile getest:
        getest [-aceghvV?][--help][--version][--verbose]
             [-D <name>=<value>|--define=<name>=<value>]*
             [--class=<regexp>][--feature=<regexp>]
-            [--compile=<command>][--se|--ise|--ge|<filename>]
+            [--compile=<command>][--ise|--ge|<filename>]
 
 A "User's Manual" documentation for getest, in HTML format, is provided
 in "$GOBO/doc/getest".

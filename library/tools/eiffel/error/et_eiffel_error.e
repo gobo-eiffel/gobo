@@ -60,15 +60,6 @@ feature -- Status report
 			-- instead (e.g. compiler or runtime crash, incorrect
 			-- execution behavior, etc.)?
 
-	se_reported: BOOLEAN
-			-- Is current error reported by SmartEiffel?
-
-	se_fatal: BOOLEAN
-			-- Is current error considered as fatal by ISE Eiffel,
-			-- or is it not reported but produces flawed behaviors
-			-- instead (e.g. compiler or runtime crash, incorrect
-			-- execution behavior, etc.)?
-
 	ge_reported: BOOLEAN
 			-- Is current error reported by Gobo Eiffel?
 
@@ -81,17 +72,17 @@ feature -- Status report
 	all_reported: BOOLEAN is
 			-- Is current error reported by all Eiffel compilers?
 		do
-			Result := ise_reported and se_reported and ge_reported
+			Result := ise_reported and ge_reported
 		ensure
-			definition: Result = (ise_reported and se_reported and ge_reported)
+			definition: Result = (ise_reported and ge_reported)
 		end
 
 	all_fatal: BOOLEAN is
 			-- Is current error considered as fatal by all Eiffel compilers?
 		do
-			Result := ise_fatal and se_fatal and ge_fatal
+			Result := ise_fatal and ge_fatal
 		ensure
-			definition: Result = (ise_fatal and se_fatal and ge_fatal)
+			definition: Result = (ise_fatal and ge_fatal)
 		end
 
 feature -- Status setting
@@ -110,22 +101,6 @@ feature -- Status setting
 			ise_fatal := b
 		ensure
 			ise_fatal: ise_fatal = b
-		end
-
-	set_se_reported (b: BOOLEAN) is
-			-- Set `se_reported' to `b'.
-		do
-			se_reported := b
-		ensure
-			se_reported: se_reported = b
-		end
-
-	set_se_fatal (b: BOOLEAN) is
-			-- Set `se_fatal' to `b'.
-		do
-			se_fatal := b
-		ensure
-			se_fatal: se_fatal = b
 		end
 
 	set_ge_reported (b: BOOLEAN) is
@@ -149,15 +124,11 @@ feature -- Status setting
 		do
 			ise_reported := b
 			ise_fatal := b
-			se_reported := b
-			se_fatal := b
 			ge_reported := b
 			ge_fatal := b
 		ensure
 			ise_reported: ise_reported = b
 			ise_fatal: ise_fatal = b
-			se_reported: se_reported = b
-			se_fatal: se_fatal = b
 			ge_reported: ge_reported = b
 			ge_fatal: ge_fatal = b
 		end

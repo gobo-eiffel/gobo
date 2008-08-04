@@ -43,15 +43,6 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Se_task_name: STRING is
-			-- "se" task name
-		once
-			Result := "se"
-		ensure
-			task_name_not_void: Result /= Void
-			task_name_not_empty: Result.count > 0
-		end
-
 	Ise_task_name: STRING is
 			-- "ise" task name
 		once

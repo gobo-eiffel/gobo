@@ -106,7 +106,6 @@
 				<ref name="move"/>
 				<ref name="outofdate"/>
 				<ref name="precursor"/>
-				<ref name="se"/>
 				<ref name="set"/>
 				<ref name="setenv"/>
 				<ref name="unset"/>
@@ -406,7 +405,6 @@
 					<choice>
 						<value>ise</value>
 						<value>ge</value>
-						<value>se</value>
 					</choice>
 					-->
 				</attribute>
@@ -415,7 +413,6 @@
 					<choice>
 						<value>ise</value>
 						<value>ge</value>
-						<value>se</value>
 					</choice>
 					-->
 				</attribute>
@@ -425,7 +422,6 @@
 						<value>ace</value>
 						<value>ecf</value>
 						<value>xace</value>
-						<value>loadpath</value>
 					</choice>
 					-->
 			</choice>
@@ -527,31 +523,6 @@
 				<attribute name="parent"/>
 			</optional>
 			<text/>
-		</element>
-	</define>
-	<define name="se">
-		<element name="se">
-			<ref name="dir_if_unless"/>
-			<optional>
-				<attribute name="exit_code_variable"/>
-			</optional>
-			<choice>
-				<attribute name="clean"/>
-				<attribute name="ace"/>
-				<group>
-					<attribute name="root_class"/>
-					<attribute name="executable"/>
-					<optional>
-						<attribute name="creation_procedure"/>
-					</optional>
-					<optional>
-						<attribute name="case_insensitive"/>
-					</optional>
-					<optional>
-						<attribute name="no_style_warning"/>
-					</optional>
-				</group>
-			</choice>
 		</element>
 	</define>
 	<define name="set">

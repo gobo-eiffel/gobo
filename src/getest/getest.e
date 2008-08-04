@@ -53,7 +53,6 @@ feature -- Processing
 				config_parser.set_fail_on_rescue (fail_on_rescue)
 				config_parser.set_compiler_ge (compiler_ge)
 				config_parser.set_compiler_ise (compiler_ise)
-				config_parser.set_compiler_se (compiler_se)
 				config_parser.parse (a_file)
 				a_file.close
 				a_config := config_parser.last_config
@@ -219,17 +218,16 @@ feature -- Status report
 
 	compiler_ge: BOOLEAN
 	compiler_ise: BOOLEAN
-	compiler_se: BOOLEAN
 			-- Compiler specified on the command-line
-			-- (--ge, --ise or --se)
+			-- (--ge or --ise)
 
 	compiler_specified: BOOLEAN is
 			-- Has an Eiffel compiler been specified on the command-line?
-			-- (--ge, --ise or --se)
+			-- (--ge or --ise)
 		do
-			Result := (compiler_ge or compiler_ise or compiler_se)
+			Result := (compiler_ge or compiler_ise)
 		ensure
-			definition: Result = (compiler_ge or compiler_ise or compiler_se)
+			definition: Result = (compiler_ge or compiler_ise)
 		end
 
 	fail_on_rescue: BOOLEAN
@@ -257,12 +255,6 @@ feature {NONE} -- Command line
 					report_usage_message
 				elseif arg.is_equal ("--verbose") or arg.is_equal ("-v") then
 					is_verbose := True
-				elseif arg.is_equal ("--se") then
-					if compiler_specified then
-						report_usage_error
-					else
-						compiler_se := True
-					end
 				elseif arg.is_equal ("--ise") then
 					if compiler_specified then
 						report_usage_error
@@ -343,11 +335,6 @@ feature {NONE} -- Command line
 					create a_file.make (ISE_config_filename)
 					if a_file.exists then
 						config_filename := ISE_config_filename
-					end
-				elseif compiler_se then
-					create a_file.make (SE_config_filename)
-					if a_file.exists then
-						config_filename := SE_config_filename
 					end
 				elseif compiler_ge then
 					create a_file.make (GE_config_filename)
@@ -460,7 +447,7 @@ feature {NONE} -- Error handling
 			create Result.make ("[-aceghvV?][--help][--version][--verbose]%N%
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
 				%%T[--class=<regexp>][--feature=<regexp>][--default_test]%N%
-				%%T[--compile=<command>][--se|--ise|--ge|<filename>]")
+				%%T[--compile=<command>][--ise|--ge|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -471,7 +458,6 @@ feature {NONE} -- Constants
 			-- Environment variable
 
 	ISE_config_filename: STRING is "getest.ise"
-	SE_config_filename: STRING is "getest.se"
 	GE_config_filename: STRING is "getest.ge"
 	cfg_config_filename: STRING is "getest.cfg"
 			-- Default configuration filenames

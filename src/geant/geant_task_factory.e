@@ -67,16 +67,6 @@ feature -- Factory
 			new_gec_task_not_void: Result /= Void
 		end
 
-	new_se_task (a_xml_element: XM_ELEMENT): GEANT_SE_TASK is
-			-- se: SmartEiffel compilation
-		require
-			a_xml_element_not_void: a_xml_element /= Void
-		do
-			create Result.make (project, a_xml_element)
-		ensure
-			new_se_task_not_void: Result /= Void
-		end
-
 	new_ise_task (a_xml_element: XM_ELEMENT): GEANT_ISE_TASK is
 			-- ise: ISE Eiffel compilation
 		require
@@ -330,8 +320,6 @@ feature {NONE} -- Implementation
 
 				-- gec: Gobo Eiffel compilation
 			builders.force_last (agent new_gec_task, Gec_task_name)
-				-- se: SmartEiffel compilation
-			builders.force_last (agent new_se_task, Se_task_name)
 				-- ise: ISE Eiffel compilation
 			builders.force_last (agent new_ise_task, Ise_task_name)
 				-- exec

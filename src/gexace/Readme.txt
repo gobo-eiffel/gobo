@@ -18,8 +18,8 @@ To compile Gexace:
 
        defines:  --define="VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*"
        options:  --verbose|--shallow
-       command:  --system=(ge|se|ise) [--format=(ace|ecf|xace|loadpath)][--output=<filename>]
-       command:  --library=(ge|se|ise) [--format=(ace|ecf|xace|loadpath)][--output=<filename>]
+       command:  --system=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]
+       command:  --library=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]
        command:  --validate
 
 A more detailed documentation for 'gexace' will be provided in

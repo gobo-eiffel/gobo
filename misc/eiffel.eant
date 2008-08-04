@@ -166,12 +166,10 @@
 
 		<gec clean="${system}"/>
 		<ise clean="${system}"/>
-		<se clean="${system}"/>
 		<delete file="compile_ge.ace"/>
 		<delete file="compile_ge.xace"/>
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_ise.ecf"/>
-		<delete file="compile_se.ace"/>
 		<delete>
 			<fileset include="vc*.pdb"/>
 		</delete>

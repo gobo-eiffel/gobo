@@ -247,7 +247,6 @@
         <ref name="outofdate"/>
         <ref name="precursor"/>
         <ref name="replace"/>
-        <ref name="se"/>
         <ref name="set"/>
         <ref name="setenv"/>
         <ref name="unset"/>

@@ -54,7 +54,6 @@
 		<geant target="xslt_and_shift" arguments="outofdate_task"/>
 		<geant target="xslt_and_shift" arguments="precursor_task"/>
 		<geant target="xslt_and_shift" arguments="replace_task"/>
-		<geant target="xslt_and_shift" arguments="se_task"/>
 		<geant target="xslt_and_shift" arguments="set_task"/>
 		<geant target="xslt_and_shift" arguments="setenv_task"/>
 		<geant target="xslt_and_shift" arguments="unset_task"/>
@@ -103,7 +102,6 @@
 		<delete file="outofdate_task.html"/>
 		<delete file="precursor_task.html"/>
 		<delete file="replace_task.html"/>
-		<delete file="se_task.html"/>
 		<delete file="set_task.html"/>
 		<delete file="setenv_task.html"/>
 		<delete file="unset_task.html"/>
