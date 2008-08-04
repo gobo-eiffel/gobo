@@ -399,6 +399,8 @@ feature -- Types
 			l_type: ET_DYNAMIC_TYPE
 			l_base_class: ET_CLASS
 			l_any: ET_CLASS
+			l_new_type: BOOLEAN
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
 			l_base_class := a_type.base_class (a_context)
 			i := l_base_class.index
@@ -412,6 +414,7 @@ feature -- Types
 					elseif l_type.next_type = Void then
 						Result := new_dynamic_type (a_type, a_context)
 						dynamic_types.force_last (Result)
+						l_new_type := True
 							-- `dynamic_type' is re-entrant (`new_dynamic_type' is
 							-- calling it). So at this stage 'l_type.next_type' is
 							-- not necessarily Void anymore. We have to take that
@@ -436,6 +439,7 @@ feature -- Types
 						elseif l_type.next_type = Void then
 							Result := new_dynamic_type (a_type, a_context)
 							dynamic_types.force_last (Result)
+							l_new_type := True
 								-- `dynamic_type' is re-entrant (`new_dynamic_type' is
 								-- calling it). So at this stage 'l_type.next_type' is
 								-- not necessarily Void anymore. We have to take that
@@ -458,6 +462,7 @@ feature -- Types
 				end
 				Result := new_dynamic_type (a_type, a_context)
 				dynamic_types.force_last (Result)
+				l_new_type := True
 					-- `dynamic_type' is re-entrant (`new_dynamic_type' is calling it).
 					-- So at this stage another type with the same base class may have
 					-- been inserted into `dynamic_types'. We have to take that possibility
@@ -476,6 +481,37 @@ feature -- Types
 				else
 						-- No other type has been inserted.
 					l_base_class.set_index (dynamic_types.count)
+				end
+			end
+			if l_new_type then
+					-- Make feature 'is_equal' alive in case it is called internally as part
+					-- of object equality ('~' and '/~') or equality ('=' and '/=') if expanded.
+					--
+					-- Note that we don't call this code in `new_dynamic_type' because
+					-- we have an infinite recursion, the type of the argument of 'is_equal'
+					-- being the type of the target (more precisely 'like Current'). So
+					-- when we create the type "T", it creates the feature 'is_equal',
+					-- which creates the type "T", which creates the feature `is_equal', etc.
+					-- Moving the code here cuts the infinite recursion.
+				if l_base_class.is_none  then
+					-- Class "NONE" has no feature available.
+				elseif Result.is_basic then
+					-- For basic types, we have an optimization which avoids calling
+					-- feature 'is_equal' internally. However this does not check
+					-- whether 'is_equal' is indeed the expected standard built-in feature
+					-- or it has been modified.
+				else
+					l_dynamic_feature := Result.seeded_dynamic_query (current_system.is_equal_seed, Current)
+					if l_dynamic_feature = Void then
+							-- Internal error: all classes should have a feature
+							-- 'is_equal'. Otherwise we get an error when parsing
+							-- class ANY if there is no such feature.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_dynamic_feature.set_regular (True)
+						dynamic_type_set_builder.propagate_is_equal_argument_type (Result, l_dynamic_feature)
+					end
 				end
 			end
 		ensure

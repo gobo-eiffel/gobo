@@ -3004,6 +3004,7 @@ feature -- Keyword and symbol names
 	minus_symbol_name: STRING is "-"
 	mod_symbol_name: STRING is "\\"
 	not_equal_symbol_name: STRING is "/="
+	not_tilde_symbol_name: STRING is "/~"
 	plus_symbol_name: STRING is "+"
 	power_symbol_name: STRING is "^"
 	question_mark_symbol_name: STRING is "?"

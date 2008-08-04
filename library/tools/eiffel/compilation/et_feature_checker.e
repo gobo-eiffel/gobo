@@ -74,6 +74,7 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_object_equality_expression,
 			process_object_test,
 			process_old_expression,
 			process_once_function,
@@ -4437,95 +4438,76 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			left_context: ET_NESTED_TYPE_CONTEXT
-			right_context: ET_NESTED_TYPE_CONTEXT
-			left_named_type: ET_NAMED_TYPE
-			right_named_type: ET_NAMED_TYPE
-			left_class: ET_CLASS
-			right_class: ET_CLASS
-			any_type: ET_CLASS_TYPE
+			l_left_operand: ET_EXPRESSION
+			l_right_operand: ET_EXPRESSION
+			l_left_context: ET_NESTED_TYPE_CONTEXT
+			l_right_context: ET_NESTED_TYPE_CONTEXT
+			l_left_convert_expression: ET_CONVERT_EXPRESSION
+			l_right_convert_expression: ET_CONVERT_EXPRESSION
+			l_any_type: ET_CLASS_TYPE
+			had_error: BOOLEAN
 		do
 			has_fatal_error := False
-			any_type := current_system.any_type
-			left_context := new_context (current_type)
-			right_context := new_context (current_type)
-			check_expression_validity (an_expression.left, left_context, any_type)
+			l_any_type := current_system.any_type
+			l_left_context := new_context (current_type)
+			l_right_context := new_context (current_type)
+			l_left_operand := an_expression.left
+			l_right_operand := an_expression.right
+			check_expression_validity (l_left_operand, l_left_context, l_any_type)
 			if not has_fatal_error then
-				check_expression_validity (an_expression.right, right_context, any_type)
+				check_expression_validity (l_right_operand, l_right_context, l_any_type)
 				if not has_fatal_error then
-						-- This rule is too constraining when checking CAT-calls.
-					if left_context.conforms_to_context (right_context) then
-							-- OK.
-						report_equality_expression (an_expression)
-					elseif right_context.conforms_to_context (left_context) then
-							-- OK.
-						report_equality_expression (an_expression)
-					elseif left_context.same_named_type (current_system.none_type, current_type) then
-							-- OK: we can compare anything with 'Void'.
-							-- This is a breach of VWEQ in case the other operand
-							-- is of expanded type or formal generic type.
-						report_equality_expression (an_expression)
-					elseif right_context.same_named_type (current_system.none_type, current_type) then
-							-- OK: we can compare anything with 'Void'.
-							-- This is a breach of VWEQ in case the other operand
-							-- is of expanded type or formal generic type.
-						report_equality_expression (an_expression)
-					elseif type_checker.convert_feature (left_context, right_context) /= Void then
-							-- OK: there is a conversion feature.
--- TODO: check the validity of this conversion feature in the current context.
-						report_equality_expression (an_expression)
-					elseif type_checker.convert_feature (right_context, left_context) /= Void then
-							-- OK: there is a conversion feature.
--- TODO: check the validity of this conversion feature in the current context.
-						report_equality_expression (an_expression)
+					if current_class /= current_class_impl then
+						-- Possible convertibility should be resolved in the implementation class.
+					elseif l_left_context.conforms_to_context (l_right_context) then
+						-- OK.
+					elseif l_right_context.conforms_to_context (l_left_context) then
+						-- OK.
+					elseif l_left_context.same_named_type (current_system.none_type, current_type) then
+						-- OK: we can compare anything with 'Void'.
+						-- This is a breach of VWEQ in case the other operand
+						-- is of expanded type or formal generic type.
+					elseif l_right_context.same_named_type (current_system.none_type, current_type) then
+						-- OK: we can compare anything with 'Void'.
+						-- This is a breach of VWEQ in case the other operand
+						-- is of expanded type or formal generic type.
 					else
-						left_class := left_context.base_class
-						right_class := right_context.base_class
-						if
-							(left_class = current_system.integer_8_class or
-							left_class = current_system.integer_16_class or
-							left_class = current_system.integer_32_class or
-							left_class = current_system.integer_64_class or
-							left_class = current_system.natural_8_class or
-							left_class = current_system.natural_16_class or
-							left_class = current_system.natural_32_class or
-							left_class = current_system.natural_64_class) and
-							(right_class = current_system.integer_8_class or
-							right_class = current_system.integer_16_class or
-							right_class = current_system.integer_32_class or
-							right_class = current_system.integer_64_class or
-							right_class = current_system.natural_8_class or
-							right_class = current_system.natural_16_class or
-							right_class = current_system.natural_32_class or
-							right_class = current_system.natural_64_class)
-						then
-								-- It is OK to compare integer values of various sizes.
-							report_equality_expression (an_expression)
-						else
-							if current_class_impl /= current_class then
-									-- We consider that VWEQ is not taken into
-									-- account in flat Degree 3 mode.
-								report_equality_expression (an_expression)
-							else
-								set_fatal_error
-								left_named_type := left_context.named_type
-								right_named_type := right_context.named_type
-								error_handler.report_vweq0a_error (current_class, current_class_impl, an_expression, left_named_type, right_named_type)
+						l_right_convert_expression := convert_expression (l_right_operand, l_right_context, l_left_context)
+						had_error := has_fatal_error
+						l_left_convert_expression := convert_expression (l_left_operand, l_left_context, l_right_context)
+						has_fatal_error := has_fatal_error or had_error
+						if has_fatal_error then
+							-- Nothing to be done.
+						elseif l_right_convert_expression /= Void then
+							if l_left_convert_expression /= Void then
+-- TODO: conversion in both directions
 							end
+								-- Insert the conversion feature call in the AST.
+							an_expression.set_right (l_right_convert_expression)
+						elseif l_left_convert_expression /= Void then
+								-- Insert the conversion feature call in the AST.
+								-- Convertibility should be resolved in the implementation class.
+							check implementation_class: current_class = current_class_impl end
+							an_expression.set_left (l_left_convert_expression)
+						else
+								-- We consider that VWEQ is not taken into account in flat Degree 3 mode.
+								-- This is not considered as a fatal error.
+							error_handler.report_vweq0a_error (current_class, current_class_impl, an_expression, l_left_context.named_type, l_right_context.named_type)
 						end
 					end
 					if not has_fatal_error then
 						a_context.force_last (current_system.boolean_class)
+						report_equality_expression (an_expression)
 					end
 				end
 			else
 					-- The left expression is not valid. Check the right expression
 					-- anyway, and then restore `has_fatal_error' to True.
-				check_expression_validity (an_expression.right, right_context, any_type)
+				check_expression_validity (l_right_operand, l_right_context, l_any_type)
 				set_fatal_error
 			end
-			free_context (right_context)
-			free_context (left_context)
+			free_context (l_right_context)
+			free_context (l_left_context)
 		end
 
 	check_expression_address_validity (an_expression: ET_EXPRESSION_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -6067,6 +6049,88 @@ feature {NONE} -- Expression validity
 				report_manifest_type (an_expression, l_type_type, a_context)
 				a_context.force_last (l_type_type)
 			end
+		end
+
+	check_object_equality_expression_validity (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_left_operand: ET_EXPRESSION
+			l_right_operand: ET_EXPRESSION
+			l_left_context: ET_NESTED_TYPE_CONTEXT
+			l_right_context: ET_NESTED_TYPE_CONTEXT
+			l_left_convert_expression: ET_CONVERT_EXPRESSION
+			l_right_convert_expression: ET_CONVERT_EXPRESSION
+			l_any_type: ET_CLASS_TYPE
+			had_error: BOOLEAN
+		do
+			has_fatal_error := False
+			an_expression.name.set_seed (current_system.is_equal_seed)
+			l_any_type := current_system.any_type
+			l_left_context := new_context (current_type)
+			l_right_context := new_context (current_type)
+			l_left_operand := an_expression.left
+			l_right_operand := an_expression.right
+			check_expression_validity (l_left_operand, l_left_context, l_any_type)
+			if not has_fatal_error then
+				check_expression_validity (l_right_operand, l_right_context, l_any_type)
+				if not has_fatal_error then
+					if current_class /= current_class_impl then
+						-- Possible convertibility should be resolved in the implementation class.
+					elseif l_left_context.conforms_to_context (l_right_context) then
+						-- OK.
+					elseif l_right_context.conforms_to_context (l_left_context) then
+						-- OK.
+					elseif l_left_context.same_named_type (current_system.none_type, current_type) then
+						-- OK: we can compare anything with 'Void'.
+						-- This is a breach of VWEQ in case the other operand
+						-- is of expanded type or formal generic type.
+					elseif l_right_context.same_named_type (current_system.none_type, current_type) then
+						-- OK: we can compare anything with 'Void'.
+						-- This is a breach of VWEQ in case the other operand
+						-- is of expanded type or formal generic type.
+					else
+						l_right_convert_expression := convert_expression (l_right_operand, l_right_context, l_left_context)
+						had_error := has_fatal_error
+						l_left_convert_expression := convert_expression (l_left_operand, l_left_context, l_right_context)
+						has_fatal_error := has_fatal_error or had_error
+						if has_fatal_error then
+							-- Nothing to be done.
+						elseif l_right_convert_expression /= Void then
+							if l_left_convert_expression /= Void then
+-- TODO: conversion in both directions
+							end
+								-- Insert the conversion feature call in the AST.
+							an_expression.set_right (l_right_convert_expression)
+						elseif l_left_convert_expression /= Void then
+								-- Insert the conversion feature call in the AST.
+								-- Convertibility should be resolved in the implementation class.
+							check implementation_class: current_class = current_class_impl end
+							an_expression.set_left (l_left_convert_expression)
+						else
+								-- We consider that VWEQ is not taken into account in flat Degree 3 mode.
+								-- This is not considered as a fatal error.
+							error_handler.report_vweq0b_error (current_class, current_class_impl, an_expression, l_left_context.named_type, l_right_context.named_type)
+						end
+					end
+					if not has_fatal_error then
+						a_context.force_last (current_system.boolean_class)
+						report_object_equality_expression (an_expression)
+					end
+				end
+			else
+					-- The left expression is not valid. Check the right expression
+					-- anyway, and then restore `has_fatal_error' to True.
+				check_expression_validity (l_right_operand, l_right_context, l_any_type)
+				set_fatal_error
+			end
+			free_context (l_right_context)
+			free_context (l_left_context)
 		end
 
 	check_object_test_validity (an_expression: ET_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -10242,6 +10306,14 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Report that an object equality expression has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+		do
+		end
+
 	report_object_test (a_object_test: ET_OBJECT_TEST) is
 			-- Report that the object-test `a_object_test' has been processed.
 			-- Note: The type of the object-test local is still viewed from
@@ -11154,6 +11226,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_manifest_type_validity (an_expression, current_context)
+		end
+
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			check_object_equality_expression_validity (an_expression, current_context)
 		end
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is

@@ -4,6 +4,9 @@ Version 3.9 - ?
 
 	* Fixed some C compilation warnings when using gcc as back-end C compiler.
 	  See bug#1961462.
+	* Added support for object equality ('~' and '/~'). Equality expressions
+	  ('=' and '/=') now use the semantics of object equality when the operands
+	  are dynamically of expanded types.
 
 	gelint:
 

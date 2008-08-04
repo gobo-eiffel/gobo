@@ -5671,7 +5671,7 @@ feature -- Validity errors
 			-- Report VWEQ error: none of the operands of the equality
 			-- expression `an_expression' appearing in `a_class_impl' and viewed
 			-- from one of its descendants `a_class' (possibly itself) conforms
-			-- to the other.
+			-- or converts to the other.
 			--
 			-- ETL2: p.375
 		require
@@ -5686,6 +5686,29 @@ feature -- Validity errors
 		do
 			if reportable_vweq_error (a_class) then
 				create an_error.make_vweq0a (a_class, a_class_impl, an_expression, a_type1, a_type2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vweq0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE) is
+			-- Report VWEQ error: none of the operands of the object-equality
+			-- expression `an_expression' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) conforms
+			-- or converts to the other.
+			--
+			-- ETL2: p.375
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type1_not_void: a_type1 /= Void
+			a_type2_not_void: a_type2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vweq_error (a_class) then
+				create an_error.make_vweq0b (a_class, a_class_impl, an_expression, a_type1, a_type2)
 				report_validity_error (an_error)
 			end
 		end

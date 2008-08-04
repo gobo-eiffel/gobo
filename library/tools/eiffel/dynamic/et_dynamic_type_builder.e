@@ -68,6 +68,7 @@ inherit
 			report_natural_16_constant,
 			report_natural_32_constant,
 			report_natural_64_constant,
+			report_object_equality_expression,
 			report_object_test,
 			report_object_test_local,
 			report_pointer_expression,
@@ -377,6 +378,21 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 				else
 					l_dynamic_feature.set_regular (True)
 				end
+			end
+		end
+
+feature {ET_DYNAMIC_SYSTEM} -- Generation
+
+	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+			-- Propagate `a_type' as argument of `a_feature', the feature being the
+			-- feature 'is_equal' possibly used internal in object equality ('~' and '/~')
+			-- or in equality ('=' and '/=') when the target type is expanded.
+		local
+			l_formal_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			l_formal_type_set := a_feature.argument_type_set (1)
+			if l_formal_type_set /= Void and then a_type.conforms_to_type (l_formal_type_set.static_type) then
+				propagate_builtin_actual_argument_dynamic_types (a_type, 1, a_feature)
 			end
 		end
 
@@ -2384,6 +2400,24 @@ feature {NONE} -- Event handling
 				set_dynamic_type_set (l_type, a_constant)
 				if natural_64_index.item = 0 then
 					natural_64_index.put (a_constant.index)
+				end
+			end
+		end
+
+	report_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Report that an object equality expression has been processed.
+		local
+			l_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_type := current_dynamic_system.boolean_type
+				mark_type_alive (l_type)
+				if an_expression.index = 0 and boolean_index.item /= 0 then
+					an_expression.set_index (boolean_index.item)
+				end
+				set_dynamic_type_set (l_type, an_expression)
+				if boolean_index.item = 0 then
+					boolean_index.put (an_expression.index)
 				end
 			end
 		end

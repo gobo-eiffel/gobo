@@ -88,6 +88,7 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_object_equality_expression,
 			process_object_test,
 			process_old_expression,
 			process_once_function,
@@ -1172,7 +1173,6 @@ feature {ET_AST_NODE} -- Processing
 			reset_fatal_error (had_error or has_fatal_error)
 		end
 
-
 	process_expression (a_expression: ET_EXPRESSION) is
 			-- Process `a_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1759,6 +1759,13 @@ feature {ET_AST_NODE} -- Processing
 			if anchored_types_enabled then
 				process_type (an_expression.type)
 			end
+		end
+
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_call_expression (an_expression)
 		end
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is

@@ -103,6 +103,7 @@ inherit
 			new_minus_symbol,
 			new_mod_symbol,
 			new_not_equal_symbol,
+			new_not_tilde_symbol,
 			new_plus_symbol,
 			new_power_symbol,
 			new_question_mark_symbol,
@@ -1096,6 +1097,14 @@ feature -- Eiffel symbols
 			-- New '/=' symbol
 		do
 			create Result.make_not_equal
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_not_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '/~' symbol
+		do
+			create Result.make_not_tilde
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end

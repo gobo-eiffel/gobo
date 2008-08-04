@@ -51,6 +51,7 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_object_equality_expression,
 			process_object_test,
 			process_old_expression,
 			process_once_function_inline_agent,
@@ -1371,6 +1372,18 @@ feature {NONE} -- Expression processing
 			l_actuals.put_first (l_type)
 			create l_type_type.make (Void, l_type_class.name, l_actuals, l_type_class)
 			a_context.force_last (l_type_type)
+		end
+
+	find_object_equality_expression_type (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			reset_fatal_error (False)
+			a_context.force_last (current_system.boolean_class)
 		end
 
 	find_object_test_type (an_expression: ET_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -3079,6 +3092,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			find_manifest_type_type (an_expression, current_context)
+		end
+
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			find_object_equality_expression_type (an_expression, current_context)
 		end
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is

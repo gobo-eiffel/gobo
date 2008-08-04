@@ -2821,7 +2821,7 @@ feature {NONE} -- Processing
 			-- two characters `c1' and `c2'.
 		require
 			two_chars: text_count >= 2
-			-- valid_string: ("//"|"\\\\"|"/="|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=").recognizes (text_substring (1, 2))
+			-- valid_string: ("//"|"\\\\"|"/="|"/~"|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=").recognizes (text_substring (1, 2))
 			valid_c1: text_item (1) = c1
 			valid_c2: text_item (2) = c2
 		do
@@ -2836,6 +2836,9 @@ feature {NONE} -- Processing
 				when '=' then
 					last_token := E_NE
 					last_et_symbol_value := ast_factory.new_not_equal_symbol (Current)
+				when '~' then
+					last_token := E_NOT_TILDE
+					last_et_symbol_value := ast_factory.new_not_tilde_symbol (Current)
 				else
 					last_token := E_UNKNOWN
 					last_et_position_value := current_position

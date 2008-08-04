@@ -124,13 +124,14 @@ feature -- Keyword and symbol codes
 	left_bracket_symbol_code: CHARACTER is '%/83/'
 	left_parenthesis_symbol_code: CHARACTER is '%/84/'
 	not_equal_symbol_code: CHARACTER is '%/85/'
-	question_mark_symbol_code: CHARACTER is '%/86/'
-	right_array_symbol_code: CHARACTER is '%/87/'
-	right_brace_symbol_code: CHARACTER is '%/88/'
-	right_bracket_symbol_code: CHARACTER is '%/89/'
-	right_parenthesis_symbol_code: CHARACTER is '%/90/'
-	semicolon_symbol_code: CHARACTER is '%/91/'
-	tilde_symbol_code: CHARACTER is '%/92/'
+	not_tilde_symbol_code: CHARACTER is '%/86/'
+	question_mark_symbol_code: CHARACTER is '%/87/'
+	right_array_symbol_code: CHARACTER is '%/88/'
+	right_brace_symbol_code: CHARACTER is '%/89/'
+	right_bracket_symbol_code: CHARACTER is '%/90/'
+	right_parenthesis_symbol_code: CHARACTER is '%/91/'
+	semicolon_symbol_code: CHARACTER is '%/92/'
+	tilde_symbol_code: CHARACTER is '%/93/'
 			-- Eiffel symbol codes
 
 feature -- Built-in codes

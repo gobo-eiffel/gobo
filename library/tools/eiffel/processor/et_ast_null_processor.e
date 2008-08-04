@@ -732,6 +732,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_object_test (an_expression: ET_OBJECT_TEST) is
 			-- Process `an_expression'.
 		do

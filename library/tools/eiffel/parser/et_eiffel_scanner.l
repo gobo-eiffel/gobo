@@ -57,18 +57,18 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 				last_comment_end := text_count
 				process_one_char_symbol ('-')
 			}
-("//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")	{
 				last_break_end := 0
 				last_comment_end := 0
 				process_two_char_symbol (text_item (1), text_item (2))
 			}
-("//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")[ \t\r\n]+	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")[ \t\r\n]+	{
 				last_text_count := 2
 				last_break_end := text_count
 				last_comment_end := 0
 				process_two_char_symbol (text_item (1), text_item (2))
 			}
-("//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")([ \t\r\n]|"--".*)+	{
+("//"|"\\\\"|"/="|"/~"|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")([ \t\r\n]|"--".*)+	{
 				last_text_count := 2
 				last_break_end := 0
 				last_comment_end := text_count

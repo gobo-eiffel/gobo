@@ -120,6 +120,10 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="equality"/>
+		<geant file="build.eant" target="clean" dir="equality" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="object_equality"/>
+		<geant file="build.eant" target="clean" dir="object_equality" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="object_test"/>
 		<geant file="build.eant" target="clean" dir="object_test" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="once"/>

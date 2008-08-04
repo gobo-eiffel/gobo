@@ -87,6 +87,7 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_object_equality_expression,
 			process_object_test,
 			process_old_expression,
 			process_once_function,
@@ -1122,6 +1123,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			process_type (an_expression.type)
+		end
+
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			process_expression (an_expression.left)
+			process_expression (an_expression.right)
 		end
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is

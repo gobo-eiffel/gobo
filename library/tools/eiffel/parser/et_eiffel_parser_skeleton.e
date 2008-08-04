@@ -640,6 +640,21 @@ feature {NONE} -- Basic operations
 							current_system.set_copy_seed (0)
 						end
 					end
+					l_query := a_class.named_query (tokens.is_equal_feature_name)
+					if l_query /= Void then
+						current_system.set_is_equal_seed (l_query.first_seed)
+					else
+						l_procedure := a_class.named_procedure (tokens.is_equal_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe5a_error (a_class, l_procedure)
+							current_system.set_is_equal_seed (0)
+						else
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe1a_error (a_class, tokens.is_equal_feature_name)
+							current_system.set_is_equal_seed (0)
+						end
+					end
 				elseif a_class = current_system.routine_class then
 					l_procedure := a_class.named_procedure (tokens.call_feature_name)
 					if l_procedure /= Void then

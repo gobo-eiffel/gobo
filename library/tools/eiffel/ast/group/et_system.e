@@ -876,6 +876,9 @@ feature -- Feature seeds
 	copy_seed: INTEGER
 			-- Seed of feature 'copy' in class ANY
 
+	is_equal_seed: INTEGER
+			-- Seed of feature 'is_equal' in class ANY
+
 	dispose_seed: INTEGER
 			-- Seed of feature 'dispose' in class DISPOSABLE
 
@@ -905,6 +908,16 @@ feature -- Feature seeds setting
 			copy_seed := a_seed
 		ensure
 			copy_seed_set: copy_seed = a_seed
+		end
+
+	set_is_equal_seed (a_seed: INTEGER) is
+			-- Set `is_equal_seed' to `a_seed'.
+		require
+			a_seed_not_negative: a_seed >= 0
+		do
+			is_equal_seed := a_seed
+		ensure
+			is_equal_seed_set: is_equal_seed = a_seed
 		end
 
 	set_dispose_seed (a_seed: INTEGER) is
@@ -2034,6 +2047,7 @@ invariant
 		-- Feature seeds.
 	default_create_seed_not_negative: default_create_seed >= 0
 	copy_seed_not_negative: copy_seed >= 0
+	is_equal_seed_not_negative: is_equal_seed >= 0
 	dispose_seed_not_negative: dispose_seed >= 0
 	routine_call_seed_not_negative: routine_call_seed >= 0
 	function_item_seed_not_negative: function_item_seed >= 0

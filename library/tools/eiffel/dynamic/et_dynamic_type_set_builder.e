@@ -188,6 +188,18 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 		deferred
 		end
 
+feature {ET_DYNAMIC_SYSTEM} -- Generation
+
+	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+			-- Propagate `a_type' as argument of `a_feature', the feature being the
+			-- feature 'is_equal' possibly used internal in object equality ('~' and '/~')
+			-- or in equality ('=' and '/=') when the target type is expanded.
+		require
+			a_type_not_void: a_type /= Void
+			a_feature_not_void: a_feature /= Void
+		deferred
+		end
+
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE) is

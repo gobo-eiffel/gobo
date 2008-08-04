@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-3-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-3-0 http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd" name="xobject_equality">
+	<target name="xobject_equality">
+		<root class="XOBJECT_EQUALITY" feature="make"/>
+		<option trace="false" profile="false" debug="false" warning="true">
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="${ISE_EIFFEL}/library/base/base.ecf" readonly="true"/>
+		<library name="time" location="${ISE_EIFFEL}/library/time/time.ecf" readonly="true"/>
+		<cluster name="object_equality_tester" location="${GOBO}/test/gelint/semantics/object_equality"/>
+		<cluster name="object_equality_testgen" location="TESTGEN"/>
+		<cluster name="ts_test" location="${GOBO}/library/test">
+			<cluster name="ts_generation" location="$|generation"/>
+			<cluster name="ts_harness" location="$|harness"/>
+		</cluster>
+		<cluster name="kl_kernel" location="${GOBO}/library/kernel">
+			<cluster name="kl_basic" location="$|basic"/>
+			<cluster name="kl_elks" location="$|elks"/>
+			<cluster name="kl_io" location="$|io"/>
+			<cluster name="kl_misc" location="$|misc"/>
+			<cluster name="kl_unicode" location="$|unicode"/>
+			<cluster name="kl_support" location="$|support"/>
+			<cluster name="kl_spec" location="$|spec">
+				<cluster name="kl_spec_ise" location="$|ise"/>
+			</cluster>
+		</cluster>
+		<cluster name="ds_structure" location="${GOBO}/library/structure">
+			<cluster name="ds_container" location="$|container"/>
+			<cluster name="ds_dispenser" location="$|dispenser"/>
+			<cluster name="ds_list" location="$|list"/>
+			<cluster name="ds_set" location="$|set"/>
+			<cluster name="ds_sort" location="$|sort"/>
+			<cluster name="ds_support" location="$|support"/>
+			<cluster name="ds_table" location="$|table"/>
+		</cluster>
+		<cluster name="ut_utility" location="${GOBO}/library/utility">
+			<cluster name="ut_error" location="$|error"/>
+			<cluster name="ut_formatter" location="$|formatter"/>
+			<cluster name="ut_command" location="$|command"/>
+			<cluster name="ut_config" location="$|config"/>
+			<cluster name="ut_support" location="$|support"/>
+			<cluster name="ut_transcoder" location="$|transcoder"/>
+			<cluster name="ut_uri" location="$|uri"/>
+		</cluster>
+		<cluster name="dp_pattern" location="${GOBO}/library/pattern">
+			<cluster name="dp_bridge" location="$|bridge"/>
+			<cluster name="dp_command" location="$|command"/>
+		</cluster>
+		<cluster name="dt_time" location="${GOBO}/library/time">
+			<cluster name="dt_clock" location="$|clock"/>
+			<cluster name="dt_date" location="$|date"/>
+			<cluster name="dt_time_zone" location="$|time_zone"/>
+		</cluster>
+	</target>
+</system>

@@ -113,6 +113,7 @@ inherit
 			process_manifest_array,
 			process_manifest_string_list,
 			process_manifest_tuple,
+			process_object_equality_expression,
 			process_object_test,
 			process_old_expression,
 			process_once_function,
@@ -3800,6 +3801,16 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			an_expression.right_symbol.process (Current)
+		end
+
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			an_expression.left.process (Current)
+			print_space
+			an_expression.operator.process (Current)
+			print_space
+			an_expression.right.process (Current)
 		end
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is

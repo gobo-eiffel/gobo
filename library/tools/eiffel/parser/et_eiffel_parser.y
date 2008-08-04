@@ -77,11 +77,11 @@ create
 
 %token <ET_KEYWORD> E_OLD
 %token <ET_SYMBOL> '{' '}'
-%token <ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!' '~'
+%token <ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!'
 %token <ET_SYMBOL_OPERATOR> '-'
 %token <ET_SYMBOL_OPERATOR> '+'
-%token <ET_SYMBOL> '='
-%token <ET_SYMBOL> E_NE
+%token <ET_SYMBOL> '=' '~'
+%token <ET_SYMBOL> E_NE E_NOT_TILDE
 %token <ET_SEMICOLON_SYMBOL> ';'
 %token <ET_BRACKET_SYMBOL> '['
 %token <ET_QUESTION_MARK_SYMBOL> '?'
@@ -89,7 +89,7 @@ create
 %left E_IMPLIES
 %left E_OR E_XOR
 %left E_AND
-%left '=' E_NE '<' '>' E_LE E_GE
+%left '=' E_NE '~' E_NOT_TILDE '<' '>' E_LE E_GE
 %left '+' '-'
 %left '*' '/' E_DIV E_MOD
 %right '^'
@@ -3373,6 +3373,10 @@ Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_equality_expression ($1, $2, $3) }
 	| Expression E_NE Expression
 		{ $$ := ast_factory.new_equality_expression ($1, $2, $3) }
+	| Expression '~' Expression
+		{ $$ := ast_factory.new_object_equality_expression ($1, $2, $3) }
+	| Expression E_NOT_TILDE Expression
+		{ $$ := ast_factory.new_object_equality_expression ($1, $2, $3) }
 	;
 
 Non_binary_expression: Bracket_target

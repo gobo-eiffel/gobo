@@ -42,6 +42,7 @@ create
 	make_left_brace,
 	make_left_parenthesis,
 	make_not_equal,
+	make_not_tilde,
 	make_right_array,
 	make_right_brace,
 	make_right_bracket,
@@ -303,6 +304,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_not_tilde is
+			-- Create a new '/~' symbol.
+		do
+			code := tokens.not_tilde_symbol_code
+			make_leaf
+		ensure
+			is_not_tilde: is_not_tilde
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_plus is
 			-- Create a new '+' symbol.
 		do
@@ -467,6 +479,8 @@ feature -- Access
 				Result := tokens.mod_symbol_name
 			when not_equal_symbol_code then
 				Result := tokens.not_equal_symbol_name
+			when not_tilde_symbol_code then
+				Result := tokens.not_tilde_symbol_name
 			when infix_plus_code then
 				Result := tokens.plus_symbol_name
 			when prefix_plus_code then
@@ -639,6 +653,12 @@ feature -- Status report
 			-- Is current symbol '/='?
 		do
 			Result := (code = tokens.not_equal_symbol_code)
+		end
+
+	is_not_tilde: BOOLEAN is
+			-- Is current symbol '/~'?
+		do
+			Result := (code = tokens.not_tilde_symbol_code)
 		end
 
 	is_plus: BOOLEAN is

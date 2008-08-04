@@ -2168,6 +2168,14 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right_brace.process (Current)
 		end
 
+	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			an_expression.left.process (Current)
+			an_expression.operator.process (Current)
+			an_expression.right.process (Current)
+		end
+
 	process_object_test (an_expression: ET_OBJECT_TEST) is
 			-- Process `an_expression'.
 		do

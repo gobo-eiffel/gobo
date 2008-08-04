@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<system name="xequality">
+	<root class="XEQUALITY" creation="make"/>
+	<option name="assertion" value="none"/>
+	<option name="console_application" value="true"/>
+	<option name="finalize" value="true"/>
+	<option name="garbage_collector" value="none"/>
+	<cluster name="equality_tester" location="${GOBO}/test/gelint/semantics/equality"/>
+	<cluster name="equality_testgen" location="TESTGEN"/>
+	<cluster name="test" location="${GOBO}/library/test" prefix="ts_">
+		<option name="abstract" value="true"/>
+		<cluster name="generation"/>
+		<cluster name="harness"/>
+	</cluster>
+	<cluster name="kernel" location="${GOBO}/library/kernel" prefix="kl_">
+		<option name="abstract" value="true"/>
+		<cluster name="basic"/>
+		<cluster name="elks"/>
+		<cluster name="io"/>
+		<cluster name="misc"/>
+		<cluster name="unicode"/>
+		<cluster name="support"/>
+		<cluster name="spec">
+			<option name="abstract" value="true"/>
+			<cluster name="ge" prefix="kl_spec_"/>
+		</cluster>
+	</cluster>
+	<cluster name="structure" location="${GOBO}/library/structure" prefix="ds_">
+		<option name="abstract" value="true"/>
+		<cluster name="container"/>
+		<cluster name="dispenser"/>
+		<cluster name="list"/>
+		<cluster name="set"/>
+		<cluster name="sort"/>
+		<cluster name="support"/>
+		<cluster name="table"/>
+	</cluster>
+	<cluster name="utility" location="${GOBO}/library/utility" prefix="ut_">
+		<option name="abstract" value="true"/>
+		<cluster name="error"/>
+		<cluster name="formatter"/>
+		<cluster name="command"/>
+		<cluster name="config"/>
+		<cluster name="support"/>
+		<cluster name="transcoder"/>
+		<cluster name="uri"/>
+	</cluster>
+	<cluster name="pattern" location="${GOBO}/library/pattern" prefix="dp_">
+		<option name="abstract" value="true"/>
+		<cluster name="bridge"/>
+		<cluster name="command"/>
+	</cluster>
+	<cluster name="time" location="${GOBO}/library/time" prefix="dt_">
+		<option name="abstract" value="true"/>
+		<cluster name="clock"/>
+		<cluster name="date"/>
+		<cluster name="time_zone"/>
+	</cluster>
+	<cluster name="ge" location="${GOBO}/library"/>
+	<cluster name="free_elks" location="${GOBO}/library/free_elks" prefix="fe_">
+		<option name="abstract" value="true"/>
+		<cluster name="fake"/>
+		<cluster name="kernel"/>
+		<cluster name="refactoring"/>
+		<cluster name="structures">
+			<cluster name="access"/>
+			<cluster name="cursor_tree"/>
+			<cluster name="cursors"/>
+			<cluster name="dispenser"/>
+			<cluster name="iteration"/>
+			<cluster name="list"/>
+			<cluster name="set">
+				<cluster name="strategies"/>
+			</cluster>
+			<cluster name="sort"/>
+			<cluster name="storage"/>
+			<cluster name="table"/>
+			<cluster name="traversing"/>
+			<cluster name="tree"/>
+		</cluster>
+		<cluster name="support"/>
+	</cluster>
+</system>

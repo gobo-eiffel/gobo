@@ -253,6 +253,7 @@ create
 	make_vuot4b,
 	make_vwbe0a,
 	make_vweq0a,
+	make_vweq0b,
 	make_vwst1a,
 	make_vwst1b,
 	make_vwst2a,
@@ -11024,6 +11025,55 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base type of right operand
 		end
 
+	make_vweq0b (a_class, a_class_impl: ET_CLASS; an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE) is
+			-- Create a new VWEQ error: none of the operands of the object-equality
+			-- expression `an_expression' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) conforms
+			-- or converts to the other.
+			--
+			-- ETL2: p.375
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type1_not_void: a_type1 /= Void
+			a_type2_not_void: a_type2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_expression.operator.position
+			code := template_code (vweq0b_template_code)
+			etl_code := vweq_etl_code
+			default_template := default_message_template (vweq0b_default_template)
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (an_expression.operator.text, 7)
+			parameters.put (a_type1.to_text, 8)
+			parameters.put (a_type2.to_text, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = object-equality operator
+			-- dollar8: $8 = base type of left operand
+			-- dollar9: $9 = base type of right operand
+		end
+
 	make_vwst1a (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
 			-- Create a new VWST-1 error: `a_name', appearing in a strip
 			-- expression in `a_class', is not the final name of a feature
@@ -12553,7 +12603,8 @@ feature {NONE} -- Implementation
 	vuot4a_default_template: STRING is "ISE does not support object-tests in preconditions."
 	vuot4b_default_template: STRING is "ISE does not support object-tests in check instructions."
 	vwbe0a_default_template: STRING is "boolean expression of non-BOOLEAN type '$7'."
-	vweq0a_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms to the other."
+	vweq0a_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
+	vweq0b_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
 	vwst1a_default_template: STRING is "feature name `$7' is not the final name of a feature in class $5."
 	vwst1b_default_template: STRING is "feature name `$7' is not the final name of an attribute in class $5."
 	vwst2a_default_template: STRING is "feature name `$7' appears twice in strip expression."
@@ -12973,6 +13024,7 @@ feature {NONE} -- Implementation
 	vuot4b_template_code: STRING is "vuot4b"
 	vwbe0a_template_code: STRING is "vwbe0a"
 	vweq0a_template_code: STRING is "vweq0a"
+	vweq0b_template_code: STRING is "vweq0b"
 	vwst1a_template_code: STRING is "vwst1a"
 	vwst1b_template_code: STRING is "vwst1b"
 	vwst2a_template_code: STRING is "vwst2a"

@@ -830,6 +830,15 @@ feature -- Eiffel symbols
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_not_tilde_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+			-- New '/~' symbol
+		require
+			a_scanner_not_void: a_scanner /= Void
+		do
+			create Result.make_not_tilde
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_plus_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
 			-- New '+' symbol
 		require
@@ -902,7 +911,8 @@ feature -- Eiffel symbols
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			Result := tokens.tilde_symbol
+			create Result.make_tilde
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_times_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL_OPERATOR is
@@ -2783,6 +2793,14 @@ feature -- AST nodes
 			-- New null instruction
 		do
 			-- Result := Void
+		end
+
+	new_object_equality_expression (l: ET_EXPRESSION; an_op: ET_SYMBOL; r: ET_EXPRESSION): ET_OBJECT_EQUALITY_EXPRESSION is
+			-- New object equality expression
+		do
+			if l /= Void and an_op /= Void and r /= Void then
+				create Result.make (l, an_op, r)
+			end
 		end
 
 	new_obsolete_message (an_obsolete: ET_KEYWORD; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is
