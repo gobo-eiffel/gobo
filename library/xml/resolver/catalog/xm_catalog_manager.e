@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 	establish_system_catalog_files is
 			-- Establish list of catalogs to be searched for all documents
 		local
-			xml_catalog_files: STRING
+			xml_catalog_files, l_separator: STRING
 			a_splitter: ST_SPLITTER
 			a_list: DS_LIST [STRING]
 			a_base_uri: UT_URI
@@ -588,7 +588,12 @@ feature {NONE} -- Implementation
 			xml_catalog_files := Execution_environment.variable_value ("XML_CATALOG_FILES")
 			if xml_catalog_files /= Void then
 				create a_splitter.make
-				a_splitter.set_separators (";:") -- works for both Unix and Windows PATH conventions
+				if operating_system.is_windows then
+					l_separator := ";"
+				else
+					l_separator := ":"
+				end
+				a_splitter.set_separators (l_separator)
 				a_list := a_splitter.split (xml_catalog_files) 
 			end
 			if a_list /= Void then

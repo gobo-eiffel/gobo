@@ -51,7 +51,7 @@ feature -- Test
 			-- Test file URI resolver.
 		do
 			create parser.make
-			parser.set_resolver (new_file_resolver_current_directory)
+			parser.set_resolver (new_file_resolver_with_uri (data_uri))
 
 			parser.parse_from_system (Relative_data)
 			assert ("parsed", parser.is_correct)
@@ -65,7 +65,7 @@ feature -- Test
 			-- Test non existing.
 		do
 			create parser.make
-			parser.set_resolver (new_file_resolver_current_directory)
+			parser.set_resolver (new_file_resolver_with_uri (data_uri))
 
 			parser.parse_from_system ("data/not.xml")
 			assert ("fails", not parser.is_correct)
@@ -79,7 +79,7 @@ feature -- Test
 			-- Test file error resolver.
 		do
 			create parser.make
-			parser.set_resolver (new_file_resolver_current_directory)
+			parser.set_resolver (new_file_resolver_with_uri (data_uri))
 
 				-- Parse broken file
 			parser.parse_from_system (Brokensub_data)
@@ -100,7 +100,7 @@ feature -- Test
 			a_stream: KL_STRING_INPUT_STREAM
 		do
 			create parser.make
-			parser.set_resolver (new_file_resolver_current_directory)
+			parser.set_resolver (new_file_resolver_with_uri (data_uri))
 
 			create a_stream.make (Relative_xml)
 			parser.parse_from_stream (a_stream)
@@ -135,5 +135,23 @@ feature {NONE} -- Implementation
 
 	Brokensub_data: STRING is "data/brokensub.xml"
 			-- Data filename "brokensub.xml"
+
+	data_dirname: STRING is
+			-- Name of parent of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "general">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+
+	data_uri: UT_URI is
+			-- Base URI for data files
+		once
+			Result := File_uri.filename_to_uri (file_system.pathname (data_dirname, "dummy.xml"))
+		ensure
+			data_uri_not_void: Result /= Void
+		end
 
 end

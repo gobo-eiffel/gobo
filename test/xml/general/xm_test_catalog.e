@@ -139,8 +139,13 @@ feature -- Tests
 feature -- Setting
 
 	set_up is
+			-- <Precursor>.
+		local
+			l_path: STRING	
 		do
-			Execution_environment.set_variable_value ("XML_CATALOG_FILES", file_system.pathname_from_file_system ("./data/test-catalog-1.xml", unix_file_system))
+			l_path := Execution_environment.interpreted_string (
+				file_system.nested_pathname ("${GOBO}", <<"test", "xml", "general", "data", "test-catalog-1.xml">>))
+			Execution_environment.set_variable_value ("XML_CATALOG_FILES", l_path)
 			shared_catalog_manager.reinit
 		end
 		

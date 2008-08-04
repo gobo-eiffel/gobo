@@ -48,7 +48,7 @@ feature -- Access
 		local
 			a_uri: UT_URI
 		once
-			create a_uri.make_resolve (current_directory_base, "./data/base_uri_master.xml")
+			create a_uri.make_resolve (base_directory, "./data/base_uri_master.xml")
 			Result := a_uri.full_reference
 		end
 
@@ -57,7 +57,7 @@ feature -- Access
 		local
 			a_uri: UT_URI
 		once
-			create a_uri.make_resolve (current_directory_base, "./data/base_uri_a.xml")
+			create a_uri.make_resolve (base_directory, "./data/base_uri_a.xml")
 			Result := a_uri.full_reference
 		end
 
@@ -73,13 +73,14 @@ feature -- Access
 			Result := "urn:base-uri:element2"
 		end
 
-	current_directory_base: UT_URI is
-			-- URI of current directory
+	base_directory: UT_URI is
+			-- URI of directory containing this class
 		local
-			a_cwd: KI_PATHNAME
+			l_uri: STRING
 		once
-			a_cwd := file_system.string_to_pathname (file_system.current_working_directory)
-			Result := File_uri.pathname_to_uri (a_cwd)
+			l_uri := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xpath", "dummy.xml">>)
+			l_uri := Execution_environment.interpreted_string (l_uri)
+			Result := File_uri.filename_to_uri (l_uri)
 		end
 
 feature -- Tests
@@ -325,6 +326,7 @@ feature -- Tests
 		end
 
 	set_up is
+			-- <Precursor>.
 		do
 			conformance.set_basic_xslt_processor
 		end
