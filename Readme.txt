@@ -95,13 +95,12 @@ Note that if you downloaded this package from SVN on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: Gobo Eiffel
-Compiler (gec) 3.8, ISE Eiffel 5.7.64493, 6.0.6.9618, 6.1.7.1477 and
-6.2.7.3306 (Classic and .NET). For more details about the supported
-Eiffel compilers, please see the file "Release_notes.txt". This software
-might work with other Eiffel compilers and/or other compiler versions,
-however no test has been done. To have a better understanding of the way
-this software has been designed and implemented, you can also have a look
-at "$GOBO/doc/portability".
+Compiler (gec) 3.9, ISE Eiffel 6.2.7.3753 (Classic and .NET).
+For more details about the supported Eiffel compilers, please see the file
+"Release_notes.txt". This software might work with other Eiffel compilers
+and/or other compiler versions, however no test has been done. To have
+a better understanding of the way this software has been designed and
+implemented, you can also have a look at "$GOBO/doc/portability".
 
 In this distribution:
 

@@ -36,16 +36,10 @@
 			<argument name="a_compiler" value="ge"/>
 			<argument name="a_output" value=""/>
 		</geant>
-		<geant target="xace" unless="${ISE_5_7}">
+		<geant target="xace">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value=""/>
 		</geant>
-		<set name="xace_format" value="ace" if="${ISE_5_7}"/>
-		<geant target="xace" if="${ISE_5_7}">
-			<argument name="a_compiler" value="ise"/>
-			<argument name="a_output" value=""/>
-		</geant>
-		<unset name="xace_format" if="${ISE_5_7}"/>
 		<geant target="other_install"/>
 	</target>
 
@@ -88,16 +82,10 @@
 		</description>
 
 		<set name="eiffel" value="ise"/>
-		<geant target="xace" unless="${ISE_5_7}">
+		<geant target="xace">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value="compile_ise.ecf"/>
 		</geant>
-		<set name="xace_format" value="ace" if="${ISE_5_7}"/>
-		<geant target="xace" if="${ISE_5_7}">
-			<argument name="a_compiler" value="ise"/>
-			<argument name="a_output" value="compile_ise.ace"/>
-		</geant>
-		<unset name="xace_format" if="${ISE_5_7}"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
@@ -106,8 +94,7 @@
 		</delete>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
-		<ise ace="compile_ise.ace" system="${system}" finalize="${finalize}" finish_freezing="true" if="${ISE_5_7}"/>
-		<ise ace="compile_ise.ecf" system="${system}" finalize="${finalize}" finish_freezing="true" unless="${ISE_5_7}"/>
+		<ise ace="compile_ise.ecf" system="${system}" finalize="${finalize}" finish_freezing="true"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<available resource="EIFGENs/${system}/${codedir}/${system}${exe}" variable="file_available"/>

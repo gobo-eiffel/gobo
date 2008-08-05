@@ -75,9 +75,9 @@ feature -- Test
 			a_system := an_xace_parser.last_system
 			assert ("system_not_void", a_system /= Void)
 			if eiffel_compiler.is_ise then
-				ise_version := ise_5_7_latest
+				ise_version := ise_latest
 			elseif eiffel_compiler.is_ge then
-				ise_version := ise_5_7_latest
+				ise_version := ise_latest
 			end
 			a_system.set_ise_version (ise_version)
 			a_system.set_ecma_version (ecma_version)
