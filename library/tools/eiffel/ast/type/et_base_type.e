@@ -288,6 +288,16 @@ feature -- Status report
 			end
 		end
 
+feature -- Comparison
+
+	same_as_base_class: BOOLEAN is
+			-- Is current type a non-generic class type with the same
+			-- expandedness and separateness status as its base class,
+			-- or is it its own base class??
+		do
+			-- Result := False
+		end
+
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 
 	conforms_from_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is

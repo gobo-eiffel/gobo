@@ -197,17 +197,19 @@ feature -- Validity checking
 			old_type: ET_BASE_TYPE
 			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
+			l_class: ET_CLASS
 		do
 			has_fatal_error := False
 			l_feature_impl := a_feature.implementation_feature
 			l_class_impl := a_feature.implementation_class
+			l_class := a_current_type.base_class
 			if not l_class_impl.is_preparsed then
 			 		-- Internal error: we should already have reported a VTCT error
 					-- somewhere stating that `l_class_impl' (which is supposed to
 					-- be an ancestor of `a_current_type.base_class') does not exist.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif l_class_impl /= a_current_type then
+			elseif l_class_impl /= l_class or else not a_current_type.same_as_base_class then
 					-- Check that this feature has already been checked in the
 					-- context of its implementation class.
 				if l_feature_impl.implementation_checked then
@@ -225,7 +227,7 @@ feature -- Validity checking
 				old_feature := current_feature
 				current_feature := a_feature
 				old_class := current_class
-				current_class := a_current_type.base_class
+				current_class := l_class
 				old_type := current_type
 				current_type := a_current_type
 				old_class_impl := current_class_impl

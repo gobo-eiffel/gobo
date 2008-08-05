@@ -533,8 +533,11 @@ feature {NONE} -- Types
 			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
 		do
-			l_base_class := a_type.base_class (a_context)
 			l_base_type := a_type.base_type (a_context)
+			l_base_class := l_base_type.base_class
+			if l_base_type.same_as_base_class then
+				l_base_type := l_base_class
+			end
 			if l_base_class = current_system.special_class then
 				Result := new_special_type (l_base_type)
 			elseif l_base_class = current_system.tuple_class then

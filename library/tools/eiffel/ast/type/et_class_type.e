@@ -19,6 +19,7 @@ inherit
 			same_syntactical_class_type,
 			same_named_class_type,
 			same_base_class_type,
+			same_as_base_class,
 			conforms_from_class_type,
 			resolved_formal_parameters,
 			append_unaliased_to_string
@@ -221,6 +222,23 @@ feature -- Comparison
 				Result := True
 			else
 				Result := other.same_base_class_type (Current, a_context, other_context)
+			end
+		end
+
+	same_as_base_class: BOOLEAN is
+			-- Is current type a non-generic class type with the same
+			-- expandedness and separateness status as its base class,
+			-- or is it its own base class?
+		do
+			if base_class.is_unknown then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif base_class = Current then
+				Result := True
+			else
+				Result := not is_generic and then
+					(is_expanded = base_class.is_expanded and
+					is_separate = base_class.is_separate)
 			end
 		end
 
