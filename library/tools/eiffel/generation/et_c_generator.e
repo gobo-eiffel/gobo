@@ -4726,14 +4726,22 @@ feature {NONE} -- Instruction generation
 				current_file.put_character (';')
 				current_file.put_new_line
 			elseif l_conforming_types.is_empty then
-				print_indentation
-				print_writable (l_target)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_string (c_eif_void)
-				current_file.put_character (';')
-				current_file.put_new_line
+				if l_target_type.is_expanded then
+					-- ISE 6.3 does not change the value of the target
+					-- when the type of the target is expanded and the
+					-- assignment attempt fails. Note that it would have
+					-- made more sense to set the target to its default
+					-- value in that case.
+				else
+					print_indentation
+					print_writable (l_target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_void)
+					current_file.put_character (';')
+					current_file.put_new_line
+				end
 			else
 				l_can_be_void := l_source_type_set.can_be_void
 				if l_can_be_void then
@@ -4752,14 +4760,22 @@ feature {NONE} -- Instruction generation
 					current_file.put_character ('{')
 					current_file.put_new_line
 					indent
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (';')
-					current_file.put_new_line
+					if l_target_type.is_expanded then
+						-- ISE 6.3 does not change the value of the target
+						-- when the type of the target is expanded and the
+						-- assignment attempt fails. Note that it would have
+						-- made more sense to set the target to its default
+						-- value in that case.
+					else
+						print_indentation
+						print_writable (l_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_void)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 					dedent
 					print_indentation
 					current_file.put_character ('}')
@@ -4800,14 +4816,22 @@ feature {NONE} -- Instruction generation
 						i := i + 1
 					end
 					indent
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (';')
-					current_file.put_new_line
+					if l_target_type.is_expanded then
+						-- ISE 6.3 does not change the value of the target
+						-- when the type of the target is expanded and the
+						-- assignment attempt fails. Note that it would have
+						-- made more sense to set the target to its default
+						-- value in that case.
+					else
+						print_indentation
+						print_writable (l_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_void)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 					print_indentation
 					current_file.put_string (c_break)
 					current_file.put_character (';')
@@ -4868,14 +4892,20 @@ feature {NONE} -- Instruction generation
 					current_file.put_character (':')
 					current_file.put_new_line
 					indent
-					print_indentation
-					print_writable (l_target)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_string (c_eif_void)
-					current_file.put_character (';')
-					current_file.put_new_line
+					if l_target_type.is_expanded then
+						-- ISE 6.3 does not change the value of the target
+						-- when the type of the target is expanded and the
+						-- assignment attempt fails.
+					else
+						print_indentation
+						print_writable (l_target)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_void)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 					dedent
 				end
 				print_indentation
