@@ -17,8 +17,7 @@ inherit
 	ET_DYNAMIC_TYPE_SET_BUILDER
 		undefine
 			error_handler,
-			set_fatal_error,
-			current_system
+			set_fatal_error
 		redefine
 			has_fatal_error
 		end
@@ -26,6 +25,8 @@ inherit
 	ET_FEATURE_CHECKER
 		rename
 			make as make_feature_checker
+		undefine
+			current_system
 		redefine
 			has_fatal_error,
 			check_external_function_validity,
@@ -185,6 +186,8 @@ feature -- Generation
 			l_count: INTEGER
 			old_nb: INTEGER
 			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_equality: ET_DYNAMIC_EQUALITY_EXPRESSION
+			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
 		do
 			has_fatal_error := False
 			old_object_id_dynamic_type_set := object_id_dynamic_type_set
@@ -324,6 +327,32 @@ feature -- Generation
 						end
 						l_call := l_call.next
 					end
+						-- Process dynamic equality expressions.
+					from
+						l_equality := l_type.equality_expressions
+					until
+						l_equality = Void
+					loop
+						l_count := l_equality.count
+						l_equality.propagate_types (Current)
+						if l_equality.count /= l_count then
+							is_built := False
+						end
+						l_equality := l_equality.next
+					end
+						-- Process dynamic object-equality expressions.
+					from
+						l_object_equality := l_type.object_equality_expressions
+					until
+						l_object_equality = Void
+					loop
+						l_count := l_object_equality.count
+						l_object_equality.propagate_types (Current)
+						if l_object_equality.count /= l_count then
+							is_built := False
+						end
+						l_object_equality := l_object_equality.next
+					end
 					i := i + 1
 				end
 					-- Process dynamic types.
@@ -381,11 +410,11 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			end
 		end
 
-feature {ET_DYNAMIC_SYSTEM} -- Generation
+feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} -- Generation
 
 	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
 			-- Propagate `a_type' as argument of `a_feature', the feature being the
-			-- feature 'is_equal' possibly used internal in object equality ('~' and '/~')
+			-- feature 'is_equal' possibly used internally in object equality ('~' and '/~')
 			-- or in equality ('=' and '/=') when the target type is expanded.
 		local
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
@@ -1923,6 +1952,8 @@ feature {NONE} -- Event handling
 			-- Report that an equality expression has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_equality: ET_DYNAMIC_EQUALITY_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.boolean_type
@@ -1933,6 +1964,17 @@ feature {NONE} -- Event handling
 				set_dynamic_type_set (l_type, an_expression)
 				if boolean_index.item = 0 then
 					boolean_index.put (an_expression.index)
+				end
+				l_target_type_set := dynamic_type_set (an_expression.left)
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- left operand should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					create l_equality.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+					l_target_type_set.static_type.put_equality_expression (l_equality)
+					propagate_equality_expression_target_dynamic_types (l_equality)
 				end
 			end
 		end
@@ -2408,6 +2450,8 @@ feature {NONE} -- Event handling
 			-- Report that an object equality expression has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.boolean_type
@@ -2418,6 +2462,17 @@ feature {NONE} -- Event handling
 				set_dynamic_type_set (l_type, an_expression)
 				if boolean_index.item = 0 then
 					boolean_index.put (an_expression.index)
+				end
+				l_target_type_set := dynamic_type_set (an_expression.left)
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- left operand should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					create l_object_equality.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+					l_target_type_set.static_type.put_object_equality_expression (l_object_equality)
+					propagate_object_equality_expression_target_dynamic_types (l_object_equality)
 				end
 			end
 		end
@@ -5981,7 +6036,23 @@ feature {NONE} -- Implementation
 	propagate_qualified_call_target_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Propagate the dynamic types of the target of `a_call' to the call itself.
 		require
-				a_call_not_void: a_call /= Void
+			a_call_not_void: a_call /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_EQUALITY_EXPRESSION) is
+			-- Propagate the dynamic types of the target of `a_equality' to the equality itself.
+		require
+			a_equality_not_void: a_equality /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_object_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION) is
+			-- Propagate the dynamic types of the target of `a_equality' to the object-equality itself.
+		require
+			a_equality_not_void: a_equality /= Void
 		do
 			-- Do nothing.
 		end

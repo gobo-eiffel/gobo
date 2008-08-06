@@ -39,7 +39,9 @@ inherit
 			propagate_like_argument_dynamic_types,
 			propagate_object_test_dynamic_types,
 			propagate_tuple_label_setter_dynamic_types,
-			propagate_qualified_call_target_dynamic_types
+			propagate_qualified_call_target_dynamic_types,
+			propagate_equality_expression_target_dynamic_types,
+			propagate_object_equality_expression_target_dynamic_types
 		end
 
 create
@@ -846,6 +848,18 @@ feature {NONE} -- Implementation
 			-- Propagate the dynamic types of the target of `a_call' to the call itself.
 		do
 			a_call.target_type_set.put_target (a_call, current_dynamic_system)
+		end
+
+	propagate_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_EQUALITY_EXPRESSION) is
+			-- Propagate the dynamic types of the target of `a_equality' to the equality itself.
+		do
+			a_equality.target_type_set.put_target (a_equality, current_dynamic_system)
+		end
+
+	propagate_object_equality_expression_target_dynamic_types (a_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION) is
+			-- Propagate the dynamic types of the target of `a_equality' to the object-equality itself.
+		do
+			a_equality.target_type_set.put_target (a_equality, current_dynamic_system)
 		end
 
 end

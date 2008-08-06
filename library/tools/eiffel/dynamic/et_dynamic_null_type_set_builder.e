@@ -56,11 +56,11 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 		do
 		end
 
-feature {ET_DYNAMIC_SYSTEM} -- Generation
+feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} -- Generation
 
 	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
 			-- Propagate `a_type' as argument of `a_feature', the feature being the
-			-- feature 'is_equal' possibly used internal in object equality ('~' and '/~')
+			-- feature 'is_equal' possibly used internally in object equality ('~' and '/~')
 			-- or in equality ('=' and '/=') when the target type is expanded.
 		do
 		end

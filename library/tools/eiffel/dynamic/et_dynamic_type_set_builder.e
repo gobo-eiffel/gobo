@@ -115,17 +115,18 @@ feature -- Generation
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_dispose_procedure: ET_DYNAMIC_FEATURE
-			l_dispose_seed: INTEGER
+			l_feature: ET_DYNAMIC_FEATURE
+			l_seed: INTEGER
 		do
 			if not a_type.is_alive then
 				a_type.set_alive
+					-- Make sure that feature 'dispose' is alive for reference types.
 				if not a_type.is_expanded then
-					l_dispose_seed := current_system.dispose_seed
-					if l_dispose_seed > 0 then
-						l_dispose_procedure := a_type.seeded_dynamic_procedure (l_dispose_seed, current_dynamic_system)
-						if l_dispose_procedure /= Void then
-							l_dispose_procedure.set_regular (True)
+					l_seed := current_system.dispose_seed
+					if l_seed > 0 then
+						l_feature := a_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
+						if l_feature /= Void then
+							l_feature.set_regular (True)
 						end
 					end
 				end
@@ -188,11 +189,11 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 		deferred
 		end
 
-feature {ET_DYNAMIC_SYSTEM} -- Generation
+feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} -- Generation
 
 	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
 			-- Propagate `a_type' as argument of `a_feature', the feature being the
-			-- feature 'is_equal' possibly used internal in object equality ('~' and '/~')
+			-- feature 'is_equal' possibly used internally in object equality ('~' and '/~')
 			-- or in equality ('=' and '/=') when the target type is expanded.
 		require
 			a_type_not_void: a_type /= Void

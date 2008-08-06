@@ -655,6 +655,37 @@ feature -- Calls
 			procedure_calls := a_call
 		end
 
+feature -- Equality expressions
+
+	equality_expressions: ET_DYNAMIC_EQUALITY_EXPRESSION
+			-- First equality expression with current type as static type of the left operand;
+			-- Needed to build the dynamic type sets of feature 'is_equal' which is internally
+			-- called when the operands involved in the equality expression are of expanded types.
+			-- (Other equality expressions are accessed with `equality_expressions.next'.)
+
+	object_equality_expressions: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
+			-- First object-equality expression with current type as static type of the left operand;
+			-- Needed to build the dynamic type sets of feature 'is_equal' which is internally called.
+			-- (Other object-equality expressions are accessed with `equality_expressions.next'.)
+
+	put_equality_expression (a_equality: ET_DYNAMIC_EQUALITY_EXPRESSION) is
+			-- Add `a_equality' to the list of equality expressions.
+		require
+			a_equality_not_void: a_equality /= Void
+		do
+			a_equality.set_next (equality_expressions)
+			equality_expressions := a_equality
+		end
+
+	put_object_equality_expression (a_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION) is
+			-- Add `a_equality' to the list of object-equality expressions.
+		require
+			a_equality_not_void: a_equality /= Void
+		do
+			a_equality.set_next (object_equality_expressions)
+			object_equality_expressions := a_equality
+		end
+
 feature -- Element change
 
 	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is

@@ -87,6 +87,8 @@ feature -- Generation
 			l_target: ET_DYNAMIC_TYPE_SET
 			l_count: INTEGER
 			old_object_id_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_equality: ET_DYNAMIC_EQUALITY_EXPRESSION
+			l_object_equality: ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION
 		do
 			has_fatal_error := False
 			old_object_id_dynamic_type_set := object_id_dynamic_type_set
@@ -228,6 +230,32 @@ feature -- Generation
 							is_built := False
 						end
 						l_procedure_call := l_procedure_call.next
+					end
+						-- Process dynamic equality expressions.
+					from
+						l_equality := l_type.equality_expressions
+					until
+						l_equality = Void
+					loop
+						l_count := l_equality.count
+						l_equality.propagate_types (Current)
+						if l_equality.count /= l_count then
+							is_built := False
+						end
+						l_equality := l_equality.next
+					end
+						-- Process dynamic object-equality expressions.
+					from
+						l_object_equality := l_type.object_equality_expressions
+					until
+						l_object_equality = Void
+					loop
+						l_count := l_object_equality.count
+						l_object_equality.propagate_types (Current)
+						if l_object_equality.count /= l_count then
+							is_built := False
+						end
+						l_object_equality := l_object_equality.next
 					end
 					i := i + 1
 				end
