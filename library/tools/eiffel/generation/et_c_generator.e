@@ -10338,18 +10338,22 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 						current_file.put_character ('=')
 						current_file.put_character (' ')
 						current_file.put_character ('(')
-							-- No need to call `print_adapted_query_call' here because an
-							-- unqualified call is not polymorphic, and therefore the type
-							-- of the query is exactly the type expected by the caller.
-						print_query_call (l_dynamic_feature, current_type, False)
+					end
+						-- When there is no result type of the form 'like argument',
+						-- then there is no need to call `print_adapted_query_call'
+						-- because an unqualified call is not polymorphic, and therefore
+						-- the type of the query is exactly the type expected by
+						-- the caller. This is another story with 'like argument'.
+						-- For example 'clone (1)' is expected to be of type INTEGER
+						-- and 'clone ("gobo")' is expected to be of type STRING.
+						-- But the corresponding generated function for 'clone' will
+						-- be declared to return an ANY. Hence the need for a call
+						-- to `print_adapted_query_call' in this case.
+					print_adapted_query_call (l_dynamic_feature, current_type, l_call_type, False)
+					if in_operand then
 						current_file.put_character (')')
 						current_file.put_character (';')
 						current_file.put_new_line
-					else
-							-- No need to call `print_adapted_query_call' here because an
-							-- unqualified call is not polymorphic, and therefore the type
-							-- of the query is exactly the type expected by the caller.
-						print_query_call (l_dynamic_feature, current_type, False)
 					end
 					call_operands.wipe_out
 					if l_manifest_tuple_operand /= Void then
@@ -12377,22 +12381,66 @@ feature {NONE} -- Query call generation
 			-- query should not be copied or cloned. It will occur later on when the call
 			-- is the source of an assignment or passed as actual argument (in the example
 			-- above it will occur when the value of the call to 'l.item' is assigned
-			-- to 'a'). And also, contrary to `print_attachment_expression', the
-			-- static type of the result of the query is expected to conform to the
-			-- type of the underlying call.
+			-- to 'a').
+			--
+			-- And also, contrary to `print_attachment_expression', the static type of
+			-- the result of the query is expected to conform to the type of the underlying
+			-- call. Unless the query has a result type of the form 'like argument'.
+			-- For example 'clone (1)' is expected to be of type INTEGER and
+			-- 'clone ("gobo")' is expected to be of type STRING. But the corresponding
+			-- generated function for 'clone' will be declared to return an ANY.
 		require
 			a_print_expression_not_void: a_print_expression /= Void
 			a_source_type_set_not_void: a_source_type_set /= Void
 			a_target_type_not_void: a_target_type /= Void
 		local
 			l_source_type: ET_DYNAMIC_TYPE
+			l_do_check_void: BOOLEAN
 		do
 			l_source_type := a_source_type_set.static_type
 			if a_target_type.is_expanded then
 					-- Only expanded types conform to expanded types.
 					-- So no unboxing is needed, and copy or clone will
 					-- not be called at this stage.
-				a_print_expression.call ([])
+					--
+					-- However we may need to unbox when the query has
+					-- a result type of the form 'like argument' (see
+					-- header comment).
+				if not l_source_type.is_expanded then
+					if a_target_type.is_generic then
+-- TODO: there might be some problems if the expanded types are generic with different actual parameters.
+						current_file.put_character ('*')
+						current_file.put_character ('(')
+						print_type_cast (a_target_type, current_file)
+						current_file.put_character ('(')
+					else
+							-- The source object has been boxed.
+						current_file.put_character ('(')
+						print_boxed_type_cast (a_target_type, current_file)
+						current_file.put_character ('(')
+					end
+					if a_source_type_set.can_be_void  then
+						can_be_void_target_count := can_be_void_target_count + 1
+						current_file.put_string (c_ge_void)
+						current_file.put_character ('(')
+						l_do_check_void := True
+					else
+						never_void_target_count := never_void_target_count + 1
+					end
+					a_print_expression.call ([])
+					if l_do_check_void then
+						current_file.put_character (')')
+					end
+					current_file.put_character (')')
+					current_file.put_character (')')
+					if not a_target_type.is_generic then
+							-- The source object has been boxed.
+						current_file.put_string (c_arrow)
+						print_boxed_attribute_item_name (a_target_type, current_file)
+					end
+				else
+					a_print_expression.call ([])
+				end
 			else
 				if l_source_type.is_expanded then
 					if l_source_type.is_generic then
