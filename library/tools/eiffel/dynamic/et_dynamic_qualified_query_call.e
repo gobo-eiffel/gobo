@@ -116,6 +116,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
+
+	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+			-- Add `a_type' to current set when the current call a call to a Tuple label.
+		do
+			a_builder.propagate_tuple_label_expression_dynamic_types (Current, a_type)
+		end
+
 invariant
 
 	result_type_set_not_void: result_type_set /= Void

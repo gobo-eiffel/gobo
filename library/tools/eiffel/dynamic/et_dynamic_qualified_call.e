@@ -96,6 +96,8 @@ feature -- Element change
 				else
 					put_type_with_feature (a_type, l_dynamic_feature, a_system)
 				end
+			else
+				put_type_with_tuple_label (a_type, a_system.dynamic_type_set_builder)
 			end
 		end
 
@@ -155,6 +157,8 @@ feature -- Element change
 				else
 					propagate_type_with_feature (a_type, l_dynamic_feature, a_builder)
 				end
+			else
+				put_type_with_tuple_label (a_type, a_builder)
 			end
 		end
 
@@ -420,6 +424,17 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		end
+
+feature {ET_DYNAMIC_TYPE_BUILDER} -- Implementation
+
+	put_type_with_tuple_label (a_type: ET_DYNAMIC_TYPE; a_builder: ET_DYNAMIC_TYPE_SET_BUILDER) is
+			-- Add `a_type' to current set when the current call a call to a Tuple label.
+		require
+			tuple_label: is_tuple_label
+			a_type_not_void: a_type /= Void
+			a_builder_not_void: a_builder /= Void
+		deferred
 		end
 
 feature -- Link

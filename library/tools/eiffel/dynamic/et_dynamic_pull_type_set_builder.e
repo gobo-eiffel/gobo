@@ -41,7 +41,8 @@ inherit
 			propagate_inline_agent_result_dynamic_types,
 			propagate_like_argument_dynamic_types,
 			propagate_object_test_dynamic_types,
-			propagate_tuple_label_setter_dynamic_types
+			propagate_tuple_label_result_dynamic_types,
+			propagate_tuple_label_argument_dynamic_types
 		end
 
 create
@@ -1386,22 +1387,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_tuple_label_setter_dynamic_types (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
-			-- Propagate dynamic types of the source of `an_assigner' to the dynamic
-			-- type set `a_target_type_set' of the corresponding tuple label.
+	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION) is
+			-- Propagate dynamic types of the source of tuple label setter `a_assigner'
+			-- to the dynamic type set `a_label_type_set' of the corresponding tuple label.
 		local
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_TUPLE_LABEL_SETTER
 		do
-			l_source_type_set := dynamic_type_set (an_assigner.source)
+			l_source_type_set := current_dynamic_feature.dynamic_type_set (a_assigner.source)
 			if l_source_type_set = Void then
-					-- Internal error: the dynamic type sets of the source
-					-- should be known at this stage.
+					-- Internal error: the dynamic type set of the source
+					-- of the label setter should be known at this stage.
 				set_fatal_error
 				error_handler.report_giaaa_error
-			elseif not a_target_type_set.is_expanded then
-				create l_attachment.make (l_source_type_set, an_assigner, current_dynamic_feature, current_dynamic_type)
-				a_target_type_set.put_source (l_attachment, current_dynamic_system)
+			elseif not a_label_type_set.is_expanded then
+				create l_attachment.make (l_source_type_set, a_assigner, current_dynamic_feature, current_dynamic_type)
+				a_label_type_set.put_source (l_attachment, current_dynamic_system)
+			end
+		end
+
+	propagate_tuple_label_result_dynamic_types (a_label_type_set, a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Propagate dynamic types `a_label_type_set' of a tuple label
+			-- to the dynamic type set `a_result_type_set' of the result type
+			-- of the associated qualified call.
+		local
+			l_result_attachment: ET_DYNAMIC_NULL_ATTACHMENT
+		do
+			if not a_result_type_set.is_expanded then
+				create l_result_attachment.make (a_label_type_set, current_dynamic_feature, current_dynamic_type)
+				a_result_type_set.put_source (l_result_attachment, current_dynamic_system)
 			end
 		end
 

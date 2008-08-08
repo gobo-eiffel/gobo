@@ -407,7 +407,93 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 				else
 					l_dynamic_feature.set_regular (True)
 				end
+			else
+				a_call.put_type_with_tuple_label (a_type, Current)
 			end
+		end
+
+feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
+
+	propagate_tuple_label_expression_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL; a_type: ET_DYNAMIC_TYPE) is
+			-- Propagate dynamic types of the label in tuple `a_type' to
+			-- the dynamic type set of the result type of `a_call'.
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_index: INTEGER
+			l_label_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			old_feature: ET_DYNAMIC_FEATURE
+			old_type: ET_DYNAMIC_TYPE
+		do
+			old_feature := current_dynamic_feature
+			current_dynamic_feature := a_call.current_feature
+			old_type := current_dynamic_type
+			current_dynamic_type := a_call.current_type
+			l_tuple_type ?= a_type
+			if l_tuple_type = Void then
+					-- Internal error: the target of a label expression
+					-- should be a Tuple.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_result_type_set := a_call.result_type_set
+				l_item_type_sets := l_tuple_type.item_type_sets
+				l_index := a_call.static_call.name.seed
+				if not l_item_type_sets.valid_index (l_index) then
+						-- Internal error: invalid label index.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_label_type_set := l_item_type_sets.item (l_index)
+					propagate_tuple_label_result_dynamic_types (l_label_type_set, l_result_type_set)
+				end
+			end
+			current_dynamic_feature := old_feature
+			current_dynamic_type := old_type
+		end
+
+	propagate_tuple_label_setter_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL; a_type: ET_DYNAMIC_TYPE) is
+			-- Propagate dynamic types of the source of tuple label setter `a_call'
+			-- to the dynamic type set of the corresponding tuple label in `a_type'.
+		local
+			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
+			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_index: INTEGER
+			l_label_type_set: ET_DYNAMIC_TYPE_SET
+			l_assigner: ET_ASSIGNER_INSTRUCTION
+			old_feature: ET_DYNAMIC_FEATURE
+			old_type: ET_DYNAMIC_TYPE
+		do
+			old_feature := current_dynamic_feature
+			current_dynamic_feature := a_call.current_feature
+			old_type := current_dynamic_type
+			current_dynamic_type := a_call.current_type
+			l_tuple_type ?= a_type
+			l_assigner ?= a_call.static_call
+			if l_tuple_type = Void then
+					-- Internal error: the target of a label expression
+					-- should be a Tuple.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_assigner = Void then
+					-- Internal error: the call should be a tuple label assigner.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_item_type_sets := l_tuple_type.item_type_sets
+				l_index := a_call.static_call.name.seed
+				if not l_item_type_sets.valid_index (l_index) then
+						-- Internal error: invalid label index.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_label_type_set := l_item_type_sets.item (l_index)
+					propagate_tuple_label_argument_dynamic_types (l_label_type_set, l_assigner)
+				end
+			end
+			current_dynamic_feature := old_feature
+			current_dynamic_type := old_type
 		end
 
 feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} -- Generation
@@ -3166,7 +3252,8 @@ feature {NONE} -- Event handling
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -3192,10 +3279,14 @@ feature {NONE} -- Event handling
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
-							l_dynamic_type_set := l_item_type_sets.item (l_index)
-							set_dynamic_type_set (l_dynamic_type_set, an_expression)
-							create l_dynamic_call.make (an_expression, l_target_type_set, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
-							l_tuple_type.put_query_call (l_dynamic_call)
+							l_dynamic_type := l_item_type_sets.item (l_index).static_type
+							l_result_type_set := new_dynamic_type_set (l_dynamic_type)
+								-- Unless proven otherwise after possible attachments,
+								-- the result is assumed to be never Void.
+							l_result_type_set.set_never_void
+							set_dynamic_type_set (l_result_type_set, an_expression)
+							create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
+							l_target_type_set.static_type.put_query_call (l_dynamic_call)
 							propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 						end
 					end
@@ -3206,14 +3297,10 @@ feature {NONE} -- Event handling
 	report_tuple_label_setter (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT) is
 			-- Report that a call to the setter of a tuple label has been processed.
 		local
-			l_call: ET_FEATURE_CALL_EXPRESSION
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			l_target: ET_EXPRESSION
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
-			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_index: INTEGER
-			l_label_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+			l_call: ET_FEATURE_CALL_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_call := an_assigner.call
@@ -3225,27 +3312,9 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_tuple_type ?= l_target_type_set.static_type
-					if l_tuple_type = Void then
-							-- Internal error: the target of a label expression
-							-- should be a Tuple.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_item_type_sets := l_tuple_type.item_type_sets
-						l_index := l_call.name.seed
-						if not l_item_type_sets.valid_index (l_index) then
-								-- Internal error: invalid label index.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							l_label_type_set := l_item_type_sets.item (l_index)
-							set_dynamic_type_set (l_label_type_set, l_call)
-							propagate_tuple_label_setter_dynamic_types (an_assigner, l_label_type_set)
-							create l_dynamic_call.make (an_assigner, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-							l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
-						end
-					end
+					create l_dynamic_call.make (an_assigner, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+					l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
+					propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 				end
 			end
 		end
@@ -6022,17 +6091,6 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_tuple_label_setter_dynamic_types (an_assigner: ET_ASSIGNER_INSTRUCTION; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
-			-- Propagate dynamic types of the source of `an_assigner' to the dynamic
-			-- type set `a_target_type_set' of the corresponding tuple label.
-		require
-			an_assigner_not_void: an_assigner /= Void
-			tuple_label: an_assigner.call.name.is_tuple_label
-			a_target_type_set_not_void: a_target_type_set /= Void
-		do
-			-- Do nothing.
-		end
-
 	propagate_qualified_call_target_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_CALL) is
 			-- Propagate the dynamic types of the target of `a_call' to the call itself.
 		require
@@ -6053,6 +6111,27 @@ feature {NONE} -- Implementation
 			-- Propagate the dynamic types of the target of `a_equality' to the object-equality itself.
 		require
 			a_equality_not_void: a_equality /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_tuple_label_argument_dynamic_types (a_label_type_set: ET_DYNAMIC_TYPE_SET; a_assigner: ET_ASSIGNER_INSTRUCTION) is
+			-- Propagate dynamic types of the source of tuple label setter `a_assigner'
+			-- to the dynamic type set `a_label_type_set' of the corresponding tuple label.
+		require
+			a_label_type_set_not_void: a_label_type_set /= Void
+			a_assigner_not_void: a_assigner /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_tuple_label_result_dynamic_types (a_label_type_set, a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Propagate dynamic types `a_label_type_set' of a tuple label
+			-- to the dynamic type set `a_result_type_set' of the result type
+			-- of the associated qualified call.
+		require
+			a_label_type_set_not_void: a_label_type_set /= Void
+			a_result_type_set_not_void: a_result_type_set /= Void
 		do
 			-- Do nothing.
 		end

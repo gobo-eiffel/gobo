@@ -189,6 +189,28 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 		deferred
 		end
 
+feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
+
+	propagate_tuple_label_expression_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL; a_type: ET_DYNAMIC_TYPE) is
+			-- Propagate dynamic types of the label in tuple `a_type' to
+			-- the dynamic type set of the result type of `a_call'.
+		require
+			a_call_not_void: a_call /= Void
+			tuple_label: a_call.is_tuple_label
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	propagate_tuple_label_setter_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL; a_type: ET_DYNAMIC_TYPE) is
+			-- Propagate dynamic types of the source of tuple label setter `a_call'
+			-- to the dynamic type set of the corresponding tuple label in `a_type'.
+		require
+			a_call_not_void: a_call /= Void
+			tuple_label: a_call.is_tuple_label
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
 feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} -- Generation
 
 	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
