@@ -7330,7 +7330,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 					if l_left_type_set.can_be_void and l_right_type_set.can_be_void then
 							-- The equality succeeds if both operands are Void.
 						current_file.put_character ('(')
+						current_file.put_character ('(')
 						print_expression (l_left_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (c_equal)
 						current_file.put_character (' ')
@@ -7338,7 +7340,9 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 						current_file.put_character (')')
 						current_file.put_character ('?')
 						current_file.put_character ('(')
+						current_file.put_character ('(')
 						print_expression (l_right_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (l_equal)
 						current_file.put_character (' ')
@@ -7346,6 +7350,87 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 						current_file.put_character (')')
 						current_file.put_character (':')
 					end
+					current_file.put_character ('(')
+					if l_left_type_set.can_be_void then
+							-- We know for sure that the right operand cannot be Void.
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						print_expression (l_left_operand)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_string (l_not_equal)
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_void)
+						current_file.put_character (')')
+						current_file.put_string (l_and_then)
+					elseif l_right_type_set.can_be_void then
+							-- We know for sure that the left operand cannot be Void.
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						print_expression (l_right_operand)
+						current_file.put_character (')')
+						current_file.put_character (' ')
+						current_file.put_string (l_not_equal)
+						current_file.put_character (' ')
+						current_file.put_string (c_eif_void)
+						current_file.put_character (')')
+						current_file.put_string (l_and_then)
+					end
+						-- Check that both operands are of the same type.
+					if l_left_type_set.count > 1 and l_right_type_set.count > 1 then
+							-- Both operands can have several types in their type set.
+							-- Check that they have the same type.
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
+						current_file.put_character (' ')
+						current_file.put_string (c_equal)
+						current_file.put_character (' ')
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character (')')
+						current_file.put_string (c_and_then)
+						current_file.put_character ('(')
+						print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
+						current_file.put_character (' ')
+						current_file.put_string (c_equal)
+						current_file.put_character (' ')
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character (')')
+						current_file.put_character (')')
+						current_file.put_character ('?')
+					elseif l_left_type_set.count > 1 then
+							-- We know that the type set of the right operand contains
+							-- only one type, which is `l_dynamic_type'. So we just have
+							-- to check that the left operand is of that type.
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
+						current_file.put_character (' ')
+						current_file.put_string (c_equal)
+						current_file.put_character (' ')
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character (')')
+						current_file.put_character ('?')
+					elseif l_right_type_set.count > 1 then
+							-- We know that the type set of the left operand contains
+							-- only one type, which is `l_dynamic_type'. So we just have
+							-- to check that the right operand is of that type.
+						current_file.put_character ('(')
+						current_file.put_character ('(')
+						print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
+						current_file.put_character (' ')
+						current_file.put_string (c_equal)
+						current_file.put_character (' ')
+						current_file.put_integer (l_dynamic_type.id)
+						current_file.put_character (')')
+						current_file.put_character ('?')
+					else
+							-- The type sets of both operands contain only one type,
+							-- which is `l_dynamic_type'. So we know for sure that
+							-- both operands are of the same type.
+					end
+						-- Call 'is_equal'.
 					l_formal_type := argument_type_set_in_feature (1, l_is_equal_feature).static_type
 					if not l_dynamic_type.conforms_to_type (l_formal_type) then
 							-- We won't be able to call 'is_equal' because the type of the
@@ -7353,84 +7438,6 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 							-- way of the equality to be True as to have both operands Void.
 						current_file.put_string (l_eif_false)
 					else
-						current_file.put_character ('(')
-						if l_left_type_set.can_be_void then
-								-- We know for sure that the right operand cannot be Void.
-							current_file.put_character ('(')
-							print_expression (l_left_operand)
-							current_file.put_character (' ')
-							current_file.put_string (l_not_equal)
-							current_file.put_character (' ')
-							current_file.put_string (c_eif_void)
-							current_file.put_character (')')
-							current_file.put_string (l_and_then)
-						elseif l_right_type_set.can_be_void then
-								-- We know for sure that the left operand cannot be Void.
-							current_file.put_character ('(')
-							print_expression (l_right_operand)
-							current_file.put_character (' ')
-							current_file.put_string (l_not_equal)
-							current_file.put_character (' ')
-							current_file.put_string (c_eif_void)
-							current_file.put_character (')')
-							current_file.put_string (l_and_then)
-						end
-							-- Check that both operands are of the same type.
-						if l_left_type_set.count > 1 and l_right_type_set.count > 1 then
-								-- Both operands can have several types in their type set.
-								-- Check that they have the same type.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (c_equal)
-							current_file.put_character (' ')
-							current_file.put_integer (l_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_string (c_and_then)
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (c_equal)
-							current_file.put_character (' ')
-							current_file.put_integer (l_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_character ('?')
-						elseif l_left_type_set.count > 1 then
-								-- We know that the type set of the right operand contains
-								-- only one type, which is `l_dynamic_type'. So we just have
-								-- to check that the left operand is of that type.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_left_operand, l_left_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (c_equal)
-							current_file.put_character (' ')
-							current_file.put_integer (l_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_character ('?')
-						elseif l_right_type_set.count > 1 then
-								-- We know that the type set of the left operand contains
-								-- only one type, which is `l_dynamic_type'. So we just have
-								-- to check that the right operand is of that type.
-							current_file.put_character ('(')
-							current_file.put_character ('(')
-							print_attribute_type_id_access (l_right_operand, l_right_static_type, False)
-							current_file.put_character (' ')
-							current_file.put_string (c_equal)
-							current_file.put_character (' ')
-							current_file.put_integer (l_dynamic_type.id)
-							current_file.put_character (')')
-							current_file.put_character ('?')
-						else
-								-- The type sets of both operands contain only one type,
-								-- which is `l_dynamic_type'. So we know for sure that
-								-- both operands are of the same type.
-						end
-							-- Call 'is_equal'.
-							--
 							-- The main purpose of object equality is to be CAT-call free.
 							-- Therefore we have to make sure that `l_dynamic_type' is the
 							-- only type in the dynamic type set of the right operand when
@@ -7451,11 +7458,15 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 								-- Optimization: avoid a function call for basic types.
 -- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							current_file.put_character ('(')
+							current_file.put_character ('(')
 							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
+							current_file.put_character (')')
 							current_file.put_character (' ')
 							current_file.put_string (l_equal)
 							current_file.put_character (' ')
+							current_file.put_character ('(')
 							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
+							current_file.put_character (')')
 							current_file.put_character (')')
 						else
 							if not l_is_equal_feature.is_generated then
@@ -7480,29 +7491,29 @@ print ("ET_C_GENERATOR.print_bit_constant%N")
 						if l_actual_type_set = equality_type_set then
 							equality_type_set.reset (current_dynamic_system.none_type)
 						end
-						if l_left_type_set.count > 1 or l_right_type_set.count > 1 then
-							current_file.put_character (':')
-								-- Reference equality.
-							if l_left_static_type.is_expanded or l_right_static_type.is_expanded then
-								current_file.put_string (l_eif_false)
-							elseif not l_has_common_reference_types and (not l_left_type_set.can_be_void or not l_right_type_set.can_be_void) then
-									-- There is no reference type in common between the dynamic type sets
-									-- of the left and right operands. The only way for the equality
-									-- to succeed is that both operands be Void.
-								current_file.put_string (l_eif_false)
-							else
-								current_file.put_character ('(')
-								print_expression (l_left_operand)
-								current_file.put_character (')')
-								current_file.put_string (l_equal)
-								current_file.put_character ('(')
-								print_expression (l_right_operand)
-								current_file.put_character (')')
-							end
+					end
+					if l_left_type_set.count > 1 or l_right_type_set.count > 1 then
+						current_file.put_character (':')
+							-- Reference equality.
+						if l_left_static_type.is_expanded or l_right_static_type.is_expanded then
+							current_file.put_string (l_eif_false)
+						elseif not l_has_common_reference_types and (not l_left_type_set.can_be_void or not l_right_type_set.can_be_void) then
+								-- There is no reference type in common between the dynamic type sets
+								-- of the left and right operands. The only way for the equality
+								-- to succeed is that both operands be Void.
+							current_file.put_string (l_eif_false)
+						else
+							current_file.put_character ('(')
+							print_expression (l_left_operand)
+							current_file.put_character (')')
+							current_file.put_string (l_equal)
+							current_file.put_character ('(')
+							print_expression (l_right_operand)
 							current_file.put_character (')')
 						end
 						current_file.put_character (')')
 					end
+					current_file.put_character (')')
 					current_file.put_character (')')
 				end
 			else
@@ -8435,21 +8446,27 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						current_file.put_string (l_eif_true)
 					elseif l_left_type_set.is_empty then
 							-- We know for sure that the left operand is Void.
+						current_file.put_character ('(')
 						print_expression (l_right_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (l_equal)
 						current_file.put_character (' ')
 						current_file.put_string (c_eif_void)
 					elseif l_right_type_set.is_empty then
 							-- We know for sure that the right operand is Void.
+						current_file.put_character ('(')
 						print_expression (l_left_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (l_equal)
 						current_file.put_character (' ')
 						current_file.put_string (c_eif_void)
 					else
 						current_file.put_character ('(')
+						current_file.put_character ('(')
 						print_expression (l_left_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (l_equal)
 						current_file.put_character (' ')
@@ -8457,7 +8474,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						current_file.put_character (')')
 						current_file.put_string (l_and_then)
 						current_file.put_character ('(')
+						current_file.put_character ('(')
 						print_expression (l_right_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (l_equal)
 						current_file.put_character (' ')
@@ -8482,7 +8501,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					if l_left_type_set.can_be_void and l_right_type_set.can_be_void then
 							-- The equality succeeds if both operands are Void.
 						current_file.put_character ('(')
+						current_file.put_character ('(')
 						print_expression (l_left_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (c_equal)
 						current_file.put_character (' ')
@@ -8490,7 +8511,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						current_file.put_character (')')
 						current_file.put_character ('?')
 						current_file.put_character ('(')
+						current_file.put_character ('(')
 						print_expression (l_right_operand)
+						current_file.put_character (')')
 						current_file.put_character (' ')
 						current_file.put_string (l_equal)
 						current_file.put_character (' ')
@@ -8509,7 +8532,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						if l_left_type_set.can_be_void then
 								-- We know for sure that the right operand cannot be Void.
 							current_file.put_character ('(')
+							current_file.put_character ('(')
 							print_expression (l_left_operand)
+							current_file.put_character (')')
 							current_file.put_character (' ')
 							current_file.put_string (l_not_equal)
 							current_file.put_character (' ')
@@ -8519,7 +8544,9 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						elseif l_right_type_set.can_be_void then
 								-- We know for sure that the left operand cannot be Void.
 							current_file.put_character ('(')
+							current_file.put_character ('(')
 							print_expression (l_right_operand)
+							current_file.put_character (')')
 							current_file.put_character (' ')
 							current_file.put_string (l_not_equal)
 							current_file.put_character (' ')
@@ -8590,11 +8617,15 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 								-- Optimization: avoid a function call for basic types.
 -- TODO: check that feature 'is_equal' is the unmodified expected standard built-in version.
 							current_file.put_character ('(')
+							current_file.put_character ('(')
 							print_unboxed_expression (l_left_operand, l_dynamic_type, False)
+							current_file.put_character (')')
 							current_file.put_character (' ')
 							current_file.put_string (l_equal)
 							current_file.put_character (' ')
+							current_file.put_character ('(')
 							print_attachment_expression (l_right_operand, l_actual_type_set, l_formal_type)
+							current_file.put_character (')')
 							current_file.put_character (')')
 						else
 							if not l_is_equal_feature.is_generated then
