@@ -55,6 +55,22 @@ feature -- Access
 			else
 				Result := a_default
 			end
+		ensure
+			value_if_defined: is_defined implies Result = value
+			default_if_not_defined: not is_defined implies Result = a_default
+		end
+
+	non_empty_value_or_else (a_default: G): G is
+			-- `value' if `is_defined' and then `not string_value.is_empty', `a_default' otherwise
+		do
+			if is_defined and then not string_value.is_empty then
+				Result := value
+			else
+				Result := a_default
+			end
+		ensure
+			value_if_defined_and_string_value_not_empty: is_defined and then not string_value.is_empty implies Result = value
+			default_if_not_defined: not is_defined or else string_value.is_empty implies Result = a_default
 		end
 
 feature -- Status report

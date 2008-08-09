@@ -5,7 +5,7 @@ indexing
 		"Available commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,106 +15,109 @@ class GEANT_AVAILABLE_COMMAND
 inherit
 
 	GEANT_FILESYSTEM_COMMAND
+		redefine
+			make
+		end
 
 create
 
 	make
 
-feature -- Status report
+feature {NONE} -- Initialization
 
-	is_file_executable: BOOLEAN is
-			-- Can command be executed on sourcefile `resource_name'?
+	make (a_project: GEANT_PROJECT) is
+			-- Initialize command.
 		do
-			Result := resource_name /= Void and then resource_name.count > 0
-		ensure
-			resource_name_not_void: Result implies resource_name /= Void
-			resource_name_not_empty: Result implies resource_name.count > 0
+			Precursor (a_project)
+
+				-- Create properties:
+			create resource_name.make
+			create variable_name.make
+			create true_value.make
+			create false_value.make
+
+				-- Set default agents:
+			create available_agent_cell.make (agent is_resource_existing)
 		end
 
+feature -- Status report
+
 	is_executable: BOOLEAN is
-			-- Can command be executed?
+			-- Can command be executed on sourcefile `resource_name'?
 		do
-			Result := is_file_executable
+ 			validate_condition (resource_name.is_defined, "  [available] error: 'resource' is not defined")
+  			validate_condition (is_valid and then not resource_name.value.is_empty, "  [available] error: 'resource' is empty")
+ 			validate_condition (is_valid and then variable_name.is_defined, "  [available] error: 'variable' is not defined")
+  			validate_condition (is_valid and then not variable_name.value.is_empty, "  [available] error: 'variable' is empty")
+			Result := is_valid
 		ensure then
-			file_executable: Result implies is_file_executable
+ 			resource_name_defined: Result implies resource_name.is_defined
+ 			resource_name_not_empty: Result implies not resource_name.value.is_empty
+ 			variable_name_defined: Result implies variable_name.is_defined
+ 			variable_name_not_empty: Result implies not variable_name.value.is_empty
 		end
 
 feature -- Access
 
-	resource_name: STRING
+	resource_name: GEANT_STRING_PROPERTY
 			-- Name of resource
 
-	variable_name: STRING
+	variable_name: GEANT_STRING_PROPERTY
 			-- Name of variable to set
 
-	true_value: STRING
+	true_value: GEANT_STRING_PROPERTY
 			-- Value to be set for variable named `variable_name'
-			-- in case `execute' evaluate a value of `True'
+			-- in case `available_agent_cell' evaluates to `True'
 
-	false_value: STRING
+	false_value: GEANT_STRING_PROPERTY
 			-- Value to be set for variable named `variable_name'
-			-- in case `execute' evaluate a value of `False'
+			-- in case `available_agent_cell' evaluates to `False'
 
-feature -- Setting
-
-	set_resource_name (a_resource_name: like resource_name) is
-			-- Set `resource_name' to `a_resource_name'.
-		require
-			a_resource_name_not_void : a_resource_name /= Void
-		do
-			resource_name := a_resource_name
-		ensure
-			resource_name_set: resource_name = a_resource_name
-		end
-
-	set_variable_name (a_variable_name: like variable_name) is
-			-- Set `variable_name' to `a_variable_name'.
-		require
-			a_variable_name_not_void : a_variable_name /= Void
-			a_variable_name_not_empty: a_variable_name.count > 0
-		do
-			variable_name := a_variable_name
-		ensure
-			variable_name_set: variable_name = a_variable_name
-		end
-
-	set_true_value (a_true_value: like true_value) is
-			-- Set `true_value' to `a_true_value'.
-		require
-			a_true_value_not_void : a_true_value /= Void
-			a_true_value_not_empty: a_true_value.count > 0
-		do
-			true_value := a_true_value
-		ensure
-			true_value_set: true_value = a_true_value
-		end
-
-	set_false_value (a_false_value: like false_value) is
-			-- Set `false_value' to `a_false_value'.
-		require
-			a_false_value_not_void : a_false_value /= Void
-			a_false_value_not_empty: a_false_value.count > 0
-		do
-			false_value := a_false_value
-		ensure
-			false_value_set: false_value = a_false_value
-		end
+	available_agent_cell: DS_CELL [FUNCTION [ANY, TUPLE [STRING], BOOLEAN]]
+			-- Available agent cell
 
 feature -- Execution
 
 	execute is
 			-- Execute command.
 		local
-			a_from_file: STRING
+			a_exists: BOOLEAN
+			a_variable_name: STRING
+			a_true_value: STRING
+			a_false_value: STRING
 		do
-			check is_file_executable: is_file_executable end
-			a_from_file := file_system.pathname_from_file_system (resource_name, unix_file_system)
-
-			if file_system.file_exists (a_from_file) or else file_system.directory_exists (a_from_file) then
-				project.set_variable_value (variable_name, true_value)
+			a_exists := available_agent_cell.item.item ([resource_name.value])
+			a_variable_name := variable_name.value
+			a_true_value := true_value.non_empty_value_or_else ("true")
+			a_false_value := false_value.non_empty_value_or_else ("false")
+			if a_exists then
+				project.set_variable_value (variable_name.value, a_true_value)
 			else
-				project.set_variable_value (variable_name, false_value)
+				project.set_variable_value (variable_name.value, a_false_value)
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	is_resource_existing (a_resource_name: STRING): BOOLEAN is
+			-- Is resource named `a_resource_name' existing?
+		require
+			a_resource_name_not_void: a_resource_name /= Void
+		local
+			a_name: STRING
+		do
+			a_name := file_system.pathname_from_file_system (a_resource_name, unix_file_system)
+			Result := file_system.file_exists (a_name) or else file_system.directory_exists (a_name)
+		end
+
+invariant
+
+	resource_name_not_void: resource_name /= Void
+	variable_name_not_void: variable_name /= Void
+	true_value_not_void: true_value /= Void
+	false_value_not_void: false_value /= Void
+
+	available_agent_cell_not_void: available_agent_cell /= Void
+	available_agent_cell_item_not_void: available_agent_cell.item /= Void
 
 end

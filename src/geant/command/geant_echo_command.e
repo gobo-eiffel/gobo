@@ -89,7 +89,7 @@ feature -- Execution
 			if to_file_property.is_defined then
 				a_to_file := to_file_property.value
 				create a_file.make (a_to_file)
-				a_append := append_property.value_or_else (False)
+				a_append := append_property.non_empty_value_or_else (False)
 				if a_append then
 					project.trace (<<"  [echo] Appending '", a_message, "' to file '", a_to_file, "'">>)
 					a_file.open_append
@@ -142,7 +142,7 @@ invariant
 	append_property_not_void: append_property /= Void
 
 	message_only_agent_cell_not_void: message_only_agent_cell /= Void
-	message_only_agent_cell__item_not_void: message_only_agent_cell.item /= Void
+	message_only_agent_cell_item_not_void: message_only_agent_cell.item /= Void
 	message_with_file_agent_cell_not_void: message_with_file_agent_cell /= Void
 	message_with_file_agent_cell_item_not_void: message_with_file_agent_cell.item /= Void
 
