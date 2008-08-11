@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Test base64 decoding routines"
 
@@ -61,7 +61,7 @@ feature -- Tests
 				assert ("decoded_string_not_void", s2 /= Void)
 				assert_equal ("original_string_matches_round_trip", s1, s2)
 				i := i +1
-				s1.append ((i \\ 10).out)
+				s1.append_string ((i \\ 10).out)
 			end
 		end
 
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			l_encoder.close
 			Result := l_string_stream.string
 		end
-   
+
 	decoded_base64_binary (a_text: STRING): STRING is
 			-- Decoded version of `a_text' from base64-binary
 		local
@@ -102,5 +102,5 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 end

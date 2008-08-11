@@ -45,7 +45,7 @@ feature -- Status report
 		do
 			Result := (0 <= i) and then (i < area.count)
 		end
-		
+
 feature -- Element change
 
 	put (v: T; i: INTEGER) is
@@ -64,6 +64,8 @@ feature {NONE} -- Element change
 			-- Make `other' the new `area'
 		do
 			area := other
+		ensure
+			area_set: area = other
 		end
 
 end

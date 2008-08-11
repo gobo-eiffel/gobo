@@ -11,7 +11,7 @@ class
 
 feature -- Conversion
 
-	from_string_to_system_string (a_str: STRING_GENERAL): SYSTEM_STRING is
+	from_string_to_system_string (a_str: READABLE_STRING_GENERAL): SYSTEM_STRING is
 			-- Convert `a_str' to an instance of SYSTEM_STRING.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet

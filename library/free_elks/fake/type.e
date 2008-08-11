@@ -34,7 +34,9 @@ convert
 		--    generating_type: STRING
 		-- becomes:
 		--    generating_type: TYPE [like Current]
-	name: {STRING, STRING_GENERAL}
+	name: {STRING, STRING_GENERAL, READABLE_STRING},
+	to_readable_string_8: {READABLE_STRING_8},
+	to_readable_string_32: {READABLE_STRING_32}
 
 feature -- Access
 
@@ -132,7 +134,6 @@ feature -- Output
 
 feature -- Features from STRING needed here for the transition period (see convert clause)
 
-
 	infix "+" (other: STRING): STRING is
 			-- Append a copy of 's' at the end of a copy of the name of the
 			-- Eiffel type represented by `Current', then return the Result.
@@ -206,6 +207,26 @@ feature -- Features from STRING needed here for the transition period (see conve
 		ensure
 			as_upper_not_void: Result /= Void
 			definition: Result.is_equal (name.as_upper)
+		end
+
+	to_readable_string_8: READABLE_STRING_8 is
+			-- Name of type
+		obsolete
+			"[080717] Use 'name' instead (or 'out' during the transition period)."
+		do
+			Result := name
+		ensure
+			to_readable_string_8_not_void: Result /= Void
+		end
+
+	to_readable_string_32: READABLE_STRING_32 is
+			-- Name of type
+		obsolete
+			"[080717] Use 'name' instead (or 'out' during the transition period)."
+		do
+			Result := name
+		ensure
+			to_readable_string_32_not_void: Result /= Void
 		end
 
 end

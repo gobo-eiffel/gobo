@@ -121,7 +121,7 @@ feature -- Status setting
 
 feature -- Parse
 
-	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
+	parse_string_with_type (s: READABLE_STRING_GENERAL; type: INTEGER) is
 			-- `Reset' convertor to start a new parse session and
 			-- parse `s' to see if it is a number of `type'.
 			-- Make result available in `overflowed', `underflowed' and `parse_successful'.
@@ -139,7 +139,7 @@ feature -- Parse
 		deferred
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	last_state: INTEGER
 		-- Last state of this state machine

@@ -99,7 +99,7 @@ feature -- Status reporting
 
 feature -- String parsing
 
-	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
+	parse_string_with_type (s: READABLE_STRING_GENERAL; type: INTEGER) is
 			-- Parse string `s' as integer of type `type'.
 		local
 			i: INTEGER

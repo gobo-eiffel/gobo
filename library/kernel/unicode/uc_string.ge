@@ -62,19 +62,21 @@ inherit
 			{STRING}
 				share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal,
 				valid_code, to_string_32;
+			{ANY} is_string_8;
 			{NONE} all
 		undefine
 			infix ">", infix "<=", infix ">=", max, min
 		redefine
 			make, make_from_string, make_empty, make_filled,
 			put, append_character, item,
-			substring, append_string, replace_substring,
+			substring, append_string, replace_substring, append,
 			index_of, has, occurrences,
 			hash_code, remove, to_lower, to_upper,
 			three_way_comparison, item_code,
 			byte_capacity,
 			has_substring, insert_character,
-			string, same_string, insert_string,
+			string, same_string, insert_string, insert, prepend,
+			prepend_string, append_string_general,
 			keep_head, keep_tail,
 			remove_head, remove_tail,
 			remove_substring,
@@ -126,13 +128,14 @@ inherit
 		redefine
 			make, make_from_string, make_empty, make_filled,
 			append_character, substring_index,
-			substring, append_string, replace_substring,
+			substring, append_string, replace_substring, append,
 			index_of, has, occurrences, head, tail,
 			hash_code, remove, to_lower, to_upper,
 			three_way_comparison, item_code,
 			byte_capacity, count,
 			has_substring, insert_character,
-			string, same_string, insert_string,
+			string, same_string, insert_string, insert, prepend,
+			prepend_string, append_string_general,
 			keep_head, keep_tail,
 			remove_head, remove_tail,
 			remove_substring,
@@ -1453,6 +1456,26 @@ feature -- Element change
 			unicode_replaced: item_code (i) = c.code
 		end
 
+	prepend (s: STRING) is
+			-- Prepend a copy of `s' at front.
+		do
+			insert_string (s, 1)
+		end
+
+	prepend_string (s: STRING) is
+			-- Prepend a copy of `s', if not void, at front.
+		do
+			if s /= Void then
+				prepend (s)
+			end
+		end
+
+	append_string_general (s: STRING) is
+			-- Append a copy of `s' at end.
+		do
+			append (s)
+		end
+
 	append_unicode_character (c: UC_CHARACTER) is
 			-- Append unicode character `c' at end.
 		require
@@ -1524,7 +1547,15 @@ feature -- Element change
 			unicode_appended: item_code (count) = c.code
 		end
 
-	append_string (a_string: STRING) is
+	append_string (s: STRING) is
+			-- Append a copy of `s' at end.
+		do
+			if s /= Void then
+				append (s)
+			end
+		end
+
+	append (a_string: STRING) is
 			-- Append a copy of `a_string' at end.
 			-- (ELKS 2001 STRING)
 		local
@@ -1939,6 +1970,14 @@ feature -- Element change
 			end
 		ensure then
 			code_inserted: item_code (i) = c.code
+		end
+
+	insert (s: STRING; i: INTEGER) is
+			-- Add `s' to left of position `i' in current string.
+		obsolete
+			"ELKS 2001: use `insert_string' instead"
+		do
+			insert_string (s, i)
 		end
 
 	insert_string (a_string: STRING; i: INTEGER) is

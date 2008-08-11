@@ -15,7 +15,7 @@ inherit
 create
 	make
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Initialize.
@@ -160,7 +160,7 @@ feature -- Status setting
 
 feature -- Parse
 
-	parse_string_with_type (s: STRING_GENERAL; type: INTEGER) is
+	parse_string_with_type (s: READABLE_STRING_GENERAL; type: INTEGER) is
 			-- Parse string `s' as real number of type `type'.
 		local
 			i: INTEGER
