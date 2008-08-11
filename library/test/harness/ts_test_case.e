@@ -185,6 +185,69 @@ feature -- Execution
 		do
 		end
 
+feature -- Registration
+
+	register_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE]) is
+			-- Register `a_test_feature' in `a_tester' with name `a_test_name'.
+		require
+			a_tester_not_void: a_tester /= Void
+			a_test_name_not_void: a_test_name /= Void
+			a_test_feature_not_void: a_test_feature /= Void
+			a_test_feature_target: a_test_feature.target = Current
+		do
+			set_test (a_test_name, a_test_feature)
+			a_tester.put_test (Current)
+		end
+
+	register_cloned_test_case (a_tester: TS_TESTER; a_test_name: STRING; a_test_feature: PROCEDURE [TS_TEST_CASE, TUPLE]) is
+			-- Register `a_test_feature' in `a_tester' with name `a_test_name'
+			-- using a clone of `Current' as test case object.
+		require
+			a_tester_not_void: a_tester /= Void
+			a_test_name_not_void: a_test_name /= Void
+			a_test_feature_not_void: a_test_feature /= Void
+			a_test_feature_target: a_test_feature.target = Current
+		local
+			l_test_case: like Current
+		do
+			l_test_case := twin
+			a_test_feature.set_target (l_test_case)
+			l_test_case.set_test (a_test_name, a_test_feature)
+			a_tester.put_test (l_test_case)
+		end
+
+	register_test_cases (a_tester: TS_TESTER) is
+			-- Register all test cases in `features_under_test'.
+			-- Can be redefined to provide more meaningful test names.
+		require
+			a_tester_not_void: a_tester /= Void
+		local
+			i, nb: INTEGER
+			l_features: like features_under_test
+		do
+			l_features := features_under_test
+			i := l_features.lower
+			nb := l_features.upper
+			if i <= nb then
+				register_test_case (a_tester, generator + ".test#" + i.out, l_features.item (i))
+				from i := i + 1 until i > nb loop
+					register_cloned_test_case (a_tester, generator + ".test#" + i.out, l_features.item (i))
+					i := i + 1
+				end
+			end
+		end
+
+	features_under_test: ARRAY [PROCEDURE [TS_TEST_CASE, TUPLE]] is
+			-- Features to be registered to the test harness
+			-- using `register_test_cases'
+		once
+			create Result.make (1, 0)
+		ensure
+			features_under_test_not_void: Result /= Void
+			no_void_feature_under_test: not Result.has (Void)
+			-- features_under_test_target: forall f in Result, f.target = Current
+		end
+
 feature {NONE} -- Execution
 
 	execute_without_rescue (a_summary: TS_SUMMARY) is
