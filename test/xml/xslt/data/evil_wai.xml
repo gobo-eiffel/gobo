@@ -1,0 +1,44 @@
+<html >
+<!-- This is a horrible XHTML-ish document 
+	with examples of most of the flaws deprecated by 
+	WAI Accessibility Guidelines
+-->
+
+<meta http-equiv="refresh" />
+
+<frameset />
+
+<body bgcolor="white" color="white">
+<img />
+
+<fieldset>
+<input />
+</fieldset>
+
+<applet />
+
+<map />
+
+<object />
+
+<frame  src="xxx.gif" />
+
+
+<i onmousedown="blah" />
+<b onmouseup="blah" />
+<blink oncklick="blah" />
+<marquee />
+
+
+<ul />
+
+<table>
+<th />
+<tr>
+	<td />
+</tr>
+
+</table>
+</body>
+
+</html>

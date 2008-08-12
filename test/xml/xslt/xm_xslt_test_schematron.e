@@ -88,7 +88,7 @@ feature -- Test
 
 			-- now use the generated transform to produce a report
 
-			create l_transformer_factory.make (l_configuration)			
+			create l_transformer_factory.make (l_configuration)
 			create l_uri_source.make ("string:/transform")
 			create l_transformer_factory.make (l_configuration)
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
@@ -116,7 +116,7 @@ feature -- Test
 				l_test_string := STRING_.appended_string (l_test_string, l_test_file.last_string)
 			end
 			l_test_file.close
-			assert ("Results same as test file", STRING_.same_string (l_test_string, l_second_output.last_output))	
+			assert ("Results same as test file", STRING_.same_string (l_test_string, l_second_output.last_output))
 		end
 
 	test_schematron_conformance is
@@ -149,8 +149,7 @@ feature {NONE} -- Implementation
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"test", "xml", "xslt", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "xml", "xslt", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_void: Result /= Void
@@ -164,25 +163,13 @@ feature {NONE} -- Implementation
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-	
-	example_data_dirname: STRING is
-			-- Name of directory containing schematron data files;
-			-- N.B. Uses example directory to avoid duplicating files
-		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"example", "xml", "xslt", "schematron", "data">>)
-			Result := Execution_environment.interpreted_string (Result)
-		ensure
-			example_data_dirname_not_void: Result /= Void
-			example_data_dirname_not_empty: not Result.is_empty
-		end
-	
+
 	schematron_basic_uri: UT_URI is
 			-- URI of file 'schematron-basic.xsl'
 		local
 			l_path: STRING
 		once
-			l_path := file_system.pathname (example_data_dirname, "schematron-basic.xsl")
+			l_path := file_system.pathname (data_dirname, "schematron-basic.xsl")
 			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			schematron_basic_uri_not_void: Result /= Void
@@ -193,7 +180,7 @@ feature {NONE} -- Implementation
 		local
 			l_path: STRING
 		once
-			l_path := file_system.pathname (example_data_dirname, "conformance1-5.xsl")
+			l_path := file_system.pathname (data_dirname, "conformance1-5.xsl")
 			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			schematron_conformance_uri_not_void: Result /= Void
@@ -204,7 +191,7 @@ feature {NONE} -- Implementation
 		local
 			l_path: STRING
 		once
-			l_path := file_system.pathname (example_data_dirname, "wai.xml")
+			l_path := file_system.pathname (data_dirname, "wai.xml")
 			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			wai_schema_uri_not_void: Result /= Void
@@ -215,7 +202,7 @@ feature {NONE} -- Implementation
 		local
 			l_path: STRING
 		once
-			l_path := file_system.pathname (example_data_dirname, "evil_wai.xml")
+			l_path := file_system.pathname (data_dirname, "evil_wai.xml")
 			Result := File_uri.filename_to_uri (l_path)
 		ensure
 			evil_wai_uri_not_void: Result /= Void
@@ -229,4 +216,5 @@ feature {NONE} -- Implementation
 			expected_report_filename_not_void: Result /= Void
 			expected_report_filename_not_empty: not Result.is_empty
 		end
+
 end

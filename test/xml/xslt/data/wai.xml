@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<!--
+	Schematron schema for WAI
+	Rick Jelliffe, ricko@gate.sinica.edu.tw
+	Academia Sinica Computing Centre, Taipei, Taiwan
+
+	Taken from http://www.w3.org/TR/1999/WAI-WEBCONTENT-19990505 
+	Status: 
+		Incomplete especially after ch 12. 
+		Needs fine-toothed combing.
+		Test for presence of attributes and elements; should 
+			also text string-length > 0
+
+	For the Schematron validator, go to 
+	http://www.ascc.net/xml/resource/schematron/schematron.html
+
+       Note: in a context, the XSLT "|" is used to indicate or. In a 
+       test, the XPath "or" is used. 
+
+-->
+	
+<schema ns="http://www.ascc.net/xml/resource/schematron/wai.xml"
+        xmlns="http://www.ascc.net/xml/schematron"        
+	fpi="+//IDN sinica.edu.tw/SGML Schema for WAI//EN"
+>
+	<title>Schema for Web Content Accessibility</title>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 1"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/#gl-provide-equivalents"
+		fpi="+//IDN sinica.edu.tw/SGML Schema for WAI::Guideline 1//EN"
+		id="g1">
+		<rule context="img  | IMG">
+			<assert  test="@alt   or  @ALT or  @longdesc  or  @LONGDESC">(1.1) An image element should have some descriptive text: an alt or longdesc attribute.</assert>
+			<key name="imgkey" path="@alt" />
+		</rule>
+		<rule context="input  | INPUT">
+			<assert test="@alt  or @ALT">(1.1) An input element should have some descriptive text: an alt or longdesc attribute.</assert>
+		</rule>
+		<rule context="applet  | APPLET ">
+			<assert test="@alt  or  @ALT">(1.1) An applet element should have some descriptive text: an alt or longdesc attribute.</assert>
+		</rule>
+		<rule context="map  | MAP">
+			<assert test="area/@alt  or  a  or  A  or  AREA/@ALT">(1.1) A map element should have some descriptive text: an alt attribute or a link.</assert>
+		</rule>
+		<rule context="object  | OBJECT">
+			<assert test="string-length(text()) &gt; 0">(1.1) An object element should contain some descriptive text.</assert>
+		</rule>
+		<rule context="frame  | FRAME ">
+			<assert test="@longdesc  or  @LONGDESC">(1.1) A frame element should have some descriptive text: a longdesc attribute.</assert>
+		</rule>
+		
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 2"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/#gl-color">
+		<rule context="body  | BODY">
+			<report role="samecolor" test="string(@bgcolor) = string(@color)">(2.2) The background color and the foreground color are the same</report>
+			<!-- put specific color comparisons here -->
+		</rule>
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 3"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/#gl-structure-presentation">
+		<rule context="b  | I  | i   | B">
+			<report test="self::*">(3.3) Concerning element <name />: B and I are not recommended. Use strong and em, or stylesheets.</report>
+		</rule>
+		<rule context="ul  | ol  | UL  | OL ">
+			<assert test="li  or  LI">(3.3) A list should not be used for formatting effects</assert>
+		</rule>
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 4"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/#gl-abbreviated-and-foreign">
+		<rule role="topdoc" context="html  | HTML  | body  | BODY">
+			<assert test="@lang  or  @xml:lang  or  @LANG ">(4.3) The primary language of a 
+				document should be identified. </assert>
+		</rule>
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 5"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/i#gl-table-markup">
+		<rule context="table  | TABLE">
+			<assert test="caption  or  CAPTION">(5.1) A table should have a caption</assert>
+			<assert test="@summary  or  @SUMMARY">(5.5) A table should have a summary attribute </assert>
+		</rule>
+		<rule context="td  | TD">
+			<assert test="@scope  or  @headers  or  @axis  or  @SCOPE  or  @HEADERS  or  @AXIS ">(5.2) Table data should identify 
+			its scope, headers, axis in attributes.</assert>
+		</rule>
+		<rule context="th  | TH">
+			<assert test="@abbr  or  @ABBR">(5.6) A table header should have an abbr attribute to give abbreviation</assert>
+		</rule>
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 6"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/#gl-new-technologies">
+		<rule context="*[@onmouseup]">
+			<assert test="@onkeyup  or  @ONKEYUP">(6.4) If you specify an "onmouseup" attribute
+			on a <name /> element,
+			you should also specify an "onkeyup" attribute</assert> 
+		</rule>
+		<rule context="*[@onmousedown]  | *[@ONMOUSEDOWN]">
+			<assert test="@onkeydown  or  @ONKEYDOWN">(6.4) If you specify an "onmousedown" 
+			attribute on a <name /> element,
+			you should also specify an "onkeydown" attribute</assert> 
+		</rule>
+		<rule context="*[@onclick]  | *[@ONCLICK]">
+			<assert test="@onkeypress  or  @ONKEYPRESS">(6.4) If you specify an "onclick" 
+			event on a <name /> element,
+			you should also specify an "onkeypress"</assert> 
+		</rule>
+		<rule context="marquee  | MARQUEE">
+			<assert test="*">(6.5) The marquee element is not good HTML</assert>
+		</rule>
+		<rule context="blink  | BLINK">
+			<assert test="*">(6.5) The blink element is not good HTML</assert>
+		</rule>
+		<rule context="frame  | FRAME">
+			<report test="contains(@src, '.gif')
+				 or 	contains(string(@src), '.GIF')  
+				 or  contains(string(@src), '.jpg')  or contains(string(@src), '.JPG') 
+				 or  contains(string(@src), '.jpeg')  or contains(string(@src), '.JPEG') 
+				 or  contains(string(@src), '.png')  or contains(string(@src), '.PNG') ">
+				(6.2) A frame should not be a direct image</report>
+			<assert test="../noframes  or  ../NOFRAMES">(6.5) If you specify a frame, also specify a
+			noframes element.</assert>
+		</rule>
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 7"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/#gl-movement">
+		<rule context="meta  | META ">
+			<report test="@http-equiv = 'refresh'">(7.1) The 
+			user should control the refreshing of the page</report>
+		</rule>
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline ?"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/">
+		<rule context="fieldset  | FIELDSET">
+			<assert test="legend or  LEGEND">(?) A fieldset should have a legend</assert>
+	     	</rule>	
+	</pattern>
+	<pattern name="Web Content Accessibility Guidelines 1.0, Guideline 12"
+		see="http://www.w3.org/TR/WAI-WEBCONTENT/#gl-complex-elements">
+		<rule context="frameset  | FRAMESET">
+			<assert test="@title  or  @TITLE">(12.1) A frameset should have a title</assert>
+	     	</rule>	
+	</pattern>
+</schema>
