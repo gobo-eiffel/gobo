@@ -159,8 +159,13 @@ feature -- Status report
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that have same dynamic type as `an_object'.
 		do
-			Result := find_instance_of (internal_.dynamic_type (an_object),
-				special_any_dynamic_type)
+			Result := objects_instance_of_type (internal_.dynamic_type (an_object))
+		end
+
+	objects_instance_of_type (a_type_id: INTEGER): SPECIAL [ANY] is
+			-- Objects that have same dynamic type as `an_object'.
+		do
+			Result := find_instance_of (a_type_id, special_any_dynamic_type)
 		end
 
 	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER] is

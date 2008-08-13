@@ -39,10 +39,10 @@ class CONSOLE inherit
 			put_new_line, new_line, end_of_file, file_close,
 			readreal, readdouble, readchar, readline, readstream,
 			readword, putbool, putreal, putdouble, putstring, putchar,
-			dispose, read_to_string, back,
+			dispose, read_to_string, back, read_line_thread_aware,
+			read_stream_thread_aware, read_word_thread_aware,
 			read_integer_with_no_type,
 			ctoi_convertor
-
 		end
 
 	ANY
@@ -131,49 +131,41 @@ feature -- Input
 			-- New line will be consumed but not part of `last_string'.
 		require else
 			is_readable: file_readable
+		do
+			read_line_thread_aware
+		end
+
+	read_line_thread_aware is
+			-- <Precursor>
+		require else
+			is_readable: file_readable
 		local
 			str_cap: INTEGER
-			read: INTEGER -- Amount of bytes already read
-			str_area: ANY
+			read: INTEGER	-- Amount of bytes already read
 			done: BOOLEAN
 			l: like last_string
+			l_old_count, l_new_count: INTEGER
+			l_buffer: C_STRING
 		do
 			if last_string = Void then
 				create_last_string (0)
 			end
 			l := last_string
-			if l /= Void then
+			l_buffer := read_data_buffer
+			if l /= Void and l_buffer /= Void then
 				from
-					str_area := l.area
-					str_cap := l.capacity
+					l.clear_all
+					str_cap := l_buffer.capacity
 				until
 					done
 				loop
-					read := read +
-						console_readline (file_pointer, $str_area, str_cap, read)
-					if read > str_cap then
-							-- End of line not reached yet
-							--|The string must be consistently set before
-							--|resizing.
-						l.set_count (str_cap)
-						if str_cap < 2048 then
-							l.grow (str_cap + 1024)
-						else
-								-- Increase capacity by `Growth_percentage' as
-								-- defined in RESIZABLE.
-							l.automatic_grow
-						end
-						str_area := l.area
-						str_cap := l.capacity
-						read := read - 1	-- True amount of byte read
-					else
-						l.set_count (read)
-						done := True
-					end
-				end
-					-- Ensure fair amount of garbage.
-				if read < 1024 then
-					l.resize (read)
+					read := console_readline (file_pointer, l_buffer.item, str_cap, 0)
+					l_old_count := l.count
+					l_new_count := l_old_count + read.min (str_cap)
+					done := read <= str_cap
+					l.grow (l_new_count)
+					l.set_count (l_new_count)
+					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
 				end
 			end
 		end
@@ -182,66 +174,69 @@ feature -- Input
  			-- Read a string of at most `nb_char' bound characters
 			-- from standard input.
 			-- Make result available in `last_string'.
+		do
+			read_stream_thread_aware (nb_char)
+		end
+
+	read_stream_thread_aware (nb_char: INTEGER) is
+			-- <Precursor>
 		local
 			new_count: INTEGER
-			str_area: ANY
-			l: like last_string
+			l_buffer: C_STRING
+			l_str: like last_string
 		do
-			if last_string = Void then
+			l_str := last_string
+			if l_str = Void then
 				create_last_string (nb_char)
+				l_str := last_string
 			end
-			l := last_string
-			if l /= Void then
-				l.grow (nb_char)
-				str_area := l.area
-				new_count := console_readstream (file_pointer, $str_area, nb_char)
-				l.set_count (new_count)
+			l_buffer := read_data_buffer
+			if l_buffer /= Void and l_str /= Void then
+				l_buffer.set_count (nb_char)
+				new_count := console_readstream (file_pointer, l_buffer.item, nb_char)
+				l_buffer.set_count (new_count)
+				l_str.grow (new_count)
+				l_str.set_count (new_count)
+				l_buffer.read_string_into (l_str)
 			end
 		end
 
 	read_word, readword is
 			-- Read a new word from standard input.
 			-- Make result available in `last_string'.
+		do
+			read_word_thread_aware
+		end
+
+	read_word_thread_aware is
+			-- <Precursor>
 		local
-			str_area: ANY
 			str_cap: INTEGER
+			read: INTEGER	-- Amount of bytes already read
 			done: BOOLEAN
-			read: INTEGER
 			l: like last_string
+			l_old_count, l_new_count: INTEGER
+			l_buffer: C_STRING
 		do
 			if last_string = Void then
 				create_last_string (0)
 			end
 			l := last_string
-			if l /= Void then
+			l_buffer := read_data_buffer
+			if l /= Void and then l_buffer /= Void then
 				from
-					str_area := l.area
-					str_cap := l.capacity
+					l.clear_all
+					str_cap := l_buffer.capacity
 				until
 					done
 				loop
-					read := read +
-						console_readword (file_pointer, $str_area, str_cap, read)
-					if read > str_cap then
-							-- End of word not reached yet
-						if str_cap < 2048 then
-							l.grow (str_cap + 1024)
-						else
-								-- Increase capacity by `Growth_percentage' as
-								-- defined in RESIZABLE.
-							l.automatic_grow
-						end
-						str_area := l.area
-						str_cap := l.capacity
-						read := read - 1	-- True amount of byte read
-					else
-						l.set_count (read)
-						done := True
-					end
-				end
-					-- Ensure fair amount of garbage.
-				if read < 1024 then
-					l.resize (read)
+					read := console_readword (file_pointer, l_buffer.item, str_cap, 0)
+					l_old_count := l.count
+					l_new_count := l_old_count + read.min (str_cap)
+					done := read <= str_cap
+					l.grow (l_new_count)
+					l.set_count (l_new_count)
+					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
 				end
 			end
 			separator := console_separator (file_pointer) -- Look ahead
@@ -253,7 +248,6 @@ feature -- Input
 		do
 			last_character := console_readchar (file_pointer)
 		end
-
 
 	next_line is
 			-- Move to next input line on standard input.

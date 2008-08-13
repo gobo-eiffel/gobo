@@ -151,14 +151,14 @@ feature -- Status setting
 		require
 			s_exists: s /= Void
 		local
-			ext: ANY
+			l_cstr: C_STRING
 		do
 			if s.is_empty then
-				ext := default_shell.to_c
+				create l_cstr.make (default_shell)
 			else
-				ext := s.to_c
+				create l_cstr.make (s)
 			end
-			return_code := system_call ($ext)
+			return_code := system_call (l_cstr.item)
 		end
 
 	launch (s: STRING) is
@@ -168,14 +168,14 @@ feature -- Status setting
 		require
 			s_not_void: s /= Void
 		local
-			ext: ANY
+			l_cstr: C_STRING
 		do
 			if s.is_empty then
-				ext := default_shell.to_c
+				create l_cstr.make (default_shell)
 			else
-				ext := s.to_c
+				create l_cstr.make (s)
 			end
-			asynchronous_system_call ($ext)
+			asynchronous_system_call (l_cstr.item)
 		end
 
 	sleep (nanoseconds: INTEGER_64) is

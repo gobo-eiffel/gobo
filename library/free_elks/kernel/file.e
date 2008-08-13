@@ -898,6 +898,12 @@ feature -- Cursor movement
 			file_opened: not is_closed
 		do
 			file_move (file_pointer, 1)
+				-- Try to trigger EOF.
+				-- Do not use `file_move' it does not trigger EOF.
+			file_gc (file_pointer).do_nothing
+			if not end_of_file then
+				back
+			end
 		end
 
 	back is
