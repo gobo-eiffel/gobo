@@ -24,9 +24,6 @@
 			<option name="exclude" value="desc"/>
 			<option name="exclude" value="classic" if="${GOBO_DOTNET}"/>
 			<option name="exclude" value="dotnet" unless="${GOBO_DOTNET}"/>
-			<option name="exclude" value="structures" if="${GOBO_EIFFELBASE}"/>
-			<option name="exclude" value="event" if="${GOBO_EIFFELBASE}"/>
-			<option name="exclude" value="serialization" if="${GOBO_EIFFELBASE}"/>
 		</cluster>
 		<cluster name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll" if="${GOBO_DOTNET}">
 			<option name="abstract" value="true"/>
@@ -61,7 +58,7 @@
 				<option name="public_key_token" value="b77a5c561934e089"/>
 			</cluster>
 		</cluster>
-		<cluster name="time" unless="${GOBO_EIFFELBASE}">
+		<cluster name="time">
 			<option name="ecf_library" value="${ISE_EIFFEL}/library/time/time.ecf"/>
 			<option name="recursive" value="true"/>
 			<option name="read_only" value="true"/>

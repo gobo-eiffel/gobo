@@ -58,7 +58,6 @@
 		<geant file="build.eant" target="${target}" dir="kernel"/>
 		<geant file="build.eant" target="${target}" dir="lexical"/>
 		<geant file="build.eant" target="${target}" dir="math"/>
-		<geant file="build.eant" target="${target}" dir="other"/>
 		<geant file="build.eant" target="${target}" dir="parse"/>
 		<geant file="build.eant" target="${target}" dir="pattern"/>
 		<geant file="build.eant" target="${target}" dir="regexp"/>

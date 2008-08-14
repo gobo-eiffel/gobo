@@ -907,7 +907,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					Result := an_actual.same_syntactical_like_current (other, other_context, a_context.root_context)
 				end
 			else
-					-- Internal error: does current type really  appear in `a_context'?
+					-- Internal error: does current type really appear in `a_context'?
 				Result := False
 			end
 		end

@@ -28,6 +28,5 @@
 	<mount location="${GOBO}/library/tools/library.xace"/>
 	<mount location="${GOBO}/library/utility/library.xace"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
-	<mount location="${GOBO}/library/other/library.xace" if="${GOBO_EIFFELBASE}"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </library>

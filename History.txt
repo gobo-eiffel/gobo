@@ -38,6 +38,12 @@ Version 3.9 - ?
 	* Added set and table classes using binary search tree, AVL tree,
 	  red-black tree and left-leaning red-black tree algorithms.
 
+	Miscellaneous:
+
+	* Removed the emulations of EiffelBase and EiffelTime in library/other.
+	  They had not been maintained for years, and it became a pain to use
+	  them after the move from Ace files to ECF files in EiffelStudio.
+
 Version 3.8 - 11 May 2008
 
 	geant:

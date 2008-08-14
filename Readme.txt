@@ -139,7 +139,6 @@ In this distribution:
     library/kernel              compiler-dependent kernel class adapters
     library/lexical             Gobo Eiffel Lexical Library classes
     library/math                Gobo Eiffel Math Library classes
-    library/other               emulation of third-party Eiffel libraries
     library/parse               Gobo Eiffel Parse Library classes
     library/pattern             Gobo Eiffel Pattern Library classes
     library/regexp              Gobo Eiffel Regexp Library classes

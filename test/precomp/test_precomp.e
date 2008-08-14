@@ -45,24 +45,11 @@ feature -- Test
 			end
 		end
 
--- This test does not work anymore with ISE 5.7 because of the
--- introduction of ECF which does not take the 'exclude' clause
--- in the 'base' cluster into account when converting the Ace
--- file to ECF.
-	xxtest_ise_base is
-			-- Test precompilation with ISE Eiffel using Gobo's
-			-- EiffelBase emulation instead of ISE's EiffelBase.
-		do
-			if eiffel_compiler.is_ise then
-				precomp_ise (True)
-			end
-		end
-
 	test_ise is
 			-- Test precompilation with ISE Eiffel.
 		do
 			if eiffel_compiler.is_ise then
-				precomp_ise (False)
+				precomp_ise
 			end
 		end
 
@@ -95,9 +82,8 @@ feature {NONE} -- Precompilation
 			assert_execute ("gelint --flat ge.xace" + output_log)
 		end
 
-	precomp_ise (base: BOOLEAN) is
-			-- Test precompilation with ISE Eiffel. If `base' is true then
-			-- use Gobo's EiffelBase emulation instead of ISE's EiffelBase.
+	precomp_ise is
+			-- Test precompilation with ISE Eiffel.
 		local
 			define_option: STRING
 			dotnet: STRING
@@ -112,9 +98,6 @@ feature {NONE} -- Precompilation
 			assert ("EIFGENs_not_exists", not file_system.directory_exists ("EIFGENs"))
 				-- Generate Ace file.
 			create define_option.make (50)
-			if base then
-				define_option.append_string ("--define=%"GOBO_EIFFELBASE")
-			end
 			dotnet := Execution_environment.variable_value ("GOBO_DOTNET")
 			if dotnet /= Void and then dotnet.count > 0 then
 				if define_option.count = 0 then
