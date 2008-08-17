@@ -568,7 +568,7 @@ feature {NONE} -- Entities
 				-- 4.2: when multiple declaration first one is binding.
 			if a_def /= Void then
 				if not entities.has (a_name) then
-					entities.force (a_def, a_name)
+					entities.force_new (a_def, a_name)
 				end
 				check has: entities.has (a_name) end
 			end
@@ -593,7 +593,7 @@ feature {NONE} -- Entities
 					-- Convert to PE.
 				create a_def.make_def (in_def)
 				if not pe_entities.has (a_name) then
-					pe_entities.force (a_def, a_name)
+					pe_entities.force_new (a_def, a_name)
 				end
 				check has: pe_entities.has (a_name) end
 			end

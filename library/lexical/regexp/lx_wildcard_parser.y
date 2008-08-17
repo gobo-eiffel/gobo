@@ -221,8 +221,9 @@ feature {NONE} -- Implementation
 			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
 			question_string := "?"
-			if character_classes.has (question_string) then
-				Result := character_classes.item (question_string)
+			character_classes.search (question_string)
+			if character_classes.found then
+				Result := character_classes.found_item
 			else
 				create Result.make (1)
 				Result.put (Slash_code)
@@ -231,7 +232,7 @@ feature {NONE} -- Implementation
 				if equiv_classes /= Void then
 					equiv_classes.add (Result)
 				end
-				character_classes.force (Result, question_string)
+				character_classes.force_new (Result, question_string)
 			end
 		ensure
 			question_character_class_not_void: Result /= Void

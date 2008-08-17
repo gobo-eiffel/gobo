@@ -36,7 +36,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_base_uri: UT_URI) is
@@ -273,7 +273,7 @@ feature -- Access
 			result_may_be_void_if_not_match: True
 		end
 
-			
+
 feature -- Status report
 
 	is_error: BOOLEAN
@@ -304,9 +304,9 @@ feature -- Events
 						shared_catalog_manager.debug_message (1, "Document element is not catalog", current_element_name)
 						-- TODO terminate the parse
 					else
-						
+
 						-- ignore this element, and all it's descendants
-						
+
 						ignoring_depth := 1
 					end
 				else
@@ -344,7 +344,7 @@ feature -- Events
 				elseif STRING_.same_string (current_element_name, Rewrite_system_entry) then
 					add_rewrite_rule (True)
 				elseif STRING_.same_string (current_element_name, Rewrite_uri_entry) then
-					add_rewrite_rule (False)			
+					add_rewrite_rule (False)
 				elseif STRING_.same_string (current_element_name, Delegate_public_entry) then
 					add_public_delegate
 				elseif STRING_.same_string (current_element_name, Delegate_system_entry) then
@@ -357,7 +357,7 @@ feature -- Events
 					add_suffix (False)
 				elseif STRING_.same_string (current_element_name, Next_catalog_entry) then
 					add_next_catalog
-				end				
+				end
 			end
 		end
 
@@ -416,13 +416,13 @@ feature {NONE} -- Implementation
 
 	prefer_public: BOOLEAN
 			-- Prefer PUBLIC or SYSTEM entries?
-	
+
 	group_prefer_public: BOOLEAN
 			-- Prefer PUBLIC or SYSTEM entries for current group?
-	
+
 	system_id: STRING
 			-- Name of catalog file
-	
+
 	in_catalog: BOOLEAN
 			-- Are we within `catalog' document element?
 
@@ -470,25 +470,25 @@ feature {NONE} -- Implementation
 
 	public_delegates: DS_LINKED_LIST [XM_PUBLIC_DELEGATE_CATALOG_ENTRY]
 			-- Delegated catalogs for PUBLIC identifiers
-	
+
 	system_delegates: DS_LINKED_LIST [XM_DELEGATE_CATALOG_ENTRY]
 			-- Delegated catalogs for SYSTEM identifiers
-	
+
 	uri_delegates: DS_LINKED_LIST [XM_DELEGATE_CATALOG_ENTRY]
 			-- Delegated catalogs for URI references
-	
+
 	system_rewrite_rules: DS_LINKED_LIST [XM_REWRITE_CATALOG_ENTRY]
 			-- Rewrite rules for SYSTEM identifiers
-	
+
 	uri_rewrite_rules: DS_LINKED_LIST [XM_REWRITE_CATALOG_ENTRY]
 			-- Rewrite rules for URI references
-	
+
 	system_suffix_rules: DS_LINKED_LIST [XM_SUFFIX_CATALOG_ENTRY]
 			-- Suffix rules for SYSTEM identifiers
-	
+
 	uri_suffix_rules: DS_LINKED_LIST [XM_SUFFIX_CATALOG_ENTRY]
 			-- Suffix rules for URI references
-	
+
 	public_entries: DS_HASH_TABLE [XM_PUBLIC_CATALOG_ENTRY, STRING]
 			-- Map of `public' entries
 
@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 			if not is_error then
 				if not system_entries.has (a_system_id) then -- only the first eligible entry encountered is checked
 					create a_system_entry.make (a_target)
-					system_entries.force (a_system_entry, a_system_id)
+					system_entries.force_new (a_system_entry, a_system_id)
 					shared_catalog_manager.debug_message (4, "System URI added is", a_system_id)
 				else
 					shared_catalog_manager.debug_message (6, "System URI is a duplicate", a_system_id)
@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 			if not is_error then
 				if not uri_entries.has (a_uri) then -- only the first eligible entry encountered is checked
 					create a_uri_entry.make (a_target)
-					uri_entries.force (a_uri_entry, a_uri)
+					uri_entries.force_new (a_uri_entry, a_uri)
 					shared_catalog_manager.debug_message (4, "URI added is", a_uri)
 				else
 					shared_catalog_manager.debug_message (6, "URI is a duplicate", a_uri)
@@ -763,19 +763,20 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not is_error then
-				if not public_entries.has (a_public_id) then -- only the first eligible entry encountered is checked
+				public_entries.search (a_public_id)
+				if not public_entries.found then -- only the first eligible entry encountered is checked
 					create a_public_entry.make (a_target, a_prefer_public)
-					public_entries.force (a_public_entry, a_public_id)
+					public_entries.force_new (a_public_entry, a_public_id)
 					shared_catalog_manager.debug_message (4, "Public URI added is", a_public_id)
 				elseif a_prefer_public then
 
 					-- If `public_entries' contains an entry, but it is for prefer="system" only,
 					--  then we need another entry for when no fsi is presented.
-					
-					a_public_entry := public_entries.item (a_public_id)
+
+					a_public_entry := public_entries.found_item
 					if not a_public_entry.prefer_public and then not prefer_public_entries.has (a_public_id) then
 						create a_public_entry.make (a_target, True)
-						prefer_public_entries.force (a_public_entry, a_public_id)
+						prefer_public_entries.force_new (a_public_entry, a_public_id)
 						shared_catalog_manager.debug_message (4, "Public URI added is", a_public_id)
 					else
 						shared_catalog_manager.debug_message (6, "Public URI is a duplicate", a_public_id)
@@ -865,7 +866,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, Base_attribute) and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
-					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)					
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, Id_attribute) and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, Rewrite_prefix_attribute) and then a_namespace_uri.count = 0 then
@@ -932,7 +933,7 @@ feature {NONE} -- Implementation
 				if STRING_.same_string (a_local_part, Base_attribute) and then
 					STRING_.same_string (a_namespace_uri, xml_namespace) then
 					create a_base_uri.make (attribute_values.item (a_cursor.index))
-					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)					
+					shared_catalog_manager.debug_message (5, "xml:base set to", base_uri.full_reference)
 				elseif STRING_.same_string (a_local_part, Id_attribute) and then a_namespace_uri.count = 0 then
 					-- OK
 				elseif STRING_.same_string (a_local_part, Uri_attribute) and then a_namespace_uri.count = 0 then
@@ -1663,7 +1664,7 @@ feature {NONE} -- Implementation
 			end
 			shared_catalog_manager.debug_message (1, STRING_.appended_string (a_message, "'"), system_id)
 		end
-	
+
 	write_missing_start_string_attribute (is_system_rule: BOOLEAN) is
 			-- Write a missing-start-string error
 		local
@@ -1696,7 +1697,7 @@ feature {NONE} -- Implementation
 			if is_system_rule then
 				a_message := STRING_.concat (a_message, Rewrite_system_entry)
 			else
-				a_message := STRING_.concat (a_message, Rewrite_uri_entry) 
+				a_message := STRING_.concat (a_message, Rewrite_uri_entry)
 			end
 			a_message := STRING_.appended_string (a_message, "'")
 			shared_catalog_manager.debug_message (5, a_message, a_target.full_reference)
@@ -1722,7 +1723,7 @@ feature {NONE} -- Implementation
 			end
 			shared_catalog_manager.debug_message (1, STRING_.appended_string (a_message, "'"), system_id)
 		end
-			
+
 	write_missing_suffix_string_attribute (is_system_rule: BOOLEAN) is
 			-- Write a missing-suffix-string error
 		local
@@ -1742,7 +1743,7 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (1, STRING_.appended_string (a_message, "'"), system_id)
 		end
 
-	
+
 	write_suffix_debug_message (a_suffix_string: STRING; a_target: UT_URI; is_system_rule: BOOLEAN) is
 			-- Write debug messages for adding suffix rule.
 		require
@@ -1755,7 +1756,7 @@ feature {NONE} -- Implementation
 			if is_system_rule then
 				a_message := STRING_.concat (a_message, System_suffix_entry)
 			else
-				a_message := STRING_.concat (a_message, Uri_suffix_entry) 
+				a_message := STRING_.concat (a_message, Uri_suffix_entry)
 			end
 			a_message := STRING_.appended_string (a_message, "'")
 			shared_catalog_manager.debug_message (5, a_message, a_target.full_reference)
@@ -1815,4 +1816,4 @@ invariant
 	element_name_stack_not_void: element_name_stack /= Void
 
 end
-	
+

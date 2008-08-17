@@ -319,55 +319,55 @@ feature {NONE} -- Implementation
 			builders.set_key_equality_tester (string_equality_tester)
 
 				-- gec: Gobo Eiffel compilation
-			builders.force_last (agent new_gec_task, Gec_task_name)
+			builders.force_new (agent new_gec_task, Gec_task_name)
 				-- ise: ISE Eiffel compilation
-			builders.force_last (agent new_ise_task, Ise_task_name)
+			builders.force_new (agent new_ise_task, Ise_task_name)
 				-- exec
-			builders.force_last (agent new_exec_task, Exec_task_name)
+			builders.force_new (agent new_exec_task, Exec_task_name)
 				-- lcc
-			builders.force_last (agent new_lcc_task, Lcc_task_name)
+			builders.force_new (agent new_lcc_task, Lcc_task_name)
 				-- set
-			builders.force_last (agent new_set_task, Set_task_name)
+			builders.force_new (agent new_set_task, Set_task_name)
 				-- unset
-			builders.force_last (agent new_unset_task, Unset_task_name)
+			builders.force_new (agent new_unset_task, Unset_task_name)
 				-- gexace
-			builders.force_last (agent new_gexace_task, Gexace_task_name)
+			builders.force_new (agent new_gexace_task, Gexace_task_name)
 				-- gelex
-			builders.force_last (agent new_gelex_task, Gelex_task_name)
+			builders.force_new (agent new_gelex_task, Gelex_task_name)
 				-- geyacc
-			builders.force_last (agent new_geyacc_task, Geyacc_task_name)
+			builders.force_new (agent new_geyacc_task, Geyacc_task_name)
 				-- gepp
-			builders.force_last (agent new_gepp_task, Gepp_task_name)
+			builders.force_new (agent new_gepp_task, Gepp_task_name)
 				-- getest
-			builders.force_last (agent new_getest_task, Getest_task_name)
+			builders.force_new (agent new_getest_task, Getest_task_name)
 				-- geant
-			builders.force_last (agent new_geant_task, Geant_task_name)
+			builders.force_new (agent new_geant_task, Geant_task_name)
 				-- echo
-			builders.force_last (agent new_echo_task, Echo_task_name)
+			builders.force_new (agent new_echo_task, Echo_task_name)
 				-- mkdir
-			builders.force_last (agent new_mkdir_task, Mkdir_task_name)
+			builders.force_new (agent new_mkdir_task, Mkdir_task_name)
 				-- delete
-			builders.force_last (agent new_delete_task, Delete_task_name)
+			builders.force_new (agent new_delete_task, Delete_task_name)
 				-- copy
-			builders.force_last (agent new_copy_task, Copy_task_name)
+			builders.force_new (agent new_copy_task, Copy_task_name)
 				-- move
-			builders.force_last (agent new_move_task, Move_task_name)
+			builders.force_new (agent new_move_task, Move_task_name)
 				-- setenv
-			builders.force_last (agent new_setenv_task, Setenv_task_name)
+			builders.force_new (agent new_setenv_task, Setenv_task_name)
 				-- xslt
-			builders.force_last (agent new_xslt_task, Xslt_task_name)
+			builders.force_new (agent new_xslt_task, Xslt_task_name)
 				-- outofdate
-			builders.force_last (agent new_outofdate_task, Outofdate_task_name)
+			builders.force_new (agent new_outofdate_task, Outofdate_task_name)
 				-- exit
-			builders.force_last (agent new_exit_task, Exit_task_name)
+			builders.force_new (agent new_exit_task, Exit_task_name)
 				-- precursor
-			builders.force_last (agent new_precursor_task, Precursor_task_name)
+			builders.force_new (agent new_precursor_task, Precursor_task_name)
 				-- available
-			builders.force_last (agent new_available_task, Available_task_name)
+			builders.force_new (agent new_available_task, Available_task_name)
 				-- input
-			builders.force_last (agent new_input_task, Input_task_name)
+			builders.force_new (agent new_input_task, Input_task_name)
 				-- replace
-			builders.force_last (agent new_replace_task, Replace_task_name)
+			builders.force_new (agent new_replace_task, Replace_task_name)
 		end
 
 invariant

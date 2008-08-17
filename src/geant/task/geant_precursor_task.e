@@ -72,10 +72,12 @@ feature {NONE} -- Initialization
 				from cs.start until cs.after loop
 					create a_argument_element.make (project, cs.item)
 					if a_argument_element.has_name and then a_argument_element.name.count > 0 then
-						if command.arguments.has (a_argument_element.name) then
+						command.arguments.search (a_argument_element.name)
+						if command.arguments.found then
 							exit_application (1, <<"  [precursor]: error: duplicate definition for argument '", a_argument_element.name, "'">>)
+						else
+							command.arguments.force_last_new (a_argument_element.value, a_argument_element.name)
 						end
-						command.arguments.force_last (a_argument_element.value, a_argument_element.name)
 						project.trace_debug (<<"  [precursor]: found actual argument '", a_argument_element.name, "'%N">>)
 					end
 					cs.forth

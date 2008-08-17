@@ -36,7 +36,7 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
@@ -120,7 +120,7 @@ feature -- Access
 				Result := import_precedence
 			end
 		end
-	
+
 	namespace_alias (a_uri_code: INTEGER): INTEGER is
 			-- Declared namespace alias for a given namespace URI code if there is one.
 			-- If there is more than one, we get the last.
@@ -132,7 +132,7 @@ feature -- Access
 			Result := -1
 			-- if there are several matches, the last in stylesheet takes priority;
 			-- but the list is in reverse stylesheet order
-			
+
 			from
 				l_index := 1
 			variant
@@ -443,7 +443,7 @@ feature -- Element change
 		ensure
 			stripper_rules_not_void: stripper_rules /= Void
 		end
-		
+
 	register_module (a_system_id: STRING) is
 			-- Register `a_system_id' as a stylesheet module.
 		require
@@ -465,10 +465,11 @@ feature -- Element change
 			collation_name_not_void: a_name /= Void -- TODO and then is a URI
 			collator_not_void: a_collator /= Void
 		do
-			if collation_map.has (a_name) then
-				collation_map.replace (a_collator, a_name)
+			collation_map.search (a_name)
+			if collation_map.found then
+				collation_map.replace_found_item (a_collator)
 			else
-				collation_map.force (a_collator, a_name)
+				collation_map.force_new (a_collator, a_name)
 			end
 		ensure
 			collator_declared: is_collator_defined (a_name)
@@ -482,8 +483,8 @@ feature -- Element change
 			executable.global_slot_manager.allocate_slot_number (a_variable_name)
 		ensure
 			global_slot_allocated: executable.global_slot_manager.number_of_variables = old executable.global_slot_manager.number_of_variables + 1
-		end																						 
-		
+		end
+
 	allocate_pattern_slots (a_variable_count: INTEGER) is
 			-- Ensure there is enough space for local variables or parameters within match patterns in any template.
 		require
@@ -580,7 +581,7 @@ feature -- Element change
 			attributes_prepared := True
 		end
 
-	
+
 	set_stylesheet_compiler (a_stylesheet_compiler: like stylesheet_compiler; a_configuration: XM_XSLT_CONFIGURATION) is
 			-- Set `stylesheet_compiler'.
 		require
@@ -635,7 +636,7 @@ feature -- Element change
 			if not any_compile_errors then
 				build_indices
 			end
-			
+
 			-- Process the attributes of every node in the tree
 
 			if not any_compile_errors then
@@ -664,7 +665,7 @@ feature -- Element change
 					a_cursor.forth
 				end
 			end
-			
+
 			-- Validate the whole logical style sheet (i.e. with included and imported sheets)
 
 			if not any_compile_errors then
@@ -748,10 +749,10 @@ feature -- Element change
 									if l_included_stylesheet.any_compile_errors then
 										set_compile_errors
 									else
-										
+
 										-- After processing the imported stylesheet and any others it brought in,
 										--  adjust the import precedence of this stylesheet if necessary.
-										
+
 										if l_module.is_import then
 											import_precedence := l_included_stylesheet.precedence + 1
 										else
@@ -768,7 +769,7 @@ feature -- Element change
 							top_level_elements.force_last (l_previous_style_element)
 						end
 					end
-				end	
+				end
 				l_child_iterator.forth
 			end
 		ensure
@@ -801,7 +802,7 @@ feature -- Element change
 			end
 			includes_processed := True
 		ensure then
-			includes_processed: includes_processed		
+			includes_processed: includes_processed
 		end
 
 	validate is
@@ -846,7 +847,7 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 			explaining: BOOLEAN
 		do
-						
+
 			-- Call compile method for each top-level object in the stylesheet
 
 			explaining := is_all_explaining
@@ -913,7 +914,7 @@ feature -- Element change
 					executable.set_named_template_table (a_compiled_templates_index)
 				end
 				executable.set_strips_input_type_annotations (input_type_annotations = Strip_annotations)
-	
+
 				-- Build the index of named character maps.
 
 				a_character_map_index := executable.character_map_index
@@ -1011,7 +1012,7 @@ feature -- Conversion
 		do
 			Result := True
 		end
-	
+
 feature {NONE} -- Implementation
 
 	overriding_runtime_library: XM_XSLT_RUNTIME_FUNCTION_LIBRARY
@@ -1022,7 +1023,7 @@ feature {NONE} -- Implementation
 
 	named_templates_index: DS_HASH_TABLE [XM_XSLT_TEMPLATE, INTEGER]
 			-- Index of named templates by `template_fingerprint'
-	
+
 	variables_index: DS_HASH_TABLE [XM_XSLT_VARIABLE_DECLARATION, INTEGER]
 			-- Index of varaibles by `variable_fingerprint'
 
@@ -1093,14 +1094,15 @@ feature {NONE} -- Implementation
 			if not any_compile_errors then
 				l_fingerprint := a_template.template_fingerprint
 				if l_fingerprint /= -1 then
-					
+
 					-- Named template
-					
-					if named_templates_index.has (l_fingerprint) then
-						
+
+					named_templates_index.search (l_fingerprint)
+					if named_templates_index.found then
+
 						-- Check the precedence.
-						
-						l_template := named_templates_index.item (l_fingerprint)
+
+						l_template := named_templates_index.found_item
 						if a_template.precedence = l_template.precedence then
 							l_message := STRING_.concat ("Duplicate named template (see line ", l_template.line_number.out)
 							l_message := STRING_.appended_string (l_message, " of ")
@@ -1110,9 +1112,9 @@ feature {NONE} -- Implementation
 						elseif a_template.precedence < l_template.precedence then
 							a_template.set_redundant_named_template
 						else
-							
+
 							-- This is not supposed to happen
-							
+
 							l_template.set_redundant_named_template
 							named_templates_index.replace (a_template, l_fingerprint)
 						end
@@ -1120,7 +1122,7 @@ feature {NONE} -- Implementation
 						if named_templates_index.is_full then
 							named_templates_index.resize (2 * named_templates_index.count)
 						end
-						named_templates_index.put (a_template, l_fingerprint)
+						named_templates_index.put_new (a_template, l_fingerprint)
 					end
 				end
 			end
@@ -1142,11 +1144,12 @@ feature {NONE} -- Implementation
 
 				-- See if there is already a global variable with this precedence
 
-				if variables_index.has (a_fingerprint) then
+				variables_index.search (a_fingerprint)
+				if variables_index.found then
 
 					-- Check the precedence
 
-					another_variable := variables_index.item (a_fingerprint)
+					another_variable := variables_index.found_item
 					if another_variable.precedence = a_variable_declaration.precedence then
 						a_message := STRING_.appended_string ("Duplicate global variable declaration (see line ", another_variable.line_number.out)
 						a_message := STRING_.appended_string (a_message, " of ")
@@ -1157,7 +1160,7 @@ feature {NONE} -- Implementation
 					elseif a_variable_declaration.precedence < another_variable.precedence then
 						a_variable_declaration.set_redundant_variable
 					else
-						
+
 						-- This is not supposed to happen
 
 						check
@@ -1170,7 +1173,7 @@ feature {NONE} -- Implementation
 					if variables_index.is_full then
 						variables_index.resize (2 * variables_index.count)
 					end
-					variables_index.put (a_variable_declaration, a_fingerprint)
+					variables_index.put_new (a_variable_declaration, a_fingerprint)
 				end
 			end
 		end
@@ -1236,7 +1239,7 @@ feature {NONE} -- Implementation
 						if l_uri_code = namespace_alias_uri_codes.item (l_index) then
 							if uri_code_from_namespace_code (l_namespace_code) /= uri_code_from_namespace_code (namespace_alias_namespace_codes.item (l_index)) then
 								create l_error.make_from_string ("Inconsistent namespace aliases", Xpath_errors_uri, "XTSE0810", Static_error)
-								l_alias.report_compile_error (l_error)								
+								l_alias.report_compile_error (l_error)
 							end
 						end
 
@@ -1248,7 +1251,7 @@ feature {NONE} -- Implementation
 
 					l_cursor.forth
 				end
-				
+
 			end
 			namespace_alias_list := Void -- Now it can be garbage-collected
 		ensure

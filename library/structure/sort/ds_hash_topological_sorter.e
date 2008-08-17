@@ -83,7 +83,7 @@ feature -- Element change
 			-- Add `v' to the list of items to be sorted.
 		do
 			items.put_last (v)
-			indexes.put (count, v)
+			indexes.put_new (count, v)
 			counts.put_last (0)
 			successors.put_last (Void)
 		end

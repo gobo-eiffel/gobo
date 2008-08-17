@@ -736,8 +736,9 @@ feature {NONE} -- Processing (nondeterministic)
 				-- that we can compare states quickly.
 			a_state.sort_positions
 			a_code := a_state.hash_code
-			if cached_states.has (a_code) then
-				state_list := cached_states.item (a_code)
+			cached_states.search (a_code)
+			if cached_states.found then
+				state_list := cached_states.found_item
 				from
 					i := 1
 					nb := state_list.count
@@ -752,7 +753,7 @@ feature {NONE} -- Processing (nondeterministic)
 				end
 			else
 				create state_list.make (2)
-				cached_states.put (state_list, a_code)
+				cached_states.put_new (state_list, a_code)
 			end
 			if Result = Void then
 				Result := a_state

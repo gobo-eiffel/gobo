@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			uri_resolver.register_scheme (l_file_resolver)
 			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create l_collator
-			collation_map.put (l_collator, Unicode_codepoint_collation_uri)
+			collation_map.put_new (l_collator, Unicode_codepoint_collation_uri)
 		ensure
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
 			available_documents_set: available_documents = a_document_pool
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			uri_resolver.register_scheme (l_file_resolver)
 			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create l_collator
-			collation_map.put (l_collator, Unicode_codepoint_collation_uri)
+			collation_map.put_new (l_collator, Unicode_codepoint_collation_uri)
 		ensure
 			restricted_context: is_restricted
 			no_available_documents: available_documents = Void
@@ -108,7 +108,7 @@ feature -- Access
 
 	last_parsed_media_type: UT_MEDIA_TYPE
 			-- Auxiliary result from last call to `build_document'
-	
+
 	security_manager: XM_XPATH_SECURITY_MANAGER
 			-- Security manager
 
@@ -182,7 +182,7 @@ feature 	-- Element change
 			a_slot_manager.set_number_of_variables (a_slot_count)
 			create local_variable_frame.make (a_slot_manager, an_array)
 		end
-	
+
 	build_document (a_uri_reference: STRING) is
 			-- Build a document.
 		local
@@ -234,12 +234,12 @@ feature 	-- Element change
 		do
 			-- pre-condition is never met
 		end
-	
+
 feature {NONE} -- Implementation
 
 	uri_resolver: XM_SIMPLE_URI_EXTERNAL_RESOLVER
 			-- URI reference resolver
-		
+
 	set_build_error (a_message: STRING) is
 			-- Set `last_build_error'.
 		require

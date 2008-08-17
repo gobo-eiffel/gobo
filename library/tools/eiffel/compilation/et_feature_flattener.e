@@ -503,7 +503,7 @@ feature {NONE} -- Feature flattening
 								end
 							end
 						else
-							aliased_features.force_last (a_named_feature, l_alias_name)
+							aliased_features.force_last_new (a_named_feature, l_alias_name)
 						end
 					end
 					if a_deferred_feature = Void then

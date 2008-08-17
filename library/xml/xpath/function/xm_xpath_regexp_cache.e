@@ -65,7 +65,7 @@ feature -- Element change
 			if regexp_cache.is_full then
 				regexp_cache.resize (regexp_cache.count * 2)
 			end
-			regexp_cache.put (a_cache_entry, a_composed_key)
+			regexp_cache.put_new (a_cache_entry, a_composed_key)
 		ensure
 			present_in_cache: has (a_composed_key)
 			correct_entry: item (a_composed_key) = a_cache_entry
@@ -80,4 +80,4 @@ invariant
 	regexp_cache_not_void: regexp_cache /= Void
 
 end
-	
+

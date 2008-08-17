@@ -103,7 +103,7 @@ feature -- Document type definition callbacks
 		do
 			if not attribute_types.has (an_element_name) then
 				create an_attribute_table.make_with_equality_testers (7, Void, string_equality_tester)
-				attribute_types.force (an_attribute_table, an_element_name)
+				attribute_types.force_new (an_attribute_table, an_element_name)
 			end
 			an_attribute_table := attribute_types.item (an_element_name)
 			check
@@ -117,7 +117,7 @@ feature -- Document type definition callbacks
 				a_message.append_string (an_element_name)
 				on_error (a_message)
 			else
-				an_attribute_table.force (a_model, a_name)
+				an_attribute_table.force_new (a_model, a_name)
 			end
 		end
 
@@ -156,7 +156,7 @@ feature -- Document type definition callbacks
 		do
 			-- do nothing
 		end
-		
+
 feature -- Document events
 
 	on_start is
@@ -328,7 +328,7 @@ feature -- Tag
 			else
 				a_prefix := an_ns_prefix
 			end
-			
+
 			if not shared_name_pool.is_name_code_allocated (a_prefix, a_namespace, a_local_part) then
 				if not shared_name_pool.is_name_pool_full (a_namespace, a_local_part) then
 					shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
@@ -340,7 +340,7 @@ feature -- Tag
 					on_error (a_message)
 				end
 			else
-				a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part) 
+				a_name_code := shared_name_pool.name_code (a_prefix, a_namespace, a_local_part)
 			end
 			if is_namespace_declaration (a_prefix, a_local_part) then
 
@@ -362,7 +362,7 @@ feature -- Tag
 				notify_attribute (a_name_code, a_prefix, a_local_part, a_value)
 				Precursor (a_namespace, an_ns_prefix, a_local_part, a_value)
 			end
-		
+
 
 		end
 
@@ -371,7 +371,7 @@ feature -- Tag
 		do
 			debug ("XPath content emitter")
 				std.error.put_string ("On_start_tag_finish.%N")
-			end			
+			end
 			receiver.start_content
 			Precursor
 		end
@@ -387,7 +387,7 @@ feature -- Tag
 					std.error.put_string (a_prefix)
 				end
 				std.error.put_string (", namespace is ")
-				std.error.put_string (a_namespace)				
+				std.error.put_string (a_namespace)
 				std.error.put_new_line
 			end
 			receiver.end_element
@@ -406,7 +406,7 @@ feature -- Content
 				std.error.put_string ("On_content: ")
 				std.error.put_string (a_content)
 				std.error.put_new_line
-			end			
+			end
 			receiver.notify_characters (a_content, 0)
 			Precursor (a_content)
 		end
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 
 	attribute_types: DS_HASH_TABLE [DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING], STRING]
 			-- Stored attribute-type definitions per element name
-	
+
 	before_dtd: BOOLEAN
 			-- Has DTD been seen yet?
 
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 				std.error.put_string (", prefix is ")
 				std.error.put_string (an_ns_prefix)
 				std.error.put_new_line
-			end			
+			end
 			if an_ns_prefix.count = 0 and then STRING_.same_string (a_local_part, "xmlns") then
 				Result := True
 			elseif STRING_.same_string (an_ns_prefix, "xmlns") then
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 					an_attribute_qname := STRING_.appended_string (an_attribute_qname, ":")
 					an_attribute_qname := STRING_.appended_string (an_attribute_qname, a_local_part)
 				end
-				
+
 				if an_attribute_table.has (an_attribute_qname) then
 					an_attribute_model := an_attribute_table.item (an_attribute_qname)
 					check
@@ -499,11 +499,11 @@ feature {NONE} -- Implementation
 			end
 			receiver.notify_attribute (a_name_code, a_type_code, a_value, 0)
 		end
-	
+
 invariant
 
 	receiver_not_void: receiver /= Void
 	attribute_types_not_void: attribute_types /= Void
 
 end
-	
+

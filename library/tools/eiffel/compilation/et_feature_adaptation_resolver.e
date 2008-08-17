@@ -130,7 +130,7 @@ feature {NONE} -- Feature recording
 					other_feature := a_features.found_item
 					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_query)
 				else
-					a_features.put_last (l_query, a_name)
+					a_features.put_last_new (l_query, a_name)
 				end
 				i := i + 1
 			end
@@ -143,7 +143,7 @@ feature {NONE} -- Feature recording
 					other_feature := a_features.found_item
 					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_procedure)
 				else
-					a_features.put_last (l_procedure, a_name)
+					a_features.put_last_new (l_procedure, a_name)
 				end
 				i := i + 1
 			end
@@ -276,7 +276,7 @@ feature {NONE} -- Feature recording
 					end
 				else
 					an_inherited_feature := new_inherited_feature (a_parent_feature)
-					a_features.put_last (an_inherited_feature, a_name)
+					a_features.put_last_new (an_inherited_feature, a_name)
 				end
 				i := i + 1
 			end
@@ -342,7 +342,7 @@ feature {NONE} -- Feature recording
 					end
 				else
 					an_inherited_feature := new_inherited_feature (a_parent_feature)
-					a_features.put_last (an_inherited_feature, a_name)
+					a_features.put_last_new (an_inherited_feature, a_name)
 				end
 				i := i + 1
 			end
@@ -446,7 +446,7 @@ feature {NONE} -- Feature adaptation
 				a_name := a_rename.old_name
 				rename_table.search (a_name)
 				if not rename_table.found then
-					rename_table.put (a_rename, a_name)
+					rename_table.put_new (a_rename, a_name)
 				else
 						-- Feature name `a_name' appears twice on the
 						-- left-hand-side of a Rename_pair in the Rename

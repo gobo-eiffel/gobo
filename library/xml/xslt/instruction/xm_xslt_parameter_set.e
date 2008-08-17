@@ -64,10 +64,11 @@ feature -- Element change
 	put (a_value: XM_XPATH_VALUE; a_fingerprint: INTEGER) is
 			-- Add a parameter to `Current'.
 		do
-			if map.has (a_fingerprint) then
-				map.replace (a_value, a_fingerprint)
+			map.search (a_fingerprint)
+			if map.found then
+				map.replace_found_item (a_value)
 			else
-				map.force (a_value, a_fingerprint)
+				map.force_new (a_value, a_fingerprint)
 			end
 		ensure
 			value_present: map.has (a_fingerprint) and then map.item (a_fingerprint) = a_value

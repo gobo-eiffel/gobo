@@ -213,7 +213,7 @@ feature -- Document type definition callbacks
 			if is_filtering then
 				if not attribute_types.has (an_element_name) then
 					create an_attribute_table.make_with_equality_testers (7, Void, string_equality_tester)
-					attribute_types.force (an_attribute_table, an_element_name)
+					attribute_types.force_new (an_attribute_table, an_element_name)
 				end
 				an_attribute_table := attribute_types.item (an_element_name)
 				check
@@ -227,7 +227,7 @@ feature -- Document type definition callbacks
 					a_message.append_string (an_element_name)
 					on_error (a_message)
 				else
-					an_attribute_table.force (a_model, a_name)
+					an_attribute_table.force_new (a_model, a_name)
 				end
 			end
 			Precursor (an_element_name, a_name, a_model)
@@ -438,7 +438,7 @@ feature -- Tag
 		do
 			if is_shorthand_element then
 				l_namespaces := namespace_bindings_stack.item
-				from 
+				from
 					namespace_bindings_stack.remove
 				until
 					namespace_bindings_stack.is_empty

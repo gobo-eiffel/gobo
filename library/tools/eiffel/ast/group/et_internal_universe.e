@@ -95,7 +95,7 @@ feature -- Access
 							l_classes := Result.found_item
 						else
 							create l_classes.make (initial_classes_in_group_capacity)
-							Result.force_last (l_classes, l_group)
+							Result.force_last_new (l_classes, l_group)
 						end
 						l_classes.force_last (l_class)
 					end

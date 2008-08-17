@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			make_time_types
 			make_numeric_types
 			make_string_types
-			
+
 			types_created := True
 			bind_names
 		ensure
@@ -49,7 +49,7 @@ feature -- Access
 				Result := type_map.item (a_fingerprint)
 			end
 		end
-	
+
 	standard_fingerprint (a_uri, a_local_name: STRING): INTEGER is
 			-- Fingerprint of a standard name
 		local
@@ -244,61 +244,61 @@ feature {NONE} -- Implementation
 
 			-- Add all types required by a Basic-level XSLT processor
 
-			Result.put (any_simple_type, Any_simple_type_code)
-			Result.put (any_atomic_type, Any_atomic_type_code)
-			Result.put (boolean_type, Boolean_type_code)
-			Result.put (numeric_type, Numeric_type_code)
-			Result.put (string_type, String_type_code)
-			Result.put (date_time_type, Date_time_type_code)
-			Result.put (date_type, Date_type_code)
-			Result.put (time_type, Time_type_code)
-			Result.put (g_year_month_type, G_year_month_type_code)
-			Result.put (g_month_type, G_month_type_code)
-			Result.put (g_month_day_type, G_month_day_type_code)
-			Result.put (g_year_type, G_year_type_code)
-			Result.put (g_day_type, G_day_type_code)
-			Result.put (any_uri_type, Any_uri_type_code)
-			Result.put (qname_type, Qname_type_code)
-			Result.put (untyped_atomic_type, Untyped_atomic_type_code)
-			Result.put (decimal_type, Decimal_type_code)
-			Result.put (float_type, Float_type_code)
-			Result.put (double_type, Double_type_code)
-			Result.put (integer_type, Integer_type_code)
-			Result.put (any_type, Any_type_code)
-			Result.put (untyped_type, Untyped_type_code)
-			Result.put (duration_type, Duration_type_code)
-			Result.put (year_month_duration_type, Year_month_duration_type_code)
-			Result.put (day_time_duration_type, Day_time_duration_type_code)
-			Result.put (hex_binary_type, Hex_binary_type_code)
-			Result.put (base64_binary_type, Base64_binary_type_code)
+			Result.put_new (any_simple_type, Any_simple_type_code)
+			Result.put_new (any_atomic_type, Any_atomic_type_code)
+			Result.put_new (boolean_type, Boolean_type_code)
+			Result.put_new (numeric_type, Numeric_type_code)
+			Result.put_new (string_type, String_type_code)
+			Result.put_new (date_time_type, Date_time_type_code)
+			Result.put_new (date_type, Date_type_code)
+			Result.put_new (time_type, Time_type_code)
+			Result.put_new (g_year_month_type, G_year_month_type_code)
+			Result.put_new (g_month_type, G_month_type_code)
+			Result.put_new (g_month_day_type, G_month_day_type_code)
+			Result.put_new (g_year_type, G_year_type_code)
+			Result.put_new (g_day_type, G_day_type_code)
+			Result.put_new (any_uri_type, Any_uri_type_code)
+			Result.put_new (qname_type, Qname_type_code)
+			Result.put_new (untyped_atomic_type, Untyped_atomic_type_code)
+			Result.put_new (decimal_type, Decimal_type_code)
+			Result.put_new (float_type, Float_type_code)
+			Result.put_new (double_type, Double_type_code)
+			Result.put_new (integer_type, Integer_type_code)
+			Result.put_new (any_type, Any_type_code)
+			Result.put_new (untyped_type, Untyped_type_code)
+			Result.put_new (duration_type, Duration_type_code)
+			Result.put_new (year_month_duration_type, Year_month_duration_type_code)
+			Result.put_new (day_time_duration_type, Day_time_duration_type_code)
+			Result.put_new (hex_binary_type, Hex_binary_type_code)
+			Result.put_new (base64_binary_type, Base64_binary_type_code)
 
 			-- Conditionally add optional types
 
-			if notation_type /= Void then Result.put (notation_type, Notation_type_code) end
-			if non_positive_integer_type /= Void then Result.put (non_positive_integer_type, Non_positive_integer_type_code) end
-			if negative_integer_type /= Void then Result.put (negative_integer_type, Negative_integer_type_code) end
-			if long_type /= Void then Result.put (long_type, Long_type_code) end
-			if int_type /= Void then Result.put (int_type, Int_type_code) end
-			if short_type /= Void then Result.put (short_type, Short_type_code) end
-			if byte_type /= Void then Result.put (byte_type, Byte_type_code) end
-			if non_negative_integer_type /= Void then Result.put (non_negative_integer_type, Non_negative_integer_type_code) end
-			if positive_integer_type /= Void then Result.put (positive_integer_type, Positive_integer_type_code) end
-			if unsigned_long_type /= Void then Result.put (unsigned_long_type, Unsigned_long_type_code) end
-			if unsigned_int_type /= Void then Result.put (unsigned_int_type, Unsigned_int_type_code) end
-			if unsigned_short_type /= Void then Result.put (unsigned_short_type, Unsigned_short_type_code) end
-			if unsigned_byte_type /= Void then Result.put (unsigned_byte_type, Unsigned_byte_type_code) end
-			if normalized_string_type /= Void then Result.put (normalized_string_type, Normalized_string_type_code) end
-			if token_type /= Void then Result.put (token_type, Token_type_code) end
-			if language_type /= Void then Result.put (language_type, Language_type_code) end
-			if nmtoken_type /= Void then Result.put (nmtoken_type, Nmtoken_type_code) end
-			if name_type /= Void then Result.put (name_type, Name_type_code) end
-			if ncname_type /= Void then Result.put (ncname_type, Ncname_type_code) end
-			if id_type /= Void then Result.put (id_type, Id_type_code) end
-			if idref_type /= Void then Result.put (idref_type, Idref_type_code) end
-			if entity_type /= Void then Result.put (entity_type, Entity_type_code) end
-			if idrefs_type /= Void then Result.put (idrefs_type, Idrefs_type_code) end
-			if entities_type /= Void then Result.put (entities_type, Entities_type_code) end
-			if nmtokens_type /= Void then Result.put (nmtokens_type, Nmtokens_type_code) end
+			if notation_type /= Void then Result.put_new (notation_type, Notation_type_code) end
+			if non_positive_integer_type /= Void then Result.put_new (non_positive_integer_type, Non_positive_integer_type_code) end
+			if negative_integer_type /= Void then Result.put_new (negative_integer_type, Negative_integer_type_code) end
+			if long_type /= Void then Result.put_new (long_type, Long_type_code) end
+			if int_type /= Void then Result.put_new (int_type, Int_type_code) end
+			if short_type /= Void then Result.put_new (short_type, Short_type_code) end
+			if byte_type /= Void then Result.put_new (byte_type, Byte_type_code) end
+			if non_negative_integer_type /= Void then Result.put_new (non_negative_integer_type, Non_negative_integer_type_code) end
+			if positive_integer_type /= Void then Result.put_new (positive_integer_type, Positive_integer_type_code) end
+			if unsigned_long_type /= Void then Result.put_new (unsigned_long_type, Unsigned_long_type_code) end
+			if unsigned_int_type /= Void then Result.put_new (unsigned_int_type, Unsigned_int_type_code) end
+			if unsigned_short_type /= Void then Result.put_new (unsigned_short_type, Unsigned_short_type_code) end
+			if unsigned_byte_type /= Void then Result.put_new (unsigned_byte_type, Unsigned_byte_type_code) end
+			if normalized_string_type /= Void then Result.put_new (normalized_string_type, Normalized_string_type_code) end
+			if token_type /= Void then Result.put_new (token_type, Token_type_code) end
+			if language_type /= Void then Result.put_new (language_type, Language_type_code) end
+			if nmtoken_type /= Void then Result.put_new (nmtoken_type, Nmtoken_type_code) end
+			if name_type /= Void then Result.put_new (name_type, Name_type_code) end
+			if ncname_type /= Void then Result.put_new (ncname_type, Ncname_type_code) end
+			if id_type /= Void then Result.put_new (id_type, Id_type_code) end
+			if idref_type /= Void then Result.put_new (idref_type, Idref_type_code) end
+			if entity_type /= Void then Result.put_new (entity_type, Entity_type_code) end
+			if idrefs_type /= Void then Result.put_new (idrefs_type, Idrefs_type_code) end
+			if entities_type /= Void then Result.put_new (entities_type, Entities_type_code) end
+			if nmtokens_type /= Void then Result.put_new (nmtokens_type, Nmtokens_type_code) end
 		ensure
 			type_map_not_void: Result /= Void
 			no_void_type: not Result.has_item (Void)
@@ -336,8 +336,8 @@ feature {NONE} -- Implementation
 			name_not_bound: not fingerprint_map.has (expanded_qname (Xml_uri, a_local_name))
 			local_name_not_mapped: not local_names.has (a_fingerprint)
 		do
-			fingerprint_map.put (a_fingerprint, expanded_qname (Xml_uri, a_local_name))
-			local_names.put (a_local_name, a_fingerprint)
+			fingerprint_map.put_new (a_fingerprint, expanded_qname (Xml_uri, a_local_name))
+			local_names.put_new (a_local_name, a_fingerprint)
 		ensure
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 			name_bound: fingerprint_map.has (expanded_qname (Xml_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xml_uri, a_local_name)) = a_fingerprint
@@ -351,8 +351,8 @@ feature {NONE} -- Implementation
 			name_not_bound: not fingerprint_map.has (expanded_qname (Xslt_uri, a_local_name))
 			local_name_not_mapped: not local_names.has (a_fingerprint)
 		do
-			fingerprint_map.put (a_fingerprint, expanded_qname (Xslt_uri, a_local_name))
-			local_names.put (a_local_name, a_fingerprint)
+			fingerprint_map.put_new (a_fingerprint, expanded_qname (Xslt_uri, a_local_name))
+			local_names.put_new (a_local_name, a_fingerprint)
 		ensure
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
 			name_bound: fingerprint_map.has (expanded_qname (Xslt_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xslt_uri, a_local_name)) = a_fingerprint
@@ -366,8 +366,8 @@ feature {NONE} -- Implementation
 			name_not_bound: not fingerprint_map.has (expanded_qname (Xml_schema_uri, a_local_name))
 			local_name_not_mapped: not local_names.has (a_fingerprint)
 		do
-			fingerprint_map.put (a_fingerprint, expanded_qname (Xml_schema_uri, a_local_name))
-			local_names.put (a_local_name, a_fingerprint)
+			fingerprint_map.put_new (a_fingerprint, expanded_qname (Xml_schema_uri, a_local_name))
+			local_names.put_new (a_local_name, a_fingerprint)
 		ensure
 			name_bound: fingerprint_map.has (expanded_qname (Xml_schema_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xml_schema_uri, a_local_name)) = a_fingerprint
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
@@ -381,8 +381,8 @@ feature {NONE} -- Implementation
 			name_not_bound: not fingerprint_map.has (expanded_qname (Xml_schema_instance_uri, a_local_name))
 			local_name_not_mapped: not local_names.has (a_fingerprint)
 		do
-			fingerprint_map.put (a_fingerprint, expanded_qname (Xml_schema_instance_uri, a_local_name))
-			local_names.put (a_local_name, a_fingerprint)
+			fingerprint_map.put_new (a_fingerprint, expanded_qname (Xml_schema_instance_uri, a_local_name))
+			local_names.put_new (a_local_name, a_fingerprint)
 		ensure
 			name_bound: fingerprint_map.has (expanded_qname (Xml_schema_instance_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xml_schema_instance_uri, a_local_name)) = a_fingerprint
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
@@ -396,8 +396,8 @@ feature {NONE} -- Implementation
 			name_not_bound: not fingerprint_map.has (expanded_qname (Xpath_standard_functions_uri, a_local_name))
 			local_name_not_mapped: not local_names.has (a_fingerprint)
 		do
-			fingerprint_map.put (a_fingerprint, expanded_qname (Xpath_standard_functions_uri, a_local_name))
-			local_names.put (a_local_name, a_fingerprint)
+			fingerprint_map.put_new (a_fingerprint, expanded_qname (Xpath_standard_functions_uri, a_local_name))
+			local_names.put_new (a_local_name, a_fingerprint)
 		ensure
 			name_bound: fingerprint_map.has (expanded_qname (Xpath_standard_functions_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Xpath_standard_functions_uri, a_local_name)) = a_fingerprint
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
@@ -411,8 +411,8 @@ feature {NONE} -- Implementation
 			name_not_bound: not fingerprint_map.has (expanded_qname (Gexslt_eiffel_type_uri, a_local_name))
 			local_name_not_mapped: not local_names.has (a_fingerprint)
 		do
-			fingerprint_map.put (a_fingerprint, expanded_qname (Gexslt_eiffel_type_uri, a_local_name))
-			local_names.put (a_local_name, a_fingerprint)
+			fingerprint_map.put_new (a_fingerprint, expanded_qname (Gexslt_eiffel_type_uri, a_local_name))
+			local_names.put_new (a_local_name, a_fingerprint)
 		ensure
 			name_bound: fingerprint_map.has (expanded_qname (Gexslt_eiffel_type_uri, a_local_name)) and then fingerprint_map.item (expanded_qname (Gexslt_eiffel_type_uri, a_local_name)) = a_fingerprint
 			local_name: local_names.has (a_fingerprint) and then STRING_.same_string (local_names.item (a_fingerprint), a_local_name)
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Gexslt_directory_element_type_code, "directory")
 			bind_gexslt_name (Gexslt_method_type_code, "method")
 		end
-	
+
 	bind_fn_names is
 			-- Bind names in the XPath functions namespace to their fingerprints.
 		do
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Unparsed_text_function_type_code, "unparsed-text")
 			bind_fn_name (Unparsed_text_available_function_type_code, "unparsed-text-available")
 		end
-	
+
 	bind_xsi_names is
 			-- Bind names in the XML Schema Instance namespace to their fingerprints.
 		do
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 			bind_xsi_name (Xsi_schema_location_type_code, "schemaLocation")
 			bind_xsi_name (Xsi_no_namespace_schema_location_type_code, "noNamespaceSchemaLocation")
 		end
-	
+
 	bind_xml_names is
 			-- Bind names in the XML namespace to their fingerprints.
 		do
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 			bind_xml_name (Xml_lang_type_code, "lang")
 			bind_xml_name (Xml_id_type_code, "id")
 		end
-	
+
 	bind_xslt_names is
 			-- Bind names in the XSLT namespace to their fingerprints.
 		do
@@ -790,4 +790,4 @@ invariant
 	type_map_not_void: type_map /= Void
 
 end
-	
+

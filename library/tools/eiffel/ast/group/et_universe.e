@@ -306,7 +306,7 @@ feature -- Access
 				else
 					create Result.make (a_name)
 					current_system.register_class (Result)
-					classes.force_last (Result, a_name)
+					classes.force_last_new (Result, a_name)
 				end
 			end
 		ensure

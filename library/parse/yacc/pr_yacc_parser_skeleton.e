@@ -316,14 +316,15 @@ feature {NONE} -- Factory
 			an_id: INTEGER
 		do
 			lower_name := a_name.as_lower
-			if terminal_symbols.has (lower_name) then
-				Result := terminal_symbols.item (lower_name)
+			terminal_symbols.search (lower_name)
+			if terminal_symbols.found then
+				Result := terminal_symbols.found_item
 			else
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
 				create Result.make (an_id, a_name, Unknown_type)
-				terminal_symbols.force (Result, lower_name)
+				terminal_symbols.force_new (Result, lower_name)
 				last_grammar.put_token (Result)
 			end
 		ensure
@@ -398,15 +399,16 @@ feature {NONE} -- Factory
 				end
 			end
 			a_key := a_code.out
-			if terminal_symbols.has (a_key) then
-				Result := terminal_symbols.item (a_key)
+			terminal_symbols.search (a_key)
+			if terminal_symbols.found then
+				Result := terminal_symbols.found_item
 			else
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
 				create Result.make (an_id, a_char, Unknown_type)
 				Result.set_token_id (a_code)
-				terminal_symbols.force (Result, a_key)
+				terminal_symbols.force_new (Result, a_key)
 				last_grammar.put_token (Result)
 			end
 		ensure
@@ -423,8 +425,9 @@ feature {NONE} -- Factory
 		local
 			an_id: INTEGER
 		do
-			if terminal_symbols.has (a_string) then
-				Result := terminal_symbols.item (a_string)
+			terminal_symbols.search (a_string)
+			if terminal_symbols.found then
+				Result := terminal_symbols.found_item
 			else
 				report_undefined_string_token_error (a_string)
 					-- Tokens are indexed from 0, but token
@@ -432,7 +435,7 @@ feature {NONE} -- Factory
 				an_id := last_grammar.tokens.count + 1
 				create Result.make (an_id, a_string, Unknown_type)
 				Result.set_literal_string (a_string)
-				terminal_symbols.force (Result, a_string)
+				terminal_symbols.force_new (Result, a_string)
 				last_grammar.put_token (Result)
 			end
 		ensure
@@ -453,13 +456,14 @@ feature {NONE} -- Factory
 			an_id: INTEGER
 		do
 			lower_name := a_name.as_lower
-			if nonterminal_symbols.has (lower_name) then
-				Result := nonterminal_symbols.item (lower_name)
+			nonterminal_symbols.search (lower_name)
+			if nonterminal_symbols.found then
+				Result := nonterminal_symbols.found_item
 			else
 					-- Variables are indexed from 0.
 				an_id := last_grammar.variables.count
 				create Result.make (an_id, a_name, Unknown_type)
-				nonterminal_symbols.force (Result, lower_name)
+				nonterminal_symbols.force_new (Result, lower_name)
 				last_grammar.put_variable (Result)
 			end
 		ensure
@@ -498,15 +502,16 @@ feature {NONE} -- Factory
 			an_id: INTEGER
 		do
 			lower_name := a_name.as_lower
-			if nonterminal_symbols.has (lower_name) then
-				Result := nonterminal_symbols.item (lower_name)
+			nonterminal_symbols.search (lower_name)
+			if nonterminal_symbols.found then
+				Result := nonterminal_symbols.found_item
 			elseif terminal_symbols.has (lower_name) then
 				Result := terminal_symbols.item (lower_name)
 			else
 					-- Variables are indexed from 0.
 				an_id := last_grammar.variables.count
 				create a_variable.make (an_id, a_name, Unknown_type)
-				nonterminal_symbols.force (a_variable, lower_name)
+				nonterminal_symbols.force_new (a_variable, lower_name)
 				last_grammar.put_variable (a_variable)
 				Result := a_variable
 			end
@@ -525,14 +530,15 @@ feature {NONE} -- Factory
 			an_id: INTEGER
 		do
 			upper_name := a_name.as_upper
-			if types.has (upper_name) then
-				Result := types.item (upper_name)
+			types.search (upper_name)
+			if types.found then
+				Result := types.found_item
 			else
 					-- Types are indexed from 1.
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make (an_id, a_name)
-				types.force (Result, upper_name)
+				types.force_new (Result, upper_name)
 				last_grammar.put_type (Result)
 			end
 		ensure
@@ -550,14 +556,15 @@ feature {NONE} -- Factory
 			an_id: INTEGER
 		do
 			upper_name := a_name.as_upper
-			if types.has (upper_name) then
-				Result := types.item (upper_name)
+			types.search (upper_name)
+			if types.found then
+				Result := types.found_item
 			else
 					-- Types are indexed from 1.
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create {PR_BASIC_TYPE} Result.make (an_id, a_name)
-				types.force (Result, upper_name)
+				types.force_new (Result, upper_name)
 				last_grammar.put_type (Result)
 			end
 		ensure
@@ -581,10 +588,11 @@ feature {NONE} -- Factory
 				an_id := last_grammar.types.count + 1
 				create Result.make_generic (an_id, a_name, generics)
 				upper_name := Result.name.as_upper
-				if types.has (upper_name) then
-					Result := types.item (upper_name)
+				types.search (upper_name)
+				if types.found then
+					Result := types.found_item
 				else
-					types.force (Result, upper_name)
+					types.force_new (Result, upper_name)
 					last_grammar.put_type (Result)
 				end
 			else
@@ -605,14 +613,15 @@ feature {NONE} -- Factory
 			an_id: INTEGER
 		do
 			lower_name := a_name.as_lower
-			if types.has (lower_name) then
-				Result := types.item (lower_name)
+			types.search (lower_name)
+			if types.found then
+				Result := types.found_item
 			else
 					-- Types are indexed from 1.
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
 				create Result.make_anchored (an_id, a_name)
-				types.force (Result, lower_name)
+				types.force_new (Result, lower_name)
 				last_grammar.put_type (Result)
 			end
 		ensure
@@ -655,7 +664,7 @@ feature {NONE} -- Implementation
 			a_token.set_token_id (256)
 			a_token.set_useful (True)
 				-- Token that represents all undefined
-				-- literal tokens. It is always the 
+				-- literal tokens. It is always the
 				-- second token on the grammar.
 			a_token := new_token ("$undefined.")
 			a_token.set_useful (True)
@@ -1137,7 +1146,7 @@ feature {NONE} -- Error handling
 		end
 
 	report_no_rules_error is
-			-- Report that no rules has been specified 
+			-- Report that no rules has been specified
 			-- in the input grammar.
 		local
 			an_error: PR_NO_RULES_ERROR
@@ -1180,7 +1189,7 @@ feature {NONE} -- Error handling
 		end
 
 	report_string_token_defined_twice_error (a_string: STRING; token1, token2: STRING) is
-			-- Report that the literal `a_string' has 
+			-- Report that the literal `a_string' has
 			-- been defined twice.
 		require
 			a_string_not_void: a_string /= Void

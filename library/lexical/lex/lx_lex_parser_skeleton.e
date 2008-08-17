@@ -477,13 +477,14 @@ feature {NONE} -- Factory
 					-- This is to allow later symbol renumbering
 					-- using equivalence classes.
 				a_name := symbol.out
-				if character_classes.has (a_name) then
-					Result := new_symbol_class_nfa (character_classes.item (a_name))
+				character_classes.search (a_name)
+				if character_classes.found then
+					Result := new_symbol_class_nfa (character_classes.found_item)
 				else
 					create a_character_class.make (1)
 					a_character_class.put (symbol)
 					equiv_classes.add (a_character_class)
-					character_classes.force (a_character_class, a_name)
+					character_classes.force_new (a_character_class, a_name)
 					Result := new_symbol_class_nfa (a_character_class)
 				end
 			else
@@ -535,8 +536,9 @@ feature {NONE} -- Factory
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
 					a_name := lower_char.out
-					if character_classes.has (a_name) then
-						Result := new_symbol_class_nfa (character_classes.item (a_name))
+					character_classes.search (a_name)
+					if character_classes.found then
+						Result := new_symbol_class_nfa (character_classes.found_item)
 					else
 						create a_character_class.make (2)
 						a_character_class.put (a_char)
@@ -544,13 +546,14 @@ feature {NONE} -- Factory
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
-						character_classes.force (a_character_class, a_name)
+						character_classes.force_new (a_character_class, a_name)
 						Result := new_symbol_class_nfa (a_character_class)
 					end
 				when Lower_a_code .. Lower_z_code then
 					a_name := a_char.out
-					if character_classes.has (a_name) then
-						Result := new_symbol_class_nfa (character_classes.item (a_name))
+					character_classes.search (a_name)
+					if character_classes.found then
+						Result := new_symbol_class_nfa (character_classes.found_item)
 					else
 						create a_character_class.make (2)
 						a_character_class.put (a_char - Case_diff)
@@ -558,7 +561,7 @@ feature {NONE} -- Factory
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
-						character_classes.force (a_character_class, a_name)
+						character_classes.force_new (a_character_class, a_name)
 						Result := new_symbol_class_nfa (a_character_class)
 					end
 				when 0 then
@@ -830,9 +833,10 @@ feature {NONE} -- Implementation
 				when Upper_a_code .. Upper_z_code then
 					lower_char := a_char + Case_diff
 					a_name := lower_char.out
-					if character_classes.has (a_name) then
+					character_classes.search (a_name)
+					if character_classes.found then
 						Result := a_string
-						Result.build_concatenation (new_symbol_class_nfa (character_classes.item (a_name)))
+						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
 					else
 						create a_character_class.make (2)
 						a_character_class.put (a_char)
@@ -840,15 +844,16 @@ feature {NONE} -- Implementation
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
-						character_classes.force (a_character_class, a_name)
+						character_classes.force_new (a_character_class, a_name)
 						Result := a_string
 						Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 					end
 				when Lower_a_code .. Lower_z_code then
 					a_name := a_char.out
-					if character_classes.has (a_name) then
+					character_classes.search (a_name)
+					if character_classes.found then
 						Result := a_string
-						Result.build_concatenation (new_symbol_class_nfa (character_classes.item (a_name)))
+						Result.build_concatenation (new_symbol_class_nfa (character_classes.found_item))
 					else
 						create a_character_class.make (2)
 						a_character_class.put (a_char - Case_diff)
@@ -856,7 +861,7 @@ feature {NONE} -- Implementation
 						if equiv_classes /= Void then
 							equiv_classes.add (a_character_class)
 						end
-						character_classes.force (a_character_class, a_name)
+						character_classes.force_new (a_character_class, a_name)
 						Result := a_string
 						Result.build_concatenation (new_symbol_class_nfa (a_character_class))
 					end
@@ -988,8 +993,9 @@ feature {NONE} -- Implementation
 			equiv_classes: LX_EQUIVALENCE_CLASSES
 		do
 			dot_string := "."
-			if character_classes.has (dot_string) then
-				Result := character_classes.item (dot_string)
+			character_classes.search (dot_string)
+			if character_classes.found then
+				Result := character_classes.found_item
 			else
 				create Result.make (1)
 				Result.put (New_line_code)
@@ -998,7 +1004,7 @@ feature {NONE} -- Implementation
 				if equiv_classes /= Void then
 					equiv_classes.add (Result)
 				end
-				character_classes.force (Result, dot_string)
+				character_classes.force_new (Result, dot_string)
 			end
 		ensure
 			dot_character_class_not_void: Result /= Void

@@ -19,7 +19,7 @@ inherit
 		export {NONE} all end
 
 	XM_XPATH_TOKENS
-	
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			input_index := 1
 			input := Void
 		end
-	
+
 feature -- Access
 
 	next_token_start_index: INTEGER
@@ -55,7 +55,7 @@ feature -- Access
 		do
 			Result := current_token
 		end
-	
+
 	last_token_value: STRING is
 			-- The string value of the most recently read token
 		require
@@ -104,7 +104,7 @@ feature -- Access
 				s := STRING_.appended_string (s, input.substring (an_index - 30, an_index))
 				Result := normalizer.normalize (s)
 			end
-			
+
 		ensure
 			recent_text_not_void: Result /= Void
 		end
@@ -116,13 +116,13 @@ feature -- Status report
 		do
 			Result := input_index > input_length + 2 -- + 2 for the mythical EOF character
 		end
-	
+
 	line_number: INTEGER
 			-- The line number (within the expression) of the current token
 
 	is_lexical_error: BOOLEAN
 			-- Did `look_ahead' find an error?
-	
+
 feature -- Status setting
 
 	tokenize (an_input: STRING; a_start, an_end, a_line_number: INTEGER) is
@@ -171,7 +171,7 @@ feature -- Status setting
 				-- do nothing
 			end
 		end
-	
+
 feature --Element change
 
 	next is
@@ -201,7 +201,7 @@ feature --Element change
 			end
 
 			-- disambiguate the current token
-				
+
 			inspect
 				current_token
 			when Name_token then
@@ -225,7 +225,7 @@ feature --Element change
 			else
 				-- do nothing
 			end
-				
+
 			if current_token = Tag_token or else current_token = Right_curly_token then
 
 				-- No lookahead after encountering "<" at the start of an XML-like tag.
@@ -234,11 +234,11 @@ feature --Element change
 
 			elseif not is_lexical_error and then not is_input_stream_exhausted then
 				look_ahead
-					
+
 				if current_token = Name_token then
 					inspect
 						next_token
-						
+
 					when Left_parenthesis_token then
 						operator_type := binary_operator (current_token_value)
 						if operator_type /= Unknown_token then
@@ -247,13 +247,13 @@ feature --Element change
 							current_token := function_type (current_token_value)
 							if not is_lexical_error and then not is_input_stream_exhausted then look_ahead  end -- swallow the (
 						end
-						
+
 					when Left_curly_token then
 						current_token := Keyword_curly_token
 						if not is_lexical_error and then not is_input_stream_exhausted then look_ahead  end -- swallow the (
-						
+
 					when Colon_colon_token then
-						if not is_lexical_error and then not is_input_stream_exhausted then 
+						if not is_lexical_error and then not is_input_stream_exhausted then
 							look_ahead
 							current_token := Axis_token
 							debug ("XPath tokens")
@@ -261,13 +261,13 @@ feature --Element change
 								std.error.put_new_line
 							end
 						end
-						
+
 					when Colon_star_token then
 						if not is_lexical_error and then not is_input_stream_exhausted then
 							look_ahead
 							current_token := Prefix_token
 						end
-						
+
 					when Dollar_token then
 						debug ("XPath tokens")
 							std.error.put_string ("Next token is dollar_token, current_token value is ")
@@ -283,7 +283,7 @@ feature --Element change
 						elseif STRING_.same_string (current_token_value, "let") then
 							current_token := Let_token
 						end
-						
+
 					when Name_token then
 						candidate := -1
 						if STRING_.same_string (current_token_value, "element") then
@@ -293,13 +293,13 @@ feature --Element change
 						elseif STRING_.same_string (current_token_value, "processing-instruction") then
 							candidate := Pi_qname_token
 						end
-						
+
 						if candidate /= -1 then
-							
+
 							-- <'element' QName '{'> constructor
 							-- <'attribute' QName '{'> constructor
 							-- <'processing-instruction' QName '{'> constructor
-							
+
 							qname := next_token_value
 							saved_token_value := current_token_value
 							saved_position := input_index
@@ -307,7 +307,7 @@ feature --Element change
 								no_error_yet: not is_lexical_error
 							end
 							if not is_input_stream_exhausted then look_ahead end
-							
+
 							if not is_lexical_error and then not is_input_stream_exhausted then
 								if next_token = Left_curly_token then
 									current_token := candidate
@@ -315,10 +315,10 @@ feature --Element change
 									look_ahead
 									finished := True
 								else
-									
+
 									-- backtrack (we don't have 2-token lookahead; this is the
 									-- only case where it's needed. So we backtrack instead.)
-									
+
 									current_token := Name_token
 									current_token_value := saved_token_value
 									input_index := saved_position
@@ -332,7 +332,7 @@ feature --Element change
 							composite := STRING_.cloned_string (current_token_value)
 							composite := STRING_.appended_string (composite, " ")
 							composite := STRING_.appended_string (composite, next_token_value)
-							
+
 							if double_keywords.has (composite) then
 								current_token := double_keywords.item (composite)
 								current_token_value := composite
@@ -358,12 +358,12 @@ feature --Element change
 		ensure
 			tokens_set_if_no_error: not is_lexical_error implies last_token_value /= Void
 		end
-	
+
 feature {NONE} -- Status setting
 
 	-- The export status of this next routine may well change
 	-- to enable it to be called by an XQuery parser class
-	
+
 	look_ahead is
 			-- Look ahead by one token;
 			-- This method does the real tokenization work;
@@ -395,7 +395,7 @@ feature {NONE} -- Status setting
 					c := input.item (input_index); input_index := input_index + 1
 					inspect
 						c
-						
+
 					when ':' then
 						if input_index <= input_length then
 							if input.item (input_index) = ':' then
@@ -412,11 +412,11 @@ feature {NONE} -- Status setting
 								finished := True
 							end
 						end
-						
+
 					when '@' then
 						next_token := At_token
 						finished := True
-						
+
 					when '?' then
 						next_token := Question_mark_token
 						finished := True
@@ -424,23 +424,23 @@ feature {NONE} -- Status setting
 					when '[' then
 						next_token := Left_square_bracket_token
 						finished := True
-							
+
 					when ']' then
 						next_token := Right_square_bracket_token
 						finished := True
-						
+
 					when '{' then
 						next_token := Left_curly_token
 						finished := True
-						
+
 					when '}' then
 						next_token := Right_curly_token
 						finished := True
-						
+
 					when ';' then
 						next_token := Semicolon_token
 						finished := True
-						
+
 					when '(' then
 						if input_index <= input_length and then input.item (input_index) = ':' then
 
@@ -476,7 +476,7 @@ feature {NONE} -- Status setting
 							next_token := Left_parenthesis_token
 						end
 						finished := True
-						
+
 					when ')' then
 									next_token := Right_parenthesis_token
 									finished := True
@@ -492,7 +492,7 @@ feature {NONE} -- Status setting
 					when '=' then
 						next_token := Equals_token
 						finished := True
-						
+
 					when '!' then
 						if input_index <= input_length and then input.item (input_index) = '=' then
 							input_index := input_index + 1
@@ -502,7 +502,7 @@ feature {NONE} -- Status setting
 							internal_last_lexical_error := "%"!%" without %"=%" in expression"
 						end
 						finished := True
-						
+
 					when '*' then
 						if input_index <= input_length and then input.item (input_index) = ':' then
 							input_index := input_index + 1
@@ -526,15 +526,15 @@ feature {NONE} -- Status setting
 					when ',' then
 						next_token := Comma_token
 						finished := True
-						
+
 					when '$' then
 						next_token := Dollar_token
 						finished := True
-						
+
 					when '|' then
 						next_token := Union_token
 						finished := True
-						
+
 					when '<' then
 						if input_index <= input_length and then input.item (input_index) = '=' then
 							input_index := input_index + 1
@@ -568,9 +568,9 @@ feature {NONE} -- Status setting
 							next_token := Slash_token
 							finished := True
 						end
-							
+
 					when '.', '0'..'9' then
-						
+
 						-- The logic here can return some tokens that are not legitimate numbers,
 						-- for example "23e" or "1.0e+". However, this will only happen if the XPath
 						-- expression as a whole is syntactically incorrect.
@@ -664,7 +664,7 @@ feature {NONE} -- Status setting
 							next_token := Number_token
 							finished := True
 						end
-						
+
 					when '"', '%'' then
 						next_token_value := ""
 						from
@@ -715,7 +715,7 @@ feature {NONE} -- Status setting
 						next_token_value := STRING_.cloned_string (next_token_value)
 						next_token  := String_literal_token
 						finished := True
-						
+
 					when '%N' then
 						line_number := line_number + 1
 						next_token_start_index := input_index
@@ -730,7 +730,7 @@ feature {NONE} -- Status setting
 								internal_last_lexical_error :=  "Invalid character ("
 								internal_last_lexical_error :=  STRING_.appended_string (internal_last_lexical_error, c.out)
 								internal_last_lexical_error :=  STRING_.appended_string (internal_last_lexical_error, ") in expression")
-								finished := True	
+								finished := True
 							end
 						end
 						from
@@ -759,7 +759,7 @@ feature {NONE} -- Status setting
 									elseif nc = '=' then
 
 										-- as in "let $x:=2"
-										
+
 										next_token_value := input.substring (next_token_start_index, input_index - 1)
 										next_token := Name_token
 										finished := True
@@ -805,7 +805,7 @@ feature {NONE} -- Implementation
 
 	next_token_value: STRING
 		-- The string value of the next token to be read
-		
+
 	input_index: INTEGER
 			-- The current position within the input string
 
@@ -826,7 +826,7 @@ feature {NONE} -- Implementation
 
 	whitespace: STRING is " %R%T%N"
 			-- White space charaters
-	
+
 	binary_operator (a_string: STRING): INTEGER is
 			-- Identify a binary operator
 		require
@@ -894,12 +894,12 @@ feature {NONE} -- Implementation
 					Result := Intersect_token
 				elseif STRING_.same_string (a_string, "satisfies") then
 					Result := Satisfies_token
-				end				
+				end
 			else
 				-- do nothing
 			end
 		end
-	
+
 		function_type (a_string: STRING): INTEGER is
 			-- Distinguish nodekind names, "if", and function names, which are all followed by a "("
 		require
@@ -956,29 +956,29 @@ feature {NONE} -- Implementation
 		do
 			Result := preceding_token <= Last_operator
 		end
-		
+
 	double_keywords: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Lookup table for composite (two-keyword) tokens
 		once
 			create Result.make_with_equality_testers (30, Void, string_equality_tester)
-			Result.put (Instance_of_token, "instance of")
-			Result.put (Cast_as_token, "cast as")
-			Result.put (Treat_as_token, "treat as")
-			Result.put (Castable_as_token, "castable as")
-			Result.put (Xquery_version_token, "xquery version")
-			Result.put (Declare_namespace_token, "declare namespace")
-			Result.put (Declare_default_token, "declare default")
-			Result.put (Declare_base_uri_token, "declare base-uri")
-			Result.put (Declare_xml_space_token, "declare xmlspace")
-			Result.put (Import_schema_token, "import schema")			
-			Result.put (Import_module_token, "import module")
-			Result.put (Declare_variable_token, "declare variable")
-			Result.put (Declare_function_token, "declare function")
-			Result.put (Module_namespace_token, "module namespace")			
-						
+			Result.put_new (Instance_of_token, "instance of")
+			Result.put_new (Cast_as_token, "cast as")
+			Result.put_new (Treat_as_token, "treat as")
+			Result.put_new (Castable_as_token, "castable as")
+			Result.put_new (Xquery_version_token, "xquery version")
+			Result.put_new (Declare_namespace_token, "declare namespace")
+			Result.put_new (Declare_default_token, "declare default")
+			Result.put_new (Declare_base_uri_token, "declare base-uri")
+			Result.put_new (Declare_xml_space_token, "declare xmlspace")
+			Result.put_new (Import_schema_token, "import schema")
+			Result.put_new (Import_module_token, "import module")
+			Result.put_new (Declare_variable_token, "declare variable")
+			Result.put_new (Declare_function_token, "declare function")
+			Result.put_new (Module_namespace_token, "module namespace")
+
 		end
-	
-	
+
+
 invariant
 
 	tokens_not_void: tokens /= Void

@@ -95,7 +95,7 @@ feature -- Access
 
 	available_functions: XM_XPATH_FUNCTION_LIBRARY
 			-- Available functions
-	
+
 	base_uri: UT_URI
 			-- Base URI
 
@@ -116,13 +116,13 @@ feature -- Access
 		do
 			Result := Xpath_standard_functions_uri
 		end
-	
+
 	namespaces: DS_HASH_TABLE [STRING, STRING]
 			-- Maps prefixes to URIs
 
 	warnings_to_std_error: BOOLEAN
 			-- should warning messages be sent to standard error stream?
-	
+
 	default_collation_name: STRING
 			-- URI naming the default collation
 
@@ -143,7 +143,7 @@ feature -- Access
 			end
 		end
 
-	
+
 	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
 			-- Fingerprint of `a_qname'
 		do
@@ -200,7 +200,7 @@ feature -- Status report
 			-- Customized host languages must redefine this routine.
 			-- It is not called for host languages supported directly
 			--  by this library.
-			
+
 		end
 
 	is_element_available (a_qname: STRING): BOOLEAN is
@@ -225,7 +225,7 @@ feature -- Element change
 			uri_not_void: a_uri /= Void
 			not_declared: not namespaces.has (an_xml_prefix)
 		do
-			namespaces.put (a_uri, an_xml_prefix)
+			namespaces.put_new (a_uri, an_xml_prefix)
 		ensure
 			set: namespaces.has (an_xml_prefix) and then STRING_.same_string (a_uri, namespaces.item (an_xml_prefix))
 		end
@@ -247,7 +247,7 @@ feature -- Element change
 
 				-- TODO - how to get allocation faliure message, and raise a dynamic error?
 				--  We will get a post-condition failed exception. Not good enough
-				
+
 			else
 				create a_variable.make (a_qname, an_initial_value)
 				variables.put (a_variable, a_fingerprint)
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 		ensure
 			nearly_positive_fingerprint: Result >= -1
 		end
-	
+
 invariant
 
 	namespaces /= Void

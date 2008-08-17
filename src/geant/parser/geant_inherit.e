@@ -243,9 +243,10 @@ feature -- Status report
 				a_rename_target_name := a_rename_cursor.key
 				project.trace_debug (<<"Project '", project.name, "': merging in renamed target `",
 					a_rename_target_name, "' (", a_rename_target.full_name, ")">>)
-				if project.targets.has (a_rename_target_name) then
+				project.targets.search (a_rename_target_name)
+				if project.targets.found then
 						-- There is already a target named `a_rename_target_name'.
-					a_target := project.targets.item (a_rename_target_name)
+					a_target := project.targets.found_item
 					if STRING_.same_string (a_target.full_name, a_rename_target.full_name) then
 							-- It is the same target so we can share it:
 						project.trace_debug (<<"Project '", project.name, "': sharing target `",
@@ -263,7 +264,7 @@ feature -- Status report
 							"  Use a rename or redefine clause to resolve the name clash.">>)
 					end
 				else
-					project.targets.force_last (a_rename_target, a_rename_target_name)
+					project.targets.force_last_new (a_rename_target, a_rename_target_name)
 				end
 				a_rename_cursor.back
 			end
@@ -327,9 +328,10 @@ feature -- Status report
 				project.trace_debug (<<"Project '", project.name, "': merging in unchanged parent target `",
 					a_unchanged_target_name, "' (", a_unchanged_target.full_name,
 					") from parent '", a_parent.parent_project.name, "%'">>)
-				if project.targets.has (a_unchanged_target_name) then
+				project.targets.search (a_unchanged_target_name)
+				if project.targets.found then
 						-- There is already a target named `a_unchanged_target_name'.
-					a_target := project.targets.item (a_unchanged_target_name)
+					a_target := project.targets.found_item
 					if STRING_.same_string (a_target.full_name, a_unchanged_target.full_name) then
 							-- It is the same target so we can safely share it:
 						project.trace_debug (<<"Project '", project.name, "': sharing target `",
@@ -347,7 +349,7 @@ feature -- Status report
 							"  Use a rename or redefine clause to resolve the name clash.">>)
 					end
 				end
-				project.targets.force_last (a_unchanged_target, a_unchanged_target_name)
+				project.targets.force_last_new (a_unchanged_target, a_unchanged_target_name)
 				a_unchanged_cursor.forth
 			end
 		end

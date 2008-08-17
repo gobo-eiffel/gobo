@@ -294,14 +294,9 @@ feature -- Access
 			cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			Result := a_locals
-
 				-- Default Result is `a_arguments' if nothing needs to be changed:
-			from
-				cursor := formal_locals.new_cursor
-				cursor.start
-			until
-				cursor.after
-			loop
+			cursor := formal_locals.new_cursor
+			from cursor.start until cursor.after loop
 				Result.force_last (cursor.item, cursor.key)
 				cursor.forth
 			end

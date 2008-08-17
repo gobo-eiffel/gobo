@@ -97,13 +97,15 @@ feature {NONE} -- Initialization
 				create a_target.make (project, cs.item)
 				project.trace_debug (<<"Project '", project.name, "': loading target `", a_target.name, "%'">>)
 					-- Make sure there is no other target with this name:
-				if a_targets.has (a_target.name) then
+				a_targets.search (a_target.name)
+				if a_targets.found then
 					exit_application (1, <<"%NLOAD ERROR:%N", "  project '", project.name,
 						"' contains a target named `", a_target.name, "' which conflicts with target `",
-						a_target.name, "' from project '", a_targets.item (a_target.name).project.name,
+						a_target.name, "' from project '", a_targets.found_item.project.name,
 						"%'.%N", "  Either use a different name, use the rename clause, or redefine this target.">>)
+				else
+					a_targets.force_last_new (a_target, a_target.name)
 				end
-				a_targets.force_last (a_target, a_target.name)
 				cs.forth
 			end
 			project.set_targets (a_targets)

@@ -60,14 +60,14 @@ feature {NONE} -- Initialization
 			create key_map.make_map_default
 			create collation_map.make_with_equality_testers (5, string_equality_tester, Void)
 			create document_map.make_map_default
-			-- TODO - register idref() support 
+			-- TODO - register idref() support
 		end
 
 feature -- Access
 
 	last_key_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		-- Result from `generate_keyed_sequence'
-	
+
 	generate_keyed_sequence (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE;
 						  a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Generate a sequence of nodes for a particular key value
@@ -86,7 +86,7 @@ feature -- Access
 			--a_collator: ST_COLLATOR
 			l_error: XM_XPATH_ERROR_VALUE
 		do
-			last_key_sequence := Void 
+			last_key_sequence := Void
 			l_item_type := a_key_value.item_type.primitive_type
 			l_key_set := key_definitions (a_key_fingerprint)
 			if l_key_set.is_backwards_compatible then
@@ -134,7 +134,7 @@ feature -- Access
 				end
 			end
 		ensure
-			possible_error: a_context.transformer.is_error implies last_key_sequence = Void 
+			possible_error: a_context.transformer.is_error implies last_key_sequence = Void
 			iterator_not_void: not a_context.transformer.is_error implies last_key_sequence /= Void -- of course, the iteration may well yield zero nodes
 		end
 
@@ -157,7 +157,7 @@ feature -- Access
 		ensure
 			key_definitions_set_not_void: Result /= Void
 		end
-	
+
 feature -- Status report
 
 	has_key (a_key_fingerprint: INTEGER): BOOLEAN is
@@ -188,15 +188,16 @@ feature -- Element change
 		local
 			l_key_list: XM_XSLT_KEY_SET
 		do
-			if key_map.has (a_key_fingerprint) then
-				l_key_list := key_map.item (a_key_fingerprint)
+			key_map.search (a_key_fingerprint)
+			if key_map.found then
+				l_key_list := key_map.found_item
 				check
 					collation_map_entry: collation_map.has (a_key_fingerprint)
 					-- as this routine ensures it
 				end
 			else
 				create l_key_list.make (a_key_fingerprint)
-				key_map.force (l_key_list, a_key_fingerprint)
+				key_map.force_new (l_key_list, a_key_fingerprint)
 				collation_map.force (a_key_definition.collation_uri, a_key_fingerprint)
 			end
 			l_key_list.add_definition (a_key_definition)
@@ -226,7 +227,7 @@ feature -- Element change
 			end
 		end
 
-			
+
 feature {NONE} -- Implementation
 
 	key_map: DS_HASH_TABLE [XM_XSLT_KEY_SET, INTEGER]
@@ -241,7 +242,7 @@ feature {NONE} -- Implementation
 	last_built_index: XM_XSLT_KEY_INDEX
 			-- Result from `build_index'
 
-	build_index (a_key_fingerprint, a_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT) is 
+	build_index (a_key_fingerprint, a_item_type: INTEGER; a_document: XM_XPATH_DOCUMENT; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Build index for `a_document' for a named key.
 		require
 			document_not_void: a_document /= Void
@@ -278,7 +279,7 @@ feature {NONE} -- Implementation
 		ensure
 			error_or_index_built: not a_context.transformer.is_error implies last_built_index /= Void
 		end
-	
+
 	construct_index (a_document: XM_XPATH_DOCUMENT; a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE];
 		a_key: XM_XSLT_KEY_DEFINITION; a_sought_item_type: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; is_first: BOOLEAN) is
 			-- Fill in `a_map' for `a_key'.
@@ -466,11 +467,12 @@ feature {NONE} -- Implementation
 			a_comparison: INTEGER
 			added: BOOLEAN
 		do
-			if a_map.has (a_value) then
-				a_node_list := a_map.item (a_value)
+			a_map.search (a_value)
+			if a_map.found then
+				a_node_list := a_map.found_item
 
 				-- This is not the first node with this key value.
-            -- Add the node to the list of nodes for this key,
+				-- Add the node to the list of nodes for this key,
 				--  unless it's already there
 
 				if a_is_first then
@@ -522,13 +524,13 @@ feature {NONE} -- Implementation
 					if not added then
 						if not a_node_list.extendible (1) then
 							a_node_list.resize (2 * a_node_list.count)
-						end						
+						end
 						a_node_list.put_last (a_node)
 					end
 				end
 			else
 				create a_node_list.make_default
-				a_map.force (a_node_list, a_value)
+				a_map.force_new (a_node_list, a_value)
 				if not a_node_list.extendible (1) then
 					a_node_list.resize (2 * a_node_list.count)
 				end
@@ -545,21 +547,23 @@ feature {NONE} -- Implementation
 			an_index_map: DS_HASH_TABLE [XM_XSLT_KEY_INDEX, XM_XPATH_64BIT_NUMERIC_CODE]
 			a_long: XM_XPATH_64BIT_NUMERIC_CODE
 		do
-			if document_map.has (a_document) then
-				an_index_map := document_map.item (a_document)
+			document_map.search (a_document)
+			if document_map.found then
+				an_index_map := document_map.found_item
 			else
 				create an_index_map.make_with_equality_testers (10, Void, long_equality_tester)
-				document_map.force (an_index_map, a_document)
+				document_map.force_new (an_index_map, a_document)
 			end
 			create a_long.make (a_key_fingerprint, an_item_type)
-			if an_index_map.has (a_long) then
+			an_index_map.search (a_long)
+			if an_index_map.found then
 				check
-					an_index_map.item (a_long).is_under_construction
+					an_index_map.found_item.is_under_construction
 					-- Logic of `sequence_by_key'
 				end
-				an_index_map.replace (an_index, a_long)
+				an_index_map.replace_found_item (an_index)
 			else
-				an_index_map.force (an_index, a_long)
+				an_index_map.force_new (an_index, a_long)
 			end
 		ensure
 			index_exists: does_index_exist (a_document, a_key_fingerprint, an_item_type)
@@ -606,6 +610,6 @@ invariant
 	key_map: key_map /= Void
 	collation_map: collation_map /= Void
 		-- coordinated_maps: forall.a_key_fingerprint key_map.has (a_key_fingerprint) implies collation_map.has (a_key_fingerprint)
-	
+
 end
-	
+

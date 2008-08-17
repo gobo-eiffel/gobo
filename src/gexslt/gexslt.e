@@ -165,7 +165,7 @@ feature -- Status report
 
 	is_timed_tracing: BOOLEAN
 			-- Are trace timings requested?
-	
+
 	is_timing: BOOLEAN
 			-- Is timing requested?
 
@@ -195,7 +195,7 @@ feature -- Setting
 			a_parameter_value := a_component_list.item (2)
 
 			-- Strip off any quotation marks around the value
-			
+
 			if a_parameter_value.count > 1 and then
 				(a_parameter_value.item (1) = '"' or else a_parameter_value.item (1) = '%'') and then
 				a_parameter_value.item (a_parameter_value.count) = a_parameter_value.item (1) then
@@ -209,7 +209,7 @@ feature -- Setting
 				report_duplicate_parameter_name (a_parameter_name)
 				Exceptions.die (1)
 			else
-				parameters.force (a_parameter_value, a_parameter_name)
+				parameters.force_new (a_parameter_value, a_parameter_name)
 			end
 		end
 
@@ -238,12 +238,11 @@ feature -- Setting
 
 			if xpath_parameters = Void then
 				create xpath_parameters.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
-			end
-			if xpath_parameters.has (a_parameter_name) then
+			elseif xpath_parameters.has (a_parameter_name) then
 				report_duplicate_parameter_name (a_parameter_name)
 				Exceptions.die (1)
 			else
-				xpath_parameters.put (a_parameter_value, a_parameter_name)
+				xpath_parameters.put_new (a_parameter_value, a_parameter_name)
 			end
 		end
 
@@ -305,7 +304,7 @@ feature -- Error handling
 			create an_error.make (a_feature + ": Not yet implemented. Sorry.")
 			error_handler.report_error (an_error)
 		end
-	
+
 	report_processing_error (a_category, a_message: STRING) is
 			-- Report a compilation or transformation error.
 		require
@@ -372,7 +371,7 @@ feature -- Error handling
 			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [namespace-uri#]local-name%N")
 			create an_error.make (a_message_string)
 			error_handler.report_error (an_error)
-		end	
+		end
 
 	report_duplicate_parameter_name (a_parameter_name: STRING) is
 			-- Report a duplicate parameter name.
@@ -402,7 +401,7 @@ feature -- Error handling
 			create a_message.make (Version_number)
 			error_handler.report_info (a_message)
 		end
-	
+
 	report_general_message (a_message_string: STRING) is
 			-- Report a miscellaneous message.
 		require
@@ -413,7 +412,7 @@ feature -- Error handling
 			create an_error.make (a_message_string)
 			error_handler.report_error (an_error)
 		end
-	
+
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gexslt usage message.
 		once
@@ -628,15 +627,15 @@ feature {NONE} -- Implementation
 			elseif an_option.is_equal ("do-not-recover") then
 				configuration.set_recovery_policy (Do_not_recover)
 			elseif an_option.is_equal ("recover-silently") then
-				configuration.set_recovery_policy (Recover_silently)				
+				configuration.set_recovery_policy (Recover_silently)
 			elseif an_option.is_equal ("stop-after-source-document") then
-				configuration.set_final_execution_phase (Stop_after_principal_source)				
+				configuration.set_final_execution_phase (Stop_after_principal_source)
 			elseif an_option.is_equal ("stop-after-compilation") then
-				configuration.set_final_execution_phase (Stop_after_compilation)				
+				configuration.set_final_execution_phase (Stop_after_compilation)
 			elseif an_option.substring_index ("warning-threshold=", 1) = 1 and then an_option.count > 18 then
 				set_warning_threshold (an_option.substring (19, an_option.count))
 			elseif an_option.substring_index ("error-threshold=", 1) = 1 and then an_option.count > 16 then
-				set_error_threshold (an_option.substring (17, an_option.count))				
+				set_error_threshold (an_option.substring (17, an_option.count))
 			elseif an_option.substring_index ("xpath-param=", 1) = 1 and then an_option.count > 12 then
 				set_xpath_parameter (an_option.substring (13, an_option.count))
 			elseif an_option.substring_index ("param=", 1) = 1 and then an_option.count > 6 then
@@ -821,7 +820,7 @@ feature {NONE} -- Implementation
 				if medium = Void then
 					medium := "screen"
 				elseif medium.is_equal ("all") then
-					report_processing_error ("Forbidden option value", "Medium must not be 'all'") 
+					report_processing_error ("Forbidden option value", "Medium must not be 'all'")
 					Exceptions.die (1)
 				end
 				if title /= Void and then title.count > 1 then
@@ -908,7 +907,7 @@ feature {NONE} -- Implementation
 				Exceptions.die (3) -- the error listener has already reported the error.message
 			end
 		end
-	
+
 	process_parameters (a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Set any parameters onto the transformer.
 		require
@@ -947,7 +946,7 @@ feature {NONE} -- Implementation
 			report_general_message ("Error-listener scripts are not supported in " + program_name)
 			Exceptions.die (1)
 		end
-	
+
 	set_warning_file (a_filename: STRING) is
 			-- Set warning output to `a_filename'.
 		require
@@ -959,7 +958,7 @@ feature {NONE} -- Implementation
 			a_file.open_write
 			error_handler.set_warning_file (a_file)
 		end
-			
+
 	set_error_file (a_filename: STRING) is
 			-- Set error output to `a_filename'.
 		require
@@ -971,7 +970,7 @@ feature {NONE} -- Implementation
 			a_file.open_write
 			error_handler.set_error_file (a_file)
 		end
-			
+
 	set_errors_and_warnings (a_filename: STRING) is
 			-- Set error and warning output to `a_filename'.
 		require
@@ -1072,7 +1071,7 @@ feature {NONE} -- Implementation
 			create l_stdin_resolver.make
 			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (l_stdin_resolver)
 		end
-			
+
 	register_network_protocols is
 			-- Register additional URI schemes which may access the network.
 			-- Descendants are encouraged to redefine this routine.

@@ -9,7 +9,7 @@ indexing
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_DTD_XMLID_VALIDATOR
 
 inherit
@@ -32,7 +32,7 @@ create
 	set_next
 
 feature -- Callbacks
-	
+
 	on_doctype (a_name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 			-- Document type declaration.
 		do
@@ -76,13 +76,13 @@ feature -- ID callbacks
 			if not id_attributes.has (an_element_name) then
 				create a_set.make_default
 				a_set.set_equality_tester (string_equality_tester)
-				id_attributes.force (a_set, an_element_name)
+				id_attributes.force_new (a_set, an_element_name)
 			end
 			id_attributes.item (an_element_name).force (a_name)
 		ensure
 			done: is_id_attribute (an_element_name, a_name)
 		end
-		
+
 feature -- Access
 
 	has_error: BOOLEAN
@@ -98,7 +98,7 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		do
 			Result := id_attributes /= Void and then
-					(id_attributes.has (an_element_name) and then 
+					(id_attributes.has (an_element_name) and then
 						id_attributes.item (an_element_name).has (a_name))
 		end
 

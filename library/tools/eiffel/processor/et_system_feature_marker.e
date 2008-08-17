@@ -610,7 +610,7 @@ feature {NONE} -- Descendants cache
 				Result := descendants_cache.found_item
 			else
 				create Result.make (50)
-				descendants_cache.force_last (Result, a_class)
+				descendants_cache.force_last_new (Result, a_class)
 				if a_class.is_preparsed then
 					l_system := a_class.current_system
 					l_system.classes_do_recursive (agent add_to_descendants (a_class, ?, Result))

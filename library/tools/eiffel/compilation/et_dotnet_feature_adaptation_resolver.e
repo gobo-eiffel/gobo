@@ -179,7 +179,7 @@ feature {NONE} -- Feature recording
 				other_feature := a_features.found_item
 				error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, a_feature)
 			else
-				a_features.force_last (a_feature, l_name)
+				a_features.force_last_new (a_feature, l_name)
 				dotnet_features.search (a_feature)
 				if dotnet_features.found then
 						-- Two features with the same .NET name and signature.
@@ -189,7 +189,7 @@ feature {NONE} -- Feature recording
 					else
 						create l_feature_list.make
 						l_feature_list.force_last (a_feature)
-						other_dotnet_features.force_last (l_feature_list, a_feature)
+						other_dotnet_features.force_last_new (l_feature_list, a_feature)
 					end
 				else
 					dotnet_features.force_last (a_feature)
@@ -402,7 +402,7 @@ feature {NONE} -- Feature recording
 					l_name := l_identifier
 				end
 				l_inherited_feature := new_inherited_feature (l_parent_feature)
-				a_features.put_last (l_inherited_feature, l_name)
+				a_features.put_last_new (l_inherited_feature, l_name)
 				i := i + 1
 			end
 			from i := 1 until i > nb2 loop
@@ -434,7 +434,7 @@ feature {NONE} -- Feature recording
 					l_name := l_identifier
 				end
 				l_inherited_feature := new_inherited_feature (l_parent_feature)
-				a_features.put_last (l_inherited_feature, l_name)
+				a_features.put_last_new (l_inherited_feature, l_name)
 				i := i + 1
 			end
 		ensure

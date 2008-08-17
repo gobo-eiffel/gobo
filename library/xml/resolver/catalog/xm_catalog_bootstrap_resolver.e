@@ -34,7 +34,7 @@ create
 	make, make_with_base_uri
 
 feature {NONE} -- Initialization
-	
+
 	make is
 			-- Initialize `Current' using current directory for base URI.
 		local
@@ -43,16 +43,16 @@ feature {NONE} -- Initialization
 			create a_resolver_factory
 			uri_scheme_resolver := a_resolver_factory.new_resolver_current_directory
 			create well_known_system_ids.make_with_equality_testers (2, string_equality_tester, string_equality_tester)
-			well_known_system_ids.put (Xml_catalog_dtd, Xml_catalog_system_id)
-			well_known_system_ids.put (Xml_catalog_dtd_1_0, Xml_catalog_system_id_1_0)
+			well_known_system_ids.put_new (Xml_catalog_dtd, Xml_catalog_system_id)
+			well_known_system_ids.put_new (Xml_catalog_dtd_1_0, Xml_catalog_system_id_1_0)
 			create well_known_public_ids.make_with_equality_testers (2, string_equality_tester, string_equality_tester)
-			well_known_public_ids.put (Xml_catalog_dtd, Xml_catalog_public_id)
-			well_known_public_ids.put (Xml_catalog_dtd_1_0, Xml_catalog_public_id_1_0)
+			well_known_public_ids.put_new (Xml_catalog_dtd, Xml_catalog_public_id)
+			well_known_public_ids.put_new (Xml_catalog_dtd_1_0, Xml_catalog_public_id_1_0)
 			create well_known_uri_references.make_with_equality_testers (4, string_equality_tester, string_equality_tester)
-			well_known_uri_references.put (Xml_catalog_xsd, Xml_catalog_xsd_id)
-			well_known_uri_references.put (Xml_catalog_rng, Xml_catalog_rng_id)
-			well_known_uri_references.put (Xml_catalog_xsd_1_0, Xml_catalog_xsd_id_1_0)
-			well_known_uri_references.put (Xml_catalog_rng_1_0, Xml_catalog_rng_id_1_0)
+			well_known_uri_references.put_new (Xml_catalog_xsd, Xml_catalog_xsd_id)
+			well_known_uri_references.put_new (Xml_catalog_rng, Xml_catalog_rng_id)
+			well_known_uri_references.put_new (Xml_catalog_xsd_1_0, Xml_catalog_xsd_id_1_0)
+			well_known_uri_references.put_new (Xml_catalog_rng_1_0, Xml_catalog_rng_id_1_0)
 		end
 
 	make_with_base_uri (a_uri: UT_URI) is
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 		ensure
 			base_uri_set: uri_scheme_resolver.uri = a_uri
 		end
-		
+
 feature -- Access
 
 	uri_scheme_resolver: XM_URI_EXTERNAL_RESOLVER
@@ -1402,7 +1402,7 @@ feature -- Action(s)
 			if well_known_system_ids.has (a_system) then
 				a_system_id := well_known_system_ids.item (a_system)
 				create {KL_STRING_INPUT_STREAM} last_stream.make (a_system_id)
-				
+
 				-- TODO: the following two lines will need to change if we implement `Current' as a general-purpose resolver-cache
 
 				has_media_type := False
@@ -1507,7 +1507,7 @@ feature -- Result
 		do
 			Result := uri_scheme_resolver.has_error
 		end
-		
+
 	last_uri_reference_error: STRING is
 			-- Last error message.
 		do

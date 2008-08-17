@@ -20,7 +20,7 @@ inherit
 	XM_XPATH_TRANSFORMER
 
 	XM_XSLT_SERIALIZER
-	
+
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_TYPE
@@ -106,7 +106,7 @@ feature -- Access
 
 	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			-- Transformer factory
-	
+
 	timer: XM_XSLT_TIMING
 			-- Timing facility
 
@@ -352,7 +352,7 @@ feature -- Basic operations
 					user_data_table.put (a_result_table, a_function)
 				end
 			elseif a_result_table /= Void then
-				user_data_table.put (a_result_table, a_function)
+				user_data_table.put_new (a_result_table, a_function)
 			end
 		end
 
@@ -590,7 +590,7 @@ feature -- Basic operations
 			principal_receiver.end_document
 			principal_receiver.close
 		end
-		
+
 feature -- Transformation
 
 	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -717,7 +717,7 @@ feature -- Transformation
 		end
 
 feature -- Removal
-	
+
 	discard_response (a_uri: STRING) is
 			-- Close and discard response from `a_uri'.
 		require
@@ -769,7 +769,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATION} -- Transformation internals
 
 	transform_document (a_start_node: XM_XPATH_NODE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -814,11 +814,11 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 					-- change_output_destination ensures this
 				end
 				principal_receiver.start_document
-			end				
+			end
 			if not is_error then
-				
+
 				-- Process the source document using the handlers that have been set up.
-				
+
 				if initial_template = Void then
 					perform_transformation (a_start_node)
 				else
@@ -836,10 +836,10 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER, XM_XSLT_TRANSFORMATI
 					loop
 						l_tail_call := l_tail.item
 						l_tail.put (Void)
-						l_tail_call.generate_tail_call (l_tail, l_context) 
+						l_tail_call.generate_tail_call (l_tail, l_context)
 					end
 				end
-				
+
 				if is_tracing then
 					trace_listener.stop_tracing
 				end
@@ -1189,6 +1189,6 @@ invariant
 	initial_context_expression_not_empty: initial_context_expression /= Void implies not initial_context_expression.is_empty
 	remembered_numbers_not_void: remembered_numbers /= Void
 	response_streams_not_void: response_streams /= Void
-	
+
 end
 

@@ -521,19 +521,19 @@ feature {NONE} -- Compilation script generation
 			Result.set_key_equality_tester (string_equality_tester)
 				-- Put some platform-dependent default values.
 			if operating_system.is_windows then
-				Result.put ("cl -nologo $cflags $includes -c $c", "cc")
-				Result.put ("link -nologo $lflags -subsystem:console -out:$exe $objs $libs", "link")
-				Result.put (".obj", "obj")
-				Result.put (".exe", "exe")
-				Result.put ("", "cflags")
-				Result.put ("", "lflags")
+				Result.put_new ("cl -nologo $cflags $includes -c $c", "cc")
+				Result.put_new ("link -nologo $lflags -subsystem:console -out:$exe $objs $libs", "link")
+				Result.put_new (".obj", "obj")
+				Result.put_new (".exe", "exe")
+				Result.put_new ("", "cflags")
+				Result.put_new ("", "lflags")
 			else
-				Result.put ("gcc $cflags $includes -c $c", "cc")
-				Result.put ("gcc $lflags -o $exe $objs $libs", "link")
-				Result.put (".o", "obj")
-				Result.put ("", "exe")
-				Result.put ("", "cflags")
-				Result.put ("", "lflags")
+				Result.put_new ("gcc $cflags $includes -c $c", "cc")
+				Result.put_new ("gcc $lflags -o $exe $objs $libs", "link")
+				Result.put_new (".o", "obj")
+				Result.put_new ("", "exe")
+				Result.put_new ("", "cflags")
+				Result.put_new ("", "lflags")
 			end
 			l_filename := file_system.nested_pathname ("${GOBO}", <<"tool", "gec", "config", "c", l_name>>)
 			l_filename := Execution_environment.interpreted_string (l_filename)
@@ -6434,7 +6434,7 @@ feature {NONE} -- Expression generation
 						l_dts_name := dynamic_type_id_set_names.found_item
 					else
 						l_dts_name := c_ge_dts + (dynamic_type_id_set_names.count + 1).out
-						dynamic_type_id_set_names.force_last (l_dts_name, l_dts_ids)
+						dynamic_type_id_set_names.force_last_new (l_dts_name, l_dts_ids)
 					end
 				end
 				l_non_conforming_types.wipe_out
@@ -13617,7 +13617,7 @@ feature {NONE} -- Polymorphic call functions generation
 					l_dynamic_type := l_target_type_set.dynamic_type (i)
 					if not l_target_dynamic_types.has (l_dynamic_type.id) then
 						l_target_dynamic_type_ids.force_last (l_dynamic_type.id)
-						l_target_dynamic_types.force_last (l_dynamic_type, l_dynamic_type.id)
+						l_target_dynamic_types.force_last_new (l_dynamic_type, l_dynamic_type.id)
 					end
 					i := i + 1
 				end
@@ -15015,7 +15015,7 @@ feature {NONE} -- Deep features generation
 						create l_standalone_type_set.make (l_attribute_type)
 						standalone_type_sets.force_last (l_standalone_type_set)
 					end
-					deep_feature_target_type_sets.force_last (l_standalone_type_set, l_attribute_type)
+					deep_feature_target_type_sets.force_last_new (l_standalone_type_set, l_attribute_type)
 				end
 				l_standalone_type_set.put_types (an_attribute_type_set)
 				from i := 1 until i > nb loop
@@ -23013,7 +23013,7 @@ feature {NONE} -- Memory allocation
 							end
 						end
 					end
-					dispose_procedures.force_last (l_dispose_procedure, a_type)
+					dispose_procedures.force_last_new (l_dispose_procedure, a_type)
 				end
 				if l_dispose_procedure /= Void then
 					print_indentation

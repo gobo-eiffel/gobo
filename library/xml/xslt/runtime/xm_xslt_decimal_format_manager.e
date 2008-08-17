@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	default_decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY is
 			-- Default decimal format
 		do
@@ -61,7 +61,7 @@ feature -- Status report
 				Result := format_map.item (a_fingerprint).is_decimal_format
 			end
 		end
-			
+
 	has (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `Current' have an entry for `a_fingerprint'?
 		require
@@ -127,7 +127,7 @@ feature -- Element change
 			if has (a_format.fingerprint) then
 				an_entry := format_map.item (a_format.fingerprint)
 				check
-					entry_is_list: an_entry.is_list 
+					entry_is_list: an_entry.is_list
 					-- From pre-condition
 				end
 				from
@@ -143,7 +143,7 @@ feature -- Element change
 				format_map.remove (a_format.fingerprint)
 			end
 			create an_entry.make (a_format)
-			format_map.put (an_entry, a_format.fingerprint)
+			format_map.put_new (an_entry, a_format.fingerprint)
 		ensure
 			named_format_added: has_named_format (a_format.fingerprint)
 		end
@@ -168,8 +168,9 @@ feature -- Element change
 			l_list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
 			l_entry: XM_XSLT_DECIMAL_FORMAT_MANAGER_ENTRY
 		do
-			if format_map.has (a_fingerprint) then
-				l_entry := format_map.item (a_fingerprint)
+			format_map.search (a_fingerprint)
+			if format_map.found then
+				l_entry := format_map.found_item
 				if l_entry.is_list then
 
 					-- it's another forward reference
@@ -188,7 +189,7 @@ feature -- Element change
 				create l_list.make_default
 				l_list.put_last (a_callback)
 				create l_entry.make_list (l_list)
-				format_map.put (l_entry, a_fingerprint)
+				format_map.put_new (l_entry, a_fingerprint)
 			end
 		end
 
@@ -208,7 +209,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (-1, -1000000)
 		ensure
-			default_default_decimal_format_not_void: Result /= Void			
+			default_default_decimal_format_not_void: Result /= Void
 		end
 
 invariant
@@ -216,4 +217,4 @@ invariant
 	format_map_not_void: format_map /= Void
 
 end
-	
+

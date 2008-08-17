@@ -401,6 +401,34 @@ feature -- Element change
 			last: (not old has (k)) implies last = v
 		end
 
+	put_last_new (v: G; k: K) is
+			-- Associate `v' with key `k'. Put `v' at the end of table.
+			-- Do not move cursors.
+		require
+			not_full: not is_full
+			new_item: not has (k)
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			i := last_position + 1
+			if i > capacity then
+				compress
+				i := last_position + 1
+			end
+			h := slots_position
+			clashes_put (slots_item (h), i)
+			slots_put (i, h)
+			item_storage_put (v, i)
+			key_storage_put (k, i)
+			last_position := i
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
+			inserted: has (k) and then item (k) = v
+			last: last = v
+		end
+
 	force (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
@@ -493,6 +521,35 @@ feature -- Element change
 			one_more: (not old has (k)) implies (count = old count + 1)
 			inserted: has (k) and then item (k) = v
 			last: (not old has (k)) implies last = v
+		end
+
+	force_last_new (v: G; k: K) is
+			-- Associate `v' with key `k'. Put `v' at the end of table.
+			-- Resize table if necessary.
+			-- Do not move cursors.
+		require
+			new_item: not has (k)
+		local
+			i, h: INTEGER
+		do
+			unset_found_item
+			i := last_position + 1
+			if i > capacity then
+				resize (new_capacity (i))
+				h := hash_position (k)
+			else
+				h := slots_position
+			end
+			clashes_put (slots_item (h), i)
+			slots_put (i, h)
+			item_storage_put (v, i)
+			key_storage_put (k, i)
+			last_position := i
+			count := count + 1
+		ensure
+			one_more: count = old count + 1
+			inserted: has (k) and then item (k) = v
+			last: last = v
 		end
 
 feature -- Duplication
