@@ -117,13 +117,6 @@ inherit
 			is_equal
 		end
 
-	KL_IMPORTED_CHARACTER_ROUTINES
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 	KL_IMPORTED_ANY_ROUTINES
 		export
 			{NONE} all
@@ -533,32 +526,20 @@ feature {NONE} -- Implementation
 		require
 			a_name_not_void: a_name /= Void
 		local
-			c: INTEGER
 			i, nb: INTEGER
 		do
 			nb := a_name.count
 			from i := 1 until i > nb loop
-				c := CHARACTER_.as_upper (a_name.item (i)).code - 48
-				inspect i \\ 5
-				when 0 then
-					Result := INTEGER_.bit_or (Result, c)
-				when 1 then
-					Result := INTEGER_.bit_or (Result, c * 64) -- 2^6
-				when 2 then
-					Result := INTEGER_.bit_or (Result, c * 4096) -- 2^12
-				when 3 then
-					Result := INTEGER_.bit_or (Result, c * 262144) -- 2^18
-				when 4 then
-					Result := INTEGER_.bit_or (Result, c * 16777216) -- 2^24
-				else
-				end
+					-- The magic number 8388593 below is the greatest prime lower than
+					-- 2^23 so that this magic number shifted to the left does not exceed 2^31.
+				Result := ((Result \\ 8388593) |<< 8) + a_name.item (i).upper.code
 				i := i + 1
 			end
 			if Result < 0 then
 				Result := - (Result + 1)
 			end
 		ensure
-			new_hash_code_non_negatige: Result >= 0
+			new_hash_code_not_negatige: Result >= 0
 		end
 
 	status_code: CHARACTER

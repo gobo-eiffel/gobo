@@ -680,25 +680,19 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, nb: INTEGER
-			a_string_count: INTEGER
 		do
-			a_string_count := a_string.count
-			if a_string_count > 5 then
-				Result := a_string_count * a_string.item (a_string_count).lower.code
-				nb := 5
-			else
-				nb := a_string_count
-			end
+			nb := a_string.count
 			from i := 1 until i > nb loop
-				Result := Result + a_string.item (i).lower.code
+					-- The magic number 8388593 below is the greatest prime lower than
+					-- 2^23 so that this magic number shifted to the left does not exceed 2^31.
+				Result := ((Result \\ 8388593) |<< 8) + a_string.item (i).upper.code
 				i := i + 1
 			end
-			Result := Result * a_string_count
 			if Result < 0 then
 				Result := - (Result + 1)
 			end
 		ensure
-			hash_code_positive: Result >= 0
+			hash_code_not_negative: Result >= 0
 		end
 
 	concat (a_string, other: STRING): STRING is
@@ -1279,7 +1273,7 @@ feature -- Element change
 					Result := appended_substring (Result, a_text, a_start, a_end - 1)
 					Result := appended_string (Result, a_new)
 					a_start := a_end + a_old_count
-				
+
 					if a_start > a_text_count then
 						a_end := 0 -- Jump out of loop
 					else
@@ -1728,5 +1722,5 @@ feature {NONE} -- Implementation
 		once
 			Result := ('0').code
 		end
-		
+
 end
