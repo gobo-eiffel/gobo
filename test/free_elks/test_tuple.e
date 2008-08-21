@@ -5,7 +5,7 @@ indexing
 		"Test features of class TUPLE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_TUPLE
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -301,23 +303,26 @@ feature -- Test
 			t2: TUPLE [l1: ANY; l2: INTEGER]
 			s1: STRING
 		do
-			b := 'b'
-			t1 := ['b', 5]
-			assert ("t1a_not_void", t1 /= Void)
-				-- Here accessing the first item should box the
-				-- character 'b' to a reference object.
-			assert_equal ("l1a", b, t1.l1)
-			assert_integers_equal ("l2a", 5, t1.l2)
-				-- Now use a polymorphic tuple.
-			s1 := "gobo"
-			t2 := [s1, 6]
-			assert ("t2b_not_void", t2 /= Void)
-			assert_same ("l1b", s1, t2.l1)
-			assert_integers_equal ("l2b", 6, t2.l2)
-			t2 := ['b', 7]
-			assert ("t2c_not_void", t2 /= Void)
-			assert_equal ("l1c", b, t2.l1)
-			assert_integers_equal ("l2c", 7, t2.l2)
+			if not eiffel_compiler.is_ise then
+					-- Does not work with ISE Eiffel.
+				b := 'b'
+				t1 := ['b', 5]
+				assert ("t1a_not_void", t1 /= Void)
+					-- Here accessing the first item should box the
+					-- character 'b' to a reference object.
+				assert_equal ("l1a", b, t1.l1)
+				assert_integers_equal ("l2a", 5, t1.l2)
+					-- Now use a polymorphic tuple.
+				s1 := "gobo"
+				t2 := [s1, 6]
+				assert ("t2b_not_void", t2 /= Void)
+				assert_same ("l1b", s1, t2.l1)
+				assert_integers_equal ("l2b", 6, t2.l2)
+				t2 := ['b', 7]
+				assert ("t2c_not_void", t2 /= Void)
+				assert_equal ("l1c", b, t2.l1)
+				assert_integers_equal ("l2c", 7, t2.l2)
+			end
 		end
 
 	test_twin is

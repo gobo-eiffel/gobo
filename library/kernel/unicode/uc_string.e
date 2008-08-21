@@ -18,7 +18,7 @@ indexing
 		%Use UC_UTF*_STRING to specify the encoding explicitly."
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,8 +27,11 @@ class UC_STRING
 
 inherit
 
-	KS_STRING
+	ANY
 		undefine
+			copy, out
+		redefine
+			is_equal
 		select
 				-- Note: The postcondition of `is_equal' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
@@ -62,7 +65,7 @@ inherit
 			{STRING}
 				share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal,
 				valid_code, to_string_32;
-			{ANY} is_string_8;
+			{ANY} is_string_8, valid_index;
 			{NONE} all
 		undefine
 			infix ">", infix "<=", infix ">=", max, min
@@ -151,8 +154,6 @@ inherit
 		end
 
 	COMPARABLE
-		export
-			{NONE} all
 		undefine
 			three_way_comparison,
 			is_equal, copy, out
@@ -203,6 +204,16 @@ inherit
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
+		undefine
+			is_equal, copy, out
+		end
+
+	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			is_equal, copy, out
+		end
+
+	KL_SHARED_PLATFORM
 		undefine
 			is_equal, copy, out
 		end
@@ -457,6 +468,7 @@ feature -- Access
 				Result := item_code_at_byte_index (k)
 			end
 		ensure then
+			item_code_not_negative: Result >= 0
 			valid_item_code: unicode.valid_code (Result)
 		end
 
@@ -476,6 +488,9 @@ feature -- Access
 				k := byte_index (i)
 				Result := character_item_at_byte_index (k)
 			end
+		ensure then
+			code_small_enough: item_code (i) <= Platform.Maximum_character_code implies Result.code = item_code (i)
+			overflow: item_code (i) > Platform.Maximum_character_code implies Result = '%U'
 		end
 
 	infix "@" (i: INTEGER): CHARACTER is
@@ -483,6 +498,8 @@ feature -- Access
 			-- (ELKS 2001 STRING)
 		do
 			Result := item (i)
+		ensure then
+			definition: Result = item (i)
 		end
 
 	substring (start_index, end_index: INTEGER): like Current is

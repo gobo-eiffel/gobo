@@ -5,7 +5,7 @@ indexing
 		"Test features of class POINTER"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_POINTER
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -131,15 +133,17 @@ feature -- Test
 		local
 			p: POINTER
 		do
-			p.set_item (pointer_0x400)
-			assert ("item1", p = pointer_0x400)
-			p.set_item (pointer_0x1000)
-			assert ("item2", p = pointer_0x1000)
-				-- Setting the 'item' of the result of a function does not
-				-- set the 'item' of the result of the next call of this
-				-- function.
-			(pointer_0x400 + 3072).set_item (pointer_0x0)
-			assert ("item3", (pointer_0x400 + 3072).item = pointer_0x1000)
+			if not eiffel_compiler.is_ise then
+				p.set_item (pointer_0x400)
+				assert ("item1", p = pointer_0x400)
+				p.set_item (pointer_0x1000)
+				assert ("item2", p = pointer_0x1000)
+					-- Setting the 'item' of the result of a function does not
+					-- set the 'item' of the result of the next call of this
+					-- function.
+				(pointer_0x400 + 3072).set_item (pointer_0x0)
+				assert ("item3", (pointer_0x400 + 3072).item = pointer_0x1000)
+			end
 		end
 
 	test_to_reference is
@@ -165,14 +169,16 @@ feature -- Test
 			p: POINTER
 			pref: POINTER_REF
 		do
-			create pref
-			pref.set_item (pointer_0x400)
-			create p.make_from_reference (pref)
-			assert ("item1", p = pointer_0x400)
-			create pref
-			pref.set_item (pointer_0x1000)
-			create p.make_from_reference (pref)
-			assert ("item2", p = pointer_0x1000)
+			if not eiffel_compiler.is_ise then
+				create pref
+				pref.set_item (pointer_0x400)
+				create p.make_from_reference (pref)
+				assert ("item1", p = pointer_0x400)
+				create pref
+				pref.set_item (pointer_0x1000)
+				create p.make_from_reference (pref)
+				assert ("item2", p = pointer_0x1000)
+			end
 		end
 
 	test_convert is

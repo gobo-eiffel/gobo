@@ -5,7 +5,7 @@ indexing
 		"Test features of class BOOLEAN"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_BOOLEAN
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -69,20 +71,22 @@ feature -- Test
 		local
 			b: BOOLEAN
 		do
-			b.set_item (True)
-			assert ("item1", b = True)
-			b.set_item (False)
-			assert ("item2", b = False)
-				-- We get a new "True" at each call (it's an expanded type).
-				-- So setting the 'item' of one occurrence of "True" does not
-				-- change the 'item' of the next occurrence of "True".
-			(True).set_item (False)
-			assert ("item3", (True).item = True)
-				-- Setting the 'item' of the result of a function does not
-				-- set the 'item' of the result of the next call of this
-				-- function.
-			(True or False).set_item (False)
-			assert ("item4", (True or False).item = True)
+			if not eiffel_compiler.is_ise then
+				b.set_item (True)
+				assert ("item1", b = True)
+				b.set_item (False)
+				assert ("item2", b = False)
+					-- We get a new "True" at each call (it's an expanded type).
+					-- So setting the 'item' of one occurrence of "True" does not
+					-- change the 'item' of the next occurrence of "True".
+				(True).set_item (False)
+				assert ("item3", (True).item = True)
+					-- Setting the 'item' of the result of a function does not
+					-- set the 'item' of the result of the next call of this
+					-- function.
+				(True or False).set_item (False)
+				assert ("item4", (True or False).item = True)
+			end
 		end
 
 	test_is_hashable is
@@ -143,14 +147,16 @@ feature -- Test
 			b: BOOLEAN
 			bref: BOOLEAN_REF
 		do
-			create bref
-			bref.set_item (True)
-			create b.make_from_reference (bref)
-			assert ("item1", b = True)
-			create bref
-			bref.set_item (False)
-			create b.make_from_reference (bref)
-			assert ("item2", b = False)
+			if not eiffel_compiler.is_ise then
+				create bref
+				bref.set_item (True)
+				create b.make_from_reference (bref)
+				assert ("item1", b = True)
+				create bref
+				bref.set_item (False)
+				create b.make_from_reference (bref)
+				assert ("item2", b = False)
+			end
 		end
 
 	test_infix_and is

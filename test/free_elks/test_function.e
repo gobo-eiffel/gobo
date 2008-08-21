@@ -5,7 +5,7 @@ indexing
 		"Test features of class FUNCTION"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_FUNCTION
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -174,14 +176,17 @@ feature -- Test
 			a := "e"
 			p4 := agent a.item (?)
 			assert_equal ("item8b", 'e', p4.item ([1, "gobo"]))
-			create b1.make (1, 1)
-			b1.put ('p', 1)
-			b := b1
-			p4 := agent b.item (?)
-			assert_equal ("item9a", 'p', p4.item ([1, "gobo"]))
-			b := "q"
-			p4 := agent b.item (?)
-			assert_equal ("item9b", 'q', p4.item ([1, "gobo"]))
+			if not eiffel_compiler.is_ise then
+					-- Does not work with ISE 6.3.
+				create b1.make (1, 1)
+				b1.put ('p', 1)
+				b := b1
+				p4 := agent b.item (?)
+				assert_equal ("item9a", 'p', p4.item ([1, "gobo"]))
+				b := "q"
+				p4 := agent b.item (?)
+				assert_equal ("item9b", 'q', p4.item ([1, "gobo"]))
+			end
 			create b2.make (1, 1)
 			b2.put ("gobo", 1)
 			b := b2
@@ -920,11 +925,15 @@ feature -- Test
 			s1, s2: STRING
 			p: FUNCTION [ANY, TUPLE, INTEGER]
 		do
-			s1 := "gobo"
-			p := agent s1.count
-			s2 := "foo"
-			p.set_target (s2)
-			assert_integers_equal ("s2", 3, p.item ([]))
+			if not eiffel_compiler.is_ise then
+					-- Does not work with ISE 6.3.7.4337.
+					-- See ISE bug report [EiffelBase #14734] submitted on 2008/08/14.
+				s1 := "gobo"
+				p := agent s1.count
+				s2 := "foo"
+				p.set_target (s2)
+				assert_integers_equal ("s2", 3, p.item ([]))
+			end
 		end
 
 	test_boxed_operands is
@@ -936,26 +945,29 @@ feature -- Test
 			p2: FUNCTION [ANY, TUPLE [ANY, ANY], BOOLEAN]
 			t: TUPLE [ANY, INTEGER]
 		do
-			p1 := agent g
-				-- Here the call to 'item' will have to box the
-				-- character 'b' to a reference object when passing
-				-- it to 'g'.
-			assert_booleans_equal ("item1", False, p1.item (['b', 3]))
-				-- Now use a polymorphic tuple argument.
-			p1 := agent g
-			t := ["gobo", 6]
-			assert_booleans_equal ("item2", False, p1.item (t))
-			t := ['b', 8]
-			assert_booleans_equal ("item3", False, p1.item (t))
-				-- Now test unboxing.
-			p2 := agent g
-			assert_booleans_equal ("item4", False, p2.item (["gobo", 2]))
-			p2 := agent g
-			t := ["gobo", 6]
-			assert_booleans_equal ("item5", False, p2.item (t))
-			p2 := agent h
-			assert_booleans_equal ("item6", False, p2.item (["gobo", 2]))
-			assert_booleans_equal ("item7", False, p2.item (t))
+			if not eiffel_compiler.is_ise then
+					-- Does not work with ISE.
+				p1 := agent g
+					-- Here the call to 'item' will have to box the
+					-- character 'b' to a reference object when passing
+					-- it to 'g'.
+				assert_booleans_equal ("item1", False, p1.item (['b', 3]))
+					-- Now use a polymorphic tuple argument.
+				p1 := agent g
+				t := ["gobo", 6]
+				assert_booleans_equal ("item2", False, p1.item (t))
+				t := ['b', 8]
+				assert_booleans_equal ("item3", False, p1.item (t))
+					-- Now test unboxing.
+				p2 := agent g
+				assert_booleans_equal ("item4", False, p2.item (["gobo", 2]))
+				p2 := agent g
+				t := ["gobo", 6]
+				assert_booleans_equal ("item5", False, p2.item (t))
+				p2 := agent h
+				assert_booleans_equal ("item6", False, p2.item (["gobo", 2]))
+				assert_booleans_equal ("item7", False, p2.item (t))
+			end
 		end
 
 	test_boxed_result is

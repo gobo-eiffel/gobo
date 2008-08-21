@@ -13,7 +13,6 @@
 	<cluster name="kernel" location="${GOBO}/library/kernel">
 		<option name="abstract" value="true"/>
 		<cluster name="basic"/>
-		<cluster name="elks"/>
 		<cluster name="io"/>
 		<cluster name="misc"/>
 		<cluster name="unicode"/>

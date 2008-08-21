@@ -5,7 +5,7 @@ indexing
 		"Test features of class INTEGER_16"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_INTEGER_16
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -145,20 +147,22 @@ feature -- Test
 		local
 			i: INTEGER_16
 		do
-			i.set_item (5)
-			assert ("item1", i = 5)
-			i.set_item (-10)
-			assert ("item2", i = -10)
-				-- We get a new "5" at each call (it's an expanded type).
-				-- So setting the 'item' of one occurrence of "5" does not
-				-- change the 'item' of the next occurrence of "5".
-			({INTEGER_16} 5).set_item (-10)
-			assert ("item3", (5).item = 5)
-				-- Setting the 'item' of the result of a function does not
-				-- set the 'item' of the result of the next call of this
-				-- function.
-			({INTEGER_16} 5 + {INTEGER_16} 6).set_item (-10)
-			assert ("item4", ({INTEGER_16} 5 + {INTEGER_16} 6).item = 11)
+			if not eiffel_compiler.is_ise then
+				i.set_item (5)
+				assert ("item1", i = 5)
+				i.set_item (-10)
+				assert ("item2", i = -10)
+					-- We get a new "5" at each call (it's an expanded type).
+					-- So setting the 'item' of one occurrence of "5" does not
+					-- change the 'item' of the next occurrence of "5".
+				({INTEGER_16} 5).set_item (-10)
+				assert ("item3", (5).item = 5)
+					-- Setting the 'item' of the result of a function does not
+					-- set the 'item' of the result of the next call of this
+					-- function.
+				({INTEGER_16} 5 + {INTEGER_16} 6).set_item (-10)
+				assert ("item4", ({INTEGER_16} 5 + {INTEGER_16} 6).item = 11)
+			end
 		end
 
 	test_to_reference is
@@ -184,14 +188,16 @@ feature -- Test
 			i: INTEGER_16
 			iref: INTEGER_16_REF
 		do
-			create iref
-			iref.set_item (5)
-			create i.make_from_reference (iref)
-			assert ("item1", i = 5)
-			create iref
-			iref.set_item (-10)
-			create i.make_from_reference (iref)
-			assert ("item2", i = -10)
+			if not eiffel_compiler.is_ise then
+				create iref
+				iref.set_item (5)
+				create i.make_from_reference (iref)
+				assert ("item1", i = 5)
+				create iref
+				iref.set_item (-10)
+				create i.make_from_reference (iref)
+				assert ("item2", i = -10)
+			end
 		end
 
 	test_infix_plus is

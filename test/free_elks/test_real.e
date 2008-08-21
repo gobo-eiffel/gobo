@@ -5,7 +5,7 @@ indexing
 		"Test features of class REAL"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_REAL
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -133,20 +135,22 @@ feature -- Test
 		local
 			r: REAL
 		do
-			r.set_item ({REAL} 5.4)
-			assert ("item1", r = {REAL} 5.4)
-			r.set_item ({REAL} -10.9)
-			assert ("item2", r = {REAL} -10.9)
-				-- We get a new "5.5" at each call (it's an expanded type).
-				-- So setting the 'item' of one occurrence of "5.5" does not
-				-- change the 'item' of the next occurrence of "5.5".
-			({REAL} 5.5).set_item ({REAL} -10.3)
-			assert ("item3", (5.5).item = {REAL} 5.5)
-				-- Setting the 'item' of the result of a function does not
-				-- set the 'item' of the result of the next call of this
-				-- function.
-			({REAL} 4.4 + {REAL} 6.5).set_item ({REAL} -11.5)
-			assert ("item4", ({REAL} 4.4 + {REAL} 6.1).item = {REAL} 10.5)
+			if not eiffel_compiler.is_ise then
+				r.set_item ({REAL} 5.4)
+				assert ("item1", r = {REAL} 5.4)
+				r.set_item ({REAL} -10.9)
+				assert ("item2", r = {REAL} -10.9)
+					-- We get a new "5.5" at each call (it's an expanded type).
+					-- So setting the 'item' of one occurrence of "5.5" does not
+					-- change the 'item' of the next occurrence of "5.5".
+				({REAL} 5.5).set_item ({REAL} -10.3)
+				assert ("item3", (5.5).item = {REAL} 5.5)
+					-- Setting the 'item' of the result of a function does not
+					-- set the 'item' of the result of the next call of this
+					-- function.
+				({REAL} 4.4 + {REAL} 6.5).set_item ({REAL} -11.5)
+				assert ("item4", ({REAL} 4.4 + {REAL} 6.1).item = {REAL} 10.5)
+			end
 		end
 
 	test_to_reference is
@@ -172,14 +176,16 @@ feature -- Test
 			r: REAL
 			rref: REAL_REF
 		do
-			create rref
-			rref.set_item ({REAL} 5.7)
-			create r.make_from_reference (rref)
-			assert ("item1", r = {REAL} 5.7)
-			create rref
-			rref.set_item ({REAL} -10.1)
-			create r.make_from_reference (rref)
-			assert ("item2", r = {REAL} -10.1)
+			if not eiffel_compiler.is_ise then
+				create rref
+				rref.set_item ({REAL} 5.7)
+				create r.make_from_reference (rref)
+				assert ("item1", r = {REAL} 5.7)
+				create rref
+				rref.set_item ({REAL} -10.1)
+				create r.make_from_reference (rref)
+				assert ("item2", r = {REAL} -10.1)
+			end
 		end
 
 	test_infix_plus is

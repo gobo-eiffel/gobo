@@ -2,21 +2,19 @@ indexing
 
 	description:
 
-		"Test features of class HASHABLE listed in KS_HASHABLE"
+		"Test features of class HASHABLE"
 
-	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	library: "FreeELKS Library"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class KS_TEST_HASHABLE
+class TEST_HASHABLE
 
 inherit
 
-	KL_TEST_CASE
-
-	KL_IMPORTED_STRING_ROUTINES
+	TS_TEST_CASE
 
 create
 
@@ -27,11 +25,13 @@ feature -- Test
 	test_hash_code1 is
 			-- Test feature `hash_code'.
 		local
+			s: STRING
 			a_hashable, a_hashable2: HASHABLE
 		do
-			a_hashable := STRING_.cloned_string ("foobar")
+			s := "foobar"
+			a_hashable := s.twin
 			assert ("hash_code1", a_hashable.hash_code = a_hashable.hash_code) 
-			a_hashable2 := STRING_.cloned_string ("foobar")
+			a_hashable2 := s.twin
 			assert ("hash_code2", a_hashable.hash_code = a_hashable2.hash_code) 
 		end
 

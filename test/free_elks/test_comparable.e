@@ -2,21 +2,19 @@ indexing
 
 	description:
 
-		"Test features of class COMPARABLE listed in KS_COMPARABLE"
+		"Test features of class COMPARABLE"
 
-	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	library: "FreeELKS Library"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class KS_TEST_COMPARABLE
+class TEST_COMPARABLE
 
 inherit
 
-	KL_TEST_CASE
-
-	KL_IMPORTED_STRING_ROUTINES
+	TS_TEST_CASE
 
 create
 

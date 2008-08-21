@@ -5,7 +5,7 @@ indexing
 		"Test features of class ANY"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_ANY
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -307,7 +309,6 @@ feature -- Test
 			-- Test feature 'standard_is_equal'.
 		local
 			s1, s2, s3: STRING
-			i1, i2, i3: INTEGER
 			sp1, sp2: SPECIAL [INTEGER]
 			aa1, aa2: AA
 		do
@@ -319,14 +320,6 @@ feature -- Test
 			assert ("not_equal2", not s1.standard_is_equal (s2))
 			assert ("not_equal3", not s1.standard_is_equal (s3))
 			assert ("not_equal4", not s3.standard_is_equal (s1))
-			i1 := 5
-			i2 := 5
-			i3 := 6
-			assert ("equal2", i1.standard_is_equal (i2))
-			assert ("equal3", i2.standard_is_equal (i1))
-			assert ("equal4", i1.standard_is_equal (i1))
-			assert ("not_equal5", not i1.standard_is_equal (i3))
-			assert ("not_equal6", not i3.standard_is_equal (i1))
 			create sp1.make (2)
 			create sp2.make (2)
 			assert ("equal5", sp1.standard_is_equal (sp1))
@@ -343,6 +336,24 @@ feature -- Test
 			aa2.set_foo (4)
 			assert ("not_equal9", not aa1.standard_is_equal (aa2))
 			assert ("not_equal10", not aa2.standard_is_equal (aa1))
+		end
+
+	test_standard_is_equal___fail_ise is
+			-- Test feature 'standard_is_equal'.
+			-- Does not work with ISE Eiffel.
+		local
+			i1, i2, i3: INTEGER
+		do
+			if not eiffel_compiler.is_ise then
+				i1 := 5
+				i2 := 5
+				i3 := 6
+				assert ("equal2", i1.standard_is_equal (i2))
+				assert ("equal3", i2.standard_is_equal (i1))
+				assert ("equal4", i1.standard_is_equal (i1))
+				assert ("not_equal5", not i1.standard_is_equal (i3))
+				assert ("not_equal6", not i3.standard_is_equal (i1))
+			end
 		end
 
 	test_standard_equal is
@@ -453,18 +464,20 @@ feature -- Test
 			i1, i2: INTEGER
 			sp1, sp2: SPECIAL [INTEGER]
 		do
-			i1 := 5
-			i2.copy (i1)
-			assert ("value3", i2 = 5)
-				-- Copy a special to a bigger one.
-			create sp1.make (2)
-			sp1.put (2, 0)
-			sp1.put (5, 1)
-			create sp2.make (5)
-			sp2.copy (sp1)
-			assert_integers_equal ("sp_count5", 2, sp2.count)
-			assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
-			assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+			if not eiffel_compiler.is_ise then
+				i1 := 5
+				i2.copy (i1)
+				assert ("value3", i2 = 5)
+					-- Copy a special to a bigger one.
+				create sp1.make (2)
+				sp1.put (2, 0)
+				sp1.put (5, 1)
+				create sp2.make (5)
+				sp2.copy (sp1)
+				assert_integers_equal ("sp_count5", 2, sp2.count)
+				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
+				assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+			end
 		end
 
 	test_copy___fail_ise_ge is
@@ -473,21 +486,24 @@ feature -- Test
 		local
 			sp1, sp2: SPECIAL [INTEGER]
 		do
-				-- Copy a special to a smaller one.
-			create sp1.make (2)
-			sp1.put (2, 0)
-			sp1.put (5, 1)
-			create sp2.make (1)
-			sp2.copy (sp1)
-			assert_integers_equal ("sp_count6", 2, sp2.count)
-			assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
-			assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
+			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
+					-- Copy a special to a smaller one.
+				create sp1.make (2)
+				sp1.put (2, 0)
+				sp1.put (5, 1)
+				create sp2.make (1)
+				sp2.copy (sp1)
+				assert_integers_equal ("sp_count6", 2, sp2.count)
+				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
+				assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
+			end
 		end
 
 	test_standard_twin is
 			-- Test feature 'standard_twin'.
 		local
 			s1, s2: STRING
+			i1, i2: INTEGER
 			sp1, sp2: SPECIAL [INTEGER]
 			aa1, aa2: AA
 		do
@@ -497,6 +513,11 @@ feature -- Test
 			assert_equal ("value1", "gobo", s2)
 			assert ("same_area1", s2.area = s1.area)
 			assert ("cloned1", s2 /= s1)
+			--
+			i1 := 5
+			i2 := i1.standard_twin
+			assert_integers_equal ("value2", 5, i2)
+			--
 			create sp1.make (2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
@@ -506,23 +527,13 @@ feature -- Test
 			assert ("sp_item0_3", sp2.item (0) = 2)
 			assert ("sp_item1_3", sp2.item (1) = 5)
 			assert ("cloned3", sp2 /= sp1)
+			--
 			create aa1
 			aa1.set_foo (5)
 			aa2 := aa1.standard_twin
 			assert ("not_void4", aa2 /= Void)
 			assert ("value4", aa2.foo = 5)
 			assert ("cloned4", aa2 /= aa1)
-		end
-
-	test_standard_twin___fail_ise is
-			-- Test feature 'standard_twin'.
-			-- Does not work with ISE Eiffel.
-		local
-			i1, i2: INTEGER
-		do
-			i1 := 5
-			i2 := i1.standard_twin
-			assert_integers_equal ("value2", 5, i2)
 		end
 
 	test_standard_copy is
@@ -564,18 +575,20 @@ feature -- Test
 			i1, i2: INTEGER
 			sp1, sp2: SPECIAL [INTEGER]
 		do
-			i1 := 5
-			i2.copy (i1)
-			assert ("value3", i2 = 5)
-				-- Copy a special to a bigger one.
-			create sp1.make (2)
-			sp1.put (2, 0)
-			sp1.put (5, 1)
-			create sp2.make (5)
-			sp2.standard_copy (sp1)
-			assert_integers_equal ("sp_count5", 2, sp2.count)
-			assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
-			assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+			if not eiffel_compiler.is_ise then
+				i1 := 5
+				i2.copy (i1)
+				assert ("value3", i2 = 5)
+					-- Copy a special to a bigger one.
+				create sp1.make (2)
+				sp1.put (2, 0)
+				sp1.put (5, 1)
+				create sp2.make (5)
+				sp2.standard_copy (sp1)
+				assert_integers_equal ("sp_count5", 2, sp2.count)
+				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
+				assert_integers_equal ("sp_item1_5", 5, sp2.item (1))
+			end
 		end
 
 	test_standard_copy___fail_ise_ge is
@@ -584,15 +597,17 @@ feature -- Test
 		local
 			sp1, sp2: SPECIAL [INTEGER]
 		do
-				-- Copy a special to a smaller one.
-			create sp1.make (2)
-			sp1.put (2, 0)
-			sp1.put (5, 1)
-			create sp2.make (1)
-			sp2.standard_copy (sp1)
-			assert_integers_equal ("sp_count6", 2, sp2.count)
-			assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
-			assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
+			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
+					-- Copy a special to a smaller one.
+				create sp1.make (2)
+				sp1.put (2, 0)
+				sp1.put (5, 1)
+				create sp2.make (1)
+				sp2.standard_copy (sp1)
+				assert_integers_equal ("sp_count6", 2, sp2.count)
+				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
+				assert_integers_equal ("sp_item1_6", 5, sp2.item (1))
+			end
 		end
 
 	test_out is

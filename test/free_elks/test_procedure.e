@@ -5,7 +5,7 @@ indexing
 		"Test features of class PROCEDURE"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class TEST_PROCEDURE
 inherit
 
 	TS_TEST_CASE
+
+	KL_SHARED_EIFFEL_COMPILER
 
 create
 
@@ -450,30 +452,33 @@ feature -- Test
 			b: ANY
 			s: STRING
 		do
-			create a.make (1, 1)
-			p1 := agent a.put
-				-- Here the call to 'call' will have to box the
-				-- character 'b' to a reference object when passing
-				-- it to ARRAY.put
-			p1.call (['b', 1])
-			b := 'b'
-			assert_equal ("call1", b, a.item (1))
-				-- Now use a polymorphic tuple argument.
-			p1 := agent a.put
-			s := "gobo"
-			t := [s, 1]
-			p1.call (t)
-			assert_same ("call2", s, a.item (1))
-			t := ['b', 1]
-			p1.call (t)
-			assert_equal ("call3", b, a.item (1))
-				-- Now test unboxing.
-			p2 := agent a.put
-			p2.call ([s, 1])
-			assert_same ("call4", s, a.item (1))
-			t := [s, 1]
-			p2.call (t)
-			assert_same ("call5", s, a.item (1))
+			if not eiffel_compiler.is_ise then
+					-- Does not work with ISE.
+				create a.make (1, 1)
+				p1 := agent a.put
+					-- Here the call to 'call' will have to box the
+					-- character 'b' to a reference object when passing
+					-- it to ARRAY.put
+				p1.call (['b', 1])
+				b := 'b'
+				assert_equal ("call1", b, a.item (1))
+					-- Now use a polymorphic tuple argument.
+				p1 := agent a.put
+				s := "gobo"
+				t := [s, 1]
+				p1.call (t)
+				assert_same ("call2", s, a.item (1))
+				t := ['b', 1]
+				p1.call (t)
+				assert_equal ("call3", b, a.item (1))
+					-- Now test unboxing.
+				p2 := agent a.put
+				p2.call ([s, 1])
+				assert_same ("call4", s, a.item (1))
+				t := [s, 1]
+				p2.call (t)
+				assert_same ("call5", s, a.item (1))
+			end
 		end
 
 	test_twin is

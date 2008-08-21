@@ -29,7 +29,6 @@
 		</description>
 		<geant target="install_io"/>
 		<geant target="install_misc"/>
-		<geant target="install_unicode"/>
 	</target>
 
 	<target name="clean">
@@ -81,14 +80,6 @@
 			<argument name="spec_dir" value="spec"/>
 			<argument name="gepp_dir" value="misc"/>
 			<argument name="gepp_file" value="kl_execution_environment"/>
-		</geant>
-	</target>
-
-	<target name="install_unicode">
-		<geant target="ge2e">
-			<argument name="spec_dir" value="spec"/>
-			<argument name="gepp_dir" value="unicode"/>
-			<argument name="gepp_file" value="uc_string"/>
 		</geant>
 	</target>
 
