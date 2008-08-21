@@ -160,7 +160,7 @@ feature {NONE} -- Parent validity
 								if not an_actual_class.features_flattened or else an_actual_class.has_flattening_error then
 									set_fatal_error
 								elseif a_class.interface_checked and then a_class.has_interface_error then
-										-- If the interface has already been checked but at error
+										-- If the interface has already been checked but an error
 										-- has been found, then we have to stop here. The case
 										-- where the interface has not been checked will be taken
 										-- care of below.

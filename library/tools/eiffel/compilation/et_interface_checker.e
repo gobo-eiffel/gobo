@@ -88,7 +88,7 @@ feature -- Error handling
 feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS) is
-			-- Flatten fetaures of `a_class' is not already done.
+			-- Flatten features of `a_class' is not already done.
 			-- Then check validity of the constraint creations of
 			-- formal parameters of `a_class' and of the actual
 			-- paramaters of its parents after having done
