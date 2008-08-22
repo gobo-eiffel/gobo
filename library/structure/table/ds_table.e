@@ -140,4 +140,20 @@ feature -- Iteration
 		deferred
 		end
 
+	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item and its key?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		deferred
+		end
+
+	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items and their keys?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		deferred
+		end
+
 end

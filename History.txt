@@ -37,6 +37,8 @@ Version 3.9 - ?
 
 	* Added set and table classes using binary search tree, AVL tree,
 	  red-black tree and left-leaning red-black tree algorithms.
+	* Added features `there_exists_with_key' and `for_all_with_key' to class
+	  DS_TABLE.
 
 	Miscellaneous:
 

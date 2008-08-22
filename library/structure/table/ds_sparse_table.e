@@ -603,6 +603,41 @@ feature -- Iteration
 			end
 		end
 
+	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item and its key?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			from i := 1 until i > last_position loop
+				if clashes_item (i) > Free_watermark then
+					if a_test.item ([item_storage_item (i), key_storage_item (i)]) then
+						Result := True
+						i := last_position + 1 -- Jump out of the loop.
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items and their keys?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		local
+			i: INTEGER
+		do
+			Result := True
+			from i := 1 until i > last_position loop
+				if clashes_item (i) > Free_watermark then
+					if not a_test.item ([item_storage_item (i), key_storage_item (i)]) then
+						Result := False
+						i := last_position + 1 -- Jump out of the loop.
+					end
+				end
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	internal_set_key_equality_tester (a_tester: like key_equality_tester) is

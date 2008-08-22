@@ -994,6 +994,49 @@ feature {NONE} -- Iteration
 			end
 		end
 
+	there_exists_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item and its key?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		local
+			l_node: like root_node
+		do
+			from
+				l_node := first_node
+			until
+				Result or else l_node = Void
+			loop
+				if a_test.item ([l_node.item, l_node.key]) then
+					Result := True
+				else
+					l_node := successor (l_node)
+				end
+			end
+		end
+
+	for_all_with_key (a_test: FUNCTION [ANY, TUPLE [G, K], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items and their keys?
+			-- (Semantics not guaranteed if `a_test' changes the structure.)
+		require
+			a_test_not_void: a_test /= Void
+		local
+			l_node: like root_node
+		do
+			from
+				l_node := first_node
+				Result := True
+			until
+				not Result or else l_node = Void
+			loop
+				if not a_test.item ([l_node.item, l_node.key]) then
+					Result := False
+				else
+					l_node := successor (l_node)
+				end
+			end
+		end
+
 feature {NONE} -- Element change
 
 	internal_put (v: G; k: K) is
