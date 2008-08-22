@@ -9,8 +9,8 @@ indexing
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2007-12-28 12:47:12 +0000 (Fri, 28 Dec 2007) $"
-	revision: "$Revision: 6237 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ST_UNICODE_V510_CHARACTER_CLASS_ROUTINES
 
