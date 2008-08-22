@@ -654,7 +654,7 @@ feature {NONE} -- Replication
 					-- listed in the Select subclause to resolve a
 					-- replication conflict with another seed. Wait
 					-- until all possible replications have been processed.
-					-- The actual check is done in `flatten_feature'.
+					-- The actual check is done in ET_FEATURE_FLATTENER.flatten_feature.
 				end
 				replicable_features.forth
 			end
