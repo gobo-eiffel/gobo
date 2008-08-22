@@ -16,8 +16,8 @@ indexing
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2008-01-20 17:59:26 +0000 (Sun, 20 Jan 2008) $"
-	revision: "$Revision: 6272 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ST_XSLT_FORMAT_DATE_TIME
 

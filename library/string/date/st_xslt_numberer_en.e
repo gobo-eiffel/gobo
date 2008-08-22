@@ -5,8 +5,8 @@ indexing
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2008-01-02 13:57:21 +0000 (Wed, 02 Jan 2008) $"
-	revision: "$Revision: 6243 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ST_XSLT_NUMBERER_EN
 

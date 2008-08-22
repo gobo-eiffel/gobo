@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date: 2007-03-02 14:44:35 +0000 (Fri, 02 Mar 2007) $"
-	revision: "$Revision: 5909 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ST_XSD_DATE_TIME_FORMAT
 

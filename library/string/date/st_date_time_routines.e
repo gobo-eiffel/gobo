@@ -11,8 +11,8 @@ indexing
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2008, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date:  $"
-	revision: "$Revision: $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class	ST_DATE_TIME_ROUTINES
 
