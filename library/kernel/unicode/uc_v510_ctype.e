@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2008, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date:  $"
-	revision: "$Revision:  $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class UC_V510_CTYPE
 

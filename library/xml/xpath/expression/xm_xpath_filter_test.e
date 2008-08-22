@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2008, Colin Adams and others"
 	license: "MIT License"
-	date: "$Date:  $"
-	revision: "$Revision:  $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class XM_XPATH_FILTER_TEST [G -> XM_XPATH_ITEM]
 
