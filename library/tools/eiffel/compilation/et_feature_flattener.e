@@ -755,8 +755,13 @@ feature {NONE} -- Feature processing
 						set_fatal_error (current_class)
 						error_handler.report_vmfn0c_error (current_class, l_effective, l_parent_feature)
 					end
+					if l_effective = Void then
+						l_feature_found := False
+						l_deferred := Void
+					end
 					if not l_feature_found then
 						l_effective := l_parent_feature
+						l_first_precursor := l_effective.precursor_feature
 						if not l_duplication_needed then
 								-- Trying to choose one which would avoid duplication.
 							if
@@ -770,17 +775,10 @@ feature {NONE} -- Feature processing
 							end
 						end
 					end
-				end
-				l_parent_feature := l_parent_feature.merged_feature
-			end
-			from
-				l_parent_feature := a_feature.parent_feature
-			until
-				l_parent_feature = Void
-			loop
-				if l_effective = Void then
+				elseif l_effective = Void then
 					if not l_feature_found then
 						l_deferred := l_parent_feature
+						l_first_precursor := l_deferred.precursor_feature
 						if not l_duplication_needed then
 								-- Trying to choose one which would avoid duplication.
 							if
@@ -796,9 +794,16 @@ feature {NONE} -- Feature processing
 						end
 					end
 				end
+				l_parent_feature := l_parent_feature.merged_feature
+			end
+			from
+				l_parent_feature := a_feature.parent_feature
+			until
+				l_parent_feature = Void
+			loop
 				l_precursor := l_parent_feature.precursor_feature
-				if l_first_precursor = Void then
-					l_first_precursor := l_precursor
+				if l_precursor = l_first_precursor then
+					-- Skip.
 				elseif not l_precursor.same_version (l_first_precursor) then
 					from i := 1 until i > nb loop
 						if l_precursor.same_version (l_other_precursors.item (i)) then
