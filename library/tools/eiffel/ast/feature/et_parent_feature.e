@@ -56,9 +56,9 @@ feature -- Status report
 	is_deferred: BOOLEAN is
 			-- Is feature inherited as deferred?
 		do
-			Result := precursor_feature.is_deferred or has_undefine
+			Result := has_undefine or precursor_feature.is_deferred
 		ensure
-			definition: Result = (precursor_feature.is_deferred or has_undefine)
+			definition: Result = (has_undefine or precursor_feature.is_deferred)
 		end
 
 	has_seed (a_seed: INTEGER): BOOLEAN is
@@ -213,8 +213,11 @@ feature -- Comparison
 			-- Do current feature and `other' have the same version?
 		require
 			other_not_void: other /= Void
+		local
+			l_other_precursor: ET_FEATURE
 		do
-			Result := precursor_feature.version = other.precursor_feature.version
+			l_other_precursor := other.precursor_feature
+			Result := (precursor_feature = l_other_precursor) or else (precursor_feature.version = l_other_precursor.version)
 		ensure
 			definition: Result = (precursor_feature.version = other.precursor_feature.version)
 		end

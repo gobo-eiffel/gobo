@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 			create parent_checker.make
 			create formal_parameter_checker.make
 			create precursor_checker.make
+			create precursors.make_map (20)
 		end
 
 feature -- Error handling
@@ -197,6 +198,9 @@ feature {NONE} -- Features
 
 	procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
 			-- Procedures
+
+	precursors: DS_HASH_TABLE [ET_FEATURE, INTEGER]
+			-- Precursor features (when inheriting without explicit redeclaration), indexed by version
 
 feature {NONE} -- Feature adaptation
 
@@ -721,14 +725,13 @@ feature {NONE} -- Feature processing
 			l_feature_found: BOOLEAN
 			l_duplicated: BOOLEAN
 			l_clients: ET_CLIENT_LIST
-			nb_precursors: INTEGER
 			l_precursor: ET_FEATURE
 			l_first_precursor: ET_FEATURE
 			l_other_precursors: ET_FEATURE_LIST
-			l_found: BOOLEAN
-			i, nb: INTEGER
+			nb: INTEGER
 			l_extended_name: ET_EXTENDED_FEATURE_NAME
 			l_identifier: ET_IDENTIFIER
+			l_has_effective: BOOLEAN
 		do
 			l_clients := inherited_clients (a_feature)
 			l_first_seed := a_feature.first_seed
@@ -738,48 +741,68 @@ feature {NONE} -- Feature processing
 				-- Check Feature_adaptation clause.
 			from
 				l_parent_feature := a_feature.parent_feature
-				l_precursor := l_parent_feature.precursor_feature
 			until
 				l_parent_feature = Void
 			loop
 				check_no_redeclaration_validity (l_parent_feature)
-				if not l_parent_feature.precursor_feature.same_version (l_precursor) then
-						-- Not sharing.
-					l_keep_same_version := False
-					l_duplication_needed := True
-					nb_precursors := nb_precursors + 1
-				end
+				l_precursor := l_parent_feature.precursor_feature
+				precursors.force_last (l_precursor, l_precursor.version)
 				if not l_parent_feature.is_deferred then
-					if l_effective /= Void and then not l_parent_feature.same_version (l_effective) then
-							-- Error: two effective features which are not shared.
-						set_fatal_error (current_class)
-						error_handler.report_vmfn0c_error (current_class, l_effective, l_parent_feature)
-					end
-					if l_effective = Void then
-						l_feature_found := False
-						l_deferred := Void
-					end
-					if not l_feature_found then
-						l_effective := l_parent_feature
-						l_first_precursor := l_effective.precursor_feature
-						if not l_duplication_needed then
-								-- Trying to choose one which would avoid duplication.
-							if
-								not l_effective.has_rename and then
-								l_effective.first_seed = l_first_seed and then
-								l_effective.other_seeds = l_other_seeds and then
-								l_effective.parent.actual_parameters = Void and then
-								l_effective.clients.same_clients (l_clients)
-							then
+					l_has_effective := True
+				end
+				l_parent_feature := l_parent_feature.merged_feature
+			end
+			if precursors.count > 1 then
+					-- Not sharing.
+				l_duplication_needed := True
+			end
+			if l_has_effective then
+				from
+					l_parent_feature := a_feature.parent_feature
+				until
+					l_parent_feature = Void
+				loop
+					if not l_parent_feature.is_deferred then
+						if l_effective /= Void and then not l_parent_feature.same_version (l_effective) then
+								-- Error: two effective features which are not shared.
+							set_fatal_error (current_class)
+							error_handler.report_vmfn0c_error (current_class, l_effective, l_parent_feature)
+						end
+						if not l_feature_found then
+							l_effective := l_parent_feature
+							if l_duplication_needed then
 								l_feature_found := True
+							else
+									-- Trying to choose one which would avoid duplication.
+								if
+									not l_effective.has_rename and then
+									l_effective.first_seed = l_first_seed and then
+									l_effective.other_seeds = l_other_seeds and then
+									l_effective.parent.actual_parameters = Void and then
+									l_effective.clients.same_clients (l_clients)
+								then
+									l_feature_found := True
+								end
 							end
 						end
 					end
-				elseif l_effective = Void then
+					l_parent_feature := l_parent_feature.merged_feature
+				end
+			else
+				from
+					l_parent_feature := a_feature.parent_feature
+				until
+					l_parent_feature = Void
+				loop
 					if not l_feature_found then
 						l_deferred := l_parent_feature
-						l_first_precursor := l_deferred.precursor_feature
-						if not l_duplication_needed then
+						l_parent_feature := l_parent_feature.merged_feature
+						if l_duplication_needed then
+							if not l_deferred.has_undefine then
+								l_feature_found := True
+								l_parent_feature := Void
+							end
+						else
 								-- Trying to choose one which would avoid duplication.
 							if
 								not l_deferred.has_rename and then
@@ -790,43 +813,70 @@ feature {NONE} -- Feature processing
 								l_deferred.clients.same_clients (l_clients)
 							then
 								l_feature_found := True
+								l_parent_feature := Void
 							end
 						end
 					end
 				end
-				l_parent_feature := l_parent_feature.merged_feature
-			end
-			from
-				l_parent_feature := a_feature.parent_feature
-			until
-				l_parent_feature = Void
-			loop
-				l_precursor := l_parent_feature.precursor_feature
-				if l_precursor = l_first_precursor then
-					-- Skip.
-				elseif not l_precursor.same_version (l_first_precursor) then
-					from i := 1 until i > nb loop
-						if l_precursor.same_version (l_other_precursors.item (i)) then
-							l_found := True
-							i := nb + 1
-						else
-							i := i + 1
-						end
-					end
-					if not l_found then
-						if l_other_precursors = Void then
-							create l_other_precursors.make_with_capacity (nb_precursors)
-						end
-						l_other_precursors.put_first (l_precursor)
-						nb := nb + 1
-					end
-				end
-				l_parent_feature := l_parent_feature.merged_feature
 			end
 			if l_effective /= Void then
 				l_parent_feature := l_effective
+				l_first_precursor := l_effective.precursor_feature
 			else
 				l_parent_feature := l_deferred
+				l_first_precursor := l_deferred.precursor_feature
+			end
+				-- There is a caveat here with precursors. Only features with the
+				-- same version are supposed to be able to be shared. But in the
+				-- example below:
+				--
+				--   class A
+				--   inherit
+				--       ANY
+				--       COMPARABLE
+				--          undefine
+				--              is_equal
+				--          end
+				--   feature
+				--   ...
+				--   end
+				--
+				--   class B
+				--   inherit
+				--       ANY
+				--   feature
+				--   ...
+				--   end
+				--
+				--   class C
+				--   inherit
+				--      A
+				--      B
+				--   feature
+				--   ...
+				--   end
+				--
+				-- we want feature 'is_equal' from class A and B to be shared in
+				-- class C before it is the same version from ANY. But the version
+				-- of 'is_equal' from class A is not exactly the same version: it
+				-- has extra postcondition inherited from COMPARABLE. This will
+				-- cause problem (e.g. missing assertions) when we will traverse
+				-- `first_precursor' and `other_precursors' from ET_FEATURE in order
+				-- to determine the inherited assertions of a feature. On the other
+				-- hand, should we decide that feature 'is_equal' from A and B
+				-- are not the same version of the feature, then we would have a
+				-- compilation error in class C! So the current implementation
+				-- will miss assertions rather than erroneously reporting
+				-- compilation errors.
+			precursors.remove (l_first_precursor.version)
+			nb := precursors.count
+			if nb > 0 then
+				create l_other_precursors.make_with_capacity (nb)
+				from precursors.start until precursors.after loop
+					l_other_precursors.put_first (precursors.item_for_iteration)
+					precursors.forth
+				end
+				precursors.wipe_out
 			end
 			l_flattened_feature := l_parent_feature.precursor_feature
 			if l_parent_feature.has_undefine then
@@ -863,10 +913,13 @@ feature {NONE} -- Feature processing
 			end
 			if l_duplicated then
 				current_system.register_feature (l_flattened_feature)
-				if a_feature.is_replicated then
-					process_replicated_seeds (a_feature, l_flattened_feature.id)
-				elseif l_keep_same_version then
+				if l_keep_same_version then
 					l_flattened_feature.set_version (l_parent_feature.precursor_feature.version)
+				else
+					l_flattened_feature.set_version (l_flattened_feature.id)
+					if a_feature.is_replicated then
+						process_replicated_seeds (a_feature, l_flattened_feature.id)
+					end
 				end
 				l_flattened_feature.resolve_inherited_signature (l_parent_feature.parent)
 				l_flattened_feature.set_clients (l_clients)
@@ -1802,5 +1855,7 @@ invariant
 	parent_checker_not_void: parent_checker /= Void
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
 	precursor_checker_not_void: precursor_checker /= Void
+	precursors_not_void: precursors /= Void
+	no_void_precursor: not precursors.has_item (Void)
 
 end

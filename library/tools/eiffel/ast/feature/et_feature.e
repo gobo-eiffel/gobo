@@ -529,7 +529,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		do
-			Result := version = other.version
+			Result := (other = Current) or else (version = other.version)
 		ensure
 			definition: Result = (version = other.version)
 		end
