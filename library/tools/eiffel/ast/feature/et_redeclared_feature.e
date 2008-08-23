@@ -2,7 +2,12 @@ indexing
 
 	description:
 
-		"Eiffel redeclared features being processed through the feature flattener"
+	"[
+		Eiffel redeclared features being processed through the feature flattener.
+		What is meant by redeclared features are features that are inherited from
+		parent classes and that are redeclared in one of the feature clauses of
+		current class.
+	]"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"

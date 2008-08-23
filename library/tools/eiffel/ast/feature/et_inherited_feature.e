@@ -2,7 +2,11 @@ indexing
 
 	description:
 
-		"Eiffel inherited features being processed through the feature flattener"
+	"[
+		Eiffel inherited features being processed through the feature flattener.
+		What is meant by inherit features are features inherited from parent classes
+		that are not redeclared in any of the feature clauses of current class.
+	]"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
