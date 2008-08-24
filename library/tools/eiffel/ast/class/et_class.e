@@ -31,14 +31,6 @@ inherit
 			append_unaliased_to_string
 		end
 
---	ET_CLIENT
---		undefine
---			copy, is_equal,
---			first_leaf, last_leaf,
---			position, break,
---			process
---		end
-
 	HASHABLE
 		undefine
 			copy, is_equal
@@ -1545,6 +1537,25 @@ feature -- Features
 			end
 		end
 
+feature -- Redeclared signature conformance checking
+
+	redeclared_signatures_checked: BOOLEAN
+			-- Has conformance of redeclared signatures been checked when flattening the features?
+			-- This could be postponed to the next compilation pass if the signature
+			-- of some features contains qualified types (e.g. of the for 'like a.b')
+			-- requiring features from other classes to be flattened (e.g. to determine
+			-- the type of feature 'b' in the base class of 'like a').
+			-- For simplicity, all validity errors related to signature conformance
+			-- are reported during the interface checking compilation pass.
+
+	set_redeclared_signatures_checked (b: BOOLEAN) is
+			-- Set `redeclared_signatures_checked' to `b'.
+		do
+			redeclared_signatures_checked := b
+		ensure
+			redeclared_signatures_checked_set: redeclared_signatures_checked = b
+		end
+
 feature -- Feature flattening status
 
 	features_flattened: BOOLEAN
@@ -1593,6 +1604,7 @@ feature -- Feature flattening status
 			has_flattening_error := False
 			features_flattened := False
 			has_deferred_features := False
+			redeclared_signatures_checked := False
 		ensure
 			features_not_flattened: not features_flattened
 			no_flattening_error: not has_flattening_error

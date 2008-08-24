@@ -29,6 +29,9 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
+	ET_SHARED_ERROR_HANDLERS
+		export {NONE} all end
+
 create
 
 	execute
@@ -179,7 +182,6 @@ feature {NONE} -- Processing
 		require
 			a_system_not_void: a_system /= Void
 		local
-			l_null_error_handler: ET_NULL_ERROR_HANDLER
 			l_system: ET_DYNAMIC_SYSTEM
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_class: ET_CLASS
@@ -189,8 +191,7 @@ feature {NONE} -- Processing
 			l_system_name: STRING
 		do
 			if is_silent then
-				create l_null_error_handler.make_standard
-				a_system.set_error_handler (l_null_error_handler)
+				a_system.set_error_handler (null_error_handler)
 			end
 			a_system.error_handler.set_ise
 			a_system.set_ise_version (ise_latest)

@@ -35,6 +35,9 @@ inherit
 	ET_SHARED_CLASS_NAME_TESTER
 		export {NONE} all end
 
+	ET_SHARED_ERROR_HANDLERS
+		export {NONE} all end
+
 create
 
 	make
@@ -249,6 +252,7 @@ feature {NONE} -- Feature flattening
 			l_query: ET_QUERY
 			l_procedure: ET_PROCEDURE
 		do
+			has_signature_error := False
 			resolve_feature_adaptations
 			if not current_class.has_flattening_error then
 				nb := named_features.count
@@ -321,6 +325,7 @@ feature {NONE} -- Feature flattening
 						-- have already had their signature resolved
 						-- when processing the parents of `current_class'.
 					resolve_identifier_signature (l_query)
+					check_signature_vtct_validity (l_query)
 					if l_query.is_deferred and then l_query.is_frozen then
 							-- A feature cannot be both deferred and frozen.
 						set_fatal_error (current_class)
@@ -409,6 +414,7 @@ feature {NONE} -- Feature flattening
 						-- have already had their signature resolved
 						-- when processing the parents of `current_class'.
 					resolve_identifier_signature (l_procedure)
+					check_signature_vtct_validity (l_procedure)
 					if l_procedure.is_deferred and then l_procedure.is_frozen then
 							-- A feature cannot be both deferred and frozen.
 						set_fatal_error (current_class)
@@ -452,6 +458,7 @@ feature {NONE} -- Feature flattening
 					i := i + 1
 				end
 				check_anchored_signatures
+				current_class.set_redeclared_signatures_checked (True)
 				from named_features.start until named_features.after loop
 					a_named_feature := named_features.item_for_iteration
 						-- Check that two features have not the same alias. Take into account
@@ -1505,24 +1512,64 @@ feature {NONE} -- Signature validity
 			-- held in the types of all signatures of `current_class'.
 		do
 			anchored_type_checker.check_signatures (current_class)
+			if anchored_type_checker.has_fatal_error then
+				set_fatal_error (current_class)
+				has_signature_error := True
+			end
 		end
 
 	anchored_type_checker: ET_ANCHORED_TYPE_CHECKER
 			-- Anchored type checker
 
+	check_signature_vtct_validity (a_feature: ET_FEATURE) is
+			-- Check whether the types in the signature of `a_feature'
+			-- (declared in `current_class') are based on known classes.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			signature_checker.check_signature_vtct_validity (a_feature, current_class)
+			if signature_checker.has_fatal_error then
+				set_fatal_error (current_class)
+				has_signature_error := True
+			end
+		end
+
 	check_signature_validity (a_feature: ET_FLATTENED_FEATURE) is
 			-- Check signature validity for redeclarations and joinings.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			l_error_handler: ET_ERROR_HANDLER
 		do
-			signature_checker.check_signature_validity (a_feature, current_class)
-			if signature_checker.has_fatal_error then
-				set_fatal_error (current_class)
+			if not has_signature_error then
+					-- Use a null error handler because errors will not be reported at this stage.
+					-- This is postponed to the next compilation pass if the signature
+					-- of some features contains qualified types (e.g. of the for 'like a.b')
+					-- requiring features from other classes to be flattened (e.g. to determine
+					-- the type of feature 'b' in the base class of 'like a').
+					-- For simplicity, all validity errors related to signature conformance
+					-- are reported during the interface checking compilation pass.
+				l_error_handler := current_system.error_handler
+				current_system.set_error_handler (null_error_handler)
+				signature_checker.check_signature_validity (a_feature, current_class)
+				current_system.set_error_handler (l_error_handler)
+				if signature_checker.has_fatal_error then
+					current_class.set_redeclared_signatures_checked (False)
+				end
 			end
 		end
 
 	signature_checker: ET_SIGNATURE_CHECKER
 			-- Signature validity checker
+
+	has_signature_error: BOOLEAN
+			-- Has an error been found in the signature of one of the features of
+			-- `current_class' that prevents us from calling `check_signature_validity'?
+			--
+			-- It can be a cycle in anchored types which will result in an infinite
+			-- loop should we try to check the signature conformance of redeclared
+			-- features. It can also be that the signature of one of the features of
+			-- `current_class' is based on an unknown class.
 
 feature {NONE} -- Formal parameters validity
 

@@ -14,7 +14,7 @@ class ET_ANCHORED_TYPE_CHECKER
 
 inherit
 
-	ET_CLASS_PROCESSOR
+	ET_CLASS_SUBPROCESSOR
 		redefine
 			make
 		end
@@ -39,22 +39,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new anchored type checker.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor {ET_CLASS_SUBPROCESSOR}
 			create anchored_type_sorter.make_default
-		end
-
-feature -- Error handling
-
-	set_fatal_error (a_class: ET_CLASS) is
-			-- Report a fatal error to `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			a_class.set_features_flattened
-			a_class.set_flattening_error
-		ensure
-			features_flattened: a_class.features_flattened
-			has_flattening_error: a_class.has_flattening_error
 		end
 
 feature -- Type checking
@@ -62,6 +48,7 @@ feature -- Type checking
 	check_signatures (a_class: ET_CLASS) is
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `a_class'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -76,6 +63,7 @@ feature -- Type checking
 			j, nb2: INTEGER
 			old_class: ET_CLASS
 		do
+			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
 			l_queries := current_class.queries
@@ -110,7 +98,7 @@ feature -- Type checking
 			end
 			anchored_type_sorter.sort
 			if anchored_type_sorter.has_cycle then
-				set_fatal_error (current_class)
+				set_fatal_error
 				error_handler.report_vtat2a_error (current_class, anchored_type_sorter.cycle)
 			end
 			anchored_type_sorter.wipe_out

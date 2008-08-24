@@ -46,6 +46,39 @@ feature {NONE} -- Initialization
 
 feature -- Signature validity
 
+	check_signature_vtct_validity (a_feature: ET_FEATURE; a_class: ET_CLASS) is
+			-- Check whether the types in the signature of `a_feature'
+			-- (declared in `a_class') are based on known classes.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		local
+			old_class: ET_CLASS
+			l_type: ET_TYPE
+			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			old_class := current_class
+			current_class := a_class
+			l_type := a_feature.type
+			if l_type /= Void then
+				l_type.process (Current)
+			end
+			l_arguments := a_feature.arguments
+			if l_arguments /= Void then
+				nb := l_arguments.count
+				from i := 1 until i > nb loop
+					l_type := l_arguments.formal_argument (i).type
+					l_type.process (Current)
+					i := i + 1
+				end
+			end
+			current_class := old_class
+		end
+
 	check_signature_validity (a_feature: ET_FLATTENED_FEATURE; a_class: ET_CLASS) is
 			-- Check signature validity of `a_feature' for redeclarations and joinings in `a_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -53,9 +86,9 @@ feature -- Signature validity
 			a_feature_not_void: a_feature /= Void
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			a_flattened_feature: ET_FEATURE
---			an_inherited_flattened_feature: ET_PARENT_FEATURE
 			a_redeclared_feature: ET_REDECLARED_FEATURE
 			an_inherited_feature: ET_INHERITED_FEATURE
 			a_parent_feature: ET_PARENT_FEATURE
@@ -69,7 +102,6 @@ feature -- Signature validity
 			current_class := a_class
 			if a_feature.is_redeclared then
 					-- Redeclaration.
-				check_signature_vtct_validity (a_feature.flattened_feature)
 				if not has_fatal_error then
 					a_redeclared_feature := a_feature.redeclared_feature
 					from
@@ -87,7 +119,6 @@ feature -- Signature validity
 						-- No need to check the signature when there is no
 						-- Joining nor merging.
 					a_flattened_feature := an_inherited_feature.flattened_feature
---					an_inherited_flattened_feature := an_inherited_feature.flattened_parent
 					if a_flattened_feature.is_deferred then
 							-- Joining (merging deferred features together).
 						from
@@ -95,9 +126,7 @@ feature -- Signature validity
 						until
 							a_parent_feature = Void
 						loop
---							if not a_parent_feature.same_version (an_inherited_flattened_feature) then
-								check_joined_signature_validity (an_inherited_feature, a_parent_feature)
---							end
+							check_joined_signature_validity (an_inherited_feature, a_parent_feature)
 							a_parent_feature := a_parent_feature.merged_feature
 						end
 					else
@@ -114,9 +143,6 @@ feature -- Signature validity
 						end
 					end
 				end
-			else
-				check_signature_vtct_validity (a_feature.flattened_feature)
-				-- check_immediate_signature_validity (a_feature.flattened_feature)
 			end
 			if a_feature.is_adapted then
 				an_adapted_feature := a_feature.adapted_feature
@@ -136,13 +162,6 @@ feature -- Signature validity
 
 feature {NONE} -- Signature validity
 
-	check_immediate_signature_validity (a_feature: ET_FEATURE) is
-			-- Check whether `a_feature' has correctly been declared.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-		end
-
 	check_redeclared_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE) is
 			-- Check whether the signature of `a_feature' conforms
 			-- to the signature of `other'. This check has to be done
@@ -153,6 +172,7 @@ feature {NONE} -- Signature validity
 		require
 			a_feature_not_void: a_feature /= Void
 			other_not_void: other /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			a_type: ET_TYPE
 			other_type: ET_TYPE
@@ -289,6 +309,7 @@ feature {NONE} -- Signature validity
 			a_feature_not_void: a_feature /= Void
 			a_feature_selected: a_feature.is_selected
 			other_not_void: other /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			a_type: ET_TYPE
 			other_type: ET_TYPE
@@ -400,6 +421,7 @@ feature {NONE} -- Signature validity
 		require
 			a_feature_not_void: a_feature /= Void
 			other_not_void: other /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			a_joined_feature: ET_FEATURE
 			other_precursor: ET_FEATURE
@@ -447,31 +469,6 @@ feature {NONE} -- Signature validity
 		end
 
 feature {NONE} -- VTCT Validity checking
-
-	check_signature_vtct_validity (a_feature: ET_FEATURE) is
-			-- Check whether the types in the signature of `a_feature'
-			-- (declared in `current_class') are based on known classes.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			l_type: ET_TYPE
-			l_arguments: ET_FORMAL_ARGUMENT_LIST
-			i, nb: INTEGER
-		do
-			l_type := a_feature.type
-			if l_type /= Void then
-				l_type.process (Current)
-			end
-			l_arguments := a_feature.arguments
-			if l_arguments /= Void then
-				nb := l_arguments.count
-				from i := 1 until i > nb loop
-					l_type := l_arguments.formal_argument (i).type
-					l_type.process (Current)
-					i := i + 1
-				end
-			end
-		end
 
 	check_bit_feature_vtct_validity (a_type: ET_BIT_FEATURE) is
 			-- Check whether `a_type' is based on known classes.
