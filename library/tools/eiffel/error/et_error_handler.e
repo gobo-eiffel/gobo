@@ -4976,7 +4976,26 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtat2a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_IDENTIFIER]) is
+	report_vtat1c_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_IDENTIFIER; other_class: ET_CLASS) is
+			-- Report VTAT error: the anchor in the Anchored_type
+			-- must be the final name of a query in `other_class'.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			other_class_not_void: other_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtat_error (a_class) then
+				create an_error.make_vtat1c (a_class, a_type, other_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtat2a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_FEATURE]) is
 			-- Report VTAT error: the anchors in `a_cycle'
 			-- are cyclic anchors in `a_class'.
 			--

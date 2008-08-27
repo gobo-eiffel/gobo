@@ -77,6 +77,9 @@ feature -- Initialization
 
 feature -- Access
 
+	type_mark: ET_TYPE_MARK
+			-- '!' or '?' symbol
+
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword
 
@@ -88,9 +91,6 @@ feature -- Access
 			-- with current type or of the feature containing the argument
 			-- in case of 'like argument';
 			-- 0 if not resolved yet
-
-	is_procedure: BOOLEAN
-			-- Is the feature with seed `seed' a procedure?
 
 	index: INTEGER is
 			-- Index in the argument list of the
@@ -538,16 +538,25 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := like_keyword.position
-			if Result.is_null then
-				Result := name.position
+			if type_mark /= Void then
+				Result := type_mark.position
+			end
+			if Result = Void or else Result.is_null then
+				Result := like_keyword.position
+				if Result.is_null then
+					Result := name.position
+				end
 			end
 		end
 
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			Result := like_keyword
+			if type_mark /= Void then
+				Result := type_mark
+			else
+				Result := like_keyword
+			end
 		end
 
 	last_leaf: ET_AST_LEAF is
@@ -637,6 +646,11 @@ feature -- Status report
 		ensure then
 			definition: Result = name.is_argument
 		end
+
+	is_procedure: BOOLEAN
+			-- Is the feature with seed `seed' a procedure?
+			-- Only make sense in case of 'like argument',
+			-- otherwise the feature has to be a query.
 
 	is_type_expanded (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Is current type expanded when viewed from `a_context'?
@@ -1855,10 +1869,5 @@ feature -- Processing
 		do
 			a_processor.process_like_feature (Current)
 		end
-
-invariant
-
-	name_not_void: name /= Void
-	seed_positive: seed >= 0
 
 end

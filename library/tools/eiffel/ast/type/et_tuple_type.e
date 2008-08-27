@@ -93,13 +93,22 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := tuple_keyword.position
+			if type_mark /= Void then
+				Result := type_mark.position
+			end
+			if Result = Void or else Result.is_null then
+				Result := tuple_keyword.position
+			end
 		end
 
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			Result := tuple_keyword
+			if type_mark /= Void then
+				Result := type_mark
+			else
+				Result := tuple_keyword
+			end
 		end
 
 	last_leaf: ET_AST_LEAF is

@@ -16,18 +16,6 @@ inherit
 
 	ET_LIKE_TYPE
 
-feature -- Status report
-
-	is_like_argument: BOOLEAN is
-			-- Is this type a 'like argument' (rather than a 'like feature')?
-		deferred
-		end
-
-	is_procedure: BOOLEAN is
-			-- Is the feature with seed `seed' a procedure?
-		deferred
-		end
-
 feature -- Access
 
 	name: ET_FEATURE_NAME is
@@ -38,13 +26,12 @@ feature -- Access
 		end
 
 	seed: INTEGER is
-			-- Feature ID of one of the seeds of the feature associated
-			-- with current type or of the feature containing the argument
-			-- in case of 'like argument';
+			-- Feature ID of one of the seeds of the
+			-- feature associated with current type;
 			-- 0 if not resolved yet
 		deferred
 		ensure
-			seed_positive: Result >= 0
+			seed_not_negative: Result >= 0
 		end
 
 end

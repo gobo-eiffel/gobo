@@ -103,6 +103,8 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
@@ -1242,6 +1244,18 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			process_expression (an_expression.expression)
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			process_type (a_type.target_type)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			process_type (a_type.target_type)
 		end
 
 	process_real_constant (a_constant: ET_REAL_CONSTANT) is

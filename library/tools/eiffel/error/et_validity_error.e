@@ -220,6 +220,7 @@ create
 	make_vscn0l,
 	make_vtat1a,
 	make_vtat1b,
+	make_vtat1c,
 	make_vtat2a,
 	make_vtbt0a,
 	make_vtbt0b,
@@ -9456,7 +9457,52 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = feature name
 		end
 
-	make_vtat2a (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_IDENTIFIER]) is
+	make_vtat1c (a_class: like current_class; a_type: ET_QUALIFIED_LIKE_IDENTIFIER; other_class: ET_CLASS) is
+			-- Create a new VTAT error: the anchor in the Anchored_type
+			-- must be the final name of a query in `other_class'.
+			--
+			-- Not in ETL
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			other_class_not_void: other_class /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_type.name.position
+			code := vtat1c_template_code
+			etl_code := vtat1_etl_code
+			default_template := vtat1c_default_template
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_type.to_text, 7)
+			parameters.put (a_type.name.name, 8)
+			parameters.put (other_class.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = invalid type
+			-- dollar8: $8 = anchor name
+			-- dollar9: $9 = remote class name
+		end
+
+	make_vtat2a (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_FEATURE]) is
 			-- Create a new VTAT error: the anchors in `a_cycle'
 			-- are cyclic anchors in `a_class'.
 			--
@@ -9468,8 +9514,8 @@ feature {NONE} -- Initialization
 			no_void_anchor: not a_cycle.has (Void)
 			is_cycle: a_cycle.count >= 2
 		local
-			a_cursor: DS_LIST_CURSOR [ET_LIKE_IDENTIFIER]
-			a_like: ET_LIKE_IDENTIFIER
+			a_cursor: DS_LIST_CURSOR [ET_LIKE_FEATURE]
+			a_like: ET_LIKE_FEATURE
 			a_feature: ET_FEATURE
 			a_query: ET_QUERY
 			a_string: STRING
@@ -12571,6 +12617,7 @@ feature {NONE} -- Implementation
 	vscn0l_default_template: STRING is "class in assembly '$8' cannot be overridden by class in group '$10'."
 	vtat1a_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query."
 	vtat1b_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query, or an argument of routine `$9'."
+	vtat1c_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query in class $9."
 	vtat2a_default_template: STRING is "anchor cycle $7."
 	vtbt0a_default_template: STRING is "invalid type '$7': `$8' is not the final name of a constant attribute of type INTEGER."
 	vtbt0b_default_template: STRING is "invalid type '$7': `$8' is not the final name of a feature."
@@ -12991,6 +13038,7 @@ feature {NONE} -- Implementation
 	vscn0l_template_code: STRING is "vscn0l"
 	vtat1a_template_code: STRING is "vtat1a"
 	vtat1b_template_code: STRING is "vtat1b"
+	vtat1c_template_code: STRING is "vtat1c"
 	vtat2a_template_code: STRING is "vtat2a"
 	vtbt0a_template_code: STRING is "vtbt0a"
 	vtbt0b_template_code: STRING is "vtbt0b"

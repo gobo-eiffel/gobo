@@ -23,8 +23,10 @@ inherit
 
 feature -- Access
 
-	type_mark: ET_TYPE_MARK
+	type_mark: ET_TYPE_MARK is
 			-- '!' or '?' symbol
+		deferred
+		end
 
 	like_keyword: ET_KEYWORD is
 			-- 'like' keyword

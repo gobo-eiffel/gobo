@@ -5,7 +5,7 @@ indexing
 		"Eiffel class type validity fourth pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,8 @@ inherit
 			process_class,
 			process_class_type,
 			process_generic_class_type,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -75,6 +77,16 @@ feature {NONE} -- Type validity
 			end
 		end
 
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+			-- Check whether all classes that appear in `a_type'
+			-- have their interface already successfully checked.
+			-- Set `has_fatal_error' to True otherwise.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			a_type.target_type.process (Current)
+		end
+
 	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
 			-- Check whether all classes that appear in `a_type'
 			-- have their interface already successfully checked.
@@ -116,6 +128,18 @@ feature {ET_AST_NODE} -- Type dispatcher
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			check_qualified_like_identifier_validity (a_type)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			check_qualified_like_identifier_validity (a_type)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is

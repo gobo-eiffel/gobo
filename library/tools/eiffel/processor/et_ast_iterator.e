@@ -2615,6 +2615,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			a_type.like_keyword.process (Current)
+			a_type.braced_type.process (Current)
+			a_type.qualified_name.process (Current)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			a_type.target_type.process (Current)
+			a_type.qualified_name.process (Current)
+		end
+
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL) is
 			-- Process `a_symbol'.
 		do

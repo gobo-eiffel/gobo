@@ -476,6 +476,25 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- Result := False
 		end
 
+	same_syntactical_qualified_like_identifier (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		require
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			-- Result := False
+		end
+
 	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?

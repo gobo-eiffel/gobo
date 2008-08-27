@@ -3113,6 +3113,25 @@ feature -- AST nodes
 			end
 		end
 
+	new_qualified_like_braced_type (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_BRACED_TYPE is
+			-- New qualified anchored type of the form 'like {A}.b'
+		do
+			if a_type /= Void and a_name /= Void then
+				create Result.make (a_type_mark, a_type, a_name)
+				if a_like /= Void and then not a_like.position.is_null then
+					Result.set_like_keyword (a_like)
+				end
+			end
+		end
+
+	new_qualified_like_type (a_type: ET_LIKE_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_TYPE is
+			-- New qualified anchored type of the form 'like a.b.c'
+		do
+			if a_type /= Void and a_name /= Void then
+				create Result.make (a_type, a_name)
+			end
+		end
+
 	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD; new_name: ET_EXTENDED_FEATURE_NAME): ET_RENAME is
 			-- New rename pair
 		do

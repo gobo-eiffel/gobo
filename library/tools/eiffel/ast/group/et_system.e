@@ -1168,6 +1168,11 @@ feature -- Parser status report
 	cluster_dependence_enabled: BOOLEAN
 			-- Should cluster dependence constraint be checked?
 
+	qualified_anchored_types_enabled: BOOLEAN
+			-- Are types of the form 'like a.b' or 'like {A}.b'
+			-- (also known as qualified anchored types or remote
+			-- anchored types) accepted?
+
 	preparse_shallow_mode: BOOLEAN
 			-- Are filenames are expected to be of the form 'classname.e'?
 
@@ -1234,6 +1239,14 @@ feature -- Parser setting
 			cluster_dependence_enabled := b
 		ensure
 			cluster_dependence_enabled_set: cluster_dependence_enabled = b
+		end
+
+	set_qualified_anchored_types_enabled (b: BOOLEAN) is
+			-- Set `qualified_anchored_types_enabled' to `b'.
+		do
+			qualified_anchored_types_enabled := b
+		ensure
+			qualified_anchored_types_enabled_set: qualified_anchored_types_enabled = b
 		end
 
 	set_preparse_shallow_mode is

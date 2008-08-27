@@ -25,6 +25,8 @@ inherit
 			process_class_type,
 			process_generic_class_type,
 			process_like_feature,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -42,8 +44,12 @@ feature -- Type resolving
 
 	resolve_type (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS) is
 			-- Resolve identifiers (such as 'like identifier' and
-			-- 'BIT identifier') in type `a_type' when in appears
-			-- in `a_feature' in `a_class'.
+			-- 'BIT identifier') in type `a_type' when it appears
+			-- in `a_feature' in `a_class'. Do not try to resolve
+			-- qualified anchored types. This is done after the
+			-- features of the corresponding classes have been
+			-- flattened.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_feature_registered: a_feature /= Void implies a_feature.is_registered
@@ -67,6 +73,7 @@ feature {NONE} -- Type resolving
 
 	resolve_bit_feature (a_type: ET_BIT_FEATURE) is
 			-- Resolve 'BIT identifier' type.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -75,6 +82,7 @@ feature {NONE} -- Type resolving
 			l_constant: ET_INTEGER_CONSTANT
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 		do
+			has_fatal_error := False
 			l_query := current_class.named_query (a_type.name)
 			if l_query /= Void then
 				l_constant_attribute ?= l_query
@@ -110,6 +118,7 @@ feature {NONE} -- Type resolving
 
 	resolve_like_feature (a_type: ET_LIKE_FEATURE) is
 			-- Resolve 'like identifier' type.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -120,6 +129,7 @@ feature {NONE} -- Type resolving
 			l_argument_name: ET_IDENTIFIER
 			resolved: BOOLEAN
 		do
+			has_fatal_error := False
 			l_name := a_type.name
 			l_query := current_class.named_query (l_name)
 			if l_query /= Void then
@@ -156,14 +166,26 @@ feature {NONE} -- Type resolving
 			end
 		end
 
+	resolve_qualified_like_identifier (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+			-- Resolve 'identifier' in 'like identifier.b'
+			-- and 'like {like identifier}.b'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			resolve_type (a_type.target_type, current_feature, current_class)
+		end
+
 	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Resolve the actual parameter types.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_parameters_not_void: a_parameters /= Void
 		local
 			i, nb: INTEGER
 			had_error: BOOLEAN
 		do
+			has_fatal_error := False
 			nb := a_parameters.count
 			from i := 1 until i > nb loop
 				resolve_type (a_parameters.type (i), current_feature, current_class)
@@ -172,19 +194,19 @@ feature {NONE} -- Type resolving
 				end
 				i := i + 1
 			end
-			if had_error then
-				set_fatal_error
-			end
+			reset_fatal_error (had_error)
 		end
 
 feature {NONE} -- Validity
 
 	check_bit_type (a_type: ET_BIT_TYPE) is
 			-- Check validity of the integer constant.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			constant_not_void: a_type.constant /= Void
 		do
+			has_fatal_error := False
 			a_type.compute_size
 			if a_type.has_size_error then
 				set_fatal_error
@@ -230,6 +252,18 @@ feature {ET_AST_NODE} -- Type processing
 			-- Process `a_type'.
 		do
 			resolve_like_feature (a_type)
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			resolve_qualified_like_identifier (a_type)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			resolve_qualified_like_identifier (a_type)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is

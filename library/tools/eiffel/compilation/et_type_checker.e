@@ -30,6 +30,8 @@ inherit
 			process_generic_class_type,
 			process_like_current,
 			process_like_feature,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -56,9 +58,10 @@ feature -- Validity checking
 	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE) is
 			-- Check validity of `a_type' written in `a_current_feature_impl' in
 			-- `a_current_class_impl' viewed from `a_current_type'. Resolve
-			-- identifiers (such as 'like identifier' and 'BIT identifier')
-			-- in type `a_type' if not already done.
-			-- Set `has_fatal_error' if an error occurred.
+			-- identifiers (such as 'like identifier', 'BIT identifier',
+			-- 'like {A}.identifier or 'like a.identifier')  in type `a_type'
+			-- if not already done.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_current_feature_impl_not_void: a_current_feature_impl /= Void
@@ -66,6 +69,7 @@ feature -- Validity checking
 			a_current_type_not_void: a_current_type /= Void
 			a_current_type_valid: a_current_type.is_valid_context
 			a_current_class_preparsed: a_current_type.base_class.is_preparsed
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			old_feature_impl: ET_CLOSURE
 			old_type: ET_BASE_TYPE
@@ -444,15 +448,18 @@ feature {NONE} -- Validity checking
 
 	check_bit_feature_validity (a_type: ET_BIT_FEATURE) is
 			-- Check validity of `a_type'.
-			-- Resolve 'BIT identifier' type.
+			-- Resolve identifier in 'BIT identifier' if not already done.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			a_query: ET_QUERY
 			a_procedure: ET_PROCEDURE
 			a_constant: ET_INTEGER_CONSTANT
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 		do
+			has_fatal_error := False
 -- TODO: should we check whether class BIT is in the universe or not?
 			if a_type.constant = Void then
 					-- Not resolved yet.
@@ -512,9 +519,12 @@ feature {NONE} -- Validity checking
 
 	check_bit_n_validity (a_type: ET_BIT_N) is
 			-- Check validity of `a_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
+			has_fatal_error := False
 -- TODO: should we check whether class BIT is in the universe or not?
 			-- The validity of the integer constant has
 			-- already been checked during the parsing.
@@ -522,10 +532,13 @@ feature {NONE} -- Validity checking
 
 	check_bit_type_validity (a_type: ET_BIT_TYPE) is
 			-- Check validity of the integer constant.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			constant_not_void: a_type.constant /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
+			has_fatal_error := False
 			a_type.compute_size
 			if a_type.has_size_error then
 				set_fatal_error
@@ -548,8 +561,10 @@ feature {NONE} -- Validity checking
 
 	check_class_type_validity (a_type: ET_CLASS_TYPE) is
 			-- Check validity of `a_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 			a_formals: ET_FORMAL_PARAMETER_LIST
@@ -558,7 +573,9 @@ feature {NONE} -- Validity checking
 			a_formal: ET_FORMAL_PARAMETER
 			a_constraint: ET_TYPE
 			a_class: ET_CLASS
+			had_error: BOOLEAN
 		do
+			has_fatal_error := False
 			a_class := a_type.base_class
 			if a_class.is_none then
 				if a_type.is_generic then
@@ -626,16 +643,18 @@ feature {NONE} -- Validity checking
 							a_formal := a_formals.formal_parameter (i)
 							if a_formal.is_expanded then
 								if not an_actual.is_type_expanded (current_type) then
-									error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
 									set_fatal_error
+									error_handler.report_gvtcg5b_error (current_class, a_type, an_actual, a_formal)
 								end
 							elseif a_formal.is_reference then
 								if not an_actual.is_type_reference (current_type) then
-									error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
 									set_fatal_error
+									error_handler.report_gvtcg5a_error (current_class, a_type, an_actual, a_formal)
 								end
 							end
+							had_error := has_fatal_error
 							an_actual.process (Current)
+							reset_fatal_error (has_fatal_error or had_error)
 							a_constraint := a_formal.constraint
 							if a_constraint /= Void then
 									-- If we have:
@@ -695,17 +714,22 @@ feature {NONE} -- Validity checking
 
 	check_like_current_validity (a_type: ET_LIKE_CURRENT) is
 			-- Check validity of `a_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		do
+			has_fatal_error := False
 			-- No validity rule to be checked.
 		end
 
 	check_like_feature_validity (a_type: ET_LIKE_FEATURE) is
 			-- Check validity of `a_type'.
-			-- Resolve 'like identifier' type.
+			-- Resolve identifer in 'like identifier' if not already done.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			a_name: ET_FEATURE_NAME
 			a_query: ET_QUERY
@@ -715,6 +739,7 @@ feature {NONE} -- Validity checking
 			resolved: BOOLEAN
 			l_feature: ET_FEATURE
 		do
+			has_fatal_error := False
 			a_name := a_type.name
 			if a_name.seed = 0 then
 					-- Not resolved yet.
@@ -771,23 +796,93 @@ feature {NONE} -- Validity checking
 			end
 		end
 
-	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
+	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
 			-- Check validity of `a_type'.
+			-- Resolve 'identifier' in 'like identifier.b', 'like a.identifier'
+			-- or 'like {A}.identifier' if not already done.
+			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			l_seed: INTEGER
+			l_query: ET_QUERY
+			l_target_type: ET_TYPE
+			l_class: ET_CLASS
+		do
+			has_fatal_error := False
+			l_target_type := a_type.target_type
+			l_target_type.process (Current)
+			if not has_fatal_error then
+				l_seed := a_type.seed
+				if l_seed = 0 then
+						-- Not resolved yet. It needs to be resolved
+						-- in the implementation class first.
+					if current_class /= current_class_impl then
+							-- Internal error: it should have been resolved in
+							-- the implementation class.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_class := l_target_type.base_class (current_class)
+						l_class.process (current_system.interface_checker)
+						if not l_class.interface_checked or else l_class.has_interface_error then
+							set_fatal_error
+						else
+							l_query := l_class.named_query (a_type.name)
+							if l_query /= Void then
+								a_type.resolve_identifier_type (l_query.first_seed)
+-- TODO: check that `l_query' is exported to `current_class'.
+							else
+								set_fatal_error
+								error_handler.report_vtat1c_error (current_class, a_type, l_class)
+							end
+						end
+					end
+				else
+					l_class := l_target_type.base_class (current_class)
+					l_class.process (current_system.interface_checker)
+					if not l_class.interface_checked or else l_class.has_interface_error then
+						set_fatal_error
+					else
+						l_query := l_class.seeded_query (l_seed)
+						if l_query /= Void then
+-- TODO: check that `l_query' is exported to `current_class'.
+						else
+								-- Internal error: if we got a seed, the `l_query' should not be void.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+					end
+				end
+			end
+		end
+
+	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
+			-- Check validity of `a_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_type_not_void: a_type /= Void
+			-- no_cycle: no cycle in anchored types involved.
 		local
 			i, nb: INTEGER
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			had_error: BOOLEAN
 		do
+			has_fatal_error := False
 -- TODO: should we check whether class TUPLE is in the universe or not?
 			a_parameters := a_type.actual_parameters
 			if a_parameters /= Void then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
 					a_parameters.type (i).process (Current)
+					if has_fatal_error then
+						had_error := True
+					end
 					i := i + 1
 				end
 			end
+			reset_fatal_error (had_error)
 		end
 
 feature {ET_AST_NODE} -- Type processing
@@ -832,6 +927,18 @@ feature {ET_AST_NODE} -- Type processing
 			-- Process `a_type'.
 		do
 			check_like_feature_validity (a_type)
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			check_qualified_like_identifier_validity (a_type)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			check_qualified_like_identifier_validity (a_type)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is

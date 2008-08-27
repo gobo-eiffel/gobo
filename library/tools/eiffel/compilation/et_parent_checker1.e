@@ -27,6 +27,8 @@ inherit
 			process_generic_class_type,
 			process_like_current,
 			process_like_feature,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -284,6 +286,18 @@ feature {ET_AST_NODE} -- Type dispatcher
 			if current_parent /= Void then
 				check_like_type_validity (a_type, current_parent)
 			end
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			process_like_type (a_type)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			process_like_type (a_type)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is

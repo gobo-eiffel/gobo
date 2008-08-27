@@ -196,6 +196,7 @@ create
 %type <ET_POSTCONDITIONS> Postcondition_opt
 %type <ET_PRECONDITIONS> Precondition_opt
 %type <ET_PROCEDURE> Procedure_declaration Single_procedure_declaration
+%type <ET_QUALIFIED_LIKE_IDENTIFIER> Qualified_anchored_type
 %type <ET_QUERY> Query_declaration Single_query_declaration
 %type <ET_REAL_CONSTANT> Real_constant Typed_real_constant Untyped_real_constant Signed_real_constant
 %type <ET_RENAME_ITEM> Rename Rename_comma
@@ -2811,6 +2812,46 @@ Anchored_type: E_LIKE Identifier
 				raise_error
 			else
 				$$ := ast_factory.new_like_current ($1, $2, $3)
+			end
+		}
+	| Qualified_anchored_type
+		{ $$ := $1 }
+	;
+
+Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6))
+			end
+		}
+	| '!' E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
+			end
+		}
+	| '?' E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
+			end
+		}
+	| Anchored_type '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_type ($1, ast_factory.new_dot_feature_name ($2, $3))
 			end
 		}
 	;

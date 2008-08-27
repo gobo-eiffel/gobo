@@ -102,6 +102,8 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
@@ -237,7 +239,7 @@ feature -- Status setting
 feature {NONE} -- Event handling
 
 	report_anchored_type (a_type: ET_LIKE_FEATURE; a_query: ET_QUERY) is
-			-- Report that the anchored type `a_type' has not been processed
+			-- Report that the anchored type `a_type' has been processed
 			-- with `a_query' as its anchor.
 		require
 			no_error: not has_fatal_error
@@ -356,6 +358,18 @@ feature {NONE} -- Event handling
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
 			a_procedure_not_void: a_procedure /= Void
+		do
+		end
+
+	report_qualified_anchored_type (a_type: ET_QUALIFIED_LIKE_IDENTIFIER; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+			-- Report that the qualified anchored type `a_type' has been processed
+			-- with `a_query' from `a_target_type' as its anchor.
+		require
+			no_error: not has_fatal_error
+			a_type_not_void: a_type /= Void
+			a_target_type_not_void: a_target_type /= Void
+			a_target_type_valid: a_target_type.is_valid_context
+			a_query_not_void: a_query /= Void
 		do
 		end
 
@@ -2130,6 +2144,54 @@ feature {ET_AST_NODE} -- Processing
 				end
 			end
 			reset_fatal_error (had_error or has_fatal_error)
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_qualified_like_identifier (a_type)
+		end
+
+	process_qualified_like_identifier (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+			-- Process `a_type'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_target_type: ET_TYPE
+			l_class: ET_CLASS
+			l_context: ET_NESTED_TYPE_CONTEXT
+			l_query: ET_QUERY
+		do
+			reset_fatal_error (False)
+			if anchored_types_enabled then
+				l_target_type := a_type.target_type
+				process_type (l_target_type)
+				if not has_fatal_error then
+					l_context := current_context
+					l_context.reset (current_type)
+					l_context.force_last (resolved_formal_parameters (l_target_type, current_class_impl, current_type))
+					if not has_fatal_error then
+						l_class := l_context.base_class
+						l_query := l_class.seeded_query (a_type.seed)
+						if l_query = Void then
+								-- This error should have already been reported when checking
+								-- `current_feature' (using ET_FEATURE_CHECKER for example).
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							report_qualified_anchored_type (a_type, l_context, l_query)
+						end
+					end
+				end
+			end
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			process_qualified_like_identifier (a_type)
 		end
 
 	process_real_constant (a_constant: ET_REAL_CONSTANT) is

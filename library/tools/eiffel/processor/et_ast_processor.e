@@ -1172,6 +1172,20 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL) is
 			-- Process `a_symbol'.
 		require

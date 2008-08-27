@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 		do
 			precursor {ET_CLASS_PROCESSOR}
 			create parent_checker3.make
+			create qualified_identifier_type_resolver.make
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create feature_adaptation_resolver.make
@@ -147,6 +148,7 @@ feature {NONE} -- Processing
 					end
 					if not current_class.has_interface_error then
 						error_handler.report_compilation_status (Current, current_class)
+						resolve_qualified_identifier_signatures
 						if not current_class.redeclared_signatures_checked then
 								-- An error occurred when checking the conformance of
 								-- redeclared signatures in the feature flattener. This
@@ -170,6 +172,75 @@ feature {NONE} -- Processing
 		ensure
 			interface_checked: a_class.interface_checked
 		end
+
+feature {NONE} -- Signature resolving
+
+	resolve_qualified_identifier_signatures
+			-- Resolve identifiers in qualified anchored types (such as in
+			-- 'like a.identifier' and 'like {A}.identifier') in types 
+			-- appearing in the signature of features declared or redeclared
+			-- in `current_class'. (Non-redeclared inherited features have
+			-- already had their qualified anchored type identifiers resolved
+			-- in the ancestor classes of `current_class'.)
+		local
+			l_queries: ET_QUERY_LIST
+			l_procedures: ET_PROCEDURE_LIST
+			i, nb: INTEGER
+		do
+			l_queries := current_class.queries
+			nb := l_queries.declared_count
+			from i := 1 until i > nb loop
+				resolve_qualified_identifier_signature (l_queries.item (i))
+				i := i + 1
+			end
+			l_procedures := current_class.procedures
+			nb := l_procedures.declared_count
+			from i := 1 until i > nb loop
+				resolve_qualified_identifier_signature (l_procedures.item (i))
+				i := i + 1
+			end
+		end
+
+	resolve_qualified_identifier_signature (a_feature: ET_FEATURE) is
+			-- Resolve identifiers in qualified anchored types (such as in
+			-- 'like a.identifier' and 'like {A}.identifier') in types 
+			-- appearing in the signature of `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			a_type, previous_type: ET_TYPE
+			args: ET_FORMAL_ARGUMENT_LIST
+			an_arg: ET_FORMAL_ARGUMENT
+			i, nb: INTEGER
+		do
+			a_type := a_feature.type
+			if a_type /= Void then
+				qualified_identifier_type_resolver.resolve_type (a_type, current_class)
+				if qualified_identifier_type_resolver.has_fatal_error then
+					set_fatal_error (current_class)
+				end
+			end
+			args := a_feature.arguments
+			if args /= Void then
+				nb := args.count
+				from i := 1 until i > nb loop
+					an_arg := args.formal_argument (i)
+					a_type := an_arg.type
+					if a_type /= previous_type then
+							-- Not resolved yet.
+						qualified_identifier_type_resolver.resolve_type (a_type, current_class)
+						if qualified_identifier_type_resolver.has_fatal_error then
+							set_fatal_error (current_class)
+						end
+						previous_type := a_type
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	qualified_identifier_type_resolver: ET_QUALIFIED_IDENTIFIER_TYPE_RESOLVER
+			-- Qualified identifier type resolver
 
 feature {NONE} -- Signature validity
 
@@ -399,6 +470,7 @@ feature {NONE} -- Parents validity
 invariant
 
 	parent3_checker_not_void: parent_checker3 /= Void
+	qualified_identifier_type_resolver_not_void: qualified_identifier_type_resolver /= Void
 	named_features_not_void: named_features /= Void
 	no_void_named_feature: not named_features.has_item (Void)
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void

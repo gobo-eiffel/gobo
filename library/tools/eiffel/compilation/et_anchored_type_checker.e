@@ -27,6 +27,8 @@ inherit
 			process_class_type,
 			process_generic_class_type,
 			process_like_feature,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_tuple_type
 		end
 
@@ -48,6 +50,9 @@ feature -- Type checking
 	check_signatures (a_class: ET_CLASS) is
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `a_class'.
+			-- Do not try to follow qualified anchored types.
+			-- This is done after the features of the corresponding
+			-- classes have been flattened.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_class_not_void: a_class /= Void
@@ -150,6 +155,15 @@ feature {NONE} -- Type checking
 			end
 		end
 
+	add_qualified_like_identifier_to_sorter (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
+			-- Add to `anchored_type_sorter' anchored types whose
+			-- anchors' types are (or contain) also anchored types.
+		do
+				-- We need to process 'like a' in types of
+				-- the form 'like a.b' and 'like {like a}.b'.
+			a_type.target_type.process (Current)
+		end
+
 	add_actual_parameters_to_sorter (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Add to `anchored_type_sorter' anchored types whose
 			-- anchors' types are (or contain) also anchored types.
@@ -165,10 +179,10 @@ feature {NONE} -- Type checking
 			end
 		end
 
-	anchored_type_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_LIKE_IDENTIFIER]
+	anchored_type_sorter: DS_HASH_TOPOLOGICAL_SORTER [ET_LIKE_FEATURE]
 			-- Anchored type sorter
 
-	current_anchored_type: ET_LIKE_IDENTIFIER
+	current_anchored_type: ET_LIKE_FEATURE
 			-- Anchored type (if any) whose anchor is the
 			-- type being processed
 
@@ -201,6 +215,18 @@ feature {ET_AST_NODE} -- Type processing
 			-- Process `a_type'.
 		do
 			add_like_feature_to_sorter (a_type)
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			add_qualified_like_identifier_to_sorter (a_type)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			add_qualified_like_identifier_to_sorter (a_type)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is

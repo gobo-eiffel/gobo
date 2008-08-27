@@ -91,7 +91,8 @@ feature -- Access
 		do
 			if type_mark /= Void then
 				Result := type_mark.position
-			else
+			end
+			if Result = Void or else Result.is_null then
 				Result := name.position
 			end
 		end

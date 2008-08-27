@@ -29,6 +29,7 @@ inherit
 			same_syntactical_formal_parameter_type,
 			same_syntactical_like_current,
 			same_syntactical_like_feature,
+			same_syntactical_qualified_like_identifier,
 			same_syntactical_tuple_type,
 			same_named_bit_type,
 			same_named_class_type,
@@ -936,6 +937,35 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
+				Result := False
+			end
+		end
+
+	same_syntactical_qualified_like_identifier (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+		do
+			if index <= a_context.base_type_actual_count then
+				an_actual := a_context.base_type_actual (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := False
+				else
+					Result := an_actual.same_syntactical_qualified_like_identifier (other, other_context, a_context.root_context)
+				end
+			else
+					-- Internal error: does current type really
+					-- appear in `a_context'?
 				Result := False
 			end
 		end

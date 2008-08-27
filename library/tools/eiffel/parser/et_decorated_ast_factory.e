@@ -293,6 +293,7 @@ inherit
 			new_prefix_minus_name,
 			new_prefix_not_name,
 			new_prefix_plus_name,
+			new_qualified_like_braced_type,
 			new_rename,
 			new_rename_comma,
 			new_renames,
@@ -3332,6 +3333,17 @@ feature -- AST nodes
 				create Result.make_plus (an_operator)
 				if a_prefix /= Void then
 					Result.set_prefix_keyword (a_prefix)
+				end
+			end
+		end
+
+	new_qualified_like_braced_type (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_BRACED_TYPE is
+			-- New qualified anchored type of the form 'like {A}.b'
+		do
+			if a_type /= Void and a_name /= Void then
+				create Result.make (a_type_mark, a_type, a_name)
+				if a_like /= Void then
+					Result.set_like_keyword (a_like)
 				end
 			end
 		end

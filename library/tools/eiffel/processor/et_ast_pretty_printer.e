@@ -130,6 +130,8 @@ inherit
 			process_prefix_expression,
 			process_prefix_name,
 			process_qualified_call,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
@@ -4502,6 +4504,53 @@ feature {ET_AST_NODE} -- Processing
 					l_arguments.process (Current)
 				end
 			end
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		local
+			l_braced_type: ET_TARGET_TYPE
+			l_target_type: ET_TYPE
+			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
+			l_feature_name: ET_FEATURE_NAME
+		do
+			a_type.like_keyword.process (Current)
+			print_space
+			l_braced_type := a_type.braced_type
+			l_target_type := l_braced_type.type
+			tokens.left_brace_symbol.process (Current)
+			l_target_type.process (Current)
+			tokens.right_brace_symbol.process (Current)
+			comment_finder.add_excluded_node (l_target_type)
+			comment_finder.find_comments (l_braced_type, comment_list)
+			comment_finder.reset_excluded_nodes
+				-- The AST may or may not contain the dot.
+				-- So we have to print them explicitly here.
+			tokens.dot_symbol.process (Current)
+			l_qualified_feature_name := a_type.qualified_name
+			l_feature_name := l_qualified_feature_name.feature_name
+			l_feature_name.process (Current)
+			comment_finder.add_excluded_node (l_feature_name)
+			comment_finder.find_comments (l_qualified_feature_name, comment_list)
+			comment_finder.reset_excluded_nodes
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		local
+			l_qualified_feature_name: ET_QUALIFIED_FEATURE_NAME
+			l_feature_name: ET_FEATURE_NAME
+		do
+			a_type.target_type.process (Current)
+				-- The AST may or may not contain the dot.
+				-- So we have to print them explicitly here.
+			tokens.dot_symbol.process (Current)
+			l_qualified_feature_name := a_type.qualified_name
+			l_feature_name := l_qualified_feature_name.feature_name
+			l_feature_name.process (Current)
+			comment_finder.add_excluded_node (l_feature_name)
+			comment_finder.find_comments (l_qualified_feature_name, comment_list)
+			comment_finder.reset_excluded_nodes
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is

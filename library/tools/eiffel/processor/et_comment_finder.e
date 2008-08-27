@@ -167,6 +167,8 @@ inherit
 			process_prefix_expression,
 			process_prefix_name,
 			process_qualified_call,
+			process_qualified_like_braced_type,
+			process_qualified_like_type,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
@@ -1475,6 +1477,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_call) then
 				precursor (a_call)
+			end
+		end
+
+	process_qualified_like_braced_type (a_type: ET_QUALIFIED_LIKE_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			if not excluded_nodes.has (a_type) then
+				precursor (a_type)
+			end
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			if not excluded_nodes.has (a_type) then
+				precursor (a_type)
 			end
 		end
 
