@@ -13732,8 +13732,9 @@ feature {NONE} -- Polymorphic call functions generation
 				current_file.put_character (' ')
 				current_file.put_character ('{')
 				current_file.put_new_line
-				from l_target_dynamic_types.start until l_target_dynamic_types.after loop
-					l_dynamic_type := l_target_dynamic_types.item_for_iteration
+				nb := l_target_dynamic_type_ids.count
+				from i := 1 until i > nb loop
+					l_dynamic_type := l_target_dynamic_types.item (l_target_dynamic_type_ids.item (i))
 					print_indentation
 					current_file.put_string (c_case)
 					current_file.put_character (' ')
@@ -13760,7 +13761,7 @@ feature {NONE} -- Polymorphic call functions generation
 						current_file.put_new_line
 					end
 					dedent
-					l_target_dynamic_types.forth
+					i := i + 1
 				end
 				if l_result_type /= Void then
 					print_indentation
