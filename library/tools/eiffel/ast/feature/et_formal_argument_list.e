@@ -75,6 +75,33 @@ feature -- Initialization
 			end
 		end
 
+feature -- Status report
+
+	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Does at least one type of current formal arguments contain
+			-- a formal generic parameter when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			i, nb: INTEGER
+			l_type, l_previous_type: ET_TYPE
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				l_type := storage.item (i).formal_argument.type
+				if l_type /= l_previous_type then
+					if l_type.has_formal_types (a_context) then
+						Result := True
+						i := nb + 1 -- Jump out of the loop
+					end
+					l_previous_type := l_type
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	formal_argument (i: INTEGER): ET_FORMAL_ARGUMENT is

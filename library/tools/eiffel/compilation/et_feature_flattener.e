@@ -785,7 +785,7 @@ feature {NONE} -- Feature processing
 									not l_effective.has_rename and then
 									l_effective.first_seed = l_first_seed and then
 									l_effective.other_seeds = l_other_seeds and then
-									l_effective.parent.actual_parameters = Void and then
+									not l_effective.signature_has_formal_types and then
 									l_effective.clients.same_clients (l_clients)
 								then
 									l_feature_found := True
@@ -816,7 +816,7 @@ feature {NONE} -- Feature processing
 								not l_deferred.has_undefine and then
 								l_deferred.first_seed = l_first_seed and then
 								l_deferred.other_seeds = l_other_seeds and then
-								l_deferred.parent.actual_parameters = Void and then
+								not l_deferred.signature_has_formal_types and then
 								l_deferred.clients.same_clients (l_clients)
 							then
 								l_feature_found := True

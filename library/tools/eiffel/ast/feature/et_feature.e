@@ -297,6 +297,29 @@ feature -- Status report
 			end
 		end
 
+	signature_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Does at least one type in the signature of current feature contain
+			-- a formal generic parameter when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			l_type: like type
+			l_arguments: like arguments
+		do
+			l_type := type
+			if l_type /= Void then
+				Result := l_type.has_formal_types (a_context)
+			end
+			if not Result then
+				l_arguments := arguments
+				if l_arguments /= Void then
+					Result := l_arguments.has_formal_types (a_context)
+				end
+			end
+		end
+
 	is_frozen: BOOLEAN is
 			-- Has feature been declared as frozen?
 		do
