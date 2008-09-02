@@ -19,11 +19,13 @@ inherit
 			base_class as base_class_in_context
 		redefine
 			reset,
+			reset_qualified_anchored_types,
 			is_named_type,
 			is_base_type,
 			has_anchored_type,
-			has_formal_type,
+			named_type_has_formal_type,
 			has_formal_types,
+			named_type_has_formal_types,
 			conforms_from_bit_type,
 			conforms_from_formal_parameter_type,
 			conforms_from_tuple_type,
@@ -56,8 +58,8 @@ inherit
 			conforms_from_class_type as context_conforms_from_class_type,
 			conforms_from_formal_parameter_type as context_conforms_from_formal_parameter_type,
 			conforms_from_tuple_type as context_conforms_from_tuple_type,
-			has_formal_type as context_has_formal_type,
-			has_formal_types as context_has_formal_types,
+			named_type_has_formal_type as context_named_type_has_formal_type,
+			named_type_has_formal_types as context_named_type_has_formal_types,
 			base_type_has_class as context_base_type_has_class,
 			named_type_has_class as context_named_type_has_class
 		redefine
@@ -74,6 +76,18 @@ feature -- Initialization
 			l_parameters := actual_parameters
 			if l_parameters /= Void then
 				l_parameters.reset
+			end
+		end
+
+	reset_qualified_anchored_types is
+			-- Reset qualified anchored types contained in current type
+			-- as they were just after they were last parsed.
+		local
+			l_parameters: like actual_parameters
+		do
+			l_parameters := actual_parameters
+			if l_parameters /= Void then
+				l_parameters.reset_qualified_anchored_types
 			end
 		end
 
@@ -264,7 +278,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context'?
 		local
@@ -272,7 +286,7 @@ feature -- Status report
 		do
 			a_parameters := actual_parameters
 			if a_parameters /= Void then
-				Result := a_parameters.has_formal_type (i, a_context)
+				Result := a_parameters.named_types_have_formal_type (i, a_context)
 			end
 		end
 
@@ -285,6 +299,18 @@ feature -- Status report
 			a_parameters := actual_parameters
 			if a_parameters /= Void then
 				Result := a_parameters.has_formal_types (a_context)
+			end
+		end
+
+	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Does the named type of current type contain a formal generic parameter
+			-- when viewed from `a_context'?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.named_types_have_formal_types (a_context)
 			end
 		end
 
@@ -536,18 +562,18 @@ feature -- Type context
 			Result := is_type_reference (Current)
 		end
 
-	context_has_formal_type (i: INTEGER): BOOLEAN is
+	context_named_type_has_formal_type (i: INTEGER): BOOLEAN is
 			-- Does the named type of current context contain the
 			-- formal generic parameter with index `i'?
 		do
-			Result := has_formal_type (i, Current)
+			Result := named_type_has_formal_type (i, Current)
 		end
 
-	context_has_formal_types: BOOLEAN is
+	context_named_type_has_formal_types: BOOLEAN is
 			-- Does the named type of current context
 			-- contain a formal generic parameter?
 		do
-			Result := has_formal_types (Current)
+			Result := named_type_has_formal_types (Current)
 		end
 
 	context_base_type_has_class (a_class: ET_CLASS): BOOLEAN is

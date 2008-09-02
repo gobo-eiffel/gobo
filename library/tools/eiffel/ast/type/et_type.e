@@ -43,6 +43,12 @@ feature -- Initialization
 		do
 		end
 
+	reset_qualified_anchored_types is
+			-- Reset qualified anchored types contained in current type
+			-- as they were just after it were last parsed.
+		do
+		end
+
 feature -- Access
 
 	base_class (a_context: ET_TYPE_CONTEXT): ET_CLASS is
@@ -262,7 +268,7 @@ feature -- Status report
 			-- Result := False
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context'?
 		require
@@ -275,6 +281,17 @@ feature -- Status report
 		end
 
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Does current type contain a formal generic parameter
+			-- when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			-- Result := False
+		end
+
+	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		require
@@ -285,8 +302,10 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Is current type a formal parameter when viewed from `a_context'?
+	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is named type of current type, or if it is a qualified type
+			-- is the named type of its  target type (recursively),
+			-- a formal parameter when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context

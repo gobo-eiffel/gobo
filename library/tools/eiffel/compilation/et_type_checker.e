@@ -731,67 +731,139 @@ feature {NONE} -- Validity checking
 			a_type_not_void: a_type /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		local
-			a_name: ET_FEATURE_NAME
-			a_query: ET_QUERY
+			l_seed: INTEGER
+			l_name: ET_FEATURE_NAME
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-			an_argument_name: ET_IDENTIFIER
+			l_index: INTEGER
+			l_argument_name: ET_IDENTIFIER
 			resolved: BOOLEAN
 			l_feature: ET_FEATURE
 		do
 			has_fatal_error := False
-			a_name := a_type.name
-			if a_name.seed = 0 then
-					-- Not resolved yet.
-				current_class_impl.process (current_system.interface_checker)
-				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
+			l_seed := a_type.seed
+			if l_seed = 0 then
+					-- Not resolved yet. It needs to be resolved
+					-- in the implementation class first.
+				if current_class /= current_class_impl then
+						-- Internal error: it should have been resolved in
+						-- the implementation class.
 					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-					a_query := current_class_impl.named_query (a_name)
-					if a_query /= Void then
-							-- This is a 'like feature'.
-						a_type.resolve_like_feature (a_query)
-						resolved := True
+					current_class.process (current_system.interface_checker)
+					if not current_class.interface_checked or else current_class.has_interface_error then
+						set_fatal_error
 					else
-							-- This has to be a 'like argument', otherwise this is an error.
-							-- Note that 'like argument' is not a valid construct in ECMA Eiffel.
-							-- This is supported here for backward compatibility.
-						l_feature ?= current_feature_impl
-						if l_feature /= Void then
-							an_argument_name ?= a_name
-							if an_argument_name /= Void then
-								args := l_feature.arguments
-								if args /= Void then
-									an_index := args.index_of (an_argument_name)
-									if an_index /= 0 then
-										an_argument_name.set_seed (an_index)
-										an_argument_name.set_argument (True)
-										a_type.resolve_like_argument (l_feature)
-										resolved := True
+						l_name := a_type.name
+						l_query := current_class.named_query (l_name)
+						if l_query /= Void then
+								-- This is a 'like feature'.
+							a_type.resolve_like_feature (l_query)
+							resolved := True
+							if in_qualified_anchored_type then
+								if  l_query.type.has_anchored_type (current_class) then
+										-- Error: the type of the anchor appearing in a qualified
+										-- anchored type should not contain other anchored types.
+										-- This is a way to avoid cycles in qualified anchored types.
+									set_fatal_error
+									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+								end
+							end
+						else
+								-- This has to be a 'like argument', otherwise this is an error.
+								-- Note that 'like argument' is not a valid construct in ECMA Eiffel.
+								-- This is supported here for backward compatibility.
+							l_feature ?= current_feature_impl
+							if l_feature /= Void then
+								l_argument_name ?= l_name
+								if l_argument_name /= Void then
+									args := l_feature.arguments
+									if args /= Void then
+										l_index := args.index_of (l_argument_name)
+										if l_index /= 0 then
+											l_argument_name.set_seed (l_index)
+											l_argument_name.set_argument (True)
+											a_type.resolve_like_argument (l_feature)
+											resolved := True
+											if in_qualified_anchored_type then
+												if args.item (l_index).type.has_anchored_type (current_class) then
+														-- Error: the type of the anchor appearing in a qualified
+														-- anchored type should not contain other anchored types.
+														-- This is a way to avoid cycles in qualified anchored types.
+													set_fatal_error
+													error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+												end
+											end
+										end
 									end
 								end
 							end
 						end
-					end
-					if not resolved then
-						set_fatal_error
-						if l_feature /= Void then
-							if current_class = current_class_impl then
+						if not resolved then
+							set_fatal_error
+							if l_feature /= Void then
 								error_handler.report_vtat1b_error (current_class, l_feature, a_type)
 							else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-								error_handler.report_vtat1b_error (current_class_impl, l_feature, a_type)
-							end
-						else
-								-- 'like argument' not valid in inline agents and invariants.
-							if current_class = current_class_impl then
+									-- 'like argument' not valid in inline agents and invariants.
 								error_handler.report_vtat1a_error (current_class, a_type)
-							else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-								error_handler.report_vtat1a_error (current_class_impl, a_type)
 							end
 						end
 					end
+				end
+			elseif in_qualified_anchored_type then
+				if l_seed /= 0 then
+						-- Anchored type already resolved.
+					if a_type.is_like_argument then
+						if a_type.is_procedure then
+							l_feature := current_class.seeded_procedure (l_seed)
+						else
+							l_feature := current_class.seeded_query (l_seed)
+						end
+						if l_feature /= Void then
+							args := l_feature.arguments
+							l_index := a_type.index
+							if args /= Void and then l_index <= args.count then
+								if args.item (l_index).type.has_anchored_type (current_class) then
+										-- Error: the type of the anchor appearing in a qualified
+										-- anchored type should not contain other anchored types.
+										-- This is a way to avoid cycles in qualified anchored types.
+									set_fatal_error
+									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+								end
+							else
+									-- Internal error: it was already checked in previous compilation
+									-- pass that we had enough arguments. Even if this is a redeclaration,
+									-- signature conformance of the redeclaration imposes that the
+									-- number of arguments does not change.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							end
+						else
+								-- Internal error: if we got a seed, then `l_feature' should not be void.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+					else
+						l_query := current_class.seeded_query (l_seed)
+						if l_query /= Void then
+							if  l_query.type.has_anchored_type (current_class) then
+									-- Error: the type of the anchor appearing in a qualified
+									-- anchored type should not contain other anchored types.
+									-- This is a way to avoid cycles in qualified anchored types.
+								set_fatal_error
+								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+							end
+						else
+								-- Internal error: if we got a seed, then `l_query' should not be void.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+					end
+				else
+						-- Internal error: the anchored type should have been resolved by the feature flattener.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				end
 			end
 		end
@@ -809,11 +881,15 @@ feature {NONE} -- Validity checking
 			l_query: ET_QUERY
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
+			old_in_qualified_anchored_type: BOOLEAN
 		do
 			has_fatal_error := False
+			old_in_qualified_anchored_type := in_qualified_anchored_type
+			in_qualified_anchored_type := True
 			l_target_type := a_type.target_type
 			l_target_type.process (Current)
 			if not has_fatal_error then
+				report_qualified_anchored_type_supplier (l_target_type, current_type)
 				l_seed := a_type.seed
 				if l_seed = 0 then
 						-- Not resolved yet. It needs to be resolved
@@ -824,7 +900,7 @@ feature {NONE} -- Validity checking
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						l_class := l_target_type.base_class (current_class)
+						l_class := l_target_type.base_class (current_type)
 						l_class.process (current_system.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
@@ -833,14 +909,22 @@ feature {NONE} -- Validity checking
 							if l_query /= Void then
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
+								if  l_query.type.has_anchored_type (current_type) then
+										-- Error: the type of the anchor appearing in a qualified
+										-- anchored type should not contain other anchored types.
+										-- This is a way to avoid cycles in qualified anchored types.
+									set_fatal_error
+									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+								end
 							else
+									-- Error: there is no query with this final name.
 								set_fatal_error
 								error_handler.report_vtat1c_error (current_class, a_type, l_class)
 							end
 						end
 					end
 				else
-					l_class := l_target_type.base_class (current_class)
+					l_class := l_target_type.base_class (current_type)
 					l_class.process (current_system.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
@@ -848,14 +932,22 @@ feature {NONE} -- Validity checking
 						l_query := l_class.seeded_query (l_seed)
 						if l_query /= Void then
 -- TODO: check that `l_query' is exported to `current_class'.
+							if l_query.type.has_anchored_type (current_type) then
+									-- Error: the type of the anchor appearing in a qualified
+									-- anchored type should not contain other anchored types.
+									-- This is a way to avoid cycles in qualified anchored types.
+								set_fatal_error
+								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+							end
 						else
-								-- Internal error: if we got a seed, the `l_query' should not be void.
+								-- Internal error: if we got a seed, then `l_query' should not be void.
 							set_fatal_error
 							error_handler.report_giaaa_error
 						end
 					end
 				end
 			end
+			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
 	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is
@@ -883,6 +975,36 @@ feature {NONE} -- Validity checking
 				end
 			end
 			reset_fatal_error (had_error)
+		end
+
+feature -- Client/Supplier relationship
+
+	supplier_handler: ET_SUPPLIER_HANDLER
+			-- Supplier handler
+
+	set_supplier_handler (a_handler: like supplier_handler) is
+			-- Set `supplier_handler' to `a_handler'.
+		do
+			supplier_handler := a_handler
+		ensure
+			supplier_handler_set: supplier_handler = a_handler
+		end
+
+feature {NONE} -- Client/Supplier relationship
+
+	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE) is
+			-- Report the fact that `a_supplier' is the target type of a
+			-- qualified anchored type in a feature or invariant in type `a_client'.
+			-- (Note that `a_supplier' is assumed to be interpreted in
+			-- the context of `a_client'.)
+		require
+			a_supplier_not_void: a_supplier /= Void
+			a_client_not_void: a_client /= Void
+			a_client_valid: a_client.is_valid_context
+		do
+			if supplier_handler /= Void then
+				supplier_handler.report_qualified_anchored_type_supplier (a_supplier, a_client)
+			end
 		end
 
 feature {ET_AST_NODE} -- Type processing
@@ -959,6 +1081,9 @@ feature {NONE} -- Access
 
 	current_type: ET_BASE_TYPE
 			-- Base type where the type appears
+
+	in_qualified_anchored_type: BOOLEAN
+			-- Is the type being checked contained in a qualified anchored type?
 
 feature {NONE} -- Implementation
 

@@ -17,11 +17,13 @@ inherit
 	ET_LIKE_IDENTIFIER
 		redefine
 			reset,
+			reset_qualified_anchored_types,
 			named_type,
 			shallow_named_type,
 			named_type_has_class,
-			is_formal_type,
-			has_formal_type,
+			named_type_is_formal_type,
+			named_type_has_formal_types,
+			named_type_has_formal_type,
 			has_formal_types,
 			same_syntactical_qualified_like_identifier,
 			same_named_bit_type,
@@ -45,6 +47,14 @@ feature -- Initialization
 		do
 			name.reset
 			target_type.reset
+		end
+
+	reset_qualified_anchored_types is
+			-- Reset qualified anchored types contained in current type
+			-- as they were just after they were last parsed.
+		do
+			name.reset
+			target_type.reset_qualified_anchored_types
 		end
 
 feature -- Access
@@ -423,7 +433,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context'?
 		local
@@ -441,7 +451,7 @@ feature -- Status report
 				l_query := l_class.seeded_query (seed)
 				if l_query /= Void then
 					l_target_context := a_context.new_type_context (l_target_type)
-					Result := l_query.type.has_formal_type (i, l_target_context)
+					Result := l_query.type.named_type_has_formal_type (i, l_target_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -452,6 +462,13 @@ feature -- Status report
 		end
 
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Does current type contain a formal generic parameter
+			-- when viewed from `a_context'?
+		do
+			Result := target_type.has_formal_types (a_context)
+		end
+
+	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		local
@@ -469,7 +486,7 @@ feature -- Status report
 				l_query := l_class.seeded_query (seed)
 				if l_query /= Void then
 					l_target_context := a_context.new_type_context (l_target_type)
-					Result := l_query.type.has_formal_types (l_target_context)
+					Result := l_query.type.named_type_has_formal_types (l_target_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -479,12 +496,35 @@ feature -- Status report
 			end
 		end
 
-	is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Is current type a formal parameter when viewed from
-			-- `a_context', or if it is a qualified type is its
-			-- target type (recursively) a formal parameter?
+	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is named type of current type, or if it is a qualified type
+			-- is the named type of its  target type (recursively),
+			-- a formal parameter when viewed from `a_context'?
+		local
+			l_base_class: ET_CLASS
+			l_query: ET_QUERY
+			l_target_type: ET_TYPE
+			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
-			Result := target_type.is_formal_type (a_context)
+			l_target_type := target_type
+			if l_target_type.named_type_is_formal_type (a_context) then
+				Result := True
+			elseif seed = 0 then
+					-- Qualified anchored type not resolved yet.
+				Result := False
+			else
+				l_base_class := l_target_type.base_class (a_context)
+				l_query := l_base_class.seeded_query (seed)
+				if l_query /= Void then
+					l_target_context := a_context.new_type_context (l_target_type)
+					Result := l_query.type.named_type_is_formal_type (l_target_context)
+				else
+						-- Internal error: an inconsistency has been
+						-- introduced in the AST since we relsolved
+						-- current qualified anchored type.
+					Result := False
+				end
+			end
 		end
 
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is
@@ -947,7 +987,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.is_formal_type (a_context) then
+				if l_target_type.named_type_is_formal_type (a_context) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
@@ -984,7 +1024,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.is_formal_type (a_context) then
+				if l_target_type.named_type_is_formal_type (a_context) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
@@ -1021,7 +1061,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.is_formal_type (a_context) then
+				if l_target_type.named_type_is_formal_type (a_context) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False
@@ -1058,7 +1098,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			else
 				l_target_type := target_type
-				if l_target_type.is_formal_type (a_context) then
+				if l_target_type.named_type_is_formal_type (a_context) then
 						-- Current type is of the unfolded form 'like {G}.a'
 						-- and only 'like {G}.a' conforms to itself.
 					Result := False

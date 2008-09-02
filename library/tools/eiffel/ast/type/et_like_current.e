@@ -19,8 +19,8 @@ inherit
 			named_type,
 			named_type_has_class,
 			is_like_current,
-			has_formal_type,
-			has_formal_types,
+			named_type_has_formal_type,
+			named_type_has_formal_types,
 			same_syntactical_like_current,
 			same_named_bit_type,
 			same_named_class_type,
@@ -209,18 +209,18 @@ feature -- Status report
 			Result := a_context.base_class.is_expanded
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context'?
 		do
-			Result := a_context.has_formal_type (i)
+			Result := a_context.named_type_has_formal_type (i)
 		end
 
-	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		do
-			Result := a_context.has_formal_types
+			Result := a_context.named_type_has_formal_types
 		end
 
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is

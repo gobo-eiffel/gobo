@@ -273,7 +273,7 @@ feature {ET_AST_NODE} -- Type processing
 		do
 			a_parameters := a_type.actual_parameters
 			if a_parameters /= Void then
-				resolve_actual_parameters (a_type.actual_parameters)
+				resolve_actual_parameters (a_parameters)
 			end
 		end
 

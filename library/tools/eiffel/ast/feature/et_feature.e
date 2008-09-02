@@ -44,7 +44,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset feature as it was just after it was last parsed.
+			-- Reset current feature as it was just after it was last parsed.
 		local
 			l_type: like type
 			l_arguments: like arguments
@@ -67,11 +67,12 @@ feature -- Initialization
 		end
 
 	reset_after_features_flattened is
-			-- Reset features at index 1 to `declared_count' as they were just after its features were last flattened.
+			-- Reset current feature as it was just after it was last flattened.
 		local
 			l_preconditions: like preconditions
 			l_postconditions: like postconditions
 		do
+			reset_signature_qualified_anchored_types
 			if assertions_checked then
 				l_preconditions := preconditions
 				if l_preconditions /= Void then
@@ -84,6 +85,23 @@ feature -- Initialization
 			end
 			reset_assertions_checked
 			reset_implementation_checked
+		end
+
+	reset_signature_qualified_anchored_types is
+			-- Reset qualified anchored types contained in signature of
+			-- current feature as they were just after they were last parsed.
+		local
+			l_type: like type
+			l_arguments: like arguments
+		do
+			l_type := type
+			if l_type /= Void then
+				l_type.reset_qualified_anchored_types
+			end
+			l_arguments := arguments
+			if l_arguments /= Void then
+				l_arguments.reset_qualified_anchored_types
+			end
 		end
 
 feature -- Access

@@ -59,6 +59,19 @@ feature -- Initialization
 			end
 		end
 
+	reset_qualified_anchored_types is
+			-- Reset qualified anchored types contained in current actual parameters
+			-- as they were just after they were last parsed.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				storage.item (i).type.reset_qualified_anchored_types
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	actual_parameter (i: INTEGER): ET_ACTUAL_PARAMETER is
@@ -211,7 +224,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_types_have_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of one of current types contain the formal generic
 			-- parameter with index `i' when viewed from `a_context'?
 		require
@@ -223,7 +236,7 @@ feature -- Status report
 		do
 			nb := count - 1
 			from j := 0 until j > nb loop
-				if storage.item (j).type.has_formal_type (i, a_context) then
+				if storage.item (j).type.named_type_has_formal_type (i, a_context) then
 					Result := True
 					j := nb + 1 -- Jump out of the loop.
 				else
@@ -233,7 +246,7 @@ feature -- Status report
 		end
 
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of one current types contain a formal generic
+			-- Does one of the current types contain a formal generic
 			-- parameter when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
@@ -245,6 +258,27 @@ feature -- Status report
 			nb := count - 1
 			from i := 0 until i > nb loop
 				if storage.item (i).type.has_formal_types (a_context) then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	named_types_have_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Does the named type of one of the current types contain a formal generic
+			-- parameter when viewed from `a_context'?
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).type.named_type_has_formal_types (a_context) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

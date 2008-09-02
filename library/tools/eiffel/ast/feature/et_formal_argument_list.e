@@ -46,13 +46,31 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset formal arguments as they were when they were first parsed.
+			-- Reset formal arguments as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
 				storage.item (i).formal_argument.reset
+				i := i + 1
+			end
+		end
+
+	reset_qualified_anchored_types is
+			-- Reset qualified anchored types contained in the types of
+			-- formal arguments as they were just after they were last parsed.
+		local
+			i, nb: INTEGER
+			l_type, l_previous_type: ET_TYPE
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				l_type := storage.item (i).formal_argument.type
+				if l_type /= l_previous_type then
+					l_type.reset_qualified_anchored_types
+					l_previous_type := l_type
+				end
 				i := i + 1
 			end
 		end

@@ -31,7 +31,7 @@ inherit
 feature -- Initialization
 
 	reset_after_features_flattened is
-			-- Reset features at index 1 to `declared_count' as they were just after its features were last flattened.
+			-- Reset current feature as it was just after it was last flattened.
 		do
 			if implementation_checked then
 				if locals /= Void then

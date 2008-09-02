@@ -103,6 +103,25 @@ feature -- Setting
 			right_brace_set: right_brace = a_brace
 		end
 
+feature -- Type processing
+
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_BRACED_TYPE is
+			-- Version of current type where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
+		local
+			l_type: ET_TYPE
+		do
+			l_type := type.resolved_formal_parameters (a_parameters)
+			if l_type /= type then
+				create Result.make (l_type)
+				Result.set_left_brace (left_brace)
+				Result.set_right_brace (right_brace)
+			else
+				Result := Current
+			end
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is

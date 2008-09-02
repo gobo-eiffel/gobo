@@ -37,15 +37,19 @@ feature {NONE} -- Initialization
 			-- Create a new interface status checker for given classes.
 		do
 			precursor {ET_CLASS_PROCESSOR}
-			create class_type_checker.make
+			create qualified_anchored_type_checker.make
+			create class_type_flattening_checker.make
+			create class_type_interface_checker.make
 		end
 
 feature -- Processing
 
 	process_class (a_class: ET_CLASS) is
 			-- Check whether the interface of `a_class' need to be checked again
-			-- after some classes have been modified in the Eiffel system. Also
-			-- check whether none of the classes appearing in the parent types
+			-- after some classes have been modified in the Eiffel system.
+			-- Check whether none of the base classes of the anchors of qualified anchored types
+			-- appearing in the types of all signatures of `a_class' have been modified.
+			-- Also, check whether none of the classes appearing in the parent types
 			-- or formal generic parameter constraints have been modified.
 			-- If `has_interface_error' is True, it means that this class
 			-- has not been checked yet. False means that it has already
@@ -88,8 +92,10 @@ feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS) is
 			-- Check whether the interface of `a_class' need to be checked again
-			-- after some classes have been modified in the Eiffel system. Also
-			-- check whether none of the classes appearing in the parent types
+			-- after some classes have been modified in the Eiffel system.
+			-- Check whether none of the base classes of the anchors of qualified anchored types
+			-- appearing in the types of all signatures of `a_class' have been modified.
+			-- Also, check whether none of the classes appearing in the parent types
 			-- or formal generic parameter constraints have been modified.
 			-- If `has_interface_error' is True, it means that this class
 			-- has not been checked yet. False means that it has already
@@ -145,6 +151,7 @@ feature {NONE} -- Processing
 				if l_reset_needed then
 					set_fatal_error (current_class)
 				else
+					check_qualified_anchored_signatures_validity
 					if not current_class.is_dotnet then
 							-- No need to check validity of .NET classes.
 						check_formal_parameters_validity
@@ -156,6 +163,21 @@ feature {NONE} -- Processing
 		ensure
 			interface_checked: not a_class.interface_checked or else not a_class.has_interface_error
 		end
+
+feature {NONE} -- Signature validity
+
+	check_qualified_anchored_signatures_validity is
+			-- Check whether none of the base classes of the anchors of qualified anchored types
+			-- appearing in the types of all signatures of `current_class' have been modified.
+		do
+			qualified_anchored_type_checker.check_signatures_validity (current_class)
+			if qualified_anchored_type_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
+		end
+
+	qualified_anchored_type_checker: ET_QUALIFIED_ANCHORED_TYPE_STATUS_CHECKER
+			-- Qualified anchored type status checker
 
 feature {NONE} -- Formal parameters and parents validity
 
@@ -180,8 +202,8 @@ feature {NONE} -- Formal parameters and parents validity
 								-- of the constraint if any is still valid. But that would
 								-- be too long to check. We don't need such level of
 								-- fine-grained checking here.
-							class_type_checker.check_type_validity (l_constraint)
-							if class_type_checker.has_fatal_error then
+							class_type_flattening_checker.check_type_validity (l_constraint)
+							if class_type_flattening_checker.has_fatal_error then
 								set_fatal_error (current_class)
 								i := nb + 1 -- Jump out of the loop.
 							end
@@ -210,8 +232,8 @@ feature {NONE} -- Formal parameters and parents validity
 							-- the corresponding formal generic parameters have a constraint
 							-- with a creation clause. But that would be too long to check.
 							-- We don't need such level of fine-grained checking here.
-						class_type_checker.check_type_validity (l_parents.parent (i).type)
-						if class_type_checker.has_fatal_error then
+						class_type_interface_checker.check_type_validity (l_parents.parent (i).type)
+						if class_type_interface_checker.has_fatal_error then
 							set_fatal_error (current_class)
 							i := nb + 1 -- Jump out of the loop.
 						end
@@ -221,11 +243,17 @@ feature {NONE} -- Formal parameters and parents validity
 			end
 		end
 
-	class_type_checker: ET_CLASS_TYPE_CHECKER3
-			-- Class type checker
+	class_type_flattening_checker: ET_CLASS_TYPE_STATUS_CHECKER3
+			-- Class type flattening checker
+
+	class_type_interface_checker: ET_CLASS_TYPE_STATUS_CHECKER4
+			-- Class type interface checker
+
 
 invariant
 
-	class_type_checker_not_void: class_type_checker /= Void
+	class_type_flattening_checker_not_void: class_type_flattening_checker /= Void
+	class_type_interface_checker_not_void: class_type_interface_checker /= Void
+	qualified_anchored_type_checker_not_void: qualified_anchored_type_checker /= Void
 
 end

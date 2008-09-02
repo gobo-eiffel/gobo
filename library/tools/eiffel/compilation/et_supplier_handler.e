@@ -145,4 +145,16 @@ feature -- Reporting
 		deferred
 		end
 
+	report_qualified_anchored_type_supplier (a_supplier: ET_TYPE; a_client: ET_BASE_TYPE) is
+			-- Report the fact that `a_supplier' is the target type of a
+			-- qualified anchored type in a feature or invariant in type `a_client'.
+			-- (Note that `a_supplier' is assumed to be interpreted in
+			-- the context of `a_client'.)
+		require
+			a_supplier_not_void: a_supplier /= Void
+			a_client_not_void: a_client /= Void
+			a_client_valid: a_client.is_valid_context
+		deferred
+		end
+
 end

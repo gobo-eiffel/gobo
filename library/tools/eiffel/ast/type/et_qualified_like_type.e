@@ -18,6 +18,9 @@ class ET_QUALIFIED_LIKE_TYPE
 inherit
 
 	ET_QUALIFIED_LIKE_IDENTIFIER
+		redefine
+			resolved_formal_parameters
+		end
 
 create
 
@@ -54,6 +57,24 @@ feature -- Access
 
 	target_type: ET_LIKE_TYPE
 			-- Target anchored type
+
+feature -- Type processing
+
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_TYPE is
+			-- Version of current type where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
+		local
+			l_target_type: like target_type
+			l_resolved_target_type: like target_type
+		do
+			Result := Current
+			l_target_type := target_type
+			l_resolved_target_type := l_target_type.resolved_formal_parameters (a_parameters)
+			if l_target_type /= l_resolved_target_type then
+				create Result.make (l_resolved_target_type, qualified_name)
+			end
+		end
 
 feature -- Output
 

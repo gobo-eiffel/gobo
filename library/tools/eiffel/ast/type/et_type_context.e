@@ -176,7 +176,7 @@ feature -- Status report
 		deferred
 		end
 
-	has_formal_type (i: INTEGER): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER): BOOLEAN is
 			-- Does the named type of current context contain the
 			-- formal generic parameter with index `i'?
 		require
@@ -186,7 +186,7 @@ feature -- Status report
 		deferred
 		end
 
-	has_formal_types: BOOLEAN is
+	named_type_has_formal_types: BOOLEAN is
 			-- Does the named type of current context
 			-- contain a formal generic parameter?
 		require

@@ -38,8 +38,11 @@ feature {NONE} -- Initialization
 			-- Create a new interface checker for given classes.
 		do
 			precursor {ET_CLASS_PROCESSOR}
+			create classes_to_be_processed.make (10)
 			create parent_checker3.make
-			create qualified_identifier_type_resolver.make
+			parent_checker3.set_classes_to_be_processed (classes_to_be_processed)
+			create qualified_anchored_type_checker.make
+			qualified_anchored_type_checker.set_classes_to_be_processed (classes_to_be_processed)
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create feature_adaptation_resolver.make
@@ -51,6 +54,9 @@ feature -- Processing
 
 	process_class (a_class: ET_CLASS) is
 			-- Flatten fetaures of `a_class' is not already done.
+			-- Then check validity of qualified anchored types appearing
+			-- in signatures, and check signature conformance in case of
+			-- redeclaration if this could not be done already.
 			-- Then check validity of the constraint creations of
 			-- formal parameters of `a_class' and of the actual
 			-- paramaters of its parents after having done
@@ -95,6 +101,9 @@ feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS) is
 			-- Flatten features of `a_class' is not already done.
+			-- Then check validity of qualified anchored types appearing
+			-- in signatures, and check signature conformance in case of
+			-- redeclaration if this could not be done already.
 			-- Then check validity of the constraint creations of
 			-- formal parameters of `a_class' and of the actual
 			-- paramaters of its parents after having done
@@ -107,6 +116,7 @@ feature {NONE} -- Processing
 			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 			i, nb: INTEGER
+			l_other_class: ET_CLASS
 		do
 			old_class := current_class
 			current_class := a_class
@@ -148,7 +158,7 @@ feature {NONE} -- Processing
 					end
 					if not current_class.has_interface_error then
 						error_handler.report_compilation_status (Current, current_class)
-						resolve_qualified_identifier_signatures
+						check_qualified_anchored_signatures_validity
 						if not current_class.redeclared_signatures_checked then
 								-- An error occurred when checking the conformance of
 								-- redeclared signatures in the feature flattener. This
@@ -169,80 +179,45 @@ feature {NONE} -- Processing
 				end
 			end
 			current_class := old_class
+			from
+			until
+				classes_to_be_processed.is_empty
+			loop
+				l_other_class := classes_to_be_processed.last
+				classes_to_be_processed.remove (l_other_class)
+				if l_other_class.is_none then
+					l_other_class.set_interface_checked
+				elseif not l_other_class.is_preparsed then
+					set_fatal_error (current_class)
+				else
+						-- This is a controlled recursive call to `internal_process_class'.
+					internal_process_class (l_other_class)
+					if l_other_class.has_interface_error then
+						set_fatal_error (current_class)
+					end
+				end
+			end
 		ensure
 			interface_checked: a_class.interface_checked
 		end
 
-feature {NONE} -- Signature resolving
-
-	resolve_qualified_identifier_signatures
-			-- Resolve identifiers in qualified anchored types (such as in
-			-- 'like a.identifier' and 'like {A}.identifier') in types 
-			-- appearing in the signature of features declared or redeclared
-			-- in `current_class'. (Non-redeclared inherited features have
-			-- already had their qualified anchored type identifiers resolved
-			-- in the ancestor classes of `current_class'.)
-		local
-			l_queries: ET_QUERY_LIST
-			l_procedures: ET_PROCEDURE_LIST
-			i, nb: INTEGER
-		do
-			l_queries := current_class.queries
-			nb := l_queries.declared_count
-			from i := 1 until i > nb loop
-				resolve_qualified_identifier_signature (l_queries.item (i))
-				i := i + 1
-			end
-			l_procedures := current_class.procedures
-			nb := l_procedures.declared_count
-			from i := 1 until i > nb loop
-				resolve_qualified_identifier_signature (l_procedures.item (i))
-				i := i + 1
-			end
-		end
-
-	resolve_qualified_identifier_signature (a_feature: ET_FEATURE) is
-			-- Resolve identifiers in qualified anchored types (such as in
-			-- 'like a.identifier' and 'like {A}.identifier') in types 
-			-- appearing in the signature of `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			a_type, previous_type: ET_TYPE
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_arg: ET_FORMAL_ARGUMENT
-			i, nb: INTEGER
-		do
-			a_type := a_feature.type
-			if a_type /= Void then
-				qualified_identifier_type_resolver.resolve_type (a_type, current_class)
-				if qualified_identifier_type_resolver.has_fatal_error then
-					set_fatal_error (current_class)
-				end
-			end
-			args := a_feature.arguments
-			if args /= Void then
-				nb := args.count
-				from i := 1 until i > nb loop
-					an_arg := args.formal_argument (i)
-					a_type := an_arg.type
-					if a_type /= previous_type then
-							-- Not resolved yet.
-						qualified_identifier_type_resolver.resolve_type (a_type, current_class)
-						if qualified_identifier_type_resolver.has_fatal_error then
-							set_fatal_error (current_class)
-						end
-						previous_type := a_type
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	qualified_identifier_type_resolver: ET_QUALIFIED_IDENTIFIER_TYPE_RESOLVER
-			-- Qualified identifier type resolver
-
 feature {NONE} -- Signature validity
+
+	check_qualified_anchored_signatures_validity is
+			-- Check validity of qualified anchored types involved in
+			-- the types of all signatures of `current_class'.
+			-- Resolve identifiers in qualified anchored types (such as in
+			-- 'like a.identifier' and 'like {A}.identifier') if not already done.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			qualified_anchored_type_checker.check_signatures_validity (current_class)
+			if qualified_anchored_type_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
+		end
+
+	qualified_anchored_type_checker: ET_QUALIFIED_ANCHORED_TYPE_CHECKER
+			-- Qualified anchored type checker
 
 	check_signatures_validity is
 			-- Check signature validity for redeclarations and joinings
@@ -449,32 +424,33 @@ feature {NONE} -- Parents validity
 
 	check_parents_validity is
 			-- Check validity of parents of `current_class'.
-		local
-			old_class: ET_CLASS
 		do
-				-- There might be controlled recursive calls
-				-- to `process', hence the following precaution
-				-- with `current_class'.
-			old_class := current_class
-			current_class := tokens.unknown_class
-			parent_checker3.check_parents_validity (old_class)
+			parent_checker3.check_parents_validity (current_class)
 			if parent_checker3.has_fatal_error then
-				set_fatal_error (old_class)
+				set_fatal_error (current_class)
 			end
-			current_class := old_class
 		end
 
 	parent_checker3: ET_PARENT_CHECKER3
 			-- Parent validity checker (third pass)
 
+feature {NONE} -- Access
+
+	classes_to_be_processed: DS_HASH_SET [ET_CLASS]
+			-- Classes that need to be processed as a result of processing `current_class';
+			-- `current_class' will not be fully valid unless these classes are also
+			-- successfully processed.
+
 invariant
 
 	parent3_checker_not_void: parent_checker3 /= Void
-	qualified_identifier_type_resolver_not_void: qualified_identifier_type_resolver /= Void
+	qualified_anchored_type_checker_not_void: qualified_anchored_type_checker /= Void
 	named_features_not_void: named_features /= Void
 	no_void_named_feature: not named_features.has_item (Void)
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
 	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
 	signature_checker_not_void: signature_checker /= Void
+	classes_to_be_processed_not_void: classes_to_be_processed /= Void
+	no_void_class_to_be_processed: not classes_to_be_processed.has (Void)
 
 end

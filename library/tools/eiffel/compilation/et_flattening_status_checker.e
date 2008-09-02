@@ -220,6 +220,7 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 			l_queries: ET_QUERY_LIST
 			l_query: ET_QUERY
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
+			l_type, l_previous_type: ET_TYPE
 			i, nb: INTEGER
 			j, nb2: INTEGER
 		do
@@ -230,13 +231,18 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 					l_procedure := l_procedures.item (i)
 					l_arguments := l_procedure.arguments
 					if l_arguments /= Void then
+						l_previous_type := Void
 						nb2 := l_arguments.count
 						from j := 1 until j > nb2 loop
-							class_type_checker.check_type_validity (l_arguments.formal_argument (j).type)
-							if class_type_checker.has_fatal_error then
-								set_fatal_error (current_class)
-								j := nb2 + 1 -- Jump out of the inner loop.
-								i := nb + 1 -- Jump out of the outer loop.
+							l_type := l_arguments.formal_argument (j).type
+							if l_type /= l_previous_type then
+								class_type_checker.check_type_validity (l_type)
+								if class_type_checker.has_fatal_error then
+									set_fatal_error (current_class)
+									j := nb2 + 1 -- Jump out of the inner loop.
+									i := nb + 1 -- Jump out of the outer loop.
+								end
+								l_previous_type := l_type
 							end
 							j := j + 1
 						end
@@ -256,13 +262,18 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 					else
 						l_arguments := l_query.arguments
 						if l_arguments /= Void then
+							l_previous_type := Void
 							nb2 := l_arguments.count
 							from j := 1 until j > nb2 loop
-								class_type_checker.check_type_validity (l_arguments.formal_argument (j).type)
-								if class_type_checker.has_fatal_error then
-									set_fatal_error (current_class)
-									j := nb2 + 1 -- Jump out of the inner loop.
-									i := nb + 1 -- Jump out of the outer loop.
+								l_type := l_arguments.formal_argument (j).type
+								if l_type /= l_previous_type then
+									class_type_checker.check_type_validity (l_type)
+									if class_type_checker.has_fatal_error then
+										set_fatal_error (current_class)
+										j := nb2 + 1 -- Jump out of the inner loop.
+										i := nb + 1 -- Jump out of the outer loop.
+									end
+									l_previous_type := l_type
 								end
 								j := j + 1
 							end
@@ -273,7 +284,7 @@ feature {NONE} -- Formal parameters, parents and signatures validity
 			end
 		end
 
-	class_type_checker: ET_CLASS_TYPE_CHECKER2
+	class_type_checker: ET_CLASS_TYPE_STATUS_CHECKER2
 			-- Class type checker
 
 invariant

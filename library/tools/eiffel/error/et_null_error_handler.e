@@ -96,7 +96,8 @@ inherit
 			reportable_vrle1_error,
 			reportable_vrle2_error,
 			reportable_vscn_error,
-			reportable_vtat_error,
+			reportable_vtat1_error,
+			reportable_vtat2_error,
 			reportable_vtbt_error,
 			reportable_vtcg3_error,
 			reportable_vtcg4_error,
@@ -691,8 +692,15 @@ feature -- Validity error status
 			Result := False
 		end
 
-	reportable_vtat_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a VTAT error be reported when it
+	reportable_vtat1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VTAT-1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vtat2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VTAT-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

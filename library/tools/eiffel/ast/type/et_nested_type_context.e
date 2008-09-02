@@ -292,7 +292,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER): BOOLEAN is
 			-- Does the named type of current context contain the
 			-- formal generic parameter with index `i'?
 		local
@@ -300,18 +300,18 @@ feature -- Status report
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_has_formal_type (i)
+				Result := root_context.context_named_type_has_formal_type (i)
 			when 1 then
-				Result := last.has_formal_type (i, root_context)
+				Result := last.named_type_has_formal_type (i, root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.has_formal_type (i, Current)
+				Result := l_type.named_type_has_formal_type (i, Current)
 				put_last (l_type)
 			end
 		end
 
-	has_formal_types: BOOLEAN is
+	named_type_has_formal_types: BOOLEAN is
 			-- Does the named type of current context
 			-- contain a formal generic parameter?
 		local
@@ -319,13 +319,13 @@ feature -- Status report
 		do
 			inspect count
 			when 0 then
-				Result := root_context.context_has_formal_types
+				Result := root_context.context_named_type_has_formal_types
 			when 1 then
-				Result := last.has_formal_types (root_context)
+				Result := last.named_type_has_formal_types (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.has_formal_types (Current)
+				Result := l_type.named_type_has_formal_types (Current)
 				put_last (l_type)
 			end
 		end

@@ -10662,6 +10662,7 @@ feature -- Client/Supplier relationship
 			-- Set `supplier_handler' to `a_handler'.
 		do
 			supplier_handler := a_handler
+			type_checker.set_supplier_handler (a_handler)
 		ensure
 			supplier_handler_set: supplier_handler = a_handler
 		end

@@ -222,6 +222,7 @@ create
 	make_vtat1b,
 	make_vtat1c,
 	make_vtat2a,
+	make_vtat2b,
 	make_vtbt0a,
 	make_vtbt0b,
 	make_vtbt0c,
@@ -296,9 +297,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_position
-			code := gvzzz0a_template_code
+			code := template_code (gvzzz0a_template_code)
 			etl_code := gvzzz_etl_code
-			default_template := gvzzz0a_default_template
+			default_template := default_message_template (gvzzz0a_default_template)
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -9368,7 +9369,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vtat1a (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE) is
-			-- Create a new VTAT error: the anchor in the Anchored_type
+			-- Create a new VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
 			--
 			-- ETL2: p.214
@@ -9411,7 +9412,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vtat1b (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
-			-- Create a new VTAT error: the anchor in the
+			-- Create a new VTAT-1 error: the anchor in the
 			-- Anchored_type must be the final name of a query
 			-- in `a_class' or an argument of `a_feature'.
 			--
@@ -9457,8 +9458,8 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = feature name
 		end
 
-	make_vtat1c (a_class: like current_class; a_type: ET_QUALIFIED_LIKE_IDENTIFIER; other_class: ET_CLASS) is
-			-- Create a new VTAT error: the anchor in the Anchored_type
+	make_vtat1c (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_IDENTIFIER; other_class: ET_CLASS) is
+			-- Create a new VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `other_class'.
 			--
 			-- Not in ETL
@@ -9471,9 +9472,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_type.name.position
-			code := vtat1c_template_code
+			code := template_code (vtat1c_template_code)
 			etl_code := vtat1_etl_code
-			default_template := vtat1c_default_template
+			default_template := default_message_template (vtat1c_default_template)
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -9503,14 +9504,14 @@ feature {NONE} -- Initialization
 		end
 
 	make_vtat2a (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_FEATURE]) is
-			-- Create a new VTAT error: the anchors in `a_cycle'
+			-- Create a new VTAT-2 error: the anchors in `a_cycle'
 			-- are cyclic anchors in `a_class'.
 			--
 			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_cyle_not_void: a_cycle /= Void
+			a_cycle_not_void: a_cycle /= Void
 			no_void_anchor: not a_cycle.has (Void)
 			is_cycle: a_cycle.count >= 2
 		local
@@ -9637,6 +9638,51 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = cycle
+		end
+
+	make_vtat2b (a_class, a_class_impl: ET_CLASS; a_type: ET_LIKE_IDENTIFIER) is
+			-- Create a new VTAT-2 error: the type of the anchor of `a_type' appearing in
+			-- a qualified anchored type in `a_class_impl' contains an anchored type
+			-- when viewed from `a_class'.
+			--
+			-- Not in ECMA, similar to VTAT-1 in ETL2 page 214, but applied to
+			-- qualified anchored types.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_type_not_void: a_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_type.name.position
+			code := template_code (vtat2b_template_code)
+			etl_code := vtat2_etl_code
+			default_template := default_message_template (vtat2b_default_template)
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_type.to_text, 7)
+			parameters.put (a_type.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = invalid type
+			-- dollar8: $8 = anchor name
 		end
 
 	make_vtbt0a (a_class: ET_CLASS; a_type: ET_BIT_FEATURE) is
@@ -12619,6 +12665,7 @@ feature {NONE} -- Implementation
 	vtat1b_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query, or an argument of routine `$9'."
 	vtat1c_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query in class $9."
 	vtat2a_default_template: STRING is "anchor cycle $7."
+	vtat2b_default_template: STRING is "invalid type '$7' when part of a qualified anchored type: the type of anchor `$8' must not contain anchored types."
 	vtbt0a_default_template: STRING is "invalid type '$7': `$8' is not the final name of a constant attribute of type INTEGER."
 	vtbt0b_default_template: STRING is "invalid type '$7': `$8' is not the final name of a feature."
 	vtbt0c_default_template: STRING is "invalid type '$7': bit size must be a positive integer constant."
@@ -13040,6 +13087,7 @@ feature {NONE} -- Implementation
 	vtat1b_template_code: STRING is "vtat1b"
 	vtat1c_template_code: STRING is "vtat1c"
 	vtat2a_template_code: STRING is "vtat2a"
+	vtat2b_template_code: STRING is "vtat2b"
 	vtbt0a_template_code: STRING is "vtbt0a"
 	vtbt0b_template_code: STRING is "vtbt0b"
 	vtbt0c_template_code: STRING is "vtbt0c"

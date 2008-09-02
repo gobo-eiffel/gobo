@@ -58,7 +58,7 @@ feature -- Signature validity
 			a_class_preparsed: a_class.is_preparsed
 		local
 			old_class: ET_CLASS
-			l_type: ET_TYPE
+			l_type, l_previous_type: ET_TYPE
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 		do
@@ -74,7 +74,10 @@ feature -- Signature validity
 				nb := l_arguments.count
 				from i := 1 until i > nb loop
 					l_type := l_arguments.formal_argument (i).type
-					l_type.process (Current)
+					if l_type /= l_previous_type then
+						l_type.process (Current)
+						l_previous_type := l_type
+					end
 					i := i + 1
 				end
 			end

@@ -210,7 +210,7 @@ feature {NONE} -- Formal parameters and parents validity
 			end
 		end
 
-	class_type_checker: ET_CLASS_TYPE_CHECKER1
+	class_type_checker: ET_CLASS_TYPE_STATUS_CHECKER1
 			-- Class type checker
 
 invariant

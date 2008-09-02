@@ -23,7 +23,7 @@ create
 feature -- Initialization
 
 	reset is
-			-- Reset features at index 1 to `declared_count' as they were just after it was last parsed.
+			-- Reset features at index 1 to `declared_count' as they were just after they were last parsed.
 		local
 			i, nb: INTEGER
 		do
@@ -37,7 +37,7 @@ feature -- Initialization
 		end
 
 	reset_after_features_flattened is
-			-- Reset features at index 1 to `declared_count' as they were just after its features were last flattened.
+			-- Reset features at index 1 to `declared_count' as they were just after they were last flattened.
 		local
 			i, nb: INTEGER
 		do

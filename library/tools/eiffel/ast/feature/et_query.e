@@ -23,7 +23,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset feature as it was just after it was last parsed.
+			-- Reset current feature as it was just after it was last parsed.
 		local
 			l_assigner: ET_ASSIGNER
 		do

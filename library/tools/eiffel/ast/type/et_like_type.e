@@ -16,7 +16,8 @@ inherit
 
 	ET_TYPE
 		redefine
-			has_anchored_type
+			has_anchored_type,
+			resolved_formal_parameters
 		end
 
 	HASHABLE
@@ -40,6 +41,16 @@ feature -- Status report
 			-- when viewed from `a_context'?
 		do
 			Result := True
+		end
+
+feature -- Type processing
+
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_LIKE_TYPE is
+			-- Version of current type where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Constants

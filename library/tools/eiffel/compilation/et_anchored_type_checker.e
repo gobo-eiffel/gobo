@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel anchored type checkers"
+		"Eiffel anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
@@ -62,7 +62,7 @@ feature -- Type checking
 			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
 			l_procedure: ET_PROCEDURE
-			a_type: ET_TYPE
+			l_type, l_previous_type: ET_TYPE
 			args: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			j, nb2: INTEGER
@@ -75,15 +75,19 @@ feature -- Type checking
 			nb := l_queries.count
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
-				a_type := l_query.type
-				a_type.process (Current)
+				l_query.type.process (Current)
 				args := l_query.arguments
 				if args /= Void then
 					nb2 := args.count
 					from j := 1 until j > nb2 loop
-						args.formal_argument (j).type.process (Current)
+						l_type := args.formal_argument (j).type
+						if l_type /= l_previous_type then
+							l_type.process (Current)
+							l_previous_type := l_type
+						end
 						j := j + 1
 					end
+					l_previous_type := Void
 				end
 				i := i + 1
 			end
@@ -93,11 +97,16 @@ feature -- Type checking
 				l_procedure := l_procedures.item (i)
 				args := l_procedure.arguments
 				if args /= Void then
+					l_previous_type := Void
 					nb2 := args.count
 					from j := 1 until j > nb2 loop
-						args.formal_argument (j).type.process (Current)
+						l_type := args.formal_argument (j).type
+						if l_type /= l_previous_type then
+							l_type.process (Current)
+						end
 						j := j + 1
 					end
+					l_previous_type := l_type
 				end
 				i := i + 1
 			end

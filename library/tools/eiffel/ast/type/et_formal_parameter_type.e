@@ -19,10 +19,12 @@ inherit
 			named_type,
 			shallow_named_type,
 			named_type_has_class,
-			name, is_formal_type,
+			named_type_is_formal_type,
+			named_type_has_formal_types,
+			name,
 			is_type_reference,
 			has_anchored_type,
-			has_formal_type,
+			named_type_has_formal_type,
 			has_formal_types,
 			same_syntactical_bit_type,
 			same_syntactical_class_type,
@@ -583,7 +585,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context'?
 		local
@@ -598,7 +600,7 @@ feature -- Status report
 						-- type is itself a formal generic parameter.
 					Result := a_formal_type.index = i
 				else
-					Result := an_actual.has_formal_type (i, a_context.root_context)
+					Result := an_actual.named_type_has_formal_type (i, a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?
@@ -607,7 +609,7 @@ feature -- Status report
 		end
 
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain a formal generic parameter
+			-- Does current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		local
 			an_actual: ET_NAMED_TYPE
@@ -629,8 +631,9 @@ feature -- Status report
 			end
 		end
 
-	is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Is current type a formal parameter when viewed from `a_context'?
+	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Does the named type of current type contain a formal generic parameter
+			-- when viewed from `a_context'?
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
@@ -643,7 +646,31 @@ feature -- Status report
 						-- type is itself a formal generic parameter.
 					Result := True
 				else
-					Result := an_actual.is_formal_type (a_context.root_context)
+					Result := an_actual.named_type_has_formal_types (a_context.root_context)
+				end
+			else
+					-- Internal error: does current type really appear in `a_context'?
+				Result := False
+			end
+		end
+
+	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is named type of current type, or if it is a qualified type
+			-- is the named type of its  target type (recursively),
+			-- a formal parameter when viewed from `a_context'?
+		local
+			an_actual: ET_NAMED_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+		do
+			if index <= a_context.base_type_actual_count then
+				an_actual := a_context.base_type_actual (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := True
+				else
+					Result := an_actual.named_type_is_formal_type (a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?

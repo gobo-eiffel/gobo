@@ -4937,7 +4937,7 @@ feature -- Validity errors
 		end
 
 	report_vtat1a_error (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE) is
-			-- Report VTAT error: the anchor in the Anchored_type
+			-- Report VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
 			--
 			-- ETL2: p.214
@@ -4949,14 +4949,14 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vtat_error (a_class) then
+			if reportable_vtat1_error (a_class) then
 				create an_error.make_vtat1a (a_class, a_type)
 				report_validity_error (an_error)
 			end
 		end
 
 	report_vtat1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
-			-- Report VTAT error: the anchor in the
+			-- Report VTAT-1 error: the anchor in the
 			-- Anchored_type must be the final name of a query
 			-- in `a_class' or an argument of `a_feature'.
 			--
@@ -4970,14 +4970,14 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vtat_error (a_class) then
+			if reportable_vtat1_error (a_class) then
 				create an_error.make_vtat1b (a_class, a_feature, a_type)
 				report_validity_error (an_error)
 			end
 		end
 
 	report_vtat1c_error (a_class: ET_CLASS; a_type: ET_QUALIFIED_LIKE_IDENTIFIER; other_class: ET_CLASS) is
-			-- Report VTAT error: the anchor in the Anchored_type
+			-- Report VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `other_class'.
 			--
 			-- Not in ETL
@@ -4989,28 +4989,49 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vtat_error (a_class) then
+			if reportable_vtat1_error (a_class) then
 				create an_error.make_vtat1c (a_class, a_type, other_class)
 				report_validity_error (an_error)
 			end
 		end
 
 	report_vtat2a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_LIKE_FEATURE]) is
-			-- Report VTAT error: the anchors in `a_cycle'
+			-- Report VTAT-2 error: the anchors in `a_cycle'
 			-- are cyclic anchors in `a_class'.
 			--
 			-- ETL3 (4.82-00-00): p.252
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_cyle_not_void: a_cycle /= Void
+			a_cycle_not_void: a_cycle /= Void
 			no_void_anchor: not a_cycle.has (Void)
 			is_cycle: a_cycle.count >= 2
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vtat_error (a_class) then
+			if reportable_vtat2_error (a_class) then
 				create an_error.make_vtat2a (a_class, a_cycle)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vtat2b_error (a_class, a_class_impl: ET_CLASS; a_type: ET_LIKE_IDENTIFIER) is
+			-- Report VTAT-2 error: the type of the anchor of `a_type' appearing in
+			-- a qualified anchored type in `a_class_impl' contains an anchored type
+			-- when viewed from `a_class'.
+			--
+			-- Not in ECMA, similar to VTAT-1 in ETL2 page 214, but applied to
+			-- qualified anchored types.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vtat2_error (a_class) then
+				create an_error.make_vtat2b (a_class, a_class_impl, a_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -7216,8 +7237,18 @@ feature -- Validity error status
 			Result := True
 		end
 
-	reportable_vtat_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a VTAT error be reported when it
+	reportable_vtat1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VTAT-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vtat2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VTAT-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

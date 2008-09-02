@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Create a new parent third pass checker.
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
-			create classes_to_be_processed.make (10)
+			create classes_to_be_processed.make (0)
 		end
 
 feature -- Validity checking
@@ -53,7 +53,6 @@ feature -- Validity checking
 		local
 			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
-			other_class: ET_CLASS
 			old_class: ET_CLASS
 		do
 			has_fatal_error := False
@@ -65,17 +64,6 @@ feature -- Validity checking
 				from i := 1 until i > nb loop
 					a_parents.parent (i).type.process (Current)
 					i := i + 1
-				end
-				from
-				until
-					classes_to_be_processed.is_empty
-				loop
-					other_class := classes_to_be_processed.last
-					classes_to_be_processed.remove_last
-					other_class.process (current_system.interface_checker)
-					if not other_class.interface_checked or else other_class.has_interface_error then
-						set_fatal_error
-					end
 				end
 			end
 			current_class := a_class
@@ -273,8 +261,23 @@ feature {ET_AST_NODE} -- Type dispatcher
 
 feature {NONE} -- Access
 
-	classes_to_be_processed: DS_ARRAYED_LIST [ET_CLASS]
+	classes_to_be_processed: DS_HASH_SET [ET_CLASS]
 			-- Classes that need to be processed
+			-- Classes that need their interface to be checked as a result of processing `current_class';
+			-- `current_class' will not be fully valid unless these classes are also successfully processed.
+
+feature {ET_INTERFACE_CHECKER} -- Access
+
+	set_classes_to_be_processed (a_classes: like classes_to_be_processed) is
+			-- Set `classes_to_be_processed' to `a_classes'.
+		require
+			a_classes_not_void: a_classes /= Void
+			no_void_class_to_be_processed: not a_classes.has (Void)
+		do
+			classes_to_be_processed := a_classes
+		ensure
+			classes_to_be_processed_set: classes_to_be_processed = a_classes
+		end
 
 invariant
 

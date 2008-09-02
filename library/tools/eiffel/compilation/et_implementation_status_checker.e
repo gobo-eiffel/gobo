@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Checkers to see whether the implementation of a class need to be checked again %
+		"Checkers to see whether the implementation of a class needs to be checked again %
 		%or not after some classes have been modified in the Eiffel system."
 
 	library: "Gobo Eiffel Tools Library"

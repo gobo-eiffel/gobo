@@ -20,9 +20,9 @@ inherit
 			named_type,
 			shallow_named_type,
 			named_type_has_class,
-			is_formal_type,
-			has_formal_type,
-			has_formal_types,
+			named_type_is_formal_type,
+			named_type_has_formal_type,
+			named_type_has_formal_types,
 			same_syntactical_like_feature,
 			same_named_bit_type,
 			same_named_class_type,
@@ -702,7 +702,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain the formal generic parameter
 			-- with index `i' when viewed from `a_context'?
 		local
@@ -731,7 +731,7 @@ feature -- Status report
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.has_formal_type (i, a_context)
+						Result := args.item (an_index).type.named_type_has_formal_type (i, a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -743,7 +743,7 @@ feature -- Status report
 				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.has_formal_type (i, a_context)
+					Result := l_query.type.named_type_has_formal_type (i, a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -753,7 +753,7 @@ feature -- Status report
 			end
 		end
 
-	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		local
@@ -782,7 +782,7 @@ feature -- Status report
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.has_formal_types (a_context)
+						Result := args.item (an_index).type.named_type_has_formal_types (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -794,7 +794,7 @@ feature -- Status report
 				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.has_formal_types (a_context)
+					Result := l_query.type.named_type_has_formal_types (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -804,8 +804,10 @@ feature -- Status report
 			end
 		end
 
-	is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Is current type a formal parameter when viewed from `a_context'?
+	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is named type of current type, or if it is a qualified type
+			-- is the named type of its  target type (recursively),
+			-- a formal parameter when viewed from `a_context'?
 		local
 			a_class: ET_CLASS
 			l_feature: ET_FEATURE
@@ -832,7 +834,7 @@ feature -- Status report
 							-- current anchored type.
 						Result := False
 					else
-						Result := args.item (an_index).type.is_formal_type (a_context)
+						Result := args.item (an_index).type.named_type_is_formal_type (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -844,7 +846,7 @@ feature -- Status report
 				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.is_formal_type (a_context)
+					Result := l_query.type.named_type_is_formal_type (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
