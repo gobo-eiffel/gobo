@@ -67,6 +67,8 @@ feature -- Execution
 					is_flat_dbc := False
 				elseif arg.is_equal ("--catcall") then
 					is_catcall := True
+				elseif arg.is_equal ("--qat") then
+					qualified_anchored_types_enabled := True
 				elseif arg.is_equal ("--silent") then
 					is_silent := True
 				elseif arg.is_equal ("--ecma") then
@@ -154,6 +156,9 @@ feature -- Status report
 	ise_version: UT_VERSION
 	is_silent: BOOLEAN
 			-- Command-line options
+
+	qualified_anchored_types_enabled: BOOLEAN
+			-- Are Qualified Anchored Types allowed?
 
 feature -- Access
 
@@ -268,6 +273,7 @@ feature {NONE} -- Processing
 			a_system.set_ecma_version (ecma_version)
 			a_system.set_flat_mode (is_flat)
 			a_system.set_flat_dbc_mode (is_flat_dbc)
+			a_system.set_qualified_anchored_types_enabled (qualified_anchored_types_enabled)
 			if is_catcall then
 				create a_dynamic_system.make (a_system)
 				a_dynamic_system.set_catcall_error_mode (True)
@@ -314,7 +320,7 @@ feature -- Error handling
 			-- Gelint usage message.
 		once
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
-				%%T[--flat][--noflatdbc][--catcall][--silent][--verbose] ace_filename")
+				%%T[--flat][--noflatdbc][--catcall][--qat][--silent][--verbose] ace_filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
