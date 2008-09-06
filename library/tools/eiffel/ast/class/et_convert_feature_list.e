@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset convert features as they were when they were first parsed.
+			-- Reset convert features as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do

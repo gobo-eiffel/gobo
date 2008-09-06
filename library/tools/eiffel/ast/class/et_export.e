@@ -19,7 +19,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset export clause as it was when it was first parsed.
+			-- Reset export clause as it was when it was last parsed.
 		do
 		end
 

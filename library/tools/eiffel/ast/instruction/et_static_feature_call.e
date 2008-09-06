@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset call as it was when it was first parsed.
+			-- Reset call as it was when it was last parsed.
 		do
 			Precursor
 			if type /= Void then

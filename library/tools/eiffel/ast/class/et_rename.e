@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset rename pair as it was when it was first parsed.
+			-- Reset rename pair as it was when it was last parsed.
 		do
 			old_name.reset
 			new_name.reset

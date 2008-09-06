@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset feature name as it was when it was first parsed.
+			-- Reset feature name as it was when it was last parsed.
 		do
 			-- Do nothing.
 		end

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset elseif part as it was when it was first parsed.
+			-- Reset elseif part as it was when it was last parsed.
 		do
 			expression.reset
 			if then_compound /= Void then

@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset when part as it was when it was first parsed.
+			-- Reset when part as it was when it was last parsed.
 		do
 			choices.reset
 			if then_compound /= Void then

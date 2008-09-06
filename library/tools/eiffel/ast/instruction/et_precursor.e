@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset precursor as it was when it was first parsed.
+			-- Reset precursor as it was when it was last parsed.
 		do
 				-- Note: do not reset `parent_type' to Void. `parent_type'
 				-- is set by the feature flattener regardless of whether

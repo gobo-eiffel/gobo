@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset instructions as they were when they were first parsed.
+			-- Reset instructions as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do

@@ -19,7 +19,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset convert feature as it was when it was first parsed.
+			-- Reset convert feature as it was when it was last parsed.
 		do
 			name.reset
 			types.reset

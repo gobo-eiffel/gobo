@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset call as it was when it was first parsed.
+			-- Reset call as it was when it was last parsed.
 		do
 			name.reset
 			if arguments /= Void then

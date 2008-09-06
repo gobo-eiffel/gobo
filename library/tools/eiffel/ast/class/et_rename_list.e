@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset rename pairs as they were when they were first parsed.
+			-- Reset rename pairs as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do

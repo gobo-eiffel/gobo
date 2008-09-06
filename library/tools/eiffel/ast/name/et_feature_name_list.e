@@ -21,7 +21,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset feature names as they were when they were first parsed.
+			-- Reset feature names as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do

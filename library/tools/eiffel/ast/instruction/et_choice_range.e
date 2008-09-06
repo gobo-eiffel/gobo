@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset choice range as it was when it was first parsed.
+			-- Reset choice range as it was when it was last parsed.
 		do
 			lower.reset
 			upper.reset

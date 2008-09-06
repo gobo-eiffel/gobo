@@ -25,7 +25,7 @@ create
 feature -- Initialization
 
 	reset is
-			-- Reset creators as they were when they were first parsed.
+			-- Reset creators as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do

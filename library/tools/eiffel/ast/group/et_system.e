@@ -1250,7 +1250,7 @@ feature -- Parser setting
 		end
 
 	set_preparse_shallow_mode is
-			-- Set `preparse_shallow_mode' to True
+			-- Set `preparse_shallow_mode' to True.
 		do
 			preparse_shallow_mode := True
 			preparse_single_mode := False
@@ -1262,7 +1262,7 @@ feature -- Parser setting
 		end
 
 	set_preparse_single_mode is
-			-- Set `preparse_single_mode' to True
+			-- Set `preparse_single_mode' to True.
 		do
 			preparse_single_mode := True
 			preparse_shallow_mode := False
@@ -1274,7 +1274,7 @@ feature -- Parser setting
 		end
 
 	set_preparse_multiple_mode is
-			-- Set `preparse_multiple_mode' to True
+			-- Set `preparse_multiple_mode' to True.
 		do
 			preparse_multiple_mode := True
 			preparse_shallow_mode := False

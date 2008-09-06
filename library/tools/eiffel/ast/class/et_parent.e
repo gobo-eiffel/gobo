@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset parents as it was when it was first parsed.
+			-- Reset parent as it was when it was last parsed.
 		do
 			type.reset
 			if actual_parameters /= Void then

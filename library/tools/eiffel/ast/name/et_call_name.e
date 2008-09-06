@@ -24,7 +24,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset call name as it was when it was first parsed.
+			-- Reset call name as it was when it was last parsed.
 		do
 			seed := 0
 		end

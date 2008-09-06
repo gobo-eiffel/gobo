@@ -22,7 +22,7 @@ inherit
 feature -- Initialization
 
 	reset is
-			-- Reset feature name as it was when it was first parsed.
+			-- Reset feature name as it was when it was last parsed.
 		deferred
 		end
 

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset actual arguments as they were when they were first parsed.
+			-- Reset actual arguments as they were when they were last parsed.
 		local
 			l_actual: ET_EXPRESSION_ITEM
 			l_expression: ET_EXPRESSION

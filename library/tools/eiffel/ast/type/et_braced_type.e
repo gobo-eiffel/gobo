@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset braced type as it was when it was first parsed.
+			-- Reset braced type as it was when it was last parsed.
 		do
 			type.reset
 		end
