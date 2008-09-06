@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			create parent_checker3.make
 			parent_checker3.set_classes_to_be_processed (classes_to_be_processed)
 			create qualified_anchored_type_checker.make
-			qualified_anchored_type_checker.set_classes_to_be_processed (classes_to_be_processed)
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create feature_adaptation_resolver.make
@@ -185,17 +184,7 @@ feature {NONE} -- Processing
 			loop
 				l_other_class := classes_to_be_processed.last
 				classes_to_be_processed.remove (l_other_class)
-				if l_other_class.is_none then
-					l_other_class.set_interface_checked
-				elseif not l_other_class.is_preparsed then
-					set_fatal_error (current_class)
-				else
-						-- This is a controlled recursive call to `internal_process_class'.
-					internal_process_class (l_other_class)
-					if l_other_class.has_interface_error then
-						set_fatal_error (current_class)
-					end
-				end
+				process_class (l_other_class)
 			end
 		ensure
 			interface_checked: a_class.interface_checked
@@ -438,8 +427,10 @@ feature {NONE} -- Access
 
 	classes_to_be_processed: DS_HASH_SET [ET_CLASS]
 			-- Classes that need to be processed as a result of processing `current_class';
-			-- `current_class' will not be fully valid unless these classes are also
-			-- successfully processed.
+			-- Typically, we already discovered that `current_class' was not valid because
+			-- these classes that it depends on were not valid themselves. But we need to
+			-- force the processing of these classes in order for the corresponding validity
+			-- errors to be properly reported.
 
 invariant
 

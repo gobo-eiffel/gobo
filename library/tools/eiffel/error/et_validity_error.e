@@ -9643,7 +9643,7 @@ feature {NONE} -- Initialization
 	make_vtat2b (a_class, a_class_impl: ET_CLASS; a_type: ET_LIKE_IDENTIFIER) is
 			-- Create a new VTAT-2 error: the type of the anchor of `a_type' appearing in
 			-- a qualified anchored type in `a_class_impl' contains an anchored type
-			-- when viewed from `a_class'.
+			-- (other than 'like Current') when viewed from `a_class'.
 			--
 			-- Not in ECMA, similar to VTAT-1 in ETL2 page 214, but applied to
 			-- qualified anchored types.
@@ -12665,7 +12665,7 @@ feature {NONE} -- Implementation
 	vtat1b_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query, or an argument of routine `$9'."
 	vtat1c_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query in class $9."
 	vtat2a_default_template: STRING is "anchor cycle $7."
-	vtat2b_default_template: STRING is "invalid type '$7' when part of a qualified anchored type: the type of anchor `$8' must not contain anchored types."
+	vtat2b_default_template: STRING is "invalid type '$7' when part of a qualified anchored type: the type of anchor `$8' must not contain anchored types (other than 'like Current')."
 	vtbt0a_default_template: STRING is "invalid type '$7': `$8' is not the final name of a constant attribute of type INTEGER."
 	vtbt0b_default_template: STRING is "invalid type '$7': `$8' is not the final name of a feature."
 	vtbt0c_default_template: STRING is "invalid type '$7': bit size must be a positive integer constant."

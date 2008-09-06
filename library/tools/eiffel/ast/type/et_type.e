@@ -257,13 +257,15 @@ feature -- Status report
 			Result := not is_type_expanded (a_context)
 		end
 
-	has_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does current type contain an anchored type
-			-- when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
+	has_anchored_type: BOOLEAN is
+			-- Does current type contain an anchored type?
+		do
+			-- Result := False
+		end
+
+	has_identifier_anchored_type: BOOLEAN is
+			-- Does current type contain an identifier anchored type
+			-- (i.e. an anchored type other than 'like Current')?
 		do
 			-- Result := False
 		end

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset is
-			-- Reset actual parameters as they were when they were first parsed.
+			-- Reset actual parameters as they were when they were last parsed.
 		local
 			i, nb: INTEGER
 		do
@@ -203,19 +203,31 @@ feature -- Access
 
 feature -- Status report
 
-	has_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does one current types contain an anchored type
-			-- when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
+	has_anchored_type: BOOLEAN is
+			-- Does one of current types contain an anchored type?
 		local
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				if storage.item (i).type.has_anchored_type (a_context) then
+				if storage.item (i).type.has_anchored_type then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
+	has_identifier_anchored_type: BOOLEAN is
+			-- Does one of current types contain an identifier anchored type
+			-- (i.e. an anchored type other than 'like Current')?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).type.has_identifier_anchored_type then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

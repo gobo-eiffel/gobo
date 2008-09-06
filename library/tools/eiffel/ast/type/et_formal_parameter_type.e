@@ -23,7 +23,6 @@ inherit
 			named_type_has_formal_types,
 			name,
 			is_type_reference,
-			has_anchored_type,
 			named_type_has_formal_type,
 			has_formal_types,
 			same_syntactical_bit_type,
@@ -555,29 +554,6 @@ feature -- Status report
 					end
 				else
 					Result := an_actual.is_type_reference (a_context.root_context)
-				end
-			else
-					-- Internal error: does current type really appear in `a_context'?
-				Result := False
-			end
-		end
-
-	has_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does current type contain an anchored type
-			-- when viewed from `a_context'?
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := False
-				else
-					Result := an_actual.has_anchored_type (a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?

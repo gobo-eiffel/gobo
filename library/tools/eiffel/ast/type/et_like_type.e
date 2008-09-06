@@ -36,9 +36,8 @@ feature -- Access
 
 feature -- Status report
 
-	has_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does current type contain an anchored type
-			-- when viewed from `a_context'?
+	has_anchored_type: BOOLEAN is
+			-- Does current type contain an anchored type?
 		do
 			Result := True
 		end

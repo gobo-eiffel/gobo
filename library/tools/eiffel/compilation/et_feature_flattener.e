@@ -394,7 +394,7 @@ feature {NONE} -- Feature flattening
 						a_type := l_query.type
 							-- The type of a once function should not contain
 							-- a formal generic parameter or an anchored type.
-						if a_type.has_anchored_type (current_class) then
+						if a_type.has_anchored_type then
 							set_fatal_error (current_class)
 							error_handler.report_vffd7a_error (current_class, l_query)
 						elseif a_type.has_formal_types (current_class) then

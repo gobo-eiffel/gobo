@@ -38,8 +38,7 @@ feature {NONE} -- Initialization
 		do
 			precursor {ET_CLASS_PROCESSOR}
 			create qualified_anchored_type_checker.make
-			create class_type_flattening_checker.make
-			create class_type_interface_checker.make
+			create class_type_checker.make
 		end
 
 feature -- Processing
@@ -202,8 +201,8 @@ feature {NONE} -- Formal parameters and parents validity
 								-- of the constraint if any is still valid. But that would
 								-- be too long to check. We don't need such level of
 								-- fine-grained checking here.
-							class_type_flattening_checker.check_type_validity (l_constraint)
-							if class_type_flattening_checker.has_fatal_error then
+							class_type_checker.check_type_validity (l_constraint)
+							if class_type_checker.has_fatal_error then
 								set_fatal_error (current_class)
 								i := nb + 1 -- Jump out of the loop.
 							end
@@ -232,8 +231,8 @@ feature {NONE} -- Formal parameters and parents validity
 							-- the corresponding formal generic parameters have a constraint
 							-- with a creation clause. But that would be too long to check.
 							-- We don't need such level of fine-grained checking here.
-						class_type_interface_checker.check_type_validity (l_parents.parent (i).type)
-						if class_type_interface_checker.has_fatal_error then
+						class_type_checker.check_type_validity (l_parents.parent (i).type)
+						if class_type_checker.has_fatal_error then
 							set_fatal_error (current_class)
 							i := nb + 1 -- Jump out of the loop.
 						end
@@ -243,17 +242,12 @@ feature {NONE} -- Formal parameters and parents validity
 			end
 		end
 
-	class_type_flattening_checker: ET_CLASS_TYPE_STATUS_CHECKER3
-			-- Class type flattening checker
-
-	class_type_interface_checker: ET_CLASS_TYPE_STATUS_CHECKER4
-			-- Class type interface checker
-
+	class_type_checker: ET_CLASS_TYPE_STATUS_CHECKER3
+			-- Class type checker
 
 invariant
 
-	class_type_flattening_checker_not_void: class_type_flattening_checker /= Void
-	class_type_interface_checker_not_void: class_type_interface_checker /= Void
+	class_type_checker_not_void: class_type_checker /= Void
 	qualified_anchored_type_checker_not_void: qualified_anchored_type_checker /= Void
 
 end

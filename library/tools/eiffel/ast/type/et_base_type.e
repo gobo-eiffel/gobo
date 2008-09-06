@@ -23,6 +23,7 @@ inherit
 			is_named_type,
 			is_base_type,
 			has_anchored_type,
+			has_identifier_anchored_type,
 			named_type_has_formal_type,
 			has_formal_types,
 			named_type_has_formal_types,
@@ -266,15 +267,25 @@ feature -- Status report
 		deferred
 		end
 
-	has_anchored_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does current type contain an anchored type
-			-- when viewed from `a_context'?
+	has_anchored_type: BOOLEAN is
+			-- Does current type contain an anchored type?
 		local
 			a_parameters: like actual_parameters
 		do
 			a_parameters := actual_parameters
 			if a_parameters /= Void then
-				Result := a_parameters.has_anchored_type (a_context)
+				Result := a_parameters.has_anchored_type
+			end
+		end
+
+	has_identifier_anchored_type: BOOLEAN is
+			-- Does current type contain an identifier anchored type?
+		local
+			a_parameters: like actual_parameters
+		do
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.has_identifier_anchored_type
 			end
 		end
 

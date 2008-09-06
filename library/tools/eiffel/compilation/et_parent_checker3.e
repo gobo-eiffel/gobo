@@ -105,9 +105,6 @@ feature {NONE} -- Parent validity
 			a_constraint_error: BOOLEAN
 		do
 			a_class := a_type.base_class
-			if not a_class.interface_checked then
-				classes_to_be_processed.force_last (a_class)
-			end
 			if a_class.is_generic then
 				a_formals := a_class.formal_parameters
 				check a_class_generic: a_formals /= Void end
@@ -147,22 +144,17 @@ feature {NONE} -- Parent validity
 								an_actual_class.process (current_system.feature_flattener)
 								if not an_actual_class.features_flattened or else an_actual_class.has_flattening_error then
 									set_fatal_error
-								elseif a_class.interface_checked and then a_class.has_interface_error then
-										-- If the interface has already been checked but an error
-										-- has been found, then we have to stop here. The case
-										-- where the interface has not been checked will be taken
-										-- care of below.
-									set_fatal_error
 								else
 									from j := 1 until j > nb2 loop
 										a_name := a_creator.feature_name (j)
 										a_constraint_error := False
-										if a_class.interface_checked then
+										if a_class.interface_checked and not a_class.has_interface_error then
 											a_seed := a_name.seed
 										else
 												-- Compute the seed of the creation procedure here.
 												-- Do not report error, that will be done when `a_class' will be
-												-- processed (it has been put in `classes_to_be_processed').
+												-- processed (it will be put in `classes_to_be_processed' when
+												-- there is an error).
 											a_constraint_base_type := a_formal.constraint_base_type
 											if a_constraint_base_type /= Void then
 												a_constraint_class := a_constraint_base_type.base_class
@@ -190,6 +182,12 @@ feature {NONE} -- Parent validity
 										end
 										if a_constraint_error then
 											set_fatal_error
+											if not a_class.interface_checked then
+													-- Make sure that the error will be reported.
+													-- For that, we need to force the interface 
+													-- of `a_class' to be checked.
+												classes_to_be_processed.force_last (a_class)
+											end
 										else
 											a_creation_procedure := an_actual_class.seeded_procedure (a_seed)
 											if a_creation_procedure = Void then

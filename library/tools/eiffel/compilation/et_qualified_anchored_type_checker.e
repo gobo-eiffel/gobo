@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 		do
 			precursor {ET_CLASS_SUBPROCESSOR}
 			current_class_impl := current_class
-			create classes_to_be_processed.make (0)
 		end
 
 feature -- Validity checking
@@ -152,9 +151,10 @@ feature {NONE} -- Type validity
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
-								if args.item (l_index).type.has_anchored_type (current_class) then
+								if args.item (l_index).type.has_identifier_anchored_type then
 										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not contain other anchored types.
+										-- anchored type should not contain anchored types
+										-- (other than 'like Current').
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
 									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -175,9 +175,10 @@ feature {NONE} -- Type validity
 					else
 						l_query := current_class.seeded_query (l_seed)
 						if l_query /= Void then
-							if  l_query.type.has_anchored_type (current_class) then
+							if  l_query.type.has_identifier_anchored_type then
 									-- Error: the type of the anchor appearing in a qualified
-									-- anchored type should not contain other anchored types.
+									-- anchored type should not contain anchored types
+									-- (other than 'like Current').
 									-- This is a way to avoid cycles in qualified anchored types.
 								set_fatal_error
 								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -222,12 +223,6 @@ feature {NONE} -- Type validity
 				if not l_class.features_flattened or else l_class.has_flattening_error then
 					set_fatal_error
 				else
-						-- In order for `current_class' to be fully valid,
-						-- we also need to have the interface of `l_class' checked.
-						-- Otherwise the query that we will get below (corresponding
-						-- to the anchor of `a_type') might have an invalid signature
-						-- (one that does not conform to its redeclared version for example).
-					classes_to_be_processed.force_last (l_class)
 					l_seed := a_type.seed
 					if l_seed = 0 then
 							-- Not resolved yet. It needs to be resolved
@@ -240,11 +235,19 @@ feature {NONE} -- Type validity
 						else
 							l_query := l_class.named_query (a_type.name)
 							if l_query /= Void then
+									-- The fact that the signature of `l_query' is valid
+									-- or not (e.g. conformance of redeclared signature),
+									-- and hence its type, will be checked later on (by
+									-- ET_TYPE_CHECKER.check_type_validity) when, while
+									-- checking (in ET_FEATURE_CHECKER) the implementation
+									-- of feature whose signature contains `a_type', we
+									-- will check the validity of its signature again.
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if  l_query.type.has_anchored_type (current_class) then
+								if  l_query.type.has_identifier_anchored_type then
 										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not contain other anchored types.
+										-- anchored type should not contain anchored types
+										-- (other than 'like Current').
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
 									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -258,10 +261,18 @@ feature {NONE} -- Type validity
 					else
 						l_query := l_class.seeded_query (l_seed)
 						if l_query /= Void then
+								-- The fact that the signature of `l_query' is valid
+								-- or not (e.g. conformance of redeclared signature),
+								-- and hence its type, will be checked later on (by
+								-- ET_TYPE_CHECKER.check_type_validity) when, while
+								-- checking (in ET_FEATURE_CHECKER) the implementation
+								-- of feature whose signature contains `a_type', we
+								-- will check the validity of its signature again.
 -- TODO: check that `l_query' is exported to `current_class'.
-							if  l_query.type.has_anchored_type (current_class) then
+							if  l_query.type.has_identifier_anchored_type then
 									-- Error: the type of the anchor appearing in a qualified
-									-- anchored type should not contain other anchored types.
+									-- anchored type should not contain anchored types
+									-- (other than 'like Current').
 									-- This is a way to avoid cycles in qualified anchored types.
 								set_fatal_error
 								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
@@ -359,29 +370,9 @@ feature {NONE} -- Access
 	in_qualified_anchored_type: BOOLEAN
 			-- Is the type being checked contained in a qualified anchored type?
 
-	classes_to_be_processed: DS_HASH_SET [ET_CLASS]
-			-- Classes that need to be processed
-			-- Classes that need their interface to be checked as a result of processing `current_class';
-			-- `current_class' will not be fully valid unless these classes are also successfully processed.
-
-feature {ET_INTERFACE_CHECKER} -- Access
-
-	set_classes_to_be_processed (a_classes: like classes_to_be_processed) is
-			-- Set `classes_to_be_processed' to `a_classes'.
-		require
-			a_classes_not_void: a_classes /= Void
-			no_void_class_to_be_processed: not a_classes.has (Void)
-		do
-			classes_to_be_processed := a_classes
-		ensure
-			classes_to_be_processed_set: classes_to_be_processed = a_classes
-		end
-
 invariant
 
 	current_class_impl_not_void: current_class_impl /= Void
 	current_class_impl_preparsed: current_class_impl.is_preparsed
-	classes_to_be_processed_not_void: classes_to_be_processed /= Void
-	no_void_class_to_be_processed: not classes_to_be_processed.has (Void)
 
 end

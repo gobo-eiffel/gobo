@@ -6,7 +6,7 @@ indexing
 		Eiffel qualified anchored type status checkers.
 		Check whether the base classes of the anchors of qualified anchored types
 		appearing in the types of all signatures of a class have their
-		interface already successfully checked.
+		features already successfully flattened.
 	]"
 
 	library: "Gobo Eiffel Tools Library"
@@ -42,7 +42,7 @@ feature -- Validity checking
 	check_signatures_validity (a_class: ET_CLASS) is
 			-- Check whether the base classes of the anchors of qualified anchored types
 			-- appearing in the types of all signatures of `a_class' have their
-			-- interface already successfully checked.
+			-- features already successfully flattened.
 			-- Set `has_fatal_error' to True otherwise.
 		require
 			a_class_not_void: a_class /= Void
@@ -123,7 +123,7 @@ feature {NONE} -- Type validity
 
 	check_qualified_like_identifier_validity (a_type: ET_QUALIFIED_LIKE_IDENTIFIER) is
 			-- Check whether the base classes of the anchors of qualified anchored types
-			-- appearing in `a_type' have their interface already successfully checked.
+			-- appearing in `a_type' have their features already successfully flattened.
 			-- Set `has_fatal_error' to True otherwise.
 		require
 			a_type_not_void: a_type /= Void
@@ -137,7 +137,7 @@ feature {NONE} -- Type validity
 			l_target_type.process (Current)
 			if not has_fatal_error then
 				l_class := l_target_type.base_class (current_class)
-				if not l_class.interface_checked or else l_class.has_interface_error then
+				if not l_class.features_flattened or else l_class.has_flattening_error then
 					set_fatal_error
 				end
 			end
@@ -145,7 +145,7 @@ feature {NONE} -- Type validity
 
 	check_actual_parameters_validity (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Check whether the base classes of the anchors of qualified anchored types
-			-- appearing in `a_parameters' have their interface already successfully checked.
+			-- appearing in `a_parameters' have their features already successfully flattened.
 			-- Set `has_fatal_error' to True otherwise.
 		require
 			a_parameters_not_void: a_parameters /= Void

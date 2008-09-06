@@ -15,6 +15,9 @@ deferred class ET_LIKE_IDENTIFIER
 inherit
 
 	ET_LIKE_TYPE
+		redefine
+			has_identifier_anchored_type
+		end
 
 feature -- Access
 
@@ -32,6 +35,15 @@ feature -- Access
 		deferred
 		ensure
 			seed_not_negative: Result >= 0
+		end
+
+feature -- Status report
+
+	has_identifier_anchored_type: BOOLEAN is
+			-- Does current type contain an identifier anchored type
+			-- (i.e. an anchored type other than 'like Current')?
+		do
+			Result := True
 		end
 
 end
