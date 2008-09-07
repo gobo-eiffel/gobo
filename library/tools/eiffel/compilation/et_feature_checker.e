@@ -602,7 +602,12 @@ feature {NONE} -- Feature validity
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_current_type_needed
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -632,7 +637,12 @@ feature {NONE} -- Feature validity
 			l_type := a_feature.type
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -750,7 +760,12 @@ feature {NONE} -- Feature validity
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := had_error or has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -810,7 +825,12 @@ feature {NONE} -- Feature validity
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := had_error or has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -924,7 +944,12 @@ feature {NONE} -- Feature validity
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := had_error or has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -982,7 +1007,12 @@ feature {NONE} -- Feature validity
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := had_error or has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -1042,7 +1072,12 @@ feature {NONE} -- Feature validity
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
 				report_result_declaration (l_type)
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := had_error or has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -1129,7 +1164,12 @@ feature {NONE} -- Feature validity
 			l_type := a_feature.type
 			check_signature_type_validity (a_feature.implementation_feature.type)
 			if not has_fatal_error then
-				report_result_supplier (l_type, current_class, a_feature)
+				if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+				else
+					report_result_supplier (l_type, current_class, a_feature)
+				end
 			end
 			had_error := has_fatal_error
 			l_object_tests := a_feature.object_tests
@@ -1197,7 +1237,12 @@ feature {NONE} -- Locals/Formal arguments validity
 						check_signature_type_validity (l_formals_impl.formal_argument (i).type)
 						if not has_fatal_error then
 							report_formal_argument_declaration (l_formal)
-							report_argument_supplier (l_type, current_class, a_feature)
+							if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+							else
+								report_argument_supplier (l_type, current_class, a_feature)
+							end
 						end
 						i := i + 1
 					end
@@ -1666,7 +1711,10 @@ feature {NONE} -- Type checking
 			l_class_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			if not in_precursor then
+			if in_precursor then
+-- TODO: when processing a precursor, its signature should be resolved to the
+-- context of `current_class', but it is currently seen in the context of its parent class.
+			else
 				if current_inline_agent /= Void then
 						-- We check the validity of the signature types of inline agents
 						-- in their implementation class because, as opposed to the
