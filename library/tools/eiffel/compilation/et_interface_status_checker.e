@@ -57,7 +57,7 @@ feature -- Processing
 			a_processor: like Current
 		do
 			if a_class.is_none then
-				a_class.unset_flattening_error
+				a_class.unset_interface_error
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
