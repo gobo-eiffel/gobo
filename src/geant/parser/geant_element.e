@@ -244,7 +244,7 @@ feature -- Access/XML attribute values
 		end
 
 	has_attribute (an_attr_name: STRING): BOOLEAN is
-			-- Is `an_attr_name' an atttribute of Current element?
+			-- Is `an_attr_name' an attribute of Current element?
 		require
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
