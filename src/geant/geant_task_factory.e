@@ -82,7 +82,7 @@ feature -- Factory
 		require
 			a_xml_element_not_void: a_xml_element /= Void
 		do
-			create Result.make (project, a_xml_element)
+			create Result.make_from_interpreting_element (create {GEANT_INTERPRETING_ELEMENT}.make (project, a_xml_element))
 		ensure
 			new_exec_task_not_void: Result /= Void
 		end

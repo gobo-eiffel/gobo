@@ -15,93 +15,74 @@ class GEANT_EXEC_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 create
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT) is
+			-- Initialize command.
+		do
+			Precursor (a_project)
+
+				-- Create properties:
+			create command_line.make
+			create exit_code_variable_name.make
+			create accept_errors.make
+		end
+
 feature -- Status report
-
-	is_commandline_executable: BOOLEAN is
-			-- Can command be executed with `command_line'?
-		do
-			Result := command_line /= Void and then command_line.count > 0
-			Result := Result and then fileset = Void
-			Result := Result and then (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
-		ensure
-			command_line_not_void: Result implies command_line /= Void
-			command_line_not_empty: Result implies command_line.count > 0
-			fileset_void: Result implies fileset = Void
-			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
-		end
-
-	is_fileset_executable: BOOLEAN is
-			-- Can command be executed on source fileset `fileset'?
-		do
-			Result := command_line /= Void and then command_line.count > 0
-			Result := Result and then fileset /= Void
-			Result := Result and then exit_code_variable_name = Void
-		ensure
-			command_line_not_void: Result implies command_line /= Void
-			command_line_not_empty: Result implies command_line.count > 0
-			fileset_not_void: Result implies fileset /= Void
-			exit_code_variable_name_void: Result implies exit_code_variable_name = Void
-		end
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
+		local
+			a_is_valid: BOOLEAN_REF
 		do
-			Result := is_commandline_executable xor is_fileset_executable
+			a_is_valid := True
+			validate_condition (command_line.is_defined, "  [echo] error: 'executable' is not defined", a_is_valid)
+			if a_is_valid.item then
+				validate_condition (not command_line.value.is_empty, "  [echo] error: 'executable' is empty", a_is_valid)
+			end
+			if a_is_valid.item then
+				if fileset = Void then
+					single_execution_mode := True
+					if exit_code_variable_name.is_defined then
+						validate_condition (not exit_code_variable_name.value.is_empty, "  [echo] error: 'exit_code_variable' may not be empty", a_is_valid)
+					end
+				else
+					single_execution_mode := False
+					validate_condition (not exit_code_variable_name.is_defined,
+						"  [echo] error: 'exit_code_variable' may not be defined together with 'fileset'", a_is_valid)
+				end
+			end
+			Result := a_is_valid
 		ensure then
-			commandline_executable_xor_is_fileset_executable:
-				Result implies is_commandline_executable xor is_fileset_executable
+			command_line_defined: Result implies command_line.is_defined
+			command_line_not_empty: Result implies not command_line.value.is_empty
+			single_xor_fileset_mode: Result implies (fileset /= Void and then not exit_code_variable_name.is_defined) xor
+				(fileset = Void and then not (exit_code_variable_name.is_defined or else not exit_code_variable_name.value.is_empty))
 		end
 
 feature -- Access
 
-	command_line: STRING
+	command_line: GEANT_STRING_PROPERTY
 			-- Command-line
 
-	exit_code_variable_name: STRING
+	exit_code_variable_name: GEANT_STRING_PROPERTY
 			-- Name of variable holding exit code of called process
 
-	accept_errors: BOOLEAN
+	accept_errors: GEANT_BOOLEAN_PROPERTY
 			-- Should return codes of called process other than zero be accepted?
 
 	fileset: GEANT_FILESET
 		-- Fileset for current command
 
 feature -- Setting
-
-	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name) is
-			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
-		require
-			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
-			a_exit_code_variable_name_not_empty: a_exit_code_variable_name.count > 0
-		do
-			exit_code_variable_name := a_exit_code_variable_name
-		ensure
-			exit_code_set: exit_code_variable_name = a_exit_code_variable_name
-		end
-
-	set_command_line (a_command_line: like command_line) is
-			-- Set `command_line' to `a_command_line'.
-		require
-			a_command_line_not_void: a_command_line /= Void
-			a_command_line_not_empty: a_command_line.count > 0
-		do
-			command_line := a_command_line
-		ensure
-			command_line_set: command_line = a_command_line
-		end
-
-	set_accept_errors (b: BOOLEAN) is
-			-- Set `accept_errors' to `b'.
-		do
-			accept_errors := b
-		ensure
-			accept_errors_set: accept_errors = b
-		end
 
 	set_fileset (a_fileset: like fileset) is
 			-- Set `fileset' to `a_fileset'.
@@ -122,25 +103,25 @@ feature -- Execution
 		local
 			s: STRING
 			a_string_interpreter: GEANT_STRING_INTERPRETER
+			a_accept_errors: BOOLEAN
 		do
-			if is_commandline_executable then
-				project.trace (<<"  [exec] ", command_line>>)
-				execute_shell (command_line)
+			if single_execution_mode then
+				project.trace (<<"  [exec] ", command_line.value>>)
+				execute_shell (command_line.value)
 
 				if exit_code_variable_name /= Void then
 						-- Store return_code of process:
-					project.set_variable_value (exit_code_variable_name, exit_code.out)
+					project.set_variable_value (exit_code_variable_name.value, exit_code.out)
 						-- Reset `exit_code' since return_code of process is available through
 						-- variable 'exit_code_variable_name':
 					exit_code := 0
 				end
 					-- TODO: remove after obsolete period:
-				if accept_errors then
+				a_accept_errors := accept_errors.non_empty_value_or_else (False)
+				if a_accept_errors then
 					exit_code := 0
 				end
 			else
-				check is_fileset_executable: is_fileset_executable end
-
 				if not fileset.is_executable then
 					project.log (<<"  [exec] error: fileset definition wrong">>)
 					exit_code := 1
@@ -157,10 +138,11 @@ feature -- Execution
 					until
 						fileset.after or else exit_code /= 0
 					loop
-						s := a_string_interpreter.interpreted_string (command_line)
+						s := a_string_interpreter.interpreted_string (command_line.value)
 						project.trace (<<"  [exec] ", s>>)
 						execute_shell (s)
-						if accept_errors then
+						a_accept_errors := accept_errors.non_empty_value_or_else (False)
+						if a_accept_errors then
 							exit_code := 0
 						end
 						fileset.forth
@@ -170,5 +152,10 @@ feature -- Execution
 
 
 		end
+
+	single_execution_mode: BOOLEAN
+			-- Should only a single command be executed?
+			-- (If False each command defined through 'fileset' will be executed)
+
 
 end

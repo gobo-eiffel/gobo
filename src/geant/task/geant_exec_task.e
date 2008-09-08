@@ -16,45 +16,33 @@ inherit
 
 	GEANT_TASK
 		redefine
-			make,
+			make_from_interpreting_element,
 			build_command,
 			command
 		end
 
 create
 
-	make
+	make_from_interpreting_element
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; an_xml_element: XM_ELEMENT) is
-			-- Create a new task with information held in `an_element'.
+	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
+			-- Create a new task with information held in `a_ie'.
 		local
 			a_value: STRING
 			a_xml_subelement: XM_ELEMENT
 			a_fs_element: GEANT_FILESET_ELEMENT
 		do
-			Precursor {GEANT_TASK} (a_project, an_xml_element)
+			Precursor {GEANT_TASK} (a_ie)
+			command.command_line.set_string_value_agent (agent a_ie.attribute_value ("executable"))
+			command.exit_code_variable_name.set_string_value_agent (agent a_ie.attribute_value_if_existing ("exit_code_variable"))
+			command.accept_errors.set_string_value_agent (agent a_ie.attribute_value_if_existing ("accept_errors"))
 
-			if has_attribute (Executable_attribute_name) then
-				a_value := attribute_value (Executable_attribute_name)
-				if a_value.count > 0 then
-					command.set_command_line (a_value)
-				end
-			end
-			if has_attribute (Exit_code_variable_attribute_name) then
-				a_value := attribute_value (Exit_code_variable_attribute_name)
-				if a_value.count > 0 then
-					command.set_exit_code_variable_name (a_value)
-				end
-			end
-			if has_attribute (Accept_errors_attribute_name) then
-				command.set_accept_errors (boolean_value (Accept_errors_attribute_name))
-			end
 			a_xml_subelement := xml_element.element_by_name (Fileset_element_name)
 			if a_xml_subelement /= Void then
 				create a_fs_element.make (project, a_xml_subelement)
-				command.set_fileset (a_fs_element.fileset)
+ 				command.set_fileset (a_fs_element.fileset)
 			end
 		end
 
@@ -70,33 +58,6 @@ feature -- Access
 			-- Exec commands
 
 feature {NONE} -- Constants
-
-	Executable_attribute_name: STRING is
-			-- Name of xml attribute executable.
-		once
-			Result := "executable"
-		ensure
-			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
-		end
-
-	Accept_errors_attribute_name: STRING is
-			-- Name of xml attribute accept_errors.
-		once
-			Result := "accept_errors"
-		ensure
-			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
-		end
-
-	Exit_code_variable_attribute_name: STRING is
-			-- Name of xml attribute exit_code_variable.
-		once
-			Result := "exit_code_variable"
-		ensure
-			attribute_name_not_void: Result /= Void
-			atribute_name_not_empty: Result.count > 0
-		end
 
 	Fileset_element_name: STRING is
 			-- Name of xml subelement for fileset
