@@ -41,11 +41,14 @@ feature -- Status report
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
+		local
+			a_is_valid: BOOLEAN_REF
 		do
- 			validate_condition (directory.is_defined, "  [mkdir] error: 'directory' is not defined")
+			a_is_valid := True
+ 			validate_condition (directory.is_defined, "  [mkdir] error: 'directory' is not defined", a_is_valid)
 				-- Prevent 'Call on Void target' for `directory.value' by checking `is_valid' first. TODO: find better solution:
-  			validate_condition (is_valid and then not directory.value.is_empty, "  [mkdir] error: 'directory' is empty")
-			Result := is_valid
+  			validate_condition (a_is_valid and then not directory.value.is_empty, "  [mkdir] error: 'directory' is empty", a_is_valid)
+			Result := a_is_valid
  		ensure then
  			directory_defined: Result implies directory.is_defined
  			directory_not_empty: Result implies not directory.value.is_empty

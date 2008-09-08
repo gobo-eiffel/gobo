@@ -44,12 +44,15 @@ feature -- Status report
 
 	is_executable: BOOLEAN is
 			-- Can command be executed on sourcefile `resource_name'?
+		local
+			a_is_valid: BOOLEAN_REF
 		do
- 			validate_condition (resource_name.is_defined, "  [available] error: 'resource' is not defined")
-  			validate_condition (is_valid and then not resource_name.value.is_empty, "  [available] error: 'resource' is empty")
- 			validate_condition (is_valid and then variable_name.is_defined, "  [available] error: 'variable' is not defined")
-  			validate_condition (is_valid and then not variable_name.value.is_empty, "  [available] error: 'variable' is empty")
-			Result := is_valid
+			a_is_valid := True
+ 			validate_condition (resource_name.is_defined, "  [available] error: 'resource' is not defined", a_is_valid)
+  			validate_condition (a_is_valid and then not resource_name.value.is_empty, "  [available] error: 'resource' is empty", a_is_valid)
+ 			validate_condition (a_is_valid and then variable_name.is_defined, "  [available] error: 'variable' is not defined", a_is_valid)
+  			validate_condition (a_is_valid and then not variable_name.value.is_empty, "  [available] error: 'variable' is empty", a_is_valid)
+			Result := a_is_valid
 		ensure then
  			resource_name_defined: Result implies resource_name.is_defined
  			resource_name_not_empty: Result implies not resource_name.value.is_empty

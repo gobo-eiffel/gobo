@@ -44,14 +44,17 @@ feature -- Status report
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
+		local
+			a_is_valid: BOOLEAN_REF
 		do
-			validate_condition (message_property.is_defined, "  [echo] error: 'message' is not defined")
-			if is_valid then
+			a_is_valid := True
+			validate_condition (message_property.is_defined, "  [echo] error: 'message' is not defined", a_is_valid)
+			if a_is_valid.item then
 				if to_file_property.is_defined then
-					validate_condition (not to_file_property.value.is_empty, "  [echo] error: 'to_file' may not be empty")
+					validate_condition (not to_file_property.value.is_empty, "  [echo] error: 'to_file' may not be empty", a_is_valid)
 				end
 			end
-			Result := is_valid
+			Result := a_is_valid
  		ensure then
  			message_property_defined: Result implies message_property.is_defined
 		end
@@ -111,7 +114,7 @@ feature {NONE} -- Implementation
 		require
 			a_message_not_void: a_message /= Void
 		do
- 			project.trace (<<"  [echo] ">>)
+ 			project.trace (<<"  [echo]">>)
 			project.log (<<a_message>>)
 			exit_code := 0
 		end
@@ -127,7 +130,7 @@ feature {NONE} -- Implementation
 			a_file_not_void: a_file /= Void
 		do
 			if a_file.is_open_write then
-				a_file.put_line (a_message)
+ 				a_file.put_line (a_message)
 				exit_code := 0
 			else
 				project.log (<<"  [echo] error: cannot write to file", a_file.name, "'">>)

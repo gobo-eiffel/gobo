@@ -62,7 +62,7 @@ feature -- Execution
 					if project.is_local_variable (name) then
 						project.trace (<<"  [unset local] name=", name >>)
 					else
-						project.trace (<<"  [unset global name=", name >>)
+						project.trace (<<"  [unset global] name=", name >>)
 					end
 				end
 
