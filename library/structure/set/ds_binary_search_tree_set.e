@@ -38,6 +38,8 @@ inherit
 			key_comparator_settable as equality_tester_settable,
 			set_key_comparator as set_equality_tester
 		redefine
+			cursor_search_forth,
+			cursor_search_back,
 			equality_tester,
 			has_void,
 			root_node
@@ -128,6 +130,40 @@ feature {NONE} -- Setting
 			-- (No "settable" precondition, to be used internally only.)
 		do
 			equality_tester := a_tester
+		end
+
+feature {DS_LINEAR_CURSOR} -- Cursor implementation
+
+	cursor_search_forth (a_cursor: like new_cursor; v: G) is
+			-- Move `a_cursor' to first position at or after its current
+			-- position where `cursor_item (a_cursor)' and `v' are equal.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `after' if not found.
+		do
+			search_node (v)
+			if found_node /= Void then
+				a_cursor.set_position (found_node)
+			else
+				a_cursor.go_after
+			end
+		end
+
+feature {DS_BILINEAR_CURSOR} -- Cursor implementation
+
+	cursor_search_back (a_cursor: like new_cursor; v: G) is
+			-- Move `a_cursor' to first position at or before its current
+			-- position where `cursor_item (a_cursor)' and `v' are equal.
+			-- (Use `equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
+			-- Move `before' if not found.
+		do
+			search_node (v)
+			if found_node /= Void then
+				a_cursor.set_position (found_node)
+			else
+				a_cursor.go_before
+			end
 		end
 
 feature -- Element change

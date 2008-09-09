@@ -35,6 +35,8 @@ inherit
 			key_comparator_settable as equality_tester_settable,
 			set_key_comparator as set_equality_tester
 		undefine
+			cursor_search_forth,
+			cursor_search_back,
 			has_void
 		redefine
 			equality_tester,

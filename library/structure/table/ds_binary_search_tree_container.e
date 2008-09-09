@@ -4,7 +4,7 @@ indexing
 
 	"[
 		Containers using binary search tree algorithms.
-		
+
 		Implementation details:
 		Binary search tree nodes contain two children and a
 		parent. Parents would be avoidable in most cases, but
@@ -1042,6 +1042,8 @@ feature {NONE} -- Element change
 	internal_put (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
+		require
+			valid_key: valid_key (k)
 		local
 			l_newest_tree_node: like root_node
 			l_node: like root_node
@@ -1086,11 +1088,18 @@ feature {NONE} -- Element change
 					on_node_added (l_newest_tree_node)
 				end
 			end
+		ensure
+			inserted: has_key (k) and then item (k) = v
+			same_count: (old has_key (k)) implies (count = old count)
+			one_more: (not old has_key (k)) implies (count = old count + 1)
 		end
 
 	internal_put_new (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- (Performance: O(height).)
+		require
+			valid_key: valid_key (k)
+			new_item: not has_key (k)
 		local
 			l_newest_tree_node: like root_node
 			l_node: like root_node
@@ -1127,6 +1136,9 @@ feature {NONE} -- Element change
 			end
 			count := count + 1
 			on_node_added (l_newest_tree_node)
+		ensure
+			one_more: count = old count + 1
+			inserted: has_key (k) and then item (k) = v
 		end
 
 feature {NONE} -- Element change
