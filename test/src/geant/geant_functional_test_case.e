@@ -52,7 +52,7 @@ feature -- Execution
 				file_system.delete_file ("stderr.txt")
 				file_system.delete_file ("out.txt")
 				file_system.delete_file ("out2.txt")
-				file_system.delete_file ("builld.eant")
+				file_system.delete_file ("build.eant")
 			end
 
 			verbose := False
