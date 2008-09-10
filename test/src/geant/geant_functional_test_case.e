@@ -22,7 +22,13 @@ inherit
 	KL_SHARED_STREAMS
 		export {NONE} all end
 
+	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
+	KL_SHARED_EXCEPTIONS
 		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
@@ -42,18 +48,24 @@ feature -- Execution
 			if not file_system.directory_exists (new_cwd) then
 				file_system.recursive_create_directory (new_cwd)
 				if not file_system.directory_exists (new_cwd) then
-					print ("error: cannot create directory '" + new_cwd + "%'%N")
+					std.error.put_line ("error: cannot create directory '" + new_cwd + "%'")
+					Exceptions.die (1)
 				end
-			else
-				file_system.set_current_working_directory (new_cwd)
-					-- Delete standard files generated during test run:
-				file_system.delete_file ("expected.txt")
-				file_system.delete_file ("stdout.txt")
-				file_system.delete_file ("stderr.txt")
-				file_system.delete_file ("out.txt")
-				file_system.delete_file ("out2.txt")
-				file_system.delete_file ("build.eant")
 			end
+
+				-- Set current working directory to test directory:
+			file_system.set_current_working_directory (new_cwd)
+			if not STRING_.same_string (file_system.cwd, new_cwd) then
+				std.error.put_line ("error: cannot change to directory '" + new_cwd + "%'")
+				Exceptions.die (1)
+			end
+				-- Delete standard files generated during test run:
+			file_system.delete_file ("expected.txt")
+			file_system.delete_file ("stdout.txt")
+			file_system.delete_file ("stderr.txt")
+			file_system.delete_file ("out.txt")
+			file_system.delete_file ("out2.txt")
+			file_system.delete_file ("build.eant")
 
 			verbose := False
 			tasks := ""
