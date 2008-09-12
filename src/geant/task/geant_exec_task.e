@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 	make_from_interpreting_element (a_ie: GEANT_INTERPRETING_ELEMENT) is
 			-- Create a new task with information held in `a_ie'.
 		local
-			a_value: STRING
 			a_xml_subelement: XM_ELEMENT
 			a_fs_element: GEANT_FILESET_ELEMENT
 		do
