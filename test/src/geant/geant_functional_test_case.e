@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class GEANT_FUNCTIONAL_TEST_CASE
+deferred class GEANT_FUNCTIONAL_TEST_CASE
 
 inherit
 
@@ -48,16 +48,14 @@ feature -- Execution
 			if not file_system.directory_exists (new_cwd) then
 				file_system.recursive_create_directory (new_cwd)
 				if not file_system.directory_exists (new_cwd) then
-					std.error.put_line ("error: cannot create directory '" + new_cwd + "%'")
-					Exceptions.die (1)
+					assert ("cannot create directory '" + new_cwd + "%'", False)
 				end
 			end
 
 				-- Set current working directory to test directory:
 			file_system.set_current_working_directory (new_cwd)
 			if not STRING_.same_string (file_system.cwd, new_cwd) then
-				std.error.put_line ("error: cannot change to directory '" + new_cwd + "%'")
-				Exceptions.die (1)
+				assert ("cannot change to directory '" + new_cwd + "%'", False)
 			end
 				-- Delete standard files generated during test run:
 			file_system.delete_file ("expected.txt")
@@ -105,7 +103,7 @@ feature {NONE} -- Implementation
 				end
 				a_file.put_line (s)
 			else
-				print ("error: cannot write to file" + "build.eant")
+				assert ("cannot write to file " + "build.eant", False)
 			end
 			a_file.close
 		end
@@ -271,7 +269,7 @@ feature {NONE} -- Assertion routines
 			if a_file.is_open_write then
 				a_file.put_string (a_expected_content)
 			else
-				print ("error: cannot write to file" + a_filename_expected)
+				assert ("error: cannot write to file " + a_filename_expected, False)
 			end
 			a_file.close
 

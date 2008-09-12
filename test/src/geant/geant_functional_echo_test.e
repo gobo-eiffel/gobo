@@ -68,7 +68,9 @@ feature -- Test
 			-- Test if task 'echo' resolves envrionment variables correctly.
 		do
 			if operating_system.is_windows then
-				check_execute ("echo %%GOBO%% > out2.txt")
+					-- Don't put space before '>', otheriwse an extra space
+					-- character is appended at the end of the line in the file.
+				check_execute ("echo %%GOBO%%> out2.txt")
 			else
 				check_execute ("echo $GOBO > out2.txt")
 			end
@@ -82,17 +84,14 @@ feature -- Test
 	test_built_in_var is
 			-- Test if task 'echo' resolves built-in variables correctly.
 		do
-				-- Test environment variable $GOBO:
 			if operating_system.is_unix then
 				check_execute ("pwd > out2.txt")
-				tasks := "<echo message='${cwd}' to_file='out.txt'/>"
-				basic_test ("test_built_in_var")
-				assert_files_equal ("test_built_in_var2", "out.txt", "out2.txt")
 			else
-				-- TODO: first check on windows that this works:
--- 				check_execute ("cd > out2.txt")
+				check_execute ("cd > out2.txt")
 			end
-
+			tasks := "<echo message='${cwd}' to_file='out.txt'/>"
+			basic_test ("test_built_in_var")
+			assert_files_equal ("test_built_in_var2", "out.txt", "out2.txt")
 		end
 
 	test_echo_validation_0 is
