@@ -751,7 +751,28 @@ feature {NONE} -- Basic operations
 		local
 			an_assertion: ET_TAGGED_ASSERTION
 			an_assertion_item: ET_ASSERTION_ITEM
+			a_tagged: ET_TAGGED_ASSERTION
+			l_position: ET_POSITION
+			l_file_position: ET_FILE_POSITION
 		do
+			if current_system.is_ise then
+					-- ISE does not accept assertions of the form:
+					--      a_tag: -- a comment assertion
+					-- when followed by another tagged assertion.
+				if not assertions.is_empty then
+					a_tagged ?= assertions.last
+					if a_tagged /= Void and then a_tagged.expression = Void then
+						l_position := a_tag.position
+						if not l_position.is_null then
+							create l_file_position.make (filename, l_position.line, l_position.column)
+							l_position := l_file_position
+						else
+							l_position := current_position
+						end
+						report_syntax_error (l_position)
+					end
+				end
+			end
 			an_assertion := ast_factory.new_tagged_assertion (ast_factory.new_tag (a_tag, a_colon))
 			if a_semicolon /= Void then
 				an_assertion_item := ast_factory.new_assertion_semicolon (an_assertion, a_semicolon)
