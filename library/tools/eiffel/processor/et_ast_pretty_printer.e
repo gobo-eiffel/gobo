@@ -261,7 +261,7 @@ feature {ET_AST_NODE} -- Processing
 			l_unlabeled: BOOLEAN
 			l_type: ET_TYPE
 			l_label: ET_IDENTIFIER
-			l_comment: ET_BREAK
+			l_comment: ET_COMMENT
 		do
 			a_list.left_bracket.process (Current)
 			nb := a_list.count
