@@ -219,8 +219,7 @@ feature -- Basic operations
 			a_node_not_void: a_node /= Void
 			a_list_not_void: a_list /= Void
 			no_void_comment: not a_list.has (Void)
-			-- SE 1.2r7 crashes when compiling this line:
-			-- all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
+			all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
 		local
 			old_list: DS_ARRAYED_LIST [ET_BREAK]
 		do
@@ -230,8 +229,7 @@ feature -- Basic operations
 			comment_list := old_list
 		ensure
 			no_void_comment: not a_list.has (Void)
-			-- SE 1.2r7 crashes when compiling this line:
-			-- all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
+			all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
 		end
 
 feature -- Excluded nodes
@@ -1700,8 +1698,7 @@ invariant
 
 	comment_list_not_void: comment_list /= Void
 	no_void_comment: not comment_list.has (Void)
-	-- SE 1.2r7 crashes when compiling this line:
-	-- all_comments: comment_list.for_all (agent {ET_BREAK}.has_comment)
+	all_comments: comment_list.for_all (agent {ET_BREAK}.has_comment)
 	excluded_nodes_not_void: excluded_nodes /= Void
 	no_void_excluded_nod: not excluded_nodes.has (Void)
 

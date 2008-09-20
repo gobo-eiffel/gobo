@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="pretty_printer" default="help">
+
+	<description>
+		system: "Eiffel pretty-printer"
+		copyright: "Copyright (c) 2008, Eric Bezault and others"
+		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="pretty_printer"/>
+		<set name="library" value="tools"/>
+		<set name="system_dir" value="${GOBO}/example/${library}/${system}"/>
+	</target>
+
+</project>

@@ -2911,16 +2911,25 @@ feature {ET_AST_NODE} -- Processing
 	process_feature_clause (a_feature_clause: ET_FEATURE_CLAUSE) is
 			-- Process `a_feature_clause'.
 		local
-			a_clients: ET_CLIENTS
+			l_clients: ET_CLIENTS
+			l_comment: ET_BREAK
 		do
 			a_feature_clause.feature_keyword.process (Current)
-			a_clients := a_feature_clause.clients_clause
-			if a_clients /= Void then
+			l_clients := a_feature_clause.clients_clause
+			if l_clients /= Void then
 				print_space
-				a_clients.process (Current)
+				l_clients.process (Current)
 			end
--- TODO: print comment on same line
-			process_comments
+				-- Make sure that the header comment is printed on the same line.
+			if not comment_list.is_empty then
+				l_comment := comment_list.first
+				comment_list.remove_first
+				print_space
+				indent
+				print_comment (l_comment)
+				dedent
+				process_comments
+			end
 		end
 
 	process_feature_clause_list (a_list: ET_FEATURE_CLAUSE_LIST) is
@@ -3003,11 +3012,15 @@ feature {ET_AST_NODE} -- Processing
 				from i := 1 until i > nb loop
 					a_feature_clause := a_feature_clauses.item (i)
 					a_feature_clause.process (Current)
+					process_comments
+					print_new_line
+					print_new_line
 					from
 					until
 						(l_query = Void or else l_query.feature_clause /= a_feature_clause) and
 						(l_procedure = Void or else l_procedure.feature_clause /= a_feature_clause)
 					loop
+						indent
 						if l_query /= Void and then l_query.feature_clause = a_feature_clause then
 							if l_procedure /= Void and then l_procedure.feature_clause = a_feature_clause then
 								if l_query.name.position < l_procedure.name.position then
@@ -3089,6 +3102,9 @@ feature {ET_AST_NODE} -- Processing
 								l_procedure := Void
 							end
 						end
+						dedent
+						print_new_line
+						print_new_line
 					end
 					i := i + 1
 				end
@@ -3417,7 +3433,9 @@ feature {ET_AST_NODE} -- Processing
 			if l_when_parts /= Void then
 				l_when_parts.process (Current)
 				process_comments
-				print_new_line
+				if not l_when_parts.is_empty then
+					print_new_line
+				end
 			end
 			l_else_compound := an_instruction.else_compound
 			if l_else_compound /= Void then
@@ -3426,7 +3444,6 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 			end
 			process_comments
-			print_new_line
 			an_instruction.end_keyword.process (Current)
 		end
 
@@ -5182,66 +5199,79 @@ feature {NONE} -- Comments
 		require
 			a_break_not_void: a_break /= Void
 			a_break_has_comment: a_break.has_comment
+		local
+			l_comment: STRING
+			i, nb: INTEGER
+			c: CHARACTER
+			l_in_comment: BOOLEAN
 		do
 			comment_printed := False
-			if not indentation_printed then
-				print_indentation
+			l_comment := a_break.text
+			nb := l_comment.count
+			from i := 1 until i > nb loop
+				c := l_comment.item (i)
+				inspect c
+				when ' ', '%T', '%R' then
+					if l_in_comment then
+						print_character (c)
+					end
+				when '%N' then
+					if l_in_comment then
+						print_new_line
+						l_in_comment := False
+					end
+				else
+					l_in_comment := True
+					print_character (c)
+				end
+				i := i + 1
 			end
--- TODO
-			file.put_string ("--")
-			print_new_line
+			if l_in_comment then
+					-- There was no new-line at the end of the comment
+					-- (probably because it appeared at the end of the file).
+					-- But in the header comment we promised to write one.
+				print_new_line
+			end
 			comment_printed := True
 		end
 
 	print_indented_comment (a_break: ET_BREAK) is
-			-- If `a_break' contains a comment, then print it on its own line
-			-- (go to next line if necessary), with an extra indentation level.
-			-- Comments are followed by a new-line.
-		do
-			if comment_printable (a_break) then
-				if indentation_printed then
-						-- We already printed something on this line.
-						-- Move to the next line.
-					print_new_line
-				end
-				indent
-				if comment_printed then
-					print_indentation
-					file.put_string ("--")
-					file.put_new_line
-				end
-				print_comment (a_break)
-				dedent
-			end
-		end
-
-	print_indented_comments (a_breaks: DS_ARRAYED_LIST [ET_BREAK]) is
-			-- If `a_breaks' contains comments, then print them on their own line
-			-- (go to next line if necessary), with an extra indentation level.
+			-- Print comment held in `a_break' on its own line (go to next
+			-- line if necessary), with an extra indentation level.
 			-- Comments are followed by a new-line.
 		require
-			a_breaks_not_void: a_breaks /= Void
-		local
-			i, nb: INTEGER
+			a_break_not_void: a_break /= Void
+			a_break_has_comment: a_break.has_comment
 		do
-			nb := a_breaks.count
-			from i := 1 until i > nb loop
-				print_indented_comment (a_breaks.item (i))
-				i := i + 1
+			if indentation_printed then
+					-- We already printed something on this line.
+					-- Move to the next line.
+				print_new_line
 			end
+			indent
+			if comment_printed then
+				print_indentation
+				file.put_string ("--")
+				file.put_new_line
+			end
+			print_comment (a_break)
+			dedent
+		end
+
+	print_indented_comments (a_comments: DS_ARRAYED_LIST [ET_BREAK]) is
+			-- Print each comment in `a_comments' on their own line (go to
+			-- next line if necessary), with an extra indentation level.
+			-- Comments are followed by a new-line.
+		require
+			a_comments_not_void: a_comments /= Void
+			no_void_comment: not a_comments.has (Void)
+			all_comments: a_comments.for_all (agent {ET_BREAK}.has_comment)
+		do
+			a_comments.do_all (agent print_indented_comment)
 		end
 
 	comment_printed: BOOLEAN
 			-- Has a comment just been printed?
-
-	comment_printable (a_break: ET_BREAK): BOOLEAN is
-			-- Is `a_break' a comment that will be printed?
-		do
-			Result := a_break /= Void and then a_break.has_comment
-		ensure
-			break_not_void: Result implies a_break /= Void
-			break_has_comment: Result implies a_break.has_comment
-		end
 
 	comment_list: DS_ARRAYED_LIST [ET_BREAK]
 			-- List of comments that have not been printed yet
@@ -5255,5 +5285,7 @@ invariant
 	file_is_open_write: file.is_open_write
 	comment_finder_not_void: comment_finder /= Void
 	comment_list_not_void: comment_list /= Void
+	no_void_comment: not comment_list.has (Void)
+	all_comments: comment_list.for_all (agent {ET_BREAK}.has_comment)
 
 end

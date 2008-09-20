@@ -4,7 +4,7 @@
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel Tools Library examples"
-		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -55,6 +55,7 @@
 		<argument name="target"/>
 
 		<geant file="build.eant" target="${target}" dir="bang2create"/>
+		<geant file="build.eant" target="${target}" dir="pretty_printer"/>
 	</target>
 
 </project>
