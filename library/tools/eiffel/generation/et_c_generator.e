@@ -8169,10 +8169,39 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 		local
 			l_string: STRING
 			l_type: ET_CLASS
+			l_atomic: BOOLEAN
+			l_temp: ET_IDENTIFIER
+			l_assignment_target: ET_WRITABLE
+			l_string_type: ET_DYNAMIC_TYPE
 		do
+				-- We consider manifest strings as being atomic expressions.
+			l_atomic := True
+			l_assignment_target := assignment_target
+			assignment_target := Void
+			l_type := a_string.type
 			if in_operand then
-				operand_stack.force (a_string)
-			else
+				if l_atomic then
+					operand_stack.force (a_string)
+				else
+					if l_assignment_target /= Void then
+						operand_stack.force (l_assignment_target)
+						print_indentation
+						print_writable (l_assignment_target)
+					else
+						l_string_type := dynamic_type_set (a_string).static_type
+						l_temp := new_temp_variable (l_string_type)
+						l_temp.set_index (a_string.index)
+						operand_stack.force (l_temp)
+						print_indentation
+						print_temp_name (l_temp, current_file)
+					end
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+				end
+			end
+			if not (l_atomic and in_operand) then
 				l_string := a_string.value
 				l_type := a_string.type
 				if l_type = current_system.string_32_class then
@@ -8186,6 +8215,11 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				current_file.put_character (' ')
 				current_file.put_integer (l_string.count)
 				current_file.put_character (')')
+			end
+			if not l_atomic and in_operand then
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
 		end
 
