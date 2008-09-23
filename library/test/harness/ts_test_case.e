@@ -306,6 +306,7 @@ feature {NONE} -- Execution
 						end
 					end
 				else
+					logger.report_abort
 						-- Report any test failure before reporting the Eiffel exception.
 					an_error_messages := assertions.error_messages
 					nb := an_error_messages.count

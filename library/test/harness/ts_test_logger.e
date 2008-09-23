@@ -21,4 +21,9 @@ feature -- Log
 		deferred
 		end
 
+	report_abort is
+			-- Report that current test has been aborted.
+		deferred
+		end
+
 end

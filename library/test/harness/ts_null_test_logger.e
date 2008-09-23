@@ -34,4 +34,9 @@ feature -- Log
 		do
 		end
 
+	report_abort is
+			-- Report that current test has been aborted.
+		do
+		end
+
 end
