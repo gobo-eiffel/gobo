@@ -1079,14 +1079,14 @@ feature {ET_AST_NODE} -- Processing
 			if an_invariant_part /= Void then
 				process_loop_invariants (an_invariant_part)
 			end
-			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void then
-				process_variant (a_variant_part)
-			end
 			process_expression (an_instruction.until_expression)
 			a_compound := an_instruction.loop_compound
 			if a_compound /= Void then
 				process_compound (a_compound)
+			end
+			a_variant_part := an_instruction.variant_part
+			if a_variant_part /= Void then
+				process_variant (a_variant_part)
 			end
 		end
 

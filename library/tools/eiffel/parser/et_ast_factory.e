@@ -2706,14 +2706,29 @@ feature -- AST nodes
 		end
 
 	new_loop_instruction (a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
-		a_variant: ET_VARIANT; an_until_conditional: ET_CONDITIONAL;
-		a_loop_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION is
+		an_until_conditional: ET_CONDITIONAL; a_loop_compound: ET_COMPOUND;
+		a_variant: ET_VARIANT; an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION is
 			-- New loop instruction
 		do
 			if an_until_conditional /= Void then
 				create Result.make (a_from_compound, an_until_conditional, a_loop_compound)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+				Result.set_has_old_variant_syntax (False)
+			end
+		end
+
+	new_loop_instruction_old_syntax (a_from_compound: ET_COMPOUND; an_invariant: ET_LOOP_INVARIANTS;
+		a_variant: ET_VARIANT; an_until_conditional: ET_CONDITIONAL;
+		a_loop_compound: ET_COMPOUND; an_end: ET_KEYWORD): ET_LOOP_INSTRUCTION is
+			-- New loop instruction with the old syntax where the variant
+			-- clause appears after the invariant clause
+		do
+			if an_until_conditional /= Void then
+				create Result.make (a_from_compound, an_until_conditional, a_loop_compound)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				Result.set_has_old_variant_syntax (True)
 			end
 		end
 

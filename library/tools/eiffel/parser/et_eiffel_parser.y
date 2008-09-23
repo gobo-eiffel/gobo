@@ -208,7 +208,7 @@ create
 %type <ET_TYPE> Type Type_no_class_name Type_no_identifier Type_no_bang_identifier
 %type <ET_TYPE_ITEM> Type_comma
 %type <ET_TYPE_LIST> Convert_types Convert_type_list
-%type <ET_VARIANT> Variant_clause_opt
+%type <ET_VARIANT> Variant_clause
 %type <ET_WHEN_PART> When_part
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
@@ -2438,9 +2438,7 @@ Loop_invariant_clause: E_INVARIANT
 		{ $$ := new_loop_invariants ($1) }
 	;
 
-Variant_clause_opt: -- Empty
-		-- { $$ := Void }
-	| E_VARIANT -- Not standard.
+Variant_clause: E_VARIANT -- Not standard.
 		{ $$ := ast_factory.new_variant ($1, Void, Void) }
 	| E_VARIANT Expression
 		{ $$ := ast_factory.new_variant ($1, Void, $2) }
@@ -2971,8 +2969,24 @@ Instruction: Creation_instruction
 		{ $$ := $1 }
 	| Multi_branch
 		{ $$ := $1 }
-	| From_compound Loop_invariant_clause_opt Variant_clause_opt E_UNTIL Expression Loop_compound E_END
-			{ $$ := ast_factory.new_loop_instruction ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
+	| From_compound Loop_invariant_clause_opt Variant_clause E_UNTIL Expression Loop_compound E_END
+		{ $$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
+	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound E_END
+		{
+			if current_system.is_ise and then current_system.ise_version < ise_6_3_7_4554 then
+				$$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, Void, ast_factory.new_conditional ($3, $4), $5, $6)
+			else
+				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, Void, $6)
+			end
+		}
+	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound Variant_clause E_END
+		{
+			if current_system.is_ise and then current_system.ise_version < ise_6_3_7_4554 then
+				raise_error
+			else
+				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, $6, $7)
+			end
+		}
 -- TODO: generate nice syntax error messages.
 --		%error(7)
 --			{

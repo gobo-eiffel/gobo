@@ -5,7 +5,7 @@ indexing
 		"Shared ISE Eiffel version numbers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -167,6 +167,32 @@ feature -- Access
 			create Result.make_major_minor (6, 2)
 		ensure
 			ise_6_2_latest_not_void: Result /= Void
+		end
+
+	ise_6_3_0: UT_VERSION is
+			-- ISE 6.3.0
+		once
+			create Result.make (6, 3, 0, 0)
+		ensure
+			ise_6_3_0_not_void: Result /= Void
+		end
+
+	ise_6_3_7_4554: UT_VERSION is
+			-- ISE 6.3.7.4554
+			-- First release with the 'variant' clause at the end
+			-- of the 'loop' instruction.
+		once
+			create Result.make (6, 3, 7, 4554)
+		ensure
+			ise_6_2_7_2906: Result /= Void
+		end
+
+	ise_6_3_latest: UT_VERSION is
+			-- After the last release ISE 6.3
+		once
+			create Result.make_major_minor (6, 3)
+		ensure
+			ise_6_3_latest_not_void: Result /= Void
 		end
 
 	ise_latest: UT_VERSION is

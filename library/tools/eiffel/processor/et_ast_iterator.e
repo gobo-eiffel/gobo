@@ -2087,13 +2087,16 @@ feature {ET_AST_NODE} -- Processing
 				an_invariant_part.process (Current)
 			end
 			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void then
+			if a_variant_part /= Void and an_instruction.has_old_variant_syntax then
 				a_variant_part.process (Current)
 			end
 			an_instruction.until_conditional.process (Current)
 			a_compound := an_instruction.loop_compound
 			if a_compound /= Void then
 				a_compound.process (Current)
+			end
+			if a_variant_part /= Void and not an_instruction.has_old_variant_syntax then
+				a_variant_part.process (Current)
 			end
 			an_instruction.end_keyword.process (Current)
 		end

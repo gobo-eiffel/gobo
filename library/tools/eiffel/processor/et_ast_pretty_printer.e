@@ -3695,7 +3695,7 @@ feature {ET_AST_NODE} -- Processing
 				process_comments
 			end
 			a_variant_part := an_instruction.variant_part
-			if a_variant_part /= Void then
+			if a_variant_part /= Void and an_instruction.has_old_variant_syntax then
 				a_variant_part.process (Current)
 				print_new_line
 				process_comments
@@ -3721,6 +3721,11 @@ feature {ET_AST_NODE} -- Processing
 			end
 			print_new_line
 			process_comments
+			if a_variant_part /= Void and not an_instruction.has_old_variant_syntax then
+				a_variant_part.process (Current)
+				print_new_line
+				process_comments
+			end
 			an_instruction.end_keyword.process (Current)
 		end
 

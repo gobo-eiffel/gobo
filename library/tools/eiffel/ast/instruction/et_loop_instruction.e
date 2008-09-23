@@ -5,7 +5,7 @@ indexing
 		"Eiffel loop instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,6 +61,12 @@ feature -- Initialization
 				loop_compound.reset
 			end
 		end
+
+feature -- Status report
+
+	has_old_variant_syntax: BOOLEAN
+			-- Does the variant clause appears after the invariant clause
+			-- (instead of before the end keyword as specified in ECMA)?
 
 feature -- Access
 
@@ -129,6 +135,16 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := end_keyword.break
+		end
+
+feature -- Status setting
+
+	set_has_old_variant_syntax (b: BOOLEAN) is
+			-- Set `has_old_variant_syntax' to `b'.
+		do
+			has_old_variant_syntax := b
+		ensure
+			has_old_variant_syntax_set: has_old_variant_syntax = b
 		end
 
 feature -- Setting

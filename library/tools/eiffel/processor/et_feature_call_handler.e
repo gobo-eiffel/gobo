@@ -1708,11 +1708,6 @@ feature {ET_AST_NODE} -- Processing
 					process_loop_invariants (l_invariant_part)
 					had_error := had_error or has_fatal_error
 				end
-				l_variant_part := an_instruction.variant_part
-				if l_variant_part /= Void then
-					process_variant (l_variant_part)
-					had_error := had_error or has_fatal_error
-				end
 			end
 			process_expression (an_instruction.until_expression)
 			had_error := had_error or has_fatal_error
@@ -1720,6 +1715,13 @@ feature {ET_AST_NODE} -- Processing
 			if l_compound /= Void then
 				process_compound (l_compound)
 				had_error := had_error or has_fatal_error
+			end
+			if assertions_enabled then
+				l_variant_part := an_instruction.variant_part
+				if l_variant_part /= Void then
+					process_variant (l_variant_part)
+					had_error := had_error or has_fatal_error
+				end
 			end
 			reset_fatal_error (had_error)
 		end

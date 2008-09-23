@@ -3155,13 +3155,6 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			l_variant := an_instruction.variant_part
-			if l_variant /= Void then
-				check_loop_variant_validity (l_variant)
-				if has_fatal_error then
-					had_error := True
-				end
-			end
 			boolean_type := current_system.boolean_class
 			l_expression := an_instruction.until_conditional.expression
 			l_expression_context := new_context (current_type)
@@ -3181,6 +3174,13 @@ feature {NONE} -- Instruction validity
 				object_test_scope_builder.build_negated_scope (l_expression, current_object_test_scope)
 				check_instructions_validity (l_compound)
 				current_object_test_scope.keep_object_tests (l_old_scope)
+				if has_fatal_error then
+					had_error := True
+				end
+			end
+			l_variant := an_instruction.variant_part
+			if l_variant /= Void then
+				check_loop_variant_validity (l_variant)
 				if has_fatal_error then
 					had_error := True
 				end
