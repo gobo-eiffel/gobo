@@ -38,9 +38,6 @@ feature -- Test
 
 	test_set_var is
 			-- Test task 'set'
-		local
-			a_expected_task_output: STRING
-			s: STRING
 		do
  			verbose := True
 			tasks := "{
