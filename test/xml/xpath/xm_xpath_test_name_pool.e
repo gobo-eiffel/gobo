@@ -30,7 +30,7 @@ create
 	make_default
 
 feature -- Access
-	
+
 	testing_namespace: STRING is "http://colina.demon.co.uk/gobo/xml/xpath/tests"
 			-- Namespace-URI for these tests
 
@@ -54,13 +54,13 @@ feature -- Test
 
 				shared_name_pool.allocate_code_for_uri (uri)
 				a_uri_code := shared_name_pool.last_uri_code
-		
+
 				another_uri_code := shared_name_pool.code_for_uri (uri)
 				assert ("Same URI code", a_uri_code = another_uri_code)
-				
+
 				counter:= counter + 1
 			end
-			
+
 			shared_name_pool.allocate_namespace_code ("test", testing_namespace)
 			namespace_code := shared_name_pool.last_namespace_code
 			assert ("Namespace code", namespace_code > 0)
@@ -69,17 +69,17 @@ feature -- Test
 
 			shared_name_pool.allocate_code_for_prefix ("test2")
 			prefix_code := shared_name_pool.last_prefix_code
-			assert ("Prefix code", prefix_code >= 12)
+			assert ("Prefix code", prefix_code >= 11)
 			prefix_code := shared_name_pool.code_for_prefix ("test2")
-			assert ("Prefix code", prefix_code >= 12)
+			assert ("Prefix code 2", prefix_code >= 11)
 		end
-	
+
 	test_conversions is
 		local
 			name_code, namespace_code, uri_code, prefix_code: INTEGER
 			an_xml_prefix, namespace_uri, local_name, display_name: STRING
 		do
-			assert ("Prefix code", not shared_name_pool.is_code_for_prefix_allocated("test3"))
+			assert ("Prefix code", not shared_name_pool.is_code_for_prefix_allocated ("test3"))
 			shared_name_pool.allocate_name ("test3", testing_namespace, "test3")
 			name_code := shared_name_pool.last_name_code
 			assert ("Positive name code", name_code > 0)
@@ -124,7 +124,7 @@ feature -- Test
 			name_code := shared_name_pool.name_code ("", "", local_name)
 			assert ("Name codes equal", name_code = original_name_code)
 		end
-	
+
 	test_miscellaneous is
 		local
 			suggestion: STRING
