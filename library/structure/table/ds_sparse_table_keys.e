@@ -205,7 +205,15 @@ feature -- Duplication
 			-- Copy `other' to current container.
 			-- Move all cursors `off' (unless `other = Current').
 		do
-			table.copy (other.table)
+			if other /= Current then
+				if table = Void then
+						-- Called from `twin'.
+					make (other.table.twin)
+				else
+					table.copy (other.table)
+					equality_tester := table.key_equality_tester
+				end
+			end
 		end
 
 feature -- Removal

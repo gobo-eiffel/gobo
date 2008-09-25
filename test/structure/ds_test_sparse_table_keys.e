@@ -154,6 +154,36 @@ feature -- Test
 			assert ("for_all2", a_table1.keys.for_all (agent INTEGER_.is_even))
 		end
 
+	test_twin is
+			-- Test feature `twin'.
+		local
+			l_table1: DS_HASH_TABLE [STRING, INTEGER]
+			l_keys1, l_keys2: DS_BILINEAR [INTEGER]
+			i: INTEGER
+		do
+			create l_table1.make (5)
+			l_table1.force_last ("one", 1)
+			l_table1.force_last ("two", 2)
+			l_table1.force_last ("three", 3)
+			l_table1.force_last ("four", 4)
+			l_keys1 := l_table1.keys
+			l_keys2 := l_keys1.twin
+			l_table1.force_last ("five", 5)
+			from l_keys1.start until l_keys1.after loop
+				i := i + 1
+				assert_integers_equal ("key1_" + i.out, i, l_keys1.item_for_iteration)
+				l_keys1.forth
+			end
+			assert_integers_equal ("keys1_count", 5, i)
+			i := 0
+			from l_keys2.start until l_keys2.after loop
+				i := i + 1
+				assert_integers_equal ("key2_" + i.out, i, l_keys2.item_for_iteration)
+				l_keys2.forth
+			end
+			assert_integers_equal ("keys2_count", 4, i)
+		end
+
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN is
