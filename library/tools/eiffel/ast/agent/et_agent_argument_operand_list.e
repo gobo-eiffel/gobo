@@ -52,11 +52,27 @@ feature -- Initialization
 	reset is
 			-- Reset actual arguments as they were when they were last parsed.
 		local
+			l_actual: ET_AGENT_ARGUMENT_OPERAND_ITEM
+			l_operand: ET_AGENT_ARGUMENT_OPERAND
+			l_operand_comma: ET_AGENT_ARGUMENT_OPERAND_COMMA
+			l_convert: ET_CONVERT_EXPRESSION
 			i, nb: INTEGER
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop
-				storage.item (i).agent_actual_argument.reset
+				l_actual := storage.item (i)
+				l_operand := l_actual.agent_actual_argument
+				l_convert ?= l_operand
+				if l_convert /= Void then
+					l_operand := l_convert.expression
+					l_operand_comma ?= l_actual
+					if l_operand_comma /= Void then
+						l_operand_comma.set_agent_actual_argument (l_operand)
+					else
+						storage.put (l_operand, i)
+					end
+				end
+				l_operand.reset
 				i := i + 1
 			end
 		end

@@ -61,7 +61,8 @@ feature -- Initialization
 			nb := count - 1
 			from i := 0 until i > nb loop
 				l_actual := storage.item (i)
-				l_convert ?= l_actual.expression
+				l_expression := l_actual.expression
+				l_convert ?= l_expression
 				if l_convert /= Void then
 					l_expression := l_convert.expression
 					l_expression_comma ?= l_actual
@@ -70,8 +71,6 @@ feature -- Initialization
 					else
 						storage.put (l_expression, i)
 					end
-				else
-					l_expression := l_actual.expression
 				end
 				l_expression.reset
 				i := i + 1

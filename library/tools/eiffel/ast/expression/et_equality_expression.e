@@ -45,8 +45,18 @@ feature -- Initialization
 
 	reset is
 			-- Reset expression as it was just after it was last parsed.
+		local
+			l_convert: ET_CONVERT_EXPRESSION
 		do
+			l_convert ?= left
+			if l_convert /= Void then
+				left := l_convert.expression
+			end
 			left.reset
+			l_convert ?= right
+			if l_convert /= Void then
+				right := l_convert.expression
+			end
 			right.reset
 		end
 
