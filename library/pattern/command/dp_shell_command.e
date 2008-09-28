@@ -15,6 +15,7 @@ class DP_SHELL_COMMAND
 inherit
 
 	DP_COMMAND
+
 	KL_SHELL_COMMAND
 
 create

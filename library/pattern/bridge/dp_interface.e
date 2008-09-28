@@ -12,10 +12,6 @@ indexing
 
 class DP_INTERFACE
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature {NONE} -- Initialization
 
 	make_from_implementation (an_implementation: like implementation) is

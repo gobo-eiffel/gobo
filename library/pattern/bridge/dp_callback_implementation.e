@@ -14,10 +14,11 @@ indexing
 class DP_CALLBACK_IMPLEMENTATION
 
 inherit
-   
+
 	DP_IMPLEMENTATION
 		redefine
-			can_implement, implement
+			can_implement,
+			implement
 		end
 
 feature {DP_INTERFACE} -- Status report
@@ -39,7 +40,7 @@ feature {DP_INTERFACE} -- Setting
 		end
 
 feature {DP_INTERFACE} -- Implementation
-   
+
 	interface: DP_INTERFACE
 			-- Interface
 

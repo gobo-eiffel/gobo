@@ -12,10 +12,6 @@ indexing
 
 class DP_IMPLEMENTATION
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature {DP_INTERFACE} -- Status report
 
 	can_implement (an_interface: DP_INTERFACE): BOOLEAN is
