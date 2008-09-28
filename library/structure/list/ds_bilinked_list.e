@@ -16,18 +16,31 @@ inherit
 
 	DS_LINKED_LIST [G]
 		redefine
-			new_cursor, put_left_cursor, force_left_cursor,
-			extend_left_cursor, append_left_cursor,
-			remove_last, remove_at_cursor, remove_left_cursor,
-			prune_last, prune_left_cursor, keep_last,
-			first_cell, set_first_cell,
-			cursor_back, cursor_search_back, cursor_go_i_th
+			new_cursor,
+			put_left_cursor,
+			force_left_cursor,
+			extend_left_cursor,
+			append_left_cursor,
+			remove_last,
+			remove_at_cursor,
+			remove_left_cursor,
+			prune_last,
+			prune_left_cursor,
+			keep_last,
+			first_cell,
+			set_first_cell,
+			cursor_back,
+			cursor_search_back,
+			cursor_go_i_th
 		end
 
 create
 
-	make, make_equal, make_from_linear,
-	make_from_array, make_default
+	make,
+	make_equal,
+	make_from_linear,
+	make_from_array,
+	make_default
 
 feature -- Access
 
@@ -188,7 +201,11 @@ feature -- Removal
 			elseif n /= 0 then
 				move_all_cursors_after
 				new_last := last_cell
-				from i := 1 until i > n loop
+				from
+					i := 1
+				until
+					i > n
+				loop
 					new_last := new_last.left
 					i := i + 1
 				end
@@ -216,7 +233,11 @@ feature -- Removal
 					-- Go to the cell to the left of the first
 					-- cell to be removed.
 				new_left := current_cell.left
-				from i := 1 until i > n loop
+				from
+					i := 1
+				until
+					i > n
+				loop
 					new_left := new_left.left
 					i := i + 1
 				end
@@ -248,7 +269,11 @@ feature -- Removal
 			else
 				move_all_cursors_after
 				new_first := last_cell
-				from i := 1 until i = n loop
+				from
+					i := 1
+				until
+					i = n
+				loop
 					new_first := new_first.left
 					i := i + 1
 				end
@@ -318,14 +343,16 @@ feature {DS_BILINKED_LIST_CURSOR} -- Cursor implementation
 			was_off := (a_cell = Void)
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					a_cell = Void or else a_tester.test (a_cell.item, v)
 				loop
 					a_cell := a_cell.left
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					a_cell = Void or else a_cell.item = v
 				loop
 					a_cell := a_cell.left
@@ -365,13 +392,21 @@ feature {DS_BILINKED_LIST_CURSOR} -- Cursor implementation
 					k := count - i + 1
 					if k < i then
 						a_cell := last_cell
-						from j := 1 until j = k loop
+						from
+							j := 1
+						until
+							j = k
+						loop
 							a_cell := a_cell.left
 							j := j + 1
 						end
 					else
 						a_cell := first_cell
-						from j := 1 until j = i loop
+						from
+							j := 1
+						until
+							j = i
+						loop
 							a_cell := a_cell.right
 							j := j + 1
 						end

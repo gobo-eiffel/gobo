@@ -16,7 +16,8 @@ inherit
 
 	DS_LINEAR [G]
 		redefine
-			new_cursor, occurrences,
+			new_cursor,
+			occurrences,
 			equality_tester_settable
 		end
 
@@ -29,8 +30,10 @@ inherit
 		undefine
 			equality_tester_settable
 		redefine
-			put_last, force_last,
-			extend_last, append_last
+			put_last,
+			force_last,
+			extend_last,
+			append_last
 		end
 
 feature -- Access

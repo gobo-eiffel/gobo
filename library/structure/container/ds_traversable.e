@@ -147,8 +147,7 @@ feature {DS_CURSOR} -- Cursor implementation
 					previous_cursor := internal_cursor
 					current_cursor := previous_cursor.next_cursor
 				until
-					current_cursor = a_cursor or
-					current_cursor = Void
+					current_cursor = a_cursor or current_cursor = Void
 				loop
 					previous_cursor := current_cursor
 					current_cursor := current_cursor.next_cursor

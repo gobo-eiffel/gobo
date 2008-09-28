@@ -16,10 +16,6 @@ indexing
 
 class DS_NESTED_LIST_FLATTENER [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make
@@ -46,12 +42,20 @@ feature -- Basic operations
 			a_list: DS_NESTED_LIST [G]
 		do
 			a_cursor := nested_lists.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_cursor.item.set_index (0)
 				a_cursor.forth
 			end
 			create pending.make (nested_lists.count)
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_list := a_cursor.item
 				if a_list.index = 0 then
 					traverse (a_list, pending)
@@ -88,7 +92,11 @@ feature {NONE} -- Implementation
 			a_list.set_index (pending.count)
 			local_items := a_list.local_items
 			remote_cursor := a_list.remote_items.new_cursor
-			from remote_cursor.start until remote_cursor.after loop
+			from
+				remote_cursor.start
+			until
+				remote_cursor.after
+			loop
 				remote_items := remote_cursor.item
 				if remote_items /= a_list then
 					if remote_items.index = 0 then
@@ -106,7 +114,11 @@ feature {NONE} -- Implementation
 						a_list.set_index (index)
 					end
 					local_cursor := remote_items.local_items.new_cursor
-					from local_cursor.start until local_cursor.after loop
+					from
+						local_cursor.start
+					until
+						local_cursor.after
+					loop
 						an_item := local_cursor.item
 						if not local_items.has (an_item) then
 							a_list.add_local_item (an_item)

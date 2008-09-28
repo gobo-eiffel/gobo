@@ -26,12 +26,14 @@ inherit
 
 	KL_IMPORTED_SPECIAL_ROUTINES
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 	KL_IMPORTED_ARRAY_ROUTINES
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 feature {NONE} -- Initialization
@@ -197,7 +199,11 @@ feature {NONE} -- Implementation
 		do
 			item_storage := array_special_item_routines.cloned_array (item_storage)
 			nb := item_storage.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				subitems := item_storage.item (i)
 				if subitems /= Void then
 					item_storage.put (subitems.twin, i)
@@ -218,7 +224,11 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := item_storage.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				item_storage.put (Void, i)
 				i := i + 1
 			end
@@ -260,7 +270,11 @@ feature {NONE} -- Implementation
 		do
 			clashes := ARRAY_SPECIAL_INTEGER_.cloned_array (clashes)
 			nb := clashes.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				subclashes := clashes.item (i)
 				if subclashes /= Void then
 					clashes.put (subclashes.twin, i)
@@ -281,7 +295,11 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := clashes.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				clashes.put (Void, i)
 				i := i + 1
 			end
@@ -332,7 +350,11 @@ feature {NONE} -- Implementation
 		do
 			slots := ARRAY_SPECIAL_INTEGER_.cloned_array (slots)
 			nb := slots.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				subslots := slots.item (i)
 				if subslots /= Void then
 					slots.put (subslots.twin, i)
@@ -353,7 +375,11 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := slots.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				slots.put (Void, i)
 				i := i + 1
 			end

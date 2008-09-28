@@ -31,9 +31,21 @@ feature -- Sort
 			v1, v2: G
 		do
 			if lower < upper then
-				from gap := (upper - lower + 1) // 2 until gap <= 0 loop
-					from i := lower + gap until i > upper loop
-						from j := i - gap until j < lower loop
+				from
+					gap := (upper - lower + 1) // 2
+				until
+					gap <= 0
+				loop
+					from
+						i := lower + gap
+					until
+						i > upper
+					loop
+						from
+							j := i - gap
+						until
+							j < lower
+						loop
 							jg := j + gap
 							v1 := a_container.item (j)
 							v2 := a_container.item (jg)

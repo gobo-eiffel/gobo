@@ -1,7 +1,6 @@
 indexing
 
 	description:
-
 	"[
 		Containers using binary search tree algorithms.
 
@@ -19,7 +18,6 @@ indexing
 		is not in the node classes. Instead there are loops in
 		the binary search tree container classes.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"
@@ -32,7 +30,8 @@ inherit
 
 	DS_BILINEAR [G]
 		undefine
-			has, equality_tester_settable
+			has,
+			equality_tester_settable
 		redefine
 			new_cursor
 		end
@@ -85,7 +84,9 @@ feature {NONE} -- Access
 			has_k: has_key (k)
 		do
 			search_node (k)
-			check found_node_not_void: found_node /= Void end
+			check
+				found_node_not_void: found_node /= Void
+			end
 			Result := found_node.item
 		end
 
@@ -548,16 +549,14 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 			if equality_tester = Void then
 				from
 				until
-					a_cursor.after or else
-					a_cursor.item = v
+					a_cursor.after or else a_cursor.item = v
 				loop
 					a_cursor.forth
 				end
 			else
 				from
 				until
-					a_cursor.after or else
-					equality_tester.test (a_cursor.item, v)
+					a_cursor.after or else equality_tester.test (a_cursor.item, v)
 				loop
 					a_cursor.forth
 				end
@@ -656,16 +655,14 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			if equality_tester = Void then
 				from
 				until
-					a_cursor.before or else
-					a_cursor.item = v
+					a_cursor.before or else a_cursor.item = v
 				loop
 					a_cursor.back
 				end
 			else
 				from
 				until
-					a_cursor.before or else
-					equality_tester.test (a_cursor.item, v)
+					a_cursor.before or else equality_tester.test (a_cursor.item, v)
 				loop
 					a_cursor.back
 				end
@@ -1652,11 +1649,7 @@ feature {NONE} -- Basic operation
 					found_node := Void
 				end
 			else
-				if
-					found_node = Void or else
-					(found_node.key = Void) or else
-					not key_comparator.order_equal (a_key, found_node.key)
-				then
+				if found_node = Void or else (found_node.key = Void) or else not key_comparator.order_equal (a_key, found_node.key) then
 					from
 						found_node := root_node
 					until

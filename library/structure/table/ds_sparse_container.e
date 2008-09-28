@@ -18,7 +18,8 @@ inherit
 
 	DS_BILINEAR [G]
 		redefine
-			has, occurrences,
+			has,
+			occurrences,
 			cursor_off
 		end
 
@@ -68,7 +69,9 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			from i := 1 until
+			from
+				i := 1
+			until
 				clashes_item (i) > Free_watermark
 			loop
 				i := i + 1
@@ -116,7 +119,10 @@ feature -- Measurement
 			i := last_position
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if clashes_item (i) > Free_watermark then
 						if a_tester.test (item_storage_item (i), v) then
 							Result := Result + 1
@@ -126,7 +132,10 @@ feature -- Measurement
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if clashes_item (i) > Free_watermark then
 						if item_storage_item (i) = v then
 							Result := Result + 1
@@ -150,26 +159,28 @@ feature -- Status report
 			i := last_position
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until i < 1 loop
-					if
-						clashes_item (i) > Free_watermark and then
-						a_tester.test (item_storage_item (i), v)
-					then
+				from
+				until
+					i < 1
+				loop
+					if clashes_item (i) > Free_watermark and then a_tester.test (item_storage_item (i), v) then
 						Result := True
-						i := 0  -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until i < 1 loop
-					if
-						clashes_item (i) > Free_watermark and then
-						item_storage_item (i) = v
-					then
+				from
+				until
+					i < 1
+				loop
+					if clashes_item (i) > Free_watermark and then item_storage_item (i) = v then
 						Result := True
-						i := 0  -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
@@ -193,7 +204,11 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					an_action.call ([item_storage_item (i)])
 				end
@@ -208,7 +223,11 @@ feature -- Iteration
 		local
 			i, j: INTEGER
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					j := j + 1
 					an_action.call ([item_storage_item (i), j])
@@ -224,7 +243,11 @@ feature -- Iteration
 			i: INTEGER
 			l_item: G
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					l_item := item_storage_item (i)
 					if a_test.item ([l_item]) then
@@ -243,7 +266,11 @@ feature -- Iteration
 			i, j: INTEGER
 			l_item: G
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					j := j + 1
 					l_item := item_storage_item (i)
@@ -261,11 +288,16 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					if a_test.item ([item_storage_item (i)]) then
 						Result := True
-						i := last_position + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := last_position + 1
 					end
 				end
 				i := i + 1
@@ -279,11 +311,16 @@ feature -- Iteration
 			i: INTEGER
 		do
 			Result := True
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					if not a_test.item ([item_storage_item (i)]) then
 						Result := False
-						i := last_position + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := last_position + 1
 					end
 				end
 				i := i + 1
@@ -386,12 +423,20 @@ feature -- Resizing
 			unset_found_item
 			m := new_modulus (n)
 			slots_resize (m + 1)
-			from i := modulus until i < 0 loop
+			from
+				i := modulus
+			until
+				i < 0
+			loop
 				slots_put (No_position, i)
 				i := i - 1
 			end
 			modulus := m
-			from i := last_position until i < 1 loop
+			from
+				i := last_position
+			until
+				i < 1
+			loop
 				if clashes_item (i) > Free_watermark then
 					h := hash_position (key_storage_item (i))
 					clashes_put (slots_item (h), i)
@@ -420,7 +465,11 @@ feature -- Optimization
 			if last_position /= count then
 				unset_found_item
 				nb := last_position
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if clashes_item (i) > Free_watermark then
 						j := j + 1
 						if j /= i then
@@ -431,7 +480,11 @@ feature -- Optimization
 					end
 					i := i + 1
 				end
-				from j := j + 1 until j > nb loop
+				from
+					j := j + 1
+				until
+					j > nb
+				loop
 					item_storage_put (dead_item, j)
 					key_storage_put (dead_key, j)
 					j := j + 1
@@ -439,7 +492,11 @@ feature -- Optimization
 				clashes_wipe_out
 				slots_wipe_out
 				nb := count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					h := hash_position (key_storage_item (i))
 					clashes_put (slots_item (h), i)
 					slots_put (i, h)
@@ -545,7 +602,8 @@ feature {NONE} -- Implementation
 						loop
 							if a_tester.test (k, key_storage_item (i)) then
 								position := i
-								i := No_position -- Jump out of the loop.
+									-- Jump out of the loop.
+								i := No_position
 							else
 								prev := i
 								i := clashes_item (i)
@@ -554,11 +612,7 @@ feature {NONE} -- Implementation
 						clashes_previous_position := prev
 					end
 				else
-					if
-						position = No_position or else
-						k /= key_storage_item (position) or else
-						k = dead_key
-					then
+					if position = No_position or else k /= key_storage_item (position) or else k = dead_key then
 						from
 							slots_position := hash_position (k)
 							i := slots_item (slots_position)
@@ -569,7 +623,8 @@ feature {NONE} -- Implementation
 						loop
 							if k = key_storage_item (i) then
 								position := i
-								i := No_position -- Jump out of the loop.
+									-- Jump out of the loop.
+								i := No_position
 							else
 								prev := i
 								i := clashes_item (i)
@@ -852,7 +907,11 @@ feature {NONE} -- Cursor movements
 		local
 			a_cursor, next_cursor: like new_cursor
 		do
-			from a_cursor := internal_cursor until (a_cursor = Void) loop
+			from
+				a_cursor := internal_cursor
+			until
+				(a_cursor = Void)
+			loop
 				a_cursor.set_position (after_position)
 				next_cursor := a_cursor.next_cursor
 				a_cursor.set_next_cursor (Void)
@@ -869,7 +928,11 @@ feature {NONE} -- Cursor movements
 		local
 			a_cursor: like new_cursor
 		do
-			from a_cursor := internal_cursor until (a_cursor = Void) loop
+			from
+				a_cursor := internal_cursor
+			until
+				(a_cursor = Void)
+			loop
 				if a_cursor.position = old_position then
 					a_cursor.set_position (new_position)
 				end
@@ -890,7 +953,10 @@ feature {NONE} -- Cursor movements
 			end
 			previous_cursor := a_cursor
 			a_cursor := a_cursor.next_cursor
-			from until (a_cursor = Void) loop
+			from
+			until
+				(a_cursor = Void)
+			loop
 				if a_cursor.position = old_position then
 					a_cursor.set_position (after_position)
 					next_cursor := a_cursor.next_cursor
@@ -916,8 +982,7 @@ feature {NONE} -- Cursor movements
 				i := old_position + 1
 				nb := last_position
 			until
-				i > nb or else
-				clashes_item (i) > Free_watermark
+				i > nb or else clashes_item (i) > Free_watermark
 			loop
 				i := i + 1
 			end
@@ -1008,8 +1073,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 					i := 1
 					nb := last_position
 				until
-					i > nb or else
-					clashes_item (i) > Free_watermark
+					i > nb or else clashes_item (i) > Free_watermark
 				loop
 					i := i + 1
 				end
@@ -1040,8 +1104,7 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 				from
 					i := last_position
 				until
-					i < 1 or else
-					clashes_item (i) > Free_watermark
+					i < 1 or else clashes_item (i) > Free_watermark
 				loop
 					i := i - 1
 				end
@@ -1069,16 +1132,15 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 			p := a_cursor.position
 			if p = before_position then
 				was_off := True
-				-- i := 0
+				i := 0
 			else
-				-- was_off := False
+				was_off := False
 				i := p + 1
 			end
 			from
 				nb := last_position
 			until
-				i > nb or else
-				clashes_item (i) > Free_watermark
+				i > nb or else clashes_item (i) > Free_watermark
 			loop
 				i := i + 1
 			end
@@ -1107,13 +1169,12 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 				was_off := True
 				i := last_position
 			else
-				-- was_off := False
+				was_off := False
 				i := p - 1
 			end
 			from
 			until
-				i < 1 or else
-				clashes_item (i) > Free_watermark
+				i < 1 or else clashes_item (i) > Free_watermark
 			loop
 				i := i - 1
 			end
@@ -1141,14 +1202,16 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 		do
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					cursor_after (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_forth (a_cursor)
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					cursor_after (a_cursor) or else cursor_item (a_cursor) = v
 				loop
 					cursor_forth (a_cursor)
@@ -1167,14 +1230,16 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 		do
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					cursor_before (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_back (a_cursor)
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					cursor_before (a_cursor) or else cursor_item (a_cursor) = v
 				loop
 					cursor_back (a_cursor)
@@ -1223,8 +1288,10 @@ feature {DS_SPARSE_CONTAINER_CURSOR} -- Cursor implementation
 		end
 
 	before_position: INTEGER is -1
+			-- Special value for before cursor position
+
 	after_position: INTEGER is -2
-			-- Special values for before and after cursor positions
+			-- Special values for after cursor position
 
 feature {NONE} -- Configuration
 

@@ -22,8 +22,12 @@ inherit
 
 create
 
-	make, make_equal, make_default,
-	make_map, make_map_equal, make_map_default,
+	make,
+	make_equal,
+	make_default,
+	make_map,
+	make_map_equal,
+	make_map_default,
 	make_with_equality_testers
 
 feature -- Access

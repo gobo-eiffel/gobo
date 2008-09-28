@@ -4,13 +4,12 @@ indexing
 
 		"Extendible containers"
 
-	remark:
-
-		"When implementation permits, items inserted with the %
-		%routines provided in this class will be internally stored %
-		%in the same order as insertion so that a later traversal %
-		%or retrieval will have deterministic behavior."
-
+	remark: "[
+		When implementation permits, items inserted with the
+		routines provided in this class will be internally stored
+		in the same order as insertion so that a later traversal
+		or retrieval will have deterministic behavior.
+	]"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
 	license: "MIT License"

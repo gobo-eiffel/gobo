@@ -58,8 +58,7 @@ feature -- Status report
 			-- Is `a_container' sorted according to
 			-- `a_comparator''s comparison criterion?
 		do
-			Result := a_container.is_empty or else
-				subsorted_with_comparator (a_container, a_comparator, 1, a_container.count)
+			Result := a_container.is_empty or else subsorted_with_comparator (a_container, a_comparator, 1, a_container.count)
 		end
 
 	subsorted (a_container: DS_INDEXABLE [G]; lower, upper: INTEGER): BOOLEAN is
@@ -113,7 +112,8 @@ feature -- Status report
 				v2 := a_container.item (i)
 				if a_comparator.less_than (v2, v1) then
 					Result := False
-					i := upper + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := upper + 1
 				else
 					i := i + 1
 				end

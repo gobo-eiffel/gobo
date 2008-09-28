@@ -12,10 +12,6 @@ indexing
 
 deferred class DS_ARRAY_SORTER [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature {NONE} -- Initialization
 
 	make (a_comparator: like comparator) is
@@ -65,8 +61,7 @@ feature -- Status report
 			a_container_not_void: a_container /= Void
 			a_comparator_not_void: a_comparator /= Void
 		do
-			Result := a_container.count = 0 or else
-				subsorted_with_comparator (a_container, a_comparator, a_container.lower, a_container.upper)
+			Result := a_container.count = 0 or else subsorted_with_comparator (a_container, a_comparator, a_container.lower, a_container.upper)
 		end
 
 	subsorted (a_container: ARRAY [G]; lower, upper: INTEGER): BOOLEAN is
@@ -120,7 +115,8 @@ feature -- Status report
 				v2 := a_container.item (i)
 				if a_comparator.less_than (v2, v1) then
 					Result := False
-					i := upper + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := upper + 1
 				else
 					i := i + 1
 				end

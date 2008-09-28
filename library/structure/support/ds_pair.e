@@ -19,8 +19,6 @@ inherit
 			item as first,
 			put as put_first,
 			make as make_first
-		export
-			{NONE} make_first
 		end
 
 create

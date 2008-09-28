@@ -22,12 +22,15 @@ inherit
 		export
 			{NONE} all
 		redefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 create
 
-	make, make_equal, make_default
+	make,
+	make_equal,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -78,23 +81,32 @@ feature -- Status report
 			i: INTEGER
 			a_tester: like equality_tester
 		do
-			i := count
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from  until i < 1 loop
+				from
+					i := count
+				until
+					i < 1
+				loop
 					if a_tester.test (storage.item (i), v) then
 						Result := True
-						i := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from  until i < 1 loop
+				from
+					i := count
+				until
+					i < 1
+				loop
 					if storage.item (i) = v then
 						Result := True
-						i := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
@@ -143,10 +155,13 @@ feature -- Measurement
 			i: INTEGER
 			a_tester: like equality_tester
 		do
-			i := count
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from  until i < 1 loop
+				from
+					i := count
+				until
+					i < 1
+				loop
 					if a_tester.test (storage.item (i), v) then
 						Result := Result + 1
 					end
@@ -154,7 +169,11 @@ feature -- Measurement
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from  until i < 1 loop
+				from
+					i := count
+				until
+					i < 1
+				loop
 					if storage.item (i) = v then
 						Result := Result + 1
 					end
@@ -234,7 +253,11 @@ feature -- Element change
 		do
 			i := count + 1
 			other_cursor := other.new_cursor
-			from other_cursor.start until other_cursor.after loop
+			from
+				other_cursor.start
+			until
+				other_cursor.after
+			loop
 				storage.put (other_cursor.item, i)
 				i := i + 1
 				other_cursor.forth
@@ -306,7 +329,11 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := count until i < 1 loop
+			from
+				i := count
+			until
+				i < 1
+			loop
 				an_action.call ([storage.item (i)])
 				i := i - 1
 			end
@@ -319,7 +346,11 @@ feature -- Iteration
 			i: INTEGER
 			l_item: G
 		do
-			from i := count until i < 1 loop
+			from
+				i := count
+			until
+				i < 1
+			loop
 				l_item := storage.item (i)
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -334,10 +365,15 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := count until i < 1 loop
+			from
+				i := count
+			until
+				i < 1
+			loop
 				if a_test.item ([storage.item (i)]) then
 					Result := True
-					i := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 0
 				else
 					i := i - 1
 				end
@@ -351,10 +387,15 @@ feature -- Iteration
 			i: INTEGER
 		do
 			Result := True
-			from i := count until i < 1 loop
+			from
+				i := count
+			until
+				i < 1
+			loop
 				if not a_test.item ([storage.item (i)]) then
 					Result := False
-					i := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 0
 				else
 					i := i - 1
 				end
@@ -378,7 +419,11 @@ feature {NONE} -- Implementation
 			dead_item: G
 			i: INTEGER
 		do
-			from i := s until i > e loop
+			from
+				i := s
+			until
+				i > e
+			loop
 				storage.put (dead_item, i)
 				i := i + 1
 			end

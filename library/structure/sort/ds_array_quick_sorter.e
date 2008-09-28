@@ -66,7 +66,10 @@ feature -- Sort
 						m := (l + u) // 2
 						pivot := a_container.item (m)
 						a_container.put (a_container.item (u), m)
-						from until l >= u loop
+						from
+						until
+							l >= u
+						loop
 							from
 							until
 								l >= u or else not a_comparator.less_than (a_container.item (l), pivot)

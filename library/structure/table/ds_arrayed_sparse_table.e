@@ -22,7 +22,8 @@ inherit
 
 	KL_IMPORTED_SPECIAL_ROUTINES
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 feature -- Access
@@ -89,7 +90,11 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			dead_item: G
 		do
-			from i := last_position until i < 1 loop
+			from
+				i := last_position
+			until
+				i < 1
+			loop
 				item_storage.put (dead_item, i)
 				i := i - 1
 			end
@@ -129,7 +134,11 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			dead_key: K
 		do
-			from i := last_position until i < 1 loop
+			from
+				i := last_position
+			until
+				i < 1
+			loop
 				key_storage.put (dead_key, i)
 				i := i - 1
 			end
@@ -171,7 +180,11 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			from i := last_position until i < 1 loop
+			from
+				i := last_position
+			until
+				i < 1
+			loop
 				clashes.put (No_position, i)
 				i := i - 1
 			end
@@ -217,7 +230,11 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			from i := modulus until i < 0 loop
+			from
+				i := modulus
+			until
+				i < 0
+			loop
 				slots.put (No_position, i)
 				i := i - 1
 			end

@@ -16,7 +16,8 @@ inherit
 
 	DS_CURSOR [G]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 feature -- Access

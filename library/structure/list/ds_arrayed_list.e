@@ -16,7 +16,8 @@ inherit
 
 	DS_LIST [G]
 		redefine
-			has, occurrences
+			has,
+			occurrences
 		end
 
 	DS_RESIZABLE [G]
@@ -25,13 +26,17 @@ inherit
 		export
 			{NONE} all
 		redefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 create
 
-	make, make_equal, make_default,
-	make_from_linear, make_from_array
+	make,
+	make_equal,
+	make_default,
+	make_from_linear,
+	make_from_array
 
 feature {NONE} -- Initialization
 
@@ -186,7 +191,10 @@ feature -- Measurement
 			i := count
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from  until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if a_tester.test (storage.item (i), v) then
 						Result := Result + 1
 					end
@@ -194,7 +202,10 @@ feature -- Measurement
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from  until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if storage.item (i) = v then
 						Result := Result + 1
 					end
@@ -216,20 +227,28 @@ feature -- Status report
 			i := count
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if a_tester.test (storage.item (i), v) then
 						Result := True
-						i := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if storage.item (i) = v then
 						Result := True
-						i := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
@@ -440,7 +459,11 @@ feature -- Element change
 		do
 			i := count + 1
 			other_cursor := other.new_cursor
-			from other_cursor.start until other_cursor.after loop
+			from
+				other_cursor.start
+			until
+				other_cursor.after
+			loop
 				storage.put (other_cursor.item, i)
 				i := i + 1
 				other_cursor.forth
@@ -475,7 +498,11 @@ feature -- Element change
 					move_cursors_right (i, n)
 					k := i
 					other_cursor := other.new_cursor
-					from other_cursor.start until other_cursor.after loop
+					from
+						other_cursor.start
+					until
+						other_cursor.after
+					loop
 						storage.put (other_cursor.item, k)
 						k := k + 1
 						other_cursor.forth
@@ -717,18 +744,20 @@ feature -- removal
 				nb := count
 				a_tester := equality_tester
 				if a_tester /= Void then
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						from
 						until
-							i > nb or else
-							not a_tester.test (storage.item (i), v)
+							i > nb or else not a_tester.test (storage.item (i), v)
 						loop
 							i := i + 1
 						end
 						from
 						until
-							i > nb or else
-							a_tester.test (storage.item (i), v)
+							i > nb or else a_tester.test (storage.item (i), v)
 						loop
 							j := j + 1
 							storage.put (storage.item (i), j)
@@ -737,18 +766,20 @@ feature -- removal
 					end
 				else
 						-- Use `=' as comparison criterion.
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						from
 						until
-							i > nb or else
-							storage.item (i) /= v
+							i > nb or else storage.item (i) /= v
 						loop
 							i := i + 1
 						end
 						from
 						until
-							i > nb or else
-							storage.item (i) = v
+							i > nb or else storage.item (i) = v
 						loop
 							j := j + 1
 							storage.put (storage.item (i), j)
@@ -846,7 +877,11 @@ feature {NONE} -- Implementation
 			dead_item: G
 			i: INTEGER
 		do
-			from i := s until i > e loop
+			from
+				i := s
+			until
+				i > e
+			loop
 				storage.put (dead_item, i)
 				i := i + 1
 			end
@@ -867,7 +902,11 @@ feature {NONE} -- Cursor movement
 		local
 			a_cursor, next_cursor: like new_cursor
 		do
-			from a_cursor := internal_cursor until (a_cursor = Void) loop
+			from
+				a_cursor := internal_cursor
+			until
+				(a_cursor = Void)
+			loop
 				a_cursor.set_position (after_position)
 				next_cursor := a_cursor.next_cursor
 				a_cursor.set_next_cursor (Void)
@@ -888,7 +927,10 @@ feature {NONE} -- Cursor movement
 			end
 			previous_cursor := a_cursor
 			a_cursor := a_cursor.next_cursor
-			from until (a_cursor = Void) loop
+			from
+			until
+				(a_cursor = Void)
+			loop
 				if a_cursor.position = i then
 					a_cursor.set_position (after_position)
 					next_cursor := a_cursor.next_cursor
@@ -911,7 +953,11 @@ feature {NONE} -- Cursor movement
 			j: INTEGER
 			a_cursor: like new_cursor
 		do
-			from a_cursor := internal_cursor until (a_cursor = Void) loop
+			from
+				a_cursor := internal_cursor
+			until
+				(a_cursor = Void)
+			loop
 				j := a_cursor.position
 				if j >= i then
 					a_cursor.set_position (j - 1)
@@ -930,7 +976,11 @@ feature {NONE} -- Cursor movement
 			a_cursor: like new_cursor
 			j: INTEGER
 		do
-			from a_cursor := internal_cursor until (a_cursor = Void) loop
+			from
+				a_cursor := internal_cursor
+			until
+				(a_cursor = Void)
+			loop
 				j := a_cursor.position
 				if j >= i then
 					a_cursor.set_position (j + offset)
@@ -1079,14 +1129,16 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			nb := count
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					i > nb or else a_tester.test (item (i), v)
 				loop
 					i := i + 1
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					i > nb or else item (i) = v
 				loop
 					i := i + 1
@@ -1121,14 +1173,16 @@ feature {DS_ARRAYED_LIST_CURSOR} -- Cursor implementation
 			i := a_cursor.position
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					i < 1 or else a_tester.test (item (i), v)
 				loop
 					i := i - 1
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					i < 1 or else item (i) = v
 				loop
 					i := i - 1

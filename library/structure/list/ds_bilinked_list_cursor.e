@@ -16,7 +16,9 @@ inherit
 
 	DS_LINKED_LIST_CURSOR [G]
 		redefine
-			container, current_cell, next_cursor
+			container,
+			current_cell,
+			next_cursor
 		end
 
 create

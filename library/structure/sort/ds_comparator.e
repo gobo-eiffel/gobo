@@ -19,6 +19,7 @@ obsolete
 inherit
 
 	KL_COMPARATOR [G]
+
 	DS_PART_COMPARATOR [G]
 
 end

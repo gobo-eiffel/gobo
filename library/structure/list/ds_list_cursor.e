@@ -16,17 +16,20 @@ inherit
 
 	DS_BILINEAR_CURSOR [G]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 	DS_DYNAMIC_CURSOR [G]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 	DS_INDEXED_CURSOR [G]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 feature -- Access

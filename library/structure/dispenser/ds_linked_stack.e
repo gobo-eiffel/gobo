@@ -20,12 +20,15 @@ inherit
 		export
 			{NONE} all
 		redefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 create
 
-	make, make_equal, make_default
+	make,
+	make_equal,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -66,20 +69,28 @@ feature -- Status report
 			a_cell := first_cell
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_tester.test (a_cell.item, v) then
 						Result := True
-						a_cell := Void  -- Jump out of the loop.
+							-- Jump out of the loop.
+						a_cell := Void
 					else
 						a_cell := a_cell.right
 					end
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_cell.item = v then
 						Result := True
-						a_cell := Void  -- Jump out of the loop.
+							-- Jump out of the loop.
+						a_cell := Void
 					else
 						a_cell := a_cell.right
 					end
@@ -119,7 +130,10 @@ feature -- Measurement
 			a_cell := first_cell
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_tester.test (a_cell.item, v) then
 						Result := Result + 1
 					end
@@ -127,7 +141,10 @@ feature -- Measurement
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_cell.item = v then
 						Result := Result + 1
 					end
@@ -182,7 +199,8 @@ feature -- Comparison
 				loop
 					if a_cell.item /= other_cell.item then
 						Result := False
-						a_cell := Void  -- Jump out of the loop.
+							-- Jump out of the loop.
+						a_cell := Void
 					else
 						a_cell := a_cell.right
 						other_cell := other_cell.right
@@ -261,7 +279,11 @@ feature -- Removal
 				wipe_out
 			else
 				a_cell := first_cell
-				from i := 1 until i > n loop
+				from
+					i := 1
+				until
+					i > n
+				loop
 					a_cell := a_cell.right
 					i := i + 1
 				end
@@ -292,7 +314,10 @@ feature -- Iteration
 			a_cell: like first_cell
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				an_action.call ([a_cell.item])
 				a_cell := a_cell.right
 			end
@@ -306,7 +331,10 @@ feature -- Iteration
 			l_item: G
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				l_item := a_cell.item
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -322,10 +350,14 @@ feature -- Iteration
 			a_cell: like first_cell
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				if a_test.item ([a_cell.item]) then
 					Result := True
-					a_cell := Void -- Jump out of the loop.
+						-- Jump out of the loop.
+					a_cell := Void
 				else
 					a_cell := a_cell.right
 				end
@@ -340,10 +372,14 @@ feature -- Iteration
 		do
 			a_cell := first_cell
 			Result := True
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				if not a_test.item ([a_cell.item]) then
 					Result := False
-					a_cell := Void -- Jump out of the loop.
+						-- Jump out of the loop.
+					a_cell := Void
 				else
 					a_cell := a_cell.right
 				end

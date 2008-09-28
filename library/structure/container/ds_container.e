@@ -16,14 +16,16 @@ inherit
 
 	ANY
 		undefine
-			copy, is_equal
+			copy,
+			is_equal
 		redefine
 			is_equal
 		end
 
 	KL_CLONABLE
 		undefine
-			copy, is_equal
+			copy,
+			is_equal
 		redefine
 			is_equal
 		end
@@ -58,11 +60,7 @@ feature -- Comparison
 			-- Is current container equal to `other'?
 		deferred
 		ensure then
-				-- TODO: The following assertion has been commented out
-				-- because of a bug in SmallEiffel -0.77b2 (implicit
-				-- feature renaming in ACTIVE, COUNTABLE and LINEAR
-				-- in cluster $GOBO/library/other/EiffelBase).
-			-- same_count: Result implies count = other.count
+			same_count: Result implies count = other.count
 		end
 
 feature -- Removal

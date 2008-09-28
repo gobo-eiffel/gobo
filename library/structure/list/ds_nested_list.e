@@ -17,10 +17,6 @@ indexing
 
 deferred class DS_NESTED_LIST [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Access
 
 	local_items: DS_LINEAR [G] is

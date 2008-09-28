@@ -1,14 +1,12 @@
 indexing
 
 	description:
-
 	"[
 		Containers using left-leaning red-black tree algorithm.
 
 		Left-leaning red-black trees are a height balanced variant of binary search trees.
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"
@@ -21,7 +19,8 @@ inherit
 
 	DS_RED_BLACK_TREE_CONTAINER [G, K]
 		redefine
-			on_node_added, on_node_removed,
+			on_node_added,
+			on_node_removed,
 			search_node_for_removal,
 			successor_for_removal,
 			on_node_for_removal_not_found
@@ -208,20 +207,14 @@ feature {NONE} -- Basic operation
 					l_node := l_node.parent
 				end
 				l_left_child := l_node.left_child
-				if
-					is_node_red (l_left_child) and
-					is_node_red (l_left_child.left_child)
-				then
+				if is_node_red (l_left_child) and is_node_red (l_left_child.left_child) then
 					rotate_right (l_left_child)
 					set_colors_after_rotation (l_node)
 					l_node := l_node.parent
 				end
 				l_left_child := l_node.left_child
 				l_right_child := l_node.right_child
-				if
-					is_node_red (l_left_child) and
-					is_node_red (l_right_child)
-				then
+				if is_node_red (l_left_child) and is_node_red (l_right_child) then
 					flip_colors (l_node)
 				end
 				l_node := l_node.parent
@@ -244,18 +237,12 @@ feature {NONE} -- Basic operation
 				l_node := Result.left_child
 			invariant
 				result_not_void: Result /= Void
-				result_is_node_2:
-					Result.is_red or else
-					is_node_red (Result.left_child) or else
-					is_node_red (Result.right_child)
+				result_is_node_2: Result.is_red or else is_node_red (Result.left_child) or else is_node_red (Result.right_child)
 				l_node_set: l_node = Result.left_child
 			until
 				l_node = Void
 			loop
-				if
-					not l_node.is_red and
-					not is_node_red (l_node.left_child)
-				then
+				if not l_node.is_red and not is_node_red (l_node.left_child) then
 					Result := move_red_left (Result)
 				end
 				Result := Result.left_child

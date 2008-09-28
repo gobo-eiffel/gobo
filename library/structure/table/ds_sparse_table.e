@@ -20,8 +20,11 @@ inherit
 			put as force,
 			put_new as force_new
 		undefine
-			has_item, occurrences, cursor_off,
-			key_for_iteration, initialized
+			has_item,
+			occurrences,
+			cursor_off,
+			key_for_iteration,
+			initialized
 		end
 
 	DS_SPARSE_CONTAINER [G, K]
@@ -29,7 +32,9 @@ inherit
 			make as make_sparse_container,
 			has as has_item
 		redefine
-			search, new_cursor, copy,
+			search,
+			new_cursor,
+			copy,
 			initialized
 		end
 
@@ -123,9 +128,7 @@ feature {NONE} -- Initialization
 			before: before
 		end
 
-	make_with_equality_testers (n: INTEGER;
-		an_item_tester: like equality_tester;
-		a_key_tester: like key_equality_tester) is
+	make_with_equality_testers (n: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester) is
 			-- Create an empty table and allocate
 			-- memory space for at least `n' items.
 			-- Use `an_item_tester' as comparison criterion for items.
@@ -151,7 +154,9 @@ feature -- Access
 			-- Item associated with `k'
 		do
 			search_position (k)
-			check hash_k: position /= No_position end
+			check
+				hash_k: position /= No_position
+			end
 			Result := item_storage_item (position)
 		end
 
@@ -161,7 +166,9 @@ feature -- Access
 			has_k: has (k)
 		do
 			search_position (k)
-			check hash_k: position /= No_position end
+			check
+				hash_k: position /= No_position
+			end
 			Result := key_storage_item (position)
 		end
 
@@ -257,8 +264,7 @@ feature -- Comparison
 				loop
 					if clashes_item (i) > Free_watermark then
 						a_key := key_storage_item (i)
-						Result := other.has (a_key) and then
-							other.item (a_key) = item_storage_item (i)
+						Result := other.has (a_key) and then other.item (a_key) = item_storage_item (i)
 					end
 					i := i - 1
 				end
@@ -288,7 +294,9 @@ feature -- Element change
 		do
 			unset_found_item
 			search_position (k)
-			check has_k: position /= No_position end
+			check
+				has_k: position /= No_position
+			end
 			item_storage_put (v, position)
 		end
 
@@ -574,7 +582,11 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					an_action.call ([item_storage_item (i), key_storage_item (i)])
 				end
@@ -591,7 +603,11 @@ feature -- Iteration
 			l_item: G
 			l_key: K
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					l_item := item_storage_item (i)
 					l_key := key_storage_item (i)
@@ -609,11 +625,16 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					if a_test.item ([item_storage_item (i), key_storage_item (i)]) then
 						Result := True
-						i := last_position + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := last_position + 1
 					end
 				end
 				i := i + 1
@@ -627,11 +648,16 @@ feature -- Iteration
 			i: INTEGER
 		do
 			Result := True
-			from i := 1 until i > last_position loop
+			from
+				i := 1
+			until
+				i > last_position
+			loop
 				if clashes_item (i) > Free_watermark then
 					if not a_test.item ([item_storage_item (i), key_storage_item (i)]) then
 						Result := False
-						i := last_position + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := last_position + 1
 					end
 				end
 				i := i + 1

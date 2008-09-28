@@ -4,12 +4,11 @@ indexing
 
 		"Cursors for keys of sparse tables, viewed as linear containers."
 
-	remark:
-
-		"Ideally the sparse tables should be descendants of both %
-		% DS_LINEAR [G] and DS_LINEAR [K], but this does not work %
-		%in Eiffel."
-
+	remark: "[
+		Ideally the sparse tables should be descendants of both
+		DS_LINEAR [G] and DS_LINEAR [K], but this does not work
+		in Eiffel.
+	]"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2006, Eric Bezault and others"
 	license: "MIT License"

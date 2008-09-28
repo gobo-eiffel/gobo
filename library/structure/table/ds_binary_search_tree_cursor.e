@@ -23,7 +23,8 @@ inherit
 
 	DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR [G, K]
 		export
-			{ANY} key
+			{ANY}
+				key
 		redefine
 			container,
 			next_cursor

@@ -18,7 +18,8 @@ inherit
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 feature -- Status report

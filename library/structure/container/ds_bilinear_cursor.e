@@ -16,7 +16,8 @@ inherit
 
 	DS_LINEAR_CURSOR [G]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 feature -- Access

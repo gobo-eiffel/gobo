@@ -4,12 +4,11 @@ indexing
 
 		"Topological sorters"
 
-	remark:
-
-		"Use the algorithm described by D. Knuth in 'The Art of %
-		%Computer Programming', Vol.1 3rd ed. p.265. The detection %
-		%of cycles is described in exercise 23 p.271 and p.548."
-
+	remark: "[
+		Use the algorithm described by D. Knuth in 'The Art of
+		Computer Programming', Vol.1 3rd ed. p.265. The detection
+		of cycles is described in exercise 23 p.271 and p.548.
+	]"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "MIT License"
@@ -18,13 +17,10 @@ indexing
 
 class DS_TOPOLOGICAL_SORTER [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
-	make, make_default
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -267,7 +263,11 @@ feature -- Removal
 			counts.remove (k)
 			successors.remove (k)
 			nb := successors.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				from
 					s1 := successors.item (i)
 					s2 := Void
@@ -358,10 +358,9 @@ feature -- Sort
 			a_counts: like counts
 			a_successors: like successors
 		do
-			-- See description of algorithm in "The Art of Computer
-			-- Programming", Vol.1 3rd ed. p.265. The detection of
-			-- cycles is described in exercise 23 p.271 and p.548.
-
+				-- See description of algorithm in "The Art of Computer
+				-- Programming", Vol.1 3rd ed. p.265. The detection of
+				-- cycles is described in exercise 23 p.271 and p.548.
 			reset
 				-- Clone `counts' and `successors' because they
 				-- are overwritten during the sort.
@@ -378,7 +377,11 @@ feature -- Sort
 				-- as `a_counts' since the corresponding slots in `a_counts'
 				-- are not used anymore.
 			qlinks := a_counts
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				if a_counts.item (i) = 0 then
 					if front = 0 then
 						front := i
@@ -390,10 +393,16 @@ feature -- Sort
 				end
 				i := i + 1
 			end
-			from until front = 0 loop
+			from
+			until
+				front = 0
+			loop
 					-- T5. Output front of queue.
 				succ := a_successors.item (front)
-				from until succ = Void loop
+				from
+				until
+					succ = Void
+				loop
 						-- T6. Erase relation.
 					i := succ.item
 					nb := a_counts.item (i) - 1
@@ -417,17 +426,28 @@ feature -- Sort
 				create cycle.make (nb + 1)
 					-- T8.
 				nb := items.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					qlinks.replace (0, i)
 					i := i + 1
 				end
 					-- T9.
 				create marks.make (1, nb)
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					marks.put (True, i)
 					succ := a_successors.item (i)
 						-- T10.
-					from until succ = Void loop
+					from
+					until
+						succ = Void
+					loop
 						qlinks.replace (i, succ.item)
 						succ := succ.right
 					end
@@ -436,19 +456,29 @@ feature -- Sort
 					-- T11.
 					-- Look for an item that has not been
 					-- sorted in `sorted_items'.
-				from i := 1 until qlinks.item (i) /= 0 loop
+				from
+					i := 1
+				until
+					qlinks.item (i) /= 0
+				loop
 					i := i + 1
 				end
 					-- T12.
 					-- Look for the start of cycle.
-				from until marks.item (i) = False loop
+				from
+				until
+					marks.item (i) = False
+				loop
 					marks.put (False, i)
 					i := qlinks.item (i)
 				end
 					-- T13.
 					-- Traverse the cycle. Note that the items
 					-- in `cycle' are stored in the reverse order.
-				from until marks.item (i) = True loop
+				from
+				until
+					marks.item (i) = True
+				loop
 					cycle.put_last (items.item (i))
 					marks.put (True, i)
 					i := qlinks.item (i)

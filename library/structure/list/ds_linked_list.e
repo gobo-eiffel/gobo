@@ -16,23 +16,33 @@ inherit
 
 	DS_LIST [G]
 		redefine
-			has, occurrences, swap,
-			cursor_off, do_all, do_if,
-			do_all_with_index, do_if_with_index,
-			there_exists, for_all
+			has,
+			occurrences,
+			swap,
+			cursor_off,
+			do_all,
+			do_if,
+			do_all_with_index,
+			do_if_with_index,
+			there_exists,
+			for_all
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		export
 			{NONE} all
 		redefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 create
 
-	make, make_equal, make_from_linear,
-	make_from_array, make_default
+	make,
+	make_equal,
+	make_from_linear,
+	make_from_array,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -143,7 +153,11 @@ feature -- Access
 			j: INTEGER
 		do
 			a_cell := first_cell
-			from j := 1 until j = i loop
+			from
+				j := 1
+			until
+				j = i
+			loop
 				a_cell := a_cell.right
 				j := j + 1
 			end
@@ -187,7 +201,10 @@ feature -- Measurement
 			a_cell := first_cell
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_tester.test (a_cell.item, v) then
 						Result := Result + 1
 					end
@@ -195,7 +212,10 @@ feature -- Measurement
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_cell.item = v then
 						Result := Result + 1
 					end
@@ -217,20 +237,28 @@ feature -- Status report
 			a_cell := first_cell
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_tester.test (a_cell.item, v) then
 						Result := True
-						a_cell := Void  -- Jump out of the loop.
+							-- Jump out of the loop.
+						a_cell := Void
 					else
 						a_cell := a_cell.right
 					end
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until (a_cell = Void) loop
+				from
+				until
+					(a_cell = Void)
+				loop
 					if a_cell.item = v then
 						Result := True
-						a_cell := Void  -- Jump out of the loop.
+							-- Jump out of the loop.
+						a_cell := Void
 					else
 						a_cell := a_cell.right
 					end
@@ -255,7 +283,10 @@ feature -- Iteration
 			a_cell: like first_cell
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				an_action.call ([a_cell.item])
 				a_cell := a_cell.right
 			end
@@ -270,7 +301,10 @@ feature -- Iteration
 			i: INTEGER
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				i := i + 1
 				an_action.call ([a_cell.item, i])
 				a_cell := a_cell.right
@@ -285,7 +319,10 @@ feature -- Iteration
 			l_item: G
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				l_item := a_cell.item
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -304,7 +341,10 @@ feature -- Iteration
 			l_item: G
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				i := i + 1
 				l_item := a_cell.item
 				if a_test.item ([l_item, i]) then
@@ -321,10 +361,14 @@ feature -- Iteration
 			a_cell: like first_cell
 		do
 			a_cell := first_cell
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				if a_test.item ([a_cell.item]) then
 					Result := True
-					a_cell := Void -- Jump out of the loop.
+						-- Jump out of the loop.
+					a_cell := Void
 				else
 					a_cell := a_cell.right
 				end
@@ -339,10 +383,14 @@ feature -- Iteration
 		do
 			a_cell := first_cell
 			Result := True
-			from until (a_cell = Void) loop
+			from
+			until
+				(a_cell = Void)
+			loop
 				if not a_test.item ([a_cell.item]) then
 					Result := False
-					a_cell := Void -- Jump out of the loop.
+						-- Jump out of the loop.
+					a_cell := Void
 				else
 					a_cell := a_cell.right
 				end
@@ -414,7 +462,8 @@ feature -- Comparison
 				loop
 					if a_cell.item /= other_cell.item then
 						Result := False
-						a_cell := Void  -- Jump out of the loop.
+							-- Jump out of the loop.
+						a_cell := Void
 					else
 						a_cell := a_cell.right
 						other_cell := other_cell.right
@@ -472,7 +521,11 @@ feature -- Element change
 			j: INTEGER
 		do
 			a_cell := first_cell
-			from j := 1 until j = i loop
+			from
+				j := 1
+			until
+				j = i
+			loop
 				a_cell := a_cell.right
 				j := j + 1
 			end
@@ -494,7 +547,11 @@ feature -- Element change
 			else
 					-- Go to cell at index `i-1'.
 				a_cell := first_cell
-				from j := 2 until j = i loop
+				from
+					j := 2
+				until
+					j = i
+				loop
 					a_cell := a_cell.right
 					j := j + 1
 				end
@@ -581,12 +638,19 @@ feature -- Element change
 					jj := i
 				end
 				i_cell := first_cell
-				from k := 1 until k = ii loop
+				from
+					k := 1
+				until
+					k = ii
+				loop
 					i_cell := i_cell.right
 					k := k + 1
 				end
 				j_cell := i_cell
-				from until k = jj loop
+				from
+				until
+					k = jj
+				loop
 					j_cell := j_cell.right
 					k := k + 1
 				end
@@ -698,7 +762,11 @@ feature -- Element change
 				end
 					-- Go to cell at index `i-1'.
 				a_cell := first_cell
-				from j := 2 until j = i loop
+				from
+					j := 2
+				until
+					j = i
+				loop
 					a_cell := a_cell.right
 					j := j + 1
 				end
@@ -860,7 +928,11 @@ feature -- Removal
 				move_last_cursors_after
 					-- Go to second to last cell.
 				a_cell := first_cell
-				from i := count until i = 2 loop
+				from
+					i := count
+				until
+					i = 2
+				loop
 					a_cell := a_cell.right
 					i := i - 1
 				end
@@ -884,7 +956,11 @@ feature -- Removal
 			else
 					-- Go to the cell at index `i-1'.
 				a_cell := first_cell
-				from j := 2 until j = i loop
+				from
+					j := 2
+				until
+					j = i
+				loop
 					a_cell := a_cell.right
 					j := j + 1
 				end
@@ -1009,7 +1085,11 @@ feature -- Removal
 			elseif n /= 0 then
 				move_all_cursors_after
 				new_first := first_cell
-				from i := 1 until i > n loop
+				from
+					i := 1
+				until
+					i > n
+				loop
 					new_first := new_first.right
 					i := i + 1
 				end
@@ -1042,13 +1122,21 @@ feature -- Removal
 				move_all_cursors_after
 					-- Go to cell at index `i-1'.
 				a_cell := first_cell
-				from j := 2 until j = i loop
+				from
+					j := 2
+				until
+					j = i
+				loop
 					a_cell := a_cell.right
 					j := j + 1
 				end
 					-- Go to the last cell to be removed.
 				new_right := a_cell.right
-				from j := 1 until j = n loop
+				from
+					j := 1
+				until
+					j = n
+				loop
 					new_right := new_right.right
 					j := j + 1
 				end
@@ -1089,7 +1177,11 @@ feature -- Removal
 					set_first_cell (current_cell)
 				else
 					a_cell := first_cell
-					from i := 1 until i = j loop
+					from
+						i := 1
+					until
+						i = j
+					loop
 						a_cell := a_cell.right
 						i := i + 1
 					end
@@ -1119,7 +1211,11 @@ feature -- Removal
 					-- Go to the cell to the right of the last
 					-- cell to be removed.
 				new_right := current_cell.right
-				from i := 1 until i > n loop
+				from
+					i := 1
+				until
+					i > n
+				loop
 					new_right := new_right.right
 					i := i + 1
 				end
@@ -1151,7 +1247,11 @@ feature -- Removal
 			else
 				move_all_cursors_after
 				new_last := first_cell
-				from i := 1 until i = n loop
+				from
+					i := 1
+				until
+					i = n
+				loop
 					new_last := new_last.right
 					i := i + 1
 				end
@@ -1188,8 +1288,7 @@ feature -- Removal
 					from
 						a_cell := first_cell
 					until
-						(a_cell = Void) or else
-						not a_tester.test (a_cell.item, v)
+						(a_cell = Void) or else not a_tester.test (a_cell.item, v)
 					loop
 						a_cell := a_cell.right
 						n := n + 1
@@ -1209,7 +1308,10 @@ feature -- Removal
 						end
 							-- Remove subsequent occurrences of `v'.
 						right_cell := a_cell.right
-						from until (right_cell = Void) loop
+						from
+						until
+							(right_cell = Void)
+						loop
 							if a_tester.test (right_cell.item, v) then
 								right_cell := right_cell.right
 								if right_cell /= Void then
@@ -1256,7 +1358,10 @@ feature -- Removal
 						end
 							-- Remove subsequent occurrences of `v'.
 						right_cell := a_cell.right
-						from until (right_cell = Void) loop
+						from
+						until
+							(right_cell = Void)
+						loop
 							if right_cell.item = v then
 								right_cell := right_cell.right
 								if right_cell /= Void then
@@ -1354,7 +1459,10 @@ feature {NONE} -- Cursor movement
 			end
 			previous_cursor := a_cursor
 			a_cursor := a_cursor.next_cursor
-			from until (a_cursor = Void) loop
+			from
+			until
+				(a_cursor = Void)
+			loop
 				if a_cursor.current_cell = old_cell then
 					a_cursor.set_after
 					next_cursor := a_cursor.next_cursor
@@ -1376,7 +1484,11 @@ feature {NONE} -- Cursor movement
 		local
 			a_cursor: like new_cursor
 		do
-			from a_cursor := internal_cursor until (a_cursor = Void) loop
+			from
+				a_cursor := internal_cursor
+			until
+				(a_cursor = Void)
+			loop
 				if a_cursor.current_cell = old_cell then
 					a_cursor.set_current_cell (new_cell)
 				end
@@ -1389,7 +1501,11 @@ feature {NONE} -- Cursor movement
 		local
 			a_cursor, next_cursor: like new_cursor
 		do
-			from a_cursor := internal_cursor until (a_cursor = Void) loop
+			from
+				a_cursor := internal_cursor
+			until
+				(a_cursor = Void)
+			loop
 				a_cursor.set_after
 				next_cursor := a_cursor.next_cursor
 				a_cursor.set_next_cursor (Void)
@@ -1467,8 +1583,7 @@ feature {DS_LINKED_LIST_CURSOR} -- Cursor implementation
 	cursor_same_position (a_cursor, other: like new_cursor): BOOLEAN is
 			-- Is `a_cursor' at same position as `other'?
 		do
-			Result := a_cursor.current_cell = other.current_cell and
-				a_cursor.before = other.before and a_cursor.after = other.after
+			Result := a_cursor.current_cell = other.current_cell and a_cursor.before = other.before and a_cursor.after = other.after
 		end
 
 	cursor_start (a_cursor: like new_cursor) is
@@ -1574,14 +1689,16 @@ feature {DS_LINKED_LIST_CURSOR} -- Cursor implementation
 			was_off := (a_cell = Void)
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					a_cell = Void or else a_tester.test (a_cell.item, v)
 				loop
 					a_cell := a_cell.right
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					a_cell = Void or else a_cell.item = v
 				loop
 					a_cell := a_cell.right
@@ -1715,7 +1832,11 @@ feature {DS_LINKED_LIST_CURSOR} -- Cursor implementation
 					new_cell := last_cell
 				else
 					new_cell := first_cell
-					from j := 1 until j = i loop
+					from
+						j := 1
+					until
+						j = i
+					loop
 						new_cell := new_cell.right
 						j := j + 1
 					end

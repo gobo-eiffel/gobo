@@ -1,7 +1,6 @@
 indexing
 
 	description:
-
 	"[
 		Tables using binary search tree algorithms.
 
@@ -9,7 +8,6 @@ indexing
 		critical applications, as the trees may become unbalanced. The alternatives
 		are DS_AVL_TREE and DS_RED_BLACK_TREE.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"
@@ -30,7 +28,8 @@ inherit
 			has as has_item,
 			has_key as has
 		export
-			{ANY} key_comparator_settable
+			{ANY}
+				key_comparator_settable
 		redefine
 			root_node
 		end
@@ -183,10 +182,7 @@ feature -- Duplication
 					loop
 						put_new (l_other_node.item, l_other_node.key)
 						if l_old_cursor_position /= Void then
-							if
-								l_old_cursor_position.item = l_other_node.item and
-								l_old_cursor_position.key = l_other_node.key
-							then
+							if l_old_cursor_position.item = l_other_node.item and l_old_cursor_position.key = l_other_node.key then
 								internal_cursor.set_position (l_old_cursor_position)
 							end
 						end

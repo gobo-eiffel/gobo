@@ -1,12 +1,10 @@
 indexing
 
 	description:
-
 	"[
 		Binary search tree nodes which associate keys and items.
 		Nodes may be linked to other binary search tree nodes.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"
@@ -117,9 +115,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER, DS_BINARY_SEARCH_TREE_CONTAINER_NODE} 
 				end
 				if Result then
 					if right_child /= Void then
-						Result :=
-							a_comparator.greater_than (right_child.key, key) and then
-							right_child.sorted (a_comparator)
+						Result := a_comparator.greater_than (right_child.key, key) and then right_child.sorted (a_comparator)
 					else
 						Result := True
 					end

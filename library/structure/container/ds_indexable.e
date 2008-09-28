@@ -24,8 +24,10 @@ inherit
 			extend as extend_last,
 			append as append_last
 		redefine
-			put_last, force_last,
-			extend_last, append_last
+			put_last,
+			force_last,
+			extend_last,
+			append_last
 		end
 
 feature -- Access
@@ -289,7 +291,11 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > count loop
+			from
+				i := 1
+			until
+				i > count
+			loop
 				an_action.call ([item (i)])
 				i := i + 1
 			end
@@ -302,7 +308,11 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > count loop
+			from
+				i := 1
+			until
+				i > count
+			loop
 				an_action.call ([item (i), i])
 				i := i + 1
 			end
@@ -315,7 +325,11 @@ feature -- Iteration
 			i: INTEGER
 			l_item: G
 		do
-			from i := 1 until i > count loop
+			from
+				i := 1
+			until
+				i > count
+			loop
 				l_item := item (i)
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -332,7 +346,11 @@ feature -- Iteration
 			i: INTEGER
 			l_item: G
 		do
-			from i := 1 until i > count loop
+			from
+				i := 1
+			until
+				i > count
+			loop
 				l_item := item (i)
 				if a_test.item ([l_item, i]) then
 					an_action.call ([l_item, i])
@@ -347,10 +365,15 @@ feature -- Iteration
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > count loop
+			from
+				i := 1
+			until
+				i > count
+			loop
 				if a_test.item ([item (i)]) then
 					Result := True
-					i := count + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := count + 1
 				else
 					i := i + 1
 				end
@@ -364,10 +387,15 @@ feature -- Iteration
 			i: INTEGER
 		do
 			Result := True
-			from i := 1 until i > count loop
+			from
+				i := 1
+			until
+				i > count
+			loop
 				if not a_test.item ([item (i)]) then
 					Result := False
-					i := count + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := count + 1
 				else
 					i := i + 1
 				end

@@ -16,12 +16,14 @@ inherit
 
 	DS_BILINEAR_CURSOR [G]
 		redefine
-			next_cursor, container
+			next_cursor,
+			container
 		end
 
 	DS_SET_CURSOR [G]
 		redefine
-			next_cursor, container
+			next_cursor,
+			container
 		end
 
 feature -- Access

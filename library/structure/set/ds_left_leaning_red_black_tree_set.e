@@ -1,14 +1,12 @@
 indexing
 
 	description:
-
 	"[
 		Sets using left-leaning red-black tree algorithm.
 
 		Left-leaning red-black trees are a height balanced variant of binary search trees.
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"

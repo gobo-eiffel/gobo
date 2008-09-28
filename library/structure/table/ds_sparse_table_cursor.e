@@ -16,12 +16,14 @@ inherit
 
 	DS_SPARSE_CONTAINER_CURSOR [G, K]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 	DS_BILINEAR_TABLE_CURSOR [G, K]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 	DS_DYNAMIC_CURSOR [G]

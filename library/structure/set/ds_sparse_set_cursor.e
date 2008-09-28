@@ -16,7 +16,8 @@ inherit
 
 	DS_SPARSE_CONTAINER_CURSOR [G, G]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 	DS_SET_CURSOR [G]

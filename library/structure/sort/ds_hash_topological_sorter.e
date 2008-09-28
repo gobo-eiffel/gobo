@@ -4,12 +4,11 @@ indexing
 
 		"Topological sorters of hashable items"
 
-	remark:
-
-		"Use the algorithm described by D. Knuth in 'The Art of %
-		%Computer Programming', Vol.1 3rd ed. p.265. The detection %
-		%of cycles is described in exercise 23 p.271 and p.548."
-
+	remark: "[
+		Use the algorithm described by D. Knuth in 'The Art of
+		Computer Programming', Vol.1 3rd ed. p.265. The detection
+		of cycles is described in exercise 23 p.271 and p.548.
+	]"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
 	license: "MIT License"
@@ -22,15 +21,20 @@ inherit
 
 	DS_TOPOLOGICAL_SORTER [G]
 		redefine
-			make, has, index_of,
-			put, force, wipe_out,
+			make,
+			has,
+			index_of,
+			put,
+			force,
+			wipe_out,
 			set_equality_tester,
 			remove
 		end
 
 create
 
-	make, make_default
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -117,7 +121,11 @@ feature -- Removal
 			k := indexes.item (v)
 			indexes.remove (v)
 			a_cursor := indexes.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				j := a_cursor.item
 				if j > k then
 					a_cursor.replace (j - 1)

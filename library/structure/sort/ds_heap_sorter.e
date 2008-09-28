@@ -32,12 +32,12 @@ feature -- Sort
 		do
 			count := upper - lower + 1
 			build_heap (a_container, a_comparator, lower, upper)
-			from 
-				i := count 
+			from
+				i := count
 			variant
 				i
-			until 
-				i <= lower 
+			until
+				i <= lower
 			loop
 				a_container.swap (lower, i)
 				add_root (a_container, a_comparator, lower, i - 1)
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 				end
 				if a_comparator.less_than (a_container.item (root), a_container.item (left_leave_index)) then
 					a_container.swap (root, left_leave_index)
-					add_root(a_container, a_comparator, left_leave_index, upper)
+					add_root (a_container, a_comparator, left_leave_index, upper)
 				end
 			end
 		end
@@ -87,10 +87,10 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			from 
-				i := upper // 2 
-			until 
-				i < lower 
+			from
+				i := upper // 2
+			until
+				i < lower
 			loop
 				add_root (a_container, a_comparator, i, upper)
 				i := i - 1

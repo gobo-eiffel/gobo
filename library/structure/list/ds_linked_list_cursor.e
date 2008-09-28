@@ -16,8 +16,12 @@ inherit
 
 	DS_LIST_CURSOR [G]
 		redefine
-			item, off, after, before,
-			same_position, next_cursor
+			item,
+			off,
+			after,
+			before,
+			same_position,
+			next_cursor
 		end
 
 create
@@ -67,8 +71,7 @@ feature -- Status report
 	same_position (other: like Current): BOOLEAN is
 			-- Is current cursor at same position as `other'?
 		do
-			Result := current_cell = other.current_cell and
-				before = other.before and after = other.after
+			Result := current_cell = other.current_cell and before = other.before and after = other.after
 		end
 
 feature -- Element change

@@ -1,7 +1,6 @@
 indexing
 
 	description:
-
 	"[
 		Sets using binary search tree algorithms.
 
@@ -9,7 +8,6 @@ indexing
 		critical applications, as the trees may become unbalanced. The alternatives
 		are DS_AVL_TREE_SET and DS_RED_BLACK_TREE_SET.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"

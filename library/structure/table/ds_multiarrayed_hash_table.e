@@ -22,11 +22,18 @@ inherit
 
 create
 
-	make, make_equal, make_default,
-	make_with_chunk_size, make_equal_with_chunk_size,
-	make_map, make_map_equal, make_map_default,
-	make_map_with_chunk_size, make_map_equal_with_chunk_size,
-	make_with_equality_testers, make_with_chunk_size_and_equality_testers
+	make,
+	make_equal,
+	make_default,
+	make_with_chunk_size,
+	make_equal_with_chunk_size,
+	make_map,
+	make_map_equal,
+	make_map_default,
+	make_map_with_chunk_size,
+	make_map_equal_with_chunk_size,
+	make_with_equality_testers,
+	make_with_chunk_size_and_equality_testers
 
 feature -- Access
 

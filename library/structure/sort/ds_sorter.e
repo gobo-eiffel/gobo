@@ -12,10 +12,6 @@ indexing
 
 deferred class DS_SORTER [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Status report
 
 	sorted (a_container: DS_SORTABLE [G]): BOOLEAN is

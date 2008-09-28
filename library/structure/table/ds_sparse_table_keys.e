@@ -4,12 +4,11 @@ indexing
 
 		"Keys of sparse tables, viewed as linear containers."
 
-	remark:
-
-		"Ideally the sparse tables should be descendants of both %
-		% DS_LINEAR [G] and DS_LINEAR [K], but this does not work %
-		%in Eiffel."
-
+	remark: "[
+		Ideally the sparse tables should be descendants of both
+		DS_LINEAR [G] and DS_LINEAR [K], but this does not work
+		in Eiffel.
+	]"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
@@ -97,7 +96,11 @@ feature -- Iteration
 			l_cursor: like new_cursor
 		do
 			l_cursor := new_cursor
-			from l_cursor.start until l_cursor.after loop
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
 				an_action.call ([l_cursor.item])
 				l_cursor.forth
 			end
@@ -112,7 +115,11 @@ feature -- Iteration
 			i: INTEGER
 		do
 			l_cursor := new_cursor
-			from l_cursor.start until l_cursor.after loop
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
 				i := i + 1
 				an_action.call ([l_cursor.item, i])
 				l_cursor.forth
@@ -127,7 +134,11 @@ feature -- Iteration
 			l_item: K
 		do
 			l_cursor := new_cursor
-			from l_cursor.start until l_cursor.after loop
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
 				l_item := l_cursor.item
 				if a_test.item ([l_item]) then
 					an_action.call ([l_item])
@@ -146,7 +157,11 @@ feature -- Iteration
 			l_item: K
 		do
 			l_cursor := new_cursor
-			from l_cursor.start until l_cursor.after loop
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
 				i := i + 1
 				l_item := l_cursor.item
 				if a_test.item ([l_item, i]) then
@@ -163,10 +178,15 @@ feature -- Iteration
 			l_cursor: like new_cursor
 		do
 			l_cursor := new_cursor
-			from l_cursor.start until l_cursor.after loop
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
 				if a_test.item ([l_cursor.item]) then
 					Result := True
-					l_cursor.go_after -- Jump out of the loop.
+						-- Jump out of the loop.
+					l_cursor.go_after
 				else
 					l_cursor.forth
 				end
@@ -181,10 +201,15 @@ feature -- Iteration
 		do
 			Result := True
 			l_cursor := new_cursor
-			from l_cursor.start until l_cursor.after loop
+			from
+				l_cursor.start
+			until
+				l_cursor.after
+			loop
 				if not a_test.item ([l_cursor.item]) then
 					Result := False
-					l_cursor.go_after -- Jump out of the loop.
+						-- Jump out of the loop.
+					l_cursor.go_after
 				else
 					l_cursor.forth
 				end
@@ -302,14 +327,16 @@ feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 		do
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					cursor_after (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_forth (a_cursor)
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					cursor_after (a_cursor) or else cursor_item (a_cursor) = v
 				loop
 					cursor_forth (a_cursor)
@@ -328,14 +355,16 @@ feature {DS_SPARSE_TABLE_KEYS_CURSOR} -- Cursor implementation
 		do
 			a_tester := equality_tester
 			if a_tester /= Void then
-				from until
+				from
+				until
 					cursor_before (a_cursor) or else a_tester.test (cursor_item (a_cursor), v)
 				loop
 					cursor_back (a_cursor)
 				end
 			else
 					-- Use `=' as comparison criterion.
-				from until
+				from
+				until
 					cursor_before (a_cursor) or else cursor_item (a_cursor) = v
 				loop
 					cursor_back (a_cursor)

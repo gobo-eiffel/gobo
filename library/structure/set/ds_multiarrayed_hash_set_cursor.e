@@ -16,7 +16,8 @@ inherit
 
 	DS_MULTIARRAYED_SPARSE_SET_CURSOR [G]
 		redefine
-			container, next_cursor
+			container,
+			next_cursor
 		end
 
 create

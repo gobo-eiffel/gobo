@@ -16,7 +16,8 @@ inherit
 
 	DS_LINEAR [G]
 		redefine
-			new_cursor, cursor_off
+			new_cursor,
+			cursor_off
 		end
 
 feature -- Access

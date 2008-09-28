@@ -22,7 +22,9 @@ inherit
 
 create
 
-	make, make_equal, make_default
+	make,
+	make_equal,
+	make_default
 
 feature -- Access
 

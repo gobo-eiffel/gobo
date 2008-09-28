@@ -1,14 +1,12 @@
 indexing
 
 	description:
-
 	"[
 		Containers using red-black tree algorithm.
 
 		Red-black trees are a height balanced variant of binary search trees.
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"
@@ -226,7 +224,7 @@ feature {NONE} -- Removal
 			-- Case 2.
 		require
 			a_parent_not_void: a_parent /= Void
-			a_sibling_not_void: a_sibling /= void
+			a_sibling_not_void: a_sibling /= Void
 		do
 			a_parent.set_is_red (True)
 			a_sibling.set_is_red (False)

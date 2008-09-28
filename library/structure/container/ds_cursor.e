@@ -16,12 +16,14 @@ inherit
 
 	ANY
 		redefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 feature -- Access

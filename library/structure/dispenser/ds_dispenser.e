@@ -16,9 +16,12 @@ inherit
 
 	DS_EXTENDIBLE [G]
 		redefine
-			put, force,
-			extend, append,
-			do_all, do_if
+			put,
+			force,
+			extend,
+			append,
+			do_all,
+			do_if
 		end
 
 feature -- Access

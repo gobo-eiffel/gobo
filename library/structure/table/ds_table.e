@@ -18,7 +18,8 @@ inherit
 
 	KL_VALUES [G, K]
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 feature -- Access

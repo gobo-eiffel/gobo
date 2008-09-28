@@ -16,7 +16,9 @@ inherit
 
 	DS_TRAVERSABLE [G]
 		redefine
-			new_cursor, do_all, do_if
+			new_cursor,
+			do_all,
+			do_if
 		end
 
 	DS_SEARCHABLE [G]
@@ -81,7 +83,11 @@ feature -- Measurement
 			a_cursor: like new_cursor
 		do
 			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_cursor.search_forth (v)
 				if not a_cursor.after then
 					Result := Result + 1
@@ -173,7 +179,11 @@ feature -- Duplication
 		do
 			create Result.make (1, count)
 			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				i := i + 1
 				Result.put (a_cursor.item, i)
 				a_cursor.forth

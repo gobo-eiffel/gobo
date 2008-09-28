@@ -30,8 +30,16 @@ feature -- Sort
 			flipped: BOOLEAN
 			v1, v2: G
 		do
-			from i := upper until i <= lower loop
-				from j := lower until j >= i loop
+			from
+				i := upper
+			until
+				i <= lower
+			loop
+				from
+					j := lower
+				until
+					j >= i
+				loop
 					v1 := a_container.item (j)
 					v2 := a_container.item (j + 1)
 					if a_comparator.less_than (v2, v1) then

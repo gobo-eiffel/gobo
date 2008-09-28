@@ -16,7 +16,8 @@ inherit
 
 	DS_DISPENSER [G]
 		redefine
-			put, force
+			put,
+			force
 		end
 
 feature -- Element change

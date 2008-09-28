@@ -17,7 +17,8 @@ inherit
 
 	DS_SET [G]
 		undefine
-			has, cursor_off
+			has,
+			cursor_off
 		end
 
 	DS_SPARSE_CONTAINER [G, G]
@@ -25,7 +26,9 @@ inherit
 			occurrences,
 			equality_tester_settable
 		redefine
-			has, new_cursor, search
+			has,
+			new_cursor,
+			search
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
@@ -72,7 +75,9 @@ feature -- Access
 			-- if not void, use `=' criterion otherwise.)
 		do
 			search_position (v)
-			check hash_v: position /= No_position end
+			check
+				hash_v: position /= No_position
+			end
 			Result := item_storage_item (position)
 		end
 
@@ -373,7 +378,7 @@ feature -- Element change
 			end
 		ensure then
 			last: (not old has (v)) implies last = v
-			-- not_changed: old has (v) implies all items at the same position
+---			not_changed: old has (v) implies all items at the same position
 		end
 
 	extend (other: DS_LINEAR [G]) is
@@ -385,7 +390,11 @@ feature -- Element change
 		do
 			if other /= Current then
 				a_cursor := other.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					put (a_cursor.item)
 					a_cursor.forth
 				end
@@ -403,7 +412,11 @@ feature -- Element change
 		do
 			if other /= Current then
 				a_cursor := other.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					put_last (a_cursor.item)
 					a_cursor.forth
 				end
@@ -461,7 +474,11 @@ feature -- Basic operations
 					resize (new_capacity (nb))
 				end
 				a_cursor := other.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					an_item := a_cursor.item
 					if not has (an_item) then
 						put_new (an_item)
@@ -488,8 +505,11 @@ feature -- Basic operations
 			else
 				move_all_cursors_after
 				unset_found_item
-				i := last_position
-				from until i < 1 loop
+				from
+					i := last_position
+				until
+					i < 1
+				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
 						if not other.has (an_item) then
@@ -518,8 +538,11 @@ feature -- Basic operations
 			else
 				move_all_cursors_after
 				unset_found_item
-				i := last_position
-				from until i < 1 loop
+				from
+					i := last_position
+				until
+					i < 1
+				loop
 					if clashes_item (i) > Free_watermark then
 						an_item := item_storage_item (i)
 						if other.has (an_item) then
@@ -557,7 +580,11 @@ feature -- Basic operations
 					resize (new_capacity (nb))
 				end
 				a_cursor := other.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					an_item := a_cursor.item
 					search (an_item)
 					if found then

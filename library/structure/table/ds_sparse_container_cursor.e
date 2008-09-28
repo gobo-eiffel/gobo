@@ -97,12 +97,11 @@ feature {DS_SPARSE_CONTAINER} -- Implementation
 
 invariant
 
--- The following assertion is commented out because
--- some Eiffel compilers check invariants even when the
--- execution of the creation procedure is not completed.
--- (In this case, this is `container' which is not fully
--- created yet, breaking its invariant.)
-
---	valid_position: valid_position (position)
+	-- The following assertion is commented out because
+	-- some Eiffel compilers check invariants even when the
+	-- execution of the creation procedure is not completed.
+	-- (In this case, this is `container' which is not fully
+	-- created yet, breaking its invariant.)
+---	valid_position: valid_position (position)
 
 end

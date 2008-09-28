@@ -19,19 +19,25 @@ inherit
 		rename
 			make_with_equality_testers as make_sparse_table_with_equality_testers
 		redefine
-			make, make_equal, make_default,
-			make_map, make_map_equal, make_map_default,
+			make,
+			make_equal,
+			make_default,
+			make_map,
+			make_map_equal,
+			make_map_default,
 			new_cursor
 		end
 
 	KL_IMPORTED_SPECIAL_ROUTINES
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 	KL_IMPORTED_ARRAY_ROUTINES
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 feature {NONE} -- Initialization
@@ -44,8 +50,7 @@ feature {NONE} -- Initialization
 			-- Use `equal' as comparison criterion for keys.
 		do
 			create key_equality_tester
-			make_with_chunk_size_and_equality_testers (n,
-				default_chunk_size, Void, key_equality_tester)
+			make_with_chunk_size_and_equality_testers (n, default_chunk_size, Void, key_equality_tester)
 		ensure then
 			chunk_size_set: chunk_size = default_chunk_size
 		end
@@ -59,8 +64,7 @@ feature {NONE} -- Initialization
 		do
 			create equality_tester
 			create key_equality_tester
-			make_with_chunk_size_and_equality_testers (n,
-				default_chunk_size, equality_tester, key_equality_tester)
+			make_with_chunk_size_and_equality_testers (n, default_chunk_size, equality_tester, key_equality_tester)
 		ensure then
 			chunk_size_set: chunk_size = default_chunk_size
 		end
@@ -76,8 +80,7 @@ feature {NONE} -- Initialization
 			a_chunk_size_positive: a_chunk_size > 0
 		do
 			create key_equality_tester
-			make_with_chunk_size_and_equality_testers (n,
-				a_chunk_size, Void, key_equality_tester)
+			make_with_chunk_size_and_equality_testers (n, a_chunk_size, Void, key_equality_tester)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -97,8 +100,7 @@ feature {NONE} -- Initialization
 		do
 			create equality_tester
 			create key_equality_tester
-			make_with_chunk_size_and_equality_testers (n,
-				a_chunk_size, equality_tester, key_equality_tester)
+			make_with_chunk_size_and_equality_testers (n, a_chunk_size, equality_tester, key_equality_tester)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -114,8 +116,7 @@ feature {NONE} -- Initialization
 			-- Use `equal' as comparison criterion for keys.
 		do
 			create key_equality_tester
-			make_with_chunk_size_and_equality_testers (default_capacity,
-				default_chunk_size, Void, key_equality_tester)
+			make_with_chunk_size_and_equality_testers (default_capacity, default_chunk_size, Void, key_equality_tester)
 		ensure then
 			chunk_size_set: chunk_size = default_chunk_size
 		end
@@ -127,8 +128,7 @@ feature {NONE} -- Initialization
 			-- Use `=' as comparison criterion for items.
 			-- Use `=' as comparison criterion for keys.
 		do
-			make_with_chunk_size_and_equality_testers (n,
-				default_chunk_size, Void, Void)
+			make_with_chunk_size_and_equality_testers (n, default_chunk_size, Void, Void)
 		ensure then
 			chunk_size_set: chunk_size = default_chunk_size
 		end
@@ -141,8 +141,7 @@ feature {NONE} -- Initialization
 			-- Use `=' as comparison criterion for keys.
 		do
 			create equality_tester
-			make_with_chunk_size_and_equality_testers (n,
-				default_chunk_size, equality_tester, Void)
+			make_with_chunk_size_and_equality_testers (n, default_chunk_size, equality_tester, Void)
 		ensure then
 			chunk_size_set: chunk_size = default_chunk_size
 		end
@@ -157,8 +156,7 @@ feature {NONE} -- Initialization
 			positive_n: n >= 0
 			a_chunk_size_positive: a_chunk_size > 0
 		do
-			make_with_chunk_size_and_equality_testers (n,
-				a_chunk_size, Void, Void)
+			make_with_chunk_size_and_equality_testers (n, a_chunk_size, Void, Void)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -177,8 +175,7 @@ feature {NONE} -- Initialization
 			a_chunk_size_positive: a_chunk_size > 0
 		do
 			create equality_tester
-			make_with_chunk_size_and_equality_testers (n,
-				a_chunk_size, equality_tester, Void)
+			make_with_chunk_size_and_equality_testers (n, a_chunk_size, equality_tester, Void)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -193,15 +190,12 @@ feature {NONE} -- Initialization
 			-- Use `=' as comparison criterion for items.
 			-- Use `=' as comparison criterion for keys.
 		do
-			make_with_chunk_size_and_equality_testers (default_capacity,
-				default_chunk_size, Void, Void)
+			make_with_chunk_size_and_equality_testers (default_capacity, default_chunk_size, Void, Void)
 		ensure then
 			chunk_size_set: chunk_size = default_chunk_size
 		end
 
-	make_with_equality_testers (n: INTEGER;
-		an_item_tester: like equality_tester;
-		a_key_tester: like key_equality_tester) is
+	make_with_equality_testers (n: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester) is
 			-- Create an empty table and allocate memory space for at
 			-- least `n' items. Array chunks will have a size of
 			-- `default_chunk_size'.
@@ -210,8 +204,7 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			make_with_chunk_size_and_equality_testers (n,
-				default_chunk_size, an_item_tester, a_key_tester)
+			make_with_chunk_size_and_equality_testers (n, default_chunk_size, an_item_tester, a_key_tester)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -221,9 +214,7 @@ feature {NONE} -- Initialization
 			key_equality_tester_set: key_equality_tester = a_key_tester
 		end
 
-	make_with_chunk_size_and_equality_testers (n: INTEGER;
-		a_chunk_size: INTEGER; an_item_tester: like equality_tester;
-		a_key_tester: like key_equality_tester) is
+	make_with_chunk_size_and_equality_testers (n: INTEGER; a_chunk_size: INTEGER; an_item_tester: like equality_tester; a_key_tester: like key_equality_tester) is
 			-- Create an empty table and allocate memory space for at
 			-- least `n' items. Array chunks will have a size of `a_chunk_size'.
 			-- Use `an_item_tester' as comparison criterion for items.
@@ -336,7 +327,11 @@ feature {NONE} -- Implementation
 		do
 			item_storage := array_special_item_routines.cloned_array (item_storage)
 			nb := item_storage.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				subitems := item_storage.item (i)
 				if subitems /= Void then
 					item_storage.put (subitems.twin, i)
@@ -357,7 +352,11 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := item_storage.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				item_storage.put (Void, i)
 				i := i + 1
 			end
@@ -397,7 +396,11 @@ feature {NONE} -- Implementation
 		do
 			key_storage := array_special_key_routines.cloned_array (key_storage)
 			nb := key_storage.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				subkeys := key_storage.item (i)
 				if subkeys /= Void then
 					key_storage.put (subkeys.twin, i)
@@ -418,7 +421,11 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := key_storage.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				key_storage.put (Void, i)
 				i := i + 1
 			end
@@ -460,7 +467,11 @@ feature {NONE} -- Implementation
 		do
 			clashes := ARRAY_SPECIAL_INTEGER_.cloned_array (clashes)
 			nb := clashes.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				subclashes := clashes.item (i)
 				if subclashes /= Void then
 					clashes.put (subclashes.twin, i)
@@ -481,7 +492,11 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := clashes.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				clashes.put (Void, i)
 				i := i + 1
 			end
@@ -532,7 +547,11 @@ feature {NONE} -- Implementation
 		do
 			slots := ARRAY_SPECIAL_INTEGER_.cloned_array (slots)
 			nb := slots.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				subslots := slots.item (i)
 				if subslots /= Void then
 					slots.put (subslots.twin, i)
@@ -553,7 +572,11 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			nb := slots.upper
-			from i := 0 until i > nb loop
+			from
+				i := 0
+			until
+				i > nb
+			loop
 				slots.put (Void, i)
 				i := i + 1
 			end

@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_list_not_void: a_list /= Void
 		do
 			container := a_list
-			-- position := 0
+			position := 0
 		ensure
 			container_set: container = a_list
 			before: before
@@ -87,8 +87,7 @@ feature {DS_ARRAYED_LIST} -- Implementation
 	valid_position (p: INTEGER): BOOLEAN is
 			-- Is `p' a valid value for `position'?
 		do
-			Result := p = container.after_position or
-				(0 <= p and p <= container.count)
+			Result := p = container.after_position or (0 <= p and p <= container.count)
 		ensure
 			not_off: (1 <= p and p <= container.count) implies Result
 			before: (p = 0) implies Result
@@ -105,12 +104,11 @@ feature {DS_ARRAYED_LIST} -- Implementation
 
 invariant
 
--- The following assertion is commented out because
--- some Eiffel compilers check invariants even when the
--- execution of the creation procedure is not completed.
--- (In this case, this is `container' which is not fully
--- created yet, breaking its invariant.)
-
---	valid_position: valid_position (position)
+	-- The following assertion is commented out because
+	-- some Eiffel compilers check invariants even when the
+	-- execution of the creation procedure is not completed.
+	-- (In this case, this is `container' which is not fully
+	-- created yet, breaking its invariant.)
+---	valid_position: valid_position (position)
 
 end

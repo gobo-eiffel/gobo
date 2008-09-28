@@ -1,12 +1,10 @@
 indexing
 
 	description:
-
 	"[
 		Binary search tree nodes which associate keys and items.
 		Nodes may be linked to other binary search tree nodes.
 	]"
-
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"
