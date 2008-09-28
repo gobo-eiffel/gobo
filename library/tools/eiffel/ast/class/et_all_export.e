@@ -16,7 +16,8 @@ inherit
 
 	ET_EXPORT
 		redefine
-			is_all
+			is_all,
+			is_none_all
 		end
 
 create
@@ -85,6 +86,12 @@ feature -- Status report
 
 	is_all: BOOLEAN is True
 			-- Is current export clause of the form 'export {CLIENT} all'?
+
+	is_none_all: BOOLEAN is
+			-- Is current export clause of the form 'export {NONE} all'?
+		do
+			Result := clients_clause.is_none
+		end
 
 feature -- Setting
 

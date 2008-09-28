@@ -57,6 +57,50 @@ feature -- Initialization
 
 feature -- Access
 
+	has_non_null_export: BOOLEAN is
+			-- Is there at least one non-null export in current export clause?
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if not storage.item (i).is_semicolon then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
+				end
+				i := i + 1
+			end
+		ensure
+			not_empty: Result implies not is_empty
+		end
+
+	is_none_all: BOOLEAN is
+			-- Is there only one non-null export clause of the form 'export {NONE} all'?
+		local
+			i, nb: INTEGER
+			l_export: ET_EXPORT
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				l_export := storage.item (i)
+				if not l_export.is_semicolon then
+					if l_export.is_none_all then
+						Result := True
+					else
+						Result := False
+							-- Jump out of the loop.
+						i := nb
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			has_non_null_export: Result implies has_non_null_export
+		end
+
+feature -- Access
+
 	export_keyword: ET_KEYWORD
 			-- 'export' keyword
 

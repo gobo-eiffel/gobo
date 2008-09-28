@@ -161,6 +161,12 @@ inherit
 			process_when_part_list
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
@@ -523,9 +529,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -533,6 +539,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -930,8 +937,11 @@ feature {ET_AST_NODE} -- Processing
 			an_invariants: ET_INVARIANTS
 		do
 			process_break (a_class.leading_break)
-			process_comments
--- TODO: add new-line if a comment has been printed.
+			if not comment_list.is_empty then
+				process_comments
+					-- Add an extra line after the comment.
+				print_new_line
+			end
 			an_indexing := a_class.first_indexing
 			if an_indexing /= Void then
 				an_indexing.process (Current)
@@ -980,7 +990,8 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				print_new_line
+				l_obsolete_string.process (Current)
 				dedent
 				process_comments
 				print_new_line
@@ -1023,8 +1034,8 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 			end
 			a_class.end_keyword.process (Current)
--- TODO: print the comment on the same line as the end keyword.
-			process_comments
+			process_comments_on_same_line
+			print_new_line
 		end
 
 	process_class_type (a_type: ET_CLASS_TYPE) is
@@ -1035,7 +1046,9 @@ feature {ET_AST_NODE} -- Processing
 			a_type_mark := a_type.type_mark
 			if a_type_mark /= Void then
 				a_type_mark.process (Current)
-				print_space
+				if a_type_mark.is_keyword then
+					print_space
+				end
 			end
 			a_type.name.process (Current)
 		end
@@ -1082,6 +1095,19 @@ feature {ET_AST_NODE} -- Processing
 			-- Comments are followed by a new-line. Then wipe out the list.
 		do
 			print_indented_comments (comment_list)
+			comment_list.wipe_out
+		ensure
+			no_more_comments: comment_list.is_empty
+		end
+
+	process_comments_on_same_line is
+			-- Process comments that have not been printed yet.
+			-- If `comment_list' is not empty, then print a space followed by
+			-- the first comment on the current line. The remaining comments
+			-- are printed on their own line, with an extra indentation level.
+			-- Comments are followed by a new-line. Then wipe out the list.
+		do
+			print_comments_on_same_line (comment_list)
 			comment_list.wipe_out
 		ensure
 			no_more_comments: comment_list.is_empty
@@ -1177,9 +1203,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -1187,6 +1213,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -1570,9 +1597,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -1580,6 +1607,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -1637,7 +1665,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				process_comments
 				print_new_line
 				dedent
@@ -1696,9 +1724,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -1706,6 +1734,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -1748,7 +1777,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				process_comments
 				print_new_line
 				dedent
@@ -1812,9 +1841,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -1822,6 +1851,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -1879,7 +1909,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				process_comments
 				print_new_line
 				dedent
@@ -2038,9 +2068,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -2048,6 +2078,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -2090,7 +2121,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				process_comments
 				print_new_line
 				dedent
@@ -2233,9 +2264,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -2243,6 +2274,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -2321,9 +2353,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -2331,6 +2363,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -2400,9 +2433,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 			nb := a_list.count
 			from i := 1 until i > nb loop
+				if i /= 1 then
+					print_new_line
+				end
 				a_list.item (i).process (Current)
 				process_comments
-				print_new_line
 				i := i + 1
 			end
 		end
@@ -2421,16 +2456,53 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
+			l_export: ET_EXPORT
 		do
-			if not a_list.is_empty then
--- TODO: a_list.has_non_null_export
+			if a_list.has_non_null_export then
 				a_list.export_keyword.process (Current)
 				indent
 				nb := a_list.count
 				from i := 1 until i > nb loop
-					process_comments
-					print_new_line
-					a_list.item (i).process (Current)
+					l_export := a_list.item (i)
+					if l_export.is_semicolon then
+							-- Skip null export.
+						comment_finder.find_comments (l_export, comment_list)
+					else
+						process_comments
+						print_new_line
+						l_export.process (Current)
+					end
+					i := i + 1
+				end
+				process_comments
+				dedent
+			else
+				comment_finder.find_comments (a_list, comment_list)
+			end
+		end
+
+	process_export_list_same_line (a_list: ET_EXPORT_LIST) is
+			-- Process `a_list'.
+			-- Print every thing on the same line.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			i, nb: INTEGER
+			l_export: ET_EXPORT
+		do
+			if a_list.has_non_null_export then
+				a_list.export_keyword.process (Current)
+				indent
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					l_export := a_list.item (i)
+					if l_export.is_semicolon then
+							-- Skip null export.
+						comment_finder.find_comments (l_export, comment_list)
+					else
+						print_space
+						l_export.process (Current)
+					end
 					i := i + 1
 				end
 				process_comments
@@ -2476,9 +2548,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -2486,6 +2558,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -2543,7 +2616,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				dedent
 				process_comments
 				print_new_line
@@ -2722,9 +2795,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -2732,6 +2805,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -2774,7 +2848,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				dedent
 				process_comments
 				print_new_line
@@ -2912,7 +2986,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature_clause'.
 		local
 			l_clients: ET_CLIENTS
-			l_comment: ET_BREAK
 		do
 			a_feature_clause.feature_keyword.process (Current)
 			l_clients := a_feature_clause.clients_clause
@@ -2920,16 +2993,7 @@ feature {ET_AST_NODE} -- Processing
 				print_space
 				l_clients.process (Current)
 			end
-				-- Make sure that the header comment is printed on the same line.
-			if not comment_list.is_empty then
-				l_comment := comment_list.first
-				comment_list.remove_first
-				print_space
-				indent
-				print_comment (l_comment)
-				dedent
-				process_comments
-			end
+			process_comments_on_same_line
 		end
 
 	process_feature_clause_list (a_list: ET_FEATURE_CLAUSE_LIST) is
@@ -2993,18 +3057,17 @@ feature {ET_AST_NODE} -- Processing
 			j, nb_queries: INTEGER
 			k, nb_procedures: INTEGER
 		do
--- TODO
 			a_feature_clauses := a_class.feature_clauses
 			if a_feature_clauses /= Void then
 				j := 1
 				l_queries := a_class.queries
-				nb_queries := l_queries.count
+				nb_queries := l_queries.declared_count
 				if nb_queries > 0 then
 					l_query := l_queries.first
 				end
 				k := 1
 				l_procedures := a_class.procedures
-				nb_procedures := l_procedures.count
+				nb_procedures := l_procedures.declared_count
 				if nb_procedures > 0 then
 					l_procedure := l_procedures.first
 				end
@@ -3327,6 +3390,7 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 			l_item: ET_INDEXING_ITEM
 			l_indexing: ET_INDEXING
+			l_tagged_indexing: ET_TAGGED_INDEXING
 		do
 			if a_list.is_empty then
 					-- Do not print empty indexing, but keep the comments if any.
@@ -3342,7 +3406,13 @@ feature {ET_AST_NODE} -- Processing
 					print_new_line
 					l_item := a_list.item (i)
 					l_indexing := l_item.indexing_clause
-					l_indexing.process (Current)
+					l_tagged_indexing ?= l_indexing
+					if l_tagged_indexing /= Void and then STRING_.same_string (l_tagged_indexing.tag.identifier.lower_name, "description") then
+						process_tagged_indexing_indented (l_tagged_indexing)
+						print_new_line
+					else
+						l_indexing.process (Current)
+					end
 					comment_finder.add_excluded_node (l_indexing)
 					comment_finder.find_comments (l_item, comment_list)
 					comment_finder.reset_excluded_nodes
@@ -3449,19 +3519,31 @@ feature {ET_AST_NODE} -- Processing
 
 	process_invariants (a_list: ET_INVARIANTS) is
 			-- Process `a_list'.
+		local
+			l_break: ET_BREAK
+			l_has_comment_assertion: BOOLEAN
 		do
-			if a_list.is_empty then
+			l_break := a_list.break
+			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty invariants, but keep the comments if any.
+					-- Note that a comment is considered as an assertion here,
+					-- and the invariant is not considered empty in that case.
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.invariant_keyword.process (Current)
 				print_new_line
 				print_new_line
-				indent
-				process_comments
-				process_assertions (a_list)
-				process_comments
-				dedent
+				if a_list.is_empty then
+						-- Print any comments with only one extra indentation level.
+					process_comments
+				else
+					indent
+					process_comments
+					process_assertions (a_list)
+					process_comments
+					dedent
+				end
 			end
 		end
 
@@ -3561,7 +3643,9 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				print_space
+				if l_type_mark.is_keyword then
+					print_space
+				end
 			end
 			a_type.like_keyword.process (Current)
 			print_space
@@ -3576,7 +3660,9 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				print_space
+				if l_type_mark.is_keyword then
+					print_space
+				end
 			end
 			a_type.like_keyword.process (Current)
 			print_space
@@ -3731,18 +3817,30 @@ feature {ET_AST_NODE} -- Processing
 
 	process_loop_invariants (a_list: ET_LOOP_INVARIANTS) is
 			-- Process `a_list'.
+		local
+			l_break: ET_BREAK
+			l_has_comment_assertion: BOOLEAN
 		do
-			if a_list.is_empty then
+			l_break := a_list.break
+			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty invariants, but keep the comments if any.
+					-- Note that a comment is considered as an assertion here,
+					-- and the invariant is not considered empty in that case.
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.invariant_keyword.process (Current)
 				print_new_line
-				indent
-				process_comments
-				process_assertions (a_list)
-				process_comments
-				dedent
+				if a_list.is_empty then
+						-- Print any comments with only one extra indentation level.
+					process_comments
+				else
+					indent
+					process_comments
+					process_assertions (a_list)
+					process_comments
+					dedent
+				end
 			end
 		end
 
@@ -3893,9 +3991,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -3903,6 +4001,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -3960,7 +4059,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				process_comments
 				print_new_line
 				dedent
@@ -4127,9 +4226,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -4137,6 +4236,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -4179,7 +4279,7 @@ feature {ET_AST_NODE} -- Processing
 				indent
 				process_comments
 				print_new_line
-				l_obsolete_message.process (Current)
+				l_obsolete_string.process (Current)
 				process_comments
 				print_new_line
 				dedent
@@ -4307,40 +4407,68 @@ feature {ET_AST_NODE} -- Processing
 			a_parent.type.process (Current)
 			indent
 			a_renames := a_parent.renames
-			if a_renames /= Void then
-				print_new_line
-				process_comments
-				a_renames.process (Current)
-			end
 			an_exports := a_parent.exports
-			if an_exports /= Void then
-				print_new_line
-				process_comments
-				an_exports.process (Current)
-			end
 			an_undefines := a_parent.undefines
-			if an_undefines /= Void then
-				print_new_line
-				process_comments
-				an_undefines.process (Current)
-			end
 			a_redefines := a_parent.redefines
-			if a_redefines /= Void then
-				print_new_line
-				process_comments
-				a_redefines.process (Current)
-			end
 			a_selects := a_parent.selects
-			if a_selects /= Void then
-				print_new_line
-				process_comments
-				a_selects.process (Current)
-			end
 			an_end_keyword := a_parent.end_keyword
-			if an_end_keyword /= Void then
-				print_new_line
-				process_comments
-				an_end_keyword.process (Current)
+			if a_renames = Void and an_undefines = Void and a_redefines = Void and a_selects = Void then
+				if an_exports = Void then
+						-- Do not print the 'end' keyword if any.
+					if an_end_keyword /= Void then
+						comment_finder.find_comments (an_end_keyword, comment_list)
+					end
+					process_comments
+				elseif an_exports.is_none_all then
+						-- Print everything on the same line.
+					print_new_line
+					process_comments
+					process_export_list_same_line (an_exports)
+					if an_end_keyword /= Void then
+						print_space
+						an_end_keyword.process (Current)
+					end
+				else
+					print_new_line
+					process_comments
+					an_exports.process (Current)
+					if an_end_keyword /= Void then
+						print_new_line
+						process_comments
+						an_end_keyword.process (Current)
+					end
+				end
+			else
+				if a_renames /= Void then
+					print_new_line
+					process_comments
+					a_renames.process (Current)
+				end
+				if an_exports /= Void then
+					print_new_line
+					process_comments
+					an_exports.process (Current)
+				end
+				if an_undefines /= Void then
+					print_new_line
+					process_comments
+					an_undefines.process (Current)
+				end
+				if a_redefines /= Void then
+					print_new_line
+					process_comments
+					a_redefines.process (Current)
+				end
+				if a_selects /= Void then
+					print_new_line
+					process_comments
+					a_selects.process (Current)
+				end
+				if an_end_keyword /= Void then
+					print_new_line
+					process_comments
+					an_end_keyword.process (Current)
+				end
 			end
 			dedent
 		end
@@ -4366,8 +4494,9 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.find_comments (l_item, comment_list)
 				comment_finder.reset_excluded_nodes
 				if i /= nb then
-					print_new_line
 					process_comments
+					print_new_line
+					print_new_line
 				end
 				i := i + 1
 			end
@@ -4379,9 +4508,15 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		local
 			a_then_keyword: ET_TOKEN
+			l_break: ET_BREAK
+			l_has_comment_assertion: BOOLEAN
 		do
-			if a_list.is_empty then
+			l_break := a_list.break
+			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty postconditions, but keep the comments if any.
+					-- Note that a comment is considered as an assertion here,
+					-- and the postcondition is not considered empty in that case.
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.ensure_keyword.process (Current)
@@ -4391,11 +4526,16 @@ feature {ET_AST_NODE} -- Processing
 					a_then_keyword.process (Current)
 				end
 				print_new_line
-				indent
-				process_comments
-				process_assertions (a_list)
-				process_comments
-				dedent
+				if a_list.is_empty then
+						-- Print any comments with only one extra indentation level.
+					process_comments
+				else
+					indent
+					process_comments
+					process_assertions (a_list)
+					process_comments
+					dedent
+				end
 			end
 		end
 
@@ -4403,22 +4543,34 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		local
 			an_else_keyword: ET_TOKEN
+			l_break: ET_BREAK
+			l_has_comment_assertion: BOOLEAN
 		do
-			if a_list.is_empty then
+			l_break := a_list.break
+			l_has_comment_assertion := l_break /= Void and then l_break.has_comment
+			if a_list.is_empty and not l_has_comment_assertion then
 					-- Do not print empty preconditions, but keep the comments if any.
+					-- Note that a comment is considered as an assertion here,
+					-- and the precondition is not considered empty in that case.
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.require_keyword.process (Current)
 				an_else_keyword := a_list.else_keyword
 				if an_else_keyword /= Void then
+					print_space
 					an_else_keyword.process (Current)
 				end
 				print_new_line
-				indent
-				process_comments
-				process_assertions (a_list)
-				process_comments
-				dedent
+				if a_list.is_empty then
+						-- Print any comments with only one extra indentation level.
+					process_comments
+				else
+					indent
+					process_comments
+					process_assertions (a_list)
+					process_comments
+					dedent
+				end
 			end
 		end
 
@@ -4486,9 +4638,20 @@ feature {ET_AST_NODE} -- Processing
 
 	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
 			-- Process `an_expression'.
+		local
+			l_operator: ET_OPERATOR
+			l_expression: ET_EXPRESSION
 		do
-			an_expression.name.process (Current)
-			print_space
+			l_operator := an_expression.name
+			l_expression := an_expression.expression
+			l_operator.process (Current)
+			if l_operator.is_prefix_minus or l_operator.is_prefix_plus then
+				if l_expression.is_prefix_expression then
+					print_space
+				end
+			else
+				print_space
+			end
 			an_expression.expression.process (Current)
 		end
 
@@ -4873,6 +5036,46 @@ feature {ET_AST_NODE} -- Processing
 			process_indexing (an_indexing)
 		end
 
+	process_tagged_indexing_indented (an_indexing: ET_TAGGED_INDEXING) is
+			-- Process `an_indexing'.
+			-- Print the tag, then the indexing terms indented two lines below.
+		require
+			an_indexing_not_void: an_indexing /= Void
+		local
+			l_tag: ET_TAG
+			l_identifier: ET_IDENTIFIER
+			l_terms: ET_INDEXING_TERM_LIST
+			l_verbatim_string: ET_VERBATIM_STRING
+		do
+			l_tag := an_indexing.tag
+			l_identifier := l_tag.identifier
+			l_identifier.process (Current)
+			comment_finder.add_excluded_node (l_identifier)
+			comment_finder.find_comments (l_tag, comment_list)
+			comment_finder.reset_excluded_nodes
+				-- The AST may or may not contain the colon.
+				-- So we have to print it explicitly here.
+			tokens.colon_symbol.process (Current)
+			l_terms := an_indexing.terms
+			if l_terms.count = 1 then
+				l_verbatim_string ?= l_terms.first.indexing_term
+			end
+			if l_verbatim_string /= Void then
+				print_new_line
+				process_indexing (an_indexing)
+					-- We make as if a comment was printed so that
+					-- a subsequent call to `print_new_line' in
+					-- `process_indexing_list' will not print anything.
+				comment_printed := True
+			else
+				print_new_line
+				print_new_line
+				indent
+				process_indexing (an_indexing)
+				dedent
+			end
+		end
+
 	process_token (a_token: ET_TOKEN) is
 			-- Process `a_token'.
 		do
@@ -4896,7 +5099,9 @@ feature {ET_AST_NODE} -- Processing
 			l_type_mark := a_type.type_mark
 			if l_type_mark /= Void then
 				l_type_mark.process (Current)
-				print_space
+				if l_type_mark.is_keyword then
+					print_space
+				end
 			end
 			process_token (tokens.tuple_keyword)
 			comment_finder.find_comments (a_type.tuple_keyword, comment_list)
@@ -4974,9 +5179,9 @@ feature {ET_AST_NODE} -- Processing
 				l_extended_feature_name := l_synonym.extended_name
 				l_feature_name := l_extended_feature_name.feature_name
 				l_alias_name := l_extended_feature_name.alias_name
-				l_synonym := l_synonym.synonym
 				l_feature_name.process (Current)
-				if l_alias_name /= Void then
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
 					print_space
 					l_alias_name.process (Current)
 					comment_finder.add_excluded_node (l_alias_name)
@@ -4984,6 +5189,7 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.add_excluded_node (l_feature_name)
 				comment_finder.find_comments (l_extended_feature_name, comment_list)
 				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
 				if l_synonym /= Void then
 						-- The AST may or may not contain the comma.
 						-- So we have to print it explicitly here.
@@ -5209,6 +5415,9 @@ feature {NONE} -- Comments
 			i, nb: INTEGER
 			c: CHARACTER
 			l_in_comment: BOOLEAN
+			l_in_comment_marker: BOOLEAN
+			l_dash_number: INTEGER
+			l_old_indentation: INTEGER
 		do
 			comment_printed := False
 			l_comment := a_break.text
@@ -5217,15 +5426,46 @@ feature {NONE} -- Comments
 				c := l_comment.item (i)
 				inspect c
 				when ' ', '%T', '%R' then
+					if l_in_comment_marker then
+						l_in_comment_marker := False
+						print_string ("--")
+					end
 					if l_in_comment then
 						print_character (c)
 					end
 				when '%N' then
+					if l_in_comment_marker then
+						l_in_comment_marker := False
+						print_string ("--")
+					end
 					if l_in_comment then
 						print_new_line
 						l_in_comment := False
 					end
+				when '-' then
+					if l_in_comment_marker then
+						l_dash_number := l_dash_number + 1
+						if l_dash_number = 3 then
+							l_in_comment_marker := False
+								-- Print comment unindented when there are 3 dashes.
+							l_old_indentation := indentation
+							indentation := 0
+							print_string ("---")
+							indentation := l_old_indentation
+						end
+					elseif not l_in_comment then
+						l_in_comment := True
+						l_in_comment_marker := True
+						l_dash_number := 1
+					else
+						l_in_comment := True
+						print_character (c)
+					end
 				else
+					if l_in_comment_marker then
+						l_in_comment_marker := False
+						print_string ("--")
+					end
 					l_in_comment := True
 					print_character (c)
 				end
@@ -5273,6 +5513,34 @@ feature {NONE} -- Comments
 			all_comments: a_comments.for_all (agent {ET_BREAK}.has_comment)
 		do
 			a_comments.do_all (agent print_indented_comment)
+		end
+
+	print_comments_on_same_line (a_comments: DS_ARRAYED_LIST [ET_BREAK]) is
+			-- If `a_comments' is not empty, then print a space followed by
+			-- the first comment on the current line. The remaining comments
+			-- are printed on their own line, with an extra indentation level.
+			-- Comments are followed by a new-line.
+		require
+			a_comments_not_void: a_comments /= Void
+			no_void_comment: not a_comments.has (Void)
+			all_comments: a_comments.for_all (agent {ET_BREAK}.has_comment)
+		local
+			i, nb: INTEGER
+		do
+			nb := a_comments.count
+			if nb > 0 then
+				if indentation_printed then
+						-- We are not at the beginning of the line.
+					print_space
+				end
+				indent
+				print_comment (a_comments.first)
+				dedent
+				from i := 2 until i > nb loop
+					print_indented_comment (a_comments.item (i))
+					i := i + 1
+				end
+			end
 		end
 
 	comment_printed: BOOLEAN

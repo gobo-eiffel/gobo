@@ -5,7 +5,7 @@ indexing
 		"Eiffel prefix expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,12 +18,14 @@ inherit
 		rename
 			target as expression
 		undefine
-			reset
+			reset,
+			is_prefix_expression
 		end
 
 	ET_UNARY_EXPRESSION
 		redefine
-			reset
+			reset,
+			is_prefix_expression
 		end
 
 create
@@ -85,6 +87,9 @@ feature -- Status report
 	is_boolean_operator: BOOLEAN
 			-- Is current prefix expression a boolean operator
 			-- on a boolean expression?
+
+	is_prefix_expression: BOOLEAN is True
+			-- Is current expression a prefix expression?
 
 feature -- Status setting
 

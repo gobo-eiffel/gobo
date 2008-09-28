@@ -100,6 +100,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_prefix_expression: BOOLEAN is
+			-- Is current expression a prefix expression?
+		do
+			-- Result := False
+		end
+
 feature -- Measurement
 
 	actual_argument_count: INTEGER is 1

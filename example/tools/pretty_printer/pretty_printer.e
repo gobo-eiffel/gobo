@@ -17,12 +17,14 @@ inherit
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 create
 
 	execute
 
-feature -- Execution
-{NONE}
+feature {NONE} -- Execution
 
 	execute is
 			-- Execute tool.
@@ -42,6 +44,7 @@ feature -- Execution
 			create error_handler.make_standard
 			read_arguments
 			create a_system.make
+			a_system.set_ise_version (ise_latest)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
 			a_system.set_ast_factory (an_ast_factory)
@@ -96,9 +99,6 @@ feature -- Execution
 		do
 				-- Read filenames.
 			inspect Arguments.argument_count
-			when 0 then
-				in_filename := "-"
-				out_filename := "-"
 			when 1 then
 				in_filename := Arguments.argument (1)
 				out_filename := "-"
@@ -159,7 +159,7 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Usage message
 		once
-			create Result.make ("[filename | -][filename | -]")
+			create Result.make ("input_filename [output_filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

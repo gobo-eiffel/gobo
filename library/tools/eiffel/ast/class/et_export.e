@@ -52,6 +52,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_none_all: BOOLEAN is
+			-- Is current export clause of the form 'export {NONE} all'?
+		do
+			-- Result := False
+		end
+
 	is_semicolon: BOOLEAN is
 			-- Is current node a semicolon?
 		do

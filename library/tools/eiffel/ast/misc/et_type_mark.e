@@ -48,6 +48,14 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_keyword: BOOLEAN is
+			-- Is current type mark a keyword?
+		do
+			Result := is_expanded or is_reference or is_separate
+		ensure
+			definition: Result = (is_expanded or is_reference or is_separate)
+		end
+
 feature -- Access
 
 	text: STRING is

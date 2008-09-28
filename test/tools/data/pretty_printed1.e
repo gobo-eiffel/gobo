@@ -1,0 +1,46 @@
+deferred class PRETTY_PRINTED1 [G -> ARRAY [STRING] create make, make_from_array end, H, I]
+
+inherit
+
+	ANY
+		rename
+			out as any_out,
+			print as any_print
+		export
+			{ANY} all
+			{STRING}
+				default_create,
+				generating_type
+		undefine
+			is_equal,
+			copy
+		redefine
+			default_create,
+			any_out
+		end
+
+feature {HASHABLE, COMPARABLE} -- Access
+
+	frozen bar, baz (a_string, a_other_string: STRING; i: INTEGER): ANY is
+			-- Do it, but do it well.
+		require
+			a_string /= Void
+		local
+			l_table: HASH_TABLE [STRING, INTEGER]
+			l_tuple: TUPLE [index, other_index: INTEGER; description: STRING]
+			l_any, l_other: ANY
+		do
+			create l_table.make (3)
+			l_table.put (a_string, 4)
+			l_table [2] := a_other_string
+			any_print ([2, "foo", 'a'])
+			do_nothing;
+			(2 + 3).do_nothing
+			create {STRING} l_any.make_from_string ("[
+				verbatim string
+				on several lines.
+			]")
+			any_print ({INTEGER}.max_value)
+		end
+
+end
