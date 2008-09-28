@@ -16,7 +16,8 @@ inherit
 
 	DT_ZONED
 		redefine
-			is_equal, time_zone
+			is_equal,
+			time_zone
 		end
 
 	HASHABLE
@@ -109,4 +110,3 @@ invariant
 	date_not_void: date /= Void
 
 end
-	

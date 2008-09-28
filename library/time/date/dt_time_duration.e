@@ -21,7 +21,8 @@ inherit
 		undefine
 			out
 		redefine
-			is_equal, time
+			is_equal,
+			time
 		end
 
 	DT_TIME_VALUE
@@ -31,17 +32,22 @@ inherit
 
 	DT_GREGORIAN_CALENDAR
 		undefine
-			out, is_equal
+			out,
+			is_equal
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			out, is_equal
+			out,
+			is_equal
 		end
 
 create
 
-	make, make_precise, make_canonical, make_precise_canonical
+	make,
+	make_precise,
+	make_canonical,
+	make_precise_canonical
 
 feature {NONE} -- Initialization
 
@@ -177,18 +183,15 @@ feature -- Access
 				Result := Result - ((-millisecond) // 1000)
 			end
 		ensure
-			definition: Result = ((hour * Minutes_in_hour + minute) *
-				Seconds_in_minute + second + INTEGER_.div (millisecond, 1000))
+			definition: Result = ((hour * Minutes_in_hour + minute) * Seconds_in_minute + second + INTEGER_.div (millisecond, 1000))
 		end
 
 	millisecond_count: INTEGER is
 			-- Total number of milliseconds
 		do
-			Result := ((hour * Minutes_in_hour + minute) *
-				Seconds_in_minute + second) * 1000 + millisecond
+			Result := ((hour * Minutes_in_hour + minute) * Seconds_in_minute + second) * 1000 + millisecond
 		ensure
-			definition: Result = (((hour * Minutes_in_hour + minute) *
-				Seconds_in_minute + second) * 1000 + millisecond)
+			definition: Result = (((hour * Minutes_in_hour + minute) * Seconds_in_minute + second) * 1000 + millisecond)
 		end
 
 	hash_code: INTEGER is
@@ -361,16 +364,14 @@ feature -- Basic operations
 			-- Sum of current duration with `other'
 		do
 			Result := cloned_object
-			Result.add_precise_hours_minutes_seconds (other.hour, other.minute,
-				other.second, other.millisecond)
+			Result.add_precise_hours_minutes_seconds (other.hour, other.minute, other.second, other.millisecond)
 		end
 
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
 			Result := cloned_object
-			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute,
-				-other.second, -other.millisecond)
+			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute, -other.second, -other.millisecond)
 		end
 
 	prefix "-": like Current is
@@ -429,10 +430,7 @@ feature -- Conversion
 			create Result.make_precise_canonical (millisecond_count)
 		ensure
 			canonical_duration_not_void: Result /= Void
-				-- TODO: The following assertion has been commented out
-				-- because of a bug in SmallEiffel -0.76b1 (implicit
-				-- feature renaming in DT_DATE_TIME).
-			-- is_canonical: Result.is_canonical
+			is_canonical: Result.is_canonical
 			same_duration: Result.is_equal (Current)
 		end
 

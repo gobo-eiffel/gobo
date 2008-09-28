@@ -23,10 +23,17 @@ inherit
 			to_date_time_duration as date_to_date_time_duration,
 			date as date_time
 		undefine
-			out, append_to_string, is_equal
+			out,
+			append_to_string,
+			is_equal
 		redefine
-			infix "<", infix "+", infix "-", prefix "-",
-			hash_code, is_canonical, date_time,
+			infix "<",
+			infix "+",
+			infix "-",
+			prefix "-",
+			hash_code,
+			is_canonical,
+			date_time,
 			make_canonical_from_dates,
 			set_canonical
 		end
@@ -40,14 +47,23 @@ inherit
 			to_date_time_duration as time_to_date_time_duration,
 			is_canonical as is_time_canonical,
 			to_canonical as to_time_canonical,
-			set_canonical as  set_time_canonical,
+			set_canonical as set_time_canonical,
 			time as date_time
 		undefine
-			infix "<", infix "+", infix "-", prefix "-",
-			hash_code, out, precise_out, append_to_string,
-			append_precise_to_string, is_equal, date_time
+			infix "<",
+			infix "+",
+			infix "-",
+			prefix "-",
+			hash_code,
+			out,
+			precise_out,
+			append_to_string,
+			append_precise_to_string,
+			is_equal,
+			date_time
 		redefine
-			is_time_canonical, set_time_canonical,
+			is_time_canonical,
+			set_time_canonical,
 			to_time_canonical
 		end
 
@@ -61,7 +77,8 @@ inherit
 
 create
 
-	make, make_precise,
+	make,
+	make_precise,
 	make_definite,
 	make_precise_definite,
 	make_canonical_definite,
@@ -180,8 +197,7 @@ feature {NONE} -- Initialization
 			millisecond_count_set: ms = millisecond_count + day * Milliseconds_in_day
 		end
 
-	make_from_date_time_duration (a_date_duration: DT_DATE_DURATION;
-		a_time_duration: DT_TIME_DURATION) is
+	make_from_date_time_duration (a_date_duration: DT_DATE_DURATION; a_time_duration: DT_TIME_DURATION) is
 			-- Create a new date time duration using
 			-- `a_date_duration' and `a_time_duration'.
 		require
@@ -416,8 +432,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code
 		do
-			Result := day + month * Max_days_in_month +
-				year * Days_in_year + millisecond_count
+			Result := day + month * Max_days_in_month + year * Days_in_year + millisecond_count
 			if Result < 0 then
 				Result := -(Result + 1)
 			end
@@ -517,8 +532,7 @@ feature -- Basic operations
 		do
 			Result := cloned_object
 			Result.add_years_months_days (other.year, other.month, other.day)
-			Result.add_precise_hours_minutes_seconds (other.hour, other.minute,
-				other.second, other.millisecond)
+			Result.add_precise_hours_minutes_seconds (other.hour, other.minute, other.second, other.millisecond)
 		end
 
 	infix "-" (other: like Current): like Current is
@@ -526,8 +540,7 @@ feature -- Basic operations
 		do
 			Result := cloned_object
 			Result.add_years_months_days (-other.year, -other.month, -other.day)
-			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute,
-				-other.second, -other.millisecond)
+			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute, -other.second, -other.millisecond)
 		end
 
 	prefix "-": like Current is
@@ -590,7 +603,7 @@ feature -- Comparison
 				if ms < 0 then
 					ms := -ms
 					d := (day - other.day) - ms // Milliseconds_in_day
-					ms := - (ms \\ Milliseconds_in_day)
+					ms := -(ms \\ Milliseconds_in_day)
 				else
 					d := (day - other.day) + ms // Milliseconds_in_day
 					ms := ms \\ Milliseconds_in_day

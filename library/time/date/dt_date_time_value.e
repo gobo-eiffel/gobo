@@ -16,13 +16,16 @@ inherit
 
 	DT_DATE_VALUE
 		undefine
-			out, append_to_string
+			out,
+			append_to_string
 		end
 
 	DT_TIME_VALUE
 		redefine
-			out, append_to_string,
-			precise_out, append_precise_to_string
+			out,
+			append_to_string,
+			precise_out,
+			append_precise_to_string
 		end
 
 feature -- Access

@@ -4,10 +4,7 @@ indexing
 
 		"UTC system clocks (precision to the millisecond)"
 
-	remark:
-
-		"With SmartEiffel under Windows the millisecond part may be stuck to zero."
-
+	remark: "With SmartEiffel under Windows the millisecond part may be stuck to zero."
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "MIT License"

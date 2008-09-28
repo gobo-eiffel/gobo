@@ -36,7 +36,7 @@ feature -- Status report
 					Result := not a_day.is_friday and not a_day.is_saturday
 				else
 					Result := not a_day.is_friday and not a_day.is_saturday and not a_day.is_sunday
-				end 
+				end
 			end
 		end
 

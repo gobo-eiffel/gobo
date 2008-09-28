@@ -144,7 +144,8 @@ feature -- Access
 			dd, a_code: INTEGER
 		do
 				-- 1 January 1970 is a Thursday.
-			dd := epoch_days (a_year, a_month, a_day) + 3 -- (thursday_code - monday_code = 3)
+				-- (thursday_code - monday_code = 3)
+			dd := epoch_days (a_year, a_month, a_day) + 3
 			if dd < 0 then
 				a_code := sunday_code - ((-(dd + 1)) \\ Days_in_week)
 			else

@@ -22,7 +22,8 @@ inherit
 
 	DT_TIME_VALUE
 		redefine
-			append_time_to_string, append_precise_time_to_string
+			append_time_to_string,
+			append_precise_time_to_string
 		end
 
 	DT_GREGORIAN_CALENDAR
@@ -37,7 +38,8 @@ inherit
 
 create
 
-	make, make_precise,
+	make,
+	make_precise,
 	make_from_second_count,
 	make_from_millisecond_count
 
@@ -160,8 +162,7 @@ feature -- Access
 		do
 			Result := storage // 1000
 		ensure
-			definition: Result = (((hour * Minutes_in_hour) + minute) *
-				Seconds_in_minute + second)
+			definition: Result = (((hour * Minutes_in_hour) + minute) * Seconds_in_minute + second)
 		end
 
 	millisecond_count: INTEGER is
@@ -169,8 +170,7 @@ feature -- Access
 		do
 			Result := storage
 		ensure
-			definition: Result = ((((hour * Minutes_in_hour) + minute) *
-				Seconds_in_minute + second) * 1000 + millisecond)
+			definition: Result = ((((hour * Minutes_in_hour) + minute) * Seconds_in_minute + second) * 1000 + millisecond)
 		end
 
 	duration (other: like Current): DT_TIME_DURATION is
@@ -187,10 +187,7 @@ feature -- Access
 			create Result.make_precise_canonical (millisecond_count - other.millisecond_count)
 		ensure
 			duration_not_void: Result /= Void
-				-- TODO: The following assertion has been commented out
-				-- because of a bug in SmallEiffel -0.76b1 (implicit
-				-- feature renaming in DT_DATE_TIME).
-			-- canonical_duration: Result.is_canonical
+			canonical_duration: Result.is_canonical
 			definition: (other + Result).is_equal (Current)
 		end
 
@@ -199,8 +196,7 @@ feature -- Access
 		require
 			other_not_void: other /= Void
 		do
-			create Result.make_precise (hour - other.hour, minute - other.minute,
-				second - other.second, millisecond - other.millisecond)
+			create Result.make_precise (hour - other.hour, minute - other.minute, second - other.second, millisecond - other.millisecond)
 		ensure
 			time_duration_not_void: Result /= Void
 			definition: (other &| Result).same_time (Current)
@@ -298,8 +294,7 @@ feature -- Setting
 			m_large_enough: m >= 0
 			m_small_enough: m < Minutes_in_hour
 		do
-			storage := (storage // Hour_shift) * Hour_shift +
-				m * Minute_shift + storage \\ Minute_shift
+			storage := (storage // Hour_shift) * Hour_shift + m * Minute_shift + storage \\ Minute_shift
 		ensure
 			minute_set: minute = m
 			same_hour: hour = old hour
@@ -313,8 +308,7 @@ feature -- Setting
 			s_large_enough: s >= 0
 			s_small_enough: s < Seconds_in_minute
 		do
-			storage := (storage // Minute_shift) * Minute_shift +
-				s * Second_shift + storage \\ Second_shift
+			storage := (storage // Minute_shift) * Minute_shift + s * Second_shift + storage \\ Second_shift
 		ensure
 			second_set: second = s
 			same_hour: hour = old hour

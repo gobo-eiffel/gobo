@@ -24,10 +24,13 @@ inherit
 			storage as date_storage,
 			set_storage as set_date_storage
 		undefine
-			out, append_to_string
+			out,
+			append_to_string
 		redefine
-			add_duration, duration,
-			infix "<", hash_code
+			add_duration,
+			duration,
+			infix "<",
+			hash_code
 		end
 
 	DT_TIME
@@ -40,12 +43,20 @@ inherit
 			storage as time_storage,
 			set_storage as set_time_storage
 		undefine
-			append_to_string, append_precise_to_string,
-			infix "<", hash_code, out, precise_out,
+			append_to_string,
+			append_precise_to_string,
+			infix "<",
+			hash_code,
+			out,
+			precise_out,
 			canonical_duration
 		redefine
-			add_hours, add_minutes, add_seconds,
-			add_milliseconds, add_duration, duration
+			add_hours,
+			add_minutes,
+			add_seconds,
+			add_milliseconds,
+			add_duration,
+			duration
 		end
 
 	DT_DATE_TIME_VALUE
@@ -62,8 +73,11 @@ inherit
 
 create
 
-	make, make_precise, make_from_date_time,
-	make_from_date, make_from_epoch
+	make,
+	make_precise,
+	make_from_date_time,
+	make_from_date,
+	make_from_epoch
 
 create {DT_DATE_TIME_HANDLER}
 
@@ -169,7 +183,7 @@ feature {NONE} -- Initialization
 		do
 			if s < 0 then
 				ss := -s
-				d :=  - (ss // Seconds_in_day)
+				d := -(ss // Seconds_in_day)
 				ss := ss \\ Seconds_in_day
 				if ss > 0 then
 					ss := Seconds_in_day - ss

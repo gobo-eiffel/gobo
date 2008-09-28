@@ -21,7 +21,8 @@ inherit
 		undefine
 			out
 		redefine
-			is_equal, date
+			is_equal,
+			date
 		end
 
 	DT_DATE_VALUE
@@ -31,17 +32,20 @@ inherit
 
 	DT_GREGORIAN_CALENDAR
 		undefine
-			out, is_equal
+			out,
+			is_equal
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			out, is_equal
+			out,
+			is_equal
 		end
 
 create
 
-	make, make_definite
+	make,
+	make_definite
 
 create {DT_DATE}
 

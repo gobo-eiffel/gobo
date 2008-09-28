@@ -104,4 +104,3 @@ invariant
 	date_time_not_void: date_time /= Void
 
 end
-	

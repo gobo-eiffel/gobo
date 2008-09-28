@@ -44,7 +44,8 @@ inherit
 
 create
 
-	make, make_from_day_count
+	make,
+	make_from_day_count
 
 create {DT_DATE_HANDLER}
 
@@ -60,7 +61,7 @@ feature {NONE} -- Initialization
 			d_large_enough: d >= 1
 			d_small_enough: d <= days_in_month (m, y)
 		do
-			set_year_month_day (y, m , d)
+			set_year_month_day (y, m, d)
 		ensure
 			year_set: year = y
 			month_set: month = m
@@ -149,7 +150,8 @@ feature -- Access
 			d: INTEGER
 		do
 				-- 1 January 1970 is a Thursday.
-			d := day_count + 4 -- (Thursday - Sunday = 4)
+				-- (Thursday - Sunday = 4)
+			d := day_count + 4
 			if d < 0 then
 				Result := Saturday - ((-(d + 1)) \\ Days_in_week)
 			else
@@ -472,7 +474,7 @@ feature -- Element change
 					yy := yy - ((-mm) // Months_in_year) - 1
 					mm := December - ((-mm) \\ Months_in_year)
 				else
-					yy := yy + (mm -1) // Months_in_year
+					yy := yy + (mm - 1) // Months_in_year
 					mm := January + (mm - 1) \\ Months_in_year
 				end
 				dim := days_in_month (mm, yy)
@@ -589,7 +591,7 @@ feature {NONE} -- Implementation
 					dd := Days_in_4_years - dd
 				elseif dd > Days_in_2_years then
 					yy := yy + 3
-					dd :=  Days_in_3_years - dd
+					dd := Days_in_3_years - dd
 				elseif dd > Days_in_year then
 					yy := yy + 2
 					dd := Days_in_2_years - dd

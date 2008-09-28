@@ -44,7 +44,7 @@ feature -- Basic operations
 		ensure
 			addition_not_void: Result /= Void
 		end
-	
+
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		require

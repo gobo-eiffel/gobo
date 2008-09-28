@@ -12,10 +12,6 @@ indexing
 
 class DT_ZONED
 
-inherit
-
-	ANY -- Needed for SE 2.1.
-
 feature -- Access
 
 	time_zone: DT_TIME_ZONE
@@ -26,4 +22,3 @@ invariant
 	time_zone_not_void: time_zone /= Void
 
 end
-	

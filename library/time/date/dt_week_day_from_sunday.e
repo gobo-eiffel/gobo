@@ -33,8 +33,13 @@ inherit
 
 create {DT_WEEK_DAYS_FROM_SUNDAY}
 
-	make_monday, make_tuesday, make_wednesday, make_thursday,
-	make_friday, make_saturday, make_sunday
+	make_monday,
+	make_tuesday,
+	make_wednesday,
+	make_thursday,
+	make_friday,
+	make_saturday,
+	make_sunday
 
 feature -- Access
 
@@ -108,4 +113,3 @@ invariant
 	first_day: sunday_code = 1
 
 end
-	

@@ -286,4 +286,3 @@ invariant
 	valid_sunday: sunday_code >= 1 and sunday_code <= Days_in_week
 
 end
-	

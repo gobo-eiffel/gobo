@@ -21,7 +21,8 @@ inherit
 
 create
 
-	make, make_from_zoned_date
+	make,
+	make_from_zoned_date
 
 feature {NONE} -- Initialization
 
@@ -59,4 +60,3 @@ feature -- Access
 		end
 
 end
-	

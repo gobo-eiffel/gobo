@@ -14,7 +14,8 @@ deferred class DT_DATE_VALUE
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 		redefine
 			out
 		end
