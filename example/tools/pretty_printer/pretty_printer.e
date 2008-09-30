@@ -48,6 +48,8 @@ feature {NONE} -- Execution
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
 			a_system.set_ast_factory (an_ast_factory)
+				-- Make sure that kernel classes are set correctly.
+			a_system.preparse_local
 			create a_cluster.make ("cluster_name", ".", a_system)
 			create a_parser.make
 			if in_filename.is_equal ("-") then
