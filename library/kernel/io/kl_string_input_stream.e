@@ -34,8 +34,10 @@ feature {NONE} -- Initialization
 		do
 			string := a_string
 			location := 0
+			end_of_input := False
 		ensure
 			string_set: string = a_string
+			not_end_of_input: not end_of_input
 		end
 
 feature -- Status report
@@ -132,7 +134,7 @@ feature -- Input
 			-- Read characters from input stream until a line separator
 			-- or end of input is reached. Make the characters that have
 			-- been read available in `last_string' and discard the line
-			-- separator characters from the input steam.
+			-- separator characters from the input stream.
 		local
 			done: BOOLEAN
 			a_target: STRING
