@@ -16,37 +16,53 @@ inherit
 
 	ANY
 		redefine
-			out, copy, is_equal
+			out,
+			copy,
+			is_equal
 		end
 
 	KL_CLONABLE
 		undefine
-			out, copy, is_equal
+			out,
+			copy,
+			is_equal
 		end
 
 	MA_DECIMAL_CONTEXT_CONSTANTS
 		undefine
-			out, copy, is_equal
+			out,
+			copy,
+			is_equal
 		end
 
 	KL_SHARED_EXCEPTIONS
 		undefine
-			out, copy, is_equal
+			out,
+			copy,
+			is_equal
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
 		undefine
-			out, copy, is_equal
+			out,
+			copy,
+			is_equal
 		end
 
 	KL_IMPORTED_ARRAY_ROUTINES
 		undefine
-			out, copy, is_equal
+			out,
+			copy,
+			is_equal
 		end
 
 create
 
-	make_default, make_double, make_extended, make_double_extended, make
+	make_default,
+	make_double,
+	make_extended,
+	make_double_extended,
+	make
 
 feature {NONE} -- Initialization
 
@@ -383,7 +399,7 @@ feature {MA_DECIMAL_HANDLER, MA_DECIMAL_CONTEXT} -- Signals
 
 feature {MA_DECIMAL} -- Implementation
 
-	force_digits (d : INTEGER) is
+	force_digits (d: INTEGER) is
 			-- Force digits to `d', just for do_underflow.
 		require
 			d_positive: d >= 0

@@ -14,7 +14,7 @@ class KL_EQUALITY_TESTER [G]
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
+	ANY
 
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end

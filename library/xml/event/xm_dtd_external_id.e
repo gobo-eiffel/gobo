@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_public: BOOLEAN is
-			--- Is public_id defined?
+			-- Is public_id defined?
 		do
 			Result := public_id /= Void
 		end

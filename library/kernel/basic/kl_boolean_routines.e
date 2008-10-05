@@ -23,11 +23,15 @@ feature -- Access
 		do
 			i := a_booleans.lower
 			nb := a_booleans.upper
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				if a_booleans.item (i) then
 					if Result then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						Result := True
 						i := i + 1
@@ -40,7 +44,7 @@ feature -- Access
 			zero: a_booleans.count = 0 implies not Result
 			unary: a_booleans.count = 1 implies Result = a_booleans.item (a_booleans.lower)
 			binary: a_booleans.count = 2 implies Result = (a_booleans.item (a_booleans.lower) xor a_booleans.item (a_booleans.upper))
-			-- more: there exists one and only one `i' in a_boolean.lower..a_boolean.upper so that a_boolean.item (i) = True
+--			more: there exists one and only one `i' in a_boolean.lower..a_boolean.upper so that a_boolean.item (i) = True
 		end
 
 end

@@ -153,7 +153,7 @@ feature {NONE} -- Factory
 			--   %token <a_type> a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+--			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 			a_type_not_void: a_type /= Void
 		do
 			Result := new_char_token (a_char)
@@ -194,7 +194,7 @@ feature {NONE} -- Factory
 			--   %left a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+--			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_left_associative
@@ -231,7 +231,7 @@ feature {NONE} -- Factory
 			--   %right a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+--			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_right_associative
@@ -268,7 +268,7 @@ feature {NONE} -- Factory
 			--   %nonassoc a_char
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+--			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_non_associative
@@ -338,7 +338,7 @@ feature {NONE} -- Factory
 			-- `last_grammar'.
 		require
 			a_char_not_void: a_char /= Void
-			-- valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+--			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
 		local
 			a_code: INTEGER
 			a_key: STRING
@@ -369,7 +369,11 @@ feature {NONE} -- Factory
 						-- Octal.
 					nb := a_char.count - 1
 					a_code := 0
-					from i := 3 until i > nb loop
+					from
+						i := 3
+					until
+						i > nb
+					loop
 						a_code := a_code * 8 + a_char.item (i).code - Zero_code
 						i := i + 1
 					end
@@ -380,8 +384,12 @@ feature {NONE} -- Factory
 					else
 							-- Hexadecimal.
 						a_code := 0
-						from i := 4 until i > nb loop
-						a_code := a_code * 16
+						from
+							i := 4
+						until
+							i > nb
+						loop
+							a_code := a_code * 16
 							c := a_char.item (i)
 							inspect c
 							when '0'..'9' then
@@ -421,7 +429,7 @@ feature {NONE} -- Factory
 			-- with this string.
 		require
 			a_string_not_void: a_string /= Void
-			-- valid_string: (\"[^"\n]*\").recognizes (a_string)
+--			valid_string: (\"[^"\n]*\").recognizes (a_string)
 		local
 			an_id: INTEGER
 		do
@@ -795,17 +803,11 @@ feature {NONE} -- Implementation
 		require
 			a_token_not_void: a_token /= Void
 			a_string_not_void: a_string /= Void
-			-- valid_string: (\"[^"\n]*\").recognizes (a_string)
+--			valid_string: (\"[^"\n]*\").recognizes (a_string)
 		do
-			if
-				a_token.literal_string /= Void and then
-				not a_token.literal_string.is_equal (a_string)
-			then
+			if a_token.literal_string /= Void and then not a_token.literal_string.is_equal (a_string) then
 				report_two_strings_token_error (a_token.name, a_token.literal_string, a_string)
-			elseif
-				terminal_symbols.has (a_string) and then
-				terminal_symbols.item (a_string) /= a_token
-			then
+			elseif terminal_symbols.has (a_string) and then terminal_symbols.item (a_string) /= a_token then
 				report_string_token_defined_twice_error (a_string, terminal_symbols.item (a_string).name, a_token.name)
 			end
 			a_token.set_literal_string (a_string)
@@ -867,7 +869,11 @@ feature {NONE} -- Implementation
 			tokens := last_grammar.tokens
 			last_token_id := 256
 			nb := tokens.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_token := tokens.item (i)
 				if not a_token.has_token_id then
 					last_token_id := last_token_id + 1
@@ -879,7 +885,11 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			create translate.make (0, max_token_id)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_token := tokens.item (i)
 				if translate.item (a_token.token_id) /= Void then
 					report_token_id_used_twice_warning (translate.item (a_token.token_id), a_token)
@@ -890,7 +900,11 @@ feature {NONE} -- Implementation
 			end
 			variables := last_grammar.variables
 			nb := variables.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_variable := variables.item (i)
 				if a_variable.rules.is_empty then
 					report_undefined_symbol_error (a_variable.name)

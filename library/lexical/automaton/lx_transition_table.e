@@ -16,17 +16,20 @@ inherit
 
 	ANY
 		redefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 	KL_CLONABLE
 		undefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 create
@@ -77,7 +80,11 @@ feature -- Access
 		do
 			create Result.make (lower, upper)
 			nb := upper
-			from i := lower until i > nb loop
+			from
+				i := lower
+			until
+				i > nb
+			loop
 				state := target (i)
 				if state /= other.target (i) then
 					if state = Void or else state = state.default then
@@ -112,8 +119,8 @@ feature -- Access
 			end
 		ensure
 			valid_label: valid_label (Result)
-			-- smallest: forall i in lower .. (Result - 1),
-			--	target (i) = Void or else target (i) = target (i).default
+--			smallest: forall i in lower .. (Result - 1),
+--				target (i) = Void or else target (i) = target (i).default
 		end
 
 	maximum_label: INTEGER is
@@ -134,8 +141,8 @@ feature -- Access
 			end
 		ensure
 			valid_label: valid_label (Result)
-			-- largest: forall i in (Result + 1) .. upper,
-			--	target (i) = Void or else target (i) = target (i).default
+--			largest: forall i in (Result + 1) .. upper,
+--				target (i) = Void or else target (i) = target (i).default
 		end
 
 	lower: INTEGER is
@@ -195,8 +202,7 @@ feature -- Removal
 			end
 		ensure
 			one_less: count <= old count
-			removed: target (label) = Void or else
-				target (label) = target (label).default
+			removed: target (label) = Void or else target (label) = target (label).default
 		end
 
 	clear_all is

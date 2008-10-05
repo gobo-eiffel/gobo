@@ -23,7 +23,15 @@ inherit
 
 	KL_BINARY_INPUT_FILE
 		export
-			{RAW_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
+			{RAW_FILE}
+				old_open_read,
+				extendible,
+				file_pointer,
+				old_count,
+				old_close,
+				old_is_closed,
+				old_put_string,
+				old_is_open_write
 			{NONE} all
 		end
 
@@ -51,7 +59,10 @@ feature -- Input
 			end
 			is_eof := True
 			a_target := last_string
-			from until done loop
+			from
+			until
+				done
+			loop
 				read_character
 				if end_of_file then
 					done := True

@@ -461,8 +461,8 @@ feature -- Pathname handling
 			a_dirname_not_void: a_dirname /= Void
 			a_pathnames_not_void: a_pathnames /= Void
 			a_pathnames_not_empty: a_pathnames.count > 0
-			-- no_void_pathname: not a_pathnames.has (Void)
-			-- a_pathnames_relative: forall p in `a_pathnames', is_relative_pathname (p)
+			no_void_pathname: not a_pathnames.has (Void)
+--			a_pathnames_relative: forall p in `a_pathnames', is_relative_pathname (p)
 		deferred
 		ensure
 			pathname_not_void: Result /= Void

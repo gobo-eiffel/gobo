@@ -1,5 +1,6 @@
 indexing
-	description: 
+
+	description:
 
 		"Options that are not flags and need a parameter"
 
@@ -72,7 +73,7 @@ feature -- Access
 				Result.append_string (parameter_description)
 				if not needs_parameter then
 					Result.append_character (']')
-				end				
+				end
 			else
 				Result.append_character (' ')
 				Result.append_string (parameter_description)
@@ -114,7 +115,7 @@ feature -- Status setting
 	set_parameter_description (a_string: STRING) is
 			-- Set the parameter name to `a_string'.
 		require
-			a_string_not_void: a_string /= VOid
+			a_string_not_void: a_string /= Void
 		do
 			parameter_description := a_string
 		ensure

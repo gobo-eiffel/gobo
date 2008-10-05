@@ -34,10 +34,26 @@ inherit
 			put as list_put
 		export
 			{NONE}
-				list_put, put_first, put_last, put_left, put_right,
-				force, force_first, force_last, force_left, force_right,
-				extend, extend_first, extend_last, extend_left, extend_right,
-				append, append_first, append_last, append_left, append_right
+				list_put,
+				put_first,
+				put_last,
+				put_left,
+				put_right,
+				force,
+				force_first,
+				force_last,
+				force_left,
+				force_right,
+				extend,
+				extend_first,
+				extend_last,
+				extend_left,
+				extend_right,
+				append,
+				append_first,
+				append_last,
+				append_left,
+				append_right
 		end
 
 create
@@ -68,8 +84,7 @@ feature -- Access
 			-- class number in place of transition label
 		require
 			template_not_void: template /= Void
-			meta_equiv_classes_built: meta_equiv_classes /= Void implies
-				meta_equiv_classes.built
+			meta_equiv_classes_built: meta_equiv_classes /= Void implies meta_equiv_classes.built
 		local
 			i, j, nb: INTEGER
 			target: LX_DFA_STATE
@@ -81,11 +96,15 @@ feature -- Access
 					-- TODO: Bug in ISE 3.3.9 in final mode code generation.
 					-- Create `transitions' (not declared as "like anchor")
 					-- first and assign it to `Result'.
-				-- create Result.make (1, meta_equiv_classes.capacity)
+--				create Result.make (1, meta_equiv_classes.capacity)
 				create transitions.make (1, meta_equiv_classes.capacity)
 				Result := transitions
 				nb := template.upper
-				from i := template.lower until i > nb loop
+				from
+					i := template.lower
+				until
+					i > nb
+				loop
 					if meta_equiv_classes.is_representative (i) then
 						target := template.target (i)
 						if target /= Void then
@@ -118,7 +137,11 @@ feature -- Element change
 			max_symbol := transitions.upper
 			create template.make (min_symbol, max_symbol)
 			create symbol_class.make (transitions.capacity)
-			from i := min_symbol until i > max_symbol loop
+			from
+				i := min_symbol
+			until
+				i > max_symbol
+			loop
 				if transitions.target (i) /= Void then
 					template.set_target (common_state, i)
 					symbol_class.put (i)

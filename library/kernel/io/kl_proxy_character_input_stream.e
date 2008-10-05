@@ -16,7 +16,11 @@ inherit
 
 	KI_CHARACTER_INPUT_STREAM
 		redefine
-			is_rewindable, is_closable, rewind, close, valid_unread_character
+			is_rewindable,
+			is_closable,
+			rewind,
+			close,
+			valid_unread_character
 		end
 
 create

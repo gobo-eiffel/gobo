@@ -16,62 +16,82 @@ inherit
 
 	KL_NUMERIC
 		redefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	HASHABLE
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	KL_PART_COMPARABLE
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	MA_SHARED_DECIMAL_CONTEXT
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	MA_SHARED_DECIMAL_CONSTANTS
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	MA_DECIMAL_CONTEXT_CONSTANTS
 		export
 			{NONE} all
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		export
 			{NONE} all
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	KL_IMPORTED_DOUBLE_ROUTINES
 		export
 			{NONE} all
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 	KL_SHARED_PLATFORM
 		export
 			{NONE} all
 		undefine
-			out, is_equal, copy
+			out,
+			is_equal,
+			copy
 		end
 
 create
@@ -86,7 +106,10 @@ create
 
 create {MA_DECIMAL}
 
-	make_infinity, make_nan, make_snan, make_special
+	make_infinity,
+	make_nan,
+	make_snan,
+	make_special
 
 create {MA_DECIMAL_TEXT_PARSER}
 
@@ -172,15 +195,16 @@ feature {NONE} -- Initialization
 			create {MA_DECIMAL_COEFFICIENT_IMP} coefficient.make (ten_exponent + 1)
 				-- Fill it, from least significant digit (lower index) to most significant (upper index) digit.
 			if temp_value = 0 then
-				coefficient.put (0,0)
+				coefficient.put (0, 0)
 			else
 				from
-					index := 0 --ten_exponent
+						-- ten_exponent
+					index := 0
 					v := temp_value
 				until
 					v = 0
 				loop
-					coefficient.put (- INTEGER_.mod (v, 10), index)
+					coefficient.put (-INTEGER_.mod (v, 10), index)
 					v := INTEGER_.div (v, 10)
 					if v /= 0 then
 						index := index + 1
@@ -669,7 +693,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	count : INTEGER is
+	count: INTEGER is
 			-- Count of significant digits
 		do
 			if is_special then
@@ -908,12 +932,12 @@ feature -- Basic operations
 					-- sNan
 				if is_nan or else other.is_nan then
 					if is_signaling_nan or else other.is_signaling_nan then
-						ctx.signal (Signal_invalid_operation ,"sNan in multiply")
+						ctx.signal (Signal_invalid_operation, "sNan in multiply")
 					end
 					Result := nan
 				elseif is_infinity or else other.is_infinity then
 					if is_zero or else other.is_zero then
-						ctx.signal (Signal_invalid_operation ,"0 * Inf")
+						ctx.signal (Signal_invalid_operation, "0 * Inf")
 						Result := nan
 					else
 						if sign = other.sign then
@@ -1083,7 +1107,8 @@ feature -- Basic operations
 							saved_exponent_limit := ctx.exponent_limit
 								-- Make sure overflow can be called.
 							ctx.set_exponent_limit (count - 1)
-							Result.set_exponent (1) --adjusted_exponent.abs - 1)
+--							Result.set_exponent (adjusted_exponent.abs - 1)
+							Result.set_exponent (1)
 							Result.do_overflow (ctx)
 							if not Result.is_special then
 								Result.set_exponent (new_exponent)
@@ -1251,7 +1276,7 @@ feature -- Basic operations
 		local
 			l_zero: like Current
 		do
-			create l_zero.make (ctx.digits+1)
+			create l_zero.make (ctx.digits + 1)
 			l_zero.set_exponent (exponent)
 			Result := l_zero.subtract (Current, ctx)
 		ensure
@@ -1442,11 +1467,15 @@ feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
 
 feature {NONE} -- Constants
 
-		Align_hint_current : INTEGER is 1
-		Align_hint_other : INTEGER is 2
-		Align_hint_both : INTEGER is 3
-		Align_hint_current_zero : INTEGER is 4
-		Align_hint_other_zero : INTEGER is 5
+	Align_hint_current: INTEGER is 1
+
+	Align_hint_other: INTEGER is 2
+
+	Align_hint_both: INTEGER is 3
+
+	Align_hint_current_zero: INTEGER is 4
+
+	Align_hint_other_zero: INTEGER is 5
 
 feature {MA_DECIMAL} -- Status setting
 
@@ -1570,14 +1599,14 @@ feature {MA_DECIMAL} -- Basic operations
 			align_hint := align_and_hint (other, ctx.digits)
 			if align_hint = Align_hint_current then
 					-- Keep `Current'.
-				shift_left(ctx.digits + 2 - count)
+				shift_left (ctx.digits + 2 - count)
 				coefficient.put (other.coefficient.item (other.coefficient.msd_index), 0)
 				ctx.signal (Signal_inexact, "")
 			elseif align_hint = Align_hint_other then
 					-- Copy `other'.
 				msd := coefficient.item (coefficient.msd_index)
 				copy (other)
-				shift_left(ctx.digits + 2 - count)
+				shift_left (ctx.digits + 2 - count)
 				coefficient.put (msd, 0)
 				ctx.signal (Signal_inexact, "")
 			elseif align_hint = Align_hint_other_zero then
@@ -1603,16 +1632,16 @@ feature {MA_DECIMAL} -- Basic operations
 			align_hint := align_and_hint (other, ctx.digits)
 			if align_hint = Align_hint_current then
 					-- Keep `Current', but subtract -1E-precision
-				shift_left(ctx.digits + 2 - count)
+				shift_left (ctx.digits + 2 - count)
 				coefficient.integer_quick_subtract_msd (1, coefficient.count)
 			elseif align_hint = Align_hint_other then
 					-- Copy `other'.
 				copy (other)
-				shift_left(ctx.digits + 2 - count)
+				shift_left (ctx.digits + 2 - count)
 				coefficient.integer_quick_subtract_msd (1, coefficient.count)
 				set_negative
 			elseif align_hint = Align_hint_current_zero then
-					-- Keep `Current'.
+				-- Keep `Current'.
 			elseif align_hint = Align_hint_other_zero then
 					-- Copy `other'.
 				copy (other)
@@ -1728,7 +1757,7 @@ feature {MA_DECIMAL} -- Basic operations
 			else
 					-- exponent < other.exponent
 					-- Need to pad other so that other.exponent = exponent
-				new_exponent := other.exponent.min (other.adjusted_exponent - (precision+1))
+				new_exponent := other.exponent.min (other.adjusted_exponent - (precision + 1))
 				if new_exponent > adjusted_exponent then
 						-- `Current' shall not affect `other',
 						-- except when `other' is Zero. In this case `Current' is returned, unchanged.
@@ -2008,7 +2037,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	lost_digits (ctx: MA_DECIMAL_CONTEXT) : BOOLEAN is
+	lost_digits (ctx: MA_DECIMAL_CONTEXT): BOOLEAN is
 			-- Should Current loose digits if rounded wrt `ctx'?
 		require
 			ctx_not_void: ctx /= Void
@@ -2044,9 +2073,9 @@ feature {MA_DECIMAL} -- Basic operations
 		require
 			ctx_not_void: ctx /= Void
 		do
-			Result := adjusted_exponent < - ctx.exponent_limit
+			Result := adjusted_exponent < -ctx.exponent_limit
 		ensure
-			definition: Result = (adjusted_exponent < - ctx.exponent_limit)
+			definition: Result = (adjusted_exponent < -ctx.exponent_limit)
 		end
 
 	clean_up (ctx: MA_DECIMAL_CONTEXT) is
@@ -2216,7 +2245,10 @@ feature {MA_DECIMAL} -- Basic operations
 							-- msd at e_tiny - 1. See if rounding shall carry some e_tiny digit.
 						ctx.set_digits (1)
 						grow (count + 1)
-					else  -- shared_digits > 0 (and shared_digits <= ctx.digits)
+					else
+						check
+--							shared_digits > 0 and shared_digits <= ctx.digits
+						end
 						count_upto_elimit := -ctx.exponent_limit - exponent + 1
 						if count < count_upto_elimit then
 							grow (count_upto_elimit)
@@ -2246,7 +2278,9 @@ feature {MA_DECIMAL} -- Basic operations
 		end
 
 	division_standard: INTEGER is 1
+
 	division_integer: INTEGER is 2
+
 	division_remainder: INTEGER is 3
 			-- Division types
 
@@ -2339,7 +2373,7 @@ feature {MA_DECIMAL} -- Basic operations
 			integer_division := (division_type /= division_standard)
 			create dividend.make_copy (Current)
 			create divisor.make_copy (other)
-			--
+				--
 			original_divisor_exponent := divisor.exponent
 			original_dividend_exponent := dividend.exponent
 			if dividend.is_zero then
@@ -2370,7 +2404,7 @@ feature {MA_DECIMAL} -- Basic operations
 					-- While coefficient of divisor >= 10 * coefficient of dividend,
 					-- Until dividend.coefficient / 10 < divisor.coefficient,
 					-- Multiply divisor by 10.
-
+					--
 					-- Init: compute 10 * coefficient of dividend
 				divisor.shift_left (1)
 					-- Adjust coefficient sizes.
@@ -2488,9 +2522,10 @@ feature {MA_DECIMAL} -- Basic operations
 							elseif new_exponent >= 0 then
 								new_exponent := 0
 							else
-								new_exponent := exponent- (original_divisor_exponent+adjust)
+								new_exponent := exponent - (original_divisor_exponent + adjust)
 							end
-						else --if divisor.adjusted_exponent >= 0 then
+--						elseif divisor.adjusted_exponent >= 0 then
+						else
 								-- Real division.
 							if bias /= 0 then
 								Result.coefficient.shift_right (bias.abs)
@@ -2561,7 +2596,7 @@ feature {MA_DECIMAL} -- Basic operations
 				end
 					-- Determine if exponential notation shall be used.
 				the_exponent := adjusted_exponent
-				exponential := not (exponent <= 0 and then adjusted_exponent >= - 6)
+				exponential := not (exponent <= 0 and then adjusted_exponent >= -6)
 				if exponential then
 					printed_exponent := the_exponent
 					if is_engineering then
@@ -2655,9 +2690,9 @@ feature {NONE} -- Implementation
 			is_one: Result.is_one
 		end
 
-	special_coefficient : MA_DECIMAL_COEFFICIENT is
+	special_coefficient: MA_DECIMAL_COEFFICIENT is
 		once
-			create {MA_DECIMAL_COEFFICIENT_IMP}Result.make (1)
+			create {MA_DECIMAL_COEFFICIENT_IMP} Result.make (1)
 			Result.put (0, 0)
 		ensure
 			special_coefficient_not_void: Result /= Void

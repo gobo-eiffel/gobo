@@ -4,11 +4,11 @@ indexing
 
 		"Platform-dependent properties"
 
-	usage:
-	
-		"This class should not be used directly through %
-		%inheritance and client/supplier relationship. %
-		%Inherit from KL_SHARED_PLATFORM instead."
+	usage: "[
+		This class should not be used directly through
+		inheritance and client/supplier relationship.
+		Inherit from KL_SHARED_PLATFORM instead.
+	]"
 
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"

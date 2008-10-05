@@ -42,7 +42,11 @@ feature -- Status report
 					least_endian := True
 				end
 				nb := a_string.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					Result := unicode.valid_non_surrogate_code (code (a_string.item_code (i), a_string.item_code (i + 1), a_string.item_code (i + 2), a_string.item_code (i + 3), least_endian))
 					if not Result then
 						i := nb + 1
@@ -92,7 +96,7 @@ feature -- Endian-ness detection
 			second_is_byte: is_byte (second)
 			third_is_byte: is_byte (third)
 			fourth_is_byte: is_byte (fourth)
-			-- first_in_stream: the character represented by (first, second, third, fourth) is first in stream
+--			first_in_stream: the character represented by (first, second, third, fourth) is first in stream
 		do
 			Result := first = 0 and second = 0 and third = Hex_fe and fourth = Hex_ff
 		ensure
@@ -107,7 +111,7 @@ feature -- Endian-ness detection
 			second_is_byte: is_byte (second)
 			third_is_byte: is_byte (third)
 			fourth_is_byte: is_byte (fourth)
-			-- first_in_stream: the character represented by (first, second, third, fourth) is first in stream
+--			first_in_stream: the character represented by (first, second, third, fourth) is first in stream
 		do
 			Result := first = Hex_ff and second = Hex_fe and third = 0 and fourth = 0
 		ensure
@@ -147,6 +151,8 @@ feature {NONE} -- Constants
 			-- 2 ^ 8
 
 	Hex_fe: INTEGER is 254
+			-- Endian detection character
+
 	Hex_ff: INTEGER is 255
 			-- Endian detection character
 

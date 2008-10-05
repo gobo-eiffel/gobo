@@ -102,14 +102,14 @@ feature {NONE} -- Generation
 			if a_token.literal_string /= Void then
 				a_file.put_string ("<span class=%"literal_token%">")
 				inspect a_token.literal_string.item (1)
-				when '%"','%'' then
+				when '%"', '%'' then
 					print_escaped (a_token.literal_string.substring (2, a_token.literal_string.count - 1), a_file)
 				else
 					print_escaped (a_token.literal_string, a_file)
 				end
 			else
 				inspect a_token.name.item (1)
-				when '%"','%'' then
+				when '%"', '%'' then
 					a_file.put_string ("<span class=%"literal_token%">")
 					print_escaped (a_token.name.substring (2, a_token.name.count - 1), a_file)
 				else
@@ -203,7 +203,11 @@ feature {NONE} -- Generation
 			c: CHARACTER
 		do
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				c := a_string.item (i)
 				inspect c
 				when '%'' then
@@ -216,7 +220,7 @@ feature {NONE} -- Generation
 					a_file.put_string ("&gt;")
 				when '&' then
 					a_file.put_string ("&amp;")
-				when 'A'..'Z','a'..'z','0'..'9','_' then
+				when 'A'..'Z', 'a'..'z', '0'..'9', '_' then
 					a_file.put_character (c)
 				else
 					a_file.put_string ("&#")

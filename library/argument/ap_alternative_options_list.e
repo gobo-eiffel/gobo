@@ -3,7 +3,7 @@ indexing
 	description:
 
 		"Lists of alternative options, introduced by a special option"
-	
+
 	library: "Gobo Eiffel Argument Library"
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "MIT License"

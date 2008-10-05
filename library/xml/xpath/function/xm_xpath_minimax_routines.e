@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 
 
 	 establish_first_primitive_type (a_result: DS_CELL [XM_XPATH_ITEM]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
-			--- Establish primitive type of first operand.
+			-- Establish primitive type of first operand.
 		require
 			a_result_not_void: a_result /= Void
 			a_result_empty: a_result.item = Void
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 
 
 	establish_next_primitive_type (a_result: DS_CELL [XM_XPATH_ITEM]; a_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
-			--- Establish primitive type of next operand.
+			-- Establish primitive type of next operand.
 		require
 			a_result_not_void: a_result /= Void
 			a_result_empty: a_result.item = Void

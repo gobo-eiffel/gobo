@@ -25,7 +25,8 @@ inherit
 
 	KI_CHARACTER_INPUT_STREAM
 		undefine
-			is_closable, close
+			is_closable,
+			close
 		redefine
 			valid_unread_character,
 			last_character

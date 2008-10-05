@@ -14,17 +14,19 @@ class PR_TYPE
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-
 	HASHABLE
 
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_CHARACTER_ROUTINES
+
 	KL_IMPORTED_INTEGER_ROUTINES
 
 create
 
-	make, make_generic, make_anchored
+	make,
+	make_generic,
+	make_anchored
 
 feature {NONE} -- Initialization
 
@@ -63,7 +65,11 @@ feature {NONE} -- Initialization
 				name.append_string (" [")
 				name.append_string (generics.item (1).name)
 				nb := generics.count
-				from i := 2 until i > nb loop
+				from
+					i := 2
+				until
+					i > nb
+				loop
 					name.append_string (", ")
 					name.append_string (generics.item (i).name)
 					i := i + 1
@@ -109,7 +115,11 @@ feature -- Access
 			nb := name.count
 			create Result.make (nb + 11)
 			Result.append_string ("last_")
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				c := name.item (i)
 				inspect c
 				when '0'..'9', 'a'..'z', '_' then
@@ -153,7 +163,11 @@ feature -- Output
 			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 		do
 			rhs := a_rule.rhs
-			from i := n + 1 until i > nb_rhs loop
+			from
+				i := n + 1
+			until
+				i > nb_rhs
+			loop
 				if rhs.item (i).type = Current then
 					offset := offset + 1
 				end
@@ -376,17 +390,13 @@ feature -- Output
 			a_file.put_string (" >= yyvsc")
 			a_file.put_integer (id)
 			a_file.put_line (" then")
-
 			print_indentation (indent + 1, a_file)
 			a_file.put_string ("if yyvs")
 			a_file.put_integer (id)
 			a_file.put_line (" = Void then")
-
 			print_create_yyvs (indent + 2, a_file)
-
 			print_indentation (indent + 1, a_file)
 			a_file.put_line ("else")
-
 			print_indentation (indent + 2, a_file)
 			a_file.put_line ("debug (%"GEYACC%")")
 			print_indentation (indent + 3, a_file)
@@ -395,7 +405,6 @@ feature -- Output
 			a_file.put_line ("%")")
 			print_indentation (indent + 2, a_file)
 			a_file.put_line ("end")
-
 			print_indentation (indent + 2, a_file)
 			a_file.put_string ("yyvsc")
 			a_file.put_integer (id)
@@ -412,10 +421,8 @@ feature -- Output
 			a_file.put_string (", yyvsc")
 			a_file.put_integer (id)
 			a_file.put_line (")")
-
 			print_indentation (indent + 1, a_file)
 			a_file.put_line ("end")
-
 			print_indentation (indent, a_file)
 			a_file.put_line ("end")
 		end
@@ -441,7 +448,11 @@ feature -- Output
 		local
 			i: INTEGER
 		do
-			from i := 1 until i > indent loop
+			from
+				i := 1
+			until
+				i > indent
+			loop
 				a_file.put_character ('%T')
 				i := i + 1
 			end
@@ -515,7 +526,6 @@ feature -- Old typing output
 				%%T%Tensure%N%
 				%%T%T%Tdefinition: Result = v%N%
 				%%T%Tend%N")
-
 			a_file.put_string ("%N%Tyyis_type")
 			a_file.put_integer (id)
 			a_file.put_string (" (v: ANY): BOOLEAN is%N%

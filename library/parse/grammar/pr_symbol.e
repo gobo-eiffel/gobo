@@ -13,10 +13,6 @@ indexing
 
 deferred class PR_SYMBOL
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature {NONE} -- Initialization
 
 	make (an_id: INTEGER; a_name: like name; a_type: like type) is

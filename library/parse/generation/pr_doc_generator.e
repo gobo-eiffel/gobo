@@ -94,7 +94,11 @@ feature {NONE} -- Generation
 		do
 			a_rules := grammar.rules
 			nb := a_rules.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_rule := a_rules.item (i)
 				a_lhs := a_rule.lhs
 					-- Do not take internal rules into account.
@@ -166,7 +170,11 @@ feature {NONE} -- Generation
 				print_empty_rhs (a_file)
 			else
 				nb := a_rhs.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_token ?= a_rhs.item (i)
 					if a_token /= Void then
 						print_token (a_token, a_file)

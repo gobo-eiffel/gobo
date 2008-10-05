@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: nonterminal $3 declared twice" 
+	default_template: STRING is "%"$1%", line $2: nonterminal $3 declared twice"
 			-- Default template used to built the error message
 
 	code: STRING is "PR0016"

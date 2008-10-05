@@ -16,13 +16,17 @@ inherit
 
 	YY_SCANNER
 		redefine
-			append_text_to_string, append_text_substring_to_string,
-			make_with_buffer, set_input_buffer,
+			append_text_to_string,
+			append_text_substring_to_string,
+			make_with_buffer,
+			set_input_buffer,
 			flush_input_buffer
 		end
 
 	KL_IMPORTED_SPECIAL_ROUTINES
+
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_ARRAY_ROUTINES
 
 feature {NONE} -- Initialization
@@ -405,8 +409,7 @@ feature {NONE} -- Implementation
 		ensure
 			array_not_void: Result /= Void
 			count_set: Result.count = an_array.count
-			-- same_items: forall i in 0 .. (an_array.count - 1),
-			--	Result.item (i) = an_array.item (an_array.lower + i)
+--			same_items: forall i in 0 .. (an_array.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
 	yy_array_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER) is
@@ -453,11 +456,9 @@ feature {NONE} -- Implementation
 		do
 			if yy_end > yy_start then
 				if yy_content_area /= Void then
-					input_buffer.set_beginning_of_line
-						(yy_content_area.item (yy_end - 1) = yyNew_line_character)
+					input_buffer.set_beginning_of_line (yy_content_area.item (yy_end - 1) = yyNew_line_character)
 				else
-					input_buffer.set_beginning_of_line
-						(yy_content.item (yy_end - 1) = yyNew_line_character)
+					input_buffer.set_beginning_of_line (yy_content.item (yy_end - 1) = yyNew_line_character)
 				end
 			end
 		end
@@ -524,7 +525,8 @@ feature {NONE} -- Implementation
 					i := i - 1
 				else
 					yy_column := a_column + 1
-					i := nb - 1 -- Jump out of the loop
+						-- Jump out of the loop
+					i := nb - 1
 				end
 			end
 			yy_line := yy_line + a_line
@@ -557,7 +559,10 @@ feature {NONE} -- Implementation
 				end
 				i := i - 1
 			end
-			from until i < nb loop
+			from
+			until
+				i < nb
+			loop
 				if yy_content_area /= Void then
 					c := yy_content_area.item (i)
 				else
@@ -612,10 +617,14 @@ feature {NONE} -- Implementation
 			-- of characters from the start of the input source)
 
 	yy_more_flag: BOOLEAN
+			-- `more' information
+
 	yy_more_len: INTEGER
 			-- `more' information
 
 	yy_last_accepting_state: INTEGER
+			-- Definition for backing up
+
 	yy_last_accepting_cpos: INTEGER
 			-- Definition for backing up
 
@@ -633,21 +642,31 @@ feature {NONE} -- Constants
 	yyNew_line_character: CHARACTER is '%N'
 			-- New line character
 
-	yyEnd_of_buffer: INTEGER is deferred end
+	yyEnd_of_buffer: INTEGER is
 			-- End of buffer rule code
+		deferred
+		end
 
-	yyBacking_up: BOOLEAN is deferred end
+	yyBacking_up: BOOLEAN is
 			-- Does current scanner back up?
 			-- (i.e. does it have non-accepting states)
+		deferred
+		end
 
-	yyLine_used: BOOLEAN is deferred end
+	yyLine_used: BOOLEAN is
 			-- Are line and column numbers used?
+		deferred
+		end
 
-	yyPosition_used: BOOLEAN is deferred end
+	yyPosition_used: BOOLEAN is
 			-- Is `position' used?
+		deferred
+		end
 
-	yyNull_equiv_class: INTEGER is deferred end
+	yyNull_equiv_class: INTEGER is
 			-- Equivalence code for NULL character
+		deferred
+		end
 
 	yy_Dummy: INTEGER is 2147483647
 			-- To be inserted in manifest arrays

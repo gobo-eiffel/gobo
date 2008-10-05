@@ -5,7 +5,7 @@ indexing
 		"Error: Unrecognized rule"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

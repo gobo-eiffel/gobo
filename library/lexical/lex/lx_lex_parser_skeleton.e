@@ -51,8 +51,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = handler
 		end
 
-	make_from_description
-		(a_description: LX_DESCRIPTION; handler: like error_handler) is
+	make_from_description (a_description: LX_DESCRIPTION; handler: like error_handler) is
 			-- Create a new scanner description parser
 			-- and initialize it with `a_description'.
 		require
@@ -377,10 +376,7 @@ feature {NONE} -- Measurement
 				regexp_count := Zero_or_more
 			end
 			if regexp_line /= series_line then
-				if
-					(regexp_line = One_or_more or regexp_line > 0) and
-					(series_line = One_or_more or series_line > 0)
-				then
+				if (regexp_line = One_or_more or regexp_line > 0) and (series_line = One_or_more or series_line > 0) then
 					regexp_line := One_or_more
 				else
 					regexp_line := Zero_or_more
@@ -457,6 +453,7 @@ feature {NONE} -- Measurement
 			-- when this rule has a trailing context
 
 	Zero_or_more: INTEGER is -1
+
 	One_or_more: INTEGER is -2
 
 feature {NONE} -- Factory
@@ -770,7 +767,11 @@ feature {NONE} -- Implementation
 		do
 			eof_rules := description.eof_rules
 			nb := stack.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_start_condition := stack.item (i)
 				if a_start_condition.has_eof then
 					report_multiple_EOF_rules_error (a_start_condition.name)
@@ -883,8 +884,7 @@ feature {NONE} -- Implementation
 			string_set: Result = a_string
 		end
 
-	append_character_to_character_class (a_char: INTEGER;
-		a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS is
+	append_character_to_character_class (a_char: INTEGER; a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS is
 			-- Append character `a_char' to `a_character_class'.
 		require
 			a_character_class_not_void: a_character_class /= Void
@@ -912,8 +912,7 @@ feature {NONE} -- Implementation
 			character_class_set: Result = a_character_class
 		end
 
-	append_character_set_to_character_class (char1, char2: INTEGER;
-		a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS is
+	append_character_set_to_character_class (char1, char2: INTEGER; a_character_class: LX_SYMBOL_CLASS): LX_SYMBOL_CLASS is
 			-- Append character set `char1'-`char2' to `a_character_class'.
 		require
 			a_character_class_not_void: a_character_class /= Void
@@ -923,7 +922,11 @@ feature {NONE} -- Implementation
 			if char1 > char2 then
 				report_negative_range_in_character_class_error
 			elseif description.case_insensitive then
-				from a_char := char1 until a_char > char2 loop
+				from
+					a_char := char1
+				until
+					a_char > char2
+				loop
 					inspect a_char
 					when Upper_a_code .. Upper_z_code then
 						a_character_class.put (a_char)
@@ -939,7 +942,11 @@ feature {NONE} -- Implementation
 					a_char := a_char + 1
 				end
 			else
-				from a_char := char1 until a_char > char2 loop
+				from
+					a_char := char1
+				until
+					a_char > char2
+				loop
 					if a_char = 0 then
 						a_character_class.put (description.characters_count)
 					else
@@ -1020,7 +1027,11 @@ feature {NONE} -- Implementation
 		do
 			action := action_factory.new_action (a_text)
 			nb := pending_rules.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				pending_rules.item (i).set_action (action)
 				i := i + 1
 			end
@@ -1039,7 +1050,11 @@ feature {NONE} -- Implementation
 			equiv_classes := description.equiv_classes
 			equiv_classes.build
 			cursor := character_classes.new_cursor
-			from cursor.start until cursor.after loop
+			from
+				cursor.start
+			until
+				cursor.after
+			loop
 				cursor.item.convert_to_equivalence (equiv_classes)
 				cursor.forth
 			end

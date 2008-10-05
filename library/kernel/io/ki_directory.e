@@ -29,9 +29,11 @@ inherit
 			last_item as last_entry,
 			valid_unread_item as valid_unread_entry
 		undefine
-			is_closable, close
+			is_closable,
+			close
 		redefine
-			read_entry, last_entry
+			read_entry,
+			last_entry
 		end
 
 feature -- Access

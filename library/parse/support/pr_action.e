@@ -16,12 +16,14 @@ inherit
 
 	DP_COMMAND
 		redefine
-			out, is_equal
+			out,
+			is_equal
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			out, is_equal
+			out,
+			is_equal
 		end
 
 create

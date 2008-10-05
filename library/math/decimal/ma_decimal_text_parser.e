@@ -64,7 +64,7 @@ feature -- Access
 			Result := coefficient_end - coefficient_begin + 1
 		end
 
-	fractional_part_count: INTEGER is 
+	fractional_part_count: INTEGER is
 			-- Number of characters in the fractional part
 		do
 			if decimal_point_index > 0 then
@@ -84,58 +84,58 @@ feature -- Access
 	exponent_significant_digits: INTEGER
 			-- Count of significant digits in exponent
 
-	exponent_count: INTEGER is 
+	exponent_count: INTEGER is
 			-- Count of significant digits in exponent;
 			-- Synonym of `exponent_significant_digits'
-		do 
-			Result := exponent_significant_digits 
+		do
+			Result := exponent_significant_digits
 		end
 
 	decimal_point_index: INTEGER
 			-- Index of decimal point if any
 
-	last_parsed : STRING
+	last_parsed: STRING
 			-- Last parsed string
 
 feature -- Status report
 
-	error: BOOLEAN is 
+	error: BOOLEAN is
 			-- Has there been an error in last parse operation?
-		do 
-			Result := state = State_error 
+		do
+			Result := state = State_error
 		end
 
 	is_comma_allowed: BOOLEAN
 			-- Is ',' allowed as fractional part separator?
 
-	is_infinity: BOOLEAN is 
+	is_infinity: BOOLEAN is
 			-- Is last parsed number an 'Infinity'?
-		do 
-			Result := not error and then state = State_infinity 
+		do
+			Result := not error and then state = State_infinity
 		end
 
-	is_nan: BOOLEAN is 
+	is_nan: BOOLEAN is
 			-- Is last parsed number a 'Not a Number'?
-		do 
-			Result := not error and then state = State_nan 
+		do
+			Result := not error and then state = State_nan
 		end
 
-	is_snan: BOOLEAN is 
+	is_snan: BOOLEAN is
 			-- Is last parsed number a 'Signaling NaN'?
-		do 
-			Result := not error and then state = State_snan 
+		do
+			Result := not error and then state = State_snan
 		end
 
-	has_point: BOOLEAN is 
+	has_point: BOOLEAN is
 			-- Has last parsed number a fractional part?
-		do 
-			Result := decimal_point_index /= 0 
+		do
+			Result := decimal_point_index /= 0
 		end
 
-	has_exponent: BOOLEAN is 
+	has_exponent: BOOLEAN is
 			-- Has last parsed number an exponent?
-		do 
-			Result := exponent_begin > 0 
+		do
+			Result := exponent_begin > 0
 		end
 
 	decimal_point_is_comma: BOOLEAN
@@ -267,7 +267,7 @@ feature {MA_DECIMAL} -- Basic operations
 			last_parsed_is_s: last_parsed = s
 		end
 
-	process_start (c: CHARACTER; index: INTEGER; s: STRING) is 
+	process_start (c: CHARACTER; index: INTEGER; s: STRING) is
 			-- Process `c' at `index' in `s' when in `state_start'.
 		require
 			state_start: state = State_start
@@ -336,7 +336,7 @@ feature {MA_DECIMAL} -- Basic operations
 			definition: not error implies is_infinity and then state = State_infinity
 		end
 
-	process_sign (c: CHARACTER; index: INTEGER; s: STRING) is 
+	process_sign (c: CHARACTER; index: INTEGER; s: STRING) is
 			-- Process `c' at `index' in `s' when in `state_sign'.
 		require
 			state_sign: state = State_sign
@@ -386,7 +386,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	process_starting_point(c: CHARACTER; index: INTEGER) is
+	process_starting_point (c: CHARACTER; index: INTEGER) is
 			-- Process `c' at `index' when in `state_starting_point'.
 		require
 			state_starting_point: state = State_starting_point
@@ -406,7 +406,7 @@ feature {MA_DECIMAL} -- Basic operations
 			-- Process `c' at `index' when in `state_point'.
 		require
 			state_point: state = State_point
-		do  
+		do
 			inspect c
 			when '0'..'9' then
 				coefficient_end := coefficient_end + 1
@@ -419,7 +419,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	process_comma (c: CHARACTER; index: INTEGER) is 
+	process_comma (c: CHARACTER; index: INTEGER) is
 			-- Process `c' at `index' when in `state_comma'.
 		require
 			state_comma: state = State_comma
@@ -434,7 +434,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	process_fractional_part (c: CHARACTER; index: INTEGER) is 
+	process_fractional_part (c: CHARACTER; index: INTEGER) is
 			-- Process `c' at `inddex' when in `state_fractional_part'.
 		require
 			state_fractional_part: state = State_fractional_part
@@ -450,7 +450,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	process_start_exponent (c: CHARACTER; index: INTEGER) is 
+	process_start_exponent (c: CHARACTER; index: INTEGER) is
 			-- Process `c' at `index' when in `state_start_exponent'.
 		require
 			state_start_exponent: state = State_start_exponent
@@ -477,13 +477,13 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	process_exponent_sign (c: CHARACTER; index: INTEGER) is 
+	process_exponent_sign (c: CHARACTER; index: INTEGER) is
 			-- Process `c' at `index' when in `state_exponent_sign'.
 		require
 			state_exponent_sign: state = State_exponent_sign
-		do  
+		do
 			inspect c
-			when '0'..'9'  then
+			when '0'..'9' then
 				exponent_as_double := c.code - ('0').code
 				exponent_begin := index
 				exponent_end := index
@@ -497,13 +497,13 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	process_exponent (c: CHARACTER; index: INTEGER) is 
+	process_exponent (c: CHARACTER; index: INTEGER) is
 			-- Process `c' at `index' when in `state_exponent'.
 		require
 			state_exponent: state = State_exponent
-		do  
+		do
 			inspect c
-			when '0'..'9'  then
+			when '0'..'9' then
 				exponent_as_double := exponent_as_double * 10 + (c.code - ('0').code)
 				exponent_end := exponent_end + 1
 				if exponent_as_double > 0 then
@@ -522,7 +522,7 @@ feature {MA_DECIMAL} -- Basic operations
 			s_not_void: s /= Void
 			t_not_void: t /= Void
 		local
-			i, j : INTEGER
+			i, j: INTEGER
 		do
 			from
 				i := i_begin
@@ -541,27 +541,45 @@ feature {MA_DECIMAL} -- Basic operations
 feature -- Constants
 
 	State_start: INTEGER is 1
+
 	State_nan: INTEGER is 2
+
 	State_snan: INTEGER is 3
+
 	State_starting_point: INTEGER is 4
+
 	State_infinity: INTEGER is 5
+
 	State_integer_part: INTEGER is 6
+
 	State_point: INTEGER is 7
+
 	State_fractional_part: INTEGER is 8
+
 	State_exponent: INTEGER is 9
+
 	State_sign: INTEGER is 10
+
 	State_comma: INTEGER is 11
+
 	State_start_exponent: INTEGER is 12
+
 	State_exponent_sign: INTEGER is 13
+
 	State_error: INTEGER is 14
 
 feature {NONE} -- Implementation
 
 	Error_invalid_value: INTEGER is 101
+
 	Error_invalid_character: INTEGER is 102
+
 	Error_invalid_character_in_integer_part: INTEGER is 103
+
 	Error_invalid_character_in_decimal_part: INTEGER is 104
+
 	Error_invalid_character_in_exponent: INTEGER is 105
+
 	Error_invalid_state: INTEGER is 106
 
 invariant

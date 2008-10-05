@@ -40,10 +40,15 @@ feature -- Status report
 				nb := v.count
 				if u.count = nb then
 					Result := True
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						if v.item_code (i) /= u.item_code (i) then
 							Result := False
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						else
 							i := i + 1
 						end

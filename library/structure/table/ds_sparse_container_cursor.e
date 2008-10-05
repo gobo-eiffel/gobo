@@ -102,6 +102,6 @@ invariant
 	-- execution of the creation procedure is not completed.
 	-- (In this case, this is `container' which is not fully
 	-- created yet, breaking its invariant.)
----	valid_position: valid_position (position)
+--	valid_position: valid_position (position)
 
 end

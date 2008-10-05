@@ -48,8 +48,7 @@ feature {NONE} -- Initialization
 			error_handler_set: error_handler = handler
 		end
 
-	make_from_description
-		(a_description: LX_DESCRIPTION; handler: like error_handler) is
+	make_from_description (a_description: LX_DESCRIPTION; handler: like error_handler) is
 			-- Create a new scanner description scanner and
 			-- initialize it with `a_description'.
 		require
@@ -159,7 +158,11 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			from i := str.count until i < 1 loop
+			from
+				i := str.count
+			until
+				i < 1
+			loop
 				unread_character (str.item (i))
 				i := i - 1
 			end
@@ -225,7 +228,11 @@ feature {NONE} -- Implementation
 					-- Octal.
 				nb := text_count
 				a_code := 0
-				from i := 2 until i > nb loop
+				from
+					i := 2
+				until
+					i > nb
+				loop
 					a_code := a_code * 8 + text_item (i).code - Zero_code
 					i := i + 1
 				end
@@ -236,8 +243,12 @@ feature {NONE} -- Implementation
 				else
 						-- Hexadecimal.
 					a_code := 0
-					from i := 3 until i > nb loop
-					a_code := a_code * 16
+					from
+						i := 3
+					until
+						i > nb
+					loop
+						a_code := a_code * 16
 						c := text_item (i)
 						inspect c
 						when '0'..'9' then

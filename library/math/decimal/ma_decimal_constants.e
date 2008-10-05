@@ -62,7 +62,7 @@ feature -- Access
 			infinity_not_void: Result /= Void
 		end
 
-	negative_infinity:  MA_DECIMAL is
+	negative_infinity: MA_DECIMAL is
 			-- Negative infinity
 		once
 			Result := zero.negative_infinity

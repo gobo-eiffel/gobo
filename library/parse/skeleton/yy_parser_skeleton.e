@@ -4,10 +4,7 @@ indexing
 
 		"Skeletons for parsers implemented with tables"
 
-	remark:
-
-		"To be used with 'geyacc --new_typing'."
-
+	remark: "To be used with 'geyacc --new_typing'."
 	library: "Gobo Eiffel Parse Library"
 	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "MIT License"
@@ -91,10 +88,7 @@ feature -- Parsing
 						yyss_top := yyss.item (yyssp)
 						index := yyn - yyNtbase
 						yystate := yypgoto.item (index) + yyss_top
-						if
-							(yystate >= 0 and yystate <= yyLast) and then
-							yycheck.item (yystate) = yyss_top
-						then
+						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
 							yystate := yytable.item (yystate)
 						else
 							yystate := yydefgoto.item (index)
@@ -182,10 +176,7 @@ feature -- Parsing
 								-- Skip next conditional instruction:
 							yyn := -1
 						end
-						if
-							(yyn < 0 or yyn > yyLast) or else
-							yycheck.item (yyn) /= yychar1
-						then
+						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yychar1 then
 							yy_goto := yyDefault
 						else
 							yyn := yytable.item (yyn)
@@ -259,10 +250,7 @@ feature -- Parsing
 						yyss_top := yyss.item (yyssp)
 						index := yyn - yyNtbase
 						yystate := yypgoto.item (index) + yyss_top
-						if
-							(yystate >= 0 and yystate <= yyLast) and then
-							yycheck.item (yystate) = yyss_top
-						then
+						if (yystate >= 0 and yystate <= yyLast) and then yycheck.item (yystate) = yyss_top then
 							yystate := yytable.item (yystate)
 						else
 							yystate := yydefgoto.item (index)
@@ -281,7 +269,7 @@ feature -- Parsing
 						yy_parsing_status := yyContinue
 						yy_goto := yyErrlab
 					else
-							-- Accepted or aborted.
+						-- Accepted or aborted.
 					end
 				when yyErrlab then
 						-- Detect error.
@@ -317,10 +305,7 @@ feature -- Parsing
 						yy_goto := yyErrpop
 					else
 						yyn := yyn + yyTerror
-						if
-							(yyn < 0 or yyn > yyLast) or else
-							yycheck.item (yyn) /= yyTerror
-						then
+						if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yyTerror then
 							yy_goto := yyErrpop
 						else
 							yyn := yytable.item (yyn)
@@ -507,7 +492,7 @@ feature {YY_PARSER_ACTION} -- Status report
 						Result := True
 					else
 							-- Error.
-						-- Result := False
+						Result := False
 					end
 				else
 					if a_token = yyEof then
@@ -522,10 +507,7 @@ feature {YY_PARSER_ACTION} -- Status report
 						end
 						yyn := yyn + yychar1
 					end
-					if
-						(yyn < 0 or yyn > yyLast) or else
-						yycheck.item (yyn) /= yychar1
-					then
+					if (yyn < 0 or yyn > yyLast) or else yycheck.item (yyn) /= yychar1 then
 							-- Do the default action for the current state.
 						yyn := yydefact.item (yystate)
 						if yyn /= 0 then
@@ -533,7 +515,7 @@ feature {YY_PARSER_ACTION} -- Status report
 							Result := True
 						else
 								-- Error.
-							-- Result := False
+							Result := False
 						end
 					else
 						yyn := yytable.item (yyn)
@@ -550,7 +532,7 @@ feature {YY_PARSER_ACTION} -- Status report
 								Result := True
 							else
 									-- Error.
-								-- Result := False
+								Result := False
 							end
 						elseif yyn = yyFinal then
 								-- Accept.
@@ -560,13 +542,13 @@ feature {YY_PARSER_ACTION} -- Status report
 							Result := True
 						else
 								-- Error.
-							-- Result := False
+							Result := False
 						end
 					end
 				end
 			else
 					-- Unknown state.
-				-- Result := False
+				Result := False
 			end
 		end
 
@@ -584,7 +566,10 @@ feature {YY_PARSER_ACTION} -- Access
 		do
 			nb := yyMax_token
 			create t.make (1, nb + 1)
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				if is_expected_token (i) then
 					j := j + 1
 					t.put (i, j)
@@ -592,7 +577,11 @@ feature {YY_PARSER_ACTION} -- Access
 				i := i + 1
 			end
 			create Result.make (1, j)
-			from i := 1 until i > j loop
+			from
+				i := 1
+			until
+				i > j
+			loop
 				Result.put (t.item (i), i)
 				i := i + 1
 			end
@@ -752,8 +741,7 @@ feature {NONE} -- Implementation
 		ensure
 			array_not_void: Result /= Void
 			count_set: Result.count = an_array.count
-			-- same_items: forall i in 0 .. (an_array.count - 1),
-			--   Result.item (i) = an_array.item (an_array.lower + i)
+--			same_items: forall i in 0 .. (an_array.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
 	yyarray_subcopy (an_array: ARRAY [INTEGER]; other: ARRAY [INTEGER]; start_pos, end_pos, index_pos: INTEGER) is
@@ -820,23 +808,35 @@ feature {NONE} -- Constants
 	yyEof: INTEGER is 0
 			-- Grammar-independent constants
 
-	yyFinal: INTEGER is deferred end
+	yyFinal: INTEGER is
 			-- Termination state id
+		deferred
+		end
 
-	yyFlag: INTEGER is deferred end
+	yyFlag: INTEGER is
 			-- Most negative INTEGER
+		deferred
+		end
 
-	yyNtbase: INTEGER is deferred end
+	yyNtbase: INTEGER is
 			-- Number of tokens
+		deferred
+		end
 
-	yyLast: INTEGER is deferred end
+	yyLast: INTEGER is
 			-- Upper bound of `yytable' and `yycheck'
+		deferred
+		end
 
-	yyMax_token: INTEGER is deferred end
+	yyMax_token: INTEGER is
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
+		deferred
+		end
 
-	yyNsyms: INTEGER is deferred end
+	yyNsyms: INTEGER is
+		deferred
+		end
 			-- Number of symbols
 			-- (terminal and nonterminal)
 

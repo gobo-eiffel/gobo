@@ -28,14 +28,10 @@ inherit
 		end
 
 	KL_OPERATING_SYSTEM
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	CONSOLE
 		rename
@@ -49,7 +45,15 @@ inherit
 			append as old_append,
 			close as old_close
 		export
-			{CONSOLE} open_read, extendible, file_pointer, count, old_close, is_closed, put_string, is_open_write;
+			{CONSOLE}
+				open_read,
+				extendible,
+				file_pointer,
+				count,
+				old_close,
+				is_closed,
+				put_string,
+				is_open_write
 			{NONE} all
 		redefine
 			file_readable
@@ -173,7 +177,10 @@ feature -- Input
 			end
 			is_eof := True
 			a_target := last_string
-			from until done loop
+			from
+			until
+				done
+			loop
 				read_character
 				if end_of_file then
 					done := True
@@ -253,8 +260,7 @@ feature -- Input
 			from
 				j := pos
 			until
-				i = nb or
-				character_buffer = Void
+				i = nb or character_buffer = Void
 			loop
 				i := i + 1
 				a_string.put (character_buffer.item, j)
@@ -270,7 +276,11 @@ feature -- Input
 						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
 						nb2 := old_read_to_string (tmp_string, 1, nb2)
-						from k := 1 until k > nb2 loop
+						from
+							k := 1
+						until
+							k > nb2
+						loop
 							a_string.put (tmp_string.item (k), j)
 							j := j + 1
 							k := k + 1

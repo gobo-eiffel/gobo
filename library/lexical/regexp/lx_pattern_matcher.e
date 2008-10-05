@@ -81,9 +81,8 @@ feature -- Access
 			subject_start_set: subject_start = 1
 			subject_end_set: subject_end = a_string.count
 			matched: has_matched implies Result /= Void
-			definition: Result /= Void implies
-				(Result.first = captured_start_position (0) and
-				Result.second = captured_end_position (0))
+			definition_first: Result /= Void implies Result.first = captured_start_position (0)
+			definition_second: Result /= Void implies Result.second = captured_end_position (0)
 		end
 
 feature -- Obsolete

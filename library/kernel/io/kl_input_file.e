@@ -136,8 +136,7 @@ feature -- Input
 			from
 				j := pos
 			until
-				i = nb or
-				character_buffer = Void
+				i = nb or character_buffer = Void
 			loop
 				i := i + 1
 				a_string.put (character_buffer.item, j)
@@ -155,7 +154,11 @@ feature -- Input
 						create tmp_string.make (nb2)
 						tmp_string.set_count (nb2)
 						nb2 := old_read_to_string (tmp_string, 1, nb2)
-						from k := 1 until k > nb2 loop
+						from
+							k := 1
+						until
+							k > nb2
+						loop
 							a_string.put (tmp_string.item (k), j)
 							j := j + 1
 							k := k + 1

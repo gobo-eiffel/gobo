@@ -15,9 +15,13 @@ class UC_UTF8_ROUTINES
 inherit
 
 	UC_IMPORTED_UNICODE_ROUTINES
+
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_INTEGER_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
+
 	UC_STRING_HANDLER
 
 feature -- Status report
@@ -34,7 +38,11 @@ feature -- Status report
 		do
 			Result := True
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_first_byte := a_string.item (i)
 				if is_encoded_first_byte (a_first_byte) then
 					bc := encoded_byte_count (a_first_byte)
@@ -44,14 +52,16 @@ feature -- Status report
 						nb2 := i + bc - 1
 						if nb2 > nb then
 							Result := False
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						else
 							a_code := encoded_first_value (a_first_byte)
 							i := i + 1
 							a_byte := a_string.item (i)
 							if not is_encoded_second_byte (a_byte, a_first_byte) then
 								Result := False
-								i := nb + 1 -- Jump out of the loop.
+									-- Jump out of the loop.
+								i := nb + 1
 							else
 								a_code := a_code * 64 + encoded_next_value (a_byte)
 								inspect bc
@@ -72,12 +82,17 @@ feature -- Status report
 									end
 								end
 								if Result then
-									from i := i + 1 until i > nb2 loop
+									from
+										i := i + 1
+									until
+										i > nb2
+									loop
 										if is_encoded_next_byte (a_string.item (i)) then
 											i := i + 1
 										else
 											Result := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										end
 									end
 								end
@@ -86,7 +101,8 @@ feature -- Status report
 					end
 				else
 					Result := False
-					i := nb + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := nb + 1
 				end
 			end
 		end
@@ -147,7 +163,7 @@ feature -- Access
 		do
 			Result := a_byte.code
 			if a_byte <= byte_127 then
-					-- 0xxxxxxx
+				-- 0xxxxxxx
 			elseif a_byte <= byte_223 then
 					-- 110xxxxx
 				Result := Result \\ 32
@@ -222,12 +238,14 @@ feature -- Measurement
 			if start_index <= end_index then
 				if ANY_.same_types (a_string, dummy_string) then
 					l_string_8 ?= a_string
-					check is_string_8: l_string_8 /= Void end
+					check
+						is_string_8: l_string_8 /= Void
+					end
 						-- This is the original code
--- 					from i := start_index until i > end_index loop
--- 						Result := Result + character_byte_count (l_string_8.item (i))
--- 						i := i + 1
--- 					end
+--					from i := start_index until i > end_index loop
+--						Result := Result + character_byte_count (l_string_8.item (i))
+--						i := i + 1
+--					end
 						-- This loop has been unrolled to get a more than
 						-- 50% improvement in performance (measured with ISE
 						-- Eiffel 5.5, Borland C, array optimisations and
@@ -239,7 +257,11 @@ feature -- Measurement
 					else
 						even_end_index := end_index - 1
 					end
-					from i := start_index until i > even_end_index loop
+					from
+						i := start_index
+					until
+						i > even_end_index
+					loop
 						c := l_string_8.item (i)
 						if c <= byte_127 then
 							Result := Result + 1
@@ -259,7 +281,9 @@ feature -- Measurement
 					end
 				elseif ANY_.same_types (a_string, dummy_uc_string) then
 					a_uc_string ?= a_string
-					check is_uc_string: a_uc_string /= Void end
+					check
+						is_uc_string: a_uc_string /= Void
+					end
 					if start_index = 1 and end_index = a_uc_string.count then
 						Result := a_uc_string.byte_count
 					else
@@ -286,7 +310,11 @@ feature -- Measurement
 							end
 						end
 					else
-						from i := start_index until i > end_index loop
+						from
+							i := start_index
+						until
+							i > end_index
+						loop
 							Result := Result + code_byte_count (a_string.code (i).to_integer_32)
 							i := i + 1
 						end
@@ -372,7 +400,11 @@ feature -- Conversion
 			else
 				nb := a_string.count
 				create Result.make (nb)
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					append_code_to_utf8 (Result, a_string.item_code (i))
 					i := i + 1
 				end
@@ -461,12 +493,16 @@ feature {NONE} -- Constants
 	byte_159: CHARACTER is '%/159/'
 
 	byte_191: CHARACTER is '%/191/'
+			-- 10111111
+
 	code_191: INTEGER is 191
 			-- 10111111
 
 	byte_194: CHARACTER is '%/194/'
 
 	byte_223: CHARACTER is '%/223/'
+			-- 11011111
+
 	code_223: INTEGER is 223
 			-- 11011111
 
@@ -475,6 +511,8 @@ feature {NONE} -- Constants
 	byte_237: CHARACTER is '%/237/'
 
 	byte_239: CHARACTER is '%/239/'
+			-- 11101111
+
 	code_239: INTEGER is 239
 			-- 11101111
 
@@ -483,14 +521,20 @@ feature {NONE} -- Constants
 	byte_244: CHARACTER is '%/244/'
 
 	byte_247: CHARACTER is '%/247/'
+			-- 11110111
+
 	code_247: INTEGER is 247
 			-- 11110111
 
 	byte_251: CHARACTER is '%/251/'
+			-- 11111011
+
 	code_251: INTEGER is 251
 			-- 11111011
 
 	byte_253: CHARACTER is '%/253/'
+			-- 11111101
+
 	code_253: INTEGER is 253
 			-- 11111101
 

@@ -23,8 +23,10 @@ inherit
 
 	LX_TABLES
 		export
-			{LX_TABLES} all;
-			{ANY} to_tables, from_tables
+			{LX_TABLES} all
+			{ANY}
+				to_tables,
+				from_tables
 		end
 
 feature {NONE} -- Initialization
@@ -91,11 +93,11 @@ feature {NONE} -- Implementation
 							-- The head has a fixed size.
 						yy_end := yy_start + yy_more_len + yy_rule.head_count
 					else
-							-- The rule has trailing context and both
-							-- the head and trail have variable size.
-							-- The work is done using another mechanism
-							-- (varaible_trail_context) (implies
-							-- performance degradation.)
+						-- The rule has trailing context and both
+						-- the head and trail have variable size.
+						-- The work is done using another mechanism
+						-- (varaible_trail_context) (implies
+						-- performance degradation.)
 					end
 				end
 				if yyLine_used then
@@ -138,8 +140,7 @@ feature {NONE} -- Implementation
 				yy_rule.action.execute
 				post_action
 				if yy_end > yy_start then
-					input_buffer.set_beginning_of_line
-						(yy_content.item (yy_end - 1) = yyNew_line_character)
+					input_buffer.set_beginning_of_line (yy_content.item (yy_end - 1) = yyNew_line_character)
 				end
 			else
 				pre_action

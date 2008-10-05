@@ -85,7 +85,11 @@ feature -- Access
 				if is_open_read then
 					k := 10
 					create an_array.make (1, k)
-					from read_entry until end_of_input loop
+					from
+						read_entry
+					until
+						end_of_input
+					loop
 						a_name := last_entry
 						tmp_file.reset (file_system.pathname (string_name, a_name))
 						if tmp_file.is_readable then
@@ -100,7 +104,11 @@ feature -- Access
 					end
 					close
 					create Result.make (1, nb)
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						Result.put (an_array.item (i), i)
 						i := i + 1
 					end
@@ -125,7 +133,11 @@ feature -- Access
 				if is_open_read then
 					k := 10
 					create an_array.make (1, k)
-					from read_entry until end_of_input loop
+					from
+						read_entry
+					until
+						end_of_input
+					loop
 						a_name := last_entry
 						if
 							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
@@ -145,7 +157,11 @@ feature -- Access
 					end
 					close
 					create Result.make (1, nb)
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						Result.put (an_array.item (i), i)
 						i := i + 1
 					end
@@ -381,7 +397,11 @@ feature -- Basic operations
 						a_new_dir.recursive_create_directory
 						open_read
 						if is_open_read then
-							from read_entry until end_of_input loop
+							from
+								read_entry
+							until
+								end_of_input
+							loop
 								a_name := last_entry
 								if
 									not STRING_.same_string (a_name, file_system.relative_current_directory) and then
@@ -422,7 +442,11 @@ feature -- Iteration
 			if is_closed then
 				open_read
 				if is_open_read then
-					from read_entry until end_of_input loop
+					from
+						read_entry
+					until
+						end_of_input
+					loop
 						a_name := last_entry
 						if
 							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
@@ -450,7 +474,11 @@ feature -- Iteration
 			if is_closed then
 				open_read
 				if is_open_read then
-					from read_entry until end_of_input loop
+					from
+						read_entry
+					until
+						end_of_input
+					loop
 						a_name := last_entry
 						if
 							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
@@ -480,7 +508,11 @@ feature -- Iteration
 			if is_closed then
 				open_read
 				if is_open_read then
-					from read_entry until Result or end_of_input loop
+					from
+						read_entry
+					until
+						Result or end_of_input
+					loop
 						a_name := last_entry
 						if
 							not STRING_.same_string (a_name, file_system.relative_current_directory) and then
@@ -511,7 +543,11 @@ feature -- Iteration
 				open_read
 				if is_open_read then
 					Result := True
-					from read_entry until not Result or end_of_input loop
+					from
+						read_entry
+					until
+						not Result or end_of_input
+					loop
 						a_name := last_entry
 						if
 							not STRING_.same_string (a_name, file_system.relative_current_directory) and then

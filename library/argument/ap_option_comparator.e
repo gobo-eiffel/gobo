@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Comparators for ordering options"
 
@@ -15,6 +15,7 @@ class AP_OPTION_COMPARATOR
 inherit
 
 	KL_COMPARATOR [AP_OPTION]
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Status report
@@ -22,7 +23,7 @@ feature -- Status report
 	less_than (u, v: AP_OPTION): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		local
-			u_string, v_string:STRING
+			u_string, v_string: STRING
 		do
 			if u.has_long_form then
 				u_string := u.long_form

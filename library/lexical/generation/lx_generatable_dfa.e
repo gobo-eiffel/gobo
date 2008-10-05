@@ -21,8 +21,9 @@ inherit
 
 	LX_TABLES
 		export
-			{LX_TABLES} all;
-			{ANY} to_tables
+			{LX_TABLES} all
+			{ANY}
+				to_tables
 		end
 
 	UT_CHARACTER_CODES
@@ -62,8 +63,7 @@ feature {NONE} -- Initialization
 			line_pragma := a_description.line_pragma
 			yy_start_conditions := a_description.start_conditions.names
 			build_rules (a_description.rules)
-			build_eof_rules
-				(a_description.eof_rules, 0, yy_start_conditions.count - 1)
+			build_eof_rules (a_description.eof_rules, 0, yy_start_conditions.count - 1)
 			max := characters_count
 			equiv_classes := a_description.equiv_classes
 			if equiv_classes /= Void and then equiv_classes.built then
@@ -175,7 +175,11 @@ feature {NONE} -- Generation
 		do
 			if eiffel_header /= Void then
 				nb := eiffel_header.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_file.put_string (eiffel_header.item (i))
 					i := i + 1
 				end
@@ -231,8 +235,7 @@ feature {NONE} -- Generation
 			if inspect_used then
 				print_inspect_actions (a_file)
 			else
-				print_binary_search_actions
-					(a_file, yy_rules.lower, yy_rules.upper)
+				print_binary_search_actions (a_file, yy_rules.lower, yy_rules.upper)
 			end
 			if post_action_used then
 				a_file.put_string ("%T%T%Tpost_action%N")
@@ -243,7 +246,11 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 			if actions_separated then
 				nb := yy_rules.upper
-				from i := yy_rules.lower until i > nb loop
+				from
+					i := yy_rules.lower
+				until
+					i > nb
+				loop
 					a_file.put_character ('%N')
 					print_action_routine (a_file, yy_rules.item (i))
 					i := i + 1
@@ -265,7 +272,11 @@ feature {NONE} -- Generation
 		do
 			a_file.put_string ("%T%T%Tinspect yy_act%N")
 			nb := yy_rules.upper
-			from i := yy_rules.lower until i > nb loop
+			from
+				i := yy_rules.lower
+			until
+				i > nb
+			loop
 				rule := yy_rules.item (i)
 				a_file.put_string ("when ")
 				a_file.put_integer (rule.id)
@@ -277,10 +288,7 @@ feature {NONE} -- Generation
 						not_shared or i > nb
 					loop
 						next_rule := yy_rules.item (i)
-						if
-							rule.action = next_rule.action and
-							not (next_rule.has_trail_context or yyLine_used or yyPosition_used)
-						then
+						if rule.action = next_rule.action and not (next_rule.has_trail_context or yyLine_used or yyPosition_used) then
 							a_file.put_string (", ")
 							a_file.put_integer (next_rule.id)
 							i := i + 1
@@ -412,15 +420,14 @@ feature {NONE} -- Generation
 					a_file.put_character ('%N')
 				elseif a_rule.head_count >= 0 then
 						-- The head has a fixed size.
-					a_file.put_string
-						("%Tyy_end := yy_start + yy_more_len + ")
+					a_file.put_string ("%Tyy_end := yy_start + yy_more_len + ")
 					a_file.put_integer (a_rule.head_count)
 					a_file.put_character ('%N')
 				else
-						-- The rule has trailing context and both
-						-- the head and trail have variable size.
-						-- The work is done using another mechanism
-						-- (variable_trail_context).
+					-- The rule has trailing context and both
+					-- the head and trail have variable size.
+					-- The work is done using another mechanism
+					-- (variable_trail_context).
 					-- TODO: Report performance degradation.
 				end
 			end
@@ -555,9 +562,13 @@ feature {NONE} -- Generation
 			nb_actions := actions.count
 			if nb_actions > 0 then
 				a_file.put_string ("%T%T%Tinspect yy_sc%N")
-				from j := 1 until j > nb_actions loop
+				from
+					j := 1
+				until
+					j > nb_actions
+				loop
 					rule_list := actions.item (j).second
-					from 
+					from
 						rule_cursor := rule_list.new_cursor
 						rule_cursor.start
 						rule := rule_cursor.item
@@ -638,7 +649,11 @@ feature {NONE} -- Generation
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyPosition_used)
 			a_file.put_string ("%N%T%T%T-- Is `position' used?%N%N")
 			nb := yy_start_conditions.upper
-			from i := yy_start_conditions.lower until i > nb loop
+			from
+				i := yy_start_conditions.lower
+			until
+				i > nb
+			loop
 				a_file.put_character ('%T')
 				a_file.put_string (yy_start_conditions.item (i))
 				a_file.put_string (": INTEGER is ")
@@ -681,8 +696,7 @@ feature {NONE} -- Generation
 				nb := a_table.count // array_size + 1
 			end
 			if nb = 1 then
-				a_file.put_string
-					("%T%Tonce%N%T%T%TResult := yy_fixed_array (<<%N")
+				a_file.put_string ("%T%Tonce%N%T%T%TResult := yy_fixed_array (<<%N")
 				ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
 				a_file.put_string (", yy_Dummy>>)%N%T%Tend%N")
 			else
@@ -692,7 +706,11 @@ feature {NONE} -- Generation
 				a_file.put_string (", ")
 				a_file.put_integer (a_table.upper)
 				a_file.put_string (")%N")
-				from j := 1 until j > nb loop
+				from
+					j := 1
+				until
+					j > nb
+				loop
 					a_file.put_string (Indentation)
 					a_file.put_string (a_name)
 					a_file.put_character ('_')
@@ -748,14 +766,17 @@ feature {NONE} -- Generation
 			nfa_states := a_state.states
 			nb := nfa_states.count
 			create line_numbers.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_nfa_state := nfa_states.item (i)
 				from
 					j := yy_rules.lower
 					yy_rules_upper := yy_rules.upper
 				until
-					j > yy_rules_upper or else
-					yy_rules.item (j).pattern.has (a_nfa_state)
+					j > yy_rules_upper or else yy_rules.item (j).pattern.has (a_nfa_state)
 				loop
 					j := j + 1
 				end
@@ -770,7 +791,11 @@ feature {NONE} -- Generation
 			line_numbers.sort (Integer_sorter)
 			a_file.put_string (" associated rule line numbers:")
 			nb := line_numbers.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				if i \\ 8 = 1 then
 					a_file.put_character ('%N')
 				end
@@ -799,20 +824,28 @@ feature {NONE} -- Generation
 			create has_transition.make (0, nb - 1)
 			if yy_ec /= Void then
 					-- Equivalence classes are used.
-				from i := 1 until i >= nb loop
+				from
+					i := 1
+				until
+					i >= nb
+				loop
 					j := yy_ec.item (i)
 					if transitions.valid_label (j) then
-						has_transition.put (transitions.target (j) /= Void , i)
+						has_transition.put (transitions.target (j) /= Void, i)
 					end
 					i := i + 1
 				end
 					-- Null transition.
 				j := yy_ec.item (nb)
 				if transitions.valid_label (j) then
-					has_transition.put (transitions.target (j) /= Void , 0)
+					has_transition.put (transitions.target (j) /= Void, 0)
 				end
 			else
-				from i := 1 until i >= nb loop
+				from
+					i := 1
+				until
+					i >= nb
+				loop
 					if transitions.valid_label (i) then
 						has_transition.put (transitions.target (i) /= Void, i)
 					end
@@ -824,7 +857,11 @@ feature {NONE} -- Generation
 				end
 			end
 			a_file.put_string (" out-transitions: [")
-			from i := 0 until i >= nb loop
+			from
+				i := 0
+			until
+				i >= nb
+			loop
 				if has_transition.item (i) then
 					a_file.put_character (' ')
 					print_readable_character (i, a_file)
@@ -846,7 +883,11 @@ feature {NONE} -- Generation
 				i := i + 1
 			end
 			a_file.put_string ("]%N jam-transitions: EOF [")
-			from i := 0 until i >= nb loop
+			from
+				i := 0
+			until
+				i >= nb
+			loop
 				if not has_transition.item (i) then
 					a_file.put_character (' ')
 					print_readable_character (i, a_file)
@@ -941,7 +982,11 @@ feature {NONE} -- Building
 		do
 			nb := rules.count
 			create yy_rules.make (1, nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				yy_rules.put (rules.item (i), i)
 				i := i + 1
 			end
@@ -955,14 +1000,18 @@ feature {NONE} -- Building
 		require
 			rules_not_void: rules /= Void
 			no_void_rule: not rules.has (Void)
-			-- valid_rules: forall rule in rules, rule.id >= l and rule.id <= u
+--			valid_rules: forall rule in rules, rule.id >= l and rule.id <= u
 		local
 			i, nb: INTEGER
 			rule: LX_RULE
 		do
 			create yy_eof_rules.make (l, u)
 			nb := rules.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				rule := rules.item (i)
 				yy_eof_rules.put (rule, rule.id)
 				i := i + 1

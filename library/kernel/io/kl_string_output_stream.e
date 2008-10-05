@@ -15,11 +15,13 @@ class KL_STRING_OUTPUT_STREAM
 inherit
 
 	KI_TEXT_OUTPUT_STREAM
+
 	KL_IMPORTED_STRING_ROUTINES
 
 create
 
-	make, make_empty
+	make,
+	make_empty
 
 feature {NONE} -- Initialization
 

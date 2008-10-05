@@ -14,11 +14,6 @@ class PR_REDUCTION
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-		undefine
-			is_equal
-		end
-
 	COMPARABLE
 
 create
@@ -85,7 +80,11 @@ feature -- Element change
 			a_token: PR_TOKEN
 		do
 			transitions_cursor := transitions.new_cursor
-			from transitions_cursor.start until transitions_cursor.after loop
+			from
+				transitions_cursor.start
+			until
+				transitions_cursor.after
+			loop
 				nb_token := nb_token + transitions_cursor.item.following_tokens.count
 				transitions_cursor.forth
 			end
@@ -93,9 +92,17 @@ feature -- Element change
 			if lookaheads.capacity < nb_token then
 				lookaheads.resize (nb_token)
 			end
-			from transitions_cursor.start until transitions_cursor.after loop
+			from
+				transitions_cursor.start
+			until
+				transitions_cursor.after
+			loop
 				follows_cursor := transitions_cursor.item.following_tokens.new_cursor
-				from follows_cursor.start until follows_cursor.after loop
+				from
+					follows_cursor.start
+				until
+					follows_cursor.after
+				loop
 					a_token := follows_cursor.item
 					if not lookaheads.has (a_token) then
 						lookaheads.put_last (a_token)

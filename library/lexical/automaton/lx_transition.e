@@ -14,8 +14,6 @@ class LX_TRANSITION [G -> LX_STATE]
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-
 	KL_CLONABLE
 
 create

@@ -19,9 +19,9 @@ feature -- Bits
 		deferred
 		ensure
 			large_enough: Result >= 1
-			-- Note: Postcondition commented out to avoid recursive
-			-- call in once-function in KL_PLATFORM:
-			-- small_enough: Result <= Boolean_bytes * Byte_bits
+				-- Note: Postcondition commented out to avoid recursive
+				-- call in once-function in KL_PLATFORM:
+--			small_enough: Result <= Boolean_bytes * Byte_bits
 		end
 
 	Byte_bits: INTEGER is 8
@@ -31,9 +31,9 @@ feature -- Bits
 			-- Number of bits in a value of type CHARACTER
 		deferred
 		ensure
-			-- Note: Postcondition commented out to avoid recursive
-			-- call in once-function in KL_PLATFORM:
-			-- definition: Result = Character_bytes * Byte_bits
+				-- Note: Postcondition commented out to avoid recursive
+				-- call in once-function in KL_PLATFORM:
+				-- definition: Result = Character_bytes * Byte_bits
 			more_than_byte: Result >= Byte_bits
 		end
 
@@ -41,9 +41,9 @@ feature -- Bits
 			-- Number of bits in a value of type DOUBLE
 		deferred
 		ensure
-			-- Note: Postcondition commented out to avoid recursive
-			-- call in once-function in KL_PLATFORM:
-			-- definition: Result = Double_bytes * Byte_bits
+				-- Note: Postcondition commented out to avoid recursive
+				-- call in once-function in KL_PLATFORM:
+--			definition: Result = Double_bytes * Byte_bits
 			more_than_real: Result >= Real_bits
 		end
 
@@ -51,9 +51,9 @@ feature -- Bits
 			-- Number of bits in a value of type INTEGER
 		deferred
 		ensure
-			-- Note: Postcondition commented out to avoid recursive
-			-- call in once-function in KL_PLATFORM:
-			-- definition: Result = Integer_bytes * Byte_bits
+				-- Note: Postcondition commented out to avoid recursive
+				-- call in once-function in KL_PLATFORM:
+--			definition: Result = Integer_bytes * Byte_bits
 			more_than_character: Result >= Character_bits
 		end
 
@@ -145,8 +145,8 @@ feature -- Values
 		deferred
 		ensure
 			meaningful: Result >= Maximum_byte_code
-			-- Problem with ^ in SE 2.1b1, and with ISE 5.6 for .NET:
-			-- definition: Result = (2 ^ Character_bits) - 1
+				-- Problem with ^ in SE 2.1b1, and with ISE 5.6 for .NET:
+--			definition: Result = (2 ^ Character_bits) - 1
 		end
 
 	Minimum_integer: INTEGER is
@@ -164,7 +164,7 @@ feature -- Values
 		ensure
 			meaningful: Result >= 0
 				-- Result = 2 ^ (Integer_bits - 1) - 1:
-			definition: Result = - (Minimum_integer + 1)
+			definition: Result = -(Minimum_integer + 1)
 		end
 
 end

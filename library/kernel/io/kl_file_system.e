@@ -17,19 +17,13 @@ inherit
 	KI_FILE_SYSTEM
 
 	KL_IMPORTED_STRING_ROUTINES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 feature -- Status report
 
@@ -123,7 +117,10 @@ feature -- File handling
 				a_file2.open_read
 				if a_file2.is_open_read then
 					Result := True
-					from until done loop
+					from
+					until
+						done
+					loop
 						a_file1.read_line
 						a_file2.read_line
 						if a_file1.end_of_file then
@@ -147,10 +144,10 @@ feature -- File handling
 					end
 				else
 					a_file1.close
-					-- Result := False
+					Result := False
 				end
 			else
-				-- Result := False
+				Result := False
 			end
 		end
 
@@ -182,7 +179,10 @@ feature -- File handling
 						Result := False
 					else
 						Result := True
-						from until done loop
+						from
+						until
+							done
+						loop
 							a_file1.read_string (512)
 							a_file2.read_string (512)
 							if a_file1.end_of_file then
@@ -210,7 +210,11 @@ feature -- File handling
 									a_file2.close
 									done := True
 								else
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										if s1.item (i) /= s2.item (i) then
 											Result := False
 											a_file1.close
@@ -228,10 +232,10 @@ feature -- File handling
 					end
 				else
 					a_file1.close
-					-- Result := False
+					Result := False
 				end
 			else
-				-- Result := False
+				Result := False
 			end
 		end
 

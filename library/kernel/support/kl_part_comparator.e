@@ -12,10 +12,6 @@ indexing
 
 deferred class KL_PART_COMPARATOR [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Status report
 
 	less_than (u, v: G): BOOLEAN is

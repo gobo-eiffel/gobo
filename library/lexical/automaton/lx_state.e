@@ -14,8 +14,6 @@ deferred class LX_STATE
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-
 	KL_CLONABLE
 
 feature -- Status report

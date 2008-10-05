@@ -42,7 +42,7 @@ feature -- Initialization
 		ensure
 			special_not_void: Result /= Void
 			count_set: Result.count = an_array.count
-			-- same_items: forall i in 0 .. (Result.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
+--			same_items: forall i in 0 .. (Result.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
 feature -- Conversion
@@ -59,7 +59,7 @@ feature -- Conversion
 		ensure
 			special_not_void: Result /= Void
 			count_set: Result.count >= an_array.count
-			-- same_items: forall i in 0.. (an_array.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
+--			same_items: forall i in 0.. (an_array.count - 1), Result.item (i) = an_array.item (an_array.lower + i)
 		end
 
 feature -- Status report

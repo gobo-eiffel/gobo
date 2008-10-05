@@ -4,12 +4,11 @@ indexing
 
 		"Command-line arguments"
 
-	usage:
-
-		"This class should not be used directly through %
-		%inheritance and client/supplier relationship. %
-		%Inherit from KL_SHARED_ARGUMENTS instead."
-
+	usage: "[
+		This class should not be used directly through
+		inheritance and client/supplier relationship.
+		Inherit from KL_SHARED_ARGUMENTS instead.
+	]"
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
@@ -22,10 +21,6 @@ class KL_ARGUMENTS
 inherit
 
 	ARGUMENTS
-		export
-				-- Needed for SE 2.1b1:
-			{ANY} argument, argument_count
-		end
 
 create {KL_SHARED_ARGUMENTS}
 

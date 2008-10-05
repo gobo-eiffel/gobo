@@ -12,13 +12,10 @@ indexing
 
 class YY_BUFFER
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
-	make, make_from_buffer
+	make,
+	make_from_buffer
 
 feature {NONE} -- Initialization
 
@@ -49,9 +46,7 @@ feature {NONE} -- Initialization
 			-- Use `make' if this behavior is not desired.
 		require
 			buff_not_void: buff /= Void
-			valid_buff: buff.count >= 2 and then
-				buff.item (buff.count - 1) = '%U' and
-				buff.item (buff.count) = '%U'
+			valid_buff: buff.count >= 2 and then buff.item (buff.count - 1) = '%U' and buff.item (buff.count) = '%U'
 		do
 			capacity := buff.count - 2
 			count := capacity

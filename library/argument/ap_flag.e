@@ -1,4 +1,5 @@
 indexing
+
 	description:
 
 		"Flags (options that do not require extra arguments)"

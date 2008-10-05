@@ -73,14 +73,20 @@ feature -- Status report
 				Result := True
 			else
 				Result := True
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if is_current (i) then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					elseif is_parent (i) then
 						if i > 1 and then not is_parent (i - 1) then
 							Result := False
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 					end
 					i := i + 1
@@ -165,10 +171,15 @@ feature -- Comparison
 					STRING_.same_string (sharename, a_pathname.sharename)))
 				then
 					Result := True
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						if not STRING_.same_string (item (i), a_pathname.item (i)) then
 							Result := False
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 						i := i + 1
 					end

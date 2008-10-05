@@ -12,10 +12,6 @@ indexing
 
 class KL_OPERATING_SYSTEM
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Status report
 
 	is_windows: BOOLEAN is

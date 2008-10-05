@@ -11,7 +11,6 @@ indexing
 		%similar enough to be usable, and therefore compacting the %
 		%output tables"
 
-
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 1999, Eric Bezault and others"
 	license: "MIT License"
@@ -26,11 +25,27 @@ inherit
 		rename
 			put as list_put
 		export
-	 		{NONE}
-				list_put, put_first, put_last, put_left, put_right,
-				force, force_first, force_last, force_left, force_right,
-				extend, extend_first, extend_last, extend_left, extend_right,
-				append, append_first, append_last, append_left, append_right
+			{NONE}
+				list_put,
+				put_first,
+				put_last,
+				put_left,
+				put_right,
+				force,
+				force_first,
+				force_last,
+				force_left,
+				force_right,
+				extend,
+				extend_first,
+				extend_last,
+				extend_left,
+				extend_right,
+				append,
+				append_first,
+				append_last,
+				append_left,
+				append_right
 		end
 
 create
@@ -39,9 +54,7 @@ create
 
 feature -- Element change
 
-	put (state_id: INTEGER;
-		transitions: LX_TRANSITION_TABLE [LX_DFA_STATE];
-		common_state: LX_DFA_STATE) is
+	put (state_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]; common_state: LX_DFA_STATE) is
 			-- Create a new proto and insert it in the proto queue.
 			-- Remove less recently used proto if queue is full.
 		require

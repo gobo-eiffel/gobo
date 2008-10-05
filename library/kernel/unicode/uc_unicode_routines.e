@@ -14,7 +14,8 @@ class UC_UNICODE_ROUTINES
 
 inherit
 
-	ANY -- Export features from ANY.
+	ANY
+			-- Export features from ANY.
 
 	UC_CTYPE
 
@@ -64,10 +65,15 @@ feature -- Status report
 			else
 				Result := True
 				nb := a_string.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if maximum_ascii_character_code < a_string.item_code (i) then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end

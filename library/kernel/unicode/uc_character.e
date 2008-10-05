@@ -14,11 +14,6 @@ class UC_CHARACTER
 
 inherit
 
-	ANY -- Needed for SE 2.1.
-		undefine
-			is_equal, out
-		end
-
 	COMPARABLE
 		redefine
 			out
@@ -26,32 +21,38 @@ inherit
 
 	HASHABLE
 		undefine
-			is_equal, out
+			is_equal,
+			out
 		end
 
 	KL_SHARED_PLATFORM
 		undefine
-			is_equal, out
+			is_equal,
+			out
 		end
 
 	UC_IMPORTED_UNICODE_ROUTINES
 		undefine
-			is_equal, out
+			is_equal,
+			out
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		undefine
-			is_equal, out
+			is_equal,
+			out
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
 		undefine
-			is_equal, out
+			is_equal,
+			out
 		end
 
 create
 
-	make_from_character, make_from_code
+	make_from_character,
+	make_from_code
 
 feature {NONE} -- Initialization
 

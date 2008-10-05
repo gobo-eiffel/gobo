@@ -20,9 +20,10 @@ inherit
 
 	COMPARABLE
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		redefine
-			infix ">" 
+			infix ">"
 		end
 
 feature {NONE} -- Initialization
@@ -122,7 +123,11 @@ feature -- Status report
 			i: INTEGER
 		do
 			Result := True
-			from i := count - 1 until i < 0 loop
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
 				if item (i) /= 0 then
 					Result := False
 					i := -1
@@ -159,7 +164,7 @@ feature {MA_DECIMAL} -- Status setting
 			coefficient_end_ge_begin: coefficient_end >= coefficient_begin
 		deferred
 		ensure
-			definition: True -- All digits in s are in Current at the right position.
+--			definition: All digits in s are in Current at the right position.
 		end
 
 feature -- Comparison
@@ -170,7 +175,7 @@ feature -- Comparison
 			Result := (three_way_comparison (other) = -1)
 		end
 
-	infix ">" (other : like Current) : BOOLEAN is
+	infix ">" (other: like Current): BOOLEAN is
 			-- Is `Current' greater than `other'?
 		do
 			Result := (three_way_comparison (other) = 1)
@@ -306,7 +311,8 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 		deferred
 		ensure
 			adapted_count: count = old count + a_count
-			zero_shifted: item (0) = 0 --and then item (1) = old item (0)
+--			zero_shifted: item (0) = 0 and then item (1) = old item (0)
+			zero_shifted: item (0) = 0
 		end
 
 	shift_right (a_count: INTEGER) is
@@ -322,7 +328,7 @@ feature {MA_DECIMAL, MA_DECIMAL_COEFFICIENT} -- Basic operations
 
 feature {MA_DECIMAL} -- Implementation
 
-	set_count (a_count : INTEGER) is
+	set_count (a_count: INTEGER) is
 			-- Set `count' to `a_count'.
 		require
 			a_count_small_enough: a_count <= capacity

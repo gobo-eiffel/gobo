@@ -18,12 +18,15 @@ inherit
 		rename
 			make as make_from_string
 		redefine
-			name, fill, wipe_out
+			name,
+			fill,
+			wipe_out
 		end
 
 create
 
-	make, make_with_size
+	make,
+	make_with_size
 
 feature {NONE} -- Initialization
 

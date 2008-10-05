@@ -20,7 +20,7 @@ feature -- Access
 		ensure
 			major_version_strictly_positive: Result > 0
 		end
-	
+
 	minor_version: INTEGER is
 			-- Minor version number of Unicode
 		deferred
@@ -28,7 +28,7 @@ feature -- Access
 			minor_version_non_negative: Result >= 0
 			single_digit: Result < 10
 		end
-	
+
 	update_version: INTEGER is
 			-- Update version number of Unicode
 		deferred
@@ -38,4 +38,3 @@ feature -- Access
 		end
 
 end
-

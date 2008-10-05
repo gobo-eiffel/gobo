@@ -35,8 +35,7 @@ feature {NONE} -- Initialization
 		ensure
 			minimum_symbol_set: minimum_symbol = min
 			maximum_symbol_set: maximum_symbol = max
-			state_states_count_set:
-				start_states_count = 2 * start_conditions.count
+			state_states_count_set: start_states_count = 2 * start_conditions.count
 		end
 
 	initialize (start_conditions: LX_START_CONDITIONS; min, max: INTEGER) is
@@ -57,7 +56,11 @@ feature {NONE} -- Initialization
 				-- an eventual end-of-buffer state.
 			create states.make ((2 * nb + 1).max (Initial_max_dfas))
 			set_nfa_state_ids (start_conditions)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				put_start_condition (start_conditions.item (i))
 				i := i + 1
 			end
@@ -65,8 +68,7 @@ feature {NONE} -- Initialization
 		ensure
 			minimum_symbol_set: minimum_symbol = min
 			maximum_symbol_set: maximum_symbol = max
-			state_states_count_set:
-				start_states_count = 2 * start_conditions.count
+			state_states_count_set: start_states_count = 2 * start_conditions.count
 			capacity_large_enough: states.capacity > start_states_count
 		end
 
@@ -84,7 +86,11 @@ feature -- Access
 			i: INTEGER
 		do
 			create Result.make (start_states_count)
-			from i := 1 until i > start_states_count loop
+			from
+				i := 1
+			until
+				i > start_states_count
+			loop
 				Result.put_last (states.item (i))
 				i := i + 1
 			end
@@ -116,11 +122,18 @@ feature -- Element change
 		do
 			create partitions.make (minimum_symbol, maximum_symbol)
 			backing_up_count := 0
-			from i := 1 until i > start_states_count loop
+			from
+				i := 1
+			until
+				i > start_states_count
+			loop
 				build_transitions (states.item (i))
 				i := i + 1
 			end
-			from until i > states.count loop
+			from
+			until
+				i > states.count
+			loop
 				state := states.item (i)
 				build_transitions (state)
 				if not state.is_accepting then
@@ -155,18 +168,30 @@ feature {NONE} -- Implementation
 			new_id := 1
 			create visited.make (100)
 			nb := start_conditions.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				start_condition := start_conditions.item (i)
 				patterns := start_condition.patterns
 				nb2 := patterns.count
-				from j := 1 until j > nb2 loop
+				from
+					j := 1
+				until
+					j > nb2
+				loop
 					nfa := patterns.item (j)
 					key := nfa.start_state.id
 					if not visited.has (key) or else visited.item (key) /= nfa then
 						visited.force (nfa, new_id)
 						nfa_states := nfa.states
 						nb3 := nfa_states.count
-						from k := 1 until k > nb3 loop
+						from
+							k := 1
+						until
+							k > nb3
+						loop
 							nfa_states.item (k).set_id (new_id)
 							new_id := new_id + 1
 							k := k + 1
@@ -176,14 +201,22 @@ feature {NONE} -- Implementation
 				end
 				patterns := start_condition.bol_patterns
 				nb2 := patterns.count
-				from j := 1 until j > nb2 loop
+				from
+					j := 1
+				until
+					j > nb2
+				loop
 					nfa := patterns.item (j)
 					key := nfa.start_state.id
 					if not visited.has (key) or else visited.item (key) /= nfa then
 						visited.force (nfa, new_id)
 						nfa_states := nfa.states
 						nb3 := nfa_states.count
-						from k := 1 until k > nb3 loop
+						from
+							k := 1
+						until
+							k > nb3
+						loop
 							nfa_states.item (k).set_id (new_id)
 							new_id := new_id + 1
 							k := k + 1
@@ -212,14 +245,22 @@ feature {NONE} -- Implementation
 			nb := patterns.count
 			create nfa_states.make (nb)
 			create nfa_bol_states.make (nb + bol_patterns.count)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				nfa_state := patterns.item (i).start_state
 				nfa_states.put_last (nfa_state)
 				nfa_bol_states.put_last (nfa_state)
 				i := i + 1
 			end
 			nb := bol_patterns.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				nfa_bol_states.put_last (bol_patterns.item (i).start_state)
 				i := i + 1
 			end
@@ -252,7 +293,11 @@ feature {NONE} -- Implementation
 			state.partition (partitions)
 			symbols := partitions.symbols
 			transitions := state.transitions
-			from i := minimum_symbol until i > maximum_symbol loop
+			from
+				i := minimum_symbol
+			until
+				i > maximum_symbol
+			loop
 				if symbols.item (i) then
 						-- There is a transition labeled `i'
 						-- leaving `new_state'.
@@ -270,7 +315,7 @@ feature {NONE} -- Implementation
 
 	new_state (state: LX_DFA_STATE): LX_DFA_STATE is
 			-- Occurrence of `state' in DFA if present;
- 			-- otherwise insert `state' into DFA
+			-- otherwise insert `state' into DFA
 		require
 			state_not_void: state /= Void
 			not_full: not states.is_full
@@ -325,7 +370,7 @@ invariant
 	positive_start_states_count: start_states_count > 0
 	start_states_count_small_enough: start_states_count <= states.count
 	positive_backing_up_count: backing_up_count >= 0
-	-- min_symbol: forall state in states, state.minimum_symbol = minimum_symbol
-	-- max_symbol: forall state in states, state.maximum_symbol = maximum_symbol
+--	min_symbol: forall state in states, state.minimum_symbol = minimum_symbol
+--	max_symbol: forall state in states, state.maximum_symbol = maximum_symbol
 
 end

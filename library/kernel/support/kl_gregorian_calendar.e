@@ -14,7 +14,7 @@ class KL_GREGORIAN_CALENDAR
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
+	ANY
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
@@ -212,7 +212,9 @@ feature -- Time
 feature -- Epoch
 
 	Epoch_year: INTEGER is 1970
+
 	Epoch_month: INTEGER is 1
+
 	Epoch_day: INTEGER is 1
 			-- Epoch date (1 Jan 1970)
 

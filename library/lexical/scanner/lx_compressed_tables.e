@@ -62,7 +62,7 @@ feature -- Constants
 	yyVariable_trail_context: BOOLEAN
 			-- Is there a regular expression with both leading
 			-- and trailing parts having variable length?
-	
+
 feature -- Conversion
 
 	from_tables (other: like to_tables) is

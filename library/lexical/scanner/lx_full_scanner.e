@@ -35,13 +35,17 @@ inherit
 			yy_ec as yy_ec_template,
 			yy_accept as yy_accept_template
 		export
-			{LX_FULL_TABLES} all;
-			{ANY} to_tables, from_tables
+			{LX_FULL_TABLES} all
+			{ANY}
+				to_tables,
+				from_tables
 		end
 
 create
 
-	make, make_with_file, make_with_buffer
+	make,
+	make_with_file,
+	make_with_buffer
 
 feature {NONE} -- Implementation
 

@@ -44,7 +44,6 @@ feature -- Old typing output
 				%%T%T%Tref ?= v%N%
 				%%T%T%TResult := ref.item%N%
 				%%T%Tend%N")
-
 			a_file.put_string ("%N%Tyyis_type")
 			a_file.put_integer (id)
 			a_file.put_string (" (v: ANY): BOOLEAN is%N%

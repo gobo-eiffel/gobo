@@ -12,10 +12,6 @@ indexing
 
 deferred class KI_BUFFER [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Access
 
 	item (i: INTEGER): G is
@@ -90,7 +86,11 @@ feature -- Element change
 			if nb > 0 then
 				j := new_pos
 				nb2 := old_pos + nb - 1
-				from i := old_pos until i > nb2 loop
+				from
+					i := old_pos
+				until
+					i > nb2
+				loop
 					put (item (i), j)
 					j := j + 1
 					i := i + 1
@@ -113,7 +113,11 @@ feature -- Element change
 		do
 			if nb > 0 then
 				j := new_pos + nb - 1
-				from i := old_pos + nb - 1 until i < old_pos loop
+				from
+					i := old_pos + nb - 1
+				until
+					i < old_pos
+				loop
 					put (item (i), j)
 					j := j - 1
 					i := i - 1

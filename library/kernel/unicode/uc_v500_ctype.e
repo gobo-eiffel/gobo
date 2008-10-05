@@ -20,15 +20,19 @@ inherit
 	UC_V500_CTYPE_UPPERCASE
 		export
 			{NONE} all
-	   undefine
-			major_version, minor_version, update_version
+		undefine
+			major_version,
+			minor_version,
+			update_version
 		end
 
 	UC_V500_CTYPE_TITLECASE
 		export
 			{NONE} all
 		undefine
-			major_version, minor_version, update_version
+			major_version,
+			minor_version,
+			update_version
 		end
 
 	UC_UNICODE_CONSTANTS
@@ -38,11 +42,9 @@ feature -- Status report
 	valid_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid unicode?
 		do
-			Result := (a_code >= minimum_unicode_character_code and
-				a_code <= maximum_unicode_character_code)
+			Result := (a_code >= minimum_unicode_character_code and a_code <= maximum_unicode_character_code)
 		ensure
-			definition: Result = (a_code >= minimum_unicode_character_code and
-				a_code <= maximum_unicode_character_code)
+			definition: Result = (a_code >= minimum_unicode_character_code and a_code <= maximum_unicode_character_code)
 		end
 
 feature -- Access
@@ -55,7 +57,7 @@ feature -- Access
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			a_rem := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := lower_codes.item (i).item (j).item (k + 1)
@@ -74,7 +76,7 @@ feature -- Access
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			a_rem := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := upper_codes.item (i).item (j).item (k + 1)
@@ -93,7 +95,7 @@ feature -- Access
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code_point // (65536)
-			a_rem  := a_code_point \\ (65536)
+			a_rem := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := title_codes.item (i).item (j).item (k + 1)

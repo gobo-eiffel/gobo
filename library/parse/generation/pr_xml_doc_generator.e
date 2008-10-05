@@ -123,7 +123,11 @@ feature {NONE} -- Generation
 			c: CHARACTER
 		do
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				c := a_string.item (i)
 				inspect c
 				when '%'' then

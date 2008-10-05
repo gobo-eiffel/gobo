@@ -16,8 +16,10 @@ inherit
 
 	YY_SCANNER_SKELETON
 		redefine
-			yy_set_content, yy_initialize,
-			yy_build_tables, reset
+			yy_set_content,
+			yy_initialize,
+			yy_build_tables,
+			reset
 		end
 
 feature {NONE} -- Initialization
@@ -122,14 +124,14 @@ feature -- Scanning
 						-- character of the current token.
 					yy_bp := yy_cp
 						-- Find the start state.
-					-- START INLINING 'yy_at_beginning_of_line'
-					-- yy_current_state := yy_start_state + yy_at_beginning_of_line
+--	START INLINING 'yy_at_beginning_of_line'
+--					yy_current_state := yy_start_state + yy_at_beginning_of_line
 					if input_buffer.beginning_of_line then
 						yy_current_state := yy_start_state + 1
 					else
 						yy_current_state := yy_start_state
 					end
-					-- END INLINING 'yy_at_beginning_of_line'
+--	END INLINING 'yy_at_beginning_of_line'
 					if yyReject_or_variable_trail_context then
 							-- Set up for storing up states.
 						yy_state_stack.put (yy_current_state, 0)
@@ -156,10 +158,7 @@ feature -- Scanning
 								yy_c := yy_content.item (yy_cp).code
 							end
 						end
-						if
-							not yyReject_or_variable_trail_context and then
-							yy_accept.item (yy_current_state) /= 0
-						then
+						if not yyReject_or_variable_trail_context and then yy_accept.item (yy_current_state) /= 0 then
 								-- Save the backing-up info before computing
 								-- the next state because we always compute one
 								-- more state than needed - we always proceed
@@ -167,14 +166,12 @@ feature -- Scanning
 							yy_last_accepting_state := yy_current_state
 							yy_last_accepting_cpos := yy_cp
 						end
-						from until
+						from
+						until
 							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
 						loop
 							yy_current_state := yy_def.item (yy_current_state)
-							if
-								yy_meta /= Void and then
-								yy_current_state >= yyTemplate_mark
-							then
+							if yy_meta /= Void and then yy_current_state >= yyTemplate_mark then
 									-- We've arranged it so that templates are
 									-- never chained to one another. This means
 									-- we can afford to make a very simple test
@@ -213,21 +210,21 @@ feature -- Scanning
 					end
 				when yyFind_rule then
 						-- We branch here when backing up.
-					check reject_used: yyReject_or_variable_trail_context end
-					from yy_found := False until yy_found loop
-						if
-							yy_lp /= 0 and
-							yy_lp < yy_accept.item (yy_current_state + 1)
-						then
+					check
+						reject_used: yyReject_or_variable_trail_context
+					end
+					from
+						yy_found := False
+					until
+						yy_found
+					loop
+						if yy_lp /= 0 and yy_lp < yy_accept.item (yy_current_state + 1) then
 							yy_act := yy_acclist.item (yy_lp)
 							if yyVariable_trail_context then
-								if
-									yy_act < - yyNb_rules or
-									yy_looking_for_trail_begin /= 0
-								then
+								if yy_act < -yyNb_rules or yy_looking_for_trail_begin /= 0 then
 									if yy_act = yy_looking_for_trail_begin then
 										yy_looking_for_trail_begin := 0
-										yy_act := - yy_act - yyNb_rules
+										yy_act := -yy_act - yyNb_rules
 										yy_found := True
 									else
 										yy_lp := yy_lp + 1
@@ -344,9 +341,7 @@ feature -- Scanning
 								yy_cp := yy_end
 								yy_bp := yy_start + yy_more_len
 								yy_goto := yyMatch
-							elseif
-								yy_end - yy_start - yy_more_len /= 0
-							then
+							elseif yy_end - yy_start - yy_more_len /= 0 then
 									-- Some text has been matched prior to
 									-- the EOB. First process it.
 								yy_current_state := yy_previous_state
@@ -472,14 +467,14 @@ feature {NONE} -- Implementation
 			yy_c: INTEGER
 		do
 				-- Find the start state.
-			-- START INLINING
-			-- Result := yy_start_state + yy_at_beginning_of_line
+--	START INLINING
+--			Result := yy_start_state + yy_at_beginning_of_line
 			if input_buffer.beginning_of_line then
 				Result := yy_start_state + 1
 			else
 				Result := yy_start_state
 			end
-			-- END INLINING
+--	END INLINING
 			if yyReject_or_variable_trail_context then
 					-- Set up for storing up states.
 				yy_state_stack.put (Result, 0)
@@ -512,14 +507,12 @@ feature {NONE} -- Implementation
 						yy_last_accepting_cpos := yy_cp
 					end
 				end
-				from until
+				from
+				until
 					yy_chk.item (yy_base.item (Result) + yy_c) = Result
 				loop
 					Result := yy_def.item (Result)
-					if
-						yy_meta /= Void and then
-						Result >= yyTemplate_mark
-					then
+					if yy_meta /= Void and then Result >= yyTemplate_mark then
 							-- We've arranged it so that templates are
 							-- never chained to one another. This means
 							-- we can afford to make a very simple test
@@ -558,14 +551,12 @@ feature {NONE} -- Implementation
 			end
 			Result := yy_current_state
 			yy_c := yyNull_equiv_class
-			from until
+			from
+			until
 				yy_chk.item (yy_base.item (Result) + yy_c) = Result
 			loop
 				Result := yy_def.item (Result)
-				if
-					yy_meta /= Void and then
-					Result >= yyTemplate_mark
-				then
+				if yy_meta /= Void and then Result >= yyTemplate_mark then
 						-- We've arranged it so that templates are never
 						-- chained to one another. This means we can
 						-- afford to make a very simple test to see if
@@ -600,22 +591,32 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is deferred end
+	yyJam_base: INTEGER is
 			-- Position in `yy_nxt'/`yy_chk' tables where
 			-- default jam table starts
+		deferred
+		end
 
-	yyJam_state: INTEGER is deferred end
+	yyJam_state: INTEGER is
 			-- State id corresponding to jam state
+		deferred
+		end
 
-	yyTemplate_mark: INTEGER is deferred end
+	yyTemplate_mark: INTEGER is
 			-- Mark between normal state and templates
+		deferred
+		end
 
-	yyReject_used: BOOLEAN is deferred end
+	yyReject_used: BOOLEAN is
 			-- Is `reject' called?
+		deferred
+		end
 
-	yyVariable_trail_context: BOOLEAN is deferred end
+	yyVariable_trail_context: BOOLEAN is
 			-- Is there a regular expression with both leading
 			-- and trailing parts having variable length?
+		deferred
+		end
 
 	yyReject_or_variable_trail_context: BOOLEAN is
 			-- Is `reject' called or is there a regular expression with
@@ -628,8 +629,10 @@ feature {NONE} -- Constants
 	yyBacking_up: BOOLEAN is True
 			-- Compressed tables always back up
 
-	yyNb_rules: INTEGER is deferred end
+	yyNb_rules: INTEGER is
 			-- Number of rules
+		deferred
+		end
 
 	yyNext_token: INTEGER is 1
 	yyMatch: INTEGER is 2

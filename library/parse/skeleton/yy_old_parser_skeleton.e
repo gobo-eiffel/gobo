@@ -4,11 +4,10 @@ indexing
 
 		"Skeletons for parsers implemented with tables"
 
-	remark:
-
-		"To be used with 'geyacc --old_typing'. Use YY_PARSER_SKELETON %
-		%and 'geyacc --new_typing' instead."
-
+	remark: "[
+		To be used with 'geyacc --old_typing'. Use YY_PARSER_SKELETON
+		and 'geyacc --new_typing' instead.
+	]"
 	library: "Gobo Eiffel Parse Library"
 	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "MIT License"
@@ -113,8 +112,10 @@ feature {NONE} -- Implementation
 	yyval: G
 			-- Semantic value from action
 
-	yyval_default: G is do end
+	yyval_default: G is
 			-- Default value for `yyval'
+		do
+		end
 
 	yy_clear_all is
 			-- Clear temporary objects so that they can be collected

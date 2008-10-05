@@ -12,10 +12,6 @@ indexing
 
 class LX_ACTION_FACTORY
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make

@@ -45,13 +45,17 @@ feature {NONE} -- Initialization
 			i, nb: INTEGER
 			state, nfa_state: LX_NFA_STATE
 			epsilon_transition: LX_EPSILON_TRANSITION [LX_NFA_STATE]
-		do		
+		do
 			nb := nfa_states.count
 			create states.make (nb)
 			create transitions.make (min, max)
 			create accepted_rules.make (nb)
 			create accepted_head_rules.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				state := nfa_states.item (i)
 				if state.transition /= Void then
 					epsilon_transition ?= state.transition
@@ -72,7 +76,7 @@ feature {NONE} -- Initialization
 						nfa_states.force_last (nfa_state)
 						nb := nb + 1
 					end
-				end	
+				end
 				if state.is_accepting then
 					if state.is_accepting_head then
 						accepted_head_rules.force_last (state.accepted_rule)
@@ -212,7 +216,11 @@ feature {LX_DFA} -- DFA construction
 		do
 			nb := states.count
 			create nfa_states.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				transition := states.item (i).transition
 				if transition /= Void and then transition.labeled (symbol) then
 					nfa_states.put_last (transition.target)
@@ -231,13 +239,17 @@ feature {LX_DFA} -- DFA construction
 		require
 			equiv_classes_not_void: equiv_classes /= Void
 			not_built: not equiv_classes.built
-			-- forall NFA `transition', transition.recordable (equiv_classes)
+--			recordable: forall NFA `transition', transition.recordable (equiv_classes)
 		local
 			i, nb: INTEGER
 			transition: LX_TRANSITION [LX_NFA_STATE]
 		do
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				transition := states.item (i).transition
 				if transition /= Void then
 					transition.record (equiv_classes)

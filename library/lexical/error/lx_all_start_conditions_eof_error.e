@@ -35,8 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is
-		"Warning, %"$1%", line $2: all start conditions already have <<EOF>> rules"
+	default_template: STRING is "Warning, %"$1%", line $2: all start conditions already have <<EOF>> rules"
 			-- Default template used to built the error message
 
 	code: STRING is "LX0002"

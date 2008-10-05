@@ -62,14 +62,19 @@ feature -- Input
 			i, end_pos: INTEGER
 		do
 			end_pos := pos + nb - 1
-			from i := pos until i > end_pos loop
+			from
+				i := pos
+			until
+				i > end_pos
+			loop
 				read_character
 				if not end_of_input then
 					a_string.put (last_character, i)
 					i := i + 1
 				else
 					Result := i - pos - nb
-					i := end_pos + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := end_pos + 1
 				end
 			end
 			Result := Result + i - pos

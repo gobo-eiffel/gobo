@@ -4,14 +4,12 @@ indexing
 
 		"Proxy character output streams"
 
-	remark:
-
-		"`append', `put_integer' and `put_boolean' are NOT redefined, %
-		%as they are defined entirely in terms of `put_character' %
-		%and `put_string' - template pattern. This is most probably %
-		%what descendants will want."
-
-
+	remark: "[
+		`append', `put_integer' and `put_boolean' are NOT redefined,
+		as they are defined entirely in terms of `put_character'
+		and `put_string' - template pattern. This is most probably
+		what descendants will want.
+	]"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
@@ -24,7 +22,8 @@ inherit
 
 	KI_CHARACTER_OUTPUT_STREAM
 		redefine
-			is_closable, close
+			is_closable,
+			close
 		end
 
 create

@@ -18,7 +18,9 @@ inherit
 		rename
 			make as make_transition
 		redefine
-			labeled, record, recordable
+			labeled,
+			record,
+			recordable
 		end
 
 create

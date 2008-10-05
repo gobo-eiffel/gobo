@@ -14,8 +14,6 @@ deferred class LX_AUTOMATON
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-
 	KL_CLONABLE
 
 feature -- Access

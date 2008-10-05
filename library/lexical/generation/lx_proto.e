@@ -15,10 +15,6 @@ indexing
 
 class LX_PROTO
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make

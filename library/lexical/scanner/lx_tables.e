@@ -81,7 +81,7 @@ feature -- Conversion
 		deferred
 		ensure
 			tables_not_void: Result /= Void
-			-- set: forall attribute, Result.attribute = attribute
+--			set: forall attribute, Result.attribute = attribute
 		end
 
 invariant

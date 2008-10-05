@@ -16,7 +16,8 @@ inherit
 
 	YY_COMPRESSED_SCANNER_SKELETON
 		redefine
-			make_with_buffer, set_input_buffer,
+			make_with_buffer,
+			set_input_buffer,
 			read_token
 		end
 
@@ -114,10 +115,7 @@ feature -- Scanning
 								yy_c := yy_content.item (yy_cp).code
 							end
 						end
-						if
-							not yyReject_or_variable_trail_context and then
-							yy_accept.item (yy_current_state) /= 0
-						then
+						if not yyReject_or_variable_trail_context and then yy_accept.item (yy_current_state) /= 0 then
 								-- Save the backing-up info before computing
 								-- the next state because we always compute one
 								-- more state than needed - we always proceed
@@ -125,15 +123,12 @@ feature -- Scanning
 							yy_last_accepting_state := yy_current_state
 							yy_last_accepting_cpos := yy_cp
 						end
-						from until
-							yy_chk.item (yy_base.item (yy_current_state) + yy_c)
-								= yy_current_state
+						from
+						until
+							yy_chk.item (yy_base.item (yy_current_state) + yy_c) = yy_current_state
 						loop
 							yy_current_state := yy_def.item (yy_current_state)
-							if
-								yy_meta /= Void and then
-								yy_current_state >= yyTemplate_mark
-							then
+							if yy_meta /= Void and then yy_current_state >= yyTemplate_mark then
 									-- We've arranged it so that templates are
 									-- never chained to one another. This means
 									-- we can afford to make a very simple test
@@ -144,8 +139,7 @@ feature -- Scanning
 								yy_c := yy_meta.item (yy_c)
 							end
 						end
-						yy_current_state :=
-							yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
+						yy_current_state := yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
 						if yyReject_or_variable_trail_context then
 							yy_state_stack.put (yy_current_state, yy_state_count)
 							yy_state_count := yy_state_count + 1
@@ -175,21 +169,21 @@ feature -- Scanning
 					end
 				when yyFind_rule then
 						-- We branch here when backing up.
-					check reject_used: yyReject_or_variable_trail_context end
-					from yy_found := False until yy_found loop
-						if
-							yy_lp /= 0 and
-							yy_lp < yy_accept.item (yy_current_state + 1)
-						then
+					check
+						reject_used: yyReject_or_variable_trail_context
+					end
+					from
+						yy_found := False
+					until
+						yy_found
+					loop
+						if yy_lp /= 0 and yy_lp < yy_accept.item (yy_current_state + 1) then
 							yy_act := yy_acclist.item (yy_lp)
 							if yyVariable_trail_context then
-								if
-									yy_act < - yyNb_rules or
-									yy_looking_for_trail_begin /= 0
-								then
+								if yy_act < -yyNb_rules or yy_looking_for_trail_begin /= 0 then
 									if yy_act = yy_looking_for_trail_begin then
 										yy_looking_for_trail_begin := 0
-										yy_act := - yy_act - yyNb_rules
+										yy_act := -yy_act - yyNb_rules
 										yy_found := True
 									else
 										yy_lp := yy_lp + 1
@@ -270,8 +264,7 @@ feature -- Scanning
 								-- with the possibility of jamming (and we
 								-- don't want to build jamming into it because
 								-- then it will run more slowly).
-							yy_next_state :=
-								yy_null_trans_state (yy_current_state)
+							yy_next_state := yy_null_trans_state (yy_current_state)
 							yy_bp := yy_bp + yy_more_len
 							if yy_next_state /= 0 then
 									-- Consume the NULL character.
@@ -296,10 +289,7 @@ feature -- Scanning
 								yy_cp := yy_end
 								yy_bp := yy_start + yy_more_len
 								yy_goto := yyMatch
-							elseif
-								yy_end - yy_start
-									- yy_more_len /= 0
-							then
+							elseif yy_end - yy_start - yy_more_len /= 0 then
 									-- Some text has been matched prior to
 									-- the EOB. First process it.
 								yy_current_state := yy_previous_state
@@ -312,8 +302,7 @@ feature -- Scanning
 								if wrap then
 									yy_bp := yy_start
 									yy_cp := yy_end
-									yy_execute_eof_action
-										((yy_start_state - 1) // 2)
+									yy_execute_eof_action ((yy_start_state - 1) // 2)
 								end
 							end
 						end

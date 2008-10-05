@@ -16,11 +16,6 @@ class PR_PORTION
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-		redefine
-			is_equal
-		end
-
 	COMPARABLE
 		redefine
 			is_equal
@@ -28,7 +23,8 @@ inherit
 
 create
 
-	make_state, make_symbol
+	make_state,
+	make_symbol
 
 feature {NONE} -- Initialization
 
@@ -135,21 +131,19 @@ feature -- Comparison
 			other_tos: like tos
 			i: INTEGER
 		do
-			if
-				is_state = other.is_state and
-				width = other.width and
-				count = other.count
-			then
+			if is_state = other.is_state and width = other.width and count = other.count then
 				Result := True
 				other_froms := other.froms
 				other_tos := other.tos
-				from i := count until i < 1 loop
-					if
-						tos.item (i) /= other_tos.item (i) or
-						froms.item (i) /= other_froms.item (i)
-					then
+				from
+					i := count
+				until
+					i < 1
+				loop
+					if tos.item (i) /= other_tos.item (i) or froms.item (i) /= other_froms.item (i) then
 						Result := False
-						i := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
@@ -180,8 +174,7 @@ feature -- Comparison
 			-- Are current portion and `other' considered
 			-- equal according to the order relationship?
 		do
-			Result := is_state = other.is_state and
-				width = other.width and count = other.count
+			Result := is_state = other.is_state and width = other.width and count = other.count
 		ensure
 			definition: Result = not (Current < other or other < Current)
 		end

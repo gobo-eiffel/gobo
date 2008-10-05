@@ -20,9 +20,7 @@ inherit
 	KI_TEXT_OUTPUT_STREAM
 
 	KL_OPERATING_SYSTEM
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	CONSOLE
 		rename
@@ -37,7 +35,15 @@ inherit
 			append as old_append,
 			close as old_close
 		export
-			{CONSOLE} open_read, extendible, file_pointer, count, old_close, is_closed, old_put_string, old_is_open_write;
+			{CONSOLE}
+				open_read,
+				extendible,
+				file_pointer,
+				count,
+				old_close,
+				is_closed,
+				old_put_string,
+				old_is_open_write
 			{NONE} all
 		end
 

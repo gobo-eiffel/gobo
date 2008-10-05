@@ -70,8 +70,8 @@ feature -- Basic operations
 					when 10, 12, 14, 15 then
 						-- Do nothing.
 					else
-						-- create e
-						-- e.raise ("Invalid file format : need 8 bytes packed decimal")
+--						create e
+--						e.raise ("Invalid file format : need 8 bytes packed decimal")
 						error := True
 						last_decimal := Void
 					end

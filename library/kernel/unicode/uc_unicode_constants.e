@@ -98,7 +98,7 @@ feature -- Access
 
 	Spacing_combining_mark_category: INTEGER is 7
 			-- Spacing combining mark
-	
+
 	Enclosing_mark_category: INTEGER is 8
 			-- Enclosing mark
 

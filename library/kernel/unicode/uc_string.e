@@ -4,19 +4,17 @@ indexing
 
 		"Unicode strings"
 
-	remark:
-
-		"Unless specified otherwise, STRING and CHARACTER are %
-		%supposed to contain characters whose code follows the %
-		%unicode character set. In other words characters whose %
-		%code is between 128 and 255 should follow the ISO 8859-1 %
-		%Latin-1 character set."
-
-	remark2:
-
-		"By default UC_STRING is implemented using the UTF-8 encoding. %
-		%Use UC_UTF*_STRING to specify the encoding explicitly."
-
+	remark: "[
+		Unless specified otherwise, STRING and CHARACTER are
+		supposed to contain characters whose code follows the
+		unicode character set. In other words characters whose
+		code is between 128 and 255 should follow the ISO 8859-1
+		Latin-1 character set.
+	]"
+	remark2: "[
+		By default UC_STRING is implemented using the UTF-8 encoding.
+		Use UC_UTF*_STRING to specify the encoding explicitly.
+	]"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
@@ -29,7 +27,8 @@ inherit
 
 	ANY
 		undefine
-			copy, out
+			copy,
+			out
 		redefine
 			is_equal
 		select
@@ -63,41 +62,83 @@ inherit
 			is_empty as old_is_empty
 		export
 			{STRING}
-				share, shared_with, area, old_is_empty, mirror, is_case_insensitive_equal,
-				valid_code, to_string_32;
-			{ANY} is_string_8, valid_index;
+				share,
+				shared_with,
+				area,
+				old_is_empty,
+				mirror,
+				is_case_insensitive_equal,
+				valid_code,
+				to_string_32
+			{ANY}
+				is_string_8,
+				valid_index
 			{NONE} all
 		undefine
-			infix ">", infix "<=", infix ">=", max, min
+			infix ">",
+			infix "<=",
+			infix ">=",
+			max,
+			min
 		redefine
-			make, make_from_string, make_empty, make_filled,
-			put, append_character, item,
-			substring, append_string, replace_substring, append,
-			index_of, has, occurrences,
-			hash_code, remove, to_lower, to_upper,
-			three_way_comparison, item_code,
+			make,
+			make_from_string,
+			make_empty,
+			make_filled,
+			put,
+			append_character,
+			item,
+			substring,
+			append_string,
+			replace_substring,
+			append,
+			index_of,
+			has,
+			occurrences,
+			hash_code,
+			remove,
+			to_lower,
+			to_upper,
+			three_way_comparison,
+			item_code,
 			byte_capacity,
-			has_substring, insert_character,
-			string, same_string, insert_string, insert, prepend,
-			prepend_string, append_string_general,
-			keep_head, keep_tail,
-			remove_head, remove_tail,
+			has_substring,
+			insert_character,
+			string,
+			same_string,
+			insert_string,
+			insert,
+			prepend,
+			prepend_string,
+			append_string_general,
+			keep_head,
+			keep_tail,
+			remove_head,
+			remove_tail,
 			remove_substring,
-			as_lower, as_upper,
-			out, fill_with,
-			head, tail,
+			as_lower,
+			as_upper,
+			out,
+			fill_with,
+			head,
+			tail,
 			infix "@",
 			count,
 			old_clear_all,
 			old_left_adjust,
 			old_right_adjust,
 			old_wipe_out,
-			code, append_code, put_code, has_code, index_of_code,
+			code,
+			append_code,
+			put_code,
+			has_code,
+			index_of_code,
 			substring_index,
 			infix "+",
 			copy
 		select
-			put, item
+			put,
+			item
 		end
 
 	STRING
@@ -127,36 +168,73 @@ inherit
 		export
 			{NONE} all
 		undefine
-			infix ">", infix "<=", infix ">=", max, min
+			infix ">",
+			infix "<=",
+			infix ">=",
+			max,
+			min
 		redefine
-			make, make_from_string, make_empty, make_filled,
-			append_character, substring_index,
-			substring, append_string, replace_substring, append,
-			index_of, has, occurrences, head, tail,
-			hash_code, remove, to_lower, to_upper,
-			three_way_comparison, item_code,
-			byte_capacity, count,
-			has_substring, insert_character,
-			string, same_string, insert_string, insert, prepend,
-			prepend_string, append_string_general,
-			keep_head, keep_tail,
-			remove_head, remove_tail,
+			make,
+			make_from_string,
+			make_empty,
+			make_filled,
+			append_character,
+			substring_index,
+			substring,
+			append_string,
+			replace_substring,
+			append,
+			index_of,
+			has,
+			occurrences,
+			head,
+			tail,
+			hash_code,
+			remove,
+			to_lower,
+			to_upper,
+			three_way_comparison,
+			item_code,
+			byte_capacity,
+			count,
+			has_substring,
+			insert_character,
+			string,
+			same_string,
+			insert_string,
+			insert,
+			prepend,
+			prepend_string,
+			append_string_general,
+			keep_head,
+			keep_tail,
+			remove_head,
+			remove_tail,
 			remove_substring,
-			as_lower, as_upper,
-			out, fill_with,
+			as_lower,
+			as_upper,
+			out,
+			fill_with,
 			old_wipe_out,
 			old_clear_all,
 			old_left_adjust,
 			old_right_adjust,
-			code, append_code, put_code, has_code, index_of_code,
+			code,
+			append_code,
+			put_code,
+			has_code,
+			index_of_code,
 			infix "+",
-			copy, infix "@"
+			copy,
+			infix "@"
 		end
 
 	COMPARABLE
 		undefine
 			three_way_comparison,
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		select
 				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
@@ -173,62 +251,90 @@ inherit
 			True_constant as stream_true_constant,
 			False_constant as stream_false_constant
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		redefine
 			append_substring
 		end
 
 	UC_STRING_HANDLER
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	UC_IMPORTED_UNICODE_ROUTINES
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	UC_IMPORTED_UTF8_ROUTINES
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	UC_IMPORTED_UTF16_ROUTINES
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	UC_IMPORTED_UTF32_ROUTINES
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	KL_SHARED_PLATFORM
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 	DEBUG_OUTPUT
 		undefine
-			is_equal, copy, out
+			is_equal,
+			copy,
+			out
 		end
 
 create
 
-	make, make_empty, make_from_string, make_from_utf8,
-	make_filled, make_filled_code, make_filled_unicode,
-	make_from_substring, make_from_utf16, make_from_utf16le,
-	make_from_utf16be, make_from_string_general,
+	make,
+	make_empty,
+	make_from_string,
+	make_from_utf8,
+	make_filled,
+	make_filled_code,
+	make_filled_unicode,
+	make_from_substring,
+	make_from_utf16,
+	make_from_utf16le,
+	make_from_utf16be,
+	make_from_string_general,
 	make_from_substring_general
 
 feature -- Initialization
@@ -358,7 +464,11 @@ feature {NONE} -- Initialization
 			make (new_byte_count)
 			set_count (n)
 			byte_count := new_byte_count
-			from i := 1 until i > new_byte_count loop
+			from
+				i := 1
+			until
+				i > new_byte_count
+			loop
 				put_code_at_byte_index (a_code, nb, i)
 				i := i + nb
 			end
@@ -380,12 +490,20 @@ feature {NONE} -- Initialization
 			set_count (n)
 			byte_count := new_byte_count
 			if nb = 1 then
-				from i := 1 until i > new_byte_count loop
+				from
+					i := 1
+				until
+					i > new_byte_count
+				loop
 					put_byte (c, i)
 					i := i + 1
 				end
 			else
-				from i := 1 until i > new_byte_count loop
+				from
+					i := 1
+				until
+					i > new_byte_count
+				loop
 					put_character_at_byte_index (c, nb, i)
 					i := i + nb
 				end
@@ -545,14 +663,23 @@ feature -- Access
 							other_unicode ?= other
 							if other_unicode /= Void then
 								nb := other_unicode.byte_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := k
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										a_code := other_unicode.item_code_at_byte_index (i)
 										if byte_item (j).code /= a_code then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := j + 1
 											i := other_unicode.next_byte_index (i)
@@ -560,20 +687,30 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										k := k + 1
 									end
 								end
 							else
 								nb := other_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := k
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										if byte_item (j).code /= other.code (i).to_integer_32 then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := j + 1
 											i := i + 1
@@ -581,7 +718,8 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										k := k + 1
 									end
@@ -592,15 +730,24 @@ feature -- Access
 							other_unicode ?= other
 							if other_unicode /= Void then
 								nb := other_unicode.byte_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := z
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										a_code := item_code_at_byte_index (j)
 										a_code2 := other_unicode.item_code_at_byte_index (i)
 										if a_code /= a_code2 then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := next_byte_index (j)
 											i := other_unicode.next_byte_index (i)
@@ -608,7 +755,8 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										z := next_byte_index (z)
 										k := k + 1
@@ -616,14 +764,23 @@ feature -- Access
 								end
 							else
 								nb := other_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := z
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										a_code := item_code_at_byte_index (j)
 										if a_code /= other.code (i).to_integer_32 then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := next_byte_index (j)
 											i := i + 1
@@ -631,7 +788,8 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										z := next_byte_index (z)
 										k := k + 1
@@ -677,17 +835,26 @@ feature -- Access
 							other_unicode ?= other
 							if other_unicode /= Void then
 								nb := other_unicode.byte_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := k
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										a_code := other_unicode.item_code_at_byte_index (i)
 										if a_code > Platform.Maximum_character_code then
 											a_code := 0
 										end
 										if byte_item (j).code /= a_code then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := j + 1
 											i := other_unicode.next_byte_index (i)
@@ -695,20 +862,30 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										k := k + 1
 									end
 								end
 							else
 								nb := other_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := k
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										if byte_item (j) /= other.item (i) then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := j + 1
 											i := i + 1
@@ -716,7 +893,8 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										k := k + 1
 									end
@@ -727,10 +905,18 @@ feature -- Access
 							other_unicode ?= other
 							if other_unicode /= Void then
 								nb := other_unicode.byte_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := z
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										a_code := item_code_at_byte_index (j)
 										if a_code > Platform.Maximum_character_code then
 											a_code := 0
@@ -741,7 +927,8 @@ feature -- Access
 										end
 										if a_code /= a_code2 then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := next_byte_index (j)
 											i := other_unicode.next_byte_index (i)
@@ -749,7 +936,8 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										z := next_byte_index (z)
 										k := k + 1
@@ -757,17 +945,26 @@ feature -- Access
 								end
 							else
 								nb := other_count
-								from k := start_index until k > end_index loop
+								from
+									k := start_index
+								until
+									k > end_index
+								loop
 									j := z
 									found := True
-									from i := 1 until i > nb loop
+									from
+										i := 1
+									until
+										i > nb
+									loop
 										a_code := item_code_at_byte_index (j)
 										if a_code > Platform.Maximum_character_code then
 											a_code := 0
 										end
 										if a_code /= other.item (i).code then
 											found := False
-											i := nb + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											i := nb + 1
 										else
 											j := next_byte_index (j)
 											i := i + 1
@@ -775,7 +972,8 @@ feature -- Access
 									end
 									if found then
 										Result := k
-										k := end_index + 1 -- Jump out of the loop.
+											-- Jump out of the loop.
+										k := end_index + 1
 									else
 										z := next_byte_index (z)
 										k := k + 1
@@ -800,13 +998,21 @@ feature -- Access
 			nb := count
 			create Result.make (nb)
 			if nb = byte_count then
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					Result.append_character (byte_item (i))
 					i := i + 1
 				end
 			else
 				nb := byte_count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := item_code_at_byte_index (i)
 					if a_code <= Platform.Maximum_character_code then
 						Result.append_character (INTEGER_.to_character (a_code))
@@ -874,10 +1080,15 @@ feature -- Access
 				if a_code > 127 then
 					-- Result := 0
 				else
-					from i := start_index until i > nb loop
+					from
+						i := start_index
+					until
+						i > nb
+					loop
 						if byte_item (i).code = a_code then
 							Result := i
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						else
 							i := i + 1
 						end
@@ -885,10 +1096,15 @@ feature -- Access
 				end
 			elseif start_index <= nb then
 				k := byte_index (start_index)
-				from i := start_index until i > nb loop
+				from
+					i := start_index
+				until
+					i > nb
+				loop
 					if item_code_at_byte_index (k) = a_code then
 						Result := i
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						k := next_byte_index (k)
 						i := i + 1
@@ -913,10 +1129,15 @@ feature -- Access
 		do
 			nb := count
 			if nb = byte_count then
-				from i := start_index until i > nb loop
+				from
+					i := start_index
+				until
+					i > nb
+				loop
 					if byte_item (i) = c then
 						Result := i
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end
@@ -925,11 +1146,16 @@ feature -- Access
 				if start_index <= nb then
 					max_code := Platform.Maximum_character_code
 					k := byte_index (start_index)
-					from i := start_index until i > nb loop
+					from
+						i := start_index
+					until
+						i > nb
+					loop
 						a_code := item_code_at_byte_index (k)
 						if a_code = 0 or a_code > max_code then
 							Result := i
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						else
 							k := next_byte_index (k)
 							i := i + 1
@@ -955,7 +1181,11 @@ feature -- Access
 			else
 				fit_in_string := True
 				nb := byte_count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := item_code_at_byte_index (i)
 					Result := 5 * Result + a_code
 					if a_code > Platform.Maximum_character_code then
@@ -968,7 +1198,7 @@ feature -- Access
 				end
 			end
 			if Result < 0 then
-				Result := - (Result + 1)
+				Result := -(Result + 1)
 			end
 		end
 
@@ -1015,7 +1245,11 @@ feature -- Measurement
 				if a_code > 127 then
 					-- Result := 0
 				else
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						if byte_item (i).code = a_code then
 							Result := Result + 1
 						end
@@ -1024,7 +1258,11 @@ feature -- Measurement
 				end
 			else
 				nb := byte_count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if item_code_at_byte_index (i) = a_code then
 						Result := Result + 1
 					end
@@ -1049,7 +1287,11 @@ feature -- Measurement
 		do
 			nb := count
 			if nb = byte_count then
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if byte_item (i) = c then
 						Result := Result + 1
 					end
@@ -1058,7 +1300,11 @@ feature -- Measurement
 			elseif c = '%U' then
 				max_code := Platform.Maximum_character_code
 				nb := byte_count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := item_code_at_byte_index (i)
 					if a_code = 0 or a_code > max_code then
 						Result := Result + 1
@@ -1131,7 +1377,7 @@ feature -- Status report
 			false_if_too_small: count < other.count implies not Result
 			true_if_initial: (count >= other.count and then substring (1, other.count).same_unicode_string (other)) implies Result
 			recurse: (count >= other.count and then not substring (1, other.count).same_unicode_string (other)) implies (Result = substring (2, count).has_unicode_substring (other))
--- TODO: Wrong signature in `has_substring':
+				-- TODO: Wrong signature in `has_substring':
 --			has_substring: Result implies has_substring (other)
 		end
 
@@ -1178,10 +1424,15 @@ feature -- Comparison
 			elseif ANY_.same_types (Current, other) and then other.byte_count = byte_count then
 				nb := byte_count
 				Result := True
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if byte_item (i) /= other.byte_item (i) then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end
@@ -1232,7 +1483,7 @@ feature -- Comparison
 			definition: Result = (count = other.count and then
 				(count > 0 implies (code (1) = other.code (1) and
 				(count >= 2 implies substring (2, count).same_unicode_string (other.substring (2, count))))))
--- TODO: wrong signature for `same_string':
+				-- TODO: wrong signature for `same_string':
 --			same_string: Result implies same_string (other)
 		end
 
@@ -1261,7 +1512,11 @@ feature -- Comparison
 				else
 					nb := nb2
 				end
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					b1 := byte_item (i)
 					b2 := other.byte_item (i)
 					if b1 = b2 then
@@ -1269,11 +1524,13 @@ feature -- Comparison
 					elseif b1 < b2 then
 						found := True
 						Result := -1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						found := True
 						Result := 1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					end
 				end
 				if not found then
@@ -1322,7 +1579,11 @@ feature -- Comparison
 				else
 					nb := nb2
 				end
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					b1 := byte_item (i)
 					b2 := uc_string.byte_item (i)
 					if b1 = b2 then
@@ -1330,11 +1591,13 @@ feature -- Comparison
 					elseif b1 < b2 then
 						found := True
 						Result := -1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						found := True
 						Result := 1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					end
 				end
 				if not found then
@@ -1352,7 +1615,11 @@ feature -- Comparison
 				else
 					nb := nb2
 				end
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c1 := item_code (i)
 					c2 := other.item_code (i)
 					if c1 = c2 then
@@ -1360,11 +1627,13 @@ feature -- Comparison
 					elseif c1 < c2 then
 						found := True
 						Result := -1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						found := True
 						Result := 1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					end
 				end
 				if not found then
@@ -1377,8 +1646,8 @@ feature -- Comparison
 			end
 		ensure
 			equal_zero: (Result = 0) = same_unicode_string (other)
-			-- smaller_negative: (Result = -1) = (Current is less than other)
-			-- greater_positive: (Result = 1) = (Current is greater than other)
+--			smaller_negative: (Result = -1) = (Current is less than other)
+--			greater_positive: (Result = 1) = (Current is greater than other)
 		end
 
 feature -- Element change
@@ -1538,7 +1807,7 @@ feature -- Element change
 		do
 				-- Checking if `c' is an ASCII character here and below,
 				-- makes this almost 30% faster for the most common case.
-			if c <= '%/127/'  then
+			if c <= '%/127/' then
 				nb := 1
 			else
 				nb := utf8.character_byte_count (c)
@@ -1701,7 +1970,11 @@ feature -- Element change
 			end
 			k := byte_count + 1
 			byte_count := new_byte_count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				from
 					a_count := a_count + 1
 					a_byte := s.item (i)
@@ -1739,14 +2012,19 @@ feature -- Element change
 			msb_first := True
 			if nb >= 2 then
 				if utf16.is_endian_detection_character_most_first (s.item_code (1), s.item_code (2)) then
-					check msb_first_set: msb_first end
+					check
+						msb_first_set: msb_first
+					end
 					i := 3
 				elseif utf16.is_endian_detection_character_least_first (s.item_code (1), s.item_code (2)) then
 					msb_first := False
 					i := 3
 				end
 			end
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				if msb_first then
 					a_most := s.item_code (i)
 					a_least := s.item_code (i + 1)
@@ -1755,11 +2033,13 @@ feature -- Element change
 					a_most := s.item_code (i + 1)
 				end
 				if utf16.is_surrogate (a_most) then
-					check valid_pre_implies_high: utf16.is_high_surrogate (a_most) end
-
-					check valid_pre_implies_size: i + 2 < nb end
+					check
+						valid_pre_implies_high: utf16.is_high_surrogate (a_most)
+					end
+					check
+						valid_pre_implies_size: i + 2 < nb
+					end
 					i := i + 2
-
 					if msb_first then
 						a_low_most := s.item_code (i)
 						a_low_least := s.item_code (i + 1)
@@ -1767,8 +2047,9 @@ feature -- Element change
 						a_low_least := s.item_code (i)
 						a_low_most := s.item_code (i + 1)
 					end
-
-					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
+					check
+						valid_pre_implies_low: utf16.is_low_surrogate (a_low_most)
+					end
 					append_item_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
 				else
 					append_item_code (a_most * 256 + a_least)
@@ -1776,7 +2057,6 @@ feature -- Element change
 				i := i + 2
 			end
 		end
-
 
 	append_utf16be (s: STRING) is
 			-- Append UTF-16BE encoded string `s' at end of current string.
@@ -1791,19 +2071,25 @@ feature -- Element change
 		do
 			i := 1
 			nb := s.count
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				a_most := s.item_code (i)
 				a_least := s.item_code (i + 1)
 				if utf16.is_surrogate (a_most) then
-					check valid_pre_implies_high: utf16.is_high_surrogate (a_most) end
-
-					check valid_pre_implies_size: i + 2 < nb end
+					check
+						valid_pre_implies_high: utf16.is_high_surrogate (a_most)
+					end
+					check
+						valid_pre_implies_size: i + 2 < nb
+					end
 					i := i + 2
-
 					a_low_most := s.item_code (i)
 					a_low_least := s.item_code (i + 1)
-
-					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
+					check
+						valid_pre_implies_low: utf16.is_low_surrogate (a_low_most)
+					end
 					append_item_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
 				else
 					append_item_code (a_most * 256 + a_least)
@@ -1825,19 +2111,25 @@ feature -- Element change
 		do
 			i := 1
 			nb := s.count
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				a_least := s.item_code (i)
 				a_most := s.item_code (i + 1)
 				if utf16.is_surrogate (a_most) then
-					check valid_pre_implies_high: utf16.is_high_surrogate (a_most) end
-
-					check valid_pre_implies_size: i + 2 < nb end
+					check
+						valid_pre_implies_high: utf16.is_high_surrogate (a_most)
+					end
+					check
+						valid_pre_implies_size: i + 2 < nb
+					end
 					i := i + 2
-
 					a_low_least := s.item_code (i)
 					a_low_most := s.item_code (i + 1)
-
-					check valid_pre_implies_low: utf16.is_low_surrogate (a_low_most) end
+					check
+						valid_pre_implies_low: utf16.is_low_surrogate (a_low_most)
+					end
 					append_item_code (utf16.surrogate_from_bytes (a_most, a_least, a_low_most, a_low_least))
 				else
 					append_item_code (a_most * 256 + a_least)
@@ -1872,7 +2164,11 @@ feature -- Element change
 				resize_byte_storage (new_byte_count)
 			end
 			byte_count := new_byte_count
-			from i := 1 until i > new_byte_count loop
+			from
+				i := 1
+			until
+				i > new_byte_count
+			loop
 				put_code_at_byte_index (a_code, nb, i)
 				i := i + nb
 			end
@@ -1896,12 +2192,20 @@ feature -- Element change
 			end
 			byte_count := new_byte_count
 			if nb = 1 then
-				from i := 1 until i > new_byte_count loop
+				from
+					i := 1
+				until
+					i > new_byte_count
+				loop
 					put_byte (c, i)
 					i := i + 1
 				end
 			else
-				from i := 1 until i > new_byte_count loop
+				from
+					i := 1
+				until
+					i > new_byte_count
+				loop
 					put_character_at_byte_index (c, nb, i)
 					i := i + nb
 				end
@@ -2267,7 +2571,11 @@ feature -- Output
 			create Result.make (nb)
 			if nb = byte_count then
 				max_ascii_char := unicode.maximum_ascii_character
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c := byte_item (i)
 					if c <= max_ascii_char then
 						Result.append_character (c)
@@ -2282,7 +2590,11 @@ feature -- Output
 			else
 				nb := byte_count
 				max_ascii_code := unicode.maximum_ascii_character_code
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := item_code_at_byte_index (i)
 					if a_code <= max_ascii_code then
 						Result.append_character (INTEGER_.to_character (a_code))
@@ -2337,7 +2649,11 @@ feature -- Conversion
 			a_code, new_code: INTEGER
 		do
 			nb := byte_count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_code := item_code_at_byte_index (i)
 				new_code := unicode.lower_code (a_code)
 				if new_code /= a_code then
@@ -2371,7 +2687,11 @@ feature -- Conversion
 			a_code, new_code: INTEGER
 		do
 			nb := byte_count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_code := item_code_at_byte_index (i)
 				new_code := unicode.upper_code (a_code)
 				if new_code /= a_code then
@@ -2403,7 +2723,11 @@ feature -- Conversion
 		do
 			nb := byte_count
 			create Result.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				Result.append_character (byte_item (i))
 				i := i + 1
 			end
@@ -2421,7 +2745,11 @@ feature -- Conversion
 		do
 			nb := byte_count
 			create Result.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_code := item_code_at_byte_index (i)
 				if unicode.is_bmp_code (a_code) then
 					a_high := a_code // 256
@@ -2456,7 +2784,11 @@ feature -- Conversion
 		do
 			nb := byte_count
 			create Result.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_code := item_code_at_byte_index (i)
 				if unicode.is_bmp_code (a_code) then
 					a_high := a_code // 256
@@ -2491,7 +2823,11 @@ feature -- Conversion
 		do
 			nb := byte_count
 			create Result.make (4 * count)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_code := item_code_at_byte_index (i)
 				m := a_code \\ 256
 				a_code := a_code // 256
@@ -2519,7 +2855,11 @@ feature -- Conversion
 		do
 			nb := byte_count
 			create Result.make (4 * count)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_code := item_code_at_byte_index (i)
 				m := a_code \\ 256
 				a_code := a_code // 256
@@ -2586,7 +2926,11 @@ feature -- Traversal
 			a_byte := byte_item (k)
 			Result := utf8.encoded_first_value (a_byte)
 			nb := k + utf8.encoded_byte_count (a_byte) - 1
-			from k := k + 1 until k > nb loop
+			from
+				k := k + 1
+			until
+				k > nb
+			loop
 				a_byte := byte_item (k)
 				Result := Result * 64 + utf8.encoded_next_value (a_byte)
 				k := k + 1
@@ -2664,10 +3008,15 @@ feature -- Traversal
 			j: INTEGER
 		do
 			Result := i
-			from j := 1 until j > n loop
+			from
+				j := 1
+			until
+				j > n
+			loop
 				Result := Result + utf8.encoded_byte_count (byte_item (Result))
 				if Result > byte_count then
-					j := n + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					j := n + 1
 				else
 					j := j + 1
 				end
@@ -3061,18 +3410,28 @@ feature {NONE} -- Implementation
 			if b > 0 then
 				if ANY_.same_types (a_string, dummy_string) then
 					l_string_8 ?= a_string
-					check is_string_8: l_string_8 /= Void end
+					check
+						is_string_8: l_string_8 /= Void
+					end
 					nb := end_index - start_index + 1
 					if nb = b then
 						k := i
-						from j := start_index until j > end_index loop
+						from
+							j := start_index
+						until
+							j > end_index
+						loop
 							put_byte (l_string_8.item (j), k)
 							k := k + 1
 							j := j + 1
 						end
 					else
 						k := i
-						from j := start_index until j > end_index loop
+						from
+							j := start_index
+						until
+							j > end_index
+						loop
 							c := l_string_8.item (j)
 							z := utf8.character_byte_count (c)
 							put_character_at_byte_index (c, z, k)
@@ -3082,11 +3441,16 @@ feature {NONE} -- Implementation
 					end
 				elseif ANY_.same_types (a_string, Current) then
 					a_uc_string ?= a_string
-					check is_uc_string: a_uc_string /= Void end
+					check
+						is_uc_string: a_uc_string /= Void
+					end
 					k := i
 					j := a_uc_string.byte_index (start_index)
 					nb := j + b - 1
-					from until j > nb loop
+					from
+					until
+						j > nb
+					loop
 						put_byte (a_uc_string.byte_item (j), k)
 						k := k + 1
 						j := j + 1
@@ -3097,7 +3461,10 @@ feature {NONE} -- Implementation
 						k := i
 						j := a_utf8_string.byte_index (start_index)
 						nb := j + b - 1
-						from until j > nb loop
+						from
+						until
+							j > nb
+						loop
 							put_byte (a_utf8_string.byte_item (j), k)
 							k := k + 1
 							j := j + 1
@@ -3108,7 +3475,10 @@ feature {NONE} -- Implementation
 							k := i
 							j := a_uc_string.byte_index (start_index)
 							nb := j + b - 1
-							from until j > nb loop
+							from
+							until
+								j > nb
+							loop
 								a_code := a_uc_string.item_code_at_byte_index (j)
 								z := utf8.code_byte_count (a_code)
 								put_code_at_byte_index (a_code, z, k)
@@ -3117,7 +3487,11 @@ feature {NONE} -- Implementation
 							end
 						else
 							k := i
-							from j := start_index until j > end_index loop
+							from
+								j := start_index
+							until
+								j > end_index
+							loop
 								a_code := a_string.code (j).to_integer_32
 								z := utf8.code_byte_count (a_code)
 								put_code_at_byte_index (a_code, z, k)
@@ -3167,7 +3541,11 @@ feature {UC_STRING} -- Inapplicable
 			i, nb: INTEGER
 		do
 			nb := count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				inspect item (i)
 				when ' ', '%T', '%R', '%N' then
 					i := i + 1
@@ -3185,7 +3563,11 @@ feature {UC_STRING} -- Inapplicable
 			i, nb: INTEGER
 		do
 			nb := count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				inspect item (nb)
 				when ' ', '%T', '%R', '%N' then
 					nb := nb - 1

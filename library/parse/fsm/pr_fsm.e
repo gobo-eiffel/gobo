@@ -14,15 +14,20 @@ class PR_FSM
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_INTEGER_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
 
 create
 
-	make, make_verbose, make_default
+	make,
+	make_verbose,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -99,7 +104,11 @@ feature -- Conflicts
 			warning: UT_MESSAGE
 		do
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				if a_state.lookahead_needed then
 					conflicts := a_state.resolve_conflicts
@@ -155,12 +164,20 @@ feature -- Conflicts
 			warning: UT_MESSAGE
 		do
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				if a_state.lookahead_needed then
 					conflicts := a_state.resolve_conflicts
 					a_cursor := conflicts.new_cursor
-					from a_cursor.start until a_cursor.after loop
+					from
+						a_cursor.start
+					until
+						a_cursor.after
+					loop
 						a_cursor.item.print_conflict (a_file)
 						a_cursor.forth
 					end
@@ -243,12 +260,20 @@ feature -- Setting
 			warning: UT_MESSAGE
 		do
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				all_before := True
 				positions := a_state.positions
 				nb2 := positions.count
-				from j := 1 until j > nb2 loop
+				from
+					j := 1
+				until
+					j > nb2
+				loop
 					a_position := positions.item (j)
 					if not a_position.before then
 						all_before := False
@@ -279,7 +304,8 @@ feature -- Setting
 								-- There won't be any syntax error at this state
 								-- because we can reduce at least one rule.
 							action_position := Void
-							j := nb2 + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							j := nb2 + 1
 						end
 					end
 					j := j + 1
@@ -288,7 +314,11 @@ feature -- Setting
 						-- Try to find the start symbols/rules.
 					start_rules := grammar.start_symbol.rules
 					create start_positions.make (nb2)
-					from j := 1 until j > nb2 loop
+					from
+						j := 1
+					until
+						j > nb2
+					loop
 						a_position := positions.item (j)
 						if start_rules.has (a_position.rule) then
 							start_positions.put_last (a_position)
@@ -296,7 +326,11 @@ feature -- Setting
 						j := j + 1
 					end
 					nb2 := start_positions.count
-					from j := 1 until j > nb2 loop
+					from
+						j := 1
+					until
+						j > nb2
+					loop
 						a_position := start_positions.item (j)
 						if action_position /= Void then
 							an_action := a_position.error_action
@@ -372,12 +406,20 @@ feature -- Setting
 			warning: UT_MESSAGE
 		do
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				all_before := True
 				positions := a_state.positions
 				nb2 := positions.count
-				from j := 1 until j > nb2 loop
+				from
+					j := 1
+				until
+					j > nb2
+				loop
 					a_position := positions.item (j)
 					if not a_position.before then
 						all_before := False
@@ -412,7 +454,8 @@ feature -- Setting
 								-- There won't be any syntax error at this state
 								-- because we can reduce at least one rule.
 							action_position := Void
-							j := nb2 + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							j := nb2 + 1
 						end
 					end
 					j := j + 1
@@ -421,7 +464,11 @@ feature -- Setting
 						-- Try to find the start symbols/rules.
 					start_rules := grammar.start_symbol.rules
 					create start_positions.make (nb2)
-					from j := 1 until j > nb2 loop
+					from
+						j := 1
+					until
+						j > nb2
+					loop
 						a_position := positions.item (j)
 						if start_rules.has (a_position.rule) then
 							start_positions.put_last (a_position)
@@ -429,7 +476,11 @@ feature -- Setting
 						j := j + 1
 					end
 					nb2 := start_positions.count
-					from j := 1 until j > nb2 loop
+					from
+						j := 1
+					until
+						j > nb2
+					loop
 						a_position := start_positions.item (j)
 						if action_position /= Void then
 							an_action := a_position.error_action
@@ -465,7 +516,11 @@ feature -- Setting
 					a_file.put_integer (a_state.id)
 					a_file.put_line (" contains 1 error action conflict:")
 					nb3 := conflicts.count
-					from k := 1 until k > nb3 loop
+					from
+						k := 1
+					until
+						k > nb3
+					loop
 						a_file.put_character ('%T')
 						conflicts.item (k).print_position (a_file)
 						a_file.put_new_line
@@ -508,7 +563,11 @@ feature -- Output
 		do
 			grammar.print_grammar (a_file)
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				states.item (i).print_state (a_file)
 				i := i + 1
 			end
@@ -524,7 +583,11 @@ feature {NONE} -- Processing (nondeterministic)
 		do
 			build_derives
 			put_start_state
-			from i := 1 until i > states.count loop
+			from
+				i := 1
+			until
+				i > states.count
+			loop
 				build_transitions (states.item (i))
 				i := i + 1
 			end
@@ -602,7 +665,11 @@ feature {NONE} -- Processing (nondeterministic)
 			a_position: PR_POSITION
 		do
 			a_cursor := a_variable.derives.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_rule := a_cursor.item
 				create a_position.make (a_rule, 1)
 				a_state.put_position (a_position)
@@ -631,20 +698,24 @@ feature {NONE} -- Processing (nondeterministic)
 		do
 			nb_tokens := grammar.tokens.count
 			nb_variables := grammar.variables.count
-			create transitions.make (- nb_tokens, nb_variables)
+			create transitions.make (-nb_tokens, nb_variables)
 			positions := a_state.positions
 			nb_positions := positions.count
 			reductions := a_state.reductions
 			if not reductions.extendible (nb_positions) then
 				reductions.resize (reductions.count + nb_positions)
 			end
-			from i := 1 until i > nb_positions loop
+			from
+				i := 1
+			until
+				i > nb_positions
+			loop
 				a_position := positions.item (i)
 				if not a_position.after then
 					a_symbol := a_position.symbol
 					a_symbol_id := a_symbol.id
 					if a_symbol.is_terminal then
-						a_symbol_id := - a_symbol_id
+						a_symbol_id := -a_symbol_id
 					end
 					target := transitions.item (a_symbol_id)
 					if target = Void then
@@ -677,7 +748,11 @@ feature {NONE} -- Processing (nondeterministic)
 				states.resize (states.capacity + nb_transitions + Max_nb_states_increment)
 				cached_states.resize (cached_states.capacity + nb_transitions + Max_nb_states_increment)
 			end
-			from i := - nb_tokens until i > nb_variables loop
+			from
+				i := -nb_tokens
+			until
+				i > nb_variables
+			loop
 				target := transitions.item (i)
 				if target /= Void then
 					target := new_state (target)
@@ -699,7 +774,10 @@ feature {NONE} -- Processing (nondeterministic)
 		do
 			rules := grammar.rules
 			i := rules.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_rule := rules.item (i)
 				if not a_rule.rhs.is_empty then
 					a_variable ?= a_rule.rhs.first
@@ -711,7 +789,10 @@ feature {NONE} -- Processing (nondeterministic)
 			end
 			variables := grammar.variables
 			i := variables.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_variable := variables.item (i)
 				a_variable.derives.append_last (a_variable.rules)
 				i := i - 1
@@ -797,7 +878,10 @@ feature {NONE} -- Processing (deterministic)
 			create reductions.make
 			create transitions.make
 			i := states.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				state1 := states.item (i)
 					-- Find out whether a lookahead token
 					-- is needed in `state1'.
@@ -808,7 +892,10 @@ feature {NONE} -- Processing (deterministic)
 					-- Build transitions going out of `state1'.
 				shifts := state1.shifts
 				j := shifts.count
-				from  until j < 1 loop
+				from
+				until
+					j < 1
+				loop
 					state2 := shifts.item (j)
 					a_variable ?= state2.accessing_symbol
 					if a_variable /= Void then
@@ -822,13 +909,20 @@ feature {NONE} -- Processing (deterministic)
 			end
 			create visited_states.make (grammar.max_rhs + 1)
 			transitions_cursor := transitions.new_cursor
-			from transitions_cursor.start until transitions_cursor.after loop
+			from
+				transitions_cursor.start
+			until
+				transitions_cursor.after
+			loop
 				a_transition := transitions_cursor.item
 				follows := a_transition.following_tokens
 				state1 := a_transition.target
 				shifts := state1.shifts
 				i := shifts.count
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					a_symbol := shifts.item (i).accessing_symbol
 					a_token ?= a_symbol
 					if a_token /= Void then
@@ -837,7 +931,9 @@ feature {NONE} -- Processing (deterministic)
 						end
 					else
 						a_variable ?= a_symbol
-						check a_variable_not_void: a_variable /= Void end
+						check
+							a_variable_not_void: a_variable /= Void
+						end
 						if a_variable.is_nullable then
 							a_transition.included_tokens.force_last (a_variable.transition (state1))
 						end
@@ -847,16 +943,25 @@ feature {NONE} -- Processing (deterministic)
 				a_variable ?= a_transition.symbol
 				rules := a_variable.rules
 				i := rules.count
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					state1 := a_transition.source
 					visited_states.wipe_out
 					visited_states.put (state1)
 					a_rule := rules.item (i)
 					rhs := a_rule.rhs
 					nb := rhs.count
-					from j := 1 until j > nb loop
+					from
+						j := 1
+					until
+						j > nb
+					loop
 						state1 := state1.shift (rhs.item (j))
-						check shift_not_void: state1 /= Void end
+						check
+							shift_not_void: state1 /= Void
+						end
 						visited_states.put (state1)
 						j := j + 1
 					end
@@ -865,19 +970,24 @@ feature {NONE} -- Processing (deterministic)
 					end
 					j := rhs.count
 					visited_states.remove
-					from until j < 1 loop
+					from
+					until
+						j < 1
+					loop
 						a_variable ?= rhs.item (j)
 						if a_variable /= Void then
 							state1 := visited_states.item
 							visited_states.remove
 							a_variable.transition (state1).included_tokens.force_last (a_transition)
 							if not a_variable.is_nullable then
-								j := 0 -- Jump out of the loop.
+									-- Jump out of the loop.
+								j := 0
 							else
 								j := j - 1
 							end
 						else
-							j := 0 -- Jump out of the loop.
+								-- Jump out of the loop.
+							j := 0
 						end
 					end
 					i := i - 1
@@ -887,7 +997,11 @@ feature {NONE} -- Processing (deterministic)
 			create follows_flattener.make
 			follows_flattener.flatten (transitions)
 			reductions_cursor := reductions.new_cursor
-			from reductions_cursor.start until reductions_cursor.after loop
+			from
+				reductions_cursor.start
+			until
+				reductions_cursor.after
+			loop
 				reductions_cursor.item.build_lookaheads
 				reductions_cursor.forth
 			end
@@ -918,9 +1032,9 @@ invariant
 	no_void_state: not states.has (Void)
 	grammar_not_void: grammar /= Void
 	valid_grammar: grammar.start_symbol /= Void
-	-- positions_sorted: forall state in states, state.positions_sorted
+--	positions_sorted: forall state in states, state.positions_sorted
 	cached_states_not_void: cached_states /= Void
 	no_void_state_list: not cached_states.has_item (Void)
-	-- no_void_cached_state: forall state_list in cached_states, forall state in state_list, state /= Void
+--	no_void_cached_state: forall state_list in cached_states, forall state in state_list, state /= Void
 
 end

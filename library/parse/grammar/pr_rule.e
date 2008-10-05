@@ -15,11 +15,6 @@ class PR_RULE
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-		undefine
-			is_equal
-		end
-
 	COMPARABLE
 
 create
@@ -153,8 +148,7 @@ feature -- Status report
 		do
 			Result := associativity = Left_assoc
 		ensure
-			associativity: Result implies
-				not (is_right_associative or is_non_associative)
+			associativity: Result implies not (is_right_associative or is_non_associative)
 		end
 
 	is_right_associative: BOOLEAN is
@@ -162,8 +156,7 @@ feature -- Status report
 		do
 			Result := associativity = Right_assoc
 		ensure
-			associativity: Result implies
-				not (is_left_associative or is_non_associative)
+			associativity: Result implies not (is_left_associative or is_non_associative)
 		end
 
 	is_non_associative: BOOLEAN is
@@ -171,8 +164,7 @@ feature -- Status report
 		do
 			Result := associativity = Non_assoc
 		ensure
-			associativity: Result implies
-				not (is_left_associative or is_right_associative)
+			associativity: Result implies not (is_left_associative or is_right_associative)
 		end
 
 	has_precedence: BOOLEAN is
@@ -249,7 +241,11 @@ feature -- Output
 				a_file.put_string (" -- Empty")
 			else
 				nb := rhs.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_file.put_character (' ')
 					a_file.put_string (rhs.item (i).name)
 					i := i + 1
@@ -302,7 +298,11 @@ feature -- Output
 			a_file.put_new_line
 			create types.make_map (nb + 1)
 			types.put_new (1, a_type)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_type := rhs.item (i).type
 				types.search (a_type)
 				if types.found then
@@ -313,7 +313,11 @@ feature -- Output
 				i := i + 1
 			end
 			a_cursor := types.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				nb := a_cursor.item
 				if nb /= 0 then
 					a_cursor.key.print_increment_yyvsp (nb, 1, a_file)
@@ -382,7 +386,9 @@ feature -- Output
 				a_file.put_new_line
 			elseif nb < 0 then
 				a_file.put_string ("%Tyyvsp := yyvsp + ")
-				check no_overflow: nb = - 1 end
+				check
+					no_overflow: nb = -1
+				end
 				a_file.put_integer (-nb)
 				a_file.put_new_line
 				a_file.put_line ("%Tif yyvsp >= yyvsc then")

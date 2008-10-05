@@ -1,5 +1,5 @@
 indexing
-	
+
 	description:
 
 		"Options that need a value from a enumerated set"
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			create {DS_LINKED_LIST [STRING]} possible_values.make
 			possible_values.set_equality_tester (string_equality_tester)
 		end
-	
+
 feature -- Access
 
 	possible_values: DS_LIST [STRING]
@@ -74,7 +74,11 @@ feature -- Status setting
 			new_name: STRING
 		do
 			create new_name.make (20)
-			from possible_values.start until possible_values.after loop
+			from
+				possible_values.start
+			until
+				possible_values.after
+			loop
 				new_name.append_string (possible_values.item_for_iteration)
 				if not possible_values.is_last then
 					new_name.append_character ('|')

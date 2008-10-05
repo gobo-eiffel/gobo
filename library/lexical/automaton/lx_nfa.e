@@ -16,17 +16,22 @@ inherit
 
 	LX_AUTOMATON
 		redefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
-			copy, is_equal
+			copy,
+			is_equal
 		end
 
 create
 
-	make, make_symbol, make_epsilon, make_symbol_class
+	make,
+	make_symbol,
+	make_epsilon,
+	make_symbol_class
 
 feature {NONE} -- Initialization
 
@@ -155,13 +160,21 @@ feature -- Duplication
 			old_states := states
 			create states.make (old_states.capacity)
 			nb := old_states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				old_state := old_states.item (i)
 				old_state.set_id (i)
 				states.put_last (old_state.cloned_object)
 				i := i + 1
 			end
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				new_state := states.item (i)
 				transition := new_state.transition
 				if transition /= Void then
@@ -356,7 +369,11 @@ feature -- Operations
 		do
 			if nb /= 1 then
 				a_nfa := cloned_object
-				from i := 2 until i >= nb loop
+				from
+					i := 2
+				until
+					i >= nb
+				loop
 					a_nfa.build_concatenation (cloned_object)
 					i := i + 1
 				end
@@ -395,7 +412,11 @@ feature -- Operations
 			else
 				a_nfa1 := cloned_object
 				a_nfa1.build_optional
-				from i := lb + 1 until i >= ub loop
+				from
+					i := lb + 1
+				until
+					i >= ub
+				loop
 					a_nfa2 := cloned_object
 					a_nfa2.build_concatenation (a_nfa1)
 					a_nfa2.build_optional
@@ -619,11 +640,11 @@ invariant
 	no_void_state: not states.has (Void)
 	start_and_final: states.count >= 2
 	final_state: not final_state.has_transition
-	-- valid_transitions: forall state in states,
-	--		state.transition /= Void implies
-	--			states.has (state.transition.target)
-	-- valid_epsilon_transitions: forall state in states,
-	--		state.epsilon_transition /= Void implies
-	--			states.has (state.epsilon_transition.target)
+--	valid_transitions: forall state in states,
+--		state.transition /= Void implies
+--			states.has (state.transition.target)
+--	valid_epsilon_transitions: forall state in states,
+--		state.epsilon_transition /= Void implies
+--			states.has (state.epsilon_transition.target)
 
 end

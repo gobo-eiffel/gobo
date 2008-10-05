@@ -54,8 +54,7 @@ feature -- Status report
 	valid_unread_character (a_character: CHARACTER): BOOLEAN is
 			-- Can `a_character' be put back in input stream?
 		do
-			Result := (location >= 1 and location <= string.count)
-				and then (a_character = string.item (location))
+			Result := (location >= 1 and location <= string.count) and then (a_character = string.item (location))
 		end
 
 feature -- Access
@@ -118,13 +117,18 @@ feature -- Input
 			else
 				STRING_.wipe_out (last_string)
 			end
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				read_character
 				if not end_of_input then
 					last_string.append_character (last_character)
 					i := i + 1
 				else
-					i := nb + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := nb + 1
 				end
 			end
 			end_of_input := (last_string.count = 0)
@@ -148,7 +152,10 @@ feature -- Input
 			end
 			is_eof := True
 			a_target := last_string
-			from until done loop
+			from
+			until
+				done
+			loop
 				read_character
 				if end_of_input then
 					done := True

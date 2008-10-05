@@ -16,16 +16,12 @@ class LX_RULE
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-		undefine
-			is_equal
-		end
-
 	COMPARABLE
 
 create
 
-	make, make_default
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -100,8 +96,7 @@ feature -- Status report
 			-- Has rule a trailing context with both
 			-- head and trail having variable size?
 		do
-			Result := has_trail_context and then
-				(head_count < 0 and trail_count < 0)
+			Result := has_trail_context and then (head_count < 0 and trail_count < 0)
 		end
 
 feature -- Setting

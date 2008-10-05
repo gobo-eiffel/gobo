@@ -16,7 +16,8 @@ inherit
 
 	KI_BUFFER [CHARACTER]
 		undefine
-			put, item
+			put,
+			item
 		redefine
 			fill_from_stream
 		end
@@ -123,7 +124,11 @@ feature -- Element change
 			nb := a_string.count
 			if nb > 0 then
 				j := pos
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					put (a_string.item (i), j)
 					j := j + 1
 					i := i + 1

@@ -35,8 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is
-		"Warning, %"$1%", line $2: dangerous trailing context"
+	default_template: STRING is "Warning, %"$1%", line $2: dangerous trailing context"
 			-- Default template used to built the error message
 
 	code: STRING is "LX0026"

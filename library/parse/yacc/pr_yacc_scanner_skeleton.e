@@ -277,7 +277,7 @@ feature {NONE} -- Error handling
 feature {NONE} -- Constants
 
 	Init_buffer_size: INTEGER is 256
-				-- Initial size for `action_buffer'
+			-- Initial size for `action_buffer'
 
 invariant
 

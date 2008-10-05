@@ -48,9 +48,9 @@ feature -- Status report
 				loop
 					a_most := a_string.item (i).code
 					if is_surrogate (a_most) then
-						i := i + 2 -- Consume the next character.
-						Result := is_high_surrogate (a_most) and 
-							((i <= cnt) and then is_low_surrogate (a_string.item(i).code))
+							-- Consume the next character.
+						i := i + 2
+						Result := is_high_surrogate (a_most) and ((i <= cnt) and then is_low_surrogate (a_string.item (i).code))
 					end
 					i := i + 2
 				end
@@ -80,9 +80,9 @@ feature -- Status report
 				loop
 					a_most := a_string.item (i).code
 					if is_surrogate (a_most) then
-						i := i + 2 -- Consume the next character.
-						Result := is_high_surrogate (a_most) and 
-							((i <= cnt) and then is_low_surrogate (a_string.item(i).code))
+							-- Consume the next character.
+						i := i + 2
+						Result := is_high_surrogate (a_most) and ((i <= cnt) and then is_low_surrogate (a_string.item (i).code))
 					end
 					i := i + 2
 				end
@@ -111,9 +111,9 @@ feature -- Status report
 				loop
 					a_most := a_string.item (i).code
 					if is_surrogate (a_most) then
-						i := i + 2 -- Consume the next character.
-						Result := is_high_surrogate (a_most) and 
-							((i <= cnt) and then is_low_surrogate (a_string.item(i).code))
+							-- Consume the next character.
+						i := i + 2
+						Result := is_high_surrogate (a_most) and ((i <= cnt) and then is_low_surrogate (a_string.item (i).code))
 					end
 					i := i + 2
 				end
@@ -153,7 +153,7 @@ feature -- Endian-ness detection
 		require
 			a_byte_is_byte: is_byte (first)
 			other_byte_is_byte: is_byte (second)
-			-- first_in_stream: the character represented by (first, second) is first in stream
+--			first_in_stream: the character represented by (first, second) is first in stream
 		do
 			Result := first = Hex_fe and second = Hex_ff
 		ensure
@@ -166,7 +166,7 @@ feature -- Endian-ness detection
 		require
 			a_byte_is_byte: is_byte (first)
 			other_byte_is_byte: is_byte (second)
-			-- first_in_stream: the character represented by (first, second) is first in stream
+--			first_in_stream: the character represented by (first, second) is first in stream
 		do
 			Result := first = Hex_ff and second = Hex_fe
 		ensure
@@ -273,7 +273,7 @@ feature -- Surrogate
 			code_high_enough: a_code > maximum_bmp_character_code
 			code_low_enough: a_code <= maximum_unicode_character_code
 		do
-			Result :=  INTEGER_.bit_or (INTEGER_.bit_and (a_code, Hex_3ff), Hex_dc00)
+			Result := INTEGER_.bit_or (INTEGER_.bit_and (a_code, Hex_3ff), Hex_dc00)
 		ensure
 			low_surrogate: Result >= 256 * Hex_dc
 			not_too_big: Result < 256 * Hex_e0
@@ -288,6 +288,8 @@ feature {NONE} -- Constants
 			-- 2 ^ 8
 
 	Hex_fe: INTEGER is 254
+			-- Endian detection character
+
 	Hex_ff: INTEGER is 255
 			-- Endian detection character
 

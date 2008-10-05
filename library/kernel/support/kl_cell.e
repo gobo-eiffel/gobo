@@ -12,17 +12,13 @@ indexing
 
 class KL_CELL [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make
 
 feature -- Access
 
-	item: G 
+	item: G
 			-- Content of cell
 
 feature -- Element change

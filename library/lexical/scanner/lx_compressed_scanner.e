@@ -19,7 +19,9 @@ inherit
 			yy_ec as yy_ec_template,
 			yy_accept as yy_accept_template
 		undefine
-			reset, yy_set_content, yy_initialize
+			reset,
+			yy_set_content,
+			yy_initialize
 		end
 
 	YY_COMPRESSED_SCANNER_SKELETON
@@ -42,13 +44,17 @@ inherit
 			yy_accept as yy_accept_template,
 			yy_acclist as yy_acclist_template
 		export
-			{LX_COMPRESSED_TABLES} all;
-			{ANY} to_tables, from_tables
+			{LX_COMPRESSED_TABLES} all
+			{ANY}
+				to_tables,
+				from_tables
 		end
 
 create
 
-	make, make_with_file, make_with_buffer
+	make,
+	make_with_file,
+	make_with_buffer
 
 feature {NONE} -- Initialization
 
@@ -92,5 +98,5 @@ feature {NONE} -- Constants
 	yyReject_or_variable_trail_context: BOOLEAN
 			-- Is `reject' called or is there a regular expression with
 			-- both leading and trailing parts having variable length?
-	
+
 end

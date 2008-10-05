@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Simple implementation of coefficients using a native array of characters"
 
@@ -16,19 +16,23 @@ inherit
 
 	MA_DECIMAL_COEFFICIENT
 		redefine
-			out, three_way_comparison
+			out,
+			three_way_comparison
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
 		export
 			{NONE} all
 		undefine
-			out, copy, is_equal
+			out,
+			copy,
+			is_equal
 		end
 
 create
 
-	make, make_copy
+	make,
+	make_copy
 
 feature {NONE} -- Initialization
 
@@ -73,10 +77,10 @@ feature -- Access
 			end
 		end
 
-	subcoefficient (index_start, index_end : INTEGER) : MA_DECIMAL_COEFFICIENT is
+	subcoefficient (index_start, index_end: INTEGER): MA_DECIMAL_COEFFICIENT is
 			-- Subcoefficient made of digits in range [index_start..index_end]
 		local
-			index : INTEGER
+			index: INTEGER
 		do
 			create {MA_DECIMAL_COEFFICIENT_IMP} Result.make (index_end - index_start + 1)
 			from
@@ -97,7 +101,8 @@ feature -- Measurement
 	lower: INTEGER is
 			-- Lower index
 		do
-			Result := 0 --digits.lower
+--			Result := digits.lower
+			Result := 0
 		end
 
 	upper: INTEGER is
@@ -187,7 +192,6 @@ feature -- Comparison
 				-- Skip leading zeroes.
 			count_a := msd_index + 1
 			count_b := other.msd_index + 1
-
 			if count_a > count_b then
 				Result := 1
 			elseif count_a < count_b then
@@ -212,7 +216,7 @@ feature -- Conversion
 	out: STRING is
 			-- Terse printable representation
 		local
-			index : INTEGER
+			index: INTEGER
 		do
 			create Result.make (count)
 			from
@@ -301,7 +305,8 @@ feature -- Basic operations
 				loop
 					index := index - 1
 				end
-				Result := (index < lower) -- found no equal item
+					-- found no equal item
+				Result := (index < lower)
 			end
 		end
 
@@ -376,7 +381,7 @@ feature -- Basic operations
 			until
 				index = count
 			loop
-				carry := carry +  l_digits.item (index) + l_other_digits.item (index)
+				carry := carry + l_digits.item (index) + l_other_digits.item (index)
 				digit := carry \\ 10
 				l_digits.put (INTEGER_.to_integer_8 (digit), index)
 				carry := carry // 10
@@ -396,10 +401,10 @@ feature -- Basic operations
 			l_digits: like digits
 			l_b_count, l_a_count: INTEGER
 			l_b_digits, l_a_digits: like digits
-			i_plus_j : INTEGER
+			i_plus_j: INTEGER
 		do
 				-- Initialization.
-			-- grow (a.count + b.count + 2)
+--			grow (a.count + b.count + 2)
 			from
 				i := 0
 				l_digits := digits
@@ -423,7 +428,8 @@ feature -- Basic operations
 				l_b_count := local_b.count
 				i := 0
 			until
-				i >= l_b_count -- local_b.count
+					-- local_b.count
+				i >= l_b_count
 			loop
 				digit := l_b_digits.item (i)
 				carry := 0
@@ -431,7 +437,8 @@ feature -- Basic operations
 					j := 0
 					i_plus_j := i + j
 				until
-					j >= l_a_count -- local_a.count
+						-- local_a.count
+					j >= l_a_count
 				loop
 					carry := carry + digit * l_a_digits.item (j) + l_digits.item (i_plus_j)
 					l_digits.put (INTEGER_.to_integer_8 (carry \\ 10), i_plus_j)
@@ -456,8 +463,8 @@ feature -- Basic operations
 			index: INTEGER
 			digit: INTEGER
 			l_digits: like digits
-			start : INTEGER
-			l_count : INTEGER
+			start: INTEGER
+			l_count: INTEGER
 		do
 			from
 				l_digits := digits
@@ -546,7 +553,8 @@ feature -- Basic operations
 			loop
 				borrow := borrow + l_digits.item (index)
 				if borrow < 0 then
-					l_digits.put (INTEGER_.to_integer_8 (10 + borrow), index - start) -- count + digits_count)
+--					l_digits.put (INTEGER_.to_integer_8 (10 + borrow), index - start) -- count + digits_count)
+					l_digits.put (INTEGER_.to_integer_8 (10 + borrow), index - start)
 					borrow := -1
 				else
 					l_digits.put (INTEGER_.to_integer_8 (borrow), index)

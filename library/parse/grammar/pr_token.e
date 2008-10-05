@@ -43,8 +43,7 @@ feature -- Status report
 		do
 			Result := associativity = Left_assoc
 		ensure
-			associativity: Result implies
-				not (is_right_associative or is_non_associative)
+			associativity: Result implies not (is_right_associative or is_non_associative)
 		end
 
 	is_right_associative: BOOLEAN is
@@ -52,8 +51,7 @@ feature -- Status report
 		do
 			Result := associativity = Right_assoc
 		ensure
-			associativity: Result implies
-				not (is_left_associative or is_non_associative)
+			associativity: Result implies not (is_left_associative or is_non_associative)
 		end
 
 	is_non_associative: BOOLEAN is
@@ -61,8 +59,7 @@ feature -- Status report
 		do
 			Result := associativity = Non_assoc
 		ensure
-			associativity: Result implies
-				not (is_left_associative or is_right_associative)
+			associativity: Result implies not (is_left_associative or is_right_associative)
 		end
 
 	is_declared: BOOLEAN
@@ -177,7 +174,11 @@ feature -- Output
 			a_file.put_character (')')
 			rules := a_grammar.rules
 			nb := rules.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_rule := rules.item (i)
 				if a_rule.rhs.has (Current) then
 					a_file.put_character (' ')

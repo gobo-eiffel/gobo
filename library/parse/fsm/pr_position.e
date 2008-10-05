@@ -14,11 +14,6 @@ class PR_POSITION
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-		undefine
-			is_equal
-		end
-
 	COMPARABLE
 
 	HASHABLE
@@ -153,13 +148,20 @@ feature -- Output
 			a_file.put_string ("  ->  ")
 			rhs := rule.rhs
 			nb := rhs.count
-			from i := 1 until i = index loop
+			from
+				i := 1
+			until
+				i = index
+			loop
 				a_file.put_string (rhs.item (i).name)
 				a_file.put_character (' ')
 				i := i + 1
 			end
 			a_file.put_character ('.')
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				a_file.put_character (' ')
 				a_file.put_string (rhs.item (i).name)
 				i := i + 1

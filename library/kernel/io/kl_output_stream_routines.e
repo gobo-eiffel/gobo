@@ -19,6 +19,7 @@ obsolete
 inherit
 
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Initialization

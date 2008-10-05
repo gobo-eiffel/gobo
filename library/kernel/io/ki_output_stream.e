@@ -12,10 +12,6 @@ indexing
 
 deferred class KI_OUTPUT_STREAM [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Output
 
 	put (v: G) is

@@ -15,11 +15,17 @@ class AP_PARSER
 inherit
 
 	KL_SHARED_ARGUMENTS
+
 	KL_SHARED_STANDARD_FILES
+
 	KL_SHARED_EXCEPTIONS
+
 	KL_SHARED_STRING_EQUALITY_TESTER
+
 	KL_IMPORTED_ARRAY_ROUTINES
+
 	KL_IMPORTED_STRING_ROUTINES
+
 	AP_CONSTANTS
 
 create
@@ -84,18 +90,30 @@ feature -- Access
 			a_list: AP_ALTERNATIVE_OPTIONS_LIST
 		do
 			create {DS_ARRAYED_LIST [AP_OPTION]} Result.make (0)
-			from options.start until options.after loop
+			from
+				options.start
+			until
+				options.after
+			loop
 				if not Result.has (options.item_for_iteration) then
 					Result.force_last (options.item_for_iteration)
 				end
 				options.forth
 			end
-			from alternative_options_lists.start until alternative_options_lists.after loop
+			from
+				alternative_options_lists.start
+			until
+				alternative_options_lists.after
+			loop
 				a_list := alternative_options_lists.item_for_iteration
 				if not Result.has (a_list.introduction_option) then
 					Result.force_last (a_list.introduction_option)
 				end
-				from a_list.start until a_list.after loop
+				from
+					a_list.start
+				until
+					a_list.after
+				loop
 					if not Result.has (a_list.item_for_iteration) then
 						Result.force_last (a_list.item_for_iteration)
 					end
@@ -149,7 +167,11 @@ feature -- Status report
 		local
 			l_option: AP_OPTION
 		do
-			from options.start until options.after loop
+			from
+				options.start
+			until
+				options.after
+			loop
 				l_option := options.item_for_iteration
 				if l_option.has_long_form and then l_option.long_form.same_string (an_option) then
 					Result := True
@@ -166,7 +188,11 @@ feature -- Status report
 		local
 			l_option: AP_OPTION
 		do
-			from options.start until options.after loop
+			from
+				options.start
+			until
+				options.after
+			loop
 				l_option := options.item_for_iteration
 				if l_option.has_short_form and then l_option.short_form = a_character then
 					Result := True
@@ -189,8 +215,12 @@ feature -- Parser
 		do
 			nb := Arguments.argument_count
 			create args.make (nb)
-			from i := 1 until i > nb loop
-				args.force (Arguments.argument(i), i)
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				args.force (Arguments.argument (i), i)
 				i := i + 1
 			end
 			parse_list (args)
@@ -218,7 +248,11 @@ feature -- Parser
 		do
 			reset_parser
 			argument_list := a_list
-			from argument_list.start until argument_list.after loop
+			from
+				argument_list.start
+			until
+				argument_list.after
+			loop
 				parse_argument
 			end
 			check_options_after_parsing
@@ -246,9 +280,7 @@ feature -- Validity checks
 			c: CHARACTER
 		do
 			c := a_character
-			Result := (c >= 'a' and c <= 'z') or
-				(c >= 'A' and c <= 'Z') or
-				(c >= '0' and c <= '9')
+			Result := (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9')
 		end
 
 	valid_long_form (a_string: STRING): BOOLEAN is
@@ -264,7 +296,11 @@ feature -- Validity checks
 				nb := a_string.count
 				if nb >= 1 then
 					Result := True
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						if
 							is_alpha_numeric (a_string.item (i)) or
 							((i > 1 and i < nb) and then
@@ -274,7 +310,8 @@ feature -- Validity checks
 							i := i + 1
 						else
 							Result := False
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 					end
 				end

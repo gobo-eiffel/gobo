@@ -14,7 +14,8 @@ deferred class YY_SCANNER
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_SHARED_STANDARD_FILES
 
@@ -426,9 +427,13 @@ feature -- Debugging
 feature {NONE} -- Constants
 
 	yyEOF_token: INTEGER is 0
+			-- Predefined EOF token code
+
 	yyError_token: INTEGER is -1
+			-- Predefined Error token code
+
 	yyUnknown_token: INTEGER is -2
-			-- Predefined token codes
+			-- Predefined Unknown token code
 
 invariant
 

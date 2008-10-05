@@ -17,7 +17,10 @@ inherit
 
 	LX_EQUIVALENCE_CLASSES
 		redefine
-			make, initialize, put, add
+			make,
+			initialize,
+			put,
+			add
 		end
 
 create
@@ -90,20 +93,36 @@ feature -- Element change
 			if symbol_class.negated then
 				j := lower - 1
 				max := upper
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					symbol := symbol_class.item (i)
-					from j := j + 1 until j >= symbol loop
+					from
+						j := j + 1
+					until
+						j >= symbol
+					loop
 						symbol_table.put (True, j)
 						j := j + 1
 					end
 					i := i + 1
 				end
-				from j := j + 1 until j > max loop
+				from
+					j := j + 1
+				until
+					j > max
+				loop
 					symbol_table.put (True, j)
 					j := j + 1
 				end
 			else
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					symbol_table.put (True, symbol_class.item (i))
 					i := i + 1
 				end

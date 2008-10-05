@@ -18,14 +18,16 @@ inherit
 		rename
 			make as make_generatable_dfa
 		redefine
-			build, print_constants,
+			build,
+			print_constants,
 			print_backing_up_report
 		end
 
 	LX_FULL_TABLES
 		export
-			{LX_FULL_TABLES, LX_DFA_REGULAR_EXPRESSION} all;
-			{ANY} to_tables
+			{LX_FULL_TABLES, LX_DFA_REGULAR_EXPRESSION} all
+			{ANY}
+				to_tables
 		end
 
 create
@@ -127,7 +129,11 @@ feature -- Building
 		do
 			backing_up_count := 0
 			create partitions.make (minimum_symbol, maximum_symbol)
-			from i := 1 until i > start_states_count loop
+			from
+				i := 1
+			until
+				i > start_states_count
+			loop
 				a_state := states.item (i)
 				build_transitions (a_state)
 				i := i + 1
@@ -135,7 +141,11 @@ feature -- Building
 				-- Process end-of-buffer state.
 			a_state := states.item (i)
 			build_transitions (a_state)
-			from i := i + 1 until i > states.count loop
+			from
+				i := i + 1
+			until
+				i > states.count
+			loop
 				a_state := states.item (i)
 				build_transitions (a_state)
 				if not a_state.is_accepting then
@@ -171,12 +181,16 @@ feature {NONE} -- Building
 			nb := yyNb_rows - 1
 				-- `0' entries for state #0.
 			j := yyNb_rows
-			from i := 1 until i > states.count loop
+			from
+				i := 1
+			until
+				i > states.count
+			loop
 				from
 					a_state := states.item (i)
 					transitions := a_state.transitions
 					if a_state.id = eob_state_id then
-						yy_nxt_.put (- eob_state_id, j)
+						yy_nxt_.put (-eob_state_id, j)
 					else
 						yy_nxt_.put (eob_state_id, j)
 					end
@@ -191,7 +205,7 @@ feature {NONE} -- Building
 						yy_nxt_.put (target.id, j)
 					else
 							-- Jams are marked by negative of state number.
-						yy_nxt_.put (- a_state.id, j)
+						yy_nxt_.put (-a_state.id, j)
 					end
 					k := k + 1
 					j := j + 1
@@ -212,7 +226,11 @@ feature {NONE} -- Building
 		do
 			nb := states.count
 			create yy_accept_.make (0, nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				if a_state.is_accepting then
 					yy_accept_.put (a_state.accepted_rules.first.id, i)

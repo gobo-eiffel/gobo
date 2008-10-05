@@ -74,10 +74,15 @@ feature -- Pathname handling
 			nb := a_dirname.count
 			if nb > 0 then
 				Result := True
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if a_dirname.item (i) /= directory_separator then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end
@@ -101,16 +106,14 @@ feature -- Pathname handling
 				from
 					i := a_pathname.count
 				until
-					i < 1 or else
-					a_pathname.item (i) /= directory_separator
+					i < 1 or else a_pathname.item (i) /= directory_separator
 				loop
 					i := i - 1
 				end
 				nb := i
 				from
 				until
-					i < 1 or else
-					a_pathname.item (i) = directory_separator
+					i < 1 or else a_pathname.item (i) = directory_separator
 				loop
 					i := i - 1
 				end
@@ -142,15 +145,13 @@ feature -- Pathname handling
 				from
 					i := a_pathname.count
 				until
-					i < 1 or else
-					a_pathname.item (i) /= directory_separator
+					i < 1 or else a_pathname.item (i) /= directory_separator
 				loop
 					i := i - 1
 				end
 				from
 				until
-					i < 1 or else
-					a_pathname.item (i) = directory_separator
+					i < 1 or else a_pathname.item (i) = directory_separator
 				loop
 					i := i - 1
 				end
@@ -159,8 +160,7 @@ feature -- Pathname handling
 				else
 					from
 					until
-						i < 1 or else
-						a_pathname.item (i) /= directory_separator
+						i < 1 or else a_pathname.item (i) /= directory_separator
 					loop
 						i := i - 1
 					end
@@ -205,7 +205,10 @@ feature -- Pathname handling
 			Result := STRING_.cloned_string (a_dirname)
 			i := a_pathnames.lower
 			nb := a_pathnames.upper
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				a_pathname := a_pathnames.item (i)
 				if a_pathname.count > 0 then
 					k := Result.count
@@ -317,11 +320,14 @@ feature -- Pathname handling
 			else
 				Result.set_relative (True)
 			end
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				from
 				until
-					i > nb or else
-					a_pathname.item (i) /= directory_separator
+					i > nb or else a_pathname.item (i) /= directory_separator
 				loop
 					i := i + 1
 				end
@@ -329,8 +335,7 @@ feature -- Pathname handling
 					j := i
 					from
 					until
-						i > nb or else
-						a_pathname.item (i) = directory_separator
+						i > nb or else a_pathname.item (i) = directory_separator
 					loop
 						i := i + 1
 					end
@@ -358,8 +363,12 @@ feature -- Pathname handling
 			if not a_pathname.is_relative then
 				Result := STRING_.appended_string (Result, root_directory)
 			end
-			nb:= a_pathname.count
-			from i := 1 until i >= nb loop
+			nb := a_pathname.count
+			from
+				i := 1
+			until
+				i >= nb
+			loop
 				if a_pathname.is_current (i) then
 					Result := STRING_.appended_string (Result, relative_current_directory)
 				elseif a_pathname.is_parent (i) then

@@ -16,7 +16,8 @@ inherit
 
 	LX_PATTERN_MATCHER
 		redefine
-			matches, recognizes
+			matches,
+			recognizes
 		end
 
 feature -- Status report
@@ -39,14 +40,19 @@ feature -- Status report
 			subject_start := 1
 			subject_end := nb
 			match_count := 0
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				e := smallest_end_position (a_string, i)
 				if e /= -1 then
 					Result := True
 					match_count := 1
 					matched_start := i
 					matched_end := e
-					i := nb + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := nb + 1
 				else
 					i := i + 1
 				end
@@ -105,13 +111,18 @@ feature -- Matching
 			subject := a_subject
 			subject_start := a_from
 			subject_end := a_to
-			from i := a_from until i > a_to loop
+			from
+				i := a_from
+			until
+				i > a_to
+			loop
 				e := longest_end_position (a_subject, i)
 				if e /= -1 then
 					match_count := 1
 					matched_start := i
 					matched_end := e
-					i := a_to + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := a_to + 1
 				else
 					i := i + 1
 				end
@@ -176,8 +187,7 @@ feature {NONE} -- Matching
 				end
 			end
 		ensure
-			valid_position: Result /= -1 implies
-				(start_pos <= Result + 1 and Result <= a_string.count)
+			valid_position: Result /= -1 implies (start_pos <= Result + 1 and Result <= a_string.count)
 		end
 
 	longest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER is
@@ -199,7 +209,7 @@ feature {NONE} -- Matching
 				nb := a_string.count
 				a_state := 1
 				if yy_accept.item (a_state) /= 0 then
-					Result := i - 1  
+					Result := i - 1
 				else
 					Result := -1
 				end
@@ -218,8 +228,7 @@ feature {NONE} -- Matching
 				end
 			end
 		ensure
-			valid_position: Result /= -1 implies
-				(start_pos <= Result + 1 and Result <= a_string.count)
+			valid_position: Result /= -1 implies (start_pos <= Result + 1 and Result <= a_string.count)
 		end
 
 feature {NONE} -- Engine Data

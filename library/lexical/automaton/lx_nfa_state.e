@@ -72,9 +72,7 @@ feature -- Status report
 			-- Is current state an accepting state for the
 			-- head part of a trailing context rule?
 		do
-			Result := is_accepting and
-				not in_trail_context and
-				has_transition
+			Result := is_accepting and not in_trail_context and has_transition
 		ensure
 			is_accepting: Result implies is_accepting
 		end
@@ -84,8 +82,7 @@ feature -- Status report
 		do
 			Result := transition /= Void or epsilon_transition /= Void
 		ensure
-			has_transition: Result implies
-				(transition /= Void or epsilon_transition /= Void)
+			has_transition: Result implies (transition /= Void or epsilon_transition /= Void)
 		end
 
 	has_epsilon_transition: BOOLEAN is

@@ -67,10 +67,15 @@ feature -- Status report
 			cursor: DS_BILINEAR_CURSOR [PR_TRANSITION]
 		do
 			cursor := transitions.new_cursor
-			from cursor.start until cursor.after loop
+			from
+				cursor.start
+			until
+				cursor.after
+			loop
 				if cursor.item.source = a_state then
 					Result := True
-					cursor.go_after -- Jump out of the loop.
+						-- Jump out of the loop.
+					cursor.go_after
 				else
 					cursor.forth
 				end
@@ -112,10 +117,15 @@ feature -- Access
 			cursor: DS_BILINEAR_CURSOR [PR_TRANSITION]
 		do
 			cursor := transitions.new_cursor
-			from cursor.start until cursor.after loop
+			from
+				cursor.start
+			until
+				cursor.after
+			loop
 				Result := cursor.item
 				if Result.source = a_state then
-					cursor.go_after -- Jump out of the loop.
+						-- Jump out of the loop.
+					cursor.go_after
 				else
 					cursor.forth
 				end
@@ -184,7 +194,11 @@ feature -- Output
 			if not rules.is_empty then
 				a_file.put_string (" on left:")
 				nb := rules.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_file.put_character (' ')
 					a_file.put_integer (rules.item (i).id)
 					i := i + 1
@@ -192,7 +206,11 @@ feature -- Output
 			end
 			r := a_grammar.rules
 			nb := r.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_rule := r.item (i)
 				if a_rule.rhs.has (Current) then
 					if not on_right then
@@ -234,10 +252,10 @@ invariant
 	non_terminal: not is_terminal
 	rules_not_void: rules /= Void
 	no_void_rule: not rules.has (Void)
-	-- derivable_rules: forall rule in rules, rule.lhs = Current
+--	derivable_rules: forall rule in rules, rule.lhs = Current
 	transitions_not_void: transitions /= Void
 	no_void_transition: not transitions.has (Void)
-	-- valid_transitions: forall t in transitions, t.symbol = Current
+--	valid_transitions: forall t in transitions, t.symbol = Current
 	no_void_first: not firsts.has (Void)
 	no_void_derive: not derives.has (Void)
 

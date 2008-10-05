@@ -4,12 +4,11 @@ indexing
 
 		"Routines that ought to be in class STRING"
 
-	remark:
-
-		"Unless otherwise specified in their preconditions, %
-		%the features of this class can deal with UC_STRING %
-		%whenever a STRING is expected."
-
+	remark: "[
+		"Unless otherwise specified in their preconditions,
+		the features of this class can deal with UC_STRING
+		whenever a STRING is expected.
+	]"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
 	license: "MIT License"
@@ -23,10 +22,15 @@ inherit
 	KL_SHARED_PLATFORM
 
 	KL_IMPORTED_CHARACTER_ROUTINES
+
 	KL_IMPORTED_INTEGER_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
+
 	UC_IMPORTED_UNICODE_ROUTINES
+
 	UC_IMPORTED_UTF16_ROUTINES
+
 	UC_IMPORTED_UTF32_ROUTINES
 
 feature -- Initialization
@@ -71,12 +75,20 @@ feature -- Initialization
 				uc_string ?= s
 				if uc_string /= Void then
 					nb := uc_string.byte_count
-					from j := 1 until j > nb loop
+					from
+						j := 1
+					until
+						j > nb
+					loop
 						Result.append_character (uc_string.character_item_at_byte_index (j))
 						j := uc_string.next_byte_index (j)
 					end
 				else
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						Result.append_character (s.item (i))
 						i := i + 1
 					end
@@ -177,11 +189,16 @@ feature -- Status report
 				Result := False
 			else
 				Result := True
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c := a_string.item (i)
 					if c < '0' or c > '9' then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end
@@ -203,11 +220,16 @@ feature -- Status report
 				Result := False
 			else
 				Result := True
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c := a_string.item (i)
 					if c < '0' or c > '9' then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end
@@ -255,7 +277,8 @@ feature -- Status report
 						c := a_string.item (l)
 						if c < '0' or c > '9' then
 							Result := False
-							l := i + k + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							l := i + k + 1
 						else
 							l := l + 1
 						end
@@ -273,7 +296,7 @@ feature -- Status report
 							else
 								i := max_integer_64_digits.item (k - m)
 							end
-							if  j < i then
+							if j < i then
 								Result := True
 								k := l + 1
 							else
@@ -300,11 +323,16 @@ feature -- Status report
 				Result := False
 			else
 				Result := True
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c := a_string.item (i)
 					if (c < '0' or c > '9') and (c < 'a' or c > 'f') and (c < 'A' or c > 'F') then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end
@@ -326,7 +354,11 @@ feature -- Status report
 				Result := False
 			else
 				Result := True
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c := a_string.item (i)
 					if
 						(c < '0' or c > '9') and (c < 'a' or c > 'z') and (c < 'A' or c > 'Z')
@@ -334,7 +366,8 @@ feature -- Status report
 						and c  /= ' ' and c /= '%T' and c /= '%R' and c /= '%N'
 					then
 						Result := False
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						i := i + 1
 					end
@@ -386,7 +419,11 @@ feature -- Access
 			else
 				nb := a_string.count
 				create Result.make (nb)
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := a_string.item_code (i)
 					if unicode.is_bmp_code (a_code) then
 						a_high := a_code // 256
@@ -429,7 +466,11 @@ feature -- Access
 			else
 				nb := a_string.count
 				create Result.make (nb)
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := a_string.item_code (i)
 					if unicode.is_bmp_code (a_code) then
 						a_high := a_code // 256
@@ -472,7 +513,11 @@ feature -- Access
 			else
 				nb := a_string.count
 				create Result.make (4 * nb)
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := a_string.item_code (i)
 					m := a_code \\ 256
 					a_code := a_code // 256
@@ -508,7 +553,11 @@ feature -- Access
 			else
 				nb := a_string.count
 				create Result.make (4 * nb)
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_code := a_string.item_code (i)
 					m := a_code \\ 256
 					a_code := a_code // 256
@@ -565,8 +614,7 @@ feature -- Access
 			substring_same_type: ANY_.same_types (Result, a_string)
 			substring_count: Result.count = end_index - start_index + 1
 			first_item: Result.count > 0 implies Result.item (1) = a_string.item (start_index)
-			-- Note: Too time and memory consuming with SE -0.74:
-			-- recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal (a_string.substring (start_index + 1, end_index))
+			recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal (a_string.substring (start_index + 1, end_index))
 		end
 
 	substring_index (a_string, other: STRING; start_index: INTEGER): INTEGER is
@@ -612,17 +660,26 @@ feature -- Access
 								if other_unicode /= Void then
 									nb := other_unicode.byte_count
 									max_code := Platform.Maximum_character_code
-									from k := start_index until k > end_index loop
+									from
+										k := start_index
+									until
+										k > end_index
+									loop
 										j := k
 										found := True
-										from i := 1 until i > nb loop
+										from
+											i := 1
+										until
+											i > nb
+										loop
 											a_code := other_unicode.item_code_at_byte_index (i)
 											if a_code > max_code then
 												a_code := 0
 											end
 											if a_string.item_code (j) /= a_code then
 												found := False
-												i := nb + 1 -- Jump out of the loop.
+													-- Jump out of the loop.
+												i := nb + 1
 											else
 												j := j + 1
 												i := other_unicode.next_byte_index (i)
@@ -630,20 +687,30 @@ feature -- Access
 										end
 										if found then
 											Result := k
-											k := end_index + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											k := end_index + 1
 										else
 											k := k + 1
 										end
 									end
 								else
 									nb := other_count
-									from k := start_index until k > end_index loop
+									from
+										k := start_index
+									until
+										k > end_index
+									loop
 										j := k
 										found := True
-										from i := 1 until i > nb loop
+										from
+											i := 1
+										until
+											i > nb
+										loop
 											if a_string.item (j) /= other.item (i) then
 												found := False
-												i := nb + 1 -- Jump out of the loop.
+													-- Jump out of the loop.
+												i := nb + 1
 											else
 												j := j + 1
 												i := i + 1
@@ -651,7 +718,8 @@ feature -- Access
 										end
 										if found then
 											Result := k
-											k := end_index + 1 -- Jump out of the loop.
+												-- Jump out of the loop.
+											k := end_index + 1
 										else
 											k := k + 1
 										end
@@ -668,8 +736,7 @@ feature -- Access
 			valid_result: Result = 0 or else (start_index <= Result and Result <= a_string.count - other.count + 1)
 			zero_if_absent: (Result = 0) = not has_substring (a_string.substring (start_index, a_string.count), other)
 			at_this_index: Result >= start_index implies elks_same_string (other, a_string.substring (Result, Result + other.count - 1))
-			none_before: Result > start_index implies not
-				has_substring (a_string.substring (start_index, Result + other.count - 2), other)
+			none_before: Result > start_index implies not has_substring (a_string.substring (start_index, Result + other.count - 2), other)
 		end
 
 	case_insensitive_hash_code (a_string: STRING): INTEGER is
@@ -682,14 +749,18 @@ feature -- Access
 			i, nb: INTEGER
 		do
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 					-- The magic number 8388593 below is the greatest prime lower than
 					-- 2^23 so that this magic number shifted to the left does not exceed 2^31.
 				Result := ((Result \\ 8388593) |<< 8) + a_string.item (i).upper.code
 				i := i + 1
 			end
 			if Result < 0 then
-				Result := - (Result + 1)
+				Result := -(Result + 1)
 			end
 		ensure
 			hash_code_not_negative: Result >= 0
@@ -792,10 +863,15 @@ feature -- Comparison
 					else
 						Result := True
 						nb := a_string.count
-						from i := 1 until i > nb loop
+						from
+							i := 1
+						until
+							i > nb
+						loop
 							if a_string.item_code (i) /= other.item_code (i) then
 								Result := False
-								i := nb + 1 -- Jump out of the loop.
+									-- Jump out of the loop.
+								i := nb + 1
 							else
 								i := i + 1
 							end
@@ -848,7 +924,11 @@ feature -- Comparison
 				nb := s1.count
 				Result := True
 				if not (ANY_.same_types (s1, dummy_string) and ANY_.same_types (s2, dummy_string)) then
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						a_code1 := s1.item_code (i)
 						a_code2 := s2.item_code (i)
 						if a_code1 = a_code2 then
@@ -857,11 +937,16 @@ feature -- Comparison
 							i := i + 1
 						else
 							Result := False
-							i := nb + 1  -- Jump out of the loop
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 					end
 				else
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						c1 := s1.item (i)
 						c2 := s2.item (i)
 						if c1 = c2 then
@@ -870,7 +955,8 @@ feature -- Comparison
 							i := i + 1
 						else
 							Result := False
-							i := nb + 1  -- Jump out of the loop
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 					end
 				end
@@ -915,7 +1001,11 @@ feature -- Comparison
 				else
 					nb := nb2
 				end
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a1 := a_string.item (i)
 					a2 := other.item (i)
 					if a1 = a2 then
@@ -923,11 +1013,13 @@ feature -- Comparison
 					elseif a1 < a2 then
 						found := True
 						Result := -1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					else
 						found := True
 						Result := 1
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 					end
 				end
 				if not found then
@@ -944,7 +1036,7 @@ feature -- Comparison
 				else
 					uc_string ?= other
 					if uc_string /= Void then
-						Result := - uc_string.three_way_unicode_comparison (a_string)
+						Result := -uc_string.three_way_unicode_comparison (a_string)
 					else
 						nb1 := a_string.count
 						nb2 := other.count
@@ -953,7 +1045,11 @@ feature -- Comparison
 						else
 							nb := nb2
 						end
-						from i := 1 until i > nb loop
+						from
+							i := 1
+						until
+							i > nb
+						loop
 							c1 := a_string.item_code (i)
 							c2 := other.item_code (i)
 							if c1 = c2 then
@@ -961,11 +1057,13 @@ feature -- Comparison
 							elseif c1 < c2 then
 								found := True
 								Result := -1
-								i := nb + 1 -- Jump out of the loop.
+									-- Jump out of the loop.
+								i := nb + 1
 							else
 								found := True
 								Result := 1
-								i := nb + 1 -- Jump out of the loop.
+									-- Jump out of the loop.
+								i := nb + 1
 							end
 						end
 						if not found then
@@ -980,8 +1078,8 @@ feature -- Comparison
 			end
 		ensure
 			equal_zero: (Result = 0) = same_string (a_string, other)
-			-- smaller_negative: (Result = -1) = (a_string is less than other)
-			-- greater_positive: (Result = 1) = (a_string is greater than other)
+--			smaller_negative: (Result = -1) = (a_string is less than other)
+--			greater_positive: (Result = 1) = (a_string is greater than other)
 		end
 
 	three_way_case_insensitive_comparison (a_string, other: STRING): INTEGER is
@@ -1007,7 +1105,11 @@ feature -- Comparison
 				else
 					nb := nb2
 				end
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c1 := a_string.item (i)
 					c2 := other.item (i)
 					if c1 = c2 then
@@ -1020,11 +1122,13 @@ feature -- Comparison
 						elseif c1 < c2 then
 							found := True
 							Result := -1
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						else
 							found := True
 							Result := 1
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 					end
 				end
@@ -1043,7 +1147,11 @@ feature -- Comparison
 				else
 					nb := nb2
 				end
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					d1 := a_string.item_code (i)
 					d2 := other.item_code (i)
 					if d1 = d2 then
@@ -1056,11 +1164,13 @@ feature -- Comparison
 						elseif d1 < d2 then
 							found := True
 							Result := -1
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						else
 							found := True
 							Result := 1
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 					end
 				end
@@ -1167,7 +1277,11 @@ feature -- Element change
 					uc_string.append_substring (other, s, e)
 					Result := uc_string
 				else
-					from i := s until i > e loop
+					from
+						i := s
+					until
+						i > e
+					loop
 						a_string.append_character (other.item (i))
 						i := i + 1
 					end
@@ -1241,7 +1355,11 @@ feature -- Element change
 			if uc_string /= Void then
 				uc_string.append_substring (other, s, e)
 			else
-				from i := s until i > e loop
+				from
+					i := s
+				until
+					i > e
+				loop
 					a_string.append_character (other.item (i))
 					i := i + 1
 				end
@@ -1269,20 +1387,25 @@ feature -- Element change
 				a_text_count := a_text.count
 				a_old_count := a_old.count
 				Result := new_empty_string (a_text, a_text_count)
-				from until a_end = 0 loop
+				from
+				until
+					a_end = 0
+				loop
 					Result := appended_substring (Result, a_text, a_start, a_end - 1)
 					Result := appended_string (Result, a_new)
 					a_start := a_end + a_old_count
-
 					if a_start > a_text_count then
-						a_end := 0 -- Jump out of loop
+							-- Jump out of the loop.
+						a_end := 0
 					else
 						a_end := substring_index (a_text, a_old, a_start)
 					end
 				end
 				Result := appended_substring (Result, a_text, a_start, a_text_count)
 			else
-				check not_found: a_end = 0 end
+				check
+					not_found: a_end = 0
+				end
 				Result := a_text
 			end
 		ensure
@@ -1310,7 +1433,9 @@ feature -- Element change
 				Result := appended_string (Result, a_new)
 				Result := appended_substring (Result, a_text, a_end + a_old_count, a_text_count)
 			else
-				check not_found: a_end = 0 end
+				check
+					not_found: a_end = 0
+				end
 				Result := a_text
 			end
 		ensure
@@ -1456,7 +1581,11 @@ feature -- Conversion
 			i, nb: INTEGER
 		do
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 					-- Shift previous result.
 				Result := Result * 16
 					-- Add current digit
@@ -1482,17 +1611,17 @@ feature -- Conversion
 					Result := Result + 8
 				when '9' then
 					Result := Result + 9
-				when 'a','A' then
+				when 'a', 'A' then
 					Result := Result + 10
-				when 'b','B' then
+				when 'b', 'B' then
 					Result := Result + 11
-				when 'c','C' then
+				when 'c', 'C' then
 					Result := Result + 12
-				when 'd','D' then
+				when 'd', 'D' then
 					Result := Result + 13
-				when 'e','E' then
+				when 'e', 'E' then
 					Result := Result + 14
-				when 'f','F' then
+				when 'f', 'F' then
 					Result := Result + 15
 				end
 				i := i + 1
@@ -1512,12 +1641,17 @@ feature -- Removal
 			i, nb: INTEGER
 		do
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				inspect a_string.item (i)
 				when ' ', '%T', '%R', '%N' then
 					i := i + 1
 				else
-					nb := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					nb := 0
 				end
 			end
 			a_string.remove_head (i - 1)
@@ -1540,12 +1674,17 @@ feature -- Removal
 			i, nb: INTEGER
 		do
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				inspect a_string.item (nb)
 				when ' ', '%T', '%R', '%N' then
 					nb := nb - 1
 				else
-					i := nb + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := nb + 1
 				end
 			end
 			a_string.keep_head (nb)
@@ -1702,7 +1841,7 @@ feature {NONE} -- Implementation
 	max_integer_64_digits: ARRAY [INTEGER] is
 			-- Digits of maximum INTEGER_64 value
 		once
-			Result  := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
+			Result := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 7>>
 		ensure
 			result_not_void: Result /= Void
 			ninteen_digits: Result.count = 19
@@ -1711,7 +1850,7 @@ feature {NONE} -- Implementation
 	min_negative_integer_64_digits: ARRAY [INTEGER] is
 			-- Digits of minimum INTEGER_64 value
 		once
-			Result  := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 8>>
+			Result := <<9, 2, 2, 3, 3, 7, 2, 0, 3, 6, 8, 5, 4, 7, 7, 5, 8, 0, 8>>
 		ensure
 			result_not_void: Result /= Void
 			ninteen_digits: Result.count = 19

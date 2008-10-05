@@ -14,8 +14,6 @@ class PR_STATE
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
-
 	HASHABLE
 
 	KL_IMPORTED_ANY_ROUTINES
@@ -57,7 +55,7 @@ feature -- Access
 			-- Positions in some rules where the
 			-- parsing could continue when the
 			-- machine is in current state
- 
+
 	shifts: DS_ARRAYED_LIST [PR_STATE]
 			-- Shift transitions (push the lookahead
 			-- token and read another); the symbol
@@ -87,10 +85,14 @@ feature -- Access
 			i: INTEGER
 		do
 			i := shifts.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				if shifts.item (i).accessing_symbol = a_symbol then
 					Result := shifts.item (i)
-					i := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 0
 				else
 					i := i - 1
 				end
@@ -119,10 +121,14 @@ feature -- Status report
 			i: INTEGER
 		do
 			i := shifts.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				if shifts.item (i).accessing_symbol = a_symbol then
 					Result := True
-					i := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 0
 				else
 					i := i - 1
 				end
@@ -162,10 +168,14 @@ feature -- Comparison
 				Result := True
 				other_positions := other.positions
 				i := positions.count
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if not positions.item (i).same_position (other_positions.item (i)) then
 						Result := False
-						i := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
@@ -190,10 +200,14 @@ feature -- Status setting
 						-- There is at least one reduction and
 						-- one shift using a terminal symbol.
 					i := shifts.count
-					from until i < 1 loop
+					from
+					until
+						i < 1
+					loop
 						if shifts.item (i).accessing_symbol.is_terminal then
 							lookahead_needed := True
-							i := 0 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := 0
 						else
 							i := i - 1
 						end
@@ -205,10 +219,14 @@ feature -- Status setting
 					-- transition using the "error" token.
 					-- (The "error" token has symbol id 1.)
 				i := shifts.count
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					if shifts.item (i).accessing_symbol.id = 1 then
 						lookahead_needed := True
-						i := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := 0
 					else
 						i := i - 1
 					end
@@ -247,11 +265,15 @@ feature -- Element change
 			a_reduction: PR_REDUCTION
 		do
 			i := reductions.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_reduction := reductions.item (i)
 				if a_reduction.rule = a_rule then
 					a_reduction.put_transition (a_transition)
-					i := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 0
 				else
 					i := i - 1
 				end
@@ -270,10 +292,14 @@ feature -- Removal
 			i: INTEGER
 		do
 			i := shifts.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				if shifts.item (i).accessing_symbol = a_symbol then
 					shifts.remove (i)
-					i := 0 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 0
 				else
 					i := i - 1
 				end
@@ -325,7 +351,10 @@ feature -- Conflicts
 			create Result.make
 			i := shifts.count
 			create tokens.make (i)
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_token ?= shifts.item (i).accessing_symbol
 				if a_token /= Void then
 					tokens.put_last (a_token)
@@ -336,14 +365,21 @@ feature -- Conflicts
 				-- in current state. First check for shift/reduce
 				-- conflicts and try to resolve them using precedence.
 			nb := reductions.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_reduction := reductions.item (i)
 				a_rule := a_reduction.rule
 				if a_rule.has_precedence then
 					rule_prec := a_rule.precedence
 					lookaheads := a_reduction.lookaheads
 					j := tokens.count
-					from until j < 1 loop
+					from
+					until
+						j < 1
+					loop
 						a_token := tokens.item (j)
 						if a_token.has_precedence then
 							if lookaheads.has (a_token) then
@@ -393,11 +429,17 @@ feature -- Conflicts
 				-- have not been resolved.
 			has_conflict := False
 			i := reductions.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_reduction := reductions.item (i)
 				lookaheads := a_reduction.lookaheads
 				j := lookaheads.count
-				from until j < 1 loop
+				from
+				until
+					j < 1
+				loop
 					a_token := lookaheads.item (j)
 					if tokens.has (a_token) then
 						has_conflict := True
@@ -425,7 +467,10 @@ feature -- Conflicts
 		do
 			i := shifts.count
 			create tokens.make (i)
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_token ?= shifts.item (i).accessing_symbol
 				if a_token /= Void then
 					tokens.put_last (a_token)
@@ -435,10 +480,16 @@ feature -- Conflicts
 				-- Loop over all reductions which require lookahead
 				-- in current state to find any shift/reduce conflicts.
 			i := reductions.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				lookaheads := reductions.item (i).lookaheads
 				j := tokens.count
-				from until j < 1 loop
+				from
+				until
+					j < 1
+				loop
 					a_token := tokens.item (j)
 					if lookaheads.has (a_token) then
 							-- There is a shift/reduce conflict.
@@ -465,10 +516,16 @@ feature -- Conflicts
 			if i > 1 then
 				create tokens.make
 				create conflicts.make
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					lookaheads := reductions.item (i).lookaheads
 					j := lookaheads.count
-					from until j < 1 loop
+					from
+					until
+						j < 1
+					loop
 						a_token := lookaheads.item (j)
 						if not tokens.has (a_token) then
 							tokens.force_last (a_token)
@@ -520,7 +577,11 @@ feature -- Output
 			a_file.put_integer (id)
 			a_file.put_string ("%N%N")
 			nb := positions.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_file.put_character ('%T')
 				positions.item (i).print_position (a_file)
 				a_file.put_character ('%N')
@@ -536,7 +597,11 @@ feature -- Output
 				end
 			else
 				nb := shifts.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_state := shifts.item (i)
 					a_symbol := a_state.accessing_symbol
 					if a_symbol.is_terminal then
@@ -560,7 +625,11 @@ feature -- Output
 					found := False
 				end
 				nb := errors.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_file.put_character ('%T')
 					a_file.put_string (errors.item (i).name)
 					a_file.put_string ("%Terror (nonassociative)%N")
@@ -580,7 +649,11 @@ feature -- Output
 					a_file.put_string (")%N%N")
 				end
 				nb := shifts.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_state := shifts.item (i)
 					a_symbol := a_state.accessing_symbol
 					if not a_symbol.is_terminal then
@@ -618,7 +691,10 @@ feature -- Output
 		do
 			i := shifts.count
 			create shift_tokens.make (i)
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_token ?= shifts.item (i).accessing_symbol
 				if a_token /= Void then
 					shift_tokens.put_last (a_token)
@@ -635,7 +711,10 @@ feature -- Output
 				a_rule := a_reduction.rule
 				lookaheads := a_reduction.lookaheads
 				i := lookaheads.count
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					a_token := lookaheads.item (i)
 					if shift_tokens.has (a_token) or errors.has (a_token) then
 						a_file.put_character ('%T')
@@ -659,11 +738,17 @@ feature -- Output
 				tokens.extend_last (errors)
 				if not no_default then
 					i := reductions.count
-					from until i < 1 loop
+					from
+					until
+						i < 1
+					loop
 						a_reduction := reductions.item (i)
 						lookaheads := a_reduction.lookaheads
 						j := lookaheads.count
-						from until j < 1 loop
+						from
+						until
+							j < 1
+						loop
 							a_token := lookaheads.item (j)
 							if not tokens.has (a_token) then
 								tokens.force_last (a_token)
@@ -680,7 +765,10 @@ feature -- Output
 					count := 0
 				end
 				i := tokens.count
-				from until i < 1 loop
+				from
+				until
+					i < 1
+				loop
 					a_token := tokens.item (i)
 					defaulted := False
 					if shift_tokens.has (a_token) then
@@ -689,7 +777,11 @@ feature -- Output
 						count := 0
 					end
 					nb := reductions.count
-					from j := 1 until j > nb loop
+					from
+						j := 1
+					until
+						j > nb
+					loop
 						a_reduction := reductions.item (j)
 						if a_reduction.lookaheads.has (a_token) then
 							if count = 0 then

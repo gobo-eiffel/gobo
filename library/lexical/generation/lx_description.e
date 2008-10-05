@@ -12,10 +12,6 @@ indexing
 
 class LX_DESCRIPTION
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make
@@ -411,7 +407,7 @@ feature -- Setting
 			-- Set `rules' to `r'.
 		require
 			r_not_void: r /= Void
-			no_void_rule: not r.has (void)
+			no_void_rule: not r.has (Void)
 		do
 			rules := r
 		ensure
@@ -422,7 +418,7 @@ feature -- Setting
 			-- Set `eof_rules' to `r'.
 		require
 			r_not_void: r /= Void
-			no_void_rule: not r.has (void)
+			no_void_rule: not r.has (Void)
 		do
 			eof_rules := r
 		ensure

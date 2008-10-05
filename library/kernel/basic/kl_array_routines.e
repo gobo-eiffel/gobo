@@ -29,7 +29,7 @@ feature -- Initialization
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = an_array.count
-			-- same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + an_array.lower - min_index)
+--			same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + an_array.lower - min_index)
 		end
 
 feature -- Status report
@@ -52,7 +52,8 @@ feature -- Status report
 			loop
 				if an_array.item (i) = v then
 					Result := True
-					i := nb + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := nb + 1
 				else
 					i := i + 1
 				end
@@ -83,7 +84,7 @@ feature -- Access
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
 			count_set: Result.count = end_pos - start_pos + 1
-			-- same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + start_pos - min_index)
+--			same_items: forall i in Result.lower .. Result.upper, Result.item (i) = an_array.item (i + start_pos - min_index)
 		end
 
 feature -- Duplication

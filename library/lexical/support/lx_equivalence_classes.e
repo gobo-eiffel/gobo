@@ -12,10 +12,6 @@ indexing
 
 class LX_EQUIVALENCE_CLASSES
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make
@@ -33,7 +29,11 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			create storage.make (min, max)
-			from i := min until i > max loop
+			from
+				i := min
+			until
+				i > max
+			loop
 				create cell.make (i)
 				storage.put (cell, i)
 				i := i + 1
@@ -59,7 +59,11 @@ feature -- Initialization
 		do
 			nb := upper
 			storage.item (lower).put (lower)
-			from i := lower + 1 until i > nb loop
+			from
+				i := lower + 1
+			until
+				i > nb
+			loop
 				cell := storage.item (i)
 				cell.put_left (storage.item (i - 1))
 				cell.put (i)
@@ -136,8 +140,7 @@ feature -- Status report
 			symbol_class_not_void: symbol_class /= Void
 			symbols_sorted: not symbol_class.sort_needed
 		do
-			Result := symbol_class.is_empty or else
-				(lower <= symbol_class.first and upper >= symbol_class.last)
+			Result := symbol_class.is_empty or else (lower <= symbol_class.first and upper >= symbol_class.last)
 		end
 
 	built: BOOLEAN is
@@ -155,7 +158,11 @@ feature -- Element change
 			cell: DS_BILINKABLE [INTEGER]
 		do
 			nb := upper
-			from i := lower until i > nb loop
+			from
+				i := lower
+			until
+				i > nb
+			loop
 				cell := storage.item (i)
 				if cell.left = Void then
 					from
@@ -220,16 +227,28 @@ feature -- Element change
 				-- be obtained in either case.
 			nb := symbol_class.count
 			create flags.make (lower, upper)
-			from k := 1 until k > nb loop
+			from
+				k := 1
+			until
+				k > nb
+			loop
 				cell := storage.item (symbol_class.item (k))
 				old_cell := cell.left
 				new_cell := cell
 				j := k + 1
-				from right := cell.right until right = Void loop
+				from
+					right := cell.right
+				until
+					right = Void
+				loop
 						-- Look for the symbol in the
 						-- symbol class.
 					i := right.item
-					from stop := False until stop or j > nb loop
+					from
+						stop := False
+					until
+						stop or j > nb
+					loop
 						symbol := symbol_class.item (j)
 						if symbol > i then
 							stop := True
@@ -261,7 +280,7 @@ feature -- Element change
 						old_cell := right
 					else
 						next_ec := False
-					end	
+					end
 					right := right.right
 				end
 				if cell.left /= Void or else old_cell /= cell.left then
@@ -291,7 +310,11 @@ feature -- Conversion
 		do
 			create Result.make (lower, upper)
 			nb := upper
-			from i := lower until i > nb loop
+			from
+				i := lower
+			until
+				i > nb
+			loop
 				Result.put (storage.item (i).item, i)
 				i := i + 1
 			end
@@ -299,8 +322,7 @@ feature -- Conversion
 			table_not_void: Result /= Void
 			table_lower_set: Result.lower = lower
 			table_upper_set: Result.upper = upper
-			-- forall i in `lower' .. `upper',
-			-- Result.item (i) = equivalence_class (i)
+--			forall i in `lower' .. `upper', Result.item (i) = equivalence_class (i)
 		end
 
 	to_array (l, u: INTEGER): ARRAY [INTEGER] is
@@ -314,7 +336,11 @@ feature -- Conversion
 		do
 			create Result.make (l, u)
 			nb := upper.min (u)
-			from i := lower.max (l) until i > nb loop
+			from
+				i := lower.max (l)
+			until
+				i > nb
+			loop
 				Result.put (storage.item (i).item, i)
 				i := i + 1
 			end
@@ -322,9 +348,8 @@ feature -- Conversion
 			array_not_void: Result /= Void
 			array_lower_set: Result.lower = l
 			array_upper_set: Result.upper = u
-			-- forall i in lower.max (l)..upper.min (u),
-			--		Result.item (i) = equivalence_class (i)
-			-- forall i in l..lower-1 or upper+1..u, Result.item (i) = 0
+--			forall i in lower.max (l)..upper.min (u), Result.item (i) = equivalence_class (i)
+--			forall i in l..lower-1 or upper+1..u, Result.item (i) = 0
 		end
 
 feature {NONE} -- Implementation

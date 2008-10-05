@@ -21,8 +21,11 @@ obsolete
 inherit
 
 	KL_IMPORTED_STRING_BUFFER_ROUTINES
+
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
+
 	STRING_HANDLER
 
 feature -- Initialization
@@ -148,7 +151,11 @@ feature -- Element change
 			nb := a_string.count
 			if nb > 0 then
 				j := pos
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_buffer.put (a_string.item (i), j)
 					j := j + 1
 					i := i + 1
@@ -193,7 +200,11 @@ feature -- Element change
 			if nb > 0 then
 				j := new_pos
 				nb2 := old_pos + nb - 1
-				from i := old_pos until i > nb2 loop
+				from
+					i := old_pos
+				until
+					i > nb2
+				loop
 					a_buffer.put (a_buffer.item (i), j)
 					j := j + 1
 					i := i + 1
@@ -217,7 +228,11 @@ feature -- Element change
 		do
 			if nb > 0 then
 				j := new_pos + nb - 1
-				from i := old_pos + nb - 1 until i < old_pos loop
+				from
+					i := old_pos + nb - 1
+				until
+					i < old_pos
+				loop
 					a_buffer.put (a_buffer.item (i), j)
 					j := j - 1
 					i := i - 1

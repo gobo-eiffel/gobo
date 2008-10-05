@@ -18,8 +18,10 @@ inherit
 		redefine
 			as_special,
 			append_substring_to_string,
-			fill_from_string, fill_from_stream,
-			move_left, move_right
+			fill_from_string,
+			fill_from_stream,
+			move_left,
+			move_right
 		end
 
 	STRING_HANDLER
@@ -32,7 +34,8 @@ inherit
 
 create
 
-	make, make_from_string
+	make,
+	make_from_string
 
 feature {NONE} -- Initialization
 
@@ -133,12 +136,20 @@ feature -- Element change
 					end
 				else
 					if as_special /= Void then
-						from i := s until i > e loop
+						from
+							i := s
+						until
+							i > e
+						loop
 							a_string.append_character (as_special.item (i))
 							i := i + 1
 						end
 					else
-						from i := s until i > e loop
+						from
+							i := s
+						until
+							i > e
+						loop
 							a_string.append_character (area.item (i))
 							i := i + 1
 						end

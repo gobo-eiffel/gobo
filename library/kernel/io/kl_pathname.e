@@ -23,7 +23,8 @@ inherit
 		export
 			{NONE} all
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 create
@@ -138,13 +139,16 @@ feature -- Element change
 			-- Append components `a_names' to pathname.
 		require
 			a_names_not_void: a_names /= Void
-			-- no_void_name: not a_names.has (Void)
+			no_void_name: not a_names.has (Void)
 		local
 			i, nb: INTEGER
 		do
 			i := a_names.lower
 			nb := a_names.upper
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				append_name (a_names.item (i))
 				i := i + 1
 			end
@@ -180,7 +184,11 @@ feature -- Element change
 				-- Do nothing.
 			else
 				j := 1
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if is_current (i) then
 						-- Ignore current directory components.
 					elseif is_parent (i) then
@@ -205,7 +213,10 @@ feature -- Element change
 					i := i + 1
 				end
 				count := (j - 1)
-				from until j > nb loop
+				from
+				until
+					j > nb
+				loop
 					components.put (Void, j)
 					j := j + 1
 				end

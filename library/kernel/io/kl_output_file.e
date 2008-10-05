@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			-- Write `s' at current position.
 		require
 			extendible: extendible
-			non_void: s /= void
+			non_void: s /= Void
 		deferred
 		end
 

@@ -37,8 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is
-		"%"$1%", line $2: multiple <<EOF>> rules for start condition $3"
+	default_template: STRING is "%"$1%", line $2: multiple <<EOF>> rules for start condition $3"
 			-- Default template used to built the error message
 
 	code: STRING is "LX0014"

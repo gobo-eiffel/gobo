@@ -17,7 +17,9 @@ inherit
 	PR_PARSER_ENGINE
 
 	KL_IMPORTED_ARRAY_ROUTINES
+
 	KL_IMPORTED_STRING_ROUTINES
+
 	UT_IMPORTED_FORMATTERS
 
 create
@@ -207,7 +209,11 @@ feature {NONE} -- Generation
 				%%T%T%Twhen -1 then%N%
 				%%T%T%T%TResult := %"Error token%"%N")
 				-- Skip the "error" and "$undefined." tokens.
-			from i := 3 until i > nb loop
+			from
+				i := 3
+			until
+				i > nb
+			loop
 				a_token := tokens.item (i)
 				if a_token.has_identifier then
 					a_name := a_token.name
@@ -231,7 +237,11 @@ feature {NONE} -- Generation
 				%%T%T%Tend%N%
 				%%T%Tend%N%Nfeature -- Token codes%N%N")
 				-- Skip the "error" and "$undefined." tokens.
-			from i := 3 until i > nb loop
+			from
+				i := 3
+			until
+				i > nb
+			loop
 				a_token := tokens.item (i)
 				if a_token.has_identifier then
 					a_name := a_token.name
@@ -264,17 +274,26 @@ feature {NONE} -- Generation
 			create types.make (nb_types)
 			tokens := machine.grammar.tokens
 			nb := tokens.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_type := tokens.item (i).type
 				types.put (a_type)
 				if types.count = nb_types then
 						-- All types have already been registered.
-					i := nb + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := nb + 1
 				end
 				i := i + 1
 			end
 			a_cursor := types.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_type := a_cursor.item
 				a_file.put_string ("%T")
 				a_file.put_string (a_type.last_value_name)
@@ -295,7 +314,11 @@ feature {NONE} -- Generation
 		do
 			eiffel_header := machine.grammar.eiffel_header
 			nb := eiffel_header.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_file.put_string (eiffel_header.item (i))
 				i := i + 1
 			end
@@ -365,7 +388,11 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tdo")
 			types := machine.grammar.types
 			nb := types.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_type := types.item (i)
 				a_type_id := a_type.id
 				a_file.put_string ("%T%T%Tyyvsp")
@@ -392,7 +419,11 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%Tdo")
 			types := machine.grammar.types
 			nb := types.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_type := types.item (i)
 				a_type.print_clear_yyvs (3, a_file)
 				i := i + 1
@@ -422,12 +453,17 @@ feature {NONE} -- Generation
 			create types.make (nb_types)
 			tokens := machine.grammar.tokens
 			nb := tokens.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_type := tokens.item (i).type
 				types.put (a_type)
 				if types.count = nb_types then
 						-- All types have already been registered.
-					i := nb + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := nb + 1
 				end
 				i := i + 1
 			end
@@ -446,7 +482,11 @@ feature {NONE} -- Generation
 			else
 				a_file.put_line ("%T%T%Tinspect yytypes2.item (yychar1)")
 				a_cursor := types.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					a_type := a_cursor.item
 					a_file.put_string ("%T%T%Twhen ")
 					a_file.put_integer (a_type.id)
@@ -522,7 +562,11 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%T%Tinspect yy_type_id")
 			types := machine.grammar.types
 			nb := types.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_type := types.item (i)
 				a_file.put_string ("%T%T%Twhen ")
 				a_file.put_integer (a_type.id)
@@ -600,8 +644,7 @@ feature {NONE} -- Generation
 				nb := a_table.count // array_size + 1
 			end
 			if nb = 1 then
-				a_file.put_string
-					("%T%Tonce%N%T%T%TResult := yyfixed_array (<<%N")
+				a_file.put_string ("%T%Tonce%N%T%T%TResult := yyfixed_array (<<%N")
 				ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
 				a_file.put_string (", yyDummy>>)%N%T%Tend%N")
 			else
@@ -611,7 +654,11 @@ feature {NONE} -- Generation
 				a_file.put_string (", ")
 				a_file.put_integer (a_table.upper)
 				a_file.put_string (")%N")
-				from j := 1 until j > nb loop
+				from
+					j := 1
+				until
+					j > nb
+				loop
 					a_file.put_string (Indentation)
 					a_file.put_string (a_name)
 					a_file.put_character ('_')
@@ -684,14 +731,19 @@ feature {NONE} -- Generation
 			rules := machine.grammar.rules
 			nb := rules.count
 			if nb_types > 0 then
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_rule := rules.item (i)
 					a_type := a_rule.lhs.type
 					if not old_typing or not a_type.name.is_equal ("ANY") then
 						types.put (a_type)
 						if types.count = nb_types then
 								-- All types have already been registered.
-							i := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							i := nb + 1
 						end
 					end
 					i := i + 1
@@ -700,7 +752,11 @@ feature {NONE} -- Generation
 			if not types.is_empty then
 				a_file.put_line ("%T%Tlocal")
 				a_cursor := types.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					a_cursor.item.print_dollar_dollar_declaration (a_file)
 					a_file.put_new_line
 					a_cursor.forth
@@ -708,7 +764,11 @@ feature {NONE} -- Generation
 			end
 			a_file.put_line ("%T%Tdo")
 			a_file.put_line ("%T%T%Tinspect yy_act")
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_rule := rules.item (i)
 				a_file.put_string ("when ")
 				a_file.put_integer (a_rule.id)
@@ -760,7 +820,11 @@ feature {NONE} -- Generation
 			nb2 := nb // inspect_size + 1
 			if nb2 = 1 then
 				a_file.put_line ("%T%T%Tinspect yy_act")
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_rule := rules.item (i)
 					a_file.put_string ("%T%T%Twhen ")
 					a_file.put_integer (a_rule.id)
@@ -790,7 +854,11 @@ feature {NONE} -- Generation
 				a_file.put_line ("%T%Tend")
 			else
 				a_file.put_string ("%T%T%T")
-				from i := 1 until i > nb2 loop
+				from
+					i := 1
+				until
+					i > nb2
+				loop
 					j := inspect_size * (i - 1) + 1
 					k := inspect_size * i
 					a_file.put_string ("if yy_act <= ")
@@ -813,7 +881,11 @@ feature {NONE} -- Generation
 				a_file.put_line ("%T%T%T%Tabort")
 				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
-				from i := 1 until i > nb2 loop
+				from
+					i := 1
+				until
+					i > nb2
+				loop
 					j := inspect_size * (i - 1) + 1
 					k := inspect_size * i
 					a_file.put_new_line
@@ -826,7 +898,10 @@ feature {NONE} -- Generation
 					a_file.put_line ("%T%Tdo")
 					a_file.put_line ("%T%T%Tinspect yy_act")
 					k := k.min (nb)
-					from until j > k loop
+					from
+					until
+						j > k
+					loop
 						a_rule := rules.item (j)
 						a_file.put_string ("%T%T%Twhen ")
 						a_file.put_integer (a_rule.id)
@@ -857,7 +932,11 @@ feature {NONE} -- Generation
 					i := i + 1
 				end
 			end
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_rule := rules.item (i)
 				a_file.put_new_line
 				a_file.put_string ("%Tyy_do_action_")
@@ -907,7 +986,11 @@ feature {NONE} -- Generation
 			a_file.put_line ("%T%T%Tinspect yy_act")
 			states := machine.states
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				an_action := a_state.error_action
 				if an_action /= Void then
@@ -981,7 +1064,11 @@ feature {NONE} -- Generation
 			nb2 := nb // inspect_size + 1
 			if nb2 = 1 then
 				a_file.put_line ("%T%T%Tinspect yy_act")
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_state := states.item (i)
 					an_action := a_state.error_action
 					if an_action /= Void then
@@ -1017,7 +1104,11 @@ feature {NONE} -- Generation
 				a_file.put_line ("%T%Tend")
 			else
 				a_file.put_string ("%T%T%T")
-				from i := 1 until i > nb2 loop
+				from
+					i := 1
+				until
+					i > nb2
+				loop
 					j := inspect_size * (i - 1)
 					k := inspect_size * i - 1
 					a_file.put_string ("if yy_act <= ")
@@ -1036,7 +1127,11 @@ feature {NONE} -- Generation
 				a_file.put_line ("%T%T%T%Treport_error (%"parse error%")")
 				a_file.put_line ("%T%T%Tend")
 				a_file.put_line ("%T%Tend")
-				from i := 1 until i > nb2 loop
+				from
+					i := 1
+				until
+					i > nb2
+				loop
 					j := inspect_size * (i - 1)
 					k := inspect_size * i - 1
 					a_file.put_new_line
@@ -1049,7 +1144,10 @@ feature {NONE} -- Generation
 					a_file.put_line ("%T%Tdo")
 					a_file.put_line ("%T%T%Tinspect yy_act")
 					k := k.min (nb - 1)
-					from until j > k loop
+					from
+					until
+						j > k
+					loop
 						a_state := states.item (j + 1)
 						an_action := a_state.error_action
 						if an_action /= Void then
@@ -1086,7 +1184,11 @@ feature {NONE} -- Generation
 					i := i + 1
 				end
 			end
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				an_action := a_state.error_action
 				if an_action /= Void then
@@ -1136,7 +1238,11 @@ feature {NONE} -- Generation
 			if not types.is_empty then
 				a_file.put_string ("%Nfeature {NONE} -- Conversion%N%N")
 				nb := types.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_type := types.item (i)
 					if a_type.is_used then
 						a_type.old_print_conversion_routine (a_file)
@@ -1159,7 +1265,11 @@ feature {NONE} -- Generation
 		do
 			types := machine.grammar.types
 			nb := types.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_type := types.item (i)
 				a_type.print_yyvs_declaration (1, a_file)
 				a_file.put_new_line
@@ -1211,7 +1321,11 @@ feature {NONE} -- Building
 				-- grammar plus the extra EOF token (id 0).
 			yyNtbase := nb + 1
 			yyNsyms := yyNtbase + machine.grammar.variables.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				token_id := tokens.item (i).token_id
 				if token_id > yyMax_token then
 					yyMax_token := token_id
@@ -1223,13 +1337,21 @@ feature {NONE} -- Building
 				-- to 2, i.e. the internal token number for
 				-- "$undefined.", which represents all invalid
 				-- inputs.
-			from i := 0 until i > yyMax_token loop
+			from
+				i := 0
+			until
+				i > yyMax_token
+			loop
 				yytranslate.put (2, i)
 				i := i + 1
 			end
 				-- The EOF token has id zero.
 			yytranslate.put (0, 0)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_token := tokens.item (i)
 				yytranslate.put (a_token.id, a_token.token_id)
 				i := i + 1
@@ -1248,7 +1370,11 @@ feature {NONE} -- Building
 			rules := machine.grammar.rules
 			nb := rules.count
 			create yyr1.make (0, nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_rule := rules.item (i)
 				yyr1.put (a_rule.lhs.id + yyNtbase, i)
 				i := i + 1
@@ -1267,7 +1393,11 @@ feature {NONE} -- Building
 			states := machine.states
 			nb := states.count
 			create yytypes1.make (0, nb - 1)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_state := states.item (i)
 				yytypes1.put (a_state.accessing_symbol.type.id, a_state.id)
 				i := i + 1
@@ -1287,7 +1417,11 @@ feature {NONE} -- Building
 			nb := tokens.count
 			create yytypes2.make (0, nb)
 			yytypes2.put (1, 0)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_token := tokens.item (i)
 				yytypes2.put (a_token.type.id, i)
 				i := i + 1
@@ -1318,39 +1452,50 @@ feature {NONE} -- Building
 			variables := machine.grammar.variables
 			nb_variables := variables.count
 			create portions.make (nb_states + nb_variables)
-
 			create yydefact.make (0, nb_states - 1)
-			from i := 1 until i > nb_states loop
+			from
+				i := 1
+			until
+				i > nb_states
+			loop
 				put_yydefact (states.item (i), portions)
 				i := i + 1
 			end
-
 			create yydefgoto.make (0, nb_variables - 1)
-			from i := 1 until i > nb_variables loop
+			from
+				i := 1
+			until
+				i > nb_variables
+			loop
 				put_yydefgoto (variables.item (i), portions)
 				i := i + 1
 			end
-
 			portions.sort (Portion_sorter)
-
 			i := nb_states - 1
 			create yypact.make (0, i)
-			from until i < 0 loop
+			from
+			until
+				i < 0
+			loop
 				yypact.put (yyFlag, i)
 				i := i - 1
 			end
-
 			i := nb_variables - 1
 			create yypgoto.make (0, i)
-			from until i < 0 loop
+			from
+			until
+				i < 0
+			loop
 				yypgoto.put (yyFlag, i)
 				i := i - 1
 			end
-
 			ii := Initial_max_table_size
 			create yytable.make (0, ii)
 			create yycheck.make (0, ii)
-			from until ii < 0 loop
+			from
+			until
+				ii < 0
+			loop
 				yycheck.put (-1, ii)
 				ii := ii - 1
 			end
@@ -1358,7 +1503,11 @@ feature {NONE} -- Building
 				-- Process big chunks first since they are
 				-- the most difficult to fit in the tables.
 			nb := portions.count
-			from i := nb until i < 1 loop
+			from
+				i := nb
+			until
+				i < 1
+			loop
 				a_portion := portions.item (i)
 				froms := a_portion.froms
 				tos := a_portion.tos
@@ -1366,13 +1515,19 @@ feature {NONE} -- Building
 				width := a_portion.width
 				state_id := -1
 				if a_portion.is_state then
-					from j := i + 1 until j > nb loop
+					from
+						j := i + 1
+					until
+						j > nb
+					loop
 						prev := portions.item (j)
 						if not a_portion.order_is_equal (prev) then
-							j := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							j := nb + 1
 						elseif a_portion.same_portion (prev) then
 							state_id := prev.id
-							j := nb + 1 -- Jump out of the loop.
+								-- Jump out of the loop.
+							j := nb + 1
 						else
 							j := j + 1
 						end
@@ -1382,44 +1537,66 @@ feature {NONE} -- Building
 					from
 						j := lowzero - froms.first
 						found := False
-					until found loop
+					until
+						found
+					loop
 						found := True
-						from k := 1 until k > count loop
+						from
+							k := 1
+						until
+							k > count
+						loop
 							loc := j + froms.item (k)
 							if loc > yytable.upper then
 								ii := yycheck.upper + 1
 								nb2 := loc + Max_table_size_increment
 								INTEGER_ARRAY_.resize (yytable, 0, nb2)
 								INTEGER_ARRAY_.resize (yycheck, 0, nb2)
-								from until ii > nb2 loop
+								from
+								until
+									ii > nb2
+								loop
 									yycheck.put (-1, ii)
 									ii := ii + 1
 								end
 							end
 							if yytable.item (loc) /= 0 then
 								found := False
-								k := count + 1 -- Jump out of the loop.
+									-- Jump out of the loop.
+								k := count + 1
 							else
 								k := k + 1
 							end
 						end
 						if found then
-							from k := i + 1 until k > nb loop
+							from
+								k := i + 1
+							until
+								k > nb
+							loop
 								if portions.item (k).position = j then
 									found := False
-									k := nb + 1 -- Jump out of the loop.
+										-- Jump out of the loop.
+									k := nb + 1
 								else
 									k := k + 1
 								end
 							end
 							if found then
-								from k := 1 until k > count loop
+								from
+									k := 1
+								until
+									k > count
+								loop
 									loc := j + froms.item (k)
 									yytable.put (tos.item (k), loc)
 									yycheck.put (froms.item (k), loc)
 									k := k + 1
 								end
-								from  until yytable.item (lowzero) = 0 loop
+								from
+								until
+									yytable.item (lowzero) = 0
+								loop
 									lowzero := lowzero + 1
 								end
 								if loc > yyLast then
@@ -1490,12 +1667,20 @@ feature {NONE} -- Building
 					-- the beginning of the list `reductions')
 					-- that likes a token is the one which
 					-- will handle it.
-				from i := nb_reductions until i < 1 loop
+				from
+					i := nb_reductions
+				until
+					i < 1
+				loop
 					a_reduction := reductions.item (i)
-					rule_id := - a_reduction.rule.id
+					rule_id := -a_reduction.rule.id
 					lookaheads := a_reduction.lookaheads
 					nb := lookaheads.count
-					from j := 1 until j > nb loop
+					from
+						j := 1
+					until
+						j > nb
+					loop
 						action_row.put (rule_id, lookaheads.item (j).id)
 						j := j + 1
 					end
@@ -1504,7 +1689,11 @@ feature {NONE} -- Building
 			end
 			shifts := a_state.shifts
 			nb := shifts.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_shift := shifts.item (i)
 				a_symbol := a_shift.accessing_symbol
 				if a_symbol.is_terminal then
@@ -1523,7 +1712,11 @@ feature {NONE} -- Building
 				-- record yyFlag as the action.
 			errors := a_state.errors
 			nb := errors.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				action_row.put (yyFlag, errors.item (i).id)
 				i := i + 1
 			end
@@ -1533,9 +1726,17 @@ feature {NONE} -- Building
 				if not a_state.lookahead_needed then
 					default_rule := reductions.first.rule.id
 				else
-					from i := 1 until i > nb_reductions loop
-						rule_id := - reductions.item (i).rule.id
-						from j := 0 until j > nb_tokens loop
+					from
+						i := 1
+					until
+						i > nb_reductions
+					loop
+						rule_id := -reductions.item (i).rule.id
+						from
+							j := 0
+						until
+							j > nb_tokens
+						loop
 							if action_row.item (j) = rule_id then
 								count := count + 1
 							end
@@ -1551,13 +1752,17 @@ feature {NONE} -- Building
 						-- replaced with zero, which means
 						-- "use the default".
 					if max > 0 then
-						from j := 0 until j > nb_tokens loop
+						from
+							j := 0
+						until
+							j > nb_tokens
+						loop
 							if action_row.item (j) = default_rule then
 								action_row.put (0, j)
 							end
 							j := j + 1
 						end
-						default_rule := - default_rule
+						default_rule := -default_rule
 					end
 				end
 			end
@@ -1565,7 +1770,11 @@ feature {NONE} -- Building
 				-- default is an error. So replace any action
 				-- which says "error' with "use default".
 			if default_rule = 0 then
-				from i := 0 until i > nb_tokens loop
+				from
+					i := 0
+				until
+					i > nb_tokens
+				loop
 					if action_row.item (i) = yyFlag then
 						action_row.put (0, i)
 					end
@@ -1577,7 +1786,11 @@ feature {NONE} -- Building
 				-- Detailed info is saved for putting
 				-- into `yytable' later.
 			count := 0
-			from i := 0 until i > nb_tokens loop
+			from
+				i := 0
+			until
+				i > nb_tokens
+			loop
 				if action_row.item (i) /= 0 then
 					count := count + 1
 				end
@@ -1586,7 +1799,11 @@ feature {NONE} -- Building
 			if count /= 0 then
 				create froms.make (count)
 				create tos.make (count)
-				from i := 0 until i > nb_tokens loop
+				from
+					i := 0
+				until
+					i > nb_tokens
+				loop
 					if action_row.item (i) /= 0 then
 						froms.put_last (i)
 						tos.put_last (action_row.item (i))
@@ -1628,13 +1845,21 @@ feature {NONE} -- Building
 				nb_states := machine.states.count
 				create state_count.make (0, nb_states - 1)
 				a_cursor := transitions.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					state_id := a_cursor.item.target.id
 					state_count.put (state_count.item (state_id) + 1, state_id)
 					a_cursor.forth
 				end
 				default_state := -1
-				from i := 0 until i >= nb_states loop
+				from
+					i := 0
+				until
+					i >= nb_states
+				loop
 					count := state_count.item (i)
 					if count > max then
 						max := count
@@ -1646,7 +1871,11 @@ feature {NONE} -- Building
 					-- into `yytable' later.
 				count := 0
 				create not_defaults.make (0, nb_states - 1)
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					a_transition := a_cursor.item
 					if a_transition.target.id /= default_state then
 						not_defaults.put (a_transition, a_transition.source.id)
@@ -1657,7 +1886,11 @@ feature {NONE} -- Building
 				if count /= 0 then
 					create froms.make (count)
 					create tos.make (count)
-					from i := 0 until i >= nb_states loop
+					from
+						i := 0
+					until
+						i >= nb_states
+					loop
 						a_transition := not_defaults.item (i)
 						if a_transition /= Void then
 							froms.put_last (a_transition.source.id)

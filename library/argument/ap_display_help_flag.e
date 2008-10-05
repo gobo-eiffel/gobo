@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"Flags that will generate a help text and terminate the application"
 
@@ -20,7 +20,9 @@ inherit
 		end
 
 	KL_SHARED_EXCEPTIONS
+
 	KL_SHARED_FILE_SYSTEM
+
 	KL_SHARED_ARGUMENTS
 
 create
@@ -100,13 +102,21 @@ feature -- Text Generation
 			all_options := a_parser.all_options
 			sorter.sort (all_options)
 			max_indent := 0
-			from all_options.start until all_options.after loop
+			from
+				all_options.start
+			until
+				all_options.after
+			loop
 				if not all_options.item_for_iteration.is_hidden then
 					max_indent := all_options.item_for_iteration.names.count.max (max_indent)
 				end
 				all_options.forth
 			end
-			from all_options.start until all_options.after loop
+			from
+				all_options.start
+			until
+				all_options.after
+			loop
 				if not all_options.item_for_iteration.is_hidden then
 					if is_not_first then
 						Result.append_character ('%N')
@@ -131,7 +141,11 @@ feature -- Text Generation
 			Result := usage_instruction (a_parser)
 			Result.append_character ('%N')
 			alt_list := a_parser.alternative_options_lists
-			from alt_list.start until alt_list.after loop
+			from
+				alt_list.start
+			until
+				alt_list.after
+			loop
 				if not alt_list.item_for_iteration.introduction_option.is_hidden then
 					Result.append_string (alternative_usage_instruction (a_parser, alt_list.item_for_iteration))
 				end
@@ -156,7 +170,11 @@ feature {NONE} -- Implementation
 		do
 			create args.make_empty
 			l_options := a_parser.options
-			from l_options.start until l_options.after loop
+			from
+				l_options.start
+			until
+				l_options.after
+			loop
 				option := l_options.item_for_iteration
 				if not option.is_hidden then
 					args.append_string (option.example)
@@ -191,7 +209,11 @@ feature {NONE} -- Implementation
 			create args.make_empty
 			args.append_string (a_list.introduction_option.name)
 			args.append_character (' ')
-			from a_list.start until a_list.after loop
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
 				option := a_list.item_for_iteration
 				if not option.is_hidden then
 					args.append_string (option.example)
@@ -206,13 +228,13 @@ feature {NONE} -- Implementation
 			Result.append_string (application_name)
 			Result.append_character (' ')
 			Result.append_string (args)
-			wrapper.set_new_line_indentation (usage_header.count+application_name.count+1)
+			wrapper.set_new_line_indentation (usage_header.count + application_name.count + 1)
 			Result := wrapper.wrapped_string (Result)
 		ensure
 			alternative_usage_instruction_not_void: Result /= Void
 		end
 
-	option_help_text (an_option:AP_OPTION; indent:INTEGER): STRING is
+	option_help_text (an_option: AP_OPTION; indent: INTEGER): STRING is
 			-- Help text of `an_option', calculated from the option_names 
 			-- and the description, assuming an indention of `indent' is 
 			-- required for correct formating
@@ -223,7 +245,7 @@ feature {NONE} -- Implementation
 		local
 			spaces: STRING
 		do
-			create spaces.make_filled (' ', indent-an_option.names.count)
+			create spaces.make_filled (' ', indent - an_option.names.count)
 			wrapper.set_new_line_indentation (indent)
 			Result := wrapper.wrapped_string (an_option.names + spaces + an_option.description)
 		ensure

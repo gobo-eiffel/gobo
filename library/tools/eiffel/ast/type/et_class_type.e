@@ -390,8 +390,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						is_generic: actual_parameters /= Void
 						other_is_generic: other_parameters /= Void
 					end
--- DISABLED: Use SmartEiffel agent type conformance semantics, where the conformance
--- of the second actual generic parameter is checked in the reverse order.
+--	DISABLED: Use SmartEiffel agent type conformance semantics, where the conformance
+--	of the second actual generic parameter is checked in the reverse order.
 --					if not other_base_class.is_preparsed then
 --							-- This class is not even preparsed (i.e. we know nothing about it,
 --							-- not even its filename). Therefore it is impossible to determine
@@ -403,7 +403,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 --						other_base_class = other_base_class.current_system.function_class or
 --						other_base_class = other_base_class.current_system.predicate_class
 --					then
----						-- Use SmartEiffel agent type conformance semantics, where the conformance
+--						-- Use SmartEiffel agent type conformance semantics, where the conformance
 --						-- of the second actual generic parameter is checked in the reverse order.
 --						Result := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context)
 --					else

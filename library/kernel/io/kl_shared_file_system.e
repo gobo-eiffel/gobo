@@ -15,7 +15,8 @@ class KL_SHARED_FILE_SYSTEM
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end

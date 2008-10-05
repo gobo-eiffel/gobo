@@ -19,6 +19,7 @@ obsolete
 inherit
 
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Initialization
@@ -120,8 +121,7 @@ feature -- Input operations
 			string_count_small_enough: Result.count <= nb_char
 		end
 
-	read_stream (a_stream: like INPUT_STREAM_TYPE;
-		a_buffer: STRING; pos, nb_char: INTEGER): INTEGER is
+	read_stream (a_stream: like INPUT_STREAM_TYPE; a_buffer: STRING; pos, nb_char: INTEGER): INTEGER is
 			-- Fill `a_buffer', starting at position `pos' with
 			-- at most `nb_char' characters read from `a_stream'.
 			-- Return the number of characters actually read.
@@ -141,7 +141,11 @@ feature -- Input operations
 			a_string := a_stream.last_string
 			Result := a_string.count
 			j := pos
-			from i := 1 until i > Result loop
+			from
+				i := 1
+			until
+				i > Result
+			loop
 				a_buffer.put (a_string.item (i), j)
 				j := j + 1
 				i := i + 1

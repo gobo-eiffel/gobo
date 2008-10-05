@@ -12,10 +12,6 @@ indexing
 
 deferred class KI_INPUT_STREAM [G]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Input
 
 	read is
@@ -58,14 +54,19 @@ feature -- Input
 			i, end_pos: INTEGER
 		do
 			end_pos := pos + nb - 1
-			from i := pos until i > end_pos loop
+			from
+				i := pos
+			until
+				i > end_pos
+			loop
 				read
 				if not end_of_input then
 					a_buffer.put (last_item, i)
 					i := i + 1
 				else
 					Result := i - pos - nb
-					i := end_pos + 1 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := end_pos + 1
 				end
 			end
 			Result := Result + i - pos

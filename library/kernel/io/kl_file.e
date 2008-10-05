@@ -17,19 +17,13 @@ inherit
 	KI_FILE
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 
@@ -180,7 +174,7 @@ feature -- Status report
 									-- Result := False
 								elseif tmp_file1.time_stamp /= time_stamp then
 									-- Result := False
-								else 
+								else
 									absolute_name1 := file_system.absolute_pathname (name)
 									absolute_name2 := file_system.absolute_pathname (other_name)
 									if STRING_.same_string (absolute_name1, absolute_name2) then
@@ -367,8 +361,7 @@ feature -- Basic operations
 								a_source_file.read_string (nb)
 							end
 						until
-							nb <= 0 or else
-							a_source_file.end_of_file
+							nb <= 0 or else a_source_file.end_of_file
 						loop
 							a_string := a_source_file.last_string
 							a_target_file.put_string (a_string)

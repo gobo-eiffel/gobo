@@ -1,4 +1,5 @@
 indexing
+
 	description:
 
 		"Options that take arbitrary string arguments"

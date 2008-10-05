@@ -21,7 +21,8 @@ inherit
 
 create
 
-	make, make_backslash_only
+	make,
+	make_backslash_only
 
 feature {NONE} -- Initialization
 
@@ -78,10 +79,7 @@ feature -- Pathname handling
 			nb := a_pathname.count
 			if nb >= 4 and then is_directory_separator (a_pathname.item (1)) then
 					-- Maybe of the form \\hostname\foobar
-				if
-					is_directory_separator (a_pathname.item (2)) and
-					not is_directory_separator (a_pathname.item (3))
-				then
+				if is_directory_separator (a_pathname.item (2)) and not is_directory_separator (a_pathname.item (3)) then
 					from
 						i := 4
 					until
@@ -147,10 +145,7 @@ feature -- Pathname handling
 					-- Note that \\hostname and \\hostname\\rootdir are not
 					-- valid Windows pathname, but \\hostname\rootdir\ and
 					-- \\hostname\rootdir\\ are.
-				if
-					is_directory_separator (a_dirname.item (2)) and
-					not is_directory_separator (a_dirname.item (3))
-				then
+				if is_directory_separator (a_dirname.item (2)) and not is_directory_separator (a_dirname.item (3)) then
 					from
 						i := 4
 					until
@@ -248,16 +243,14 @@ feature -- Pathname handling
 				from
 					i := a_pathname.count
 				until
-					i < 1 or else
-					not is_directory_separator (a_pathname.item (i))
+					i < 1 or else not is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
 				nb := i
 				from
 				until
-					i < 1 or else
-					is_directory_separator (a_pathname.item (i))
+					i < 1 or else is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
@@ -289,15 +282,13 @@ feature -- Pathname handling
 				from
 					i := a_pathname.count
 				until
-					i < 1 or else
-					not is_directory_separator (a_pathname.item (i))
+					i < 1 or else not is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
 				from
 				until
-					i < 1 or else
-					is_directory_separator (a_pathname.item (i))
+					i < 1 or else is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
@@ -306,8 +297,7 @@ feature -- Pathname handling
 				else
 					from
 					until
-						i < 1 or else
-						not is_directory_separator (a_pathname.item (i))
+						i < 1 or else not is_directory_separator (a_pathname.item (i))
 					loop
 						i := i - 1
 					end
@@ -358,7 +348,10 @@ feature -- Pathname handling
 			Result := STRING_.cloned_string (a_dirname)
 			i := a_pathnames.lower
 			nb := a_pathnames.upper
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				a_pathname := a_pathnames.item (i)
 				if a_pathname.count > 0 then
 					k := Result.count
@@ -474,29 +467,24 @@ feature -- Pathname handling
 			create Result.make
 			Result.set_relative (True)
 			nb := a_pathname.count
-			if
-				nb > 2 and then
-				(is_directory_separator (a_pathname.item (1)) and
-				is_directory_separator (a_pathname.item (2)))
-			then
+			if nb > 2 and then (is_directory_separator (a_pathname.item (1)) and is_directory_separator (a_pathname.item (2))) then
 				has_hostname := True
 				Result.set_relative (False)
 				i := 3
-			elseif
-				nb > 0 and then
-				is_directory_separator (a_pathname.item (1))
-			then
+			elseif nb > 0 and then is_directory_separator (a_pathname.item (1)) then
 				Result.set_relative (False)
 				i := 2
 			else
 				has_drive := True
 				i := 1
 			end
-			from until i > nb loop
+			from
+			until
+				i > nb
+			loop
 				from
 				until
-					i > nb or else
-					not is_directory_separator (a_pathname.item (i))
+					i > nb or else not is_directory_separator (a_pathname.item (i))
 				loop
 					i := i + 1
 				end
@@ -504,8 +492,7 @@ feature -- Pathname handling
 					j := i
 					from
 					until
-						i > nb or else
-						is_directory_separator (a_pathname.item (i))
+						i > nb or else is_directory_separator (a_pathname.item (i))
 					loop
 						i := i + 1
 					end
@@ -524,7 +511,9 @@ feature -- Pathname handling
 						Result.set_sharename (str)
 						has_sharename := False
 					elseif has_drive then
-						check str_not_empty: str.count > 0 end
+						check
+							str_not_empty: str.count > 0
+						end
 						if str.item (str.count) = ':' then
 							Result.set_drive (str)
 							Result.set_relative (False)
@@ -551,7 +540,7 @@ feature -- Pathname handling
 			a_sharename: STRING
 		do
 			create Result.make (50)
-			nb:= a_pathname.count
+			nb := a_pathname.count
 			a_drive := a_pathname.drive
 			if a_drive /= Void then
 				Result := STRING_.appended_string (Result, a_drive)
@@ -574,7 +563,11 @@ feature -- Pathname handling
 					Result := STRING_.appended_string (Result, root_directory)
 				end
 			end
-			from i := 1 until i >= nb loop
+			from
+				i := 1
+			until
+				i >= nb
+			loop
 				if a_pathname.is_current (i) then
 					Result := STRING_.appended_string (Result, relative_current_directory)
 				elseif a_pathname.is_parent (i) then
@@ -681,8 +674,7 @@ feature -- Pathname handling
 			from
 				i := 1
 			until
-				i > nb or else
-				is_directory_separator (a_dirname.item (i))
+				i > nb or else is_directory_separator (a_dirname.item (i))
 			loop
 				i := i + 1
 			end

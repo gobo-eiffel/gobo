@@ -15,7 +15,9 @@ class KL_INTEGER_ROUTINES
 inherit
 
 	KL_SHARED_PLATFORM
+
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Conversion
@@ -37,13 +39,14 @@ feature -- Conversion
 		require
 			an_int_positive: an_int >= 0
 		do
-			create Result.make (8) -- Max 8 hexadecimal digits for 32-bits
+				-- Max 8 hexadecimal digits for 32-bits.
+			create Result.make (8)
 			append_hexadecimal_integer (an_int, Result, uppercase)
 		ensure
 			hexadecimal_not_void: Result /= Void
 			is_string: ANY_.same_types (Result, "")
-			-- regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (Result)
-			-- regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (Result)
+--			regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (Result)
+--			regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (Result)
 		end
 
 	to_decimal (an_int: INTEGER): STRING is
@@ -55,7 +58,7 @@ feature -- Conversion
 		ensure
 			decimal_not_void: Result /= Void
 			is_string: ANY_.same_types (Result, "")
-			-- regexp: (0|(-?[1-9][0-9]*)).recognizes (Result)
+--			regexp: (0|(-?[1-9][0-9]*)).recognizes (Result)
 		end
 
 	to_octal (an_int: INTEGER): STRING is
@@ -69,7 +72,7 @@ feature -- Conversion
 		ensure
 			octal_not_void: Result /= Void
 			is_string: ANY_.same_types (Result, "")
-			-- regexp: (0|[1-7][0-7]*).recognizes (Result)
+--			regexp: (0|[1-7][0-7]*).recognizes (Result)
 		end
 
 	to_integer (an_int: INTEGER): INTEGER is
@@ -395,7 +398,6 @@ feature -- Operation(s)
 		do
 			Result := m.bit_shift_left (n)
 		end
-
 
 	bit_shift_right (m, n: INTEGER): INTEGER is
 			-- `m' shifted `n' bits to right;

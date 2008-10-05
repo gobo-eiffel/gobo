@@ -18,12 +18,14 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		undefine
-			is_equal, copy
+			is_equal,
+			copy
 		end
 
 create
 
-	make, make_with_initial
+	make,
+	make_with_initial
 
 feature {NONE} -- Initialization
 
@@ -61,8 +63,7 @@ feature -- Status report
 			until
 				Result or i > nb
 			loop
-				Result :=
-					a_lower_name.is_equal (item (i).name.as_lower)
+				Result := a_lower_name.is_equal (item (i).name.as_lower)
 				i := i + 1
 			end
 		end
@@ -87,9 +88,7 @@ feature -- Access
 				Result /= Void or i > nb
 			loop
 				Result := item (i)
-				if
-					not a_lower_name.is_equal (Result.name.as_lower)
-				then
+				if not a_lower_name.is_equal (Result.name.as_lower) then
 					Result := Void
 					i := i + 1
 				end
@@ -105,7 +104,11 @@ feature -- Access
 		do
 			nb := count
 			create Result.make (0, nb - 1)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				Result.put (item (i).name, i - 1)
 				i := i + 1
 			end
@@ -113,8 +116,7 @@ feature -- Access
 			names_not_void: Result /= Void
 			lower_set: Result.lower = 0
 			same_count: Result.count = count
-			-- definition: forall i in 1..count,
-			-- 	Result.item (i - 1) = item (i).name
+--			definition: forall i in 1..count, Result.item (i - 1) = item (i).name
 		end
 
 feature -- Element change
@@ -148,7 +150,11 @@ feature -- Element change
 			a_start_condition: LX_START_CONDITION
 		do
 			nb := other.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_start_condition := other.item (i)
 				if not has (a_start_condition) then
 					force_last (a_start_condition)
@@ -167,7 +173,11 @@ feature -- Element change
 			a_start_condition: LX_START_CONDITION
 		do
 			nb := other.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_start_condition := other.item (i)
 				if not a_start_condition.has_eof then
 					force_last (a_start_condition)
@@ -187,7 +197,11 @@ feature -- Traversal
 			i, nb: INTEGER
 		do
 			nb := count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				item (i).put_nfa (a_nfa)
 				i := i + 1
 			end
@@ -203,7 +217,11 @@ feature -- Traversal
 			a_start_condition: LX_START_CONDITION
 		do
 			nb := count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_start_condition := item (i)
 				if not a_start_condition.is_exclusive then
 					a_start_condition.put_nfa (a_nfa)
@@ -221,7 +239,11 @@ feature -- Traversal
 			i, nb: INTEGER
 		do
 			nb := count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				item (i).put_bol_nfa (a_nfa)
 				i := i + 1
 			end
@@ -237,7 +259,11 @@ feature -- Traversal
 			a_start_condition: LX_START_CONDITION
 		do
 			nb := count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_start_condition := item (i)
 				if not a_start_condition.is_exclusive then
 					a_start_condition.put_bol_nfa (a_nfa)

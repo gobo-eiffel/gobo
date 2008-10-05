@@ -11,10 +11,6 @@ indexing
 
 class KL_GOBO_VERSION
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Constants
 
 	Version_number: STRING is "3.8"

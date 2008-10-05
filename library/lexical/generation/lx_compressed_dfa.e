@@ -18,14 +18,17 @@ inherit
 		rename
 			make as make_generatable_dfa
 		redefine
-			build, resize, print_constants,
+			build,
+			resize,
+			print_constants,
 			print_backing_up_report
 		end
 
 	LX_COMPRESSED_TABLES
 		export
-			{LX_COMPRESSED_TABLES} all;
-			{ANY} to_tables
+			{LX_COMPRESSED_TABLES} all
+			{ANY}
+				to_tables
 		end
 
 create
@@ -87,12 +90,20 @@ feature -- Access
 		do
 			create Result.make (yy_rules.count)
 			if yyVariable_trail_context then
-				from i := states.count until i < 1 loop
+				from
+					i := states.count
+				until
+					i < 1
+				loop
 					a_state := states.item (i)
 					if a_state.is_accepting_head then
 						acc_set := a_state.accepted_head_rules
 						nfa_states := a_state.states
-						from j := nfa_states.count until j < 1 loop
+						from
+							j := nfa_states.count
+						until
+							j < 1
+						loop
 							a_nfa_state := nfa_states.item (j)
 							if a_nfa_state.in_trail_context then
 								from
@@ -190,8 +201,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%T%T-- State id corresponding to jam state%
 				%%N%N%TyyTemplate_mark: INTEGER is ")
 			a_file.put_integer (yyTemplate_mark)
-			a_file.put_string
-				("%N%T%T%T-- Mark between normal states and templates%N%N%
+			a_file.put_string ("%N%T%T%T-- Mark between normal states and templates%N%N%
 				%%TyyNull_equiv_class: INTEGER is ")
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
@@ -241,7 +251,11 @@ feature -- Building
 				-- previous state, backing-up information needs
 				-- to be kept.
 			backing_up_count := 1
-			from i := 1 until i > start_states_count loop
+			from
+				i := 1
+			until
+				i > start_states_count
+			loop
 				a_state := states.item (i)
 				build_transitions (a_state)
 				put_state (a_state)
@@ -253,7 +267,11 @@ feature -- Building
 				-- Make sure it jams on end of buffer.
 			create singleton.make (a_state.id, Jam_id, 0, 0)
 			singletons.put_last (singleton)
-			from i := i + 1 until i > states.count loop
+			from
+				i := i + 1
+			until
+				i > states.count
+			loop
 				a_state := states.item (i)
 				build_transitions (a_state)
 				if not a_state.is_accepting then
@@ -293,7 +311,11 @@ feature {NONE} -- Building
 			nb := table_end
 			create yy_nxt_.make (0, nb)
 			create yy_chk_.make (0, nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				yy_nxt_.put (yy_nxt.item (i), i)
 				yy_chk_.put (yy_chk.item (i), i)
 				i := i + 1
@@ -319,7 +341,11 @@ feature {NONE} -- Building
 			nb := states.count + templates_count
 			create yy_base_.make (0, nb)
 			create yy_def_.make (0, nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				yy_base_.put (yy_base.item (i), i)
 				yy_def_.put (yy_def.item (i), i)
 				i := i + 1
@@ -354,7 +380,11 @@ feature {NONE} -- Building
 					-- we compute the indices that go into the `yy_accept'
 					-- array which will contain pointers into the
 					-- `yy_acclist' array.
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					state := states.item (i)
 					j := j + state.accepted_rules.count
 					j := j + state.accepted_head_rules.count
@@ -362,20 +392,25 @@ feature {NONE} -- Building
 				end
 				create yy_acclist_.make (0, j.max (1))
 				j := 1
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					yy_accept_.put (j, i)
 					state := states.item (i)
 					acc_set := state.accepted_rules
 					acc_nb := acc_set.count
-					from k := 1 until k > acc_nb loop
+					from
+						k := 1
+					until
+						k > acc_nb
+					loop
 						a_rule := acc_set.item (k)
-						if
-							yyVariable_trail_context and
-							a_rule.variable_trail
-						then
+						if yyVariable_trail_context and a_rule.variable_trail then
 								-- Special hack to flag accepting id
 								-- as part of trailing context rule.
-							yy_acclist_.put (- a_rule.id, j)
+							yy_acclist_.put (-a_rule.id, j)
 						else
 							yy_acclist_.put (a_rule.id, j)
 						end
@@ -384,12 +419,16 @@ feature {NONE} -- Building
 					end
 					acc_set := state.accepted_head_rules
 					acc_nb := acc_set.count
-					from k := 1 until k > acc_nb loop
+					from
+						k := 1
+					until
+						k > acc_nb
+					loop
 						a_rule := acc_set.item (k)
 							-- Special hack to flag accepting id
 							-- as head part of variable trailing
 							-- context rule.
-						yy_acclist_.put (- a_rule.id - yyNb_rules, j)
+						yy_acclist_.put (-a_rule.id - yyNb_rules, j)
 						j := j + 1
 						k := k + 1
 					end
@@ -405,7 +444,11 @@ feature {NONE} -- Building
 					-- Make room for the jam state accepting id
 					-- (hence nb + 1).
 				create yy_accept_.make (0, nb + 1)
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					state := states.item (i)
 					if state.is_accepting then
 						yy_accept_.put (state.accepted_rules.first.id, i)
@@ -471,7 +514,11 @@ feature {NONE} -- Compression
 				create frequencies.make (trans_nb)
 				st_cursor := common_states.new_cursor
 				nb := maximum_symbol
-				from i := minimum_symbol until i > nb loop
+				from
+					i := minimum_symbol
+				until
+					i > nb
+				loop
 					common_state := transitions.target (i)
 					if common_state /= Void then
 						st_cursor.start
@@ -486,9 +533,14 @@ feature {NONE} -- Compression
 					end
 					i := i + 1
 				end
-				st_cursor.go_after -- Release cursor to GC.
+					-- Release cursor to GC.
+				st_cursor.go_after
 				nb := common_states.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					if common_freq < frequencies.item (i) then
 						common_state := common_states.item (i)
 						common_freq := frequencies.item (i)
@@ -506,16 +558,14 @@ feature {NONE} -- Compression
 				if common_freq * 100 > trans_nb * Check_common_percentage then
 					from
 					until
-						cursor.after or else
-						cursor.item.common_state = common_state
+						cursor.after or else cursor.item.common_state = common_state
 					loop
 						cursor.forth
 					end
 					if not cursor.after then
 						proto := cursor.item
 						proto_cursor.go_to (cursor)
-						difference := transitions.difference
-							(proto.transitions, null_state)
+						difference := transitions.difference (proto.transitions, null_state)
 						min_diff := difference.count
 					end
 				else
@@ -529,8 +579,7 @@ feature {NONE} -- Compression
 					if not protos.is_empty then
 						proto := protos.first
 						proto_cursor.go_to (cursor)
-						difference := transitions.difference
-							(proto.transitions, null_state)
+						difference := transitions.difference (proto.transitions, null_state)
 						min_diff := difference.count
 					end
 				end
@@ -541,10 +590,12 @@ feature {NONE} -- Compression
 					-- reasonable matches.
 				if min_diff * 100 > trans_nb * First_match_diff_percentage then
 						-- Not good enough match. Scan the rest of the protos.
-					from until cursor.after loop
+					from
+					until
+						cursor.after
+					loop
 						new_proto := cursor.item
-						new_diff := transitions.difference
-							(new_proto.transitions, null_state)
+						new_diff := transitions.difference (new_proto.transitions, null_state)
 						if new_diff.count < min_diff then
 							proto := new_proto
 							proto_cursor.go_to (cursor)
@@ -554,7 +605,8 @@ feature {NONE} -- Compression
 						cursor.forth
 					end
 				else
-					cursor.go_after -- Release cursor to GC.
+						-- Release cursor to GC.
+					cursor.go_after
 				end
 					-- Check if the proto we've decided on as our best bet
 					-- is close enough to the state we want to match to
@@ -566,10 +618,9 @@ feature {NONE} -- Compression
 					if common_freq * 100 >= trans_nb * Template_same_percentage then
 						templates.put (state, common_state)
 						template := templates.last
-						default_id := - templates.count
+						default_id := -templates.count
 						protos.put (default_id, template, common_state)
-						put_entry (state.id, default_id,
-							transitions.difference (template, null_state))
+						put_entry (state.id, default_id, transitions.difference (template, null_state))
 					else
 						protos.put (state.id, transitions.cloned_object, common_state)
 						put_entry (state.id, Jam_id, transitions)
@@ -585,12 +636,12 @@ feature {NONE} -- Compression
 						protos.put (state.id, transitions.cloned_object, common_state)
 					end
 				end
-				proto_cursor.go_after -- Release cursor to GC.
+					-- Release cursor to GC.
+				proto_cursor.go_after
 			end
 		end
 
-	put_entry (state_id, default_id: INTEGER;
-		transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]) is
+	put_entry (state_id, default_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]) is
 			-- Create base/default and next/check entries for
 			-- `transitions' out of state `state_id'.
 		require
@@ -634,7 +685,7 @@ feature {NONE} -- Compression
 					-- at the end of next/check tables, we must make
 					-- sure that we have valid base address (i.e.
 					-- non negative).
-
+					--
 					-- Find the first transition of `state' that we
 					-- need to worry about.
 				min_label := transitions.minimum_label
@@ -644,7 +695,10 @@ feature {NONE} -- Compression
 				if trans_nb * 100 <= symb_nb * Interior_fit_percentage then
 						-- Attempt to squeeze it into the middle of tables.
 					base_addr := first_free
-					from until base_addr >= min_label loop
+					from
+					until
+						base_addr >= min_label
+					loop
 							-- Using `base_addr' would result in a
 							-- negative base address below; find the
 							-- next free slot.
@@ -662,18 +716,18 @@ feature {NONE} -- Compression
 						INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
 						INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 					end
-					from i := min_label until i > max_label loop
-						if
-							transitions.target (i) /= Void and
-							yy_chk_.item (base_addr + i - min_label) /= 0
-						then
+					from
+						i := min_label
+					until
+						i > max_label
+					loop
+						if transitions.target (i) /= Void and yy_chk_.item (base_addr + i - min_label) /= 0 then
 								-- `base_addr' unsuitable. Find another.
 							from
 								base_addr := base_addr + 1
 								max_index := yy_nxt_.upper
 							until
-								base_addr > max_index or else
-								yy_chk_.item (base_addr) = 0
+								base_addr > max_index or else yy_chk_.item (base_addr) = 0
 							loop
 								base_addr := base_addr + 1
 							end
@@ -705,7 +759,11 @@ feature {NONE} -- Compression
 				end
 				yy_base.put (table_base, state_id)
 				yy_def.put (default_id, state_id)
-				from i := min_label until i > max_label loop
+				from
+					i := min_label
+				until
+					i > max_label
+				loop
 					if transitions.target (i) /= Void then
 						yy_nxt_.put (transitions.target (i).id, table_base + i)
 						yy_chk_.put (state_id, table_base + i)
@@ -747,8 +805,7 @@ feature {NONE} -- Compression
 				yy_chk_ := yy_chk
 				max_index := yy_nxt.upper
 			until
-				first_free > max_index or else
-				yy_chk_.item (first_free) = 0
+				first_free > max_index or else yy_chk_.item (first_free) = 0
 			loop
 				first_free := first_free + 1
 			end
@@ -799,7 +856,11 @@ feature {NONE} -- Compression
 				-- Leave room for the jam-state after the last real state.
 			i := states.count + 2
 			cursor := templates.new_cursor
-			from cursor.start until cursor.after loop
+			from
+				cursor.start
+			until
+				cursor.after
+			loop
 				template := templates.equiv_template (cursor.item)
 					-- It is assumed in the skeleton that if we're using
 					-- meta-equivalence classes, the yy_def entry for all
@@ -820,7 +881,11 @@ feature {NONE} -- Compression
 		local
 			i: INTEGER
 		do
-			from i := singletons.count until i < 1 loop
+			from
+				i := singletons.count
+			until
+				i < 1
+			loop
 				put_singleton (singletons.item (i))
 				i := i - 1
 			end
@@ -844,7 +909,11 @@ feature {NONE} -- Compression
 			yy_base_ := yy_base
 			yy_def_ := yy_def
 			nb := states.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				if yy_base_.item (i) = Jam_id then
 					yy_base_.put (jam_base, i)
 				end
@@ -859,7 +928,11 @@ feature {NONE} -- Compression
 			yy_base_.put (jam_base, jam_state)
 			yy_def_.put (0, jam_state)
 			nb := states.count + templates_count
-			from i := i + 1 until i > nb loop
+			from
+				i := i + 1
+			until
+				i > nb
+			loop
 				yy_def_.put (jam_state, i)
 				i := i + 1
 			end
@@ -872,7 +945,11 @@ feature {NONE} -- Compression
 				INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 			end
 			nb := table_end
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				if yy_chk_.item (i) = 0 or else yy_nxt_.item (i) = 0 then
 					yy_nxt_.put (jam_state, i)
 				end
@@ -881,7 +958,11 @@ feature {NONE} -- Compression
 				-- Add in default end-of-buffer transition.
 			yy_nxt_.put (eob_state_id, jam_base)
 			yy_chk_.put (jam_state, jam_base)
-			from i := jam_base + 1 until i > max_index loop
+			from
+				i := jam_base + 1
+			until
+				i > max_index
+			loop
 				yy_nxt_.put (jam_state, i)
 				yy_chk_.put (jam_state, i)
 				i := i + 1
@@ -998,7 +1079,7 @@ feature {NONE} -- Constants
 			-- transition table and the most similar proto must be of
 			-- the state's total number of out-transitions to create
 			-- a new proto from the state
- 
+
 	Proto_size_percentage: INTEGER is 15
 			-- Percentage the number of out-transitions a state must be
 			-- of the number of equivalence classes in order to be 

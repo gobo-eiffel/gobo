@@ -18,13 +18,13 @@ inherit
 
 	KL_SHARED_PLATFORM
 		export {NONE} all end
-		
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
-		
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-		
+
 feature -- Access
 
 	token_name (a_token: INTEGER): STRING is
@@ -42,10 +42,7 @@ feature {NONE} -- Implementation
 			c: CHARACTER
 			i, j, k: INTEGER
 		do
-			if
-				a_token >= Platform.Minimum_character_code and
-				a_token <= Platform.Maximum_character_code
-			then
+			if a_token >= Platform.Minimum_character_code and a_token <= Platform.Maximum_character_code then
 				c := INTEGER_.to_character (a_token)
 				inspect c
 				when '%B' then
@@ -59,7 +56,7 @@ feature {NONE} -- Implementation
 				when '%T' then
 					Result := "%'\t%'"
 				when '%'' then
-					Result :="%'\%'%'"
+					Result := "%'\%'%'"
 				when '%"' then
 					Result := "%'\%"%'"
 				when ' ', '!', '#', '$', '&', '('..'~' then
@@ -76,13 +73,16 @@ feature {NONE} -- Implementation
 					else
 						if a_token < 0 then
 							Result.append_character ('-')
-							k := - a_token
+							k := -a_token
 							i := 4
 						else
 							k := a_token
 							i := 3
 						end
-						from until k = 0 loop
+						from
+						until
+							k = 0
+						loop
 							inspect k \\ 8
 							when 0 then
 								Result.append_character ('0')

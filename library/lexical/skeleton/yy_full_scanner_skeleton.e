@@ -87,15 +87,11 @@ feature -- Scanning
 								yy_c := yy_content.item (yy_cp).code
 							end
 						end
-						yy_current_state := yy_nxt.item
-							(yy_current_state * yyNb_rows + yy_c)
+						yy_current_state := yy_nxt.item (yy_current_state * yyNb_rows + yy_c)
 					until
 						yy_current_state <= 0
 					loop
-						if
-							yyBacking_up and then
-							yy_accept.item (yy_current_state) /= 0
-						then
+						if yyBacking_up and then yy_accept.item (yy_current_state) /= 0 then
 							yy_last_accepting_state := yy_current_state
 							yy_last_accepting_cpos := yy_cp
 						end
@@ -113,10 +109,9 @@ feature -- Scanning
 								yy_c := yy_content.item (yy_cp).code
 							end
 						end
-						yy_current_state := yy_nxt.item
-							(yy_current_state * yyNb_rows + yy_c)
+						yy_current_state := yy_nxt.item (yy_current_state * yyNb_rows + yy_c)
 					end
-					yy_current_state := - yy_current_state
+					yy_current_state := -yy_current_state
 					yy_goto := yyFind_action
 				when yyFind_action then
 						-- Find the action number.
@@ -162,8 +157,7 @@ feature -- Scanning
 								-- with the possibility of jamming (and we
 								-- don't want to build jamming into it because
 								-- then it will run more slowly).
-							yy_next_state :=
-								yy_null_trans_state (yy_current_state)
+							yy_next_state := yy_null_trans_state (yy_current_state)
 							yy_bp := yy_bp + yy_more_len
 							if yy_next_state /= 0 then
 									-- Consume the NULL character.
@@ -185,9 +179,7 @@ feature -- Scanning
 								yy_cp := yy_end
 								yy_bp := yy_start + yy_more_len
 								yy_goto := yyMatch
-							elseif
-								yy_end - yy_start - yy_more_len /= 0
-							then
+							elseif yy_end - yy_start - yy_more_len /= 0 then
 									-- Some text has been matched prior to
 									-- the EOB. First process it.
 								yy_current_state := yy_previous_state
@@ -200,8 +192,7 @@ feature -- Scanning
 								if wrap then
 									yy_bp := yy_start
 									yy_cp := yy_end
-									yy_execute_eof_action
-										((yy_start_state - 1) // 2)
+									yy_execute_eof_action ((yy_start_state - 1) // 2)
 								end
 							end
 						end
@@ -278,8 +269,7 @@ feature {NONE} -- Implementation
 		local
 			yy_is_jam: BOOLEAN
 		do
-			Result := yy_nxt.item
-				(yy_current_state * yyNb_rows + yyNull_equiv_class)
+			Result := yy_nxt.item (yy_current_state * yyNb_rows + yyNull_equiv_class)
 			yy_is_jam := (Result <= 0)
 			if yy_is_jam then
 				Result := 0
@@ -291,8 +281,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	yyNb_rows: INTEGER is deferred end
+	yyNb_rows: INTEGER is
 			-- Number of rows in `yy_nxt'
+		deferred
+		end
 
 	yyNext_token: INTEGER is 1
 	yyMatch: INTEGER is 2

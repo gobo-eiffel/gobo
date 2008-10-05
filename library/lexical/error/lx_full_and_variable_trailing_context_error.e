@@ -33,8 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is
-		"$0: variable trailing context rules cannot be used with -f"
+	default_template: STRING is "$0: variable trailing context rules cannot be used with -f"
 			-- Default template used to built the error message
 
 	code: STRING is "LX0029"

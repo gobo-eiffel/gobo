@@ -14,9 +14,11 @@ class PR_GRAMMAR
 
 inherit
 
-	ANY -- Export features from ANY.
+	ANY
+			-- Export features from ANY.
 
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_INTEGER_ROUTINES
 
 create
@@ -62,7 +64,10 @@ feature -- Access
 			i: INTEGER
 		do
 			i := rules.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				if rules.item (i).rhs.count > Result then
 					Result := rules.item (i).rhs.count
 				end
@@ -70,8 +75,7 @@ feature -- Access
 			end
 		ensure
 			max_rhs_positive: Result >= 0
-			-- definition: forall rule in rules, Result >= rule.rhs.count
-			--   and there_exists rule in rules, rule.rhs.count = Result
+--			definition: forall rule in rules, Result >= rule.rhs.count and there_exists rule in rules, rule.rhs.count = Result
 		end
 
 feature -- User-defined Eiffel code
@@ -187,7 +191,11 @@ feature -- Output
 		do
 			a_file.put_string ("Grammar%N%N")
 			nb := rules.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				rules.item (i).print_rule (a_file)
 				a_file.put_character ('%N')
 				i := i + 1
@@ -196,14 +204,22 @@ feature -- Output
 				-- EOF token.
 			a_file.put_string ("$ (token 0)%N")
 			nb := tokens.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				tokens.item (i).print_token (Current, a_file)
 				a_file.put_character ('%N')
 				i := i + 1
 			end
 			a_file.put_string ("%NNonterminals, with rules where they appear%N%N")
 			nb := variables.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				variables.item (i).print_variable (Current, a_file)
 				a_file.put_character ('%N')
 				i := i + 1
@@ -229,7 +245,11 @@ feature -- Processing
 		do
 			mark_useful_variables
 			mark_useful_rules
-			from i := 1 until i > rules.count loop
+			from
+				i := 1
+			until
+				i > rules.count
+			loop
 				a_rule := rules.item (i)
 				if a_rule.is_useful then
 					a_rule.set_id (i)
@@ -239,14 +259,21 @@ feature -- Processing
 					useless_rules := useless_rules + 1
 				end
 			end
-			from i := 1 until i > variables.count loop
+			from
+				i := 1
+			until
+				i > variables.count
+			loop
 				a_variable := variables.item (i)
 				if a_variable.is_useful then
 						-- Variables are indexed from 0.
 					a_variable.set_id (i - 1)
 					r := a_variable.rules
 					j := r.count
-					from until j < 1 loop
+					from
+					until
+						j < 1
+					loop
 						if not r.item (j).is_useful then
 							r.remove (j)
 						end
@@ -310,7 +337,11 @@ feature -- Processing
 			if useless_variables > 0 then
 				a_file.put_string ("Useless nonterminals:%N%N")
 				nb := old_variables.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_variable := old_variables.item (i)
 					if not a_variable.is_useful then
 						a_file.put_character ('%T')
@@ -322,7 +353,11 @@ feature -- Processing
 				a_file.put_character ('%N')
 			end
 			nb := tokens.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_token := tokens.item (i)
 				if not a_token.is_useful then
 					if useless_tokens = 0 then
@@ -341,7 +376,11 @@ feature -- Processing
 			if useless_rules > 0 then
 				a_file.put_string ("Useless rules:%N%N")
 				nb := old_rules.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_rule := old_rules.item (i)
 					if not a_rule.is_useful then
 						a_file.put_character ('#')
@@ -351,7 +390,11 @@ feature -- Processing
 						a_file.put_string (": ")
 						rhs := a_rule.rhs
 						nb_rhs := rhs.count
-						from j := 1 until j > nb_rhs loop
+						from
+							j := 1
+						until
+							j > nb_rhs
+						loop
 							a_file.put_string (rhs.item (j).name)
 							a_file.put_character (' ')
 							j := j + 1
@@ -381,7 +424,11 @@ feature -- Processing
 		do
 			nb := rules.count
 			create todo.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_rule := rules.item (i)
 				lhs := a_rule.lhs
 				rhs := a_rule.rhs
@@ -424,9 +471,15 @@ feature -- Processing
 				todo := tmp
 				todo.wipe_out
 				nb := old_todo.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_list := old_todo.item (i)
-					check list_not_empty: not a_list.is_empty end
+					check
+						list_not_empty: not a_list.is_empty
+					end
 					if not a_list.first.is_nullable then
 						from
 							j := a_list.count
@@ -473,22 +526,34 @@ feature {NONE} -- Processing
 			nb_rules: INTEGER
 		do
 			nb_rules := rules.count
-			from changed := True until not changed loop
+			from
+				changed := True
+			until
+				not changed
+			loop
 				changed := False
-				from i := 1 until i > nb_rules loop
+				from
+					i := 1
+				until
+					i > nb_rules
+				loop
 					a_rule := rules.item (i)
 					if not a_rule.is_useful then
 						a_rule.set_useful (True)
 						rhs := a_rule.rhs
 						j := rhs.count
-						from until j < 1 loop
+						from
+						until
+							j < 1
+						loop
 							a_symbol := rhs.item (j)
 							if a_symbol.is_terminal or a_symbol.is_useful then
 								j := j - 1
 							else
 									-- Not useful yet.
 								a_rule.set_useful (False)
-								j := 0 -- Jump out of the loop.
+									-- Jump out of the loop.
+								j := 0
 							end
 						end
 						if a_rule.is_useful then
@@ -515,7 +580,10 @@ feature {NONE} -- Processing
 		do
 			useful := start_symbol /= Void and then start_symbol.is_useful
 			i := variables.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				variables.item (i).set_useful (False)
 				i := i - 1
 			end
@@ -524,7 +592,10 @@ feature {NONE} -- Processing
 				traverse_variable (start_symbol)
 			end
 			i := rules.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_rule := rules.item (i)
 				if not a_rule.lhs.is_useful then
 					a_rule.set_useful (False)
@@ -550,12 +621,18 @@ feature {NONE} -- Processing
 		do
 			r := a_variable.rules
 			i := r.count
-			from until i < 1 loop
+			from
+			until
+				i < 1
+			loop
 				a_rule := r.item (i)
 				if a_rule.is_useful then
 					rhs := a_rule.rhs
 					j := rhs.count
-					from until j < 1 loop
+					from
+					until
+						j < 1
+					loop
 						a_symbol := rhs.item (j)
 						variable2 ?= a_symbol
 						if variable2 /= Void then

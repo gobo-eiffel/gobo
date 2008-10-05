@@ -21,11 +21,28 @@ inherit
 			put as arrayed_put
 		export
 			{NONE}
-				arrayed_put, put_first, put_last, put_left, put_right,
-				force, force_first, force_last, force_left, force_right,
-				extend, extend_first, extend_last, extend_left, extend_right,
-				append, append_first, append_last, append_left, append_right,
-				replace, swap
+				arrayed_put,
+				put_first,
+				put_last,
+				put_left,
+				put_right,
+				force,
+				force_first,
+				force_last,
+				force_left,
+				force_right,
+				extend,
+				extend_first,
+				extend_last,
+				extend_left,
+				extend_right,
+				append,
+				append_first,
+				append_last,
+				append_left,
+				append_right,
+				replace,
+				swap
 		end
 
 create
@@ -125,7 +142,11 @@ feature -- Convertion
 			symbol: INTEGER
 		do
 			nb := count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				symbol := item (i)
 				if classes.is_representative (symbol) then
 					j := j + 1

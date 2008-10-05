@@ -4,11 +4,10 @@ indexing
 
 		"Objects that may be compared according to a partial order relation"
 
-	remark:
-	
-		"The basic operation is < (less than); others %
-		%are defined in terms of this operation and is_equal."
-
+	remark: "[
+		The basic operation is < (less than); others
+		are defined in terms of this operation and is_equal.
+	]"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2000, Eric Bezault and others"
 	license: "MIT License"
@@ -16,10 +15,6 @@ indexing
 	revision: "$Revision$"
 
 deferred class KL_PART_COMPARABLE
-
-inherit
-
-	ANY -- Needed for SE 2.1b1.
 
 feature -- Comparison
 

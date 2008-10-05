@@ -3,7 +3,7 @@ indexing
 	description:
 
 		"flags that will generate a help text and terminate the application"
-	
+
 	library: "Gobo Eiffel Argument Library"
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "MIT License"

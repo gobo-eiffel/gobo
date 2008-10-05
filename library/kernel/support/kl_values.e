@@ -12,17 +12,13 @@ indexing
 
 deferred class KL_VALUES [G, K]
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Access
 
 	value (k: K): G is
 			-- Item associated with `k';
 			-- Return default value if no such item
 		require
-			k_not_void: k /= Void 
+			k_not_void: k /= Void
 		deferred
 		end
 
