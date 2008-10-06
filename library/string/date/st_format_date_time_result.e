@@ -1,12 +1,10 @@
 indexing
 
 	description:
-
-		"[
-        Results from {ST_XSLT_FORMAT_DATE_TIME}.format_date_time .
-        Either a formatted string or an error.
-       ]"
-
+	"[
+		Results from {ST_XSLT_FORMAT_DATE_TIME}.format_date_time .
+		Either a formatted string or an error.
+	]"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
@@ -17,7 +15,8 @@ class ST_FORMAT_DATE_TIME_RESULT
 
 create
 
-	make, make_error
+	make,
+	make_error
 
 feature {NONE} -- Initialization
 

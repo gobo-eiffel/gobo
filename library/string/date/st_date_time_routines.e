@@ -1,12 +1,11 @@
 indexing
 
 	description:
-
-		"[
-	     Routines for formatting dates and times using XSLT-defined picture strings
-        See See http://www.w3.org/TR/xslt20/#format-date for a detailed description of the rules.
-        See ST_TEST_DATE_TIME_ROUTINES for examples of usage.
-      ]"
+	"[
+		Routines for formatting dates and times using XSLT-defined picture strings
+		See See http://www.w3.org/TR/xslt20/#format-date for a detailed description of the rules.
+		See ST_TEST_DATE_TIME_ROUTINES for examples of usage.
+	]"
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2008, Colin Adams and others"
@@ -14,7 +13,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	ST_DATE_TIME_ROUTINES
+class ST_DATE_TIME_ROUTINES
 
 feature -- Access
 

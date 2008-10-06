@@ -30,7 +30,9 @@ feature -- Access
 
 feature -- Type anchors
 
-	STRING_BUFFER_TYPE: STRING is do end
+	STRING_BUFFER_TYPE: STRING is
 			-- Type anchor
+		do
+		end
 
 end

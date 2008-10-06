@@ -41,7 +41,9 @@ feature -- Formatting
 			a_cell: DS_CELL [BOOLEAN]
 		do
 			a_cell ?= a_parameter
-			check valid_parameter: a_cell /= Void end
+			check
+				valid_parameter: a_cell /= Void
+			end
 			boolean_format_to (a_cell.item, a_stream)
 		end
 
@@ -69,8 +71,11 @@ feature -- Formatting
 feature {NONE} -- Constants
 
 	true_lowercase: STRING is "true"
+
 	false_lowercase: STRING is "false"
+
 	true_uppercase: STRING is "True"
+
 	false_uppercase: STRING is "False"
 
 end

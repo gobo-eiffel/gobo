@@ -99,8 +99,10 @@ feature -- Access
 feature -- Status report
 
 	compiler_ise: BOOLEAN
+			-- Will the ISE compiler be used to compile the test classes?
+
 	compiler_ge: BOOLEAN
-			-- Compiler which will be used to compile the test classes
+			-- Will the Gobo compiler be used to compile the test classes?
 
 	fail_on_rescue: BOOLEAN
 			-- Should the test application crash when an error occur?
@@ -137,9 +139,7 @@ feature -- Status setting
 
 feature -- AST factory
 
-	new_config (a_root_class: STRING; a_testgen: STRING;
-		a_compile: STRING; an_execute: STRING;
-		a_clusters: DS_LIST [TS_CLUSTER]): TS_CONFIG is
+	new_config (a_root_class: STRING; a_testgen: STRING; a_compile: STRING; an_execute: STRING; a_clusters: DS_LIST [TS_CLUSTER]): TS_CONFIG is
 			-- New config
 		require
 			a_root_class_not_void: a_root_class /= Void
@@ -242,7 +242,11 @@ feature -- Defaults
 				Result.append_string (" -a")
 			end
 			a_cursor := variables.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				Result.append_string (" -D %"")
 				Result.append_string (a_cursor.key)
 				Result.append_character ('=')

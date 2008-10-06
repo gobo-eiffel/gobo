@@ -28,7 +28,9 @@ feature -- Access
 
 feature -- Type anchors
 
-	OUTPUT_STREAM_TYPE: IO_MEDIUM is do end
+	OUTPUT_STREAM_TYPE: IO_MEDIUM is
 			-- Type anchor
+		do
+		end
 
 end

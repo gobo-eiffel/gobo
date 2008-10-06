@@ -15,8 +15,14 @@ class ST_UNICODE_NORMALIZATION_CONSTANTS
 feature -- Constants
 
 	Nfd: INTEGER is 0
+			-- Normal forms
+
 	Nfc: INTEGER is 1
+			-- Normal forms
+
 	Nfkd: INTEGER is 2
+			-- Normal forms
+
 	Nfkc: INTEGER is 3
 			-- Normal forms
 

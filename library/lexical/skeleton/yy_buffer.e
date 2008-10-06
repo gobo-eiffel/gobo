@@ -307,8 +307,7 @@ invariant
 	content_count: content.count >= capacity + 2
 	positive_capacity: capacity >= 0
 	valid_count: count >= 0 and count <= capacity
-	end_of_buffer: content.item (count + 1) = End_of_buffer_character and
-		content.item (count + 2) = End_of_buffer_character
+	end_of_buffer: content.item (count + 1) = End_of_buffer_character and content.item (count + 2) = End_of_buffer_character
 	valid_index: index >= 1 and index <= count + 2
 	line_positive: line >= 1
 	column_positive: column >= 1

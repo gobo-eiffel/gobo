@@ -18,7 +18,9 @@ inherit
 		rename
 			make as make_summary
 		redefine
-			put_failure, put_abort, start_test
+			put_failure,
+			put_abort,
+			start_test
 		end
 
 create

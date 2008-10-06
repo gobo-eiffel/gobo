@@ -14,7 +14,8 @@ class RX_BYTE_CODE
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_IMPORTED_SPECIAL_ROUTINES
 
@@ -230,13 +231,21 @@ feature -- Element Change
 			character_sets_count := nb
 			a_booleans := a_set.set
 			if a_negate then
-				from j := 0 until j > 255 loop
+				from
+					j := 0
+				until
+					j > 255
+				loop
 					character_sets.put (not a_booleans.item (j), i)
 					i := i + 1
 					j := j + 1
 				end
 			else
-				from j := 0 until j > 255 loop
+				from
+					j := 0
+				until
+					j > 255
+				loop
 					character_sets.put (a_booleans.item (j), i)
 					i := i + 1
 					j := j + 1
@@ -262,7 +271,10 @@ feature -- Element Change
 			resize_byte_code (k)
 			count := k
 			j := a_position
-			from until i >= k loop
+			from
+			until
+				i >= k
+			loop
 				byte_code.put (byte_code.item (j), i)
 				j := j + 1
 				i := i + 1
@@ -356,7 +368,7 @@ invariant
 	byte_code_not_void: byte_code /= Void
 	count_positive: count >= 0
 	count_small_enough: count <= capacity
-	-- bytes_positive: forall i in 0 .. count - 1, byte_code.item (i) >= 0
+--	bytes_positive: forall i in 0 .. count - 1, byte_code.item (i) >= 0
 	character_sets_not_void: character_sets /= Void
 	character_sets_count_positive: character_sets_count >= 0
 	character_sets_count_small_enough: character_sets_count <= character_sets_capacity

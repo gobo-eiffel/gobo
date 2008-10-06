@@ -12,18 +12,13 @@ indexing
 
 class TS_CONFIG
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_root: like root_class; a_testgen: like testgen; a_compile: like compile;
-		an_execute: like execute; a_clusters: like clusters) is
+	make (a_root: like root_class; a_testgen: like testgen; a_compile: like compile; an_execute: like execute; a_clusters: like clusters) is
 			-- Create a new configuration.
 		require
 			a_root_not_void: a_root /= Void
@@ -84,7 +79,11 @@ feature -- Setting
 			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
 		do
 			a_cursor := clusters.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_cursor.item.set_class_regexp (a_regexp)
 				a_cursor.forth
 			end
@@ -99,7 +98,11 @@ feature -- Setting
 			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
 		do
 			a_cursor := clusters.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_cursor.item.set_feature_regexp (a_regexp)
 				a_cursor.forth
 			end
@@ -111,7 +114,11 @@ feature -- Setting
 			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
 		do
 			a_cursor := clusters.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_cursor.item.set_default_test_included (b)
 				a_cursor.forth
 			end
@@ -128,7 +135,11 @@ feature -- Processing
 			a_cursor: DS_LIST_CURSOR [TS_CLUSTER]
 		do
 			a_cursor := clusters.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_cursor.item.process (testcases, an_error_handler)
 				a_cursor.forth
 			end

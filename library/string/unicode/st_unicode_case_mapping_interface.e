@@ -31,8 +31,8 @@ feature -- Access
 			from
 				i := 1
 				l_count := a_string.count
-				-- We don't know in advance how big the result will be.
-				-- So this is a best guess:
+					-- We don't know in advance how big the result will be.
+					-- So this is a best guess:
 				create Result.make (l_count)
 			variant
 				increasing_index: l_count - i + 1
@@ -65,8 +65,8 @@ feature -- Access
 			from
 				i := 1
 				l_count := a_string.count
-				-- We don't know in advance how big the result will be.
-				-- So this is a best guess:
+					-- We don't know in advance how big the result will be.
+					-- So this is a best guess:
 				create Result.make (l_count)
 			variant
 				increasing_index: l_count - i + 1
@@ -81,7 +81,7 @@ feature -- Access
 					Result.append_item_code (l_code)
 				end
 				i := i + 1
-			end			
+			end
 		ensure
 			upper_unicode_string_not_void: Result /= Void
 			new_string: not ANY_.same_objects (Result, a_string)
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			i, j, k, l_rem: INTEGER
 		do
 			i := a_code // (65536)
-			l_rem  := a_code \\ (65536)
+			l_rem := a_code \\ (65536)
 			j := l_rem // 256
 			k := l_rem \\ 256
 			Result := lower_case_mappings.item (i).item (j).item (k)
@@ -118,14 +118,14 @@ feature {NONE} -- Implementation
 			i, j, k, l_rem: INTEGER
 		do
 			i := a_code // (65536)
-			l_rem  := a_code \\ (65536)
+			l_rem := a_code \\ (65536)
 			j := l_rem // 256
 			k := l_rem \\ 256
 			Result := upper_case_mappings.item (i).item (j).item (k)
 		ensure
 			non_empty: Result /= Void implies not Result.is_empty
 		end
-	
+
 	title_codes (a_code: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- Code points of full title case mapping of `a_code' as a Unicode code point
 		require
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			i, j, k, l_rem: INTEGER
 		do
 			i := a_code // (65536)
-			l_rem  := a_code \\ (65536)
+			l_rem := a_code \\ (65536)
 			j := l_rem // 256
 			k := l_rem \\ 256
 			Result := title_case_mappings.item (i).item (j).item (k)
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_pair (i, j: INTEGER): DS_ARRAYED_LIST [INTEGER] is
-				-- List of two integers
+			-- List of two integers
 		do
 			create Result.make (2)
 			Result.put_last (i)

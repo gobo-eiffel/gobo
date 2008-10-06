@@ -45,9 +45,9 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = regexp
-	-- dollar2: $2 = filename
-	-- dollar3: $3 = line number
+--	dollar0: $0 = program name
+--	dollar1: $1 = regexp
+--	dollar2: $2 = filename
+--	dollar3: $3 = line number
 
 end

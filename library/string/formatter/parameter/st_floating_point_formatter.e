@@ -4,17 +4,16 @@ indexing
 
 		"Formatters for double parameters, $e or $E"
 
-	formatting_rules:
-
-		"The double parameter is rounded and formatted in the style %
-		%[-]d.ddde±dd where there is one digit before the decimal-point %
-		%character and the number of digits after it is equal to the %
-		%precision; if the precision is missing, it is taken as 6; if %
-		%the precision is zero, no decimal-point character appears. An E %
-		%formatting uses the letter E (rather than e) to introduce the %
-		%exponent. The exponent always contains at least two digits; if %
-		%the value is zero, the exponent is 00."
-
+	formatting_rules: "[
+		The double parameter is rounded and formatted in the style
+		[-]d.ddde±dd where there is one digit before the decimal-point
+		character and the number of digits after it is equal to the
+		precision; if the precision is missing, it is taken as 6; if
+		the precision is zero, no decimal-point character appears. An E
+		formatting uses the letter E (rather than e) to introduce the
+		exponent. The exponent always contains at least two digits; if
+		the value is zero, the exponent is 00.
+	]"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
 	license: "MIT License"

@@ -581,13 +581,25 @@ feature {NONE} -- Implementation
 			-- Has current matched token been rejected?
 
 	yy_state_stack: SPECIAL [INTEGER]
+			-- State buffer variable
+
 	yy_state_count: INTEGER
+			-- State buffer variable
+
 	yy_full_match: INTEGER
+			-- State buffer variable
+
 	yy_lp: INTEGER
+			-- State buffer variable
+
 	yy_looking_for_trail_begin: INTEGER
+			-- State buffer variable
+
 	yy_full_lp: INTEGER
+			-- State buffer variable
+
 	yy_full_state: INTEGER
-			-- State buffer variables
+			-- State buffer variable
 
 feature {NONE} -- Constants
 
@@ -635,9 +647,13 @@ feature {NONE} -- Constants
 		end
 
 	yyNext_token: INTEGER is 1
+
 	yyMatch: INTEGER is 2
+
 	yyFind_action: INTEGER is 3
+
 	yyDo_action: INTEGER is 4
+
 	yyFind_rule: INTEGER is 5
 
 invariant

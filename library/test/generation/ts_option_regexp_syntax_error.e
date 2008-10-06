@@ -44,8 +44,8 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = option name
-	-- dollar2: $2 = regexp
+--	dollar0: $0 = program name
+--	dollar1: $1 = option name
+--	dollar2: $2 = regexp
 
 end

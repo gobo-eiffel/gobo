@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 					Result := "%'\%'%'"
 				when '%"' then
 					Result := "%'\%"%'"
-				when ' ', '!', '#', '$', '&', '('..'~' then
+				when ' ', '!', '#', '$', '&', '(' .. '~' then
 					create Result.make (3)
 					Result.append_character ('%'')
 					Result.append_character (c)

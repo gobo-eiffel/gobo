@@ -133,7 +133,7 @@ feature -- Removal
 		do
 			an_array.clear_all
 		ensure
-			-- all_cleared: forall i in 0..(an_array.count - 1), an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
+--			all_cleared: forall i in 0..(an_array.count - 1), an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
 		end
 
 end

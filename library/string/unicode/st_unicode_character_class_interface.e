@@ -310,8 +310,7 @@ feature -- Access
 		require
 			valid_code: unicode.valid_code (a_code)
 		do
-			inspect
-				character_class (a_code)
+			inspect character_class (a_code)
 			when Space_separator_category, Line_separator_category, Paragraph_separator_category then
 				Result := True
 			else
@@ -385,7 +384,7 @@ feature -- Access
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := decimal_values.item (i).item (j).item (k)
@@ -402,7 +401,7 @@ feature -- Access
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := character_classes.item (i).item (j).item (k)
@@ -421,7 +420,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := upper_case_properties.item (i).item (j).item (k + 1)
@@ -435,7 +434,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := lower_case_properties.item (i).item (j).item (k + 1)
@@ -449,7 +448,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := alphabetic_properties.item (i).item (j).item (k + 1)
@@ -463,7 +462,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := math_properties.item (i).item (j).item (k + 1)
@@ -478,7 +477,11 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			create Result.make (0, 255)
-			from i := 0 until i > 255 loop
+			from
+				i := 0
+			until
+				i > 255
+			loop
 				Result.put (INTEGER_.to_integer_8 (a_string.item (i + 1).code), i)
 				i := i + 1
 			end
@@ -493,7 +496,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			character_classes_not_void: Result /= Void
-			-- no_void_character_class: not Result.has (Void)
+--			no_void_character_class: not Result.has (Void)
 		end
 
 	decimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
@@ -501,7 +504,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			decimal_values_not_void: Result /= Void
-			-- no_void_decimal_value: not Result.has (Void)
+--			no_void_decimal_value: not Result.has (Void)
 		end
 
 	upper_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
@@ -509,7 +512,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			upper_case_properties_not_void: Result /= Void
-			-- no_void_upper_case_property: not Result.has (Void)
+--			no_void_upper_case_property: not Result.has (Void)
 		end
 
 	lower_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
@@ -517,7 +520,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			lower_case_properties_not_void: Result /= Void
-			-- no_void_lower_case_property: not Result.has (Void)
+--			no_void_lower_case_property: not Result.has (Void)
 		end
 
 	alphabetic_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
@@ -525,7 +528,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			alphabetic_properties_not_void: Result /= Void
-			-- no_void_alphabetic_property: not Result.has (Void)
+--			no_void_alphabetic_property: not Result.has (Void)
 		end
 
 	math_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
@@ -533,7 +536,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			math_properties_not_void: Result /= Void
-			-- no_void_math_property: not Result.has (Void)
+--			no_void_math_property: not Result.has (Void)
 		end
 
 end

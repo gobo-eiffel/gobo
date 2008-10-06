@@ -14,11 +14,15 @@ class TS_TESTCASES
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_GOBO_VERSION
+
 	KL_SHARED_FILE_SYSTEM
+
 	KL_SHARED_EXECUTION_ENVIRONMENT
+
 	KL_IMPORTED_STRING_ROUTINES
 
 create
@@ -68,7 +72,11 @@ feature -- Generation
 			l_class: ET_CLASS
 		do
 			a_cursor := testcases.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				l_class := a_cursor.key
 				if l_class.is_deferred then
 						-- Generate a new class only when the test case class
@@ -214,7 +222,11 @@ feature -- Generation
 				a_file.put_line ("%Tbuild_suite is")
 				a_file.put_line ("%T%T%T-- Add to `suite' the test cases that need to executed.")
 				a_cursor := testcases.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					a_pair := a_cursor.item
 					if not a_pair.first.is_empty then
 						l_test_index := l_test_index + 1
@@ -243,7 +255,11 @@ feature -- Generation
 				end
 				a_file.put_line ("%T%Tdo")
 				l_test_index := 0
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					a_pair := a_cursor.item
 					l_test_features := a_pair.first
 					if not l_test_features.is_empty then
@@ -251,7 +267,11 @@ feature -- Generation
 						l_class := a_cursor.key
 						l_test_name := l_class.upper_name
 						l_test_features_cursor := l_test_features.new_cursor
-						from l_test_features_cursor.start until l_test_features_cursor.after loop
+						from
+							l_test_features_cursor.start
+						until
+							l_test_features_cursor.after
+						loop
 							l_test_feature_name := l_test_features_cursor.item
 							a_file.put_string ("%T%T%Tcreate l_test")
 							a_file.put_integer (l_test_index)
@@ -334,7 +354,11 @@ feature -- Measurement
 			a_list: DS_LIST [STRING]
 		do
 			a_cursor := testcases.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_list := a_cursor.item.first
 				if a_list /= Void then
 					Result := Result + a_list.count
@@ -359,9 +383,9 @@ invariant
 	testcases_not_void: testcases /= Void
 	no_void_class_name: not testcases.has (Void)
 	no_void_testcase: not testcases.has_item (Void)
-	-- feature_names_not_void: forall item in testcases, item.first /= Void
-	-- no_void_feature_names: forall item in testcases, not item.has (Void)
-	-- class_prefix_not_void: forall item in testcases, item.second /= Void
+--	feature_names_not_void: forall item in testcases, item.first /= Void
+--	no_void_feature_names: forall item in testcases, not item.has (Void)
+--	class_prefix_not_void: forall item in testcases, item.second /= Void
 	error_handler_not_void: error_handler /= Void
 	tester_parent_not_void: tester_parent /= Void
 	version_not_void: version /= Void

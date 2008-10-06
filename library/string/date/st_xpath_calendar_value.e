@@ -27,7 +27,6 @@ inherit
 
 feature -- Access
 
-	
 	year: INTEGER is
 			-- Year component
 		require
@@ -53,7 +52,7 @@ feature -- Access
 		ensure
 			strictly_positive_result: Result > 0
 		end
-	
+
 	month: INTEGER is
 			-- Month component
 		require
@@ -120,7 +119,7 @@ feature -- Access
 		ensure
 			result_in_range: Result >= 1 and then Result <= 53
 		end
-	
+
 	week_in_month: INTEGER is
 			-- Week within month
 		require
@@ -151,8 +150,12 @@ feature -- Access
 			not_date_value: not is_xpath_date
 		do
 			Result := hour
-			if Result > 11 then Result := Result - 12 end
-			if Result = 0 then Result := 12 end
+			if Result > 11 then
+				Result := Result - 12
+			end
+			if Result = 0 then
+				Result := 12
+			end
 		ensure
 			result_in_range: Result >= 1 and then Result <= 12
 		end
@@ -225,11 +228,15 @@ feature -- Access
 			end
 			Result := l_time_zone.name
 			if Result.count = 1 then
-				check STRING_.same_string (Result, "Z") end
+				check
+					STRING_.same_string (Result, "Z")
+				end
 				Result := "+00:00"
 			else
-				check Result.count = 9 end
-				-- Result begins with UTC
+				check
+					Result.count = 9
+				end
+					-- Result begins with UTC
 				Result := Result.substring (4, 9)
 			end
 		ensure
@@ -269,7 +276,7 @@ feature -- Conversion
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
-	
+
 	as_xpath_date: ST_XPATH_DATE_VALUE is
 			-- `Current' seen as a date value
 		require
@@ -287,7 +294,7 @@ feature -- Conversion
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
-		
+
 invariant
 
 	time_or_date_or_date_time: BOOLEAN_.nxor (<<is_xpath_time, is_xpath_date, is_xpath_date_time>>)

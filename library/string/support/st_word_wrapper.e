@@ -4,13 +4,12 @@ indexing
 
 		"Word-warp a text document to a fixed column width."
 
-	remark:
-
-		"This implementation replaces all existing whitespace either a %
-		%single space or a single newline character. Words that are %
-		%longer than a single line will be forcefully broken at the %
-		%line length."
-		
+	remark: "[
+		This implementation replaces all existing whitespace either a
+		single space or a single newline character. Words that are
+		longer than a single line will be forcefully broken at the
+		line length.
+	]"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "MIT License"
@@ -113,8 +112,7 @@ feature -- Text transformation
 					from
 						search_position := position + line_length
 					until
-						search_position = position or
-						unwrapped_text.item (search_position) = ' '
+						search_position = position or unwrapped_text.item (search_position) = ' '
 					loop
 						search_position := search_position - 1
 					end
@@ -167,13 +165,10 @@ feature {NONE} -- Implementation
 			string_same_size: a_text.count = old a_text.count
 		end
 
-	is_space (a_character: CHARACTER):BOOLEAN is
+	is_space (a_character: CHARACTER): BOOLEAN is
 			-- Is `a_character' a tab, a newline, a linefeed or a space?
 		do
-			Result := (a_character = ' ') or
-				(a_character = '%T') or
-				(a_character = '%N') or
-				(a_character = '%R')
+			Result := (a_character = ' ') or (a_character = '%T') or (a_character = '%N') or (a_character = '%R')
 		end
 
 invariant

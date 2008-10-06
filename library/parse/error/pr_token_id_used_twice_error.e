@@ -47,10 +47,10 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = filename
-	-- dollar2: $2 = token1
-	-- dollar3: $3 = token2
-	-- dollar4: $4 = token id
+--	dollar0: $0 = program name
+--	dollar1: $1 = filename
+--	dollar2: $2 = token1
+--	dollar3: $3 = token2
+--	dollar4: $4 = token id
 
 end

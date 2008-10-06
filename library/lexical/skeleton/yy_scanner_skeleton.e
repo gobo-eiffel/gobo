@@ -427,8 +427,7 @@ feature {NONE} -- Implementation
 		do
 			INTEGER_ARRAY_.subcopy (an_array, other, start_pos, end_pos, index_pos)
 		ensure
-			-- copied: forall i in 0 .. (end_pos - start_pos),
-			--     an_array.item (index_pos + i) = other.item (start_pos + i)
+--			copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
 		end
 
 	yy_execute_action (yy_act: INTEGER) is

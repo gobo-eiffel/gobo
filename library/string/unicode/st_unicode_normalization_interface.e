@@ -4,11 +4,10 @@ indexing
 
 		"Routines for normalizing Unicode strings"
 
-	remark:
-
-		"These routines will not work on UTF-16 strings - they will %
-		%need a few modifications to account of surrogates."
-
+	remark: "[
+		These routines will not work on UTF-16 strings - they will
+		need a few modifications to account of surrogates.
+	]"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
@@ -49,7 +48,7 @@ feature -- Access
 			check
 				state_not_void: a_state /= Void
 				boolean_result: not a_state.is_undefined
-				-- post-conditions of `quick_check'
+					-- post-conditions of `quick_check'
 			end
 			if a_state.is_true then
 				Result := True
@@ -67,7 +66,7 @@ feature -- Access
 			check
 				state_not_void: a_state /= Void
 				boolean_result: not a_state.is_undefined
-				-- post-conditions of `quick_check'
+					-- post-conditions of `quick_check'
 			end
 			if a_state.is_true then
 				Result := True
@@ -262,7 +261,7 @@ feature -- Property
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := injected_canonical_combining_class (canonical_combining_class_properties.item (i).item (j).item (k))
@@ -279,7 +278,7 @@ feature -- Property
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := decomposition_type_properties.item (i).item (j).item (k)
@@ -296,7 +295,7 @@ feature -- Property
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := decomposition_mapping_properties.item (i).item (j).item (k)
@@ -308,7 +307,9 @@ feature -- Property
 feature {NONE} -- Implementation
 
 	False_value: CHARACTER is '%/0/'
+
 	True_value: CHARACTER is '%/1/'
+
 	Uncertain_value: CHARACTER is '%/2/'
 
 	quick_check (a_source: STRING; a_form: INTEGER): UT_TRISTATE is
@@ -364,7 +365,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfd_quick_check_array.item (i).item (j).item (k + 1)
@@ -380,7 +381,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfkd_quick_check_array.item (i).item (j).item (k + 1)
@@ -396,7 +397,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfc_quick_check_array.item (i).item (j).item (k + 1)
@@ -412,7 +413,7 @@ feature {NONE} -- Implementation
 			i, j, k, a_rem: INTEGER
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := nfkc_quick_check_array.item (i).item (j).item (k + 1)
@@ -432,7 +433,11 @@ feature {NONE} -- Implementation
 		do
 			create a_sorter.make (Current)
 			len := a_decomposition.count
-			from a_start := 1 until a_start >= len loop
+			from
+				a_start := 1
+			until
+				a_start >= len
+			loop
 				a_finish := end_of_combining_sequence (a_decomposition, a_start, len)
 				if not a_sorter.subsorted (a_decomposition, a_start, a_finish) then
 					a_sorter.subsort (a_decomposition, a_start, a_finish)
@@ -444,7 +449,7 @@ feature {NONE} -- Implementation
 			in_canonical_order: True
 		end
 
-	end_of_combining_sequence  (a_decomposition: DS_ARRAYED_LIST [INTEGER]; a_start, len: INTEGER): INTEGER is
+	end_of_combining_sequence (a_decomposition: DS_ARRAYED_LIST [INTEGER]; a_start, len: INTEGER): INTEGER is
 			-- Last character in combining sequence
 		require
 			decomposition_not_void: a_decomposition /= Void
@@ -482,14 +487,18 @@ feature {NONE} -- Implementation
 			a_mapping: DS_ARRAYED_LIST [INTEGER]
 		do
 			i := a_code // (65536)
-			a_rem  := a_code \\ (65536)
+			a_rem := a_code \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			a_mapping := decomposition_mapping_properties.item (i).item (j).item (k)
 			if a_mapping /= Void and not (is_canonical and decomposition_type_properties.item (i).item (j).item (k) /= Canonical_decomposition_mapping) then
 				changed.put (True)
 				len := a_mapping.count
-				from x := 1 until x > len loop
+				from
+					x := 1
+				until
+					x > len
+				loop
 					recursively_decompose (a_mapping.item (x), is_canonical, a_decomposition, changed)
 					x := x + 1
 				end
@@ -508,7 +517,11 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (a_decomposition.count)
 			a_cursor := a_decomposition.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				Result.append_item_code (a_cursor.item)
 				a_cursor.forth
 			end
@@ -528,7 +541,11 @@ feature {NONE} -- Implementation
 		do
 			len := a_source.count
 			create Result.make (len)
-			from i := 1 until i > len loop
+			from
+				i := 1
+			until
+				i > len
+			loop
 				a_code := a_source.item_code (i)
 				recursively_decompose (a_code, is_canonical, Result, changed)
 				i := i + 1
@@ -567,7 +584,7 @@ feature {NONE} -- Implementation
 			loop
 				a_code := a_decomposition.item (a_decomp_pos)
 				a_decomp_pos := a_decomp_pos + 1
-				a_class :=  canonical_combining_class_property (a_code)
+				a_class := canonical_combining_class_property (a_code)
 				create a_key.make (a_starter, a_code)
 				if composition_map.has (a_key) and (a_last_class < a_class or a_last_class = 0) then
 					a_composite := composition_map.item (a_key)
@@ -600,7 +617,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			nfd_quick_check_array_not_void: Result /= Void
-			-- no_void_nfd_quick_check_array: not Result.has (Void)
+--			no_void_nfd_quick_check_array: not Result.has (Void)
 		end
 
 	nfc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
@@ -608,7 +625,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			nfc_quick_check_array_not_void: Result /= Void
-			-- no_void_nfc_quick_check_array: not Result.has (Void)
+--			no_void_nfc_quick_check_array: not Result.has (Void)
 		end
 
 	nfkd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
@@ -616,7 +633,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			nfkd_quick_check_array_not_void: Result /= Void
-			-- no_void_nfkd_quick_check_array: not Result.has (Void)
+--			no_void_nfkd_quick_check_array: not Result.has (Void)
 		end
 
 	nfkc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
@@ -624,7 +641,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			nfkc_quick_check_array_not_void: Result /= Void
-			-- no_void_nfkc_quick_check_array: not Result.has (Void)
+--			no_void_nfkc_quick_check_array: not Result.has (Void)
 		end
 
 	canonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
@@ -632,15 +649,15 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			canonical_combining_class_properties_not_void: Result /= Void
-			-- no_void_canonical_combining_class_property: not Result.has (Void)
+--			no_void_canonical_combining_class_property: not Result.has (Void)
 		end
 
 	decomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
-		-- Decomposition type property for each code point
+			-- Decomposition type property for each code point
 		deferred
 		ensure
 			decomposition_type_properties_not_void: Result /= Void
-			-- no_void_decomposition_type_property: not Result.has (Void)
+--			no_void_decomposition_type_property: not Result.has (Void)
 		end
 
 	decomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
@@ -668,7 +685,11 @@ feature {NONE} -- Implementation
 			j: INTEGER_8
 		do
 			create Result.make (0, 255)
-			from i := 0 until i > 255 loop
+			from
+				i := 0
+			until
+				i > 255
+			loop
 				j := INTEGER_.to_integer_8 (a_string.item (i + 1).code)
 				Result.put (j, i)
 				i := i + 1
@@ -739,7 +760,7 @@ feature {NONE} -- Implementation
 			five_integers: Result.count = 5
 		end
 
-	new_sextuple (i, j, k, l, m , n: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_sextuple (i, j, k, l, m, n: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of six integers
 		do
 			create Result.make (6)
@@ -754,7 +775,7 @@ feature {NONE} -- Implementation
 			six_integers: Result.count = 6
 		end
 
-	new_heptuple (i, j, k, l, m , n, o: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_heptuple (i, j, k, l, m, n, o: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of seven integers
 		do
 			create Result.make (7)
@@ -770,7 +791,7 @@ feature {NONE} -- Implementation
 			seven_integers: Result.count = 7
 		end
 
-	new_octuple (i, j, k, l, m , n, o, p: INTEGER): DS_ARRAYED_LIST [INTEGER] is
+	new_octuple (i, j, k, l, m, n, o, p: INTEGER): DS_ARRAYED_LIST [INTEGER] is
 			-- List of eight integers
 		do
 			create Result.make (8)
@@ -832,11 +853,7 @@ feature {NONE} -- Implementation
 				Result := 9
 			when 5 then
 				Result := 10
-			when
-				6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-				18, 19,20, 21, 22, 23, 24, 25, 26, 27, 28,
-				29, 30, 31
-			then
+			when 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 then
 				Result := INTEGER_.to_integer_8 (a_class + 5)
 			when 32 then
 				Result := 84

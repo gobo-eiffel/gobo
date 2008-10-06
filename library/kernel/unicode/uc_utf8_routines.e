@@ -163,7 +163,7 @@ feature -- Access
 		do
 			Result := a_byte.code
 			if a_byte <= byte_127 then
-				-- 0xxxxxxx
+					-- 0xxxxxxx
 			elseif a_byte <= byte_223 then
 					-- 110xxxxx
 				Result := Result \\ 32

@@ -12,10 +12,6 @@ indexing
 
 deferred class TS_TEST
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Access
 
 	name: STRING is

@@ -611,12 +611,10 @@ feature -- Comparison
 				Result := ms = 0 and d = 0
 			end
 		ensure
-			-- Commented out because of possible overflow:
-			-- definition: Result =
-			--    (((day * Milliseconds_in_day + millisecond_count) =
-			--        (other.day * Milliseconds_in_day + other.millisecond_count)) and
-			--    ((year * Months_in_year + month) =
-			--        (other.year * Months_in_year + other.month)))
+				-- Commented out because of possible overflow:
+--			definition: Result =
+--				(((day * Milliseconds_in_day + millisecond_count) = (other.day * Milliseconds_in_day + other.millisecond_count)) and
+--				((year * Months_in_year + month) = (other.year * Months_in_year + other.month)))
 		end
 
 feature -- Conversion

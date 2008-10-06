@@ -61,18 +61,18 @@ feature -- Bits
 			-- Number of bits in a value of type POINTER
 		deferred
 		ensure
-			-- Note: Postcondition commented out to avoid recursive
-			-- call in once-function in KL_PLATFORM:
-			-- definition: Result = Pointer_bytes * Byte_bits
+				-- Note: Postcondition commented out to avoid recursive
+				-- call in once-function in KL_PLATFORM:
+--			definition: Result = Pointer_bytes * Byte_bits
 		end
 
 	Real_bits: INTEGER is
 			-- Number of bits in a value of type REAL
 		deferred
 		ensure
-			-- Note: Postcondition commented out to avoid recursive
-			-- call in once-function in KL_PLATFORM:
-			-- definition: Result = Real_bytes * Byte_bits
+				-- Note: Postcondition commented out to avoid recursive
+				-- call in once-function in KL_PLATFORM:
+--			definition: Result = Real_bytes * Byte_bits
 		end
 
 feature -- Bytes

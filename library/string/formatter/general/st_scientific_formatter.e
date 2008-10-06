@@ -6,13 +6,11 @@ indexing
 		%as input and return the formatted output."
 
 	usage: "Inherit from ST_FORMATTING_ROUTINES and use its format routines."
-
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-
 
 class ST_SCIENTIFIC_FORMATTER
 
@@ -25,7 +23,8 @@ inherit
 
 create
 
-	make, make_with_escape
+	make,
+	make_with_escape
 
 feature {NONE} -- Initialization
 
@@ -103,17 +102,37 @@ feature {NONE} -- Parameter formatters
 		end
 
 	boolean_formatter: ST_BOOLEAN_FORMATTER
+			-- Parameter formatter
+
 	character_formatter: ST_CHARACTER_FORMATTER
+			-- Parameter formatter
+
 	floating_point_formatter: ST_FLOATING_POINT_FORMATTER
+			-- Parameter formatter
+
 	fixed_point_formatter: ST_FIXED_POINT_FORMATTER
+			-- Parameter formatter
+
 	fixed_or_floating_point_formatter: ST_FIXED_OR_FLOATING_POINT_FORMATTER
+			-- Parameter formatter
+
 	decimal_formatter: ST_DECIMAL_FORMATTER
+			-- Parameter formatter
+
 	octal_formatter: ST_UNSIGNED_OCTAL_FORMATTER
+			-- Parameter formatter
+
 	hexadecimal_formatter: ST_UNSIGNED_HEXADECIMAL_FORMATTER
+			-- Parameter formatter
+
 	unsigned_decimal_formatter: ST_UNSIGNED_DECIMAL_FORMATTER
+			-- Parameter formatter
+
 	pointer_formatter: ST_POINTER_FORMATTER
+			-- Parameter formatter
+
 	string_formatter: ST_STRING_FORMATTER
-			-- Parameter formatters
+			-- Parameter formatter
 
 invariant
 

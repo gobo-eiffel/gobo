@@ -14,13 +14,15 @@ class RX_CHARACTER_SET
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_IMPORTED_SPECIAL_ROUTINES
 
 create
 
-	make, make_empty
+	make,
+	make_empty
 
 feature {ANY} -- Initialization
 
@@ -52,10 +54,15 @@ feature -- Status report
 			i: INTEGER
 		do
 			Result := True
-			from i := 0 until i > 255 loop
+			from
+				i := 0
+			until
+				i > 255
+			loop
 				if set.item (i) then
 					Result := False
-					i := 256 -- Jump out of the loop.
+						-- Jump out of the loop.
+					i := 256
 				else
 					i := i + 1
 				end
@@ -82,7 +89,11 @@ feature -- Element Change
 			i, nb: INTEGER
 		do
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				add_character (a_string.item_code (i))
 				i := i + 1
 			end
@@ -97,7 +108,7 @@ feature -- Element Change
 		local
 			c: INTEGER
 		do
-			-- TODO: handler unicode.
+				-- TODO: handler unicode.
 			c := a_code \\ 256
 			set.put (True, c)
 		ensure
@@ -113,7 +124,11 @@ feature -- Element Change
 			other_set: like set
 		do
 			other_set := other.set
-			from i := 0 until i > 255 loop
+			from
+				i := 0
+			until
+				i > 255
+			loop
 				if other_set.item (i) then
 					set.put (True, i)
 				end
@@ -130,7 +145,11 @@ feature -- Element Change
 			other_set: like set
 		do
 			other_set := other.set
-			from i := 0 until i > 255 loop
+			from
+				i := 0
+			until
+				i > 255
+			loop
 				if not other_set.item (i) then
 					set.put (True, i)
 				end
@@ -145,7 +164,11 @@ feature -- Removal
 		local
 			i: INTEGER
 		do
-			from i := 0 until i > 255 loop
+			from
+				i := 0
+			until
+				i > 255
+			loop
 				set.put (False, i)
 				i := i + 1
 			end

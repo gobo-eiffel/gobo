@@ -411,15 +411,21 @@ feature {NONE} -- Implementation
 			-- Associativity of current rule
 
 	Left_assoc: INTEGER is 1
+			-- Code for left associativity
+
 	Right_assoc: INTEGER is 2
+			-- Code for right associativity
+
 	Non_assoc: INTEGER is 3
-			-- Valid values for `associativity'
+			-- Code for no associativity
 
 feature {NONE} -- Constants
 
 	Initial_max_nb_rhs: INTEGER is 20
+			-- Initial capacity for `rhs'
+
 	Max_nb_rhs_increment: INTEGER is 20
-			-- Maximum number of right-hand-side symbols
+			-- Increment when resizing `rhs'
 
 invariant
 

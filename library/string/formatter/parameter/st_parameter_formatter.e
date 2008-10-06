@@ -184,7 +184,10 @@ feature {NONE} -- Formatting
 			nb: INTEGER
 		do
 			nb := width - a_string.count
-			from until nb <= 0 loop
+			from
+			until
+				nb <= 0
+			loop
 				a_stream.put_character (padding_character)
 				nb := nb - 1
 			end
@@ -204,7 +207,10 @@ feature {NONE} -- Formatting
 		do
 			nb := width - a_string.count
 			a_stream.put_string (a_string)
-			from until nb <= 0 loop
+			from
+			until
+				nb <= 0
+			loop
 				a_stream.put_character (padding_character)
 				nb := nb - 1
 			end
@@ -227,12 +233,18 @@ feature {NONE} -- Formatting
 			if nb > 0 then
 				l := nb // 2
 				r := nb - l
-				from until l <= 0 loop
+				from
+				until
+					l <= 0
+				loop
 					a_stream.put_character (padding_character)
 					l := l - 1
 				end
 				a_stream.put_string (a_string)
-				from until r <= 0 loop
+				from
+				until
+					r <= 0
+				loop
 					a_stream.put_character (padding_character)
 					r := r - 1
 				end
@@ -265,9 +277,13 @@ feature {NONE} -- Alignment
 			-- Alignment policy for formatted parameter
 
 	align_left: INTEGER is 1
+			-- Possible value for `alignment'
+
 	align_right: INTEGER is 2
+			-- Possible value for `alignment'
+
 	align_center: INTEGER is 3
-			-- Possible values for `alignment'
+			-- Possible value for `alignment'
 
 invariant
 

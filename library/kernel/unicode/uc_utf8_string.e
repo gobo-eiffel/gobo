@@ -11,7 +11,6 @@ indexing
 		code is between 128 and 255 should follow the ISO 8859-1
 		Latin-1 character set.
 	]"
-
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"

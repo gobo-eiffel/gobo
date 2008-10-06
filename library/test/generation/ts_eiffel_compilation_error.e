@@ -39,6 +39,6 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
+--	dollar0: $0 = program name
 
 end

@@ -44,7 +44,7 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = filename
+--	dollar0: $0 = program name
+--	dollar1: $1 = filename
 
 end

@@ -16,12 +16,15 @@ inherit
 
 	ST_XPATH_CALENDAR_VALUE
 		redefine
-			is_xpath_time, as_xpath_time
+			is_xpath_time,
+			as_xpath_time
 		end
 
 create
 
-	make, make_from_time, make_from_zoned_time
+	make,
+	make_from_time,
+	make_from_zoned_time
 
 feature {NONE} -- Initialization
 

@@ -52,7 +52,11 @@ feature -- Measurement
 			a_cursor: DS_LIST_CURSOR [TS_TEST]
 		do
 			a_cursor := tests.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				Result := Result + a_cursor.item.count
 				a_cursor.forth
 			end
@@ -66,7 +70,11 @@ feature -- Execution
 			a_cursor: DS_LIST_CURSOR [TS_TEST]
 		do
 			a_cursor := tests.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_cursor.item.execute (a_summary)
 				a_cursor.forth
 			end

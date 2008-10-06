@@ -114,7 +114,7 @@ feature -- Element change
 			inserted: item.item (i) = c
 			safe_to_edit: changed
 		end
-	
+
 feature {NONE} -- Implementation
 
 	changed: BOOLEAN
@@ -138,4 +138,3 @@ invariant
 	item_not_void: item /= Void
 
 end
-	

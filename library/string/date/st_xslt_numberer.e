@@ -1,6 +1,8 @@
 indexing
 
-	description: "Objects that support number formatting."
+	description:
+
+		"Objects that support number formatting."
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -16,8 +18,7 @@ inherit
 
 feature -- Access
 
-	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER;
-		a_group_separator, a_letter, an_ordinal: STRING): STRING is
+	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING): STRING is
 			-- Formated number string
 		require
 			number_is_positive: a_number /= Void and then a_number.is_positive
@@ -34,21 +35,23 @@ feature -- Access
 	month_name (a_month, a_minimum_width, a_maximum_width: INTEGER): STRING is
 			-- Month name or abbreviation
 		require
-			valid_month: a_month >= 1 and then a_month <= 12 -- January = 1
+				-- January = 1
+			valid_month: a_month >= 1 and then a_month <= 12
 		deferred
 		ensure
 			valid_month_name: Result /= Void
-			is_capitalized: True -- First letter upper-case, others in lower-case
+--			is_capitalized: First letter upper-case, others in lower-case
 		end
 
 	day_name (a_day, a_minimum_width, a_maximum_width: INTEGER): STRING is
 			-- Name of day of week
 		require
-			valid_iso_day: a_day >= 1 and then a_day <= 7 -- Monday = 1
+				-- Monday = 1
+			valid_iso_day: a_day >= 1 and then a_day <= 7
 		deferred
 		ensure
 			valid_day_name: Result /= Void
-			is_capitalized: True -- First letter upper-case, others in lower-case
+--			is_capitalized: First letter upper-case, others in lower-case
 		end
 
 	half_day_name (a_minute, a_minimum_width, a_maximum_width: INTEGER): STRING is
@@ -58,8 +61,7 @@ feature -- Access
 		deferred
 		ensure
 			valid_half_day_name: Result /= Void
-			is_capitalized: True -- First letter upper-case, others in lower-case
+--			is_capitalized: First letter upper-case, others in lower-case
 		end
 
 end
-

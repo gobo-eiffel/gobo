@@ -21,7 +21,8 @@ inherit
 
 create
 
-	make_standard, make_null
+	make_standard,
+	make_null
 
 feature -- Reporting
 

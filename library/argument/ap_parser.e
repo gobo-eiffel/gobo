@@ -343,19 +343,21 @@ feature -- Validity checks
 			long_set.set_equality_tester (string_equality_tester)
 			create short_set.make
 			nb := a_list.count
-			from i := 1 until (not Result) or (i > nb) loop
+			from
+				i := 1
+			until
+				(not Result) or (i > nb)
+			loop
 				l_option := a_list.item (i)
 				if l_option = Void then
 					Result := False
 				else
 					if l_option.has_short_form then
-						Result := valid_short_form (l_option.short_form) and
-							not short_set.has (l_option.short_form)
+						Result := valid_short_form (l_option.short_form) and not short_set.has (l_option.short_form)
 						short_set.force_last (l_option.short_form)
 					end
 					if l_option.has_long_form and Result then
-						Result := valid_long_form (l_option.long_form) and
-							not long_set.has (l_option.long_form)
+						Result := valid_long_form (l_option.long_form) and not long_set.has (l_option.long_form)
 						long_set.force_last (l_option.long_form)
 					end
 					i := i + 1
@@ -370,7 +372,11 @@ feature -- Validity checks
 		do
 			if all_valid_short_and_long_form (options) then
 				Result := True
-				from alternative_options_lists.start until (not Result) or alternative_options_lists.after loop
+				from
+					alternative_options_lists.start
+				until
+					(not Result) or alternative_options_lists.after
+				loop
 					aol := alternative_options_lists.item_for_iteration
 					if not all_valid_short_and_long_form (aol) then
 						Result := False
@@ -408,7 +414,11 @@ feature {NONE} -- Implementation
 			o: AP_OPTION
 			error: AP_ERROR
 		do
-			from current_options.start until current_options.after loop
+			from
+				current_options.start
+			until
+				current_options.after
+			loop
 				o := current_options.item_for_iteration
 				if o.is_mandatory and not o.was_found then
 					create error.make_missing_option_error (o)
@@ -435,7 +445,11 @@ feature {NONE} -- Implementation
 			if length >= 2 and then l_argument.item (1) = short_option_introduction then
 				if l_argument.item (2) = long_option_introduction then
 					if length = 2 then
-						from argument_list.forth until argument_list.after loop
+						from
+							argument_list.forth
+						until
+							argument_list.after
+						loop
 							parameters.force_last (argument_list.item_for_iteration)
 							argument_list.forth
 						end
@@ -460,7 +474,7 @@ feature {NONE} -- Implementation
 		local
 			l_argument: STRING
 			option_string: STRING
-			option,o: AP_OPTION
+			option, o: AP_OPTION
 			parameter_position: INTEGER
 			parameter: STRING
 			error: AP_ERROR
@@ -545,7 +559,7 @@ feature {NONE} -- Implementation
 			l_argument: STRING
 			i: INTEGER
 			option_character: CHARACTER
-			option,o: AP_OPTION
+			option, o: AP_OPTION
 			parameter: STRING
 			error: AP_ERROR
 		do
@@ -586,8 +600,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if option = Void then
-					create error.make_unknown_option_error
-					  (option_character.out)
+					create error.make_unknown_option_error (option_character.out)
 					error_handler.report_error (error)
 				else
 					if option.needs_parameter then
@@ -597,7 +610,7 @@ feature {NONE} -- Implementation
 								parameter := argument_list.item_for_iteration
 							end
 						else
-							parameter := l_argument.substring (i + 1,l_argument.count)
+							parameter := l_argument.substring (i + 1, l_argument.count)
 							i := l_argument.count
 						end
 						if parameter = Void then
@@ -625,7 +638,11 @@ feature {NONE} -- Implementation
 		do
 			error_handler.reset
 			all_options_list := all_options
-			from all_options_list.start until all_options_list.after loop
+			from
+				all_options_list.start
+			until
+				all_options_list.after
+			loop
 				all_options_list.item_for_iteration.reset
 				all_options_list.forth
 			end

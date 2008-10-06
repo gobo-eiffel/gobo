@@ -4,10 +4,7 @@ indexing
 
 		"Objects that represent STRINGs for comparison"
 
-	remark:
-
-		"If two STRINGs are equal, then their collation keys are equal, and vice versa."
-
+	remark: "If two STRINGs are equal, then their collation keys are equal, and vice versa."
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"
@@ -17,8 +14,6 @@ indexing
 deferred class ST_COLLATION_KEY
 
 inherit
-
-	ANY -- Needed for SE 2.1b1.
 
 	HASHABLE
 

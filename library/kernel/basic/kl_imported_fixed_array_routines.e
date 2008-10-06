@@ -62,11 +62,29 @@ feature -- Access
 
 feature -- Type anchors
 
-	FIXED_ANY_ARRAY_TYPE: SPECIAL [ANY] is do end
-	FIXED_BOOLEAN_ARRAY_TYPE: SPECIAL [BOOLEAN] is do end
-	FIXED_CHARACTER_ARRAY_TYPE: SPECIAL [CHARACTER] is do end
-	FIXED_INTEGER_ARRAY_TYPE: SPECIAL [INTEGER] is do end
-	FIXED_STRING_ARRAY_TYPE: SPECIAL [STRING] is do end
-			-- Type anchors
+	FIXED_ANY_ARRAY_TYPE: SPECIAL [ANY] is
+			-- Type anchor
+		do
+		end
+
+	FIXED_BOOLEAN_ARRAY_TYPE: SPECIAL [BOOLEAN] is
+			-- Type anchor
+		do
+		end
+
+	FIXED_CHARACTER_ARRAY_TYPE: SPECIAL [CHARACTER] is
+			-- Type anchor
+		do
+		end
+
+	FIXED_INTEGER_ARRAY_TYPE: SPECIAL [INTEGER] is
+			-- Type anchor
+		do
+		end
+
+	FIXED_STRING_ARRAY_TYPE: SPECIAL [STRING] is
+			-- Type anchor
+		do
+		end
 
 end

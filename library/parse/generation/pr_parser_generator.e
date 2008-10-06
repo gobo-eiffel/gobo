@@ -1913,8 +1913,10 @@ feature {NONE} -- Access
 feature {NONE} -- Constants
 
 	Initial_max_table_size: INTEGER is 500
+			-- Initial capacity for `yytable' and `yycheck'
+
 	Max_table_size_increment: INTEGER is 500
-			-- Maximum number of items in `yytable' and `yycheck'
+			-- Increment when resizing `yytable' and `yycheck'
 
 	Indentation: STRING is "%T%T%T"
 

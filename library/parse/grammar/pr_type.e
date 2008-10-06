@@ -122,9 +122,9 @@ feature -- Access
 			loop
 				c := name.item (i)
 				inspect c
-				when '0'..'9', 'a'..'z', '_' then
+				when '0' .. '9', 'a' .. 'z', '_' then
 					Result.append_character (c)
-				when 'A'..'Z' then
+				when 'A' .. 'Z' then
 					Result.append_character (CHARACTER_.as_lower (c))
 				else
 					Result.append_character ('_')

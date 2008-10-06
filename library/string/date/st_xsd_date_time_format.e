@@ -22,7 +22,8 @@ inherit
 
 create
 
-	make_1_0, make_1_1
+	make_1_0,
+	make_1_1
 
 feature -- Conversion
 
@@ -68,10 +69,16 @@ feature -- Conversion
 			if a_time.millisecond > 0 then
 				Result.append_character ('.')
 				l_millisecond := a_time.millisecond.out
-				from  until l_millisecond.count = 3 loop
+				from
+				until
+					l_millisecond.count = 3
+				loop
 					l_millisecond.insert_character ('0', 1)
 				end
-				from  until l_millisecond.item (l_millisecond.count) /= '0' loop
+				from
+				until
+					l_millisecond.item (l_millisecond.count) /= '0'
+				loop
 					l_millisecond.remove_tail (1)
 				end
 				Result.append_string (l_millisecond)
@@ -221,13 +228,19 @@ feature {NONE} -- Implementation
 					yy := 1 - a_date.year
 				end
 				INTEGER_.append_decimal_integer (yy, Result)
-				from  until  Result.count >= 4 loop
+				from
+				until
+					Result.count >= 4
+				loop
 					Result.insert_character ('0', 1)
 				end
 				Result.insert_character ('-', 1)
 			else
 				INTEGER_.append_decimal_integer (a_date.year, Result)
-				from  until  Result.count >= 4 loop
+				from
+				until
+					Result.count >= 4
+				loop
 					Result.insert_character ('0', 1)
 				end
 			end
@@ -243,7 +256,10 @@ feature {NONE} -- Implementation
 		do
 			Result := ""
 			INTEGER_.append_decimal_integer (a_date.month, Result)
-			from until  Result.count = 2 loop
+			from
+			until
+				Result.count = 2
+			loop
 				Result.insert_character ('0', 1)
 			end
 		ensure
@@ -258,7 +274,10 @@ feature {NONE} -- Implementation
 		do
 			Result := ""
 			INTEGER_.append_decimal_integer (a_date.day, Result)
-			from until  Result.count = 2 loop
+			from
+			until
+				Result.count = 2
+			loop
 				Result.insert_character ('0', 1)
 			end
 		ensure
@@ -273,7 +292,10 @@ feature {NONE} -- Implementation
 		do
 			Result := ""
 			INTEGER_.append_decimal_integer (a_time_part, Result)
-			from until  Result.count = 2 loop
+			from
+			until
+				Result.count = 2
+			loop
 				Result.insert_character ('0', 1)
 			end
 		ensure
@@ -297,8 +319,7 @@ feature {NONE} -- Implementation
 				else
 					Result := "+"
 				end
-				Result := Result + time_part_to_string (an_offset.hour.abs) + ":" +
-					time_part_to_string (an_offset.minute.abs)
+				Result := Result + time_part_to_string (an_offset.hour.abs) + ":" + time_part_to_string (an_offset.minute.abs)
 			end
 		ensure
 			zone_not_void: Result /= Void
@@ -311,8 +332,7 @@ feature {NONE} -- Implementation
 			create Result.make_canonical (0)
 		ensure
 			utc_offset_not_void: Result /= Void
-			offset_is_zero: Result.hour = 0 and then Result.minute = 0 and then
-				Result.second = 0 and then Result.millisecond = 0
+			offset_is_zero: Result.hour = 0 and then Result.minute = 0 and then Result.second = 0 and then Result.millisecond = 0
 		end
 
 end

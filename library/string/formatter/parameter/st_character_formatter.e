@@ -41,7 +41,9 @@ feature -- Formatting
 			a_cell: DS_CELL [CHARACTER]
 		do
 			a_cell ?= a_parameter
-			check valid_parameter: a_cell /= Void end
+			check
+				valid_parameter: a_cell /= Void
+			end
 			character_format_to (a_cell.item, a_stream)
 		end
 

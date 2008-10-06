@@ -24,7 +24,8 @@ inherit
 
 create
 
-	make_1_0, make_1_1
+	make_1_0,
+	make_1_1
 
 feature {NONE} -- Initialization
 
@@ -65,7 +66,7 @@ feature -- Access
 			some_components: DS_LIST [STRING]
 			a_year, a_month, a_day: INTEGER
 			is_negative: BOOLEAN
-			a_year_result: DS_PAIR [BOOLEAN, INTEGER] 
+			a_year_result: DS_PAIR [BOOLEAN, INTEGER]
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
@@ -90,7 +91,7 @@ feature -- Access
 							Result := False
 						else
 							a_year := a_year_result.second
-							a_month := month_ok  (some_components.item (2))
+							a_month := month_ok (some_components.item (2))
 							if a_month < January or else a_month > December then
 								Result := False
 							else
@@ -115,7 +116,7 @@ feature -- Access
 		local
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
-			an_hour, a_minute: INTEGER 
+			an_hour, a_minute: INTEGER
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -151,8 +152,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_date (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -253,8 +254,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_date_time.item (a_formatted_date_time.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_date_time (a_formatted_date_time.substring (1, a_formatted_date_time.count - 6))
 											if Result then
@@ -296,17 +297,20 @@ feature -- Access
 					some_components := a_splitter.split_greedy (a_formatted_time)
 					Result := some_components.count = 3
 					if Result then
-						Result := False -- until proved `True'
+							-- until proved `True'
+						Result := False
 						if some_components.item (1).count = 2 and then CHARACTER_.is_digit (some_components.item (1).item (1)) and then CHARACTER_.is_digit (some_components.item (1).item (2)) then
 							an_hour := some_components.item (1).to_integer
 							Result := an_hour >= 0 and then an_hour <= 24
 							if Result then
-								Result := False -- until proved `True'
-								if  some_components.item (2).count = 2 and then CHARACTER_.is_digit (some_components.item (2).item (1)) and then CHARACTER_.is_digit (some_components.item (2).item (2)) then
+									-- until proved `True'
+								Result := False
+								if some_components.item (2).count = 2 and then CHARACTER_.is_digit (some_components.item (2).item (1)) and then CHARACTER_.is_digit (some_components.item (2).item (2)) then
 									a_minute := some_components.item (2).to_integer
 									Result := a_minute >= 0 and then a_minute <= 59
 									if Result then
-										Result := False -- until proved `True'
+											-- until proved `True'
+										Result := False
 										a_splitter.set_separators (".")
 										some_seconds := a_splitter.split_greedy (some_components.item (3))
 										if some_seconds.count = 1 or else some_seconds.count = 2 then
@@ -351,7 +355,7 @@ feature -- Access
 		local
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
-			an_hour, a_minute: INTEGER 
+			an_hour, a_minute: INTEGER
 		do
 			if not a_formatted_time.is_empty then
 				if STRING_.same_string (a_formatted_time, last_cached_zoned_time_string) then
@@ -387,8 +391,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_time.item (a_formatted_time.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_time (a_formatted_time.substring (1, a_formatted_time.count - 6))
 											if Result then
@@ -422,7 +426,7 @@ feature -- Access
 			some_components: DS_LIST [STRING]
 			a_year, a_month: INTEGER
 			is_negative: BOOLEAN
-			a_year_result: DS_PAIR [BOOLEAN, INTEGER] 
+			a_year_result: DS_PAIR [BOOLEAN, INTEGER]
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
@@ -447,7 +451,7 @@ feature -- Access
 							Result := False
 						else
 							a_year := a_year_result.second
-							a_month := month_ok  (some_components.item (2))
+							a_month := month_ok (some_components.item (2))
 							if a_month < January or else a_month > December then
 								Result := False
 							else
@@ -468,7 +472,7 @@ feature -- Access
 		local
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
-			an_hour, a_minute: INTEGER 
+			an_hour, a_minute: INTEGER
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -504,8 +508,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_year_month (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -537,7 +541,7 @@ feature -- Access
 			a_date: STRING
 			a_year: INTEGER
 			is_negative: BOOLEAN
-			a_year_result: DS_PAIR [BOOLEAN, INTEGER] 
+			a_year_result: DS_PAIR [BOOLEAN, INTEGER]
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
@@ -573,7 +577,7 @@ feature -- Access
 		local
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
-			an_hour, a_minute: INTEGER 
+			an_hour, a_minute: INTEGER
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -609,8 +613,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_year (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -677,7 +681,7 @@ feature -- Access
 		local
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
-			an_hour, a_minute: INTEGER 
+			an_hour, a_minute: INTEGER
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -713,8 +717,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_month_day (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -777,7 +781,7 @@ feature -- Access
 		local
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
-			an_hour, a_minute: INTEGER 
+			an_hour, a_minute: INTEGER
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -813,8 +817,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_day (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -837,7 +841,7 @@ feature -- Access
 		ensure
 			day_cached: Result implies last_cached_zoned_date /= Void
 		end
-	
+
 	is_month (a_formatted_date: STRING): BOOLEAN is
 			-- Is `a_formatted_date' a valid gMonth?
 		require
@@ -876,7 +880,7 @@ feature -- Access
 		local
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
-			an_hour, a_minute: INTEGER 
+			an_hour, a_minute: INTEGER
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -912,8 +916,8 @@ feature -- Access
 										end
 										if Result then
 											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
-												an_hour := - an_hour
-												a_minute := - a_minute
+												an_hour := -an_hour
+												a_minute := -a_minute
 											end
 											Result := is_month (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -1341,8 +1345,7 @@ feature {NONE} -- Implementation
 				create Result.make (False, 0)
 			elseif a_year.item (1) = '+' then
 				create Result.make (False, 0)
-			elseif not a_year.is_integer
-				or else (STRING_.same_string (a_year, "0000") and then not is_year_zero_valid) then
+			elseif not a_year.is_integer or else (STRING_.same_string (a_year, "0000") and then not is_year_zero_valid) then
 				create Result.make (False, 0)
 			elseif a_year.count < 4 then
 				create Result.make (False, 0)
@@ -1429,7 +1432,10 @@ feature {NONE} -- Implementation
 			end
 			a_count := some_milliseconds
 			a_count.keep_head (3)
-			from until a_count.count = 3 loop
+			from
+			until
+				a_count.count = 3
+			loop
 				a_count.append_character ('0')
 			end
 			Result := a_count.to_integer

@@ -269,7 +269,7 @@ feature -- Parsing
 						yy_parsing_status := yyContinue
 						yy_goto := yyErrlab
 					else
-						-- Accepted or aborted.
+							-- Accepted or aborted.
 					end
 				when yyErrlab then
 						-- Detect error.
@@ -660,13 +660,31 @@ feature {NONE} -- Tables
 feature {NONE} -- Suspended state
 
 	yy_suspended_yystacksize: INTEGER
+			-- Local variable of `parse' to be remembered
+			-- when parsing has been suspended
+
 	yy_suspended_yystate: INTEGER
+			-- Local variable of `parse' to be remembered
+			-- when parsing has been suspended
+
 	yy_suspended_yyn: INTEGER
+			-- Local variable of `parse' to be remembered
+			-- when parsing has been suspended
+
 	yy_suspended_yychar1: INTEGER
+			-- Local variable of `parse' to be remembered
+			-- when parsing has been suspended
+
 	yy_suspended_index: INTEGER
+			-- Local variable of `parse' to be remembered
+			-- when parsing has been suspended
+
 	yy_suspended_yyss_top: INTEGER
+			-- Local variable of `parse' to be remembered
+			-- when parsing has been suspended
+
 	yy_suspended_yy_goto: INTEGER
-			-- Local variables of `parse' to be remembered
+			-- Local variable of `parse' to be remembered
 			-- when parsing has been suspended
 
 feature {NONE} -- Implementation
@@ -759,8 +777,7 @@ feature {NONE} -- Implementation
 		do
 			INTEGER_ARRAY_.subcopy (an_array, other, start_pos, end_pos, index_pos)
 		ensure
-			-- copied: forall i in 0 .. (end_pos - start_pos),
-			--     an_array.item (index_pos + i) = other.item (start_pos + i)
+--			copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
 		end
 
 	yyss: SPECIAL [INTEGER]
@@ -790,23 +807,43 @@ feature {NONE} -- Implementation
 feature {NONE} -- Constants
 
 	yyNewstate: INTEGER is 1
+			-- Goto constant
+
 	yyDefault: INTEGER is 2
+			-- Goto constant
+
 	yyReduce: INTEGER is 3
+			-- Goto constant
+
 	yyErrlab: INTEGER is 4
+			-- Goto constant
+
 	yyErrhandle: INTEGER is 5
+			-- Goto constant
+
 	yyErrpop: INTEGER is 6
-			-- Goto constants
+			-- Goto constant
 
 	yyAccepted: INTEGER is 101
+			-- Parsing status
+
 	yyAborted: INTEGER is 102
+			-- Parsing status
+
 	yyError_raised: INTEGER is 103
+			-- Parsing status
+
 	yyContinue: INTEGER is 104
+			-- Parsing status
+
 	yySuspended: INTEGER is 105
 			-- Parsing status
 
 	yyTerror: INTEGER is 1
+			-- Grammar-independent constant
+
 	yyEof: INTEGER is 0
-			-- Grammar-independent constants
+			-- Grammar-independent constant
 
 	yyFinal: INTEGER is
 			-- Termination state id
@@ -841,12 +878,14 @@ feature {NONE} -- Constants
 			-- (terminal and nonterminal)
 
 	yyInitial_stack_size: INTEGER is 200
+			-- Initial size of parser's stacks
+
 	yyInitial_yyvs_size: INTEGER is 10
 			-- Initial size of parser's stacks
 
 	yyDummy: INTEGER is 2147483647
 			-- To be inserted in manifest arrays
-			-- in order to make SE 2.1b1 happy.
+			-- in order to make SE 2.1b1 happy
 
 invariant
 

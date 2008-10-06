@@ -604,7 +604,10 @@ feature {TS_TEST_HANDLER} -- Files
 				create a_file2.make (Execution_environment.interpreted_string (a_filename2))
 				a_file2.open_read
 				if a_file2.is_open_read then
-					from until done loop
+					from
+					until
+						done
+					loop
 						a_file1.read_line
 						a_file2.read_line
 						i := i + 1
@@ -714,11 +717,16 @@ feature {TS_TEST_HANDLER} -- Files
 			if a_filename2.count = nb then
 				a_name1 := a_filename1.as_lower
 				a_name2 := a_filename2.as_lower
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					c1 := a_name1.item (i)
 					c2 := a_name2.item (i)
 					if c1 /= c2 and not ((c1 = '\' and c2 = '/') or (c1 = '/' and c2 = '\')) then
-						i := nb + 1 -- Jump out of the loop.
+							-- Jump out of the loop.
+						i := nb + 1
 						create a_message.make (50)
 						a_message.append_string (a_tag)
 						a_message.append_string (" (filenames '")
@@ -799,7 +807,11 @@ feature {TS_TEST_HANDLER} -- Containers
 				i1 := expected.lower
 				i2 := actual.lower
 				nb := expected.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i1)
 					if expected_item /= actual_item then
@@ -862,7 +874,11 @@ feature {TS_TEST_HANDLER} -- Containers
 				i1 := expected.lower
 				i2 := actual.lower
 				nb := expected.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i1)
 					if not ANY_.equal_objects (expected_item, actual_item) then
@@ -938,7 +954,11 @@ feature {TS_TEST_HANDLER} -- Containers
 				i1 := expected.lower
 				i2 := actual.lower
 				nb := expected.count
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i2)
 					if expected_item /= actual_item then

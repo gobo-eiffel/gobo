@@ -14,15 +14,19 @@ class TS_TESTER
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_SHARED_ARGUMENTS
+
 	KL_SHARED_EXCEPTIONS
+
 	KL_SHARED_STANDARD_FILES
 
 create
 
-	make_default, make
+	make_default,
+	make
 
 feature {NONE} -- Initialization
 
@@ -210,7 +214,11 @@ feature {NONE} -- Command line
 			arg: STRING
 		do
 			nb := Arguments.argument_count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				arg := Arguments.argument (i)
 				if arg.is_equal ("-o") then
 					if i < nb then

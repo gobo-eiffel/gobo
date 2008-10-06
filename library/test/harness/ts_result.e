@@ -12,10 +12,6 @@ indexing
 
 deferred class TS_RESULT
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 feature -- Access
 
 	test: TS_TEST
@@ -26,19 +22,19 @@ feature -- Status report
 	passed: BOOLEAN is
 			-- Has `test' passed?
 		do
-			-- Result := False
+			Result := False
 		end
 
 	failed: BOOLEAN is
 			-- Has `test' failed?
 		do
-			-- Result := False
+			Result := False
 		end
 
 	aborted: BOOLEAN is
 			-- Has `test' aborted?
 		do
-			-- Result := False
+			Result := False
 		end
 
 feature -- Output

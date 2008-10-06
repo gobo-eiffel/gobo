@@ -4,13 +4,12 @@ indexing
 
 		"Formatters for integer parameters"
 
-	formatting_rules:
-
-		"Precision, if not 0, gives the minimum of digits that must appear; %
-		%if the formatted value requires fewer digits, it is padded on the %
-		%left with zeros. The default precision is 1. When 0 is formatted with %
-		%a precision 0, the output is empty."
-
+	formatting_rules: "[
+		Precision, if not 0, gives the minimum of digits that must appear;
+		if the formatted value requires fewer digits, it is padded on the
+		left with zeros. The default precision is 1. When 0 is formatted with
+		a precision 0, the output is empty.
+	]"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
 	license: "MIT License"
@@ -23,7 +22,8 @@ inherit
 
 	ST_PARAMETER_FORMATTER
 		redefine
-			reset_options, make
+			reset_options,
+			make
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -82,7 +82,9 @@ feature -- Formatting
 			a_cell: DS_CELL [INTEGER]
 		do
 			a_cell ?= a_parameter
-			check valid_parameter: a_cell /= Void end
+			check
+				valid_parameter: a_cell /= Void
+			end
 			integer_format_to (a_cell.item, a_stream)
 		end
 
@@ -97,7 +99,7 @@ feature -- Formatting
 			old_width: INTEGER
 		do
 			if precision = 0 and a_parameter = 0 then
-				-- Do nothing
+					-- Do nothing.
 			else
 				STRING_.wipe_out (integer_buffer)
 				if a_parameter = Platform.Minimum_integer then
@@ -186,6 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 	lower_digits: STRING is "0123456789abcdefghijklmnopqrstuvwxyz"
+
 	upper_digits: STRING is "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	integer_buffer: STRING

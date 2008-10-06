@@ -52,7 +52,11 @@ feature -- Replacement
 			c: INTEGER
 		do
 			nb := a_replacement.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				c := a_replacement.item_code (i)
 				if c = Backslash_code then
 					from
@@ -60,8 +64,7 @@ feature -- Replacement
 						j := i
 						ref := 0
 					until
-						i > nb or else
-						(a_replacement.item_code (i) < Zero_code or a_replacement.item_code (i) > Nine_code)
+						i > nb or else (a_replacement.item_code (i) < Zero_code or a_replacement.item_code (i) > Nine_code)
 					loop
 						c := a_replacement.item_code (i)
 						ref := ref * 10 + c - Zero_code
@@ -174,7 +177,10 @@ feature -- Replacement
 			old_subject_start: INTEGER
 		do
 			old_subject_start := subject_start
-			from until not has_matched loop
+			from
+			until
+				not has_matched
+			loop
 				STRING_.append_substring_to_string (a_string, subject, subject_start, captured_start_position (0) - 1)
 				append_replacement_to_string (a_string, a_replacement)
 				match_substring (subject, captured_end_position (0) + 1, subject_end)
@@ -215,7 +221,10 @@ feature -- Splitting
 			l_last_char_matched := i - 1
 			old_subject_start := i
 			nb := an_array.upper
-			from until not has_matched loop
+			from
+			until
+				not has_matched
+			loop
 				j := captured_start_position (0)
 				k := captured_end_position (0)
 				if j > k then

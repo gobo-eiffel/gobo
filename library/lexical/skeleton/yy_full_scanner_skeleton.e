@@ -287,9 +287,13 @@ feature {NONE} -- Constants
 		end
 
 	yyNext_token: INTEGER is 1
+
 	yyMatch: INTEGER is 2
+
 	yyFind_action: INTEGER is 3
+
 	yyDo_action: INTEGER is 4
+
 	yyFind_rule: INTEGER is 5
 
 invariant

@@ -365,7 +365,7 @@ feature {NONE} -- Factory
 					a_code := 7
 				when 'v' then
 					a_code := 13
-				when '0'..'7' then
+				when '0' .. '7' then
 						-- Octal.
 					nb := a_char.count - 1
 					a_code := 0
@@ -392,11 +392,11 @@ feature {NONE} -- Factory
 							a_code := a_code * 16
 							c := a_char.item (i)
 							inspect c
-							when '0'..'9' then
+							when '0' .. '9' then
 								a_code := a_code + c.code - Zero_code
-							when 'a'..'z' then
+							when 'a' .. 'z' then
 								a_code := a_code + c.code - Lower_a_code + 10
-							when 'A'..'Z' then
+							when 'A' .. 'Z' then
 								a_code := a_code + c.code - Upper_a_code + 10
 							end
 							i := i + 1
@@ -1279,9 +1279,10 @@ feature {NONE} -- Error handling
 feature {NONE} -- Constants
 
 	Initial_max_nb_tokens: INTEGER is 100
+			-- Initial maximum number of terminal symbols
+
 	Initial_max_nb_variables: INTEGER is 300
-			-- Initial maximum number of terminal
-			-- and nonterminal symbols
+			-- Initial maximum number of nonterminal symbols
 
 	Initial_max_nb_types: INTEGER is 300
 			-- Initial maximum number of types

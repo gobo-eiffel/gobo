@@ -137,11 +137,11 @@ feature -- Element change
 			loop
 				c := s.item (i)
 				inspect c
-				when '0'..'9' then
+				when '0' .. '9' then
 					put (INTEGER_.to_integer_8 (c.code - ('0').code), k)
 					k := k + 1
 				else
-					-- Do nothing.
+						-- Do nothing.
 				end
 				i := i - 1
 			end
@@ -408,7 +408,8 @@ feature -- Basic operations
 			from
 				i := 0
 				l_digits := digits
-			until i >= count
+			until
+				i >= count
 			loop
 				l_digits.put (INTEGER_.to_integer_8 (0), i)
 				i := i + 1
@@ -428,7 +429,6 @@ feature -- Basic operations
 				l_b_count := local_b.count
 				i := 0
 			until
-					-- local_b.count
 				i >= l_b_count
 			loop
 				digit := l_b_digits.item (i)
@@ -437,7 +437,6 @@ feature -- Basic operations
 					j := 0
 					i_plus_j := i + j
 				until
-						-- local_a.count
 					j >= l_a_count
 				loop
 					carry := carry + digit * l_a_digits.item (j) + l_digits.item (i_plus_j)

@@ -1,6 +1,8 @@
 indexing
 
-	description: "Objects that support number formatting for language en."
+	description:
+
+		"Objects that support number formatting for language en."
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -30,8 +32,7 @@ inherit
 
 feature -- Access
 
-	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER;
-		a_group_separator, a_letter, an_ordinal: STRING): STRING is
+	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER; a_group_separator, a_letter, an_ordinal: STRING): STRING is
 			-- Formated number string
 		local
 			a_character_code: INTEGER
@@ -44,34 +45,38 @@ feature -- Access
 				Result := converted_number (a_number, decimal_digits_set (a_picture), a_picture.count, a_group_size, a_group_separator, an_ordinal)
 			elseif a_picture.count = 1 then
 				a_character_code := a_picture.item_code (1)
-				inspect
-					a_character_code
-				when 105 then -- 'i' - lower case Roman numerals
+				inspect a_character_code
+				when 105 then
+						-- 'i' - lower case Roman numerals
 					if a_number.is_zero then
 						Result := new_unicode_string ("0")
 					else
 						Result := converted_roman_numerals (a_number)
 					end
-				when 73 then -- 'I' - upper case Roman numerals
+				when 73 then
+						-- 'I' - upper case Roman numerals
 					if a_number.is_zero then
 						Result := new_unicode_string ("0")
 					else
 						Result := converted_roman_numerals (a_number)
 						Result.to_upper
 					end
-				when 65 then -- 'A' - Upper case ASCII letters
+				when 65 then
+						-- 'A' - Upper case ASCII letters
 					if a_number.is_integer then
 						Result := alphabetic_number (a_number.to_integer, latin_upper_case_letters)
 					else
 						Result := converted_number (a_number, european_digits, a_picture.count, a_group_size, a_group_separator, an_ordinal)
 					end
-				when 97 then -- 'a' - Lower case ASCII letters
+				when 97 then
+						-- 'a' - Lower case ASCII letters
 					if a_number.is_integer then
 						Result := alphabetic_number (a_number.to_integer, latin_lower_case_letters)
 					else
 						Result := converted_number (a_number, european_digits, a_picture.count, a_group_size, a_group_separator, an_ordinal)
 					end
-				when 87 then -- 'W' -- Upper case words
+				when 87 then
+						-- 'W' -- Upper case words
 					if a_number.is_integer then
 						if an_ordinal.count > 0 then
 							Result := cased_ordinal_number (a_number.to_integer, False, True)
@@ -81,7 +86,8 @@ feature -- Access
 					else
 						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 					end
-				when 119 then -- 'w' -- Lower case words
+				when 119 then
+						-- 'w' -- Lower case words
 					if a_number.is_integer then
 						if an_ordinal.count > 0 then
 							Result := cased_ordinal_number (a_number.to_integer, False, False)
@@ -92,9 +98,7 @@ feature -- Access
 						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 					end
 				else
-
-					-- Un-supported formatting token - use "1"
-
+						-- Un-supported formatting token - use "1"
 					Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 				end
 			else
@@ -109,9 +113,7 @@ feature -- Access
 						Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 					end
 				else
-
-					-- Un-supported formatting token - use "1"
-
+						-- Un-supported formatting token - use "1"
 					Result := converted_number (a_number, european_digits, 1, a_group_size, a_group_separator, an_ordinal)
 				end
 			end
@@ -124,11 +126,16 @@ feature -- Access
 		do
 			Result := STRING_.cloned_string (english_months.item (a_month))
 			a_max := a_maximum_width
-			if a_max < 3 then a_max := 3 end
+			if a_max < 3 then
+				a_max := 3
+			end
 			if Result.count > a_max then
 				Result := Result.substring (1, a_max)
 			end
-			from  until Result.count >= a_minimum_width loop
+			from
+			until
+				Result.count >= a_minimum_width
+			loop
 				Result := Result + new_unicode_string (" ")
 			end
 		end
@@ -138,27 +145,30 @@ feature -- Access
 		local
 			a_max: INTEGER
 		do
-			Result :=  STRING_.cloned_string (english_days.item (a_day))
+			Result := STRING_.cloned_string (english_days.item (a_day))
 			a_max := a_maximum_width
-			if a_max < 2 then a_max := 2 end
+			if a_max < 2 then
+				a_max := 2
+			end
 			if Result.count > a_max then
-				Result :=  STRING_.cloned_string (english_day_abbreviations.item (a_day))
+				Result := STRING_.cloned_string (english_day_abbreviations.item (a_day))
 			end
 			if Result.count > a_max then
 				Result := Result.substring (1, a_max)
 			end
-			from  until Result.count >= a_minimum_width loop
+			from
+			until
+				Result.count >= a_minimum_width
+			loop
 				Result := Result + new_unicode_string (" ")
 			end
 		end
-
 
 	half_day_name (a_minute, a_minimum_width, a_maximum_width: INTEGER): STRING is
 			-- A.M./P.M indicator
 		do
 			if a_minute < 12 * 60 then
-				inspect
-					a_maximum_width
+				inspect a_maximum_width
 				when 1 then
 					Result := new_unicode_string ("A")
 				when 2, 3 then
@@ -167,8 +177,7 @@ feature -- Access
 					Result := new_unicode_string ("A.M.")
 				end
 			else
-				inspect
-					a_maximum_width
+				inspect a_maximum_width
 				when 1 then
 					Result := new_unicode_string ("P")
 				when 2, 3 then
@@ -180,7 +189,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
-
 	-- Alphabets
 
 	latin_upper_case_letters: STRING is
@@ -290,9 +298,7 @@ feature {NONE} -- Implementation
 		do
 			Result := new_unicode_string_empty
 			a_string := new_unicode_string_empty
-
-			-- First convert `a_number' to a decimal string using `digits'
-
+				-- First convert `a_number' to a decimal string using `digits'
 			from
 				create a_reduced_number.make_copy (a_number)
 				create a_base.make_from_integer (10)
@@ -304,9 +310,7 @@ feature {NONE} -- Implementation
 				a_string := STRING_.appended_string (another_string, a_string)
 				a_reduced_number := a_reduced_number.divide_integer (a_base, shared_decimal_context)
 			end
-
-			-- Now append leading zeros
-
+				-- Now append leading zeros
 			from
 				create another_string.make (0)
 				an_index := 1
@@ -317,16 +321,14 @@ feature {NONE} -- Implementation
 				an_index := an_index + 1
 			end
 			another_string := STRING_.appended_string (another_string, a_string)
-
-			-- Now insert grouping separators
-
+				-- Now insert grouping separators
 			if a_group_size > 0 then
 				from
 					an_index := 1
 				until
 					an_index > another_string.count
 				loop
-					if an_index > 1 and then (another_string.count  + 1 - an_index) \\ a_group_size = 0 then
+					if an_index > 1 and then (another_string.count + 1 - an_index) \\ a_group_size = 0 then
 						Result := STRING_.appended_string (Result, a_group_separator)
 					end
 					Result := STRING_.appended_string (Result, another_string.substring (an_index, an_index))
@@ -349,10 +351,8 @@ feature {NONE} -- Implementation
 		local
 			four_thousand: MA_DECIMAL
 		do
-
-			-- Roman numbers beyond 4000 use overlining and other conventions which we won't
-			--  attempt to reproduce. We'll go high enough to handle present-day Gregorian years.
-
+				-- Roman numbers beyond 4000 use overlining and other conventions which we won't
+				--  attempt to reproduce. We'll go high enough to handle present-day Gregorian years.
 			create four_thousand.make_from_integer (4000)
 			if a_number.compare (four_thousand, shared_decimal_context).is_positive then
 				Result := a_number.to_scientific_string
@@ -361,7 +361,6 @@ feature {NONE} -- Implementation
 				Result := STRING_.appended_string (Result, roman_hundreds.item ((a_number.to_integer // 100) \\ 10))
 				Result := STRING_.appended_string (Result, roman_tens.item ((a_number.to_integer // 10) \\ 10))
 				Result := STRING_.appended_string (Result, roman_units.item (a_number.to_integer \\ 10))
-
 			end
 		ensure
 			converted_number_not_void: Result /= Void
@@ -423,7 +422,8 @@ feature {NONE} -- Implementation
 		do
 			if a_number >= 1000000000 then
 				a_remainder := a_number \\ 1000000000
-				Result := words_number (a_number // 1000000000) + new_unicode_string (" Billion") -- American and very modern English usage - TODO - descendant class for en-GB with traditional
+					-- American and very modern English usage - TODO - descendant class for en-GB with traditional
+				Result := words_number (a_number // 1000000000) + new_unicode_string (" Billion")
 				if a_remainder /= 0 then
 					if a_remainder < 100 then
 						Result := Result + new_unicode_string (" and ")
@@ -482,7 +482,8 @@ feature {NONE} -- Implementation
 			positive_integer: a_number >= 0
 		do
 			if a_number = 0 then
-				Result := new_unicode_string ("Zeroth") -- ?? Physics usage, not colloquial English
+					-- ?? Physics usage, not colloquial English
+				Result := new_unicode_string ("Zeroth")
 			else
 				Result := ordinal_number (a_number)
 			end
@@ -506,7 +507,8 @@ feature {NONE} -- Implementation
 		do
 			if a_number >= 1000000000 then
 				l_remainder := a_number \\ 1000000000
-				Result := words_number (a_number // 1000000000) + new_unicode_string (" Billion") -- American and very modern English usage
+					-- American and very modern English usage
+				Result := words_number (a_number // 1000000000) + new_unicode_string (" Billion")
 				if l_remainder = 0 then
 					Result := Result + new_unicode_string ("th")
 				else
@@ -720,8 +722,7 @@ feature {NONE} -- Implementation
 			if a_penultimate = 1 then
 				Result := new_unicode_string ("th")
 			else
-				inspect
-					an_ultimate
+				inspect an_ultimate
 				when 1 then
 					Result := new_unicode_string ("st")
 				when 2 then

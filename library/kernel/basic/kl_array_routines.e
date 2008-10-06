@@ -122,7 +122,7 @@ feature -- Element change
 				an_array.subcopy (other, start_pos, end_pos, index_pos)
 			end
 		ensure
-			-- copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
+--			copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
 		end
 
 feature -- Removal
@@ -136,7 +136,7 @@ feature -- Removal
 		do
 			an_array.clear_all
 		ensure
-			-- all_cleared: forall i in an_array.lower .. an_array.upper, an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
+--			all_cleared: forall i in an_array.lower .. an_array.upper, an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
 		end
 
 feature -- Resizing

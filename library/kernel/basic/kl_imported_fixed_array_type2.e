@@ -20,7 +20,9 @@ obsolete
 
 feature -- Type anchors
 
-	FIXED_ARRAY_TYPE: SPECIAL [G] is do end
+	FIXED_ARRAY_TYPE: SPECIAL [G] is
 			-- Type anchor
+		do
+		end
 
 end

@@ -93,11 +93,11 @@ feature {NONE} -- Implementation
 							-- The head has a fixed size.
 						yy_end := yy_start + yy_more_len + yy_rule.head_count
 					else
-						-- The rule has trailing context and both
-						-- the head and trail have variable size.
-						-- The work is done using another mechanism
-						-- (varaible_trail_context) (implies
-						-- performance degradation.)
+							-- The rule has trailing context and both
+							-- the head and trail have variable size.
+							-- The work is done using another mechanism
+							-- (varaible_trail_context) (implies
+							-- performance degradation.)
 					end
 				end
 				if yyLine_used then

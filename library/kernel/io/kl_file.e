@@ -169,11 +169,11 @@ feature -- Status report
 								other_inode := inode
 								string_name := a_name
 								if inode /= other_inode then
-									-- Result := False
+									Result := False
 								elseif tmp_file1.count /= count then
-									-- Result := False
+									Result := False
 								elseif tmp_file1.time_stamp /= time_stamp then
-									-- Result := False
+									Result := False
 								else
 									absolute_name1 := file_system.absolute_pathname (name)
 									absolute_name2 := file_system.absolute_pathname (other_name)

@@ -653,19 +653,27 @@ feature {NONE} -- Processing
 feature {NONE} -- Constants
 
 	Initial_max_nb_tokens: INTEGER is 100
+			-- Initial capacity for `tokens'
+
 	Max_nb_tokens_increment: INTEGER is 100
+			-- Increment when resizing `tokens'
+
 	Initial_max_nb_variables: INTEGER is 300
+			-- Initial capacity for `variables'
+
 	Max_nb_variables_increment: INTEGER is 300
-			-- Maximum number of terminal
-			-- and nonterminal symbols
+			-- Increment when resizing `variables'
 
 	Initial_max_nb_types: INTEGER is 300
+			-- Initial capacity for `types'
 	Max_nb_types_increment: INTEGER is 300
-			-- Maximum number of types
+			-- Increment when resizing `types'
 
 	Initial_max_nb_rules: INTEGER is 500
+			-- Initial capacity for `rules'
+
 	Max_nb_rules_increment: INTEGER is 500
-			-- Maximum number of rules
+			-- Increment when resizing `rules'
 
 invariant
 

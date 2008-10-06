@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			-- is held in `text'. Check whether the corresponding 
 			-- character is not out of range. Set `last_integer_value' accordingly.
 		require
-			-- valid_text: `text' recognized by \\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
+--			valid_text: `text' recognized by \\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 		local
 			c: CHARACTER
 			a_code: INTEGER
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 				a_code := 7
 			when 'v' then
 				a_code := 13
-			when '0'..'7' then
+			when '0' .. '7' then
 					-- Octal.
 				nb := text_count
 				a_code := 0
@@ -251,11 +251,11 @@ feature {NONE} -- Implementation
 						a_code := a_code * 16
 						c := text_item (i)
 						inspect c
-						when '0'..'9' then
+						when '0' .. '9' then
 							a_code := a_code + c.code - Zero_code
-						when 'a'..'z' then
+						when 'a' .. 'z' then
 							a_code := a_code + c.code - Lower_a_code + 10
-						when 'A'..'Z' then
+						when 'A' .. 'Z' then
 							a_code := a_code + c.code - Upper_a_code + 10
 						end
 						i := i + 1

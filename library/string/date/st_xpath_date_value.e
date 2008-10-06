@@ -16,12 +16,15 @@ inherit
 
 	ST_XPATH_CALENDAR_VALUE
 		redefine
-			is_xpath_date, as_xpath_date
+			is_xpath_date,
+			as_xpath_date
 		end
 
 create
 
-	make, make_from_date, make_from_zoned_date
+	make,
+	make_from_date,
+	make_from_zoned_date
 
 feature {NONE} -- Initialization
 
@@ -96,7 +99,7 @@ feature -- Status report
 		end
 
 feature -- Conversion
-	
+
 	as_xpath_date: ST_XPATH_DATE_VALUE is
 			-- `Current' seen as a date value
 		do

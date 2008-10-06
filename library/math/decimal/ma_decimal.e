@@ -540,7 +540,7 @@ feature -- Status report
 	exponentiable (other: NUMERIC): BOOLEAN is
 			-- May current object be elevated to the power `other'?
 		do
-			--| TODO
+				--| TODO
 		end
 
 	is_negative: BOOLEAN
@@ -677,7 +677,7 @@ feature -- Basic operations
 	infix "^" (other: NUMERIC): MA_DECIMAL is
 			-- Current decimal to the power `other'
 		do
-			--| TODO
+				--| TODO
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -1612,7 +1612,7 @@ feature {MA_DECIMAL} -- Basic operations
 			elseif align_hint = Align_hint_other_zero then
 				copy (other)
 			elseif align_hint = Align_hint_current_zero then
-				-- Keep `Current'.
+					-- Keep `Current'.
 			else
 				coefficient.integer_add (other.coefficient)
 				exponent := exponent.min (other.exponent)
@@ -1641,7 +1641,7 @@ feature {MA_DECIMAL} -- Basic operations
 				coefficient.integer_quick_subtract_msd (1, coefficient.count)
 				set_negative
 			elseif align_hint = Align_hint_current_zero then
-				-- Keep `Current'.
+					-- Keep `Current'.
 			elseif align_hint = Align_hint_other_zero then
 					-- Copy `other'.
 				copy (other)
@@ -1694,7 +1694,7 @@ feature {MA_DECIMAL} -- Basic operations
 				when Round_half_even then
 					do_round_half_even (ctx)
 				else
-					-- Do nothing.
+						-- Do nothing.
 				end
 			end
 		ensure
@@ -1833,7 +1833,7 @@ feature {MA_DECIMAL} -- Basic operations
 			elseif count_alignment < 0 then
 				grow (other.count)
 			else
-				-- Do nothing.
+					-- Do nothing.
 			end
 		ensure
 			same_count: count = other.count
@@ -2388,8 +2388,8 @@ feature {MA_DECIMAL} -- Basic operations
 				-- 1. divisor.coefficient <= dividend.coefficient
 				-- 2. dividend.coefficient < 10 * divisor.coefficient
 			from
-				-- While coefficient of dividend is less than coefficient of divisor
-				-- multiply coefficient of divident by 10.
+					-- While coefficient of dividend is less than coefficient of divisor
+					-- multiply coefficient of divident by 10.
 			until
 				dividend.coefficient >= divisor.coefficient
 			loop
@@ -2549,12 +2549,12 @@ feature {MA_DECIMAL} -- Basic operations
 			not_constant_snan: Current /= snan
 		do
 			if is_quiet_nan then
-				-- Do nothing.
+					-- Do nothing.
 			elseif is_signaling_nan then
 				ctx.signal (Signal_invalid_operation, "sNaN as operand in rescale")
 				set_quiet_nan
 			elseif is_infinity then
-				-- Do nothing.
+					-- Do nothing.
 			end
 		end
 

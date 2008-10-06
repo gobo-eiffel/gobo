@@ -1592,7 +1592,7 @@ feature -- Conversion
 					-- (inspect independent of character set)
 				inspect a_string.item (i)
 				when '0' then
-					-- Do nothing.
+						-- Do nothing.
 				when '1' then
 					Result := Result + 1
 				when '2' then

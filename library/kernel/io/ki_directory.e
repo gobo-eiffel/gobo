@@ -50,9 +50,8 @@ feature -- Access
 			-- Void if current directory could not be searched
 		deferred
 		ensure
-			-- ARRAY.has is not portable:
-			-- no_void_filename: Result /= Void implies not Result.has (Void)
-			-- no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
+			no_void_filename: Result /= Void implies not Result.has (Void)
+--			no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
 		end
 
 	directory_names: ARRAY [STRING] is
@@ -61,9 +60,8 @@ feature -- Access
 			-- (Do not include parent and current directory names.)
 		deferred
 		ensure
-			-- ARRAY.has is not portable:
-			-- no_void_filename: Result /= Void implies not Result.has (Void)
-			-- no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
+			no_void_filename: Result /= Void implies not Result.has (Void)
+--			no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
 		end
 
 feature -- Status report

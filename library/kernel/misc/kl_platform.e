@@ -9,7 +9,6 @@ indexing
 		inheritance and client/supplier relationship.
 		Inherit from KL_SHARED_PLATFORM instead.
 	]"
-
 	pattern: "Singleton"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"

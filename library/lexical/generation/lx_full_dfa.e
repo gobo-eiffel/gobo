@@ -247,7 +247,9 @@ feature {NONE} -- Building
 feature {NONE} -- Constants
 
 	Initial_max_xpairs: INTEGER is 2000
+			-- Initial capacity for the arrays of next/check pairs for non-templates
+
 	Max_xpairs_increment: INTEGER is 2000
-			-- Maximum number of next/check pairs for non-templates
+			-- Inrcement when resizingthe arrays of next/check pairs for non-templates
 
 end

@@ -1078,7 +1078,7 @@ feature -- Access
 			nb := count
 			if nb = byte_count then
 				if a_code > 127 then
-					-- Result := 0
+					Result := 0
 				else
 					from
 						i := start_index
@@ -1243,7 +1243,7 @@ feature -- Measurement
 			nb := count
 			if nb = byte_count then
 				if a_code > 127 then
-					-- Result := 0
+					Result := 0
 				else
 					from
 						i := 1
@@ -1688,7 +1688,7 @@ feature -- Element change
 			end
 			new_count := utf8.code_byte_count (a_code)
 			if new_count = old_count then
-				-- Do nothing.
+					-- Do nothing.
 			elseif new_count < old_count then
 				move_bytes_left (k + old_count, old_count - new_count)
 			else
@@ -1726,7 +1726,7 @@ feature -- Element change
 			end
 			new_count := utf8.character_byte_count (c)
 			if new_count = old_count then
-				-- Do nothing.
+					-- Do nothing.
 			elseif new_count < old_count then
 				move_bytes_left (k + old_count, old_count - new_count)
 			else
@@ -2388,7 +2388,7 @@ feature -- Element change
 					end
 					new_count := utf8.substring_byte_count (str, 1, a_string_count)
 					if new_count = old_count then
-						-- Do nothing.
+							-- Do nothing.
 					elseif new_count < old_count then
 						move_bytes_left (k + old_count, old_count - new_count)
 					else
@@ -2660,7 +2660,7 @@ feature -- Conversion
 					old_count := utf8.code_byte_count (a_code)
 					new_count := utf8.code_byte_count (new_code)
 					if new_count = old_count then
-						-- Do nothing.
+							-- Do nothing.
 					elseif new_count < old_count then
 						move_bytes_left (i + old_count, old_count - new_count)
 					else
@@ -2698,7 +2698,7 @@ feature -- Conversion
 					old_count := utf8.code_byte_count (a_code)
 					new_count := utf8.code_byte_count (new_code)
 					if new_count = old_count then
-						-- Do nothing.
+							-- Do nothing.
 					elseif new_count < old_count then
 						move_bytes_left (i + old_count, old_count - new_count)
 					else

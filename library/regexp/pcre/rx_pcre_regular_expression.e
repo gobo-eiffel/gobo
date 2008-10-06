@@ -71,9 +71,8 @@ feature -- Access
 			Result := captured_start_position (n)
 		ensure
 			position_large_enough: Result /= 0 implies Result >= subject_start
-			position_small_enough: Result <= subject_end or else
-					-- Consequence of empty matches at the end of a subject:
-				(Result = subject_end + 1 implies captured_end_position (n) = subject_end)
+				-- The or-branch is the consequence of empty matches at the end of a subject:
+			position_small_enough: (Result <= subject_end) or else (Result = subject_end + 1 implies captured_end_position (n) = subject_end)
 		end
 
 	end_of_portion (n: INTEGER): INTEGER is

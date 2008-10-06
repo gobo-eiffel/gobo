@@ -220,7 +220,7 @@ feature {NONE} -- Generation
 					a_file.put_string ("&gt;")
 				when '&' then
 					a_file.put_string ("&amp;")
-				when 'A'..'Z', 'a'..'z', '0'..'9', '_' then
+				when 'A' .. 'Z', 'a' .. 'z', '0' .. '9', '_' then
 					a_file.put_character (c)
 				else
 					a_file.put_string ("&#")

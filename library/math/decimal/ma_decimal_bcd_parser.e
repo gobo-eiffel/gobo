@@ -68,7 +68,7 @@ feature -- Basic operations
 					when 11, 13 then
 						last_decimal.set_negative
 					when 10, 12, 14, 15 then
-						-- Do nothing.
+							-- Do nothing.
 					else
 --						create e
 --						e.raise ("Invalid file format : need 8 bytes packed decimal")

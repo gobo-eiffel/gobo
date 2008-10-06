@@ -51,7 +51,9 @@ feature -- Formatting
 			a_string: STRING
 		do
 			a_string ?= a_parameter
-			check valid_parameter: a_string /= Void end
+			check
+				valid_parameter: a_string /= Void
+			end
 			string_format_to (a_string, a_stream)
 		end
 

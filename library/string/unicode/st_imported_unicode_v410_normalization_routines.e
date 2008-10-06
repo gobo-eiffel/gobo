@@ -23,4 +23,3 @@ feature -- Access
 		end
 
 end
-

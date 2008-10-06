@@ -305,7 +305,7 @@ feature {NONE} -- Generation
 					if i <= nb then
 						next_rule := yy_rules.item (i)
 						if next_rule.action = rule.action then
-							-- Warning: ("action duplicated due to trailing context")
+								-- Warning: ("action duplicated due to trailing context")
 						end
 					end
 				end
@@ -424,11 +424,11 @@ feature {NONE} -- Generation
 					a_file.put_integer (a_rule.head_count)
 					a_file.put_character ('%N')
 				else
-					-- The rule has trailing context and both
-					-- the head and trail have variable size.
-					-- The work is done using another mechanism
-					-- (variable_trail_context).
-					-- TODO: Report performance degradation.
+						-- The rule has trailing context and both
+						-- the head and trail have variable size.
+						-- The work is done using another mechanism
+						-- (variable_trail_context).
+						-- TODO: Report performance degradation.
 				end
 			end
 			if yyLine_used then

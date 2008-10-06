@@ -137,7 +137,7 @@ feature -- Basic operations
 		require
 			is_closable: is_closable
 		do
-			-- Do nothing.
+				-- Do nothing.
 		end
 
 	rewind is
@@ -145,7 +145,7 @@ feature -- Basic operations
 		require
 			can_rewind: is_rewindable
 		do
-			-- Do nothing.
+				-- Do nothing.
 		end
 
 end

@@ -181,7 +181,7 @@ feature -- Element change
 		do
 			nb := count
 			if nb = 1 and then is_current (1) and is_relative then
-				-- Do nothing.
+					-- Do nothing.
 			else
 				j := 1
 				from
@@ -190,7 +190,7 @@ feature -- Element change
 					i > nb
 				loop
 					if is_current (i) then
-						-- Ignore current directory components.
+							-- Ignore current directory components.
 					elseif is_parent (i) then
 						if j = 1 or else is_parent (j - 1) then
 								-- Leading parent directory component.
@@ -246,8 +246,10 @@ feature {NONE} -- Constants
 			-- Initial capacity for `components'
 
 	Current_directory: STRING is "."
+			-- Special pathname component representing the current directory
+
 	Parent_directory: STRING is ".."
-			-- Special pathname components
+			-- Special pathname component representing the parent directory
 
 invariant
 

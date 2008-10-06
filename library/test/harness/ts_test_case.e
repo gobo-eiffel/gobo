@@ -230,7 +230,11 @@ feature -- Registration
 			nb := l_features.upper
 			if i <= nb then
 				register_test_case (a_tester, generator + ".test#" + i.out, l_features.item (i))
-				from i := i + 1 until i > nb loop
+				from
+					i := i + 1
+				until
+					i > nb
+				loop
 					register_cloned_test_case (a_tester, generator + ".test#" + i.out, l_features.item (i))
 					i := i + 1
 				end
@@ -245,7 +249,7 @@ feature -- Registration
 		ensure
 			features_under_test_not_void: Result /= Void
 			no_void_feature_under_test: not Result.has (Void)
-			-- features_under_test_target: forall f in Result, f.target = Current
+--			features_under_test_target: forall f in Result, f.target = Current
 		end
 
 feature {NONE} -- Execution
@@ -270,7 +274,11 @@ feature {NONE} -- Execution
 			if nb = 0 then
 				a_summary.put_success (Current)
 			else
-				from i := 1 until i > nb loop
+				from
+					i := 1
+				until
+					i > nb
+				loop
 					a_summary.put_failure (Current, an_error_messages.item (i))
 					i := i + 1
 				end
@@ -300,7 +308,11 @@ feature {NONE} -- Execution
 							-- been raised, there must be a reported error.
 						a_summary.put_success (Current)
 					else
-						from i := 1 until i > nb loop
+						from
+							i := 1
+						until
+							i > nb
+						loop
 							a_summary.put_failure (Current, an_error_messages.item (i))
 							i := i + 1
 						end
@@ -310,7 +322,11 @@ feature {NONE} -- Execution
 						-- Report any test failure before reporting the Eiffel exception.
 					an_error_messages := assertions.error_messages
 					nb := an_error_messages.count
-					from i := 1 until i > nb loop
+					from
+						i := 1
+					until
+						i > nb
+					loop
 						a_summary.put_failure (Current, an_error_messages.item (i))
 						i := i + 1
 					end

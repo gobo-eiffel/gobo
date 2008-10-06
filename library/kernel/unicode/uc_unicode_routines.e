@@ -44,11 +44,9 @@ feature -- Status report
 	valid_ascii_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid ASCII code?
 		do
-			Result := (a_code >= minimum_ascii_character_code and
-				a_code <= maximum_ascii_character_code)
+			Result := (a_code >= minimum_ascii_character_code and a_code <= maximum_ascii_character_code)
 		ensure
-			definition: Result = (a_code >= minimum_ascii_character_code and
-				a_code <= maximum_ascii_character_code)
+			definition: Result = (a_code >= minimum_ascii_character_code and a_code <= maximum_ascii_character_code)
 		end
 
 	is_ascii_string (a_string: STRING): BOOLEAN is

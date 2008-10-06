@@ -32,7 +32,7 @@ feature -- Execution
 	execute is
 			-- Execute current command.
 		do
-			-- Do nothing.
+				-- Do nothing.
 		end
 
 end

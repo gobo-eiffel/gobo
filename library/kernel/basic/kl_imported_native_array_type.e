@@ -21,7 +21,9 @@ obsolete
 
 feature -- Type anchors
 
-	NATIVE_ARRAY_TYPE: SPECIAL [G] is do end
+	NATIVE_ARRAY_TYPE: SPECIAL [G] is
 			-- Type anchor
+		do
+		end
 
 end

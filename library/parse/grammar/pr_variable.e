@@ -230,8 +230,10 @@ feature -- Output
 feature {NONE} -- Constants
 
 	Initial_max_nb_rules: INTEGER is 5
+			-- Initial capacity for `rules'
+
 	Max_nb_rules_increment: INTEGER is 5
-			-- Maxium number of derive rules
+			-- Increment when resizing `rules'
 
 feature {DS_NESTED_LIST_FLATTENER} -- Implementation
 

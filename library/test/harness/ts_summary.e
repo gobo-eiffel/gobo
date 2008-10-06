@@ -12,10 +12,6 @@ indexing
 
 class TS_SUMMARY
 
-inherit
-
-	ANY -- Needed for SE 2.1b1.
-
 create
 
 	make
@@ -125,7 +121,7 @@ feature -- Element change
 		require
 			a_test_not_void: a_test /= Void
 		do
-			-- Do nothing.
+				-- Do nothing.
 		end
 
 	end_test (a_test: TS_TEST; asserts: INTEGER) is
@@ -208,7 +204,11 @@ feature -- Output
 		do
 			a_file.put_line ("Test Results:")
 			a_cursor := results.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_result := a_cursor.item
 				if not a_result.passed then
 					a_result.print_result (a_file)
@@ -229,7 +229,11 @@ feature -- Output
 			if not results.is_empty then
 				a_file.put_line ("Test Results:")
 				a_cursor := results.new_cursor
-				from a_cursor.start until a_cursor.after loop
+				from
+					a_cursor.start
+				until
+					a_cursor.after
+				loop
 					a_cursor.item.print_result (a_file)
 					a_file.put_new_line
 					a_cursor.forth

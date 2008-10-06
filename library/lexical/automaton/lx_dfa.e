@@ -359,8 +359,10 @@ feature {NONE} -- Resizing
 feature {NONE} -- Constants
 
 	Initial_max_dfas: INTEGER is 1000
+			-- Initial capacity for `states'
+
 	Max_dfas_increment: INTEGER is 1000
-			-- Maximum number of DFA states
+			-- Increment when resizing `states'
 
 invariant
 

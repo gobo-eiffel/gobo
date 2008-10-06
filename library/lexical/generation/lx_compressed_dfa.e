@@ -1040,8 +1040,10 @@ feature {NONE} -- Constants
 			-- Id of the state that always jams
 
 	Initial_max_xpairs: INTEGER is 2000
+			-- Initial capacity for the arrays of next/check pairs for non-templates
+
 	Max_xpairs_increment: INTEGER is 2000
-			-- Maximum number of next/check pairs for non-templates
+			-- Increment when resizing the arrays of next/check pairs for non-templates
 
 	Singletons_capacity: INTEGER is 500
 			-- Maximum number of states with only one out-transition

@@ -11,12 +11,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 deferred class ST_FORMATTER
 
 inherit
 
-	ANY -- Needed for SE 2.1b1.
+	ANY
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -196,7 +195,11 @@ feature {NONE} -- Formatting
 			end
 			nb := a_format.count
 			s := 1
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				if a_format.item (i) = escape_character then
 					if s < i then
 						a_stream.put_substring (a_format, s, i - 1)
@@ -493,11 +496,19 @@ feature {NONE} -- Parameter formatters
 feature {NONE} -- Constants
 
 	Left_flag: CHARACTER is '-'
+		-- Flag
+
 	Center_flag: CHARACTER is '^'
+		-- Flag
+
 	Zero_padding_flag: CHARACTER is '0'
+		-- Flag
+
 	Plus_sign_flag: CHARACTER is '+'
+		-- Flag
+
 	Space_flag: CHARACTER is ' '
-		-- Flags
+		-- Flag
 
 	Dot_marker: CHARACTER is '.'
 			-- Character that separates width from precision

@@ -33,33 +33,69 @@ feature -- Year
 --			definition: Result = (December - Januray + 1)
 
 	Days_in_year: INTEGER is 365
+			-- Number of days in a non-leap year
+
 	Days_in_leap_year: INTEGER is 366
-			-- Number of days in a (leap) year
+			-- Number of days in a leap year
 
 	Days_in_400_years: INTEGER is 146097
+			-- Number of days in 400 years
+
 	Days_in_100_years: INTEGER is 36524
+			-- Number of days in 100 years
+
 	Days_in_4_years: INTEGER is 1461
+			-- Number of days in 4 years
+
 	Days_in_3_years: INTEGER is 1095
+			-- Number of days in 3 years with no leap year
+
 	Days_in_3_leap_years: INTEGER is 1096
+			-- Number of days in 3 years with a leap year
+
 	Days_in_2_years: INTEGER is 730
+			-- Number of days in 2 years with no leap year
+
 	Days_in_2_leap_years: INTEGER is 731
-			-- Number of days in multiple years
+			-- Number of days in 2 years with a leap year
 
 feature -- Month
 
 	January: INTEGER is 1
+			-- Code for January
+
 	February: INTEGER is 2
+			-- Code for February
+
 	March: INTEGER is 3
+			-- Code for March
+
 	April: INTEGER is 4
+			-- Code for April
+
 	May: INTEGER is 5
+			-- Code for May
+
 	June: INTEGER is 6
+			-- Code for June
+
 	July: INTEGER is 7
+			-- Code for July
+
 	August: INTEGER is 8
+			-- Code for August
+
 	September: INTEGER is 9
+			-- Code for September
+
 	October: INTEGER is 10
+			-- Code for October
+
 	November: INTEGER is 11
+			-- Code for November
+
 	December: INTEGER is 12
-			-- Months
+			-- Code for December
 
 	days_in_month (m, y: INTEGER): INTEGER is
 			-- Number of days in month `m' of year `y'
@@ -130,13 +166,37 @@ feature -- Month
 feature -- Week day
 
 	Sunday: INTEGER is 1
+			-- Code for Sunday
+--		obsolete
+--			"[041224] Use DT_WEEK_DAY instead."
+
 	Monday: INTEGER is 2
+			-- Code for Monday
+--		obsolete
+--			"[041224] Use DT_WEEK_DAY instead."
+
 	Tuesday: INTEGER is 3
+			-- Code for Tuesday
+--		obsolete
+--			"[041224] Use DT_WEEK_DAY instead."
+
 	Wednesday: INTEGER is 4
+			-- Code for Wednesday
+--		obsolete
+--			"[041224] Use DT_WEEK_DAY instead."
+
 	Thursday: INTEGER is 5
+			-- Code for Thursday
+--		obsolete
+--			"[041224] Use DT_WEEK_DAY instead."
+
 	Friday: INTEGER is 6
+			-- Code for Friday
+--		obsolete
+--			"[041224] Use DT_WEEK_DAY instead."
+
 	Saturday: INTEGER is 7
-			-- Week days
+			-- Code for Saturday
 --		obsolete
 --			"[041224] Use DT_WEEK_DAY instead."
 
@@ -199,10 +259,10 @@ feature -- Time
 
 	Seconds_in_day: INTEGER is 86400
 			-- Number of seconds in a day
- 
+
 	Milliseconds_in_day: INTEGER is 86400000
 			-- Number of milliseconds in a day
- 
+
 	Minutes_in_hour: INTEGER is 60
 			-- Number of minutes in an hour
 
@@ -239,8 +299,7 @@ feature {NONE} -- Epoch
 			-- Number of leap years between year '1'
 			-- and year 'Epoch_year - 1'
 		once
-			Result := ((Epoch_year - 1) // 4) -
-				((Epoch_year - 1) // 100) + ((Epoch_year - 1) // 400)
+			Result := ((Epoch_year - 1) // 4) - ((Epoch_year - 1) // 100) + ((Epoch_year - 1) // 400)
 		end
 
 	Epoch_days_at_month: INTEGER is

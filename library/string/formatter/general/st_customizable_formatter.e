@@ -11,7 +11,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class ST_CUSTOMIZABLE_FORMATTER
 
 inherit
@@ -23,7 +22,8 @@ inherit
 
 create
 
-	make, make_with_escape
+	make,
+	make_with_escape
 
 feature {NONE} -- Initialization
 

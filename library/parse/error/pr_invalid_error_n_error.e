@@ -45,9 +45,9 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = filename
-	-- dollar2: $2 = line number
-	-- dollar3: $3 = `n' (as in %error(n))
+--	dollar0: $0 = program name
+--	dollar1: $1 = filename
+--	dollar2: $2 = line number
+--	dollar3: $3 = `n' (as in %error(n))
 
 end

@@ -4,13 +4,12 @@ indexing
 
 		"PCRE shared character sets"
 
-	remark:
-
-		"Each regexp compiler and matcher uses these character sets to %
-		%classify a character type. Make your own changes to these sets %
-		%if you would localize your regexp compiler. Keep in mind that %
-		%changes will be shared by all regexp compilers."
-
+	remark: "[
+		Each regexp compiler and matcher uses these character sets to
+		classify a character type. Make your own changes to these sets
+		if you would localize your regexp compiler. Keep in mind that
+		changes will be shared by all regexp compilers.
+		]"
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
 	license: "MIT License"
@@ -104,7 +103,11 @@ feature -- Character sets
 			i: INTEGER
 		once
 			create Result.make_empty
-			from i := 0 until i > 31 loop
+			from
+				i := 0
+			until
+				i > 31
+			loop
 				Result.add_character (i)
 				i := i + 1
 			end
@@ -147,7 +150,11 @@ feature -- Character sets
 			i: INTEGER
 		once
 			create Result.make_empty
-			from i := 0 until i > 127 loop
+			from
+				i := 0
+			until
+				i > 127
+			loop
 				Result.add_character (i)
 				i := i + 1
 			end
@@ -159,7 +166,7 @@ feature -- Character sets
 	space_set: RX_CHARACTER_SET is
 			-- Space character set
 		once
-			create Result.make("%T%N%F%R%/11/ ")
+			create Result.make ("%T%N%F%R%/11/ ")
 		ensure
 			space_set_not_void: Result /= Void
 			space_set_not_empty: not Result.is_empty

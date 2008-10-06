@@ -4,15 +4,14 @@ indexing
 
 		"Formatters for double parameters, $g or $G"
 
-	formatting_rules:
-
-		"The precision specifies the number of significant digits. If %
-		%the precision is missing, 6 digits are given; if the precision %
-		%is zero, it is treated as 1. Style 'e' is used if the exponent %
-		%from its conversion is less than -4 or greater than or equal to %
-		%the precision. A decimal point appears only if it is %
-		%followed by at least one digit."
-
+	formatting_rules: "[
+		The precision specifies the number of significant digits. If
+		the precision is missing, 6 digits are given; if the precision
+		is zero, it is treated as 1. Style 'e' is used if the exponent
+		from its conversion is less than -4 or greater than or equal to
+		the precision. A decimal point appears only if it is
+		followed by at least one digit.
+	]"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004-2005, Object-Tools and others"
 	license: "MIT License"

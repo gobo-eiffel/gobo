@@ -16,7 +16,8 @@ inherit
 
 	ST_PARAMETER_FORMATTER
 		redefine
-			make, reset_options
+			make,
+			reset_options
 		end
 
 	KL_IMPORTED_DOUBLE_ROUTINES
@@ -66,7 +67,9 @@ feature -- Formatting
 			a_cell: DS_CELL [DOUBLE]
 		do
 			a_cell ?= a_parameter
-			check valid_parameter: a_cell /= Void end
+			check
+				valid_parameter: a_cell /= Void
+			end
 			double_format_to (a_cell.item, a_stream)
 		end
 
@@ -131,13 +134,18 @@ feature {NONE} -- Implementation
 					-- pieces.
 				rounded_int := 0
 				overflow_int := DOUBLE_.truncated_to_integer (10.0 ^ decimal_digit_count)
-				from j := nb until j < 1 loop
+				from
+					j := nb
+				until
+					j < 1
+				loop
 					fp_piece := fractional_list.item (j) + 1
 					if fp_piece < overflow_int then
 							-- No more overflow - all done.
 						fractional_list.replace (fp_piece, j)
 						is_overflow_consumed := True
-						j := 0 -- Jump out of the loop.
+							-- Jump out of the loop.
+						j := 0
 					else
 							-- Current digits have "overflowed" - reset the digits and
 							-- continue propagating the carry.
@@ -151,7 +159,11 @@ feature {NONE} -- Implementation
 			end
 				-- Build up the fractional digits string from the digit pieces in
 				-- `fractional_list' and `rounded_int' (containing the final digits).
-			from j := 1 until j > nb loop
+			from
+				j := 1
+			until
+				j > nb
+			loop
 				append_integer_to_string (fractional_list.item (j), decimal_digit_count, fractional_part)
 				j := j + 1
 			end

@@ -839,15 +839,19 @@ feature -- Output
 feature {NONE} -- Constants
 
 	Initial_max_nb_positions: INTEGER is 50
+			-- Initial capacity for `positions'
+
 	Max_nb_positions_increment: INTEGER is 50
-			-- Maximum number of positions
+			-- Increment when resizing `positions'
 
 	Initial_max_nb_shifts: INTEGER is 50
+			-- Initial capacity for `transitions'
+
 	Initial_max_nb_reductions: INTEGER is 50
-			-- Maximum number of transitions
+			-- Increment when resizing `transitions'
 
 	Initial_max_nb_errors: INTEGER is 10
-			-- Maximum number of errors
+			-- Initial capacity for `errors'
 
 	Position_sorter: DS_BUBBLE_SORTER [PR_POSITION] is
 			-- Position sorter

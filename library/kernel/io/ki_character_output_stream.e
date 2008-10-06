@@ -195,7 +195,9 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	True_constant: STRING is "True"
+			-- String representation of boolean value 'True'
+
 	False_constant: STRING is "False"
-			-- String representation of boolean values
+			-- String representation of boolean value 'False'
 
 end

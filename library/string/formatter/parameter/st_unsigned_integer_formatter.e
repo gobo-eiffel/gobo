@@ -16,7 +16,8 @@ inherit
 
 	ST_INTEGER_FORMATTER
 		redefine
-			valid_parameter, integer_format_to
+			valid_parameter,
+			integer_format_to
 		end
 
 feature -- Status report

@@ -14,9 +14,11 @@ deferred class RX_PATTERN_MATCHER
 
 inherit
 
-	ANY -- Export features from ANY.
+	ANY
+			-- Export features from ANY.
 
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_ANY_ROUTINES
 
 feature {NONE} -- Initialization
@@ -137,17 +139,14 @@ feature -- Status report
 		do
 			match (a_subject)
 			if has_matched then
-				Result := captured_start_position (0) = 1 and
-					captured_end_position (0) = a_subject.count
+				Result := captured_start_position (0) = 1 and captured_end_position (0) = a_subject.count
 			end
 		ensure
 			is_matching: is_matching
 			subject_set: subject = a_subject
 			subject_start_set: subject_start = 1
 			subject_end_set: subject_end = a_subject.count
-			definition: Result = (has_matched and then
-				(captured_start_position (0) = 1 and
-				captured_end_position (0) = a_subject.count))
+			definition: Result = (has_matched and then (captured_start_position (0) = 1 and captured_end_position (0) = a_subject.count))
 		end
 
 feature -- Access
@@ -178,9 +177,8 @@ feature -- Access
 		deferred
 		ensure
 			position_large_enough: Result /= 0 implies Result >= subject_start
-			position_small_enough: Result <= subject_end or
-					-- Consequence of empty matches at the end of a subject:
-				(Result = subject_end + 1 and captured_end_position (n) = subject_end)
+				-- The or-branch is the consequence of empty matches at the end of a subject:
+			position_small_enough: (Result <= subject_end) or (Result = subject_end + 1 and captured_end_position (n) = subject_end)
 		end
 
 	captured_end_position (n: INTEGER): INTEGER is
@@ -316,7 +314,11 @@ feature -- Multiple matching
 			a_string: STRING
 		do
 			a_cursor := an_input.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_string := a_cursor.item
 				if matches (a_string) then
 					an_output.force (a_string)
@@ -341,7 +343,11 @@ feature -- Multiple matching
 			a_string: STRING
 		do
 			a_cursor := an_input.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				a_string := a_cursor.item
 				if recognizes (a_string) then
 					an_output.force (a_string)

@@ -21,7 +21,8 @@ inherit
 
 create
 
-	make, make_with_separators
+	make,
+	make_with_separators
 
 feature {NONE} -- Initialization
 
@@ -70,8 +71,7 @@ feature -- Setting
 		require
 			a_string_not_void: a_string /= Void
 			a_string_not_empty: not a_string.is_empty
-			escape_character_not_separator: has_escape_character implies
-				not a_string.has (escape_character)
+			escape_character_not_separator: has_escape_character implies not a_string.has (escape_character)
 		local
 			i, nb: INTEGER
 		do
@@ -79,7 +79,11 @@ feature -- Setting
 				-- Initialize codes hash set from separators.
 			nb := a_string.count
 			create separator_codes.make (nb)
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				separator_codes.put (a_string.item_code (i))
 				i := i + 1
 			end
@@ -118,18 +122,22 @@ feature -- Status report
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 		do
 			a_cursor := a_linear.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				if a_cursor.item.is_empty then
 					Result := True
-					a_cursor.go_after -- Jump out of the loop.
+						-- Jump out of the loop.
+					a_cursor.go_after
 				else
 					a_cursor.forth
 				end
 			end
 		ensure
 			definition_empty: a_linear.is_empty implies not Result
-			definition_for_first: a_linear.count > 0
-				implies (a_linear.first.is_empty implies Result)
+			definition_for_first: a_linear.count > 0 implies (a_linear.first.is_empty implies Result)
 		end
 
 feature -- Operation(s)
@@ -225,7 +233,11 @@ feature -- Operation(s)
 				-- Using a string for separator is unicode compatible.
 			a_separator := separators.substring (1, 1)
 			a_cursor := a_linear.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				Result := STRING_.appended_string (Result, a_cursor.item)
 				a_cursor.forth
 				if not a_cursor.after then
@@ -335,7 +347,11 @@ feature {NONE} -- Implementation
 				-- Using a string for separator is unicode compatible.
 			a_separator := separators.substring (1, 1)
 			a_cursor := a_linear.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				Result := escape_appended_string (Result, a_cursor.item)
 				a_cursor.forth
 				if not a_cursor.after then
@@ -359,7 +375,11 @@ feature {NONE} -- Implementation
 			Result := a_result
 			last_after := 1
 			nb := a_string.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_code := a_string.item_code (i)
 				if a_code = escape_character.code or separator_codes.has (a_code) then
 					Result := STRING_.appended_substring (Result, a_string, last_after, i - 1)
@@ -381,7 +401,6 @@ invariant
 
 	separators_not_void: separators /= Void
 	separators_not_empty: not separators.is_empty
-	escape_character_not_separator: has_escape_character
-		implies not separators.has (escape_character)
+	escape_character_not_separator: has_escape_character implies not separators.has (escape_character)
 
 end

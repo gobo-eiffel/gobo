@@ -53,13 +53,13 @@ feature -- Status report
 	is_call_agent: BOOLEAN is
 			-- Is current agent a call agent?
 		do
-			-- Result := False
+			Result := False
 		end
 
 	is_inline_agent: BOOLEAN is
 			-- Is current agent an inline agent?
 		do
-			-- Result := False
+			Result := False
 		end
 
 	is_never_void: BOOLEAN is True

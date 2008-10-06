@@ -63,11 +63,29 @@ feature -- Access
 
 feature -- Type anchors
 
-	NATIVE_ANY_ARRAY_TYPE: SPECIAL [ANY] is do end
-	NATIVE_BOOLEAN_ARRAY_TYPE: SPECIAL [BOOLEAN] is do end
-	NATIVE_CHARACTER_ARRAY_TYPE: SPECIAL [CHARACTER] is do end
-	NATIVE_INTEGER_ARRAY_TYPE: SPECIAL [INTEGER] is do end
-	NATIVE_STRING_ARRAY_TYPE: SPECIAL [STRING] is do end
-			-- Type anchors
+	NATIVE_ANY_ARRAY_TYPE: SPECIAL [ANY] is
+			-- Type anchor
+		do
+		end
+
+	NATIVE_BOOLEAN_ARRAY_TYPE: SPECIAL [BOOLEAN] is
+			-- Type anchor
+		do
+		end
+
+	NATIVE_CHARACTER_ARRAY_TYPE: SPECIAL [CHARACTER] is
+			-- Type anchor
+		do
+		end
+
+	NATIVE_INTEGER_ARRAY_TYPE: SPECIAL [INTEGER] is
+			-- Type anchor
+		do
+		end
+
+	NATIVE_STRING_ARRAY_TYPE: SPECIAL [STRING] is
+			-- Type anchor
+		do
+		end
 
 end

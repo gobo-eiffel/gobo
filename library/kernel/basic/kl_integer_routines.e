@@ -193,7 +193,7 @@ feature -- Output
 				end
 			end
 		ensure
-			-- regexp: (0|(-?[1-9][0-9]*)).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+--			regexp: (0|(-?[1-9][0-9]*)).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
 	append_octal_integer (an_int: INTEGER; a_string: STRING) is
@@ -232,7 +232,7 @@ feature -- Output
 				end
 			end
 		ensure
-			-- regexp: (0|[1-7][0-7]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+--			regexp: (0|[1-7][0-7]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
 	append_hexadecimal_integer (an_int: INTEGER; a_string: STRING; uppercase: BOOLEAN) is
@@ -311,8 +311,8 @@ feature -- Output
 				end
 			end
 		ensure
-			-- regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
-			-- regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+--			regexp_uppercase: uppercase implies (0|[1-9A-F][0-9A-F]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
+--			regexp_lowercase: not uppercase implies (0|[1-9a-f][0-9a-f]*).recognizes (a_string.substring (old a_string.count + 1, a_string.count))
 		end
 
 feature -- Operation(s)

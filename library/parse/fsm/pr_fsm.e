@@ -1010,8 +1010,10 @@ feature {NONE} -- Processing (deterministic)
 feature {NONE} -- Constants
 
 	Initial_max_nb_states: INTEGER is 100
+			-- Initial capacity for `states'
+
 	Max_nb_states_increment: INTEGER is 100
-			-- Maxium number of states
+			-- Increment when resizing `states'
 
 	No_type: PR_TYPE is
 			-- Type used when no type has been specified

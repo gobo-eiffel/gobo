@@ -49,11 +49,11 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = filename
-	-- dollar2: $2 = line number
-	-- dollar3: $3 = literal string
-	-- dollar4: $4 = token1
-	-- dollar5: $5 = token2
+--	dollar0: $0 = program name
+--	dollar1: $1 = filename
+--	dollar2: $2 = line number
+--	dollar3: $3 = literal string
+--	dollar4: $4 = token1
+--	dollar5: $5 = token2
 
 end

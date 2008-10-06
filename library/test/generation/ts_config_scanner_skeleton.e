@@ -27,7 +27,9 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+
 	KL_IMPORTED_INTEGER_ROUTINES
+
 	KL_SHARED_PLATFORM
 
 feature {NONE} -- Initialization
@@ -92,7 +94,7 @@ feature -- AST factory
 feature {NONE} -- Constants
 
 	Init_buffer_size: INTEGER is 256
-				-- Initial size for `buffer'
+			-- Initial size for `buffer'
 
 invariant
 

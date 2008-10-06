@@ -257,7 +257,7 @@ feature {MA_DECIMAL} -- Basic operations
 			when State_start, State_sign, State_comma, State_start_exponent, State_exponent_sign, State_starting_point then
 				state := State_error
 			else
-				-- Do nothing.
+					-- Do nothing.
 			end
 			if decimal_point_is_comma and then not is_comma_allowed then
 				state := State_error
@@ -275,7 +275,7 @@ feature {MA_DECIMAL} -- Basic operations
 			index_in_s: index > 0 and then index <= s.count
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				coefficient_begin := index
 				coefficient_end := index
 				state := State_integer_part
@@ -346,7 +346,7 @@ feature {MA_DECIMAL} -- Basic operations
 			inspect c
 			when 'i', 'I' then
 				handle_i (s, index)
-			when '0'..'9' then
+			when '0' .. '9' then
 				coefficient_begin := index
 				coefficient_end := index
 				state := State_integer_part
@@ -367,7 +367,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_integer_part: state = State_integer_part
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				coefficient_end := coefficient_end + 1
 			when 'e', 'E' then
 				state := State_start_exponent
@@ -392,7 +392,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_starting_point: state = State_starting_point
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				coefficient_begin := index
 				coefficient_end := index
 				state := State_fractional_part
@@ -408,7 +408,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_point: state = State_point
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				coefficient_end := coefficient_end + 1
 				state := State_fractional_part
 			when 'e', 'E' then
@@ -425,7 +425,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_comma: state = State_comma
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				coefficient_end := coefficient_end + 1
 				state := State_fractional_part
 			else
@@ -440,7 +440,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_fractional_part: state = State_fractional_part
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				coefficient_end := coefficient_end + 1
 			when 'e', 'E' then
 				state := State_start_exponent
@@ -456,7 +456,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_start_exponent: state = State_start_exponent
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				exponent_as_double := c.code - ('0').code
 				exponent_begin := index
 				exponent_end := index
@@ -483,7 +483,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_exponent_sign: state = State_exponent_sign
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				exponent_as_double := c.code - ('0').code
 				exponent_begin := index
 				exponent_end := index
@@ -503,7 +503,7 @@ feature {MA_DECIMAL} -- Basic operations
 			state_exponent: state = State_exponent
 		do
 			inspect c
-			when '0'..'9' then
+			when '0' .. '9' then
 				exponent_as_double := exponent_as_double * 10 + (c.code - ('0').code)
 				exponent_end := exponent_end + 1
 				if exponent_as_double > 0 then

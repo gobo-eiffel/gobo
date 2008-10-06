@@ -45,9 +45,9 @@ feature -- Access
 
 invariant
 
-	-- dollar0: $0 = program name
-	-- dollar1: $1 = filename
-	-- dollar2: $2 = line number
-	-- dollar3: $3 = option
+--	dollar0: $0 = program name
+--	dollar1: $1 = filename
+--	dollar2: $2 = line number
+--	dollar3: $3 = option
 
 end

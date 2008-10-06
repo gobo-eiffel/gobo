@@ -14,7 +14,8 @@ deferred class LX_TABLES
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_IMPORTED_ARRAY_ROUTINES
 
@@ -27,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			from_tables (other)
 		ensure
-			-- set: forall attribute, attribute = other.attribute
+--			set: forall attribute, attribute = other.attribute
 		end
 
 feature -- Tables
@@ -73,7 +74,7 @@ feature -- Conversion
 			other_not_void: other /= Void
 		deferred
 		ensure
-			-- set: forall attribute, attribute = other.attribute
+--			set: forall attribute, attribute = other.attribute
 		end
 
 	to_tables: LX_TABLES is

@@ -103,10 +103,15 @@ feature -- Templates
 			-- Default template
 
 	invalid_parameter_error_template: STRING is "The value '$2' is not valid for the option '$1'."
+
 	missing_option_error_template: STRING is "The mandatory option '$1' is missing."
+
 	missing_parameter_error_template: STRING is "The option '$1' is missing a parameter."
+
 	surplus_option_error_template: STRING is "Too many occurrences of option '$1'."
+
 	unknown_option_error_template: STRING is "Unknown option '$1'."
+
 	unnecessary_parameter_error_template: STRING is "The flag '$1' was given the parameter '$2'."
 
 feature -- Error Codes
@@ -115,10 +120,15 @@ feature -- Error Codes
 			-- Error code
 
 	invalid_parameter_error_code: STRING is "APIPAR"
+
 	missing_option_error_code: STRING is "APMOPT"
+
 	missing_parameter_error_code: STRING is "APMPAR"
+
 	surplus_option_error_code: STRING is "APSOPT"
+
 	unknown_option_error_code: STRING is "APUOPT"
+
 	unnecessary_parameter_error_code: STRING is "APUPAR"
 
 invariant

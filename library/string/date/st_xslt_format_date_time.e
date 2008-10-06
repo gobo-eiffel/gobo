@@ -1,18 +1,16 @@
 indexing
 
 	description:
+	"[
+		Objects that perform time/date formatting
+		in accordance with the XSLT functions:
+			format-date()
+			format-time()
+			format-date-time()
 
-		"[
-        Objects that perform time/date formatting
-        in accordance with the XSLT functions:
-         format-date()
-         format-time()
-         format-date-time()
-
-        See http://www.w3.org/TR/xslt20/#format-date
-        See also possible errata regarding time zones.
-       ]"
-
+		See http://www.w3.org/TR/xslt20/#format-date
+		See also possible errata regarding time zones.
+	]"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2007, Colin Adams and others"
 	license: "MIT License"
@@ -45,14 +43,13 @@ inherit
 
 feature -- Access
 
-
 	Default_language: STRING is "en"
 			-- Language used if user does not supply one
 
 	Default_calendar: STRING is "CE"
 			-- Calendar used if user does not supply one
 
-	Default_country:  STRING is "US"
+	Default_country: STRING is "US"
 			-- Country used if user does not supply one
 
 	Iso_calendar: STRING is "ISO"
@@ -116,7 +113,7 @@ feature {NONE} -- Implementation
 	primary_modifier: STRING
 			-- Specifier in current variable marker
 
-	parse_picture_string (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE;	a_picture, a_language, a_calendar, a_country: STRING) is
+	parse_picture_string (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_picture' and format output.
 		require
 			a_result_not_void: a_result /= Void
@@ -133,9 +130,16 @@ feature {NONE} -- Implementation
 			l_finished, l_finished_inner: BOOLEAN
 		do
 			from
-				i := 1; l_count := a_picture.count
-			until l_finished loop
-				from l_finished_inner := False until i > l_count or else l_finished_inner loop
+				i := 1
+				l_count := a_picture.count
+			until
+				l_finished
+			loop
+				from
+					l_finished_inner := False
+				until
+					i > l_count or else l_finished_inner
+				loop
 					if a_picture.index_of ('[', i) = i then
 						l_open := i
 						l_finished_inner := True
@@ -145,7 +149,8 @@ feature {NONE} -- Implementation
 							i := i + 1
 							if a_picture.index_of (']', i) /= i then
 								a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error ("] must be doubled in picture string", "XTDE1340"))
-								l_finished := True; l_finished_inner := True
+								l_finished := True
+								l_finished_inner := True
 							end
 						end
 					end
@@ -176,7 +181,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if a_result.item = Void then -- no error
+			if a_result.item = Void then
+					-- no error
 				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make (a_result_string))
 			end
 		end
@@ -229,8 +235,7 @@ feature {NONE} -- Implementation
 			valid_specifier: is_valid_specifier (a_specifier)
 			modifiers_exist: some_modifiers /= Void
 		do
-			inspect
-				a_specifier
+			inspect a_specifier
 			when 'Y' then
 				format_year (a_result, a_result_string, a_calendar_value, some_modifiers, a_language, a_calendar, a_country)
 			when 'M' then
@@ -293,7 +298,6 @@ feature {NONE} -- Implementation
 				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1350"))
 			end
 		end
-
 
 	ordinal_attribute_value: STRING is
 			-- Value of xsl:number "ordinal" attribute
@@ -553,7 +557,7 @@ feature {NONE} -- Implementation
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
 					create l_number.make_from_integer (a_calendar_value.week_in_year)
-					-- TODO: this is result in ISO calendar - adjust for others, if you can find out what they are!
+						-- TODO: this is result in ISO calendar - adjust for others, if you can find out what they are!
 					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
@@ -715,7 +719,9 @@ feature {NONE} -- Implementation
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "n", True)
 				if a_result.item = Void then
-					if not is_name_modifier then primary_modifier := "n" end
+					if not is_name_modifier then
+						primary_modifier := "n"
+					end
 					l_numberer := selected_numberer (a_language)
 					l_string := correctly_cased_name (l_numberer.half_day_name (a_calendar_value.minutes_in_day, minimum_width, maximum_width))
 					if not ANY_.same_types (a_result_string, l_string) then
@@ -839,7 +845,7 @@ feature {NONE} -- Implementation
 						l_number := l_number.rescale (0 - maximum_width, shared_half_even_context)
 						l_string := l_number.to_scientific_string
 						if l_string.count > 2 then
-							-- chop off 0.
+								-- chop off 0.
 							l_string := l_string.substring (3, l_string.count)
 						end
 					end
@@ -880,7 +886,8 @@ feature {NONE} -- Implementation
 					if is_decimal_format then
 						l_string := a_calendar_value.time_zone_description
 					else
-						l_string := "???" -- TODO
+							-- TODO
+						l_string := "???"
 					end
 					if l_string.count < minimum_width then
 						if is_decimal_format then
@@ -946,7 +953,9 @@ feature {NONE} -- Implementation
 			l_string: STRING
 		do
 			check_modifiers (a_result, some_modifiers, "n", True)
-			if not is_name_modifier then primary_modifier := "n" end
+			if not is_name_modifier then
+				primary_modifier := "n"
+			end
 			if a_result.item = Void then
 				if maximum_width <= 2 then
 					l_string := a_calendar
@@ -984,7 +993,9 @@ feature {NONE} -- Implementation
 			check_not_time_value (a_result, a_calendar_value, "E specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "n", True)
-				if not is_name_modifier then primary_modifier := "n" end
+				if not is_name_modifier then
+					primary_modifier := "n"
+				end
 				if a_result.item = Void then
 					if a_calendar_value.is_xpath_time then
 						a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error ("Era is not available with time values", "XTDE1350"))
@@ -1006,8 +1017,7 @@ feature {NONE} -- Implementation
 	is_decimal_format: BOOLEAN is
 			-- Does `primary_modifier' indicate a decimal format?
 		do
-			Result := is_zeros_plus_one (primary_modifier) or
-				(primary_modifier.count = 1 and then is_one (primary_modifier.item_code (1)))
+			Result := is_zeros_plus_one (primary_modifier) or (primary_modifier.count = 1 and then is_one (primary_modifier.item_code (1)))
 		end
 
 	check_modifiers (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
@@ -1038,7 +1048,7 @@ feature {NONE} -- Implementation
 				elseif some_components.count = 2 then
 					a_modifier := some_components.item (1)
 					if a_modifier.count /= 1 or else (a_modifier.item (1) /= 'i' and a_modifier.item (1) /= 'I') then
-						-- widths are ignored for roman numerals
+							-- widths are ignored for roman numerals
 						set_widths (a_result, some_components.item (2))
 					end
 				else
@@ -1084,7 +1094,9 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if a_result.item = Void and then primary_modifier = Void then primary_modifier := a_default end
+			if a_result.item = Void and then primary_modifier = Void then
+				primary_modifier := a_default
+			end
 		ensure
 			primary_modifier_set: a_result.item = Void implies primary_modifier /= Void and then not primary_modifier.is_empty
 		end
@@ -1095,7 +1107,8 @@ feature {NONE} -- Implementation
 			modifier_not_empty: a_modifier /= Void and then not a_modifier.is_empty
 		do
 			primary_modifier := Void
-			if is_zeros_plus_one (a_modifier)
+			if
+				is_zeros_plus_one (a_modifier)
 				or (a_modifier.count = 1 and then is_one (a_modifier.item_code (1)))
 				or STRING_.same_string (a_modifier, "A")
 				or STRING_.same_string (a_modifier, "a")
@@ -1103,12 +1116,17 @@ feature {NONE} -- Implementation
 				or STRING_.same_string (a_modifier, "i")
 				or STRING_.same_string (a_modifier, "W")
 				or STRING_.same_string (a_modifier, "w")
-				or STRING_.same_string (a_modifier, "Ww") then
+				or STRING_.same_string (a_modifier, "Ww")
+			then
 				primary_modifier := a_modifier
-			elseif STRING_.same_string (a_modifier, "Nn")
+			elseif
+				STRING_.same_string (a_modifier, "Nn")
 				or else STRING_.same_string (a_modifier, "N")
-				or else STRING_.same_string (a_modifier, "n") then
-				if use_names then primary_modifier := a_modifier end
+				or else STRING_.same_string (a_modifier, "n")
+			then
+				if use_names then
+					primary_modifier := a_modifier
+				end
 			end
 		end
 
@@ -1185,9 +1203,7 @@ feature {NONE} -- Implementation
 		require
 			requested_language_not_void: a_requested_language /= Void
 		do
-
-			-- TODO: change when multiple languages are supported
-
+				-- TODO: change when multiple languages are supported
 			Result := STRING_.same_string (a_requested_language, Default_language)
 		end
 
@@ -1218,11 +1234,8 @@ feature {NONE} -- Implementation
 		require
 			requested_calendar_not_void: a_requested_calendar /= Void
 		do
-
-			-- TODO: change when more calendars are supported
-
-			Result := STRING_.same_string (a_requested_calendar, Default_calendar)
-				or STRING_.same_string (a_requested_calendar, Ad_calendar)
+				-- TODO: change when more calendars are supported
+			Result := STRING_.same_string (a_requested_calendar, Default_calendar) or STRING_.same_string (a_requested_calendar, Ad_calendar)
 		end
 
 	calendar (a_requested_calendar: STRING): STRING is
@@ -1244,14 +1257,11 @@ feature {NONE} -- Implementation
 			language_not_void: a_language /= Void
 			language_is_supported: is_language_supported (a_language)
 		do
-
-			-- TODO: change when additional languages are supported
-
+				-- TODO: change when additional languages are supported
 			Result := "[Calendar: CE]"
 		ensure
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
-
 
 	calendar_name (a_calendar: STRING): STRING is
 			-- Full name for `a_calendar'
@@ -1271,15 +1281,16 @@ feature {NONE} -- Implementation
 	week_day_number (a_day: INTEGER; a_calendar, a_country: STRING): INTEGER is
 			-- Number of day in week for `a_calendar' in `a_country'
 		require
-			valid_iso_day_number: a_day >= 1 and then a_day <= 7 -- Monday = 1
+				-- Monday = 1
+			valid_iso_day_number: a_day >= 1 and then a_day <= 7
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			country_not_void: a_country /= Void
 		do
 			if STRING_.same_string (a_calendar, Iso_calendar) then
 				Result := a_day
 			else
-				-- For now, assuming Sunday =1, Saturday = 7, for all calendars and countries
-				-- TODO: correct this
+					-- For now, assuming Sunday =1, Saturday = 7, for all calendars and countries
+					-- TODO: correct this
 				Result := week_days_from_monday.week_day_from_code (a_day).as_week_day_from_sunday.code
 			end
 		end
@@ -1287,7 +1298,8 @@ feature {NONE} -- Implementation
 	is_name_modifier: BOOLEAN is
 			-- Is `primary_modifier' a name request?
 		do
-			if STRING_.same_string (primary_modifier, "n")
+			if
+				STRING_.same_string (primary_modifier, "n")
 				or else STRING_.same_string (primary_modifier, "N")
 				or else STRING_.same_string (primary_modifier, "Nn")
 			 then
@@ -1299,12 +1311,10 @@ feature {NONE} -- Implementation
 			-- `a_name' cased according to `primary_modifier'
 		require
 			name_not_void: a_name /= Void
-			is_capitalized: True -- First letter upper-case, others in lower-case
+--			is_capitalized: First letter upper-case, others in lower-case
 			valid_name_modifier: is_name_modifier
 		do
-
-			-- TODO: correct this for Unicode captialization
-
+				-- TODO: correct this for Unicode captialization
 			if STRING_.same_string (primary_modifier, "n") then
 				Result := a_name.as_lower
 			elseif STRING_.same_string (primary_modifier, "N") then
@@ -1312,7 +1322,7 @@ feature {NONE} -- Implementation
 			else
 				check
 					capitalized: STRING_.same_string (primary_modifier, "Nn")
-					-- from pre-condition `valid_name_modifier'
+						-- from pre-condition `valid_name_modifier'
 				end
 				Result := a_name
 			end
@@ -1329,9 +1339,7 @@ feature {NONE} -- Implementation
 		local
 			a_year: INTEGER
 		do
-
-			-- TODO: other calendars and countries, and language
-
+				-- TODO: other calendars and countries, and language
 			a_year := a_calendar_value.year
 			if STRING_.same_string (a_calendar, Default_calendar) then
 				if a_year > 0 then
@@ -1347,7 +1355,7 @@ feature {NONE} -- Implementation
 						Result := "BCE"
 					end
 				end
-			elseif  STRING_.same_string (a_calendar, Ad_calendar) then
+			elseif STRING_.same_string (a_calendar, Ad_calendar) then
 				if a_year > 0 then
 					if maximum_width >= 11 then
 						Result := "Anno Domini"

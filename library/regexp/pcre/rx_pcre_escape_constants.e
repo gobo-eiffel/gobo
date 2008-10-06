@@ -96,16 +96,27 @@ feature -- Access
 feature -- Constants
 
 	esc_uca: INTEGER is 1
+
 	esc_ucb: INTEGER is 2
+
 	esc_lcb: INTEGER is 3
+
 	esc_ucd: INTEGER is 4
+
 	esc_lcd: INTEGER is 5
+
 	esc_ucs: INTEGER is 6
+
 	esc_lcs: INTEGER is 7
+
 	esc_ucw: INTEGER is 8
+
 	esc_lcw: INTEGER is 9
+
 	esc_ucz: INTEGER is 10
+
 	esc_lcz: INTEGER is 11
+
 	esc_ref: INTEGER is 12
 
 end

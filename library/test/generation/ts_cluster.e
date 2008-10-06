@@ -21,13 +21,12 @@ inherit
 
 create
 
-	make, make_default
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname;
-		cregexp: like class_regexp; fregexp: like feature_regexp;
-		a_prefix: like class_prefix) is
+	make (a_name: like name; a_pathname: like pathname; cregexp: like class_regexp; fregexp: like feature_regexp; a_prefix: like class_prefix) is
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
@@ -136,7 +135,11 @@ feature -- Processing
 			a_system.activate_processors
 			a_system.parse_all
 			a_cursor := a_system.classes.new_cursor
-			from a_cursor.start until a_cursor.after loop
+			from
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
 				if class_regexp.recognizes (a_cursor.key.name) then
 					process_class (a_cursor.item, testcases)
 				end
@@ -160,7 +163,11 @@ feature -- Processing
 			create feature_names.make_equal
 			l_procedures := a_class.procedures
 			nb := l_procedures.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				an_identifier ?= l_procedures.item (i).name
 				if an_identifier /= Void then
 					a_name := an_identifier.name

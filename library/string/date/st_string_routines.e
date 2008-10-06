@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	ST_STRING_ROUTINES
+class ST_STRING_ROUTINES
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 		export {NONE} all end
 
 feature -- Status report
-	
+
 	is_all_whitespace (chars: STRING): BOOLEAN is
 			-- Does `chars' consist only of XML white-space characters?
 		local

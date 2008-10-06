@@ -14,14 +14,17 @@ class RX_CASE_MAPPING
 
 inherit
 
-	ANY -- Export features of ANY.
+	ANY
+			-- Export features of ANY.
 
 	KL_IMPORTED_SPECIAL_ROUTINES
+
 	KL_IMPORTED_INTEGER_ROUTINES
 
 create
 
-	make, make_default
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -109,7 +112,11 @@ feature -- Reset
 		local
 			i: INTEGER
 		do
-			from i := 0 until i > 255 loop
+			from
+				i := 0
+			until
+				i > 255
+			loop
 				lower_table.put (i, i)
 				flip_table.put (i, i)
 				i := i + 1
@@ -132,7 +139,11 @@ feature -- Element Change
 			l_code, u_code: INTEGER
 		do
 			nb := an_upper_characters.count
-			from i := 1 until i > nb loop
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				l := a_lower_characters.item (i)
 				u := an_upper_characters.item (i)
 				l_code := l.code
@@ -156,9 +167,9 @@ invariant
 
 	lower_table_not_void: lower_table /= Void
 	lower_table_large_enough: lower_table.count = 256
-	-- valid_lower_table: forall i in lower_table, 0 <= i and i < 256
+--	valid_lower_table: forall i in lower_table, 0 <= i and i < 256
 	flip_table_not_void: flip_table /= Void
 	flip_table_large_enough: flip_table.count = 256
-	-- valid_flip_table: forall i in flip_table, 0 <= i and i < 256
+--	valid_flip_table: forall i in flip_table, 0 <= i and i < 256
 
 end

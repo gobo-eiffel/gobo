@@ -4,13 +4,12 @@ indexing
 
 		"PCRE byte code constants"
 
-	remark:
-
-		"The maximizing and minimizing versions of opcodes (e.g. 'op_foo' %
-		%and 'op_minfoo') must come in pair, with the minimizing in second %
-		%position. Furthermore, sets 'op_*star', 'op_*plus', 'op_*query' %
-		%'op_*upto', op_*exact' should be in that order."
-
+	remark: "[
+		The maximizing and minimizing versions of opcodes (e.g. 'op_foo'
+		and 'op_minfoo') must come in pair, with the minimizing in second
+		position. Furthermore, sets 'op_*star', 'op_*plus', 'op_*query'
+		'op_*upto', op_*exact' should be in that order.
+	]"
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
 	license: "MIT License"
@@ -478,12 +477,7 @@ feature -- Access
 				Result := "?"
 			when op_minquery, op_notminquery, op_typeminquery, op_crminquery then
 				Result := "??"
-			when
-				op_upto, op_minupto, op_exact,
-				op_notupto, op_notminupto, op_notexact,
-				op_typeupto, op_typeminupto, op_typeexact,
-				op_crrange, op_crminrange
-			then
+			when op_upto, op_minupto, op_exact, op_notupto, op_notminupto, op_notexact, op_typeupto, op_typeminupto, op_typeexact, op_crrange, op_crminrange then
 				Result := "{"
 			when op_class then
 				Result := "class"
