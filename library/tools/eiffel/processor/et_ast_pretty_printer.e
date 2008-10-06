@@ -45,6 +45,7 @@ inherit
 			process_call_instruction,
 			process_check_instruction,
 			process_choice_list,
+			process_choice_range,
 			process_class,
 			process_class_type,
 			process_clients,
@@ -425,43 +426,38 @@ feature {ET_AST_NODE} -- Processing
 			l_identifier: ET_IDENTIFIER
 			l_symbol: ET_SYMBOL
 		do
-			if a_list.is_empty then
-					-- Do not print empty assertions, but keep the comments if any.
-				comment_finder.find_comments (a_list, comment_list)
-			else
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					l_item := a_list.item (i)
-					l_assertion := l_item.assertion
-					l_assertion.process (Current)
-					comment_finder.add_excluded_node (l_assertion)
-					comment_finder.find_comments (l_item, comment_list)
-					comment_finder.reset_excluded_nodes
-					if i /= nb then
-						l_identifier ?= l_assertion.last_leaf
-						l_symbol ?= a_list.item (i + 1).first_leaf
-						if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
-								-- Print a semicolon in order to avoid syntax ambiguity.
-								-- For example if we have:
-								--
-								--  check
-								--     f.g
-								--     (a + b).h
-								--  end
-								--
-								-- it could also be seen as:
-								--
-								--  check
-								--     f.g (a + b).h
-								--  end
-								--
-							tokens.semicolon_symbol.process (Current)
-						end
-						print_new_line
-						process_comments
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				l_item := a_list.item (i)
+				l_assertion := l_item.assertion
+				l_assertion.process (Current)
+				comment_finder.add_excluded_node (l_assertion)
+				comment_finder.find_comments (l_item, comment_list)
+				comment_finder.reset_excluded_nodes
+				if i /= nb then
+					l_identifier ?= l_assertion.last_leaf
+					l_symbol ?= a_list.item (i + 1).first_leaf
+					if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
+							-- Print a semicolon in order to avoid syntax ambiguity.
+							-- For example if we have:
+							--
+							--  check
+							--     f.g
+							--     (a + b).h
+							--  end
+							--
+							-- it could also be seen as:
+							--
+							--  check
+							--     f.g (a + b).h
+							--  end
+							--
+						tokens.semicolon_symbol.process (Current)
 					end
-					i := i + 1
 				end
+				process_comments
+				print_new_line
+				i := i + 1
 			end
 		end
 
@@ -877,18 +873,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_instruction.check_keyword.process (Current)
 			print_new_line
-			if an_instruction.is_empty then
-					-- There is no assertion to be printed.
-					-- Print any comments with only one extra indentation level.
-				process_comments
-			else
-				indent
-				process_comments
-				process_assertions (an_instruction)
-				print_new_line
-				process_comments
-				dedent
-			end
+			indent
+			process_comments
+			process_assertions (an_instruction)
+			process_comments
+			dedent
 			an_instruction.end_keyword.process (Current)
 		end
 
@@ -919,6 +908,16 @@ feature {ET_AST_NODE} -- Processing
 					i := i + 1
 				end
 			end
+		end
+
+	process_choice_range (a_choice: ET_CHOICE_RANGE) is
+			-- Process `a_choice'.
+		do
+			a_choice.lower.process (Current)
+			print_space
+			a_choice.dotdot.process (Current)
+			print_space
+			a_choice.upper.process (Current)
 		end
 
 	process_class (a_class: ET_CLASS) is
@@ -1023,8 +1022,6 @@ feature {ET_AST_NODE} -- Processing
 			if an_invariants /= Void then
 				an_invariants.process (Current)
 				process_comments
-				print_new_line
-				print_new_line
 			end
 			an_indexing := a_class.second_indexing
 			if an_indexing /= Void then
@@ -1132,49 +1129,43 @@ feature {ET_AST_NODE} -- Processing
 				comment_finder.find_comments (a_list.item (i), comment_list)
 				i := i + 1
 			end
-			if i > nb then
-					-- There is no instruction to be printed.
-					-- Print any comments with only one extra indentation level.
-				process_comments
-			else
-				indent
-				process_comments
-				from until i > nb loop
-					l_instruction := a_list.item (i)
-					print_new_line
-					l_instruction.process (Current)
-						-- Skip null instructions.
-					from
-						i := i + 1
-					until
-						i > nb or else not a_list.item (i).is_semicolon
-					loop
-						comment_finder.find_comments (a_list.item (i), comment_list)
-						i := i + 1
-					end
-					if i <= nb then
-						l_identifier ?= l_instruction.last_leaf
-						l_symbol ?= a_list.item (i).first_leaf
-						if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
-								-- Print a semicolon in order to avoid syntax ambiguity.
-								-- For example if we have:
-								--
-								--  do
-								--     f.g
-								--     (a + b).h
-								--
-								-- it could also be seen as:
-								--
-								--  do
-								--     f.g (a + b).h
-								--
-							tokens.semicolon_symbol.process (Current)
-						end
-					end
-					process_comments
+			indent
+			process_comments
+			from until i > nb loop
+				l_instruction := a_list.item (i)
+				print_new_line
+				l_instruction.process (Current)
+					-- Skip null instructions.
+				from
+					i := i + 1
+				until
+					i > nb or else not a_list.item (i).is_semicolon
+				loop
+					comment_finder.find_comments (a_list.item (i), comment_list)
+					i := i + 1
 				end
-				dedent
+				if i <= nb then
+					l_identifier ?= l_instruction.last_leaf
+					l_symbol ?= a_list.item (i).first_leaf
+					if l_identifier /= Void and l_symbol /= Void and then (l_symbol.is_left_parenthesis or l_symbol.is_left_bracket) then
+							-- Print a semicolon in order to avoid syntax ambiguity.
+							-- For example if we have:
+							--
+							--  do
+							--     f.g
+							--     (a + b).h
+							--
+							-- it could also be seen as:
+							--
+							--  do
+							--     f.g (a + b).h
+							--
+						tokens.semicolon_symbol.process (Current)
+					end
+				end
+				process_comments
 			end
+			dedent
 		end
 
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
@@ -1674,7 +1665,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			a_feature.deferred_keyword.process (Current)
 			process_comments
@@ -1683,7 +1673,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
 			l_semicolon := a_feature.semicolon
@@ -1786,7 +1775,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			a_feature.deferred_keyword.process (Current)
 			process_comments
@@ -1795,7 +1783,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
 			l_semicolon := a_feature.semicolon
@@ -1918,7 +1905,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
@@ -1938,7 +1924,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.rescue_clause
 			if l_compound /= Void then
@@ -1994,7 +1979,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
@@ -2014,7 +1998,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.rescue_clause
 			if l_compound /= Void then
@@ -2130,7 +2113,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
@@ -2150,7 +2132,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.rescue_clause
 			if l_compound /= Void then
@@ -2194,7 +2175,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
@@ -2214,7 +2194,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.rescue_clause
 			if l_compound /= Void then
@@ -2625,7 +2604,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			tokens.external_keyword.process (Current)
 			l_external_language := a_feature.language
@@ -2659,7 +2637,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
 			l_semicolon := a_feature.semicolon
@@ -2710,7 +2687,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			tokens.external_keyword.process (Current)
 			l_external_language := an_expression.language
@@ -2746,7 +2722,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
 			l_actual_arguments ?= an_expression.actual_arguments
@@ -2857,7 +2832,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			tokens.external_keyword.process (Current)
 			l_external_language := a_feature.language
@@ -2891,7 +2865,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			a_feature.end_keyword.process (Current)
 			l_semicolon := a_feature.semicolon
@@ -2930,7 +2903,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			tokens.external_keyword.process (Current)
 			l_external_language := an_expression.language
@@ -2966,7 +2938,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			an_expression.end_keyword.process (Current)
 			l_actual_arguments ?= an_expression.actual_arguments
@@ -3534,16 +3505,15 @@ feature {ET_AST_NODE} -- Processing
 				a_list.invariant_keyword.process (Current)
 				print_new_line
 				print_new_line
+				indent
+				process_comments
+				process_assertions (a_list)
 				if a_list.is_empty then
-						-- Print any comments with only one extra indentation level.
-					process_comments
-				else
-					indent
-					process_comments
-					process_assertions (a_list)
-					process_comments
-					dedent
+					print_new_line
 				end
+				print_new_line
+				process_comments
+				dedent
 			end
 		end
 
@@ -3777,7 +3747,6 @@ feature {ET_AST_NODE} -- Processing
 			an_invariant_part := an_instruction.invariant_part
 			if an_invariant_part /= Void then
 				an_invariant_part.process (Current)
-				print_new_line
 				process_comments
 			end
 			a_variant_part := an_instruction.variant_part
@@ -3831,16 +3800,11 @@ feature {ET_AST_NODE} -- Processing
 			else
 				a_list.invariant_keyword.process (Current)
 				print_new_line
-				if a_list.is_empty then
-						-- Print any comments with only one extra indentation level.
-					process_comments
-				else
-					indent
-					process_comments
-					process_assertions (a_list)
-					process_comments
-					dedent
-				end
+				indent
+				process_comments
+				process_assertions (a_list)
+				process_comments
+				dedent
 			end
 		end
 
@@ -4068,7 +4032,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
@@ -4088,7 +4051,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.rescue_clause
 			if l_compound /= Void then
@@ -4144,7 +4106,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
@@ -4164,7 +4125,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.rescue_clause
 			if l_compound /= Void then
@@ -4288,7 +4248,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := a_feature.locals
 			if l_locals /= Void then
@@ -4308,7 +4267,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := a_feature.rescue_clause
 			if l_compound /= Void then
@@ -4352,7 +4310,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_preconditions /= Void then
 				l_preconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_locals := an_expression.locals
 			if l_locals /= Void then
@@ -4372,7 +4329,6 @@ feature {ET_AST_NODE} -- Processing
 			if l_postconditions /= Void then
 				l_postconditions.process (Current)
 				process_comments
-				print_new_line
 			end
 			l_compound := an_expression.rescue_clause
 			if l_compound /= Void then
@@ -4526,16 +4482,11 @@ feature {ET_AST_NODE} -- Processing
 					a_then_keyword.process (Current)
 				end
 				print_new_line
-				if a_list.is_empty then
-						-- Print any comments with only one extra indentation level.
-					process_comments
-				else
-					indent
-					process_comments
-					process_assertions (a_list)
-					process_comments
-					dedent
-				end
+				indent
+				process_comments
+				process_assertions (a_list)
+				process_comments
+				dedent
 			end
 		end
 
@@ -4561,16 +4512,11 @@ feature {ET_AST_NODE} -- Processing
 					an_else_keyword.process (Current)
 				end
 				print_new_line
-				if a_list.is_empty then
-						-- Print any comments with only one extra indentation level.
-					process_comments
-				else
-					indent
-					process_comments
-					process_assertions (a_list)
-					process_comments
-					dedent
-				end
+				indent
+				process_comments
+				process_assertions (a_list)
+				process_comments
+				dedent
 			end
 		end
 
@@ -5415,9 +5361,6 @@ feature {NONE} -- Comments
 			i, nb: INTEGER
 			c: CHARACTER
 			l_in_comment: BOOLEAN
-			l_in_comment_marker: BOOLEAN
-			l_dash_number: INTEGER
-			l_old_indentation: INTEGER
 		do
 			comment_printed := False
 			l_comment := a_break.text
@@ -5426,47 +5369,30 @@ feature {NONE} -- Comments
 				c := l_comment.item (i)
 				inspect c
 				when ' ', '%T', '%R' then
-					if l_in_comment_marker then
-						l_in_comment_marker := False
-						print_string ("--")
-					end
 					if l_in_comment then
 						print_character (c)
 					end
 				when '%N' then
-					if l_in_comment_marker then
-						l_in_comment_marker := False
-						print_string ("--")
-					end
 					if l_in_comment then
 						print_new_line
 						l_in_comment := False
 					end
 				when '-' then
-					if l_in_comment_marker then
-						l_dash_number := l_dash_number + 1
-						if l_dash_number = 3 then
-							l_in_comment_marker := False
-								-- Print comment unindented when there are 3 dashes.
-							l_old_indentation := indentation
-							indentation := 0
-							print_string ("---")
-							indentation := l_old_indentation
+					if not l_in_comment then
+						if i = 1 or else l_comment.item (i - 1) /= '%N' then
+								-- This comment does not appear at the beginning of a line.
+						elseif i + 2 > nb or else l_comment.item (i + 2) /= '%T' then
+								-- The two dashes are not followed by a tab.
+						else
+								-- This looks like code that has been commented out
+								-- (either manually or using EiffelStudio).
+								-- Do not indent this comment.
+							indentation_printed := True
 						end
-					elseif not l_in_comment then
-						l_in_comment := True
-						l_in_comment_marker := True
-						l_dash_number := 1
-					else
-						l_in_comment := True
-						print_character (c)
 					end
-				else
-					if l_in_comment_marker then
-						l_in_comment_marker := False
-						print_string ("--")
-					end
+					print_character (c)
 					l_in_comment := True
+				else
 					print_character (c)
 				end
 				i := i + 1
@@ -5496,8 +5422,8 @@ feature {NONE} -- Comments
 			indent
 			if comment_printed then
 				print_indentation
-				file.put_string ("--")
-				file.put_new_line
+				print_string ("--")
+				print_new_line
 			end
 			print_comment (a_break)
 			dedent

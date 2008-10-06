@@ -41,6 +41,16 @@ feature {HASHABLE, COMPARABLE} -- Access
 				on several lines.
 			]")
 			any_print ({INTEGER}.max_value)
+			inspect foo
+			when 'a' .. 'z' then
+				do_it
+			end
+		end
+
+	f is
+		require
+				-- My comment.
+		do
 		end
 
 end
