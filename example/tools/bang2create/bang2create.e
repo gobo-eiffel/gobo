@@ -46,7 +46,7 @@ feature -- Execution
 			a_system.set_ast_factory (an_ast_factory)
 			create a_cluster.make ("cluster_name", ".", a_system)
 			create a_parser.make
-			if in_filename.is_equal ("-") then
+			if in_filename.is_equal ("-") or in_filename.is_empty then
 				a_parser.parse_file (std.input, "stdin", a_time_stamp, a_cluster)
 			else
 				create in_file.make (in_filename)

@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
 		do
 			make_with_buffer (Empty_buffer)
 			last_text_count := 1

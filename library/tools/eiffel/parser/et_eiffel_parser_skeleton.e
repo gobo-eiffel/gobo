@@ -143,6 +143,7 @@ feature -- Parsing
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
 			a_cluster_not_void: a_cluster /= Void
 		local
 			old_group: ET_GROUP

@@ -181,6 +181,7 @@ feature {NONE} -- Parsing
 			-- be updated.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_file: KL_TEXT_INPUT_FILE
@@ -257,6 +258,7 @@ feature {NONE} -- Parsing
 		require
 			a_class_not_void: a_class /= Void
 			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: not a_filename.is_empty
 		local
 			l_other_class: ET_CLASS
 		do

@@ -537,10 +537,41 @@ feature -- Preparsing
 			end
 		end
 
+	class_in_group (a_group: ET_GROUP): ET_CLASS is
+			-- First class among current class and its overridden classes
+			-- that is in `a_group';
+			-- Void if no such class
+			--
+			-- Note: this function will typically be useful when
+			-- called on `master_class' rather than on `Current'.
+		require
+			a_group_not_void: a_group /= Void
+		local
+			l_class: ET_CLASS
+		do
+			from
+				l_class := Current
+			until
+				l_class = Void
+			loop
+				if l_class.is_in_group (a_group) then
+					Result := l_class
+					l_class := Void
+				else
+					l_class := l_class.overridden_class
+				end
+			end
+		ensure
+			in_group: Result /= Void implies is_in_group (a_group)
+		end
+
 	class_in_group_recursive (a_group: ET_GROUP): ET_CLASS is
 			-- First class among current class and its overridden classes that
 			-- is in `a_group' or recursively one of its subgroups;
 			-- Void if no such class
+			--
+			-- Note: this function will typically be useful when
+			-- called on `master_class' rather than on `Current'.
 		require
 			a_group_not_void: a_group /= Void
 		local
@@ -558,6 +589,8 @@ feature -- Preparsing
 					l_class := l_class.overridden_class
 				end
 			end
+		ensure
+			in_group: Result /= Void implies is_in_group_recursive (a_group)
 		end
 
 	master_class: ET_CLASS
@@ -568,6 +601,7 @@ feature -- Preparsing
 			-- Set `filename' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
 			filename := a_name
 		ensure
@@ -683,11 +717,12 @@ feature -- Preparsing status
 	is_in_cluster: BOOLEAN is
 			-- Is current class in a cluster?
 		do
-			Result := (filename /= Void and then group /= Void and then group.is_cluster)
+			Result := (filename /= Void and then not filename.is_empty and then group /= Void and then group.is_cluster)
 		ensure
 			group_not_void: Result implies group /= Void
 			is_cluster: Result implies group.is_cluster
 			filename_not_void: Result implies filename /= Void
+			filename_not_empty: Result implies not filename.is_empty
 		end
 
 	is_in_dotnet_assembly: BOOLEAN is
@@ -719,7 +754,7 @@ feature -- Preparsing status
 	is_in_override_cluster: BOOLEAN is
 			-- Is current class in an override cluster?
 		do
-			Result := filename /= Void and then group /= Void and then (group.is_cluster and group.is_override)
+			Result := filename /= Void and then not filename.is_empty and then group /= Void and then (group.is_cluster and group.is_override)
 		ensure
 			is_cluster: Result implies is_in_cluster
 			is_override: Result implies is_in_override_group
