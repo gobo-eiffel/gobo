@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	input_filename1: STRING is
 			-- Filename of Eiffel class to be pretty-printed
 		once
-			Result := file_system.nested_pathname ("${GOBO}", <<"test", "tools", "data", "pretty_printed1.e">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"test", "tools", "data", "pretty_printed1.txt">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			input_filename1_not_void: Result /= Void
