@@ -562,7 +562,7 @@ feature -- Preparsing
 				end
 			end
 		ensure
-			in_group: Result /= Void implies is_in_group (a_group)
+			in_group: Result /= Void implies Result.is_in_group (a_group)
 		end
 
 	class_in_group_recursive (a_group: ET_GROUP): ET_CLASS is
@@ -590,7 +590,7 @@ feature -- Preparsing
 				end
 			end
 		ensure
-			in_group: Result /= Void implies is_in_group_recursive (a_group)
+			in_group: Result /= Void implies Result.is_in_group_recursive (a_group)
 		end
 
 	master_class: ET_CLASS
