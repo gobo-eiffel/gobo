@@ -4,7 +4,7 @@ indexing
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	retrieve_by_name (file_name: STRING): ANY is
+	retrieve_by_name (file_name: STRING): ?ANY is
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.

@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	name: STRING is
+	name: ?STRING is
 			-- Medium name
 		deferred
 		end

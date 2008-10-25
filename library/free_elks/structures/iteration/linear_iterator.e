@@ -242,13 +242,13 @@ feature -- Iteration
 				j := 1
 			invariant
 				j >= 1 and j <= i
-			variant
-				i - j
 			until
 				exhausted or else j = i
 			loop
 				forth
 				j := j + 1
+			variant
+				i - j
 			end
 			continue_for (action, n, k)
 		end
@@ -265,8 +265,6 @@ feature -- Iteration
 			from
 			invariant
 				i >= 0 and i <= n
-			variant
-				n - i
 			until
 				exhausted or else i = n
 			loop
@@ -276,14 +274,16 @@ feature -- Iteration
 					j := 0
 				invariant
 					j >= 0 and j <= k
-				variant
-					k - j
 				until
 					exhausted or else j = k
 				loop
 					forth
 					j := j + 1
+				variant
+					k - j
 				end
+			variant
+				n - i
 			end
 		end
 

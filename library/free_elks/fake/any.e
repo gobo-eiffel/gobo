@@ -7,7 +7,7 @@ indexing
 		]"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,7 +86,7 @@ feature -- Comparison
 			symmetric: Result implies other.standard_is_equal (Current)
 		end
 
-	frozen equal (some: ANY; other: like some): BOOLEAN is
+	frozen equal (some: ?ANY; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void or attached
 			-- to objects considered equal?
 		do
@@ -102,7 +102,7 @@ feature -- Comparison
 						some.is_equal (other))
 		end
 
-	frozen standard_equal (some: ANY; other: like some): BOOLEAN is
+	frozen standard_equal (some: ?ANY; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void or attached to
 			-- field-by-field identical objects of the same type?
 			-- Always uses default object comparison criterion.
@@ -131,7 +131,7 @@ feature -- Comparison
 			symmetric: Result implies other.is_deep_equal (Current)
 		end
 
-	frozen deep_equal (some: ANY; other: like some): BOOLEAN is
+	frozen deep_equal (some: ?ANY; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void
 			-- or attached to isomorphic object structures?
 		do
@@ -143,7 +143,7 @@ feature -- Comparison
 		ensure
 			shallow_implies_deep: standard_equal (some, other) implies Result
 			both_or_none_void: (some = Void) implies (Result = (other = Void))
-			same_type: (Result and (some /= Void)) implies some.same_type (other)
+			same_type: (Result and (some /= Void)) implies (other /= Void and then some.same_type (other))
 			symmetric: Result implies deep_equal (other, some)
 		end
 
@@ -183,7 +183,7 @@ feature -- Duplication
 			is_standard_equal: standard_is_equal (other)
 		end
 
-	frozen clone (other: ANY): like other is
+	frozen clone (other: ?ANY): like other is
 			-- Void if `other' is void; otherwise new object
 			-- equal to `other'
 			--
@@ -199,7 +199,7 @@ feature -- Duplication
 			equal: equal (Result, other)
 		end
 
-	frozen standard_clone (other: ANY): like other is
+	frozen standard_clone (other: ?ANY): like other is
 			-- Void if `other' is void; otherwise new object
 			-- field-by-field identical to `other'.
 			-- Always uses default copying semantics.
@@ -232,7 +232,7 @@ feature -- Duplication
 			deep_equal: deep_equal (Current, Result)
 		end
 
-	frozen deep_clone (other: ANY): like other is
+	frozen deep_clone (other: ?ANY): like other is
 			-- Void if `other' is void: otherwise, new object structure
 			-- recursively duplicated from the one attached to `other'
 		obsolete
@@ -262,12 +262,10 @@ feature {NONE} -- Retrieval
 			-- Called from runtime to perform a proper dynamic dispatch on `correct_mismatch'
 			-- from MISMATCH_CORRECTOR.
 		local
-			l_corrector: MISMATCH_CORRECTOR
 			l_msg: STRING
 			l_exc: EXCEPTIONS
 		do
-			l_corrector ?= Current
-			if l_corrector /= Void then
+			if {l_corrector: MISMATCH_CORRECTOR} Current then
 				l_corrector.correct_mismatch
 			else
 				create l_msg.make_from_string ("Mismatch: ")
@@ -306,7 +304,7 @@ feature -- Output
 			tagged_out_not_void: Result /= Void
 		end
 
-	print (some: ANY) is
+	print (some: ?ANY) is
 			-- Write terse external representation of `some'
 			-- on standard output.
 		do
@@ -346,7 +344,7 @@ feature -- Basic operations
 		do
 		end
 
-	frozen default: like Current is
+	frozen default: ?like Current is
 			-- Default value of object's type
 		do
 		end
@@ -358,6 +356,14 @@ feature -- Basic operations
 		do
 		ensure
 			-- Result = Result.default
+		end
+
+	frozen as_attached: !like Current
+			-- Attached version of Current
+			-- (Can be used during transitional period to convert
+			-- non-void-safe classes to void-safe ones.)
+		do
+			Result := Current
 		end
 
 invariant

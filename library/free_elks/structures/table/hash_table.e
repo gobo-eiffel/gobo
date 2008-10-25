@@ -200,7 +200,7 @@ feature -- Access
 	found_item: G
 			-- Item, if any, yielded by last search operation
 
-	item alias "[]", infix "@" (key: H): G assign put is
+	item alias "[]", infix "@" (key: H): G assign force is
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		local
@@ -648,8 +648,6 @@ feature -- Element change
 			--
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
-		require else
-			True
 		local
 			l_default_key: H
 			l_default_value: G

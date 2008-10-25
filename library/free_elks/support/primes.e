@@ -158,8 +158,6 @@ feature -- Access
 					Result := 2; found := 1
 				invariant
 					-- Between 1 and `Result' there are `found' primes.
-				variant
-					i * i - Result
 				until
 					found = i
 				loop
@@ -167,6 +165,8 @@ feature -- Access
 					if candidates.item (Result) then
 						found := found + 1
 					end
+				variant
+					i * i - Result
 				end
 			end
 		end
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 					-- Using math formula from J. Massias and G. Robin,
 					-- "Bornes effectives pour certaines fonctions concernant les nombres premiers,"
 					-- J. Théorie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
-					-- n (ln n + ln (ln n) - 1 + 1.8 ln (ln n) / ln n) 
+					-- n (ln n + ln (ln n) - 1 + 1.8 ln (ln n) / ln n)
 				create l_double_math
 				ln_n := l_double_math.log (n)
 				ln_ln_n := l_double_math.log (ln_n)

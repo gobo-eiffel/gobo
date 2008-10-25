@@ -98,13 +98,13 @@ feature -- Test
 	test_item_address is
 			-- Test feature 'item_address'.
 		local
-			sp1: SPECIAL [INTEGER]
+			sp1: SPECIAL [INTEGER_32]
 			sp2: SPECIAL [STRING]
 			l_platform: PLATFORM
 		do
 			create l_platform
 			create sp1.make (3)
-			assert ("item_address1", sp1.item_address (2) = sp1.base_address + 2 * l_platform.Integer_bytes)
+			assert ("item_address1", sp1.item_address (2) = sp1.base_address + 2 * l_platform.Integer_32_bytes)
 			create sp2.make (4)
 			assert ("item_address2", sp2.item_address (1) = sp2.base_address + l_platform.Pointer_bytes)
 		end
@@ -228,37 +228,37 @@ feature -- Test
 		do
 			create sp1.make (4)
 			create sp2.make (6)
-			assert ("same_items1", sp1.same_items (sp2, 0, 3))
+			assert ("same_items1", sp1.same_items (sp2, 0, 0, 4))
 			sp2.put (5, 4)
-			assert ("same_items2", sp1.same_items (sp2, 0, 3))
+			assert ("same_items2", sp1.same_items (sp2, 0, 0, 4))
 			sp2.put (9, 2)
-			assert ("not_same_items1", not sp1.same_items (sp2, 0, 3))
-			assert ("not_same_items2", not sp1.same_items (sp2, 0, 2))
-			assert ("same_items3", sp1.same_items (sp2, 0, 1))
-			assert ("same_items4", sp1.same_items (sp2, 0, 0))
-			assert ("same_items5", sp1.same_items (sp2, 0, -1))
+			assert ("not_same_items1", not sp1.same_items (sp2, 0, 0, 4))
+			assert ("not_same_items2", not sp1.same_items (sp2, 0, 0, 3))
+			assert ("same_items3", sp1.same_items (sp2, 0, 0, 2))
+			assert ("same_items4", sp1.same_items (sp2, 0, 0, 1))
+			assert ("same_items5", sp1.same_items (sp2, 0, 0, 0))
 			sp1.put (9, 2)
-			assert ("same_items6", sp1.same_items (sp2, 0, 3))
-			assert ("same_items7", sp1.same_items (sp1, 0, 3))
-			assert ("same_items8", sp2.same_items (sp2, 0, 3))
+			assert ("same_items6", sp1.same_items (sp2, 0, 0, 4))
+			assert ("same_items7", sp1.same_items (sp1, 0, 0, 4))
+			assert ("same_items8", sp2.same_items (sp2, 0, 0, 4))
 			create sp3.make (3)
 			create sp4.make (2)
-			assert ("same_items9", sp3.same_items (sp4, 0, 1))
+			assert ("same_items9", sp3.same_items (sp4, 0, 0, 2))
 			s1 := "foo"
 			s2 := "bar"
 			sp3.put (s1, 0)
-			assert ("not_same_items3", not sp3.same_items (sp4, 0, 1))
-			assert ("not_same_items4", not sp3.same_items (sp4, 0, 0))
-			assert ("same_items10", sp3.same_items (sp4, 0, -1))
+			assert ("not_same_items3", not sp3.same_items (sp4, 0, 0, 2))
+			assert ("not_same_items4", not sp3.same_items (sp4, 0, 0, 1))
+			assert ("same_items10", sp3.same_items (sp4, 0, 0, 0))
 			sp4.put ("foo", 0)
-			assert ("not_same_items5", not sp3.same_items (sp4, 0, 0))
+			assert ("not_same_items5", not sp3.same_items (sp4, 0, 0, 1))
 			sp4.put (s2, 0)
-			assert ("not_same_items6", not sp3.same_items (sp4, 0, 0))
+			assert ("not_same_items6", not sp3.same_items (sp4, 0, 0, 1))
 			sp4.put (s1, 0)
-			assert ("same_items11", sp3.same_items (sp4, 0, 1))
+			assert ("same_items11", sp3.same_items (sp4, 0, 0, 2))
 			sp4.put (s2, 1)
-			assert ("same_items12", sp3.same_items (sp3, 0, 1))
-			assert ("same_items13", sp4.same_items (sp4, 0, 1))
+			assert ("same_items12", sp3.same_items (sp3, 0, 0, 2))
+			assert ("same_items13", sp4.same_items (sp4, 0, 0, 2))
 		end
 
 	test_valid_index is

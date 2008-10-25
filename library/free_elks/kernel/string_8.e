@@ -15,14 +15,15 @@ class
 inherit
 	READABLE_STRING_8
 		export
-			{ANY} make, make_empty, make_filled, make_from_string, fill_character
+			{ANY} make, make_empty, make_filled, make_from_c, make_from_string, fill_character
 		redefine
 			item, infix "@", area
 		end
 
 	STRING_GENERAL
 		rename
-			append as append_string_general
+			append as append_string_general,
+			same_string as same_string_general
 		undefine
 			copy, is_equal, out
 		redefine
@@ -77,24 +78,6 @@ convert
 
 feature -- Initialization
 
-	make_from_c (c_string: POINTER)
-			-- Initialize from contents of `c_string',
-			-- a string created by some C function
-		local
-			l_count: INTEGER
-		do
-			if area = Void then
-				c_string_provider.share_from_pointer (c_string)
-				l_count := c_string_provider.count
-				create area.make (l_count + 1)
-				count := l_count
-				internal_hash_code := 0
-				c_string_provider.read_string_into (Current)
-			else
-				from_c (c_string)
-			end
-		end
-
 	make_from_cil (a_system_string: SYSTEM_STRING)
 			-- Initialize Current with `a_system_string'.
 		local
@@ -102,12 +85,10 @@ feature -- Initialization
 		do
 			if a_system_string /= Void then
 				l_count := a_system_string.length
-				create area.make (l_count + 1)
-				count := l_count
-				internal_hash_code := 0
+			end
+			make (l_count)
+			if l_count > 0 then
 				dotnet_convertor.read_system_string_into (a_system_string, Current)
-			else
-				make (0)
 			end
 		end
 
@@ -1492,24 +1473,24 @@ feature -- Conversion
 					-- Shift characters to the right.
 				from
 					l_area := area
-				variant
-					i + 1
 				until
 					i = 0
 				loop
 					i := i - 1
 					l_area.put (l_area.item (i), i + nb_space)
+				variant
+					i + 1
 				end
 
 					-- Fill left part with spaces.
 				from
-				variant
-					nb_space + 1
 				until
 					nb_space = 0
 				loop
 					nb_space := nb_space - 1
 					l_area.put (' ', nb_space)
+				variant
+					nb_space + 1
 				end
 					-- Restore `count'
 				count := nb
@@ -1557,42 +1538,20 @@ feature -- Conversion
 
 	to_lower
 			-- Convert to lower case.
-		local
-			i: INTEGER
-			a: like area
 		do
-			from
-				i := count - 1
-				a := area
-			until
-				i < 0
-			loop
-				a.put (a.item (i).lower, i)
-				i := i - 1
-			end
+			to_lower_area (area, 0, count - 1)
 			internal_hash_code := 0
 		ensure
-			length_end_content: elks_checking implies is_equal (old as_lower)
+			length_and_content: elks_checking implies is_equal (old as_lower)
 		end
 
 	to_upper
 			-- Convert to upper case.
-		local
-			i: INTEGER
-			a: like area
 		do
-			from
-				i := count - 1
-				a := area
-			until
-				i < 0
-			loop
-				a.put (a.item (i).upper, i)
-				i := i - 1
-			end
+			to_upper_area (area, 0, count - 1)
 			internal_hash_code := 0
 		ensure
-			length_end_content: elks_checking implies is_equal (old as_upper)
+			length_and_content: elks_checking implies is_equal (old as_upper)
 		end
 
 	linear_representation: LINEAR [CHARACTER_8]

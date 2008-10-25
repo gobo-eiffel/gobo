@@ -143,6 +143,36 @@ feature -- Status report
 				(Result = substring (2, count).has_code (c))
 		end
 
+	same_string (a_other: READABLE_STRING_GENERAL): BOOLEAN is
+			-- Does `a_other' represent the same string as `Current'?
+		require
+			a_other_not_void: a_other /= Void
+		local
+			i, l_count: INTEGER
+		do
+			if a_other = Current then
+				Result := True
+			else
+				l_count := count
+				if l_count = a_other.count then
+					from
+						Result := True
+						i := 1
+					until
+						i > l_count
+					loop
+						if code (i) /= a_other.code (i) then
+							Result := False
+							i := l_count -- Jump out of the loop
+						end
+						i := i + 1
+					variant
+						increasing_index: l_count - i + 1
+					end
+				end
+			end
+		end
+
 feature -- Conversion
 
 	frozen to_cil: SYSTEM_STRING is

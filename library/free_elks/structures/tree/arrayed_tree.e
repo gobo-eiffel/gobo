@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: ?ARRAYED_TREE [G]
+	parent: ?like child
 			-- Parent of current node
 
 	left_sibling: like parent is
@@ -96,7 +96,7 @@ feature -- Element change
 			end
 		end
 
-	replace_child (n: like new_cell) is
+	replace_child (n: like child) is
 			-- Make `n' the node's current child.
 		do
 			if object_comparison then
@@ -159,7 +159,7 @@ feature -- Element change
 			al_put_right (n)
 		end
 
-	put_child_left (n: like new_cell) is
+	put_child_left (n: like child) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -172,7 +172,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	put_child_right (n: like new_cell) is
+	put_child_right (n: like child) is
 			-- Add `n' to the right of the cursor position.
 			-- Do not move cursor.
 		do
@@ -185,7 +185,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	put_child (n: like new_cell) is
+	put_child (n: like child) is
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	child: like parent is
+	child: ARRAYED_TREE [G] is
 		do
 			Result := arrayed_list.item
 		end
@@ -600,7 +600,7 @@ feature -- Access
 			Result := arrayed_list.index_of (v, i)
 		end
 
-	prune (n: like new_cell) is
+	prune (n: like child) is
 		do
 			arrayed_list.prune (n)
 		end

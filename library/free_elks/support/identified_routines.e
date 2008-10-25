@@ -25,6 +25,7 @@ feature -- Basic operations
 			"built_in"
 		ensure
 			eif_object_id_positive: Result > 0
+			inserted: eif_id_object (Result) = an_object
 		end
 
 	eif_object_id_free (an_id: INTEGER) is
@@ -33,6 +34,8 @@ feature -- Basic operations
 			an_id_non_negative: an_id >= 0
 		external
 			"built_in"
+		ensure
+			removed: eif_id_object (an_id) = Void
 		end
 
 end

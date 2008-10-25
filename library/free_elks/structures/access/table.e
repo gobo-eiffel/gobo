@@ -20,7 +20,7 @@ deferred class TABLE [G, H] inherit
 
 feature -- Access
 
-	item alias "[]", infix "@" (k: H): G assign put is
+	item alias "[]", infix "@" (k: H): G assign force is
 			-- Entry of key `k'.
 		require
 			valid_key: valid_key (k)
@@ -41,6 +41,15 @@ feature -- Element change
 		require
 			valid_key: valid_key (k)
 		deferred
+		end
+
+	force (v: G; k: H) is
+			-- Associate value `v' with key `k'.
+		require
+			valid_key: valid_key (k)
+		deferred
+		ensure
+			inserted: item (k) = v
 		end
 
 feature {NONE} -- Inapplicable

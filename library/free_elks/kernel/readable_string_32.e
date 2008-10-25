@@ -14,6 +14,8 @@ deferred class
 
 inherit
 	READABLE_STRING_GENERAL
+		rename
+			same_string as same_string_general
 		redefine
 			copy, is_equal, out
 		end
@@ -80,7 +82,19 @@ feature {NONE} -- Initialization
 			-- a string created by some C function
 		require
 			c_string_exists: c_string /= default_pointer
-		deferred
+		local
+			l_count: INTEGER
+		do
+			c_string_provider.share_from_pointer (c_string)
+			l_count := c_string_provider.count
+			if area = Void then
+				create area.make (l_count + 1)
+			elseif l_count >= area.count then
+				area := area.aliased_resized_area (l_count + 1)
+			end
+			count := l_count
+			internal_hash_code := 0
+			c_string_provider.read_substring_into_character_32_area (area, 1, l_count)
 		end
 
 	make_from_cil (a_system_string: SYSTEM_STRING)
@@ -398,43 +412,14 @@ feature -- Comparison
 			-- Do `Current' and `other' have same character sequence?
 		require
 			other_not_void: other /= Void
-		local
-			i, nb: INTEGER
-			l_area, l_other_area: like area
 		do
 			if other = Current then
 				Result := True
 			elseif other.count = count then
-				Result := True
-				nb := count
 				if same_type (other) then
-					from
-						l_area := area
-						l_other_area := other.area
-					until
-						i = nb
-					loop
-						if l_area.item (i) /= l_other_area.item (i) then
-							Result := False
-							i := nb -- Jump out of the loop.
-						else
-							i := i + 1
-						end
-					end
+					Result := area.same_items (other.area, 0, 0, count)
 				else
-					from
-						i := 1
-						nb := nb + 1
-					until
-						i = nb
-					loop
-						if item (i) /= other.item (i) then
-							Result := False
-							i := nb -- Jump out of the loop.
-						else
-							i := i + 1
-						end
-					end
+					Result := same_string_general (other)
 				end
 			end
 		ensure
@@ -595,6 +580,8 @@ feature -- Status report
 			-- Is `i' within the bounds of the string?
 		do
 			Result := (i > 0) and (i <= count)
+		ensure then
+			definition: Result = (1 <= i and i <= count)
 		end
 
 	valid_code (v: NATURAL_32): BOOLEAN
@@ -622,10 +609,41 @@ feature -- Status report
 				-- Digit	= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 		end
 
+	is_real_sequence: BOOLEAN
+			-- Does `Current' represent a real sequence?
+		local
+			l_convertor: like ctor_convertor
+		do
+			l_convertor := ctor_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_no_limitation)
+			Result := l_convertor.is_integral_double
+		ensure
+			syntax_and_range:
+				-- 'Result' is True if and only if the following condition is satisfied:
+				--
+				-- In the following BNF grammar, the value of
+				--	'Current' can be produced by "Real_literal":
+				--
+				-- Real_literal	= Mantissa [Exponent_part]
+				-- Exponent_part = "E" Exponent
+				--				 | "e" Exponent
+				-- Exponent		= Integer_literal
+				-- Mantissa		= Decimal_literal
+				-- Decimal_literal = Integer_literal ["." [Integer]] | "." Integer
+				-- Integer_literal = [Sign] Integer
+				-- Sign			= "+" | "-"
+				-- Integer		= Digit | Digit Integer
+				-- Digit		= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+		end
+
 	is_real: BOOLEAN
 			-- Does `Current' represent a REAL?
+		local
+			l_convertor: like ctor_convertor
 		do
-			Result := is_double
+			l_convertor := ctor_convertor
+			l_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_real)
+			Result := l_convertor.is_integral_real
 		ensure
 			syntax_and_range:
 				-- 'Result' is True if and only if the following two
@@ -829,6 +847,7 @@ feature -- Conversion
 			is_valid_as_string_8: is_valid_as_string_8
 		deferred
 		ensure
+			as_lower_attached: Result /= Void
 			length: Result.count = count
 			anchor: count > 0 implies Result.item (1) = item (1).as_lower
 			recurse: count > 1 implies Result.substring (2, count).
@@ -841,6 +860,7 @@ feature -- Conversion
 			is_valid_as_string_8: is_valid_as_string_8
 		deferred
 		ensure
+			as_upper_attached: Result /= Void
 			length: Result.count = count
 			anchor: count > 0 implies Result.item (1) = item (1).as_upper
 			recurse: count > 1 implies Result.substring (2, count).
@@ -977,8 +997,8 @@ feature -- Conversion
 				Result := True
 			end
 		ensure
-			to_boolean: (Result = true_constant.same_string (as_lower)) or
-				(not Result = false_constant.same_string (as_lower))
+			to_boolean: (Result = as_lower.same_string (true_constant)) or
+				(not Result = as_lower.same_string (false_constant))
 		end
 
 	split (a_separator: CHARACTER_32): LIST [like Current]
@@ -1053,7 +1073,7 @@ feature -- Output
 			Result.append (as_string_8)
 		ensure then
 			out_not_void: Result /= Void
-			same_items: same_type ("") implies Result.same_string (Current)
+			same_items: same_type ("") implies same_string (Result)
 		end
 
 feature {NONE} -- Implementation
@@ -1111,7 +1131,81 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {READABLE_STRING_32} -- Implementation
+	to_lower_area (a: like area; start_index, end_index: INTEGER)
+			-- Replace all characters in `a' between `start_index' and `end_index'
+			-- with their lower version when available.
+		require
+			a_not_void: a /= Void
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < a.count
+		local
+			i: INTEGER
+			c: CHARACTER_32
+		do
+			from
+				i := start_index
+			until
+				i > end_index
+			loop
+				c := a.item (i)
+				if c.is_character_8 then
+					a.put (c.lower, i)
+				end
+				i := i + 1
+			end
+		end
+
+	to_upper_area (a: like area; start_index, end_index: INTEGER)
+			-- Replace all characters in `a' between `start_index' and `end_index'
+			-- with their upper version when available.
+		require
+			a_not_void: a /= Void
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < a.count
+		local
+			i: INTEGER
+			c: CHARACTER_32
+		do
+			from
+				i := start_index
+			until
+				i > end_index
+			loop
+				c := a.item (i)
+				if c.is_character_8 then
+					a.put (c.upper, i)
+				end
+				i := i + 1
+			end
+		end
+
+	mirror_area (a: like area; start_index, end_index: INTEGER)
+			-- Mirror all characters in `a' between `start_index' and `end_index'.
+		require
+			a_not_void: a /= Void
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < a.count
+		local
+			c: CHARACTER_32
+			i, j: INTEGER
+		do
+			from
+				i := end_index
+			until
+				i < start_index
+			loop
+				c := a.item (i)
+				a.put (a.item (j), i)
+				a.put (c, j)
+				i := i - 1
+				j := j + 1
+			end
+		end
+
+feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
 
 	area: SPECIAL [CHARACTER_32]
 			-- Storage for characters

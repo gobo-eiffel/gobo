@@ -16,7 +16,7 @@ class SORTED_TWO_WAY_LIST [G -> COMPARABLE] inherit
 
 	TWO_WAY_LIST [G]
 		undefine
-			has, search, copy, is_equal, is_inserted
+			has, search, is_inserted
 		redefine
 			prune_all, extend, new_chain
 		end
@@ -26,7 +26,7 @@ class SORTED_TWO_WAY_LIST [G -> COMPARABLE] inherit
 			move, remove, before, go_i_th,
 			isfirst, start, finish, readable,
 			islast, first, prune, after,
-			last, off, prune_all
+			last, off, prune_all, copy
 		end
 
 create

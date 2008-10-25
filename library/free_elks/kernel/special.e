@@ -4,7 +4,7 @@ indexing
 		used to represent arrays and strings
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2005, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -107,11 +107,12 @@ feature -- Access
 			base_address_not_null: Result /= default_pointer
 		end
 
-	native_array: ?NATIVE_ARRAY [T]
+	native_array: NATIVE_ARRAY [T]
 			-- Only for compatibility with .NET
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
 		do
+			create Result
 		end
 
 feature -- Measurement
@@ -167,30 +168,39 @@ feature -- Status report
 			valid_on_empty_area: (end_index < start_index) implies Result
 		end
 
-	same_items (other: like Current; start_index, end_index: INTEGER): BOOLEAN
-			-- Do all items between index `start_index' and `end_index' have
-			-- same value?
+	same_items (other: like Current; other_index, current_index, n: INTEGER): BOOLEAN
+			-- Are the `n' elements of `other' from `other_index' position the same as
+			-- the `n' elements of `Current' from `current_index'?
 			-- (Use reference equality for comparison.)
 		require
-			start_index_non_negative: start_index >= 0
-			start_index_not_too_big: start_index <= end_index + 1
-			end_index_valid: end_index < count
 			other_not_void: other /= Void
-			other_has_enough_items: end_index < other.count
+			other_index_non_negative: other_index >= 0
+			current_index_non_negative: current_index >= 0
+			n_non_negative: n >= 0
+			n_is_small_enough_for_other: other_index + n <= other.count
+			n_is_small_enough_for_current: current_index + n <= count
 		local
-			i: INTEGER
+			i, j, nb: INTEGER
 		do
-			from
-				Result := True
-				i := start_index
-			until
-				i > end_index or else not Result
-			loop
-				Result := item (i) = other.item (i)
-				i := i + 1
+			Result := True
+			if other /= Current then
+				from
+					i := other_index
+					j := current_index
+					nb := other_index + n
+				until
+					i = nb
+				loop
+					if other.item (i) /= item (j) then
+						Result := False
+						i := nb - 1
+					end
+					i := i + 1
+					j := j + 1
+				end
 			end
 		ensure
-			valid_on_empty_area: (end_index < start_index) implies Result
+			valid_on_empty_area: (n = 0) implies Result
 		end
 
 	valid_index (i: INTEGER): BOOLEAN
@@ -267,8 +277,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			copied:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
-					-- `item' (`i') = `other'.`item' (`source_index' + `i' - `destination_index')
+			copied:	same_items (other, source_index, destination_index, n)
 		end
 
 	move_data (source_index, destination_index, n: INTEGER)
@@ -296,8 +305,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			moved:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
-					-- `item' (`i') = old `item' (`source_index' + `i' - `destination_index')
+			moved: same_items (old twin, source_index, destination_index, n)
 		end
 
 	overlapping_move (source_index, destination_index, n: INTEGER)
@@ -347,8 +355,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			moved:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
-					-- `item' (`i') = old `item' (`source_index' + `i' - `destination_index')
+			moved: same_items (old twin, source_index, destination_index, n)
 		end
 
 	non_overlapping_move (source_index, destination_index, n: INTEGER)
@@ -379,8 +386,7 @@ feature -- Element change
 				i := i + 1
 			end
 		ensure
-			moved:	-- For every `i' in `destination_index' .. `destination_index' + `n' - 1
-					-- `item' (`i') = `item' (`source_index' + `i' - `destination_index')
+			moved: same_items (Current, source_index, destination_index, n)
 		end
 
 feature -- Resizing
@@ -396,8 +402,7 @@ feature -- Resizing
 			Result_not_void: Result /= Void
 			Result_different_from_current: Result /= Current
 			new_count: Result.count = n
-			preserved:	-- For every `i' in `0' .. (n - 1).min (old `upper')
-						-- `item' (`i') = old `item' (`i')
+			preserved: Result.same_items (Current, 0, 0, n.min (old count))
 		end
 
 	aliased_resized_area (n: INTEGER): like Current
@@ -410,8 +415,7 @@ feature -- Resizing
 		ensure
 			Result_not_void: Result /= Void
 			new_count: Result.count = n
-			preserved:	-- For every `i' in `0' .. old `upper'
-						-- `item' (`i') = old `item' (`i')
+			preserved: Result.same_items (old twin, 0, 0, old count)
 		end
 
 feature -- Removal

@@ -15,9 +15,10 @@ deferred class INDEXABLE [G, H -> INTEGER] inherit
 
 	TABLE [G, H]
 		rename
-			valid_key as valid_index
+			valid_key as valid_index,
+			force as put
 		redefine
-			put, valid_index
+			valid_index
 		end
 
 feature -- Measurement
@@ -41,15 +42,6 @@ feature -- Status report
 					(i <= index_set.upper))
 		end
 
-feature -- Element change
-
-	put (v: G; k: H) is
-			-- Associate value `v' with key `k'.
-		deferred
-		ensure then
-			insertion_done: item (k) = v
-		end
-
 invariant
 
 	index_set_not_void: index_set /= Void
@@ -66,13 +58,7 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class INDEXABLE
+end
 
 
 

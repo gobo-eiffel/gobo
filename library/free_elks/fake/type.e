@@ -3,7 +3,7 @@ indexing
 	description: "Representation of an Eiffel type."
 	remark: "At any given time, there is no more than one instance of TYPE representing a given Eiffel type."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -95,7 +95,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	adapt alias "[]" (g: G): G is
+	adapt alias "[]" (g: ?G): ?G is
 			-- Adapts `g' or calls necessary conversion routine to adapt `g'
 		do
 			Result := g
@@ -103,7 +103,7 @@ feature -- Conversion
 			adapted: equal (Result, g)
 		end
 
-	attempt alias "#?" (obj: ANY): G is
+	attempt alias "#?" (obj: ANY): ?G is
 			-- Result of assignment attempt of `obj' to entity of type G
 		do
 -- TODO: this is not valid Eiffel.
@@ -113,7 +113,7 @@ feature -- Conversion
 			assigned_or_void: Result = obj or Result = default_value
 		end
 
-	default_value: G is
+	default_value: ?G is
 			-- Default value for entities declared of Eiffel type represented by `Current'
 		do
 		end

@@ -114,8 +114,8 @@ feature -- Access
 			Result := file_group (group_id)
 		end
 
-	file_name: STRING
-			-- File name to which information applies.
+	file_name: ?STRING
+			-- File name to which information applies
 
 feature -- Status report
 
@@ -217,29 +217,47 @@ feature -- Status report
 
 	is_access_readable: BOOLEAN is
 			-- Is file readable by real UID?
+		require
+			file_name_attached: file_name /= Void
 		local
 			ext_name: ANY
+			f: ?STRING
 		do
-			ext_name := file_name.to_c
-			Result := file_access ($ext_name, 3)
+			f := file_name
+			if f /= Void then
+				ext_name := f.to_c
+				Result := file_access ($ext_name, 3)
+			end
 		end
 
 	is_access_writable: BOOLEAN is
 			-- Is file writable by real UID?
+		require
+			file_name_attached: file_name /= Void
 		local
 			ext_name: ANY
+			f: ?STRING
 		do
-			ext_name := file_name.to_c
-			Result := file_access ($ext_name, 2)
+			f := file_name
+			if f /= Void then
+				ext_name := f.to_c
+				Result := file_access ($ext_name, 2)
+			end
 		end
 
 	is_access_executable: BOOLEAN is
 			-- Is file executable by real UID?
+		require
+			file_name_attached: file_name /= Void
 		local
 			ext_name: ANY
+			f: ?STRING
 		do
-			ext_name := file_name.to_c
-			Result := file_access ($ext_name, 1)
+			f := file_name
+			if f /= Void then
+				ext_name := f.to_c
+				Result := file_access ($ext_name, 1)
+			end
 		end
 
 feature -- Element change

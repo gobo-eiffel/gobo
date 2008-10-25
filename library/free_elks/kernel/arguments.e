@@ -34,6 +34,7 @@ feature -- Access
 			Result := internal_argument_array
 		ensure
 			argument_array_not_void: Result /= Void
+			argument_array_compare_objects: Result.object_comparison
 		end
 
 	Command_line: STRING is
@@ -101,7 +102,7 @@ feature -- Status report
 			-- Does command line specify argument beginning with word
 			-- option `opt' and, if so, at what position?
 			-- If one of the arguments in list of space-separated arguments
-			-- is `Xoptxx', where `X' is the current `option_sign', 'xx' 
+			-- is `Xoptxx', where `X' is the current `option_sign', 'xx'
 			-- is arbitrary, possibly empty sequence of characters,
 			-- then index of this argument in list;
 			-- else 0.
@@ -346,6 +347,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			create Result.make (0, argument_count)
+			Result.compare_objects
 			from
 			until
 				i > argument_count
@@ -355,6 +357,10 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			internal_argument_array_not_void: Result /= Void
+			internal_argument_array_compare_objects: Result.object_comparison
 		end
+
+invariant
+	argument_array_consistent: argument_array.is_equal (internal_argument_array)
 
 end

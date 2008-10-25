@@ -24,7 +24,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING_GENERAL) is
+	make (a_string: READABLE_STRING_GENERAL) is
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -153,17 +153,19 @@ feature -- Access
 			a_string_large_enough: a_string.count >= end_pos - start_pos + 1
 		local
 			l_data: like managed_data
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 		do
 			from
 				i := start_pos - 1
-				nb := end_pos
+				nb := end_pos - start_pos
 				l_data := managed_data
+				j := 1
 			until
-				i = nb
+				i > nb
 			loop
-				a_string.put_code (l_data.read_natural_8 (i), i + 1)
+				a_string.put_code (l_data.read_natural_8 (i), j)
 				i := i + 1
+				j := j + 1
 			end
 		end
 
@@ -176,6 +178,62 @@ feature -- Access
 			a_string_large_enough: a_string.count >= count
 		do
 			read_substring_into (a_string, 1, count)
+		end
+
+	read_substring_into_character_8_area (a_area: SPECIAL [CHARACTER_8]; start_pos, end_pos: INTEGER) is
+			-- Copy of substring containing all characters at indices
+			-- between `start_pos' and `end_pos' into `a_area'.
+		require
+			a_area_not_void: a_area /= Void
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_position_not_too_big: end_pos <= capacity
+			a_area_large_enough: a_area.count >= end_pos - start_pos + 1
+		local
+			l_data: like managed_data
+			i, j, nb: INTEGER
+		do
+			from
+				i := start_pos - 1
+				nb := end_pos - start_pos
+				l_data := managed_data
+			until
+				i > nb
+			loop
+				a_area.put (l_data.read_natural_8 (i).to_character_8, j)
+				i := i + 1
+				j := j + 1
+			end
+		ensure
+			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]
+		end
+
+	read_substring_into_character_32_area (a_area: SPECIAL [CHARACTER_32]; start_pos, end_pos: INTEGER) is
+			-- Copy of substring containing all characters at indices
+			-- between `start_pos' and `end_pos' into `a_area'.
+		require
+			a_area_not_void: a_area /= Void
+			start_position_big_enough: start_pos >= 1
+			end_position_big_enough: start_pos <= end_pos + 1
+			end_position_not_too_big: end_pos <= capacity
+			a_area_large_enough: a_area.count >= end_pos - start_pos + 1
+		local
+			l_data: like managed_data
+			i, j, nb: INTEGER
+		do
+			from
+				i := start_pos - 1
+				nb := end_pos - start_pos
+				l_data := managed_data
+			until
+				i > nb
+			loop
+				a_area.put (l_data.read_natural_32 (i).to_character_32, j)
+				i := i + 1
+				j := j + 1
+			end
+		ensure
+			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]			
 		end
 
 	item: POINTER is
@@ -211,7 +269,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_string (a_string: STRING_GENERAL) is
+	set_string (a_string: READABLE_STRING_GENERAL) is
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -220,7 +278,7 @@ feature -- Element change
 			set_substring (a_string, 1, a_string.count)
 		end
 
-	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+	set_substring (a_string: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER) is
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void

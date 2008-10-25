@@ -62,6 +62,7 @@ feature -- Initialization
 		do
 			arity := n
 			create fixed_list.make_filled (n)
+			replace (v)
 				-- In order to ensure that no child is Void, we manually fill
 				-- the tree with default values.
 			from
@@ -72,7 +73,6 @@ feature -- Initialization
 				replace_child (create {like Current}.make (0, l_default))
 				fixed_list.forth
 			end
-			replace (v)
 		ensure
 			node_item: item = v
 			node_arity: arity = n
