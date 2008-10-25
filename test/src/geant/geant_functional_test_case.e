@@ -44,7 +44,7 @@ feature -- Execution
 
 			old_cwd := file_system.current_working_directory
 			new_cwd := test_dir
-			
+
 			if not file_system.directory_exists (new_cwd) then
 				file_system.recursive_create_directory (new_cwd)
 				if not file_system.directory_exists (new_cwd) then
@@ -87,9 +87,9 @@ feature {NONE} -- Implementation
 			-- token 'TEST_TAG' with `a_tag' and token 'TASKS' with `tasks'.
 		require
 			a_tag_not_void: a_tag /= Void
-			a_tag_not_empty: not a_tag.empty
+			a_tag_not_empty: not a_tag.is_empty
 			a_filename_not_void: a_filename /= Void
-			a_filename_not_empty: not a_filename.empty
+			a_filename_not_empty: not a_filename.is_empty
 		local
 			a_file: KL_TEXT_OUTPUT_FILE
 			s: STRING
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			--   `verbose'
 		require
 			a_tag_not_void: a_tag /= Void
-			a_tag_not_empty: not a_tag.empty
+			a_tag_not_empty: not a_tag.is_empty
 		local
 			a_build_filename: STRING
 			a_cmd: STRING
