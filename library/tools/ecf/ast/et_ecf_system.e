@@ -15,18 +15,30 @@ class ET_ECF_SYSTEM
 inherit
 
 	ET_SYSTEM
+		rename
+			make as make_system
+		end
+
+	ET_ECF_INTERNAL_UNIVERSE
+		undefine
+			preparse_local,
+			parse_all_local
 		redefine
-			clusters
+			make
 		end
 
 create
 
 	make
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	clusters: ET_ECF_CLUSTERS
-			-- Clusters
+	make (a_name, a_filename: STRING) is
+			-- Create a new ECF system.
+		do
+			precursor (a_name, a_filename)
+			make_system
+		end
 
 feature -- Setting
 

@@ -112,6 +112,7 @@ feature {NONE} -- Parsing
 			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((current_system.preparse_readonly_mode or else not a_cluster.is_read_only) and then (current_system.preparse_override_mode implies a_cluster.is_override))) then
 				error_handler.report_preparsing_status (a_cluster)
 				l_dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
+				l_dir_name := file_system.canonical_pathname (l_dir_name)
 				l_dir := tmp_directory
 				l_dir.reset (l_dir_name)
 				l_dir.open_read

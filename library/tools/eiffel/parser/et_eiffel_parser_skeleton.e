@@ -204,6 +204,7 @@ feature -- Parsing
 			end
 			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((current_system.preparse_readonly_mode or else not a_cluster.is_read_only) and then (current_system.preparse_override_mode implies a_cluster.is_override))) then
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
+				dir_name := file_system.canonical_pathname (dir_name)
 				dir := tmp_directory
 				dir.reset (dir_name)
 				dir.open_read

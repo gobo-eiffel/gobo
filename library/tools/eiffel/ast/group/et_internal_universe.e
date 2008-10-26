@@ -366,6 +366,8 @@ feature {NONE} -- Parsing
 		do
 			if not libraries.is_empty then
 				libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.export_classes (Current))
+-- TODO: take into account class renaming and class name clashes with NONE:
+				classes.force_last (current_system.none_class, current_system.none_class.name)
 				if eiffel_class (current_system.any_class.name) /= current_system.any_class then
 -- TODO: report error
 				end

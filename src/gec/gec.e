@@ -169,10 +169,17 @@ feature {NONE} -- Eiffel config file parsing
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+		local
+			l_ecf_parser: ET_ECF_SYSTEM_PARSER
+			l_ecf_error_handler: ET_ECF_ERROR_HANDLER
 		do
-				-- ECF is not supported.
-				-- Parse Ace file as default.
-			parse_ace_file (a_file)
+			last_system := Void
+			create l_ecf_error_handler.make_standard
+			create l_ecf_parser.make (l_ecf_error_handler)
+			l_ecf_parser.parse_file (a_file)
+			if not l_ecf_error_handler.has_error then
+				last_system := l_ecf_parser.last_system
+			end
 		end
 
 feature {NONE} -- Processing

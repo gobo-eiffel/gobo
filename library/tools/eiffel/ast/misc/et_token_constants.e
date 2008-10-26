@@ -3183,6 +3183,14 @@ feature -- System
 			empty_system_not_void: Result /= Void
 		end
 
+	empty_library: ET_LIBRARY is
+			-- Shared empty Eiffel class library
+		once
+			create Result.make (empty_system)
+		ensure
+			empty_library_not_void: Result /= Void
+		end
+
 	standard_error_handler: ET_ERROR_HANDLER is
 			-- Shared error handler where error messages
 			-- will be sent to standard files

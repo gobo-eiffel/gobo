@@ -56,6 +56,14 @@ This documentation is structured as follows:
 	</varlistentry>
 	<varlistentry>
 		<term>
+			<link linkend="ecf">ECF Files</link>
+		</term>
+		<listitem><para>
+			Purpose, syntax and semantics of ECF files.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
 			<link linkend="applications">Applications</link>
 		</term>
 		<listitem><para>

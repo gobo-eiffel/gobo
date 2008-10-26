@@ -51,6 +51,8 @@ feature -- Status report
 			l_slash_name: STRING
 			i, nb: INTEGER
 			l_parent: ET_GROUP
+			l_library: ET_LIBRARY
+			l_library_name: STRING
 		do
 			if a_group = current_cluster then
 				Result := True
@@ -75,6 +77,20 @@ feature -- Status report
 					l_parent := a_group.parent
 					if l_parent /= Void then
 						Result := has_group (l_parent)
+					else
+						l_library ?= a_group.universe
+						if l_library /= Void then
+							l_library_name := l_library.name
+							if l_library_name /= Void and then not l_library_name.is_empty then
+								from i := 1 until i > nb loop
+									if STRING_.same_case_insensitive (group_names.item (i), l_library_name) then
+										Result := True
+										i := nb + 1
+									end
+									i := i + 1
+								end
+							end
+						end
 					end
 				end
 			end

@@ -1,0 +1,94 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"ECF Files"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/ecf">
+<chapterinfo>
+	<copyright>
+		<year>2008</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>11 October 2008</date>
+</chapterinfo>
+
+<title>ECF Files</title>
+
+<para>
+Under construction
+</para>
+
+<section><title>Variables</title>
+<para>
+Variables are defined in targets, using the following syntax:
+<blockquote><programlisting>
+&lt;variable name="..." value="..."/&gt;
+</programlisting></blockquote>
+The variables visible from a target are the variables specified in that target, recursively 
+in its parent targets, and environment variables. Variables specified in a target override
+environment variables with the same name. They also override variables with the same name
+specified in its parent targets.
+</para>
+<section><title>Variables in pathnames</title>
+<para>
+Variables appearing in pathnames are replaced by the corresponding value if there is 
+a variable with that name visible from the target where the pathname has been specified.
+It is replaced by an empty string otherwise. Note that variables visible from the
+project target (if different from the target where the pathname is specified) are not
+taken into account. Also, variables specified in a child of the target where the
+pathname is specified are not take into account, even if that pathname is used as
+part of this child target through inheritance. For example:
+<blockquote><programlisting>
+&lt;target name="parent"&gt;
+	&lt;variable name="foo" value="gobo"/&gt;
+	&lt;cluster name="foo" location="${foo}/library"/&gt;
+&lt;/target&gt;
+&lt;target name="child" extends="parent"&gt;
+	&lt;variable name="foo" value="ise"/&gt;
+&lt;/target&gt;
+</programlisting></blockquote>
+even when dealing with the target 'child', the pathname of the cluster 'foo' will be
+expanded to 'gobo/library' and not 'ise/library'.
+</para>
+</section>
+<section><title>Nested variables</title>
+<para>
+Variables appearing in the value of other variables:
+<blockquote><programlisting>
+&lt;variable name="foo" value="gobo"/&gt;
+&lt;variable name="bar" value="${foo} is great"/&gt;
+</programlisting></blockquote>
+are not expanded. So the value of the variable 'bar' is '${foo} is great', and not 'gobo is great'.
+</para>
+</section>
+<section><title>Variables in conditions</title>
+<para>
+Contrary to variables appearing in pathnames, variables used in 'custom' clauses of
+conditions, such as 'foo' in the example below:
+<blockquote><programlisting>
+&lt;condition/&gt;
+	&lt;custom name="foo" value="gobo"/&gt;
+&lt;/condition/&gt;
+</programlisting></blockquote>
+only take into account values visible from the project target, and not from the target
+where this condition has been specified (if different from the project target). So here
+this condition will be satisfied if the variable 'foo' has the value 'gobo' when viewed
+from the project target, even if this variable has another value in the current target.
+</para>
+</section>
+</section>
+
+</chapter>

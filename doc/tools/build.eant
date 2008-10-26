@@ -29,6 +29,7 @@
 		<set name="previous" value="index"/>
 		<set name="current" value="index"/>
 		<geant target="xslt_and_shift" arguments="ace"/>
+		<geant target="xslt_and_shift" arguments="ecf"/>
 		<geant target="xslt_and_shift" arguments="applications"/>
 		<geant target="xslt_and_shift" arguments="limitations"/>
 		<geant target="xslt_and_shift" arguments="see_also"/>
@@ -48,6 +49,7 @@
 
 		<delete file="index.html"/>
 		<delete file="ace.html"/>
+		<delete file="ecf.html"/>
 		<delete file="applications.html"/>
 		<delete file="limitations.html"/>
 		<delete file="see_also.html"/>

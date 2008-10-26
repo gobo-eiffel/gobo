@@ -36,6 +36,12 @@ feature {NONE} -- Initialization
 			current_system_set: current_system = a_system
 		end
 
+feature -- Access
+
+	name: STRING
+			-- Name of the library if any;
+			-- Void otherwise
+
 feature -- Relations
 
 	add_library_recursive (a_visited: DS_HASH_SET [ET_LIBRARY]) is
