@@ -88,6 +88,18 @@ typedef unsigned __int64 uint64_t;
 #endif
 #endif
 
+/* Portable integer pointers */
+#ifdef EIF_WINDOWS
+#ifndef _INTPTR_T_DEFINED
+#define _INTPTR_T_DEFINED
+#ifdef _WIN64
+typedef __int64 intptr_t;
+#else
+typedef int intptr_t;
+#endif
+#endif
+#endif
+
 /* Basic Eiffel types */
 typedef struct {int id;} EIF_ANY;
 #define EIF_REFERENCE EIF_ANY*
