@@ -3933,6 +3933,26 @@ feature -- Validity errors
 			end
 		end
 
+	report_vomb2b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT) is
+			-- Report VOMB-2 error: the inspect choice `a_constant' in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not a constant attribute.
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vomb2_error (a_class) then
+				create an_error.make_vomb2b (a_class, a_class_impl, a_constant)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vpca1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
 			-- Report VPCA-1 error: `a_name', appearing in an unqualified
 			-- call agent in `a_class', is not the final name of a feature

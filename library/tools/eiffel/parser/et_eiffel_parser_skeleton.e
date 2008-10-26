@@ -1158,6 +1158,39 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_choice_attribute_constant (a_name: ET_IDENTIFIER): ET_IDENTIFIER is
+			-- New choice constant which is supposed to be the name of
+			-- a constant attribute or unique attribute
+		local
+			a_seed: INTEGER
+		do
+			if a_name /= Void then
+				Result := a_name
+				if last_formal_arguments /= Void then
+					a_seed := last_formal_arguments.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_seed (a_seed)
+						a_name.set_argument (True)
+						last_formal_arguments.formal_argument (a_seed).set_used (True)
+					end
+				end
+				if a_seed = 0 and then last_local_variables /= Void then
+					a_seed := last_local_variables.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_seed (a_seed)
+						a_name.set_local (True)
+						last_local_variables.local_variable (a_seed).set_used (True)
+					end
+				end
+				if a_seed = 0 and then last_object_tests /= Void then
+					a_seed := last_object_tests.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_object_test_local (True)
+					end
+				end
+			end
+		end
+
 	new_client (a_name: ET_CLASS_NAME): ET_CLIENT is
 			-- New client
 		local

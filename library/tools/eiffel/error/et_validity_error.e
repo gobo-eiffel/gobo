@@ -170,6 +170,7 @@ create
 	make_vmss3a,
 	make_vomb1a,
 	make_vomb2a,
+	make_vomb2b,
 	make_vpca1a,
 	make_vpca1b,
 	make_vpca2a,
@@ -6898,9 +6899,9 @@ feature {NONE} -- Initialization
 			class_impl := a_class
 			a_feature := replicated_features.first
 			position := a_feature.select_name.position
-			code := template_code (vmrc2a_template_code)
+			code := template_code (vmrc2b_template_code)
 			etl_code := vmrc2_etl_code
-			default_template := default_message_template (vmrc2a_default_template)
+			default_template := default_message_template (vmrc2b_default_template)
 			a_cursor := replicated_features.new_cursor
 			from
 				create a_string.make (20)
@@ -7168,6 +7169,62 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = base type of choice constant
 			-- dollar8: $8 = base type of inspect expression
+		end
+
+	make_vomb2b (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHOICE_CONSTANT) is
+			-- Create a new VOMB-2 error: the inspect choice `a_constant' in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not a constant attribute.
+			--
+			-- ETL2: p.239
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+		local
+			l_identifier: ET_IDENTIFIER
+			l_static_call: ET_STATIC_CALL_EXPRESSION
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.position
+			code := template_code (vomb2b_template_code)
+			etl_code := vomb2_etl_code
+			default_template := default_message_template (vomb2b_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			l_identifier ?= a_constant
+			if l_identifier /= Void then
+				parameters.put (l_identifier.lower_name, 7)
+			else
+				l_static_call ?= a_constant
+				if l_static_call /= Void then
+					parameters.put (l_static_call.name.lower_name, 7)
+				else
+-- TODO: Should never happen. Find a better way to handle that.
+					parameters.put ("", 7)
+				end
+			end
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = choice name
 		end
 
 	make_vpca1a (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
@@ -12606,13 +12663,14 @@ feature {NONE} -- Implementation
 	vmfn0c_default_template: STRING is "two features with the same name `$7' inherited from $8 and `$9' inherited from $10."
 	vmfn2a_default_template: STRING is "feature `$7' inherited from $9 has an alias `$8' but the version inherited from $10 has none."
 	vmfn2b_default_template: STRING is "feature `$7' inherited from $9 has an alias `$8' but the version inherited from $11 has a different one `$10'."
-	vmrc2a_default_template: STRING is "replicated features $6 have not been selected."
-	vmrc2b_default_template: STRING is "replicated features $6 have been selected more than once."
+	vmrc2a_default_template: STRING is "replicated features $7 have not been selected."
+	vmrc2b_default_template: STRING is "replicated features $7 have been selected more than once."
 	vmss1a_default_template: STRING is "`$7' is not the final name of a feature inherited from $8."
 	vmss2a_default_template: STRING is "feature name `$7' appears twice in the Select subclause of parent $8."
 	vmss3a_default_template: STRING is "feature name `$7' appears in the Select subclause of parent $8 but is not replicated."
 	vomb1a_default_template: STRING is "inspect expression of type '$7' different from INTEGER or CHARACTER."
 	vomb2a_default_template: STRING is "inspect constant of type '$7' different from type '$8' of inspect expression."
+	vomb2b_default_template: STRING is "inspect choice `$7' is not a constant attribute."
 	vpca1a_default_template: STRING is "`$7' is not the final name of a feature in class $5."
 	vpca1b_default_template: STRING is "`$7' is not the final name of a feature in class $8."
 	vpca2a_default_template: STRING is "feature `$8' of class $9 is not exported to class $5."
@@ -13035,6 +13093,7 @@ feature {NONE} -- Implementation
 	vmss3a_template_code: STRING is "vmss3a"
 	vomb1a_template_code: STRING is "vomb1a"
 	vomb2a_template_code: STRING is "vomb2a"
+	vomb2b_template_code: STRING is "vomb2b"
 	vpca1a_template_code: STRING is "vpca1a"
 	vpca1b_template_code: STRING is "vpca1b"
 	vpca2a_template_code: STRING is "vpca2a"

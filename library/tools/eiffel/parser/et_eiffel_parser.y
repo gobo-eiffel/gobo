@@ -3181,7 +3181,7 @@ Choice_constant: Integer_constant
 	| Character_constant
 		{ $$ := $1 }
 	| Identifier
-		{ $$ := $1 }
+		{ $$ := new_choice_attribute_constant ($1) }
 	| Static_call_expression
 		{ $$ := $1 }
 	;

@@ -2952,6 +2952,7 @@ feature {NONE} -- Instruction validity
 			j, nb2: INTEGER
 			l_value_class: ET_CLASS
 			l_choice_class: ET_CLASS
+			l_constant: ET_CONSTANT
 		do
 			has_fatal_error := False
 			any_type := current_system.any_type
@@ -3002,50 +3003,12 @@ feature {NONE} -- Instruction validity
 						check_expression_validity (l_choice_constant, l_choice_context, l_value_context)
 						if has_fatal_error then
 							had_error := True
-						elseif not had_value_error then
-							if l_choice_context.same_named_type (l_value_type, l_value_context) then
-								-- OK.
-							else
-								l_value_class := l_value_context.base_class
-								l_choice_class := l_choice_context.base_class
-								if
-									l_value_class = current_system.integer_16_class and then
-									l_choice_class = current_system.integer_8_class
-								then
-									-- Valid with ISE Eiffel. To be checked with other compilers.
-								elseif
-									l_value_class = current_system.integer_32_class and then
-									(l_choice_class = current_system.integer_8_class or
-									l_choice_class = current_system.integer_16_class)
-								then
-									-- Valid with ISE Eiffel. To be checked with other compilers.
-								elseif
-									l_value_class = current_system.integer_64_class and then
-									(l_choice_class = current_system.integer_8_class or
-									l_choice_class = current_system.integer_16_class or
-									l_choice_class = current_system.integer_32_class)
-								then
-									-- Valid with ISE Eiffel. To be checked with other compilers.
-								elseif
-									l_value_class = current_system.character_32_class and then
-									l_choice_class = current_system.character_8_class
-								then
-									-- Valid with ISE Eiffel. To be checked with other compilers.
-								else
-									had_error := True
-									set_fatal_error
-									l_value_named_type := l_value_context.named_type
-									l_choice_named_type := l_choice_context.named_type
-									error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
-								end
-							end
-						end
-						l_choice_context.wipe_out
-						if l_choice.is_range then
-							l_choice_constant := l_choice.upper
-							check_expression_validity (l_choice_constant, l_choice_context, l_value_context)
-							if has_fatal_error then
+						else
+							l_constant := choice_constant (l_choice_constant)
+							if l_constant = Void then
 								had_error := True
+								set_fatal_error
+								error_handler.report_vomb2b_error (current_class, current_class_impl, l_choice_constant)
 							elseif not had_value_error then
 								if l_choice_context.same_named_type (l_value_type, l_value_context) then
 									-- OK.
@@ -3084,6 +3047,58 @@ feature {NONE} -- Instruction validity
 									end
 								end
 							end
+						end
+						l_choice_context.wipe_out
+						if l_choice.is_range then
+							l_choice_constant := l_choice.upper
+							check_expression_validity (l_choice_constant, l_choice_context, l_value_context)
+							if has_fatal_error then
+								had_error := True
+							else
+								l_constant := choice_constant (l_choice_constant)
+								if l_constant = Void then
+									had_error := True
+									set_fatal_error
+									error_handler.report_vomb2b_error (current_class, current_class_impl, l_choice_constant)
+								elseif not had_value_error then
+									if l_choice_context.same_named_type (l_value_type, l_value_context) then
+										-- OK.
+									else
+										l_value_class := l_value_context.base_class
+										l_choice_class := l_choice_context.base_class
+										if
+											l_value_class = current_system.integer_16_class and then
+											l_choice_class = current_system.integer_8_class
+										then
+											-- Valid with ISE Eiffel. To be checked with other compilers.
+										elseif
+											l_value_class = current_system.integer_32_class and then
+											(l_choice_class = current_system.integer_8_class or
+											l_choice_class = current_system.integer_16_class)
+										then
+											-- Valid with ISE Eiffel. To be checked with other compilers.
+										elseif
+											l_value_class = current_system.integer_64_class and then
+											(l_choice_class = current_system.integer_8_class or
+											l_choice_class = current_system.integer_16_class or
+											l_choice_class = current_system.integer_32_class)
+										then
+											-- Valid with ISE Eiffel. To be checked with other compilers.
+										elseif
+											l_value_class = current_system.character_32_class and then
+											l_choice_class = current_system.character_8_class
+										then
+											-- Valid with ISE Eiffel. To be checked with other compilers.
+										else
+											had_error := True
+											set_fatal_error
+											l_value_named_type := l_value_context.named_type
+											l_choice_named_type := l_choice_context.named_type
+											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+										end
+									end
+								end
+							end
 							l_choice_context.wipe_out
 						end
 						j := j + 1
@@ -3093,11 +3108,6 @@ feature {NONE} -- Instruction validity
 				end
 				free_context (l_choice_context)
 				free_context (l_value_context)
--- TODO: update comment
-					-- We need to process the compounds after the choices because
-					-- `check_instructions_validity' may alter `actual_context'
-					-- and `formal_context' used to check the validity of the
-					-- choice values compared to the type of the inspect expression.
 				from i := 1 until i > nb loop
 					l_when_part := l_when_parts.item (i)
 					l_compound := l_when_part.then_compound
@@ -3122,6 +3132,72 @@ feature {NONE} -- Instruction validity
 			if had_error then
 				set_fatal_error
 			end
+		end
+
+	choice_constant (a_choice_constant: ET_CHOICE_CONSTANT): ET_CONSTANT is
+			-- Constant value of the inspect choice `a_choice_constant',
+			-- or Void if it appears not to be a constant after all
+			--
+			-- Note that validity `a_choice_constant' as an expression
+			-- is assumed to have already been checked.
+			-- Therefore, this routine will not change the value of `has_fatal_error'.
+			-- It will just return Void if something unexpected is encountered.
+		require
+			a_choice_constant_not_void: a_choice_constant /= Void
+		local
+			l_identifier: ET_IDENTIFIER
+			l_query: ET_QUERY
+			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
+			l_unique_attribute: ET_UNIQUE_ATTRIBUTE
+			l_static_call: ET_STATIC_CALL_EXPRESSION
+			l_static_type: ET_TYPE
+			l_static_class: ET_CLASS
+			l_static_context: ET_NESTED_TYPE_CONTEXT
+			l_old_has_fatal_error: BOOLEAN
+			l_seed: INTEGER
+		do
+			l_old_has_fatal_error := has_fatal_error
+			Result ?= a_choice_constant
+			if Result = Void then
+				l_identifier ?= a_choice_constant
+				if l_identifier /= Void then
+					if l_identifier.is_argument then
+							-- This is not a constant.
+					elseif l_identifier.is_local then
+							-- This is not a constant.
+					elseif l_identifier.is_object_test_local then
+							-- This is not a constant.
+					else
+						l_seed := l_identifier.seed
+						l_query := current_class.seeded_query (l_seed)
+					end
+				else
+					l_static_call ?= a_choice_constant
+					if l_static_call /= Void then
+						l_static_type := resolved_formal_parameters (l_static_call.type, current_class_impl, current_type)
+						if not has_fatal_error then
+							l_static_context := new_context (current_type)
+							l_static_context.force_last (l_static_type)
+							l_static_class := l_static_context.base_class
+							l_query := l_static_class.seeded_query (l_static_call.name.seed)
+							free_context (l_static_context)
+						end
+					end
+				end
+				if l_query /= Void then
+					l_constant_attribute ?= l_query
+					if l_constant_attribute /= Void then
+						Result := l_constant_attribute.constant
+					else
+						l_unique_attribute ?= l_query
+						if l_unique_attribute /= Void then
+-- TODO: determine the exact value of the unique attribute.
+							Result := create {ET_REGULAR_INTEGER_CONSTANT}.make ("1")
+						end
+					end
+				end
+			end
+			has_fatal_error := l_old_has_fatal_error
 		end
 
 	check_loop_instruction_validity (an_instruction: ET_LOOP_INSTRUCTION) is
