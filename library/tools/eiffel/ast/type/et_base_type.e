@@ -330,7 +330,7 @@ feature -- Comparison
 	same_as_base_class: BOOLEAN is
 			-- Is current type a non-generic class type with the same
 			-- expandedness and separateness status as its base class,
-			-- or is it its own base class??
+			-- or is it its own base class?
 		do
 			-- Result := False
 		end
