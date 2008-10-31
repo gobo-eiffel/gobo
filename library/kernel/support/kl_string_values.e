@@ -115,6 +115,7 @@ feature -- Conversion
 			end
 		ensure
 			interpreted_string_not_void: Result /= Void
+			new_string: Result /= a_string
 		end
 
 end
