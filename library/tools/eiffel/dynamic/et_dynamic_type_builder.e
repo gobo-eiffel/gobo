@@ -905,7 +905,7 @@ feature {NONE} -- Feature validity
 					end
 				elseif not a_feature.type.is_type_expanded (current_type) then
 -- TODO: build full dynamic type sets, recursively.
-					error_handler.report_warning_message ("Dynamic type set not built for external feature " + current_type.to_text + "." + a_feature.lower_name + "%N")
+					error_handler.report_warning_message ("Dynamic type set not built for external feature " + current_type.to_text + "." + a_feature.lower_name)
 				end
 			end
 		end
