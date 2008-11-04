@@ -19,6 +19,9 @@ inherit
 	ET_ECF_ELEMENT_NAMES
 		export {NONE} all end
 
+	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -35,6 +38,8 @@ feature {NONE} -- Initialization
 		do
 			create a_handler.make_standard
 			make (a_handler)
+		ensure
+			ise_version_set: ise_version = ise_latest
 		end
 
 	make (an_error_handler: like error_handler) is
@@ -46,6 +51,7 @@ feature {NONE} -- Initialization
 			make_with_factory (ast_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
+			ise_version_set: ise_version = ise_latest
 		end
 
 	make_with_factory (a_factory: like ast_factory; an_error_handler: like error_handler) is
@@ -56,9 +62,11 @@ feature {NONE} -- Initialization
 		do
 			error_handler := an_error_handler
 			ast_factory := a_factory
+			ise_version := ise_latest
 		ensure
 			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
+			ise_version_set: ise_version = ise_latest
 		end
 
 feature -- Access
@@ -88,6 +96,9 @@ feature -- Access
 			library_parser_not_void: Result /= Void
 		end
 
+	ise_version: UT_VERSION
+			-- ISE version to be used when evaluating version conditions
+
 feature -- Setting
 
 	set_enclosing_universe (a_universe: like enclosing_universe) is
@@ -96,6 +107,16 @@ feature -- Setting
 			enclosing_universe := a_universe
 		ensure
 			enclosing_universe_set: enclosing_universe = a_universe
+		end
+
+	set_ise_version (a_version: like ise_version) is
+			-- Set `ise_version' to `a_version'.
+		require
+			a_version_not_void: a_version /= Void
+		do
+			ise_version := a_version
+		ensure
+			ise_version_set: ise_version = a_version
 		end
 
 feature {NONE} -- AST factory
@@ -319,6 +340,13 @@ feature {NONE} -- AST factory
 						if l_condition /= Void then
 							Result.put_last (l_condition)
 						end
+					elseif STRING_.same_string (l_child.name, xml_version) then
+						l_condition := new_version_condition (l_child, a_position_table, a_universe)
+						if l_condition /= Void then
+							Result.put_last (l_condition)
+						end
+					else
+-- TODO: ECF warning
 					end
 				end
 				l_cursor.forth
@@ -712,6 +740,82 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_version_condition (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_UNIVERSE): ET_ECF_VERSION_CONDITION is
+			-- New version condition built from `an_element'
+		require
+			an_element_not_void: an_element /= Void
+			is_version: STRING_.same_string (an_element.name, xml_version)
+			a_position_table_not_void: a_position_table /= Void
+			a_universe_not_void: a_universe /= Void
+		local
+			l_type: STRING
+			l_min: STRING
+			l_max: STRING
+			l_min_version: UT_VERSION
+			l_max_version: UT_VERSION
+			l_version_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			if an_element.has_attribute_by_name (xml_min) then
+				l_min := an_element.attribute_by_name (xml_min).value
+				if l_min /= Void then
+					create l_version_regexp.make
+					l_version_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?(\.([0-9]+))?")
+					if l_version_regexp.recognizes (l_min) then
+						inspect l_version_regexp.match_count
+						when 2 then
+							create l_min_version.make_major (l_version_regexp.captured_substring (1).to_integer)
+						when 4 then
+							create l_min_version.make_major_minor (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer)
+						when 6 then
+							create l_min_version.make (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer, l_version_regexp.captured_substring (5).to_integer, 0)
+						when 8 then
+							create l_min_version.make (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer, l_version_regexp.captured_substring (5).to_integer, l_version_regexp.captured_substring (7).to_integer)
+						else
+-- TODO: ECF error
+						end
+					end
+				end
+			end
+			if an_element.has_attribute_by_name (xml_max) then
+				l_max := an_element.attribute_by_name (xml_max).value
+				if l_max /= Void then
+					create l_version_regexp.make
+					l_version_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?(\.([0-9]+))?")
+					if l_version_regexp.recognizes (l_max) then
+						inspect l_version_regexp.match_count
+						when 2 then
+							create l_max_version.make_major (l_version_regexp.captured_substring (1).to_integer)
+						when 4 then
+							create l_max_version.make_major_minor (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer)
+						when 6 then
+							create l_max_version.make (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer, l_version_regexp.captured_substring (5).to_integer, 0)
+						when 8 then
+							create l_max_version.make (l_version_regexp.captured_substring (1).to_integer, l_version_regexp.captured_substring (3).to_integer, l_version_regexp.captured_substring (5).to_integer, l_version_regexp.captured_substring (7).to_integer)
+						else
+-- TODO: ECF error
+						end
+					end
+				end
+			end
+			if (l_min_version /= Void and l_max_version /= Void) and then l_max_version < l_min_version then
+-- TODO: ECF error
+			end
+			if not an_element.has_attribute_by_name (xml_type) then
+-- TODO: ECF error
+			else
+				l_type := an_element.attribute_by_name (xml_type).value
+				if l_type = Void then
+-- TODO: ECF error
+				elseif STRING_.same_case_insensitive (l_type, xml_compiler) then
+					create {ET_ECF_COMPILER_VERSION_CONDITION} Result.make (l_min_version, l_max_version)
+				elseif STRING_.same_case_insensitive (l_type, xml_msil_clr) then
+					create {ET_ECF_COMPILER_VERSION_CONDITION} Result.make (l_min_version, l_max_version)
+				else
+-- TODO: ECF error
+				end
+			end
+		end
+
 feature {NONE} -- Element change
 
 	fill_system_config (a_system_config: ET_ECF_SYSTEM_CONFIG; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_universe: ET_UNIVERSE) is
@@ -897,5 +1001,6 @@ invariant
 
 	ast_factory_not_void: ast_factory /= Void
 	error_handler_not_void: error_handler /= Void
+	ise_version_not_void: ise_version /= Void
 
 end

@@ -23,6 +23,9 @@ feature -- Constants
 	xml_cluster: STRING is "cluster"
 			-- "cluster" element name
 
+	xml_compiler: STRING is "compiler"
+			-- "compiler" attribute value
+
 	xml_condition: STRING is "condition"
 			-- "condition" element name
 
@@ -56,6 +59,15 @@ feature -- Constants
 	xml_library_target: STRING is "library_target"
 			-- "library_target" attribute name
 
+	xml_min: STRING is "min"
+			-- "min" attribute name
+
+	xml_max: STRING is "max"
+			-- "max" attribute name
+
+	xml_msil_clr: STRING is "msil_clr"
+			-- "msil_clr" attribute value
+
 	xml_multithreaded: STRING is "multithreaded"
 			-- "multithreaded" attribute name
 
@@ -80,6 +92,9 @@ feature -- Constants
 	xml_target: STRING is "target"
 			-- "target" element name
 
+	xml_type: STRING is "type"
+			-- "type" attribute name
+
 	xml_uuid: STRING is "uuid"
 			-- "target" element name
 
@@ -88,5 +103,8 @@ feature -- Constants
 
 	xml_variable: STRING is "variable"
 			-- "variable" element name
+
+	xml_version: STRING is "version"
+			-- "version" element name
 
 end

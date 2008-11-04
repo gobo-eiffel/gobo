@@ -57,7 +57,7 @@ feature {NONE} -- Element change
 -- TODO: we need to select the target
 			end
 			if l_target /= Void then
-				create l_state.make (l_target)
+				create l_state.make (l_target, ise_version)
 				l_target.update_state (l_state)
 				l_system.select_target (l_target, l_state)
 				parse_libraries (l_system, l_state)
