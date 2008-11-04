@@ -253,6 +253,9 @@ feature {NONE} -- Eiffel config file parsing
 			last_system := Void
 			create l_ecf_error_handler.make_standard
 			create l_ecf_parser.make (l_ecf_error_handler)
+			if ise_version /= Void then
+				l_ecf_parser.set_ise_version (ise_version)
+			end
 			l_ecf_parser.parse_file (a_file)
 			if not l_ecf_error_handler.has_error then
 				last_system := l_ecf_parser.last_system
