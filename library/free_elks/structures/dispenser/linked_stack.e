@@ -55,9 +55,10 @@ feature -- Access
 				not_empty: not is_empty
 			end
 			f := first_element
-			if f /= Void then
-				Result := f.item
+			check
+				f_attached: f /= Void
 			end
+			Result := f.item
 		end
 
 feature -- Element change

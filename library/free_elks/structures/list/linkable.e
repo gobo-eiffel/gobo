@@ -21,6 +21,9 @@ class LINKABLE [G] inherit
 				item
 		end
 
+create {CHAIN}
+	put
+
 feature -- Access
 
 	right: ?like Current
@@ -56,13 +59,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
 end -- class LINKABLE
-
-
-

@@ -115,11 +115,9 @@ feature -- Removal
 			-- Remove top item.
 		require else
 			not_empty: count /= 0
-		local
-			default_value: like item
 		do
-			fl.put (default_value, count)
 			count := count - 1
+			fl.area.put_default (count)
 		end
 
 	wipe_out is
@@ -214,7 +212,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -224,13 +222,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
 end -- class BOUNDED_STACK
-
-
-

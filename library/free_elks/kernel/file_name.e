@@ -1,7 +1,7 @@
 indexing
 	description: "File name abstraction"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,8 +13,11 @@ inherit
 	PATH_NAME
 
 create
-	make, make_from_string, make_temporary_name
-	
+	make,
+	make_from_string,
+	make_from_other_string,
+	make_temporary_name
+
 create {FILE_NAME}
 	string_make
 
@@ -26,7 +29,7 @@ feature {NONE} -- Initialization
 			p: POINTER
 		do
 			p := c_tempnam (p, p)
-			make_from_c (p)
+			make_from_c_pointer (p)
 			p.memory_free
 		end
 
@@ -100,7 +103,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.string_make (n)
 		end
-		
+
 feature {NONE} -- Externals
 
 	eif_append_file_name (s, p, v: POINTER) is

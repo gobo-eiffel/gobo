@@ -42,9 +42,10 @@ feature -- Access
 			a: like active
 		do
 			a := active
-			if a /= Void then
-				Result := a.item
+			check
+				a_attached: a /= Void
 			end
+			Result := a.item
 		end
 
 	first: like item is
@@ -53,9 +54,10 @@ feature -- Access
 			f: like first_element
 		do
 			f := first_element
-			if f /= Void then
-				Result := f.item
+			check
+				f_attached: f /= Void
 			end
+			Result := f.item
 		end
 
 	last: like item is
@@ -64,9 +66,10 @@ feature -- Access
 			l: like last_element
 		do
 			l := last_element
-			if l /= Void then
-				Result := l.item
+			check
+				l_attached: l /= Void
 			end
+			Result := l.item
 		end
 
 	index: INTEGER
@@ -643,8 +646,7 @@ feature {LINKED_LIST} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			create Result
-			Result.put (v)
+			create Result.put (v)
 		ensure
 			result_exists: Result /= Void
 		end

@@ -1780,7 +1780,7 @@ feature -- Types
 			Result := formal_parameters.item (i)
 			if Result = Void then
 				create l_name.make ("G" + i.out)
-				create Result.make (l_name, i)
+				create Result.make (Void, l_name, i)
 				formal_parameters.replace (Result, i)
 			end
 		ensure

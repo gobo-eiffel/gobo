@@ -69,13 +69,15 @@ create
 	make_empty,
 	make_filled,
 	make_from_string,
+	make_from_other_string,
 	make_from_c,
+	make_from_c_pointer,
 	make_from_cil
 
 convert
 	to_cil: {SYSTEM_STRING},
 	make_from_cil ({SYSTEM_STRING}),
-	as_string_8: {READABLE_STRING_8, STRING_8}
+	as_string_8: {READABLE_STRING_8, STRING_8, ?STRING_8}
 
 feature -- Initialization
 
@@ -89,6 +91,7 @@ feature -- Initialization
 			end
 			make (l_count)
 			if l_count > 0 then
+				set_count (l_count)
 				dotnet_convertor.read_system_string_into (a_system_string, Current)
 			end
 		end

@@ -20,8 +20,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize.
 		do
-			create leading_separators.make_from_string (" ")
-			create trailing_separators.make_from_string (" ")
+			create leading_separators.make_from_other_string (" ")
+			create trailing_separators.make_from_other_string (" ")
 		ensure
 			leading_separators_set: leading_separators.is_equal (" ")
 			trailing_separators_set: trailing_separators.is_equal (" ")

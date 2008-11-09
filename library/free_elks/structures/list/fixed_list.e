@@ -248,7 +248,6 @@ feature -- Element change
 			-- (or `after' if no right neighbor)
 		local
 			i, j: INTEGER
-			default_value: G
 		do
 			if not off then
 				from
@@ -260,7 +259,7 @@ feature -- Element change
 					area.put (area.item (j), i)
 					i := j
 				end
-				put_i_th (default_value, count)
+				area.put_default (i)
 				count := count - 1
 			end
 		end

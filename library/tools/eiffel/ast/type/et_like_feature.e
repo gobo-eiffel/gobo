@@ -172,6 +172,7 @@ feature -- Access
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
@@ -225,6 +226,7 @@ feature -- Access
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
@@ -433,6 +435,7 @@ feature -- Access
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class
@@ -487,6 +490,7 @@ feature -- Access
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Anchored type not resolved yet.
 				Result := tokens.unknown_class

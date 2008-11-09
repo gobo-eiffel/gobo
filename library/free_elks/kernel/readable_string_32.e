@@ -64,6 +64,8 @@ feature {NONE} -- Initialization
 
 	make_from_string (s: READABLE_STRING_32)
 			-- Initialize from the characters of `s'.
+--		obsolete
+--			"Use `make_from_other_string' to create object and `copy' to modify it."
 		require
 			string_exists: s /= Void
 		do
@@ -80,18 +82,49 @@ feature {NONE} -- Initialization
 	make_from_c (c_string: POINTER)
 			-- Initialize from contents of `c_string',
 			-- a string created by some C function
+--		obsolete
+--			"Use `make_from_c_pointer' to create object and `from_c' to modify it."
 		require
 			c_string_exists: c_string /= default_pointer
 		local
 			l_count: INTEGER
 		do
-			c_string_provider.share_from_pointer (c_string)
+			c_string_provider.set_shared_from_pointer (c_string)
 			l_count := c_string_provider.count
 			if area = Void then
 				create area.make (l_count + 1)
 			elseif l_count >= area.count then
 				area := area.aliased_resized_area (l_count + 1)
 			end
+			count := l_count
+			internal_hash_code := 0
+			c_string_provider.read_substring_into_character_32_area (area, 1, l_count)
+		end
+
+	make_from_other_string (s: READABLE_STRING_32)
+			-- Create new instance from the characters of `s'.
+		require
+			string_exists: s /= Void
+		do
+			area := s.area.twin
+			count := s.count
+			internal_hash_code := 0
+		ensure
+			not_shared_implementation: Current /= s implies not shared_with (s)
+			initialized: same_string (s)
+		end
+
+	make_from_c_pointer (c_string: POINTER)
+			-- Create new instance from contents of `c_string',
+			-- a string created by some C function
+		require
+			c_string_exists: c_string /= default_pointer
+		local
+			l_count: INTEGER
+		do
+			c_string_provider.set_shared_from_pointer (c_string)
+			l_count := c_string_provider.count
+			create area.make (l_count + 1)
 			count := l_count
 			internal_hash_code := 0
 			c_string_provider.read_substring_into_character_32_area (area, 1, l_count)
@@ -246,7 +279,7 @@ feature -- Access
 	string: STRING_32
 			-- New STRING_32 having same character sequence as `Current'.
 		do
-			create Result.make_from_string (Current)
+			create Result.make_from_other_string (Current)
 		ensure
 			string_not_void: Result /= Void
 			string_type: Result.same_type (create {STRING_32}.make_empty)

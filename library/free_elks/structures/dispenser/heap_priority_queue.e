@@ -131,7 +131,7 @@ feature -- Element change
 			end
 			put (v)
 		end
-		
+
 	put (v: like item) is
 			-- Insert item `v' at its proper position.
 		local
@@ -154,7 +154,6 @@ feature -- Removal
 	remove is
 			-- Remove item of highest value.
 		local
-			l_default: G
 			i, j: INTEGER
 			up: like item
 			stop: BOOLEAN
@@ -179,7 +178,7 @@ feature -- Removal
 				end
 				put_i_th (up, i)
 			end
-			put_i_th (l_default, count + 1)
+			area.put_default (count)
 		end
 
 	prune (v: G) is
@@ -225,7 +224,7 @@ feature -- Removal
 					i := i + 1
 				end
 			end
-			
+
 			if l_tmp.count = count - 1 then
 					--| Item was found, we can update `Current'.
 				from
@@ -335,7 +334,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -344,11 +343,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end -- class HEAP_PRIORITY_QUEUE

@@ -52,9 +52,10 @@ feature -- Measurement
 			t: like tree
 		do
 			t := tree
-			if t /= Void then
-				Result := t.min
+			check
+				t_attached: t /= Void
 			end
+			Result := t.min
 		end
 
 	max: like item is
@@ -63,9 +64,10 @@ feature -- Measurement
 			t: like tree
 		do
 			t := tree
-			if t /= Void then
-				Result := t.max
+			check
+				t_attached: t /= Void
 			end
+			Result := t.max
 		end
 
 	item: G is
@@ -74,9 +76,10 @@ feature -- Measurement
 			a: like active_node
 		do
 			a := active_node
-			if a /= Void then
-				Result := a.item
+			check
+				a_attached: a /= Void
 			end
+			Result := a.item
 		end
 
 feature -- Status report

@@ -86,8 +86,10 @@ class TWO_WAY_TREE [G] inherit
 				child
 			{NONE}
 				twl_make, twl_has,
-				twl_fill, twl_duplicate,
-				twl_full
+				twl_fill,
+				twl_duplicate,
+				twl_full,
+				split
 		undefine
 			copy, child_readable, is_leaf,
 			child_writable,
@@ -95,16 +97,13 @@ class TWO_WAY_TREE [G] inherit
 			child_isfirst, valid_cursor_index,
 			is_equal
 		redefine
-			first_child, child_islast, last_child, new_cell, child_cursor
+			first_child, child_islast, last_child, new_cell, child_cursor, split, new_chain
 		select
 			is_leaf
 		end
 
 create
 	make
-
-create {TWO_WAY_TREE}
-	twl_make, make_sublist
 
 feature -- Initialization
 
@@ -299,6 +298,13 @@ feature -- Element change
 			end
 		end
 
+feature -- Removal
+
+	split (n: INTEGER)
+			-- Do nothing.
+		do
+		end
+
 feature {TWO_WAY_TREE} -- Implementation
 
 	new_cell (v: like item): TWO_WAY_TREE [G] is
@@ -318,6 +324,12 @@ feature {TWO_WAY_TREE} -- Implementation
 			-- produce an adequately allocated and initialized object.
 		do
 			create Result.make (item)
+		end
+
+	new_chain: like Current is
+			-- <Precursor>
+		do
+			Result := new_tree
 		end
 
 	clone_node (n: like Current): like Current is

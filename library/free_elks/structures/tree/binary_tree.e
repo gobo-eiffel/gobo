@@ -73,9 +73,10 @@ feature -- Access
 			l: like left_child
 		do
 			l := left_child
-			if l /= Void then
-				Result := l.item
+			check
+				l_attached: l /= Void
 			end
+			Result := l.item
 		end
 
 	right_item: like item is
@@ -86,9 +87,10 @@ feature -- Access
 			r: like right_child
 		do
 			r := right_child
-			if r /= Void then
-				Result := r.item
+			check
+				r_attached: r /= Void
 			end
+			Result := r.item
 		end
 
 	first_child: like parent is

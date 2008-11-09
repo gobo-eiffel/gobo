@@ -81,6 +81,7 @@ feature -- Access
 			-- unmatched formal generic parameter if this parameter
 			-- is current type.
 		do
+-- TODO: take `type_mark' into account.
 			Result := a_context.base_type
 		end
 
@@ -90,6 +91,7 @@ feature -- Access
 			-- by their named version and should still be considered as
 			-- viewed from `a_context'
 		do
+-- TODO: take `type_mark' into account.
 			Result := a_context
 		end
 
@@ -122,6 +124,7 @@ feature -- Access
 			-- new formal type in that case instead of the base
 			-- type of its constraint.
 		do
+-- TODO: take `type_mark' into account.
 			Result := a_context.named_type
 		end
 

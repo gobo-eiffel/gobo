@@ -6,14 +6,14 @@ indexing
 		might be the addition or the removal of an attribute as well as an attribute type change.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
+	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	MISMATCH_CORRECTOR
-	
+
 feature -- Correction
 
 	correct_mismatch is
@@ -23,7 +23,7 @@ feature -- Correction
 			l_exc: EXCEPTIONS
 		do
 				-- If it is not redefined then we raise an exception.
-			create l_msg.make_from_string ("Mismatch: ")
+			create l_msg.make_from_other_string ("Mismatch: ")
 			create l_exc
 			l_msg.append (generating_type)
 			l_exc.raise_retrieval_exception (l_msg)

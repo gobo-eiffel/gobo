@@ -72,9 +72,10 @@ feature -- Access
 			a: like active
 		do
 			a := active
-			if a /= Void then
-				Result := a.item
+			check
+				a_attached: a /= Void
 			end
+			Result := a.item
 		ensure then
 			last_element_if_not_empty:
 				not is_empty implies (active = last_element)

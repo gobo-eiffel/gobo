@@ -489,14 +489,12 @@ feature -- Removal
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor)
-		local
-			default_value: G
 		do
 			if index < count then
 				subcopy (Current, index + 1, count, index)
 			end
 			set_count (count - 1)
-			area.put (default_value, count)
+			area.put_default (count)
 		ensure then
 			index: index = old index
 		end
@@ -510,7 +508,6 @@ feature -- Removal
 			offset: INTEGER
 			res: BOOLEAN
 			obj_cmp: BOOLEAN
-			default_val: like item
 			l_area: like area
 		do
 			obj_cmp := object_comparison
@@ -536,7 +533,7 @@ feature -- Removal
 						i := i + 1
 					end
 				else
-					l_area.put (default_val, i)
+					l_area.put_default (i)
 					i := i + 1
 				end
 			end

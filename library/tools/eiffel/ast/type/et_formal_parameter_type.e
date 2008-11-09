@@ -54,20 +54,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; an_index: INTEGER) is
+	make (a_type_mark: like type_mark; a_name: like name; an_index: INTEGER) is
 			-- Create a new formal generic type.
 		require
 			a_name_not_void: a_name /= Void
 			an_index_positive: an_index >= 1
 		do
+			type_mark := a_type_mark
 			name := a_name
 			index := an_index
 		ensure
+			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
 			index_set: index = an_index
 		end
 
 feature -- Access
+
+	type_mark: ET_TYPE_MARK
+			-- '!' or '?' symbol
 
 	name: ET_IDENTIFIER
 			-- Name of type
@@ -144,6 +149,7 @@ feature -- Access
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
 		do
+-- TODO: take `type_mark' into account.
 			if index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
@@ -203,6 +209,7 @@ feature -- Access
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
 		do
+-- TODO: take `type_mark' into account.
 			if index <= a_context.actual_parameter_count then
 				an_actual := a_context.actual_parameters.type (index)
 				a_formal_type ?= an_actual
@@ -387,6 +394,7 @@ feature -- Access
 			-- new formal type in that case instead of the base
 			-- type of its constraint.
 		do
+-- TODO: take `type_mark' into account.
 			if index <= a_context.base_type_actual_count then
 				Result := a_context.base_type_actual (index)
 			else
@@ -402,6 +410,7 @@ feature -- Access
 			-- new formal type in that case instead of the base
 			-- type of its constraint.
 		do
+-- TODO: take `type_mark' into account.
 			if index <= a_context.actual_parameter_count then
 				Result ?= a_context.actual_parameters.type (index)
 				if Result = Void then
@@ -420,13 +429,22 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := name.position
+			if type_mark /= Void then
+				Result := type_mark.position
+			end
+			if Result = Void or else Result.is_null then
+				Result := name.position
+			end
 		end
 
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			Result := name
+			if type_mark /= Void then
+				Result := type_mark
+			else
+				Result := name
+			end
 		end
 
 	last_leaf: ET_AST_LEAF is
@@ -1406,6 +1424,7 @@ feature -- Type processing
 			a_type: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER_TYPE
 		do
+-- TODO: take `type_mark' into account.
 			Result := Current
 			if index <= a_parameters.count then
 				a_type := a_parameters.type (index)

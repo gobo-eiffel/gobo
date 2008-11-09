@@ -18,6 +18,9 @@ class BI_LINKABLE [G] inherit
 			put_right, forget_right
 		end
 
+create {CHAIN}
+	put
+
 feature -- Access
 
 	left: ?like Current

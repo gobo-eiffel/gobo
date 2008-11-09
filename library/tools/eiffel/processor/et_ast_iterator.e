@@ -1761,7 +1761,13 @@ feature {ET_AST_NODE} -- Processing
 
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
 			-- Process `a_type'.
+		local
+			l_type_mark: ET_TYPE_MARK
 		do
+			l_type_mark := a_type.type_mark
+			if l_type_mark /= Void then
+				l_type_mark.process (Current)
+			end
 			a_type.name.process (Current)
 		end
 

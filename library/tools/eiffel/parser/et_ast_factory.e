@@ -2235,11 +2235,11 @@ feature -- AST nodes
 			Result := a_formal
 		end
 
-	new_formal_parameter_type (a_name: ET_IDENTIFIER; an_index: INTEGER): ET_FORMAL_PARAMETER_TYPE is
+	new_formal_parameter_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER; an_index: INTEGER): ET_FORMAL_PARAMETER_TYPE is
 			-- New formal generic parameter type
 		do
 			if a_name /= Void and then an_index >= 1 then
-				create Result.make (a_name, an_index)
+				create Result.make (a_type_mark, a_name, an_index)
 			end
 		end
 

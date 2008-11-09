@@ -53,7 +53,7 @@ indexing
 		]"
 
 	compatibility: "[
-		This version of the class accepts any value of type H as key.
+		This version of the class accepts any value of type K as key.
 		Previous versions did not accept the default value as a key;
 		this restriction no longer applies. Most clients of the old version
 		should work correctly with this one; a client that explicitly relied
@@ -80,7 +80,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class HASH_TABLE [G, H -> HASHABLE] inherit
+class HASH_TABLE [G, K -> HASHABLE] inherit
 
 	UNBOUNDED [G]
 		rename
@@ -89,7 +89,7 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 			has_item, copy, is_equal
 		end
 
-	TABLE [G, H]
+	TABLE [G, K]
 		rename
 			has as has_item,
 			wipe_out as clear_all,
@@ -121,7 +121,7 @@ feature -- Initialization
 			-- if more than `n' items are inserted.
 		local
 			clever: PRIMES
-			l_void_item: G
+			l_void_item: ?G
 			l_size: INTEGER
 		do
 			create clever
@@ -155,8 +155,8 @@ feature -- Initialization
 			n >= 0
 		local
 			i: INTEGER
-			new_table: HASH_TABLE [G, H]
-			l_default_key: H
+			new_table: HASH_TABLE [G, K]
+			l_default_key: ?K
 			l_content: like content
 			l_keys: like keys
 		do
@@ -197,10 +197,10 @@ feature -- Initialization
 
 feature -- Access
 
-	found_item: G
+	found_item: ?G
 			-- Item, if any, yielded by last search operation
 
-	item alias "[]", infix "@" (key: H): G assign force is
+	item alias "[]", infix "@" (key: ?K): ?G assign force is
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		local
@@ -217,7 +217,7 @@ feature -- Access
 				(not (has (key))) implies (Result = computed_default_value)
 		end
 
-	has (key: H): BOOLEAN is
+	has (key: ?K): BOOLEAN is
 			-- Is there an item in the table with key `key'?
 		local
 			old_control, old_position: INTEGER
@@ -230,11 +230,11 @@ feature -- Access
 			default_case: (key = computed_default_key) implies (Result = has_default)
 		end
 
-	has_key (key: H): BOOLEAN is
+	has_key (key: ?K): BOOLEAN is
 			-- Is there an item in the table with key `key'? Set `found_item' to the found item.
 		local
 			old_position: INTEGER
-			l_default_value: G
+			l_default_value: ?G
 		do
 			old_position := position
 			internal_search (key)
@@ -251,7 +251,7 @@ feature -- Access
 			item_if_found: found implies (found_item = item (key))
 		end
 
-	has_item (v: G): BOOLEAN is
+	has_item (v: ?G): BOOLEAN is
 			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -284,7 +284,7 @@ feature -- Access
 			end
 		end
 
-	current_keys: ARRAY [H] is
+	current_keys: ARRAY [?K] is
 			-- New array containing actually used keys, from 1 to `count'
 		local
 			j: INTEGER
@@ -306,7 +306,7 @@ feature -- Access
 			good_count: Result.count = count
  		end
 
-	item_for_iteration: G is
+	item_for_iteration: ?G is
 			-- Element at current iteration position
 		require
 			not_off: not off
@@ -314,7 +314,7 @@ feature -- Access
 			Result := content.item (iteration_position)
 		end
 
-	key_for_iteration: H is
+	key_for_iteration: ?K is
 			-- Key at current iteration position
 		require
 			not_off: not off
@@ -340,7 +340,7 @@ feature -- Measurement
 	capacity: INTEGER
 			-- Number of items that may be stored.
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: ?G): INTEGER is
 			-- Number of table items equal to `v'.
 		local
 			old_iteration_position: INTEGER
@@ -465,20 +465,20 @@ feature -- Status report
 			end
 		end
 
-	valid_key (k: H): BOOLEAN is
+	valid_key (k: ?K): BOOLEAN is
 			-- Is `k' a valid key?
 		local
 			l_internal: INTERNAL
-			l_default_key: H
+			l_default_key: ?K
 			l_index, i, nb: INTEGER
 			l_name: STRING
-			l_cell: CELL [H]
+			l_cell: CELL [?K]
 		do
 			Result := True
 			debug ("prevent_hash_table_catcall")
 				if k /= l_default_key then
 					create l_internal
-					create l_cell
+					create l_cell.put (l_default_key)
 					from
 						i := 1
 						nb := l_internal.field_count (l_cell)
@@ -492,8 +492,10 @@ feature -- Status report
 						end
 						i := i + 1
 					end
-					Result := l_internal.field_static_type_of_type (
-						l_index, l_internal.dynamic_type (l_cell)) = l_internal.dynamic_type (k)
+					if k /= Void then
+						Result := l_internal.field_static_type_of_type (
+							l_index, l_internal.dynamic_type (l_cell)) = l_internal.dynamic_type (k)
+					end
 				end
 			end
 		end
@@ -515,7 +517,7 @@ feature -- Cursor movement
 		local
 			stop: BOOLEAN
 			l_keys: like keys
-			l_default_key: H
+			l_default_key: ?K
 			pos_for_iter, table_size: INTEGER
 		do
 			from
@@ -542,13 +544,13 @@ feature -- Cursor movement
 			end
 		end
 
-	search (key: H) is
+	search (key: K) is
 			-- Search for item of key `key'.
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `key'.
 		local
 			old_position: INTEGER
-			l_default_value: G
+			l_default_value: ?G
 		do
 			old_position := position
 			internal_search (key)
@@ -563,7 +565,7 @@ feature -- Cursor movement
 			item_if_found: found implies (found_item = item (key))
 		end
 
-	search_item: G is
+	search_item: ?G is
 		obsolete
 			"Use found_item instead."
 		do
@@ -572,7 +574,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put (new: G; key: H) is
+	put (new: ?G; key: ?K) is
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 			-- Set `inserted' if and only if an insertion has
@@ -586,7 +588,7 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		local
-			l_default_key: H
+			l_default_key: ?K
 			l_pos: like position
 		do
 			internal_search (key)
@@ -638,7 +640,7 @@ feature -- Element change
 							and (old has_default)))
 		end
 
-	force (new: G; key: H) is
+	force (new: ?G; key: ?K) is
 			-- Update table so that `new' will be the item associated
 			-- with `key'.
 			-- If there was an item for that key, set `found'
@@ -649,8 +651,8 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		local
-			l_default_key: H
-			l_default_value: G
+			l_default_key: ?K
+			l_default_value: ?G
 		do
 			internal_search (key)
 			if not_found then
@@ -696,7 +698,7 @@ feature -- Element change
 						((key /= computed_default_key) and (old has_default)))
 		end
 
-	extend (new: G; key: H) is
+	extend (new: ?G; key: ?K) is
 			-- Assuming there is no item of key `key',
 			-- insert `new' with `key'.
 			-- Set `inserted'.
@@ -706,7 +708,7 @@ feature -- Element change
 		require
 			not_present: not has (key)
 		local
-			l_default_key: H
+			l_default_key: ?K
 			l_pos: like position
 		do
 			search_for_insertion (key)
@@ -740,7 +742,7 @@ feature -- Element change
 					((key = computed_default_key) or (old has_default))
 		end
 
-	replace (new: G; key: H) is
+	replace (new: ?G; key: ?K) is
 			-- Replace item at `key', if present,
 			-- with `new'; do not change associated key.
 			-- Set `replaced' if and only if a replacement has been made
@@ -765,7 +767,7 @@ feature -- Element change
 			found_item_is_old_item: found_item = old (item (key))
 		end
 
-	replace_key (new_key: H; old_key: H) is
+	replace_key (new_key: ?K; old_key: ?K) is
 			-- If there is an item of key `old_key' and no item of key
 			-- `new_key', replace the former's key by `new_key',
 			-- set `replaced', and set `found_item' to the item
@@ -778,8 +780,8 @@ feature -- Element change
 			-- see `instructions' in the Indexing clause.
 		local
 			insert_position, l_pos: INTEGER
-			l_default_value: G
-			l_default_key: H
+			l_default_value: ?G
+			l_default_key: ?K
 		do
 			put (l_default_value, new_key)
 			if inserted then
@@ -837,7 +839,7 @@ feature -- Element change
 					((new_key /= computed_default_key) and (old has_default)))
 		end
 
-	merge (other: HASH_TABLE [G, H]) is
+	merge (other: HASH_TABLE [G, K]) is
 			-- Merge `other' into Current. If `other' has some elements
 			-- with same key as in `Current', replace them by one from
 			-- `other'.
@@ -858,7 +860,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (key: H) is
+	remove (key: ?K) is
 			-- Remove item associated with `key', if present.
 			-- Set `removed' if and only if an item has been
 			-- removed (i.e. `key' was present);
@@ -866,8 +868,8 @@ feature -- Removal
 			-- If not, set `not_found'.
 			-- Reset `found_item' to its default value if `removed'.
 		local
-			l_default_key: H
-			l_default_value: G
+			l_default_key: ?K
+			l_default_value: ?G
 			l_pos: like position
 		do
 			internal_search (key)
@@ -902,7 +904,7 @@ feature -- Removal
 	clear_all, wipe_out is
 			-- Reset all items to default values; reset status.
 		local
-			l_default_value: G
+			l_default_value: ?G
 		do
 			content.clear_all
 			keys.clear_all
@@ -924,7 +926,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [?G] is
 			-- Representation as a linear structure
 		local
 			old_iteration_position: INTEGER
@@ -974,7 +976,7 @@ feature {NONE} -- Transformation
 			end
 
 				-- Convert `keys' from ARRAY to SPECIAL
-			if {array_keys: ARRAY [H]} mismatch_information.item ("keys") then
+			if {array_keys: ARRAY [K]} mismatch_information.item ("keys") then
 				keys := array_keys.area
 			end
 
@@ -1012,10 +1014,10 @@ feature {NONE} -- Transformation
 
 feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
-	content: SPECIAL [G]
+	content: SPECIAL [?G]
 			-- Array of contents
 
-	keys: SPECIAL [H]
+	keys: SPECIAL [?K]
 			-- Array of keys
 
 	deleted_marks: SPECIAL [BOOLEAN]
@@ -1033,7 +1035,7 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 	set_no_default is
 			-- Record information that there is no value for default key.
 		local
-			l_default_value: G
+			l_default_value: ?G
 		do
 			has_default := False
 			content.put (l_default_value, capacity)
@@ -1080,7 +1082,7 @@ feature {NONE} -- Implementation
 		require
 			in_bounds: i >= 0 and i < capacity
 		local
-			l_default_key: H
+			l_default_key: ?K
 		do
 			Result := (keys.item (i) /= l_default_key)
 		end
@@ -1154,7 +1156,7 @@ feature {NONE} -- Implementation
 			deleted_marks := d
 		end
 
-	default_key_value: G is
+	default_key_value: ?G is
 			-- Value associated with the default key, if any
 		require
 			has_default: has_default
@@ -1162,15 +1164,15 @@ feature {NONE} -- Implementation
 			Result := content.item (capacity)
 		end
 
-	computed_default_key: H is
+	computed_default_key: ?K is
 			-- Default key
 			-- (For performance reasons, used only in assertions;
 			-- elsewhere, see use of local entity `l_default_key'.)
 		do
-			-- No instructions necessary (returns default value of type H)
+			-- No instructions necessary (returns default value of type K)
 		end
 
-	computed_default_value: G is
+	computed_default_value: ?G is
 			-- Default value of type G
 			-- (For performance reasons, used only in assertions;
 			-- elsewhere, see use of local entity `l_default_value'.)
@@ -1178,20 +1180,20 @@ feature {NONE} -- Implementation
 			-- No instructions necessary (returns default value of type G)
 		end
 
-	internal_search (key: H) is
+	internal_search (key: ?K) is
 			-- Search for item of key `key'.
 			-- If successful, set `position' to index
 			-- of item with this key (the same index as the key's index).
 			-- If not, set `position' to possible position for insertion,
 			-- and set status to `found' or `not_found'.
 		local
-			l_default_key: H
+			l_default_key: ?K
 			hash_value, increment, l_pos, l_capacity: INTEGER
 			first_deleted_position: INTEGER
 			stop: BOOLEAN
 			l_keys: like keys
 			l_deleted_marks: like deleted_marks
-			l_key: H
+			l_key: ?K
 		do
 			first_deleted_position := impossible_position
 			if key = l_default_key or else key = Void then
@@ -1249,13 +1251,13 @@ feature {NONE} -- Implementation
 				(position = capacity) = (key = computed_default_key)
 		end
 
-	search_for_insertion (key: H) is
+	search_for_insertion (key: ?K) is
 			-- Assuming there is no item of key `key', compute
 			-- `position' at which to insert such an item.
 		require
 			not_present: not has (key)
 		local
-			l_default_key: H
+			l_default_key: ?K
 			hash_value, increment, l_pos, l_capacity: INTEGER
 			l_deleted_marks: like deleted_marks
 			l_keys: like keys
@@ -1288,7 +1290,7 @@ feature {NONE} -- Implementation
 				(position = capacity) = (key = computed_default_key)
 		end
 
-	key_at (n: INTEGER): H is
+	key_at (n: INTEGER): ?K is
 			-- Key at position `n'
 		require
 			in_bounds: n >= 0 and n < capacity

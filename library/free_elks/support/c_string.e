@@ -3,7 +3,7 @@ indexing
 		%collector problems (mainly objects moving around) when %
 		%interfacing with C APIs."
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,8 @@ create
 	make_empty,
 	make_by_pointer,
 	make_by_pointer_and_count,
+	make_shared_from_pointer,
+	make_shared_from_pointer_and_count,
 	share_from_pointer,
 	share_from_pointer_and_count
 
@@ -39,7 +41,7 @@ feature --{NONE} -- Initialization
 		require
 			a_length_positive: a_length >= 0
 		do
-			create managed_data.make ((a_length + 1))
+			create managed_data.make (a_length + 1)
 			count := 0
 		end
 
@@ -62,10 +64,52 @@ feature --{NONE} -- Initialization
 			managed_data.item.memory_copy (a_ptr, a_length)
 		end
 
+	make_shared_from_pointer (a_ptr: POINTER) is
+			-- New instance sharing `a_ptr'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+		do
+			make_shared_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
+		end
+
+	make_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+			-- New instance sharing `a_ptr' of `a_length' byte.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_length_non_negative: a_length >= 0
+		do
+			count := a_length
+			create managed_data.share_from_pointer (a_ptr, a_length + 1)
+		end
+
 feature -- Initialization
+
+	set_shared_from_pointer (a_ptr: POINTER) is
+			-- Share `a_ptr'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+		do
+			set_shared_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
+		end
+
+	set_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+			-- Share `a_ptr' of `a_length' byte.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_length_non_negative: a_length >= 0
+		do
+			count := a_length
+			if not managed_data.is_shared then
+				create managed_data.share_from_pointer (a_ptr, a_length + 1)
+			else
+				managed_data.set_from_pointer (a_ptr, a_length + 1)
+			end
+		end
 
 	share_from_pointer (a_ptr: POINTER) is
 			-- New instance sharing `a_ptr'.
+--		obsolete
+--			"Use `make_shared_from_pointer' to create object and `set_shared_from_pointer' to modify it."
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 		do
@@ -74,6 +118,8 @@ feature -- Initialization
 
 	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
 			-- New instance sharing `a_ptr' of `a_length' byte.
+--		obsolete
+--			"Use `make_shared_from_pointer_and_count' to create object and `set_shared_from_pointer_and_count' to modify it."
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_length_non_negative: a_length >= 0

@@ -872,12 +872,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_type_mark := a_constraint.type_mark
 			a_formal := a_formals.formal_parameter_by_name (a_name)
 			if a_formal /= Void then
-				if a_type_mark /= Void then
-						-- A formal parameter cannot be prefixed by
-						-- 'expanded', 'reference', 'separate', '!' or '?'.
+				if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
+						-- A formal parameter type is not a class type.
+						-- It cannot be prefixed by 'expanded' or 'reference'.
+						-- But it can be prefixed by '!' or '?'.
 					report_syntax_error (a_type_mark.position)
+					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index)
+				else
+					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index)
 				end
-				Result := ast_factory.new_formal_parameter_type (a_name, a_formal.index)
 			else
 				a_base_class := universe.eiffel_class (a_name)
 				if providers_enabled then
@@ -921,14 +924,15 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_type_mark := a_constraint.type_mark
 			a_formal := a_formals.formal_parameter_by_name (a_name)
 			if a_formal /= Void then
-				if a_type_mark /= Void then
-						-- A formal parameter cannot be prefixed by
-						-- 'expanded', 'reference', 'separate', '!' or '?'.
+				if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
+						-- A formal parameter type is not a class type.
+						-- It cannot be prefixed by 'expanded' or 'reference'.
+						-- But it can be prefixed by '!' or '?'.
 					report_syntax_error (a_type_mark.position)
 				end
 					-- A formal parameter cannot have actual generic parameters.
 				report_syntax_error (a_constraint.actual_parameters.position)
-				Result := ast_factory.new_formal_parameter_type (a_name, a_formal.index)
+				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index)
 			else
 				a_base_class := universe.eiffel_class (a_name)
 				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, Current)
@@ -1413,10 +1417,10 @@ feature {NONE} -- AST factory
 					if a_generics /= Void then
 						-- TODO: Error
 					end
-					if a_type_mark /= Void then
-						-- TODO: ERROR
+					if a_type_mark /= Void and then a_type_mark.is_keyword then
+						-- TODO: Error
 					end
-					Result := ast_factory.new_formal_parameter_type (a_name, a_parameter.index)
+					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_parameter.index)
 				else
 					a_class := universe.eiffel_class (a_name)
 					if providers_enabled then
@@ -3040,7 +3044,7 @@ feature {NONE} -- Built-in
 			if a_feature.name.same_feature_name (tokens.call_feature_name) then
 					-- 'call' should be a procedure.
 				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (l_name, 2)
+				create l_open_args.make (Void, l_name, 2)
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, <<l_open_args.type>>, Void)
@@ -3069,9 +3073,9 @@ feature {NONE} -- Built-in
 			a_class := a_feature.implementation_class
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
 				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (l_name, 2)
+				create l_open_args.make (Void, l_name, 2)
 				create l_name.make ("RESULT_TYPE")
-				create l_result_type.make (l_name, 3)
+				create l_result_type.make (Void, l_name, 3)
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
@@ -5071,7 +5075,7 @@ feature {NONE} -- Built-in
 			a_class := a_feature.implementation_class
 			if a_feature.name.same_feature_name (tokens.call_feature_name) then
 				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (l_name, 2)
+				create l_open_args.make (Void, l_name, 2)
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
@@ -5108,9 +5112,9 @@ feature {NONE} -- Built-in
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
 					-- 'item' should be a function.
 				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (l_name, 2)
+				create l_open_args.make (Void, l_name, 2)
 				create l_name.make ("RESULT_TYPE")
-				create l_result_type.make (l_name, 3)
+				create l_result_type.make (Void, l_name, 3)
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, <<l_open_args.type>>, l_result_type)

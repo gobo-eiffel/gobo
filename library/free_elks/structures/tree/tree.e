@@ -44,9 +44,10 @@ feature -- Access
 			c: like child
 		do
 			c := child
-			if c /= Void then
-				Result := c.item
+			check
+				c_attached: c /= Void
 			end
+			Result := c.item
 		end
 
 	child_cursor: CURSOR is

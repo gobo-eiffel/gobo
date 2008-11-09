@@ -5,7 +5,7 @@ indexing
 		by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -39,7 +39,7 @@ feature -- Access
 			error_not_void: Result /= Void
 		end
 
-	default_output: PLAIN_TEXT_FILE
+	default_output: ?PLAIN_TEXT_FILE
 			-- Default output
 
 	standard_default: PLAIN_TEXT_FILE is
@@ -47,13 +47,14 @@ feature -- Access
 			-- if `default_output' is Void.
 			--| Useful if a class inherits from STD_FILES and
 			--| and a `putint' is applied without standard setting.
+		local
+			r: ?PLAIN_TEXT_FILE
 		do
-			Result := output
-			if default_output = Void then
-				-- Result := output
-			else
-				Result := default_output
+			r := default_output
+			if r = Void then
+				r := output
 			end
+			Result := r
 		end
 
 feature -- Status report

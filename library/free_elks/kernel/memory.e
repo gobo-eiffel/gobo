@@ -4,7 +4,7 @@ indexing
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -175,7 +175,7 @@ feature -- Status report
 			i, nb, dtype: INTEGER
 			l_spec: SPECIAL [ANY]
 			l_item: ANY
-			l_list: ARRAYED_LIST [ANY]
+			l_list: ?ARRAYED_LIST [ANY]
 			l_memory_count_map: HASH_TABLE [INTEGER, INTEGER]
 		do
 				-- First get all object instances in runtime.
@@ -224,7 +224,8 @@ feature -- Status report
 					Result.search (dtype)
 					if Result.found then
 						l_list := Result.found_item
-					else
+					end
+					if l_list = Void then
 						create l_list.make_filled (l_memory_count_map.item (dtype))
 						l_list.start
 						Result.put (l_list, dtype)

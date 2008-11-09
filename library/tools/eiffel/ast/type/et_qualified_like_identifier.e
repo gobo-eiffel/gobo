@@ -130,6 +130,7 @@ feature -- Access
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
@@ -160,6 +161,7 @@ feature -- Access
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
@@ -279,6 +281,7 @@ feature -- Access
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class
@@ -310,6 +313,7 @@ feature -- Access
 			l_target_type: ET_TYPE
 			l_target_context: ET_NESTED_TYPE_CONTEXT
 		do
+-- TODO: take `type_mark' into account.
 			if seed = 0 then
 					-- Qualified anchored type not resolved yet.
 				Result := tokens.unknown_class

@@ -78,7 +78,7 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
-			t: like i_th
+			t: ?like i_th
 		do
 			if object_comparison then
 				if v /= Void then
@@ -195,13 +195,12 @@ feature -- Removal
 	remove is
 			-- Remove oldest item.
 		local
-			default_value: G
 			l_out_index: like out_index
 			l_capacity: like capacity
 		do
 			l_out_index := out_index
 			l_capacity := capacity
-			area.put (default_value, l_out_index - lower)
+			area.put_default (l_out_index - lower)
 			l_out_index := (l_out_index + 1) \\ l_capacity
 			if l_out_index = 0 then
 				l_out_index := l_capacity
@@ -271,7 +270,6 @@ feature {ARRAYED_QUEUE} -- Implementation
 	grow is
 		local
 			i, j: INTEGER
-			default_value: G
 		do
 			i := array_count
 			conservative_resize (1, capacity + additional_space)
@@ -282,8 +280,8 @@ feature {ARRAYED_QUEUE} -- Implementation
 					i < out_index
 				loop
 					put_i_th (i_th (i), j)
-					put_i_th (default_value, i)
 					i := i - 1
+					area.put_default (i)
 					j := j - 1
 				end
 				out_index := j + 1
@@ -313,6 +311,3 @@ indexing
 		]"
 
 end -- class ARRAYED_QUEUE
-
-
-

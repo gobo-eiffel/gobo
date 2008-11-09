@@ -532,7 +532,6 @@ feature -- Removal
 		local
 			old_active, next, index,
 			first_child_index: INTEGER
-			default_value: G
 		do
 			old_active := active
 			first_child_index := first_child_table.item (old_active)
@@ -563,7 +562,7 @@ feature -- Removal
 			if old_active = last then
 				last := last - 1
 			else
-				item_table.put (default_value, old_active)
+				item_table.area.put_default (old_active - 1)
 				first_child_table.put (Removed_mark, old_active)
 				next_sibling_table.put (free_list_index, old_active)
 				free_list_index := old_active
@@ -631,7 +630,6 @@ feature {NONE} -- Implementation
 	remove_subtree (i: INTEGER) is
 		local
 			index, next: INTEGER
-			default_value: G
 		do
 			from
 				index := first_child_table.item (i)
@@ -645,7 +643,7 @@ feature {NONE} -- Implementation
 			if i = last then
 				last := last - 1
 			else
-				item_table.put (default_value, i)
+				item_table.area.put_default (i - 1)
 				first_child_table.put (Removed_mark, i)
 				next_sibling_table.put (free_list_index, i)
 				free_list_index := i
@@ -654,8 +652,6 @@ feature {NONE} -- Implementation
 		end
 
 	new_cell_index: INTEGER is
-		local
-			default_value: like item
 		do
 			if free_list_index > 0 then
 				Result := free_list_index
@@ -663,7 +659,11 @@ feature {NONE} -- Implementation
 				free_list_count := free_list_count - 1
 			else
 				last := last + 1
-				item_table.force (default_value, last)
+				if item_table.count < last then
+					item_table.grow (last)
+				else
+					item_table.area.put_default (last - 1)
+				end
 				next_sibling_table.force (0, last)
 				first_child_table.force (0, last)
 				Result := last
@@ -689,6 +689,3 @@ indexing
 		]"
 
 end -- class COMPACT_CURSOR_TREE
-
-
-

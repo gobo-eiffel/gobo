@@ -1,7 +1,7 @@
 indexing
-	description: "Files, viewed as persistent sequences of bytes" 
+	description: "Files, viewed as persistent sequences of bytes"
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -222,14 +222,18 @@ feature {NONE} -- Implementation
 
 	integer_buffer: MANAGED_POINTER is
 			-- Buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
+		local
+			r: ?MANAGED_POINTER
 		do
-			if internal_integer_buffer = Void then
-				create internal_integer_buffer.make (16)
+			r := internal_integer_buffer
+			if r = Void then
+				create r.make (16)
+				internal_integer_buffer := r
 			end
-			Result := internal_integer_buffer
+			Result := r
 		end
 
-	internal_integer_buffer: MANAGED_POINTER
+	internal_integer_buffer: ?MANAGED_POINTER
 			-- Internal integer buffer
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is

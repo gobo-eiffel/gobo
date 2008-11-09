@@ -4,7 +4,7 @@ indexing
 		"Infinite sequences, indexed by integers"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 2005, Eiffel Software and others"
+	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	names: countable_sequence, infinite_sequence;
 	access: cursor, membership;
@@ -95,6 +95,8 @@ feature {NONE} -- Inapplicable
 	linear_representation: LINEAR [G] is
 			-- Representation as a linear structure
 		do
+				-- Make sure Result is attached.
+			create {LINKED_LIST [G]} Result.make
 		end
 
 	prune (v: G) is

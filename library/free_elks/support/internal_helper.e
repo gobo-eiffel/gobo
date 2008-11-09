@@ -79,15 +79,19 @@ feature -- Status report
 			a_type_not_void: a_type /= Void
 		local
 			l_table: like pre_ecma_type_mapping
+			r: ?STRING
 		do
-			Result := a_type
 			if not is_pre_ecma_mapping_disabled then
 				l_table := pre_ecma_type_mapping
 				l_table.search (a_type)
 				if l_table.found then
-					Result := l_table.found_item
+					r := l_table.found_item
 				end
 			end
+			if r = Void then
+				r := a_type
+			end
+			Result := r
 		ensure
 			mapped_type_not_void: Result /= Void
 		end

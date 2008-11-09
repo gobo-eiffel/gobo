@@ -22,7 +22,8 @@ inherit
 		undefine
 			type, label, actual_parameter
 		redefine
-			process, position, first_leaf
+			process, position, first_leaf,
+			type_mark
 		end
 
 	HASHABLE

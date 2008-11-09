@@ -609,8 +609,7 @@ feature {NONE} -- Implementation
 
 	new_cell (a: ARRAYED_LIST [G]): like first_element is
 		do
-			create Result
-			Result.put (a)
+			create Result.put (a)
 		end
 
 invariant

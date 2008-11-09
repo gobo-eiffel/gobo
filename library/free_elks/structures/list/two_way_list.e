@@ -470,8 +470,7 @@ feature {TWO_WAY_LIST} -- Implementation
 	new_cell (v: like item): BI_LINKABLE [G] is
 			-- A newly created instance of the type of `first_element'.
 		do
-			create Result
-			Result.put (v)
+			create Result.put (v)
 		end
 
 	previous: like first_element is

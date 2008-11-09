@@ -42,13 +42,19 @@ feature -- Access
 
 	class_name: STRING is
 			-- Name of generating class which held attribute values
+		local
+			r: ?STRING
 		do
 			check
 				has_class_entry: has (Class_key)
 			end
 			if {l_result: STRING} item (Class_key) then
-				Result := l_result
+				r := l_result
 			end
+			check
+				r_attached: r /= Void
+			end
+			Result := r
 		ensure
 			result_exists: Result /= Void
 		end
@@ -57,6 +63,9 @@ feature -- Output
 
 	out: STRING is
 			-- Printable representation of attributes values
+		local
+			i: ?ANY
+			k: ?STRING
 		do
 			from
 				create Result.make (20 + class_name.count + 40 * count)
@@ -71,14 +80,20 @@ feature -- Output
 			until
 				after
 			loop
-				if not key_for_iteration.is_equal (Class_key) then
+				k := key_for_iteration
+				if k = Void or else not k.is_equal (Class_key) then
 					Result.append ("  ")
-					Result.append (key_for_iteration)
-					Result.append (": ")
-					if item_for_iteration = Void then
+					if k = Void then
 						Result.append ("Void")
 					else
-						Result.append (item_for_iteration.out)
+						Result.append (k)
+					end
+					Result.append (": ")
+					i := item_for_iteration
+					if i = Void then
+						Result.append ("Void")
+					else
+						Result.append (i.out)
 					end
 					Result.append_character ('%N')
 				end
@@ -95,7 +110,7 @@ feature {NONE} -- Implementation
 		local
 			l_key: STRING
 		do
-			create l_key.make_from_c (ckey)
+			create l_key.make_from_c_pointer (ckey)
 			put (value, l_key)
 		end
 

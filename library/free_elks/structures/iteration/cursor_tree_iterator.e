@@ -16,7 +16,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CURSOR_TREE_ITERATOR [G] inherit
+deferred class CURSOR_TREE_ITERATOR [G] inherit
 
 		LINEAR_ITERATOR [G]
 			rename

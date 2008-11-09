@@ -27,9 +27,10 @@ feature -- Access
 			a: like active
 		do
 			a := active
-			if a /= Void then
-				Result := a.item
+			check
+				a_attached: a /= Void
 			end
+			Result := a.item
 		end
 
 	cursor: RECURSIVE_TREE_CURSOR [G] is
@@ -166,6 +167,7 @@ feature -- Cursor movement
 			-- Move cursor one position backward.
 		local
 			a: like active_parent
+			c: ?like active
 		do
 			if below then
 				after := False
@@ -178,7 +180,11 @@ feature -- Cursor movement
 				a := active_parent
 				if a /= Void then
 					a.child_back
-					active := a.child
+					c := a.child
+					check
+						c_attached: c /= Void
+					end
+					active := c
 				end
 			end
 		end
@@ -187,6 +193,7 @@ feature -- Cursor movement
 			-- Move cursor one position forward.
 		local
 			a: like active_parent
+			c: ?like active
 		do
 			if below then
 				before := False
@@ -199,7 +206,11 @@ feature -- Cursor movement
 				a := active_parent
 				if a /= Void then
 					a.child_forth
-					active := a.child
+					c := a.child
+					check
+						c_attached: c /= Void
+					end
+					active := c
 				end
 			end
 		end
@@ -208,16 +219,17 @@ feature -- Cursor movement
 			-- Move cursor one level upward to parent,
 			-- or `above' if `is_root' holds.
 		local
-			a: like active
+			a: ?like active
 		do
 			if below then
 				below := False
 			else
 				a := active_parent
-				active := a
-				if a /= Void then
-					active_parent := a.parent
+				check
+					a_attached: a /= Void
 				end
+				active := a
+				active_parent := a.parent
 				corresponding_child
 			end
 			after := False
@@ -231,6 +243,7 @@ feature -- Cursor movement
 			-- or `before' if `i' = 0.
 		local
 			a: like active
+			c: ?like active
 		do
 			if i = 0 then
 				if arity = 0 then
@@ -238,29 +251,35 @@ feature -- Cursor movement
 				else
 					a := active
 					active_parent := a
-					if a /= Void then
-						a.child_go_i_th (1)
-						active := a.child
+					a.child_go_i_th (1)
+					c := a.child
+					check
+						c_attached: c /= Void
 					end
+					active := c
 				end
 				before := True
 			elseif above or else i <= arity then
 				a := active
 				active_parent := a
-				if a /= Void then
-					a.child_go_i_th (i)
-					active := a.child
+				a.child_go_i_th (i)
+				c := a.child
+				check
+					c_attached: c /= Void
 				end
+				active := c
 			else
 				if arity = 0 then
 					below := True
 				else
 					a := active
 					active_parent := a
-					if a /= Void then
-						a.child_go_i_th (arity)
-						active := a.child
+					a.child_go_i_th (arity)
+					c := a.child
+					check
+						c_attached: c /= Void
 					end
+					active := c
 				end
 				after := True
 			end
@@ -319,16 +338,17 @@ feature -- Removal
 			-- (and consequently the corresponding
 			-- subtree). Cursor moved up one level.
 		local
-			a: like active
+			a: ?like active
 		do
 			corresponding_child
 			a := active_parent
-			active := a
-			if a /= Void then
-				active_parent := a.parent
-				a.remove_child
-				a.child_back
+			check
+				a_attached: a /= Void
 			end
+			active := a
+			active_parent := a.parent
+			a.remove_child
+			a.child_back
 		ensure then
 			not_off_unless_empty: is_empty or else not off
 		end
@@ -356,7 +376,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	active: ?DYNAMIC_TREE [G]
+	active: DYNAMIC_TREE [G]
 			-- Current node
 
 	active_parent: ?like active
@@ -383,9 +403,15 @@ feature {NONE} -- Implementation
 			-- to position `p', without checking
 			-- whether `p' is a valid cursor position
 			-- or not.
+		local
+			a: ?like active
 		do
 			active_parent := p.active_parent
-			active := p.active
+			a := p.active
+			check
+				a_attached: a /= Void
+			end
+			active := a
 			corresponding_child
 			after := p.after
 			before := p.before
@@ -408,6 +434,3 @@ indexing
 		]"
 
 end -- class RECURSIVE_CURSOR_TREE
-
-
-

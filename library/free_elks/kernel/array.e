@@ -543,37 +543,29 @@ feature -- Resizing
 		require
 			good_indices: min_index <= max_index
 		local
-			old_size, new_size, old_count: INTEGER
+			new_size: INTEGER
 			new_lower, new_upper: INTEGER
 			offset: INTEGER
-			v: like item
 		do
 			if empty_area then
-				new_lower := min_index
-				new_upper := max_index
+				make_area (max_index - min_index + 1)
+				lower := min_index
+				upper := max_index
 			else
 				new_lower := min_index.min (lower)
 				new_upper := max_index.max (upper)
-			end
-			new_size := new_upper - new_lower + 1
-			if not empty_area then
-				old_size := area.count
-				old_count := upper - lower + 1
-			end
-			if empty_area then
-				make_area (new_size)
-			else
-				if new_size > old_size then
+				new_size := new_upper - new_lower + 1
+				if new_size > area.count then
 					area := area.aliased_resized_area (new_size)
 				end
 				if new_lower < lower then
 					offset := lower - new_lower
-					area.move_data (0, offset, old_count)
-					area.fill_with (v, 0, offset - 1)
+					area.move_data (0, offset, upper - lower + 1)
+					area.fill_with_default (0, offset - 1)
 				end
+				lower := new_lower
+				upper := new_upper
 			end
-			lower := new_lower
-			upper := new_upper
 		ensure
 			no_low_lost: lower = min_index or else lower = old lower
 			no_high_lost: upper = max_index or else upper = old upper
@@ -704,7 +696,6 @@ feature {NONE} -- Implementation
 			old_size, new_size: INTEGER
 			new_lower, new_upper: INTEGER
 			offset: INTEGER
-			v: like item
 		do
 			if empty_area then
 				new_lower := min_index
@@ -731,7 +722,7 @@ feature {NONE} -- Implementation
 				if new_lower < lower then
 					offset := lower - new_lower
 					area.move_data (0, offset, capacity)
-					area.fill_with (v, 0, offset - 1)
+					area.fill_with_default (0, offset - 1)
 				end
 			end
 			lower := new_lower
