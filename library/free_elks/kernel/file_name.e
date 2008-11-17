@@ -15,7 +15,6 @@ inherit
 create
 	make,
 	make_from_string,
-	make_from_other_string,
 	make_temporary_name
 
 create {FILE_NAME}

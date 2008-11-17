@@ -103,7 +103,7 @@ feature -- Status setting
 			separators_not_void: separators /= Void
 			separators_valid: separators_valid (separators)
 		do
-			create leading_separators.make_from_other_string (separators)
+			create leading_separators.make_from_string (separators)
 		ensure
 			leading_separators_set: leading_separators.is_equal (separators)
 		end
@@ -114,7 +114,7 @@ feature -- Status setting
 			separators_not_void: separators /= Void
 			separators_valid: separators_valid (separators)
 		do
-			create trailing_separators.make_from_other_string (separators)
+			create trailing_separators.make_from_string (separators)
 		ensure
 			trailing_separators_set: trailing_separators.is_equal (separators)
 		end

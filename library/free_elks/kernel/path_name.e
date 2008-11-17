@@ -16,7 +16,7 @@ inherit
 			extend as string_extend
 		export
 			{PATH_NAME} all
-			{ANY} is_empty, empty, to_c, wipe_out, out, string, twin, prunable
+			{ANY} is_empty, empty, to_c, wipe_out, out, string, twin, prunable, as_attached
 		undefine
 			new_string
 		redefine

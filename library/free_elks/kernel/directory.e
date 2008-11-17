@@ -288,7 +288,7 @@ feature -- Removal
 					not l.item.same_string (".") and
 					not l.item.same_string ("..")
 				then
-					create file_name.make_from_other_string (name)
+					create file_name.make_from_string (name)
 					file_name.set_file_name (l.item)
 					create file.make (file_name)
 					if
@@ -365,7 +365,7 @@ feature -- Removal
 					not l.item.is_equal (current_directory) and
 					not l.item.is_equal (parent_directory)
 				then
-					create file_name.make_from_other_string (name)
+					create file_name.make_from_string (name)
 					file_name.set_file_name (l.item)
 					create file.make (file_name)
 					if

@@ -21,8 +21,8 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		do
 			reset (type_no_limitation)
-			create leading_separators.make_from_other_string (" ")
-			create trailing_separators.make_from_other_string (" ")
+			create leading_separators.make_from_string (" ")
+			create trailing_separators.make_from_string (" ")
 		ensure
 			leading_separators_set: leading_separators.is_equal (" ")
 			trailing_separators_set: trailing_separators.is_equal (" ")
