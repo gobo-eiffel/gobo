@@ -26,6 +26,7 @@
 		</description>
 
 		<delete directory="Tbang2create"/>
+		<delete directory="Tpretty_printer"/>
 	</target>
 
 	<target name="init_system">
