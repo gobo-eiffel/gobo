@@ -30,27 +30,33 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name, a_filename: STRING) is
+	make (a_name, a_filename: ET_IDENTIFIER; a_universe: like universe) is
 			-- Create a new ECF adapted library.
 		require
 			a_name_not_void: a_name /= Void
 			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
 		do
 			name := a_name
 			filename := a_filename
+			universe := a_universe
 			make_adapted_library (tokens.empty_library)
 		ensure
 			name_set: name = a_name
 			filename_set: filename = a_filename
+			universe_set: universe = a_universe
 		end
 
 feature -- Access
 
-	name: STRING
+	name: ET_IDENTIFIER
 			-- Name
 
-	filename: STRING
+	filename: ET_IDENTIFIER
 			-- ECF filename
+
+	universe: ET_ECF_INTERNAL_UNIVERSE
+			-- ECF universe containing the current reference to `library'
 
 feature -- Setting
 
@@ -68,5 +74,6 @@ invariant
 
 	name_not_void: name /= Void
 	filename_not_void: filename /= Void
+	universe_not_void: universe /= Void
 
 end

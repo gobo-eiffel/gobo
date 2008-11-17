@@ -59,6 +59,15 @@ feature -- Access
 	file_rules: ET_ECF_FILE_RULES
 			-- File rules
 
+	external_includes: ET_ECF_EXTERNAL_INCLUDES
+			-- External includes
+
+	external_objects: ET_ECF_EXTERNAL_OBJECTS
+			-- External objects
+
+	external_libraries: ET_ECF_EXTERNAL_LIBRARIES
+			-- External libraries
+
 feature -- Setting
 
 	set_clusters (a_clusters: like clusters) is
@@ -108,6 +117,30 @@ feature -- Setting
 			file_rules_set: file_rules = a_file_rules
 		end
 
+	set_external_includes (a_external_includes: like external_includes) is
+			-- Set `external_includes' to `a_external_includes'.
+		do
+			external_includes := a_external_includes
+		ensure
+			external_includes_set: external_includes = a_external_includes
+		end
+
+	set_external_objects (a_external_objects: like external_objects) is
+			-- Set `external_objects' to `a_external_objects'.
+		do
+			external_objects := a_external_objects
+		ensure
+			external_objects_set: external_objects = a_external_objects
+		end
+
+	set_external_libraries (a_external_libraries: like external_libraries) is
+			-- Set `external_libraries' to `a_external_libraries'.
+		do
+			external_libraries := a_external_libraries
+		ensure
+			external_libraries_set: external_libraries = a_external_libraries
+		end
+
 feature -- Basic operations
 
 	update_state (a_state: ET_ECF_STATE) is
@@ -120,7 +153,6 @@ feature -- Basic operations
 			if parent /= Void then
 				parent.update_state (a_state)
 			end
--- TODO
 		end
 
 	fill_universe (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE) is
@@ -135,17 +167,22 @@ feature -- Basic operations
 			l_universe_libraries: ET_ADAPTED_LIBRARIES
 			l_cluster: ET_ECF_CLUSTER
 			l_library: ET_ECF_ADAPTED_LIBRARY
+			l_ecf_library: ET_ECF_LIBRARY
 			i, nb: INTEGER
 		do
 			if parent /= Void then
 				parent.fill_universe (a_universe, a_state)
 			end
 			if clusters /= Void then
+				l_ecf_library ?= a_universe
 				l_universe_clusters := a_universe.clusters
 				nb := clusters.count
 				from i := 1 until i > nb loop
 					l_cluster := clusters.cluster (i)
-					if l_cluster.is_enabled (a_state) then
+					if l_ecf_library /= Void and l_cluster.is_override then
+						 -- Override clusters in ECF libraries are ignored.
+						 -- That's the way it works in ISE Eiffel.
+					elseif l_cluster.is_enabled (a_state) then
 						if l_universe_clusters = Void then
 							create l_universe_clusters.make (l_cluster)
 							a_universe.set_clusters (l_universe_clusters)
@@ -173,6 +210,15 @@ feature -- Basic operations
 					end
 					i := i + 1
 				end
+			end
+			if external_includes /= Void then
+				external_includes.fill_external_includes (a_universe.current_system, a_state)
+			end
+			if external_objects /= Void then
+				external_objects.fill_external_objects (a_universe.current_system, a_state)
+			end
+			if external_libraries /= Void then
+				external_libraries.fill_external_libraries (a_universe.current_system, a_state)
 			end
 		end
 

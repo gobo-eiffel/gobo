@@ -49,12 +49,14 @@ feature {NONE} -- Element change
 			l_target: ET_ECF_TARGET
 		do
 			l_system := new_system (an_element, a_position_table, a_filename)
--- TODO: check that there is no cycles in targets.
 			l_targets := l_system.targets
-			if l_targets /= Void and then l_targets.count = 1 then
-				l_target := l_targets.target (1)
+-- TODO: we need to be able to select the target.
+			if l_targets /= Void and then not l_targets.is_empty then
+					-- Use last target as default target.
+				l_target := l_targets.target (l_targets.count)
 			else
--- TODO: we need to select the target
+					-- No target found in the ECF file.
+					-- Error already reported in `fill_system_config'.
 			end
 			if l_target /= Void then
 				create l_state.make (l_target, ise_version)

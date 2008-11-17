@@ -1014,6 +1014,14 @@ feature -- Setting
 			root_class_set: root_class.name.same_class_name (a_name)
 		end
 
+	unset_root_class is
+			-- Unset `root_class'.
+		do
+			root_class := Void
+		ensure
+			root_class_unset: root_class = Void
+		end
+
 	set_root_creation (a_name: like root_creation) is
 			-- Set `root_creation' to `a_name'.
 		do

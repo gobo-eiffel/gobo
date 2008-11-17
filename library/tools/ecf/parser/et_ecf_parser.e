@@ -66,7 +66,21 @@ feature -- Parsing
 			l_document: XM_DOCUMENT
 			l_root_element: XM_ELEMENT
 			l_position_table: XM_POSITION_TABLE
+			l_unknown_universe: ET_ECF_SYSTEM
+			l_full_filename: STRING
+			l_position: ET_COMPRESSED_POSITION
+			l_xm_position: XM_POSITION
+			l_message: STRING
 		do
+				-- Make sure that the filename of the ECF system is a canonical absolute pathname.
+			l_full_filename := a_file.name
+				-- Make sure that the directory separator symbol is the
+				-- one of the current file system. We take advantage of
+				-- the fact that `windows_file_system' accepts both '\'
+				-- and '/' as directory separator.
+			l_full_filename := file_system.pathname_from_file_system (l_full_filename, windows_file_system)
+			l_full_filename := file_system.absolute_pathname (l_full_filename)
+			l_full_filename := file_system.canonical_pathname (l_full_filename)
 			xml_parser.parse_from_stream (a_file)
 			if xml_parser.is_correct then
 				if not tree_pipe.error.has_error then
@@ -74,16 +88,27 @@ feature -- Parsing
 					l_root_element := l_document.root_element
 					l_root_name := l_root_element.name
 					l_position_table := tree_pipe.tree.last_position_table
-					if STRING_.same_string (l_root_name, xml_system) then
-						build_system_config (l_root_element, l_position_table, a_file.name)
+					if STRING_.same_case_insensitive (l_root_name, xml_system) then
+						build_system_config (l_root_element, l_position_table, l_full_filename)
 					else
--- TODO: ECF error
+						l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
+						error_handler.report_eabx_error (element_name (l_root_element, l_position_table), l_unknown_universe)
 					end
 				else
-					error_handler.report_parser_error (tree_pipe.last_error)
+					l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
+					create l_position.make (0, 0)
+					l_message := tree_pipe.last_error
+					error_handler.report_syntax_error (l_message, l_position, l_unknown_universe)
 				end
 			else
-				error_handler.report_parser_error (xml_parser.last_error_extended_description)
+				l_unknown_universe := ast_factory.new_system ("*unknown*", l_full_filename)
+				l_xm_position := xml_parser.position
+				create l_position.make (l_xm_position.row, l_xm_position.column)
+				l_message := xml_parser.last_error_description
+				if l_message = Void then
+					l_message := "XML syntax error"
+				end
+				error_handler.report_syntax_error (l_message, l_position, l_unknown_universe)
 			end
 		end
 
@@ -106,7 +131,7 @@ feature {NONE} -- Element change
 			-- Build system config from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
-			is_system: STRING_.same_string (an_element.name, xml_system)
+			is_system: STRING_.same_case_insensitive (an_element.name, xml_system)
 			a_position_table_not_void: a_position_table /= Void
 			a_filename_not_void: a_filename /= Void
 		deferred

@@ -48,13 +48,12 @@ feature {NONE} -- Element change
 			l_library: ET_ECF_LIBRARY
 			l_system: ET_SYSTEM
 		do
-			if enclosing_universe /= Void then
-				l_system := enclosing_universe.current_system
+			if client /= Void then
+				l_system := client.universe.current_system
 			else
 				l_system := tokens.empty_system
 			end
 			l_library := new_library (an_element, a_position_table, a_filename, l_system)
--- TODO: check that there is no cycles in targets.
 			last_library := l_library
 		end
 

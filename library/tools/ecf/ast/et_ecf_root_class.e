@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_name: STRING) is
+	make (a_class_name: ET_IDENTIFIER) is
 			-- Create a new root with `a_class_name' as root class name.
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -34,15 +34,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	class_name: STRING
+	class_name: ET_IDENTIFIER
 			-- Root class name
 
-	creation_procedure_name: STRING
+	creation_procedure_name: ET_IDENTIFIER
 			-- Root creation procedure name
 
 feature -- Setting
 
-	set_creation_procedure_name (a_name: STRING) is
+	set_creation_procedure_name (a_name: ET_IDENTIFIER) is
 			-- Set `creation_procedure_name' to `a_name'.
 		do
 			creation_procedure_name := a_name
@@ -55,10 +55,8 @@ feature -- Element change
 	fill_root (a_system: ET_ECF_SYSTEM) is
 			-- Fill `a_system' with root information.
 		do
-			a_system.set_root_class_name (class_name)
-			if creation_procedure_name /= Void then
-				a_system.set_creation_procedure_name (creation_procedure_name)
-			end
+			a_system.set_root_class (class_name)
+			a_system.set_root_creation (creation_procedure_name)
 		end
 
 invariant

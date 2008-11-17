@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			file_rules.put_last (a_file_rule)
 		ensure
 			one_file_rule: file_rules.count = 1
-			file_rules_set: file_rules.last = a_file_rule
+			file_rule_set: file_rules.last = a_file_rule
 		end
 
 	make_empty is

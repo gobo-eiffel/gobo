@@ -35,12 +35,22 @@ Version 3.9 - ?
 	  clusters were not marked as such.
 	* Removed support for SmartEiffel config files.
 
+	Gobo Eiffel Kernel Library:
+
+	* Added `make_from_string_general' and `make_from_substring_general'
+	  in class UC_STRING.
+
 	Gobo Eiffel Structure Library:
 
 	* Added set and table classes using binary search tree, AVL tree,
 	  red-black tree and left-leaning red-black tree algorithms.
 	* Added features `there_exists_with_key' and `for_all_with_key' to class
 	  DS_TABLE.
+
+	Gobo Eiffel Tools Library:
+
+	* Added minimal support for ECF files.
+	* Improved Eiffel pretty-printer.
 
 	Miscellaneous:
 

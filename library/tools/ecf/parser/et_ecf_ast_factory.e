@@ -25,13 +25,14 @@ feature {NONE} -- Initialization
 
 feature -- AST factory
 
-	new_adapted_library (a_name, a_filename: STRING): ET_ECF_ADAPTED_LIBRARY is
+	new_adapted_library (a_name, a_filename: ET_IDENTIFIER; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_ADAPTED_LIBRARY is
 			-- New adpated library
 		require
 			a_name_not_void: a_name /= Void
 			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
 		do
-			create Result.make (a_name, a_filename)
+			create Result.make (a_name, a_filename, a_universe)
 		ensure
 			adapted_library_not_void: Result /= Void
 		end
@@ -128,6 +129,66 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
+	new_external_include (a_pathname: STRING): ET_ECF_EXTERNAL_INCLUDE is
+			-- New external include
+		require
+			a_pathname_not_void: a_pathname /= Void
+		do
+			create Result.make (a_pathname)
+		ensure
+			external_include_not_void: Result /= Void
+		end
+
+	new_external_includes (a_external_include: ET_ECF_EXTERNAL_INCLUDE): ET_ECF_EXTERNAL_INCLUDES is
+			-- New external include list
+		require
+			a_external_include_not_void: a_external_include /= Void
+		do
+			create Result.make (a_external_include)
+		ensure
+			external_includes_not_void: Result /= Void
+		end
+
+	new_external_library (a_pathname: STRING): ET_ECF_EXTERNAL_LIBRARY is
+			-- New external library
+		require
+			a_pathname_not_void: a_pathname /= Void
+		do
+			create Result.make (a_pathname)
+		ensure
+			external_library_not_void: Result /= Void
+		end
+
+	new_external_libraries (a_external_library: ET_ECF_EXTERNAL_LIBRARY): ET_ECF_EXTERNAL_LIBRARIES is
+			-- New external library list
+		require
+			a_external_library_not_void: a_external_library /= Void
+		do
+			create Result.make (a_external_library)
+		ensure
+			external_libraries_not_void: Result /= Void
+		end
+
+	new_external_object (a_pathname: STRING): ET_ECF_EXTERNAL_OBJECT is
+			-- New external object
+		require
+			a_pathname_not_void: a_pathname /= Void
+		do
+			create Result.make (a_pathname)
+		ensure
+			external_object_not_void: Result /= Void
+		end
+
+	new_external_objects (a_external_object: ET_ECF_EXTERNAL_OBJECT): ET_ECF_EXTERNAL_OBJECTS is
+			-- New external object list
+		require
+			a_external_object_not_void: a_external_object /= Void
+		do
+			create Result.make (a_external_object)
+		ensure
+			external_objects_not_void: Result /= Void
+		end
+
 	new_file_rule (a_exclude, a_include: DS_HASH_SET [STRING]): ET_ECF_FILE_RULE is
 			-- New file rule
 		require
@@ -181,7 +242,15 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
-	new_root_class (a_class_name: STRING): ET_ECF_ROOT_CLASS is
+	new_root_all_classes: ET_ECF_ROOT_ALL_CLASSES is
+			-- New all classes root
+		do
+			create Result.make
+		ensure
+			root_all_classes_not_void: Result /= Void
+		end
+
+	new_root_class (a_class_name: ET_IDENTIFIER): ET_ECF_ROOT_CLASS is
 			-- New root with `a_class_name' as root class name
 		require
 			a_class_name_not_void: a_class_name /= Void

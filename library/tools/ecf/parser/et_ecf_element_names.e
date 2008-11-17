@@ -14,6 +14,9 @@ class ET_ECF_ELEMENT_NAMES
 
 feature -- Constants
 
+	xml_all_classes: STRING is "all_classes"
+			-- "all_classes" attribute name
+
 	xml_build: STRING is "build"
 			-- "build" attribute name
 
@@ -43,6 +46,15 @@ feature -- Constants
 
 	xml_excluded_value: STRING is "excluded_value"
 			-- "excluded_value" attribute name
+
+	xml_external_include: STRING is "external_include"
+			-- "external_include" element name
+
+	xml_external_library: STRING is "external_library"
+			-- "external_library" element name
+
+	xml_external_object: STRING is "external_object"
+			-- "external_object" element name
 
 	xml_feature: STRING is "feature"
 			-- "feature" attribute name
@@ -76,6 +88,9 @@ feature -- Constants
 
 	xml_location: STRING is "location"
 			-- "location" attribute name
+
+	xml_override: STRING is "override"
+			-- "override" element name
 
 	xml_platform: STRING is "platform"
 			-- "platform" element name
