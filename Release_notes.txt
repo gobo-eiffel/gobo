@@ -1,4 +1,4 @@
-ISE 6.2 (ISE Eiffel)
+ISE 6.3 (ISE Eiffel)
 
 	* The ECF files for ISE Eiffel provided in this package are for
 	  Eiffel classic. In order to get ECF files configured for Eiffel

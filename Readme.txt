@@ -69,7 +69,7 @@ To install this package, please follow the instructions below:
 
 Under Windows:
 
-    . download the package gobo38-src.7z or gobo38-src.zip
+    . download the package gobo39-src.7z or gobo39-src.zip
     . copy the files to a directory of your choice on your disk and
       set the environment variable %GOBO% to that directory, known as
       the distribution directory. Also put the directory %GOBO%\bin
@@ -81,7 +81,7 @@ Under Windows:
 
 Under Unix/Linux:
 
-    . download the package gobo38-src.tar.gz
+    . download the package gobo39-src.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
@@ -95,7 +95,7 @@ Note that if you downloaded this package from SVN on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
 The supported Eiffel compilers, in alphabetical order, are: Gobo Eiffel
-Compiler (gec) 3.9, ISE Eiffel 6.2.7.3753 (Classic and .NET).
+Compiler (gec) 3.9, ISE Eiffel 6.3.7.5660 (Classic and .NET).
 For more details about the supported Eiffel compilers, please see the file
 "Release_notes.txt". This software might work with other Eiffel compilers
 and/or other compiler versions, however no test has been done. To have
@@ -197,4 +197,4 @@ for your specific needs. Thank you in advance.
 
 --
 Copyright (c) 1997-2008, Eric Bezault and others
-11 May 2008
+20 November 2008
