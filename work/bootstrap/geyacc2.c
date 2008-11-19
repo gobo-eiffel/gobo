@@ -4,315 +4,1202 @@
 extern "C" {
 #endif
 
-EIF_TYPE GE_types[308] = {
-{0, 0, EIF_FALSE},
-{0, 1, EIF_FALSE},
-{0, 2, EIF_FALSE},
-{0, 3, EIF_FALSE},
-{0, 4, EIF_FALSE},
-{0, 5, EIF_FALSE},
-{0, 6, EIF_FALSE},
-{0, 7, EIF_FALSE},
-{0, 8, EIF_FALSE},
-{0, 9, EIF_FALSE},
-{0, 10, EIF_FALSE},
-{0, 11, EIF_FALSE},
-{0, 12, EIF_FALSE},
-{0, 13, EIF_FALSE},
-{0, 14, EIF_FALSE},
-{0, 15, EIF_TRUE},
-{0, 16, EIF_TRUE},
-{0, 17, EIF_FALSE},
-{0, 18, EIF_FALSE},
-{0, 19, EIF_FALSE},
-{0, 20, EIF_FALSE},
-{0, 21, EIF_FALSE},
-{0, 22, EIF_FALSE},
-{0, 23, EIF_FALSE},
-{0, 24, EIF_FALSE},
-{0, 25, EIF_FALSE},
-{0, 26, EIF_FALSE},
-{0, 27, EIF_FALSE},
-{0, 28, EIF_FALSE},
-{0, 29, EIF_FALSE},
-{0, 30, EIF_FALSE},
-{0, 31, EIF_FALSE},
-{0, 32, EIF_FALSE},
-{0, 33, EIF_FALSE},
-{0, 34, EIF_FALSE},
-{0, 35, EIF_FALSE},
-{0, 36, EIF_FALSE},
-{0, 37, EIF_FALSE},
-{0, 38, EIF_FALSE},
-{0, 39, EIF_FALSE},
-{0, 40, EIF_FALSE},
-{0, 41, EIF_FALSE},
-{0, 42, EIF_FALSE},
-{0, 43, EIF_FALSE},
-{0, 44, EIF_FALSE},
-{0, 45, EIF_FALSE},
-{0, 46, EIF_FALSE},
-{0, 47, EIF_FALSE},
-{0, 48, EIF_FALSE},
-{0, 49, EIF_FALSE},
-{0, 50, EIF_FALSE},
-{0, 51, EIF_FALSE},
-{0, 52, EIF_FALSE},
-{0, 53, EIF_FALSE},
-{0, 54, EIF_FALSE},
-{0, 55, EIF_FALSE},
-{0, 56, EIF_FALSE},
-{0, 57, EIF_FALSE},
-{0, 58, EIF_FALSE},
-{0, 59, EIF_FALSE},
-{0, 60, EIF_FALSE},
-{0, 61, EIF_FALSE},
-{0, 62, EIF_FALSE},
-{0, 63, EIF_FALSE},
-{0, 64, EIF_FALSE},
-{0, 65, EIF_FALSE},
-{0, 66, EIF_FALSE},
-{0, 67, EIF_FALSE},
-{0, 68, EIF_FALSE},
-{0, 69, EIF_FALSE},
-{0, 70, EIF_FALSE},
-{0, 71, EIF_FALSE},
-{0, 72, EIF_FALSE},
-{0, 73, EIF_FALSE},
-{0, 74, EIF_FALSE},
-{0, 75, EIF_FALSE},
-{0, 76, EIF_FALSE},
-{0, 77, EIF_FALSE},
-{0, 78, EIF_FALSE},
-{0, 79, EIF_FALSE},
-{0, 80, EIF_FALSE},
-{0, 81, EIF_FALSE},
-{0, 82, EIF_FALSE},
-{0, 83, EIF_FALSE},
-{0, 84, EIF_FALSE},
-{0, 85, EIF_FALSE},
-{0, 86, EIF_FALSE},
-{0, 87, EIF_FALSE},
-{0, 88, EIF_FALSE},
-{0, 89, EIF_FALSE},
-{0, 90, EIF_FALSE},
-{0, 91, EIF_FALSE},
-{0, 92, EIF_FALSE},
-{0, 93, EIF_FALSE},
-{0, 94, EIF_FALSE},
-{0, 95, EIF_FALSE},
-{0, 96, EIF_TRUE},
-{0, 97, EIF_FALSE},
-{0, 98, EIF_FALSE},
-{0, 99, EIF_FALSE},
-{0, 100, EIF_FALSE},
-{0, 101, EIF_TRUE},
-{0, 102, EIF_FALSE},
-{0, 103, EIF_FALSE},
-{0, 104, EIF_FALSE},
-{0, 105, EIF_FALSE},
-{0, 106, EIF_FALSE},
-{0, 107, EIF_FALSE},
-{0, 108, EIF_FALSE},
-{0, 109, EIF_FALSE},
-{0, 110, EIF_FALSE},
-{0, 111, EIF_FALSE},
-{0, 112, EIF_FALSE},
-{0, 113, EIF_FALSE},
-{0, 114, EIF_FALSE},
-{0, 115, EIF_FALSE},
-{0, 116, EIF_TRUE},
-{0, 117, EIF_FALSE},
-{0, 118, EIF_FALSE},
-{0, 119, EIF_FALSE},
-{0, 120, EIF_FALSE},
-{0, 121, EIF_FALSE},
-{0, 122, EIF_TRUE},
-{0, 123, EIF_FALSE},
-{0, 124, EIF_FALSE},
-{0, 125, EIF_FALSE},
-{0, 126, EIF_FALSE},
-{0, 127, EIF_FALSE},
-{0, 128, EIF_FALSE},
-{0, 129, EIF_FALSE},
-{0, 130, EIF_FALSE},
-{0, 131, EIF_FALSE},
-{0, 132, EIF_FALSE},
-{0, 133, EIF_TRUE},
-{0, 134, EIF_FALSE},
-{0, 135, EIF_FALSE},
-{0, 136, EIF_FALSE},
-{0, 137, EIF_TRUE},
-{0, 138, EIF_FALSE},
-{0, 139, EIF_TRUE},
-{0, 140, EIF_FALSE},
-{0, 141, EIF_TRUE},
-{0, 142, EIF_FALSE},
-{0, 143, EIF_FALSE},
-{0, 144, EIF_FALSE},
-{0, 145, EIF_FALSE},
-{0, 146, EIF_FALSE},
-{0, 147, EIF_FALSE},
-{0, 148, EIF_FALSE},
-{0, 149, EIF_FALSE},
-{0, 150, EIF_FALSE},
-{0, 151, EIF_FALSE},
-{0, 152, EIF_FALSE},
-{0, 153, EIF_FALSE},
-{0, 154, EIF_FALSE},
-{0, 155, EIF_FALSE},
-{0, 156, EIF_FALSE},
-{0, 157, EIF_FALSE},
-{0, 158, EIF_FALSE},
-{0, 159, EIF_FALSE},
-{0, 160, EIF_FALSE},
-{0, 161, EIF_FALSE},
-{0, 162, EIF_FALSE},
-{0, 163, EIF_FALSE},
-{0, 164, EIF_FALSE},
-{0, 165, EIF_FALSE},
-{0, 166, EIF_FALSE},
-{0, 167, EIF_FALSE},
-{0, 168, EIF_FALSE},
-{0, 169, EIF_FALSE},
-{0, 170, EIF_FALSE},
-{0, 171, EIF_FALSE},
-{0, 172, EIF_FALSE},
-{0, 173, EIF_FALSE},
-{0, 174, EIF_FALSE},
-{0, 175, EIF_FALSE},
-{0, 176, EIF_FALSE},
-{0, 177, EIF_FALSE},
-{0, 178, EIF_FALSE},
-{0, 179, EIF_FALSE},
-{0, 180, EIF_FALSE},
-{0, 181, EIF_FALSE},
-{0, 182, EIF_FALSE},
-{0, 183, EIF_TRUE},
-{0, 184, EIF_FALSE},
-{0, 185, EIF_FALSE},
-{0, 186, EIF_FALSE},
-{0, 187, EIF_FALSE},
-{0, 188, EIF_FALSE},
-{0, 189, EIF_FALSE},
-{0, 190, EIF_TRUE},
-{0, 191, EIF_FALSE},
-{0, 192, EIF_FALSE},
-{0, 193, EIF_FALSE},
-{0, 194, EIF_TRUE},
-{0, 195, EIF_FALSE},
-{0, 196, EIF_FALSE},
-{0, 197, EIF_FALSE},
-{0, 198, EIF_FALSE},
-{0, 199, EIF_FALSE},
-{0, 200, EIF_FALSE},
-{0, 201, EIF_FALSE},
-{0, 202, EIF_FALSE},
-{0, 203, EIF_FALSE},
-{0, 204, EIF_FALSE},
-{0, 205, EIF_FALSE},
-{0, 206, EIF_TRUE},
-{0, 207, EIF_FALSE},
-{0, 208, EIF_FALSE},
-{0, 209, EIF_FALSE},
-{0, 210, EIF_TRUE},
-{0, 211, EIF_FALSE},
-{0, 212, EIF_TRUE},
-{0, 213, EIF_FALSE},
-{0, 214, EIF_FALSE},
-{0, 215, EIF_FALSE},
-{0, 216, EIF_FALSE},
-{0, 217, EIF_FALSE},
-{0, 218, EIF_FALSE},
-{0, 219, EIF_FALSE},
-{0, 220, EIF_FALSE},
-{0, 221, EIF_FALSE},
-{0, 222, EIF_FALSE},
-{0, 223, EIF_FALSE},
-{0, 224, EIF_FALSE},
-{0, 225, EIF_TRUE},
-{0, 226, EIF_FALSE},
-{0, 227, EIF_FALSE},
-{0, 228, EIF_FALSE},
-{0, 229, EIF_FALSE},
-{0, 230, EIF_FALSE},
-{0, 231, EIF_FALSE},
-{0, 232, EIF_FALSE},
-{0, 233, EIF_FALSE},
-{0, 234, EIF_FALSE},
-{0, 235, EIF_FALSE},
-{0, 236, EIF_FALSE},
-{0, 237, EIF_FALSE},
-{0, 238, EIF_FALSE},
-{0, 239, EIF_FALSE},
-{0, 240, EIF_FALSE},
-{0, 241, EIF_FALSE},
-{0, 242, EIF_FALSE},
-{0, 243, EIF_FALSE},
-{0, 244, EIF_FALSE},
-{0, 245, EIF_FALSE},
-{0, 246, EIF_FALSE},
-{0, 247, EIF_FALSE},
-{0, 248, EIF_FALSE},
-{0, 249, EIF_FALSE},
-{0, 250, EIF_TRUE},
-{0, 251, EIF_FALSE},
-{0, 252, EIF_TRUE},
-{0, 253, EIF_FALSE},
-{0, 254, EIF_FALSE},
-{0, 255, EIF_FALSE},
-{0, 256, EIF_FALSE},
-{0, 257, EIF_FALSE},
-{0, 258, EIF_FALSE},
-{0, 259, EIF_FALSE},
-{0, 260, EIF_FALSE},
-{0, 261, EIF_FALSE},
-{0, 262, EIF_FALSE},
-{0, 263, EIF_FALSE},
-{0, 264, EIF_TRUE},
-{0, 265, EIF_FALSE},
-{0, 266, EIF_FALSE},
-{0, 267, EIF_FALSE},
-{0, 268, EIF_FALSE},
-{0, 269, EIF_FALSE},
-{0, 270, EIF_FALSE},
-{0, 271, EIF_FALSE},
-{0, 272, EIF_FALSE},
-{0, 273, EIF_TRUE},
-{0, 274, EIF_FALSE},
-{0, 275, EIF_FALSE},
-{0, 276, EIF_FALSE},
-{0, 277, EIF_FALSE},
-{0, 278, EIF_TRUE},
-{0, 279, EIF_FALSE},
-{0, 280, EIF_FALSE},
-{0, 281, EIF_FALSE},
-{0, 282, EIF_FALSE},
-{0, 283, EIF_FALSE},
-{0, 284, EIF_FALSE},
-{0, 285, EIF_FALSE},
-{0, 286, EIF_FALSE},
-{0, 287, EIF_FALSE},
-{0, 288, EIF_FALSE},
-{0, 289, EIF_FALSE},
-{0, 290, EIF_FALSE},
-{0, 291, EIF_FALSE},
-{0, 292, EIF_FALSE},
-{0, 293, EIF_FALSE},
-{0, 294, EIF_FALSE},
-{0, 295, EIF_FALSE},
-{0, 296, EIF_FALSE},
-{0, 297, EIF_FALSE},
-{0, 298, EIF_FALSE},
-{0, 299, EIF_FALSE},
-{0, 300, EIF_FALSE},
-{0, 301, EIF_FALSE},
-{0, 302, EIF_TRUE},
-{0, 303, EIF_FALSE},
-{0, 304, EIF_FALSE},
-{0, 305, EIF_FALSE},
-{0, 306, EIF_FALSE},
-{0, 307, EIF_FALSE}
+/* UT_USAGE_MESSAGE.arguments */
+T0* T56f6(T0* C)
+{
+	T0* R = 0;
+	if (ge352os1778) {
+		return ge352ov1778;
+	} else {
+		ge352os1778 = '\1';
+		ge352ov1778 = R;
+	}
+	R = T27c4();
+	ge352ov1778 = R;
+	return R;
+}
+
+/* UT_USAGE_MESSAGE.string_ */
+T0* T56f5(T0* C)
+{
+	T0* R = 0;
+	if (ge277os1780) {
+		return ge277ov1780;
+	} else {
+		ge277os1780 = '\1';
+		ge277ov1780 = R;
+	}
+	R = T119c11();
+	ge277ov1780 = R;
+	return R;
+}
+
+/* UT_VERSION_NUMBER.default_message */
+T0* T55f2(T0* C)
+{
+	T0* R = 0;
+	R = (T55f4(C, ge216ov2639));
+	return R;
+}
+
+/* UT_VERSION_NUMBER.message */
+T0* T55f4(T0* C, T0* a1)
+{
+	T0* t1;
+	T1 t2;
+	T6 t3;
+	T6 t4;
+	T0* t5;
+	T0* R = 0;
+	T0* l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 l4 = 0;
+	T2 l5 = 0;
+	T1 l6 = 0;
+	T1 l7 = 0;
+	T1 l8 = 0;
+	l2 = (T6)(GE_int32(1));
+	l4 = (((T17*)(a1))->a2);
+	t1 = (T55f5(C));
+	R = (T119f3(GE_void(t1), a1, l4));
+	while (1) {
+		t2 = (T6f1((&l2), l4));
+		if (t2) {
+			break;
+		}
+		l5 = (T17f14(a1, l2));
+		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+		t2 = (((((l5) != ((T2)('$'))))));
+		if (t2) {
+			t2 = (((((l5) != ((T2)('\000'))))));
+			if (t2) {
+				T17f32(GE_void(R), l5);
+			} else {
+				t1 = (T55f5(C));
+				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				R = (T119f4(GE_void(t1), R, a1, t3, t4));
+			}
+		} else {
+			t2 = (T6f1((&l2), l4));
+			if (t2) {
+				T17f32(GE_void(R), (T2)('$'));
+			} else {
+				l5 = (T17f14(a1, l2));
+				t2 = (((((l5) == ((T2)('$'))))));
+				if (t2) {
+					T17f32(GE_void(R), (T2)('$'));
+					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+				} else {
+					t1 = (T55f5(C));
+					l1 = (T119f3(GE_void(t1), a1, (T6)(GE_int32(5))));
+					t2 = (((((l5) == ((T2)('{'))))));
+					if (t2) {
+						l7 = EIF_TRUE;
+						l8 = EIF_FALSE;
+						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l8);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f14(a1, l2));
+							t2 = (((((l5) == ((T2)('}'))))));
+							if (t2) {
+								l8 = EIF_TRUE;
+							} else {
+								t2 = (((((l5) != ((T2)('\000'))))));
+								if (t2) {
+									T17f32(GE_void(l1), l5);
+								} else {
+									t1 = (T55f5(C));
+									T119f12(GE_void(t1), l1, a1, l2, l2);
+								}
+							}
+							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						}
+					} else {
+						l7 = EIF_FALSE;
+						l8 = EIF_FALSE;
+						l6 = EIF_FALSE;
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l6);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f14(a1, l2));
+							switch (l5) {
+							case (T2)'0':
+							case (T2)'1':
+							case (T2)'2':
+							case (T2)'3':
+							case (T2)'4':
+							case (T2)'5':
+							case (T2)'6':
+							case (T2)'7':
+							case (T2)'8':
+							case (T2)'9':
+								T17f32(GE_void(l1), l5);
+								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+								break;
+							default:
+								l6 = EIF_TRUE;
+								break;
+							}
+						}
+					}
+					t2 = (T17f15(GE_void(l1)));
+					if (t2) {
+						l3 = (T17f16(GE_void(l1)));
+						t2 = (T124f4(GE_void(((T55*)(C))->a1), l3));
+						if (t2) {
+							t1 = (T55f5(C));
+							t5 = (T124f5(GE_void(((T55*)(C))->a1), l3));
+							R = (T119f5(GE_void(t1), R, t5));
+						} else {
+							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
+							if (t2) {
+								t1 = (T55f5(C));
+								t5 = (T55f6(C));
+								t5 = (((T27*)(GE_void(t5)))->a1);
+								R = (T119f5(GE_void(t1), R, t5));
+							} else {
+								T17f32(GE_void(R), (T2)('$'));
+								if (l7) {
+									T17f32(GE_void(R), (T2)('{'));
+								}
+								t1 = (T55f5(C));
+								R = (T119f5(GE_void(t1), R, l1));
+								if (l8) {
+									T17f32(GE_void(R), (T2)('}'));
+								}
+							}
+						}
+					} else {
+						T17f32(GE_void(R), (T2)('$'));
+						if (l7) {
+							T17f32(GE_void(R), (T2)('{'));
+						}
+						t1 = (T55f5(C));
+						R = (T119f5(GE_void(t1), R, l1));
+						if (l8) {
+							T17f32(GE_void(R), (T2)('}'));
+						}
+					}
+				}
+			}
+		}
+	}
+	return R;
+}
+
+/* UT_VERSION_NUMBER.arguments */
+T0* T55f6(T0* C)
+{
+	T0* R = 0;
+	if (ge352os1778) {
+		return ge352ov1778;
+	} else {
+		ge352os1778 = '\1';
+		ge352ov1778 = R;
+	}
+	R = T27c4();
+	ge352ov1778 = R;
+	return R;
+}
+
+/* UT_VERSION_NUMBER.string_ */
+T0* T55f5(T0* C)
+{
+	T0* R = 0;
+	if (ge277os1780) {
+		return ge277ov1780;
+	} else {
+		ge277os1780 = '\1';
+		ge277ov1780 = R;
+	}
+	R = T119c11();
+	ge277ov1780 = R;
+	return R;
+}
+
+/* UT_CANNOT_READ_FILE_ERROR.default_message */
+T0* T52f2(T0* C)
+{
+	T0* R = 0;
+	R = (T52f4(C, ge205ov2639));
+	return R;
+}
+
+/* UT_CANNOT_READ_FILE_ERROR.message */
+T0* T52f4(T0* C, T0* a1)
+{
+	T0* t1;
+	T1 t2;
+	T6 t3;
+	T6 t4;
+	T0* t5;
+	T0* R = 0;
+	T0* l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 l4 = 0;
+	T2 l5 = 0;
+	T1 l6 = 0;
+	T1 l7 = 0;
+	T1 l8 = 0;
+	l2 = (T6)(GE_int32(1));
+	l4 = (((T17*)(a1))->a2);
+	t1 = (T52f5(C));
+	R = (T119f3(GE_void(t1), a1, l4));
+	while (1) {
+		t2 = (T6f1((&l2), l4));
+		if (t2) {
+			break;
+		}
+		l5 = (T17f14(a1, l2));
+		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+		t2 = (((((l5) != ((T2)('$'))))));
+		if (t2) {
+			t2 = (((((l5) != ((T2)('\000'))))));
+			if (t2) {
+				T17f32(GE_void(R), l5);
+			} else {
+				t1 = (T52f5(C));
+				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				R = (T119f4(GE_void(t1), R, a1, t3, t4));
+			}
+		} else {
+			t2 = (T6f1((&l2), l4));
+			if (t2) {
+				T17f32(GE_void(R), (T2)('$'));
+			} else {
+				l5 = (T17f14(a1, l2));
+				t2 = (((((l5) == ((T2)('$'))))));
+				if (t2) {
+					T17f32(GE_void(R), (T2)('$'));
+					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+				} else {
+					t1 = (T52f5(C));
+					l1 = (T119f3(GE_void(t1), a1, (T6)(GE_int32(5))));
+					t2 = (((((l5) == ((T2)('{'))))));
+					if (t2) {
+						l7 = EIF_TRUE;
+						l8 = EIF_FALSE;
+						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l8);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f14(a1, l2));
+							t2 = (((((l5) == ((T2)('}'))))));
+							if (t2) {
+								l8 = EIF_TRUE;
+							} else {
+								t2 = (((((l5) != ((T2)('\000'))))));
+								if (t2) {
+									T17f32(GE_void(l1), l5);
+								} else {
+									t1 = (T52f5(C));
+									T119f12(GE_void(t1), l1, a1, l2, l2);
+								}
+							}
+							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						}
+					} else {
+						l7 = EIF_FALSE;
+						l8 = EIF_FALSE;
+						l6 = EIF_FALSE;
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l6);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f14(a1, l2));
+							switch (l5) {
+							case (T2)'0':
+							case (T2)'1':
+							case (T2)'2':
+							case (T2)'3':
+							case (T2)'4':
+							case (T2)'5':
+							case (T2)'6':
+							case (T2)'7':
+							case (T2)'8':
+							case (T2)'9':
+								T17f32(GE_void(l1), l5);
+								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+								break;
+							default:
+								l6 = EIF_TRUE;
+								break;
+							}
+						}
+					}
+					t2 = (T17f15(GE_void(l1)));
+					if (t2) {
+						l3 = (T17f16(GE_void(l1)));
+						t2 = (T124f4(GE_void(((T52*)(C))->a1), l3));
+						if (t2) {
+							t1 = (T52f5(C));
+							t5 = (T124f5(GE_void(((T52*)(C))->a1), l3));
+							R = (T119f5(GE_void(t1), R, t5));
+						} else {
+							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
+							if (t2) {
+								t1 = (T52f5(C));
+								t5 = (T52f6(C));
+								t5 = (((T27*)(GE_void(t5)))->a1);
+								R = (T119f5(GE_void(t1), R, t5));
+							} else {
+								T17f32(GE_void(R), (T2)('$'));
+								if (l7) {
+									T17f32(GE_void(R), (T2)('{'));
+								}
+								t1 = (T52f5(C));
+								R = (T119f5(GE_void(t1), R, l1));
+								if (l8) {
+									T17f32(GE_void(R), (T2)('}'));
+								}
+							}
+						}
+					} else {
+						T17f32(GE_void(R), (T2)('$'));
+						if (l7) {
+							T17f32(GE_void(R), (T2)('{'));
+						}
+						t1 = (T52f5(C));
+						R = (T119f5(GE_void(t1), R, l1));
+						if (l8) {
+							T17f32(GE_void(R), (T2)('}'));
+						}
+					}
+				}
+			}
+		}
+	}
+	return R;
+}
+
+/* UT_CANNOT_READ_FILE_ERROR.arguments */
+T0* T52f6(T0* C)
+{
+	T0* R = 0;
+	if (ge352os1778) {
+		return ge352ov1778;
+	} else {
+		ge352os1778 = '\1';
+		ge352ov1778 = R;
+	}
+	R = T27c4();
+	ge352ov1778 = R;
+	return R;
+}
+
+/* UT_CANNOT_READ_FILE_ERROR.string_ */
+T0* T52f5(T0* C)
+{
+	T0* R = 0;
+	if (ge277os1780) {
+		return ge277ov1780;
+	} else {
+		ge277os1780 = '\1';
+		ge277ov1780 = R;
+	}
+	R = T119c11();
+	ge277ov1780 = R;
+	return R;
+}
+
+/* UT_CANNOT_WRITE_TO_FILE_ERROR.default_message */
+T0* T25f2(T0* C)
+{
+	T0* R = 0;
+	R = (T25f4(C, ge206ov2639));
+	return R;
+}
+
+/* UT_CANNOT_WRITE_TO_FILE_ERROR.message */
+T0* T25f4(T0* C, T0* a1)
+{
+	T0* t1;
+	T1 t2;
+	T6 t3;
+	T6 t4;
+	T0* t5;
+	T0* R = 0;
+	T0* l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	T6 l4 = 0;
+	T2 l5 = 0;
+	T1 l6 = 0;
+	T1 l7 = 0;
+	T1 l8 = 0;
+	l2 = (T6)(GE_int32(1));
+	l4 = (((T17*)(a1))->a2);
+	t1 = (T25f5(C));
+	R = (T119f3(GE_void(t1), a1, l4));
+	while (1) {
+		t2 = (T6f1((&l2), l4));
+		if (t2) {
+			break;
+		}
+		l5 = (T17f14(a1, l2));
+		l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+		t2 = (((((l5) != ((T2)('$'))))));
+		if (t2) {
+			t2 = (((((l5) != ((T2)('\000'))))));
+			if (t2) {
+				T17f32(GE_void(R), l5);
+			} else {
+				t1 = (T25f5(C));
+				t3 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				t4 = ((T6)((l2)-((T6)(GE_int32(1)))));
+				R = (T119f4(GE_void(t1), R, a1, t3, t4));
+			}
+		} else {
+			t2 = (T6f1((&l2), l4));
+			if (t2) {
+				T17f32(GE_void(R), (T2)('$'));
+			} else {
+				l5 = (T17f14(a1, l2));
+				t2 = (((((l5) == ((T2)('$'))))));
+				if (t2) {
+					T17f32(GE_void(R), (T2)('$'));
+					l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+				} else {
+					t1 = (T25f5(C));
+					l1 = (T119f3(GE_void(t1), a1, (T6)(GE_int32(5))));
+					t2 = (((((l5) == ((T2)('{'))))));
+					if (t2) {
+						l7 = EIF_TRUE;
+						l8 = EIF_FALSE;
+						l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l8);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f14(a1, l2));
+							t2 = (((((l5) == ((T2)('}'))))));
+							if (t2) {
+								l8 = EIF_TRUE;
+							} else {
+								t2 = (((((l5) != ((T2)('\000'))))));
+								if (t2) {
+									T17f32(GE_void(l1), l5);
+								} else {
+									t1 = (T25f5(C));
+									T119f12(GE_void(t1), l1, a1, l2, l2);
+								}
+							}
+							l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+						}
+					} else {
+						l7 = EIF_FALSE;
+						l8 = EIF_FALSE;
+						l6 = EIF_FALSE;
+						while (1) {
+							t2 = (T6f1((&l2), l4));
+							if (!(t2)) {
+								t2 = (l6);
+							}
+							if (t2) {
+								break;
+							}
+							l5 = (T17f14(a1, l2));
+							switch (l5) {
+							case (T2)'0':
+							case (T2)'1':
+							case (T2)'2':
+							case (T2)'3':
+							case (T2)'4':
+							case (T2)'5':
+							case (T2)'6':
+							case (T2)'7':
+							case (T2)'8':
+							case (T2)'9':
+								T17f32(GE_void(l1), l5);
+								l2 = ((T6)((l2)+((T6)(GE_int32(1)))));
+								break;
+							default:
+								l6 = EIF_TRUE;
+								break;
+							}
+						}
+					}
+					t2 = (T17f15(GE_void(l1)));
+					if (t2) {
+						l3 = (T17f16(GE_void(l1)));
+						t2 = (T124f4(GE_void(((T25*)(C))->a1), l3));
+						if (t2) {
+							t1 = (T25f5(C));
+							t5 = (T124f5(GE_void(((T25*)(C))->a1), l3));
+							R = (T119f5(GE_void(t1), R, t5));
+						} else {
+							t2 = (((((l3) == ((T6)(GE_int32(0)))))));
+							if (t2) {
+								t1 = (T25f5(C));
+								t5 = (T25f6(C));
+								t5 = (((T27*)(GE_void(t5)))->a1);
+								R = (T119f5(GE_void(t1), R, t5));
+							} else {
+								T17f32(GE_void(R), (T2)('$'));
+								if (l7) {
+									T17f32(GE_void(R), (T2)('{'));
+								}
+								t1 = (T25f5(C));
+								R = (T119f5(GE_void(t1), R, l1));
+								if (l8) {
+									T17f32(GE_void(R), (T2)('}'));
+								}
+							}
+						}
+					} else {
+						T17f32(GE_void(R), (T2)('$'));
+						if (l7) {
+							T17f32(GE_void(R), (T2)('{'));
+						}
+						t1 = (T25f5(C));
+						R = (T119f5(GE_void(t1), R, l1));
+						if (l8) {
+							T17f32(GE_void(R), (T2)('}'));
+						}
+					}
+				}
+			}
+		}
+	}
+	return R;
+}
+
+/* UT_CANNOT_WRITE_TO_FILE_ERROR.arguments */
+T0* T25f6(T0* C)
+{
+	T0* R = 0;
+	if (ge352os1778) {
+		return ge352ov1778;
+	} else {
+		ge352os1778 = '\1';
+		ge352ov1778 = R;
+	}
+	R = T27c4();
+	ge352ov1778 = R;
+	return R;
+}
+
+/* UT_CANNOT_WRITE_TO_FILE_ERROR.string_ */
+T0* T25f5(T0* C)
+{
+	T0* R = 0;
+	if (ge277os1780) {
+		return ge277ov1780;
+	} else {
+		ge277os1780 = '\1';
+		ge277ov1780 = R;
+	}
+	R = T119c11();
+	ge277ov1780 = R;
+	return R;
+}
+
+/* PR_ERROR_ACTION.is_equal */
+T1 T70f4(T0* C, T0* a1)
+{
+	T0* t1;
+	T1 t2;
+	T1 R = 0;
+	t1 = (T70f5(C));
+	t2 = (T72f2(GE_void(t1), C, a1));
+	if (t2) {
+		t1 = (((T70*)(GE_void(a1)))->a1);
+		R = (T174f3(GE_void(((T70*)(C))->a1), t1));
+	}
+	return R;
+}
+
+/* PR_ACTION.is_equal */
+T1 T174f3(T0* C, T0* a1)
+{
+	T0* t1;
+	T1 t2;
+	T1 R = 0;
+	t1 = (T174f4(C));
+	t2 = (T72f2(GE_void(t1), C, a1));
+	if (t2) {
+		t1 = (((T174*)(GE_void(a1)))->a1);
+		R = (T17f5(GE_void(((T174*)(C))->a1), t1));
+	}
+	return R;
+}
+
+/* PR_ACTION.any_ */
+T0* T174f4(T0* C)
+{
+	T0* R = 0;
+	if (ge264os1804) {
+		return ge264ov1804;
+	} else {
+		ge264os1804 = '\1';
+		ge264ov1804 = R;
+	}
+	R = T72c3();
+	ge264ov1804 = R;
+	return R;
+}
+
+/* PR_ERROR_ACTION.any_ */
+T0* T70f5(T0* C)
+{
+	T0* R = 0;
+	if (ge264os1804) {
+		return ge264ov1804;
+	} else {
+		ge264os1804 = '\1';
+		ge264ov1804 = R;
+	}
+	R = T72c3();
+	ge264ov1804 = R;
+	return R;
+}
+
+/* PR_POSITION.is_equal */
+T1 T69f12(T0* C, T0* a1)
+{
+	T1 t1;
+	T1 R = 0;
+	t1 = (T69f8(C, a1));
+	t1 = ((T1)(!(t1)));
+	if (t1) {
+		t1 = (T69f8(GE_void(a1), C));
+		R = ((T1)(!(t1)));
+	} else {
+		R = EIF_FALSE;
+	}
+	return R;
+}
+
+/* STRING_8.is_equal */
+T1 T17f5(T0* C, T0* a1)
+{
+	T1 t1;
+	T6 t2;
+	T0* t3;
+	T1 R = 0;
+	T6 l1 = 0;
+	t1 = ((a1)==(C));
+	if (t1) {
+		R = EIF_TRUE;
+	} else {
+		l1 = ((T17*)(C))->a2;
+		t2 = (((T17*)(GE_void(a1)))->a2);
+		t1 = (((((l1) == (t2)))));
+		if (t1) {
+			t3 = (((T17*)(GE_void(a1)))->a1);
+			t2 = (T17f8(C, ((T17*)(C))->a1, t3, l1));
+			R = (((((t2) == ((T6)(GE_int32(0)))))));
+		}
+	}
+	return R;
+}
+
+/* STRING_8.str_strict_cmp */
+T6 T17f8(T0* C, T0* a1, T0* a2, T6 a3)
+{
+	T1 t1;
+	T2 t2;
+	T6 R = 0;
+	T6 l1 = 0;
+	T6 l2 = 0;
+	T6 l3 = 0;
+	while (1) {
+		t1 = (((((l1) == (a3)))));
+		if (t1) {
+			break;
+		}
+		t2 = (((T15*)(GE_void(a1)))->z2[l1]);
+		l2 = ((T6)(t2));
+		t2 = (((T15*)(GE_void(a2)))->z2[l1]);
+		l3 = ((T6)(t2));
+		t1 = (((((l2) != (l3)))));
+		if (t1) {
+			R = ((T6)((l2)-(l3)));
+			l1 = ((T6)((a3)-((T6)(GE_int32(1)))));
+		}
+		l1 = ((T6)((l1)+((T6)(GE_int32(1)))));
+	}
+	return R;
+}
+
+/* INTEGER_32.is_equal */
+T1 T6f19(T6* C, T6 a1)
+{
+	T6 t1;
+	T6 t2;
+	T1 R = 0;
+	t1 = (a1);
+	t2 = (*C);
+	R = (((((t1) == (t2)))));
+	return R;
+}
+
+T0* GE_ma103(T6 c, T6 n, ...)
+{
+	T0* R;
+	T0* t1;
+	t1 = GE_new102(c, EIF_FALSE);
+	*(T102*)t1 = GE_default102;
+	((T102*)(t1))->z1 = c;
+	if (n!=0) {
+		va_list v;
+		T6 j = n;
+		T6 *i = ((T102*)(t1))->z2;
+		va_start(v, n);
+		while (j--) {
+			*(i++) = va_arg(v, T6);
+		}
+		va_end(v);
+	}
+	R = GE_new103(EIF_TRUE);
+	((T103*)(R))->a1 = t1;
+	((T103*)(R))->a2 = 1;
+	((T103*)(R))->a3 = c;
+	return R;
+}
+
+T0* ge344ov1775;
+T0* ge180ov1845;
+T0* ge217ov5494;
+T0* ge217ov5493;
+T0* ge217ov5492;
+T0* ge217ov5491;
+T0* ge284ov5483;
+T0* ge326ov1914;
+T0* ge417ov1914;
+T0* ge180ov1847;
+T0* ge324ov1914;
+T0* ge306ov1944;
+T0* ge325ov4818;
+T0* ge310ov4531;
+T0* ge50ov1769;
+T0* ge156ov2639;
+T0* ge168ov2639;
+T0* ge171ov2639;
+T0* ge162ov2639;
+T0* ge164ov2639;
+T0* ge163ov2639;
+T0* ge148ov2639;
+T0* ge145ov2639;
+T0* ge161ov2639;
+T0* ge166ov2639;
+T0* ge167ov2639;
+T0* ge169ov2639;
+T0* ge165ov2639;
+T0* ge170ov2639;
+T0* ge160ov2639;
+T0* ge146ov2639;
+T0* ge147ov2639;
+T0* ge150ov2639;
+T0* ge155ov2639;
+T0* ge152ov2639;
+T0* ge157ov2639;
+T0* ge158ov2639;
+T0* ge149ov2639;
+T0* ge159ov2639;
+T0* ge151ov2639;
+T0* ge154ov2639;
+T0* ge153ov2639;
+T0* ge211ov2639;
+T0* ge209ov2639;
+T0* ge215ov2639;
+T0* ge216ov2639;
+T0* ge205ov2639;
+T0* ge206ov2639;
+
+void GE_const_init()
+{
+	ge344ov1775 = (GE_ms8("3.9", 3));
+	ge180ov1845 = (GE_ms8("\t\t\t", 3));
+	ge217ov5494 = (GE_ms8("\t\t\t", 3));
+	ge217ov5493 = (GE_ms8("    ", 4));
+	ge217ov5492 = (GE_ms8("   ", 3));
+	ge217ov5491 = (GE_ms8("  ", 2));
+	ge284ov5483 = (GE_ms8("", 0));
+	ge326ov1914 = (GE_ms8("\n", 1));
+	ge417ov1914 = (GE_ms8("\n", 1));
+	ge180ov1847 = (GE_ms8("standard input", 14));
+	ge324ov1914 = (GE_ms8("\n", 1));
+	ge306ov1944 = (GE_ms8("empty_name", 10));
+	ge325ov4818 = (GE_ms8("", 0));
+	ge310ov4531 = (GE_ms8("", 0));
+	ge50ov1769 = (GE_ms8(".e", 2));
+	ge156ov2639 = (GE_ms8("\"$1\", line $2: precedence of $3 defined twice", 45));
+	ge168ov2639 = (GE_ms8("\"$1\", line $2: undefined literal string token $3", 48));
+	ge171ov2639 = (GE_ms8("\"$1\", line $2: nonterminal $3 declared twice", 44));
+	ge162ov2639 = (GE_ms8("\"$1\", line $2: symbol $3 is already declared as a token", 55));
+	ge164ov2639 = (GE_ms8("\"$1\", line $2: token $3 declared twice", 38));
+	ge163ov2639 = (GE_ms8("\"$1\", line $2: symbol $3 is already declared as a nonterminal", 61));
+	ge148ov2639 = (GE_ms8("\"$1\", line $2: invalid use of $$$3 in semantic action", 53));
+	ge145ov2639 = (GE_ms8("Warning, \"$1\", line $2: dangerous use of $$$3 in semantic action", 64));
+	ge161ov2639 = (GE_ms8("\"$1\", line $2: literal string $3 defined twice with $4 and $5", 61));
+	ge166ov2639 = (GE_ms8("\"$1\", line $2: token $3 associated with two literal strings $4 and $5", 69));
+	ge167ov2639 = (GE_ms8("\"$1\", line $2: token $3 has two different ids $4 and $5", 55));
+	ge169ov2639 = (GE_ms8("\"$1\": undefined symbol $2", 25));
+	ge165ov2639 = (GE_ms8("Warning, \"$1\": tokens $2 and $3 both assigned number $4", 55));
+	ge170ov2639 = (GE_ms8("\"$1\", line $2: unknown start symbol $3", 38));
+	ge160ov2639 = (GE_ms8("\"$1\", line $2: start symbol $3 is a token", 41));
+	ge146ov2639 = (GE_ms8("\"$1\", line $2: integer $3 too large (implementation limitation)", 63));
+	ge147ov2639 = (GE_ms8("\"$1\", line $2: invalid use of $$$$ in error action", 50));
+	ge150ov2639 = (GE_ms8("\"$1\", line $2: literal string tokens must have a least two characters ($3)", 74));
+	ge155ov2639 = (GE_ms8("\"$1\", line $2: integer cannot be null", 37));
+	ge152ov2639 = (GE_ms8("\"$1\", line $2: missing $3", 25));
+	ge157ov2639 = (GE_ms8("\"$1\", line $2: symbol $3 after \045prec is not a token", 51));
+	ge158ov2639 = (GE_ms8("\"$1\", line $2: \045prec specified twice", 36));
+	ge149ov2639 = (GE_ms8("\"$1\", line $2: invalid use of \045error($3) in rule", 48));
+	ge159ov2639 = (GE_ms8("Warning, \"$1\", line $2: rule $3 declared twice", 46));
+	ge151ov2639 = (GE_ms8("\"$1\", line $2: left-hand-side symbol $3 is a token", 50));
+	ge154ov2639 = (GE_ms8("\"$1\": no rules in input grammar", 31));
+	ge153ov2639 = (GE_ms8("\"$1\", line $2: multiple \045start declarations", 43));
+	ge211ov2639 = (GE_ms8("Syntax error in \"$1\" at line $2", 31));
+	ge209ov2639 = (GE_ms8("$1", 2));
+	ge215ov2639 = (GE_ms8("usage: $0 $1", 12));
+	ge216ov2639 = (GE_ms8("$0 version $1", 13));
+	ge205ov2639 = (GE_ms8("$0: cannot read \'$1\'", 20));
+	ge206ov2639 = (GE_ms8("$0: cannot write to \'$1\'", 24));
+}
+
+EIF_TYPE GE_types[312] = {
+{0, 0, EIF_FALSE, 0},
+{0, 1, EIF_FALSE, 0},
+{0, 2, EIF_FALSE, 0},
+{0, 3, EIF_FALSE, 0},
+{0, 4, EIF_FALSE, 0},
+{0, 5, EIF_FALSE, 0},
+{0, 6, EIF_FALSE, 0},
+{0, 7, EIF_FALSE, 0},
+{0, 8, EIF_FALSE, 0},
+{0, 9, EIF_FALSE, 0},
+{0, 10, EIF_FALSE, 0},
+{0, 11, EIF_FALSE, 0},
+{0, 12, EIF_FALSE, 0},
+{0, 13, EIF_FALSE, 0},
+{0, 14, EIF_FALSE, 0},
+{0, 15, EIF_TRUE, 0},
+{0, 16, EIF_TRUE, 0},
+{0, 17, EIF_FALSE, 0},
+{0, 18, EIF_FALSE, 0},
+{0, 19, EIF_FALSE, 0},
+{0, 20, EIF_FALSE, 0},
+{0, 21, EIF_FALSE, 0},
+{0, 22, EIF_FALSE, 0},
+{0, 23, EIF_FALSE, 0},
+{0, 24, EIF_FALSE, &T24f21},
+{0, 25, EIF_FALSE, 0},
+{0, 26, EIF_FALSE, 0},
+{0, 27, EIF_FALSE, 0},
+{0, 28, EIF_FALSE, 0},
+{0, 29, EIF_FALSE, 0},
+{0, 30, EIF_FALSE, 0},
+{0, 31, EIF_FALSE, 0},
+{0, 32, EIF_FALSE, 0},
+{0, 33, EIF_FALSE, 0},
+{0, 34, EIF_FALSE, 0},
+{0, 35, EIF_FALSE, 0},
+{0, 36, EIF_FALSE, 0},
+{0, 37, EIF_FALSE, 0},
+{0, 38, EIF_FALSE, 0},
+{0, 39, EIF_FALSE, 0},
+{0, 40, EIF_FALSE, 0},
+{0, 41, EIF_FALSE, 0},
+{0, 42, EIF_FALSE, 0},
+{0, 43, EIF_FALSE, 0},
+{0, 44, EIF_FALSE, 0},
+{0, 45, EIF_FALSE, 0},
+{0, 46, EIF_FALSE, 0},
+{0, 47, EIF_FALSE, 0},
+{0, 48, EIF_FALSE, 0},
+{0, 49, EIF_FALSE, 0},
+{0, 50, EIF_FALSE, 0},
+{0, 51, EIF_FALSE, &T51f36},
+{0, 52, EIF_FALSE, 0},
+{0, 53, EIF_FALSE, 0},
+{0, 54, EIF_FALSE, 0},
+{0, 55, EIF_FALSE, 0},
+{0, 56, EIF_FALSE, 0},
+{0, 57, EIF_FALSE, 0},
+{0, 58, EIF_FALSE, 0},
+{0, 59, EIF_FALSE, 0},
+{0, 60, EIF_FALSE, 0},
+{0, 61, EIF_FALSE, 0},
+{0, 62, EIF_FALSE, 0},
+{0, 63, EIF_FALSE, 0},
+{0, 64, EIF_FALSE, 0},
+{0, 65, EIF_FALSE, 0},
+{0, 66, EIF_FALSE, 0},
+{0, 67, EIF_FALSE, 0},
+{0, 68, EIF_FALSE, 0},
+{0, 69, EIF_FALSE, 0},
+{0, 70, EIF_FALSE, 0},
+{0, 71, EIF_FALSE, 0},
+{0, 72, EIF_FALSE, 0},
+{0, 73, EIF_FALSE, 0},
+{0, 74, EIF_FALSE, 0},
+{0, 75, EIF_FALSE, 0},
+{0, 76, EIF_FALSE, 0},
+{0, 77, EIF_FALSE, 0},
+{0, 78, EIF_FALSE, 0},
+{0, 79, EIF_FALSE, 0},
+{0, 80, EIF_FALSE, 0},
+{0, 81, EIF_FALSE, 0},
+{0, 82, EIF_FALSE, 0},
+{0, 83, EIF_FALSE, 0},
+{0, 84, EIF_FALSE, 0},
+{0, 85, EIF_FALSE, 0},
+{0, 86, EIF_FALSE, 0},
+{0, 87, EIF_FALSE, 0},
+{0, 88, EIF_FALSE, 0},
+{0, 89, EIF_FALSE, 0},
+{0, 90, EIF_FALSE, 0},
+{0, 91, EIF_FALSE, 0},
+{0, 92, EIF_FALSE, 0},
+{0, 93, EIF_FALSE, 0},
+{0, 94, EIF_FALSE, 0},
+{0, 95, EIF_FALSE, 0},
+{0, 96, EIF_FALSE, 0},
+{0, 97, EIF_TRUE, 0},
+{0, 98, EIF_FALSE, 0},
+{0, 99, EIF_FALSE, 0},
+{0, 100, EIF_FALSE, 0},
+{0, 101, EIF_FALSE, 0},
+{0, 102, EIF_TRUE, 0},
+{0, 103, EIF_FALSE, 0},
+{0, 104, EIF_FALSE, 0},
+{0, 105, EIF_FALSE, 0},
+{0, 106, EIF_FALSE, 0},
+{0, 107, EIF_FALSE, 0},
+{0, 108, EIF_FALSE, 0},
+{0, 109, EIF_FALSE, 0},
+{0, 110, EIF_FALSE, 0},
+{0, 111, EIF_FALSE, 0},
+{0, 112, EIF_FALSE, 0},
+{0, 113, EIF_FALSE, 0},
+{0, 114, EIF_FALSE, 0},
+{0, 115, EIF_FALSE, 0},
+{0, 116, EIF_FALSE, 0},
+{0, 117, EIF_TRUE, 0},
+{0, 118, EIF_FALSE, 0},
+{0, 119, EIF_FALSE, 0},
+{0, 120, EIF_FALSE, 0},
+{0, 121, EIF_FALSE, 0},
+{0, 122, EIF_FALSE, 0},
+{0, 123, EIF_TRUE, 0},
+{0, 124, EIF_FALSE, 0},
+{0, 125, EIF_FALSE, 0},
+{0, 126, EIF_FALSE, 0},
+{0, 127, EIF_FALSE, 0},
+{0, 128, EIF_FALSE, 0},
+{0, 129, EIF_FALSE, 0},
+{0, 130, EIF_FALSE, 0},
+{0, 131, EIF_FALSE, 0},
+{0, 132, EIF_FALSE, 0},
+{0, 133, EIF_FALSE, 0},
+{0, 134, EIF_TRUE, 0},
+{0, 135, EIF_FALSE, 0},
+{0, 136, EIF_FALSE, 0},
+{0, 137, EIF_FALSE, 0},
+{0, 138, EIF_TRUE, 0},
+{0, 139, EIF_FALSE, 0},
+{0, 140, EIF_TRUE, 0},
+{0, 141, EIF_FALSE, 0},
+{0, 142, EIF_TRUE, 0},
+{0, 143, EIF_FALSE, 0},
+{0, 144, EIF_FALSE, 0},
+{0, 145, EIF_FALSE, 0},
+{0, 146, EIF_FALSE, 0},
+{0, 147, EIF_FALSE, 0},
+{0, 148, EIF_FALSE, 0},
+{0, 149, EIF_FALSE, 0},
+{0, 150, EIF_FALSE, 0},
+{0, 151, EIF_FALSE, 0},
+{0, 152, EIF_FALSE, 0},
+{0, 153, EIF_FALSE, 0},
+{0, 154, EIF_FALSE, 0},
+{0, 155, EIF_FALSE, 0},
+{0, 156, EIF_FALSE, 0},
+{0, 157, EIF_FALSE, 0},
+{0, 158, EIF_FALSE, 0},
+{0, 159, EIF_FALSE, 0},
+{0, 160, EIF_FALSE, 0},
+{0, 161, EIF_FALSE, 0},
+{0, 162, EIF_FALSE, 0},
+{0, 163, EIF_FALSE, 0},
+{0, 164, EIF_FALSE, 0},
+{0, 165, EIF_FALSE, 0},
+{0, 166, EIF_FALSE, 0},
+{0, 167, EIF_FALSE, 0},
+{0, 168, EIF_FALSE, 0},
+{0, 169, EIF_FALSE, 0},
+{0, 170, EIF_FALSE, 0},
+{0, 171, EIF_FALSE, 0},
+{0, 172, EIF_FALSE, 0},
+{0, 173, EIF_FALSE, 0},
+{0, 174, EIF_FALSE, 0},
+{0, 175, EIF_FALSE, 0},
+{0, 176, EIF_FALSE, 0},
+{0, 177, EIF_FALSE, 0},
+{0, 178, EIF_FALSE, 0},
+{0, 179, EIF_FALSE, 0},
+{0, 180, EIF_FALSE, 0},
+{0, 181, EIF_FALSE, 0},
+{0, 182, EIF_FALSE, 0},
+{0, 183, EIF_FALSE, 0},
+{0, 184, EIF_TRUE, 0},
+{0, 185, EIF_FALSE, 0},
+{0, 186, EIF_FALSE, 0},
+{0, 187, EIF_FALSE, 0},
+{0, 188, EIF_FALSE, 0},
+{0, 189, EIF_FALSE, 0},
+{0, 190, EIF_FALSE, 0},
+{0, 191, EIF_TRUE, 0},
+{0, 192, EIF_FALSE, 0},
+{0, 193, EIF_FALSE, 0},
+{0, 194, EIF_FALSE, 0},
+{0, 195, EIF_TRUE, 0},
+{0, 196, EIF_FALSE, 0},
+{0, 197, EIF_FALSE, 0},
+{0, 198, EIF_FALSE, 0},
+{0, 199, EIF_FALSE, 0},
+{0, 200, EIF_FALSE, 0},
+{0, 201, EIF_FALSE, 0},
+{0, 202, EIF_FALSE, 0},
+{0, 203, EIF_FALSE, 0},
+{0, 204, EIF_FALSE, 0},
+{0, 205, EIF_FALSE, 0},
+{0, 206, EIF_FALSE, 0},
+{0, 207, EIF_TRUE, 0},
+{0, 208, EIF_FALSE, 0},
+{0, 209, EIF_FALSE, 0},
+{0, 210, EIF_FALSE, 0},
+{0, 211, EIF_TRUE, 0},
+{0, 212, EIF_FALSE, 0},
+{0, 213, EIF_TRUE, 0},
+{0, 214, EIF_FALSE, 0},
+{0, 215, EIF_FALSE, 0},
+{0, 216, EIF_FALSE, 0},
+{0, 217, EIF_FALSE, 0},
+{0, 218, EIF_FALSE, 0},
+{0, 219, EIF_FALSE, 0},
+{0, 220, EIF_FALSE, 0},
+{0, 221, EIF_FALSE, 0},
+{0, 222, EIF_FALSE, 0},
+{0, 223, EIF_FALSE, 0},
+{0, 224, EIF_FALSE, 0},
+{0, 225, EIF_FALSE, 0},
+{0, 226, EIF_TRUE, 0},
+{0, 227, EIF_FALSE, 0},
+{0, 228, EIF_FALSE, 0},
+{0, 229, EIF_FALSE, 0},
+{0, 230, EIF_FALSE, 0},
+{0, 231, EIF_FALSE, 0},
+{0, 232, EIF_FALSE, 0},
+{0, 233, EIF_FALSE, 0},
+{0, 234, EIF_FALSE, 0},
+{0, 235, EIF_FALSE, 0},
+{0, 236, EIF_FALSE, 0},
+{0, 237, EIF_FALSE, 0},
+{0, 238, EIF_FALSE, 0},
+{0, 239, EIF_FALSE, 0},
+{0, 240, EIF_FALSE, 0},
+{0, 241, EIF_FALSE, 0},
+{0, 242, EIF_FALSE, 0},
+{0, 243, EIF_FALSE, 0},
+{0, 244, EIF_FALSE, 0},
+{0, 245, EIF_FALSE, 0},
+{0, 246, EIF_FALSE, 0},
+{0, 247, EIF_FALSE, 0},
+{0, 248, EIF_FALSE, 0},
+{0, 249, EIF_FALSE, 0},
+{0, 250, EIF_FALSE, 0},
+{0, 251, EIF_TRUE, 0},
+{0, 252, EIF_FALSE, 0},
+{0, 253, EIF_TRUE, 0},
+{0, 254, EIF_FALSE, 0},
+{0, 255, EIF_FALSE, 0},
+{0, 256, EIF_FALSE, 0},
+{0, 257, EIF_FALSE, 0},
+{0, 258, EIF_FALSE, 0},
+{0, 259, EIF_FALSE, 0},
+{0, 260, EIF_FALSE, 0},
+{0, 261, EIF_FALSE, 0},
+{0, 262, EIF_FALSE, 0},
+{0, 263, EIF_FALSE, 0},
+{0, 264, EIF_FALSE, 0},
+{0, 265, EIF_FALSE, 0},
+{0, 266, EIF_FALSE, 0},
+{0, 267, EIF_FALSE, 0},
+{0, 268, EIF_TRUE, 0},
+{0, 269, EIF_FALSE, 0},
+{0, 270, EIF_FALSE, 0},
+{0, 271, EIF_FALSE, 0},
+{0, 272, EIF_FALSE, 0},
+{0, 273, EIF_FALSE, 0},
+{0, 274, EIF_FALSE, 0},
+{0, 275, EIF_FALSE, 0},
+{0, 276, EIF_FALSE, 0},
+{0, 277, EIF_TRUE, 0},
+{0, 278, EIF_FALSE, 0},
+{0, 279, EIF_FALSE, 0},
+{0, 280, EIF_FALSE, 0},
+{0, 281, EIF_FALSE, 0},
+{0, 282, EIF_TRUE, 0},
+{0, 283, EIF_FALSE, 0},
+{0, 284, EIF_FALSE, 0},
+{0, 285, EIF_FALSE, 0},
+{0, 286, EIF_FALSE, 0},
+{0, 287, EIF_FALSE, 0},
+{0, 288, EIF_FALSE, 0},
+{0, 289, EIF_FALSE, 0},
+{0, 290, EIF_FALSE, 0},
+{0, 291, EIF_FALSE, 0},
+{0, 292, EIF_FALSE, 0},
+{0, 293, EIF_FALSE, 0},
+{0, 294, EIF_FALSE, 0},
+{0, 295, EIF_FALSE, 0},
+{0, 296, EIF_FALSE, 0},
+{0, 297, EIF_FALSE, 0},
+{0, 298, EIF_FALSE, 0},
+{0, 299, EIF_FALSE, 0},
+{0, 300, EIF_FALSE, 0},
+{0, 301, EIF_FALSE, 0},
+{0, 302, EIF_FALSE, 0},
+{0, 303, EIF_FALSE, 0},
+{0, 304, EIF_FALSE, 0},
+{0, 305, EIF_FALSE, 0},
+{0, 306, EIF_TRUE, 0},
+{0, 307, EIF_FALSE, 0},
+{0, 308, EIF_FALSE, 0},
+{0, 309, EIF_FALSE, 0},
+{0, 310, EIF_FALSE, 0},
+{0, 311, EIF_FALSE, 0}
 };
 
 int main(int argc, char** argv)
@@ -485,6 +1372,30 @@ EIF_REFERENCE GE_check_void(EIF_REFERENCE obj)
 		GE_raise(1);
 	}
 	return (obj);
+}
+
+/*
+	Check whether 'ptr' is a null pointer.
+	If it is, then raise a no-more-memory exception.
+	Return 'ptr'
+*/
+void* GE_check_null(void* ptr)
+{
+	if (!ptr) {
+#ifdef EIF_WINDOWS
+		GE_show_console();
+#endif
+		fprintf(stderr, "No more memory!\n");
+#ifdef EIF_DEBUG
+		{
+			char c;
+			fprintf(stderr, "Press Enter...\n");
+			scanf("%c", &c);
+		}
+#endif
+		GE_raise(2);
+	}
+	return (ptr);
 }
 
 #ifdef __cplusplus
@@ -778,7 +1689,7 @@ extern "C" {
 		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -786,6 +1697,211 @@ extern "C" {
 
 #ifndef GE_GC_C
 #define GE_GC_C
+
+#ifdef EIF_BOEHM_GC
+/*
+ * Call dispose routine `disp' on object `C'.
+ */
+void GE_boehm_dispose(void* C, void* disp) {
+#ifdef EIF_EXCEPTION_TRACE
+	((GE_types[((EIF_REFERENCE)C)->id]).dispose)(0,(EIF_REFERENCE)C);
+#else
+	((GE_types[((EIF_REFERENCE)C)->id]).dispose)((EIF_REFERENCE)C);
+#endif
+}
+#endif
+
+#endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
+/*
+	description:
+
+		"C functions used to implement class EXCEPTIONS"
+
+	system: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
+#ifndef EIF_EXCEPT_C
+#define EIF_EXCEPT_C
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void eraise(char* name, long code) {
+	GE_raise((int)code);
+}
+
+void esdie(int code) {
+	exit(code);
+}
+
+EIF_REFERENCE eename(long except) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eename' in 'eif_except.h' not implemented\n");
+	return EIF_VOID;
+}
+
+char* eeltag(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eeltag' in 'eif_except.h' not implemented\n");
+	return (char *)0;
+}
+
+char* eelrout(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eelrout' in 'eif_except.h' not implemented\n");
+	return (char *)0;
+}
+
+char* eelclass(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eelclass' in 'eif_except.h' not implemented\n");
+	return (char *)0;
+}
+
+long eelcode(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eelcode' in 'eif_except.h' not implemented\n");
+	return 0;
+}
+
+EIF_REFERENCE stack_trace_string(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'stack_trace_string' in 'eif_except.h' not implemented\n");
+	return EIF_VOID;
+}
+
+char* eeotag(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eeotag' in 'eif_except.h' not implemented\n");
+	return (char *)0;
+}
+
+long eeocode(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eeocode' in 'eif_except.h' not implemented\n");
+	return 0;
+}
+
+char* eeorout(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eeorout' in 'eif_except.h' not implemented\n");
+	return (char *)0;
+}
+
+char* eeoclass(void) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eeoclass' in 'eif_except.h' not implemented\n");
+	return (char *)0;
+}
+
+void eecatch(long code) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eecatch' in 'eif_except.h' not implemented\n");
+}
+
+void eeignore(long code) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eeignore' in 'eif_except.h' not implemented\n");
+}
+
+void eetrace(char b) {
+	/* TODO */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'eetrace' in 'eif_except.h' not implemented\n");
+}
+
+#ifdef EIF_WINDOWS
+void set_windows_exception_filter() {
+	/* TODO: Needed to compile some code at AXAR */
+#ifdef EIF_WINDOWS
+	GE_show_console();
+#endif
+	fprintf(stderr, "'set_windows_exception_filter' in 'eif_except.h' not implemented\n");
+}
+#endif
+
+/*
+ * Raise an Eiffel exception of the given code with no associated tag.
+ */
+void xraise(int code) {
+	eraise(NULL, (long)code);
+}
+
+/*
+ * Raise 'Operating system error' exception.
+ */
+void esys(void) {
+	if (errno == 0) {
+			/* External event */
+		xraise(EN_EXT);
+	} else {
+			/* Operating system error */
+		xraise(EN_SYS);
+	}
+}
+
+/*
+ * As a special case, an I/O error is raised when a system call which is
+ * I/O bound fails.
+ */
+void eise_io(char *tag) {
+	eraise(tag, EN_ISE_IO);		/* I/O error */
+}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 #ifdef __cplusplus
@@ -802,7 +1918,7 @@ extern "C" {
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -810,6 +1926,65 @@ extern "C" {
 
 #ifndef EIF_FILE_C
 #define EIF_FILE_C
+
+/* HAS_CHOWN:
+ *	This symbol, if defined, indicates that the chown routine is
+ *	available.
+ */
+#ifndef EIF_WINDOWS
+#define HAS_CHOWN
+#endif
+
+/* HAS_GETEUID:
+ *	This symbol, if defined, indicates that the geteuid system call is
+ *	available
+ */
+#ifndef EIF_WINDOWS
+#define  HAS_GETEUID
+#endif
+
+/* HAS_GETGRGID:
+ *	This symbol, if defined, indicates that the getgrgid system call is
+ *	available
+ */
+#ifndef EIF_WINDOWS
+#define  HAS_GETGRGID
+#endif
+
+/* HAS_GETGROUPS:
+ *	This symbol, if defined, indicates that the getgroups() routine is
+ *	available to get the list of process groups.  If unavailable, multiple
+ *	groups are probably not supported.
+ */
+#ifndef EIF_WINDOWS
+#define HAS_GETGROUPS
+#define Groups_t gid_t	/* Type for 2nd arg to getgroups() */
+#endif
+
+/* HAS_GETPWUID:
+ *	This symbol, if defined, indicates that the getpwuid system call is
+ *	available
+ */
+#ifndef EIF_WINDOWS
+#define  HAS_GETPWUID
+#endif
+
+/* HAS_LINK:
+ *	This symbol, if defined, indicates that the link routine is
+ *	available to create hard links.
+ */
+#ifndef EIF_WINDOWS
+#define HAS_LINK
+#endif
+
+/* HAS_LSTAT:
+ *	This symbol, if defined, indicates that the lstat routine is
+ *	available to do file stats on symbolic links.
+ */
+#ifndef EIF_WINDOWS
+#define HAS_LSTAT
+#endif
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -826,6 +2001,8 @@ extern int utime(const char *, struct utimbuf *); /* Needed for lcc-win32 */
 #else
 #include <utime.h>
 #include <unistd.h>
+#include <pwd.h>
+#include <grp.h>
 #endif
 
 #ifndef NAME_MAX
@@ -900,107 +2077,291 @@ extern int utime(const char *, struct utimbuf *); /* Needed for lcc-win32 */
 extern "C" {
 #endif
 
+/*
+ * Create directory `dirname'.
+ */
 void file_mkdir(char* dirname) {
-#ifdef WIN32
-	mkdir(dirname);
+	errno = 0;
+#ifdef EIF_WINDOWS
+	if (mkdir(dirname) == -1) {
 #else
-	mkdir(dirname, 0777);
+	if (mkdir(dirname, 0777) == -1) {
 #endif
+		esys(); /* Raise exception */
+	}
 }
 
+/*
+ * Rename file `from' into `to'.
+ */
 void file_rename(char* from, char* to) {
-#ifdef WIN32
-	struct stat buf;
+	for (;;) {
+#ifdef EIF_WINDOWS
+		if (file_exists(to)) {
+				/* To have the same behavior as Unix, we need to remove the destination file if it exists.
+				 * Of course we can do this only if `from' and `to' do not represent the same file.
+				 * To check this, we use `CreateFile' to open both file, and then using the information
+				 * returned by `GetFileInformationByHandle' we can check whether or not they are indeed
+				 * the same. */
+			BY_HANDLE_FILE_INFORMATION l_to_info, l_from_info;
+			HANDLE l_from_file = CreateFile (from, GENERIC_READ, FILE_SHARE_READ, NULL,
+				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			HANDLE l_to_file = CreateFile (to, GENERIC_READ, FILE_SHARE_READ, NULL,
+					OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	if (stat(to, &buf) != -1) {
-		remove(to);
+			if ((l_from_file == INVALID_HANDLE_VALUE) || (l_to_file == INVALID_HANDLE_VALUE)) {
+					/* We do not need the handles anymore, simply close them. Since Microsoft
+					 * API accepts INVALID_HANDLE_VALUE we don't check the validity of arguments. */
+				CloseHandle(l_from_file);
+				CloseHandle(l_to_file);
+
+					/* For some reasons we cannot open the file. This should not happen, maybe the OS has
+					 * removed `from' or `to'. In that case, we simply try to remove destination as we were
+					 * doing in former revision of `file_rename'. */
+				remove (to);
+			} else {
+				BOOL success = GetFileInformationByHandle (l_from_file, &l_from_info);
+				success = success && GetFileInformationByHandle (l_to_file, &l_to_info);
+					/* We do not need the handles anymore, simply close them. */
+				CloseHandle(l_from_file);
+				CloseHandle(l_to_file);
+				if (success) {
+						/* Check that `from' and `to' do not represent the same file. */
+					if
+						((l_from_info.dwVolumeSerialNumber != l_to_info.dwVolumeSerialNumber) ||
+						(l_from_info.nFileIndexLow != l_to_info.nFileIndexLow) ||
+						(l_from_info.nFileIndexHigh != l_to_info.nFileIndexHigh))
+					{
+						remove (to);
+					} else {
+							/* Files are identical, nothing to be done apart from */
+						break;
+					}
+				} else {
+						/* An error occurred while retrieving the information about `from' and `to'. Like
+						 * for the case where `l_from_file' and `l_to_file' are invalid, we try to remove
+						 * the file. */
+					remove (to);
+				}
+			}
+		}
+#endif
+		errno = 0;
+		if (rename(from, to) == -1) {
+			esys(); /* Raise exception */
+		}
+		break;
+	}
+}
+
+/*
+ * Link file `from' into `to'.
+ */
+void file_link(char *from, char *to) {
+#ifdef HAS_LINK
+	errno = 0;
+	if (link(from, to) == -1) {
+		esys(); /* Raise exception */
 	}
 #endif
-	rename(from, to);
 }
 
-void file_link(char *from, char *to) {
-		/* Link file `from' into `to' */
-#ifdef HAS_LINK
-	link(from, to);
-#endif
-}
-
+/*
+ * Delete file or directory `name'.
+ */
 void file_unlink(char *name) {
-		/* Delete file or directory `name' */
 	struct stat buf;
-
-	if (stat(name, &buf) != -1) {
-		if (buf.st_mode & S_IFDIR) {
-			rmdir(name);
-		} else {
-			remove(name);
+	file_stat(name, &buf);
+	errno = 0;
+	if (buf.st_mode & S_IFDIR) {
+		if (rmdir(name) == -1) {
+			esys(); /* Raise exception */
+		}
+	} else {
+		if (remove(name) == -1) {
+			esys(); /* Raise exception */
 		}
 	}
 }
 
 static char* file_open_mode(int how) {
+/* Under Windows we add the mode "N". This is to make sure that
+ * files created in Eiffel are not inheritable by default as otherwise
+ * it makes things too complicated for the end user when spawning
+ * child processes in multithreaded mode.
+ * This follows the change in EiffelStudio svn#73874.
+ */
 	switch (how) {
 	case 0: 
+#ifdef EIF_WINDOWS
+		return "rtN";
+#else
 		return "r";
+#endif
 	case 1:
+#ifdef EIF_WINDOWS
+		return "wtN";
+#else
 		return "w";
+#endif
 	case 2:
+#ifdef EIF_WINDOWS
+		return "atN";
+#else
 		return "a";
+#endif
 	case 3:
+#ifdef EIF_WINDOWS
+		return "rt+N";
+#else
 		return "r+";
+#endif
 	case 4:
+#ifdef EIF_WINDOWS
+		return "wt+N";
+#else
 		return "w+";
+#endif
 	case 5:
+#ifdef EIF_WINDOWS
+		return "at+N";
+#else
 		return "a+";
+#endif
 	case 10: 
-		return "rb";
-	case 11:
-		return "wb";
-	case 12:
-		return "ab";
-	case 13:
-		return "rb+";
-	case 14:
-		return "wb+";
-	case 15:
-		return "ab+";
-	default:
+#ifdef EIF_WINDOWS
+		return "rbN";
+#else
 		return "r";
+#endif
+	case 11:
+#ifdef EIF_WINDOWS
+		return "wbN";
+#else
+		return "w";
+#endif
+	case 12:
+#ifdef EIF_WINDOWS
+		return "abN";
+#else
+		return "a";
+#endif
+	case 13:
+#ifdef EIF_WINDOWS
+		return "rb+N";
+#else
+		return "r+";
+#endif
+	case 14:
+#ifdef EIF_WINDOWS
+		return "wb+N";
+#else
+		return "w+";
+#endif
+	case 15:
+#ifdef EIF_WINDOWS
+		return "ab+N";
+#else
+		return "a+";
+#endif
+	default:
+#ifdef EIF_WINDOWS
+		return "rtN";
+#else
+		return "r";
+#endif
 	}
 }
 
+/*
+ * Open file `name' with the corresponding type `how'.
+ */
 EIF_POINTER file_open(char *name, int how) {
-	/* TODO: raise an exception if could not open file */
-	return (EIF_POINTER)fopen(name, file_open_mode(how));
+	FILE *fp;
+	errno = 0;
+	fp = (FILE *)fopen(name, file_open_mode(how));
+	if (fp == (FILE *)0) {
+		esys(); /* Open failed, raise exception */
+	}
+	return (EIF_POINTER)fp;
 }
 
+/*
+ * Open file `fd' with the corresponding type `how'.
+ */
 EIF_POINTER file_dopen(int fd, int how) {
-	/* TODO: raise an exception if could not open file */
-	return (EIF_POINTER)fdopen(fd, file_open_mode(how));
+	FILE *fp;
+	errno = 0;
+	fp = (FILE *)fdopen(fd, file_open_mode(how));
+	if (fp == (FILE *)0) {
+		esys(); /* Open failed, raise exception */
+	}
+	return (EIF_POINTER)fp;
 }
 
+/*
+ * Reopen file `name' with the corresponding type `how' and substitute that
+ * to the old stream described by `old'. This is useful to redirect 'stdout'
+ * to another place, for instance.
+ */
 EIF_POINTER file_reopen(char *name, int how, FILE *old) {
-	/* TODO: raise an exception if could not open file */
-	return (EIF_POINTER)freopen(name, file_open_mode(how), old);
+	FILE *fp;
+	errno = 0;
+	fp = (FILE *)freopen(name, file_open_mode(how), old);
+	if (fp == (FILE *)0) {
+		esys(); /* Open failed, raise exception */
+	}
+	return (EIF_POINTER)fp;
 }
 
+/*
+ * Close the file.
+ */
 void file_close(FILE *fp) {
-	fclose(fp);
+	errno = 0;
+	if (fclose(fp) != 0) {
+		esys(); /* Close failed, raise exception */
+	}
 }
 
+/*
+ * Flush data held in stdio buffer.
+ */
 void file_flush(FILE *fp) {
-	fflush(fp);
+	errno = 0;
+	if (fflush(fp) != 0) {
+	    esys(); /* Flush failed, raise exception */
+	}
 }
 
+/*
+ * Return the associated file descriptor.
+ */
 EIF_INTEGER file_fd(FILE *f) {
+	if (f == (FILE *)0) {
+		eraise("invalid file pointer", EN_EXT);
+	}
 	return (EIF_INTEGER)fileno(f);
 }
 
+/*
+ * Get a character from `f'.
+ */
 EIF_CHARACTER file_gc(FILE *f) {
-	return (EIF_CHARACTER)getc(f);
+	int c;
+	errno = 0;
+	c = getc(f);
+	if (c == EOF && ferror(f)) {
+		eise_io("FILE: unable to read CHARACTER value.");
+	}
+	return (EIF_CHARACTER)c;
 }
 
+/*
+ * Get a string from `f' and fill it into `s' (at most `bound' characters),
+ * with `start' being the amount of bytes already stored within s. This
+ * means we really have to read (bound - start) characters.
+ */
 EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) {
 	EIF_INTEGER amount;
 	int c = '\0';
@@ -1008,12 +2369,18 @@ EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) {
 
 	amount = bound - start;
 	s += start;
+	errno = 0;
 	read = 0;
 	while (amount-- > 0) {
 		if ((c = getc(f)) == '\n' || c == EOF)
 			break;
 		*s++ = c;
 		read++;
+	}
+	if (c == EOF && ferror(f)) {
+			/* An I/O error occurred */
+			/* Raise exception */
+		eise_io("FILE: unable to read current line.");
 	}
 	if (c == EOF || c == '\n')
 #ifdef EIF_WINDOWS
@@ -1029,74 +2396,149 @@ EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start) {
 	return bound - start + 1;
 }
 
+/*
+ * Read min (bound, remaining bytes in file) characters into `s' and
+ * return the number of characters read.
+ */
 EIF_INTEGER file_gss(FILE* f, char* s, EIF_INTEGER bound) {
-	return (EIF_INTEGER)fread((void*)s, (size_t)1, (size_t)bound, f);
+	EIF_INTEGER amount;
+	amount = (EIF_INTEGER)fread((void*)s, (size_t)1, (size_t)bound, f);
+	if (ferror(f)) {
+			/* An I/O error occurred */
+			/* Raise exception */
+		eise_io("FILE: unable to read stream.");
+	}
+	return amount;
 }
 
+/*
+ * Get a word from `f' and fill it into `s' (at most `bound' characters),
+ * with `start' being the amount of bytes already stored within s. This
+ * means we really have to read (bound - start) characters. Any leading
+ * spaces are skipped.
+ */
 EIF_INTEGER file_gw(FILE* f, char* s, EIF_INTEGER bound, EIF_INTEGER start) {
 	EIF_INTEGER amount;
 	int c = 0;
 
 	amount = bound - start;
 	s += start;
+	errno = 0;
 	if (start == 0) {
-		while ((c = getc(f)) != EOF)
-			if (!isspace(c))
+		while ((c = getc(f)) != EOF) {
+			if (!isspace(c)) {
 				break;
-		if (c == EOF)
+			}
+		}
+		if (c == EOF) {
+			if (ferror(f)) {
+					/* An I/O error occurred */
+					/* Raise exception */
+				eise_io("FILE: unable to read word.");
+			}
+				/* Reached EOF before word */
 			return (EIF_INTEGER) 0;
-		else
-			ungetc(c, f);
+		} else if (EOF == ungetc(c, f)) {
+			eise_io("FILE: unable to read word.");
+		}
 	}
 	while (amount-- > 0) {
 		c = getc(f);
-		if (c == EOF)
+		if (c == EOF) {
+			if (ferror(f)) {
+					/* An I/O error occurred */
+					/* Raise exception */
+				eise_io("FILE: unable to read word.");
+			}
 			break;
-		if (isspace(c)) {
-			ungetc(c, f);
+		} else if (isspace(c)) {
+			if (EOF == ungetc(c, f)) {
+				eise_io("FILE: unable to read word.");
+			}
 			break;
 		}
 		*s++ = c;
 	}
-	if (c == EOF || isspace(c))
+	if (c == EOF || isspace(c)) {
 		return bound - start - amount - 1;
+	}
 	return bound - start + 1;
 }
 
+/*
+ * Look ahead one character. If EOF, return 0.
+ */
 EIF_CHARACTER file_lh(FILE *f) {
 	int c;
 
+	errno = 0;
 	c = getc(f);
-	if (c != EOF)
-		ungetc(c, f);
-	return (EIF_CHARACTER)(c == EOF ? (char)0 : (char)c);
+	if (c == EOF) {
+		if (ferror(f)) {
+			eise_io("FILE: error when reading a character ahead.");
+		}
+	} else if (EOF == ungetc(c, f)) {
+		eise_io("FILE: error when reading a character ahead.");
+	}
+	return (EIF_CHARACTER) (c == EOF ? (char) 0 : (char) c);
 }
 
+/*
+ * Size of file `fp'.
+ */
 EIF_INTEGER eif_file_size(FILE *fp) {
 	struct stat buf;
 
-	fflush (fp);
-	if (fstat(fileno(fp), &buf) == -1)
+	errno = 0;
+	if (fflush (fp) != 0) {
+		esys();
+	}
+	if (fstat(fileno(fp), &buf) == -1) {
+		esys();
 		return (EIF_INTEGER)0;
-	else
+	} else {
 		return (EIF_INTEGER)(buf.st_size);
+	}
 }
 
+/*
+ * Read upto next input line.
+ */
 void file_tnil(FILE *f) {
 	int c;
 
+	errno = 0;
 	while ((c = getc(f)) != '\n' && c != EOF)
 		;
+	if (c == EOF && ferror(f))
+		eise_io("FILE: error during reading the end of the file.");
 }
 
+/*
+ * Current position within file.
+ */
 EIF_INTEGER file_tell(FILE *f) {
+
+	if (f == (FILE *) 0) {
+		eraise("invalid file pointer", EN_EXT);
+	}
 	return (EIF_INTEGER)ftell(f);
 }
 
+/*
+ * Touch file `name' by setting both access and modification time to the
+ * current time stamp. This external function exists only because there
+ * is no way within UNIX_FILE to get the current time stamp. Otherwise,
+ * we could simply call file_utime.
+ */
 void file_touch(char *name) {
 	file_utime(name, time((time_t *) 0), 2);
 }
 
+/*
+ * Modify the modification and/or the access time stored in the file's
+ * inode. The 'how' parameter tells which attributes should be set.
+ */
 void file_utime(char *name, time_t stamp, int how) {
 	struct utimbuf tp;
 	struct stat buf;
@@ -1116,13 +2558,46 @@ void file_utime(char *name, time_t stamp, int how) {
 	} else {
 		tp.actime = tp.modtime = stamp; /* Change both access and modification times */
 	}
-	utime(name, &tp);
+	errno = 0;
+	if (utime(name, &tp) == -1) {
+			/* Raise exception */
+		esys();
+	}
 }
 
+/*
+ * This is an encapsulation of the stat() system call. The routine either
+ * succeeds and returns or fails and raises the appropriate exception.
+ */
 void file_stat(char *path, struct stat *buf) {
-	stat(path, buf);
+	int status;			/* System call status */
+	errno = 0;
+#ifdef HAS_LSTAT
+	status = lstat(path, buf);
+	if (status == 0) {
+		/* We found a file, not let's check if it is not a symbolic link,
+		 * if it is the case, we need to call `stat' to make sure the link
+		 * is valid. It is going to slow down current call by stating twice
+		 * the info, but this case is quite rare and there is a benefit
+		 * in using `lstat' over `stat' the first time as more than 90%
+		 * of the files we stat are not symlink. */
+		if ((buf->st_mode & S_IFLNK) == S_IFLNK) {
+			status = stat(path, buf);
+		}
+	}
+#else
+	status = stat(path, buf);		/* Get file statistics */
+#endif
+	if (status == -1) {
+			/* Raise exception */
+		esys();
+	}
 }
 
+/*
+ * Change permissions of file `name', using an interface like chmod(1).
+ * The flag is true if permissions are to be added, 0 to remove them.
+ */
 void file_perm(char *name, char *who, char *what, int flag) {
 	int fmode;
 	struct stat buf;
@@ -1169,7 +2644,7 @@ void file_perm(char *name, char *who, char *what, int flag) {
 				break;
 #endif
 			default:
-				break;
+				eraise("invalid user permission", EN_EXT);
 			}
 		break;
 	case 'g':
@@ -1203,7 +2678,7 @@ void file_perm(char *name, char *who, char *what, int flag) {
 					fmode &= ~S_IXGRP;
 				break;
 			default:
-				break;
+				eraise("invalid group permission", EN_EXT);
 			}
 		break;
 	case 'o':
@@ -1237,19 +2712,28 @@ void file_perm(char *name, char *who, char *what, int flag) {
 					fmode &= ~S_IXOTH;
 				break;
 			default:
-				break;
+				eraise("invalid other permission", EN_EXT);
 			}
 		break;
 	default:
-		break;
+		eraise("invalid permission target", EN_EXT);
 	}
     file_chmod(name, fmode);
 }
 
+/*
+ * Change permission mode on file `path'.
+ */
 void file_chmod(char *path, int mode) {
-	chmod(path, mode);
+	errno = 0;
+	if (chmod(path, mode) == -1) {
+		esys();
+	}
 }
 
+/*
+ * Change the owner of the file to `uid'.
+ */
 void file_chown(char *name, int uid) {
 #ifdef HAS_CHOWN
 	int gid;
@@ -1257,10 +2741,16 @@ void file_chown(char *name, int uid) {
 	
 	file_stat(name, &buf);
 	gid = buf.st_gid;
-	chown(name, uid, gid);
+	errno = 0;
+	if (chown(name, uid, gid) == -1) {
+		esys();
+	}
 #endif
 }
 
+/*
+ * Change the group of the file to `gid'.
+ */
 void file_chgrp(char *name, int gid) {
 #ifdef HAS_CHOWN
 	int uid;
@@ -1268,74 +2758,159 @@ void file_chgrp(char *name, int gid) {
 	
 	file_stat(name, &buf);
 	uid = buf.st_uid;
-	chown(name, uid, gid);
+	errno = 0;
+	if (chown(name, uid, gid) == -1) {
+		esys();
+	}
 #endif
 }
 
+/*
+ * Put new_line onto `f'.
+ */
 void file_tnwl(FILE *f) {
-	putc('\n', f);
+	errno = 0;
+	if (putc('\n', f) == EOF) {
+		eise_io("FILE: unable to write new line.");
+	}
 }
 
+/*
+ * Append a copy of `other' to `f'.
+ */
 void file_append(FILE *f, FILE *other, EIF_INTEGER l) {
 	size_t amount;
 	char buffer[512];
 	int bufsize = 512;
 
-	fseek(other, 0, SEEK_SET);
-	fseek(f, 0, SEEK_END);
+	errno = 0;
+	if (fseek(other, 0, SEEK_SET) != 0) {
+		esys();
+	}
+	if (fseek(f, 0, SEEK_END) != 0) {
+		esys();
+	}
 	while (l > 0) {
 		amount = l;
 		if (l < bufsize)
 			amount = l;
 		else
 			amount = bufsize;
-		if (amount != fread(buffer, sizeof(char), amount, other))
+		if (amount != fread(buffer, sizeof(char), amount, other)) {
+			eise_io("FILE: unable to read appended file.");
 			break;
+		}
 		l -= amount;
-		if (amount != fwrite(buffer, sizeof(char), amount, f))
+		if (amount != fwrite(buffer, sizeof(char), amount, f)) {
+			eise_io("FILE: unable to write appended file.");
 			break;
+		}
 	}
 }
 
+/*
+ * Write string `str' on `f'.
+ */
 void file_ps(FILE *f, char *str, EIF_INTEGER len) {
-	fwrite(str, sizeof(char) * len, 1, f);
+	errno = 0;
+	if (len == 0) {
+		/* Nothing to be done. */
+	} else if (fwrite(str, sizeof(char) * len, 1, f) != 1) {
+		eise_io("FILE: unable to write STRING object.");
+	}
 }
 
+/*
+ * Write character `c' on `f'.
+ */
 void file_pc(FILE *f, char c) {
-	putc(c, f);
+	errno = 0;
+	if (putc(c, f) == EOF) {
+		eise_io("FILE: unable to write CHARACTER value.");
+	}
 }
 
+/*
+ * Go to absolute position `pos' counted from start.
+ */
 void file_go(FILE *f, EIF_INTEGER pos) {
-	fseek(f, pos, SEEK_SET);
+	errno = 0;
+	if (fseek(f, pos, SEEK_SET) != 0) {
+		esys();
+	}
 	clearerr(f);
 }
 
+/*
+ * Go to absolute position `pos' counted from end.
+ */
 void file_recede(FILE *f, EIF_INTEGER pos) {
-	fseek(f, -pos, SEEK_END);
+	errno = 0;
+	if (fseek(f, -pos, SEEK_END) != 0) {
+		esys();
+	}
 	clearerr(f);
 }
 
+/*
+ * Go to absolute position `pos' counted from current position.
+ */
 void file_move(FILE *f, EIF_INTEGER pos) {
-	fseek(f, pos, SEEK_CUR);
+	errno = 0;
+	if (fseek(f, pos, SEEK_CUR) != 0) {
+		esys();
+	}
 	clearerr(f);
 }
 
+/*
+ * End of file.
+ */
 EIF_BOOLEAN file_feof(FILE *fp) {
 	return (EIF_BOOLEAN)(feof(fp) != 0);
 }
 
+/*
+ * Test whether file exists or not. If `name' represents a symbolic link,
+ * it will check that pointed file does exist.
+ */
 EIF_BOOLEAN file_exists(char *name) {
+	int status;					/* System call status */
 	struct stat buf;
-
-	return ((stat(name, &buf) == -1) ? EIF_FALSE : EIF_TRUE);
+#ifdef HAS_LSTAT
+	status = lstat(name, &buf);	/* Attempt to stat file */
+	if (status == 0) {
+		/* We found a file, not let's check if it is not a symbolic link,
+		 * if it is the case, we need to call `stat' to make sure the link
+		 * is valid. */
+		if ((buf.st_mode & S_IFLNK) == S_IFLNK) {
+			status = stat(name, &buf);
+		}
+	}
+#else
+	status = stat (name, &buf);
+#endif
+	return ((status == -1) ? EIF_FALSE : EIF_TRUE);
 }
 
+/*
+ * Test whether file exists or not without following the symbolic link
+ * if `name' represents one.
+ */
 EIF_BOOLEAN file_path_exists(char *name) {
 	struct stat buf;
-
+#ifdef HAS_LSTAT
+	return ((lstat(name, &buf) == -1) ? EIF_FALSE : EIF_TRUE);
+#else
 	return ((stat(name, &buf) == -1) ? EIF_FALSE : EIF_TRUE);
+#endif
 }
 
+/*
+ * Check whether access permission `op' are possible on file `name' using
+ * real UID and real GID. This is probably only useful to setuid or setgid
+ * programs.
+ */
 EIF_BOOLEAN file_access(char *name, EIF_INTEGER op) {
 	switch (op) {
 	case 0: /* Does file exist? */
@@ -1351,6 +2926,11 @@ EIF_BOOLEAN file_access(char *name, EIF_INTEGER op) {
 	}
 }
 
+/*
+ * Check whether the file `path' may be created: we need write permissions
+ * in the parent directory and there must not be any file bearing that name
+ * with no write permissions...
+ */
 EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length) {
 	struct stat buf;
 	char *temp = NULL;
@@ -1403,61 +2983,145 @@ EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length) {
 	return EIF_FALSE;
 }
 
+/*
+ * Swallow next character if it is a new line.
+ */
 static void swallow_nl(FILE *f) {
-		/* Swallow next character if it is a new line */
 	if (f != stdin) {
+			/* getc() cannot be used as it doesn't set the EOF flag */
 		fscanf (f, "\n");
 	} else {
 		int c;
+		errno = 0;
 		c = getc(f);
-		if (c != '\n')
-			ungetc(c, f);
+		if (c == EOF && ferror(f)) {
+			eise_io("FILE: error during reading the end of the file.");
+		} else if (c != '\n' && EOF == ungetc(c, f)) {
+			eise_io("FILE: End of file.");
+		}
 	}
 }
 
+/*
+ * Get an integer from `f'.
+ */
 EIF_INTEGER file_gi(FILE *f) {
 	EIF_INTEGER i;     
 
-	fscanf(f, "%d", &i);
+	errno = 0;
+	if (fscanf(f, "%d", &i) < 0) {
+		eise_io("FILE: unable to read INTEGER value.");
+	}
 	swallow_nl(f);
 	return i;
 }
 
+/*
+ * Get a real from `f'.
+ */
 EIF_REAL_32 file_gr(FILE *f) {
 	EIF_REAL_32 r;     
-
-	fscanf(f, "%f", &r);
+	errno = 0;
+	if (fscanf(f, "%f", &r) < 0) {
+		eise_io("FILE: unable to read REAL value.");
+	}
 	swallow_nl(f);
 	return r;
 }
 
+/*
+ * Get a double from `f'.
+ */
 EIF_REAL_64 file_gd(FILE *f) {
 	EIF_REAL_64 d;     
-
-	fscanf(f, "%lf", &d);
+	errno = 0;
+	if (fscanf(f, "%lf", &d) < 0) {
+		eise_io("FILE: unable to read DOUBLE value.");
+	}
 	swallow_nl(f);
 	return d;
 }
 
+/*
+ * Write `number' on `f'.
+ */
 void file_pi(FILE *f, EIF_INTEGER number) {
-	fprintf(f, "%d", number);
+	errno = 0;
+	if (fprintf(f, "%d", number) < 0) {
+		eise_io("FILE: unable to write INTEGER value.");
+	}
 }
 
+/*
+ * Write `number' on `f'.
+ */
 void file_pr(FILE *f, EIF_REAL_32 number) {
-    fprintf (f, "%g", number);
+	errno = 0;
+    if (0 > fprintf (f, "%g", number) < 0) {
+		eise_io("FILE: unable to write REAL value.");
+	}
 }
 
+/*
+ * Write double `val' onto `f'.
+ */
 void file_pd(FILE *f, EIF_REAL_64 val) {
-	fprintf(f, "%.17g", val);
+	errno = 0;
+	if (fprintf(f, "%.17g", val) < 0) {
+		eise_io("FILE: unable to write DOUBLE value.");
+	}
 }
 
+/*
+ * Size of the stat structure. This is used by the Eiffel side to create
+ * the area (special object) which will play the role of a stat buffer
+ * structure.
+ */
 EIF_INTEGER stat_size(void) {
 	return (EIF_INTEGER)sizeof(struct stat);
 }
 
+#ifdef HAS_GETGROUPS
+/*
+ * Does the list of groups the user belongs to include `gid'?
+ */
+static EIF_BOOLEAN eif_group_in_list(int gid) {
+	Groups_t *group_list;
+	int i, nb_groups, nb_groups_max;
+
+	nb_groups_max = getgroups(0, (Groups_t *)0);
+	if (nb_groups_max <= 0) {
+		return EIF_FALSE;
+	} else {
+		group_list = (Groups_t *)malloc(nb_groups_max * sizeof(Groups_t));
+		if (group_list == (Groups_t *)0) {
+			xraise(EN_IO);
+			return EIF_FALSE;
+		} else if ((nb_groups = getgroups(nb_groups_max, group_list)) == -1) {
+			free(group_list);
+			xraise(EN_IO);
+			return EIF_FALSE;
+		} else {
+			for (i=0; i< nb_groups; i++)
+				if (group_list[i] == gid) {
+					free(group_list);
+					return EIF_TRUE;
+				}
+			free(group_list);
+			return EIF_FALSE;
+		}
+	}
+}
+#endif
+
+/*
+ * Check file permissions using effective UID and effective GID. The
+ * current permission mode is held in the st_mode field of the stat()
+ * buffer structure `buf'.
+ */
 EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 	int mode = buf->st_mode & ST_MODE;	/* Current mode */
-#ifndef WIN32
+#ifdef HAS_GETEUID
 	int uid = buf->st_uid;				/* File owner */
 	int gid = buf->st_gid;				/* File group */
 	int euid, egid;						/* Effective user and group */
@@ -1465,9 +3129,9 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 
     switch (op) {
 	case 0: /* Is file readable */
-#ifdef WIN32
-		return ((mode && S_IREAD) ? EIF_TRUE : EIF_FALSE);
-#else
+#ifdef EIF_WINDOWS
+	return ((mode && S_IREAD) ? EIF_TRUE : EIF_FALSE);
+#elif defined HAS_GETEUID
 		euid = geteuid();
 		egid = getegid();
 
@@ -1477,13 +3141,17 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 			return ((mode & S_IRUSR) ? EIF_TRUE : EIF_FALSE);
 		else if (gid == egid)
 			return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
-		else
-			return ((mode & S_IROTH) ? EIF_TRUE : EIF_FALSE);
+#ifdef HAS_GETGROUPS
+		else if (eif_group_in_list(gid))
+			return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
+		else
+#endif
+			return ((mode & S_IROTH) ? EIF_TRUE : EIF_FALSE);
 	case 1: /* Is file writable */
-#ifdef WIN32
+#ifdef EIF_WINDOWS
 		return ((mode & S_IWRITE) ? EIF_TRUE : EIF_FALSE);
-#else
+#elif defined HAS_GETEUID
 		euid = geteuid();
 		egid = getegid();
 
@@ -1493,13 +3161,17 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 			return ((mode & S_IWUSR) ? EIF_TRUE : EIF_FALSE);
 		else if (gid == egid)
 			return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
-		else
-			return ((mode & S_IWOTH) ? EIF_TRUE : EIF_FALSE);
+#ifdef HAS_GETGROUPS
+		else if (eif_group_in_list(gid))
+			return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
+		else
+#endif
+			return ((mode & S_IWOTH) ? EIF_TRUE : EIF_FALSE);
 	case 2: /* Is file executable */
-#ifdef WIN32
+#ifdef EIF_WINDOWS
 		return EIF_TRUE;
-#else
+#elif defined HAS_GETEUID
 		euid = geteuid();
 		egid = getegid();
 
@@ -1509,45 +3181,52 @@ EIF_BOOLEAN file_eaccess(struct stat *buf, int op) {
 			return ((mode & S_IXUSR) ? EIF_TRUE : EIF_FALSE);
 		else if (gid == egid)
 			return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
-		else
-			return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);
+#ifdef HAS_GETGROUPS
+		else if (eif_group_in_list(gid))
+			return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
+		else
+#endif
+			return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);
 	case 3: /* Is file setuid */
-#ifdef WIN32
+#ifdef EIF_WINDOWS
 		return EIF_FALSE;
 #else
 		return ((mode & S_ISUID) ? EIF_TRUE : EIF_FALSE);
 #endif
 	case 4: /* Is file setgid */
-#ifdef WIN32
+#ifdef EIF_WINDOWS
 		return EIF_FALSE;
 #else
 		return ((mode & S_ISGID) ? EIF_TRUE : EIF_FALSE);
 #endif
 	case 5: /* Is file sticky */
-#ifdef WIN32
+#ifdef EIF_WINDOWS
 		return EIF_FALSE;
 #else
 		return ((mode & S_ISVTX) ? EIF_TRUE : EIF_FALSE);
 #endif
 	case 6: /* Is file owned by effective UID */
-#ifdef WIN32
-		return EIF_TRUE;
-#else
+#ifdef HAS_GETEUID
 		return ((uid == geteuid()) ? EIF_TRUE : EIF_FALSE);
+#else
+		return EIF_TRUE;
 #endif
 	case 7: /* Is file owned by real UID */
-#ifdef WIN32
-		return EIF_TRUE;
-#else
+#ifdef HAS_GETEUID
 		return ((uid == getuid()) ? EIF_TRUE : EIF_FALSE);
+#else
+		return EIF_TRUE;
 #endif
 	default:
-		break;
+		return EIF_FALSE;
 	}
-	return EIF_FALSE;
 }
 
+/*
+ * Perform the field dereferencing from the appropriate stat structure,
+ * which Eiffel cannot do directly.
+ */
 EIF_INTEGER file_info(struct stat *buf, int op) {
 	switch (op) {
 	case 0:	/* File permission mode */
@@ -1579,13 +3258,15 @@ EIF_INTEGER file_info(struct stat *buf, int op) {
 	case 13: /* Is file a regular (plain) one */
 		if (buf->st_mode & S_IFREG || 0 == (buf->st_mode & ~ST_MODE))
 			return (EIF_INTEGER)S_IFREG;
-		return (EIF_INTEGER)0;
+		else
+			return (EIF_INTEGER)0;
 	case 14: /* Is file a device */
 		if (buf->st_mode & S_IFCHR)
 			return (EIF_INTEGER)S_IFCHR;
-		if (buf->st_mode & S_IFBLK)
+		else if (buf->st_mode & S_IFBLK)
 			return (EIF_INTEGER)S_IFBLK;
-		return (EIF_INTEGER)0;
+		else
+			return (EIF_INTEGER)0;
 	case 15: /* Is file a character device */
 		return (EIF_INTEGER)(buf->st_mode & S_IFCHR);
 	case 16: /* Is file a block device */
@@ -1597,11 +3278,15 @@ EIF_INTEGER file_info(struct stat *buf, int op) {
 	case 19: /* Is file a socket */
 		return (EIF_INTEGER)(buf->st_mode & S_IFSOCK);
 	default:
-		break;
+		return (EIF_INTEGER)0;
     }
-	return (EIF_INTEGER)0;
 }
 
+/*
+ * Return the Eiffel string filled in with the name associated with `uid'
+ * if found in /etc/passwd. Otherwise, return fill it in with the numeric
+ * value.
+ */
 EIF_REFERENCE file_owner(int uid) {
 	char buf[NAME_MAX];
 	char* str;
@@ -1619,9 +3304,14 @@ EIF_REFERENCE file_owner(int uid) {
 	snprintf(buf, NAME_MAX, "%d", uid);
 	str = buf;
 #endif
-	return GE_ms(str, strlen(str));
+	return GE_ms8(str, strlen(str));
 }
 
+/*
+ * Return the Eiffel string filled in with the name associated with `gid'
+ * if found in /etc/group. Otherwise, return fill it in with the numeric
+ * value.
+ */
 EIF_REFERENCE file_group(int gid) {
 	char buf[NAME_MAX];
 	char* str;
@@ -1639,64 +3329,127 @@ EIF_REFERENCE file_group(int gid) {
 	snprintf(buf, NAME_MAX, "%d", gid);
 	str = buf;
 #endif
-	return GE_ms(str, strlen(str));
+	return GE_ms8(str, strlen(str));
 }
 
+/*
+ * Get an integer from `f'.
+ */
 EIF_INTEGER file_gib(FILE* f) {
 	EIF_INTEGER i;     
-
-	fread (&i, sizeof(EIF_INTEGER), 1, f);
+	errno = 0;
+	if (fread (&i, sizeof (EIF_INTEGER), 1, f) != 1) {
+		eise_io("FILE: unable to read INTEGER value.");
+	}
 	return i;
 }
 
+/*
+ * Get a real from `f'.
+ */
 EIF_REAL_32 file_grb(FILE* f) {
 	EIF_REAL_32 r;     
-
-	fread (&r, sizeof(EIF_REAL_32), 1, f);
+	errno = 0;
+	if (fread (&r, sizeof (EIF_REAL_32), 1, f) != 1) {
+		eise_io("FILE: unable to read REAL value.");
+	}
 	return r;
 }
 
+/*
+ * Get a double from `f'.
+ */
 EIF_REAL_64 file_gdb(FILE* f) {
 	EIF_REAL_64 d;     
-
-	fread (&d, sizeof(EIF_REAL_64), 1, f);
+	errno = 0;
+	if (fread (&d, sizeof(EIF_REAL_64), 1, f) != 1) {
+		eise_io("FILE: unable to read DOUBLE value.");
+	}
 	return d;
 }
 
+/*
+ * Open file `name' with the corresponding type `how'.
+ */
 EIF_POINTER file_binary_open(char* name, int how) {
-	/* TODO: raise an exception if could not open file */
-	if (how < 10)
-		return (EIF_POINTER)fopen(name, file_open_mode(how + 10));
-	else
-		return (EIF_POINTER)fopen(name, file_open_mode(how));
+	FILE *fp;
+	errno = 0;
+	if (how < 10) {
+		fp = (FILE *)fopen(name, file_open_mode(how + 10));
+	} else {
+		fp = (FILE *)fopen(name, file_open_mode(how));
+	}
+	if (fp == (FILE *)0) {
+		esys(); /* Open failed, raise exception */
+	}
+	return (EIF_POINTER)fp;
+
 }
 
+/*
+ * Open file `fd' with the corresponding type `how'.
+ */
 EIF_POINTER file_binary_dopen(int fd, int how) {
-	/* TODO: raise an exception if could not open file */
-	if (how < 10)
-		return (EIF_POINTER)fdopen(fd, file_open_mode(how + 10));
-	else
-		return (EIF_POINTER)fdopen(fd, file_open_mode(how));
+	FILE *fp;
+	errno = 0;
+	if (how < 10) {
+		fp = (FILE *)fdopen(fd, file_open_mode(how + 10));
+	} else {
+		fp = (FILE *)fdopen(fd, file_open_mode(how));
+	}
+	if (fp == (FILE *)0) {
+		esys(); /* Open failed, raise exception */
+	}
+	return (EIF_POINTER)fp;
 }
 
+/*
+ * Reopen file `name' with the corresponding type `how' and substitute that
+ * to the old stream described by `old'. This is useful to redirect 'stdout'
+ * to another place, for instance.
+ */
 EIF_POINTER file_binary_reopen(char* name, int how, FILE* old) {
-	/* TODO: raise an exception if could not open file */
-	if (how < 10)
-		return (EIF_POINTER)freopen(name, file_open_mode(how + 10), old);
-	else
-		return (EIF_POINTER)freopen(name, file_open_mode(how), old);
+	FILE *fp;
+	errno = 0;
+	if (how < 10) {
+		fp = (FILE *)freopen(name, file_open_mode(how + 10), old);
+	 } else {
+		fp = (FILE *)freopen(name, file_open_mode(how), old);
+	}
+	if (fp == (FILE *)0) {
+		esys(); /* Open failed, raise exception */
+	}
+	return (EIF_POINTER)fp;
 }
 
+/*
+ * Write `number' on `f'.
+ */
 void file_pib(FILE* f, EIF_INTEGER number) {
-	fwrite(&number, sizeof(EIF_INTEGER), 1, f);
+	errno = 0;
+	if (fwrite(&number, sizeof(EIF_INTEGER),1, f) != 1) {
+		eise_io("FILE: unable to write INTEGER value.");
+	}
 }
 
+/*
+ * Write `number' on `f'.
+ */
 void file_prb(FILE* f, EIF_REAL_32 number) {
-    fwrite(&number, sizeof(EIF_REAL_32), 1, f);
+	errno = 0;
+    if (fwrite(&number, sizeof(EIF_REAL_32),1, f) != 1) {
+		eise_io("FILE: unable to write REAL value.");
+	}
 }
 
+/*
+ * Write double `val' onto `f'.
+ */
 void file_pdb(FILE* f, EIF_REAL_64 val) {
-	fwrite (&val, sizeof(EIF_REAL_64), 1, f);
+	errno = 0;
+	if (fwrite (&val, sizeof(EIF_REAL_64), 1, f) != 1) {
+		eise_io("FILE: unable to write DOUBLE value.");
+	}
 }
 
 #ifdef __cplusplus
@@ -1868,170 +3621,6 @@ void console_file_close (FILE* f) {
 #endif
 	file_close(f);
 }
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef __cplusplus
-}
-#endif
-/*
-	description:
-
-		"C functions used to implement class EXCEPTIONS"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-*/
-
-#ifndef EIF_EXCEPT_C
-#define EIF_EXCEPT_C
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void eraise(char* name, long code) {
-	GE_raise((int)code);
-}
-
-void esdie(int code) {
-	exit(code);
-}
-
-EIF_REFERENCE eename(long except) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eename' in 'eif_except.h' not implemented\n");
-	return EIF_VOID;
-}
-
-char* eeltag(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeltag' in 'eif_except.h' not implemented\n");
-	return (char *)0;
-}
-
-char* eelrout(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eelrout' in 'eif_except.h' not implemented\n");
-	return (char *)0;
-}
-
-char* eelclass(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eelclass' in 'eif_except.h' not implemented\n");
-	return (char *)0;
-}
-
-long eelcode(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eelcode' in 'eif_except.h' not implemented\n");
-	return 0;
-}
-
-EIF_REFERENCE stack_trace_string(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'stack_trace_string' in 'eif_except.h' not implemented\n");
-	return EIF_VOID;
-}
-
-char* eeotag(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeotag' in 'eif_except.h' not implemented\n");
-	return (char *)0;
-}
-
-long eeocode(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeocode' in 'eif_except.h' not implemented\n");
-	return 0;
-}
-
-char* eeorout(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeorout' in 'eif_except.h' not implemented\n");
-	return (char *)0;
-}
-
-char* eeoclass(void) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeoclass' in 'eif_except.h' not implemented\n");
-	return (char *)0;
-}
-
-void eecatch(long code) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eecatch' in 'eif_except.h' not implemented\n");
-}
-
-void eeignore(long code) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eeignore' in 'eif_except.h' not implemented\n");
-}
-
-void eetrace(char b) {
-	/* TODO */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'eetrace' in 'eif_except.h' not implemented\n");
-}
-
-#ifdef EIF_WINDOWS
-void set_windows_exception_filter() {
-	/* TODO: Needed to compile some code at AXAR */
-#ifdef EIF_WINDOWS
-	GE_show_console();
-#endif
-	fprintf(stderr, "'set_windows_exception_filter' in 'eif_except.h' not implemented\n");
-}
-#endif
 
 #ifdef __cplusplus
 }

@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,14 @@
 #else
 #define EIF_IS_VMS EIF_FALSE
 #endif
+/* MAC definition */
+#ifdef EIF_MAC
+#define EIF_IS_MAC EIF_TRUE
+#undef EIF_IS_UNIX
+#define EIF_IS_UNIX EIF_FALSE
+#else
+#define EIF_IS_MAC EIF_FALSE
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -77,6 +85,18 @@ typedef unsigned long int uint32_t;
 typedef unsigned __int64 uint64_t;
 #else
 #include <inttypes.h>
+#endif
+#endif
+
+/* Portable integer pointers */
+#ifdef EIF_WINDOWS
+#ifndef _INTPTR_T_DEFINED
+#define _INTPTR_T_DEFINED
+#ifdef _WIN64
+typedef __int64 intptr_t;
+#else
+typedef int intptr_t;
+#endif
 #endif
 #endif
 
@@ -261,6 +281,14 @@ EIF_REFERENCE GE_check_catcall(EIF_REFERENCE obj, int type_ids[], int nb);
 #define GE_void(obj) (!(obj)?GE_check_void(obj):(obj))
 extern EIF_REFERENCE GE_check_void(EIF_REFERENCE obj);
 
+/*
+	Check whether 'ptr' is a null pointer.
+	If it is, then raise a no-more-memory exception.
+	Return 'ptr'
+*/
+#define GE_null(ptr) GE_check_null(ptr)
+extern void* GE_check_null(void* ptr);
+
 #ifdef __cplusplus
 }
 #endif
@@ -346,7 +374,7 @@ extern int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lp
 		"C functions used to access garbage collector facilities"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -374,8 +402,40 @@ extern int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lp
 /*
 	Memory allocation.
 */
-#define GE_alloc(x) GC_MALLOC(x)
-#define GE_alloc_atomic(x) GC_MALLOC_ATOMIC(x)
+
+/*
+ * GE_alloc allocates memory that can contain pointers to collectable objects.
+ */
+#define GE_alloc(x) GE_null(GC_MALLOC(x))
+
+/*
+ * When defined, GE_alloc_cleared means that GE_alloc makes sure that the allocated memory is zeroed.
+ */
+#define GE_alloc_cleared
+
+/*
+ * GE_alloc_atomic allocates memory that does not contain pointers to collectable objects.
+ */
+#define GE_alloc_atomic(x) GE_null(GC_MALLOC_ATOMIC(x))
+
+/*
+ * When defined, GE_alloc_atomic_cleared means that GE_alloc_atomic makes sure that the allocated memory is zeroed.
+ */
+/* #define GE_alloc_atomic_cleared */
+
+/*
+	Dispose
+*/
+
+/*
+ * Call dispose routine `disp' on object `C'.
+ */
+extern void GE_boehm_dispose(void*, void*);
+
+/*
+ * Register dispose routine `disp' to be called on object `obj' when it will be collected.
+ */
+#define GE_register_dispose(obj, disp) GC_REGISTER_FINALIZER((void*)(obj), (void (*) (void*, void*)) &GE_boehm_dispose, NULL, NULL, NULL)
 
 #else
 
@@ -391,8 +451,35 @@ extern int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lp
 /*
 	Memory allocation.
 */
-#define GE_alloc(x) calloc((x),1)
-#define GE_alloc_atomic(x) calloc((x),1)
+
+/*
+ * GE_alloc allocates memory that can contain pointers to collectable objects.
+ */
+#define GE_alloc(x) GE_null(malloc(x))
+
+/*
+ * When defined, GE_alloc_cleared means that GE_alloc makes sure that the allocated memory is zeroed.
+ */
+/* #define GE_alloc_cleared */
+
+/*
+ * GE_alloc_atomic allocates memory that does not contain pointers to collectable objects.
+ */
+#define GE_alloc_atomic(x) GE_null(malloc(x))
+
+/*
+ * When defined, GE_alloc_atomic_cleared means that GE_alloc_atomic makes sure that the allocated memory is zeroed.
+ */
+/* #define GE_alloc_atomic_cleared */
+
+/*
+	Dispose
+*/
+
+/*
+ * Register dispose routine `disp' to be called on object `obj' when it will be collected.
+ */
+#define GE_register_dispose(obj, disp) /* do nothing */
 
 #endif
 
@@ -636,589 +723,589 @@ typedef struct S63 T63;
 typedef struct S65 T65;
 
 /* KL_INTEGER_ROUTINES */
-typedef struct S66 T66;
-
-/* DS_ARRAYED_LIST [PR_POSITION] */
 typedef struct S67 T67;
 
-/* PR_POSITION */
+/* DS_ARRAYED_LIST [PR_POSITION] */
 typedef struct S68 T68;
 
-/* PR_ERROR_ACTION */
+/* PR_POSITION */
 typedef struct S69 T69;
 
-/* DS_ARRAYED_LIST [PR_RULE] */
+/* PR_ERROR_ACTION */
 typedef struct S70 T70;
 
-/* KL_ANY_ROUTINES */
+/* DS_ARRAYED_LIST [PR_RULE] */
 typedef struct S71 T71;
 
-/* PR_RULE */
+/* KL_ANY_ROUTINES */
 typedef struct S72 T72;
 
-/* PR_VARIABLE */
+/* PR_RULE */
 typedef struct S73 T73;
 
-/* DS_LINKED_LIST [PR_REDUCTION] */
+/* PR_VARIABLE */
 typedef struct S74 T74;
 
+/* DS_LINKED_LIST [PR_REDUCTION] */
+typedef struct S75 T75;
+
 /* DS_LINKED_LIST [PR_TRANSITION] */
-typedef struct S76 T76;
+typedef struct S77 T77;
 
 /* DS_NESTED_LIST_FLATTENER [PR_TOKEN] */
-typedef struct S78 T78;
-
-/* DS_LINKED_LIST [PR_TOKEN] */
 typedef struct S79 T79;
 
-/* DS_ARRAYED_LIST [PR_SYMBOL] */
+/* DS_LINKED_LIST [PR_TOKEN] */
 typedef struct S80 T80;
 
-/* DS_ARRAYED_STACK [PR_STATE] */
+/* DS_ARRAYED_LIST [PR_SYMBOL] */
 typedef struct S81 T81;
 
-/* PR_TRANSITION */
+/* DS_ARRAYED_STACK [PR_STATE] */
 typedef struct S82 T82;
 
-/* PR_TOKEN */
-typedef struct S84 T84;
+/* PR_TRANSITION */
+typedef struct S83 T83;
 
-/* DS_ARRAYED_LIST [PR_REDUCTION] */
+/* PR_TOKEN */
 typedef struct S85 T85;
 
+/* DS_ARRAYED_LIST [PR_REDUCTION] */
+typedef struct S86 T86;
+
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION] */
-typedef struct S87 T87;
+typedef struct S88 T88;
 
 /* DS_LINKED_LIST_CURSOR [PR_REDUCTION] */
-typedef struct S89 T89;
-
-/* PR_REDUCTION */
 typedef struct S90 T90;
 
-/* DS_ARRAYED_LIST [PR_VARIABLE] */
+/* PR_REDUCTION */
 typedef struct S91 T91;
 
-/* DS_NESTED_LIST_FLATTENER [PR_RULE] */
+/* DS_ARRAYED_LIST [PR_VARIABLE] */
 typedef struct S92 T92;
 
-/* DS_LINKED_LIST [PR_VARIABLE] */
+/* DS_NESTED_LIST_FLATTENER [PR_RULE] */
 typedef struct S93 T93;
 
-/* DS_LINKED_LIST [PR_RULE] */
+/* DS_LINKED_LIST [PR_VARIABLE] */
 typedef struct S94 T94;
 
-/* SPECIAL [PR_STATE] */
-typedef struct S96 T96;
+/* DS_LINKED_LIST [PR_RULE] */
+typedef struct S95 T95;
 
-/* ARRAY [PR_STATE] */
+/* SPECIAL [PR_STATE] */
 typedef struct S97 T97;
 
-/* DS_ARRAYED_LIST [PR_TOKEN] */
+/* ARRAY [PR_STATE] */
 typedef struct S98 T98;
 
-/* PR_TYPE */
+/* DS_ARRAYED_LIST [PR_TOKEN] */
 typedef struct S99 T99;
 
-/* DS_LINKED_LIST_CURSOR [PR_RULE] */
+/* PR_TYPE */
 typedef struct S100 T100;
 
-/* SPECIAL [INTEGER_32] */
+/* DS_LINKED_LIST_CURSOR [PR_RULE] */
 typedef struct S101 T101;
 
-/* ARRAY [INTEGER_32] */
+/* SPECIAL [INTEGER_32] */
 typedef struct S102 T102;
 
-/* DS_ARRAYED_LIST [PR_PORTION] */
+/* ARRAY [INTEGER_32] */
 typedef struct S103 T103;
 
-/* DS_ARRAYED_LIST [INTEGER_32] */
+/* DS_ARRAYED_LIST [PR_PORTION] */
 typedef struct S104 T104;
 
-/* PR_PORTION */
+/* DS_ARRAYED_LIST [INTEGER_32] */
 typedef struct S105 T105;
 
+/* PR_PORTION */
+typedef struct S106 T106;
+
 /* DS_BUBBLE_SORTER [PR_PORTION] */
-typedef struct S107 T107;
+typedef struct S108 T108;
 
 /* KL_ARRAY_ROUTINES [INTEGER_32] */
-typedef struct S109 T109;
-
-/* UT_STRING_FORMATTER */
 typedef struct S110 T110;
 
-/* DS_ARRAYED_LIST [STRING_8] */
+/* UT_STRING_FORMATTER */
 typedef struct S111 T111;
 
-/* DS_ARRAYED_LIST [PR_TYPE] */
+/* DS_ARRAYED_LIST [STRING_8] */
 typedef struct S112 T112;
 
-/* DS_HASH_SET [PR_TYPE] */
+/* DS_ARRAYED_LIST [PR_TYPE] */
 typedef struct S113 T113;
 
-/* DS_HASH_SET_CURSOR [PR_TYPE] */
+/* DS_HASH_SET [PR_TYPE] */
 typedef struct S114 T114;
 
-/* SPECIAL [PR_TRANSITION] */
-typedef struct S116 T116;
+/* DS_HASH_SET_CURSOR [PR_TYPE] */
+typedef struct S115 T115;
 
-/* ARRAY [PR_TRANSITION] */
+/* SPECIAL [PR_TRANSITION] */
 typedef struct S117 T117;
 
-/* KL_STRING_ROUTINES */
+/* ARRAY [PR_TRANSITION] */
 typedef struct S118 T118;
 
-/* UT_ARRAY_FORMATTER */
+/* KL_STRING_ROUTINES */
 typedef struct S119 T119;
 
-/* TYPED_POINTER [ANY] */
-typedef struct S121 T121;
+/* UT_ARRAY_FORMATTER */
+typedef struct S120 T120;
 
-/* SPECIAL [STRING_8] */
+/* TYPED_POINTER [ANY] */
 typedef struct S122 T122;
 
-/* ARRAY [STRING_8] */
+/* SPECIAL [STRING_8] */
 typedef struct S123 T123;
 
-/* KL_STDERR_FILE */
+/* ARRAY [STRING_8] */
 typedef struct S124 T124;
 
-/* PR_ACTION_FACTORY */
+/* KL_STDERR_FILE */
 typedef struct S125 T125;
 
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8] */
+/* PR_ACTION_FACTORY */
 typedef struct S126 T126;
 
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8] */
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8] */
 typedef struct S127 T127;
 
-/* DS_HASH_TABLE [PR_TYPE, STRING_8] */
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8] */
 typedef struct S128 T128;
 
-/* YY_FILE_BUFFER */
+/* DS_HASH_TABLE [PR_TYPE, STRING_8] */
 typedef struct S129 T129;
 
-/* YY_BUFFER */
+/* YY_FILE_BUFFER */
 typedef struct S130 T130;
 
-/* KL_SPECIAL_ROUTINES [INTEGER_32] */
+/* YY_BUFFER */
 typedef struct S131 T131;
 
-/* SPECIAL [ANY] */
-typedef struct S133 T133;
+/* KL_SPECIAL_ROUTINES [INTEGER_32] */
+typedef struct S132 T132;
 
-/* KL_SPECIAL_ROUTINES [ANY] */
+/* SPECIAL [ANY] */
 typedef struct S134 T134;
 
-/* KL_SPECIAL_ROUTINES [STRING_8] */
+/* KL_SPECIAL_ROUTINES [ANY] */
 typedef struct S135 T135;
 
-/* DS_PAIR [STRING_8, INTEGER_32] */
+/* KL_SPECIAL_ROUTINES [STRING_8] */
 typedef struct S136 T136;
 
-/* SPECIAL [PR_TYPE] */
+/* DS_PAIR [STRING_8, INTEGER_32] */
 typedef struct S137 T137;
 
-/* KL_SPECIAL_ROUTINES [PR_TYPE] */
+/* SPECIAL [PR_TYPE] */
 typedef struct S138 T138;
 
-/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
+/* KL_SPECIAL_ROUTINES [PR_TYPE] */
 typedef struct S139 T139;
 
-/* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_TYPE]] */
+/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
 typedef struct S140 T140;
 
-/* SPECIAL [PR_TOKEN] */
+/* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_TYPE]] */
 typedef struct S141 T141;
 
-/* KL_SPECIAL_ROUTINES [PR_TOKEN] */
+/* SPECIAL [PR_TOKEN] */
 typedef struct S142 T142;
 
-/* DS_ARRAYED_LIST [PR_ERROR_ACTION] */
+/* KL_SPECIAL_ROUTINES [PR_TOKEN] */
 typedef struct S143 T143;
 
-/* UT_SYNTAX_ERROR */
+/* DS_ARRAYED_LIST [PR_ERROR_ACTION] */
 typedef struct S144 T144;
 
-/* ARRAY [PR_TOKEN] */
+/* UT_SYNTAX_ERROR */
 typedef struct S145 T145;
 
-/* PR_MULTIPLE_START_DECLARATIONS_ERROR */
+/* ARRAY [PR_TOKEN] */
 typedef struct S146 T146;
 
-/* PR_NO_RULES_ERROR */
+/* PR_MULTIPLE_START_DECLARATIONS_ERROR */
 typedef struct S147 T147;
 
-/* PR_LHS_SYMBOL_TOKEN_ERROR */
+/* PR_NO_RULES_ERROR */
 typedef struct S148 T148;
 
-/* PR_RULE_DECLARED_TWICE_ERROR */
+/* PR_LHS_SYMBOL_TOKEN_ERROR */
 typedef struct S149 T149;
 
-/* PR_INVALID_ERROR_N_ERROR */
+/* PR_RULE_DECLARED_TWICE_ERROR */
 typedef struct S150 T150;
 
-/* PR_PREC_SPECIFIED_TWICE_ERROR */
+/* PR_INVALID_ERROR_N_ERROR */
 typedef struct S151 T151;
 
-/* PR_PREC_NOT_TOKEN_ERROR */
+/* PR_PREC_SPECIFIED_TWICE_ERROR */
 typedef struct S152 T152;
 
-/* PR_MISSING_CHARACTERS_ERROR */
+/* PR_PREC_NOT_TOKEN_ERROR */
 typedef struct S153 T153;
 
-/* PR_NULL_INTEGER_ERROR */
+/* PR_MISSING_CHARACTERS_ERROR */
 typedef struct S154 T154;
 
-/* PR_INVALID_STRING_TOKEN_ERROR */
+/* PR_NULL_INTEGER_ERROR */
 typedef struct S155 T155;
 
-/* PR_INVALID_DOLLAR_DOLLAR_ERROR */
+/* PR_INVALID_STRING_TOKEN_ERROR */
 typedef struct S156 T156;
 
-/* PR_INTEGER_TOO_LARGE_ERROR */
+/* PR_INVALID_DOLLAR_DOLLAR_ERROR */
 typedef struct S157 T157;
 
-/* PR_START_SYMBOL_TOKEN_ERROR */
+/* PR_INTEGER_TOO_LARGE_ERROR */
 typedef struct S158 T158;
 
-/* PR_UNKNOWN_START_SYMBOL_ERROR */
+/* PR_START_SYMBOL_TOKEN_ERROR */
 typedef struct S159 T159;
 
-/* PR_TOKEN_ID_USED_TWICE_ERROR */
+/* PR_UNKNOWN_START_SYMBOL_ERROR */
 typedef struct S160 T160;
 
-/* PR_UNDEFINED_SYMBOL_ERROR */
+/* PR_TOKEN_ID_USED_TWICE_ERROR */
 typedef struct S161 T161;
 
-/* PR_TWO_TOKEN_IDS_TOKEN_ERROR */
+/* PR_UNDEFINED_SYMBOL_ERROR */
 typedef struct S162 T162;
 
-/* PR_TWO_STRINGS_TOKEN_ERROR */
+/* PR_TWO_TOKEN_IDS_TOKEN_ERROR */
 typedef struct S163 T163;
 
-/* PR_STRING_TOKEN_DEFINED_TWICE_ERROR */
+/* PR_TWO_STRINGS_TOKEN_ERROR */
 typedef struct S164 T164;
 
-/* PR_DANGEROUS_DOLLAR_N_ERROR */
+/* PR_STRING_TOKEN_DEFINED_TWICE_ERROR */
 typedef struct S165 T165;
 
-/* PR_INVALID_DOLLAR_N_ERROR */
+/* PR_DANGEROUS_DOLLAR_N_ERROR */
 typedef struct S166 T166;
 
+/* PR_INVALID_DOLLAR_N_ERROR */
+typedef struct S167 T167;
+
 /* KL_COMPARABLE_COMPARATOR [PR_PORTION] */
-typedef struct S168 T168;
+typedef struct S169 T169;
 
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]] */
-typedef struct S171 T171;
-
-/* PR_BASIC_TYPE */
 typedef struct S172 T172;
 
-/* PR_ACTION */
+/* PR_BASIC_TYPE */
 typedef struct S173 T173;
 
-/* PR_SYMBOL_DECLARED_VARIABLE_ERROR */
+/* PR_ACTION */
 typedef struct S174 T174;
 
-/* PR_TOKEN_DECLARED_TWICE_ERROR */
+/* PR_SYMBOL_DECLARED_VARIABLE_ERROR */
 typedef struct S175 T175;
 
-/* PR_SYMBOL_DECLARED_TOKEN_ERROR */
+/* PR_TOKEN_DECLARED_TWICE_ERROR */
 typedef struct S176 T176;
 
-/* PR_VARIABLE_DECLARED_TWICE_ERROR */
+/* PR_SYMBOL_DECLARED_TOKEN_ERROR */
 typedef struct S177 T177;
 
-/* PR_UNDEFINED_STRING_TOKEN_ERROR */
+/* PR_VARIABLE_DECLARED_TWICE_ERROR */
 typedef struct S178 T178;
 
-/* PR_PRECEDENCE_DEFINED_TWICE_ERROR */
+/* PR_UNDEFINED_STRING_TOKEN_ERROR */
 typedef struct S179 T179;
 
-/* UNIX_FILE_INFO */
+/* PR_PRECEDENCE_DEFINED_TWICE_ERROR */
 typedef struct S180 T180;
 
-/* KL_SPECIAL_ROUTINES [PR_STATE] */
+/* UNIX_FILE_INFO */
 typedef struct S181 T181;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_STATE] */
+/* KL_SPECIAL_ROUTINES [PR_STATE] */
 typedef struct S182 T182;
 
-/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
+/* DS_ARRAYED_LIST_CURSOR [PR_STATE] */
 typedef struct S183 T183;
 
-/* DS_SPARSE_TABLE_KEYS [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
 typedef struct S184 T184;
 
-/* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_STATE]] */
-typedef struct S186 T186;
+/* DS_SPARSE_TABLE_KEYS [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+typedef struct S185 T185;
 
-/* DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+/* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_STATE]] */
 typedef struct S187 T187;
 
-/* DS_BUBBLE_SORTER [PR_POSITION] */
+/* DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
 typedef struct S188 T188;
 
-/* SPECIAL [PR_POSITION] */
-typedef struct S190 T190;
+/* DS_BUBBLE_SORTER [PR_POSITION] */
+typedef struct S189 T189;
 
-/* KL_EQUALITY_TESTER [PR_POSITION] */
+/* SPECIAL [PR_POSITION] */
 typedef struct S191 T191;
 
-/* KL_SPECIAL_ROUTINES [PR_POSITION] */
+/* KL_EQUALITY_TESTER [PR_POSITION] */
 typedef struct S192 T192;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_POSITION] */
+/* KL_SPECIAL_ROUTINES [PR_POSITION] */
 typedef struct S193 T193;
 
-/* SPECIAL [PR_RULE] */
+/* DS_ARRAYED_LIST_CURSOR [PR_POSITION] */
 typedef struct S194 T194;
 
-/* KL_SPECIAL_ROUTINES [PR_RULE] */
+/* SPECIAL [PR_RULE] */
 typedef struct S195 T195;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_RULE] */
+/* KL_SPECIAL_ROUTINES [PR_RULE] */
 typedef struct S196 T196;
 
-/* DS_LINKABLE [PR_REDUCTION] */
-typedef struct S198 T198;
+/* DS_ARRAYED_LIST_CURSOR [PR_RULE] */
+typedef struct S197 T197;
 
-/* DS_LINKABLE [PR_TRANSITION] */
+/* DS_LINKABLE [PR_REDUCTION] */
 typedef struct S199 T199;
 
+/* DS_LINKABLE [PR_TRANSITION] */
+typedef struct S200 T200;
+
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]] */
-typedef struct S201 T201;
+typedef struct S202 T202;
 
 /* SPECIAL [PR_SYMBOL] */
-typedef struct S206 T206;
-
-/* KL_SPECIAL_ROUTINES [PR_SYMBOL] */
 typedef struct S207 T207;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_SYMBOL] */
+/* KL_SPECIAL_ROUTINES [PR_SYMBOL] */
 typedef struct S208 T208;
 
-/* KL_SPECIAL_ROUTINES [PR_REDUCTION] */
+/* DS_ARRAYED_LIST_CURSOR [PR_SYMBOL] */
 typedef struct S209 T209;
 
-/* SPECIAL [PR_REDUCTION] */
+/* KL_SPECIAL_ROUTINES [PR_REDUCTION] */
 typedef struct S210 T210;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION] */
+/* SPECIAL [PR_REDUCTION] */
 typedef struct S211 T211;
 
-/* SPECIAL [PR_VARIABLE] */
+/* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION] */
 typedef struct S212 T212;
 
-/* KL_SPECIAL_ROUTINES [PR_VARIABLE] */
+/* SPECIAL [PR_VARIABLE] */
 typedef struct S213 T213;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE] */
+/* KL_SPECIAL_ROUTINES [PR_VARIABLE] */
 typedef struct S214 T214;
 
+/* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE] */
+typedef struct S215 T215;
+
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]] */
-typedef struct S217 T217;
+typedef struct S218 T218;
 
 /* DS_LINKED_LIST_CURSOR [PR_VARIABLE] */
-typedef struct S222 T222;
-
-/* DS_ARRAYED_LIST_CURSOR [PR_TOKEN] */
 typedef struct S223 T223;
 
-/* DS_LINKABLE [PR_RULE] */
+/* DS_ARRAYED_LIST_CURSOR [PR_TOKEN] */
 typedef struct S224 T224;
 
-/* SPECIAL [PR_PORTION] */
+/* DS_LINKABLE [PR_RULE] */
 typedef struct S225 T225;
 
-/* KL_SPECIAL_ROUTINES [PR_PORTION] */
+/* SPECIAL [PR_PORTION] */
 typedef struct S226 T226;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_PORTION] */
+/* KL_SPECIAL_ROUTINES [PR_PORTION] */
 typedef struct S227 T227;
 
-/* DS_ARRAYED_LIST_CURSOR [INTEGER_32] */
-typedef struct S229 T229;
+/* DS_ARRAYED_LIST_CURSOR [PR_PORTION] */
+typedef struct S228 T228;
 
-/* UT_INTEGER_FORMATTER */
+/* DS_ARRAYED_LIST_CURSOR [INTEGER_32] */
 typedef struct S230 T230;
 
-/* DS_ARRAYED_LIST_CURSOR [STRING_8] */
+/* UT_INTEGER_FORMATTER */
 typedef struct S231 T231;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_TYPE] */
+/* DS_ARRAYED_LIST_CURSOR [STRING_8] */
 typedef struct S232 T232;
 
+/* DS_ARRAYED_LIST_CURSOR [PR_TYPE] */
+typedef struct S233 T233;
+
 /* DS_SPARSE_TABLE_KEYS [PR_TOKEN, STRING_8] */
-typedef struct S234 T234;
+typedef struct S235 T235;
 
 /* DS_HASH_TABLE_CURSOR [PR_TOKEN, STRING_8] */
-typedef struct S236 T236;
-
-/* DS_SPARSE_TABLE_KEYS [PR_VARIABLE, STRING_8] */
 typedef struct S237 T237;
 
-/* DS_HASH_TABLE_CURSOR [PR_VARIABLE, STRING_8] */
-typedef struct S239 T239;
+/* DS_SPARSE_TABLE_KEYS [PR_VARIABLE, STRING_8] */
+typedef struct S238 T238;
 
-/* DS_SPARSE_TABLE_KEYS [PR_TYPE, STRING_8] */
+/* DS_HASH_TABLE_CURSOR [PR_VARIABLE, STRING_8] */
 typedef struct S240 T240;
 
-/* DS_HASH_TABLE_CURSOR [PR_TYPE, STRING_8] */
-typedef struct S242 T242;
+/* DS_SPARSE_TABLE_KEYS [PR_TYPE, STRING_8] */
+typedef struct S241 T241;
 
-/* TO_SPECIAL [INTEGER_32] */
+/* DS_HASH_TABLE_CURSOR [PR_TYPE, STRING_8] */
 typedef struct S243 T243;
 
-/* TO_SPECIAL [ANY] */
+/* TO_SPECIAL [INTEGER_32] */
 typedef struct S244 T244;
 
-/* TO_SPECIAL [STRING_8] */
+/* TO_SPECIAL [ANY] */
 typedef struct S245 T245;
 
-/* TO_SPECIAL [PR_TYPE] */
+/* TO_SPECIAL [STRING_8] */
 typedef struct S246 T246;
 
-/* TO_SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
+/* TO_SPECIAL [PR_TYPE] */
 typedef struct S247 T247;
 
-/* TO_SPECIAL [PR_TOKEN] */
+/* TO_SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
 typedef struct S248 T248;
 
-/* KL_SPECIAL_ROUTINES [PR_ERROR_ACTION] */
+/* TO_SPECIAL [PR_TOKEN] */
 typedef struct S249 T249;
 
-/* SPECIAL [PR_ERROR_ACTION] */
+/* KL_SPECIAL_ROUTINES [PR_ERROR_ACTION] */
 typedef struct S250 T250;
 
-/* DS_ARRAYED_LIST_CURSOR [PR_ERROR_ACTION] */
+/* SPECIAL [PR_ERROR_ACTION] */
 typedef struct S251 T251;
 
-/* SPECIAL [NATURAL_8] */
+/* DS_ARRAYED_LIST_CURSOR [PR_ERROR_ACTION] */
 typedef struct S252 T252;
 
+/* SPECIAL [NATURAL_8] */
+typedef struct S253 T253;
+
 /* STRING_TO_INTEGER_CONVERTOR */
-typedef struct S254 T254;
+typedef struct S255 T255;
 
 /* KL_COMPARABLE_COMPARATOR [PR_POSITION] */
-typedef struct S256 T256;
+typedef struct S258 T258;
 
 /* DS_LINKABLE [PR_TOKEN] */
-typedef struct S260 T260;
+typedef struct S262 T262;
 
 /* DS_LINKED_LIST_CURSOR [PR_TOKEN] */
-typedef struct S261 T261;
-
-/* KL_CHARACTER_BUFFER */
 typedef struct S263 T263;
 
-/* SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
-typedef struct S264 T264;
-
-/* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_VARIABLE]] */
-typedef struct S265 T265;
-
-/* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [PR_VARIABLE]] */
-typedef struct S266 T266;
-
-/* TYPED_POINTER [SPECIAL [CHARACTER_8]] */
+/* KL_CHARACTER_BUFFER */
 typedef struct S267 T267;
 
-/* TO_SPECIAL [PR_STATE] */
+/* SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
 typedef struct S268 T268;
 
-/* DS_SPARSE_TABLE_KEYS_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+/* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_VARIABLE]] */
 typedef struct S269 T269;
 
-/* TO_SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
+/* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [PR_VARIABLE]] */
 typedef struct S270 T270;
 
-/* TO_SPECIAL [PR_POSITION] */
+/* TYPED_POINTER [SPECIAL [CHARACTER_8]] */
 typedef struct S271 T271;
 
-/* TO_SPECIAL [PR_RULE] */
+/* TO_SPECIAL [PR_STATE] */
 typedef struct S272 T272;
 
-/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
+/* DS_SPARSE_TABLE_KEYS_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
 typedef struct S273 T273;
 
-/* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_TOKEN]] */
+/* TO_SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
 typedef struct S274 T274;
 
-/* TO_SPECIAL [PR_SYMBOL] */
+/* TO_SPECIAL [PR_POSITION] */
 typedef struct S275 T275;
 
-/* TO_SPECIAL [PR_REDUCTION] */
+/* TO_SPECIAL [PR_RULE] */
 typedef struct S276 T276;
 
-/* TO_SPECIAL [PR_VARIABLE] */
+/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
 typedef struct S277 T277;
 
-/* SPECIAL [DS_NESTED_LIST [PR_RULE]] */
+/* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_TOKEN]] */
 typedef struct S278 T278;
 
-/* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_RULE]] */
+/* TO_SPECIAL [PR_SYMBOL] */
 typedef struct S279 T279;
 
-/* TO_SPECIAL [PR_PORTION] */
+/* TO_SPECIAL [PR_REDUCTION] */
 typedef struct S280 T280;
 
-/* DS_SPARSE_TABLE_KEYS_CURSOR [PR_TOKEN, STRING_8] */
+/* TO_SPECIAL [PR_VARIABLE] */
 typedef struct S281 T281;
 
-/* DS_SPARSE_TABLE_KEYS_CURSOR [PR_VARIABLE, STRING_8] */
+/* SPECIAL [DS_NESTED_LIST [PR_RULE]] */
 typedef struct S282 T282;
 
-/* DS_SPARSE_TABLE_KEYS_CURSOR [PR_TYPE, STRING_8] */
+/* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_RULE]] */
 typedef struct S283 T283;
 
-/* TO_SPECIAL [PR_ERROR_ACTION] */
+/* TO_SPECIAL [PR_PORTION] */
 typedef struct S284 T284;
 
-/* KL_CHARACTER_ROUTINES */
+/* DS_SPARSE_TABLE_KEYS_CURSOR [PR_TOKEN, STRING_8] */
 typedef struct S285 T285;
 
-/* INTEGER_OVERFLOW_CHECKER */
+/* DS_SPARSE_TABLE_KEYS_CURSOR [PR_VARIABLE, STRING_8] */
 typedef struct S286 T286;
 
-/* KL_OPERATING_SYSTEM */
+/* DS_SPARSE_TABLE_KEYS_CURSOR [PR_TYPE, STRING_8] */
 typedef struct S287 T287;
 
-/* TO_SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
+/* TO_SPECIAL [PR_ERROR_ACTION] */
 typedef struct S288 T288;
 
-/* TO_SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
+/* KL_CHARACTER_ROUTINES */
+typedef struct S289 T289;
+
+/* INTEGER_OVERFLOW_CHECKER */
 typedef struct S290 T290;
 
-/* TO_SPECIAL [DS_NESTED_LIST [PR_RULE]] */
+/* KL_OPERATING_SYSTEM */
 typedef struct S291 T291;
 
-/* DS_LINKED_LIST_CURSOR [PR_CONFLICT] */
+/* TO_SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
+typedef struct S292 T292;
+
+/* TO_SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
+typedef struct S294 T294;
+
+/* TO_SPECIAL [DS_NESTED_LIST [PR_RULE]] */
 typedef struct S295 T295;
 
+/* DS_LINKED_LIST_CURSOR [PR_CONFLICT] */
+typedef struct S299 T299;
+
 /* DS_LINKABLE [PR_CONFLICT] */
-typedef struct S296 T296;
+typedef struct S300 T300;
 
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE] */
-typedef struct S297 T297;
-
-/* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE] */
-typedef struct S298 T298;
-
-/* DS_LINKABLE [PR_VARIABLE] */
 typedef struct S301 T301;
 
-/* SPECIAL [NATURAL_64] */
+/* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE] */
 typedef struct S302 T302;
 
+/* DS_LINKABLE [PR_VARIABLE] */
+typedef struct S305 T305;
+
+/* SPECIAL [NATURAL_64] */
+typedef struct S306 T306;
+
 /* PLATFORM */
-typedef struct S303 T303;
+typedef struct S307 T307;
 
 /* DS_SPARSE_TABLE_KEYS [INTEGER_32, PR_TYPE] */
-typedef struct S304 T304;
+typedef struct S308 T308;
 
 /* DS_SPARSE_TABLE_KEYS_CURSOR [INTEGER_32, PR_TYPE] */
-typedef struct S306 T306;
+typedef struct S310 T310;
 
 /* Struct for boxed version of type BOOLEAN */
 struct Sb1 {
@@ -1305,13 +1392,13 @@ struct Sb14 {
 };
 
 /* Struct for type TYPED_POINTER [ANY] */
-struct S121 {
+struct S122 {
 	int id;
 	T14 a1; /* to_pointer */
 };
 
 /* Struct for type TYPED_POINTER [SPECIAL [CHARACTER_8]] */
-struct S267 {
+struct S271 {
 	int id;
 	T14 a1; /* to_pointer */
 };
@@ -1548,19 +1635,19 @@ struct S50 {
 	T6 a22; /* yy_suspended_index */
 	T6 a23; /* yy_suspended_yyss_top */
 	T6 a24; /* yy_suspended_yy_goto */
-	T6 a25; /* error_count */
-	T1 a26; /* yy_lookahead_needed */
-	T6 a27; /* yyerrstatus */
-	T6 a28; /* yyssp */
-	T0* a29; /* yypact */
-	T6 a30; /* last_token */
-	T0* a31; /* yytranslate */
-	T0* a32; /* yycheck */
-	T0* a33; /* yytable */
-	T0* a34; /* yydefact */
-	T0* a35; /* yyr1 */
-	T0* a36; /* yypgoto */
-	T0* a37; /* yydefgoto */
+	T0* a25; /* yyr1 */
+	T6 a26; /* yyssp */
+	T0* a27; /* yypgoto */
+	T0* a28; /* yycheck */
+	T0* a29; /* yytable */
+	T0* a30; /* yydefgoto */
+	T6 a31; /* error_count */
+	T1 a32; /* yy_lookahead_needed */
+	T6 a33; /* yyerrstatus */
+	T0* a34; /* yypact */
+	T6 a35; /* last_token */
+	T0* a36; /* yytranslate */
+	T0* a37; /* yydefact */
 	T0* a38; /* yytypes1 */
 	T0* a39; /* yytypes2 */
 	T6 a40; /* yy_start */
@@ -1682,24 +1769,25 @@ struct S57 {
 struct S58 {
 	int id;
 	T6 a1; /* capacity */
-	T6 a2; /* position */
+	T6 a2; /* found_position */
 	T0* a3; /* item_storage */
 	T0* a4; /* key_equality_tester */
 	T6 a5; /* modulus */
 	T6 a6; /* last_position */
-	T6 a7; /* free_slot */
-	T6 a8; /* slots_position */
+	T6 a7; /* position */
+	T6 a8; /* free_slot */
 	T6 a9; /* count */
-	T6 a10; /* clashes_previous_position */
-	T0* a11; /* equality_tester */
-	T0* a12; /* internal_keys */
-	T6 a13; /* found_position */
-	T0* a14; /* slots */
-	T0* a15; /* clashes */
-	T0* a16; /* special_item_routines */
-	T0* a17; /* key_storage */
-	T0* a18; /* special_key_routines */
+	T0* a10; /* equality_tester */
+	T0* a11; /* internal_keys */
+	T0* a12; /* slots */
+	T0* a13; /* clashes */
+	T0* a14; /* special_item_routines */
+	T0* a15; /* key_storage */
+	T0* a16; /* special_key_routines */
+	T6 a17; /* slots_position */
+	T6 a18; /* clashes_previous_position */
 	T0* a19; /* internal_cursor */
+	T0* a20; /* hash_function */
 };
 
 /* Struct for type PR_STATE */
@@ -1742,12 +1830,12 @@ struct S65 {
 };
 
 /* Struct for type KL_INTEGER_ROUTINES */
-struct S66 {
+struct S67 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_POSITION] */
-struct S67 {
+struct S68 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -1758,21 +1846,21 @@ struct S67 {
 };
 
 /* Struct for type PR_POSITION */
-struct S68 {
+struct S69 {
 	int id;
 	T6 a1; /* index */
 	T0* a2; /* rule */
 };
 
 /* Struct for type PR_ERROR_ACTION */
-struct S69 {
+struct S70 {
 	int id;
 	T0* a1; /* action */
 	T6 a2; /* line_nb */
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_RULE] */
-struct S70 {
+struct S71 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -1783,12 +1871,12 @@ struct S70 {
 };
 
 /* Struct for type KL_ANY_ROUTINES */
-struct S71 {
+struct S72 {
 	int id;
 };
 
 /* Struct for type PR_RULE */
-struct S72 {
+struct S73 {
 	int id;
 	T0* a1; /* rhs */
 	T0* a2; /* lhs */
@@ -1802,7 +1890,7 @@ struct S72 {
 };
 
 /* Struct for type PR_VARIABLE */
-struct S73 {
+struct S74 {
 	int id;
 	T0* a1; /* rules */
 	T0* a2; /* derives */
@@ -1817,7 +1905,7 @@ struct S73 {
 };
 
 /* Struct for type DS_LINKED_LIST [PR_REDUCTION] */
-struct S74 {
+struct S75 {
 	int id;
 	T0* a1; /* internal_cursor */
 	T0* a2; /* first_cell */
@@ -1826,7 +1914,7 @@ struct S74 {
 };
 
 /* Struct for type DS_LINKED_LIST [PR_TRANSITION] */
-struct S76 {
+struct S77 {
 	int id;
 	T0* a1; /* internal_cursor */
 	T0* a2; /* first_cell */
@@ -1835,12 +1923,12 @@ struct S76 {
 };
 
 /* Struct for type DS_NESTED_LIST_FLATTENER [PR_TOKEN] */
-struct S78 {
+struct S79 {
 	int id;
 };
 
 /* Struct for type DS_LINKED_LIST [PR_TOKEN] */
-struct S79 {
+struct S80 {
 	int id;
 	T0* a1; /* first_cell */
 	T0* a2; /* equality_tester */
@@ -1850,7 +1938,7 @@ struct S79 {
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_SYMBOL] */
-struct S80 {
+struct S81 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -1861,7 +1949,7 @@ struct S80 {
 };
 
 /* Struct for type DS_ARRAYED_STACK [PR_STATE] */
-struct S81 {
+struct S82 {
 	int id;
 	T0* a1; /* storage */
 	T6 a2; /* count */
@@ -1870,7 +1958,7 @@ struct S81 {
 };
 
 /* Struct for type PR_TRANSITION */
-struct S82 {
+struct S83 {
 	int id;
 	T0* a1; /* following_tokens */
 	T0* a2; /* target */
@@ -1880,7 +1968,7 @@ struct S82 {
 };
 
 /* Struct for type PR_TOKEN */
-struct S84 {
+struct S85 {
 	int id;
 	T6 a1; /* token_id */
 	T0* a2; /* name */
@@ -1894,7 +1982,7 @@ struct S84 {
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_REDUCTION] */
-struct S85 {
+struct S86 {
 	int id;
 	T0* a1; /* special_routines */
 	T0* a2; /* storage */
@@ -1904,7 +1992,7 @@ struct S85 {
 };
 
 /* Struct for type DS_LINKED_LIST_CURSOR [PR_TRANSITION] */
-struct S87 {
+struct S88 {
 	int id;
 	T1 a1; /* after */
 	T0* a2; /* current_cell */
@@ -1914,7 +2002,7 @@ struct S87 {
 };
 
 /* Struct for type DS_LINKED_LIST_CURSOR [PR_REDUCTION] */
-struct S89 {
+struct S90 {
 	int id;
 	T1 a1; /* after */
 	T0* a2; /* current_cell */
@@ -1924,7 +2012,7 @@ struct S89 {
 };
 
 /* Struct for type PR_REDUCTION */
-struct S90 {
+struct S91 {
 	int id;
 	T0* a1; /* rule */
 	T0* a2; /* lookaheads */
@@ -1932,7 +2020,7 @@ struct S90 {
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_VARIABLE] */
-struct S91 {
+struct S92 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -1942,12 +2030,12 @@ struct S91 {
 };
 
 /* Struct for type DS_NESTED_LIST_FLATTENER [PR_RULE] */
-struct S92 {
+struct S93 {
 	int id;
 };
 
 /* Struct for type DS_LINKED_LIST [PR_VARIABLE] */
-struct S93 {
+struct S94 {
 	int id;
 	T0* a1; /* internal_cursor */
 	T0* a2; /* first_cell */
@@ -1956,7 +2044,7 @@ struct S93 {
 };
 
 /* Struct for type DS_LINKED_LIST [PR_RULE] */
-struct S94 {
+struct S95 {
 	int id;
 	T0* a1; /* internal_cursor */
 	T0* a2; /* first_cell */
@@ -1966,14 +2054,14 @@ struct S94 {
 };
 
 /* Struct for type SPECIAL [PR_STATE] */
-struct S96 {
+struct S97 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type ARRAY [PR_STATE] */
-struct S97 {
+struct S98 {
 	int id;
 	T0* a1; /* area */
 	T6 a2; /* lower */
@@ -1981,7 +2069,7 @@ struct S97 {
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_TOKEN] */
-struct S98 {
+struct S99 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -1992,7 +2080,7 @@ struct S98 {
 };
 
 /* Struct for type PR_TYPE */
-struct S99 {
+struct S100 {
 	int id;
 	T0* a1; /* name */
 	T6 a2; /* id */
@@ -2000,7 +2088,7 @@ struct S99 {
 };
 
 /* Struct for type DS_LINKED_LIST_CURSOR [PR_RULE] */
-struct S100 {
+struct S101 {
 	int id;
 	T1 a1; /* after */
 	T0* a2; /* current_cell */
@@ -2010,14 +2098,14 @@ struct S100 {
 };
 
 /* Struct for type SPECIAL [INTEGER_32] */
-struct S101 {
+struct S102 {
 	int id;
 	T6 z1; /* count */
 	T6 z2[1]; /* item */
 };
 
 /* Struct for type ARRAY [INTEGER_32] */
-struct S102 {
+struct S103 {
 	int id;
 	T0* a1; /* area */
 	T6 a2; /* lower */
@@ -2025,7 +2113,7 @@ struct S102 {
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_PORTION] */
-struct S103 {
+struct S104 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -2035,7 +2123,7 @@ struct S103 {
 };
 
 /* Struct for type DS_ARRAYED_LIST [INTEGER_32] */
-struct S104 {
+struct S105 {
 	int id;
 	T0* a1; /* special_routines */
 	T0* a2; /* storage */
@@ -2045,7 +2133,7 @@ struct S104 {
 };
 
 /* Struct for type PR_PORTION */
-struct S105 {
+struct S106 {
 	int id;
 	T6 a1; /* id */
 	T0* a2; /* froms */
@@ -2057,32 +2145,22 @@ struct S105 {
 };
 
 /* Struct for type DS_BUBBLE_SORTER [PR_PORTION] */
-struct S107 {
+struct S108 {
 	int id;
 	T0* a1; /* comparator */
 };
 
 /* Struct for type KL_ARRAY_ROUTINES [INTEGER_32] */
-struct S109 {
-	int id;
-};
-
-/* Struct for type UT_STRING_FORMATTER */
 struct S110 {
 	int id;
 };
 
-/* Struct for type DS_ARRAYED_LIST [STRING_8] */
+/* Struct for type UT_STRING_FORMATTER */
 struct S111 {
 	int id;
-	T6 a1; /* count */
-	T0* a2; /* storage */
-	T0* a3; /* special_routines */
-	T6 a4; /* capacity */
-	T0* a5; /* internal_cursor */
 };
 
-/* Struct for type DS_ARRAYED_LIST [PR_TYPE] */
+/* Struct for type DS_ARRAYED_LIST [STRING_8] */
 struct S112 {
 	int id;
 	T6 a1; /* count */
@@ -2092,8 +2170,18 @@ struct S112 {
 	T0* a5; /* internal_cursor */
 };
 
-/* Struct for type DS_HASH_SET [PR_TYPE] */
+/* Struct for type DS_ARRAYED_LIST [PR_TYPE] */
 struct S113 {
+	int id;
+	T6 a1; /* count */
+	T0* a2; /* storage */
+	T0* a3; /* special_routines */
+	T6 a4; /* capacity */
+	T0* a5; /* internal_cursor */
+};
+
+/* Struct for type DS_HASH_SET [PR_TYPE] */
+struct S114 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* clashes */
@@ -2110,10 +2198,11 @@ struct S113 {
 	T6 a13; /* found_position */
 	T6 a14; /* clashes_previous_position */
 	T0* a15; /* equality_tester */
+	T0* a16; /* hash_function */
 };
 
 /* Struct for type DS_HASH_SET_CURSOR [PR_TYPE] */
-struct S114 {
+struct S115 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
@@ -2121,14 +2210,14 @@ struct S114 {
 };
 
 /* Struct for type SPECIAL [PR_TRANSITION] */
-struct S116 {
+struct S117 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type ARRAY [PR_TRANSITION] */
-struct S117 {
+struct S118 {
 	int id;
 	T0* a1; /* area */
 	T6 a2; /* lower */
@@ -2136,24 +2225,24 @@ struct S117 {
 };
 
 /* Struct for type KL_STRING_ROUTINES */
-struct S118 {
-	int id;
-};
-
-/* Struct for type UT_ARRAY_FORMATTER */
 struct S119 {
 	int id;
 };
 
+/* Struct for type UT_ARRAY_FORMATTER */
+struct S120 {
+	int id;
+};
+
 /* Struct for type SPECIAL [STRING_8] */
-struct S122 {
+struct S123 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type ARRAY [STRING_8] */
-struct S123 {
+struct S124 {
 	int id;
 	T0* a1; /* area */
 	T6 a2; /* lower */
@@ -2161,7 +2250,7 @@ struct S123 {
 };
 
 /* Struct for type KL_STDERR_FILE */
-struct S124 {
+struct S125 {
 	int id;
 	T14 a1; /* file_pointer */
 	T0* a2; /* name */
@@ -2169,84 +2258,87 @@ struct S124 {
 };
 
 /* Struct for type PR_ACTION_FACTORY */
-struct S125 {
+struct S126 {
 	int id;
 };
 
 /* Struct for type DS_HASH_TABLE [PR_TOKEN, STRING_8] */
-struct S126 {
+struct S127 {
 	int id;
 	T6 a1; /* position */
-	T0* a2; /* item_storage */
-	T0* a3; /* key_equality_tester */
-	T6 a4; /* count */
-	T6 a5; /* capacity */
-	T6 a6; /* slots_position */
-	T6 a7; /* free_slot */
-	T6 a8; /* last_position */
-	T6 a9; /* modulus */
-	T6 a10; /* clashes_previous_position */
-	T0* a11; /* equality_tester */
-	T0* a12; /* internal_keys */
-	T6 a13; /* found_position */
+	T6 a2; /* found_position */
+	T0* a3; /* item_storage */
+	T0* a4; /* key_equality_tester */
+	T6 a5; /* count */
+	T6 a6; /* capacity */
+	T6 a7; /* slots_position */
+	T6 a8; /* free_slot */
+	T6 a9; /* last_position */
+	T6 a10; /* modulus */
+	T6 a11; /* clashes_previous_position */
+	T0* a12; /* equality_tester */
+	T0* a13; /* internal_keys */
 	T0* a14; /* clashes */
 	T0* a15; /* slots */
 	T0* a16; /* key_storage */
 	T0* a17; /* internal_cursor */
 	T0* a18; /* special_item_routines */
 	T0* a19; /* special_key_routines */
+	T0* a20; /* hash_function */
 };
 
 /* Struct for type DS_HASH_TABLE [PR_VARIABLE, STRING_8] */
-struct S127 {
+struct S128 {
 	int id;
 	T6 a1; /* count */
-	T6 a2; /* position */
-	T0* a3; /* item_storage */
-	T0* a4; /* key_equality_tester */
-	T6 a5; /* capacity */
-	T6 a6; /* slots_position */
-	T6 a7; /* free_slot */
-	T6 a8; /* last_position */
-	T6 a9; /* modulus */
-	T6 a10; /* clashes_previous_position */
-	T0* a11; /* equality_tester */
-	T0* a12; /* internal_keys */
-	T6 a13; /* found_position */
+	T6 a2; /* found_position */
+	T6 a3; /* position */
+	T0* a4; /* item_storage */
+	T0* a5; /* key_equality_tester */
+	T6 a6; /* capacity */
+	T6 a7; /* slots_position */
+	T6 a8; /* free_slot */
+	T6 a9; /* last_position */
+	T6 a10; /* modulus */
+	T6 a11; /* clashes_previous_position */
+	T0* a12; /* equality_tester */
+	T0* a13; /* internal_keys */
 	T0* a14; /* clashes */
 	T0* a15; /* slots */
 	T0* a16; /* key_storage */
 	T0* a17; /* internal_cursor */
 	T0* a18; /* special_item_routines */
 	T0* a19; /* special_key_routines */
+	T0* a20; /* hash_function */
 };
 
 /* Struct for type DS_HASH_TABLE [PR_TYPE, STRING_8] */
-struct S128 {
+struct S129 {
 	int id;
-	T6 a1; /* position */
+	T6 a1; /* found_position */
 	T0* a2; /* item_storage */
 	T0* a3; /* key_equality_tester */
-	T6 a4; /* count */
-	T6 a5; /* capacity */
-	T6 a6; /* slots_position */
+	T6 a4; /* position */
+	T6 a5; /* count */
+	T6 a6; /* capacity */
 	T6 a7; /* free_slot */
 	T6 a8; /* last_position */
-	T6 a9; /* modulus */
-	T6 a10; /* clashes_previous_position */
-	T0* a11; /* equality_tester */
-	T0* a12; /* internal_keys */
-	T6 a13; /* found_position */
+	T0* a9; /* equality_tester */
+	T0* a10; /* internal_keys */
+	T6 a11; /* modulus */
+	T6 a12; /* slots_position */
+	T6 a13; /* clashes_previous_position */
 	T0* a14; /* clashes */
 	T0* a15; /* slots */
 	T0* a16; /* key_storage */
 	T0* a17; /* internal_cursor */
 	T0* a18; /* special_item_routines */
 	T0* a19; /* special_key_routines */
+	T0* a20; /* hash_function */
 };
 
 /* Struct for type YY_FILE_BUFFER */
-struct S129 {
+struct S130 {
 	int id;
 	T0* a1; /* content */
 	T6 a2; /* index */
@@ -2263,7 +2355,7 @@ struct S129 {
 };
 
 /* Struct for type YY_BUFFER */
-struct S130 {
+struct S131 {
 	int id;
 	T0* a1; /* content */
 	T6 a2; /* index */
@@ -2277,72 +2369,72 @@ struct S130 {
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [INTEGER_32] */
-struct S131 {
+struct S132 {
 	int id;
 };
 
 /* Struct for type SPECIAL [ANY] */
-struct S133 {
+struct S134 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [ANY] */
-struct S134 {
-	int id;
-};
-
-/* Struct for type KL_SPECIAL_ROUTINES [STRING_8] */
 struct S135 {
 	int id;
 };
 
-/* Struct for type DS_PAIR [STRING_8, INTEGER_32] */
+/* Struct for type KL_SPECIAL_ROUTINES [STRING_8] */
 struct S136 {
+	int id;
+};
+
+/* Struct for type DS_PAIR [STRING_8, INTEGER_32] */
+struct S137 {
 	int id;
 	T0* a1; /* first */
 	T6 a2; /* second */
 };
 
 /* Struct for type SPECIAL [PR_TYPE] */
-struct S137 {
+struct S138 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_TYPE] */
-struct S138 {
+struct S139 {
 	int id;
 };
 
 /* Struct for type SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
-struct S139 {
+struct S140 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_TYPE]] */
-struct S140 {
+struct S141 {
 	int id;
 };
 
 /* Struct for type SPECIAL [PR_TOKEN] */
-struct S141 {
+struct S142 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_TOKEN] */
-struct S142 {
+struct S143 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST [PR_ERROR_ACTION] */
-struct S143 {
+struct S144 {
 	int id;
 	T6 a1; /* count */
 	T6 a2; /* capacity */
@@ -2352,13 +2444,13 @@ struct S143 {
 };
 
 /* Struct for type UT_SYNTAX_ERROR */
-struct S144 {
+struct S145 {
 	int id;
 	T0* a1; /* parameters */
 };
 
 /* Struct for type ARRAY [PR_TOKEN] */
-struct S145 {
+struct S146 {
 	int id;
 	T0* a1; /* area */
 	T6 a2; /* lower */
@@ -2366,138 +2458,138 @@ struct S145 {
 };
 
 /* Struct for type PR_MULTIPLE_START_DECLARATIONS_ERROR */
-struct S146 {
-	int id;
-	T0* a1; /* parameters */
-};
-
-/* Struct for type PR_NO_RULES_ERROR */
 struct S147 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_LHS_SYMBOL_TOKEN_ERROR */
+/* Struct for type PR_NO_RULES_ERROR */
 struct S148 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_RULE_DECLARED_TWICE_ERROR */
+/* Struct for type PR_LHS_SYMBOL_TOKEN_ERROR */
 struct S149 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_INVALID_ERROR_N_ERROR */
+/* Struct for type PR_RULE_DECLARED_TWICE_ERROR */
 struct S150 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_PREC_SPECIFIED_TWICE_ERROR */
+/* Struct for type PR_INVALID_ERROR_N_ERROR */
 struct S151 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_PREC_NOT_TOKEN_ERROR */
+/* Struct for type PR_PREC_SPECIFIED_TWICE_ERROR */
 struct S152 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_MISSING_CHARACTERS_ERROR */
+/* Struct for type PR_PREC_NOT_TOKEN_ERROR */
 struct S153 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_NULL_INTEGER_ERROR */
+/* Struct for type PR_MISSING_CHARACTERS_ERROR */
 struct S154 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_INVALID_STRING_TOKEN_ERROR */
+/* Struct for type PR_NULL_INTEGER_ERROR */
 struct S155 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_INVALID_DOLLAR_DOLLAR_ERROR */
+/* Struct for type PR_INVALID_STRING_TOKEN_ERROR */
 struct S156 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_INTEGER_TOO_LARGE_ERROR */
+/* Struct for type PR_INVALID_DOLLAR_DOLLAR_ERROR */
 struct S157 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_START_SYMBOL_TOKEN_ERROR */
+/* Struct for type PR_INTEGER_TOO_LARGE_ERROR */
 struct S158 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_UNKNOWN_START_SYMBOL_ERROR */
+/* Struct for type PR_START_SYMBOL_TOKEN_ERROR */
 struct S159 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_TOKEN_ID_USED_TWICE_ERROR */
+/* Struct for type PR_UNKNOWN_START_SYMBOL_ERROR */
 struct S160 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_UNDEFINED_SYMBOL_ERROR */
+/* Struct for type PR_TOKEN_ID_USED_TWICE_ERROR */
 struct S161 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_TWO_TOKEN_IDS_TOKEN_ERROR */
+/* Struct for type PR_UNDEFINED_SYMBOL_ERROR */
 struct S162 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_TWO_STRINGS_TOKEN_ERROR */
+/* Struct for type PR_TWO_TOKEN_IDS_TOKEN_ERROR */
 struct S163 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_STRING_TOKEN_DEFINED_TWICE_ERROR */
+/* Struct for type PR_TWO_STRINGS_TOKEN_ERROR */
 struct S164 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_DANGEROUS_DOLLAR_N_ERROR */
+/* Struct for type PR_STRING_TOKEN_DEFINED_TWICE_ERROR */
 struct S165 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_INVALID_DOLLAR_N_ERROR */
+/* Struct for type PR_DANGEROUS_DOLLAR_N_ERROR */
 struct S166 {
 	int id;
 	T0* a1; /* parameters */
 };
 
+/* Struct for type PR_INVALID_DOLLAR_N_ERROR */
+struct S167 {
+	int id;
+	T0* a1; /* parameters */
+};
+
 /* Struct for type KL_COMPARABLE_COMPARATOR [PR_PORTION] */
-struct S168 {
+struct S169 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]] */
-struct S171 {
+struct S172 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -2507,7 +2599,7 @@ struct S171 {
 };
 
 /* Struct for type PR_BASIC_TYPE */
-struct S172 {
+struct S173 {
 	int id;
 	T6 a1; /* id */
 	T0* a2; /* name */
@@ -2515,61 +2607,61 @@ struct S172 {
 };
 
 /* Struct for type PR_ACTION */
-struct S173 {
+struct S174 {
 	int id;
 	T0* a1; /* text */
 };
 
 /* Struct for type PR_SYMBOL_DECLARED_VARIABLE_ERROR */
-struct S174 {
-	int id;
-	T0* a1; /* parameters */
-};
-
-/* Struct for type PR_TOKEN_DECLARED_TWICE_ERROR */
 struct S175 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_SYMBOL_DECLARED_TOKEN_ERROR */
+/* Struct for type PR_TOKEN_DECLARED_TWICE_ERROR */
 struct S176 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_VARIABLE_DECLARED_TWICE_ERROR */
+/* Struct for type PR_SYMBOL_DECLARED_TOKEN_ERROR */
 struct S177 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_UNDEFINED_STRING_TOKEN_ERROR */
+/* Struct for type PR_VARIABLE_DECLARED_TWICE_ERROR */
 struct S178 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type PR_PRECEDENCE_DEFINED_TWICE_ERROR */
+/* Struct for type PR_UNDEFINED_STRING_TOKEN_ERROR */
 struct S179 {
 	int id;
 	T0* a1; /* parameters */
 };
 
-/* Struct for type UNIX_FILE_INFO */
+/* Struct for type PR_PRECEDENCE_DEFINED_TWICE_ERROR */
 struct S180 {
+	int id;
+	T0* a1; /* parameters */
+};
+
+/* Struct for type UNIX_FILE_INFO */
+struct S181 {
 	int id;
 	T0* a1; /* buffered_file_info */
 	T0* a2; /* file_name */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_STATE] */
-struct S181 {
+struct S182 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_STATE] */
-struct S182 {
+struct S183 {
 	int id;
 	T6 a1; /* position */
 	T0* a2; /* next_cursor */
@@ -2577,14 +2669,14 @@ struct S182 {
 };
 
 /* Struct for type SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
-struct S183 {
+struct S184 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
-struct S184 {
+struct S185 {
 	int id;
 	T0* a1; /* table */
 	T0* a2; /* equality_tester */
@@ -2592,60 +2684,61 @@ struct S184 {
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_STATE]] */
-struct S186 {
+struct S187 {
 	int id;
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
-struct S187 {
+struct S188 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
 };
 
 /* Struct for type DS_BUBBLE_SORTER [PR_POSITION] */
-struct S188 {
+struct S189 {
 	int id;
 	T0* a1; /* comparator */
 };
 
 /* Struct for type SPECIAL [PR_POSITION] */
-struct S190 {
+struct S191 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_EQUALITY_TESTER [PR_POSITION] */
-struct S191 {
-	int id;
-};
-
-/* Struct for type KL_SPECIAL_ROUTINES [PR_POSITION] */
 struct S192 {
 	int id;
 };
 
-/* Struct for type DS_ARRAYED_LIST_CURSOR [PR_POSITION] */
+/* Struct for type KL_SPECIAL_ROUTINES [PR_POSITION] */
 struct S193 {
 	int id;
+};
+
+/* Struct for type DS_ARRAYED_LIST_CURSOR [PR_POSITION] */
+struct S194 {
+	int id;
 	T0* a1; /* container */
+	T6 a2; /* position */
 };
 
 /* Struct for type SPECIAL [PR_RULE] */
-struct S194 {
+struct S195 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_RULE] */
-struct S195 {
+struct S196 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_RULE] */
-struct S196 {
+struct S197 {
 	int id;
 	T6 a1; /* position */
 	T0* a2; /* next_cursor */
@@ -2653,21 +2746,21 @@ struct S196 {
 };
 
 /* Struct for type DS_LINKABLE [PR_REDUCTION] */
-struct S198 {
-	int id;
-	T0* a1; /* item */
-	T0* a2; /* right */
-};
-
-/* Struct for type DS_LINKABLE [PR_TRANSITION] */
 struct S199 {
 	int id;
 	T0* a1; /* item */
 	T0* a2; /* right */
 };
 
+/* Struct for type DS_LINKABLE [PR_TRANSITION] */
+struct S200 {
+	int id;
+	T0* a1; /* item */
+	T0* a2; /* right */
+};
+
 /* Struct for type DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]] */
-struct S201 {
+struct S202 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -2676,37 +2769,38 @@ struct S201 {
 };
 
 /* Struct for type SPECIAL [PR_SYMBOL] */
-struct S206 {
+struct S207 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_SYMBOL] */
-struct S207 {
+struct S208 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_SYMBOL] */
-struct S208 {
+struct S209 {
 	int id;
 	T0* a1; /* container */
+	T6 a2; /* position */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_REDUCTION] */
-struct S209 {
+struct S210 {
 	int id;
 };
 
 /* Struct for type SPECIAL [PR_REDUCTION] */
-struct S210 {
+struct S211 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_REDUCTION] */
-struct S211 {
+struct S212 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
@@ -2714,19 +2808,19 @@ struct S211 {
 };
 
 /* Struct for type SPECIAL [PR_VARIABLE] */
-struct S212 {
+struct S213 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_VARIABLE] */
-struct S213 {
+struct S214 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_VARIABLE] */
-struct S214 {
+struct S215 {
 	int id;
 	T6 a1; /* position */
 	T0* a2; /* next_cursor */
@@ -2734,7 +2828,7 @@ struct S214 {
 };
 
 /* Struct for type DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]] */
-struct S217 {
+struct S218 {
 	int id;
 	T6 a1; /* count */
 	T0* a2; /* storage */
@@ -2743,7 +2837,7 @@ struct S217 {
 };
 
 /* Struct for type DS_LINKED_LIST_CURSOR [PR_VARIABLE] */
-struct S222 {
+struct S223 {
 	int id;
 	T0* a1; /* container */
 	T1 a2; /* before */
@@ -2753,7 +2847,7 @@ struct S222 {
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_TOKEN] */
-struct S223 {
+struct S224 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
@@ -2761,55 +2855,59 @@ struct S223 {
 };
 
 /* Struct for type DS_LINKABLE [PR_RULE] */
-struct S224 {
+struct S225 {
 	int id;
 	T0* a1; /* item */
 	T0* a2; /* right */
 };
 
 /* Struct for type SPECIAL [PR_PORTION] */
-struct S225 {
+struct S226 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [PR_PORTION] */
-struct S226 {
+struct S227 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_PORTION] */
-struct S227 {
+struct S228 {
 	int id;
 	T0* a1; /* container */
+	T6 a2; /* position */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [INTEGER_32] */
-struct S229 {
+struct S230 {
 	int id;
 	T0* a1; /* container */
+	T6 a2; /* position */
 };
 
 /* Struct for type UT_INTEGER_FORMATTER */
-struct S230 {
+struct S231 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [STRING_8] */
-struct S231 {
-	int id;
-	T0* a1; /* container */
-};
-
-/* Struct for type DS_ARRAYED_LIST_CURSOR [PR_TYPE] */
 struct S232 {
 	int id;
 	T0* a1; /* container */
+	T6 a2; /* position */
+};
+
+/* Struct for type DS_ARRAYED_LIST_CURSOR [PR_TYPE] */
+struct S233 {
+	int id;
+	T0* a1; /* container */
+	T6 a2; /* position */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS [PR_TOKEN, STRING_8] */
-struct S234 {
+struct S235 {
 	int id;
 	T0* a1; /* table */
 	T0* a2; /* equality_tester */
@@ -2817,14 +2915,14 @@ struct S234 {
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [PR_TOKEN, STRING_8] */
-struct S236 {
+struct S237 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS [PR_VARIABLE, STRING_8] */
-struct S237 {
+struct S238 {
 	int id;
 	T0* a1; /* table */
 	T0* a2; /* equality_tester */
@@ -2832,14 +2930,14 @@ struct S237 {
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [PR_VARIABLE, STRING_8] */
-struct S239 {
+struct S240 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS [PR_TYPE, STRING_8] */
-struct S240 {
+struct S241 {
 	int id;
 	T0* a1; /* table */
 	T0* a2; /* equality_tester */
@@ -2847,102 +2945,103 @@ struct S240 {
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [PR_TYPE, STRING_8] */
-struct S242 {
+struct S243 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
 };
 
 /* Struct for type TO_SPECIAL [INTEGER_32] */
-struct S243 {
-	int id;
-	T0* a1; /* area */
-};
-
-/* Struct for type TO_SPECIAL [ANY] */
 struct S244 {
 	int id;
 	T0* a1; /* area */
 };
 
-/* Struct for type TO_SPECIAL [STRING_8] */
+/* Struct for type TO_SPECIAL [ANY] */
 struct S245 {
 	int id;
 	T0* a1; /* area */
 };
 
-/* Struct for type TO_SPECIAL [PR_TYPE] */
+/* Struct for type TO_SPECIAL [STRING_8] */
 struct S246 {
 	int id;
 	T0* a1; /* area */
 };
 
-/* Struct for type TO_SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
+/* Struct for type TO_SPECIAL [PR_TYPE] */
 struct S247 {
 	int id;
 	T0* a1; /* area */
 };
 
-/* Struct for type TO_SPECIAL [PR_TOKEN] */
+/* Struct for type TO_SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
 struct S248 {
 	int id;
 	T0* a1; /* area */
 };
 
-/* Struct for type KL_SPECIAL_ROUTINES [PR_ERROR_ACTION] */
+/* Struct for type TO_SPECIAL [PR_TOKEN] */
 struct S249 {
+	int id;
+	T0* a1; /* area */
+};
+
+/* Struct for type KL_SPECIAL_ROUTINES [PR_ERROR_ACTION] */
+struct S250 {
 	int id;
 };
 
 /* Struct for type SPECIAL [PR_ERROR_ACTION] */
-struct S250 {
+struct S251 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [PR_ERROR_ACTION] */
-struct S251 {
+struct S252 {
 	int id;
 	T0* a1; /* container */
+	T6 a2; /* position */
 };
 
 /* Struct for type SPECIAL [NATURAL_8] */
-struct S252 {
+struct S253 {
 	int id;
 	T6 z1; /* count */
 	T8 z2[1]; /* item */
 };
 
 /* Struct for type STRING_TO_INTEGER_CONVERTOR */
-struct S254 {
+struct S255 {
 	int id;
 	T6 a1; /* sign */
 	T11 a2; /* part1 */
 	T11 a3; /* part2 */
 	T6 a4; /* last_state */
 	T1 a5; /* internal_overflowed */
-	T6 a6; /* conversion_type */
-	T0* a7; /* leading_separators */
-	T0* a8; /* trailing_separators */
+	T0* a6; /* leading_separators */
+	T0* a7; /* trailing_separators */
+	T6 a8; /* conversion_type */
 	T1 a9; /* leading_separators_acceptable */
 	T1 a10; /* trailing_separators_acceptable */
 };
 
 /* Struct for type KL_COMPARABLE_COMPARATOR [PR_POSITION] */
-struct S256 {
+struct S258 {
 	int id;
 };
 
 /* Struct for type DS_LINKABLE [PR_TOKEN] */
-struct S260 {
+struct S262 {
 	int id;
 	T0* a1; /* item */
 	T0* a2; /* right */
 };
 
 /* Struct for type DS_LINKED_LIST_CURSOR [PR_TOKEN] */
-struct S261 {
+struct S263 {
 	int id;
 	T1 a1; /* after */
 	T0* a2; /* current_cell */
@@ -2952,26 +3051,26 @@ struct S261 {
 };
 
 /* Struct for type KL_CHARACTER_BUFFER */
-struct S263 {
+struct S267 {
 	int id;
 	T0* a1; /* as_special */
 	T0* a2; /* area */
 };
 
 /* Struct for type SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
-struct S264 {
+struct S268 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_VARIABLE]] */
-struct S265 {
+struct S269 {
 	int id;
 };
 
 /* Struct for type DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [PR_VARIABLE]] */
-struct S266 {
+struct S270 {
 	int id;
 	T0* a1; /* next_cursor */
 	T0* a2; /* container */
@@ -2979,118 +3078,118 @@ struct S266 {
 };
 
 /* Struct for type TO_SPECIAL [PR_STATE] */
-struct S268 {
+struct S272 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
-struct S269 {
+struct S273 {
 	int id;
 	T0* a1; /* container */
 	T0* a2; /* table_cursor */
 };
 
 /* Struct for type TO_SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
-struct S270 {
+struct S274 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type TO_SPECIAL [PR_POSITION] */
-struct S271 {
+struct S275 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type TO_SPECIAL [PR_RULE] */
-struct S272 {
+struct S276 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
-struct S273 {
+struct S277 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_TOKEN]] */
-struct S274 {
+struct S278 {
 	int id;
 };
 
 /* Struct for type TO_SPECIAL [PR_SYMBOL] */
-struct S275 {
+struct S279 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type TO_SPECIAL [PR_REDUCTION] */
-struct S276 {
+struct S280 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type TO_SPECIAL [PR_VARIABLE] */
-struct S277 {
+struct S281 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type SPECIAL [DS_NESTED_LIST [PR_RULE]] */
-struct S278 {
+struct S282 {
 	int id;
 	T6 z1; /* count */
 	T0* z2[1]; /* item */
 };
 
 /* Struct for type KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_RULE]] */
-struct S279 {
+struct S283 {
 	int id;
 };
 
 /* Struct for type TO_SPECIAL [PR_PORTION] */
-struct S280 {
+struct S284 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS_CURSOR [PR_TOKEN, STRING_8] */
-struct S281 {
+struct S285 {
 	int id;
 	T0* a1; /* container */
 	T0* a2; /* table_cursor */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS_CURSOR [PR_VARIABLE, STRING_8] */
-struct S282 {
+struct S286 {
 	int id;
 	T0* a1; /* container */
 	T0* a2; /* table_cursor */
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS_CURSOR [PR_TYPE, STRING_8] */
-struct S283 {
+struct S287 {
 	int id;
 	T0* a1; /* container */
 	T0* a2; /* table_cursor */
 };
 
 /* Struct for type TO_SPECIAL [PR_ERROR_ACTION] */
-struct S284 {
+struct S288 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type KL_CHARACTER_ROUTINES */
-struct S285 {
+struct S289 {
 	int id;
 };
 
 /* Struct for type INTEGER_OVERFLOW_CHECKER */
-struct S286 {
+struct S290 {
 	int id;
 	T0* a1; /* integer_overflow_state1 */
 	T0* a2; /* integer_overflow_state2 */
@@ -3099,30 +3198,30 @@ struct S286 {
 };
 
 /* Struct for type KL_OPERATING_SYSTEM */
-struct S287 {
+struct S291 {
 	int id;
 };
 
 /* Struct for type TO_SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
-struct S288 {
+struct S292 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type TO_SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
-struct S290 {
+struct S294 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type TO_SPECIAL [DS_NESTED_LIST [PR_RULE]] */
-struct S291 {
+struct S295 {
 	int id;
 	T0* a1; /* area */
 };
 
 /* Struct for type DS_LINKED_LIST_CURSOR [PR_CONFLICT] */
-struct S295 {
+struct S299 {
 	int id;
 	T1 a1; /* after */
 	T0* a2; /* current_cell */
@@ -3132,14 +3231,14 @@ struct S295 {
 };
 
 /* Struct for type DS_LINKABLE [PR_CONFLICT] */
-struct S296 {
+struct S300 {
 	int id;
 	T0* a1; /* item */
 	T0* a2; /* right */
 };
 
 /* Struct for type DS_HASH_TABLE [INTEGER_32, PR_TYPE] */
-struct S297 {
+struct S301 {
 	int id;
 	T6 a1; /* found_position */
 	T6 a2; /* position */
@@ -3160,10 +3259,11 @@ struct S297 {
 	T0* a17; /* internal_cursor */
 	T0* a18; /* special_item_routines */
 	T0* a19; /* special_key_routines */
+	T0* a20; /* hash_function */
 };
 
 /* Struct for type DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE] */
-struct S298 {
+struct S302 {
 	int id;
 	T0* a1; /* container */
 	T6 a2; /* position */
@@ -3171,26 +3271,26 @@ struct S298 {
 };
 
 /* Struct for type DS_LINKABLE [PR_VARIABLE] */
-struct S301 {
+struct S305 {
 	int id;
 	T0* a1; /* item */
 	T0* a2; /* right */
 };
 
 /* Struct for type SPECIAL [NATURAL_64] */
-struct S302 {
+struct S306 {
 	int id;
 	T6 z1; /* count */
 	T11 z2[1]; /* item */
 };
 
 /* Struct for type PLATFORM */
-struct S303 {
+struct S307 {
 	int id;
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS [INTEGER_32, PR_TYPE] */
-struct S304 {
+struct S308 {
 	int id;
 	T0* a1; /* table */
 	T0* a2; /* equality_tester */
@@ -3198,7 +3298,7 @@ struct S304 {
 };
 
 /* Struct for type DS_SPARSE_TABLE_KEYS_CURSOR [INTEGER_32, PR_TYPE] */
-struct S306 {
+struct S310 {
 	int id;
 	T0* a1; /* container */
 	T0* a2; /* table_cursor */
@@ -3208,6 +3308,7 @@ typedef struct {
 	int id;
 	EIF_INTEGER type_id;
 	EIF_BOOLEAN is_special;
+	void (*dispose) (EIF_REFERENCE);
 } EIF_TYPE;
 
 
@@ -3265,7 +3366,6 @@ extern T59 GE_default59;
 extern T62 GE_default62;
 extern T63 GE_default63;
 extern T65 GE_default65;
-extern T66 GE_default66;
 extern T67 GE_default67;
 extern T68 GE_default68;
 extern T69 GE_default69;
@@ -3274,22 +3374,22 @@ extern T71 GE_default71;
 extern T72 GE_default72;
 extern T73 GE_default73;
 extern T74 GE_default74;
-extern T76 GE_default76;
-extern T78 GE_default78;
+extern T75 GE_default75;
+extern T77 GE_default77;
 extern T79 GE_default79;
 extern T80 GE_default80;
 extern T81 GE_default81;
 extern T82 GE_default82;
-extern T84 GE_default84;
+extern T83 GE_default83;
 extern T85 GE_default85;
-extern T87 GE_default87;
-extern T89 GE_default89;
+extern T86 GE_default86;
+extern T88 GE_default88;
 extern T90 GE_default90;
 extern T91 GE_default91;
 extern T92 GE_default92;
 extern T93 GE_default93;
 extern T94 GE_default94;
-extern T96 GE_default96;
+extern T95 GE_default95;
 extern T97 GE_default97;
 extern T98 GE_default98;
 extern T99 GE_default99;
@@ -3299,18 +3399,18 @@ extern T102 GE_default102;
 extern T103 GE_default103;
 extern T104 GE_default104;
 extern T105 GE_default105;
-extern T107 GE_default107;
-extern T109 GE_default109;
+extern T106 GE_default106;
+extern T108 GE_default108;
 extern T110 GE_default110;
 extern T111 GE_default111;
 extern T112 GE_default112;
 extern T113 GE_default113;
 extern T114 GE_default114;
-extern T116 GE_default116;
+extern T115 GE_default115;
 extern T117 GE_default117;
 extern T118 GE_default118;
 extern T119 GE_default119;
-extern T121 GE_default121;
+extern T120 GE_default120;
 extern T122 GE_default122;
 extern T123 GE_default123;
 extern T124 GE_default124;
@@ -3321,7 +3421,7 @@ extern T128 GE_default128;
 extern T129 GE_default129;
 extern T130 GE_default130;
 extern T131 GE_default131;
-extern T133 GE_default133;
+extern T132 GE_default132;
 extern T134 GE_default134;
 extern T135 GE_default135;
 extern T136 GE_default136;
@@ -3355,8 +3455,8 @@ extern T163 GE_default163;
 extern T164 GE_default164;
 extern T165 GE_default165;
 extern T166 GE_default166;
-extern T168 GE_default168;
-extern T171 GE_default171;
+extern T167 GE_default167;
+extern T169 GE_default169;
 extern T172 GE_default172;
 extern T173 GE_default173;
 extern T174 GE_default174;
@@ -3370,20 +3470,20 @@ extern T181 GE_default181;
 extern T182 GE_default182;
 extern T183 GE_default183;
 extern T184 GE_default184;
-extern T186 GE_default186;
+extern T185 GE_default185;
 extern T187 GE_default187;
 extern T188 GE_default188;
-extern T190 GE_default190;
+extern T189 GE_default189;
 extern T191 GE_default191;
 extern T192 GE_default192;
 extern T193 GE_default193;
 extern T194 GE_default194;
 extern T195 GE_default195;
 extern T196 GE_default196;
-extern T198 GE_default198;
+extern T197 GE_default197;
 extern T199 GE_default199;
-extern T201 GE_default201;
-extern T206 GE_default206;
+extern T200 GE_default200;
+extern T202 GE_default202;
 extern T207 GE_default207;
 extern T208 GE_default208;
 extern T209 GE_default209;
@@ -3392,23 +3492,23 @@ extern T211 GE_default211;
 extern T212 GE_default212;
 extern T213 GE_default213;
 extern T214 GE_default214;
-extern T217 GE_default217;
-extern T222 GE_default222;
+extern T215 GE_default215;
+extern T218 GE_default218;
 extern T223 GE_default223;
 extern T224 GE_default224;
 extern T225 GE_default225;
 extern T226 GE_default226;
 extern T227 GE_default227;
-extern T229 GE_default229;
+extern T228 GE_default228;
 extern T230 GE_default230;
 extern T231 GE_default231;
 extern T232 GE_default232;
-extern T234 GE_default234;
-extern T236 GE_default236;
+extern T233 GE_default233;
+extern T235 GE_default235;
 extern T237 GE_default237;
-extern T239 GE_default239;
+extern T238 GE_default238;
 extern T240 GE_default240;
-extern T242 GE_default242;
+extern T241 GE_default241;
 extern T243 GE_default243;
 extern T244 GE_default244;
 extern T245 GE_default245;
@@ -3419,14 +3519,11 @@ extern T249 GE_default249;
 extern T250 GE_default250;
 extern T251 GE_default251;
 extern T252 GE_default252;
-extern T254 GE_default254;
-extern T256 GE_default256;
-extern T260 GE_default260;
-extern T261 GE_default261;
+extern T253 GE_default253;
+extern T255 GE_default255;
+extern T258 GE_default258;
+extern T262 GE_default262;
 extern T263 GE_default263;
-extern T264 GE_default264;
-extern T265 GE_default265;
-extern T266 GE_default266;
 extern T267 GE_default267;
 extern T268 GE_default268;
 extern T269 GE_default269;
@@ -3449,25 +3546,496 @@ extern T285 GE_default285;
 extern T286 GE_default286;
 extern T287 GE_default287;
 extern T288 GE_default288;
+extern T289 GE_default289;
 extern T290 GE_default290;
 extern T291 GE_default291;
+extern T292 GE_default292;
+extern T294 GE_default294;
 extern T295 GE_default295;
-extern T296 GE_default296;
-extern T297 GE_default297;
-extern T298 GE_default298;
+extern T299 GE_default299;
+extern T300 GE_default300;
 extern T301 GE_default301;
 extern T302 GE_default302;
-extern T303 GE_default303;
-extern T304 GE_default304;
+extern T305 GE_default305;
 extern T306 GE_default306;
+extern T307 GE_default307;
+extern T308 GE_default308;
+extern T310 GE_default310;
 
-extern T0* GE_ms(char* s, T6 c);
+extern T0* GE_ms8(char* s, T6 c);
+extern T0* GE_ms32(char* s, T6 c);
 /* Call to ANY.same_type */
-extern T1 T19x28T0(T0* C, T0* a1);
+extern T1 T19x27T0(T0* C, T0* a1);
 /* Call to ANY.is_equal */
-extern T1 T19x29T0(T0* C, T0* a1);
+extern T1 T19x28T0(T0* C, T0* a1);
 /* Call to UT_ERROR.default_message */
-extern T0* T33x2443(T0* C);
+extern T0* T33x2638(T0* C);
+/* New instance of type SPECIAL [CHARACTER_8] */
+extern T0* GE_new15(T6 a1, T1 initialize);
+/* New instance of type STRING_8 */
+extern T0* GE_new17(T1 initialize);
+/* New instance of type GEYACC */
+extern T0* GE_new21(T1 initialize);
+/* New instance of type PR_FSM */
+extern T0* GE_new22(T1 initialize);
+/* New instance of type PR_PARSER_GENERATOR */
+extern T0* GE_new23(T1 initialize);
+/* New instance of type KL_TEXT_OUTPUT_FILE */
+extern T0* GE_new24(T1 initialize);
+/* New instance of type UT_CANNOT_WRITE_TO_FILE_ERROR */
+extern T0* GE_new25(T1 initialize);
+/* New instance of type KL_ARGUMENTS */
+extern T0* GE_new27(T1 initialize);
+/* New instance of type UT_ERROR_HANDLER */
+extern T0* GE_new28(T1 initialize);
+/* New instance of type PR_GRAMMAR */
+extern T0* GE_new29(T1 initialize);
+/* New instance of type PR_XML_DOC_GENERATOR */
+extern T0* GE_new30(T1 initialize);
+/* New instance of type PR_HTML_DOC_GENERATOR */
+extern T0* GE_new31(T1 initialize);
+/* New instance of type KL_EXCEPTIONS */
+extern T0* GE_new34(T1 initialize);
+/* New instance of type KL_STANDARD_FILES */
+extern T0* GE_new35(T1 initialize);
+/* New instance of type KL_STDOUT_FILE */
+extern T0* GE_new36(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_RULE] */
+extern T0* GE_new37(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_TOKEN] */
+extern T0* GE_new38(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_VARIABLE] */
+extern T0* GE_new39(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_TYPE] */
+extern T0* GE_new40(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [INTEGER_32] */
+extern T0* GE_new41(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [STRING_8] */
+extern T0* GE_new42(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_TRANSITION] */
+extern T0* GE_new43(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_REDUCTION] */
+extern T0* GE_new44(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_STATE] */
+extern T0* GE_new45(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_PORTION] */
+extern T0* GE_new46(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_CONFLICT] */
+extern T0* GE_new47(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_VARIABLE]] */
+extern T0* GE_new48(T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [DS_ARRAYED_LIST [PR_STATE]] */
+extern T0* GE_new49(T1 initialize);
+/* New instance of type PR_YACC_PARSER */
+extern T0* GE_new50(T1 initialize);
+/* New instance of type KL_TEXT_INPUT_FILE */
+extern T0* GE_new51(T1 initialize);
+/* New instance of type UT_CANNOT_READ_FILE_ERROR */
+extern T0* GE_new52(T1 initialize);
+/* New instance of type KL_STDIN_FILE */
+extern T0* GE_new54(T1 initialize);
+/* New instance of type UT_VERSION_NUMBER */
+extern T0* GE_new55(T1 initialize);
+/* New instance of type UT_USAGE_MESSAGE */
+extern T0* GE_new56(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_STATE] */
+extern T0* GE_new57(T1 initialize);
+/* New instance of type DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+extern T0* GE_new58(T1 initialize);
+/* New instance of type PR_STATE */
+extern T0* GE_new59(T1 initialize);
+/* New instance of type UT_MESSAGE */
+extern T0* GE_new62(T1 initialize);
+/* New instance of type DS_LINKED_LIST [PR_CONFLICT] */
+extern T0* GE_new63(T1 initialize);
+/* New instance of type PR_CONFLICT */
+extern T0* GE_new65(T1 initialize);
+/* New instance of type KL_INTEGER_ROUTINES */
+extern T0* GE_new67(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_POSITION] */
+extern T0* GE_new68(T1 initialize);
+/* New instance of type PR_POSITION */
+extern T0* GE_new69(T1 initialize);
+/* New instance of type PR_ERROR_ACTION */
+extern T0* GE_new70(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_RULE] */
+extern T0* GE_new71(T1 initialize);
+/* New instance of type KL_ANY_ROUTINES */
+extern T0* GE_new72(T1 initialize);
+/* New instance of type PR_RULE */
+extern T0* GE_new73(T1 initialize);
+/* New instance of type PR_VARIABLE */
+extern T0* GE_new74(T1 initialize);
+/* New instance of type DS_LINKED_LIST [PR_REDUCTION] */
+extern T0* GE_new75(T1 initialize);
+/* New instance of type DS_LINKED_LIST [PR_TRANSITION] */
+extern T0* GE_new77(T1 initialize);
+/* New instance of type DS_NESTED_LIST_FLATTENER [PR_TOKEN] */
+extern T0* GE_new79(T1 initialize);
+/* New instance of type DS_LINKED_LIST [PR_TOKEN] */
+extern T0* GE_new80(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_SYMBOL] */
+extern T0* GE_new81(T1 initialize);
+/* New instance of type DS_ARRAYED_STACK [PR_STATE] */
+extern T0* GE_new82(T1 initialize);
+/* New instance of type PR_TRANSITION */
+extern T0* GE_new83(T1 initialize);
+/* New instance of type PR_TOKEN */
+extern T0* GE_new85(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_REDUCTION] */
+extern T0* GE_new86(T1 initialize);
+/* New instance of type DS_LINKED_LIST_CURSOR [PR_TRANSITION] */
+extern T0* GE_new88(T1 initialize);
+/* New instance of type DS_LINKED_LIST_CURSOR [PR_REDUCTION] */
+extern T0* GE_new90(T1 initialize);
+/* New instance of type PR_REDUCTION */
+extern T0* GE_new91(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_VARIABLE] */
+extern T0* GE_new92(T1 initialize);
+/* New instance of type DS_NESTED_LIST_FLATTENER [PR_RULE] */
+extern T0* GE_new93(T1 initialize);
+/* New instance of type DS_LINKED_LIST [PR_VARIABLE] */
+extern T0* GE_new94(T1 initialize);
+/* New instance of type DS_LINKED_LIST [PR_RULE] */
+extern T0* GE_new95(T1 initialize);
+/* New instance of type SPECIAL [PR_STATE] */
+extern T0* GE_new97(T6 a1, T1 initialize);
+/* New instance of type ARRAY [PR_STATE] */
+extern T0* GE_new98(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_TOKEN] */
+extern T0* GE_new99(T1 initialize);
+/* New instance of type PR_TYPE */
+extern T0* GE_new100(T1 initialize);
+/* New instance of type DS_LINKED_LIST_CURSOR [PR_RULE] */
+extern T0* GE_new101(T1 initialize);
+/* New instance of type SPECIAL [INTEGER_32] */
+extern T0* GE_new102(T6 a1, T1 initialize);
+/* New instance of type ARRAY [INTEGER_32] */
+extern T0* GE_new103(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_PORTION] */
+extern T0* GE_new104(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [INTEGER_32] */
+extern T0* GE_new105(T1 initialize);
+/* New instance of type PR_PORTION */
+extern T0* GE_new106(T1 initialize);
+/* New instance of type DS_BUBBLE_SORTER [PR_PORTION] */
+extern T0* GE_new108(T1 initialize);
+/* New instance of type KL_ARRAY_ROUTINES [INTEGER_32] */
+extern T0* GE_new110(T1 initialize);
+/* New instance of type UT_STRING_FORMATTER */
+extern T0* GE_new111(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [STRING_8] */
+extern T0* GE_new112(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_TYPE] */
+extern T0* GE_new113(T1 initialize);
+/* New instance of type DS_HASH_SET [PR_TYPE] */
+extern T0* GE_new114(T1 initialize);
+/* New instance of type DS_HASH_SET_CURSOR [PR_TYPE] */
+extern T0* GE_new115(T1 initialize);
+/* New instance of type SPECIAL [PR_TRANSITION] */
+extern T0* GE_new117(T6 a1, T1 initialize);
+/* New instance of type ARRAY [PR_TRANSITION] */
+extern T0* GE_new118(T1 initialize);
+/* New instance of type KL_STRING_ROUTINES */
+extern T0* GE_new119(T1 initialize);
+/* New instance of type UT_ARRAY_FORMATTER */
+extern T0* GE_new120(T1 initialize);
+/* New instance of type SPECIAL [STRING_8] */
+extern T0* GE_new123(T6 a1, T1 initialize);
+/* New instance of type ARRAY [STRING_8] */
+extern T0* GE_new124(T1 initialize);
+/* New instance of type KL_STDERR_FILE */
+extern T0* GE_new125(T1 initialize);
+/* New instance of type PR_ACTION_FACTORY */
+extern T0* GE_new126(T1 initialize);
+/* New instance of type DS_HASH_TABLE [PR_TOKEN, STRING_8] */
+extern T0* GE_new127(T1 initialize);
+/* New instance of type DS_HASH_TABLE [PR_VARIABLE, STRING_8] */
+extern T0* GE_new128(T1 initialize);
+/* New instance of type DS_HASH_TABLE [PR_TYPE, STRING_8] */
+extern T0* GE_new129(T1 initialize);
+/* New instance of type YY_FILE_BUFFER */
+extern T0* GE_new130(T1 initialize);
+/* New instance of type YY_BUFFER */
+extern T0* GE_new131(T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [INTEGER_32] */
+extern T0* GE_new132(T1 initialize);
+/* New instance of type SPECIAL [ANY] */
+extern T0* GE_new134(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [ANY] */
+extern T0* GE_new135(T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [STRING_8] */
+extern T0* GE_new136(T1 initialize);
+/* New instance of type DS_PAIR [STRING_8, INTEGER_32] */
+extern T0* GE_new137(T1 initialize);
+/* New instance of type SPECIAL [PR_TYPE] */
+extern T0* GE_new138(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_TYPE] */
+extern T0* GE_new139(T1 initialize);
+/* New instance of type SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
+extern T0* GE_new140(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_TYPE]] */
+extern T0* GE_new141(T1 initialize);
+/* New instance of type SPECIAL [PR_TOKEN] */
+extern T0* GE_new142(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_TOKEN] */
+extern T0* GE_new143(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [PR_ERROR_ACTION] */
+extern T0* GE_new144(T1 initialize);
+/* New instance of type UT_SYNTAX_ERROR */
+extern T0* GE_new145(T1 initialize);
+/* New instance of type ARRAY [PR_TOKEN] */
+extern T0* GE_new146(T1 initialize);
+/* New instance of type PR_MULTIPLE_START_DECLARATIONS_ERROR */
+extern T0* GE_new147(T1 initialize);
+/* New instance of type PR_NO_RULES_ERROR */
+extern T0* GE_new148(T1 initialize);
+/* New instance of type PR_LHS_SYMBOL_TOKEN_ERROR */
+extern T0* GE_new149(T1 initialize);
+/* New instance of type PR_RULE_DECLARED_TWICE_ERROR */
+extern T0* GE_new150(T1 initialize);
+/* New instance of type PR_INVALID_ERROR_N_ERROR */
+extern T0* GE_new151(T1 initialize);
+/* New instance of type PR_PREC_SPECIFIED_TWICE_ERROR */
+extern T0* GE_new152(T1 initialize);
+/* New instance of type PR_PREC_NOT_TOKEN_ERROR */
+extern T0* GE_new153(T1 initialize);
+/* New instance of type PR_MISSING_CHARACTERS_ERROR */
+extern T0* GE_new154(T1 initialize);
+/* New instance of type PR_NULL_INTEGER_ERROR */
+extern T0* GE_new155(T1 initialize);
+/* New instance of type PR_INVALID_STRING_TOKEN_ERROR */
+extern T0* GE_new156(T1 initialize);
+/* New instance of type PR_INVALID_DOLLAR_DOLLAR_ERROR */
+extern T0* GE_new157(T1 initialize);
+/* New instance of type PR_INTEGER_TOO_LARGE_ERROR */
+extern T0* GE_new158(T1 initialize);
+/* New instance of type PR_START_SYMBOL_TOKEN_ERROR */
+extern T0* GE_new159(T1 initialize);
+/* New instance of type PR_UNKNOWN_START_SYMBOL_ERROR */
+extern T0* GE_new160(T1 initialize);
+/* New instance of type PR_TOKEN_ID_USED_TWICE_ERROR */
+extern T0* GE_new161(T1 initialize);
+/* New instance of type PR_UNDEFINED_SYMBOL_ERROR */
+extern T0* GE_new162(T1 initialize);
+/* New instance of type PR_TWO_TOKEN_IDS_TOKEN_ERROR */
+extern T0* GE_new163(T1 initialize);
+/* New instance of type PR_TWO_STRINGS_TOKEN_ERROR */
+extern T0* GE_new164(T1 initialize);
+/* New instance of type PR_STRING_TOKEN_DEFINED_TWICE_ERROR */
+extern T0* GE_new165(T1 initialize);
+/* New instance of type PR_DANGEROUS_DOLLAR_N_ERROR */
+extern T0* GE_new166(T1 initialize);
+/* New instance of type PR_INVALID_DOLLAR_N_ERROR */
+extern T0* GE_new167(T1 initialize);
+/* New instance of type KL_COMPARABLE_COMPARATOR [PR_PORTION] */
+extern T0* GE_new169(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]] */
+extern T0* GE_new172(T1 initialize);
+/* New instance of type PR_BASIC_TYPE */
+extern T0* GE_new173(T1 initialize);
+/* New instance of type PR_ACTION */
+extern T0* GE_new174(T1 initialize);
+/* New instance of type PR_SYMBOL_DECLARED_VARIABLE_ERROR */
+extern T0* GE_new175(T1 initialize);
+/* New instance of type PR_TOKEN_DECLARED_TWICE_ERROR */
+extern T0* GE_new176(T1 initialize);
+/* New instance of type PR_SYMBOL_DECLARED_TOKEN_ERROR */
+extern T0* GE_new177(T1 initialize);
+/* New instance of type PR_VARIABLE_DECLARED_TWICE_ERROR */
+extern T0* GE_new178(T1 initialize);
+/* New instance of type PR_UNDEFINED_STRING_TOKEN_ERROR */
+extern T0* GE_new179(T1 initialize);
+/* New instance of type PR_PRECEDENCE_DEFINED_TWICE_ERROR */
+extern T0* GE_new180(T1 initialize);
+/* New instance of type UNIX_FILE_INFO */
+extern T0* GE_new181(T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_STATE] */
+extern T0* GE_new182(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_STATE] */
+extern T0* GE_new183(T1 initialize);
+/* New instance of type SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
+extern T0* GE_new184(T6 a1, T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+extern T0* GE_new185(T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_STATE]] */
+extern T0* GE_new187(T1 initialize);
+/* New instance of type DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+extern T0* GE_new188(T1 initialize);
+/* New instance of type DS_BUBBLE_SORTER [PR_POSITION] */
+extern T0* GE_new189(T1 initialize);
+/* New instance of type SPECIAL [PR_POSITION] */
+extern T0* GE_new191(T6 a1, T1 initialize);
+/* New instance of type KL_EQUALITY_TESTER [PR_POSITION] */
+extern T0* GE_new192(T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_POSITION] */
+extern T0* GE_new193(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_POSITION] */
+extern T0* GE_new194(T1 initialize);
+/* New instance of type SPECIAL [PR_RULE] */
+extern T0* GE_new195(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_RULE] */
+extern T0* GE_new196(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_RULE] */
+extern T0* GE_new197(T1 initialize);
+/* New instance of type DS_LINKABLE [PR_REDUCTION] */
+extern T0* GE_new199(T1 initialize);
+/* New instance of type DS_LINKABLE [PR_TRANSITION] */
+extern T0* GE_new200(T1 initialize);
+/* New instance of type DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]] */
+extern T0* GE_new202(T1 initialize);
+/* New instance of type SPECIAL [PR_SYMBOL] */
+extern T0* GE_new207(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_SYMBOL] */
+extern T0* GE_new208(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_SYMBOL] */
+extern T0* GE_new209(T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_REDUCTION] */
+extern T0* GE_new210(T1 initialize);
+/* New instance of type SPECIAL [PR_REDUCTION] */
+extern T0* GE_new211(T6 a1, T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_REDUCTION] */
+extern T0* GE_new212(T1 initialize);
+/* New instance of type SPECIAL [PR_VARIABLE] */
+extern T0* GE_new213(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_VARIABLE] */
+extern T0* GE_new214(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_VARIABLE] */
+extern T0* GE_new215(T1 initialize);
+/* New instance of type DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]] */
+extern T0* GE_new218(T1 initialize);
+/* New instance of type DS_LINKED_LIST_CURSOR [PR_VARIABLE] */
+extern T0* GE_new223(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_TOKEN] */
+extern T0* GE_new224(T1 initialize);
+/* New instance of type DS_LINKABLE [PR_RULE] */
+extern T0* GE_new225(T1 initialize);
+/* New instance of type SPECIAL [PR_PORTION] */
+extern T0* GE_new226(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_PORTION] */
+extern T0* GE_new227(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_PORTION] */
+extern T0* GE_new228(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [INTEGER_32] */
+extern T0* GE_new230(T1 initialize);
+/* New instance of type UT_INTEGER_FORMATTER */
+extern T0* GE_new231(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [STRING_8] */
+extern T0* GE_new232(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_TYPE] */
+extern T0* GE_new233(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS [PR_TOKEN, STRING_8] */
+extern T0* GE_new235(T1 initialize);
+/* New instance of type DS_HASH_TABLE_CURSOR [PR_TOKEN, STRING_8] */
+extern T0* GE_new237(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS [PR_VARIABLE, STRING_8] */
+extern T0* GE_new238(T1 initialize);
+/* New instance of type DS_HASH_TABLE_CURSOR [PR_VARIABLE, STRING_8] */
+extern T0* GE_new240(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS [PR_TYPE, STRING_8] */
+extern T0* GE_new241(T1 initialize);
+/* New instance of type DS_HASH_TABLE_CURSOR [PR_TYPE, STRING_8] */
+extern T0* GE_new243(T1 initialize);
+/* New instance of type TO_SPECIAL [INTEGER_32] */
+extern T0* GE_new244(T1 initialize);
+/* New instance of type TO_SPECIAL [ANY] */
+extern T0* GE_new245(T1 initialize);
+/* New instance of type TO_SPECIAL [STRING_8] */
+extern T0* GE_new246(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_TYPE] */
+extern T0* GE_new247(T1 initialize);
+/* New instance of type TO_SPECIAL [DS_ARRAYED_LIST [PR_TYPE]] */
+extern T0* GE_new248(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_TOKEN] */
+extern T0* GE_new249(T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [PR_ERROR_ACTION] */
+extern T0* GE_new250(T1 initialize);
+/* New instance of type SPECIAL [PR_ERROR_ACTION] */
+extern T0* GE_new251(T6 a1, T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [PR_ERROR_ACTION] */
+extern T0* GE_new252(T1 initialize);
+/* New instance of type SPECIAL [NATURAL_8] */
+extern T0* GE_new253(T6 a1, T1 initialize);
+/* New instance of type STRING_TO_INTEGER_CONVERTOR */
+extern T0* GE_new255(T1 initialize);
+/* New instance of type KL_COMPARABLE_COMPARATOR [PR_POSITION] */
+extern T0* GE_new258(T1 initialize);
+/* New instance of type DS_LINKABLE [PR_TOKEN] */
+extern T0* GE_new262(T1 initialize);
+/* New instance of type DS_LINKED_LIST_CURSOR [PR_TOKEN] */
+extern T0* GE_new263(T1 initialize);
+/* New instance of type KL_CHARACTER_BUFFER */
+extern T0* GE_new267(T1 initialize);
+/* New instance of type SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
+extern T0* GE_new268(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_VARIABLE]] */
+extern T0* GE_new269(T1 initialize);
+/* New instance of type DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [PR_VARIABLE]] */
+extern T0* GE_new270(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_STATE] */
+extern T0* GE_new272(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32] */
+extern T0* GE_new273(T1 initialize);
+/* New instance of type TO_SPECIAL [DS_ARRAYED_LIST [PR_STATE]] */
+extern T0* GE_new274(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_POSITION] */
+extern T0* GE_new275(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_RULE] */
+extern T0* GE_new276(T1 initialize);
+/* New instance of type SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
+extern T0* GE_new277(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_TOKEN]] */
+extern T0* GE_new278(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_SYMBOL] */
+extern T0* GE_new279(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_REDUCTION] */
+extern T0* GE_new280(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_VARIABLE] */
+extern T0* GE_new281(T1 initialize);
+/* New instance of type SPECIAL [DS_NESTED_LIST [PR_RULE]] */
+extern T0* GE_new282(T6 a1, T1 initialize);
+/* New instance of type KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_RULE]] */
+extern T0* GE_new283(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_PORTION] */
+extern T0* GE_new284(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [PR_TOKEN, STRING_8] */
+extern T0* GE_new285(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [PR_VARIABLE, STRING_8] */
+extern T0* GE_new286(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [PR_TYPE, STRING_8] */
+extern T0* GE_new287(T1 initialize);
+/* New instance of type TO_SPECIAL [PR_ERROR_ACTION] */
+extern T0* GE_new288(T1 initialize);
+/* New instance of type KL_CHARACTER_ROUTINES */
+extern T0* GE_new289(T1 initialize);
+/* New instance of type INTEGER_OVERFLOW_CHECKER */
+extern T0* GE_new290(T1 initialize);
+/* New instance of type KL_OPERATING_SYSTEM */
+extern T0* GE_new291(T1 initialize);
+/* New instance of type TO_SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]] */
+extern T0* GE_new292(T1 initialize);
+/* New instance of type TO_SPECIAL [DS_NESTED_LIST [PR_TOKEN]] */
+extern T0* GE_new294(T1 initialize);
+/* New instance of type TO_SPECIAL [DS_NESTED_LIST [PR_RULE]] */
+extern T0* GE_new295(T1 initialize);
+/* New instance of type DS_LINKED_LIST_CURSOR [PR_CONFLICT] */
+extern T0* GE_new299(T1 initialize);
+/* New instance of type DS_LINKABLE [PR_CONFLICT] */
+extern T0* GE_new300(T1 initialize);
+/* New instance of type DS_HASH_TABLE [INTEGER_32, PR_TYPE] */
+extern T0* GE_new301(T1 initialize);
+/* New instance of type DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE] */
+extern T0* GE_new302(T1 initialize);
+/* New instance of type DS_LINKABLE [PR_VARIABLE] */
+extern T0* GE_new305(T1 initialize);
+/* New instance of type SPECIAL [NATURAL_64] */
+extern T0* GE_new306(T6 a1, T1 initialize);
+/* New instance of type PLATFORM */
+extern T0* GE_new307(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS [INTEGER_32, PR_TYPE] */
+extern T0* GE_new308(T1 initialize);
+/* New instance of type DS_SPARSE_TABLE_KEYS_CURSOR [INTEGER_32, PR_TYPE] */
+extern T0* GE_new310(T1 initialize);
 /* GEYACC.execute */
 extern T0* T21c18(void);
 /* PR_PARSER_GENERATOR.print_parser */
@@ -3477,47 +4045,47 @@ extern void T23f59(T0* C, T0* a1);
 /* PR_PARSER_GENERATOR.print_constants */
 extern void T23f58(T0* C, T0* a1);
 /* KL_STDOUT_FILE.put_integer */
-extern void T36f14(T0* C, T6 a1);
+extern void T36f15(T0* C, T6 a1);
 /* KL_STDOUT_FILE.put_character */
-extern void T36f12(T0* C, T2 a1);
+extern void T36f13(T0* C, T2 a1);
 /* KL_STDOUT_FILE.old_put_character */
-extern void T36f17(T0* C, T2 a1);
+extern void T36f18(T0* C, T2 a1);
 /* KL_STDOUT_FILE.console_pc */
-extern void T36f21(T0* C, T14 a1, T2 a2);
+extern void T36f22(T0* C, T14 a1, T2 a2);
 /* KL_TEXT_OUTPUT_FILE.put_integer */
-extern void T24f24(T0* C, T6 a1);
+extern void T24f25(T0* C, T6 a1);
 /* KL_TEXT_OUTPUT_FILE.put_character */
-extern void T24f25(T0* C, T2 a1);
+extern void T24f26(T0* C, T2 a1);
 /* KL_TEXT_OUTPUT_FILE.old_put_character */
-extern void T24f32(T0* C, T2 a1);
+extern void T24f33(T0* C, T2 a1);
 /* KL_TEXT_OUTPUT_FILE.file_pc */
-extern void T24f35(T0* C, T14 a1, T2 a2);
+extern void T24f36(T0* C, T14 a1, T2 a2);
 /* PR_PARSER_GENERATOR.print_stack_declarations */
 extern void T23f57(T0* C, T0* a1);
 /* PR_BASIC_TYPE.print_yyvs_declaration */
-extern void T172f14(T0* C, T6 a1, T0* a2);
+extern void T173f14(T0* C, T6 a1, T0* a2);
 /* KL_STDOUT_FILE.put_line */
-extern void T36f10(T0* C, T0* a1);
+extern void T36f11(T0* C, T0* a1);
 /* KL_TEXT_OUTPUT_FILE.put_line */
-extern void T24f27(T0* C, T0* a1);
+extern void T24f28(T0* C, T0* a1);
 /* PR_BASIC_TYPE.print_indentation */
-extern void T172f20(T0* C, T6 a1, T0* a2);
+extern void T173f20(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.print_yyvs_declaration */
-extern void T99f16(T0* C, T6 a1, T0* a2);
+extern void T100f16(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.print_indentation */
-extern void T99f22(T0* C, T6 a1, T0* a2);
+extern void T100f22(T0* C, T6 a1, T0* a2);
 /* DS_ARRAYED_LIST [PR_TYPE].item */
-extern T0* T112f8(T0* C, T6 a1);
+extern T0* T113f8(T0* C, T6 a1);
 /* INTEGER_32.infix ">" */
 extern T1 T6f1(T6* C, T6 a1);
 /* PR_PARSER_GENERATOR.old_print_conversion_routines */
 extern void T23f56(T0* C, T0* a1);
 /* PR_BASIC_TYPE.old_print_conversion_routine */
-extern void T172f13(T0* C, T0* a1);
+extern void T173f13(T0* C, T0* a1);
 /* PR_TYPE.old_print_conversion_routine */
-extern void T99f15(T0* C, T0* a1);
+extern void T100f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TYPE].is_empty */
-extern T1 T112f6(T0* C);
+extern T1 T113f6(T0* C);
 /* PR_PARSER_GENERATOR.print_eiffel_tables */
 extern void T23f55(T0* C, T0* a1);
 /* PR_PARSER_GENERATOR.print_eiffel_array */
@@ -3527,15 +4095,15 @@ extern T6 T6f9(T6* C, T6 a1);
 /* INTEGER_32.infix "<=" */
 extern T1 T6f12(T6* C, T6 a1);
 /* UT_ARRAY_FORMATTER.put_integer_array */
-extern void T119f8(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
+extern void T120f8(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
 /* INTEGER_32.out */
 extern T0* T6f11(T6* C);
 /* STRING_8.append_integer */
-extern void T17f32(T0* C, T6 a1);
+extern void T17f33(T0* C, T6 a1);
 /* INTEGER_32.infix ">=" */
 extern T1 T6f4(T6* C, T6 a1);
 /* STRING_8.append_character */
-extern void T17f31(T0* C, T2 a1);
+extern void T17f32(T0* C, T2 a1);
 /* STRING_8.resize */
 extern void T17f39(T0* C, T6 a1);
 /* SPECIAL [CHARACTER_8].aliased_resized_area */
@@ -3547,63 +4115,67 @@ extern T6 T6f16(T6* C, T6 a1);
 /* STRING_8.capacity */
 extern T6 T17f12(T0* C);
 /* STRING_8.make */
-extern T0* T17c28(T6 a1);
-/* STRING_8.make_area */
-extern void T17f37(T0* C, T6 a1);
+extern T0* T17c29(T6 a1);
 /* SPECIAL [CHARACTER_8].make */
-extern T0* T15c9(T6 a1);
+extern T0* T15c11(T6 a1);
 /* ARRAY [INTEGER_32].item */
-extern T6 T102f4(T0* C, T6 a1);
+extern T6 T103f4(T0* C, T6 a1);
 /* PR_PARSER_GENERATOR.array_formatter_ */
-extern unsigned char ge224os1672;
-extern T0* ge224ov1672;
+extern unsigned char ge220os1873;
+extern T0* ge220ov1873;
 extern T0* T23f29(T0* C);
 /* UT_ARRAY_FORMATTER.default_create */
-extern T0* T119c7(void);
+extern T0* T120c7(void);
 /* ARRAY [INTEGER_32].count */
-extern T6 T102f5(T0* C);
+extern T6 T103f5(T0* C);
 /* KL_STRING_ROUTINES.same_string */
-extern T1 T118f1(T0* C, T0* a1, T0* a2);
+extern T1 T119f1(T0* C, T0* a1, T0* a2);
 /* STRING_8.item_code */
 extern T6 T17f17(T0* C, T6 a1);
 /* KL_STRING_ROUTINES.elks_same_string */
-extern T1 T118f8(T0* C, T0* a1, T0* a2);
+extern T1 T119f8(T0* C, T0* a1, T0* a2);
 /* STRING_8.same_string */
 extern T1 T17f20(T0* C, T0* a1);
-/* STRING_8.item */
-extern T2 T17f14(T0* C, T6 a1);
+/* STRING_8.same_string_general */
+extern T1 T17f25(T0* C, T0* a1);
+/* STRING_8.code */
+extern T10 T17f26(T0* C, T6 a1);
+/* INTEGER_32.to_natural_32 */
+extern T10 T6f17(T6* C);
+/* SPECIAL [CHARACTER_8].same_items */
+extern T1 T15f5(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
 /* KL_ANY_ROUTINES.same_types */
-extern T1 T71f2(T0* C, T0* a1, T0* a2);
+extern T1 T72f2(T0* C, T0* a1, T0* a2);
 /* KL_STRING_ROUTINES.any_ */
-extern unsigned char ge261os1603;
-extern T0* ge261ov1603;
-extern T0* T118f6(T0* C);
+extern unsigned char ge264os1804;
+extern T0* ge264ov1804;
+extern T0* T119f6(T0* C);
 /* KL_ANY_ROUTINES.default_create */
-extern T0* T71c3(void);
+extern T0* T72c3(void);
 /* STRING_8.substring */
 extern T0* T17f11(T0* C, T6 a1, T6 a2);
 /* STRING_8.set_count */
-extern void T17f33(T0* C, T6 a1);
+extern void T17f34(T0* C, T6 a1);
 /* SPECIAL [CHARACTER_8].copy_data */
-extern void T15f8(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
+extern void T15f10(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
 /* SPECIAL [CHARACTER_8].move_data */
-extern void T15f11(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [CHARACTER_8].overlapping_move */
 extern void T15f13(T0* C, T6 a1, T6 a2, T6 a3);
+/* SPECIAL [CHARACTER_8].overlapping_move */
+extern void T15f15(T0* C, T6 a1, T6 a2, T6 a3);
 /* SPECIAL [CHARACTER_8].non_overlapping_move */
-extern void T15f12(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T15f14(T0* C, T6 a1, T6 a2, T6 a3);
 /* STRING_8.new_string */
 extern T0* T17f7(T0* C, T6 a1);
 /* PR_PARSER_GENERATOR.string_ */
-extern unsigned char ge269os1579;
-extern T0* ge269ov1579;
+extern unsigned char ge277os1780;
+extern T0* ge277ov1780;
 extern T0* T23f28(T0* C);
 /* KL_STRING_ROUTINES.default_create */
-extern T0* T118c11(void);
+extern T0* T119c11(void);
 /* PR_PARSER_GENERATOR.print_error_actions */
 extern void T23f54(T0* C, T0* a1);
 /* PR_ACTION.out */
-extern T0* T173f2(T0* C);
+extern T0* T174f2(T0* C);
 /* DS_ARRAYED_LIST [PR_STATE].item */
 extern T0* T57f8(T0* C, T6 a1);
 /* PR_PARSER_GENERATOR.print_separated_error_actions */
@@ -3611,247 +4183,247 @@ extern void T23f53(T0* C, T0* a1);
 /* PR_PARSER_GENERATOR.print_actions */
 extern void T23f52(T0* C, T0* a1);
 /* PR_RULE.print_action */
-extern void T72f26(T0* C, T0* a1, T1 a2, T0* a3);
+extern void T73f26(T0* C, T0* a1, T1 a2, T0* a3);
 /* PR_BASIC_TYPE.print_push_yyval */
-extern void T172f19(T0* C, T6 a1, T0* a2);
+extern void T173f19(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.print_push_yyval */
-extern void T99f21(T0* C, T6 a1, T0* a2);
+extern void T100f21(T0* C, T6 a1, T0* a2);
 /* PR_BASIC_TYPE.print_resize_yyvs */
-extern void T172f18(T0* C, T6 a1, T0* a2);
+extern void T173f18(T0* C, T6 a1, T0* a2);
 /* PR_BASIC_TYPE.print_create_yyvs */
-extern void T172f21(T0* C, T6 a1, T0* a2);
+extern void T173f21(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.print_resize_yyvs */
-extern void T99f20(T0* C, T6 a1, T0* a2);
+extern void T100f20(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.print_create_yyvs */
-extern void T99f23(T0* C, T6 a1, T0* a2);
+extern void T100f23(T0* C, T6 a1, T0* a2);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].item */
-extern T6 T297f20(T0* C, T0* a1);
+extern T6 T301f37(T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].item_storage_item */
-extern T6 T297f29(T0* C, T6 a1);
+extern T6 T301f29(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].search_position */
-extern void T297f45(T0* C, T0* a1);
+extern void T301f46(T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].clashes_item */
-extern T6 T297f24(T0* C, T6 a1);
+extern T6 T301f24(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].hash_position */
-extern T6 T297f25(T0* C, T0* a1);
+extern T6 T301f25(T0* C, T0* a1);
 /* PR_BASIC_TYPE.hash_code */
-extern T6 T172f4(T0* C);
+extern T6 T173f4(T0* C);
 /* PR_TYPE.hash_code */
-extern T6 T99f5(T0* C);
+extern T6 T100f5(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].key_storage_item */
-extern T0* T297f21(T0* C, T6 a1);
+extern T0* T301f21(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].slots_item */
-extern T6 T297f26(T0* C, T6 a1);
+extern T6 T301f26(T0* C, T6 a1);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].forth */
-extern void T298f9(T0* C);
+extern void T302f9(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].cursor_forth */
-extern void T297f58(T0* C, T0* a1);
+extern void T301f59(T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].add_traversing_cursor */
-extern void T297f60(T0* C, T0* a1);
+extern void T301f61(T0* C, T0* a1);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].set_next_cursor */
-extern void T298f11(T0* C, T0* a1);
+extern void T302f11(T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].remove_traversing_cursor */
-extern void T297f59(T0* C, T0* a1);
+extern void T301f60(T0* C, T0* a1);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].set_position */
-extern void T298f10(T0* C, T6 a1);
+extern void T302f10(T0* C, T6 a1);
 /* PR_BASIC_TYPE.print_increment_yyvsp */
-extern void T172f17(T0* C, T6 a1, T6 a2, T0* a3);
+extern void T173f17(T0* C, T6 a1, T6 a2, T0* a3);
 /* PR_TYPE.print_increment_yyvsp */
-extern void T99f19(T0* C, T6 a1, T6 a2, T0* a3);
+extern void T100f19(T0* C, T6 a1, T6 a2, T0* a3);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].key */
-extern T0* T298f6(T0* C);
+extern T0* T302f6(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].cursor_key */
-extern T0* T297f35(T0* C, T0* a1);
+extern T0* T301f35(T0* C, T0* a1);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].item */
-extern T6 T298f5(T0* C);
+extern T6 T302f5(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].cursor_item */
-extern T6 T297f34(T0* C, T0* a1);
+extern T6 T301f34(T0* C, T0* a1);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].after */
-extern T1 T298f4(T0* C);
+extern T1 T302f4(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].cursor_after */
-extern T1 T297f33(T0* C, T0* a1);
+extern T1 T301f33(T0* C, T0* a1);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].start */
-extern void T298f8(T0* C);
+extern void T302f8(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].cursor_start */
-extern void T297f57(T0* C, T0* a1);
+extern void T301f58(T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].cursor_off */
-extern T1 T297f39(T0* C, T0* a1);
+extern T1 T301f40(T0* C, T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].is_empty */
-extern T1 T297f38(T0* C);
+extern T1 T301f39(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].new_cursor */
-extern T0* T297f31(T0* C);
+extern T0* T301f31(T0* C);
 /* DS_HASH_TABLE_CURSOR [INTEGER_32, PR_TYPE].make */
-extern T0* T298c7(T0* a1);
+extern T0* T302c7(T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].replace_found_item */
-extern void T297f44(T0* C, T6 a1);
+extern void T301f45(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].item_storage_put */
-extern void T297f50(T0* C, T6 a1, T6 a2);
+extern void T301f51(T0* C, T6 a1, T6 a2);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].found_item */
-extern T6 T297f30(T0* C);
+extern T6 T301f30(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].found */
-extern T1 T297f22(T0* C);
+extern T1 T301f22(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].search */
-extern void T297f43(T0* C, T0* a1);
+extern void T301f44(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_SYMBOL].item */
-extern T0* T80f12(T0* C, T6 a1);
+extern T0* T81f12(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].put_new */
-extern void T297f42(T0* C, T6 a1, T0* a2);
+extern void T301f43(T0* C, T6 a1, T0* a2);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].key_storage_put */
-extern void T297f51(T0* C, T0* a1, T6 a2);
+extern void T301f52(T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].slots_put */
-extern void T297f49(T0* C, T6 a1, T6 a2);
+extern void T301f50(T0* C, T6 a1, T6 a2);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].clashes_put */
-extern void T297f48(T0* C, T6 a1, T6 a2);
+extern void T301f49(T0* C, T6 a1, T6 a2);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].unset_found_item */
-extern void T297f47(T0* C);
+extern void T301f48(T0* C);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].make_map */
-extern T0* T297c41(T6 a1);
+extern T0* T301c42(T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].make_with_equality_testers */
-extern void T297f46(T0* C, T6 a1, T0* a2, T0* a3);
+extern void T301f47(T0* C, T6 a1, T0* a2, T0* a3);
 /* DS_SPARSE_TABLE_KEYS [INTEGER_32, PR_TYPE].make */
-extern T0* T304c5(T0* a1);
+extern T0* T308c5(T0* a1);
 /* DS_SPARSE_TABLE_KEYS [INTEGER_32, PR_TYPE].new_cursor */
-extern T0* T304f4(T0* C);
+extern T0* T308f4(T0* C);
 /* DS_SPARSE_TABLE_KEYS_CURSOR [INTEGER_32, PR_TYPE].make */
-extern T0* T306c3(T0* a1);
+extern T0* T310c3(T0* a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].make_sparse_container */
-extern void T297f52(T0* C, T6 a1);
+extern void T301f53(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].make_slots */
-extern void T297f56(T0* C, T6 a1);
+extern void T301f57(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [INTEGER_32].make */
-extern T0* T131f1(T0* C, T6 a1);
+extern T0* T132f1(T0* C, T6 a1);
 /* TO_SPECIAL [INTEGER_32].make_area */
-extern T0* T243c2(T6 a1);
+extern T0* T244c2(T6 a1);
 /* SPECIAL [INTEGER_32].make */
-extern T0* T101c6(T6 a1);
+extern T0* T102c5(T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].special_integer_ */
-extern unsigned char ge267os3758;
-extern T0* ge267ov3758;
-extern T0* T297f32(T0* C);
+extern unsigned char ge275os3995;
+extern T0* ge275ov3995;
+extern T0* T301f32(T0* C);
 /* KL_SPECIAL_ROUTINES [INTEGER_32].default_create */
-extern T0* T131c4(void);
+extern T0* T132c4(void);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].new_modulus */
-extern T6 T297f28(T0* C, T6 a1);
+extern T6 T301f28(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].make_clashes */
-extern void T297f55(T0* C, T6 a1);
+extern void T301f56(T0* C, T6 a1);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].make_key_storage */
-extern void T297f54(T0* C, T6 a1);
+extern void T301f55(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_TYPE].make */
-extern T0* T138f1(T0* C, T6 a1);
+extern T0* T139f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_TYPE].make_area */
-extern T0* T246c2(T6 a1);
+extern T0* T247c2(T6 a1);
 /* SPECIAL [PR_TYPE].make */
-extern T0* T137c4(T6 a1);
+extern T0* T138c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_TYPE].default_create */
-extern T0* T138c3(void);
+extern T0* T139c3(void);
 /* DS_HASH_TABLE [INTEGER_32, PR_TYPE].make_item_storage */
-extern void T297f53(T0* C, T6 a1);
+extern void T301f54(T0* C, T6 a1);
 /* PR_RULE.old_print_action */
-extern void T72f25(T0* C, T0* a1, T1 a2, T0* a3);
+extern void T73f25(T0* C, T0* a1, T1 a2, T0* a3);
 /* PR_BASIC_TYPE.old_print_dollar_dollar_finalization */
-extern void T172f25(T0* C, T0* a1);
+extern void T173f25(T0* C, T0* a1);
 /* PR_TYPE.old_print_dollar_dollar_finalization */
-extern void T99f27(T0* C, T0* a1);
+extern void T100f27(T0* C, T0* a1);
 /* PR_BASIC_TYPE.old_print_dollar_dollar_initialization */
-extern void T172f24(T0* C, T0* a1);
+extern void T173f24(T0* C, T0* a1);
 /* PR_TYPE.old_print_dollar_dollar_initialization */
-extern void T99f26(T0* C, T0* a1);
+extern void T100f26(T0* C, T0* a1);
 /* DS_HASH_SET_CURSOR [PR_TYPE].forth */
-extern void T114f8(T0* C);
+extern void T115f8(T0* C);
 /* DS_HASH_SET [PR_TYPE].cursor_forth */
-extern void T113f47(T0* C, T0* a1);
+extern void T114f48(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].add_traversing_cursor */
-extern void T113f49(T0* C, T0* a1);
+extern void T114f50(T0* C, T0* a1);
 /* DS_HASH_SET_CURSOR [PR_TYPE].set_next_cursor */
-extern void T114f10(T0* C, T0* a1);
+extern void T115f10(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].remove_traversing_cursor */
-extern void T113f48(T0* C, T0* a1);
+extern void T114f49(T0* C, T0* a1);
 /* DS_HASH_SET_CURSOR [PR_TYPE].set_position */
-extern void T114f9(T0* C, T6 a1);
+extern void T115f9(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].clashes_item */
-extern T6 T113f21(T0* C, T6 a1);
+extern T6 T114f21(T0* C, T6 a1);
 /* PR_BASIC_TYPE.print_dollar_dollar_declaration */
-extern void T172f16(T0* C, T0* a1);
+extern void T173f16(T0* C, T0* a1);
 /* PR_TYPE.print_dollar_dollar_declaration */
-extern void T99f18(T0* C, T0* a1);
+extern void T100f18(T0* C, T0* a1);
 /* DS_HASH_SET_CURSOR [PR_TYPE].item */
-extern T0* T114f4(T0* C);
+extern T0* T115f4(T0* C);
 /* DS_HASH_SET [PR_TYPE].cursor_item */
-extern T0* T113f30(T0* C, T0* a1);
+extern T0* T114f30(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].item_storage_item */
-extern T0* T113f25(T0* C, T6 a1);
+extern T0* T114f25(T0* C, T6 a1);
 /* DS_HASH_SET_CURSOR [PR_TYPE].after */
-extern T1 T114f5(T0* C);
+extern T1 T115f5(T0* C);
 /* DS_HASH_SET [PR_TYPE].cursor_after */
-extern T1 T113f29(T0* C, T0* a1);
+extern T1 T114f29(T0* C, T0* a1);
 /* DS_HASH_SET_CURSOR [PR_TYPE].start */
-extern void T114f7(T0* C);
+extern void T115f7(T0* C);
 /* DS_HASH_SET [PR_TYPE].cursor_start */
-extern void T113f46(T0* C, T0* a1);
+extern void T114f47(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].cursor_off */
-extern T1 T113f34(T0* C, T0* a1);
+extern T1 T114f35(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].new_cursor */
-extern T0* T113f17(T0* C);
+extern T0* T114f17(T0* C);
 /* DS_HASH_SET_CURSOR [PR_TYPE].make */
-extern T0* T114c6(T0* a1);
+extern T0* T115c6(T0* a1);
 /* DS_HASH_SET [PR_TYPE].is_empty */
-extern T1 T113f19(T0* C);
+extern T1 T114f19(T0* C);
 /* DS_HASH_SET [PR_TYPE].put */
-extern void T113f36(T0* C, T0* a1);
+extern void T114f37(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].slots_put */
-extern void T113f45(T0* C, T6 a1, T6 a2);
+extern void T114f46(T0* C, T6 a1, T6 a2);
 /* DS_HASH_SET [PR_TYPE].clashes_put */
-extern void T113f44(T0* C, T6 a1, T6 a2);
+extern void T114f45(T0* C, T6 a1, T6 a2);
 /* DS_HASH_SET [PR_TYPE].slots_item */
-extern T6 T113f20(T0* C, T6 a1);
+extern T6 T114f20(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].item_storage_put */
-extern void T113f43(T0* C, T0* a1, T6 a2);
+extern void T114f44(T0* C, T0* a1, T6 a2);
 /* DS_HASH_SET [PR_TYPE].search_position */
-extern void T113f42(T0* C, T0* a1);
+extern void T114f43(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].hash_position */
-extern T6 T113f28(T0* C, T0* a1);
+extern T6 T114f28(T0* C, T0* a1);
 /* DS_HASH_SET [PR_TYPE].key_storage_item */
-extern T0* T113f27(T0* C, T6 a1);
+extern T0* T114f27(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].key_equality_tester */
-extern T0* T113f26(T0* C);
+extern T0* T114f26(T0* C);
 /* DS_HASH_SET [PR_TYPE].unset_found_item */
-extern void T113f41(T0* C);
+extern void T114f42(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].item */
-extern T0* T70f7(T0* C, T6 a1);
+extern T0* T71f7(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].make */
-extern T0* T113c35(T6 a1);
+extern T0* T114c36(T6 a1);
 /* DS_HASH_SET [PR_TYPE].make_slots */
-extern void T113f40(T0* C, T6 a1);
+extern void T114f41(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].special_integer_ */
-extern T0* T113f22(T0* C);
+extern T0* T114f22(T0* C);
 /* DS_HASH_SET [PR_TYPE].new_modulus */
-extern T6 T113f23(T0* C, T6 a1);
+extern T6 T114f23(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].make_clashes */
-extern void T113f39(T0* C, T6 a1);
+extern void T114f40(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].make_key_storage */
-extern void T113f38(T0* C, T6 a1);
+extern void T114f39(T0* C, T6 a1);
 /* DS_HASH_SET [PR_TYPE].make_item_storage */
-extern void T113f37(T0* C, T6 a1);
+extern void T114f38(T0* C, T6 a1);
 /* PR_PARSER_GENERATOR.print_separated_actions */
 extern void T23f51(T0* C, T0* a1);
 /* PR_PARSER_GENERATOR.print_pop_last_value */
 extern void T23f50(T0* C, T0* a1);
 /* PR_BASIC_TYPE.print_pop_last_value */
-extern void T172f12(T0* C, T6 a1, T0* a2);
+extern void T173f12(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.print_pop_last_value */
-extern void T99f14(T0* C, T6 a1, T0* a2);
+extern void T100f14(T0* C, T6 a1, T0* a2);
 /* PR_PARSER_GENERATOR.print_push_error_value */
 extern void T23f49(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].item */
-extern T0* T98f10(T0* C, T6 a1);
+extern T0* T99f10(T0* C, T6 a1);
 /* PR_PARSER_GENERATOR.print_push_last_value */
 extern void T23f48(T0* C, T0* a1);
 /* PR_BASIC_TYPE.print_push_last_value */
-extern void T172f15(T0* C, T6 a1, T0* a2);
+extern void T173f15(T0* C, T6 a1, T0* a2);
 /* PR_BASIC_TYPE.last_value_name */
-extern T0* T172f5(T0* C);
+extern T0* T173f5(T0* C);
 /* KL_CHARACTER_ROUTINES.as_lower */
-extern T2 T285f1(T0* C, T2 a1);
+extern T2 T289f1(T0* C, T2 a1);
 /* CHARACTER_8.lower */
 extern T2 T2f3(T2* C);
 /* CHARACTER_8.is_upper */
@@ -3863,37 +4435,39 @@ extern T8 T8f1(T8* C, T8 a1);
 /* CHARACTER_8.character_types */
 extern T8 T2f7(T2* C, T6 a1);
 /* CHARACTER_8.internal_character_types */
-extern unsigned char ge37os93;
-extern T0* ge37ov93;
+extern unsigned char ge8os92;
+extern T0* ge8ov92;
 extern T0* T2f10(T2* C);
 /* NATURAL_8.infix "|" */
 extern T8 T8f3(T8* C, T8 a1);
 /* SPECIAL [NATURAL_8].make */
-extern T0* T252c2(T6 a1);
+extern T0* T253c2(T6 a1);
 /* PR_BASIC_TYPE.character_ */
-extern unsigned char ge264os3271;
-extern T0* ge264ov3271;
-extern T0* T172f6(T0* C);
+extern unsigned char ge267os3538;
+extern T0* ge267ov3538;
+extern T0* T173f6(T0* C);
 /* KL_CHARACTER_ROUTINES.default_create */
-extern T0* T285c2(void);
+extern T0* T289c2(void);
+/* STRING_8.item */
+extern T2 T17f14(T0* C, T6 a1);
 /* STRING_8.append_string */
-extern void T17f29(T0* C, T0* a1);
+extern void T17f30(T0* C, T0* a1);
 /* STRING_8.append */
 extern void T17f38(T0* C, T0* a1);
 /* PR_TYPE.print_push_last_value */
-extern void T99f17(T0* C, T6 a1, T0* a2);
+extern void T100f17(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.last_value_name */
-extern T0* T99f6(T0* C);
+extern T0* T100f6(T0* C);
 /* PR_TYPE.character_ */
-extern T0* T99f7(T0* C);
+extern T0* T100f7(T0* C);
 /* DS_HASH_SET [PR_TYPE].first */
-extern T0* T113f16(T0* C);
+extern T0* T114f33(T0* C);
 /* PR_PARSER_GENERATOR.print_clear_value_stacks */
 extern void T23f47(T0* C, T0* a1);
 /* PR_BASIC_TYPE.print_clear_yyvs */
-extern void T172f11(T0* C, T6 a1, T0* a2);
+extern void T173f11(T0* C, T6 a1, T0* a2);
 /* PR_TYPE.print_clear_yyvs */
-extern void T99f13(T0* C, T6 a1, T0* a2);
+extern void T100f13(T0* C, T6 a1, T0* a2);
 /* PR_PARSER_GENERATOR.print_init_value_stacks */
 extern void T23f46(T0* C, T0* a1);
 /* PR_PARSER_GENERATOR.print_create_value_stacks */
@@ -3901,55 +4475,59 @@ extern void T23f45(T0* C, T0* a1);
 /* PR_PARSER_GENERATOR.print_build_parser_tables */
 extern void T23f44(T0* C, T0* a1);
 /* KL_STDOUT_FILE.put_string */
-extern void T36f11(T0* C, T0* a1);
+extern void T36f12(T0* C, T0* a1);
 /* KL_STDOUT_FILE.old_put_string */
-extern void T36f16(T0* C, T0* a1);
+extern void T36f17(T0* C, T0* a1);
 /* KL_STDOUT_FILE.console_ps */
-extern void T36f20(T0* C, T14 a1, T14 a2, T6 a3);
+extern void T36f21(T0* C, T14 a1, T14 a2, T6 a3);
 /* KL_STRING_ROUTINES.as_string */
-extern T0* T118f2(T0* C, T0* a1);
+extern T0* T119f2(T0* C, T0* a1);
 /* STRING_8.string */
 extern T0* T17f18(T0* C);
+/* STRING_8.make_from_string */
+extern T0* T17c43(T0* a1);
+/* SPECIAL [CHARACTER_8].twin */
+extern T0* T15f3(T0* C);
 /* KL_STDOUT_FILE.string_ */
 extern T0* T36f6(T0* C);
 /* KL_TEXT_OUTPUT_FILE.put_string */
-extern void T24f23(T0* C, T0* a1);
+extern void T24f24(T0* C, T0* a1);
 /* KL_TEXT_OUTPUT_FILE.old_put_string */
-extern void T24f31(T0* C, T0* a1);
+extern void T24f32(T0* C, T0* a1);
 /* KL_TEXT_OUTPUT_FILE.file_ps */
-extern void T24f34(T0* C, T14 a1, T14 a2, T6 a3);
+extern void T24f35(T0* C, T14 a1, T14 a2, T6 a3);
 /* KL_TEXT_OUTPUT_FILE.string_ */
 extern T0* T24f9(T0* C);
 /* PR_PARSER_GENERATOR.print_token_codes */
 extern void T23f42(T0* C, T0* a1);
 /* UT_STRING_FORMATTER.put_eiffel_string */
-extern void T110f3(T0* C, T0* a1, T0* a2);
+extern void T111f3(T0* C, T0* a1, T0* a2);
 /* UT_INTEGER_FORMATTER.put_decimal_integer */
-extern void T230f2(T0* C, T0* a1, T6 a2);
+extern void T231f2(T0* C, T0* a1, T6 a2);
 /* UT_STRING_FORMATTER.integer_formatter_ */
-extern unsigned char ge224os1668;
-extern T0* ge224ov1668;
-extern T0* T110f1(T0* C);
+extern unsigned char ge220os1869;
+extern T0* ge220ov1869;
+extern T0* T111f1(T0* C);
 /* UT_INTEGER_FORMATTER.default_create */
-extern T0* T230c1(void);
+extern T0* T231c1(void);
 /* PR_PARSER_GENERATOR.string_formatter_ */
-extern unsigned char ge224os1671;
-extern T0* ge224ov1671;
+extern unsigned char ge220os1872;
+extern T0* ge220ov1872;
 extern T0* T23f27(T0* C);
 /* UT_STRING_FORMATTER.default_create */
-extern T0* T110c2(void);
+extern T0* T111c2(void);
 /* PR_TOKEN.has_identifier */
-extern T1 T84f15(T0* C);
+extern T1 T85f15(T0* C);
 /* PR_PARSER_GENERATOR.print_last_values */
 extern void T23f62(T0* C, T0* a1);
 /* KL_STDOUT_FILE.put_new_line */
-extern void T36f13(T0* C);
+extern void T36f14(T0* C);
 /* KL_TEXT_OUTPUT_FILE.put_new_line */
-extern void T24f26(T0* C);
+extern void T24f27(T0* C);
 /* PR_PARSER_GENERATOR.print_eiffel_header */
 extern void T23f43(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [STRING_8].item */
-extern T0* T111f6(T0* C, T6 a1);
+extern T0* T112f6(T0* C, T6 a1);
 /* PR_PARSER_GENERATOR.print_token_class */
 extern void T23f35(T0* C, T0* a1, T0* a2, T0* a3);
 /* PR_PARSER_GENERATOR.set_input_filename */
@@ -3963,153 +4541,155 @@ extern T0* T23c31(T0* a1);
 /* PR_PARSER_GENERATOR.build_action_tables */
 extern void T23f41(T0* C);
 /* KL_ARRAY_ROUTINES [INTEGER_32].subarray */
-extern T0* T109f1(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
+extern T0* T110f1(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
 /* KL_ARRAY_ROUTINES [INTEGER_32].subcopy */
-extern void T109f4(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5);
+extern void T110f4(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5);
 /* ARRAY [INTEGER_32].subcopy */
-extern void T102f11(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
+extern void T103f11(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
 /* SPECIAL [INTEGER_32].copy_data */
-extern void T101f9(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
+extern void T102f8(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
 /* SPECIAL [INTEGER_32].move_data */
-extern void T101f7(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T102f6(T0* C, T6 a1, T6 a2, T6 a3);
 /* SPECIAL [INTEGER_32].overlapping_move */
-extern void T101f12(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T102f11(T0* C, T6 a1, T6 a2, T6 a3);
 /* SPECIAL [INTEGER_32].non_overlapping_move */
-extern void T101f11(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T102f10(T0* C, T6 a1, T6 a2, T6 a3);
 /* PR_PORTION.set_position */
-extern void T105f13(T0* C, T6 a1);
+extern void T106f13(T0* C, T6 a1);
 /* KL_ARRAY_ROUTINES [INTEGER_32].resize */
-extern void T109f3(T0* C, T0* a1, T6 a2, T6 a3);
+extern void T110f3(T0* C, T0* a1, T6 a2, T6 a3);
 /* ARRAY [INTEGER_32].conservative_resize */
-extern void T102f10(T0* C, T6 a1, T6 a2);
-/* SPECIAL [INTEGER_32].fill_with */
-extern void T101f8(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T103f10(T0* C, T6 a1, T6 a2);
+/* SPECIAL [INTEGER_32].fill_with_default */
+extern void T102f7(T0* C, T6 a1, T6 a2);
+/* SPECIAL [INTEGER_32].put_default */
+extern void T102f12(T0* C, T6 a1);
 /* SPECIAL [INTEGER_32].aliased_resized_area */
-extern T0* T101f3(T0* C, T6 a1);
+extern T0* T102f3(T0* C, T6 a1);
 /* ARRAY [INTEGER_32].make_area */
-extern void T102f9(T0* C, T6 a1);
+extern void T103f9(T0* C, T6 a1);
 /* ARRAY [INTEGER_32].empty_area */
-extern T1 T102f6(T0* C);
+extern T1 T103f6(T0* C);
 /* PR_PARSER_GENERATOR.integer_array_ */
-extern unsigned char ge262os1664;
-extern T0* ge262ov1664;
+extern unsigned char ge265os1865;
+extern T0* ge265ov1865;
 extern T0* T23f26(T0* C);
 /* KL_ARRAY_ROUTINES [INTEGER_32].default_create */
-extern T0* T109c2(void);
+extern T0* T110c2(void);
 /* DS_ARRAYED_LIST [INTEGER_32].item */
-extern T6 T104f9(T0* C, T6 a1);
+extern T6 T105f9(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [INTEGER_32].first */
-extern T6 T104f8(T0* C);
+extern T6 T105f8(T0* C);
 /* PR_PORTION.same_portion */
-extern T1 T105f8(T0* C, T0* a1);
+extern T1 T106f8(T0* C, T0* a1);
 /* PR_PORTION.order_is_equal */
-extern T1 T105f9(T0* C, T0* a1);
+extern T1 T106f9(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_PORTION].item */
-extern T0* T103f6(T0* C, T6 a1);
+extern T0* T104f6(T0* C, T6 a1);
 /* ARRAY [INTEGER_32].put */
-extern void T102f8(T0* C, T6 a1, T6 a2);
+extern void T103f8(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_PORTION].sort */
-extern void T103f10(T0* C, T0* a1);
+extern void T104f10(T0* C, T0* a1);
 /* DS_BUBBLE_SORTER [PR_PORTION].sort */
-extern void T107f3(T0* C, T0* a1);
+extern void T108f3(T0* C, T0* a1);
 /* DS_BUBBLE_SORTER [PR_PORTION].sort_with_comparator */
-extern void T107f4(T0* C, T0* a1, T0* a2);
+extern void T108f4(T0* C, T0* a1, T0* a2);
 /* DS_BUBBLE_SORTER [PR_PORTION].subsort_with_comparator */
-extern void T107f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
+extern void T108f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
 /* DS_ARRAYED_LIST [PR_PORTION].replace */
-extern void T103f12(T0* C, T0* a1, T6 a2);
+extern void T104f12(T0* C, T0* a1, T6 a2);
 /* KL_COMPARABLE_COMPARATOR [PR_PORTION].less_than */
-extern T1 T168f1(T0* C, T0* a1, T0* a2);
+extern T1 T169f1(T0* C, T0* a1, T0* a2);
 /* PR_PORTION.infix "<" */
-extern T1 T105f10(T0* C, T0* a1);
+extern T1 T106f10(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_PORTION].is_empty */
-extern T1 T103f8(T0* C);
+extern T1 T104f8(T0* C);
 /* PR_PARSER_GENERATOR.portion_sorter */
-extern unsigned char ge184os1645;
-extern T0* ge184ov1645;
+extern unsigned char ge180os1846;
+extern T0* ge180ov1846;
 extern T0* T23f23(T0* C);
 /* DS_BUBBLE_SORTER [PR_PORTION].make */
-extern T0* T107c2(T0* a1);
+extern T0* T108c2(T0* a1);
 /* KL_COMPARABLE_COMPARATOR [PR_PORTION].make */
-extern T0* T168c2(void);
+extern T0* T169c2(void);
 /* PR_PARSER_GENERATOR.put_yydefgoto */
 extern void T23f61(T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [PR_PORTION].put_last */
-extern void T103f11(T0* C, T0* a1);
+extern void T104f11(T0* C, T0* a1);
 /* PR_PORTION.make_symbol */
-extern T0* T105c12(T6 a1, T0* a2, T0* a3);
+extern T0* T106c12(T6 a1, T0* a2, T0* a3);
 /* DS_ARRAYED_LIST [INTEGER_32].last */
-extern T6 T104f7(T0* C);
+extern T6 T105f7(T0* C);
 /* DS_ARRAYED_LIST [INTEGER_32].put_last */
-extern void T104f11(T0* C, T6 a1);
+extern void T105f11(T0* C, T6 a1);
 /* ARRAY [PR_TRANSITION].item */
-extern T0* T117f4(T0* C, T6 a1);
+extern T0* T118f4(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [INTEGER_32].make */
-extern T0* T104c10(T6 a1);
+extern T0* T105c10(T6 a1);
 /* DS_ARRAYED_LIST [INTEGER_32].new_cursor */
-extern T0* T104f6(T0* C);
+extern T0* T105f6(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [INTEGER_32].make */
-extern T0* T229c2(T0* a1);
+extern T0* T230c3(T0* a1);
 /* ARRAY [PR_TRANSITION].put */
-extern void T117f6(T0* C, T0* a1, T6 a2);
+extern void T118f6(T0* C, T0* a1, T6 a2);
 /* ARRAY [PR_TRANSITION].make */
-extern T0* T117c5(T6 a1, T6 a2);
+extern T0* T118c5(T6 a1, T6 a2);
 /* ARRAY [PR_TRANSITION].make_area */
-extern void T117f7(T0* C, T6 a1);
+extern void T118f7(T0* C, T6 a1);
 /* SPECIAL [PR_TRANSITION].make */
-extern T0* T116c2(T6 a1);
+extern T0* T117c2(T6 a1);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].forth */
-extern void T87f9(T0* C);
+extern void T88f9(T0* C);
 /* DS_LINKED_LIST [PR_TRANSITION].cursor_forth */
-extern void T76f11(T0* C, T0* a1);
+extern void T77f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TRANSITION].add_traversing_cursor */
-extern void T76f12(T0* C, T0* a1);
+extern void T77f12(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].set_next_cursor */
-extern void T87f11(T0* C, T0* a1);
+extern void T88f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TRANSITION].remove_traversing_cursor */
-extern void T76f13(T0* C, T0* a1);
+extern void T77f13(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].set */
-extern void T87f10(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T88f10(T0* C, T0* a1, T1 a2, T1 a3);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].item */
-extern T0* T87f6(T0* C);
+extern T0* T88f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].start */
-extern void T87f8(T0* C);
+extern void T88f8(T0* C);
 /* DS_LINKED_LIST [PR_TRANSITION].cursor_start */
-extern void T76f10(T0* C, T0* a1);
+extern void T77f10(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TRANSITION].cursor_off */
-extern T1 T76f7(T0* C, T0* a1);
+extern T1 T77f7(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TRANSITION].new_cursor */
-extern T0* T76f6(T0* C);
+extern T0* T77f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].make */
-extern T0* T87c7(T0* a1);
+extern T0* T88c7(T0* a1);
 /* DS_LINKED_LIST [PR_TRANSITION].is_empty */
-extern T1 T76f5(T0* C);
+extern T1 T77f5(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].item */
-extern T0* T91f6(T0* C, T6 a1);
+extern T0* T92f6(T0* C, T6 a1);
 /* PR_PARSER_GENERATOR.put_yydefact */
 extern void T23f60(T0* C, T0* a1, T0* a2);
 /* PR_PORTION.make_state */
-extern T0* T105c11(T6 a1, T0* a2, T0* a3);
+extern T0* T106c11(T6 a1, T0* a2, T0* a3);
 /* DS_ARRAYED_LIST [PR_REDUCTION].first */
-extern T0* T85f10(T0* C);
+extern T0* T86f10(T0* C);
 /* DS_ARRAYED_LIST [PR_REDUCTION].item */
-extern T0* T85f9(T0* C, T6 a1);
+extern T0* T86f9(T0* C, T6 a1);
 /* ARRAY [INTEGER_32].make */
-extern T0* T102c7(T6 a1, T6 a2);
+extern T0* T103c7(T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_PORTION].make */
-extern T0* T103c9(T6 a1);
+extern T0* T104c9(T6 a1);
 /* DS_ARRAYED_LIST [PR_PORTION].new_cursor */
-extern T0* T103f7(T0* C);
+extern T0* T104f7(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_PORTION].make */
-extern T0* T227c2(T0* a1);
+extern T0* T228c3(T0* a1);
 /* KL_SPECIAL_ROUTINES [PR_PORTION].make */
-extern T0* T226f1(T0* C, T6 a1);
+extern T0* T227f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_PORTION].make_area */
-extern T0* T280c2(T6 a1);
+extern T0* T284c2(T6 a1);
 /* SPECIAL [PR_PORTION].make */
-extern T0* T225c2(T6 a1);
+extern T0* T226c2(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_PORTION].default_create */
-extern T0* T226c2(void);
+extern T0* T227c2(void);
 /* PR_PARSER_GENERATOR.build_yytypes2 */
 extern void T23f40(T0* C);
 /* PR_PARSER_GENERATOR.build_yytypes1 */
@@ -4129,167 +4709,159 @@ extern void T28f9(T0* C, T0* a1);
 /* UT_ERROR_HANDLER.report_warning_message */
 extern void T28f12(T0* C, T0* a1);
 /* KL_STDERR_FILE.put_line */
-extern void T124f10(T0* C, T0* a1);
+extern void T125f11(T0* C, T0* a1);
 /* KL_STDERR_FILE.put_new_line */
-extern void T124f14(T0* C);
+extern void T125f15(T0* C);
 /* KL_STDERR_FILE.put_string */
-extern void T124f11(T0* C, T0* a1);
+extern void T125f12(T0* C, T0* a1);
 /* KL_STDERR_FILE.old_put_string */
-extern void T124f15(T0* C, T0* a1);
+extern void T125f16(T0* C, T0* a1);
 /* KL_STDERR_FILE.console_ps */
-extern void T124f19(T0* C, T14 a1, T14 a2, T6 a3);
+extern void T125f20(T0* C, T14 a1, T14 a2, T6 a3);
 /* KL_STDERR_FILE.string_ */
-extern T0* T124f5(T0* C);
+extern T0* T125f5(T0* C);
 /* UT_ERROR_HANDLER.message */
 extern T0* T28f5(T0* C, T0* a1);
 /* UT_MESSAGE.make */
 extern T0* T62c7(T0* a1);
 /* ARRAY [STRING_8].put */
-extern void T123f7(T0* C, T0* a1, T6 a2);
+extern void T124f7(T0* C, T0* a1, T6 a2);
 /* ARRAY [STRING_8].make */
-extern T0* T123c6(T6 a1, T6 a2);
+extern T0* T124c6(T6 a1, T6 a2);
 /* ARRAY [STRING_8].make_area */
-extern void T123f8(T0* C, T6 a1);
+extern void T124f8(T0* C, T6 a1);
 /* SPECIAL [STRING_8].make */
-extern T0* T122c4(T6 a1);
+extern T0* T123c4(T6 a1);
 /* KL_INTEGER_ROUTINES.append_decimal_integer */
-extern void T66f2(T0* C, T6 a1, T0* a2);
+extern void T67f2(T0* C, T6 a1, T0* a2);
 /* PR_FSM.integer_ */
-extern unsigned char ge266os1602;
-extern T0* ge266ov1602;
+extern unsigned char ge272os1803;
+extern T0* ge272ov1803;
 extern T0* T22f5(T0* C);
 /* KL_INTEGER_ROUTINES.default_create */
-extern T0* T66c1(void);
+extern T0* T67c1(void);
 /* PR_STATE.set_error_action */
 extern void T59f29(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_POSITION].put_last */
-extern void T67f13(T0* C, T0* a1);
+extern void T68f13(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].has */
-extern T1 T70f15(T0* C, T0* a1);
+extern T1 T71f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_POSITION].make */
-extern T0* T67c12(T6 a1);
+extern T0* T68c12(T6 a1);
 /* DS_ARRAYED_LIST [PR_POSITION].new_cursor */
-extern T0* T67f10(T0* C);
+extern T0* T68f10(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_POSITION].make */
-extern T0* T193c2(T0* a1);
+extern T0* T194c3(T0* a1);
 /* KL_SPECIAL_ROUTINES [PR_POSITION].make */
-extern T0* T192f1(T0* C, T6 a1);
+extern T0* T193f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_POSITION].make_area */
-extern T0* T271c2(T6 a1);
+extern T0* T275c2(T6 a1);
 /* SPECIAL [PR_POSITION].make */
-extern T0* T190c4(T6 a1);
+extern T0* T191c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_POSITION].default_create */
-extern T0* T192c3(void);
+extern T0* T193c3(void);
 /* KL_ANY_ROUTINES.equal_objects */
-extern T1 T71f1(T0* C, T0* a1, T0* a2);
+extern T1 T72f1(T0* C, T0* a1, T0* a2);
 /* PR_FSM.any_ */
 extern T0* T22f6(T0* C);
 /* PR_POSITION.error_action */
-extern T0* T68f6(T0* C);
+extern T0* T69f6(T0* C);
 /* DS_ARRAYED_LIST [PR_ERROR_ACTION].item */
-extern T0* T143f8(T0* C, T6 a1);
+extern T0* T144f8(T0* C, T6 a1);
 /* PR_POSITION.after */
-extern T1 T68f5(T0* C);
+extern T1 T69f5(T0* C);
 /* PR_POSITION.before */
-extern T1 T68f4(T0* C);
+extern T1 T69f4(T0* C);
 /* DS_ARRAYED_LIST [PR_POSITION].item */
-extern T0* T67f8(T0* C, T6 a1);
+extern T0* T68f8(T0* C, T6 a1);
 /* PR_FSM.resolve_conflicts */
 extern void T22f16(T0* C, T0* a1);
 /* PR_STATE.reduce_reduce_count */
 extern T6 T59f21(T0* C);
 /* DS_LINKED_LIST [PR_TOKEN].force_last */
-extern void T79f11(T0* C, T0* a1);
+extern void T80f11(T0* C, T0* a1);
 /* DS_LINKABLE [PR_TOKEN].put_right */
-extern void T260f4(T0* C, T0* a1);
+extern void T262f4(T0* C, T0* a1);
 /* DS_LINKABLE [PR_TOKEN].make */
-extern T0* T260c3(T0* a1);
+extern T0* T262c3(T0* a1);
 /* DS_LINKED_LIST [PR_TOKEN].is_empty */
-extern T1 T79f6(T0* C);
+extern T1 T80f6(T0* C);
 /* DS_LINKED_LIST [PR_TOKEN].has */
-extern T1 T79f7(T0* C, T0* a1);
+extern T1 T80f7(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TOKEN].make */
-extern T0* T79c10(void);
+extern T0* T80c10(void);
 /* DS_LINKED_LIST [PR_TOKEN].new_cursor */
-extern T0* T79f8(T0* C);
+extern T0* T80f8(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_TOKEN].make */
-extern T0* T261c7(T0* a1);
+extern T0* T263c7(T0* a1);
 /* PR_STATE.shift_reduce_count */
 extern T6 T59f20(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].remove */
-extern void T98f22(T0* C, T6 a1);
+extern void T99f22(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].move_left */
-extern void T98f28(T0* C, T6 a1, T6 a2);
+extern void T99f28(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_TOKEN].move_cursors_left */
-extern void T98f27(T0* C, T6 a1);
+extern void T99f27(T0* C, T6 a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].set_position */
-extern void T223f10(T0* C, T6 a1);
+extern void T224f10(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].remove_last */
-extern void T98f26(T0* C);
+extern void T99f26(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].move_last_cursors_after */
-extern void T98f31(T0* C);
+extern void T99f31(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].set_next_cursor */
-extern void T223f11(T0* C, T0* a1);
+extern void T224f11(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].has */
-extern T1 T98f9(T0* C, T0* a1);
+extern T1 T99f9(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].put_last */
-extern void T98f21(T0* C, T0* a1);
+extern void T99f21(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].make */
-extern T0* T98c19(T6 a1);
+extern T0* T99c19(T6 a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].new_cursor */
-extern T0* T98f7(T0* C);
+extern T0* T99f7(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].make */
-extern T0* T223c7(T0* a1);
+extern T0* T224c7(T0* a1);
 /* KL_SPECIAL_ROUTINES [PR_TOKEN].make */
-extern T0* T142f1(T0* C, T6 a1);
+extern T0* T143f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_TOKEN].make_area */
-extern T0* T248c2(T6 a1);
+extern T0* T249c2(T6 a1);
 /* SPECIAL [PR_TOKEN].make */
-extern T0* T141c4(T6 a1);
+extern T0* T142c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_TOKEN].default_create */
-extern T0* T142c3(void);
+extern T0* T143c3(void);
 /* PR_STATE.resolve_conflicts */
 extern T0* T59f18(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].force_last */
-extern void T98f23(T0* C, T0* a1);
+extern void T99f23(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].resize */
-extern void T98f20(T0* C, T6 a1);
+extern void T99f20(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_TOKEN].resize */
-extern T0* T142f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_TOKEN].resized_area */
-extern T0* T141f3(T0* C, T6 a1);
-/* SPECIAL [PR_TOKEN].copy_data */
-extern void T141f7(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_TOKEN].move_data */
-extern void T141f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_TOKEN].overlapping_move */
-extern void T141f10(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_TOKEN].non_overlapping_move */
-extern void T141f9(T0* C, T6 a1, T6 a2, T6 a3);
+extern T0* T143f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_TOKEN].aliased_resized_area */
+extern T0* T142f3(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].new_capacity */
-extern T6 T98f12(T0* C, T6 a1);
+extern T6 T99f12(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].extendible */
-extern T1 T98f11(T0* C, T6 a1);
+extern T1 T99f11(T0* C, T6 a1);
 /* PR_TOKEN.is_non_associative */
-extern T1 T84f18(T0* C);
+extern T1 T85f18(T0* C);
 /* PR_TOKEN.is_right_associative */
-extern T1 T84f17(T0* C);
+extern T1 T85f17(T0* C);
 /* PR_TOKEN.is_left_associative */
-extern T1 T84f16(T0* C);
+extern T1 T85f16(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].delete */
-extern void T98f25(T0* C, T0* a1);
+extern void T99f25(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].clear_items */
-extern void T98f30(T0* C, T6 a1, T6 a2);
+extern void T99f30(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_TOKEN].is_empty */
-extern T1 T98f13(T0* C);
+extern T1 T99f13(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].move_all_cursors_after */
-extern void T98f29(T0* C);
+extern void T99f29(T0* C);
 /* DS_LINKED_LIST [PR_CONFLICT].force_last */
 extern void T63f9(T0* C, T0* a1);
 /* DS_LINKABLE [PR_CONFLICT].put_right */
-extern void T296f4(T0* C, T0* a1);
+extern void T300f4(T0* C, T0* a1);
 /* DS_LINKABLE [PR_CONFLICT].make */
-extern T0* T296c3(T0* a1);
+extern T0* T300c3(T0* a1);
 /* DS_LINKED_LIST [PR_CONFLICT].is_empty */
 extern T1 T63f5(T0* C);
 /* PR_CONFLICT.make */
@@ -4303,235 +4875,227 @@ extern void T57f25(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_STATE].move_cursors_left */
 extern void T57f24(T0* C, T6 a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_STATE].set_position */
-extern void T182f5(T0* C, T6 a1);
+extern void T183f5(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_STATE].remove_last */
 extern void T57f23(T0* C);
 /* DS_ARRAYED_LIST [PR_STATE].move_last_cursors_after */
 extern void T57f26(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_STATE].set_next_cursor */
-extern void T182f6(T0* C, T0* a1);
+extern void T183f6(T0* C, T0* a1);
 /* PR_TOKEN.has_precedence */
-extern T1 T84f10(T0* C);
+extern T1 T85f10(T0* C);
 /* PR_RULE.has_precedence */
-extern T1 T72f15(T0* C);
+extern T1 T73f15(T0* C);
 /* DS_LINKED_LIST [PR_CONFLICT].make */
 extern T0* T63c8(void);
 /* DS_LINKED_LIST [PR_CONFLICT].new_cursor */
 extern T0* T63f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_CONFLICT].make */
-extern T0* T295c7(T0* a1);
+extern T0* T299c7(T0* a1);
 /* PR_FSM.make_default */
 extern void T22f12(T0* C, T0* a1);
 /* PR_FSM.build_deterministic */
 extern void T22f19(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_REDUCTION].forth */
-extern void T89f9(T0* C);
+extern void T90f9(T0* C);
 /* DS_LINKED_LIST [PR_REDUCTION].cursor_forth */
-extern void T74f11(T0* C, T0* a1);
+extern void T75f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_REDUCTION].add_traversing_cursor */
-extern void T74f12(T0* C, T0* a1);
+extern void T75f12(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_REDUCTION].set_next_cursor */
-extern void T89f11(T0* C, T0* a1);
+extern void T90f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_REDUCTION].remove_traversing_cursor */
-extern void T74f13(T0* C, T0* a1);
+extern void T75f13(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_REDUCTION].set */
-extern void T89f10(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T90f10(T0* C, T0* a1, T1 a2, T1 a3);
 /* PR_REDUCTION.build_lookaheads */
-extern void T90f7(T0* C);
+extern void T91f7(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_TOKEN].forth */
-extern void T261f9(T0* C);
+extern void T263f9(T0* C);
 /* DS_LINKED_LIST [PR_TOKEN].cursor_forth */
-extern void T79f13(T0* C, T0* a1);
+extern void T80f13(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TOKEN].add_traversing_cursor */
-extern void T79f14(T0* C, T0* a1);
+extern void T80f14(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_TOKEN].set_next_cursor */
-extern void T261f11(T0* C, T0* a1);
+extern void T263f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TOKEN].remove_traversing_cursor */
-extern void T79f15(T0* C, T0* a1);
+extern void T80f15(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_TOKEN].set */
-extern void T261f10(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T263f10(T0* C, T0* a1, T1 a2, T1 a3);
 /* DS_LINKED_LIST_CURSOR [PR_TOKEN].item */
-extern T0* T261f6(T0* C);
+extern T0* T263f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_TOKEN].start */
-extern void T261f8(T0* C);
+extern void T263f8(T0* C);
 /* DS_LINKED_LIST [PR_TOKEN].cursor_start */
-extern void T79f12(T0* C, T0* a1);
+extern void T80f12(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_TOKEN].cursor_off */
-extern T1 T79f9(T0* C, T0* a1);
+extern T1 T80f9(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].wipe_out */
-extern void T98f34(T0* C);
+extern void T99f34(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_REDUCTION].item */
-extern T0* T89f6(T0* C);
+extern T0* T90f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_REDUCTION].start */
-extern void T89f8(T0* C);
+extern void T90f8(T0* C);
 /* DS_LINKED_LIST [PR_REDUCTION].cursor_start */
-extern void T74f10(T0* C, T0* a1);
+extern void T75f10(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_REDUCTION].cursor_off */
-extern T1 T74f7(T0* C, T0* a1);
+extern T1 T75f7(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_REDUCTION].new_cursor */
-extern T0* T74f6(T0* C);
+extern T0* T75f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_REDUCTION].make */
-extern T0* T89c7(T0* a1);
+extern T0* T90c7(T0* a1);
 /* DS_NESTED_LIST_FLATTENER [PR_TOKEN].flatten */
-extern void T78f2(T0* C, T0* a1);
+extern void T79f2(T0* C, T0* a1);
 /* DS_NESTED_LIST_FLATTENER [PR_TOKEN].traverse */
-extern void T78f3(T0* C, T0* a1, T0* a2);
+extern void T79f3(T0* C, T0* a1, T0* a2);
 /* PR_TRANSITION.set_following_tokens */
-extern void T82f9(T0* C, T0* a1);
+extern void T83f9(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]].remove */
-extern void T201f10(T0* C);
+extern void T202f10(T0* C);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]].item */
-extern T0* T201f5(T0* C);
+extern T0* T202f5(T0* C);
 /* PR_TRANSITION.add_following_token */
-extern void T82f10(T0* C, T0* a1);
+extern void T83f10(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]].force */
-extern void T201f9(T0* C, T0* a1);
+extern void T202f9(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]].resize */
-extern void T201f11(T0* C, T6 a1);
+extern void T202f11(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_TOKEN]].resize */
-extern T0* T274f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].resized_area */
-extern T0* T273f3(T0* C, T6 a1);
-/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].copy_data */
-extern void T273f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].move_data */
-extern void T273f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].overlapping_move */
-extern void T273f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].non_overlapping_move */
-extern void T273f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].make */
-extern T0* T273c4(T6 a1);
+extern T0* T278f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].aliased_resized_area */
+extern T0* T277f3(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]].new_capacity */
-extern T6 T201f7(T0* C, T6 a1);
+extern T6 T202f7(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]].extendible */
-extern T1 T201f6(T0* C, T6 a1);
+extern T1 T202f6(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_TOKEN]].make */
-extern T0* T201c8(T6 a1);
+extern T0* T202c8(T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_TOKEN]].make */
-extern T0* T274f1(T0* C, T6 a1);
+extern T0* T278f1(T0* C, T6 a1);
 /* TO_SPECIAL [DS_NESTED_LIST [PR_TOKEN]].make_area */
-extern T0* T290c2(T6 a1);
+extern T0* T294c2(T6 a1);
+/* SPECIAL [DS_NESTED_LIST [PR_TOKEN]].make */
+extern T0* T277c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_TOKEN]].default_create */
-extern T0* T274c3(void);
+extern T0* T278c3(void);
 /* PR_TRANSITION.set_index */
-extern void T82f8(T0* C, T6 a1);
+extern void T83f8(T0* C, T6 a1);
 /* DS_NESTED_LIST_FLATTENER [PR_TOKEN].make */
-extern T0* T78c1(void);
+extern T0* T79c1(void);
 /* DS_ARRAYED_STACK [PR_STATE].item */
-extern T0* T81f5(T0* C);
+extern T0* T82f5(T0* C);
 /* DS_ARRAYED_STACK [PR_STATE].remove */
-extern void T81f9(T0* C);
+extern void T82f9(T0* C);
 /* PR_STATE.put_transition */
 extern void T59f32(T0* C, T0* a1, T0* a2);
 /* PR_REDUCTION.put_transition */
-extern void T90f6(T0* C, T0* a1);
+extern void T91f6(T0* C, T0* a1);
 /* PR_STATE.shift */
 extern T0* T59f22(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [PR_STATE].put */
-extern void T81f8(T0* C, T0* a1);
+extern void T82f8(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [PR_STATE].wipe_out */
-extern void T81f7(T0* C);
+extern void T82f7(T0* C);
 /* DS_ARRAYED_STACK [PR_STATE].clear_items */
-extern void T81f10(T0* C, T6 a1, T6 a2);
+extern void T82f10(T0* C, T6 a1, T6 a2);
 /* PR_TRANSITION.symbol */
-extern T0* T82f6(T0* C);
+extern T0* T83f6(T0* C);
 /* PR_VARIABLE.transition */
-extern T0* T73f12(T0* C, T0* a1);
+extern T0* T74f12(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].go_after */
-extern void T87f12(T0* C);
+extern void T88f12(T0* C);
 /* DS_LINKED_LIST [PR_TRANSITION].cursor_go_after */
-extern void T76f14(T0* C, T0* a1);
+extern void T77f14(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_TRANSITION].set_after */
-extern void T87f13(T0* C);
+extern void T88f13(T0* C);
 /* DS_ARRAYED_STACK [PR_STATE].make */
-extern T0* T81c6(T6 a1);
+extern T0* T82c6(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_STATE].make */
-extern T0* T181f1(T0* C, T6 a1);
+extern T0* T182f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_STATE].make_area */
-extern T0* T268c2(T6 a1);
+extern T0* T272c2(T6 a1);
 /* SPECIAL [PR_STATE].make */
-extern T0* T96c4(T6 a1);
+extern T0* T97c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_STATE].default_create */
-extern T0* T181c3(void);
+extern T0* T182c3(void);
 /* PR_GRAMMAR.max_rhs */
 extern T6 T29f9(T0* C);
 /* DS_LINKED_LIST [PR_TRANSITION].force_last */
-extern void T76f9(T0* C, T0* a1);
+extern void T77f9(T0* C, T0* a1);
 /* DS_LINKABLE [PR_TRANSITION].put_right */
-extern void T199f4(T0* C, T0* a1);
+extern void T200f4(T0* C, T0* a1);
 /* DS_LINKABLE [PR_TRANSITION].make */
-extern T0* T199c3(T0* a1);
+extern T0* T200c3(T0* a1);
 /* PR_VARIABLE.put_transition */
-extern void T73f19(T0* C, T0* a1);
+extern void T74f19(T0* C, T0* a1);
 /* PR_TRANSITION.make */
-extern T0* T82c7(T0* a1, T0* a2);
+extern T0* T83c7(T0* a1, T0* a2);
 /* DS_LINKED_LIST [PR_REDUCTION].append_last */
-extern void T74f9(T0* C, T0* a1);
+extern void T75f9(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_REDUCTION].is_empty */
-extern T1 T74f5(T0* C);
+extern T1 T75f5(T0* C);
 /* DS_LINKABLE [PR_REDUCTION].put_right */
-extern void T198f4(T0* C, T0* a1);
+extern void T199f4(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].after */
-extern T1 T211f6(T0* C);
+extern T1 T212f4(T0* C);
 /* DS_ARRAYED_LIST [PR_REDUCTION].cursor_after */
-extern T1 T85f12(T0* C, T0* a1);
+extern T1 T86f12(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].forth */
-extern void T211f9(T0* C);
+extern void T212f9(T0* C);
 /* DS_ARRAYED_LIST [PR_REDUCTION].cursor_forth */
-extern void T85f20(T0* C, T0* a1);
+extern void T86f20(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].set_position */
-extern void T211f10(T0* C, T6 a1);
+extern void T212f10(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_REDUCTION].add_traversing_cursor */
-extern void T85f21(T0* C, T0* a1);
+extern void T86f21(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].set_next_cursor */
-extern void T211f11(T0* C, T0* a1);
+extern void T212f11(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_REDUCTION].remove_traversing_cursor */
-extern void T85f22(T0* C, T0* a1);
+extern void T86f22(T0* C, T0* a1);
 /* DS_LINKABLE [PR_REDUCTION].make */
-extern T0* T198c3(T0* a1);
+extern T0* T199c3(T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].item */
-extern T0* T211f4(T0* C);
+extern T0* T212f6(T0* C);
 /* DS_ARRAYED_LIST [PR_REDUCTION].cursor_item */
-extern T0* T85f11(T0* C, T0* a1);
+extern T0* T86f11(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].start */
-extern void T211f8(T0* C);
+extern void T212f8(T0* C);
 /* DS_ARRAYED_LIST [PR_REDUCTION].cursor_start */
-extern void T85f19(T0* C, T0* a1);
+extern void T86f19(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].off */
-extern T1 T211f5(T0* C);
+extern T1 T212f5(T0* C);
 /* DS_ARRAYED_LIST [PR_REDUCTION].cursor_off */
-extern T1 T85f14(T0* C, T0* a1);
+extern T1 T86f14(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_REDUCTION].cursor_before */
-extern T1 T85f15(T0* C, T0* a1);
+extern T1 T86f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_REDUCTION].new_cursor */
-extern T0* T85f7(T0* C);
+extern T0* T86f7(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_REDUCTION].make */
-extern T0* T211c7(T0* a1);
+extern T0* T212c7(T0* a1);
 /* DS_ARRAYED_LIST [PR_REDUCTION].is_empty */
-extern T1 T85f8(T0* C);
+extern T1 T86f8(T0* C);
 /* PR_STATE.set_lookahead_needed */
 extern void T59f31(T0* C);
 /* DS_ARRAYED_LIST [PR_STATE].is_empty */
 extern T1 T57f12(T0* C);
 /* DS_LINKED_LIST [PR_TRANSITION].make */
-extern T0* T76c8(void);
+extern T0* T77c8(void);
 /* DS_LINKED_LIST [PR_REDUCTION].make */
-extern T0* T74c8(void);
+extern T0* T75c8(void);
 /* PR_FSM.build_nondeterministic */
 extern void T22f18(T0* C);
 /* PR_FSM.put_final_state */
 extern void T22f23(T0* C);
 /* PR_TOKEN.make */
-extern T0* T84c20(T6 a1, T0* a2, T0* a3);
+extern T0* T85c20(T6 a1, T0* a2, T0* a3);
 /* PR_FSM.no_type */
-extern unsigned char ge177os1601;
-extern T0* ge177ov1601;
+extern unsigned char ge173os1802;
+extern T0* ge173ov1802;
 extern T0* T22f9(T0* C);
 /* DS_ARRAYED_LIST [PR_TYPE].first */
-extern T0* T112f7(T0* C);
+extern T0* T113f7(T0* C);
 /* PR_TYPE.make */
-extern T0* T99c8(T6 a1, T0* a2);
+extern T0* T100c8(T6 a1, T0* a2);
 /* DS_ARRAYED_LIST [PR_STATE].force_last */
 extern void T57f18(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_STATE].new_capacity */
@@ -4541,19 +5105,19 @@ extern void T57f17(T0* C, T0* a1);
 /* PR_STATE.make */
 extern T0* T59c25(T6 a1, T0* a2);
 /* DS_ARRAYED_LIST [PR_REDUCTION].make */
-extern T0* T85c16(T6 a1);
+extern T0* T86c16(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_REDUCTION].make */
-extern T0* T209f1(T0* C, T6 a1);
+extern T0* T210f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_REDUCTION].make_area */
-extern T0* T276c2(T6 a1);
+extern T0* T280c2(T6 a1);
 /* SPECIAL [PR_REDUCTION].make */
-extern T0* T210c4(T6 a1);
+extern T0* T211c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_REDUCTION].default_create */
-extern T0* T209c3(void);
+extern T0* T210c3(void);
 /* DS_ARRAYED_LIST [PR_POSITION].make_equal */
-extern T0* T67c14(T6 a1);
+extern T0* T68c14(T6 a1);
 /* KL_EQUALITY_TESTER [PR_POSITION].default_create */
-extern T0* T191c3(void);
+extern T0* T192c3(void);
 /* PR_STATE.has_shift */
 extern T1 T59f24(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_STATE].first */
@@ -4561,17 +5125,9 @@ extern T0* T57f9(T0* C);
 /* DS_ARRAYED_LIST [PR_STATE].resize */
 extern void T57f16(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_STATE].resize */
-extern T0* T181f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_STATE].resized_area */
-extern T0* T96f3(T0* C, T6 a1);
-/* SPECIAL [PR_STATE].copy_data */
-extern void T96f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_STATE].move_data */
-extern void T96f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_STATE].overlapping_move */
-extern void T96f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_STATE].non_overlapping_move */
-extern void T96f8(T0* C, T6 a1, T6 a2, T6 a3);
+extern T0* T182f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_STATE].aliased_resized_area */
+extern T0* T97f3(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_STATE].extendible */
 extern T1 T57f7(T0* C, T6 a1);
 /* PR_FSM.build_transitions */
@@ -4580,192 +5136,166 @@ extern void T22f22(T0* C, T0* a1);
 extern T0* T22f8(T0* C, T0* a1);
 /* PR_STATE.set_id */
 extern void T59f28(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].put */
-extern void T58f36(T0* C, T0* a1, T6 a2);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].put_new */
+extern void T58f38(T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].key_storage_put */
-extern void T58f47(T0* C, T6 a1, T6 a2);
+extern void T58f49(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].item_storage_put */
+extern void T58f48(T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].slots_put */
-extern void T58f41(T0* C, T6 a1, T6 a2);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].clashes_put */
 extern void T58f42(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].clashes_put */
+extern void T58f43(T0* C, T6 a1, T6 a2);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].slots_item */
 extern T6 T58f28(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].clashes_item */
-extern T6 T58f23(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].item_storage_put */
-extern void T58f46(T0* C, T0* a1, T6 a2);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].search_position */
-extern void T58f37(T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].hash_position */
 extern T6 T58f27(T0* C, T6 a1);
 /* INTEGER_32.hash_code */
-extern T6 T6f19(T6* C);
+extern T6 T6f20(T6* C);
 /* INTEGER_32.infix "&" */
-extern T6 T6f20(T6* C, T6 a1);
+extern T6 T6f22(T6* C, T6 a1);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].clashes_item */
+extern T6 T58f23(T0* C, T6 a1);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].unset_found_item */
+extern void T58f40(T0* C);
+/* PR_STATE.same_state */
+extern T1 T59f12(T0* C, T0* a1);
+/* PR_POSITION.same_position */
+extern T1 T69f7(T0* C, T0* a1);
+/* PR_STATE.any_ */
+extern T0* T59f23(T0* C);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].found_item */
+extern T0* T58f29(T0* C);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].item_storage_item */
+extern T0* T58f22(T0* C, T6 a1);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].found */
+extern T1 T58f30(T0* C);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].search */
+extern void T58f37(T0* C, T6 a1);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].search_position */
+extern void T58f47(T0* C, T6 a1);
 /* KL_EQUALITY_TESTER [INTEGER_32].test */
 extern T1 T41f1(T0* C, T6 a1, T6 a2);
 /* KL_EQUALITY_TESTER [INTEGER_32].any_ */
 extern T0* T41f2(T0* C);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].key_storage_item */
-extern T6 T58f25(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].unset_found_item */
-extern void T58f39(T0* C);
-/* PR_STATE.same_state */
-extern T1 T59f12(T0* C, T0* a1);
-/* PR_POSITION.same_position */
-extern T1 T68f7(T0* C, T0* a1);
-/* PR_STATE.any_ */
-extern T0* T59f23(T0* C);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].item */
-extern T0* T58f29(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].item_storage_item */
-extern T0* T58f22(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].has */
-extern T1 T58f31(T0* C, T6 a1);
+extern T6 T58f26(T0* C, T6 a1);
 /* PR_STATE.sort_positions */
 extern void T59f26(T0* C);
 /* DS_ARRAYED_LIST [PR_POSITION].sort */
-extern void T67f15(T0* C, T0* a1);
+extern void T68f15(T0* C, T0* a1);
 /* DS_BUBBLE_SORTER [PR_POSITION].sort */
-extern void T188f3(T0* C, T0* a1);
+extern void T189f3(T0* C, T0* a1);
 /* DS_BUBBLE_SORTER [PR_POSITION].sort_with_comparator */
-extern void T188f4(T0* C, T0* a1, T0* a2);
+extern void T189f4(T0* C, T0* a1, T0* a2);
 /* DS_BUBBLE_SORTER [PR_POSITION].subsort_with_comparator */
-extern void T188f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
+extern void T189f5(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
 /* DS_ARRAYED_LIST [PR_POSITION].replace */
-extern void T67f17(T0* C, T0* a1, T6 a2);
+extern void T68f17(T0* C, T0* a1, T6 a2);
 /* KL_COMPARABLE_COMPARATOR [PR_POSITION].less_than */
-extern T1 T256f1(T0* C, T0* a1, T0* a2);
+extern T1 T258f1(T0* C, T0* a1, T0* a2);
 /* PR_POSITION.infix "<" */
-extern T1 T68f8(T0* C, T0* a1);
+extern T1 T69f8(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_POSITION].is_empty */
-extern T1 T67f11(T0* C);
+extern T1 T68f11(T0* C);
 /* PR_STATE.position_sorter */
-extern unsigned char ge180os3353;
-extern T0* ge180ov3353;
+extern unsigned char ge176os3587;
+extern T0* ge176ov3587;
 extern T0* T59f14(T0* C);
 /* DS_BUBBLE_SORTER [PR_POSITION].make */
-extern T0* T188c2(T0* a1);
+extern T0* T189c2(T0* a1);
 /* KL_COMPARABLE_COMPARATOR [PR_POSITION].make */
-extern T0* T256c2(void);
+extern T0* T258c2(void);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].resize */
-extern void T58f35(T0* C, T6 a1);
+extern void T58f36(T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].clashes_resize */
-extern void T58f45(T0* C, T6 a1);
+extern void T58f46(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [INTEGER_32].resize */
-extern T0* T131f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [INTEGER_32].resized_area */
-extern T0* T101f4(T0* C, T6 a1);
+extern T0* T132f2(T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].special_integer_ */
-extern T0* T58f26(T0* C);
+extern T0* T58f24(T0* C);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].key_storage_resize */
-extern void T58f44(T0* C, T6 a1);
+extern void T58f45(T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].item_storage_resize */
-extern void T58f43(T0* C, T6 a1);
+extern void T58f44(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_STATE]].resize */
-extern T0* T186f1(T0* C, T0* a1, T6 a2);
-/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].resized_area */
-extern T0* T183f3(T0* C, T6 a1);
-/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].copy_data */
-extern void T183f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].move_data */
-extern void T183f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].overlapping_move */
-extern void T183f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].non_overlapping_move */
-extern void T183f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].make */
-extern T0* T183c4(T6 a1);
+extern T0* T187f1(T0* C, T0* a1, T6 a2);
+/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].aliased_resized_area */
+extern T0* T184f3(T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].slots_resize */
-extern void T58f40(T0* C, T6 a1);
+extern void T58f41(T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].new_modulus */
-extern T6 T58f20(T0* C, T6 a1);
+extern T6 T58f33(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_REDUCTION].put_last */
-extern void T85f18(T0* C, T0* a1);
+extern void T86f18(T0* C, T0* a1);
 /* PR_REDUCTION.make */
-extern T0* T90c5(T0* a1);
+extern T0* T91c5(T0* a1);
 /* PR_FSM.put_closure_positions */
 extern void T22f24(T0* C, T0* a1, T0* a2);
 /* DS_LINKED_LIST_CURSOR [PR_RULE].forth */
-extern void T100f9(T0* C);
+extern void T101f9(T0* C);
 /* DS_LINKED_LIST [PR_RULE].cursor_forth */
-extern void T94f12(T0* C, T0* a1);
+extern void T95f12(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_RULE].add_traversing_cursor */
-extern void T94f13(T0* C, T0* a1);
+extern void T95f13(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_RULE].set_next_cursor */
-extern void T100f11(T0* C, T0* a1);
+extern void T101f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_RULE].remove_traversing_cursor */
-extern void T94f14(T0* C, T0* a1);
+extern void T95f14(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_RULE].set */
-extern void T100f10(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T101f10(T0* C, T0* a1, T1 a2, T1 a3);
 /* PR_POSITION.make */
-extern T0* T68c13(T0* a1, T6 a2);
+extern T0* T69c13(T0* a1, T6 a2);
 /* DS_LINKED_LIST_CURSOR [PR_RULE].item */
-extern T0* T100f6(T0* C);
+extern T0* T101f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_RULE].start */
-extern void T100f8(T0* C);
+extern void T101f8(T0* C);
 /* DS_LINKED_LIST [PR_RULE].cursor_start */
-extern void T94f11(T0* C, T0* a1);
+extern void T95f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_RULE].cursor_off */
-extern T1 T94f6(T0* C, T0* a1);
+extern T1 T95f6(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_RULE].new_cursor */
-extern T0* T94f8(T0* C);
+extern T0* T95f8(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_RULE].make */
-extern T0* T100c7(T0* a1);
+extern T0* T101c7(T0* a1);
 /* PR_STATE.put_position */
 extern void T59f27(T0* C, T0* a1);
 /* PR_POSITION.hash_code */
-extern T6 T68f3(T0* C);
+extern T6 T69f3(T0* C);
 /* DS_ARRAYED_LIST [PR_POSITION].resize */
-extern void T67f16(T0* C, T6 a1);
+extern void T68f16(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_POSITION].resize */
-extern T0* T192f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_POSITION].resized_area */
-extern T0* T190f3(T0* C, T6 a1);
-/* SPECIAL [PR_POSITION].copy_data */
-extern void T190f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_POSITION].move_data */
-extern void T190f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_POSITION].overlapping_move */
-extern void T190f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_POSITION].non_overlapping_move */
-extern void T190f8(T0* C, T6 a1, T6 a2, T6 a3);
+extern T0* T193f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_POSITION].aliased_resized_area */
+extern T0* T191f3(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_POSITION].is_full */
-extern T1 T67f7(T0* C);
+extern T1 T68f7(T0* C);
 /* DS_ARRAYED_LIST [PR_POSITION].has */
-extern T1 T67f9(T0* C, T0* a1);
+extern T1 T68f9(T0* C, T0* a1);
 /* KL_EQUALITY_TESTER [PR_POSITION].test */
-extern T1 T191f1(T0* C, T0* a1, T0* a2);
+extern T1 T192f1(T0* C, T0* a1, T0* a2);
 /* KL_EQUALITY_TESTER [PR_POSITION].any_ */
-extern T0* T191f2(T0* C);
+extern T0* T192f2(T0* C);
 /* PR_POSITION.next */
-extern T0* T68f10(T0* C);
+extern T0* T69f10(T0* C);
 /* ARRAY [PR_STATE].put */
-extern void T97f6(T0* C, T0* a1, T6 a2);
+extern void T98f6(T0* C, T0* a1, T6 a2);
 /* ARRAY [PR_STATE].item */
-extern T0* T97f4(T0* C, T6 a1);
+extern T0* T98f4(T0* C, T6 a1);
 /* PR_POSITION.symbol */
-extern T0* T68f9(T0* C);
+extern T0* T69f9(T0* C);
 /* DS_ARRAYED_LIST [PR_REDUCTION].resize */
-extern void T85f17(T0* C, T6 a1);
+extern void T86f17(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_REDUCTION].resize */
-extern T0* T209f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_REDUCTION].resized_area */
-extern T0* T210f3(T0* C, T6 a1);
-/* SPECIAL [PR_REDUCTION].copy_data */
-extern void T210f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_REDUCTION].move_data */
-extern void T210f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_REDUCTION].overlapping_move */
-extern void T210f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_REDUCTION].non_overlapping_move */
-extern void T210f8(T0* C, T6 a1, T6 a2, T6 a3);
+extern T0* T210f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_REDUCTION].aliased_resized_area */
+extern T0* T211f3(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_REDUCTION].extendible */
-extern T1 T85f6(T0* C, T6 a1);
+extern T1 T86f6(T0* C, T6 a1);
 /* ARRAY [PR_STATE].make */
-extern T0* T97c5(T6 a1, T6 a2);
+extern T0* T98c5(T6 a1, T6 a2);
 /* ARRAY [PR_STATE].make_area */
-extern void T97f7(T0* C, T6 a1);
+extern void T98f7(T0* C, T6 a1);
 /* PR_FSM.put_start_state */
 extern void T22f21(T0* C);
 /* DS_ARRAYED_LIST [PR_STATE].put_first */
@@ -4779,201 +5309,195 @@ extern void T57f20(T0* C, T6 a1, T6 a2);
 /* PR_FSM.build_derives */
 extern void T22f20(T0* C);
 /* DS_NESTED_LIST_FLATTENER [PR_RULE].flatten */
-extern void T92f2(T0* C, T0* a1);
+extern void T93f2(T0* C, T0* a1);
 /* DS_NESTED_LIST_FLATTENER [PR_RULE].traverse */
-extern void T92f3(T0* C, T0* a1, T0* a2);
+extern void T93f3(T0* C, T0* a1, T0* a2);
 /* PR_VARIABLE.set_derives */
-extern void T73f25(T0* C, T0* a1);
+extern void T74f25(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]].remove */
-extern void T217f10(T0* C);
+extern void T218f10(T0* C);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]].item */
-extern T0* T217f5(T0* C);
+extern T0* T218f5(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_VARIABLE].forth */
-extern void T222f9(T0* C);
+extern void T223f9(T0* C);
 /* DS_LINKED_LIST [PR_VARIABLE].cursor_forth */
-extern void T93f11(T0* C, T0* a1);
+extern void T94f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_VARIABLE].add_traversing_cursor */
-extern void T93f12(T0* C, T0* a1);
+extern void T94f12(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_VARIABLE].set_next_cursor */
-extern void T222f11(T0* C, T0* a1);
+extern void T223f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_VARIABLE].remove_traversing_cursor */
-extern void T93f13(T0* C, T0* a1);
+extern void T94f13(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_VARIABLE].set */
-extern void T222f10(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T223f10(T0* C, T0* a1, T1 a2, T1 a3);
 /* PR_VARIABLE.add_derive */
-extern void T73f24(T0* C, T0* a1);
+extern void T74f24(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_RULE].force_last */
-extern void T94f16(T0* C, T0* a1);
+extern void T95f16(T0* C, T0* a1);
 /* DS_LINKABLE [PR_RULE].put_right */
-extern void T224f4(T0* C, T0* a1);
+extern void T225f4(T0* C, T0* a1);
 /* DS_LINKABLE [PR_RULE].make */
-extern T0* T224c3(T0* a1);
+extern T0* T225c3(T0* a1);
 /* DS_LINKED_LIST [PR_RULE].is_empty */
-extern T1 T94f7(T0* C);
+extern T1 T95f7(T0* C);
 /* DS_LINKED_LIST [PR_RULE].has */
-extern T1 T94f9(T0* C, T0* a1);
+extern T1 T95f9(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_VARIABLE].item */
-extern T0* T222f6(T0* C);
+extern T0* T223f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_VARIABLE].start */
-extern void T222f8(T0* C);
+extern void T223f8(T0* C);
 /* DS_LINKED_LIST [PR_VARIABLE].cursor_start */
-extern void T93f10(T0* C, T0* a1);
+extern void T94f10(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_VARIABLE].cursor_off */
-extern T1 T93f7(T0* C, T0* a1);
+extern T1 T94f7(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_VARIABLE].new_cursor */
-extern T0* T93f6(T0* C);
+extern T0* T94f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_VARIABLE].make */
-extern T0* T222c7(T0* a1);
+extern T0* T223c7(T0* a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]].force */
-extern void T217f9(T0* C, T0* a1);
+extern void T218f9(T0* C, T0* a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]].resize */
-extern void T217f11(T0* C, T6 a1);
+extern void T218f11(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_RULE]].resize */
-extern T0* T279f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [DS_NESTED_LIST [PR_RULE]].resized_area */
-extern T0* T278f3(T0* C, T6 a1);
-/* SPECIAL [DS_NESTED_LIST [PR_RULE]].copy_data */
-extern void T278f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [DS_NESTED_LIST [PR_RULE]].move_data */
-extern void T278f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_NESTED_LIST [PR_RULE]].overlapping_move */
-extern void T278f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_NESTED_LIST [PR_RULE]].non_overlapping_move */
-extern void T278f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_NESTED_LIST [PR_RULE]].make */
-extern T0* T278c4(T6 a1);
+extern T0* T283f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [DS_NESTED_LIST [PR_RULE]].aliased_resized_area */
+extern T0* T282f3(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]].new_capacity */
-extern T6 T217f7(T0* C, T6 a1);
+extern T6 T218f7(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]].extendible */
-extern T1 T217f6(T0* C, T6 a1);
+extern T1 T218f6(T0* C, T6 a1);
 /* DS_ARRAYED_STACK [DS_NESTED_LIST [PR_RULE]].make */
-extern T0* T217c8(T6 a1);
+extern T0* T218c8(T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_RULE]].make */
-extern T0* T279f1(T0* C, T6 a1);
+extern T0* T283f1(T0* C, T6 a1);
 /* TO_SPECIAL [DS_NESTED_LIST [PR_RULE]].make_area */
-extern T0* T291c2(T6 a1);
+extern T0* T295c2(T6 a1);
+/* SPECIAL [DS_NESTED_LIST [PR_RULE]].make */
+extern T0* T282c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_NESTED_LIST [PR_RULE]].default_create */
-extern T0* T279c3(void);
+extern T0* T283c3(void);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].forth */
-extern void T214f11(T0* C);
+extern void T215f11(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].cursor_forth */
-extern void T91f36(T0* C, T0* a1);
+extern void T92f36(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].set_position */
-extern void T214f8(T0* C, T6 a1);
+extern void T215f8(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].add_traversing_cursor */
-extern void T91f37(T0* C, T0* a1);
+extern void T92f37(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].set_next_cursor */
-extern void T214f9(T0* C, T0* a1);
+extern void T215f9(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].remove_traversing_cursor */
-extern void T91f38(T0* C, T0* a1);
+extern void T92f38(T0* C, T0* a1);
 /* PR_VARIABLE.set_index */
-extern void T73f23(T0* C, T6 a1);
+extern void T74f23(T0* C, T6 a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].item */
-extern T0* T214f4(T0* C);
+extern T0* T215f4(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].cursor_item */
-extern T0* T91f15(T0* C, T0* a1);
+extern T0* T92f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].after */
-extern T1 T214f5(T0* C);
+extern T1 T215f5(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].cursor_after */
-extern T1 T91f16(T0* C, T0* a1);
+extern T1 T92f16(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].start */
-extern void T214f10(T0* C);
+extern void T215f10(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].cursor_start */
-extern void T91f35(T0* C, T0* a1);
+extern void T92f35(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].is_empty */
-extern T1 T91f17(T0* C);
+extern T1 T92f17(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].off */
-extern T1 T214f6(T0* C);
+extern T1 T215f6(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].cursor_off */
-extern T1 T91f18(T0* C, T0* a1);
+extern T1 T92f18(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].cursor_before */
-extern T1 T91f19(T0* C, T0* a1);
+extern T1 T92f19(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].new_cursor */
-extern T0* T91f11(T0* C);
+extern T0* T92f11(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_VARIABLE].make */
-extern T0* T214c7(T0* a1);
+extern T0* T215c7(T0* a1);
 /* DS_NESTED_LIST_FLATTENER [PR_RULE].make */
-extern T0* T92c1(void);
+extern T0* T93c1(void);
 /* DS_LINKED_LIST [PR_RULE].append_last */
-extern void T94f15(T0* C, T0* a1);
+extern void T95f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].after */
-extern T1 T196f5(T0* C);
+extern T1 T197f5(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].cursor_after */
-extern T1 T70f18(T0* C, T0* a1);
+extern T1 T71f18(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].forth */
-extern void T196f11(T0* C);
+extern void T197f11(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].cursor_forth */
-extern void T70f33(T0* C, T0* a1);
+extern void T71f33(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].set_position */
-extern void T196f8(T0* C, T6 a1);
+extern void T197f8(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_RULE].add_traversing_cursor */
-extern void T70f34(T0* C, T0* a1);
+extern void T71f34(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].set_next_cursor */
-extern void T196f9(T0* C, T0* a1);
+extern void T197f9(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].remove_traversing_cursor */
-extern void T70f35(T0* C, T0* a1);
+extern void T71f35(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].item */
-extern T0* T196f4(T0* C);
+extern T0* T197f4(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].cursor_item */
-extern T0* T70f17(T0* C, T0* a1);
+extern T0* T71f17(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].start */
-extern void T196f10(T0* C);
+extern void T197f10(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].cursor_start */
-extern void T70f32(T0* C, T0* a1);
+extern void T71f32(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].off */
-extern T1 T196f6(T0* C);
+extern T1 T197f6(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].cursor_off */
-extern T1 T70f19(T0* C, T0* a1);
+extern T1 T71f19(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].cursor_before */
-extern T1 T70f20(T0* C, T0* a1);
+extern T1 T71f20(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].new_cursor */
-extern T0* T70f12(T0* C);
+extern T0* T71f12(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_RULE].make */
-extern T0* T196c7(T0* a1);
+extern T0* T197c7(T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].is_empty */
-extern T1 T70f9(T0* C);
+extern T1 T71f9(T0* C);
 /* DS_LINKED_LIST [PR_VARIABLE].force_last */
-extern void T93f9(T0* C, T0* a1);
+extern void T94f9(T0* C, T0* a1);
 /* DS_LINKABLE [PR_VARIABLE].put_right */
-extern void T301f4(T0* C, T0* a1);
+extern void T305f4(T0* C, T0* a1);
 /* DS_LINKABLE [PR_VARIABLE].make */
-extern T0* T301c3(T0* a1);
+extern T0* T305c3(T0* a1);
 /* DS_LINKED_LIST [PR_VARIABLE].is_empty */
-extern T1 T93f5(T0* C);
+extern T1 T94f5(T0* C);
 /* DS_ARRAYED_LIST [PR_SYMBOL].first */
-extern T0* T80f10(T0* C);
+extern T0* T81f10(T0* C);
 /* DS_ARRAYED_LIST [PR_SYMBOL].is_empty */
-extern T1 T80f9(T0* C);
+extern T1 T81f9(T0* C);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make */
-extern T0* T58c34(T6 a1);
+extern T0* T58c35(T6 a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_with_equality_testers */
-extern void T58f38(T0* C, T6 a1, T0* a2, T0* a3);
+extern void T58f39(T0* C, T6 a1, T0* a2, T0* a3);
 /* DS_SPARSE_TABLE_KEYS [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make */
-extern T0* T184c5(T0* a1);
+extern T0* T185c5(T0* a1);
 /* DS_SPARSE_TABLE_KEYS [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].new_cursor */
-extern T0* T184f4(T0* C);
+extern T0* T185f4(T0* C);
 /* DS_SPARSE_TABLE_KEYS_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make */
-extern T0* T269c3(T0* a1);
+extern T0* T273c3(T0* a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].new_cursor */
 extern T0* T58f32(T0* C);
 /* DS_HASH_TABLE_CURSOR [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make */
-extern T0* T187c3(T0* a1);
+extern T0* T188c3(T0* a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_sparse_container */
-extern void T58f48(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_slots */
-extern void T58f52(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_clashes */
-extern void T58f51(T0* C, T6 a1);
-/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_key_storage */
 extern void T58f50(T0* C, T6 a1);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_slots */
+extern void T58f54(T0* C, T6 a1);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_clashes */
+extern void T58f53(T0* C, T6 a1);
+/* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_key_storage */
+extern void T58f52(T0* C, T6 a1);
 /* DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER_32].make_item_storage */
-extern void T58f49(T0* C, T6 a1);
+extern void T58f51(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_STATE]].make */
-extern T0* T186f2(T0* C, T6 a1);
+extern T0* T187f2(T0* C, T6 a1);
 /* TO_SPECIAL [DS_ARRAYED_LIST [PR_STATE]].make_area */
-extern T0* T270c2(T6 a1);
+extern T0* T274c2(T6 a1);
+/* SPECIAL [DS_ARRAYED_LIST [PR_STATE]].make */
+extern T0* T184c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_STATE]].default_create */
-extern T0* T186c3(void);
+extern T0* T187c3(void);
 /* KL_EQUALITY_TESTER [INTEGER_32].default_create */
 extern T0* T41c3(void);
 /* DS_ARRAYED_LIST [PR_STATE].make */
@@ -4981,101 +5505,101 @@ extern T0* T57c14(T6 a1);
 /* DS_ARRAYED_LIST [PR_STATE].new_cursor */
 extern T0* T57f10(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_STATE].make */
-extern T0* T182c4(T0* a1);
+extern T0* T183c4(T0* a1);
 /* PR_GRAMMAR.set_nullable */
 extern void T29f21(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].remove_last */
-extern void T91f23(T0* C);
+extern void T92f23(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].move_last_cursors_after */
-extern void T91f27(T0* C);
+extern void T92f27(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].last */
-extern T0* T91f10(T0* C);
+extern T0* T92f10(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].first */
-extern T0* T91f9(T0* C);
+extern T0* T92f9(T0* C);
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]].item */
-extern T0* T171f6(T0* C, T6 a1);
+extern T0* T172f6(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]].wipe_out */
-extern void T171f11(T0* C);
+extern void T172f11(T0* C);
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]].clear_items */
-extern void T171f13(T0* C, T6 a1, T6 a2);
+extern void T172f13(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]].move_all_cursors_after */
-extern void T171f12(T0* C);
+extern void T172f12(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [PR_VARIABLE]].set_next_cursor */
-extern void T266f6(T0* C, T0* a1);
+extern void T270f6(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [PR_VARIABLE]].set_position */
-extern void T266f5(T0* C, T6 a1);
+extern void T270f5(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]].put_last */
-extern void T171f10(T0* C, T0* a1);
+extern void T172f10(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].put_last */
-extern void T91f22(T0* C, T0* a1);
+extern void T92f22(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].put_first */
-extern void T91f21(T0* C, T0* a1);
+extern void T92f21(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].put */
-extern void T91f26(T0* C, T0* a1, T6 a2);
+extern void T92f26(T0* C, T0* a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_VARIABLE].move_cursors_right */
-extern void T91f33(T0* C, T6 a1, T6 a2);
+extern void T92f33(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_VARIABLE].move_right */
-extern void T91f32(T0* C, T6 a1, T6 a2);
+extern void T92f32(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_VARIABLE].make */
-extern T0* T91c20(T6 a1);
+extern T0* T92c20(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_VARIABLE].make */
-extern T0* T213f1(T0* C, T6 a1);
+extern T0* T214f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_VARIABLE].make_area */
-extern T0* T277c2(T6 a1);
+extern T0* T281c2(T6 a1);
 /* SPECIAL [PR_VARIABLE].make */
-extern T0* T212c5(T6 a1);
+extern T0* T213c5(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_VARIABLE].default_create */
-extern T0* T213c3(void);
+extern T0* T214c3(void);
 /* PR_VARIABLE.set_nullable */
-extern void T73f20(T0* C);
+extern void T74f20(T0* C);
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]].make */
-extern T0* T171c9(T6 a1);
+extern T0* T172c9(T6 a1);
 /* DS_ARRAYED_LIST [DS_ARRAYED_LIST [PR_VARIABLE]].new_cursor */
-extern T0* T171f7(T0* C);
+extern T0* T172f7(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [DS_ARRAYED_LIST [PR_VARIABLE]].make */
-extern T0* T266c4(T0* a1);
+extern T0* T270c4(T0* a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_VARIABLE]].make */
-extern T0* T265f1(T0* C, T6 a1);
+extern T0* T269f1(T0* C, T6 a1);
 /* TO_SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]].make_area */
-extern T0* T288c2(T6 a1);
+extern T0* T292c2(T6 a1);
 /* SPECIAL [DS_ARRAYED_LIST [PR_VARIABLE]].make */
-extern T0* T264c2(T6 a1);
+extern T0* T268c2(T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_VARIABLE]].default_create */
-extern T0* T265c2(void);
+extern T0* T269c2(void);
 /* PR_GRAMMAR.reduce */
 extern void T29f23(T0* C, T0* a1);
 /* PR_GRAMMAR.integer_ */
 extern T0* T29f14(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].remove */
-extern void T91f24(T0* C, T6 a1);
+extern void T92f24(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].move_left */
-extern void T91f29(T0* C, T6 a1, T6 a2);
+extern void T92f29(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_VARIABLE].move_cursors_left */
-extern void T91f28(T0* C, T6 a1);
+extern void T92f28(T0* C, T6 a1);
 /* PR_VARIABLE.set_id */
-extern void T73f22(T0* C, T6 a1);
+extern void T74f22(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_RULE].remove */
-extern void T70f22(T0* C, T6 a1);
+extern void T71f22(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_RULE].move_left */
-extern void T70f28(T0* C, T6 a1, T6 a2);
+extern void T71f28(T0* C, T6 a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_RULE].move_cursors_left */
-extern void T70f27(T0* C, T6 a1);
+extern void T71f27(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_RULE].remove_last */
-extern void T70f26(T0* C);
+extern void T71f26(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].move_last_cursors_after */
-extern void T70f31(T0* C);
+extern void T71f31(T0* C);
 /* PR_RULE.set_id */
-extern void T72f28(T0* C, T6 a1);
+extern void T73f28(T0* C, T6 a1);
 /* PR_GRAMMAR.mark_useful_rules */
 extern void T29f29(T0* C);
 /* PR_RULE.set_useful */
-extern void T72f29(T0* C, T1 a1);
+extern void T73f29(T0* C, T1 a1);
 /* PR_GRAMMAR.traverse_variable */
 extern void T29f30(T0* C, T0* a1);
 /* PR_TOKEN.set_useful */
-extern void T84f28(T0* C, T1 a1);
+extern void T85f28(T0* C, T1 a1);
 /* PR_VARIABLE.set_useful */
-extern void T73f18(T0* C, T1 a1);
+extern void T74f18(T0* C, T1 a1);
 /* PR_GRAMMAR.mark_useful_variables */
 extern void T29f28(T0* C);
 /* PR_FSM.make_verbose */
@@ -5087,67 +5611,67 @@ extern void T59f30(T0* C, T0* a1);
 /* PR_STATE.print_reductions */
 extern void T59f34(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].extend_last */
-extern void T98f24(T0* C, T0* a1);
+extern void T99f24(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].forth */
-extern void T223f9(T0* C);
+extern void T224f9(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].cursor_forth */
-extern void T98f33(T0* C, T0* a1);
+extern void T99f33(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].add_traversing_cursor */
-extern void T98f35(T0* C, T0* a1);
+extern void T99f35(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].remove_traversing_cursor */
-extern void T98f36(T0* C, T0* a1);
+extern void T99f36(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].item */
-extern T0* T223f5(T0* C);
+extern T0* T224f4(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].cursor_item */
-extern T0* T98f16(T0* C, T0* a1);
+extern T0* T99f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].after */
-extern T1 T223f4(T0* C);
+extern T1 T224f5(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].cursor_after */
-extern T1 T98f15(T0* C, T0* a1);
+extern T1 T99f16(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].start */
-extern void T223f8(T0* C);
+extern void T224f8(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].cursor_start */
-extern void T98f32(T0* C, T0* a1);
+extern void T99f32(T0* C, T0* a1);
 /* DS_ARRAYED_LIST_CURSOR [PR_TOKEN].off */
-extern T1 T223f6(T0* C);
+extern T1 T224f6(T0* C);
 /* DS_ARRAYED_LIST [PR_TOKEN].cursor_off */
-extern T1 T98f17(T0* C, T0* a1);
+extern T1 T99f17(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].cursor_before */
-extern T1 T98f18(T0* C, T0* a1);
+extern T1 T99f18(T0* C, T0* a1);
 /* PR_POSITION.print_position */
-extern void T68f14(T0* C, T0* a1);
+extern void T69f14(T0* C, T0* a1);
 /* PR_GRAMMAR.print_grammar */
 extern void T29f22(T0* C, T0* a1);
 /* PR_VARIABLE.print_variable */
-extern void T73f21(T0* C, T0* a1, T0* a2);
+extern void T74f21(T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [PR_SYMBOL].has */
-extern T1 T80f11(T0* C, T0* a1);
+extern T1 T81f11(T0* C, T0* a1);
 /* PR_TOKEN.print_token */
-extern void T84f30(T0* C, T0* a1, T0* a2);
+extern void T85f30(T0* C, T0* a1, T0* a2);
 /* PR_RULE.print_rule */
-extern void T72f27(T0* C, T0* a1);
+extern void T73f27(T0* C, T0* a1);
 /* PR_FSM.set_error_actions_verbose */
 extern void T22f14(T0* C, T0* a1, T0* a2);
 /* PR_FSM.resolve_conflicts_verbose */
 extern void T22f13(T0* C, T0* a1, T0* a2);
 /* DS_LINKED_LIST_CURSOR [PR_CONFLICT].forth */
-extern void T295f9(T0* C);
+extern void T299f9(T0* C);
 /* DS_LINKED_LIST [PR_CONFLICT].cursor_forth */
 extern void T63f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_CONFLICT].add_traversing_cursor */
 extern void T63f12(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_CONFLICT].set_next_cursor */
-extern void T295f11(T0* C, T0* a1);
+extern void T299f11(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_CONFLICT].remove_traversing_cursor */
 extern void T63f13(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_CONFLICT].set */
-extern void T295f10(T0* C, T0* a1, T1 a2, T1 a3);
+extern void T299f10(T0* C, T0* a1, T1 a2, T1 a3);
 /* PR_CONFLICT.print_conflict */
 extern void T65f6(T0* C, T0* a1);
 /* DS_LINKED_LIST_CURSOR [PR_CONFLICT].item */
-extern T0* T295f6(T0* C);
+extern T0* T299f6(T0* C);
 /* DS_LINKED_LIST_CURSOR [PR_CONFLICT].start */
-extern void T295f8(T0* C);
+extern void T299f8(T0* C);
 /* DS_LINKED_LIST [PR_CONFLICT].cursor_start */
 extern void T63f10(T0* C, T0* a1);
 /* DS_LINKED_LIST [PR_CONFLICT].cursor_off */
@@ -5155,54 +5679,54 @@ extern T1 T63f7(T0* C, T0* a1);
 /* PR_GRAMMAR.reduce_verbose */
 extern void T29f20(T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [PR_RULE].cloned_object */
-extern T0* T70f11(T0* C);
+extern T0* T71f11(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].twin */
-extern T0* T70f8(T0* C);
+extern T0* T71f8(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].copy */
-extern void T70f25(T0* C, T0* a1);
+extern void T71f25(T0* C, T0* a1);
 /* SPECIAL [PR_RULE].twin */
-extern T0* T194f4(T0* C);
+extern T0* T195f4(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].valid_cursor */
-extern T1 T70f13(T0* C, T0* a1);
+extern T1 T71f13(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].move_all_cursors_after */
-extern void T70f29(T0* C);
+extern void T71f29(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].cloned_object */
-extern T0* T91f8(T0* C);
+extern T0* T92f8(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].twin */
-extern T0* T91f7(T0* C);
+extern T0* T92f7(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].copy */
-extern void T91f25(T0* C, T0* a1);
+extern void T92f25(T0* C, T0* a1);
 /* SPECIAL [PR_VARIABLE].twin */
-extern T0* T212f2(T0* C);
+extern T0* T213f2(T0* C);
 /* DS_ARRAYED_LIST [PR_VARIABLE].valid_cursor */
-extern T1 T91f12(T0* C, T0* a1);
+extern T1 T92f12(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].move_all_cursors_after */
-extern void T91f30(T0* C);
+extern void T92f30(T0* C);
 /* KL_STANDARD_FILES.output */
-extern unsigned char ge301os2633;
-extern T0* ge301ov2633;
+extern unsigned char ge323os2896;
+extern T0* ge323ov2896;
 extern T0* T35f1(T0* C);
 /* KL_STDOUT_FILE.make */
 extern T0* T36c9(void);
 /* KL_STDOUT_FILE.make_open_stdout */
-extern void T36f15(T0* C, T0* a1);
+extern void T36f16(T0* C, T0* a1);
 /* KL_STDOUT_FILE.set_write_mode */
-extern void T36f19(T0* C);
+extern void T36f20(T0* C);
 /* KL_STDOUT_FILE.console_def */
 extern T14 T36f4(T0* C, T6 a1);
 /* KL_STDOUT_FILE.old_make */
-extern void T36f18(T0* C, T0* a1);
+extern void T36f19(T0* C, T0* a1);
 /* GEYACC.std */
-extern unsigned char ge299os1578;
-extern T0* ge299ov1578;
+extern unsigned char ge321os1779;
+extern T0* ge321ov1779;
 extern T0* T21f12(T0* C);
 /* KL_STANDARD_FILES.default_create */
 extern T0* T35c4(void);
 /* KL_EXCEPTIONS.die */
 extern void T34f2(T0* C, T6 a1);
 /* GEYACC.exceptions */
-extern unsigned char ge317os1575;
-extern T0* ge317ov1575;
+extern unsigned char ge354os1776;
+extern T0* ge354ov1776;
 extern T0* T21f15(T0* C);
 /* KL_EXCEPTIONS.default_create */
 extern T0* T34c1(void);
@@ -5213,11 +5737,11 @@ extern void T28f10(T0* C, T0* a1);
 /* UT_CANNOT_WRITE_TO_FILE_ERROR.make */
 extern T0* T25c7(T0* a1);
 /* KL_TEXT_OUTPUT_FILE.close */
-extern void T24f22(T0* C);
+extern void T24f23(T0* C);
 /* KL_TEXT_OUTPUT_FILE.old_close */
 extern void T24f30(T0* C);
 /* KL_TEXT_OUTPUT_FILE.file_close */
-extern void T24f33(T0* C, T14 a1);
+extern void T24f34(T0* C, T14 a1);
 /* PR_HTML_DOC_GENERATOR.print_grammar */
 extern void T31f5(T0* C, T0* a1);
 /* PR_HTML_DOC_GENERATOR.print_grammar_footer */
@@ -5285,29 +5809,29 @@ extern void T30f9(T0* C, T0* a1);
 /* PR_XML_DOC_GENERATOR.print_grammar_header */
 extern void T30f6(T0* C, T0* a1);
 /* KL_TEXT_OUTPUT_FILE.is_open_write */
-extern T1 T24f11(T0* C);
+extern T1 T24f12(T0* C);
 /* KL_TEXT_OUTPUT_FILE.old_is_open_write */
 extern T1 T24f8(T0* C);
 /* KL_TEXT_OUTPUT_FILE.open_write */
-extern void T24f21(T0* C);
+extern void T24f22(T0* C);
 /* KL_TEXT_OUTPUT_FILE.is_closed */
-extern T1 T24f12(T0* C);
+extern T1 T24f13(T0* C);
 /* KL_TEXT_OUTPUT_FILE.old_is_closed */
-extern T1 T24f19(T0* C);
+extern T1 T24f11(T0* C);
 /* KL_TEXT_OUTPUT_FILE.old_open_write */
-extern void T24f29(T0* C);
+extern void T24f31(T0* C);
 /* KL_TEXT_OUTPUT_FILE.default_pointer */
-extern T14 T24f16(T0* C);
+extern T14 T24f18(T0* C);
 /* KL_TEXT_OUTPUT_FILE.open_write */
-extern void T24f29p1(T0* C);
+extern void T24f31p1(T0* C);
 /* KL_TEXT_OUTPUT_FILE.file_open */
-extern T14 T24f18(T0* C, T14 a1, T6 a2);
+extern T14 T24f19(T0* C, T14 a1, T6 a2);
 /* STRING_8.to_c */
 extern T0* T17f4(T0* C);
 /* KL_TEXT_OUTPUT_FILE.make */
 extern T0* T24c20(T0* a1);
 /* KL_TEXT_OUTPUT_FILE.old_make */
-extern void T24f28(T0* C, T0* a1);
+extern void T24f29(T0* C, T0* a1);
 /* PR_HTML_DOC_GENERATOR.set_lhs_shared */
 extern void T31f4(T0* C, T1 a1);
 /* PR_XML_DOC_GENERATOR.set_lhs_shared */
@@ -5319,27 +5843,27 @@ extern T0* T30c3(T0* a1);
 /* GEYACC.parse_input_file */
 extern void T21f21(T0* C);
 /* KL_STANDARD_FILES.input */
-extern unsigned char ge301os2632;
-extern T0* ge301ov2632;
+extern unsigned char ge323os2895;
+extern T0* ge323ov2895;
 extern T0* T35f2(T0* C);
 /* KL_STDIN_FILE.make */
 extern T0* T54c18(void);
 /* KL_STDIN_FILE.make_open_stdin */
-extern void T54f19(T0* C, T0* a1);
+extern void T54f20(T0* C, T0* a1);
 /* KL_STDIN_FILE.set_read_mode */
-extern void T54f21(T0* C);
+extern void T54f22(T0* C);
 /* KL_STDIN_FILE.console_def */
 extern T14 T54f8(T0* C, T6 a1);
 /* KL_STDIN_FILE.old_make */
-extern void T54f20(T0* C, T0* a1);
+extern void T54f21(T0* C, T0* a1);
 /* UT_CANNOT_READ_FILE_ERROR.make */
 extern T0* T52c7(T0* a1);
 /* KL_TEXT_INPUT_FILE.close */
-extern void T51f37(T0* C);
+extern void T51f38(T0* C);
 /* KL_TEXT_INPUT_FILE.old_close */
 extern void T51f40(T0* C);
 /* KL_TEXT_INPUT_FILE.file_close */
-extern void T51f41(T0* C, T14 a1);
+extern void T51f42(T0* C, T14 a1);
 /* PR_YACC_PARSER.parse_file */
 extern void T50f257(T0* C, T0* a1);
 /* PR_YACC_PARSER.parse */
@@ -5349,25 +5873,17 @@ extern void T50f274(T0* C, T6 a1);
 /* PR_YACC_PARSER.yy_push_error_value */
 extern void T50f273(T0* C);
 /* KL_SPECIAL_ROUTINES [ANY].resize */
-extern T0* T134f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [ANY].resized_area */
-extern T0* T133f2(T0* C, T6 a1);
-/* SPECIAL [ANY].copy_data */
-extern void T133f7(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [ANY].move_data */
-extern void T133f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [ANY].overlapping_move */
-extern void T133f10(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [ANY].non_overlapping_move */
-extern void T133f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [ANY].make */
-extern T0* T133c4(T6 a1);
+extern T0* T135f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [ANY].aliased_resized_area */
+extern T0* T134f2(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [ANY].make */
-extern T0* T134f1(T0* C, T6 a1);
+extern T0* T135f1(T0* C, T6 a1);
 /* TO_SPECIAL [ANY].make_area */
-extern T0* T244c2(T6 a1);
+extern T0* T245c2(T6 a1);
+/* SPECIAL [ANY].make */
+extern T0* T134c3(T6 a1);
 /* KL_SPECIAL_ROUTINES [ANY].default_create */
-extern T0* T134c3(void);
+extern T0* T135c3(void);
 /* PR_YACC_PARSER.yy_do_action */
 extern void T50f272(T0* C, T6 a1);
 /* PR_GRAMMAR.set_eiffel_code */
@@ -5375,7 +5891,7 @@ extern void T29f25(T0* C, T0* a1);
 /* PR_YACC_PARSER.report_prec_not_token_error */
 extern void T50f300(T0* C, T0* a1);
 /* PR_PREC_NOT_TOKEN_ERROR.make */
-extern T0* T152c7(T0* a1, T6 a2, T0* a3);
+extern T0* T153c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.filename */
 extern T0* T50f229(T0* C);
 /* PR_YACC_PARSER.new_token */
@@ -5383,159 +5899,133 @@ extern T0* T50f177(T0* C, T0* a1);
 /* PR_GRAMMAR.put_token */
 extern void T29f33(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TOKEN].is_full */
-extern T1 T98f8(T0* C);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].force */
-extern void T126f36(T0* C, T0* a1, T0* a2);
+extern T1 T99f8(T0* C);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].force_new */
+extern void T127f41(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].key_storage_put */
-extern void T126f44(T0* C, T0* a1, T6 a2);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].slots_put */
-extern void T126f43(T0* C, T6 a1, T6 a2);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].clashes_put */
-extern void T126f42(T0* C, T6 a1, T6 a2);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].slots_item */
-extern T6 T126f29(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].clashes_item */
-extern T6 T126f28(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].hash_position */
-extern T6 T126f21(T0* C, T0* a1);
-/* STRING_8.hash_code */
-extern T6 T17f25(T0* C);
-/* INTEGER_32.infix "|<<" */
-extern T6 T6f22(T6* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].resize */
-extern void T126f41(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].clashes_resize */
-extern void T126f49(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].special_integer_ */
-extern T0* T126f31(T0* C);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].key_storage_resize */
-extern void T126f48(T0* C, T6 a1);
-/* KL_SPECIAL_ROUTINES [STRING_8].resize */
-extern T0* T135f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [STRING_8].resized_area */
-extern T0* T122f3(T0* C, T6 a1);
-/* SPECIAL [STRING_8].copy_data */
-extern void T122f7(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [STRING_8].move_data */
-extern void T122f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [STRING_8].overlapping_move */
-extern void T122f10(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [STRING_8].non_overlapping_move */
-extern void T122f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].item_storage_resize */
-extern void T126f47(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].key_storage_item */
-extern T0* T126f20(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].slots_resize */
-extern void T126f46(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].new_modulus */
-extern T6 T126f24(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].new_capacity */
-extern T6 T126f33(T0* C, T6 a1);
+extern void T127f49(T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].item_storage_put */
-extern void T126f40(T0* C, T0* a1, T6 a2);
+extern void T127f45(T0* C, T0* a1, T6 a2);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].slots_put */
+extern void T127f48(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].clashes_put */
+extern void T127f47(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].slots_item */
+extern T6 T127f36(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].hash_position */
+extern T6 T127f28(T0* C, T0* a1);
+/* STRING_8.hash_code */
+extern T6 T17f27(T0* C);
+/* INTEGER_32.infix "|<<" */
+extern T6 T6f24(T6* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].clashes_item */
+extern T6 T127f35(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].resize */
+extern void T127f46(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].clashes_resize */
+extern void T127f54(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].special_integer_ */
+extern T0* T127f33(T0* C);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].key_storage_resize */
+extern void T127f53(T0* C, T6 a1);
+/* KL_SPECIAL_ROUTINES [STRING_8].resize */
+extern T0* T136f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [STRING_8].aliased_resized_area */
+extern T0* T123f3(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].item_storage_resize */
+extern void T127f52(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].key_storage_item */
+extern T0* T127f23(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].slots_resize */
+extern void T127f51(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].new_modulus */
+extern T6 T127f26(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].new_capacity */
+extern T6 T127f25(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].unset_found_item */
+extern void T127f44(T0* C);
+/* PR_YACC_PARSER.unknown_type */
+extern unsigned char ge201os3897;
+extern T0* ge201ov3897;
+extern T0* T50f244(T0* C);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].found_item */
+extern T0* T127f21(T0* C);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].item_storage_item */
+extern T0* T127f29(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].found */
+extern T1 T127f31(T0* C);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].search */
+extern void T127f40(T0* C, T0* a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].search_position */
-extern void T126f37(T0* C, T0* a1);
+extern void T127f42(T0* C, T0* a1);
 /* KL_EQUALITY_TESTER [STRING_8].test */
 extern T1 T42f1(T0* C, T0* a1, T0* a2);
 /* KL_EQUALITY_TESTER [STRING_8].any_ */
 extern T0* T42f2(T0* C);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].unset_found_item */
-extern void T126f39(T0* C);
-/* PR_YACC_PARSER.unknown_type */
-extern unsigned char ge205os3661;
-extern T0* ge205ov3661;
-extern T0* T50f244(T0* C);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].item */
-extern T0* T126f22(T0* C, T0* a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].item_storage_item */
-extern T0* T126f32(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TOKEN, STRING_8].has */
-extern T1 T126f23(T0* C, T0* a1);
 /* STRING_8.as_lower */
 extern T0* T17f10(T0* C);
 /* STRING_8.to_lower */
-extern void T17f36(T0* C);
+extern void T17f37(T0* C);
+/* STRING_8.to_lower_area */
+extern void T17f42(T0* C, T0* a1, T6 a2, T6 a3);
 /* STRING_8.twin */
 extern T0* T17f9(T0* C);
 /* STRING_8.copy */
-extern void T17f35(T0* C, T0* a1);
-/* SPECIAL [CHARACTER_8].twin */
-extern T0* T15f3(T0* C);
+extern void T17f36(T0* C, T0* a1);
 /* PR_YACC_PARSER.report_prec_specified_twice_error */
 extern void T50f299(T0* C);
 /* PR_PREC_SPECIFIED_TWICE_ERROR.make */
-extern T0* T151c7(T0* a1, T6 a2);
+extern T0* T152c7(T0* a1, T6 a2);
 /* PR_YACC_PARSER.put_action */
 extern void T50f298(T0* C, T0* a1, T0* a2);
 /* PR_RULE.put_symbol */
-extern void T72f23(T0* C, T0* a1);
+extern void T73f23(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_ERROR_ACTION].put_last */
-extern void T143f12(T0* C, T0* a1);
+extern void T144f12(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_ERROR_ACTION].resize */
-extern void T143f11(T0* C, T6 a1);
+extern void T144f11(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_ERROR_ACTION].resize */
-extern T0* T249f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_ERROR_ACTION].resized_area */
-extern T0* T250f2(T0* C, T6 a1);
-/* SPECIAL [PR_ERROR_ACTION].copy_data */
-extern void T250f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_ERROR_ACTION].move_data */
-extern void T250f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_ERROR_ACTION].overlapping_move */
-extern void T250f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_ERROR_ACTION].non_overlapping_move */
-extern void T250f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_ERROR_ACTION].make */
-extern T0* T250c4(T6 a1);
+extern T0* T250f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_ERROR_ACTION].aliased_resized_area */
+extern T0* T251f2(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_ERROR_ACTION].is_full */
-extern T1 T143f6(T0* C);
+extern T1 T144f6(T0* C);
 /* DS_ARRAYED_LIST [PR_SYMBOL].put_last */
-extern void T80f15(T0* C, T0* a1);
+extern void T81f15(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_SYMBOL].resize */
-extern void T80f14(T0* C, T6 a1);
+extern void T81f14(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_SYMBOL].resize */
-extern T0* T207f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_SYMBOL].resized_area */
-extern T0* T206f3(T0* C, T6 a1);
-/* SPECIAL [PR_SYMBOL].copy_data */
-extern void T206f6(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_SYMBOL].move_data */
-extern void T206f7(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_SYMBOL].overlapping_move */
-extern void T206f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_SYMBOL].non_overlapping_move */
-extern void T206f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_SYMBOL].make */
-extern T0* T206c4(T6 a1);
+extern T0* T208f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_SYMBOL].aliased_resized_area */
+extern T0* T207f3(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_SYMBOL].is_full */
-extern T1 T80f7(T0* C);
+extern T1 T81f7(T0* C);
 /* PR_RULE.set_action */
-extern void T72f24(T0* C, T0* a1);
+extern void T73f24(T0* C, T0* a1);
 /* PR_VARIABLE.set_type */
-extern void T73f16(T0* C, T0* a1);
+extern void T74f16(T0* C, T0* a1);
 /* PR_YACC_PARSER.no_action */
-extern unsigned char ge205os3659;
-extern T0* ge205ov3659;
+extern unsigned char ge201os3895;
+extern T0* ge201ov3895;
 extern T0* T50f231(T0* C);
 /* PR_ACTION_FACTORY.new_action */
-extern T0* T125f1(T0* C, T0* a1);
+extern T0* T126f1(T0* C, T0* a1);
 /* PR_ACTION.make */
-extern T0* T173c6(T0* a1);
+extern T0* T174c6(T0* a1);
 /* PR_YACC_PARSER.new_action */
 extern T0* T50f176(T0* C, T0* a1);
 /* PR_YACC_PARSER.new_string_token */
 extern T0* T50f175(T0* C, T0* a1);
 /* PR_TOKEN.set_literal_string */
-extern void T84f22(T0* C, T0* a1);
+extern void T85f22(T0* C, T0* a1);
 /* PR_YACC_PARSER.report_undefined_string_token_error */
 extern void T50f329(T0* C, T0* a1);
 /* PR_UNDEFINED_STRING_TOKEN_ERROR.make */
-extern T0* T178c7(T0* a1, T6 a2, T0* a3);
+extern T0* T179c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.new_char_token */
 extern T0* T50f174(T0* C, T0* a1);
 /* PR_TOKEN.set_token_id */
-extern void T84f21(T0* C, T6 a1);
+extern void T85f21(T0* C, T6 a1);
 /* PR_YACC_PARSER.put_symbol */
 extern void T50f297(T0* C, T0* a1, T0* a2);
 /* PR_YACC_PARSER.new_symbol */
@@ -5543,389 +6033,377 @@ extern T0* T50f173(T0* C, T0* a1);
 /* PR_GRAMMAR.put_variable */
 extern void T29f32(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].resize */
-extern void T91f34(T0* C, T6 a1);
+extern void T92f34(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_VARIABLE].resize */
-extern T0* T213f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_VARIABLE].resized_area */
-extern T0* T212f4(T0* C, T6 a1);
-/* SPECIAL [PR_VARIABLE].copy_data */
-extern void T212f8(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_VARIABLE].move_data */
-extern void T212f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_VARIABLE].overlapping_move */
-extern void T212f11(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_VARIABLE].non_overlapping_move */
-extern void T212f10(T0* C, T6 a1, T6 a2, T6 a3);
+extern T0* T214f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_VARIABLE].aliased_resized_area */
+extern T0* T213f4(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_VARIABLE].is_full */
-extern T1 T91f14(T0* C);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].force */
-extern void T127f36(T0* C, T0* a1, T0* a2);
+extern T1 T92f14(T0* C);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].force_new */
+extern void T128f40(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].key_storage_put */
-extern void T127f44(T0* C, T0* a1, T6 a2);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].slots_put */
-extern void T127f43(T0* C, T6 a1, T6 a2);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].clashes_put */
-extern void T127f42(T0* C, T6 a1, T6 a2);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].slots_item */
-extern T6 T127f29(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].clashes_item */
-extern T6 T127f28(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].hash_position */
-extern T6 T127f21(T0* C, T0* a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].resize */
-extern void T127f41(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].clashes_resize */
-extern void T127f49(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].special_integer_ */
-extern T0* T127f31(T0* C);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].key_storage_resize */
-extern void T127f48(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].item_storage_resize */
-extern void T127f47(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].key_storage_item */
-extern T0* T127f20(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].slots_resize */
-extern void T127f46(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].new_modulus */
-extern T6 T127f24(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].new_capacity */
-extern T6 T127f33(T0* C, T6 a1);
+extern void T128f48(T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].item_storage_put */
-extern void T127f40(T0* C, T0* a1, T6 a2);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].search_position */
-extern void T127f37(T0* C, T0* a1);
+extern void T128f44(T0* C, T0* a1, T6 a2);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].slots_put */
+extern void T128f47(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].clashes_put */
+extern void T128f46(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].slots_item */
+extern T6 T128f34(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].hash_position */
+extern T6 T128f24(T0* C, T0* a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].clashes_item */
+extern T6 T128f33(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].resize */
+extern void T128f45(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].clashes_resize */
+extern void T128f53(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].special_integer_ */
+extern T0* T128f32(T0* C);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].key_storage_resize */
+extern void T128f52(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].item_storage_resize */
+extern void T128f51(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].key_storage_item */
+extern T0* T128f22(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].slots_resize */
+extern void T128f50(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].new_modulus */
+extern T6 T128f25(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].new_capacity */
+extern T6 T128f23(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].unset_found_item */
-extern void T127f39(T0* C);
+extern void T128f43(T0* C);
 /* PR_VARIABLE.make */
-extern T0* T73c15(T6 a1, T0* a2, T0* a3);
+extern T0* T74c15(T6 a1, T0* a2, T0* a3);
 /* DS_LINKED_LIST [PR_VARIABLE].make */
-extern T0* T93c8(void);
+extern T0* T94c8(void);
 /* DS_LINKED_LIST [PR_RULE].make */
-extern T0* T94c10(void);
+extern T0* T95c10(void);
 /* DS_ARRAYED_LIST [PR_RULE].make */
-extern T0* T70c21(T6 a1);
+extern T0* T71c21(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_RULE].make */
-extern T0* T195f1(T0* C, T6 a1);
+extern T0* T196f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_RULE].make_area */
-extern T0* T272c2(T6 a1);
+extern T0* T276c2(T6 a1);
 /* SPECIAL [PR_RULE].make */
-extern T0* T194c5(T6 a1);
+extern T0* T195c5(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_RULE].default_create */
-extern T0* T195c3(void);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].item */
-extern T0* T127f23(T0* C, T0* a1);
+extern T0* T196c3(void);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].item */
+extern T0* T127f30(T0* C, T0* a1);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].has */
+extern T1 T127f22(T0* C, T0* a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].found_item */
+extern T0* T128f28(T0* C);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].item_storage_item */
-extern T0* T127f22(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].has */
-extern T1 T127f26(T0* C, T0* a1);
+extern T0* T128f27(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].found */
+extern T1 T128f35(T0* C);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].search */
+extern void T128f39(T0* C, T0* a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].search_position */
+extern void T128f41(T0* C, T0* a1);
 /* PR_YACC_PARSER.put_error_action */
 extern void T50f296(T0* C, T0* a1, T6 a2, T0* a3);
 /* PR_RULE.set_error_action */
-extern void T72f22(T0* C, T0* a1, T6 a2);
+extern void T73f22(T0* C, T0* a1, T6 a2);
 /* DS_ARRAYED_LIST [PR_ERROR_ACTION].replace */
-extern void T143f10(T0* C, T0* a1, T6 a2);
+extern void T144f10(T0* C, T0* a1, T6 a2);
 /* PR_YACC_PARSER.new_error_action */
 extern T0* T50f172(T0* C, T0* a1, T6 a2);
 /* PR_ERROR_ACTION.make */
-extern T0* T69c6(T0* a1, T6 a2);
+extern T0* T70c6(T0* a1, T6 a2);
 /* PR_YACC_PARSER.report_invalid_error_n_error */
 extern void T50f295(T0* C, T6 a1);
 /* PR_INVALID_ERROR_N_ERROR.make */
-extern T0* T150c7(T0* a1, T6 a2, T6 a3);
+extern T0* T151c7(T0* a1, T6 a2, T6 a3);
 /* PR_RULE.set_line_nb */
-extern void T72f21(T0* C, T6 a1);
+extern void T73f21(T0* C, T6 a1);
 /* PR_YACC_PARSER.put_rule */
 extern void T50f294(T0* C, T0* a1);
 /* PR_GRAMMAR.put_rule */
 extern void T29f27(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].put_last */
-extern void T70f24(T0* C, T0* a1);
+extern void T71f24(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_RULE].resize */
-extern void T70f23(T0* C, T6 a1);
+extern void T71f23(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_RULE].resize */
-extern T0* T195f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_RULE].resized_area */
-extern T0* T194f3(T0* C, T6 a1);
-/* SPECIAL [PR_RULE].copy_data */
-extern void T194f7(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_RULE].move_data */
-extern void T194f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_RULE].overlapping_move */
-extern void T194f11(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_RULE].non_overlapping_move */
-extern void T194f10(T0* C, T6 a1, T6 a2, T6 a3);
+extern T0* T196f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_RULE].aliased_resized_area */
+extern T0* T195f3(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_RULE].is_full */
-extern T1 T70f16(T0* C);
+extern T1 T71f16(T0* C);
 /* PR_YACC_PARSER.report_rule_declared_twice_warning */
 extern void T50f293(T0* C, T0* a1);
 /* PR_RULE_DECLARED_TWICE_ERROR.make */
-extern T0* T149c7(T0* a1, T6 a2, T0* a3);
+extern T0* T150c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.new_variable */
 extern T0* T50f171(T0* C, T0* a1);
 /* PR_YACC_PARSER.new_rule */
 extern T0* T50f170(T0* C, T0* a1);
 /* PR_VARIABLE.put_rule */
-extern void T73f17(T0* C, T0* a1);
+extern void T74f17(T0* C, T0* a1);
 /* PR_RULE.make */
-extern T0* T72c16(T6 a1, T0* a2, T0* a3);
+extern T0* T73c16(T6 a1, T0* a2, T0* a3);
 /* DS_ARRAYED_LIST [PR_ERROR_ACTION].make */
-extern T0* T143c9(T6 a1);
+extern T0* T144c9(T6 a1);
 /* DS_ARRAYED_LIST [PR_ERROR_ACTION].new_cursor */
-extern T0* T143f7(T0* C);
+extern T0* T144f7(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_ERROR_ACTION].make */
-extern T0* T251c2(T0* a1);
+extern T0* T252c3(T0* a1);
 /* KL_SPECIAL_ROUTINES [PR_ERROR_ACTION].make */
-extern T0* T249f1(T0* C, T6 a1);
+extern T0* T250f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_ERROR_ACTION].make_area */
-extern T0* T284c2(T6 a1);
+extern T0* T288c2(T6 a1);
+/* SPECIAL [PR_ERROR_ACTION].make */
+extern T0* T251c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_ERROR_ACTION].default_create */
-extern T0* T249c3(void);
+extern T0* T250c3(void);
 /* DS_ARRAYED_LIST [PR_SYMBOL].make */
-extern T0* T80c13(T6 a1);
+extern T0* T81c13(T6 a1);
 /* DS_ARRAYED_LIST [PR_SYMBOL].new_cursor */
-extern T0* T80f8(T0* C);
+extern T0* T81f8(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_SYMBOL].make */
-extern T0* T208c2(T0* a1);
+extern T0* T209c3(T0* a1);
 /* KL_SPECIAL_ROUTINES [PR_SYMBOL].make */
-extern T0* T207f1(T0* C, T6 a1);
+extern T0* T208f1(T0* C, T6 a1);
 /* TO_SPECIAL [PR_SYMBOL].make_area */
-extern T0* T275c2(T6 a1);
+extern T0* T279c2(T6 a1);
+/* SPECIAL [PR_SYMBOL].make */
+extern T0* T207c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [PR_SYMBOL].default_create */
-extern T0* T207c3(void);
+extern T0* T208c3(void);
 /* PR_YACC_PARSER.new_dummy_variable */
 extern T0* T50f169(T0* C);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].force */
+extern void T128f38(T0* C, T0* a1, T0* a2);
 /* PR_YACC_PARSER.integer_ */
 extern T0* T50f243(T0* C);
 /* PR_YACC_PARSER.report_lhs_symbol_token_error */
 extern void T50f292(T0* C, T0* a1);
 /* PR_LHS_SYMBOL_TOKEN_ERROR.make */
-extern T0* T148c7(T0* a1, T6 a2, T0* a3);
+extern T0* T149c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.is_terminal */
 extern T1 T50f168(T0* C, T0* a1);
 /* PR_YACC_PARSER.process_rule */
 extern void T50f291(T0* C, T0* a1);
 /* PR_RULE.set_precedence */
-extern void T72f20(T0* C, T6 a1);
+extern void T73f20(T0* C, T6 a1);
 /* PR_RULE.set_non_associative */
-extern void T72f19(T0* C);
+extern void T73f19(T0* C);
 /* PR_RULE.set_right_associative */
-extern void T72f18(T0* C);
+extern void T73f18(T0* C);
 /* PR_RULE.set_left_associative */
-extern void T72f17(T0* C);
+extern void T73f17(T0* C);
 /* PR_YACC_PARSER.report_no_rules_error */
 extern void T50f290(T0* C);
 /* PR_NO_RULES_ERROR.make */
-extern T0* T147c7(T0* a1);
+extern T0* T148c7(T0* a1);
 /* PR_YACC_PARSER.new_nonterminal */
 extern T0* T50f165(T0* C, T0* a1, T0* a2);
 /* PR_YACC_PARSER.report_variable_declared_twice_error */
 extern void T50f328(T0* C, T0* a1);
 /* PR_VARIABLE_DECLARED_TWICE_ERROR.make */
-extern T0* T177c7(T0* a1, T6 a2, T0* a3);
+extern T0* T178c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.is_nonterminal */
 extern T1 T50f230(T0* C, T0* a1);
+/* DS_HASH_TABLE [PR_VARIABLE, STRING_8].has */
+extern T1 T128f29(T0* C, T0* a1);
 /* PR_YACC_PARSER.report_variable_declared_as_token_error */
 extern void T50f327(T0* C, T0* a1);
 /* PR_SYMBOL_DECLARED_TOKEN_ERROR.make */
-extern T0* T176c7(T0* a1, T6 a2, T0* a3);
+extern T0* T177c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.new_nonassoc_char_terminal */
 extern T0* T50f164(T0* C, T0* a1, T6 a2);
 /* PR_YACC_PARSER.set_precedence */
 extern void T50f326(T0* C, T0* a1, T6 a2);
 /* PR_TOKEN.set_precedence */
-extern void T84f29(T0* C, T6 a1);
+extern void T85f29(T0* C, T6 a1);
 /* PR_YACC_PARSER.report_precedence_defined_twice_error */
 extern void T50f330(T0* C, T0* a1);
 /* PR_PRECEDENCE_DEFINED_TWICE_ERROR.make */
-extern T0* T179c7(T0* a1, T6 a2, T0* a3);
+extern T0* T180c7(T0* a1, T6 a2, T0* a3);
 /* PR_TOKEN.set_non_associative */
-extern void T84f27(T0* C);
+extern void T85f27(T0* C);
 /* PR_YACC_PARSER.new_nonassoc_terminal */
 extern T0* T50f163(T0* C, T0* a1, T6 a2);
 /* PR_YACC_PARSER.report_token_declared_as_variable_error */
 extern void T50f324(T0* C, T0* a1);
 /* PR_SYMBOL_DECLARED_VARIABLE_ERROR.make */
-extern T0* T174c7(T0* a1, T6 a2, T0* a3);
+extern T0* T175c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.new_right_char_terminal */
 extern T0* T50f162(T0* C, T0* a1, T6 a2);
 /* PR_TOKEN.set_right_associative */
-extern void T84f26(T0* C);
+extern void T85f26(T0* C);
 /* PR_YACC_PARSER.new_right_terminal */
 extern T0* T50f161(T0* C, T0* a1, T6 a2);
 /* PR_YACC_PARSER.new_left_char_terminal */
 extern T0* T50f160(T0* C, T0* a1, T6 a2);
 /* PR_TOKEN.set_left_associative */
-extern void T84f25(T0* C);
+extern void T85f25(T0* C);
 /* PR_YACC_PARSER.new_left_terminal */
 extern T0* T50f159(T0* C, T0* a1, T6 a2);
 /* PR_YACC_PARSER.new_char_terminal */
 extern T0* T50f158(T0* C, T0* a1, T0* a2);
 /* PR_TOKEN.set_type */
-extern void T84f24(T0* C, T0* a1);
+extern void T85f24(T0* C, T0* a1);
 /* PR_TOKEN.set_declared */
-extern void T84f23(T0* C);
+extern void T85f23(T0* C);
 /* PR_YACC_PARSER.report_token_declared_twice_error */
 extern void T50f325(T0* C, T0* a1);
 /* PR_TOKEN_DECLARED_TWICE_ERROR.make */
-extern T0* T175c7(T0* a1, T6 a2, T0* a3);
+extern T0* T176c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.set_literal_string */
 extern void T50f289(T0* C, T0* a1, T0* a2);
+/* DS_HASH_TABLE [PR_TOKEN, STRING_8].force */
+extern void T127f39(T0* C, T0* a1, T0* a2);
 /* PR_YACC_PARSER.report_string_token_defined_twice_error */
 extern void T50f319(T0* C, T0* a1, T0* a2, T0* a3);
 /* PR_STRING_TOKEN_DEFINED_TWICE_ERROR.make */
-extern T0* T164c7(T0* a1, T6 a2, T0* a3, T0* a4, T0* a5);
+extern T0* T165c7(T0* a1, T6 a2, T0* a3, T0* a4, T0* a5);
 /* PR_YACC_PARSER.report_two_strings_token_error */
 extern void T50f318(T0* C, T0* a1, T0* a2, T0* a3);
 /* PR_TWO_STRINGS_TOKEN_ERROR.make */
-extern T0* T163c7(T0* a1, T6 a2, T0* a3, T0* a4, T0* a5);
+extern T0* T164c7(T0* a1, T6 a2, T0* a3, T0* a4, T0* a5);
 /* PR_YACC_PARSER.set_token_id */
 extern void T50f288(T0* C, T0* a1, T6 a2);
 /* PR_YACC_PARSER.report_two_token_ids_token_error */
 extern void T50f317(T0* C, T0* a1, T6 a2, T6 a3);
 /* PR_TWO_TOKEN_IDS_TOKEN_ERROR.make */
-extern T0* T162c7(T0* a1, T6 a2, T0* a3, T6 a4, T6 a5);
+extern T0* T163c7(T0* a1, T6 a2, T0* a3, T6 a4, T6 a5);
 /* PR_TOKEN.has_token_id */
-extern T1 T84f14(T0* C);
+extern T1 T85f14(T0* C);
 /* PR_YACC_PARSER.new_terminal */
 extern T0* T50f154(T0* C, T0* a1, T0* a2);
 /* DS_ARRAYED_LIST [PR_TYPE].force_last */
-extern void T112f14(T0* C, T0* a1);
+extern void T113f14(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TYPE].resize */
-extern void T112f15(T0* C, T6 a1);
+extern void T113f15(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_TYPE].new_capacity */
-extern T6 T112f11(T0* C, T6 a1);
+extern T6 T113f11(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_TYPE].extendible */
-extern T1 T112f10(T0* C, T6 a1);
+extern T1 T113f10(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [PR_TYPE].make */
-extern T0* T112c13(T6 a1);
+extern T0* T113c13(T6 a1);
 /* DS_ARRAYED_LIST [PR_TYPE].new_cursor */
-extern T0* T112f9(T0* C);
+extern T0* T113f9(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [PR_TYPE].make */
-extern T0* T232c2(T0* a1);
+extern T0* T233c3(T0* a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_TYPE]].resize */
-extern T0* T140f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].resized_area */
-extern T0* T139f3(T0* C, T6 a1);
-/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].copy_data */
-extern void T139f7(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].move_data */
-extern void T139f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].overlapping_move */
-extern void T139f10(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].non_overlapping_move */
-extern void T139f9(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].make */
-extern T0* T139c4(T6 a1);
+extern T0* T141f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].aliased_resized_area */
+extern T0* T140f3(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_TYPE]].make */
-extern T0* T140f1(T0* C, T6 a1);
+extern T0* T141f1(T0* C, T6 a1);
 /* TO_SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].make_area */
-extern T0* T247c2(T6 a1);
+extern T0* T248c2(T6 a1);
+/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].make */
+extern T0* T140c4(T6 a1);
 /* KL_SPECIAL_ROUTINES [DS_ARRAYED_LIST [PR_TYPE]].default_create */
-extern T0* T140c3(void);
+extern T0* T141c3(void);
 /* PR_YACC_PARSER.new_anchored_type */
 extern T0* T50f151(T0* C, T0* a1);
 /* PR_GRAMMAR.put_type */
 extern void T29f31(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TYPE].put_last */
-extern void T112f16(T0* C, T0* a1);
+extern void T113f16(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [PR_TYPE].is_full */
-extern T1 T112f12(T0* C);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].force */
-extern void T128f36(T0* C, T0* a1, T0* a2);
+extern T1 T113f12(T0* C);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].force_new */
+extern void T129f38(T0* C, T0* a1, T0* a2);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].key_storage_put */
-extern void T128f44(T0* C, T0* a1, T6 a2);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].slots_put */
-extern void T128f43(T0* C, T6 a1, T6 a2);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].clashes_put */
-extern void T128f42(T0* C, T6 a1, T6 a2);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].slots_item */
-extern T6 T128f29(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].clashes_item */
-extern T6 T128f28(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].hash_position */
-extern T6 T128f21(T0* C, T0* a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].resize */
-extern void T128f41(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].clashes_resize */
-extern void T128f49(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].special_integer_ */
-extern T0* T128f31(T0* C);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].key_storage_resize */
-extern void T128f48(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].item_storage_resize */
-extern void T128f47(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].key_storage_item */
-extern T0* T128f20(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].slots_resize */
-extern void T128f46(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].new_modulus */
-extern T6 T128f24(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].new_capacity */
-extern T6 T128f33(T0* C, T6 a1);
+extern void T129f46(T0* C, T0* a1, T6 a2);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].item_storage_put */
-extern void T128f40(T0* C, T0* a1, T6 a2);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].search_position */
-extern void T128f37(T0* C, T0* a1);
+extern void T129f45(T0* C, T0* a1, T6 a2);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].slots_put */
+extern void T129f44(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].clashes_put */
+extern void T129f43(T0* C, T6 a1, T6 a2);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].slots_item */
+extern T6 T129f29(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].hash_position */
+extern T6 T129f28(T0* C, T0* a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].clashes_item */
+extern T6 T129f27(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].resize */
+extern void T129f42(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].clashes_resize */
+extern void T129f51(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].special_integer_ */
+extern T0* T129f31(T0* C);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].key_storage_resize */
+extern void T129f50(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].item_storage_resize */
+extern void T129f49(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].key_storage_item */
+extern T0* T129f23(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].slots_resize */
+extern void T129f48(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].new_modulus */
+extern T6 T129f24(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].new_capacity */
+extern T6 T129f34(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].unset_found_item */
-extern void T128f39(T0* C);
+extern void T129f41(T0* C);
 /* PR_TYPE.make_anchored */
-extern T0* T99c10(T6 a1, T0* a2);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].item */
-extern T0* T128f22(T0* C, T0* a1);
+extern T0* T100c10(T6 a1, T0* a2);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].found_item */
+extern T0* T129f33(T0* C);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].item_storage_item */
-extern T0* T128f32(T0* C, T6 a1);
-/* DS_HASH_TABLE [PR_TYPE, STRING_8].has */
-extern T1 T128f23(T0* C, T0* a1);
+extern T0* T129f32(T0* C, T6 a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].found */
+extern T1 T129f21(T0* C);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].search */
+extern void T129f37(T0* C, T0* a1);
+/* DS_HASH_TABLE [PR_TYPE, STRING_8].search_position */
+extern void T129f40(T0* C, T0* a1);
 /* PR_YACC_PARSER.new_generic_type */
 extern T0* T50f150(T0* C, T0* a1, T0* a2);
 /* STRING_8.as_upper */
 extern T0* T17f6(T0* C);
 /* STRING_8.to_upper */
-extern void T17f34(T0* C);
+extern void T17f35(T0* C);
+/* STRING_8.to_upper_area */
+extern void T17f40(T0* C, T0* a1, T6 a2, T6 a3);
 /* CHARACTER_8.upper */
 extern T2 T2f2(T2* C);
 /* CHARACTER_8.is_lower */
 extern T1 T2f4(T2* C);
 /* PR_TYPE.make_generic */
-extern T0* T99c9(T6 a1, T0* a2, T0* a3);
+extern T0* T100c9(T6 a1, T0* a2, T0* a3);
 /* PR_YACC_PARSER.new_basic_type */
 extern T0* T50f148(T0* C, T0* a1);
 /* PR_BASIC_TYPE.make */
-extern T0* T172c8(T6 a1, T0* a2);
+extern T0* T173c8(T6 a1, T0* a2);
 /* KL_SPECIAL_ROUTINES [PR_TYPE].resize */
-extern T0* T138f2(T0* C, T0* a1, T6 a2);
-/* SPECIAL [PR_TYPE].resized_area */
-extern T0* T137f3(T0* C, T6 a1);
-/* SPECIAL [PR_TYPE].copy_data */
-extern void T137f7(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
-/* SPECIAL [PR_TYPE].move_data */
-extern void T137f8(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_TYPE].overlapping_move */
-extern void T137f10(T0* C, T6 a1, T6 a2, T6 a3);
-/* SPECIAL [PR_TYPE].non_overlapping_move */
-extern void T137f9(T0* C, T6 a1, T6 a2, T6 a3);
+extern T0* T139f2(T0* C, T0* a1, T6 a2);
+/* SPECIAL [PR_TYPE].aliased_resized_area */
+extern T0* T138f3(T0* C, T6 a1);
 /* PR_YACC_PARSER.new_type */
 extern T0* T50f145(T0* C, T0* a1);
 /* PR_YACC_PARSER.no_type */
-extern unsigned char ge205os3660;
-extern T0* ge205ov3660;
+extern unsigned char ge201os3896;
+extern T0* ge201ov3896;
 extern T0* T50f143(T0* C);
 /* PR_GRAMMAR.set_expected_conflicts */
 extern void T29f24(T0* C, T6 a1);
 /* DS_PAIR [STRING_8, INTEGER_32].make */
-extern T0* T136c3(T0* a1, T6 a2);
+extern T0* T137c3(T0* a1, T6 a2);
 /* PR_YACC_PARSER.report_multiple_start_declarations_error */
 extern void T50f287(T0* C);
 /* PR_MULTIPLE_START_DECLARATIONS_ERROR.make */
-extern T0* T146c7(T0* a1, T6 a2);
+extern T0* T147c7(T0* a1, T6 a2);
 /* DS_ARRAYED_LIST [STRING_8].force_last */
-extern void T111f11(T0* C, T0* a1);
+extern void T112f11(T0* C, T0* a1);
 /* DS_ARRAYED_LIST [STRING_8].resize */
-extern void T111f12(T0* C, T6 a1);
+extern void T112f12(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [STRING_8].new_capacity */
-extern T6 T111f9(T0* C, T6 a1);
+extern T6 T112f9(T0* C, T6 a1);
 /* DS_ARRAYED_LIST [STRING_8].extendible */
-extern T1 T111f8(T0* C, T6 a1);
+extern T1 T112f8(T0* C, T6 a1);
 /* PR_YACC_PARSER.initialize_grammar */
 extern void T50f286(T0* C);
 /* PR_YACC_PARSER.process_symbols */
@@ -5933,41 +6411,41 @@ extern void T50f285(T0* C);
 /* PR_YACC_PARSER.report_undefined_symbol_error */
 extern void T50f316(T0* C, T0* a1);
 /* PR_UNDEFINED_SYMBOL_ERROR.make */
-extern T0* T161c7(T0* a1, T0* a2);
+extern T0* T162c7(T0* a1, T0* a2);
 /* ARRAY [PR_TOKEN].put */
-extern void T145f6(T0* C, T0* a1, T6 a2);
+extern void T146f6(T0* C, T0* a1, T6 a2);
 /* PR_YACC_PARSER.report_token_id_used_twice_warning */
 extern void T50f315(T0* C, T0* a1, T0* a2);
 /* PR_TOKEN_ID_USED_TWICE_ERROR.make */
-extern T0* T160c7(T0* a1, T0* a2, T0* a3, T6 a4);
+extern T0* T161c7(T0* a1, T0* a2, T0* a3, T6 a4);
 /* ARRAY [PR_TOKEN].item */
-extern T0* T145f4(T0* C, T6 a1);
+extern T0* T146f4(T0* C, T6 a1);
 /* ARRAY [PR_TOKEN].make */
-extern T0* T145c5(T6 a1, T6 a2);
+extern T0* T146c5(T6 a1, T6 a2);
 /* ARRAY [PR_TOKEN].make_area */
-extern void T145f7(T0* C, T6 a1);
+extern void T146f7(T0* C, T6 a1);
 /* PR_YACC_PARSER.set_start_symbol */
 extern void T50f284(T0* C);
 /* DS_ARRAYED_LIST [PR_RULE].first */
-extern T0* T70f10(T0* C);
+extern T0* T71f10(T0* C);
 /* PR_GRAMMAR.set_start_symbol */
 extern void T29f26(T0* C, T0* a1);
 /* PR_YACC_PARSER.report_unknown_start_symbol_error */
 extern void T50f314(T0* C);
 /* PR_UNKNOWN_START_SYMBOL_ERROR.make */
-extern T0* T159c7(T0* a1, T6 a2, T0* a3);
+extern T0* T160c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.report_start_symbol_token_error */
 extern void T50f313(T0* C);
 /* PR_START_SYMBOL_TOKEN_ERROR.make */
-extern T0* T158c7(T0* a1, T6 a2, T0* a3);
+extern T0* T159c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.yy_push_last_value */
 extern void T50f271(T0* C, T6 a1);
 /* KL_SPECIAL_ROUTINES [STRING_8].make */
-extern T0* T135f1(T0* C, T6 a1);
+extern T0* T136f1(T0* C, T6 a1);
 /* TO_SPECIAL [STRING_8].make_area */
-extern T0* T245c2(T6 a1);
+extern T0* T246c2(T6 a1);
 /* KL_SPECIAL_ROUTINES [STRING_8].default_create */
-extern T0* T135c3(void);
+extern T0* T136c3(void);
 /* PR_YACC_PARSER.accept */
 extern void T50f270(T0* C);
 /* PR_YACC_PARSER.yy_do_error_action */
@@ -5975,7 +6453,7 @@ extern void T50f268(T0* C, T6 a1);
 /* PR_YACC_PARSER.report_error */
 extern void T50f283(T0* C, T0* a1);
 /* UT_SYNTAX_ERROR.make */
-extern T0* T144c7(T0* a1, T6 a2);
+extern T0* T145c7(T0* a1, T6 a2);
 /* PR_YACC_PARSER.report_eof_expected_error */
 extern void T50f282(T0* C);
 /* PR_YACC_PARSER.read_token */
@@ -5985,61 +6463,57 @@ extern void T50f281(T0* C, T6 a1);
 /* PR_YACC_PARSER.text_item */
 extern T2 T50f228(T0* C, T6 a1);
 /* STRING_8.wipe_out */
-extern void T17f30(T0* C);
+extern void T17f31(T0* C);
 /* PR_YACC_PARSER.cloned_string */
 extern T0* T50f184(T0* C, T0* a1);
 /* PR_YACC_PARSER.report_integer_too_large_error */
 extern void T50f312(T0* C, T0* a1);
 /* PR_INTEGER_TOO_LARGE_ERROR.make */
-extern T0* T157c7(T0* a1, T6 a2, T0* a3);
+extern T0* T158c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.process_dollar_n */
 extern void T50f311(T0* C, T6 a1, T6 a2, T0* a3);
 /* PR_BASIC_TYPE.append_dollar_n_to_string */
-extern void T172f23(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
+extern void T173f23(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
 /* PR_BASIC_TYPE.integer_ */
-extern T0* T172f7(T0* C);
+extern T0* T173f7(T0* C);
 /* PR_TYPE.append_dollar_n_to_string */
-extern void T99f25(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
+extern void T100f25(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
 /* PR_TYPE.integer_ */
-extern T0* T99f4(T0* C);
+extern T0* T100f4(T0* C);
 /* PR_BASIC_TYPE.old_append_dollar_n_to_string */
-extern void T172f22(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
+extern void T173f22(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
 /* PR_TYPE.old_append_dollar_n_to_string */
-extern void T99f24(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
+extern void T100f24(T0* C, T6 a1, T6 a2, T0* a3, T0* a4);
 /* PR_YACC_PARSER.report_invalid_dollar_n_error */
 extern void T50f322(T0* C, T6 a1);
 /* PR_INVALID_DOLLAR_N_ERROR.make */
-extern T0* T166c7(T0* a1, T6 a2, T6 a3);
+extern T0* T167c7(T0* a1, T6 a2, T6 a3);
 /* PR_YACC_PARSER.report_dangerous_dollar_n_warning */
 extern void T50f321(T0* C, T6 a1);
 /* PR_DANGEROUS_DOLLAR_N_ERROR.make */
-extern T0* T165c7(T0* a1, T6 a2, T6 a3);
+extern T0* T166c7(T0* a1, T6 a2, T6 a3);
 /* STRING_8.is_integer */
 extern T1 T17f15(T0* C);
 /* STRING_8.is_valid_integer_or_natural */
 extern T1 T17f23(T0* C, T6 a1);
 /* STRING_TO_INTEGER_CONVERTOR.is_integral_integer */
-extern T1 T254f12(T0* C);
+extern T1 T255f12(T0* C);
 /* STRING_TO_INTEGER_CONVERTOR.parse_string_with_type */
-extern void T254f17(T0* C, T0* a1, T6 a2);
-/* STRING_8.code */
-extern T10 T17f26(T0* C, T6 a1);
-/* INTEGER_32.to_natural_32 */
-extern T10 T6f26(T6* C);
+extern void T255f17(T0* C, T0* a1, T6 a2);
 /* STRING_TO_INTEGER_CONVERTOR.parse_character */
-extern void T254f23(T0* C, T2 a1);
+extern void T255f23(T0* C, T2 a1);
 /* STRING_TO_INTEGER_CONVERTOR.overflowed */
-extern T1 T254f15(T0* C);
+extern T1 T255f15(T0* C);
 /* INTEGER_OVERFLOW_CHECKER.will_overflow */
-extern T1 T286f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4);
+extern T1 T290f7(T0* C, T11 a1, T11 a2, T6 a3, T6 a4);
 /* NATURAL_64.infix ">" */
 extern T1 T11f4(T11* C, T11 a1);
 /* STRING_TO_INTEGER_CONVERTOR.overflow_checker */
-extern unsigned char ge540os6090;
-extern T0* ge540ov6090;
-extern T0* T254f14(T0* C);
+extern unsigned char ge588os6188;
+extern T0* ge588ov6188;
+extern T0* T255f14(T0* C);
 /* INTEGER_OVERFLOW_CHECKER.make */
-extern T0* T286c13(void);
+extern T0* T290c13(void);
 /* NATURAL_64.to_natural_64 */
 extern T11 T11f7(T11* C);
 /* NATURAL_32.to_natural_64 */
@@ -6055,67 +6529,65 @@ extern T11 T5f3(T5* C);
 /* INTEGER_8.to_natural_64 */
 extern T11 T4f3(T4* C);
 /* SPECIAL [NATURAL_64].make */
-extern T0* T302c2(T6 a1);
+extern T0* T306c2(T6 a1);
 /* STRING_8.has */
-extern T1 T17f27(T0* C, T2 a1);
+extern T1 T17f28(T0* C, T2 a1);
 /* INTEGER_32.to_natural_64 */
-extern T11 T6f23(T6* C);
+extern T11 T6f25(T6* C);
 /* CHARACTER_8.is_digit */
 extern T1 T2f17(T2* C);
 /* STRING_TO_INTEGER_CONVERTOR.reset */
-extern void T254f18(T0* C, T6 a1);
+extern void T255f18(T0* C, T6 a1);
 /* STRING_8.ctoi_convertor */
-extern unsigned char ge537os1258;
-extern T0* ge537ov1258;
+extern unsigned char ge580os1267;
+extern T0* ge580ov1267;
 extern T0* T17f24(T0* C);
 /* STRING_TO_INTEGER_CONVERTOR.set_trailing_separators_acceptable */
-extern void T254f22(T0* C, T1 a1);
+extern void T255f22(T0* C, T1 a1);
 /* STRING_TO_INTEGER_CONVERTOR.set_leading_separators_acceptable */
-extern void T254f21(T0* C, T1 a1);
+extern void T255f21(T0* C, T1 a1);
 /* STRING_TO_INTEGER_CONVERTOR.set_trailing_separators */
-extern void T254f20(T0* C, T0* a1);
-/* STRING_8.make_from_string */
-extern T0* T17c41(T0* a1);
+extern void T255f20(T0* C, T0* a1);
 /* STRING_TO_INTEGER_CONVERTOR.set_leading_separators */
-extern void T254f19(T0* C, T0* a1);
+extern void T255f19(T0* C, T0* a1);
 /* STRING_TO_INTEGER_CONVERTOR.make */
-extern T0* T254c16(void);
+extern T0* T255c16(void);
 /* PR_YACC_PARSER.process_dollar_dollar */
 extern void T50f310(T0* C, T0* a1);
 /* PR_BASIC_TYPE.append_dollar_dollar_to_string */
-extern void T172f10(T0* C, T0* a1);
+extern void T173f10(T0* C, T0* a1);
 /* PR_TYPE.append_dollar_dollar_to_string */
-extern void T99f12(T0* C, T0* a1);
+extern void T100f12(T0* C, T0* a1);
 /* PR_BASIC_TYPE.old_append_dollar_dollar_to_string */
-extern void T172f9(T0* C, T0* a1);
+extern void T173f9(T0* C, T0* a1);
 /* PR_TYPE.old_append_dollar_dollar_to_string */
-extern void T99f11(T0* C, T0* a1);
+extern void T100f11(T0* C, T0* a1);
 /* PR_YACC_PARSER.report_invalid_dollar_dollar_error */
 extern void T50f309(T0* C);
 /* PR_INVALID_DOLLAR_DOLLAR_ERROR.make */
-extern T0* T156c7(T0* a1, T6 a2);
+extern T0* T157c7(T0* a1, T6 a2);
 /* PR_YACC_PARSER.start_condition */
 extern T6 T50f226(T0* C);
 /* PR_YACC_PARSER.text_substring */
 extern T0* T50f181(T0* C, T6 a1, T6 a2);
 /* KL_CHARACTER_BUFFER.substring */
-extern T0* T263f6(T0* C, T6 a1, T6 a2);
+extern T0* T267f6(T0* C, T6 a1, T6 a2);
 /* PR_YACC_PARSER.more */
 extern void T50f308(T0* C);
 /* PR_YACC_PARSER.report_invalid_string_token_error */
 extern void T50f307(T0* C, T0* a1);
 /* PR_INVALID_STRING_TOKEN_ERROR.make */
-extern T0* T155c7(T0* a1, T6 a2, T0* a3);
+extern T0* T156c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.text_count */
 extern T6 T50f180(T0* C);
 /* PR_YACC_PARSER.report_null_integer_error */
 extern void T50f306(T0* C);
 /* PR_NULL_INTEGER_ERROR.make */
-extern T0* T154c7(T0* a1, T6 a2);
+extern T0* T155c7(T0* a1, T6 a2);
 /* STRING_8.to_integer */
 extern T6 T17f16(T0* C);
 /* STRING_TO_INTEGER_CONVERTOR.parsed_integer */
-extern T6 T254f13(T0* C);
+extern T6 T255f13(T0* C);
 /* PR_YACC_PARSER.text */
 extern T0* T50f202(T0* C);
 /* PR_YACC_PARSER.set_start_condition */
@@ -6127,7 +6599,7 @@ extern void T50f305(T0* C);
 /* PR_YACC_PARSER.report_missing_characters_error */
 extern void T50f303(T0* C, T0* a1);
 /* PR_MISSING_CHARACTERS_ERROR.make */
-extern T0* T153c7(T0* a1, T6 a2, T0* a3);
+extern T0* T154c7(T0* a1, T6 a2, T0* a3);
 /* PR_YACC_PARSER.wrap */
 extern T1 T50f123(T0* C);
 /* PR_YACC_PARSER.yy_refill_input_buffer */
@@ -6135,11 +6607,11 @@ extern void T50f279(T0* C);
 /* PR_YACC_PARSER.yy_set_content */
 extern void T50f277(T0* C, T0* a1);
 /* KL_CHARACTER_BUFFER.count */
-extern T6 T263f4(T0* C);
+extern T6 T267f4(T0* C);
 /* YY_FILE_BUFFER.fill */
-extern void T129f19(T0* C);
+extern void T130f19(T0* C);
 /* KL_CHARACTER_BUFFER.fill_from_stream */
-extern T6 T263f5(T0* C, T0* a1, T6 a2, T6 a3);
+extern T6 T267f5(T0* C, T0* a1, T6 a2, T6 a3);
 /* KL_STDIN_FILE.read_to_string */
 extern T6 T54f13(T0* C, T0* a1, T6 a2, T6 a3);
 /* KL_STDIN_FILE.old_read_to_string */
@@ -6147,7 +6619,7 @@ extern T6 T54f16(T0* C, T0* a1, T6 a2, T6 a3);
 /* KL_STDIN_FILE.file_gss */
 extern T6 T54f17(T0* C, T14 a1, T14 a2, T6 a3);
 /* SPECIAL [CHARACTER_8].item_address */
-extern T14 T15f5(T0* C, T6 a1);
+extern T14 T15f6(T0* C, T6 a1);
 /* KL_STDIN_FILE.any_ */
 extern T0* T54f14(T0* C);
 /* KL_STDIN_FILE.old_end_of_file */
@@ -6155,27 +6627,27 @@ extern T1 T54f10(T0* C);
 /* KL_STDIN_FILE.console_eof */
 extern T1 T54f12(T0* C, T14 a1);
 /* STRING_8.put */
-extern void T17f42(T0* C, T2 a1, T6 a2);
+extern void T17f44(T0* C, T2 a1, T6 a2);
 /* KL_TEXT_INPUT_FILE.read_to_string */
 extern T6 T51f29(T0* C, T0* a1, T6 a2, T6 a3);
 /* KL_TEXT_INPUT_FILE.dummy_kl_character_buffer */
-extern unsigned char ge387os4290;
-extern T0* ge387ov4290;
+extern unsigned char ge310os4532;
+extern T0* ge310ov4532;
 extern T0* T51f33(T0* C);
 /* KL_CHARACTER_BUFFER.make */
-extern T0* T263c8(T6 a1);
+extern T0* T267c8(T6 a1);
 /* KL_OPERATING_SYSTEM.is_dotnet */
-extern unsigned char ge393os2643;
-extern T1 ge393ov2643;
-extern T1 T287f1(T0* C);
+extern unsigned char ge349os2906;
+extern T1 ge349ov2906;
+extern T1 T291f1(T0* C);
 /* PLATFORM.default_create */
-extern T0* T303c2(void);
+extern T0* T307c2(void);
 /* KL_CHARACTER_BUFFER.operating_system */
-extern unsigned char ge319os1762;
-extern T0* ge319ov1762;
-extern T0* T263f7(T0* C);
+extern unsigned char ge357os1963;
+extern T0* ge357ov1963;
+extern T0* T267f7(T0* C);
 /* KL_OPERATING_SYSTEM.default_create */
-extern T0* T287c2(void);
+extern T0* T291c2(void);
 /* KL_TEXT_INPUT_FILE.old_read_to_string */
 extern T6 T51f32(T0* C, T0* a1, T6 a2, T6 a3);
 /* KL_TEXT_INPUT_FILE.file_gss */
@@ -6187,41 +6659,41 @@ extern T1 T51f26(T0* C);
 /* KL_TEXT_INPUT_FILE.file_feof */
 extern T1 T51f28(T0* C, T14 a1);
 /* KL_CHARACTER_BUFFER.put */
-extern void T263f9(T0* C, T2 a1, T6 a2);
+extern void T267f9(T0* C, T2 a1, T6 a2);
 /* KL_TEXT_INPUT_FILE.end_of_input */
 extern T1 T51f24(T0* C);
 /* KL_STDIN_FILE.read_character */
-extern void T54f22(T0* C);
-/* KL_STDIN_FILE.old_read_character */
 extern void T54f23(T0* C);
+/* KL_STDIN_FILE.old_read_character */
+extern void T54f24(T0* C);
 /* KL_STDIN_FILE.console_readchar */
 extern T2 T54f11(T0* C, T14 a1);
 /* KL_TEXT_INPUT_FILE.read_character */
-extern void T51f43(T0* C);
-/* KL_TEXT_INPUT_FILE.old_read_character */
 extern void T51f44(T0* C);
+/* KL_TEXT_INPUT_FILE.old_read_character */
+extern void T51f45(T0* C);
 /* KL_TEXT_INPUT_FILE.file_gc */
 extern T2 T51f27(T0* C, T14 a1);
 /* YY_FILE_BUFFER.compact_left */
-extern void T129f21(T0* C);
+extern void T130f21(T0* C);
 /* KL_CHARACTER_BUFFER.move_left */
-extern void T263f10(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T267f10(T0* C, T6 a1, T6 a2, T6 a3);
 /* STRING_8.subcopy */
-extern void T17f43(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
+extern void T17f45(T0* C, T0* a1, T6 a2, T6 a3, T6 a4);
 /* YY_FILE_BUFFER.resize */
-extern void T129f23(T0* C);
+extern void T130f23(T0* C);
 /* KL_CHARACTER_BUFFER.resize */
-extern void T263f11(T0* C, T6 a1);
+extern void T267f11(T0* C, T6 a1);
 /* YY_FILE_BUFFER.default_capacity */
-extern unsigned char ge135os5395;
-extern T6 ge135ov5395;
-extern T6 T129f13(T0* C);
+extern unsigned char ge131os5630;
+extern T6 ge131ov5630;
+extern T6 T130f13(T0* C);
 /* YY_BUFFER.fill */
-extern void T130f15(T0* C);
+extern void T131f15(T0* C);
 /* YY_FILE_BUFFER.set_index */
-extern void T129f17(T0* C, T6 a1);
+extern void T130f17(T0* C, T6 a1);
 /* YY_BUFFER.set_index */
-extern void T130f13(T0* C, T6 a1);
+extern void T131f13(T0* C, T6 a1);
 /* PR_YACC_PARSER.yy_null_trans_state */
 extern T6 T50f122(T0* C, T6 a1);
 /* PR_YACC_PARSER.yy_previous_state */
@@ -6229,31 +6701,31 @@ extern T6 T50f121(T0* C);
 /* PR_YACC_PARSER.fatal_error */
 extern void T50f278(T0* C, T0* a1);
 /* KL_STDERR_FILE.put_character */
-extern void T124f12(T0* C, T2 a1);
+extern void T125f13(T0* C, T2 a1);
 /* KL_STDERR_FILE.old_put_character */
-extern void T124f16(T0* C, T2 a1);
+extern void T125f17(T0* C, T2 a1);
 /* KL_STDERR_FILE.console_pc */
-extern void T124f20(T0* C, T14 a1, T2 a2);
+extern void T125f21(T0* C, T14 a1, T2 a2);
 /* KL_STANDARD_FILES.error */
-extern unsigned char ge301os2634;
-extern T0* ge301ov2634;
+extern unsigned char ge323os2897;
+extern T0* ge323ov2897;
 extern T0* T35f3(T0* C);
 /* KL_STDERR_FILE.make */
-extern T0* T124c9(void);
+extern T0* T125c9(void);
 /* KL_STDERR_FILE.make_open_stderr */
-extern void T124f13(T0* C, T0* a1);
+extern void T125f14(T0* C, T0* a1);
 /* KL_STDERR_FILE.set_write_mode */
-extern void T124f18(T0* C);
+extern void T125f19(T0* C);
 /* KL_STDERR_FILE.console_def */
-extern T14 T124f6(T0* C, T6 a1);
+extern T14 T125f6(T0* C, T6 a1);
 /* KL_STDERR_FILE.old_make */
-extern void T124f17(T0* C, T0* a1);
+extern void T125f18(T0* C, T0* a1);
 /* PR_YACC_PARSER.std */
 extern T0* T50f178(T0* C);
 /* KL_CHARACTER_BUFFER.item */
-extern T2 T263f3(T0* C, T6 a1);
+extern T2 T267f3(T0* C, T6 a1);
 /* PR_YACC_PARSER.special_integer_ */
-extern T0* T50f103(T0* C);
+extern T0* T50f111(T0* C);
 /* PR_YACC_PARSER.yy_init_value_stacks */
 extern void T50f266(T0* C);
 /* PR_YACC_PARSER.yy_clear_all */
@@ -6265,17 +6737,27 @@ extern void T50f320(T0* C);
 /* PR_YACC_PARSER.yy_clear_value_stacks */
 extern void T50f323(T0* C);
 /* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].clear_all */
-extern void T139f6(T0* C);
+extern void T140f6(T0* C);
+/* SPECIAL [DS_ARRAYED_LIST [PR_TYPE]].put_default */
+extern void T140f7(T0* C, T6 a1);
 /* SPECIAL [PR_TYPE].clear_all */
-extern void T137f6(T0* C);
+extern void T138f6(T0* C);
+/* SPECIAL [PR_TYPE].put_default */
+extern void T138f7(T0* C, T6 a1);
 /* SPECIAL [PR_TOKEN].clear_all */
-extern void T141f6(T0* C);
+extern void T142f6(T0* C);
+/* SPECIAL [PR_TOKEN].put_default */
+extern void T142f7(T0* C, T6 a1);
 /* SPECIAL [INTEGER_32].clear_all */
-extern void T101f10(T0* C);
+extern void T102f9(T0* C);
 /* SPECIAL [STRING_8].clear_all */
-extern void T122f6(T0* C);
+extern void T123f6(T0* C);
+/* SPECIAL [STRING_8].put_default */
+extern void T123f7(T0* C, T6 a1);
 /* SPECIAL [ANY].clear_all */
-extern void T133f6(T0* C);
+extern void T134f5(T0* C);
+/* SPECIAL [ANY].put_default */
+extern void T134f6(T0* C, T6 a1);
 /* PR_YACC_PARSER.abort */
 extern void T50f269(T0* C);
 /* PR_YACC_PARSER.set_input_buffer */
@@ -6283,69 +6765,69 @@ extern void T50f260(T0* C, T0* a1);
 /* PR_YACC_PARSER.yy_load_input_buffer */
 extern void T50f265(T0* C);
 /* YY_FILE_BUFFER.set_position */
-extern void T129f18(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T130f18(T0* C, T6 a1, T6 a2, T6 a3);
 /* YY_BUFFER.set_position */
-extern void T130f14(T0* C, T6 a1, T6 a2, T6 a3);
+extern void T131f14(T0* C, T6 a1, T6 a2, T6 a3);
 /* PR_YACC_PARSER.new_file_buffer */
-extern T0* T50f227(T0* C, T0* a1);
+extern T0* T50f224(T0* C, T0* a1);
 /* YY_FILE_BUFFER.make */
-extern T0* T129c16(T0* a1);
+extern T0* T130c16(T0* a1);
 /* YY_FILE_BUFFER.make_with_size */
-extern void T129f20(T0* C, T0* a1, T6 a2);
+extern void T130f20(T0* C, T0* a1, T6 a2);
 /* YY_FILE_BUFFER.set_file */
-extern void T129f22(T0* C, T0* a1);
+extern void T130f22(T0* C, T0* a1);
 /* YY_FILE_BUFFER.flush */
-extern void T129f24(T0* C);
+extern void T130f24(T0* C);
 /* YY_FILE_BUFFER.new_default_buffer */
-extern T0* T129f15(T0* C, T6 a1);
+extern T0* T130f15(T0* C, T6 a1);
 /* KL_TEXT_INPUT_FILE.is_open_read */
-extern T1 T51f10(T0* C);
+extern T1 T51f11(T0* C);
 /* KL_TEXT_INPUT_FILE.old_is_open_read */
 extern T1 T51f19(T0* C);
 /* KL_TEXT_INPUT_FILE.open_read */
-extern void T51f36(T0* C);
+extern void T51f37(T0* C);
 /* KL_TEXT_INPUT_FILE.is_closed */
-extern T1 T51f15(T0* C);
+extern T1 T51f16(T0* C);
 /* KL_TEXT_INPUT_FILE.old_is_closed */
-extern T1 T51f23(T0* C);
+extern T1 T51f10(T0* C);
 /* KL_TEXT_INPUT_FILE.old_open_read */
-extern void T51f39(T0* C);
+extern void T51f41(T0* C);
 /* KL_TEXT_INPUT_FILE.default_pointer */
-extern T14 T51f18(T0* C);
+extern T14 T51f20(T0* C);
 /* KL_TEXT_INPUT_FILE.open_read */
-extern void T51f39p1(T0* C);
+extern void T51f41p1(T0* C);
 /* KL_TEXT_INPUT_FILE.file_open */
-extern T14 T51f20(T0* C, T14 a1, T6 a2);
+extern T14 T51f21(T0* C, T14 a1, T6 a2);
 /* KL_TEXT_INPUT_FILE.old_is_readable */
-extern T1 T51f14(T0* C);
+extern T1 T51f15(T0* C);
 /* UNIX_FILE_INFO.is_readable */
-extern T1 T180f5(T0* C);
+extern T1 T181f5(T0* C);
 /* UNIX_FILE_INFO.file_eaccess */
-extern T1 T180f3(T0* C, T14 a1, T6 a2);
+extern T1 T181f3(T0* C, T14 a1, T6 a2);
 /* KL_TEXT_INPUT_FILE.buffered_file_info */
-extern unsigned char ge520os1956;
-extern T0* ge520ov1956;
-extern T0* T51f22(T0* C);
+extern unsigned char ge559os2160;
+extern T0* ge559ov2160;
+extern T0* T51f23(T0* C);
 /* UNIX_FILE_INFO.make */
-extern T0* T180c6(void);
+extern T0* T181c6(void);
 /* UNIX_FILE_INFO.make_buffered_file_info */
-extern void T180f8(T0* C, T6 a1);
+extern void T181f8(T0* C, T6 a1);
 /* UNIX_FILE_INFO.stat_size */
-extern T6 T180f4(T0* C);
+extern T6 T181f4(T0* C);
 /* KL_TEXT_INPUT_FILE.set_buffer */
-extern void T51f42(T0* C);
+extern void T51f43(T0* C);
 /* UNIX_FILE_INFO.update */
-extern void T180f7(T0* C, T0* a1);
+extern void T181f7(T0* C, T0* a1);
 /* UNIX_FILE_INFO.file_stat */
-extern void T180f9(T0* C, T14 a1, T14 a2);
+extern void T181f9(T0* C, T14 a1, T14 a2);
 /* KL_TEXT_INPUT_FILE.old_exists */
-extern T1 T51f13(T0* C);
+extern T1 T51f14(T0* C);
 /* KL_TEXT_INPUT_FILE.file_exists */
-extern T1 T51f21(T0* C, T14 a1);
+extern T1 T51f22(T0* C, T14 a1);
 /* KL_TEXT_INPUT_FILE.make */
 extern T0* T51c35(T0* a1);
 /* KL_TEXT_INPUT_FILE.old_make */
-extern void T51f38(T0* C, T0* a1);
+extern void T51f39(T0* C, T0* a1);
 /* KL_TEXT_INPUT_FILE.string_ */
 extern T0* T51f25(T0* C);
 /* PR_YACC_PARSER.set_old_typing */
@@ -6353,136 +6835,136 @@ extern void T50f256(T0* C, T1 a1);
 /* PR_YACC_PARSER.make */
 extern T0* T50c255(T0* a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].make */
-extern T0* T128c35(T6 a1);
+extern T0* T129c36(T6 a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].make_with_equality_testers */
-extern void T128f38(T0* C, T6 a1, T0* a2, T0* a3);
+extern void T129f39(T0* C, T6 a1, T0* a2, T0* a3);
 /* DS_SPARSE_TABLE_KEYS [PR_TYPE, STRING_8].make */
-extern T0* T240c5(T0* a1);
+extern T0* T241c5(T0* a1);
 /* DS_SPARSE_TABLE_KEYS [PR_TYPE, STRING_8].new_cursor */
-extern T0* T240f4(T0* C);
+extern T0* T241f4(T0* C);
 /* DS_SPARSE_TABLE_KEYS_CURSOR [PR_TYPE, STRING_8].make */
-extern T0* T283c3(T0* a1);
+extern T0* T287c3(T0* a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].new_cursor */
-extern T0* T128f30(T0* C);
+extern T0* T129f30(T0* C);
 /* DS_HASH_TABLE_CURSOR [PR_TYPE, STRING_8].make */
-extern T0* T242c3(T0* a1);
+extern T0* T243c3(T0* a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].make_sparse_container */
-extern void T128f45(T0* C, T6 a1);
+extern void T129f47(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].make_slots */
-extern void T128f53(T0* C, T6 a1);
+extern void T129f55(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].make_clashes */
-extern void T128f52(T0* C, T6 a1);
+extern void T129f54(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].make_key_storage */
-extern void T128f51(T0* C, T6 a1);
+extern void T129f53(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TYPE, STRING_8].make_item_storage */
-extern void T128f50(T0* C, T6 a1);
+extern void T129f52(T0* C, T6 a1);
 /* KL_EQUALITY_TESTER [STRING_8].default_create */
 extern T0* T42c3(void);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].make */
-extern T0* T127c35(T6 a1);
+extern T0* T128c37(T6 a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].make_with_equality_testers */
-extern void T127f38(T0* C, T6 a1, T0* a2, T0* a3);
+extern void T128f42(T0* C, T6 a1, T0* a2, T0* a3);
 /* DS_SPARSE_TABLE_KEYS [PR_VARIABLE, STRING_8].make */
-extern T0* T237c5(T0* a1);
+extern T0* T238c5(T0* a1);
 /* DS_SPARSE_TABLE_KEYS [PR_VARIABLE, STRING_8].new_cursor */
-extern T0* T237f4(T0* C);
+extern T0* T238f4(T0* C);
 /* DS_SPARSE_TABLE_KEYS_CURSOR [PR_VARIABLE, STRING_8].make */
-extern T0* T282c3(T0* a1);
+extern T0* T286c3(T0* a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].new_cursor */
-extern T0* T127f30(T0* C);
+extern T0* T128f31(T0* C);
 /* DS_HASH_TABLE_CURSOR [PR_VARIABLE, STRING_8].make */
-extern T0* T239c3(T0* a1);
+extern T0* T240c3(T0* a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].make_sparse_container */
-extern void T127f45(T0* C, T6 a1);
+extern void T128f49(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].make_slots */
-extern void T127f53(T0* C, T6 a1);
+extern void T128f57(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].make_clashes */
-extern void T127f52(T0* C, T6 a1);
+extern void T128f56(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].make_key_storage */
-extern void T127f51(T0* C, T6 a1);
+extern void T128f55(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_VARIABLE, STRING_8].make_item_storage */
-extern void T127f50(T0* C, T6 a1);
+extern void T128f54(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].make */
-extern T0* T126c35(T6 a1);
+extern T0* T127c38(T6 a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].make_with_equality_testers */
-extern void T126f38(T0* C, T6 a1, T0* a2, T0* a3);
+extern void T127f43(T0* C, T6 a1, T0* a2, T0* a3);
 /* DS_SPARSE_TABLE_KEYS [PR_TOKEN, STRING_8].make */
-extern T0* T234c5(T0* a1);
+extern T0* T235c5(T0* a1);
 /* DS_SPARSE_TABLE_KEYS [PR_TOKEN, STRING_8].new_cursor */
-extern T0* T234f4(T0* C);
+extern T0* T235f4(T0* C);
 /* DS_SPARSE_TABLE_KEYS_CURSOR [PR_TOKEN, STRING_8].make */
-extern T0* T281c3(T0* a1);
+extern T0* T285c3(T0* a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].new_cursor */
-extern T0* T126f30(T0* C);
+extern T0* T127f32(T0* C);
 /* DS_HASH_TABLE_CURSOR [PR_TOKEN, STRING_8].make */
-extern T0* T236c3(T0* a1);
+extern T0* T237c3(T0* a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].make_sparse_container */
-extern void T126f45(T0* C, T6 a1);
+extern void T127f50(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].make_slots */
-extern void T126f53(T0* C, T6 a1);
+extern void T127f58(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].make_clashes */
-extern void T126f52(T0* C, T6 a1);
+extern void T127f57(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].make_key_storage */
-extern void T126f51(T0* C, T6 a1);
+extern void T127f56(T0* C, T6 a1);
 /* DS_HASH_TABLE [PR_TOKEN, STRING_8].make_item_storage */
-extern void T126f50(T0* C, T6 a1);
+extern void T127f55(T0* C, T6 a1);
 /* PR_GRAMMAR.make */
 extern T0* T29c19(void);
 /* DS_ARRAYED_LIST [STRING_8].make */
-extern T0* T111c10(T6 a1);
+extern T0* T112c10(T6 a1);
 /* DS_ARRAYED_LIST [STRING_8].new_cursor */
-extern T0* T111f7(T0* C);
+extern T0* T112f7(T0* C);
 /* DS_ARRAYED_LIST_CURSOR [STRING_8].make */
-extern T0* T231c2(T0* a1);
+extern T0* T232c3(T0* a1);
 /* PR_ACTION_FACTORY.make */
-extern T0* T125c2(void);
+extern T0* T126c2(void);
 /* PR_YACC_PARSER.make_parser_skeleton */
 extern void T50f259(T0* C);
 /* PR_YACC_PARSER.yy_build_parser_tables */
 extern void T50f264(T0* C);
 /* PR_YACC_PARSER.yycheck_template */
-extern unsigned char ge204os3555;
-extern T0* ge204ov3555;
+extern unsigned char ge200os3791;
+extern T0* ge200ov3791;
 extern T0* T50f128(T0* C);
 /* PR_YACC_PARSER.yyfixed_array */
 extern T0* T50f241(T0* C, T0* a1);
 /* KL_SPECIAL_ROUTINES [INTEGER_32].to_special */
-extern T0* T131f3(T0* C, T0* a1);
+extern T0* T132f3(T0* C, T0* a1);
 /* PR_YACC_PARSER.yytable_template */
-extern unsigned char ge204os3554;
-extern T0* ge204ov3554;
+extern unsigned char ge200os3790;
+extern T0* ge200ov3790;
 extern T0* T50f127(T0* C);
 /* PR_YACC_PARSER.yypgoto_template */
-extern unsigned char ge204os3553;
-extern T0* ge204ov3553;
+extern unsigned char ge200os3789;
+extern T0* ge200ov3789;
 extern T0* T50f124(T0* C);
 /* PR_YACC_PARSER.yypact_template */
-extern unsigned char ge204os3552;
-extern T0* ge204ov3552;
+extern unsigned char ge200os3788;
+extern T0* ge200ov3788;
 extern T0* T50f118(T0* C);
 /* PR_YACC_PARSER.yydefgoto_template */
-extern unsigned char ge204os3551;
-extern T0* ge204ov3551;
+extern unsigned char ge200os3787;
+extern T0* ge200ov3787;
 extern T0* T50f117(T0* C);
 /* PR_YACC_PARSER.yydefact_template */
-extern unsigned char ge204os3550;
-extern T0* ge204ov3550;
+extern unsigned char ge200os3786;
+extern T0* ge200ov3786;
 extern T0* T50f116(T0* C);
 /* PR_YACC_PARSER.yytypes2_template */
-extern unsigned char ge204os3549;
-extern T0* ge204ov3549;
+extern unsigned char ge200os3785;
+extern T0* ge200ov3785;
 extern T0* T50f114(T0* C);
 /* PR_YACC_PARSER.yytypes1_template */
-extern unsigned char ge204os3548;
-extern T0* ge204ov3548;
+extern unsigned char ge200os3784;
+extern T0* ge200ov3784;
 extern T0* T50f110(T0* C);
 /* PR_YACC_PARSER.yyr1_template */
-extern unsigned char ge204os3547;
-extern T0* ge204ov3547;
+extern unsigned char ge200os3783;
+extern T0* ge200ov3783;
 extern T0* T50f106(T0* C);
 /* PR_YACC_PARSER.yytranslate_template */
-extern unsigned char ge204os3546;
-extern T0* ge204ov3546;
+extern unsigned char ge200os3782;
+extern T0* ge200ov3782;
 extern T0* T50f105(T0* C);
 /* PR_YACC_PARSER.yy_create_value_stacks */
 extern void T50f263(T0* C);
@@ -6495,54 +6977,54 @@ extern void T50f276(T0* C);
 /* PR_YACC_PARSER.yy_build_tables */
 extern void T50f302(T0* C);
 /* PR_YACC_PARSER.yy_accept_template */
-extern unsigned char ge206os4064;
-extern T0* ge206ov4064;
+extern unsigned char ge202os4301;
+extern T0* ge202ov4301;
 extern T0* T50f238(T0* C);
 /* PR_YACC_PARSER.yy_fixed_array */
 extern T0* T50f254(T0* C, T0* a1);
 /* PR_YACC_PARSER.yy_meta_template */
-extern unsigned char ge206os4063;
-extern T0* ge206ov4063;
+extern unsigned char ge202os4300;
+extern T0* ge202ov4300;
 extern T0* T50f237(T0* C);
 /* PR_YACC_PARSER.yy_ec_template */
-extern unsigned char ge206os4062;
-extern T0* ge206ov4062;
+extern unsigned char ge202os4299;
+extern T0* ge202ov4299;
 extern T0* T50f236(T0* C);
 /* PR_YACC_PARSER.yy_def_template */
-extern unsigned char ge206os4061;
-extern T0* ge206ov4061;
+extern unsigned char ge202os4298;
+extern T0* ge202ov4298;
 extern T0* T50f235(T0* C);
 /* PR_YACC_PARSER.yy_base_template */
-extern unsigned char ge206os4060;
-extern T0* ge206ov4060;
+extern unsigned char ge202os4297;
+extern T0* ge202ov4297;
 extern T0* T50f234(T0* C);
 /* PR_YACC_PARSER.yy_chk_template */
-extern unsigned char ge206os4059;
-extern T0* ge206ov4059;
+extern unsigned char ge202os4296;
+extern T0* ge202ov4296;
 extern T0* T50f233(T0* C);
 /* PR_YACC_PARSER.yy_nxt_template */
-extern unsigned char ge206os4058;
-extern T0* ge206ov4058;
+extern unsigned char ge202os4295;
+extern T0* ge202ov4295;
 extern T0* T50f232(T0* C);
 /* PR_YACC_PARSER.empty_buffer */
-extern unsigned char ge140os3913;
-extern T0* ge140ov3913;
-extern T0* T50f135(T0* C);
+extern unsigned char ge136os4150;
+extern T0* ge136ov4150;
+extern T0* T50f132(T0* C);
 /* YY_BUFFER.make */
-extern T0* T130c12(T0* a1);
+extern T0* T131c12(T0* a1);
 /* YY_BUFFER.make_from_buffer */
-extern void T130f16(T0* C, T0* a1);
+extern void T131f16(T0* C, T0* a1);
 /* KL_CHARACTER_BUFFER.fill_from_string */
-extern void T263f12(T0* C, T0* a1, T6 a2);
+extern void T267f12(T0* C, T0* a1, T6 a2);
 /* YY_BUFFER.new_default_buffer */
-extern T0* T130f11(T0* C, T6 a1);
+extern T0* T131f11(T0* C, T6 a1);
 /* GEYACC.read_command_line */
 extern void T21f20(T0* C);
 /* GEYACC.report_usage_error */
 extern void T21f24(T0* C);
 /* GEYACC.usage_message */
-extern unsigned char ge54os1572;
-extern T0* ge54ov1572;
+extern unsigned char ge50os1773;
+extern T0* ge50ov1773;
 extern T0* T21f17(T0* C);
 /* UT_USAGE_MESSAGE.make */
 extern T0* T56c7(T0* a1);
@@ -6565,8 +7047,8 @@ extern T0* T28f4(T0* C);
 /* KL_ARGUMENTS.set_program_name */
 extern void T27f5(T0* C, T0* a1);
 /* GEYACC.arguments */
-extern unsigned char ge315os1577;
-extern T0* ge315ov1577;
+extern unsigned char ge352os1778;
+extern T0* ge352ov1778;
 extern T0* T21f13(T0* C);
 /* KL_ARGUMENTS.make */
 extern T0* T27c4(void);
@@ -6594,248 +7076,252 @@ extern T0* T39c1(void);
 extern T0* T38c1(void);
 /* KL_EQUALITY_TESTER [PR_RULE].default_create */
 extern T0* T37c1(void);
+/* KL_TEXT_INPUT_FILE.dispose */
+extern void T51f36(T0* C);
+/* KL_TEXT_OUTPUT_FILE.dispose */
+extern void T24f21(T0* C);
 /* PR_PRECEDENCE_DEFINED_TWICE_ERROR.default_message */
-extern T0* T179f5(T0* C);
+extern T0* T180f5(T0* C);
 /* PR_PRECEDENCE_DEFINED_TWICE_ERROR.message */
-extern T0* T179f3(T0* C, T0* a1);
+extern T0* T180f3(T0* C, T0* a1);
 /* PR_PRECEDENCE_DEFINED_TWICE_ERROR.arguments */
-extern T0* T179f6(T0* C);
+extern T0* T180f6(T0* C);
 /* KL_STRING_ROUTINES.appended_string */
-extern T0* T118f5(T0* C, T0* a1, T0* a2);
+extern T0* T119f5(T0* C, T0* a1, T0* a2);
 /* KL_STRING_ROUTINES.concat */
-extern T0* T118f10(T0* C, T0* a1, T0* a2);
+extern T0* T119f10(T0* C, T0* a1, T0* a2);
 /* STRING_8.infix "+" */
 extern T0* T17f21(T0* C, T0* a1);
 /* ARRAY [STRING_8].item */
-extern T0* T123f5(T0* C, T6 a1);
+extern T0* T124f5(T0* C, T6 a1);
 /* ARRAY [STRING_8].valid_index */
-extern T1 T123f4(T0* C, T6 a1);
+extern T1 T124f4(T0* C, T6 a1);
 /* KL_STRING_ROUTINES.append_substring_to_string */
-extern void T118f12(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
+extern void T119f12(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
 /* KL_STRING_ROUTINES.appended_substring */
-extern T0* T118f4(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
+extern T0* T119f4(T0* C, T0* a1, T0* a2, T6 a3, T6 a4);
 /* KL_STRING_ROUTINES.new_empty_string */
-extern T0* T118f3(T0* C, T0* a1, T6 a2);
+extern T0* T119f3(T0* C, T0* a1, T6 a2);
 /* KL_STRING_ROUTINES.cloned_string */
-extern T0* T118f9(T0* C, T0* a1);
+extern T0* T119f9(T0* C, T0* a1);
 /* PR_PRECEDENCE_DEFINED_TWICE_ERROR.string_ */
-extern T0* T179f4(T0* C);
+extern T0* T180f4(T0* C);
 /* PR_UNDEFINED_STRING_TOKEN_ERROR.default_message */
-extern T0* T178f5(T0* C);
+extern T0* T179f5(T0* C);
 /* PR_UNDEFINED_STRING_TOKEN_ERROR.message */
-extern T0* T178f3(T0* C, T0* a1);
+extern T0* T179f3(T0* C, T0* a1);
 /* PR_UNDEFINED_STRING_TOKEN_ERROR.arguments */
-extern T0* T178f6(T0* C);
+extern T0* T179f6(T0* C);
 /* PR_UNDEFINED_STRING_TOKEN_ERROR.string_ */
-extern T0* T178f4(T0* C);
+extern T0* T179f4(T0* C);
 /* PR_VARIABLE_DECLARED_TWICE_ERROR.default_message */
-extern T0* T177f5(T0* C);
+extern T0* T178f5(T0* C);
 /* PR_VARIABLE_DECLARED_TWICE_ERROR.message */
-extern T0* T177f3(T0* C, T0* a1);
+extern T0* T178f3(T0* C, T0* a1);
 /* PR_VARIABLE_DECLARED_TWICE_ERROR.arguments */
-extern T0* T177f6(T0* C);
+extern T0* T178f6(T0* C);
 /* PR_VARIABLE_DECLARED_TWICE_ERROR.string_ */
-extern T0* T177f4(T0* C);
+extern T0* T178f4(T0* C);
 /* PR_SYMBOL_DECLARED_TOKEN_ERROR.default_message */
-extern T0* T176f5(T0* C);
+extern T0* T177f5(T0* C);
 /* PR_SYMBOL_DECLARED_TOKEN_ERROR.message */
-extern T0* T176f3(T0* C, T0* a1);
+extern T0* T177f3(T0* C, T0* a1);
 /* PR_SYMBOL_DECLARED_TOKEN_ERROR.arguments */
-extern T0* T176f6(T0* C);
+extern T0* T177f6(T0* C);
 /* PR_SYMBOL_DECLARED_TOKEN_ERROR.string_ */
-extern T0* T176f4(T0* C);
+extern T0* T177f4(T0* C);
 /* PR_TOKEN_DECLARED_TWICE_ERROR.default_message */
-extern T0* T175f5(T0* C);
+extern T0* T176f5(T0* C);
 /* PR_TOKEN_DECLARED_TWICE_ERROR.message */
-extern T0* T175f3(T0* C, T0* a1);
+extern T0* T176f3(T0* C, T0* a1);
 /* PR_TOKEN_DECLARED_TWICE_ERROR.arguments */
-extern T0* T175f6(T0* C);
+extern T0* T176f6(T0* C);
 /* PR_TOKEN_DECLARED_TWICE_ERROR.string_ */
-extern T0* T175f4(T0* C);
+extern T0* T176f4(T0* C);
 /* PR_SYMBOL_DECLARED_VARIABLE_ERROR.default_message */
-extern T0* T174f5(T0* C);
+extern T0* T175f5(T0* C);
 /* PR_SYMBOL_DECLARED_VARIABLE_ERROR.message */
-extern T0* T174f3(T0* C, T0* a1);
+extern T0* T175f3(T0* C, T0* a1);
 /* PR_SYMBOL_DECLARED_VARIABLE_ERROR.arguments */
-extern T0* T174f6(T0* C);
+extern T0* T175f6(T0* C);
 /* PR_SYMBOL_DECLARED_VARIABLE_ERROR.string_ */
-extern T0* T174f4(T0* C);
+extern T0* T175f4(T0* C);
 /* PR_INVALID_DOLLAR_N_ERROR.default_message */
-extern T0* T166f5(T0* C);
+extern T0* T167f5(T0* C);
 /* PR_INVALID_DOLLAR_N_ERROR.message */
-extern T0* T166f3(T0* C, T0* a1);
+extern T0* T167f3(T0* C, T0* a1);
 /* PR_INVALID_DOLLAR_N_ERROR.arguments */
-extern T0* T166f6(T0* C);
+extern T0* T167f6(T0* C);
 /* PR_INVALID_DOLLAR_N_ERROR.string_ */
-extern T0* T166f4(T0* C);
+extern T0* T167f4(T0* C);
 /* PR_DANGEROUS_DOLLAR_N_ERROR.default_message */
-extern T0* T165f5(T0* C);
+extern T0* T166f5(T0* C);
 /* PR_DANGEROUS_DOLLAR_N_ERROR.message */
-extern T0* T165f3(T0* C, T0* a1);
+extern T0* T166f3(T0* C, T0* a1);
 /* PR_DANGEROUS_DOLLAR_N_ERROR.arguments */
-extern T0* T165f6(T0* C);
+extern T0* T166f6(T0* C);
 /* PR_DANGEROUS_DOLLAR_N_ERROR.string_ */
-extern T0* T165f4(T0* C);
+extern T0* T166f4(T0* C);
 /* PR_STRING_TOKEN_DEFINED_TWICE_ERROR.default_message */
-extern T0* T164f5(T0* C);
+extern T0* T165f5(T0* C);
 /* PR_STRING_TOKEN_DEFINED_TWICE_ERROR.message */
-extern T0* T164f3(T0* C, T0* a1);
+extern T0* T165f3(T0* C, T0* a1);
 /* PR_STRING_TOKEN_DEFINED_TWICE_ERROR.arguments */
-extern T0* T164f6(T0* C);
+extern T0* T165f6(T0* C);
 /* PR_STRING_TOKEN_DEFINED_TWICE_ERROR.string_ */
-extern T0* T164f4(T0* C);
+extern T0* T165f4(T0* C);
 /* PR_TWO_STRINGS_TOKEN_ERROR.default_message */
-extern T0* T163f5(T0* C);
+extern T0* T164f5(T0* C);
 /* PR_TWO_STRINGS_TOKEN_ERROR.message */
-extern T0* T163f3(T0* C, T0* a1);
+extern T0* T164f3(T0* C, T0* a1);
 /* PR_TWO_STRINGS_TOKEN_ERROR.arguments */
-extern T0* T163f6(T0* C);
+extern T0* T164f6(T0* C);
 /* PR_TWO_STRINGS_TOKEN_ERROR.string_ */
-extern T0* T163f4(T0* C);
+extern T0* T164f4(T0* C);
 /* PR_TWO_TOKEN_IDS_TOKEN_ERROR.default_message */
-extern T0* T162f5(T0* C);
+extern T0* T163f5(T0* C);
 /* PR_TWO_TOKEN_IDS_TOKEN_ERROR.message */
-extern T0* T162f3(T0* C, T0* a1);
+extern T0* T163f3(T0* C, T0* a1);
 /* PR_TWO_TOKEN_IDS_TOKEN_ERROR.arguments */
-extern T0* T162f6(T0* C);
+extern T0* T163f6(T0* C);
 /* PR_TWO_TOKEN_IDS_TOKEN_ERROR.string_ */
-extern T0* T162f4(T0* C);
+extern T0* T163f4(T0* C);
 /* PR_UNDEFINED_SYMBOL_ERROR.default_message */
-extern T0* T161f5(T0* C);
+extern T0* T162f5(T0* C);
 /* PR_UNDEFINED_SYMBOL_ERROR.message */
-extern T0* T161f3(T0* C, T0* a1);
+extern T0* T162f3(T0* C, T0* a1);
 /* PR_UNDEFINED_SYMBOL_ERROR.arguments */
-extern T0* T161f6(T0* C);
+extern T0* T162f6(T0* C);
 /* PR_UNDEFINED_SYMBOL_ERROR.string_ */
-extern T0* T161f4(T0* C);
+extern T0* T162f4(T0* C);
 /* PR_TOKEN_ID_USED_TWICE_ERROR.default_message */
-extern T0* T160f5(T0* C);
+extern T0* T161f5(T0* C);
 /* PR_TOKEN_ID_USED_TWICE_ERROR.message */
-extern T0* T160f3(T0* C, T0* a1);
+extern T0* T161f3(T0* C, T0* a1);
 /* PR_TOKEN_ID_USED_TWICE_ERROR.arguments */
-extern T0* T160f6(T0* C);
+extern T0* T161f6(T0* C);
 /* PR_TOKEN_ID_USED_TWICE_ERROR.string_ */
-extern T0* T160f4(T0* C);
+extern T0* T161f4(T0* C);
 /* PR_UNKNOWN_START_SYMBOL_ERROR.default_message */
-extern T0* T159f5(T0* C);
+extern T0* T160f5(T0* C);
 /* PR_UNKNOWN_START_SYMBOL_ERROR.message */
-extern T0* T159f3(T0* C, T0* a1);
+extern T0* T160f3(T0* C, T0* a1);
 /* PR_UNKNOWN_START_SYMBOL_ERROR.arguments */
-extern T0* T159f6(T0* C);
+extern T0* T160f6(T0* C);
 /* PR_UNKNOWN_START_SYMBOL_ERROR.string_ */
-extern T0* T159f4(T0* C);
+extern T0* T160f4(T0* C);
 /* PR_START_SYMBOL_TOKEN_ERROR.default_message */
-extern T0* T158f5(T0* C);
+extern T0* T159f5(T0* C);
 /* PR_START_SYMBOL_TOKEN_ERROR.message */
-extern T0* T158f3(T0* C, T0* a1);
+extern T0* T159f3(T0* C, T0* a1);
 /* PR_START_SYMBOL_TOKEN_ERROR.arguments */
-extern T0* T158f6(T0* C);
+extern T0* T159f6(T0* C);
 /* PR_START_SYMBOL_TOKEN_ERROR.string_ */
-extern T0* T158f4(T0* C);
+extern T0* T159f4(T0* C);
 /* PR_INTEGER_TOO_LARGE_ERROR.default_message */
-extern T0* T157f5(T0* C);
+extern T0* T158f5(T0* C);
 /* PR_INTEGER_TOO_LARGE_ERROR.message */
-extern T0* T157f3(T0* C, T0* a1);
+extern T0* T158f3(T0* C, T0* a1);
 /* PR_INTEGER_TOO_LARGE_ERROR.arguments */
-extern T0* T157f6(T0* C);
+extern T0* T158f6(T0* C);
 /* PR_INTEGER_TOO_LARGE_ERROR.string_ */
-extern T0* T157f4(T0* C);
+extern T0* T158f4(T0* C);
 /* PR_INVALID_DOLLAR_DOLLAR_ERROR.default_message */
-extern T0* T156f5(T0* C);
+extern T0* T157f5(T0* C);
 /* PR_INVALID_DOLLAR_DOLLAR_ERROR.message */
-extern T0* T156f3(T0* C, T0* a1);
+extern T0* T157f3(T0* C, T0* a1);
 /* PR_INVALID_DOLLAR_DOLLAR_ERROR.arguments */
-extern T0* T156f6(T0* C);
+extern T0* T157f6(T0* C);
 /* PR_INVALID_DOLLAR_DOLLAR_ERROR.string_ */
-extern T0* T156f4(T0* C);
+extern T0* T157f4(T0* C);
 /* PR_INVALID_STRING_TOKEN_ERROR.default_message */
-extern T0* T155f5(T0* C);
+extern T0* T156f5(T0* C);
 /* PR_INVALID_STRING_TOKEN_ERROR.message */
-extern T0* T155f3(T0* C, T0* a1);
+extern T0* T156f3(T0* C, T0* a1);
 /* PR_INVALID_STRING_TOKEN_ERROR.arguments */
-extern T0* T155f6(T0* C);
+extern T0* T156f6(T0* C);
 /* PR_INVALID_STRING_TOKEN_ERROR.string_ */
-extern T0* T155f4(T0* C);
+extern T0* T156f4(T0* C);
 /* PR_NULL_INTEGER_ERROR.default_message */
-extern T0* T154f5(T0* C);
+extern T0* T155f5(T0* C);
 /* PR_NULL_INTEGER_ERROR.message */
-extern T0* T154f3(T0* C, T0* a1);
+extern T0* T155f3(T0* C, T0* a1);
 /* PR_NULL_INTEGER_ERROR.arguments */
-extern T0* T154f6(T0* C);
+extern T0* T155f6(T0* C);
 /* PR_NULL_INTEGER_ERROR.string_ */
-extern T0* T154f4(T0* C);
+extern T0* T155f4(T0* C);
 /* PR_MISSING_CHARACTERS_ERROR.default_message */
-extern T0* T153f5(T0* C);
+extern T0* T154f5(T0* C);
 /* PR_MISSING_CHARACTERS_ERROR.message */
-extern T0* T153f3(T0* C, T0* a1);
+extern T0* T154f3(T0* C, T0* a1);
 /* PR_MISSING_CHARACTERS_ERROR.arguments */
-extern T0* T153f6(T0* C);
+extern T0* T154f6(T0* C);
 /* PR_MISSING_CHARACTERS_ERROR.string_ */
-extern T0* T153f4(T0* C);
+extern T0* T154f4(T0* C);
 /* PR_PREC_NOT_TOKEN_ERROR.default_message */
-extern T0* T152f5(T0* C);
+extern T0* T153f5(T0* C);
 /* PR_PREC_NOT_TOKEN_ERROR.message */
-extern T0* T152f3(T0* C, T0* a1);
+extern T0* T153f3(T0* C, T0* a1);
 /* PR_PREC_NOT_TOKEN_ERROR.arguments */
-extern T0* T152f6(T0* C);
+extern T0* T153f6(T0* C);
 /* PR_PREC_NOT_TOKEN_ERROR.string_ */
-extern T0* T152f4(T0* C);
+extern T0* T153f4(T0* C);
 /* PR_PREC_SPECIFIED_TWICE_ERROR.default_message */
-extern T0* T151f5(T0* C);
+extern T0* T152f5(T0* C);
 /* PR_PREC_SPECIFIED_TWICE_ERROR.message */
-extern T0* T151f3(T0* C, T0* a1);
+extern T0* T152f3(T0* C, T0* a1);
 /* PR_PREC_SPECIFIED_TWICE_ERROR.arguments */
-extern T0* T151f6(T0* C);
+extern T0* T152f6(T0* C);
 /* PR_PREC_SPECIFIED_TWICE_ERROR.string_ */
-extern T0* T151f4(T0* C);
+extern T0* T152f4(T0* C);
 /* PR_INVALID_ERROR_N_ERROR.default_message */
-extern T0* T150f5(T0* C);
+extern T0* T151f5(T0* C);
 /* PR_INVALID_ERROR_N_ERROR.message */
-extern T0* T150f3(T0* C, T0* a1);
+extern T0* T151f3(T0* C, T0* a1);
 /* PR_INVALID_ERROR_N_ERROR.arguments */
-extern T0* T150f6(T0* C);
+extern T0* T151f6(T0* C);
 /* PR_INVALID_ERROR_N_ERROR.string_ */
-extern T0* T150f4(T0* C);
+extern T0* T151f4(T0* C);
 /* PR_RULE_DECLARED_TWICE_ERROR.default_message */
-extern T0* T149f5(T0* C);
+extern T0* T150f5(T0* C);
 /* PR_RULE_DECLARED_TWICE_ERROR.message */
-extern T0* T149f3(T0* C, T0* a1);
+extern T0* T150f3(T0* C, T0* a1);
 /* PR_RULE_DECLARED_TWICE_ERROR.arguments */
-extern T0* T149f6(T0* C);
+extern T0* T150f6(T0* C);
 /* PR_RULE_DECLARED_TWICE_ERROR.string_ */
-extern T0* T149f4(T0* C);
+extern T0* T150f4(T0* C);
 /* PR_LHS_SYMBOL_TOKEN_ERROR.default_message */
-extern T0* T148f5(T0* C);
+extern T0* T149f5(T0* C);
 /* PR_LHS_SYMBOL_TOKEN_ERROR.message */
-extern T0* T148f3(T0* C, T0* a1);
+extern T0* T149f3(T0* C, T0* a1);
 /* PR_LHS_SYMBOL_TOKEN_ERROR.arguments */
-extern T0* T148f6(T0* C);
+extern T0* T149f6(T0* C);
 /* PR_LHS_SYMBOL_TOKEN_ERROR.string_ */
-extern T0* T148f4(T0* C);
+extern T0* T149f4(T0* C);
 /* PR_NO_RULES_ERROR.default_message */
-extern T0* T147f5(T0* C);
+extern T0* T148f5(T0* C);
 /* PR_NO_RULES_ERROR.message */
-extern T0* T147f3(T0* C, T0* a1);
+extern T0* T148f3(T0* C, T0* a1);
 /* PR_NO_RULES_ERROR.arguments */
-extern T0* T147f6(T0* C);
+extern T0* T148f6(T0* C);
 /* PR_NO_RULES_ERROR.string_ */
-extern T0* T147f4(T0* C);
+extern T0* T148f4(T0* C);
 /* PR_MULTIPLE_START_DECLARATIONS_ERROR.default_message */
-extern T0* T146f5(T0* C);
+extern T0* T147f5(T0* C);
 /* PR_MULTIPLE_START_DECLARATIONS_ERROR.message */
-extern T0* T146f3(T0* C, T0* a1);
+extern T0* T147f3(T0* C, T0* a1);
 /* PR_MULTIPLE_START_DECLARATIONS_ERROR.arguments */
-extern T0* T146f6(T0* C);
+extern T0* T147f6(T0* C);
 /* PR_MULTIPLE_START_DECLARATIONS_ERROR.string_ */
-extern T0* T146f4(T0* C);
+extern T0* T147f4(T0* C);
 /* UT_SYNTAX_ERROR.default_message */
-extern T0* T144f5(T0* C);
+extern T0* T145f5(T0* C);
 /* UT_SYNTAX_ERROR.message */
-extern T0* T144f3(T0* C, T0* a1);
+extern T0* T145f3(T0* C, T0* a1);
 /* UT_SYNTAX_ERROR.arguments */
-extern T0* T144f6(T0* C);
+extern T0* T145f6(T0* C);
 /* UT_SYNTAX_ERROR.string_ */
-extern T0* T144f4(T0* C);
+extern T0* T145f4(T0* C);
 /* UT_MESSAGE.default_message */
 extern T0* T62f5(T0* C);
 /* UT_MESSAGE.message */
@@ -6877,70 +7363,70 @@ extern T0* T25f6(T0* C);
 /* UT_CANNOT_WRITE_TO_FILE_ERROR.string_ */
 extern T0* T25f5(T0* C);
 /* PR_ERROR_ACTION.is_equal */
-extern T1 T69f4(T0* C, T0* a1);
+extern T1 T70f4(T0* C, T0* a1);
 /* PR_ACTION.is_equal */
-extern T1 T173f3(T0* C, T0* a1);
+extern T1 T174f3(T0* C, T0* a1);
 /* PR_ACTION.any_ */
-extern T0* T173f4(T0* C);
+extern T0* T174f4(T0* C);
 /* PR_ERROR_ACTION.any_ */
-extern T0* T69f5(T0* C);
+extern T0* T70f5(T0* C);
 /* PR_POSITION.is_equal */
-extern T1 T68f12(T0* C, T0* a1);
+extern T1 T69f12(T0* C, T0* a1);
 /* STRING_8.is_equal */
 extern T1 T17f5(T0* C, T0* a1);
 /* STRING_8.str_strict_cmp */
 extern T6 T17f8(T0* C, T0* a1, T0* a2, T6 a3);
 /* INTEGER_32.is_equal */
-extern T1 T6f18(T6* C, T6 a1);
-extern T0* GE_ma102(T6 c, ...);
-extern T0* ge312ov1574;
-extern T0* ge184ov1644;
-extern T0* ge221ov5262;
-extern T0* ge221ov5261;
-extern T0* ge221ov5260;
-extern T0* ge221ov5259;
-extern T0* ge403ov5251;
-extern T0* ge401ov1713;
-extern T0* ge406ov1713;
-extern T0* ge184ov1646;
-extern T0* ge399ov1713;
-extern T0* ge376ov1743;
-extern T0* ge400ov4578;
-extern T0* ge387ov4289;
-extern T0* ge54ov1568;
-extern T0* ge160ov2444;
-extern T0* ge172ov2444;
-extern T0* ge175ov2444;
-extern T0* ge166ov2444;
-extern T0* ge168ov2444;
-extern T0* ge167ov2444;
-extern T0* ge152ov2444;
-extern T0* ge149ov2444;
-extern T0* ge165ov2444;
-extern T0* ge170ov2444;
-extern T0* ge171ov2444;
-extern T0* ge173ov2444;
-extern T0* ge169ov2444;
-extern T0* ge174ov2444;
-extern T0* ge164ov2444;
-extern T0* ge150ov2444;
-extern T0* ge151ov2444;
-extern T0* ge154ov2444;
-extern T0* ge159ov2444;
-extern T0* ge156ov2444;
-extern T0* ge161ov2444;
-extern T0* ge162ov2444;
-extern T0* ge153ov2444;
-extern T0* ge163ov2444;
-extern T0* ge155ov2444;
-extern T0* ge158ov2444;
-extern T0* ge157ov2444;
-extern T0* ge215ov2444;
-extern T0* ge213ov2444;
-extern T0* ge219ov2444;
-extern T0* ge220ov2444;
-extern T0* ge209ov2444;
-extern T0* ge210ov2444;
+extern T1 T6f19(T6* C, T6 a1);
+extern T0* GE_ma103(T6 c, T6 n, ...);
+extern T0* ge344ov1775;
+extern T0* ge180ov1845;
+extern T0* ge217ov5494;
+extern T0* ge217ov5493;
+extern T0* ge217ov5492;
+extern T0* ge217ov5491;
+extern T0* ge284ov5483;
+extern T0* ge326ov1914;
+extern T0* ge417ov1914;
+extern T0* ge180ov1847;
+extern T0* ge324ov1914;
+extern T0* ge306ov1944;
+extern T0* ge325ov4818;
+extern T0* ge310ov4531;
+extern T0* ge50ov1769;
+extern T0* ge156ov2639;
+extern T0* ge168ov2639;
+extern T0* ge171ov2639;
+extern T0* ge162ov2639;
+extern T0* ge164ov2639;
+extern T0* ge163ov2639;
+extern T0* ge148ov2639;
+extern T0* ge145ov2639;
+extern T0* ge161ov2639;
+extern T0* ge166ov2639;
+extern T0* ge167ov2639;
+extern T0* ge169ov2639;
+extern T0* ge165ov2639;
+extern T0* ge170ov2639;
+extern T0* ge160ov2639;
+extern T0* ge146ov2639;
+extern T0* ge147ov2639;
+extern T0* ge150ov2639;
+extern T0* ge155ov2639;
+extern T0* ge152ov2639;
+extern T0* ge157ov2639;
+extern T0* ge158ov2639;
+extern T0* ge149ov2639;
+extern T0* ge159ov2639;
+extern T0* ge151ov2639;
+extern T0* ge154ov2639;
+extern T0* ge153ov2639;
+extern T0* ge211ov2639;
+extern T0* ge209ov2639;
+extern T0* ge215ov2639;
+extern T0* ge216ov2639;
+extern T0* ge205ov2639;
+extern T0* ge206ov2639;
 extern void GE_const_init(void);
 extern EIF_TYPE GE_types[];
 
@@ -6952,10 +7438,98 @@ extern EIF_TYPE GE_types[];
 /*
 	description:
 
+		"C functions used to implement class EXCEPTIONS"
+
+	system: "Gobo Eiffel Compiler"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
+#ifndef EIF_EXCEPT_H
+#define EIF_EXCEPT_H
+
+#include <errno.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern void eraise(char* name, long code);
+extern void esdie(int code);
+extern EIF_REFERENCE eename(long except);
+extern char* eeltag(void);
+extern char* eelrout(void);
+extern char* eelclass(void);
+extern long eelcode(void);
+extern EIF_REFERENCE stack_trace_string(void);
+extern char* eeotag(void);
+extern long eeocode(void);
+extern char* eeorout(void);
+extern char* eeoclass(void);
+extern void eecatch(long code);
+extern void eeignore(long code);
+extern void eetrace(char b);
+
+#ifdef EIF_WINDOWS
+/* Needed to compile some code at AXAR */
+extern void set_windows_exception_filter();
+#endif
+
+/* Raises an Eiffel exception of the given code with no associated tag. */
+extern void xraise(int code);
+/* Raise 'Operating system error' exception. */
+extern void esys(void);
+/* As a special case, an I/O error is raised when a system call which is I/O bound fails. */
+extern void eise_io(char *tag);
+
+/*
+ * Predefined exception numbers. Value cannot start at 0 because this may need
+ * a propagation via longjmp and USG implementations turn out a 0 to be 1.
+ */
+#define EN_VOID		1			/* Feature applied to void reference */
+#define EN_MEM		2			/* No more memory */
+#define EN_PRE		3			/* Pre-condition violated */
+#define EN_POST		4			/* Post-condition violated */
+#define EN_FLOAT	5			/* Floating point exception (signal SIGFPE) */
+#define EN_CINV		6			/* Class invariant violated */
+#define EN_CHECK	7			/* Assertion violated */
+#define EN_FAIL		8			/* Routine failure */
+#define EN_WHEN		9			/* Unmatched inspect value */
+#define EN_VAR		10			/* Non-decreasing loop variant */
+#define EN_LINV		11			/* Loop invariant violated */
+#define EN_SIG		12			/* Operating system signal */
+#define EN_BYE		13			/* Eiffel run-time panic */
+#define EN_RESC		14			/* Exception in rescue clause */
+#define EN_OMEM		15			/* Out of memory (cannot be ignored) */
+#define EN_RES		16			/* Resumption failed (retry did not succeed) */
+#define EN_CDEF		17			/* Create on deferred */
+#define EN_EXT		18			/* External event */
+#define EN_VEXP		19			/* Void assigned to expanded */
+#define EN_HDLR		20			/* Exception in signal handler */
+#define EN_IO		21			/* I/O error */
+#define EN_SYS		22			/* Operating system error */
+#define EN_RETR		23			/* Retrieval error */
+#define EN_PROG		24			/* Developer exception */
+#define EN_FATAL	25			/* Eiffel run-time fatal error */
+#define EN_DOL		26			/* $ applied to melted feature */
+#define EN_ISE_IO	27			/* I/O error raised by the ISE Eiffel runtime */
+#define EN_COM		28			/* COM error raised by EiffelCOM runtime */
+#define EN_RT_CHECK	29			/* Runtime check error such as out-of-bound array access */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+/*
+	description:
+
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2007, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -6971,62 +7545,320 @@ extern EIF_TYPE GE_types[];
 extern "C" {
 #endif
 
+/*
+ * Create directory `dirname'.
+ */
 extern void file_mkdir(char* dirname);
+
+/*
+ * Rename file `from' into `to'.
+ */
 extern void file_rename(char* from, char* to);
+
+/*
+ * Link file `from' into `to'.
+ */
 extern void file_link(char *from, char *to);
+
+/*
+ * Delete file or directory `name'.
+ */
 extern void file_unlink(char *name);
+
+/*
+ * Open file `name' with the corresponding type `how'.
+ */
 extern EIF_POINTER file_open(char *name, int how);
+
+/*
+ * Open file `fd' with the corresponding type `how'.
+ */
 extern EIF_POINTER file_dopen(int fd, int how);
+
+/*
+ * Reopen file `name' with the corresponding type `how' and substitute that
+ * to the old stream described by `old'. This is useful to redirect 'stdout'
+ * to another place, for instance.
+ */
 extern EIF_POINTER file_reopen(char *name, int how, FILE *old);
+
+/*
+ * Close the file.
+ */
 extern void file_close(FILE *fp);
+
+/*
+ * Flush data held in stdio buffer.
+ */
 extern void file_flush(FILE *fp);
+
+/*
+ * Return the associated file descriptor.
+ */
 extern EIF_INTEGER file_fd(FILE *f);
+
+/*
+ * Get a character from `f'.
+ */
 extern EIF_CHARACTER file_gc(FILE *f);
+
+/*
+ * Get a string from `f' and fill it into `s' (at most `bound' characters),
+ * with `start' being the amount of bytes already stored within s. This
+ * means we really have to read (bound - start) characters.
+ */
 extern EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
+
+/*
+ * Read min (bound, remaining bytes in file) characters into `s' and
+ * return the number of characters read.
+ */
 extern EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound);
+
+/*
+ * Get a word from `f' and fill it into `s' (at most `bound' characters),
+ * with `start' being the amount of bytes already stored within s. This
+ * means we really have to read (bound - start) characters. Any leading
+ * spaces are skipped.
+ */
 extern EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
+
+/*
+ * Look ahead one character. If EOF, return 0.
+ */
 extern EIF_CHARACTER file_lh(FILE *f);
+
+/*
+ * Size of file `fp'.
+ */
 extern EIF_INTEGER eif_file_size(FILE *fp);
+
+/*
+ * Read upto next input line.
+ */
 extern void file_tnil(FILE *f);
+
+/*
+ * Current position within file.
+ */
 extern EIF_INTEGER file_tell(FILE *f);
+
+/*
+ * Touch file `name' by setting both access and modification time to the
+ * current time stamp. This external function exists only because there
+ * is no way within UNIX_FILE to get the current time stamp. Otherwise,
+ * we could simply call file_utime.
+ */
 extern void file_touch(char *name);
+
+/*
+ * Modify the modification and/or the access time stored in the file's
+ * inode. The 'how' parameter tells which attributes should be set.
+ */
 extern void file_utime(char *name, time_t stamp, int how);
+
+/*
+ * This is an encapsulation of the stat() system call. The routine either
+ * succeeds and returns or fails and raises the appropriate exception.
+ */
 extern void file_stat(char *path, struct stat *buf);
+
+/*
+ * Change permissions of file `name', using an interface like chmod(1).
+ * The flag is true if permissions are to be added, 0 to remove them.
+ */
 extern void file_perm(char *name, char *who, char *what, int flag);
+
+/*
+ * Change permission mode on file `path'.
+ */
 extern void file_chmod(char *path, int mode);
+
+/*
+ * Change the owner of the file to `uid'.
+ */
 extern void file_chown(char *name, int uid);
+
+/*
+ * Change the group of the file to `gid'.
+ */
 extern void file_chgrp(char *name, int gid);
+
+/*
+ * Put new_line onto `f'.
+ */
 extern void file_tnwl(FILE *f);
+
+/*
+ * Append a copy of `other' to `f'.
+ */
 extern void file_append(FILE *f, FILE *other, EIF_INTEGER l);
+
+/*
+ * Write string `str' on `f'.
+ */
 extern void file_ps(FILE *f, char *str, EIF_INTEGER len);
+
+/*
+ * Write character `c' on `f'.
+ */
 extern void file_pc(FILE *f, char c);
+
+/*
+ * Go to absolute position `pos' counted from start.
+ */
 extern void file_go(FILE *f, EIF_INTEGER pos);
+
+/*
+ * Go to absolute position `pos' counted from end.
+ */
 extern void file_recede(FILE *f, EIF_INTEGER pos);
+
+/*
+ * Go to absolute position `pos' counted from current position.
+ */
 extern void file_move(FILE *f, EIF_INTEGER pos);
+
+/*
+ * End of file.
+ */
 extern EIF_BOOLEAN file_feof(FILE *fp);
+
+/*
+ * Test whether file exists or not. If `name' represents a symbolic link,
+ * it will check that pointed file does exist.
+ */
 extern EIF_BOOLEAN file_exists(char *name);
+
+/*
+ * Test whether file exists or not without following the symbolic link
+ * if `name' represents one.
+ */
 extern EIF_BOOLEAN file_path_exists(char *name);
+
+/*
+ * Check whether access permission `op' are possible on file `name' using
+ * real UID and real GID. This is probably only useful to setuid or setgid
+ * programs.
+ */
 extern EIF_BOOLEAN file_access(char *name, EIF_INTEGER op);
+
+/*
+ * Check whether the file `path' may be created: we need write permissions
+ * in the parent directory and there must not be any file bearing that name
+ * with no write permissions...
+ */
 extern EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length);
+
+/*
+ * Get an integer from `f'.
+ */
 extern EIF_INTEGER file_gi(FILE *f);
+
+/*
+ * Get a real from `f'.
+ */
 extern EIF_REAL_32 file_gr(FILE *f);
+
+/*
+ * Get a double from `f'.
+ */
 extern EIF_REAL_64 file_gd(FILE *f);
+
+/*
+ * Write `number' on `f'.
+ */
 extern void file_pi(FILE *f, EIF_INTEGER number);
+
+/*
+ * Write `number' on `f'.
+ */
 extern void file_pr(FILE *f, EIF_REAL_32 number);
+
+/*
+ * Write double `val' onto `f'.
+ */
 extern void file_pd(FILE *f, EIF_REAL_64 val);
+
+/*
+ * Size of the stat structure. This is used by the Eiffel side to create
+ * the area (special object) which will play the role of a stat buffer
+ * structure.
+ */
 extern EIF_INTEGER stat_size(void);
+
+/*
+ * Check file permissions using effective UID and effective GID. The
+ * current permission mode is held in the st_mode field of the stat()
+ * buffer structure `buf'.
+ */
 extern EIF_BOOLEAN file_eaccess(struct stat *buf, int op);
+
+/*
+ * Perform the field dereferencing from the appropriate stat structure,
+ * which Eiffel cannot do directly.
+ */
 extern EIF_INTEGER file_info(struct stat *buf, int op);
+
+/*
+ * Return the Eiffel string filled in with the name associated with `uid'
+ * if found in /etc/passwd. Otherwise, return fill it in with the numeric
+ * value.
+ */
 extern EIF_REFERENCE file_owner(int uid);
+
+/*
+ * Return the Eiffel string filled in with the name associated with `gid'
+ * if found in /etc/group. Otherwise, return fill it in with the numeric
+ * value.
+ */
 extern EIF_REFERENCE file_group(int gid);
+
+/*
+ * Get an integer from `f'.
+ */
 extern EIF_INTEGER file_gib(FILE* f);
+
+/*
+ * Get a real from `f'.
+ */
 extern EIF_REAL_32 file_grb(FILE* f);
+
+/*
+ * Get a double from `f'.
+ */
 extern EIF_REAL_64 file_gdb(FILE* f);
+
+/*
+ * Open file `name' with the corresponding type `how'.
+ */
 extern EIF_POINTER file_binary_open(char* name, int how);
+
+/*
+ * Open file `fd' with the corresponding type `how'.
+ */
 extern EIF_POINTER file_binary_dopen(int fd, int how);
+
+/*
+ * Reopen file `name' with the corresponding type `how' and substitute that
+ * to the old stream described by `old'. This is useful to redirect 'stdout'
+ * to another place, for instance.
+ */
 extern EIF_POINTER file_binary_reopen(char* name, int how, FILE* old);
+
+/*
+ * Write `number' on `f'.
+ */
 extern void file_pib(FILE* f, EIF_INTEGER number);
+
+/*
+ * Write `number' on `f'.
+ */
 extern void file_prb(FILE* f, EIF_REAL_32 number);
+
+/*
+ * Write double `val' onto `f'.
+ */
 extern void file_pdb(FILE* f, EIF_REAL_64 val);
 
 #ifdef __cplusplus
@@ -7071,51 +7903,6 @@ extern EIF_INTEGER console_readline(FILE* f, char* s, EIF_INTEGER bound, EIF_INT
 extern void console_next_line(FILE* f);
 extern EIF_INTEGER console_readstream(FILE* f, char* s, EIF_INTEGER bound);
 extern void console_file_close (FILE* f);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-/*
-	description:
-
-		"C functions used to implement class EXCEPTIONS"
-
-	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
-	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
-*/
-
-#ifndef EIF_EXCEPT_H
-#define EIF_EXCEPT_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern void eraise(char* name, long code);
-extern void esdie(int code);
-extern EIF_REFERENCE eename(long except);
-extern char* eeltag(void);
-extern char* eelrout(void);
-extern char* eelclass(void);
-extern long eelcode(void);
-extern EIF_REFERENCE stack_trace_string(void);
-extern char* eeotag(void);
-extern long eeocode(void);
-extern char* eeorout(void);
-extern char* eeoclass(void);
-extern void eecatch(long code);
-extern void eeignore(long code);
-extern void eetrace(char b);
-
-#ifdef EIF_WINDOWS
-/* Needed to compile some code at AXAR */
-extern void set_windows_exception_filter();
-#endif
 
 #ifdef __cplusplus
 }
