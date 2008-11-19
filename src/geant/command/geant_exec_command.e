@@ -41,9 +41,9 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		local
-			a_is_valid: BOOLEAN_REF
+			a_is_valid: DS_CELL [BOOLEAN]
 		do
-			a_is_valid := True
+			create a_is_valid.make (True)
 			validate_condition (command_line.is_defined, "  [echo] error: 'executable' is not defined", a_is_valid)
 			if a_is_valid.item then
 				validate_condition (not command_line.value.is_empty, "  [echo] error: 'executable' is empty", a_is_valid)
@@ -60,7 +60,7 @@ feature -- Status report
 						"  [echo] error: 'exit_code_variable' may not be defined together with 'fileset'", a_is_valid)
 				end
 			end
-			Result := a_is_valid
+			Result := a_is_valid.item
 		ensure then
 			command_line_defined: Result implies command_line.is_defined
 			command_line_not_empty: Result implies not command_line.value.is_empty

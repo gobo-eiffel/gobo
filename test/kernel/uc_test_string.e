@@ -363,7 +363,7 @@ feature -- Test
 			uc_string ?= a_string
 			assert ("uc_string", uc_string /= Void)
 			uc_string.put_item_code (too_big_character, 2)
-			assert_characters_equal ("item4", '%U', a_string @ 2) 
+			assert_characters_equal ("item4", '%U', a_string @ 2)
 		end
 
 	test_put_unicode1 is
@@ -1477,7 +1477,8 @@ feature -- Test
 			a_string2.append_item_code (too_big_character2)
 			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_string (a_string2))
-			assert ("same5", a_string.same_string ("foo%Ubar"))
+-- The semantics of `same_string' has changed in class STRING.
+--			assert ("same5", a_string.same_string ("foo%Ubar"))
 		end
 
 	test_same_unicode_string1 is

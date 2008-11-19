@@ -84,8 +84,8 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	validate_condition (a_condition: BOOLEAN; a_message: STRING; a_is_valid: BOOLEAN_REF) is
-			-- If `a_is_valid' and then `a_condition' add `a_message' to `validation_messages' and set `a_is_valid' to False.
+	validate_condition (a_condition: BOOLEAN; a_message: STRING; a_is_valid: DS_CELL [BOOLEAN]) is
+			-- If `a_is_valid' and then not `a_condition' add `a_message' to `validation_messages' and set `a_is_valid' to False.
 		require
 			a_message_not_void: a_message /= Void
 			a_message_not_empty: not a_message.is_empty
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 				-- Do not continue with validation if `is_valid' is already False:
 			if a_is_valid.item then
 				if not a_condition then
-					a_is_valid.set_item (False)
+					a_is_valid.put (False)
 					validation_messages.force_last (a_message)
 				end
 			end

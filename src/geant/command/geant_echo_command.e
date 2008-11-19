@@ -45,16 +45,16 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		local
-			a_is_valid: BOOLEAN_REF
+			a_is_valid: DS_CELL [BOOLEAN]
 		do
-			a_is_valid := True
+			create a_is_valid.make (True)
 			validate_condition (message_property.is_defined, "  [echo] error: 'message' is not defined", a_is_valid)
 			if a_is_valid.item then
 				if to_file_property.is_defined then
 					validate_condition (not to_file_property.value.is_empty, "  [echo] error: 'to_file' may not be empty", a_is_valid)
 				end
 			end
-			Result := a_is_valid
+			Result := a_is_valid.item
  		ensure then
  			message_property_defined: Result implies message_property.is_defined
 		end
@@ -101,7 +101,9 @@ feature -- Execution
 					a_file.open_write
 				end
 				message_with_file_agent_cell.item.call ([a_message, a_file, a_append])
-				a_file.close
+				if a_file.is_open_write then
+					a_file.close
+				end
 			else
 				message_only_agent_cell.item.call ([a_message])
 			end
@@ -133,7 +135,7 @@ feature {NONE} -- Implementation
  				a_file.put_line (a_message)
 				exit_code := 0
 			else
-				project.log (<<"  [echo] error: cannot write to file", a_file.name, "'">>)
+				project.log (<<"  [echo] error: cannot write to file '", a_file.name, "'">>)
 				exit_code := 1
 			end
 		end
