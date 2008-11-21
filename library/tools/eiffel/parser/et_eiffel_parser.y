@@ -1544,9 +1544,13 @@ Creation_procedure_list: Identifier
 	| Creation_procedure_comma
 		-- TODO: syntax error.
 		{
-			$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value)
-			if $$ /= Void and $1 /= Void then
-				$$.put_first ($1)
+			if current_system.is_ise then
+				raise_error
+			else
+				$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value)
+				if $$ /= Void and $1 /= Void then
+					$$.put_first ($1)
+				end
 			end
 		}
 	| Creation_procedure_comma Creation_procedure_list
