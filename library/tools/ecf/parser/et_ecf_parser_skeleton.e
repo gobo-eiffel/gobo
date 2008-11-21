@@ -844,7 +844,7 @@ feature {NONE} -- AST factory
 			elseif l_class_name.value.is_empty then
 				error_handler.report_eacb_error (attribute_name (l_class_name, a_position_table), a_universe)
 			else
-				l_root_class := ast_factory.new_root_class (attribute_name (l_class_name, a_position_table))
+				l_root_class := ast_factory.new_root_class (attribute_value (l_class_name, a_position_table))
 				Result := l_root_class
 				l_feature := an_element.attribute_by_name (xml_feature)
 				if l_feature = Void then
