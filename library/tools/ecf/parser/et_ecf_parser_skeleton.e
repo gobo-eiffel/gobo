@@ -852,7 +852,7 @@ feature {NONE} -- AST factory
 				elseif l_feature.value.is_empty then
 					error_handler.report_eacc_error (attribute_name (l_feature, a_position_table), a_universe)
 				else
-					l_root_class.set_creation_procedure_name (attribute_name (l_feature, a_position_table))
+					l_root_class.set_creation_procedure_name (attribute_value (l_feature, a_position_table))
 				end
 			end
 		end
