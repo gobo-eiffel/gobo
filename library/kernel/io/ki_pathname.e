@@ -148,6 +148,7 @@ feature -- Comparison
 
 	same_pathname (a_pathname: KI_PATHNAME): BOOLEAN is
 			-- Is current pathname considered equal to `other'?
+			-- Use case-sensitive comparison.
 		require
 			a_pathname_not_void: a_pathname /= Void
 		local
@@ -177,6 +178,48 @@ feature -- Comparison
 						i > nb
 					loop
 						if not STRING_.same_string (item (i), a_pathname.item (i)) then
+							Result := False
+								-- Jump out of the loop.
+							i := nb + 1
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	same_case_insensitive (a_pathname: KI_PATHNAME): BOOLEAN is
+			-- Is current pathname considered equal to `other'?
+			-- Use case-insensitive comparison.
+		require
+			a_pathname_not_void: a_pathname /= Void
+		local
+			i, nb: INTEGER
+		do
+			if a_pathname = Current then
+				Result := True
+			else
+				nb := count
+				if
+					nb = a_pathname.count and
+					is_relative = a_pathname.is_relative and
+					((drive = Void and a_pathname.drive = Void) or else
+					((drive /= Void and a_pathname.drive /= Void) and then
+					STRING_.same_case_insensitive (drive, a_pathname.drive))) and
+					((hostname = Void and a_pathname.hostname = Void) or else
+					((hostname /= Void and a_pathname.hostname /= Void) and then
+					STRING_.same_case_insensitive (hostname, a_pathname.hostname))) and
+					((sharename = Void and a_pathname.sharename = Void) or else
+					((sharename /= Void and a_pathname.sharename /= Void) and then
+					STRING_.same_case_insensitive (sharename, a_pathname.sharename)))
+				then
+					Result := True
+					from
+						i := 1
+					until
+						i > nb
+					loop
+						if not STRING_.same_case_insensitive (item (i), a_pathname.item (i)) then
 							Result := False
 								-- Jump out of the loop.
 							i := nb + 1

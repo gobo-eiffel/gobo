@@ -1136,7 +1136,7 @@ feature -- Working directory
 				a_file_system.set_current_working_directory (a_name)
 				assert ("readable2", a_file_system.is_directory_readable (a_name))
 				assert ("readable3", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert_filenames_equal ("cwd1", a_name, a_file_system.current_working_directory)
+				assert ("cwd1", a_file_system.same_pathnames (a_name, a_file_system.current_working_directory))
 					-- Change directory to '$GOBO/test/kernel/data'.
 				a_name := "data"
 				a_file_system.set_current_working_directory (a_name)
@@ -1146,11 +1146,11 @@ feature -- Working directory
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable5", a_file_system.is_directory_readable (a_name))
-				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
+				assert ("cwd2", a_file_system.same_pathnames (a_name, a_file_system.current_working_directory))
 				assert ("readable6", a_file_system.is_directory_readable (cwd))
 					-- Go back to old working directory.
 				a_file_system.set_current_working_directory (cwd)
-				assert_filenames_equal ("cwd3", cwd, a_file_system.current_working_directory)
+				assert ("cwd3", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
 			end
 		end
 
@@ -1173,7 +1173,7 @@ feature -- Working directory
 				a_file_system.cd (a_name)
 				assert ("readable2", a_file_system.is_directory_readable (a_name))
 				assert ("readable3", a_file_system.is_directory_readable (a_file_system.cwd))
-				assert_filenames_equal ("cwd1", a_name, a_file_system.cwd)
+				assert ("cwd1", a_file_system.same_pathnames (a_name, a_file_system.cwd))
 					-- Change directory to 'data' ('$GOBO/test/kernel/data').
 				a_name := "data"
 				a_file_system.cd (a_name)
@@ -1183,11 +1183,11 @@ feature -- Working directory
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
 				assert ("readable5", a_file_system.is_directory_readable (a_name))
-				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
+				assert ("cwd2", a_file_system.same_pathnames (a_name, a_file_system.cwd))
 				assert ("readable6", a_file_system.is_directory_readable (cwd))
 					-- Go back to old working directory.
 				a_file_system.cd (cwd)
-				assert_filenames_equal ("cwd3", cwd, a_file_system.cwd)
+				assert ("cwd3", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 			end
 		end
 
@@ -1210,7 +1210,7 @@ feature -- Working directory
 				a_file_system.set_current_working_directory (a_name)
 				assert ("readable2", a_file_system.is_directory_readable (a_name))
 				assert ("readable3", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert_filenames_equal ("cwd1", a_name, a_file_system.current_working_directory)
+				assert ("cwd1", a_file_system.same_pathnames (a_name, a_file_system.current_working_directory))
 					-- Change directory to 'data' ('$GOBO/test/kernel/data').
 				a_name := "data"
 				assert ("readable4", a_file_system.is_directory_readable (a_name))
@@ -1220,7 +1220,7 @@ feature -- Working directory
 				assert ("readable5", a_file_system.is_directory_readable (a_file_system.current_working_directory))
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
+				assert ("cwd2", a_file_system.same_pathnames (a_name, a_file_system.current_working_directory))
 					-- Change directory to current directory '.' ('$GOBO/test/kernel/data').
 				a_name := file_system.relative_current_directory
 				assert ("readable6", a_file_system.is_directory_readable (a_name))
@@ -1228,7 +1228,7 @@ feature -- Working directory
 				assert ("readable7", a_file_system.is_directory_readable (a_file_system.current_working_directory))
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd3", a_name, a_file_system.current_working_directory)
+				assert ("cwd3", a_file_system.same_pathnames (a_name, a_file_system.current_working_directory))
 					-- Change directory to parent directory '..' ('$GOBO/test/kernel').
 				a_name := file_system.relative_parent_directory
 				assert ("readable8", a_file_system.is_directory_readable (a_name))
@@ -1236,7 +1236,7 @@ feature -- Working directory
 				assert ("readable9", a_file_system.is_directory_readable (a_file_system.current_working_directory))
 				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd4", a_name, a_file_system.current_working_directory)
+				assert ("cwd4", a_file_system.same_pathnames (a_name, a_file_system.current_working_directory))
 					-- Change directory to 'data' ('$GOBO/test/kernel/data').
 				a_name := "data"
 				assert ("readable10", a_file_system.is_directory_readable (a_name))
@@ -1245,11 +1245,11 @@ feature -- Working directory
 				assert ("readable11", a_file_system.is_directory_readable (a_file_system.current_working_directory))
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd2", a_name, a_file_system.current_working_directory)
+				assert ("cwd2", a_file_system.same_pathnames (a_name, a_file_system.current_working_directory))
 					-- Go back to old working directory.
 				assert ("readable10", a_file_system.is_directory_readable (cwd))
 				a_file_system.set_current_working_directory (cwd)
-				assert_filenames_equal ("cwd5", cwd, a_file_system.current_working_directory)
+				assert ("cwd5", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
 			end
 		end
 
@@ -1272,7 +1272,7 @@ feature -- Working directory
 				a_file_system.cd (a_name)
 				assert ("readable2", a_file_system.is_directory_readable (a_name))
 				assert ("readable3", a_file_system.is_directory_readable (a_file_system.cwd))
-				assert_filenames_equal ("cwd1", a_name, a_file_system.cwd)
+				assert ("cwd1", a_file_system.same_pathnames (a_name, a_file_system.cwd))
 					-- Change directory to 'data' ('$GOBO/test/kernel/data').
 				a_name := "data"
 				assert ("readable4", a_file_system.is_directory_readable (a_name))
@@ -1282,7 +1282,7 @@ feature -- Working directory
 				assert ("readable5", a_file_system.is_directory_readable (a_file_system.cwd))
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
+				assert ("cwd2", a_file_system.same_pathnames (a_name, a_file_system.cwd))
 					-- Change directory to current directory '.' ('$GOBO/test/kernel/data').
 				a_name := file_system.relative_current_directory
 				assert ("readable6", a_file_system.is_directory_readable (a_name))
@@ -1290,7 +1290,7 @@ feature -- Working directory
 				assert ("readable7", a_file_system.is_directory_readable (a_file_system.cwd))
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd3", a_name, a_file_system.cwd)
+				assert ("cwd3", a_file_system.same_pathnames (a_name, a_file_system.cwd))
 					-- Change directory to parent directory '..' ('$GOBO/test/kernel').
 				a_name := file_system.relative_parent_directory
 				assert ("readable8", a_file_system.is_directory_readable (a_name))
@@ -1298,7 +1298,7 @@ feature -- Working directory
 				assert ("readable9", a_file_system.is_directory_readable (a_file_system.cwd))
 				a_name := kernel_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd4", a_name, a_file_system.cwd)
+				assert ("cwd4", a_file_system.same_pathnames (a_name, a_file_system.cwd))
 					-- Change directory to 'data' ('$GOBO/test/kernel/data').
 				a_name := "data"
 				assert ("readable10", a_file_system.is_directory_readable (a_name))
@@ -1307,11 +1307,11 @@ feature -- Working directory
 				assert ("readable11", a_file_system.is_directory_readable (a_file_system.cwd))
 				a_name := data_dirname
 				a_name := Execution_environment.interpreted_string (a_name)
-				assert_filenames_equal ("cwd2", a_name, a_file_system.cwd)
+				assert ("cwd2", a_file_system.same_pathnames (a_name, a_file_system.cwd))
 					-- Go back to old working directory.
 				assert ("readable10", a_file_system.is_directory_readable (cwd))
 				a_file_system.cd (cwd)
-				assert_filenames_equal ("cwd5", cwd, a_file_system.cwd)
+				assert ("cwd5", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 			end
 		end
 
@@ -1334,7 +1334,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				assert ("readable1", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert_filenames_equal ("not_changed1", cwd, a_file_system.current_working_directory)
+				assert ("not_changed1", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
 					-- Try to change to non-existing directory with empty pathname.
 				a_name := ""
 				assert ("not_readable3", not a_file_system.is_directory_readable (a_name))
@@ -1342,7 +1342,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable4", not a_file_system.is_directory_readable (a_name))
 				assert ("readable2", a_file_system.is_directory_readable (a_file_system.current_working_directory))
-				assert_filenames_equal ("not_changed2", cwd, a_file_system.current_working_directory)
+				assert ("not_changed2", a_file_system.same_pathnames (cwd, a_file_system.current_working_directory))
 			end
 		end
 
@@ -1365,7 +1365,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				assert ("readable1", a_file_system.is_directory_readable (a_file_system.cwd))
-				assert_filenames_equal ("not_changed1", cwd, a_file_system.cwd)
+				assert ("not_changed1", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 					-- Try to change to non-existing directory with empty pathname.
 				a_name := ""
 				assert ("not_readable3", not a_file_system.is_directory_readable (a_name))
@@ -1373,7 +1373,7 @@ feature -- Working directory
 					-- Change of directory failed.
 				assert ("not_readable4", not a_file_system.is_directory_readable (a_name))
 				assert ("readable2", a_file_system.is_directory_readable (a_file_system.cwd))
-				assert_filenames_equal ("not_changed2", cwd, a_file_system.cwd)
+				assert ("not_changed2", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 			end
 		end
 
@@ -1593,31 +1593,31 @@ feature -- Pathname handling
 				a_parent := a_file_system.absolute_parent_directory (a_name)
 				a_name := Execution_environment.interpreted_string ("$GOBO\test")
 				a_name := a_file_system.absolute_pathname (a_name)
-				assert_filenames_equal ("parent1", a_name, a_parent)
-				assert_filenames_equal ("cwd1", cwd, a_file_system.cwd)
+				assert ("parent1", a_file_system.same_pathnames (a_name, a_parent))
+				assert ("cwd1", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 					-- For the following tests it is hope that we are not
 					-- on drive G:. The drive G: might not even exist but
 					-- the tests should still succeed.
 				a_name := "G:\foo\bar"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent2", "G:\foo", a_parent)
+				assert ("parent2", a_file_system.same_pathnames ("G:\foo", a_parent))
 				a_name := "G:\foo"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent3", "G:\", a_parent)
+				assert ("parent3", a_file_system.same_pathnames ("G:\", a_parent))
 				a_name := "G:\"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
 				assert_same ("root1", a_name, a_parent)
-				assert_filenames_equal ("parent4", "G:\", a_parent)
+				assert ("parent4", a_file_system.same_pathnames ("G:\", a_parent))
 					-- Absolute directory names with no drive letter.
 				a_name := "\foo\bar"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent5", STRING_.concat (a_file_system.current_drive, "\foo"), a_parent)
+				assert ("parent5", a_file_system.same_pathnames (STRING_.concat (a_file_system.current_drive, "\foo"), a_parent))
 				a_name := "\foo"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent6", a_file_system.absolute_root_directory, a_parent)
+				assert ("parent6", a_file_system.same_pathnames (a_file_system.absolute_root_directory, a_parent))
 				a_name := "\"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent7", a_file_system.absolute_root_directory, a_parent)
+				assert ("parent7", a_file_system.same_pathnames (a_file_system.absolute_root_directory, a_parent))
 			end
 		end
 
@@ -1640,14 +1640,14 @@ feature -- Pathname handling
 				a_parent := a_file_system.absolute_parent_directory (a_name)
 				a_name := Execution_environment.interpreted_string ("$GOBO\test\kernel")
 				a_name := a_file_system.absolute_pathname (a_name)
-				assert_filenames_equal ("parent1", a_name, a_parent)
+				assert ("parent1", a_file_system.same_pathnames (a_name, a_parent))
 					-- Possibly non-existing relative directory name.
 				a_name := "foobar"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
 				a_name := Execution_environment.interpreted_string ("$GOBO\test")
-				assert_filenames_equal ("parent2", a_name, a_parent)
+				assert ("parent2", a_file_system.same_pathnames (a_name, a_parent))
 				a_file_system.cd (cwd)
-				assert_filenames_equal ("back", cwd, a_file_system.cwd)
+				assert ("back", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 			end
 		end
 
@@ -1666,14 +1666,14 @@ feature -- Pathname handling
 				a_name := new_dirname ("gobo")
 				assert ("not_readable1", not a_file_system.is_directory_readable (a_name))
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent1", cwd, a_parent)
-				assert_filenames_equal ("not_moved1", cwd, a_file_system.cwd)
+				assert ("parent1", a_file_system.same_pathnames (cwd, a_parent))
+				assert ("not_moved1", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 					-- Non-existing directory with empty pathname.
 				a_name := ""
 				assert ("not_readable2", not a_file_system.is_directory_readable (a_name))
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent2", a_file_system.absolute_parent_directory (cwd), a_parent)
-				assert_filenames_equal ("not_moved2", cwd, a_file_system.cwd)
+				assert ("parent2", a_file_system.same_pathnames (a_file_system.absolute_parent_directory (cwd), a_parent))
+				assert ("not_moved2", a_file_system.same_pathnames (cwd, a_file_system.cwd))
 			end
 		end
 
@@ -1688,17 +1688,17 @@ feature -- Pathname handling
 			if a_file_system.is_current_file_system then
 				a_name := "\\gobosoft.com\shares\foo"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent1", "\\gobosoft.com\shares", a_parent)
+				assert ("parent1", a_file_system.same_pathnames ("\\gobosoft.com\shares", a_parent))
 				a_name := "\\gobosoft.com\shares\foo\bar"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent2", "\\gobosoft.com\shares\foo", a_parent)
+				assert ("parent2", a_file_system.same_pathnames ("\\gobosoft.com\shares\foo", a_parent))
 				a_name := "\\gobosoft.com\shares"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
 				assert_same ("root1", a_name, a_parent)
-				assert_filenames_equal ("parent3", "\\gobosoft.com\shares", a_parent)
+				assert ("parent3", a_file_system.same_pathnames ("\\gobosoft.com\shares", a_parent))
 				a_name := "\\gobosoft.com\shares/foo"
 				a_parent := a_file_system.absolute_parent_directory (a_name)
-				assert_filenames_equal ("parent4", "\\gobosoft.com\shares", a_parent)
+				assert ("parent4", a_file_system.same_pathnames ("\\gobosoft.com\shares", a_parent))
 			end
 		end
 

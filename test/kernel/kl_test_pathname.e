@@ -486,6 +486,55 @@ feature -- Test
 			assert ("not_same_pathname2", not a_pathname1.same_pathname (a_pathname2))
 		end
 
+	test_same_case_insensitive is
+			-- Test feature `same_case_insensitive'.
+		local
+			a_pathname1, a_pathname2: KL_PATHNAME
+		do
+			create a_pathname1.make
+			a_pathname1.set_relative (True)
+			a_pathname1.append_parent
+			a_pathname1.append_name ("foo")
+			a_pathname1.append_current
+			a_pathname1.append_name ("bar")
+			assert ("relative1", a_pathname1.is_relative)
+			assert ("drive1", a_pathname1.drive = Void)
+			assert ("hostname1", a_pathname1.hostname = Void)
+			assert_integers_equal ("count1", 4, a_pathname1.count)
+			assert ("parent1", a_pathname1.is_parent (1))
+			assert_equal ("foo1", "foo", a_pathname1.item (2))
+			assert ("current1", a_pathname1.is_current (3))
+			assert_equal ("bar1", "bar", a_pathname1.item (4))
+			assert ("same_case_insensitive1", a_pathname1.same_case_insensitive (a_pathname1))
+			create a_pathname2.make
+			a_pathname2.set_relative (True)
+			a_pathname2.append_parent
+			a_pathname2.append_name ("foo")
+			a_pathname2.append_current
+			a_pathname2.append_name ("bar")
+			assert ("relative2", a_pathname2.is_relative)
+			assert ("drive2", a_pathname2.drive = Void)
+			assert ("hostname2", a_pathname2.hostname = Void)
+			assert_integers_equal ("count2", 4, a_pathname2.count)
+			assert ("parent2", a_pathname2.is_parent (1))
+			assert_equal ("foo2", "foo", a_pathname2.item (2))
+			assert ("current2", a_pathname2.is_current (3))
+			assert_equal ("bar2", "bar", a_pathname2.item (4))
+			assert ("same_case_insensitive2", a_pathname1.same_case_insensitive (a_pathname2))
+			assert ("same_pathname1", a_pathname1.same_pathname (a_pathname2))
+			a_pathname1.append_name ("gobo")
+			assert ("not_same_case_insensitive1", not a_pathname1.same_case_insensitive (a_pathname2))
+			a_pathname2.append_name ("GOBO")
+			assert ("same_case_insensitive3", a_pathname1.same_case_insensitive (a_pathname2))
+			assert ("not_same_pathname1", not a_pathname1.same_pathname (a_pathname2))
+			a_pathname2 := a_pathname1.cloned_object
+			assert ("same_case_insensitive4", a_pathname1.same_case_insensitive (a_pathname2))
+			a_pathname1.set_drive ("c:")
+			assert ("not_same_case_insensitive2", not a_pathname1.same_case_insensitive (a_pathname2))
+			a_pathname2.set_drive ("C:")
+			assert ("same_case_insensitive5", a_pathname1.same_case_insensitive (a_pathname2))
+		end
+
 	test_is_parent is
 			-- Test feature `is_parent'.
 		local

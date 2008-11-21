@@ -15,6 +15,9 @@ class KL_UNIX_FILE_SYSTEM
 inherit
 
 	KL_FILE_SYSTEM
+		redefine
+			same_canonical_pathnames
+		end
 
 create
 
@@ -88,6 +91,46 @@ feature -- Pathname handling
 					end
 				end
 			end
+		end
+
+	same_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN is
+			-- Are `a_pathname1' and `a_pathname2' considered equal when
+			-- viewed from the current file system?
+			-- (`a_pathname1' and `a_pathname2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+			--
+			-- Note that pathnames may be considered equal when viewed
+			-- from one file system but not from another. For example
+			-- Windows is case-insensitive, but Unix is case-sensitive.
+		local
+			p1, p2: KI_PATHNAME
+		do
+			p1 := string_to_pathname (a_pathname1)
+			p2 := string_to_pathname (a_pathname2)
+			Result := p1.same_pathname (p2)
+		end
+
+	same_canonical_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN is
+			-- Are the canonical versions of `a_pathname1' and `a_pathname2'
+			-- considered equal when viewed from the current file system?
+			-- (`a_pathname1' and `a_pathname2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+			--
+			-- Note that pathnames may be considered equal when viewed
+			-- from one file system but not from another. For example
+			-- Windows is case-insensitive, but Unix is case-sensitive.
+		local
+			p1, p2: KI_PATHNAME
+		do
+			p1 := string_to_pathname (a_pathname1)
+			p2 := string_to_pathname (a_pathname2)
+			p1.set_canonical
+			p2.set_canonical
+			Result := p1.same_pathname (p2)
 		end
 
 	basename (a_pathname: STRING): STRING is

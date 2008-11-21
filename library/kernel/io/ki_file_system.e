@@ -87,7 +87,7 @@ feature -- File handling
 
 	same_physical_file (a_filename1, a_filename2: STRING): BOOLEAN is
 			-- Are files named `a_filename1' and `a_filename2'
-			-- the same physical file? Return False if one 
+			-- the same physical file? Return False if one
 			-- or both files don't exist. (Return True if
 			-- it was impossible to determine whether the
 			-- files were physically the same files.)
@@ -280,7 +280,7 @@ feature -- Directory handling
 			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
 			-- if it already existed or `name' is a nested directory
-			-- name and its parent directory does not exist and 
+			-- name and its parent directory does not exist and
 			-- could not be created.
 			-- (`a_dirname' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -331,7 +331,7 @@ feature -- Working directory
 
 	cwd, current_working_directory: STRING is
 			-- Name of current working directory;
-			-- Return absolute pathname with the naming 
+			-- Return absolute pathname with the naming
 			-- convention of the underlying file system
 			-- (Return a new object at each call.)
 		require
@@ -393,6 +393,63 @@ feature -- Pathname handling
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
+		end
+
+	same_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN is
+			-- Are `a_pathname1' and `a_pathname2' considered equal when
+			-- viewed from the current file system?
+			-- (`a_pathname1' and `a_pathname2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+			--
+			-- Note that pathnames may be considered equal when viewed
+			-- from one file system but not from another. For example
+			-- Windows is case-insensitive, but Unix is case-sensitive.
+		require
+			a_pathname1_not_void: a_pathname1 /= Void
+			a_pathname2_not_void: a_pathname2 /= Void
+		deferred
+		end
+
+	same_canonical_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN is
+			-- Are the canonical versions of `a_pathname1' and `a_pathname2'
+			-- considered equal when viewed from the current file system?
+			-- (`a_pathname1' and `a_pathname2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+			--
+			-- Note that pathnames may be considered equal when viewed
+			-- from one file system but not from another. For example
+			-- Windows is case-insensitive, but Unix is case-sensitive.
+		require
+			a_pathname1_not_void: a_pathname1 /= Void
+			a_pathname2_not_void: a_pathname2 /= Void
+		do
+			Result := same_pathnames (canonical_pathname (a_pathname1), canonical_pathname (a_pathname2))
+		ensure
+			definition: Result = same_pathnames (canonical_pathname (a_pathname1), canonical_pathname (a_pathname2))
+		end
+
+	same_canonical_absolute_pathnames (a_pathname1, a_pathname2: STRING): BOOLEAN is
+			-- Are the canonical absolute versions of `a_pathname1' and `a_pathname2'
+			-- considered equal when viewed from the current file system?
+			-- (`a_pathname1' and `a_pathname2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+			--
+			-- Note that pathnames may be considered equal when viewed
+			-- from one file system but not from another. For example
+			-- Windows is case-insensitive, but Unix is case-sensitive.
+		require
+			a_pathname1_not_void: a_pathname1 /= Void
+			a_pathname2_not_void: a_pathname2 /= Void
+		do
+			Result := same_canonical_pathnames (absolute_pathname (a_pathname1), absolute_pathname (a_pathname2))
+		ensure
+			definition: Result = same_canonical_pathnames (absolute_pathname (a_pathname1), absolute_pathname (a_pathname2))
 		end
 
 	basename (a_pathname: STRING): STRING is

@@ -1,3 +1,9 @@
+Version 3.10 - ?
+
+	Gobo Eiffel Kernel Library:
+
+	* Added features `same_*_pathnames' to class KI_FILE_SYSTEM.
+
 Version 3.9 - 20 November 2008
 
 	geant:
