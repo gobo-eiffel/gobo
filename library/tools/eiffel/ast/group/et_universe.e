@@ -34,7 +34,6 @@ inherit
 			export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
-			export {NONE} all end
 
 feature {NONE} -- Initialization
 

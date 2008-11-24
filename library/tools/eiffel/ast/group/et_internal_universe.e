@@ -1,12 +1,10 @@
 indexing
 
 	description:
-
 	"[
 		Eiffel class universes whose classes can be found locally
 		in clusters, or exported by libraries or .NET assemlies.
 	]"
-
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
 	license: "MIT License"
@@ -26,8 +24,6 @@ inherit
 			parse_all_recursive,
 			add_universe_recursive
 		end
-
-	KL_IMPORTED_ARRAY_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -54,10 +50,22 @@ feature -- Status report
 			-- Do not take into account missing implicit subclusters.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not STRING_ARRAY_.has (a_names, Void)
-			-- no_empty_name: forall n in a_names, n.count > 0
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := clusters.has_subcluster_by_name (a_names)
+		end
+
+	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN is
+			-- Is there a cluster with absolute pathname `a_pathname' in universe?
+			--
+			-- `a_pathname' is expected to be a canonical absolute pathname.
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+		do
+			Result := clusters.has_subcluster_with_absolute_pathname (a_pathname)
 		end
 
 feature -- Access
@@ -106,15 +114,33 @@ feature -- Access
 		end
 
 	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
-			-- Cluster named `a_names' in universe;
-			-- Add missing implicit subclusters if needed;
-			-- Void if not such cluster
+			-- Cluster named `a_names' in universe
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not STRING_ARRAY_.has (a_names, Void)
-			-- no_empty_name: forall n in a_names, n.count > 0
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		do
 			Result := clusters.subcluster_by_name (a_names)
+		ensure
+			not_void_if_has: has_cluster_by_name (a_names) implies Result /= Void
+		end
+
+	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER is
+			-- Cluster with absolute pathname `a_pathname' in universe
+			--
+			-- `a_pathname' is expected to be a canonical absolute pathname.
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+		do
+			Result := clusters.subcluster_with_absolute_pathname (a_pathname)
+		ensure
+			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
 		end
 
 feature -- Measurement
@@ -201,6 +227,66 @@ feature -- Element change
 			clusters.add_implicit_subclusters
 		end
 
+feature -- Iteration
+
+	clusters_do_explicit_local (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+			-- Apply `an_action' to every non-implicit cluster of current universe
+			-- and recursively their subclusters.
+			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
+		do
+			clusters.do_explicit (an_action)
+		end
+
+	clusters_do_explicit_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+			-- Apply `an_action' to every non-implicit cluster of current universe
+			-- and recursively their subclusters, as well as on the clusters and
+			-- subclusters that are declared in the universes it depends on recursively.
+			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
+		do
+			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.clusters_do_explicit_local (an_action))
+		end
+
+	internal_universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]) is
+			-- Apply `an_action' on current universe and recursively on
+			-- the internal universes it depends on.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
+		do
+			create l_visited.make (10)
+			add_internal_universe_recursive (l_visited)
+			l_visited.do_all (an_action)
+		end
+
+	internal_universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on current universe and recursively on
+			-- the internal universes it depends on.
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+		local
+			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
+		do
+			if a_stop_request = Void then
+				internal_universes_do_recursive (an_action)
+			elseif not a_stop_request.item ([]) then
+				create l_visited.make (10)
+				add_internal_universe_recursive (l_visited)
+				from l_visited.start until l_visited.after loop
+					if a_stop_request.item ([]) then
+						l_visited.go_after
+					else
+						an_action.call ([l_visited.item_for_iteration])
+						l_visited.forth
+					end
+				end
+			end
+		end
+
 feature -- Relations
 
 	add_universe_recursive (a_visited: DS_HASH_SET [ET_UNIVERSE]) is
@@ -211,6 +297,18 @@ feature -- Relations
 				a_visited.force_last (Current)
 				libraries.do_all (agent {ET_LIBRARY}.add_universe_recursive (a_visited))
 				dotnet_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_universe_recursive (a_visited))
+			end
+		end
+
+	add_internal_universe_recursive (a_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]) is
+			-- Add current universe to `a_visited' and
+			-- recursively the internal universes it depends on.
+		require
+			a_visited_not_void: a_visited /= Void
+		do
+			if not a_visited.has (Current) then
+				a_visited.force_last (Current)
+				libraries.do_all (agent {ET_LIBRARY}.add_internal_universe_recursive (a_visited))
 			end
 		end
 

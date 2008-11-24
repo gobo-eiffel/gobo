@@ -17,6 +17,8 @@ inherit
 	HASHABLE
 	DEBUG_OUTPUT
 	KL_IMPORTED_ANY_ROUTINES
+	KL_SHARED_EXECUTION_ENVIRONMENT
+	KL_SHARED_FILE_SYSTEM
 
 feature -- Status report
 
@@ -199,6 +201,21 @@ feature -- Access
 		ensure
 			full_unix_pathname_not_void: Result /= Void
 			full_unix_pathname_not_empty: Result.count > 0
+		end
+
+	absolute_pathname: STRING is
+			-- Canonical absolute pathname of current group where
+			-- environment variables have been resolved
+		do
+			Result := Execution_environment.interpreted_string (full_pathname)
+			if Result.is_empty then
+				Result := name
+			end
+			Result := file_system.absolute_pathname (Result)
+			Result := file_system.canonical_pathname (Result)
+		ensure
+			full_aboslute_pathname_not_void: Result /= Void
+			full_aboslute_pathname_not_empty: Result.count > 0
 		end
 
 	cluster: ET_CLUSTER is

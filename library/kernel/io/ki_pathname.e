@@ -5,7 +5,7 @@ indexing
 		"Interface for pathnames"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,6 +104,7 @@ feature -- Access
 		deferred
 		ensure
 			item_not_void: Result /= Void
+			item_not_empty: not Result.is_empty
 		end
 
 	drive: STRING is
@@ -124,6 +125,39 @@ feature -- Access
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
 		deferred
+		end
+
+	trailing_items (a_pathname: KI_PATHNAME): ARRAY [STRING] is
+			-- Items in `a_pathname' that are past the last item in `Current'
+			--
+			-- Useful when `Current' is a subpathname of `a_pathname'.
+		require
+			a_pathname_not_void: a_pathname /= Void
+		local
+			i, j, nb: INTEGER
+		do
+			i := count + 1
+			nb := a_pathname.count
+			j := nb - i + 1
+			if j <= 0 then
+				create Result.make (1, 0)
+			else
+				create Result.make (1, j)
+				from
+					j := 1
+				until
+					i > nb
+				loop
+					Result.put (a_pathname.item (i), j)
+					j := j + 1
+					i := i + 1
+				end
+			end
+		ensure
+			trailing_items_not_void: Result /= Void
+			no_void_item: not Result.has (Void)
+			no_empty_item: not Result.there_exists (agent {STRING}.is_empty)
+			count: Result.count = (a_pathname.count - count).max (0)
 		end
 
 feature -- Measurement
@@ -151,6 +185,32 @@ feature -- Comparison
 			-- Use case-sensitive comparison.
 		require
 			a_pathname_not_void: a_pathname /= Void
+		do
+			if a_pathname = Current then
+				Result := True
+			elseif count = a_pathname.count then
+				Result := is_subpathname (a_pathname)
+			end
+		end
+
+	same_case_insensitive (a_pathname: KI_PATHNAME): BOOLEAN is
+			-- Is current pathname considered equal to `other'?
+			-- Use case-insensitive comparison.
+		require
+			a_pathname_not_void: a_pathname /= Void
+		do
+			if a_pathname = Current then
+				Result := True
+			elseif count = a_pathname.count then
+				Result := is_case_insensitive_subpathname (a_pathname)
+			end
+		end
+
+	is_subpathname (a_pathname: KI_PATHNAME): BOOLEAN is
+			-- Is current pathname a subpathname of `other'?
+			-- Use case-sensitive comparison.
+		require
+			a_pathname_not_void: a_pathname /= Void
 		local
 			i, nb: INTEGER
 		do
@@ -159,7 +219,7 @@ feature -- Comparison
 			else
 				nb := count
 				if
-					nb = a_pathname.count and
+					nb <= a_pathname.count and
 					is_relative = a_pathname.is_relative and
 					((drive = Void and a_pathname.drive = Void) or else
 					((drive /= Void and a_pathname.drive /= Void) and then
@@ -188,8 +248,8 @@ feature -- Comparison
 			end
 		end
 
-	same_case_insensitive (a_pathname: KI_PATHNAME): BOOLEAN is
-			-- Is current pathname considered equal to `other'?
+	is_case_insensitive_subpathname (a_pathname: KI_PATHNAME): BOOLEAN is
+			-- Is current pathname a subpathname of `other'?
 			-- Use case-insensitive comparison.
 		require
 			a_pathname_not_void: a_pathname /= Void
@@ -201,7 +261,7 @@ feature -- Comparison
 			else
 				nb := count
 				if
-					nb = a_pathname.count and
+					nb <= a_pathname.count and
 					is_relative = a_pathname.is_relative and
 					((drive = Void and a_pathname.drive = Void) or else
 					((drive /= Void and a_pathname.drive /= Void) and then

@@ -21,6 +21,8 @@ inherit
 
 	ET_ECF_INTERNAL_UNIVERSE
 		undefine
+			preparse,
+			parse_all,
 			preparse_local,
 			parse_all_local
 		redefine

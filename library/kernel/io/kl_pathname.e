@@ -127,6 +127,7 @@ feature -- Element change
 			-- Append component `a_name' to pathname.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
 			count := count + 1
 			components.force (a_name, count)
@@ -140,6 +141,7 @@ feature -- Element change
 		require
 			a_names_not_void: a_names /= Void
 			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			i, nb: INTEGER
 		do

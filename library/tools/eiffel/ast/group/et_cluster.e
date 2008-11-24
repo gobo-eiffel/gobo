@@ -22,10 +22,7 @@ inherit
 		end
 
 	KL_SHARED_OPERATING_SYSTEM
-	KL_SHARED_EXECUTION_ENVIRONMENT
-	KL_SHARED_FILE_SYSTEM
 	KL_IMPORTED_STRING_ROUTINES
-	KL_IMPORTED_ARRAY_ROUTINES
 
 feature -- Status report
 
@@ -104,6 +101,39 @@ feature -- Status report
 			loop
 				Result := l_parent = Current
 				l_parent := l_parent.parent
+			end
+		end
+
+	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN is
+			-- Is there a subcluster (recursively) named `a_names',
+			-- or True if `a_names' is empty?
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
+		do
+			if a_names.is_empty then
+				Result := True
+			elseif subclusters /= Void then
+				Result := subclusters.has_subcluster_by_name (a_names)
+			end
+		end
+
+	has_cluster_with_absolute_pathname (a_pathname: STRING): BOOLEAN is
+			-- Does current cluster or one of its subclusters (recursively)
+			-- have the absolute pathname `a_pathname'?
+			--
+			-- `a_pathname' is expected to be a canonical absolute pathname.
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+		do
+			if file_system.same_pathnames (a_pathname, absolute_pathname) then
+				Result := True
+			elseif subclusters /= Void then
+				Result := subclusters.has_subcluster_with_absolute_pathname (a_pathname)
 			end
 		end
 
@@ -229,56 +259,58 @@ feature -- Nested
 	parent: ET_CLUSTER
 			-- Parent cluster
 
-	subcluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
-			-- Subcluster (recursively) named `a_names' in current clusters;
-			-- Add missing implicit subclusters if needed;
-			-- Void if not such cluster
+	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
+			-- Current cluster if `a_names' is empty, otherwise
+			-- (recursively) subcluster named `a_names'
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not STRING_ARRAY_.has (a_names, Void)
-			-- no_empty_name: forall n in a_names, n.count > 0
+			no_void_name: not a_names.has (Void)
+			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			l_name: STRING
-			i, nb: INTEGER
-			l_clusters: ET_CLUSTERS
-			l_parent_cluster: ET_CLUSTER
 		do
-			l_parent_cluster := Current
-			l_clusters := subclusters
-			i := a_names.lower
-			nb := a_names.upper
-			from until i > nb loop
-				if l_clusters /= Void then
-					l_name := a_names.item (i)
-					Result := l_clusters.cluster_by_name (l_name)
-				else
-					Result := Void
-				end
-				if Result /= Void then
-					l_parent_cluster := Result
-					l_clusters := Result.subclusters
-					i := i + 1
-				elseif l_parent_cluster /= Void and then l_parent_cluster.is_recursive then
-					from until i > nb loop
-						l_name := a_names.item (i)
-						l_parent_cluster.add_recursive_cluster (l_name)
-						l_clusters := l_parent_cluster.subclusters
-						if l_clusters /= Void then
-							Result := l_clusters.cluster_by_name (l_name)
-						else
-							Result := Void
-						end
-						if Result /= Void then
-							l_parent_cluster := Result
-							i := i + 1
-						else
-							i := nb + 1 -- Jump out of the loop.
-						end
-					end
-				else
-					i := nb + 1 -- Jump out of the loop.
+			if a_names.is_empty then
+				Result := Current
+			elseif subclusters /= Void then
+				Result := subclusters.subcluster_by_name_with_parent (a_names, Current)
+			elseif is_recursive then
+				l_name := a_names.item (a_names.lower)
+				if is_valid_directory_name (l_name) then
+					add_recursive_cluster (l_name)
+					Result := subclusters.subcluster_by_name_with_parent (a_names, Current)
 				end
 			end
+		ensure
+			not_void_if_has: has_cluster_by_name (a_names) implies Result /= Void
+		end
+
+	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER is
+			-- Cluster with absolute pathname `a_pathname' in either current cluster
+			-- or one of its subclusters (recursively)
+			--
+			-- `a_pathname' is expected to be a canonical absolute pathname.
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_absolute: file_system.is_absolute_pathname (a_pathname)
+		local
+			l_pathname, l_current_pathname: KI_PATHNAME
+		do
+			if file_system.same_pathnames (a_pathname, absolute_pathname) then
+				Result := Current
+			elseif is_recursive then
+				l_pathname := file_system.string_to_pathname (a_pathname)
+				l_current_pathname := file_system.string_to_pathname (absolute_pathname)
+				Result := cluster_by_name (l_pathname.trailing_items (l_current_pathname))
+			elseif subclusters /= Void then
+				Result := subclusters.subcluster_with_absolute_pathname (a_pathname)
+			end
+		ensure
+			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
 		end
 
 	subclusters: ET_CLUSTERS
@@ -308,6 +340,63 @@ feature -- Dependence constraints
 			-- When overriding, should classes of current cluster (and recursively
 			-- of its subclusters) be considered as part of the cluster of their
 			-- overridden classes when dealing with provider/dependant constraints?
+
+feature -- SCM mappings
+
+	scm_read_mapping: ET_CLUSTER_SCM_READ_MAPPING
+			-- SCM read mapping declared in current cluster
+			--
+			-- See class ET_CLUSTER_SCM_READ_MAPPING for explanations
+			-- about SCM read mapings.
+
+	scm_write_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
+			-- SCM write mapping declared in current cluster
+			--
+			-- See class ET_CLUSTER_SCM_WRITE_MAPPING for explanations
+			-- about SCM write mappings.
+
+	scm_read_mapping_recursive: ET_CLUSTER_SCM_READ_MAPPING is
+			-- SCM read mapping applicable to current cluster;
+			-- It is either `scm_read_mapping' if not Void, or recursively
+			-- the version from the parent cluster if the current cluster is relative
+			-- (i.e. if its pathname is relative to the pathname of its parent cluster).
+		do
+			if scm_read_mapping /= Void then
+				Result := scm_read_mapping
+			elseif parent /= Void and is_relative then
+				Result := parent.scm_read_mapping_recursive
+			end
+		end
+
+	scm_write_mapping_recursive: ET_CLUSTER_SCM_WRITE_MAPPING is
+			-- SCM write mapping applicable to current cluster;
+			-- It is either `scm_write_mapping' if not Void, or recursively
+			-- the version from its parent cluster if the current cluster is relative
+			-- (i.e. if its pathname is relative to the pathname of its parent cluster).
+		do
+			if scm_write_mapping /= Void then
+				Result := scm_write_mapping
+			elseif parent /= Void and is_relative then
+				Result := parent.scm_write_mapping_recursive
+			end
+		end
+
+	scm_mapping_recursive: ET_CLUSTER_SCM_MAPPING is
+			-- SCM read or write mapping applicable to current cluster;
+			-- It is either `scm_write_mapping' if not Void, or else
+			-- `scm_read_mapping' if not Void, or recursively the version
+			-- from its parent cluster if the current cluster is relative
+			-- (i.e. if its pathname is relative to the pathname of its
+			-- parent cluster).
+		do
+			if scm_write_mapping /= Void then
+				Result := scm_write_mapping
+			elseif scm_read_mapping /= Void then
+				Result := scm_read_mapping
+			elseif parent /= Void and is_relative then
+				Result := parent.scm_mapping_recursive
+			end
+		end
 
 feature -- Measurement
 
@@ -460,6 +549,22 @@ feature -- Setting
 			dependant_constraint_set: dependant_constraint = a_constraint
 		end
 
+	set_scm_read_mapping (a_scm_mapping: like scm_read_mapping) is
+			-- Set `scm_read_mapping' to `a_scm_mapping'.
+		do
+			scm_read_mapping := a_scm_mapping
+		ensure
+			scm_read_mapping_set: scm_read_mapping = a_scm_mapping
+		end
+
+	set_scm_write_mapping (a_scm_mapping: like scm_write_mapping) is
+			-- Set `scm_write_mapping' to `a_scm_mapping'.
+		do
+			scm_write_mapping := a_scm_mapping
+		ensure
+			scm_write_mapping_set: scm_write_mapping = a_scm_mapping
+		end
+
 feature -- Element change
 
 	add_subcluster (a_cluster: like parent) is
@@ -475,6 +580,8 @@ feature -- Element change
 			end
 			subclusters.put_last (a_cluster)
 			a_cluster.set_parent (Current)
+		ensure
+			subclusters_not_void: subclusters /= Void
 		end
 
 	add_recursive_cluster (a_name: STRING) is
@@ -506,6 +613,8 @@ feature -- Element change
 			if not found then
 				add_subcluster (new_recursive_cluster (a_name))
 			end
+		ensure
+			subclusters_not_void: subclusters /= Void
 		end
 
 	add_implicit_subclusters is

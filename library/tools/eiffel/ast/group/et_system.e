@@ -16,6 +16,8 @@ inherit
 
 	ET_INTERNAL_UNIVERSE
 		redefine
+			preparse,
+			parse_all,
 			preparse_local,
 			parse_all_local
 		end
@@ -1380,6 +1382,27 @@ feature -- Implementation checking status setting
 
 feature -- Parsing
 
+	preparse is
+			-- Build a mapping between class names and their filenames and
+			-- populate `classes' (both with classes declared locally and
+			-- exported by other universes which have themselves been preparsed
+			-- recursively during this call), even if the classes have not been
+			-- parsed yet. If current universe had already been reparsed,
+			-- then rebuild the mapping between class names and filenames:
+			-- modified classes are reset and left unparsed and new classes
+			-- are added to `classes', but are not parsed.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- `classes_modified' and `classes_added' will be updated.
+		do
+			precursor
+			build_scm_read_mappings
+			build_scm_write_mappings
+		end
+
 	preparse_local is
 			-- Build a mapping between class names and their filenames and
 			-- populate `classes' (both with classes declared locally and
@@ -1400,6 +1423,31 @@ feature -- Parsing
 			if root_class /= Void then
 				root_class := eiffel_class (root_class.name)
 			end
+		end
+
+	parse_all is
+			-- Parse all classes declared locally in the current universe,
+			-- and recursively those that are declared in universes it
+			-- depends on. There is no need to call one of the preparse
+			-- routines beforehand since the current routine will traverse
+			-- all clusters and parse all Eiffel files anyway. The mapping
+			-- between class names and their filenames will be done during
+			-- this process and `classes' will be populated (both with classes
+			-- declared locally and those exported by other universes which
+			-- have themselves been parsed recursively during this call).
+			-- If current universe had already been preparsed, then rebuild
+			-- the mapping between class names and filenames and reparse
+			-- the classes that have been modified or were not parsed yet.
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- preparsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- `classes_modified' and `classes_added' will be updated.
+		do
+			precursor
+			build_scm_read_mappings
+			build_scm_write_mappings
 		end
 
 	parse_all_local is
@@ -1461,6 +1509,77 @@ feature -- Parsing
 					end
 				end
 			end
+		end
+
+feature -- SCM mappings
+
+	build_scm_read_mappings is
+			-- Build SCM read mappings for all clusters in current system.
+		do
+			clusters_do_explicit_recursive (agent build_scm_read_mapping)
+		end
+
+	build_scm_read_mapping (a_cluster: ET_CLUSTER) is
+			-- Build SCM read mapping of `a_cluster' if not already done.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_mapping: ET_CLUSTER_SCM_READ_MAPPING
+		do
+			if a_cluster.scm_read_mapping = Void then
+				if scm_read_mapping_builder /= Void then
+					l_mapping := scm_read_mapping_builder.item ([a_cluster])
+					if l_mapping /= Void then
+						a_cluster.set_scm_read_mapping (l_mapping)
+					end
+				end
+			end
+		end
+
+	scm_read_mapping_builder: FUNCTION [ANY, TUPLE [ET_CLUSTER], ET_CLUSTER_SCM_READ_MAPPING]
+			-- Function which is able to build a SCM read mapping for a given cluster
+
+	set_scm_read_mapping_builder (a_builder: like scm_read_mapping_builder) is
+			-- Set `scm_read_mapping_builder' to `a_builder'.
+		do
+			scm_read_mapping_builder := a_builder
+		ensure
+			scm_read_mapping_builder_set: scm_read_mapping_builder = a_builder
+		end
+
+	build_scm_write_mappings is
+			-- Build SCM write mappings for all clusters in current system.
+		do
+			clusters_do_explicit_recursive (agent build_scm_write_mapping)
+		end
+
+	build_scm_write_mapping (a_cluster: ET_CLUSTER) is
+			-- Build SCM write mapping of `a_cluster' if not already done.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
+		do
+			if a_cluster.scm_write_mapping = Void then
+				if scm_write_mapping_builder /= Void then
+					l_mapping := scm_write_mapping_builder.item ([a_cluster])
+					if l_mapping /= Void then
+						a_cluster.set_scm_write_mapping (l_mapping)
+						l_mapping.master_cluster.scm_read_mapping_recursive.scm_write_mappings.force_last (l_mapping)
+					end
+				end
+			end
+		end
+
+	scm_write_mapping_builder: FUNCTION [ANY, TUPLE [ET_CLUSTER], ET_CLUSTER_SCM_WRITE_MAPPING]
+			-- Function which is able to build a SCM write mapping for a given cluster
+
+	set_scm_write_mapping_builder (a_builder: like scm_write_mapping_builder) is
+			-- Set `scm_write_mapping_builder' to `a_builder'.
+		do
+			scm_write_mapping_builder := a_builder
+		ensure
+			scm_write_mapping_builder_set: scm_write_mapping_builder = a_builder
 		end
 
 feature -- Compilation status report
