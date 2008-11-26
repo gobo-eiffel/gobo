@@ -305,7 +305,7 @@ feature -- Nested
 			elseif is_recursive then
 				l_pathname := file_system.string_to_pathname (a_pathname)
 				l_current_pathname := file_system.string_to_pathname (absolute_pathname)
-				Result := cluster_by_name (l_pathname.trailing_items (l_current_pathname))
+				Result := cluster_by_name (l_current_pathname.trailing_items (l_pathname))
 			elseif subclusters /= Void then
 				Result := subclusters.subcluster_with_absolute_pathname (a_pathname)
 			end
