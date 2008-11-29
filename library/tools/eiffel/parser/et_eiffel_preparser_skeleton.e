@@ -131,7 +131,7 @@ feature {NONE} -- Parsing
 								nb := l_classes.count
 								from i := 1 until i > nb loop
 									l_class := l_classes.item (i)
-									if STRING_.same_string (l_class.filename, l_filename) then
+									if file_system.same_pathnames (l_class.filename, l_filename) then
 										i := nb + 1
 									else
 										l_class := Void

@@ -224,7 +224,7 @@ feature -- Parsing
 								nb := l_classes.count
 								from i := 1 until i > nb loop
 									l_class := l_classes.item (i)
-									if STRING_.same_string (l_class.filename, a_filename) then
+									if file_system.same_pathnames (l_class.filename, a_filename) then
 										if not l_class.is_parsed then
 												-- Force the parsing.
 											l_class.reset
@@ -1733,7 +1733,7 @@ feature {NONE} -- AST factory
 						Result := l_other_class
 					end
 				elseif Result.is_preparsed then
-					if (Result = current_class) or (Result.is_in_cluster and then (Result.group = group and STRING_.same_string (Result.filename, filename))) then
+					if (Result = current_class) or (Result.is_in_cluster and then (Result.group = group and file_system.same_pathnames (Result.filename, filename))) then
 							-- This is the class we want to parse.
 						if Result.is_parsed then
 -- TODO: find a way to check whether two classes in the same file don't have the same name.
