@@ -6,8 +6,8 @@
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="base" location="${ISE_EIFFEL}/library/base/base.ecf" readonly="true"/>
-		<library name="time" location="${ISE_EIFFEL}/library/time/time.ecf" readonly="true"/>
+		<library name="base" location="${ISE_LIBRARY}/library/base/base.ecf" readonly="true"/>
+		<library name="time" location="${ISE_LIBRARY}/library/time/time.ecf" readonly="true"/>
 		<cluster name="equality_tester" location="${GOBO}/test/gelint/semantics/equality"/>
 		<cluster name="equality_testgen" location="TESTGEN"/>
 		<cluster name="ts_test" location="${GOBO}/library/test">

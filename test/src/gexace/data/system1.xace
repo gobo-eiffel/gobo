@@ -16,7 +16,7 @@
 		<option name="recursive" value="true"/>
 	</cluster>
 
-	<cluster name="base" location="${ISE_EIFFEL}/library/base" if="${GOBO_EIFFEL}=ise">
+	<cluster name="base" location="${ISE_LIBRARY}/library/base" if="${GOBO_EIFFEL}=ise">
 		<option name="recursive" value="true"/>
 		<option name="read_only" value="true"/>
 		<option name="exclude" value=".svn"/>
