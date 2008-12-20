@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			create external_object_pathnames.make (20)
 			create external_library_pathnames.make (20)
 			console_application_mode := True
+			alias_transition_mode := True
 			unknown_builtin_reported := True
 			set_basic_classes
 			set_default_class_mapping
@@ -1068,6 +1069,10 @@ feature -- Compilation options
 			-- The trace is displayed each time the execution enters or exits
 			-- from a feature.
 
+	alias_transition_mode: BOOLEAN
+			-- Should functions declared with the old infix/prefix syntax and
+			-- with the new alias syntax considered the same?
+
 	use_boehm_gc: BOOLEAN
 			-- Should the application be compiled with the Boehm GC?
 
@@ -1107,6 +1112,14 @@ feature -- Compilation options setting
 			trace_mode := b
 		ensure
 			trace_mode_set: trace_mode = b
+		end
+
+	set_alias_transition_mode (b: BOOLEAN) is
+			-- Set `alias_transition_mode' to `b'.
+		do
+			alias_transition_mode := b
+		ensure
+			alias_transition_mode_set: alias_transition_mode = b
 		end
 
 	set_use_boehm_gc (b: BOOLEAN) is
