@@ -140,6 +140,15 @@ feature {NONE} -- Feature recording
 					if current_system.alias_transition_mode then
 						l_alias_name := l_query.alias_name
 						if l_alias_name /= Void then
+							if l_query.is_infixable then
+								if l_alias_name.is_infixable then
+									l_alias_name.set_infix
+								end
+							elseif l_query.is_prefixable then
+								if l_alias_name.is_prefixable then
+									l_alias_name.set_prefix
+								end
+							end
 							if not alias_mapping.has (l_alias_name) then
 								alias_mapping.force_last_new (a_name, l_alias_name)
 							else
@@ -161,17 +170,6 @@ feature {NONE} -- Feature recording
 					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_procedure)
 				else
 					a_features.put_last_new (l_procedure, a_name)
-					if current_system.alias_transition_mode then
-						l_alias_name := l_procedure.alias_name
-						if l_alias_name /= Void then
-							if not alias_mapping.has (l_alias_name) then
-								alias_mapping.force_last_new (a_name, l_alias_name)
-							else
-								-- Error: there is already a feature with the same alias.
-								-- This error will be reported later in ET_FEATURE_FLATTENER.
-							end
-						end
-					end
 				end
 				i := i + 1
 			end
@@ -262,6 +260,17 @@ feature {NONE} -- Feature recording
 						a_parent_feature.set_new_name (a_rename)
 						a_name := a_rename.new_name.feature_name
 						l_alias_name := a_rename.new_name.alias_name
+						if l_alias_name /= Void then
+							if l_query.is_infixable then
+								if l_alias_name.is_infixable then
+									l_alias_name.set_infix
+								end
+							elseif l_query.is_prefixable then
+								if l_alias_name.is_prefixable then
+									l_alias_name.set_prefix
+								end
+							end
+						end
 					end
 				end
 				if has_export then
@@ -358,30 +367,18 @@ feature {NONE} -- Feature recording
 				l_procedure := l_procedures.item (i)
 				a_parent_feature := new_parent_feature (l_procedure, a_parent)
 				a_name := l_procedure.name
-				l_alias_name := l_procedure.alias_name
 				if has_rename then
 					rename_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not rename_table.found and then l_alias_name /= Void then
-							rename_table.search (l_alias_name)
-						end
-					end
 					if rename_table.found then
 						a_rename := rename_table.found_item
 						rename_table.remove_found_item
 						has_rename := not rename_table.is_empty
 						a_parent_feature.set_new_name (a_rename)
 						a_name := a_rename.new_name.feature_name
-						l_alias_name := a_rename.new_name.alias_name
 					end
 				end
 				if has_export then
 					export_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not export_table.found and then l_alias_name /= Void then
-							export_table.search (l_alias_name)
-						end
-					end
 					if export_table.found then
 						export_table.remove_found_item
 						has_export := not export_table.is_empty
@@ -389,11 +386,6 @@ feature {NONE} -- Feature recording
 				end
 				if has_undefine then
 					undefine_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not undefine_table.found and then l_alias_name /= Void then
-							undefine_table.search (l_alias_name)
-						end
-					end
 					if undefine_table.found then
 						a_parent_feature.set_undefine_name (undefine_table.found_key.feature_name)
 						if not undefine_table.found_item then
@@ -404,11 +396,6 @@ feature {NONE} -- Feature recording
 				end
 				if has_redefine then
 					redefine_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not redefine_table.found and then l_alias_name /= Void then
-							redefine_table.search (l_alias_name)
-						end
-					end
 					if redefine_table.found then
 						a_parent_feature.set_redefine_name (redefine_table.found_key.feature_name)
 						if not redefine_table.found_item then
@@ -419,11 +406,6 @@ feature {NONE} -- Feature recording
 				end
 				if has_select then
 					select_table.search (a_name)
-					if current_system.alias_transition_mode then
-						if not select_table.found and then l_alias_name /= Void then
-							select_table.search (l_alias_name)
-						end
-					end
 					if select_table.found then
 						a_parent_feature.set_select_name (select_table.found_key.feature_name)
 						if not select_table.found_item then
@@ -433,14 +415,6 @@ feature {NONE} -- Feature recording
 					end
 				end
 				a_features.search (a_name)
-				if current_system.alias_transition_mode then
-					if not a_features.found and then l_alias_name /= Void then
-						alias_mapping.search (l_alias_name)
-						if alias_mapping.found then
-							a_features.search (alias_mapping.found_item)
-						end
-					end
-				end
 				if a_features.found then
 					a_named_feature := a_features.found_item
 					if a_named_feature.is_immediate then
@@ -452,16 +426,6 @@ feature {NONE} -- Feature recording
 				else
 					an_inherited_feature := new_inherited_feature (a_parent_feature)
 					a_features.put_last_new (an_inherited_feature, a_name)
-					if current_system.alias_transition_mode then
-						if l_alias_name /= Void then
-							if not alias_mapping.has (l_alias_name) then
-								alias_mapping.force_last_new (a_name, l_alias_name)
-							else
-								-- Error: there is already a feature with the same alias.
-								-- This error will be reported later in ET_FEATURE_FLATTENER.
-							end
-						end
-					end
 				end
 				i := i + 1
 			end
