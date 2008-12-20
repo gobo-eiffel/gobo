@@ -166,6 +166,7 @@ feature -- Built-in codes
 	builtin_any_deep_twin: INTEGER is 11
 	builtin_any_copy: INTEGER is 12
 	builtin_any_generating_type2: INTEGER is 13
+	builtin_any_is_equal: INTEGER is 14
 			-- Codes for built-in features from class "ANY"
 
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER is

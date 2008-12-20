@@ -1653,7 +1653,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_indentation_assign_to_result
 				print_builtin_any_same_type_call (current_feature, current_type, False)
 				print_semicolon_newline
-			when builtin_any_standard_is_equal then
+			when builtin_any_standard_is_equal, builtin_any_is_equal then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_any_standard_is_equal_call (current_feature, current_type, False)
@@ -11943,7 +11943,7 @@ feature {NONE} -- Query call generation
 				print_builtin_any_generator_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_any_same_type then
 				print_builtin_any_same_type_call (a_feature, a_target_type, a_check_void_target)
-			when builtin_any_standard_is_equal then
+			when builtin_any_standard_is_equal, builtin_any_is_equal then
 				print_builtin_any_standard_is_equal_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)

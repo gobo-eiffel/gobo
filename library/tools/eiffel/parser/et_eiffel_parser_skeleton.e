@@ -2011,6 +2011,22 @@ feature {NONE} -- Built-in
 					set_fatal_error (a_class)
 					error_handler.report_gvkbs0a_error (a_class, a_feature, Void, tokens.like_current)
 				end
+			elseif a_feature.name.same_feature_name (tokens.is_equal_feature_name) then
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_equal))
+				l_formals := a_feature.arguments
+				if l_formals = Void or else l_formals.count /= 1 then
+						-- The signature should be 'is_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<tokens.like_current.type>>, current_system.boolean_class)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.like_current, a_class, a_class) then
+						-- The signature should be 'is_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<tokens.like_current.type>>, current_system.boolean_class)
+				elseif not a_feature.type.same_syntactical_type (current_system.boolean_class, a_class, a_class) then
+						-- The signature should be 'is_equal (other: like Current): BOOLEAN'.
+					set_fatal_error (a_class)
+					error_handler.report_gvkbs0a_error (a_class, a_feature, <<tokens.like_current.type>>, current_system.boolean_class)
+				end
 			elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal))
 				l_formals := a_feature.arguments
@@ -4475,6 +4491,11 @@ feature {NONE} -- Built-in
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_twin))
 				set_fatal_error (a_class)
 				error_handler.report_gvkbs0a_error (a_class, a_feature, Void, tokens.like_current)
+			elseif a_feature.name.same_feature_name (tokens.is_equal_feature_name) then
+					-- 'ANY.is_equal' should be a function.
+				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_is_equal))
+				set_fatal_error (a_class)
+				error_handler.report_gvkbs0a_error (a_class, a_feature, <<tokens.like_current.type>>, current_system.boolean_class)
 			elseif a_feature.name.same_feature_name (tokens.standard_is_equal_feature_name) then
 					-- 'ANY.standard_is_equal' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_any_feature (tokens.builtin_any_standard_is_equal))

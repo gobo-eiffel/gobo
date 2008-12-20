@@ -999,6 +999,8 @@ feature {NONE} -- Feature validity
 				report_builtin_any_generator (a_feature)
 			when builtin_any_is_deep_equal then
 				report_builtin_any_is_deep_equal (a_feature)
+			when builtin_any_is_equal then
+				report_builtin_any_is_equal (a_feature)
 			when builtin_any_same_type then
 				report_builtin_any_same_type (a_feature)
 			when builtin_any_standard_is_equal then
@@ -3751,6 +3753,21 @@ feature {NONE} -- Built-in features
 
 	report_builtin_any_is_deep_equal (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'ANY.is_deep_equal' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_dynamic_system.boolean_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_any_is_equal (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.is_equal' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
