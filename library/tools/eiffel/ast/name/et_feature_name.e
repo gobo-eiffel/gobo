@@ -15,12 +15,21 @@ deferred class ET_FEATURE_NAME
 inherit
 
 	ET_CALL_NAME
+		redefine
+			is_feature_name,
+			feature_name
+		end
 
 	ET_FEATURE_NAME_ITEM
 
 	ET_QUALIFIED_FEATURE_NAME
 
 	ET_ASSIGNER
+
+feature -- Status report
+
+	is_feature_name: BOOLEAN is True
+			-- Is current call name a feature name?
 
 feature -- Access
 

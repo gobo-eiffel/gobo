@@ -15,6 +15,8 @@ class ET_PREFIX_NAME
 inherit
 
 	ET_FEATURE_NAME
+		rename
+			alias_name as feature_alias_name
 		undefine
 			is_alias,
 			is_prefix_minus,
@@ -22,7 +24,7 @@ inherit
 			is_prefix_not,
 			is_prefix
 		redefine
-			alias_name
+			feature_alias_name
 		end
 
 	ET_ALIAS_NAME
@@ -52,7 +54,9 @@ inherit
 			is_infix_power,
 			is_infix_times,
 			is_infix_xor,
-			is_infix_dotdot
+			is_infix_dotdot,
+			is_feature_name,
+			feature_name
 		redefine
 			is_infixable, is_prefix,
 			is_prefixable, set_prefix,
@@ -132,7 +136,7 @@ feature -- Access
 			end
 		end
 
-	alias_name: ET_ALIAS_NAME is
+	feature_alias_name: ET_ALIAS_NAME is
 			-- Alias name, if any
 		do
 			Result := Current

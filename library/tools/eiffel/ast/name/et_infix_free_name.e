@@ -16,6 +16,7 @@ inherit
 
 	ET_INFIX_NAME
 		undefine
+			alias_name, alias_lower_name,
 			name, lower_name, hash_code, same_call_name,
 			process, same_alias_name,
 			is_infix_freeop,
@@ -55,7 +56,9 @@ inherit
 			is_prefix,
 			is_prefix_minus,
 			is_prefix_plus,
-			is_prefix_not
+			is_prefix_not,
+			is_feature_name,
+			feature_name
 		redefine
 			name, process,
 			is_infix_freeop

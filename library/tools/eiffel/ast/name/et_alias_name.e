@@ -504,6 +504,12 @@ feature -- Access
 	name: STRING is
 			-- Name of feature
 		do
+			Result := alias_name
+		end
+
+	alias_name: STRING is
+			-- Name of alias
+		do
 			inspect code
 			when alias_bracket_code then
 				Result := tokens.alias_bracket_name
@@ -553,6 +559,9 @@ feature -- Access
 					-- Should never happen.
 				Result := tokens.unknown_name
 			end
+		ensure
+			alias_name_not_void: Result /= Void
+			alias_name_not_empty: Result.count > 0
 		end
 
 	lower_name: STRING is
@@ -560,6 +569,17 @@ feature -- Access
 			-- (May return the same object as `name' if already in lower case.)
 		do
 			Result := name
+		end
+
+	alias_lower_name: STRING is
+			-- Lower-name of alias
+			-- (May return the same object as `alias_name' if already in lower case.)
+		do
+			Result := alias_name
+		ensure
+			alias_lower_name_not_void: Result /= Void
+			alias_lower_name_not_empty: Result.count > 0
+			definition: Result.is_equal (alias_name.as_lower)
 		end
 
 	hash_code: INTEGER is

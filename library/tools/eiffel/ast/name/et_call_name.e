@@ -98,6 +98,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_feature_name: BOOLEAN is
+			-- Is current call name a feature name?
+		do
+			-- Result := False
+		end
+
 	is_infix: BOOLEAN is
 			-- Is current call name of the form 'infix ...'?
 		do
@@ -314,6 +320,16 @@ feature -- Conversion
 			is_object_test_local: is_object_test_local
 		do
 			check is_object_test_local: is_object_test_local end
+		ensure
+			definition: ANY_.same_objects (Result, Current)
+		end
+
+	feature_name: ET_FEATURE_NAME is
+			-- Current name viewed as a feature name
+		require
+			is_feature_name: is_feature_name
+		do
+			check is_feature_name: is_feature_name end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
 		end

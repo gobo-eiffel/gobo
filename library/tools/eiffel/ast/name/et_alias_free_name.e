@@ -42,7 +42,7 @@ inherit
 			is_prefix_plus,
 			is_prefix_not
 		redefine
-			name, process,
+			alias_name, alias_lower_name, process,
 			is_infix, is_infix_freeop,
 			is_prefix, is_prefix_freeop,
 			is_prefixable, is_infixable,
@@ -132,13 +132,33 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING is
-			-- Name of feature
+	alias_name: STRING is
+			-- Name of alias
 		do
 			create Result.make (free_operator_name.count + 8)
 			Result.append_string (alias_double_quote)
 			Result.append_string (free_operator_name)
 			Result.append_character ('%"')
+		end
+
+	alias_lower_name: STRING is
+			-- Lower-name of alias
+			-- (May return the same object as `alias_name' if already in lower case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := alias_name
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'A' and c <= 'Z' then
+					Result := Result.as_lower
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
 		end
 
 	free_operator_name: STRING is
