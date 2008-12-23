@@ -78,25 +78,16 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
-			t: ?like i_th
 		do
 			if object_comparison then
-				if v /= Void then
-					from
-						i := out_index
-						if i /= in_index then
-							t := i_th (i)
-						end
-					until
-						i = in_index or (t /= Void and then v.is_equal (t))
-					loop
-						i := i + 1
-						if i > capacity then
-							i := 1
-						end
-						if i /= in_index then
-							t := i_th (i)
-						end
+				from
+					i := out_index
+				until
+					i = in_index or v ~ i_th (i)
+				loop
+					i := i + 1
+					if i > capacity then
+						i := 1
 					end
 				end
 			else

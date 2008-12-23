@@ -43,9 +43,9 @@ feature -- Comparison
 							after or not Result
 						loop
 							if object_comparison then
-								Result := equal (item, other.item)
+								Result := item ~ other.item
 							else
-								Result := (item = other.item)
+								Result := item = other.item
 							end
 							forth
 							other.forth

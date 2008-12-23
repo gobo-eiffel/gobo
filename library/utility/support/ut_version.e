@@ -20,7 +20,7 @@ inherit
 			out
 		end
 
-	COMPARABLE
+	KL_COMPARABLE
 		undefine
 			is_equal, out
 		end
@@ -181,7 +181,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current version less than `other'?
 		do
 			if other.has_major then

@@ -360,21 +360,21 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum of current duration with `other'
 		do
 			Result := cloned_object
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute, other.second, other.millisecond)
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
 			Result := cloned_object
 			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute, -other.second, -other.millisecond)
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		do
 			Result := cloned_object
@@ -383,7 +383,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current time duration less than `other'?
 		do
 			Result := millisecond_count < other.millisecond_count

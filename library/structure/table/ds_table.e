@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	infix "@", item (k: K): G is
+	at alias "@", item (k: K): G is
 			-- Item associated with `k'
 		require
 			has_k: has (k)

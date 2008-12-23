@@ -15,7 +15,7 @@ class PR_RULE
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 
 create
 
@@ -213,7 +213,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current rule considered less than `other'?
 		do
 			Result := id < other.id

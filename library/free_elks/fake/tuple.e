@@ -33,7 +33,7 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", infix "@" (index: INTEGER): ANY assign put is
+	item alias "[]", at alias "@" (index: INTEGER): ANY assign put is
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)

@@ -51,8 +51,9 @@ feature -- Status report
 			-- Is the last exception originally due to a developer
 			-- exception of name `name'?
 		do
-			Result := is_developer_exception and then
-						equal (name, developer_exception_name)
+			if is_developer_exception then
+				Result := developer_exception_name ~ name
+			end
 		end
 
 	developer_exception_name: STRING is

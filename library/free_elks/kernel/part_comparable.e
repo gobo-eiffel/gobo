@@ -11,22 +11,22 @@ deferred class
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		require
 			other_exists: other /= Void
 		deferred
 		end
 
-	infix "<=" (other: like Current): BOOLEAN is
+	is_less_equal alias "<=" (other: like Current): BOOLEAN is
 			-- Is current object less than or equal to `other'?
 		require
 			other_exists: other /= Void
 		do
-			Result := (Current < other) or is_equal (other)
+			Result := (Current < other) or (Current ~ other)
 		end
 
-	infix ">" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN is
 			-- Is current object greater than `other'?
 		require
 			other_exists: other /= Void
@@ -34,12 +34,12 @@ feature -- Comparison
 			Result := other < Current
 		end
 
-	infix ">=" (other: like Current): BOOLEAN is
+	is_greater_equal alias ">=" (other: like Current): BOOLEAN is
 			-- Is current object greater than or equal to `other'?
 		require
 			other_exists: other /= Void
 		do
-			Result := (other < Current) or is_equal (other)
+			Result := (other < Current) or (Current ~ other)
 		end
 
 end

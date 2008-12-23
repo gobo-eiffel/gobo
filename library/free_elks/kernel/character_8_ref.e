@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
 			Result := code < other.code
@@ -70,7 +70,7 @@ feature -- Comparison
 
 feature -- Basic routines
 
-	infix "+" (incr: INTEGER): CHARACTER_8
+	plus alias "+" (incr: INTEGER): CHARACTER_8
 			-- Add `incr' to the code of `item'
 		require
 			valid_increment: (item.code + incr).is_valid_character_8_code
@@ -80,7 +80,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = incr
 		end
 
-	infix "-" (decr: INTEGER): CHARACTER_8
+	minus alias "-" (decr: INTEGER): CHARACTER_8
 			-- Subtract `decr' to the code of `item'
 		require
 			valid_decrement: (item.code - decr).is_valid_character_8_code
@@ -90,7 +90,7 @@ feature -- Basic routines
 			valid_result: item |-| Result = decr
 		end
 
-	infix "|-|" (other: CHARACTER_8): INTEGER
+	difference alias "|-|" (other: CHARACTER_8): INTEGER
 			-- Difference between the codes of `item' and `other'
 		do
 			Result := item.code - other.code

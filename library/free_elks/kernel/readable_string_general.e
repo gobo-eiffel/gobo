@@ -266,7 +266,7 @@ feature -- Duplication
 			substring_count: Result.count = end_index - start_index + 1 or Result.count = 0
 			first_code: Result.count > 0 implies Result.code (1) = code (start_index)
 			recurse: Result.count > 0 implies
-				Result.substring (2, Result.count).is_equal (substring (start_index + 1, end_index))
+				Result.substring (2, Result.count) ~ substring (start_index + 1, end_index)
 		end
 
 feature {NONE} -- Assertion helper

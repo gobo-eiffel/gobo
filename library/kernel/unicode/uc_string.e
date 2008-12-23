@@ -40,6 +40,7 @@ inherit
 
 	STRING
 		rename
+			item as item,
 			capacity as byte_capacity,
 			clear_all as old_clear_all,
 			left_adjust as old_left_adjust,

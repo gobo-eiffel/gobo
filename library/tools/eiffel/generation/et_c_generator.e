@@ -2738,6 +2738,10 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_builtin_special_put_call (current_feature, current_type, False)
 				call_operands.wipe_out
+			when builtin_special_put_default then
+				fill_call_formal_arguments (a_feature)
+				print_builtin_special_put_default_call (current_feature, current_type, False)
+				call_operands.wipe_out
 			else
 					-- Internal error: unknown built-in feature.
 					-- This error should already have been reported during parsing.
@@ -6331,6 +6335,8 @@ feature {NONE} -- Procedure call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_special_put then
 				print_builtin_special_put_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_special_put_default then
+				print_builtin_special_put_default_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_procedure_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -16694,6 +16700,84 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
+	print_builtin_memory_free_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'MEMORY.free'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			if call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				include_runtime_header_file ("eif_memory.h", False, header_file)
+				print_indentation
+				current_file.put_string (c_eif_mem_free)
+				current_file.put_character ('(')
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_memory_find_referers_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'MEMORY.find_referers'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+		do
+			l_result_type_set := a_feature.result_type_set
+			if call_operands.count /= 3 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				include_runtime_header_file ("eif_traverse.h", False, header_file)
+				print_type_cast (l_result_type_set.static_type, current_file)
+				current_file.put_string (c_find_referers)
+				current_file.put_character ('(')
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				l_argument := call_operands.item (3)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (2, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (')')
+			end
+		end
+
 	print_builtin_platform_boolean_bytes_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'PLATFORM.boolean_bytes'.
@@ -20301,6 +20385,52 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
 				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
 				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_special_put_default_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'SPECIAL.put_default'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_argument: ET_EXPRESSION
+			l_actual_type_set: ET_DYNAMIC_TYPE_SET
+			l_formal_type: ET_DYNAMIC_TYPE
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_item_type: ET_DYNAMIC_TYPE
+		do
+			l_special_type ?= a_target_type
+			if l_special_type = Void then
+					-- Internal error: this was already reported during parsing.
+					-- This built-in can only be in class SPECIAL (and its descendants).
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif call_operands.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				print_indentation
+				print_attribute_special_item_access (call_operands.first, a_target_type, a_check_void_target)
+				current_file.put_character ('[')
+				l_argument := call_operands.item (2)
+				l_actual_type_set := dynamic_type_set (l_argument)
+				l_formal_type := argument_type_set_in_feature (1, a_feature).static_type
+				print_attachment_expression (l_argument, l_actual_type_set, l_formal_type)
+				current_file.put_character (']')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				l_item_type := l_special_type.item_type_set.static_type
+				print_default_entity_value (l_item_type, current_file)
 				current_file.put_character (';')
 				current_file.put_new_line
 			end
@@ -27469,6 +27599,7 @@ feature {NONE} -- Constants
 	c_eif_is_unix: STRING is "EIF_IS_UNIX"
 	c_eif_is_vms: STRING is "EIF_IS_VMS"
 	c_eif_is_windows: STRING is "EIF_IS_WINDOWS"
+	c_eif_mem_free: STRING is "eif_mem_free"
 	c_eif_natural: STRING is "EIF_NATURAL"
 	c_eif_natural_8: STRING is "EIF_NATURAL_8"
 	c_eif_natural_16: STRING is "EIF_NATURAL_16"
@@ -27491,6 +27622,7 @@ feature {NONE} -- Constants
 	c_endif: STRING is "#endif"
 	c_equal: STRING is "=="
 	c_extern: STRING is "extern"
+	c_find_referers: STRING is "find_referers"
 	c_float: STRING is "float"
 	c_for: STRING is "for"
 	c_fprintf: STRING is "fprintf"

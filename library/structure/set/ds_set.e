@@ -38,7 +38,7 @@ inherit
 
 feature -- Access
 
-	infix "@", item (v: G): G is
+	at alias "@", item (v: G): G is
 			-- Item equal to `v' held in set
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)

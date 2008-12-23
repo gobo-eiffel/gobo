@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than current real?
 		do
 			Result := item < other.item
@@ -224,48 +224,48 @@ feature -- Basic operations
 			same_absolute_value: (Result = item) or (Result = -item)
 		end
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum with `other'
 		do
 			create Result
 			Result.set_item (item + other.item)
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			create Result
 			Result.set_item (item - other.item)
 		end
 
-	infix "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current is
 			-- Product by `other'
 		do
 			create Result
 			Result.set_item (item * other.item)
 		end
 
-	infix "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current is
 			-- Division by `other'
 		do
 			create Result
 			Result.set_item (item / other.item)
 		end
 
-	infix "^" (other: REAL_64): REAL_64 is
+	power alias "^" (other: REAL_64): REAL_64 is
 			-- Current real to the power `other'
 		do
 			Result := item ^ other
 		end
 
-	prefix "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		do
 			create Result
 			Result.set_item (+ item)
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		do
 			create Result
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_exists: Result /= Void
-			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
+			same_absolute_value: (Result ~ Current) or (Result ~ -Current)
 		end
 
 invariant

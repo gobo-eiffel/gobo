@@ -322,21 +322,21 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum of current duration with `other'
 		do
 			Result := cloned_object
 			Result.add_years_months_days (other.year, other.month, other.day)
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
 			Result := cloned_object
 			Result.add_years_months_days (-other.year, -other.month, -other.day)
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		do
 			Result := cloned_object
@@ -345,7 +345,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current date duration less than `other'?
 		local
 			m: INTEGER

@@ -17,7 +17,7 @@ inherit
 		export
 			{ANY} make, make_empty, make_filled, make_from_c, make_from_string, fill_character
 		redefine
-			item, infix "@", area
+			item, at, area
 		end
 
 	STRING_GENERAL
@@ -31,8 +31,6 @@ inherit
 		end
 
 	INDEXABLE [CHARACTER_8, INTEGER]
-		rename
-			item as item
 		undefine
 			copy, is_equal, out
 		redefine
@@ -48,10 +46,8 @@ inherit
 		end
 
 	TO_SPECIAL [CHARACTER_8]
-		rename
-			item as item
 		undefine
-			copy, is_equal, out, item, infix "@", put, valid_index
+			copy, is_equal, out, item, at, put, valid_index
 		redefine
 			area
 		end
@@ -166,7 +162,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): CHARACTER_8 assign put
+	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_8 assign put
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
@@ -203,7 +199,7 @@ feature -- Element change
 			count := s.count
 			internal_hash_code := 0
 		ensure
-			is_substring: is_equal (t.substring (n1, n2))
+			is_substring: Current ~ (t.substring (n1, n2))
 		end
 
 	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER)
@@ -234,7 +230,7 @@ feature -- Element change
 		ensure
 			same_count: count = old count
 			copied: elks_checking implies
-				(is_equal (old substring (1, index_pos - 1) +
+				(Current ~ (old substring (1, index_pos - 1) +
 				old other.substring (start_pos, end_pos) +
 				old substring (index_pos + (end_pos - start_pos + 1), count)))
 		end
@@ -275,7 +271,7 @@ feature -- Element change
 		ensure
 			new_count: count = old count + old s.count - end_index + start_index - 1
 			replaced: elks_checking implies
-				(is_equal (old (substring (1, start_index - 1) +
+				(Current ~ (old (substring (1, start_index - 1) +
 					s + substring (end_index + 1, count))))
 		end
 
@@ -426,7 +422,7 @@ feature -- Element change
 			keep_head (n)
 		ensure
 			new_count: count = n.min (old count)
-			kept: elks_checking implies is_equal (old substring (1, n.min (count)))
+			kept: elks_checking implies Current ~ (old substring (1, n.min (count)))
 		end
 
 	keep_head (n: INTEGER)
@@ -441,7 +437,7 @@ feature -- Element change
 			end
 		ensure
 			new_count: count = n.min (old count)
-			kept: elks_checking implies is_equal (old substring (1, n.min (count)))
+			kept: elks_checking implies Current ~ (old substring (1, n.min (count)))
 		end
 
 	tail (n: INTEGER)
@@ -455,7 +451,7 @@ feature -- Element change
 			keep_tail (n)
 		ensure
 			new_count: count = n.min (old count)
-			kept: elks_checking implies is_equal (old substring (count - n.min(count) + 1, count))
+			kept: elks_checking implies Current ~ (old substring (count - n.min(count) + 1, count))
 		end
 
 	keep_tail (n: INTEGER)
@@ -474,7 +470,7 @@ feature -- Element change
 			end
 		ensure
 			new_count: count = n.min (old count)
-			kept: elks_checking implies is_equal (old substring (count - n.min(count) + 1, count))
+			kept: elks_checking implies Current ~ (old substring (count - n.min(count) + 1, count))
 		end
 
 	left_adjust
@@ -505,7 +501,7 @@ feature -- Element change
 		ensure
 			valid_count: count <= old count
 			new_count: not is_empty implies not item (1).is_space
-			kept: elks_checking implies is_equal ((old twin).substring (old count - count + 1, old count))
+			kept: elks_checking implies Current ~ ((old twin).substring (old count - count + 1, old count))
 		end
 
 	right_adjust
@@ -539,7 +535,7 @@ feature -- Element change
 				 (item (count) /= '%T') and
 				 (item (count) /= '%R') and
 				 (item (count) /= '%N'))
-			kept: elks_checking implies is_equal ((old twin).substring (1, count))
+			kept: elks_checking implies Current ~ ((old twin).substring (1, count))
 		end
 
 	share (other: STRING_8)
@@ -564,8 +560,8 @@ feature -- Element change
 			internal_hash_code := 0
 		ensure then
 			stable_count: count = old count
-			stable_before_i: elks_checking implies substring (1, i - 1).is_equal (old substring (1, i - 1))
-			stable_after_i: elks_checking implies substring (i + 1, count).is_equal (old substring (i + 1, count))
+			stable_before_i: elks_checking implies substring (1, i - 1) ~ (old substring (1, i - 1))
+			stable_after_i: elks_checking implies substring (i + 1, count) ~ (old substring (i + 1, count))
 		end
 
 	put_code (v: NATURAL_32; i: INTEGER)
@@ -600,7 +596,7 @@ feature -- Element change
 			insert_string (s, 1)
 		ensure
 			new_count: count = old (count + s.count)
-			inserted: elks_checking implies string.is_equal (old (s.twin.as_string_8) + old substring (1, count))
+			inserted: elks_checking implies string ~ (old (s.twin.as_string_8) + old substring (1, count))
 		end
 
 	prepend_boolean (b: BOOLEAN)
@@ -665,10 +661,10 @@ feature -- Element change
 			end
 		ensure
 			new_count: count = old count + old s.count
-			appended: elks_checking implies is_equal (old twin + old s.twin)
+			appended: elks_checking implies Current ~ (old twin + old s.twin)
 		end
 
-	infix "+" (s: READABLE_STRING_8): like Current
+	plus alias "+" (s: READABLE_STRING_8): like Current
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		do
@@ -685,7 +681,7 @@ feature -- Element change
 			end
 		ensure
 			appended: s /= Void implies
-				(elks_checking implies is_equal (old twin + old s.twin))
+				(elks_checking implies Current ~ (old twin + old s.twin))
 		end
 
 	append_integer (i: INTEGER)
@@ -1071,7 +1067,7 @@ feature -- Element change
 		ensure then
 			item_inserted: item (count) = c
 			new_count: count = old count + 1
-			stable_before: elks_checking implies substring (1, count - 1).is_equal (old twin)
+			stable_before: elks_checking implies substring (1, count - 1) ~ (old twin)
 		end
 
 	append_boolean (b: BOOLEAN)
@@ -1092,7 +1088,7 @@ feature -- Element change
 			insert_string (s, i)
 		ensure
 			inserted: elks_checking implies
-				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
+				(Current ~ (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
 	insert_string (s: READABLE_STRING_8; i: INTEGER)
@@ -1129,8 +1125,7 @@ feature -- Element change
 				internal_hash_code := 0
 			end
 		ensure
-			inserted: elks_checking implies
-				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
+			inserted: elks_checking implies (Current ~ (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
 	insert_character (c: CHARACTER_8; i: INTEGER)
@@ -1163,8 +1158,8 @@ feature -- Element change
 		ensure
 			one_more_character: count = old count + 1
 			inserted: item (i) = c
-			stable_before_i: elks_checking implies substring (1, i - 1).is_equal (old substring (1, i - 1))
-			stable_after_i: elks_checking implies substring (i + 1, count).is_equal (old substring (i, count))
+			stable_before_i: elks_checking implies substring (1, i - 1) ~ (old substring (1, i - 1))
+			stable_after_i: elks_checking implies substring (i + 1, count) ~ (old substring (i, count))
 		end
 
 feature -- Removal
@@ -1195,7 +1190,7 @@ feature -- Removal
 				keep_tail (count - n)
 			end
 		ensure
-			removed: elks_checking implies is_equal (old substring (n.min (count) + 1, count))
+			removed: elks_checking implies Current ~ (old substring (n.min (count) + 1, count))
 		end
 
 	remove_substring (start_index, end_index: INTEGER)
@@ -1215,8 +1210,7 @@ feature -- Removal
 				count := l_count - nb_removed
 			end
 		ensure
-			removed: elks_checking implies
-				is_equal (old substring (1, start_index - 1) + old substring (end_index + 1, count))
+			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))
 		end
 
 	remove_tail (n: INTEGER)
@@ -1235,7 +1229,7 @@ feature -- Removal
 				keep_head (l_count - n)
 			end
 		ensure
-			removed: elks_checking implies is_equal (old substring (1, count - n.min (count)))
+			removed: elks_checking implies Current ~ (old substring (1, count - n.min (count)))
 		end
 
 	prune (c: CHARACTER_8)
@@ -1544,7 +1538,7 @@ feature -- Conversion
 			to_lower_area (area, 0, count - 1)
 			internal_hash_code := 0
 		ensure
-			length_and_content: elks_checking implies is_equal (old as_lower)
+			length_and_content: elks_checking implies Current ~ (old as_lower)
 		end
 
 	to_upper
@@ -1553,7 +1547,7 @@ feature -- Conversion
 			to_upper_area (area, 0, count - 1)
 			internal_hash_code := 0
 		ensure
-			length_and_content: elks_checking implies is_equal (old as_upper)
+			length_and_content: elks_checking implies Current ~ (old as_upper)
 		end
 
 	linear_representation: LINEAR [CHARACTER_8]

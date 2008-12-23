@@ -122,16 +122,34 @@ feature {NONE} -- Implementation: status report
 			i, nb: INTEGER
 			cc: CHARACTER
 		do
-			Result := not s.is_empty and then s.item (1).is_alpha
-			from
-				i := 2
+			if not s.is_empty then
+				cc := s.item (1)
 				nb := s.count + 1
-			until
-				i = nb or not Result
-			loop
-				cc := s.item (i)
-				Result := cc.is_alpha or cc.is_digit or cc = '_'
-				i := i + 1
+				if cc = attached_mark or cc = detachable_mark then
+					from
+						i := 2
+					until
+						i = nb or not s.item (i).is_space
+					loop
+						i := i + 1
+					end
+				else
+					i := 1
+				end
+				if s.item (i).is_alpha then
+					from
+						Result := True
+					until
+						i = nb
+					loop
+						cc := s.item (i)
+						if not (cc.is_alpha or cc.is_digit or cc = '_') then
+							Result := False
+							i := nb - 1
+						end
+						i := i + 1
+					end
+				end
 			end
 		end
 
@@ -202,4 +220,7 @@ feature {NONE} -- ECMA mapping helper
 			pre_ecma_type_mapping_not_void: Result /= Void
 		end
 
+	attached_mark: CHARACTER = '!'
+	detachable_mark: CHARACTER = '?'
+			-- Symbols use for attachment marks.
 end

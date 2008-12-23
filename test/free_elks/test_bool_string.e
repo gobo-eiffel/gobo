@@ -56,8 +56,8 @@ feature -- Test
 			assert ("item2", bs.item (2) = False)
 		end
 
-	test_infix_and is
-			-- Test feature 'infix "and"'.
+	test_conjuncted is
+			-- Test feature 'conjuncted alias "and"'.
 		local
 			bs1, bs2, bs3: BOOL_STRING
 		do
@@ -70,8 +70,8 @@ feature -- Test
 			assert ("item2", bs3.item (2) = False)
 		end
 
-	test_infix_or is
-			-- Test feature 'infix "or"'.
+	test_disjuncted is
+			-- Test feature 'disjuncted alias "or"'.
 		local
 			bs1, bs2, bs3: BOOL_STRING
 		do
@@ -84,8 +84,8 @@ feature -- Test
 			assert ("item2", bs3.item (2) = True)
 		end
 
-	test_infix_xor is
-			-- Test feature 'infix "xor"'.
+	test_disjuncted_exclusive is
+			-- Test feature 'disjuncted_exclusive alias "xor"'.
 		local
 			bs1, bs2, bs3: BOOL_STRING
 		do
@@ -98,8 +98,8 @@ feature -- Test
 			assert ("item2", bs3.item (2) = True)
 		end
 
-	test_prefix_not is
-			-- Test feature 'prefix "not"'.
+	test_negated is
+			-- Test feature 'negated alias "not"'.
 		local
 			bs1, bs2: BOOL_STRING
 		do

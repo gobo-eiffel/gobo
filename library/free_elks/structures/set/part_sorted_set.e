@@ -51,15 +51,12 @@ feature -- Element change
 
 	extend, put (v: G) is
 			-- Ensure that structure includes `v'.
-		local
-			l_item: like item
 		do
 			search_after (v)
 			if after then
 				put_left (v)
 			else
-				l_item := item
-				if l_item /= Void and then v /= Void and then l_item.is_equal (v) then
+				if v ~ item then
 					put_left (v)
 				end
 			end
@@ -80,15 +77,15 @@ feature -- Element change
 				i := item
 				o := other.item
 				if i /= Void and then o /= Void then
-				if i < o then
-					forth
-				elseif i.is_equal (o) then
-					forth
-					other.forth
-				else -- i > o
-					put_left (o)
-					other.forth
-				end
+					if i < o then
+						forth
+					elseif i ~ o then
+						forth
+						other.forth
+					else -- i > o
+						put_left (o)
+						other.forth
+					end
 				end
 			end
 			if after then

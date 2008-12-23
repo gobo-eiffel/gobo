@@ -32,7 +32,7 @@ inherit
 
 feature -- Access
 
-	infix "@", item (i: INTEGER): G is
+	at alias "@", item (i: INTEGER): G is
 			-- Item at index `i'
 		require
 			valid_index: 1 <= i and i <= count

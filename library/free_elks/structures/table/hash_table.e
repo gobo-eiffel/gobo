@@ -1,74 +1,7 @@
 indexing
-
-	description:
-		"Hash tables, used to store items identified by hashable keys"
+	description: "Hash tables, used to store items identified by hashable keys"
 	legal: "See notice at end of class."
-
-	instructions: "[
-		Several procedures are provided for inserting an item
-		with a given key.
-
-		Here is how to choose between them:
-
-			- Use `put' if you want to do an insertion only if
-			  there was no item with the given key, doing nothing
-			  otherwise. (You can find out on return if there was one,
-			  and what it was.)
-
-			- Use `force' if you always want to insert the item;
-			  if there was one for the given key it will be removed,
-			  (and you can find out on return what it was).
-
-			- Use `extend' if you are sure there is no item with
-			  the given key, enabling faster insertion (but
-			  unpredictable behavior if this assumption is not true).
-
-			- Use `replace' if you want to replace an already present
-			  item with the given key, and do nothing if there is none.
-
-		In addition you can use `replace_key' to change the key of an
-		already present item, identified by its previous key, or
-		do nothing if there is nothing for that previous key.
-		You can find out on return.
-		]"
-
-	instructions: "[
-		To find out whether a key appears in the table, use `has'.
-		To find out the item, if any, associated with a certain key,
-		use `item'.
-
-		Both of these routines perform a search. If you need
-		both pieces of information (does a key appear? And, if so,
-		what is the associated item?), you can avoid performing
-		two redundant traversals by using instead the combination
-		of `search', `found' and `found_item' as follows:
-
-			your_table.search (your_key)
-			if your_table.found then
-				what_you_where_looking_for := your_table.found_item
-				... Do whatever is needed to `what_you_were_looking_for' ...
-			else
-				... No item was present for `your_key' ...
-			end
-		]"
-
-	compatibility: "[
-		This version of the class accepts any value of type K as key.
-		Previous versions did not accept the default value as a key;
-		this restriction no longer applies. Most clients of the old version
-		should work correctly with this one; a client that explicitly relied
-		on the default value not being hashable should use the old version
-		available in the EiffelBase 3.3 compatibility cluster.
-
-		Also, `force' now sets either `found' or `not_found'.
-		(Previously it would always set `inserted'.)
-		]"
-
-	storable_compatibility: "[
-		Persistent instances of the old version of this class will not be
-		 retrievable with the present version.
-		]"
-
+	instructions: "See instructions at the end of the class."
 	warning: "[
 		Modifying an object used as a key by an item present in a table will
 		cause incorrect behavior. If you will be modifying key objects,
@@ -82,18 +15,19 @@ indexing
 
 class HASH_TABLE [G, K -> HASHABLE] inherit
 
-	UNBOUNDED [G]
+	UNBOUNDED [?G]
 		rename
 			has as has_item
 		redefine
 			has_item, copy, is_equal
 		end
 
-	TABLE [G, K]
+	TABLE [?G, K]
 		rename
 			has as has_item,
 			wipe_out as clear_all,
-			extend as collection_extend
+			extend as collection_extend,
+			force as table_force
 		export
 			{NONE} prune_all
 		redefine
@@ -121,7 +55,7 @@ feature -- Initialization
 			-- if more than `n' items are inserted.
 		local
 			clever: PRIMES
-			l_void_item: ?G
+			l_default_value: ?G
 			l_size: INTEGER
 		do
 			create clever
@@ -138,7 +72,7 @@ feature -- Initialization
 			count := 0
 			deleted_position := 0
 			control := 0
-			found_item := l_void_item
+			found_item := l_default_value
 			has_default := False
 			position := 0
 			used_slot_count := 0
@@ -156,7 +90,6 @@ feature -- Initialization
 		local
 			i: INTEGER
 			new_table: HASH_TABLE [G, K]
-			l_default_key: ?K
 			l_content: like content
 			l_keys: like keys
 		do
@@ -178,13 +111,14 @@ feature -- Initialization
 				i := i + 1
 			end
 
-			if has_default then
-				new_table.put (l_content.item (capacity), l_default_key)
-			end
-
 			set_content (new_table.content)
 			set_keys (new_table.keys)
 			set_deleted_marks (new_table.deleted_marks)
+
+			if has_default then
+				content.put (l_content.item (capacity), new_table.capacity)
+				keys.put_default (new_table.capacity)
+			end
 
 			capacity := new_table.capacity
 			used_slot_count := count
@@ -200,7 +134,7 @@ feature -- Access
 	found_item: ?G
 			-- Item, if any, yielded by last search operation
 
-	item alias "[]", infix "@" (key: ?K): ?G assign force is
+	item alias "[]", at alias "@" (key: K): ?G assign  table_force is
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		local
@@ -217,7 +151,7 @@ feature -- Access
 				(not (has (key))) implies (Result = computed_default_value)
 		end
 
-	has (key: ?K): BOOLEAN is
+	has (key: K): BOOLEAN is
 			-- Is there an item in the table with key `key'?
 		local
 			old_control, old_position: INTEGER
@@ -230,7 +164,7 @@ feature -- Access
 			default_case: (key = computed_default_key) implies (Result = has_default)
 		end
 
-	has_key (key: ?K): BOOLEAN is
+	has_key (key: K): BOOLEAN is
 			-- Is there an item in the table with key `key'? Set `found_item' to the found item.
 		local
 			old_position: INTEGER
@@ -269,7 +203,7 @@ feature -- Access
 					until
 						i = capacity or else Result
 					loop
-						Result := occupied (i) and then equal (v, l_content.item (i))
+						Result := occupied (i) and then (v ~ l_content.item (i))
 						i := i + 1
 					end
 				else
@@ -284,7 +218,7 @@ feature -- Access
 			end
 		end
 
-	current_keys: ARRAY [?K] is
+	current_keys: ARRAY [K] is
 			-- New array containing actually used keys, from 1 to `count'
 		local
 			j: INTEGER
@@ -306,7 +240,7 @@ feature -- Access
 			good_count: Result.count = count
  		end
 
-	item_for_iteration: ?G is
+	item_for_iteration: G is
 			-- Element at current iteration position
 		require
 			not_off: not off
@@ -314,7 +248,7 @@ feature -- Access
 			Result := content.item (iteration_position)
 		end
 
-	key_for_iteration: ?K is
+	key_for_iteration: K is
 			-- Key at current iteration position
 		require
 			not_off: not off
@@ -352,7 +286,7 @@ feature -- Measurement
 				until
 					off
 				loop
-					if equal (item_for_iteration, v) then
+					if item_for_iteration ~ v then
 						Result := Result + 1
 					end
 					forth
@@ -378,10 +312,20 @@ feature -- Comparison
 			-- Does table contain the same information as `other'?
 		do
 			Result :=
-				equal (keys, other.keys) and
-				equal (content, other.content) and
-				equal (deleted_marks, other.deleted_marks) and
+				keys ~ other.keys and
+				content ~ other.content and
+				deleted_marks ~ other.deleted_marks and
 				(has_default = other.has_default)
+		end
+
+	same_keys (a_search_key, a_key: K): BOOLEAN is
+			-- Does `a_search_key' equal to `a_key'?
+			--| Default implementation is using ~.
+		require
+			valid_search_key: valid_key (a_search_key)
+			valid_key: valid_key (a_key)
+		do
+			Result := a_search_key ~ a_key
 		end
 
 feature -- Status report
@@ -465,7 +409,7 @@ feature -- Status report
 			end
 		end
 
-	valid_key (k: ?K): BOOLEAN is
+	valid_key (k: K): BOOLEAN is
 			-- Is `k' a valid key?
 		local
 			l_internal: INTERNAL
@@ -484,15 +428,15 @@ feature -- Status report
 						nb := l_internal.field_count (l_cell)
 						l_name := "item"
 					until
-						i >= nb
+						i > nb
 					loop
-						if l_internal.field_name (i, l_cell).is_equal (l_name) then
+						if l_internal.field_name (i, l_cell) ~ l_name then
 							l_index := i
 							i := nb + 1
 						end
 						i := i + 1
 					end
-					if k /= Void then
+					if l_index > 0 and then k /= Void then
 						Result := l_internal.field_static_type_of_type (
 							l_index, l_internal.dynamic_type (l_cell)) = l_internal.dynamic_type (k)
 					end
@@ -517,7 +461,6 @@ feature -- Cursor movement
 		local
 			stop: BOOLEAN
 			l_keys: like keys
-			l_default_key: ?K
 			pos_for_iter, table_size: INTEGER
 		do
 			from
@@ -528,7 +471,7 @@ feature -- Cursor movement
 				stop
 			loop
 				pos_for_iter := pos_for_iter + 1
-				stop := pos_for_iter > table_size or else (l_keys.item (pos_for_iter) /= l_default_key)
+				stop := pos_for_iter > table_size or else (not l_keys.is_default (pos_for_iter))
 			end
 			iteration_position := pos_for_iter
 		end
@@ -574,7 +517,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put (new: ?G; key: ?K) is
+	put (new: G; key: K) is
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 			-- Set `inserted' if and only if an insertion has
@@ -640,7 +583,7 @@ feature -- Element change
 							and (old has_default)))
 		end
 
-	force (new: ?G; key: ?K) is
+	force (new: G; key: K) is
 			-- Update table so that `new' will be the item associated
 			-- with `key'.
 			-- If there was an item for that key, set `found'
@@ -650,32 +593,8 @@ feature -- Element change
 			--
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
-		local
-			l_default_key: ?K
-			l_default_value: ?G
 		do
-			internal_search (key)
-			if not_found then
-				if soon_full then
-					add_space
-					internal_search (key)
-				end
-				if deleted_position /= Impossible_position then
-					position := deleted_position
-					deleted_marks.put (False, position)
-				else
-					used_slot_count := used_slot_count + 1
-				end
-				keys.put (key, position)
-				if key = l_default_key then
-					has_default := True
-				end
-				count := count + 1
-				found_item := l_default_value
-			else
-				found_item := content.item (position)
-			end
-			content.put (new, position)
+			table_force (new, key)
 		ensure then
 			insertion_done: item (key) = new
 			now_present: has (key)
@@ -698,7 +617,7 @@ feature -- Element change
 						((key /= computed_default_key) and (old has_default)))
 		end
 
-	extend (new: ?G; key: ?K) is
+	extend (new: G; key: K) is
 			-- Assuming there is no item of key `key',
 			-- insert `new' with `key'.
 			-- Set `inserted'.
@@ -742,7 +661,7 @@ feature -- Element change
 					((key = computed_default_key) or (old has_default))
 		end
 
-	replace (new: ?G; key: ?K) is
+	replace (new: G; key: K) is
 			-- Replace item at `key', if present,
 			-- with `new'; do not change associated key.
 			-- Set `replaced' if and only if a replacement has been made
@@ -767,7 +686,7 @@ feature -- Element change
 			found_item_is_old_item: found_item = old (item (key))
 		end
 
-	replace_key (new_key: ?K; old_key: ?K) is
+	replace_key (new_key: K; old_key: K) is
 			-- If there is an item of key `old_key' and no item of key
 			-- `new_key', replace the former's key by `new_key',
 			-- set `replaced', and set `found_item' to the item
@@ -779,54 +698,25 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		local
-			insert_position, l_pos: INTEGER
-			l_default_value: ?G
-			l_default_key: ?K
+			l_item: G
 		do
-			put (l_default_value, new_key)
-			if inserted then
-				count := count - 1
-				insert_position := position
+			internal_search (new_key)
+			if not found then
 				internal_search (old_key)
 				if found then
-					l_pos := position
-					content.put (content.item (l_pos), insert_position)
-					if old_key = l_default_key then
-						set_no_default
-					else
-						content.put (l_default_value, l_pos)
-						keys.put (l_default_key, l_pos)
-						deleted_marks.put (True, l_pos)
-						if iteration_position = l_pos then
-							forth
-						end
-					end
-					if new_key = l_default_key then
-						has_default := True
-					end
+					l_item := content.item (position)
+					remove (old_key)
+					put (l_item, new_key)
 					control := replaced_constant
-						-- The call to `search' has set `found_item'
-						-- to the item previously associated with `old_key'.
-				else
-					position := insert_position
-					content.put (l_default_value, insert_position)
-					keys.put (l_default_key, insert_position)
-					deleted_marks.put (True, insert_position)
-					if iteration_position = insert_position then
-						forth
-					end
-					check
-						not_found: not_found
-					end
 				end
-			-- else the call to `put' has set `found_item'
-			-- to the item previously associated with `new_key'.
+			else
+				set_conflict
+				found_item := content.item (position)
 			end
 		ensure
 			same_count: count = old count
 			replaced_or_conflict_or_not_found: replaced or conflict or not_found
-			old_absent: (replaced and not equal (new_key, old_key))
-								implies (not has (old_key))
+			old_absent: (replaced and not same_keys (new_key, old_key)) implies (not has (old_key))
 			new_present: (replaced or conflict) = has (new_key)
 			new_item: replaced implies (item (new_key) = old (item (old_key)))
 			not_found_implies_no_old_key: not_found implies old (not has (old_key))
@@ -860,7 +750,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (key: ?K) is
+	remove (key: K) is
 			-- Remove item associated with `key', if present.
 			-- Set `removed' if and only if an item has been
 			-- removed (i.e. `key' was present);
@@ -878,8 +768,8 @@ feature -- Removal
 					set_no_default
 				else
 					l_pos := position
-					content.put (l_default_value, l_pos)
-					keys.put (l_default_key, l_pos)
+					content.put_default (l_pos)
+					keys.put_default (l_pos)
 					deleted_marks.put (True, l_pos)
 					if iteration_position = l_pos then
 						forth
@@ -926,7 +816,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [?G] is
+	linear_representation: ARRAYED_LIST [G] is
 			-- Representation as a linear structure
 		local
 			old_iteration_position: INTEGER
@@ -1014,10 +904,10 @@ feature {NONE} -- Transformation
 
 feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
-	content: SPECIAL [?G]
+	content: SPECIAL [G]
 			-- Array of contents
 
-	keys: SPECIAL [?K]
+	keys: SPECIAL [K]
 			-- Array of keys
 
 	deleted_marks: SPECIAL [BOOLEAN]
@@ -1034,11 +924,9 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
 	set_no_default is
 			-- Record information that there is no value for default key.
-		local
-			l_default_value: ?G
 		do
 			has_default := False
-			content.put (l_default_value, capacity)
+			content.put_default (capacity)
 		end
 
 feature {HASH_TABLE} -- Implementation: search attributes
@@ -1081,10 +969,8 @@ feature {NONE} -- Implementation
 			-- Is position `i' occupied by a non-default key and a value?
 		require
 			in_bounds: i >= 0 and i < capacity
-		local
-			l_default_key: ?K
 		do
-			Result := (keys.item (i) /= l_default_key)
+			Result := not keys.is_default (i)
 		end
 
 	truly_occupied (i: INTEGER): BOOLEAN is
@@ -1156,7 +1042,7 @@ feature {NONE} -- Implementation
 			deleted_marks := d
 		end
 
-	default_key_value: ?G is
+	default_key_value: G is
 			-- Value associated with the default key, if any
 		require
 			has_default: has_default
@@ -1180,7 +1066,7 @@ feature {NONE} -- Implementation
 			-- No instructions necessary (returns default value of type G)
 		end
 
-	internal_search (key: ?K) is
+	internal_search (key: K) is
 			-- Search for item of key `key'.
 			-- If successful, set `position' to index
 			-- of item with this key (the same index as the key's index).
@@ -1193,10 +1079,10 @@ feature {NONE} -- Implementation
 			stop: BOOLEAN
 			l_keys: like keys
 			l_deleted_marks: like deleted_marks
-			l_key: ?K
+			l_key: K
 		do
 			first_deleted_position := impossible_position
-			if key = l_default_key or else key = Void then
+			if key = l_default_key or key = Void then
 				position := capacity
 				if has_default then
 					control := found_constant
@@ -1217,7 +1103,7 @@ feature {NONE} -- Implementation
 						-- Go to next increment.
 					l_pos := (l_pos + increment) \\ l_capacity
 					l_key := l_keys.item (l_pos)
-					if l_key = Void or else l_key = l_default_key then
+					if l_key = l_default_key or l_key = Void then
 						if not l_deleted_marks.item (l_pos) then
 							stop := True
 							control := not_found_constant
@@ -1230,7 +1116,7 @@ feature {NONE} -- Implementation
 								catcall_detected: l_key.same_type (key)
 							end
 						end
-						if l_key.is_equal (key) then
+						if same_keys (l_key, key) then
 							stop := True
 							control := found_constant
 						end
@@ -1251,7 +1137,7 @@ feature {NONE} -- Implementation
 				(position = capacity) = (key = computed_default_key)
 		end
 
-	search_for_insertion (key: ?K) is
+	search_for_insertion (key: K) is
 			-- Assuming there is no item of key `key', compute
 			-- `position' at which to insert such an item.
 		require
@@ -1262,7 +1148,7 @@ feature {NONE} -- Implementation
 			l_deleted_marks: like deleted_marks
 			l_keys: like keys
 		do
-			if key = l_default_key or else key = Void then
+			if key = l_default_key or key = Void then
 				check
 						-- Because of the precondition
 					not has_default
@@ -1277,7 +1163,7 @@ feature {NONE} -- Implementation
 					l_deleted_marks := deleted_marks
 					l_keys := keys
 				until
-					l_deleted_marks.item (l_pos) or l_keys.item (l_pos) = l_default_key
+					l_deleted_marks.item (l_pos) or l_keys.is_default (l_pos)
 				loop
 					l_pos := (l_pos + increment) \\ l_capacity
 				end
@@ -1414,14 +1300,47 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	prune (v: G) is
+	prune (v: ?G) is
 			-- Remove one occurrence of `v' if any.
 		do
 		end
 
-	collection_extend (v: G) is
+	collection_extend (v: ?G) is
 			-- Insert a new occurrence of `v'.
 		do
+		end
+
+	table_force (new: ?G; key: K) is
+		local
+			l_default_key: ?K
+			l_default_value: ?G
+		do
+			internal_search (key)
+			if not_found then
+				if soon_full then
+					add_space
+					internal_search (key)
+				end
+				if deleted_position /= Impossible_position then
+					position := deleted_position
+					deleted_marks.put (False, position)
+				else
+					used_slot_count := used_slot_count + 1
+				end
+				keys.put (key, position)
+				if key = l_default_key then
+					has_default := True
+				end
+				count := count + 1
+				found_item := l_default_value
+			else
+				found_item := content.item (position)
+			end
+			if {l_g: G} new then
+				content.put (l_g, position)
+			else
+				content.put_default (position)
+			end
 		end
 
 invariant
@@ -1444,6 +1363,51 @@ invariant
 	slot_count_small_enough: used_slot_count <= capacity
 
 indexing
+	instruction: "[
+		Several procedures are provided for inserting an item
+		with a given key.
+
+		Here is how to choose between them:
+
+			- Use `put' if you want to do an insertion only if
+			  there was no item with the given key, doing nothing
+			  otherwise. (You can find out on return if there was one,
+			  and what it was.)
+
+			- Use `force' if you always want to insert the item;
+			  if there was one for the given key it will be removed,
+			  (and you can find out on return what it was).
+
+			- Use `extend' if you are sure there is no item with
+			  the given key, enabling faster insertion (but
+			  unpredictable behavior if this assumption is not true).
+
+			- Use `replace' if you want to replace an already present
+			  item with the given key, and do nothing if there is none.
+
+		In addition you can use `replace_key' to change the key of an
+		already present item, identified by its previous key, or
+		do nothing if there is nothing for that previous key.
+		You can find out on return.
+
+		To find out whether a key appears in the table, use `has'.
+		To find out the item, if any, associated with a certain key,
+		use `item'.
+
+		Both of these routines perform a search. If you need
+		both pieces of information (does a key appear? And, if so,
+		what is the associated item?), you can avoid performing
+		two redundant traversals by using instead the combination
+		of `search', `found' and `found_item' as follows:
+
+			your_table.search (your_key)
+			if your_table.found then
+				what_you_where_looking_for := your_table.found_item
+				... Do whatever is needed to `what_you_were_looking_for' ...
+			else
+				... No item was present for `your_key' ...
+			end
+		]"
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

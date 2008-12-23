@@ -24,48 +24,6 @@ create
 
 feature -- Test
 
-	run_all is
-			-- Run all tests.
-		do
-			test_default_create
-			test_less_than
-			test_less_equal
-			test_greater_than
-			test_greater_equal
-			test_out
-			test_item
-			test_set_item___fail_ise
-			test_to_reference
-			test_make_from_reference___fail_ise
-			test_infix_plus
-			test_infix_minus
-			test_infix_times
-			test_infix_divide
-			test_infix_div
-			test_infix_mod
-			test_infix_power
-			test_prefix_minus
-			test_prefix_plus
-			test_to_character
-			test_to_real
-			test_to_double
-			test_as_natural_8
-			test_as_natural_16
-			test_as_natural_32
-			test_as_natural_64
-			test_as_integer_8
-			test_as_integer_16
-			test_as_integer_32
-			test_as_integer_64
-			test_bit_and
-			test_bit_or
-			test_bit_xor
-			test_bit_not
-			test_bit_shift_left
-			test_bit_shift_right
-			test_convert
-		end
-
 	test_default_create is
 			-- Test feature 'default_create'.
 		local
@@ -74,8 +32,8 @@ feature -- Test
 			assert ("default", i = 0)
 		end
 
-	test_less_than is
-			-- Test feature 'infix "<"'.
+	test_is_less is
+			-- Test feature 'is_less alias "<"'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -90,8 +48,8 @@ feature -- Test
 			assert ("not_less_than2", not (i1 < i2))
 		end
 
-	test_less_equal is
-			-- Test feature 'infix "<="'.
+	test_is_less_equal is
+			-- Test feature 'is_less_equal alias "<="'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -106,8 +64,8 @@ feature -- Test
 			assert ("less_equal2", i1 <= i2)
 		end
 
-	test_greater_than is
-			-- Test feature 'infix ">"'.
+	test_is_greater is
+			-- Test feature 'is_greater alias ">"'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -122,8 +80,8 @@ feature -- Test
 			assert ("not_greater_than2", not (i1 > i2))
 		end
 
-	test_greater_equal is
-			-- Test feature 'infix ">="'.
+	test_is_greater_equal is
+			-- Test feature 'is_greater_equal alias ">="'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -242,8 +200,8 @@ feature -- Test
 			end
 		end
 
-	test_infix_plus is
-			-- Test feature 'infix "+"'.
+	test_plus is
+			-- Test feature 'plus alias "+"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -253,8 +211,8 @@ feature -- Test
 			assert ("plus1", i1 + i2 = i3)
 		end
 
-	test_infix_minus is
-			-- Test feature 'infix "-"'.
+	test_minus is
+			-- Test feature 'minus alias "-"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -264,8 +222,8 @@ feature -- Test
 			assert ("minus1", i1 - i2 = i3)
 		end
 
-	test_infix_times is
-			-- Test feature 'infix "*"'.
+	test_product is
+			-- Test feature 'product alias"*"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -275,8 +233,8 @@ feature -- Test
 			assert ("times1", i1 * i2 = i3)
 		end
 
-	test_infix_divide is
-			-- Test feature 'infix "/"'.
+	test_quotient is
+			-- Test feature 'quotient alias "/"'.
 		local
 			i1, i2: INTEGER_64
 			d1: DOUBLE
@@ -287,8 +245,8 @@ feature -- Test
 			assert ("divide1", i1 / i2 = d1)
 		end
 
-	test_infix_div is
-			-- Test feature 'infix "//"'.
+	test_integer_quotient is
+			-- Test feature 'integer_quotient alias "//"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -306,8 +264,8 @@ feature -- Test
 			assert ("div3", i1 // i2 = i3)
 		end
 
-	test_infix_mod is
-			-- Test feature 'infix "\\"'.
+	test_integer_remainder is
+			-- Test feature 'integer_remainder alias "\\"'.
 		local
 			i1, i2, i3: INTEGER_64
 		do
@@ -317,20 +275,20 @@ feature -- Test
 			assert ("mod1", i1 \\ i2 = i3)
 			i1 := 21
 			i2 := -10
-			i3 := 1 
+			i3 := 1
 			assert ("mod2", i1 \\ i2 = i3)
 			i1 := -21
 			i2 := 9
-			i3 := -3 
+			i3 := -3
 			assert ("mod3", i1 \\ i2 = i3)
 			i1 := -9223372036854775808
 			i2 := 10
-			i3 := -8 
+			i3 := -8
 			assert ("mod4", i1 \\ i2 = i3)
 		end
 
-	test_infix_power is
-			-- Test feature 'infix "^"'.
+	test_power is
+			-- Test feature 'power alias "^"'.
 		local
 			i: INTEGER_64
 			d1, d2: DOUBLE
@@ -345,8 +303,8 @@ feature -- Test
 			assert ("power2", i ^ d1 = d2)
 		end
 
-	test_prefix_minus is
-			-- Test feature 'prefix "-"'.
+	test_opposite is
+			-- Test feature 'opposite alias "-"'.
 		local
 			i1, i2: INTEGER_64
 		do
@@ -355,8 +313,8 @@ feature -- Test
 			assert ("minus1", -i1 = i2)
 		end
 
-	test_prefix_plus is
-			-- Test feature 'prefix "+"'.
+	test_identity is
+			-- Test feature 'identity alias "+"'.
 		local
 			i1, i2: INTEGER_64
 		do

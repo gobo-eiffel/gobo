@@ -145,7 +145,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	infix "@", item (i: INTEGER): G is
+	at alias "@", item (i: INTEGER): G is
 			-- Item at index `i'
 			-- (Performance: O(i).)
 		local

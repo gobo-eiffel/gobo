@@ -16,7 +16,7 @@ class LX_RULE
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 
 create
 
@@ -187,7 +187,7 @@ feature -- Setting
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current rule less than `other'?
 		do
 			Result := id < other.id

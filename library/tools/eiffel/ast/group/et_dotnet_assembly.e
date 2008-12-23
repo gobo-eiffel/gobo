@@ -261,6 +261,7 @@ feature {NONE} -- Parsing
 			classes.force_last (current_system.integer_32_ref_class, current_system.integer_32_ref_class.name)
 			classes.force_last (current_system.integer_64_class, current_system.integer_64_class.name)
 			classes.force_last (current_system.integer_64_ref_class, current_system.integer_64_ref_class.name)
+			classes.force_last (current_system.memory_class, current_system.memory_class.name)
 			classes.force_last (current_system.native_array_class, current_system.native_array_class.name)
 			classes.force_last (current_system.natural_8_class, current_system.natural_8_class.name)
 			classes.force_last (current_system.natural_8_ref_class, current_system.natural_8_ref_class.name)

@@ -88,10 +88,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		high_word, low_word: INTEGER
+	high_word, low_word: INTEGER
 			-- Component integers
 
-		hash_code: INTEGER is
+	hash_code: INTEGER is
 			-- Hash code value
 		do
 			Result := high_word.hash_code // 2 + low_word.hash_code // 2
@@ -100,7 +100,7 @@ feature -- Access
 feature -- Comparison
 
 
-	infix "<" (other: XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
+	is_less alias "<" (other: XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
 			-- Is `Current' less than `other'?
 		require
 			other_not_void: other /= Void
@@ -114,7 +114,7 @@ feature -- Comparison
 			asymmetric: Result implies not (other < Current)
 		end
 
-	infix ">" (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
+	is_greater alias ">" (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
 			-- Is `Current' greater than 'other'?
 		require
 			other_not_void: other /= Void

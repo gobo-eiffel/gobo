@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): CHARACTER_32
+	item alias "[]", at alias "@" (i: INTEGER): CHARACTER_32
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
@@ -256,8 +256,7 @@ feature -- Access
 		do
 			Result := string_searcher.substring_index (Current, other, start_pos, end_pos)
 		ensure
-			correct_place: Result > 0 implies
-				other.is_equal (substring (Result, Result + other.count - 1))
+			correct_place: Result > 0 implies other ~ substring (Result, Result + other.count - 1)
 			-- forall x : start_pos..Result
 			--	not substring (x, x+other.count -1).is_equal (other)
 		end
@@ -270,8 +269,7 @@ feature -- Access
 			string_not_void: Result /= Void
 			string_type: Result.same_type (create {STRING_32}.make_empty)
 			first_item: count > 0 implies Result.item (1) = item (1)
-			recurse: count > 1 implies Result.substring (2, count).is_equal (
-				substring (2, count).string)
+			recurse: count > 1 implies Result.substring (2, count) ~ substring (2, count).string
 		end
 
 	string_representation: STRING_32
@@ -286,8 +284,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 			correct_type: Result.same_type (create {STRING_32}.make_empty)
 			first_item: count > 0 implies Result.item (1) = item (1)
-			recurse: count > 1 implies Result.substring (2, count).is_equal (
-				substring (2, count).string)
+			recurse: count > 1 implies Result.substring (2, count) ~ substring (2, count).string
 		end
 
 	substring_index (other: READABLE_STRING_32; start_index: INTEGER): INTEGER
@@ -424,7 +421,7 @@ feature -- Comparison
 		ensure
 			symmetric: Result implies other.is_case_insensitive_equal (Current)
 			consistent: standard_is_equal (other) implies Result
-			valid_result: as_lower.is_equal (other.as_lower) implies Result
+			valid_result: as_lower ~ other.as_lower implies Result
 		end
 
 	same_string (other: READABLE_STRING_32): BOOLEAN is
@@ -442,10 +439,10 @@ feature -- Comparison
 				end
 			end
 		ensure
-			definition: Result = string.is_equal (other.string)
+			definition: Result = (string ~ other.string)
 		end
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is string lexicographically lower than `other'?
 		local
 			other_count: INTEGER
@@ -845,7 +842,7 @@ feature {NONE} -- Element change
 
 feature -- Element change
 
-	infix "+" (s: READABLE_STRING_32): like Current
+	plus alias "+" (s: READABLE_STRING_32): like Current
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
@@ -854,7 +851,7 @@ feature -- Element change
 		ensure
 			Result_exists: Result /= Void
 			new_count: Result.count = count + s.count
-			initial: elks_checking implies Result.substring (1, count).is_equal (Current)
+			initial: elks_checking implies Result.substring (1, count) ~ Current
 			final: elks_checking implies Result.substring (count + 1, count + s.count).same_string (s)
 		end
 
@@ -869,8 +866,7 @@ feature -- Conversion
 			as_lower_attached: Result /= Void
 			length: Result.count = count
 			anchor: count > 0 implies Result.item (1) = item (1).as_lower
-			recurse: count > 1 implies Result.substring (2, count).
-				is_equal (substring (2, count).as_lower)
+			recurse: count > 1 implies Result.substring (2, count) ~ substring (2, count).as_lower
 		end
 
 	as_upper: like Current
@@ -882,8 +878,7 @@ feature -- Conversion
 			as_upper_attached: Result /= Void
 			length: Result.count = count
 			anchor: count > 0 implies Result.item (1) = item (1).as_upper
-			recurse: count > 1 implies Result.substring (2, count).
-				is_equal (substring (2, count).as_upper)
+			recurse: count > 1 implies Result.substring (2, count) ~ substring (2, count).as_upper
 		end
 
 	to_integer_8: INTEGER_8

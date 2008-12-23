@@ -53,9 +53,9 @@ feature -- Comparison
 								-- Because `has' has been queried before.
 						end
 						if set1.object_comparison then
-							Result := not equal (set1.item, hash.found_item)
+							Result := set1.item /~ hash.found_item
 						else
-							Result := (set1.item /= hash.found_item)
+							Result := set1.item /= hash.found_item
 						end
 					end
 					set1.forth
@@ -76,9 +76,9 @@ feature -- Comparison
 						hash.put (set2.item, c)
 					else
 						if set1.object_comparison then
-							Result := not equal (set2.item, hash.found_item)
+							Result := set2.item /~ hash.found_item
 						else
-							Result := (set2.item /= hash.found_item)
+							Result := set2.item /= hash.found_item
 						end
 					end
 					set2.forth
@@ -95,6 +95,7 @@ feature -- Basic operations
 			hash: HASH_TABLE [G, INTEGER]
 			c: INTEGER
 			eq: BOOLEAN
+			h: ?G
 		do
 			create hash.make (set1.count + set2.count)
 			if set1.object_comparison then
@@ -118,9 +119,9 @@ feature -- Basic operations
 					hash.search (c)
 					if hash.found then
 						if set1.object_comparison then
-							eq := equal (set2.item, hash.found_item)
+							eq := set2.item ~ hash.found_item
 						else
-							eq := (set2.item = hash.found_item)
+							eq := set2.item = hash.found_item
 						end
 						if eq then hash.remove (c) end
 					else
@@ -137,7 +138,10 @@ feature -- Basic operations
 			end
 			set1.wipe_out
 			from hash.start until hash.after loop
-				set1.extend (hash.item_for_iteration)
+				h := hash.item_for_iteration
+				if h /= Void then
+					set1.extend (h)
+				end
 				hash.forth
 			end
 		end

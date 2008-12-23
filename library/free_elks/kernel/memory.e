@@ -153,7 +153,7 @@ feature -- Status report
 	referers (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that refer to `an_object'.
 		do
-			Result := find_referers ($an_object, special_any_dynamic_type)
+			Result := find_referers (an_object, special_any_dynamic_type)
 		end
 
 	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
@@ -427,17 +427,8 @@ feature -- Removal
 			-- Free `object', by-passing garbage collection.
 			-- Erratic behavior will result if the object is still
 			-- referenced.
-		do
-			mem_free ($object)
-		end
-
-	mem_free (addr: POINTER) is
-			-- Free memory of object at `addr'.
-			-- (Preferred interface is `free'.)
 		external
-			"C signature (EIF_REFERENCE) use %"eif_memory.h%""
-		alias
-			"eif_mem_free"
+			"built_in static"
 		end
 
 	full_coalesce is
@@ -476,9 +467,9 @@ feature {NONE} -- Implementation
 			"eif_gc_mon"
 		end
 
-	find_referers (target: POINTER; result_type: INTEGER): SPECIAL [ANY] is
+	find_referers (target: ANY; result_type: INTEGER): SPECIAL [ANY] is
 		external
-			"C signature (EIF_REFERENCE, EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
+			"built_in static"
 		end
 
 	find_instance_of (dtype, result_type: INTEGER): SPECIAL [ANY] is

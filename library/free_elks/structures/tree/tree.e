@@ -140,7 +140,7 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			if object_comparison then
-				Result := equal (item, other.item)
+				Result := item ~ other.item
 			else
 				Result := item = other.item
 			end
@@ -242,12 +242,9 @@ feature -- Status report
 			-- Does subtree include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
-		local
-			i: G
 		do
 			if object_comparison then
-				i := item
-				Result := v /= Void and then i /= Void and then (v.is_equal (i) or else subtree_has (v))
+				Result := v ~ item or else subtree_has (v)
 			else
 				Result := v = item or else subtree_has (v)
 			end
@@ -485,7 +482,6 @@ feature {TREE} -- Implementation
 		local
 			cursor: CURSOR
 			c: like child
-			i: G
 		do
 			cursor := child_cursor
 			from
@@ -495,8 +491,7 @@ feature {TREE} -- Implementation
 			loop
 				if child /= Void then
 					if object_comparison then
-						i := child_item
-						Result := (v /= Void) and then (i /= Void) and then v.is_equal (i)
+						Result := v ~ child_item
 					else
 						Result := v = child_item
 					end
@@ -600,7 +595,7 @@ feature {NONE} -- Implementation
 			l_other_cursor := t2.child_cursor
 
 			if t1.is_leaf and t2.is_leaf then
-				Result := equal (t1.item, t2.item)
+				Result := t1.item ~ t2.item
 			elseif t1.is_leaf xor t2.is_leaf then
 				Result := False
 			else
@@ -855,7 +850,7 @@ feature {NONE} -- Implementation
 						-- Because we removed all items.
 					at_root: p1 = other and p2 = tmp_tree
 						-- Because the root nodes where the last item we removed.
-					copy_correct: equal (other, tmp_tree)
+					copy_correct: other ~ tmp_tree
 						-- Because `other' has been copied to `tmp_tree'.
 
 					index_stack_empty: orgidx_stack.is_empty

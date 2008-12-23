@@ -81,7 +81,7 @@ feature -- Output
 				after
 			loop
 				k := key_for_iteration
-				if k = Void or else not k.is_equal (Class_key) then
+				if k /~ Class_key then
 					Result.append ("  ")
 					if k = Void then
 						Result.append ("Void")

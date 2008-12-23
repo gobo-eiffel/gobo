@@ -183,6 +183,7 @@ feature -- Built-in codes
 	builtin_special_element_size: INTEGER is 5
 	builtin_special_aliased_resized_area: INTEGER is 6
 	builtin_special_base_address: INTEGER is 7
+	builtin_special_put_default: INTEGER is 8
 			-- Codes for built-in features from class "SPECIAL"
 
 	builtin_character_8_class: INTEGER is 3
@@ -414,5 +415,16 @@ feature -- Built-in codes
 	builtin_tuple_reference_item: INTEGER is 33
 	builtin_tuple_set_object_comparison: INTEGER is 34
 			-- Codes for built-in features from class "TUPLE"
+
+	builtin_memory_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class "MEMORY"
+		do
+			Result := builtin_memory_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_memory_class: INTEGER is 24
+	builtin_memory_find_referers: INTEGER is 1
+	builtin_memory_free: INTEGER is 2
+			-- Codes for built-in features from class "MEMORY"
 
 end

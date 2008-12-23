@@ -80,7 +80,7 @@ feature -- Access
 			until
 				Result or e = Void
 			loop
-				Result := e.is_equal (entry_name)
+				Result := e ~ entry_name
 				dir_temp.readentry
 				e := dir_temp.lastentry
 			end
@@ -128,7 +128,7 @@ feature -- Access
 			eif_dir_rename ($ext_old_name, $ext_new_name)
 			name := new_name
 		ensure
-			name_changed: name.is_equal (new_name)
+			name_changed: name ~ new_name
 		end
 
 feature -- Measurement
@@ -361,10 +361,7 @@ feature -- Removal
 			until
 				l.after or requested_cancel
 			loop
-				if
-					not l.item.is_equal (current_directory) and
-					not l.item.is_equal (parent_directory)
-				then
+				if l.item /~ current_directory and l.item /~ parent_directory then
 					create file_name.make_from_string (name)
 					file_name.set_file_name (l.item)
 					create file.make (file_name)

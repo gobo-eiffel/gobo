@@ -113,7 +113,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	i_th alias "[]", infix "@" (i: INTEGER): like item assign put_i_th is
+	i_th alias "[]", at alias "@" (i: INTEGER): like item assign put_i_th is
 			-- Item at `i'-th position
 		local
 			pos: CURSOR

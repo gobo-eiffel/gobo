@@ -24,7 +24,7 @@ inherit
 			is_equal
 		end
 
-	COMPARABLE
+	KL_COMPARABLE
 		redefine
 			is_equal
 		end
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := date_time_to_utc < other.date_time_to_utc

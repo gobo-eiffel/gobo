@@ -19,7 +19,7 @@ inherit
 			is_equal
 		end
 
-	COMPARABLE
+	KL_COMPARABLE
 		redefine
 			is_equal
 		end
@@ -102,12 +102,12 @@ feature -- Comparison
 			-- Is current state equal to `other'?
 		do
 				-- This routine has been redefined to follow
-				-- the redefinition of `infix "<"' (for details,
+				-- the redefinition of `is_less' (for details,
 				-- see postconditions in class COMPARABLE.)
 			Result := id = other.id
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current state less than `other'?
 			-- (This is used for optimization purposes
 			-- in routine `make' from LX_DFA_STATE.)

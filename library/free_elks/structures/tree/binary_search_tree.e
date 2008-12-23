@@ -552,9 +552,9 @@ feature {NONE} -- Implementation
 			-- (depending on `object_comparison')
 		do
 			if object_comparison then
-				Result := equal (src, dest)
+				Result := src ~ dest
 			else
-				Result := (src = dest)
+				Result := src = dest
 			end
 		end
 

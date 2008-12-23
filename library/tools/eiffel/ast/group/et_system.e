@@ -190,6 +190,9 @@ feature -- Basic classes
 			-- (Note that _REF classes are kept for backward compatibility with
 			-- ISE Eiffel, they are not part of ECMA Eiffel.)
 
+	memory_class: ET_CLASS
+			-- Class "MEMORY"
+
 	native_array_class: ET_CLASS
 			-- Class "NATIVE_ARRAY"
 
@@ -390,6 +393,9 @@ feature -- Basic classes
 				-- Class "INTEGER_64_REF".
 			integer_64_ref_class := ast_factory.new_class (tokens.integer_64_ref_class_name)
 			register_class (integer_64_ref_class)
+				-- Class "MEMORY".
+			memory_class := ast_factory.new_class (tokens.memory_class_name)
+			register_class (memory_class)
 				-- Class "NATIVE_ARRAY".
 			native_array_class := ast_factory.new_class (tokens.native_array_class_name)
 			register_class (native_array_class)
@@ -2151,6 +2157,7 @@ invariant
 	integer_32_ref_class_not_void: integer_32_ref_class /= Void
 	integer_64_class_not_void: integer_64_class /= Void
 	integer_64_ref_class_not_void: integer_64_ref_class /= Void
+	memory_class_not_void: memory_class /= Void
 	native_array_class_not_void: native_array_class /= Void
 	natural_8_class_not_void: natural_8_class /= Void
 	natural_8_ref_class_not_void: natural_8_ref_class /= Void

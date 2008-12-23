@@ -111,7 +111,7 @@ feature -- Comparison
 					not Result or l_current.is_empty
 				loop
 					if object_comparison then
-						Result := equal (l_current.item, l_other.item)
+						Result := l_current.item ~ l_other.item
 					else
 						Result := l_current.item = l_other.item
 					end
@@ -201,7 +201,7 @@ feature -- Removal
 					i > nb
 				loop
 					l_item := i_th (i)
-					if not l_done and equal (l_item, v) then
+					if not l_done and l_item ~ v then
 						l_done := True
 					else
 						l_tmp.extend (l_item)

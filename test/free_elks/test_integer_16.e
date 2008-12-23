@@ -32,8 +32,8 @@ feature -- Test
 			assert ("default", i = 0)
 		end
 
-	test_less_than is
-			-- Test feature 'infix "<"'.
+	test_is_less is
+			-- Test feature 'is_less alias "<"'.
 		local
 			i1, i2: INTEGER_16
 		do
@@ -48,8 +48,8 @@ feature -- Test
 			assert ("not_less_than2", not (i1 < i2))
 		end
 
-	test_less_equal is
-			-- Test feature 'infix "<="'.
+	test_is_less_equal is
+			-- Test feature 'is_less_equal alias "<="'.
 		local
 			i1, i2: INTEGER_16
 		do
@@ -64,8 +64,8 @@ feature -- Test
 			assert ("less_equal2", i1 <= i2)
 		end
 
-	test_greater_than is
-			-- Test feature 'infix ">"'.
+	test_is_greater is
+			-- Test feature 'is_greater alias ">"'.
 		local
 			i1, i2: INTEGER_16
 		do
@@ -80,8 +80,8 @@ feature -- Test
 			assert ("not_greater_than2", not (i1 > i2))
 		end
 
-	test_greater_equal is
-			-- Test feature 'infix ">="'.
+	test_is_greater_equal is
+			-- Test feature 'is_greater_equal alias ">="'.
 		local
 			i1, i2: INTEGER_16
 		do
@@ -200,8 +200,8 @@ feature -- Test
 			end
 		end
 
-	test_infix_plus is
-			-- Test feature 'infix "+"'.
+	test_plus is
+			-- Test feature 'plus alias "+"'.
 		local
 			i1, i2, i3: INTEGER_16
 		do
@@ -211,8 +211,8 @@ feature -- Test
 			assert ("plus1", i1 + i2 = i3)
 		end
 
-	test_infix_minus is
-			-- Test feature 'infix "-"'.
+	test_minus is
+			-- Test feature 'minus alias "-"'.
 		local
 			i1, i2, i3: INTEGER_16
 		do
@@ -222,8 +222,8 @@ feature -- Test
 			assert ("minus1", i1 - i2 = i3)
 		end
 
-	test_infix_times is
-			-- Test feature 'infix "*"'.
+	test_product is
+			-- Test feature 'product alias "*"'.
 		local
 			i1, i2, i3: INTEGER_16
 		do
@@ -233,8 +233,8 @@ feature -- Test
 			assert ("times1", i1 * i2 = i3)
 		end
 
-	test_infix_divide is
-			-- Test feature 'infix "/"'.
+	test_quotient is
+			-- Test feature 'quotient alias "/"'.
 		local
 			i1, i2: INTEGER_16
 			d1: DOUBLE
@@ -245,8 +245,8 @@ feature -- Test
 			assert ("divide1", i1 / i2 = d1)
 		end
 
-	test_infix_div is
-			-- Test feature 'infix "//"'.
+	test_integer_quotient is
+			-- Test feature 'integer_quotient alias "//"'.
 		local
 			i1, i2, i3: INTEGER_16
 		do
@@ -264,8 +264,8 @@ feature -- Test
 			assert ("div3", i1 // i2 = i3)
 		end
 
-	test_infix_mod is
-			-- Test feature 'infix "\\"'.
+	test_integer_remainder is
+			-- Test feature 'integer_remainder alias "\\"'.
 		local
 			i1, i2, i3: INTEGER_16
 		do
@@ -283,8 +283,8 @@ feature -- Test
 			assert ("mod3", i1 \\ i2 = i3)
 		end
 
-	test_infix_power is
-			-- Test feature 'infix "^"'.
+	test_power is
+			-- Test feature 'power alias "^"'.
 		local
 			i: INTEGER_16
 			d1, d2: DOUBLE
@@ -299,8 +299,8 @@ feature -- Test
 			assert ("power2", i ^ d1 = d2)
 		end
 
-	test_prefix_minus is
-			-- Test feature 'prefix "-"'.
+	test_opposite is
+			-- Test feature 'opposite alias "-"'.
 		local
 			i1, i2: INTEGER_16
 		do
@@ -309,8 +309,8 @@ feature -- Test
 			assert ("minus1", -i1 = i2)
 		end
 
-	test_prefix_plus is
-			-- Test feature 'prefix "+"'.
+	test_identity is
+			-- Test feature 'identity alias "+"'.
 		local
 			i1, i2: INTEGER_16
 		do

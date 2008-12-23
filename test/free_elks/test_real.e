@@ -32,8 +32,8 @@ feature -- Test
 			assert ("default", r = {REAL} 0.0)
 		end
 
-	test_less_than is
-			-- Test feature 'infix "<"'.
+	test_is_less is
+			-- Test feature 'is_less alias "<"'.
 		local
 			r1, r2: REAL
 		do
@@ -48,8 +48,8 @@ feature -- Test
 			assert ("not_less_than2", not (r1 < r2))
 		end
 
-	test_less_equal is
-			-- Test feature 'infix "<="'.
+	test_is_less_equal is
+			-- Test feature 'is_less_equal alias "<="'.
 		local
 			r1, r2: REAL
 		do
@@ -64,8 +64,8 @@ feature -- Test
 			assert ("less_equal2", r1 <= r2)
 		end
 
-	test_greater_than is
-			-- Test feature 'infix ">"'.
+	test_is_greater is
+			-- Test feature 'is_greater alias ">"'.
 		local
 			r1, r2: REAL
 		do
@@ -80,8 +80,8 @@ feature -- Test
 			assert ("not_greater_than2", not (r1 > r2))
 		end
 
-	test_greater_equal is
-			-- Test feature 'infix ">="'.
+	test_is_greater_equal is
+			-- Test feature 'is_greater_equal alias ">="'.
 		local
 			r1, r2: REAL
 		do
@@ -188,8 +188,8 @@ feature -- Test
 			end
 		end
 
-	test_infix_plus is
-			-- Test feature 'infix "+"'.
+	test_plus is
+			-- Test feature 'plus alias "+"'.
 		local
 			r1, r2, r3, r4: REAL
 		do
@@ -204,8 +204,8 @@ feature -- Test
 			assert ("plus1", r4 = r3)
 		end
 
-	test_infix_minus is
-			-- Test feature 'infix "-"'.
+	test_minus is
+			-- Test feature 'minus alias "-"'.
 		local
 			r1, r2, r3: REAL
 		do
@@ -215,8 +215,8 @@ feature -- Test
 			assert ("minus1", r1 - r2 = r3)
 		end
 
-	test_infix_times is
-			-- Test feature 'infix "*"'.
+	test_product is
+			-- Test feature 'product alias "*"'.
 		local
 			r1, r2, r3: REAL
 		do
@@ -226,8 +226,8 @@ feature -- Test
 			assert ("times1", r1 * r2 = r3)
 		end
 
-	test_infix_divide is
-			-- Test feature 'infix "/"'.
+	test_quotient is
+			-- Test feature 'quotient alias "/"'.
 		local
 			r1, r2, r3: REAL
 		do
@@ -237,8 +237,8 @@ feature -- Test
 			assert ("divide1", r1 / r2 = r3)
 		end
 
-	test_infix_power is
-			-- Test feature 'infix "^"'.
+	test_power is
+			-- Test feature 'power alias "^"'.
 		local
 			r1: REAL
 			r2, r3: DOUBLE
@@ -253,8 +253,8 @@ feature -- Test
 			assert ("power2", r1 ^ r2 = r3)
 		end
 
-	test_prefix_minus is
-			-- Test feature 'prefix "-"'.
+	test_opposite is
+			-- Test feature 'opposite alias "-"'.
 		local
 			r1, r2: REAL
 		do
@@ -263,8 +263,8 @@ feature -- Test
 			assert ("minus1", -r1 = r2)
 		end
 
-	test_prefix_plus is
-			-- Test feature 'prefix "+"'.
+	test_identity is
+			-- Test feature 'identity alias "+"'.
 		local
 			r1, r2: REAL
 		do

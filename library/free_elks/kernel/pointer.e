@@ -11,7 +11,7 @@ frozen expanded class POINTER inherit
 	POINTER_REF
 		redefine
 			hash_code,
-			infix "+",
+			plus,
 			to_integer_32,
 			out
 		end
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Operations
 
-	infix "+" (offset: INTEGER): POINTER is
+	plus alias "+" (offset: INTEGER): POINTER is
 			-- Pointer moved by an offset of `offset' bytes.
 		external
 			"built_in"

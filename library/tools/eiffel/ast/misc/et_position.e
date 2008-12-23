@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	infix "<" (other: ET_POSITION): BOOLEAN is
+	is_less alias "<" (other: ET_POSITION): BOOLEAN is
 			-- Is current position less than `other'?
 		require
 			other_not_void: other /= Void

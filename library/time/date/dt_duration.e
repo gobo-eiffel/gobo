@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum of current duration with `other'
 		require
 			other_not_void: other /= Void
@@ -45,7 +45,7 @@ feature -- Basic operations
 			addition_not_void: Result /= Void
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Difference with `other'
 		require
 			other_not_void: other /= Void
@@ -54,7 +54,7 @@ feature -- Basic operations
 			subtraction_not_void: Result /= Void
 		end
 
-	prefix "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		do
 			Result := Current
@@ -63,7 +63,7 @@ feature -- Basic operations
 			same_object: Result = Current
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		deferred
 		ensure

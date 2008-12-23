@@ -49,8 +49,8 @@ feature -- Test
 			assert ("not_is_equal3", not a_comparable.is_equal (0)) 
 		end
 
-	test_infix_less1 is
-			-- Test feature `infix "<"'.
+	test_is_less1 is
+			-- Test feature `is_less alias "<"'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
@@ -73,8 +73,8 @@ feature -- Test
 			assert ("not_less6", not (a_comparable2 < a_comparable))
 		end
 
-	test_infix_less2 is
-			-- Test feature `infix "<"'.
+	test_is_less2 is
+			-- Test feature `is_less alias "<"'.
 		local
 			a_comparable, a_comparable2: INTEGER
 		do
@@ -97,8 +97,8 @@ feature -- Test
 			assert ("not_less6", not (a_comparable2 < a_comparable))
 		end
 
-	test_infix_less_equal1 is
-			-- Test feature `infix "<="'.
+	test_is_less_equal1 is
+			-- Test feature `is_less_equal alias "<="'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
@@ -121,8 +121,8 @@ feature -- Test
 			assert ("less6", a_comparable2 <= a_comparable)
 		end
 
-	test_infix_less_equal2 is
-			-- Test feature `infix "<="'.
+	test_is_less_equal2 is
+			-- Test feature `is_less_equal alias "<="'.
 		local
 			a_comparable, a_comparable2: INTEGER
 		do
@@ -145,8 +145,8 @@ feature -- Test
 			assert ("less6", a_comparable2 <= a_comparable)
 		end
 
-	test_infix_greater1 is
-			-- Test feature `infix ">"'.
+	test_is_greater1 is
+			-- Test feature `is_greater alias ">"'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
@@ -169,8 +169,8 @@ feature -- Test
 			assert ("not_greater6", not (a_comparable2 > a_comparable))
 		end
 
-	test_infix_greater2 is
-			-- Test feature `infix ">"'.
+	test_is_greater2 is
+			-- Test feature `is_greater alias ">"'.
 		local
 			a_comparable, a_comparable2: INTEGER
 		do
@@ -193,8 +193,8 @@ feature -- Test
 			assert ("not_greater6", not (a_comparable2 > a_comparable))
 		end
 
-	test_infix_greater_equal1 is
-			-- Test feature `infix ">="'.
+	test_is_greater_equal1 is
+			-- Test feature `is_greater_equal alias ">="'.
 		local
 			a_comparable, a_comparable2: COMPARABLE
 		do
@@ -217,8 +217,8 @@ feature -- Test
 			assert ("greater6", a_comparable2 >= a_comparable)
 		end
 
-	test_infix_greater_equal2 is
-			-- Test feature `infix ">="'.
+	test_is_greater_equal2 is
+			-- Test feature `is_greater_equal alias ">="'.
 		local
 			a_comparable, a_comparable2: INTEGER
 		do

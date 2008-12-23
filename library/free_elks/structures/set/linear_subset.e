@@ -74,7 +74,6 @@ feature -- Element change
 		local
 			idx: INTEGER
 			found: BOOLEAN
-			i: like item
 		do
 			idx := index
 			from
@@ -83,8 +82,7 @@ feature -- Element change
 				found or after
 			loop
 				if object_comparison then
-					i := item
-					found := i /= Void and then v.is_equal (i)
+					found := v ~ item
 				else
 					found := (v = item)
 				end

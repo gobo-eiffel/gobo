@@ -27,10 +27,10 @@ inherit
 			append_to_string,
 			is_equal
 		redefine
-			infix "<",
-			infix "+",
-			infix "-",
-			prefix "-",
+			is_less,
+			plus,
+			minus,
+			opposite,
 			hash_code,
 			is_canonical,
 			date_time,
@@ -50,10 +50,10 @@ inherit
 			set_canonical as set_time_canonical,
 			time as date_time
 		undefine
-			infix "<",
-			infix "+",
-			infix "-",
-			prefix "-",
+			is_less,
+			plus,
+			minus,
+			opposite,
 			hash_code,
 			out,
 			precise_out,
@@ -527,7 +527,7 @@ feature -- Setting
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum of current duration with `other'
 		do
 			Result := cloned_object
@@ -535,7 +535,7 @@ feature -- Basic operations
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute, other.second, other.millisecond)
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
 			Result := cloned_object
@@ -543,7 +543,7 @@ feature -- Basic operations
 			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute, -other.second, -other.millisecond)
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		do
 			Result := cloned_object
@@ -553,7 +553,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current date time duration less than `other'?
 		local
 			m, d, ms: INTEGER

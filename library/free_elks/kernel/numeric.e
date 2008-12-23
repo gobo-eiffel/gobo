@@ -55,17 +55,17 @@ feature -- Status report
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum with `other' (commutative).
 		require
 			other_exists: other /= Void
 		deferred
 		ensure
 			result_exists: Result /= Void
-			commutative: equal (Result, other + Current)
+			commutative: Result ~ (other + Current)
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		require
 			other_exists: other /= Void
@@ -74,7 +74,7 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	infix "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current is
 			-- Product by `other'
 		require
 			other_exists: other /= Void
@@ -83,7 +83,7 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	infix "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current is
 			-- Division by `other'
 		require
 			other_exists: other /= Void
@@ -93,14 +93,14 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	prefix "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		deferred
 		ensure

@@ -320,7 +320,7 @@ feature -- Status setting
 		do
 			sign_string := "- +"
 		ensure
-			sign_string.is_equal ("- +")
+			sign_string ~ "- +"
 		end
 
 	sign_cr_dr is
@@ -328,7 +328,7 @@ feature -- Status setting
 		do
 			sign_string := "CR DR"
 		ensure
-			sign_string.is_equal ("CR DR")
+			sign_string ~ "CR DR"
 		end
 
 	sign_dr_cr is
@@ -336,7 +336,7 @@ feature -- Status setting
 		do
 			sign_string := "DR CR"
 		ensure
-			sign_string.is_equal ("DR CR")
+			sign_string ~ "DR CR"
 		end
 
 	sign_floating_dollar is
@@ -345,7 +345,7 @@ feature -- Status setting
 			sign_string := "$$$"
 			sign_leading
 		ensure
-			sign_string.is_equal ("$$$")
+			sign_string ~ "$$$"
 		end
 
 	sign_floating_dollar_signed is
@@ -354,7 +354,7 @@ feature -- Status setting
 			sign_string := "-$ $+$"
 			sign_leading
 		ensure
-			sign_string.is_equal ("-$ $+$")
+			sign_string ~ "-$ $+$"
 		end
 
 	set_sign (s: STRING) is
@@ -368,7 +368,7 @@ feature -- Status setting
 		do
 			sign_string := s.twin
 		ensure
-			sign_string.is_equal (s)
+			sign_set: sign_string ~ s
 		end
 
 	bracket_negative is

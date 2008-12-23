@@ -14,7 +14,7 @@ class PR_REDUCTION
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 
 create
 
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current reduction considered less than `other'?
 		do
 			Result := rule < other.rule

@@ -76,7 +76,7 @@ feature -- Access
 			non_void_area: Result /= default_pointer
 		end
 
-	item alias "[]", infix "@" (i: INTEGER): INTEGER_8 assign put is
+	item alias "[]", at alias "@" (i: INTEGER): INTEGER_8 assign put is
 			-- Entry at index `i'.
 		require
 			valid_index: valid_index (i)

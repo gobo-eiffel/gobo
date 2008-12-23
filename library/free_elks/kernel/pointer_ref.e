@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Operations
 
-	infix "+" (offset: INTEGER): POINTER is
+	plus alias "+" (offset: INTEGER): POINTER is
 			-- Pointer moved by an offset of `offset' bytes.
 		do
 			Result := item + offset

@@ -20,7 +20,7 @@ deferred class TABLE [G, H] inherit
 
 feature -- Access
 
-	item alias "[]", infix "@" (k: H): G assign force is
+	item alias "[]", at alias "@" (k: H): G assign force is
 			-- Entry of key `k'.
 		require
 			valid_key: valid_key (k)

@@ -14,7 +14,7 @@ class PR_POSITION
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 
 	HASHABLE
 		undefine
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current position considered
 			-- less than `other'?
 		do

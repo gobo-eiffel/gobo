@@ -12,19 +12,19 @@ frozen expanded class REAL_64 inherit
 
 	REAL_64_REF
 		redefine
-			infix "<",
+			is_less,
 			truncated_to_integer,
 			truncated_to_integer_64,
 			truncated_to_real,
 			ceiling_real_64,
 			floor_real_64,
-			infix "+",
-			infix "-",
-			infix "*",
-			infix "/",
-			infix "^",
-			prefix "-",
-			prefix "+",
+			plus,
+			minus,
+			product,
+			quotient,
+			power,
+			opposite,
+			identity,
 			out
 		end
 
@@ -38,7 +38,7 @@ convert
 
 feature -- Comparison
 
-	infix "<" (other: REAL_64): BOOLEAN is
+	is_less alias "<" (other: REAL_64): BOOLEAN is
 			-- Is `other' greater than current double?
 		external
 			"built_in"
@@ -81,43 +81,43 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	infix "+" (other: REAL_64): REAL_64 is
+	plus alias "+" (other: REAL_64): REAL_64 is
 			-- Sum with `other'
 		external
 			"built_in"
 		end
 
-	infix "-" (other: REAL_64): REAL_64 is
+	minus alias "-" (other: REAL_64): REAL_64 is
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	infix "*" (other: REAL_64): REAL_64 is
+	product alias "*" (other: REAL_64): REAL_64 is
 			-- Product with `other'
 		external
 			"built_in"
 		end
 
-	infix "/" (other: REAL_64): REAL_64 is
+	quotient alias "/" (other: REAL_64): REAL_64 is
 			-- Division by `other'
 		external
 			"built_in"
 		end
 
-	infix "^" (other: REAL_64): REAL_64 is
+	power alias "^" (other: REAL_64): REAL_64 is
 			-- Current double to the power `other'
 		external
 			"built_in"
 		end
 
-	prefix "+": REAL_64 is
+	identity alias "+": REAL_64 is
 			-- Unary plus
 		external
 			"built_in"
 		end
 
-	prefix "-": REAL_64 is
+	opposite alias "-": REAL_64 is
 			-- Unary minus
 		external
 			"built_in"

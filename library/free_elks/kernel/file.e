@@ -1108,7 +1108,7 @@ feature -- Element change
 			file_rename ($ext_old_name, $ext_new_name)
 			name := new_name
 		ensure
-			name_changed: name.is_equal (new_name)
+			name_changed: name ~ new_name
 		end
 
 	add_permission (who, what: STRING) is

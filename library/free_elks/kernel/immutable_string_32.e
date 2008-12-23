@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 feature -- Elment change
 
-	infix "+" (s: READABLE_STRING_32): like Current
+	plus alias "+" (s: READABLE_STRING_32): like Current
 			-- <Precursor>
 		local
 			a: like area

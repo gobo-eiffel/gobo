@@ -51,7 +51,7 @@ feature -- Access
 			"built_in"
 		end
 
-	infix "@" (i: INTEGER): T
+	at alias "@" (i: INTEGER): T
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -74,7 +74,7 @@ feature -- Access
 				Result := start_position
 				nb := count
 			until
-				Result >= nb or else equal (item (Result), v)
+				Result >= nb or else item (Result) ~ v
 			loop
 				Result := Result + 1
 			end
@@ -452,10 +452,8 @@ feature -- Removal
 		require
 			index_big_enough: i >= 0
 			index_small_enough: i < count
-		local
-			default_value: ?T
-		do
-			put (default_value, i)
+		external
+			"built_in"
 		ensure
 			is_default: is_default (i)
 		end

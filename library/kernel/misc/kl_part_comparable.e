@@ -18,14 +18,14 @@ deferred class KL_PART_COMPARABLE
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		require
 			other_not_void: other /= Void
 		deferred
 		end
 
-	infix "<=" (other: like Current): BOOLEAN is
+	is_less_equal alias "<=" (other: like Current): BOOLEAN is
 			-- Is current object less than or equal to `other'?
 		require
 			other_not_void: other /= Void
@@ -35,7 +35,7 @@ feature -- Comparison
 			definition: Result = ((Current < other) or is_equal (other))
 		end
 
-	infix ">" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN is
 			-- Is current object greater than `other'?
 		require
 			other_not_void: other /= Void
@@ -45,7 +45,7 @@ feature -- Comparison
 			definition: Result = (other < Current)
 		end
 
-	infix ">=" (other: like Current): BOOLEAN is
+	is_greater_equal alias ">=" (other: like Current): BOOLEAN is
 			-- Is current object greater than or equal to `other'?
 		require
 			other_not_void: other /= Void

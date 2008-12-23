@@ -202,7 +202,7 @@ feature -- Access
 			definition: (other &| Result).same_time (Current)
 		end
 
-	infix "&|" (a_duration: like time_duration): like Current is
+	plus_time_duration alias "&|" (a_duration: like time_duration): like Current is
 			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require
@@ -436,7 +436,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := storage < other.storage

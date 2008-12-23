@@ -15,6 +15,9 @@ class MA_DECIMAL
 inherit
 
 	KL_NUMERIC
+		rename
+			plus as binary_plus alias "+",
+			minus as binary_minus alias "-"
 		redefine
 			out,
 			is_equal,
@@ -610,7 +613,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	infix "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current is
 			-- Product by `other'
 		do
 			Result := multiply (other, shared_decimal_context)
@@ -618,7 +621,7 @@ feature -- Basic operations
 			product_not_void: Result /= Void
 		end
 
-	prefix "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		do
 			Result := plus (shared_decimal_context)
@@ -626,7 +629,7 @@ feature -- Basic operations
 			unary_plus_not_void: Result /= Void
 		end
 
-	infix "+" (other: like Current): like Current is
+	binary_plus alias "+" (other: like Current): like Current is
 			-- Sum with `other' (commutative)
 		do
 			Result := add (other, shared_decimal_context)
@@ -634,7 +637,7 @@ feature -- Basic operations
 			sum_not_void: Result /= Void
 		end
 
-	prefix "-": like Current is
+	opposite alias "-": like Current is
 			-- Unary minus
 		do
 			Result := minus (shared_decimal_context)
@@ -642,7 +645,7 @@ feature -- Basic operations
 			unary_minus_not_void: Result /= Void
 		end
 
-	infix "-" (other: like Current): like Current is
+	binary_minus alias "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			Result := subtract (other, shared_decimal_context)
@@ -650,7 +653,7 @@ feature -- Basic operations
 			subtract_not_void: Result /= Void
 		end
 
-	infix "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current is
 			-- Division by `other'
 		do
 			Result := divide (other, shared_decimal_context)
@@ -658,7 +661,7 @@ feature -- Basic operations
 			division_not_void: Result /= Void
 		end
 
-	infix "\\" (other: like Current): like Current is
+	integer_remainder alias "\\" (other: like Current): like Current is
 			-- Remainder of integer division
 		do
 			Result := remainder (other, shared_decimal_context)
@@ -666,7 +669,7 @@ feature -- Basic operations
 			remainder_not_void: Result /= Void
 		end
 
-	infix "//" (other: like Current): like Current is
+	integer_quotient alias "//" (other: like Current): like Current is
 			-- Integer division
 		do
 			Result := divide_integer (other, shared_decimal_context)
@@ -674,13 +677,13 @@ feature -- Basic operations
 			integer_division_not_void: Result /= Void
 		end
 
-	infix "^" (other: NUMERIC): MA_DECIMAL is
+	power alias "^" (other: NUMERIC): MA_DECIMAL is
 			-- Current decimal to the power `other'
 		do
 				--| TODO
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current decimal less than `other'?
 		local
 			res: MA_DECIMAL

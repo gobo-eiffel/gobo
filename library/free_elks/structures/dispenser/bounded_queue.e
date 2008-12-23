@@ -64,7 +64,6 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i: INTEGER
-			w: G
 		do
 			if object_comparison then
 				if v /= Void then
@@ -74,8 +73,7 @@ feature -- Access
 						until
 							Result or i >= fl.count
 						loop
-							w := fl.item (i)
-							Result := w /= Void and then v.is_equal (w)
+							Result := v ~ fl.item (i)
 							i := i + 1
 						end
 						from
@@ -83,8 +81,7 @@ feature -- Access
 						until
 							Result or i >= in_index
 						loop
-							w := fl.item (i)
-							Result := w /= Void and then v.is_equal (w)
+							Result := v ~ fl.item (i)
 							i := i + 1
 						end
 					else
@@ -93,8 +90,7 @@ feature -- Access
 						until
 							Result or i >= in_index
 						loop
-							w := fl.item (i)
-							Result := w /= Void and then v.is_equal (w)
+							Result := v ~ fl.item (i)
 							i := i + 1
 						end
 					end

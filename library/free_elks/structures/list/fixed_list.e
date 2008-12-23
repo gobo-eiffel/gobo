@@ -23,7 +23,7 @@ class FIXED_LIST [G] inherit
 				fill,
 				prune, prune_all
 		undefine
-			force, prune, infix "@", put_i_th,
+			force, prune, at, put_i_th,
 			prune_all, copy, i_th
 		redefine
 			first,
@@ -55,7 +55,7 @@ class FIXED_LIST [G] inherit
 			{ANY}
 				i_th,
 				put_i_th,
-				infix "@",
+				at,
 				is_equal,
 				occurrences,
 				valid_index,

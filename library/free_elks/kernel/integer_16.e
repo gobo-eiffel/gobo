@@ -12,16 +12,16 @@ frozen expanded class INTEGER_16 inherit
 
 	INTEGER_16_REF
 		redefine
-			infix "<",
-			infix "+",
-			infix "-",
-			infix "*",
-			infix "/",
-			prefix "+",
-			prefix "-",
-			infix "//",
-			infix "\\",
-			infix "^",
+			is_less,
+			plus,
+			minus,
+			product,
+			quotient,
+			power,
+			integer_quotient,
+			integer_remainder,
+			opposite,
+			identity,
 			as_natural_8,
 			as_natural_16,
 			as_natural_32,
@@ -55,7 +55,7 @@ convert
 
 feature -- Comparison
 
-	infix "<" (other: INTEGER_16): BOOLEAN is
+	is_less alias "<" (other: INTEGER_16): BOOLEAN is
 			-- Is current integer less than `other'?
 		external
 			"built_in"
@@ -63,55 +63,55 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	infix "+" (other: INTEGER_16): INTEGER_16 is
+	plus alias "+" (other: INTEGER_16): INTEGER_16 is
 			-- Sum with `other'
 		external
 			"built_in"
 		end
 
-	infix "-" (other: INTEGER_16): INTEGER_16 is
+	minus alias "-" (other: INTEGER_16): INTEGER_16 is
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	infix "*" (other: INTEGER_16): INTEGER_16 is
+	product alias "*" (other: INTEGER_16): INTEGER_16 is
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	infix "/" (other: INTEGER_16): REAL_64 is
+	quotient alias "/" (other: INTEGER_16): REAL_64 is
 			-- Division by `other'
 		external
 			"built_in"
 		end
 
-	prefix "+": INTEGER_16 is
+	identity alias "+": INTEGER_16 is
 			-- Unary plus
 		external
 			"built_in"
 		end
 
-	prefix "-": INTEGER_16 is
+	opposite alias "-": INTEGER_16 is
 			-- Unary minus
 		external
 			"built_in"
 		end
 
-	infix "//" (other: INTEGER_16): INTEGER_16 is
+	integer_quotient alias "//" (other: INTEGER_16): INTEGER_16 is
 			-- Integer division of Current by `other'
 		external
 			"built_in"
 		end
 
-	infix "\\" (other: INTEGER_16): INTEGER_16 is
+	integer_remainder alias "\\" (other: INTEGER_16): INTEGER_16 is
 			-- Remainder of the integer division of Current by `other'
 		external
 			"built_in"
 		end
 
-	infix "^" (other: REAL_64): REAL_64 is
+	power alias "^" (other: REAL_64): REAL_64 is
 			-- Integer power of Current by `other'
 		external
 			"built_in"
@@ -193,13 +193,13 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and (i: INTEGER_16): INTEGER_16 is
+	bit_and alias "&" (i: INTEGER_16): INTEGER_16 is
 			-- Bitwise and between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_or (i: INTEGER_16): INTEGER_16 is
+	bit_or alias "|" (i: INTEGER_16): INTEGER_16 is
 			-- Bitwise or between Current' and `i'.
 		external
 			"built_in"
@@ -217,13 +217,13 @@ feature -- Bit operations
 			"built_in"
 		end
 
-	bit_shift_left (n: INTEGER): INTEGER_16 is
+	bit_shift_left alias "|<<" (n: INTEGER): INTEGER_16 is
 			-- Shift Current from `n' position to left.
 		external
 			"built_in"
 		end
 
-	bit_shift_right (n: INTEGER): INTEGER_16 is
+	bit_shift_right alias "|>>" (n: INTEGER): INTEGER_16 is
 			-- Shift Current from `n' position to right.
 		external
 			"built_in"

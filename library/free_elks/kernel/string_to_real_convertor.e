@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 			create leading_separators.make_from_string (" ")
 			create trailing_separators.make_from_string (" ")
 		ensure
-			leading_separators_set: leading_separators.is_equal (" ")
-			trailing_separators_set: trailing_separators.is_equal (" ")
+			leading_separators_set: leading_separators ~ " "
+			trailing_separators_set: trailing_separators ~ " "
 			leading_separators_not_acceptable:
 				not leading_separators_acceptable
 			trailing_separatorsnot_acceptable:

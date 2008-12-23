@@ -105,7 +105,7 @@ feature -- Status setting
 		do
 			create leading_separators.make_from_string (separators)
 		ensure
-			leading_separators_set: leading_separators.is_equal (separators)
+			leading_separators_set: leading_separators ~ separators
 		end
 
 	set_trailing_separators (separators: STRING) is
@@ -116,7 +116,7 @@ feature -- Status setting
 		do
 			create trailing_separators.make_from_string (separators)
 		ensure
-			trailing_separators_set: trailing_separators.is_equal (separators)
+			trailing_separators_set: trailing_separators ~ separators
 		end
 
 feature -- Parse

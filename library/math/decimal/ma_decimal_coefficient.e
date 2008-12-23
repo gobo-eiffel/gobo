@@ -18,12 +18,12 @@ deferred class MA_DECIMAL_COEFFICIENT
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 		undefine
 			is_equal,
 			copy
 		redefine
-			infix ">"
+			is_greater
 		end
 
 feature {NONE} -- Initialization
@@ -169,13 +169,13 @@ feature {MA_DECIMAL} -- Status setting
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `Current' less than `other'?
 		do
 			Result := (three_way_comparison (other) = -1)
 		end
 
-	infix ">" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN is
 			-- Is `Current' greater than `other'?
 		do
 			Result := (three_way_comparison (other) = 1)

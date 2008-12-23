@@ -77,7 +77,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	infix "@", item (k: K): G is
+	at alias "@", item (k: K): G is
 			-- Item associated with key `k'
 			-- (Performance: O(height).)
 		require

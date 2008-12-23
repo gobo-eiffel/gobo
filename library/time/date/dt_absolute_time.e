@@ -14,7 +14,7 @@ deferred class DT_ABSOLUTE_TIME
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 		undefine
 			is_equal
 		end
@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	infix "-" (other: like Current): like duration is
+	minus alias "-" (other: like Current): like duration is
 			-- Duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
@@ -36,7 +36,7 @@ feature -- Access
 			definition: (other + Result).is_equal (Current)
 		end
 
-	infix "+" (a_duration: like duration): like Current is
+	plus alias "+" (a_duration: like duration): like Current is
 			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require

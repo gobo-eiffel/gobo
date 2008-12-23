@@ -125,8 +125,8 @@ feature -- Test
 			assert ("item2", bref2.item = False)
 		end
 
-	test_infix_and is
-			-- Test feature 'infix "and"'.
+	test_conjuncted is
+			-- Test feature 'conjuncted alias "and"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -149,8 +149,8 @@ feature -- Test
 			assert ("and4", b3 = False)
 		end
 
-	test_infix_and_then is
-			-- Test feature 'infix "and then"'.
+	test_conjuncted_semistrict is
+			-- Test feature 'conjuncted_semistrict alias "and then"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -173,8 +173,8 @@ feature -- Test
 			assert ("and_then4", b3 = False)
 		end
 
-	test_infix_or is
-			-- Test feature 'infix "or"'.
+	test_disjuncted is
+			-- Test feature 'disjuncted alias "or"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -197,8 +197,8 @@ feature -- Test
 			assert ("or4", b3 = False)
 		end
 
-	test_infix_or_else is
-			-- Test feature 'infix "or else"'.
+	test_disjuncted_semistrict is
+			-- Test feature 'disjuncted_semistrict alias "or else"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -221,8 +221,8 @@ feature -- Test
 			assert ("or_else4", b3 = False)
 		end
 
-	test_infix_xor is
-			-- Test feature 'infix "xor"'.
+	test_disjuncted_exclusive is
+			-- Test feature 'disjuncted_exclusive alias "xor"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -245,8 +245,8 @@ feature -- Test
 			assert ("xor4", b3 = False)
 		end
 
-	test_infix_implies is
-			-- Test feature 'infix "implies"'.
+	test_implication is
+			-- Test feature 'implication alias "implies"'.
 		local
 			b1, b2: BOOLEAN_REF
 			b3: BOOLEAN
@@ -269,8 +269,8 @@ feature -- Test
 			assert ("implies4", b3 = True)
 		end
 
-	test_prefix_not is
-			-- Test feature 'prefix "not"'.
+	test_negated is
+			-- Test feature 'negated alias "not"'.
 		local
 			bref1, bref2: BOOLEAN_REF
 		do

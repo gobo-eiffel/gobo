@@ -32,8 +32,8 @@ feature -- Test
 			assert ("default", p = pointer_0x0)
 		end
 
-	test_infix_plus is
-			-- Test feature 'infix "+"'.
+	test_plus is
+			-- Test feature 'plus alias "+"'.
 		local
 			p1, p2: POINTER
 		do

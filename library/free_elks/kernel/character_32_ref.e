@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
 			Result := code < other.code

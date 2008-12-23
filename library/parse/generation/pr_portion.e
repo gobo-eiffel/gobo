@@ -16,7 +16,7 @@ class PR_PORTION
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 		redefine
 			is_equal
 		end
@@ -153,7 +153,7 @@ feature -- Comparison
 			same_category: Result implies (is_state = other.is_state)
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current table portion considered
 			-- less than `other'?
 		do

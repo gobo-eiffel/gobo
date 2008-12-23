@@ -134,7 +134,7 @@ feature -- Output
 
 feature -- Features from STRING needed here for the transition period (see convert clause)
 
-	infix "+" (other: STRING): STRING is
+	plus alias "+" (other: STRING): STRING is
 			-- Append a copy of 's' at the end of a copy of the name of the
 			-- Eiffel type represented by `Current', then return the Result.
 			-- This feature from STRING is needed here for the

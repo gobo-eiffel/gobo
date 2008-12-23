@@ -142,7 +142,7 @@ feature -- Status setting
 			return_code := eif_putenv (l_c_env.item)
 		ensure
 			variable_set: (return_code = 0) implies
-				(equal (get (key), value) or else (value.is_empty and then (get (key) = Void)))
+				((get (key) ~ value.string) or else (value.is_empty and then (get (key) = Void)))
 		end
 
 	system (s: STRING) is

@@ -61,7 +61,7 @@ feature -- Access
 		once
 			Result := argument (0)
 		ensure
-			definition: Result.is_equal (argument (0))
+			definition: Result ~ argument (0)
 		end
 
 feature -- Status report
@@ -310,9 +310,9 @@ feature {NONE} -- Implementation
 			w_not_void: w /= Void
 		do
 			if option_sign.item = '%U' then
-				Result := arg.is_equal (w)
+				Result := arg ~ w
 			elseif not arg.is_empty and then arg.item (1) = option_sign.item then
-				Result := arg.substring (2, arg.count).is_equal (w)
+				Result := arg.substring (2, arg.count) ~ w
 			end
 		end
 
@@ -323,9 +323,9 @@ feature {NONE} -- Implementation
 			w_not_void: w /= Void
 		do
 			if option_sign.item = '%U' and then arg.count >= w.count then
-				Result := arg.substring (1, w.count).is_equal (w)
+				Result := arg.substring (1, w.count) ~ w
 			elseif arg.item (1) = option_sign.item and then arg.count > w.count then
-				Result := arg.substring (2, w.count + 1).is_equal (w)
+				Result := arg.substring (2, w.count + 1) ~ w
 			end
 		end
 
@@ -361,6 +361,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	argument_array_consistent: argument_array.is_equal (internal_argument_array)
+	argument_array_consistent: argument_array ~ internal_argument_array
 
 end

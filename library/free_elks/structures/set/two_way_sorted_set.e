@@ -74,27 +74,25 @@ feature -- Element change
 		local
 			found: BOOLEAN
 			b: BOOLEAN
-			i: like item
 		do
 			search_after (v)
 			b := after
 			if not b then
-				i := item
-				b := i /= Void and then v /= Void and then not i.is_equal (v)
+				b := item /~ v
 			end
 			if b then
 				put_left (v)
 				back
 			end
 			if object_comparison then
-				if after or else not equal (item, v) then
+				if after or else item /~ v then
 					put_left (v)
 					back
 				end
 			else
 				from
 				until
-					found or after or else not equal (item, v)
+					found or after or else item /~ v
 				loop
 					found := item = v
 					forth
@@ -112,7 +110,6 @@ feature -- Element change
 			mode: BOOLEAN
 			other_item: like item
 			b: BOOLEAN
-			l_item: like item
 		do
 			from
 				mode := object_comparison
@@ -128,8 +125,7 @@ feature -- Element change
 				if not after then
 					b := not mode and then item = other_item
 					if not b and then mode then
-						l_item := item
-						b := l_item /= Void and then other_item /= Void and then l_item.is_equal (other_item)
+						b := item ~ other_item
 					end
 					if b then
 						forth
@@ -191,9 +187,6 @@ feature -- Basic operations
 
 	intersect (other: like Current) is
 			-- Remove all items not in `other'.
-		local
-			l_item: like item
-			i: like item
 		do
 			from
 				start
@@ -218,9 +211,7 @@ feature -- Basic operations
 					if
 						not other.after
 					then
-						l_item := other.item
-						i := item
-						if l_item /= Void and then i /= Void and then l_item.is_equal (i) then
+						if item ~ other.item then
 							forth
 							other.forth
 						end
@@ -241,7 +232,6 @@ feature -- Basic operations
 			-- Remove all items also in `other'.
 		local
 			other_item: like item
-			i: like item
 		do
 			from
 				start
@@ -253,11 +243,8 @@ feature -- Basic operations
 				if item < other_item then
 					search_after (other_item)
 				end
-				if not after and then other_item /= Void then
-					i := item
-					if i /= Void and then other_item.is_equal (i) then
-						remove
-					end
+				if not after and then item ~ other_item then
+					remove
 				end
 				other.forth
 			end

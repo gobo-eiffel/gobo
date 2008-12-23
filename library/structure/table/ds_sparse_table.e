@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	infix "@", item (k: K): G is
+	at alias "@", item (k: K): G is
 			-- Item associated with `k'
 		do
 			search_position (k)

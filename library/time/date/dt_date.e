@@ -233,7 +233,7 @@ feature -- Access
 			max_days_in_month: Result <= Max_days_in_month
 		end
 
-	infix "&@" (a_duration: like date_duration): like Current is
+	plus_date_duration alias "&@" (a_duration: like date_duration): like Current is
 			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require
@@ -508,7 +508,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := storage < other.storage

@@ -20,9 +20,9 @@ class BOOL_STRING inherit
 			{NONE} all
 			{BOOL_STRING} area
 		redefine
-			item, infix "@", put, valid_index
+			item, at, put, valid_index
 		end
-		
+
 	ANY
 
 create
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item alias "[]", infix "@" (i: INTEGER): BOOLEAN assign put is
+	item alias "[]", at alias "@" (i: INTEGER): BOOLEAN assign put is
 			-- Boolean at `i'-th position,
 			-- beginning at left, 1 origin
 		do
@@ -89,7 +89,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "and" (other: like Current): like Current is
+	conjuncted alias "and" (other: like Current): like Current is
 		-- Logical and of 'Current' and `other'
 		require
 			other_not_void: other /= Void
@@ -107,7 +107,7 @@ feature -- Basic operations
 			end
 		end
 
-	infix "or" (other: like Current): like Current is
+	disjuncted alias "or" (other: like Current): like Current is
 			-- Logical or of 'Current' and `other'
 		require
 			other_not_void: other /= Void
@@ -125,7 +125,7 @@ feature -- Basic operations
 			end
 		end
 
-	infix "xor" (other: like Current): like Current is
+	disjuncted_exclusive alias "xor" (other: like Current): like Current is
 		-- Logical exclusive or of 'Current' and `other'
 		require
 			other_not_void: other /= Void
@@ -143,7 +143,7 @@ feature -- Basic operations
 			end
 		end
 
-	prefix "not": like Current is
+	negated alias "not": like Current is
 			-- Negation of 'Current'
 		local
 			result_area: like area

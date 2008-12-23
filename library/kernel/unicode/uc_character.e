@@ -14,7 +14,7 @@ class UC_CHARACTER
 
 inherit
 
-	COMPARABLE
+	KL_COMPARABLE
 		redefine
 			out
 		end
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than other?
 		do
 			Result := (code < other.code)

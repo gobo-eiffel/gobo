@@ -19,7 +19,7 @@ class ARRAYED_LIST [G] inherit
 		rename
 			force as force_i_th,
 			item as array_item,
-			infix "@" as array_infix_at,
+			at as array_infix_at,
 			make as array_make,
 			put as put_i_th,
 			count as array_count,
@@ -48,14 +48,14 @@ class ARRAYED_LIST [G] inherit
 			put_i_th,
 			force, is_inserted, copy
 		redefine
-			first, last, swap, wipe_out, i_th, infix "@",
+			first, last, swap, wipe_out, i_th, at,
 			go_i_th, move, prunable, start, finish,
 			count, prune, remove,
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
 			append, valid_index
 		select
-			count, index_set, i_th, infix "@"
+			count, index_set, i_th, at
 		end
 
 create
@@ -118,7 +118,7 @@ feature -- Access
 			Result := area.item (index - 1)
 		end
 
-	i_th alias "[]", infix "@" (i: INTEGER): like item assign put_i_th is
+	i_th alias "[]", at alias "@" (i: INTEGER): like item assign put_i_th is
 			-- Item at `i'-th position
 		do
 			Result := area.item (i - 1)
@@ -151,7 +151,6 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 		do
 			l_area := area
@@ -161,8 +160,7 @@ feature -- Access
 				until
 					i > nb or Result
 				loop
-					l_item := l_area.item (i)
-					Result := l_item /= Void and then v.is_equal (l_item)
+					Result := v ~ l_area.item (i)
 					i := i + 1
 				end
 			else
@@ -295,7 +293,6 @@ feature -- Cursor movement
 			-- based on `object_comparison'.)
 		local
 			l_area: like area
-			l_item: like item
 			i, nb: INTEGER
 			l_found: BOOLEAN
 		do
@@ -309,8 +306,7 @@ feature -- Cursor movement
 				until
 					i > nb or l_found
 				loop
-					l_item := l_area.item (i)
-					l_found := l_item /= Void and then v.is_equal (l_item)
+					l_found := v ~ l_area.item (i)
 					i := i + 1
 				end
 			else
@@ -457,22 +453,16 @@ feature -- Removal
 			-- after cursor position.
 			-- Move cursor to right neighbor.
 			-- (or `after' if no right neighbor or `v' does not occur)
-		local
-			i: like item
 		do
-			if before then index := 1 end
+			if before then
+				index := 1
+			end
 			if object_comparison then
-				if v /= Void and then not after then
-					from
-						i := item
-					until
-						after or else (i /= Void and then v.is_equal (i))
-					loop
-						forth
-						if not after then
-							i := item
-						end
-					end
+				from
+				until
+					after or else item ~ v
+				loop
+					forth
 				end
 			else
 				from
@@ -482,7 +472,9 @@ feature -- Removal
 					forth
 				end
 			end
-			if not after then remove end
+			if not after then
+				remove
+			end
 		end
 
 	remove is
@@ -523,9 +515,9 @@ feature -- Removal
 						l_area.put (l_area.item (i + offset), i)
 					end
 					if obj_cmp then
-						res := equal (v, l_area.item (i))
+						res := v ~ l_area.item (i)
 					else
-						res := (v = l_area.item (i))
+						res := v = l_area.item (i)
 					end
 					if res then
 						offset := offset + 1

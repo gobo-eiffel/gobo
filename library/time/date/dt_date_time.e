@@ -29,7 +29,7 @@ inherit
 		redefine
 			add_duration,
 			duration,
-			infix "<",
+			is_less,
 			hash_code
 		end
 
@@ -45,7 +45,7 @@ inherit
 		undefine
 			append_to_string,
 			append_precise_to_string,
-			infix "<",
+			is_less,
 			hash_code,
 			out,
 			precise_out,
@@ -255,7 +255,7 @@ feature -- Element change
 			-- (Add `a_duration.year' and `a_duration.month' first, then
 			-- set `day' to `day.min (day_in_month (new_month, new_year))'
 			-- and finally add `a_duration.day', `a_duration.hour',
-			-- `a_duration.minute', `a_duration.second' and 
+			-- `a_duration.minute', `a_duration.second' and
 			-- `a_duration.millisecond'.)
 		local
 			ms, d: INTEGER
@@ -336,7 +336,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is `Current' before `other' on the time axis?
 		do
 			Result := date_storage < other.date_storage or else

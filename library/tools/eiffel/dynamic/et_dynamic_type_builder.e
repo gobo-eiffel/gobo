@@ -945,6 +945,8 @@ feature {NONE} -- Feature validity
 				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.integer_32_type)
 			when builtin_integer_64_class then
 				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.integer_64_type)
+			when builtin_memory_class then
+				check_external_builtin_memory_function_validity (a_feature)
 			when builtin_natural_8_class then
 				check_external_builtin_sized_integer_function_validity (a_feature, current_dynamic_system.natural_8_type)
 			when builtin_natural_16_class then
@@ -1107,6 +1109,26 @@ feature {NONE} -- Feature validity
 				report_builtin_identified_eif_id_object (a_feature)
 			when builtin_identified_eif_object_id then
 				report_builtin_identified_eif_object_id (a_feature)
+			else
+					-- Internal error: invalid built-in feature.
+					-- Error already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	check_external_builtin_memory_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Check validity of `a_feature'.
+			-- `a_feature' is a built-in function introduced in class "MEMORY".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_memory: (a_feature.builtin_code // builtin_capacity) = builtin_memory_class
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_memory_find_referers then
+				report_builtin_memory_find_referers (a_feature)
 			else
 					-- Internal error: invalid built-in feature.
 					-- Error already reported during parsing.
@@ -1502,6 +1524,8 @@ feature {NONE} -- Feature validity
 				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.integer_32_type)
 			when builtin_integer_64_class then
 				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.integer_64_type)
+			when builtin_memory_class then
+				check_external_builtin_memory_procedure_validity (a_feature)
 			when builtin_natural_8_class then
 				check_external_builtin_sized_integer_procedure_validity (a_feature, current_dynamic_system.natural_8_type)
 			when builtin_natural_16_class then
@@ -1584,6 +1608,26 @@ feature {NONE} -- Feature validity
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_identified_eif_object_id_free then
 				report_builtin_identified_eif_object_id_free (a_feature)
+			else
+					-- Internal error: invalid built-in feature.
+					-- Error already reported during parsing.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			end
+		end
+
+	check_external_builtin_memory_procedure_validity (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Check validity of `a_feature'.
+			-- `a_feature' is a built-in procedure introduced in class "MEMORY".
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_builtin: a_feature.is_builtin
+			a_feature_is_builtin_memory: (a_feature.builtin_code // builtin_capacity) = builtin_memory_class
+		do
+			inspect a_feature.builtin_code \\ builtin_capacity
+			when builtin_memory_free then
+				report_builtin_memory_free (a_feature)
 			else
 					-- Internal error: invalid built-in feature.
 					-- Error already reported during parsing.
@@ -1706,6 +1750,8 @@ feature {NONE} -- Feature validity
 				report_builtin_special_make (a_feature)
 			when builtin_special_put then
 				report_builtin_special_put (a_feature)
+			when builtin_special_put_default then
+				report_builtin_special_put_default (a_feature)
 			else
 					-- Internal error: invalid built-in feature.
 					-- Error already reported during parsing.
@@ -4074,6 +4120,39 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
+	report_builtin_memory_find_referers (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'MEMORY.find_referers' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'find_referers (target: ANY; result_type: INTEGER): SPECIAL [ANY]'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_result_type := l_result_type_set.static_type
+					mark_type_alive (l_result_type)
+					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_memory_free (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'MEMORY.free' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
 	report_builtin_platform_boolean_bytes (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'PLATFORM.boolean_bytes' is being analyzed.
 		require
@@ -5338,6 +5417,15 @@ feature {NONE} -- Built-in features
 
 	report_builtin_special_put (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Report that built-in feature 'SPECIAL.put' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
+	report_builtin_special_put_default (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'SPECIAL.put_default' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void

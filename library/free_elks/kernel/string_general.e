@@ -30,8 +30,8 @@ feature -- Settings
 		ensure
 			inserted: code (i) = v
 			stable_count: count = old count
-			stable_before_i: elks_checking implies substring (1, i - 1).is_equal (old substring (1, i - 1))
-			stable_after_i: elks_checking implies substring (i + 1, count).is_equal (old substring (i + 1, count))
+			stable_before_i: elks_checking implies substring (1, i - 1) ~ (old substring (1, i - 1))
+			stable_after_i: elks_checking implies substring (i + 1, count) ~ (old substring (i + 1, count))
 		end
 
 feature {STRING_HANDLER} -- Settings
@@ -73,7 +73,7 @@ feature -- Element change
 		ensure then
 			item_inserted: code (count) = c
 			new_count: count = old count + 1
-			stable_before: elks_checking implies substring (1, count - 1).is_equal (old twin)
+			stable_before: elks_checking implies substring (1, count - 1) ~ (old twin)
 		end
 
 	append (s: READABLE_STRING_GENERAL) is
@@ -105,7 +105,7 @@ feature -- Element change
 			end
 		ensure
 			new_count: count = old count + old s.count
-			appended: elks_checking implies to_string_32.is_equal (old to_string_32.twin + old s.to_string_32.twin)
+			appended: elks_checking implies to_string_32 ~ (old to_string_32.twin + old s.to_string_32.twin)
 		end
 
 feature -- Removal
@@ -118,7 +118,7 @@ feature -- Removal
 		ensure
 			new_count: count = old count - 1
 			removed: elks_checking implies
-				to_string_32.is_equal (old substring (1, i - 1).to_string_32 + old substring (i + 1, count).to_string_32)
+				to_string_32 ~ (old substring (1, i - 1).to_string_32 + old substring (i + 1, count).to_string_32)
 		end
 
 feature -- Resizing

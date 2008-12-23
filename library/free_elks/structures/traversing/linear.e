@@ -41,7 +41,6 @@ feature -- Access
 			positive_occurrences: i > 0
 		local
 			occur, pos: INTEGER
-			w: like item
 		do
 			if object_comparison and v /= Void then
 				from
@@ -50,8 +49,7 @@ feature -- Access
 				until
 					exhausted or (occur = i)
 				loop
-					w := item
-					if w /= Void and then v.is_equal (w) then
+					if item ~ v then
 						occur := occur + 1
 					end
 					forth
@@ -84,21 +82,13 @@ feature -- Access
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 			-- If no such position ensure that `exhausted' will be true.
-		local
-			i: like item
 		do
-			if object_comparison and v /= Void then
-				if not exhausted then
-					from
-						i := item
-					until
-						exhausted or else (i /= Void and then v.is_equal (i))
-					loop
-						forth
-						if not exhausted then
-							i := item
-						end
-					end
+			if object_comparison then
+				from
+				until
+					exhausted or else v ~ item
+				loop
+					forth
 				end
 			else
 				from
@@ -110,7 +100,7 @@ feature -- Access
 			end
 		ensure
 			object_found: (not exhausted and object_comparison)
-				 implies equal (v, item)
+				 implies v ~ item
 			item_found: (not exhausted and not object_comparison)
 				 implies v = item
 		end

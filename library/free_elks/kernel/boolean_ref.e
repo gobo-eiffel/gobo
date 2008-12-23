@@ -75,7 +75,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "and" (other: like Current): BOOLEAN
+	conjuncted alias "and" (other: like Current): BOOLEAN
 			-- Boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -87,7 +87,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current and then other)
 		end
 
-	infix "and then" (other: like Current): BOOLEAN
+	conjuncted_semistrict alias "and then" (other: like Current): BOOLEAN
 			-- Boolean semi-strict conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -97,7 +97,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current or else not other)
 		end
 
-	infix "implies" (other: like Current): BOOLEAN
+	implication alias "implies" (other: like Current): BOOLEAN
 			-- Boolean implication of `other'
 			-- (semi-strict)
 		require
@@ -108,13 +108,13 @@ feature -- Basic operations
 			definition: Result = (not Current or else other)
 		end
 
-	prefix "not": BOOLEAN
+	negated alias "not": BOOLEAN
 			-- Negation
 		do
 			Result := not item
 		end
 
-	infix "or" (other: like Current): BOOLEAN
+	disjuncted alias "or" (other: like Current): BOOLEAN
 			-- Boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -126,7 +126,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current or else other)
 		end
 
-	infix "or else" (other: like Current): BOOLEAN
+	disjuncted_semistrict alias "or else" (other: like Current): BOOLEAN
 			-- Boolean semi-strict disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -136,7 +136,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current and then not other)
 		end
 
-	infix "xor" (other: like Current): BOOLEAN
+	disjuncted_exclusive alias "xor" (other: like Current): BOOLEAN
 			-- Boolean exclusive or with `other'
 		require
 			other_exists: other /= Void
@@ -158,7 +158,7 @@ feature -- Output
 		end
 
 invariant
-	involutive_negation: (not (not Current)).is_equal (Current)
+	involutive_negation: (not (not Current)) ~ (Current)
 	non_contradiction: not ((not Current) and Current)
 	completeness: (not Current) or Current
 
