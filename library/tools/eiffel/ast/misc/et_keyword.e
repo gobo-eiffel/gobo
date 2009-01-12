@@ -65,6 +65,7 @@ create
 	make_like,
 	make_local,
 	make_loop,
+	make_note,
 	make_obsolete,
 	make_old,
 	make_once,
@@ -511,6 +512,17 @@ feature {NONE} -- Initialization
 			make_token (tokens.not_keyword_name)
 		ensure
 			is_not: is_not
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_note is
+			-- Create a new 'note' keyword.
+		do
+			code := tokens.note_keyword_code
+			make_token (tokens.note_keyword_name)
+		ensure
+			is_note: is_note
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -1024,6 +1036,12 @@ feature -- Status report
 			-- Is current keyword 'not'?
 		do
 			Result := (code = tokens.prefix_not_code)
+		end
+
+	is_note: BOOLEAN is
+			-- Is current keyword 'note'?
+		do
+			Result := (code = tokens.note_keyword_code)
 		end
 
 	is_obsolete: BOOLEAN is

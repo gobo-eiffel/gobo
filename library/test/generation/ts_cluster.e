@@ -130,8 +130,7 @@ feature -- Processing
 			create a_cluster.make (name, pathname, a_system)
 			create a_clusters.make (a_cluster)
 			a_system.set_clusters (a_clusters)
-			a_system.set_use_attribute_keyword (False)
-			a_system.set_use_reference_keyword (True)
+			a_system.set_default_keyword_usage
 			a_system.activate_processors
 			a_system.parse_all
 			a_cursor := a_system.classes.new_cursor

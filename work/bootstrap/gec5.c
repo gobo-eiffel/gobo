@@ -2026,14 +2026,14 @@ void T509f219(T0* C, T0* a1)
 T0* T509f58(T0* C)
 {
 	T0* R = 0;
-	if (ge151os5826) {
-		return ge151ov5826;
+	if (ge151os5840) {
+		return ge151ov5840;
 	} else {
-		ge151os5826 = '\1';
-		ge151ov5826 = R;
+		ge151os5840 = '\1';
+		ge151ov5840 = R;
 	}
 	R = T150c12(GE_ms8("", 0));
-	ge151ov5826 = R;
+	ge151ov5840 = R;
 	return R;
 }
 
@@ -2175,14 +2175,14 @@ void T503f214(T0* C, T0* a1)
 T0* T503f57(T0* C)
 {
 	T0* R = 0;
-	if (ge284os5000) {
-		return ge284ov5000;
+	if (ge284os5011) {
+		return ge284ov5011;
 	} else {
-		ge284os5000 = '\1';
-		ge284ov5000 = R;
+		ge284os5011 = '\1';
+		ge284ov5011 = R;
 	}
 	R = T123c4();
-	ge284ov5000 = R;
+	ge284ov5011 = R;
 	return R;
 }
 
@@ -2226,11 +2226,11 @@ T0* T503f48(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24360) {
-		return ge1424ov24360;
+	if (ge1427os24423) {
+		return ge1427ov24423;
 	} else {
-		ge1424os24360 = '\1';
-		ge1424ov24360 = R;
+		ge1427os24423 = '\1';
+		ge1427ov24423 = R;
 	}
 	t1 = GE_ma431((T6)832,(T6)832,
 (T6)(GE_int32(0)),
@@ -3066,7 +3066,7 @@ T0* T503f48(T0* C)
 (T6)(GE_int32(0)),
 (T6)(GE_int32(2147483647)));
 	R = (T503f53(C, t1));
-	ge1424ov24360 = R;
+	ge1427ov24423 = R;
 	return R;
 }
 
@@ -3085,11 +3085,11 @@ T0* T503f88(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24359) {
-		return ge1424ov24359;
+	if (ge1427os24422) {
+		return ge1427ov24422;
 	} else {
-		ge1424os24359 = '\1';
-		ge1424ov24359 = R;
+		ge1427os24422 = '\1';
+		ge1427ov24422 = R;
 	}
 	t1 = GE_ma431((T6)93,(T6)93,
 (T6)(GE_int32(0)),
@@ -3186,7 +3186,7 @@ T0* T503f88(T0* C)
 (T6)(GE_int32(47)),
 (T6)(GE_int32(2147483647)));
 	R = (T503f53(C, t1));
-	ge1424ov24359 = R;
+	ge1427ov24422 = R;
 	return R;
 }
 
@@ -3195,11 +3195,11 @@ T0* T503f67(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24358) {
-		return ge1424ov24358;
+	if (ge1427os24421) {
+		return ge1427ov24421;
 	} else {
-		ge1424os24358 = '\1';
-		ge1424ov24358 = R;
+		ge1427os24421 = '\1';
+		ge1427ov24421 = R;
 	}
 	t1 = GE_ma431((T6)258,(T6)258,
 (T6)(GE_int32(0)),
@@ -3461,7 +3461,7 @@ T0* T503f67(T0* C)
 (T6)(GE_int32(1)),
 (T6)(GE_int32(2147483647)));
 	R = (T503f53(C, t1));
-	ge1424ov24358 = R;
+	ge1427ov24421 = R;
 	return R;
 }
 
@@ -3470,11 +3470,11 @@ T0* T503f58(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24357) {
-		return ge1424ov24357;
+	if (ge1427os24420) {
+		return ge1427ov24420;
 	} else {
-		ge1424os24357 = '\1';
-		ge1424ov24357 = R;
+		ge1427os24420 = '\1';
+		ge1427ov24420 = R;
 	}
 	t1 = GE_ma431((T6)885,(T6)885,
 (T6)(GE_int32(0)),
@@ -4363,7 +4363,7 @@ T0* T503f58(T0* C)
 (T6)(GE_int32(830)),
 (T6)(GE_int32(2147483647)));
 	R = (T503f53(C, t1));
-	ge1424ov24357 = R;
+	ge1427ov24420 = R;
 	return R;
 }
 
@@ -4372,11 +4372,11 @@ T0* T503f50(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24356) {
-		return ge1424ov24356;
+	if (ge1427os24419) {
+		return ge1427ov24419;
 	} else {
-		ge1424os24356 = '\1';
-		ge1424ov24356 = R;
+		ge1427os24419 = '\1';
+		ge1427ov24419 = R;
 	}
 	t1 = GE_ma431((T6)885,(T6)885,
 (T6)(GE_int32(0)),
@@ -5265,7 +5265,7 @@ T0* T503f50(T0* C)
 (T6)(GE_int32(5068)),
 (T6)(GE_int32(2147483647)));
 	R = (T503f53(C, t1));
-	ge1424ov24356 = R;
+	ge1427ov24419 = R;
 	return R;
 }
 
@@ -5274,11 +5274,11 @@ T0* T503f47(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1424os24349) {
-		return ge1424ov24349;
+	if (ge1427os24412) {
+		return ge1427ov24412;
 	} else {
-		ge1424os24349 = '\1';
-		ge1424ov24349 = R;
+		ge1427os24412 = '\1';
+		ge1427ov24412 = R;
 	}
 	l1 = T431c10((T6)(GE_int32(0)), (T6)(GE_int32(5207)));
 	T503f221(C, l1);
@@ -5288,7 +5288,7 @@ T0* T503f47(T0* C)
 	T503f225(C, l1);
 	T503f226(C, l1);
 	R = (T503f53(C, l1));
-	ge1424ov24349 = R;
+	ge1427ov24412 = R;
 	return R;
 }
 
@@ -5521,14 +5521,14 @@ void T503f227(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5)
 T0* T503f54(T0* C)
 {
 	T0* R = 0;
-	if (ge274os3512) {
-		return ge274ov3512;
+	if (ge274os3523) {
+		return ge274ov3523;
 	} else {
-		ge274os3512 = '\1';
-		ge274ov3512 = R;
+		ge274os3523 = '\1';
+		ge274ov3523 = R;
 	}
 	R = T1286c2();
-	ge274ov3512 = R;
+	ge274ov3523 = R;
 	return R;
 }
 
@@ -10582,11 +10582,11 @@ T0* T503f64(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1424os24342) {
-		return ge1424ov24342;
+	if (ge1427os24405) {
+		return ge1427ov24405;
 	} else {
-		ge1424os24342 = '\1';
-		ge1424ov24342 = R;
+		ge1427os24405 = '\1';
+		ge1427ov24405 = R;
 	}
 	l1 = T431c10((T6)(GE_int32(0)), (T6)(GE_int32(5207)));
 	T503f215(C, l1);
@@ -10596,7 +10596,7 @@ T0* T503f64(T0* C)
 	T503f219(C, l1);
 	T503f220(C, l1);
 	R = (T503f53(C, l1));
-	ge1424ov24342 = R;
+	ge1427ov24405 = R;
 	return R;
 }
 
@@ -15866,14 +15866,14 @@ void T503f215(T0* C, T0* a1)
 T0* T503f49(T0* C)
 {
 	T0* R = 0;
-	if (ge151os5826) {
-		return ge151ov5826;
+	if (ge151os5840) {
+		return ge151ov5840;
 	} else {
-		ge151os5826 = '\1';
-		ge151ov5826 = R;
+		ge151os5840 = '\1';
+		ge151ov5840 = R;
 	}
 	R = T150c12(GE_ms8("", 0));
-	ge151ov5826 = R;
+	ge151ov5840 = R;
 	return R;
 }
 
@@ -16088,14 +16088,14 @@ void T483f13(T0* C, T0* a1)
 T0* T115f182(T0* C)
 {
 	T0* R = 0;
-	if (ge381os1766) {
-		return ge381ov1766;
+	if (ge382os1766) {
+		return ge382ov1766;
 	} else {
-		ge381os1766 = '\1';
-		ge381ov1766 = R;
+		ge382os1766 = '\1';
+		ge382ov1766 = R;
 	}
 	R = T48c3();
-	ge381ov1766 = R;
+	ge382ov1766 = R;
 	return R;
 }
 
@@ -16141,19 +16141,19 @@ void T482f27(T0* C)
 }
 
 /* XM_DTD_ATTRIBUTE_CONTENT.default_enumeration_list */
-unsigned char ge1335os24835 = '\0';
-T0* ge1335ov24835;
+unsigned char ge1338os24898 = '\0';
+T0* ge1338ov24898;
 T0* T482f7(T0* C)
 {
 	T0* R = 0;
-	if (ge1335os24835) {
-		return ge1335ov24835;
+	if (ge1338os24898) {
+		return ge1338ov24898;
 	} else {
-		ge1335os24835 = '\1';
-		ge1335ov24835 = R;
+		ge1338os24898 = '\1';
+		ge1338ov24898 = R;
 	}
 	R = T92c18();
-	ge1335ov24835 = R;
+	ge1338ov24898 = R;
 	return R;
 }
 
@@ -16896,15 +16896,15 @@ void T115f247(T0* C, T0* a1, T0* a2)
 {
 	T1 t1;
 	T480f12(GE_void(a1));
-	t1 = ((a2)==(ge1422ov11577));
+	t1 = ((a2)==(ge1425ov11612));
 	if (t1) {
 		T480f13(GE_void(a1));
 	} else {
-		t1 = ((a2)==(ge1422ov11578));
+		t1 = ((a2)==(ge1425ov11613));
 		if (t1) {
 			T480f14(GE_void(a1));
 		} else {
-			t1 = ((a2)==(ge1422ov11579));
+			t1 = ((a2)==(ge1425ov11614));
 			if (t1) {
 				T480f11(GE_void(a1));
 			}
@@ -17272,14 +17272,14 @@ T1 T1202f1(T0* C, T0* a1, T0* a2)
 T0* T1202f2(T0* C)
 {
 	T0* R = 0;
-	if (ge273os1858) {
-		return ge273ov1858;
+	if (ge273os1864) {
+		return ge273ov1864;
 	} else {
-		ge273os1858 = '\1';
-		ge273ov1858 = R;
+		ge273os1864 = '\1';
+		ge273ov1864 = R;
 	}
 	R = T82c5();
-	ge273ov1858 = R;
+	ge273ov1864 = R;
 	return R;
 }
 
@@ -17499,14 +17499,14 @@ void T479f48(T0* C, T6 a1)
 T0* T479f28(T0* C)
 {
 	T0* R = 0;
-	if (ge284os5000) {
-		return ge284ov5000;
+	if (ge284os5011) {
+		return ge284ov5011;
 	} else {
-		ge284os5000 = '\1';
-		ge284ov5000 = R;
+		ge284os5011 = '\1';
+		ge284ov5011 = R;
 	}
 	R = T123c4();
-	ge284ov5000 = R;
+	ge284ov5011 = R;
 	return R;
 }
 
@@ -17953,12 +17953,12 @@ void T115f241(T0* C, T0* a1)
 	if (t1) {
 		T472f8(GE_void(((T115*)(C))->a4), ((T115*)(C))->a2);
 		((T115*)(C))->a2 = T507c198();
-		T468x24396T0(GE_void(((T115*)(C))->a2), ((T115*)(C))->a9);
+		T468x24459T0(GE_void(((T115*)(C))->a2), ((T115*)(C))->a9);
 	} else {
 		t2 = (T115f103(C));
 		t1 = ((((T115*)(C))->a9)==(t2));
 		if (t1) {
-			T115f232(C, ge1419ov11756);
+			T115f232(C, ge1422ov11791);
 		} else {
 			t2 = (T475f2(GE_void(((T115*)(C))->a9)));
 			T115f232(C, t2);
@@ -17975,19 +17975,19 @@ T0* T475f2(T0* C)
 }
 
 /* XM_EIFFEL_PARSER.null_resolver */
-unsigned char ge1422os11536 = '\0';
-T0* ge1422ov11536;
+unsigned char ge1425os11571 = '\0';
+T0* ge1425ov11571;
 T0* T115f103(T0* C)
 {
 	T0* R = 0;
-	if (ge1422os11536) {
-		return ge1422ov11536;
+	if (ge1425os11571) {
+		return ge1425ov11571;
 	} else {
-		ge1422os11536 = '\1';
-		ge1422ov11536 = R;
+		ge1425os11571 = '\1';
+		ge1425ov11571 = R;
 	}
 	R = T475c4();
-	ge1422ov11536 = R;
+	ge1425ov11571 = R;
 	return R;
 }
 
@@ -18098,14 +18098,14 @@ void T507f218(T0* C, T0* a1)
 T0* T507f184(T0* C)
 {
 	T0* R = 0;
-	if (ge284os5000) {
-		return ge284ov5000;
+	if (ge284os5011) {
+		return ge284ov5011;
 	} else {
-		ge284os5000 = '\1';
-		ge284ov5000 = R;
+		ge284os5011 = '\1';
+		ge284ov5011 = R;
 	}
 	R = T123c4();
-	ge284ov5000 = R;
+	ge284ov5011 = R;
 	return R;
 }
 
@@ -18149,11 +18149,11 @@ T0* T507f192(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24360) {
-		return ge1424ov24360;
+	if (ge1427os24423) {
+		return ge1427ov24423;
 	} else {
-		ge1424os24360 = '\1';
-		ge1424ov24360 = R;
+		ge1427os24423 = '\1';
+		ge1427ov24423 = R;
 	}
 	t1 = GE_ma431((T6)832,(T6)832,
 (T6)(GE_int32(0)),
@@ -18989,7 +18989,7 @@ T0* T507f192(T0* C)
 (T6)(GE_int32(0)),
 (T6)(GE_int32(2147483647)));
 	R = (T507f195(C, t1));
-	ge1424ov24360 = R;
+	ge1427ov24423 = R;
 	return R;
 }
 
@@ -19008,11 +19008,11 @@ T0* T507f191(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24359) {
-		return ge1424ov24359;
+	if (ge1427os24422) {
+		return ge1427ov24422;
 	} else {
-		ge1424os24359 = '\1';
-		ge1424ov24359 = R;
+		ge1427os24422 = '\1';
+		ge1427ov24422 = R;
 	}
 	t1 = GE_ma431((T6)93,(T6)93,
 (T6)(GE_int32(0)),
@@ -19109,7 +19109,7 @@ T0* T507f191(T0* C)
 (T6)(GE_int32(47)),
 (T6)(GE_int32(2147483647)));
 	R = (T507f195(C, t1));
-	ge1424ov24359 = R;
+	ge1427ov24422 = R;
 	return R;
 }
 
@@ -19118,11 +19118,11 @@ T0* T507f190(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24358) {
-		return ge1424ov24358;
+	if (ge1427os24421) {
+		return ge1427ov24421;
 	} else {
-		ge1424os24358 = '\1';
-		ge1424ov24358 = R;
+		ge1427os24421 = '\1';
+		ge1427ov24421 = R;
 	}
 	t1 = GE_ma431((T6)258,(T6)258,
 (T6)(GE_int32(0)),
@@ -19384,7 +19384,7 @@ T0* T507f190(T0* C)
 (T6)(GE_int32(1)),
 (T6)(GE_int32(2147483647)));
 	R = (T507f195(C, t1));
-	ge1424ov24358 = R;
+	ge1427ov24421 = R;
 	return R;
 }
 
@@ -19393,11 +19393,11 @@ T0* T507f189(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24357) {
-		return ge1424ov24357;
+	if (ge1427os24420) {
+		return ge1427ov24420;
 	} else {
-		ge1424os24357 = '\1';
-		ge1424ov24357 = R;
+		ge1427os24420 = '\1';
+		ge1427ov24420 = R;
 	}
 	t1 = GE_ma431((T6)885,(T6)885,
 (T6)(GE_int32(0)),
@@ -20286,7 +20286,7 @@ T0* T507f189(T0* C)
 (T6)(GE_int32(830)),
 (T6)(GE_int32(2147483647)));
 	R = (T507f195(C, t1));
-	ge1424ov24357 = R;
+	ge1427ov24420 = R;
 	return R;
 }
 
@@ -20295,11 +20295,11 @@ T0* T507f188(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24356) {
-		return ge1424ov24356;
+	if (ge1427os24419) {
+		return ge1427ov24419;
 	} else {
-		ge1424os24356 = '\1';
-		ge1424ov24356 = R;
+		ge1427os24419 = '\1';
+		ge1427ov24419 = R;
 	}
 	t1 = GE_ma431((T6)885,(T6)885,
 (T6)(GE_int32(0)),
@@ -21188,7 +21188,7 @@ T0* T507f188(T0* C)
 (T6)(GE_int32(5068)),
 (T6)(GE_int32(2147483647)));
 	R = (T507f195(C, t1));
-	ge1424ov24356 = R;
+	ge1427ov24419 = R;
 	return R;
 }
 
@@ -21197,11 +21197,11 @@ T0* T507f187(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1424os24349) {
-		return ge1424ov24349;
+	if (ge1427os24412) {
+		return ge1427ov24412;
 	} else {
-		ge1424os24349 = '\1';
-		ge1424ov24349 = R;
+		ge1427os24412 = '\1';
+		ge1427ov24412 = R;
 	}
 	l1 = T431c10((T6)(GE_int32(0)), (T6)(GE_int32(5207)));
 	T507f228(C, l1);
@@ -21211,7 +21211,7 @@ T0* T507f187(T0* C)
 	T507f232(C, l1);
 	T507f233(C, l1);
 	R = (T507f195(C, l1));
-	ge1424ov24349 = R;
+	ge1427ov24412 = R;
 	return R;
 }
 
@@ -21444,14 +21444,14 @@ void T507f234(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5)
 T0* T507f197(T0* C)
 {
 	T0* R = 0;
-	if (ge274os3512) {
-		return ge274ov3512;
+	if (ge274os3523) {
+		return ge274ov3523;
 	} else {
-		ge274os3512 = '\1';
-		ge274ov3512 = R;
+		ge274os3523 = '\1';
+		ge274ov3523 = R;
 	}
 	R = T1286c2();
-	ge274ov3512 = R;
+	ge274ov3523 = R;
 	return R;
 }
 
@@ -26505,11 +26505,11 @@ T0* T507f186(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1424os24342) {
-		return ge1424ov24342;
+	if (ge1427os24405) {
+		return ge1427ov24405;
 	} else {
-		ge1424os24342 = '\1';
-		ge1424ov24342 = R;
+		ge1427os24405 = '\1';
+		ge1427ov24405 = R;
 	}
 	l1 = T431c10((T6)(GE_int32(0)), (T6)(GE_int32(5207)));
 	T507f222(C, l1);
@@ -26519,7 +26519,7 @@ T0* T507f186(T0* C)
 	T507f226(C, l1);
 	T507f227(C, l1);
 	R = (T507f195(C, l1));
-	ge1424ov24342 = R;
+	ge1427ov24405 = R;
 	return R;
 }
 
@@ -31789,14 +31789,14 @@ void T507f222(T0* C, T0* a1)
 T0* T507f49(T0* C)
 {
 	T0* R = 0;
-	if (ge151os5826) {
-		return ge151ov5826;
+	if (ge151os5840) {
+		return ge151ov5840;
 	} else {
-		ge151os5826 = '\1';
-		ge151ov5826 = R;
+		ge151os5840 = '\1';
+		ge151ov5840 = R;
 	}
 	R = T150c12(GE_ms8("", 0));
-	ge151ov5826 = R;
+	ge151ov5840 = R;
 	return R;
 }
 
@@ -31987,8 +31987,8 @@ T0* T477c7(void)
 {
 	T0* C;
 	C = GE_new477(EIF_TRUE);
-	((T477*)(C))->a1 = ge1415ov24715;
-	((T477*)(C))->a2 = ge1415ov24716;
+	((T477*)(C))->a1 = ge1418ov24778;
+	((T477*)(C))->a2 = ge1418ov24779;
 	((T477*)(C))->a3 = EIF_TRUE;
 	return C;
 }
@@ -32013,11 +32013,11 @@ void T115f261(T0* C, T0* a1, T0* a2, T1 a3)
 void T115f238(T0* C, T0* a1)
 {
 	T1 t1;
-	t1 = (T468x24401T0(GE_void(((T115*)(C))->a2), a1));
+	t1 = (T468x24464T0(GE_void(((T115*)(C))->a2), a1));
 	if (t1) {
-		T468x24402T0(GE_void(((T115*)(C))->a2), a1);
+		T468x24465T0(GE_void(((T115*)(C))->a2), a1);
 	} else {
-		T115f232(C, ge1419ov11729);
+		T115f232(C, ge1422ov11764);
 	}
 }
 
@@ -32085,10 +32085,10 @@ T0* T115f117(T0* C, T0* a1)
 			t2 = (T473f21(GE_void(((T115*)(C))->a8), a1));
 			R = (T115f194(C, t2));
 		} else {
-			T115f232(C, ge1419ov11752);
+			T115f232(C, ge1422ov11787);
 		}
 	} else {
-		T115f232(C, ge1419ov11764);
+		T115f232(C, ge1422ov11799);
 	}
 	return R;
 }
@@ -32224,14 +32224,14 @@ void T722f30(T0* C, T6 a1)
 T0* T174f2(T0* C)
 {
 	T0* R = 0;
-	if (ge367os1859) {
-		return ge367ov1859;
+	if (ge368os1865) {
+		return ge368ov1865;
 	} else {
-		ge367os1859 = '\1';
-		ge367ov1859 = R;
+		ge368os1865 = '\1';
+		ge368ov1865 = R;
 	}
 	R = T173c3();
-	ge367ov1859 = R;
+	ge368ov1865 = R;
 	return R;
 }
 
@@ -32239,14 +32239,14 @@ T0* T174f2(T0* C)
 T0* T115f201(T0* C)
 {
 	T0* R = 0;
-	if (ge281os3041) {
-		return ge281ov3041;
+	if (ge281os3052) {
+		return ge281ov3052;
 	} else {
-		ge281os3041 = '\1';
-		ge281ov3041 = R;
+		ge281os3052 = '\1';
+		ge281ov3052 = R;
 	}
 	R = T174c5();
-	ge281ov3041 = R;
+	ge281ov3052 = R;
 	return R;
 }
 
@@ -32425,7 +32425,7 @@ T0* T115f177(T0* C, T0* a1)
 	T6 l1 = 0;
 	t1 = ((a1)==(EIF_VOID));
 	if (t1) {
-		R = ge1412ov11228;
+		R = ge1415ov11263;
 	} else {
 		R = T17c42();
 		l1 = (T6)(GE_int32(1));
@@ -32450,7 +32450,7 @@ T0* T115f177(T0* C, T0* a1)
 		}
 		t1 = (T6f1((&l1), (T6)(GE_int32(100))));
 		if (t1) {
-			T17f41(GE_void(R), ge1412ov11227);
+			T17f41(GE_void(R), ge1415ov11262);
 			t2 = (((((T0*)(GE_void(a1)))->id==17)?((T17*)(a1))->a2:((T721*)(a1))->a1));
 			l1 = ((T6)((t2)+((T6)(GE_int32(1)))));
 		}
@@ -32507,14 +32507,14 @@ void T115f255(T0* C, T0* a1)
 	t1 = ((((T115*)(C))->a3)==(EIF_VOID));
 	if (t1) {
 		((T115*)(C))->a3 = (T115f135(C));
-		T468x24397(GE_void(((T115*)(C))->a2));
+		T468x24460(GE_void(((T115*)(C))->a2));
 		while (1) {
 			t1 = (T472f3(GE_void(((T115*)(C))->a4)));
 			if (t1) {
 				break;
 			}
 			t2 = (T472f4(GE_void(((T115*)(C))->a4)));
-			T468x24397(GE_void(t2));
+			T468x24460(GE_void(t2));
 			T472f7(GE_void(((T115*)(C))->a4));
 		}
 	}
@@ -32529,7 +32529,7 @@ T0* T115f96(T0* C, T0* a1)
 	T0* R = 0;
 	t1 = (T115f185(C));
 	if (t1) {
-		T115f232(C, ge1419ov11772);
+		T115f232(C, ge1422ov11807);
 	} else {
 		t2 = (T115f187(C));
 		t1 = (T720f1(GE_void(t2), a1));
@@ -32540,13 +32540,13 @@ T0* T115f96(T0* C, T0* a1)
 				t3 = (T115f189(C, R));
 				t1 = (T6f1(&t3, (T6)(GE_int32(255))));
 				if (t1) {
-					T115f232(C, ge1419ov11773);
+					T115f232(C, ge1422ov11808);
 				} else {
 					R = (((((T0*)(GE_void(R)))->id==721)?T721f43(R):T17f16(R)));
 				}
 			}
 		} else {
-			T115f232(C, ge1419ov11774);
+			T115f232(C, ge1422ov11809);
 		}
 	}
 	return R;
@@ -32860,14 +32860,14 @@ T1 T720f2(T0* C, T2 a1)
 T0* T115f187(T0* C)
 {
 	T0* R = 0;
-	if (ge379os10751) {
-		return ge379ov10751;
+	if (ge380os10786) {
+		return ge380ov10786;
 	} else {
-		ge379os10751 = '\1';
-		ge379ov10751 = R;
+		ge380os10786 = '\1';
+		ge380ov10786 = R;
 	}
 	R = T720c36();
-	ge379ov10751 = R;
+	ge380ov10786 = R;
 	return R;
 }
 
@@ -32916,36 +32916,36 @@ T0* T115f115(T0* C)
 }
 
 /* XM_EIFFEL_PARSER.shared_empty_string_string */
-unsigned char ge1422os11604 = '\0';
-T0* ge1422ov11604;
+unsigned char ge1425os11639 = '\0';
+T0* ge1425ov11639;
 T0* T115f193(T0* C)
 {
 	T0* R = 0;
-	if (ge1422os11604) {
-		return ge1422ov11604;
+	if (ge1425os11639) {
+		return ge1425ov11639;
 	} else {
-		ge1422os11604 = '\1';
-		ge1422ov11604 = R;
+		ge1425os11639 = '\1';
+		ge1425ov11639 = R;
 	}
 	R = T17c42();
-	ge1422ov11604 = R;
+	ge1425ov11639 = R;
 	return R;
 }
 
 /* XM_EIFFEL_PARSER.shared_empty_string_uc */
-unsigned char ge1422os11605 = '\0';
-T0* ge1422ov11605;
+unsigned char ge1425os11640 = '\0';
+T0* ge1425ov11640;
 T0* T115f192(T0* C)
 {
 	T0* R = 0;
-	if (ge1422os11605) {
-		return ge1422ov11605;
+	if (ge1425os11640) {
+		return ge1425ov11640;
 	} else {
-		ge1422os11605 = '\1';
-		ge1422ov11605 = R;
+		ge1425os11640 = '\1';
+		ge1425ov11640 = R;
 	}
 	R = (T115f199(C));
-	ge1422ov11605 = R;
+	ge1425ov11640 = R;
 	return R;
 }
 
@@ -33045,7 +33045,7 @@ void T115f231(T0* C, T0* a1, T0* a2)
 	if (t1) {
 		T476f20(GE_void(a1), a2);
 	} else {
-		T115f232(C, ge1419ov11767);
+		T115f232(C, ge1422ov11802);
 	}
 }
 
@@ -33086,14 +33086,14 @@ T0* T476f7(T0* C)
 T0* T476f8(T0* C)
 {
 	T0* R = 0;
-	if (ge381os1766) {
-		return ge381ov1766;
+	if (ge382os1766) {
+		return ge382ov1766;
 	} else {
-		ge381os1766 = '\1';
-		ge381ov1766 = R;
+		ge382os1766 = '\1';
+		ge382ov1766 = R;
 	}
 	R = T48c3();
-	ge381ov1766 = R;
+	ge382ov1766 = R;
 	return R;
 }
 
@@ -33236,12 +33236,12 @@ void T115f217(T0* C)
 	T1 t1;
 	T0* t2;
 	T0* l1 = 0;
-	T468x5811(GE_void(((T115*)(C))->a2));
-	((T115*)(C))->a36 = (T468x5796(GE_void(((T115*)(C))->a2)));
-	((T115*)(C))->a48 = (T468x24412(GE_void(((T115*)(C))->a2)));
-	t1 = (T468x5805(GE_void(((T115*)(C))->a2)));
+	T468x5825(GE_void(((T115*)(C))->a2));
+	((T115*)(C))->a36 = (T468x5810(GE_void(((T115*)(C))->a2)));
+	((T115*)(C))->a48 = (T468x24475(GE_void(((T115*)(C))->a2)));
+	t1 = (T468x5819(GE_void(((T115*)(C))->a2)));
 	if (t1) {
-		T468x24397(GE_void(((T115*)(C))->a2));
+		T468x24460(GE_void(((T115*)(C))->a2));
 		t1 = (T472f3(GE_void(((T115*)(C))->a4)));
 		t1 = ((T1)(!(t1)));
 		if (t1) {
@@ -33301,10 +33301,10 @@ void T115f228(T0* C, T0* a1)
 			t2 = (T473f21(GE_void(((T115*)(C))->a7), a1));
 			T115f254(C, t2);
 		} else {
-			T115f232(C, ge1419ov11750);
+			T115f232(C, ge1422ov11785);
 		}
 	} else {
-		T115f232(C, ge1419ov11751);
+		T115f232(C, ge1422ov11786);
 	}
 }
 
@@ -33324,7 +33324,7 @@ void T115f254(T0* C, T0* a1)
 		t2 = (((((T0*)(GE_void(a1)))->id==509)?((T509*)(a1))->a9:((T503*)(a1))->a9));
 		T115f232(C, t2);
 	} else {
-		t3 = (T468x5800(GE_void(((T115*)(C))->a2)));
+		t3 = (T468x5814(GE_void(((T115*)(C))->a2)));
 		if (((T0*)(GE_void(a1)))->id==509) {
 			T509f233(a1, t3);
 		} else {
@@ -33377,7 +33377,7 @@ void T503f228(T0* C)
 	T0* t3;
 	T0* l1 = 0;
 	if (((T503*)(C))->a7) {
-		T503f236(C, ge1419ov11753);
+		T503f236(C, ge1422ov11788);
 	} else {
 		t1 = (T503f62(C));
 		if (t1) {
@@ -33544,14 +33544,14 @@ void T720f37(T0* C, T0* a1, T6 a2)
 T0* T720f29(T0* C)
 {
 	T0* R = 0;
-	if (ge281os3041) {
-		return ge281ov3041;
+	if (ge281os3052) {
+		return ge281ov3052;
 	} else {
-		ge281os3041 = '\1';
-		ge281ov3041 = R;
+		ge281os3052 = '\1';
+		ge281ov3052 = R;
 	}
 	R = T174c5();
-	ge281ov3041 = R;
+	ge281ov3052 = R;
 	return R;
 }
 
@@ -33559,14 +33559,14 @@ T0* T720f29(T0* C)
 T0* T503f66(T0* C)
 {
 	T0* R = 0;
-	if (ge379os10751) {
-		return ge379ov10751;
+	if (ge380os10786) {
+		return ge380ov10786;
 	} else {
-		ge379os10751 = '\1';
-		ge379ov10751 = R;
+		ge380os10786 = '\1';
+		ge380ov10786 = R;
 	}
 	R = T720c36();
-	ge379ov10751 = R;
+	ge380ov10786 = R;
 	return R;
 }
 
@@ -33584,7 +33584,7 @@ void T509f232(T0* C)
 	T0* t3;
 	T0* l1 = 0;
 	if (((T509*)(C))->a7) {
-		T509f240(C, ge1419ov11753);
+		T509f240(C, ge1422ov11788);
 	} else {
 		t1 = (T509f63(C));
 		if (t1) {
@@ -33621,14 +33621,14 @@ void T509f232(T0* C)
 T0* T509f68(T0* C)
 {
 	T0* R = 0;
-	if (ge379os10751) {
-		return ge379ov10751;
+	if (ge380os10786) {
+		return ge380ov10786;
 	} else {
-		ge379os10751 = '\1';
-		ge379ov10751 = R;
+		ge380os10786 = '\1';
+		ge380ov10786 = R;
 	}
 	R = T720c36();
-	ge379ov10751 = R;
+	ge380ov10786 = R;
 	return R;
 }
 
@@ -33648,7 +33648,7 @@ void T115f227(T0* C, T0* a1)
 		t2 = (T473f21(GE_void(((T115*)(C))->a7), a1));
 		T115f254(C, t2);
 	} else {
-		T115f232(C, ge1419ov11751);
+		T115f232(C, ge1422ov11786);
 	}
 }
 
@@ -33662,7 +33662,7 @@ void T115f226(T0* C, T0* a1)
 		t2 = (T473f21(GE_void(((T115*)(C))->a8), a1));
 		T115f254(C, t2);
 	} else {
-		T115f232(C, ge1419ov11757);
+		T115f232(C, ge1422ov11792);
 	}
 }
 
@@ -33670,14 +33670,14 @@ void T115f226(T0* C, T0* a1)
 T0* T115f113(T0* C)
 {
 	T0* R = 0;
-	if (ge284os5000) {
-		return ge284ov5000;
+	if (ge284os5011) {
+		return ge284ov5011;
 	} else {
-		ge284os5000 = '\1';
-		ge284ov5000 = R;
+		ge284os5011 = '\1';
+		ge284ov5011 = R;
 	}
 	R = T123c4();
-	ge284ov5000 = R;
+	ge284ov5011 = R;
 	return R;
 }
 
@@ -34168,14 +34168,14 @@ void T468f213(T0* C, T0* a1)
 T0* T468f182(T0* C)
 {
 	T0* R = 0;
-	if (ge284os5000) {
-		return ge284ov5000;
+	if (ge284os5011) {
+		return ge284ov5011;
 	} else {
-		ge284os5000 = '\1';
-		ge284ov5000 = R;
+		ge284os5011 = '\1';
+		ge284ov5011 = R;
 	}
 	R = T123c4();
-	ge284ov5000 = R;
+	ge284ov5011 = R;
 	return R;
 }
 
@@ -34219,11 +34219,11 @@ T0* T468f190(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24360) {
-		return ge1424ov24360;
+	if (ge1427os24423) {
+		return ge1427ov24423;
 	} else {
-		ge1424os24360 = '\1';
-		ge1424ov24360 = R;
+		ge1427os24423 = '\1';
+		ge1427ov24423 = R;
 	}
 	t1 = GE_ma431((T6)832,(T6)832,
 (T6)(GE_int32(0)),
@@ -35059,7 +35059,7 @@ T0* T468f190(T0* C)
 (T6)(GE_int32(0)),
 (T6)(GE_int32(2147483647)));
 	R = (T468f193(C, t1));
-	ge1424ov24360 = R;
+	ge1427ov24423 = R;
 	return R;
 }
 
@@ -35078,11 +35078,11 @@ T0* T468f189(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24359) {
-		return ge1424ov24359;
+	if (ge1427os24422) {
+		return ge1427ov24422;
 	} else {
-		ge1424os24359 = '\1';
-		ge1424ov24359 = R;
+		ge1427os24422 = '\1';
+		ge1427ov24422 = R;
 	}
 	t1 = GE_ma431((T6)93,(T6)93,
 (T6)(GE_int32(0)),
@@ -35179,7 +35179,7 @@ T0* T468f189(T0* C)
 (T6)(GE_int32(47)),
 (T6)(GE_int32(2147483647)));
 	R = (T468f193(C, t1));
-	ge1424ov24359 = R;
+	ge1427ov24422 = R;
 	return R;
 }
 
@@ -35188,11 +35188,11 @@ T0* T468f188(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24358) {
-		return ge1424ov24358;
+	if (ge1427os24421) {
+		return ge1427ov24421;
 	} else {
-		ge1424os24358 = '\1';
-		ge1424ov24358 = R;
+		ge1427os24421 = '\1';
+		ge1427ov24421 = R;
 	}
 	t1 = GE_ma431((T6)258,(T6)258,
 (T6)(GE_int32(0)),
@@ -35454,7 +35454,7 @@ T0* T468f188(T0* C)
 (T6)(GE_int32(1)),
 (T6)(GE_int32(2147483647)));
 	R = (T468f193(C, t1));
-	ge1424ov24358 = R;
+	ge1427ov24421 = R;
 	return R;
 }
 
@@ -35463,11 +35463,11 @@ T0* T468f187(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24357) {
-		return ge1424ov24357;
+	if (ge1427os24420) {
+		return ge1427ov24420;
 	} else {
-		ge1424os24357 = '\1';
-		ge1424ov24357 = R;
+		ge1427os24420 = '\1';
+		ge1427ov24420 = R;
 	}
 	t1 = GE_ma431((T6)885,(T6)885,
 (T6)(GE_int32(0)),
@@ -36356,7 +36356,7 @@ T0* T468f187(T0* C)
 (T6)(GE_int32(830)),
 (T6)(GE_int32(2147483647)));
 	R = (T468f193(C, t1));
-	ge1424ov24357 = R;
+	ge1427ov24420 = R;
 	return R;
 }
 
@@ -36365,11 +36365,11 @@ T0* T468f186(T0* C)
 {
 	T0* t1;
 	T0* R = 0;
-	if (ge1424os24356) {
-		return ge1424ov24356;
+	if (ge1427os24419) {
+		return ge1427ov24419;
 	} else {
-		ge1424os24356 = '\1';
-		ge1424ov24356 = R;
+		ge1427os24419 = '\1';
+		ge1427ov24419 = R;
 	}
 	t1 = GE_ma431((T6)885,(T6)885,
 (T6)(GE_int32(0)),
@@ -37258,7 +37258,7 @@ T0* T468f186(T0* C)
 (T6)(GE_int32(5068)),
 (T6)(GE_int32(2147483647)));
 	R = (T468f193(C, t1));
-	ge1424ov24356 = R;
+	ge1427ov24419 = R;
 	return R;
 }
 
@@ -37267,11 +37267,11 @@ T0* T468f185(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1424os24349) {
-		return ge1424ov24349;
+	if (ge1427os24412) {
+		return ge1427ov24412;
 	} else {
-		ge1424os24349 = '\1';
-		ge1424ov24349 = R;
+		ge1427os24412 = '\1';
+		ge1427ov24412 = R;
 	}
 	l1 = T431c10((T6)(GE_int32(0)), (T6)(GE_int32(5207)));
 	T468f226(C, l1);
@@ -37281,7 +37281,7 @@ T0* T468f185(T0* C)
 	T468f230(C, l1);
 	T468f231(C, l1);
 	R = (T468f193(C, l1));
-	ge1424ov24349 = R;
+	ge1427ov24412 = R;
 	return R;
 }
 
@@ -37514,14 +37514,14 @@ void T468f232(T0* C, T0* a1, T0* a2, T6 a3, T6 a4, T6 a5)
 T0* T468f195(T0* C)
 {
 	T0* R = 0;
-	if (ge274os3512) {
-		return ge274ov3512;
+	if (ge274os3523) {
+		return ge274ov3523;
 	} else {
-		ge274os3512 = '\1';
-		ge274ov3512 = R;
+		ge274os3523 = '\1';
+		ge274ov3523 = R;
 	}
 	R = T1286c2();
-	ge274ov3512 = R;
+	ge274ov3523 = R;
 	return R;
 }
 
@@ -42575,11 +42575,11 @@ T0* T468f184(T0* C)
 {
 	T0* R = 0;
 	T0* l1 = 0;
-	if (ge1424os24342) {
-		return ge1424ov24342;
+	if (ge1427os24405) {
+		return ge1427ov24405;
 	} else {
-		ge1424os24342 = '\1';
-		ge1424ov24342 = R;
+		ge1427os24405 = '\1';
+		ge1427ov24405 = R;
 	}
 	l1 = T431c10((T6)(GE_int32(0)), (T6)(GE_int32(5207)));
 	T468f220(C, l1);
@@ -42589,7 +42589,7 @@ T0* T468f184(T0* C)
 	T468f224(C, l1);
 	T468f225(C, l1);
 	R = (T468f193(C, l1));
-	ge1424ov24342 = R;
+	ge1427ov24405 = R;
 	return R;
 }
 
@@ -47859,14 +47859,14 @@ void T468f220(T0* C, T0* a1)
 T0* T468f42(T0* C)
 {
 	T0* R = 0;
-	if (ge151os5826) {
-		return ge151ov5826;
+	if (ge151os5840) {
+		return ge151ov5840;
 	} else {
-		ge151os5826 = '\1';
-		ge151ov5826 = R;
+		ge151os5840 = '\1';
+		ge151ov5840 = R;
 	}
 	R = T150c12(GE_ms8("", 0));
-	ge151ov5826 = R;
+	ge151ov5840 = R;
 	return R;
 }
 
@@ -47908,12 +47908,12 @@ T0* T74f16(T0* C, T0* a1)
 		t1 = (T444f11(GE_void(a1), l1));
 		if (t1) {
 			t2 = (T74f19(C));
-			R = (T26f8(GE_void(t2), R, ge338ov10021));
+			R = (T26f8(GE_void(t2), R, ge338ov10056));
 		} else {
 			t1 = (T444f7(GE_void(a1), l1));
 			if (t1) {
 				t2 = (T74f19(C));
-				R = (T26f8(GE_void(t2), R, ge338ov10022));
+				R = (T26f8(GE_void(t2), R, ge338ov10057));
 			} else {
 				t2 = (T74f19(C));
 				t3 = (T444f8(GE_void(a1), l1));
@@ -47932,12 +47932,12 @@ T0* T74f16(T0* C, T0* a1)
 		t1 = (T444f11(GE_void(a1), l1));
 		if (t1) {
 			t2 = (T74f19(C));
-			R = (T26f8(GE_void(t2), R, ge338ov10021));
+			R = (T26f8(GE_void(t2), R, ge338ov10056));
 		} else {
 			t1 = (T444f7(GE_void(a1), l1));
 			if (t1) {
 				t2 = (T74f19(C));
-				R = (T26f8(GE_void(t2), R, ge338ov10022));
+				R = (T26f8(GE_void(t2), R, ge338ov10057));
 			} else {
 				t2 = (T74f19(C));
 				t3 = (T444f8(GE_void(a1), l1));
@@ -47962,7 +47962,7 @@ T1 T444f7(T0* C, T6 a1)
 	T0* t1;
 	T1 R = 0;
 	t1 = (T444f8(C, a1));
-	R = ((t1)==(ge326ov10198));
+	R = ((t1)==(ge326ov10233));
 	return R;
 }
 
@@ -47972,7 +47972,7 @@ T1 T444f11(T0* C, T6 a1)
 	T0* t1;
 	T1 R = 0;
 	t1 = (T444f8(C, a1));
-	R = ((t1)==(ge326ov10197));
+	R = ((t1)==(ge326ov10232));
 	return R;
 }
 
@@ -48052,7 +48052,7 @@ void T444f19(T0* C)
 /* KL_PATHNAME.append_current */
 void T444f21(T0* C)
 {
-	T444f26(C, ge326ov10197);
+	T444f26(C, ge326ov10232);
 }
 
 /* KL_PATHNAME.append_name */
@@ -48343,12 +48343,12 @@ T0* T74f17(T0* C, T0* a1)
 			l4 = ((T6)((l1)-((T6)(GE_int32(1)))));
 			l5 = (((((T0*)(GE_void(a1)))->id==17)?T17f20(a1, l3, l4):T721f14(a1, l3, l4)));
 			t3 = (T74f19(C));
-			t1 = (T26f1(GE_void(t3), l5, ge338ov10021));
+			t1 = (T26f1(GE_void(t3), l5, ge338ov10056));
 			if (t1) {
 				T444f21(GE_void(R));
 			} else {
 				t3 = (T74f19(C));
-				t1 = (T26f1(GE_void(t3), l5, ge338ov10022));
+				t1 = (T26f1(GE_void(t3), l5, ge338ov10057));
 				if (t1) {
 					T444f22(GE_void(R));
 				} else {
@@ -48363,7 +48363,7 @@ T0* T74f17(T0* C, T0* a1)
 /* KL_PATHNAME.append_parent */
 void T444f22(T0* C)
 {
-	T444f26(C, ge326ov10198);
+	T444f26(C, ge326ov10233);
 }
 
 /* KL_PATHNAME.set_relative */
@@ -48470,12 +48470,12 @@ T0* T73f19(T0* C, T0* a1)
 		t1 = (T444f11(GE_void(a1), l1));
 		if (t1) {
 			t2 = (T73f12(C));
-			R = (T26f8(GE_void(t2), R, ge341ov10021));
+			R = (T26f8(GE_void(t2), R, ge341ov10056));
 		} else {
 			t1 = (T444f7(GE_void(a1), l1));
 			if (t1) {
 				t2 = (T73f12(C));
-				R = (T26f8(GE_void(t2), R, ge341ov10022));
+				R = (T26f8(GE_void(t2), R, ge341ov10057));
 			} else {
 				t2 = (T73f12(C));
 				t3 = (T444f8(GE_void(a1), l1));
@@ -48494,12 +48494,12 @@ T0* T73f19(T0* C, T0* a1)
 		t1 = (T444f11(GE_void(a1), l1));
 		if (t1) {
 			t2 = (T73f12(C));
-			R = (T26f8(GE_void(t2), R, ge341ov10021));
+			R = (T26f8(GE_void(t2), R, ge341ov10056));
 		} else {
 			t1 = (T444f7(GE_void(a1), l1));
 			if (t1) {
 				t2 = (T73f12(C));
-				R = (T26f8(GE_void(t2), R, ge341ov10022));
+				R = (T26f8(GE_void(t2), R, ge341ov10057));
 			} else {
 				t2 = (T73f12(C));
 				t3 = (T444f8(GE_void(a1), l1));

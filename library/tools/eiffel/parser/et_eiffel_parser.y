@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,7 @@ create
 %token <ET_KEYWORD> E_DO E_ELSE E_ELSEIF E_END E_ENSURE
 %token <ET_KEYWORD> E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
 %token <ET_KEYWORD> E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
-%token <ET_KEYWORD> E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_OBSOLETE
+%token <ET_KEYWORD> E_INVARIANT E_IS E_LIKE E_LOCAL E_LOOP E_NOTE E_OBSOLETE
 %token <ET_KEYWORD> E_ONCE E_ONCE_STRING E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
 %token <ET_KEYWORD> E_RESCUE E_SELECT E_STRIP E_WHEN
 %token <ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
@@ -164,8 +164,8 @@ create
 %type <ET_FORMAL_PARAMETER_LIST> Formal_parameters_opt Formal_parameter_list
 %type <ET_IDENTIFIER> Identifier Class_name
 %type <ET_IF_INSTRUCTION> Conditional
-%type <ET_INDEXING_LIST> Indexing_clause Indexing_clause_opt Index_list
-%type <ET_INDEXING_ITEM> Index_clause Index_clause_semicolon Index_clause_impl
+%type <ET_INDEXING_LIST> Indexing_clause Indexing_clause_opt Index_list Note_list
+%type <ET_INDEXING_ITEM> Index_clause Index_clause_semicolon Index_clause_impl Note_item Note_item_semicolon Note_item_impl
 %type <ET_INDEXING_TERM> Index_value
 %type <ET_INDEXING_TERM_ITEM> Index_value_comma
 %type <ET_INDEXING_TERM_LIST> Index_terms
@@ -213,7 +213,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 51
+%expect 52
 %start Class_declarations
 
 %%
@@ -336,12 +336,73 @@ Indexing_clause: E_INDEXING
 			remove_keyword
 			remove_counter
 		}
+	| E_NOTE
+		{ $$ := ast_factory.new_indexings ($1, 0) }
+	| E_NOTE
+		{
+			add_keyword ($1)
+			add_counter
+		}
+	Note_list
+		{
+			$$ := $3
+			remove_keyword
+			remove_counter
+		}
 	;
 
 Indexing_clause_opt: -- Empty
 		-- { $$ := Void }
 	| Indexing_clause
 		{ $$ := $1 }
+	;
+
+Note_list: Note_item
+		{
+			if $1 /= Void then
+				$$ := ast_factory.new_indexings (last_keyword, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first ($1)
+				end
+			else
+				$$ := ast_factory.new_indexings (last_keyword, counter_value)
+			end
+		}
+	| Note_item
+		{ increment_counter }
+	  Note_list
+		{
+			$$ := $3
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	| Note_item_semicolon
+		{ increment_counter }
+	  Note_list
+		{
+			$$ := $3
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	;
+
+Note_item: Add_counter Note_item_impl
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+Note_item_impl: Identifier ':' Index_terms
+		{
+			$$ := ast_factory.new_tagged_indexing (ast_factory.new_tag ($1, $2), $3)
+		}
+	;
+
+Note_item_semicolon: Note_item ';'
+		{ $$ := ast_factory.new_indexing_semicolon ($1, $2) }
 	;
 
 Index_list: Index_clause

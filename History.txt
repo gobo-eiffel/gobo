@@ -4,6 +4,11 @@ Version 3.10 - ?
 
 	* Added features `same_*_pathnames' to class KI_FILE_SYSTEM.
 
+	Gobo Eiffel Tools Library:
+
+	* Added support for keyword 'note' as a replacement of 'indexing'.
+	  See bug#2499770.
+
 Version 3.9 - 20 November 2008
 
 	geant:

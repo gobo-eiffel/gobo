@@ -151,6 +151,15 @@ feature -- Access
 			ise_6_2_0_not_void: Result /= Void
 		end
 
+	ise_6_2_7_2567: UT_VERSION is
+			-- ISE 6.2.7.2567
+			-- First release with support for keyword 'note'.
+		once
+			create Result.make (6, 2, 7, 2567)
+		ensure
+			ise_6_2_7_2567: Result /= Void
+		end
+
 	ise_6_2_7_2906: UT_VERSION is
 			-- ISE 6.2.7.2906
 			-- Last release with 'like Current', 'INTEGER', 'REAL' and 'DOUBLE'
@@ -181,6 +190,7 @@ feature -- Access
 			-- ISE 6.3.7.4554
 			-- First release with the 'variant' clause at the end
 			-- of the 'loop' instruction.
+			-- First release with support for keyword 'attribute'.
 		once
 			create Result.make (6, 3, 7, 4554)
 		ensure
@@ -193,6 +203,22 @@ feature -- Access
 			create Result.make_major_minor (6, 3)
 		ensure
 			ise_6_3_latest_not_void: Result /= Void
+		end
+
+	ise_6_4_0: UT_VERSION is
+			-- ISE 6.4.0
+		once
+			create Result.make (6, 4, 0, 0)
+		ensure
+			ise_6_4_0_not_void: Result /= Void
+		end
+
+	ise_6_4_latest: UT_VERSION is
+			-- After the last release ISE 6.4
+		once
+			create Result.make_major_minor (6, 4)
+		ensure
+			ise_6_4_latest_not_void: Result /= Void
 		end
 
 	ise_latest: UT_VERSION is

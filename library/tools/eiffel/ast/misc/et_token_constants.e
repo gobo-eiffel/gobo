@@ -2468,6 +2468,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	note_keyword: ET_KEYWORD is
+			-- 'note' keyword
+		once
+			create Result.make_note
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	obsolete_keyword: ET_KEYWORD is
 			-- 'obsolete' keyword
 		once
@@ -3181,6 +3189,7 @@ feature -- Keyword and symbol names
 	local_keyword_name: STRING is "local"
 	loop_keyword_name: STRING is "loop"
 	not_keyword_name: STRING is "not"
+	note_keyword_name: STRING is "note"
 	obsolete_keyword_name: STRING is "obsolete"
 	old_keyword_name: STRING is "old"
 	once_keyword_name: STRING is "once"

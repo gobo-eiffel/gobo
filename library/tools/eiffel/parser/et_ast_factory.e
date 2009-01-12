@@ -391,6 +391,15 @@ feature -- Eiffel keywords
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
+	new_note_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'note' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
+		do
+			Result := tokens.note_keyword
+		end
+
 	new_obsolete_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'obsolete' keyword
 		require

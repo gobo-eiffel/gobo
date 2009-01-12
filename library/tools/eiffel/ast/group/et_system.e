@@ -1183,6 +1183,10 @@ feature -- Parser status report
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
 
+	use_note_keyword: BOOLEAN
+			-- Should 'note' be considered as
+			-- a keyword (otherwise identifier)?
+
 	use_reference_keyword: BOOLEAN
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
@@ -1231,6 +1235,14 @@ feature -- Parser setting
 			use_attribute_keyword_set: use_attribute_keyword = b
 		end
 
+	set_use_note_keyword (b: BOOLEAN) is
+			-- Set `use_note_keyword' to `b'.
+		do
+			use_note_keyword := b
+		ensure
+			use_note_keyword_set: use_note_keyword = b
+		end
+
 	set_use_reference_keyword (b: BOOLEAN) is
 			-- Set `use_reference_keyword' to `b'.
 		do
@@ -1242,7 +1254,8 @@ feature -- Parser setting
 	set_default_keyword_usage is
 			-- Set default keyword usage.
 		do
-			set_use_attribute_keyword (False)
+			set_use_attribute_keyword (True)
+			set_use_note_keyword (True)
 			set_use_reference_keyword (True)
 		end
 
@@ -1635,7 +1648,8 @@ feature -- Compilation setting
 			ecma_version := a_version
 			if ecma_version /= Void then
 				set_use_attribute_keyword (True)
-				set_use_reference_keyword (True)
+				set_use_note_keyword (True)
+				set_use_reference_keyword (False)
 			elseif ise_version /= Void then
 				set_ise_version (ise_version)
 			else
@@ -1650,7 +1664,8 @@ feature -- Compilation setting
 		do
 			ise_version := a_version
 			if ise_version /= Void then
-				set_use_attribute_keyword (False)
+				set_use_attribute_keyword (ise_version >= ise_6_3_7_4554)
+				set_use_note_keyword (ise_version >= ise_6_2_7_2567)
 				set_use_reference_keyword (True)
 			elseif ecma_version /= Void then
 				set_ecma_version (ecma_version)

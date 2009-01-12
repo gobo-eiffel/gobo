@@ -120,6 +120,13 @@ feature -- Status report
 			Result := current_system.use_attribute_keyword
 		end
 
+	use_note_keyword: BOOLEAN is
+			-- Should 'note' be considered as
+			-- a keyword (otherwise identifier)?
+		do
+			Result := current_system.use_note_keyword
+		end
+
 	use_reference_keyword: BOOLEAN is
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
@@ -899,6 +906,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.local_keyword_name)
 			Result.force_new (-1, tokens.loop_keyword_name)
 			Result.force_new (-1, tokens.not_keyword_name)
+			Result.force_new (-1, tokens.note_keyword_name)
 			Result.force_new (-1, tokens.obsolete_keyword_name)
 			Result.force_new (-1, tokens.old_keyword_name)
 			Result.force_new (-1, tokens.once_keyword_name)
@@ -1305,6 +1313,26 @@ feature {NONE} -- Processing
 							when 'p', 'P' then
 								last_token := E_LOOP
 								last_et_keyword_value := ast_factory.new_loop_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'n', 'N' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 't', 'T' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								if use_note_keyword then
+									last_token := E_NOTE
+									last_et_keyword_value := ast_factory.new_note_keyword (Current)
+								end
 							else
 								-- Do nothing.
 							end

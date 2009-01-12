@@ -55,6 +55,7 @@ inherit
 			new_local_keyword,
 			new_loop_keyword,
 			new_not_keyword,
+			new_note_keyword,
 			new_obsolete_keyword,
 			new_old_keyword,
 			new_once_keyword,
@@ -687,6 +688,15 @@ feature -- Eiffel keywords
 			-- New 'not' keyword
 		do
 			create Result.make_not
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_note_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'note' keyword
+		do
+			create Result.make_note
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
