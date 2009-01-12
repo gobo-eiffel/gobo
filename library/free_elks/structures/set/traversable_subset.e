@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Subsets that are traversable sequentially"
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ deferred class TRAVERSABLE_SUBSET [G] inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		require
 			not_off: not off
@@ -28,14 +28,14 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		deferred
 		end
 
 feature -- Comparison
 
-	disjoint (other: TRAVERSABLE_SUBSET [G]): BOOLEAN is
+	disjoint (other: TRAVERSABLE_SUBSET [G]): BOOLEAN
 			-- Do current set and `other' have no
 			-- items in common?
 		local
@@ -49,7 +49,7 @@ feature -- Comparison
 			end
 		end
 
-	is_subset (other: TRAVERSABLE_SUBSET [G]): BOOLEAN is
+	is_subset (other: TRAVERSABLE_SUBSET [G]): BOOLEAN
 			-- Is current set a subset of `other'?
 		do
 			if not other.is_empty and then count <= other.count then
@@ -68,29 +68,29 @@ feature -- Comparison
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is cursor behind last item?
 		deferred
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is cursor off the active items?
 		deferred
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is container empty?
 		deferred
 		end
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first item.
 		deferred
 		end
 
-	forth is
+	forth
 			-- Move cursor to next element.
 		require
 			not_after: not after
@@ -99,7 +99,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	merge (other: CONTAINER [G]) is
+	merge (other: CONTAINER [G])
 			-- Add all items of `other'.
 		local
 			l: LINEAR [G]
@@ -123,7 +123,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove current item.
 		require
 			not_off: not off
@@ -132,7 +132,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	symdif (other: TRAVERSABLE_SUBSET [G]) is
+	symdif (other: TRAVERSABLE_SUBSET [G])
 			-- Remove all items also in `other', and add all
 			-- items of `other' not already present.
 		local
@@ -154,7 +154,7 @@ feature -- Basic operations
 			end
 		end
 
-	intersect (other: TRAVERSABLE_SUBSET [G]) is
+	intersect (other: TRAVERSABLE_SUBSET [G])
 			-- Remove all items not in `other'.
 			-- No effect if `other' `is_empty'.
 		do
@@ -176,7 +176,7 @@ feature -- Basic operations
 			end
 		end
 
-	subtract (other: TRAVERSABLE_SUBSET [G]) is
+	subtract (other: TRAVERSABLE_SUBSET [G])
 			-- Remove all items also in `other'.
 		do
 			if not (other.is_empty or is_empty) then
@@ -198,7 +198,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]):
-							SUBSET_STRATEGY [G] is
+							SUBSET_STRATEGY [G]
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
 		require
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			strategy_set: Result /= Void
 		end
 
-	subset_strategy (other: TRAVERSABLE_SUBSET [G]): SUBSET_STRATEGY [G] is
+	subset_strategy (other: TRAVERSABLE_SUBSET [G]): SUBSET_STRATEGY [G]
 			-- Subset strategy suitable for the type of the contained elements.
 		require
 			not_empty: not is_empty
@@ -228,7 +228,7 @@ invariant
 	empty_definition: is_empty = (count = 0)
 	count_range: count >= 0
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

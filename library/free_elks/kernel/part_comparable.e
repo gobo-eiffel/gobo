@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that may be compared according to a partial order relation"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
@@ -11,14 +11,14 @@ deferred class
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		require
 			other_exists: other /= Void
 		deferred
 		end
 
-	is_less_equal alias "<=" (other: like Current): BOOLEAN is
+	is_less_equal alias "<=" (other: like Current): BOOLEAN
 			-- Is current object less than or equal to `other'?
 		require
 			other_exists: other /= Void
@@ -26,7 +26,7 @@ feature -- Comparison
 			Result := (Current < other) or (Current ~ other)
 		end
 
-	is_greater alias ">" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN
 			-- Is current object greater than `other'?
 		require
 			other_exists: other /= Void
@@ -34,7 +34,7 @@ feature -- Comparison
 			Result := other < Current
 		end
 
-	is_greater_equal alias ">=" (other: like Current): BOOLEAN is
+	is_greater_equal alias ">=" (other: like Current): BOOLEAN
 			-- Is current object greater than or equal to `other'?
 		require
 			other_exists: other /= Void

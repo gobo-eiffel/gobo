@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		References to objects containing reference to object
 		meant to be exchanged with non-Eiffel software.

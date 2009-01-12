@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Subsets that are traversable linearly without commitment to a concrete
@@ -19,24 +19,24 @@ deferred class LINEAR_SUBSET [G] inherit
 
 feature -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Current index
 		deferred
 		end
 
 feature -- Status report
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is cursor at left from first item?
 		deferred
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last item?
 		deferred
 		end
 
-	valid_index (n: INTEGER): BOOLEAN is
+	valid_index (n: INTEGER): BOOLEAN
 			-- Is `n' a valid index?
 		deferred
 		ensure
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th item.
 		require
 			valid_index: valid_index (i)
@@ -56,7 +56,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put_left (v: G) is
+	put_left (v: G)
 			-- Insert `v' before the cursor.
 		require
 			item_exists: v /= Void
@@ -66,7 +66,7 @@ feature -- Element change
 			cursor_position_unchanged: index = old index + 1
 		end
 
-	move_item (v: G) is
+	move_item (v: G)
 			-- Move `v' to the left of cursor.
 		require
 			item_exists: v /= Void
@@ -102,7 +102,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]):
-								SUBSET_STRATEGY [G] is
+								SUBSET_STRATEGY [G]
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
 		do
@@ -117,7 +117,7 @@ invariant
 
 	before_definition: before = (index = 0)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

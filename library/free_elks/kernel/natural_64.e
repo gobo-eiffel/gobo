@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unsigned integer values coded on 64 bits"
 	external_name: "System.UInt64"
 	assembly: "mscorlib"
@@ -53,7 +53,7 @@ convert
 
 feature -- Comparison
 
-	is_less alias "<" (other: NATURAL_64): BOOLEAN is
+	is_less alias "<" (other: NATURAL_64): BOOLEAN
 			-- Is current integer less than `other'?
 		external
 			"built_in"
@@ -61,49 +61,49 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	plus alias "+" (other: NATURAL_64): NATURAL_64 is
+	plus alias "+" (other: NATURAL_64): NATURAL_64
 			-- Sum with `other'
 		external
 			"built_in"
 		end
 
-	minus alias "-" (other: NATURAL_64): NATURAL_64 is
+	minus alias "-" (other: NATURAL_64): NATURAL_64
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: NATURAL_64): NATURAL_64 is
+	product alias "*" (other: NATURAL_64): NATURAL_64
 			-- Product by `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: NATURAL_64): REAL_64 is
+	quotient alias "/" (other: NATURAL_64): REAL_64
 			-- Division by `other'
 		external
 			"built_in"
 		end
 
-	identity alias "+": NATURAL_64 is
+	identity alias "+": NATURAL_64
 			-- Unary plus
 		external
 			"built_in"
 		end
 
-	integer_quotient alias "//" (other: NATURAL_64): NATURAL_64 is
+	integer_quotient alias "//" (other: NATURAL_64): NATURAL_64
 			-- Integer division of Current by `other'
 		external
 			"built_in"
 		end
 
-	integer_remainder alias "\\" (other: NATURAL_64): NATURAL_64 is
+	integer_remainder alias "\\" (other: NATURAL_64): NATURAL_64
 			-- Remainder of the integer division of Current by `other'
 		external
 			"built_in"
 		end
 
-	power alias "^" (other: REAL_64): REAL_64 is
+	power alias "^" (other: REAL_64): REAL_64
 			-- Integer power of Current by `other'
 		external
 			"built_in"
@@ -111,73 +111,73 @@ feature -- Basic operations
 
 feature -- Conversion
 
-	as_natural_8: NATURAL_8 is
+	as_natural_8: NATURAL_8
 			-- Convert `item' into an NATURAL_8 value.
 		external
 			"built_in"
 		end
 
-	as_natural_16: NATURAL_16 is
+	as_natural_16: NATURAL_16
 			-- Convert `item' into an NATURAL_16 value.
 		external
 			"built_in"
 		end
 
-	as_natural_32: NATURAL_32 is
+	as_natural_32: NATURAL_32
 			-- Convert `item' into an NATURAL_32 value.
 		external
 			"built_in"
 		end
 
-	as_natural_64: NATURAL_64 is
+	as_natural_64: NATURAL_64
 			-- Convert `item' into an NATURAL_64 value.
 		external
 			"built_in"
 		end
 
-	as_integer_8: INTEGER_8 is
+	as_integer_8: INTEGER_8
 			-- Convert `item' into an INTEGER_8 value.
 		external
 			"built_in"
 		end
 
-	as_integer_16: INTEGER_16 is
+	as_integer_16: INTEGER_16
 			-- Convert `item' into an INTEGER_16 value.
 		external
 			"built_in"
 		end
 
-	as_integer_32: INTEGER_32 is
+	as_integer_32: INTEGER_32
 			-- Convert `item' into an INTEGER_32 value.
 		external
 			"built_in"
 		end
 
-	as_integer_64: INTEGER_64 is
+	as_integer_64: INTEGER_64
 			-- Convert `item' into an INTEGER_64 value.
 		external
 			"built_in"
 		end
 
-	to_real_32: REAL_32 is
+	to_real_32: REAL_32
 			-- Convert `item' into a REAL_32
 		external
 			"built_in"
 		end
 
-	to_real_64: REAL_64 is
+	to_real_64: REAL_64
 			-- Convert `item' into a REAL_64
 		external
 			"built_in"
 		end
 
-	to_character_8: CHARACTER_8 is
+	to_character_8: CHARACTER_8
 			-- Associated character in 8 bit version.
 		external
 			"built_in"
 		end
 
-	to_character_32: CHARACTER_32 is
+	to_character_32: CHARACTER_32
 			-- Associated character in 32 bit version.
 		external
 			"built_in"
@@ -185,37 +185,37 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	bit_and alias "&" (i: NATURAL_64): NATURAL_64 is
+	bit_and alias "&" (i: NATURAL_64): NATURAL_64
 			-- Bitwise and between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_or alias "|" (i: NATURAL_64): NATURAL_64 is
+	bit_or alias "|" (i: NATURAL_64): NATURAL_64
 			-- Bitwise or between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_xor (i: NATURAL_64): NATURAL_64 is
+	bit_xor (i: NATURAL_64): NATURAL_64
 			-- Bitwise xor between Current' and `i'.
 		external
 			"built_in"
 		end
 
-	bit_not: NATURAL_64 is
+	bit_not: NATURAL_64
 			-- One's complement of Current.
 		external
 			"built_in"
 		end
 
-	bit_shift_left alias "|<<" (n: INTEGER): NATURAL_64 is
+	bit_shift_left alias "|<<" (n: INTEGER): NATURAL_64
 			-- Shift Current from `n' position to left.
 		external
 			"built_in"
 		end
 
-	bit_shift_right alias "|>>" (n: INTEGER): NATURAL_64 is
+	bit_shift_right alias "|>>" (n: INTEGER): NATURAL_64
 			-- Shift Current from `n' position to right.
 		external
 			"built_in"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Stacks with a bounded physical size, implemented by arrays"
@@ -32,7 +32,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create a stack for at most `n' items.
 		require
 			non_negative_argument: n >= 0
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Last item pushed (i.e. top)
 		require else
 			not_empty: count > 0
@@ -53,7 +53,7 @@ feature -- Access
 			Result := fl.item (count)
 		end
 
-	item_for_iteration: G is
+	item_for_iteration: G
 			-- Element at current iteration position
 		require
 			not_off: not off
@@ -65,12 +65,12 @@ feature -- Measurement
 
 	count: INTEGER
 
-	capacity: INTEGER is
+	capacity: INTEGER
 		do
 			Result := fl.count - 1
 		end
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 		do
 			if object_comparison then
 				fl.compare_objects
@@ -82,21 +82,21 @@ feature -- Measurement
 
 feature -- Element change
 
-	extend, force, put (v: like item) is
+	extend, force, put (v: like item)
 			-- Push `v' on top.
 		do
 			count := count + 1
 			fl.put (v, count)
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace top item by `v'.
 		do
 			fl.put (v, count)
 		end
 feature -- Access
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does `v' appear in stack?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove top item.
 		require else
 			not_empty: count /= 0
@@ -120,7 +120,7 @@ feature -- Removal
 			fl.area.put_default (count)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			fl.clear_all
@@ -129,20 +129,20 @@ feature -- Removal
 
 feature -- Status report
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 		do
 			Result := not full
 		ensure then
 			Result = not full
 		end
 
-	resizable: BOOLEAN is True
+	resizable: BOOLEAN = True
 
-	prunable: BOOLEAN is True
+	prunable: BOOLEAN = True
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (in the reverse order of original insertion)
 		local
@@ -161,7 +161,7 @@ feature -- Conversion
 
 feature -- Iteration
 
-	start is
+	start
 			-- Move to first position.
 			-- (No effect if empty)
 		do
@@ -170,7 +170,7 @@ feature -- Iteration
 			end
 		end
 
-	finish is
+	finish
 			-- Move to last position.
 			-- (No effect if empty)
 		do
@@ -179,13 +179,13 @@ feature -- Iteration
 			end
 		end
 
-	forth is
+	forth
 			-- Move to next position.
 		do
 			index := index - 1
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := (index < 1) or else (index > count)
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	prune (v: G) is
+	prune (v: G)
 		do
 		end
 
@@ -210,7 +210,7 @@ invariant
 	count_small_enough: count <= capacity
 	extendible_definition: extendible = not full
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

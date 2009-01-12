@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Stacks implemented by resizable arrays"
@@ -59,7 +59,7 @@ create {ARRAYED_STACK}
 
 feature -- Element change
 
-	extend, put, force (v: like item) is
+	extend, put, force (v: like item)
 			-- Push `v' on top.
 		do
 			al_extend (v)
@@ -68,7 +68,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove top item.
 		require else
 			not_empty: count /= 0
@@ -79,7 +79,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (in the reverse order of original insertion)
 		local
@@ -96,7 +96,7 @@ feature -- Conversion
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

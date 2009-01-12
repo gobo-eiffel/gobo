@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Containers whose items are accessible through keys"
@@ -20,7 +20,7 @@ deferred class TABLE [G, H] inherit
 
 feature -- Access
 
-	item alias "[]", at alias "@" (k: H): G assign force is
+	item alias "[]", at alias "@" (k: H): G assign force
 			-- Entry of key `k'.
 		require
 			valid_key: valid_key (k)
@@ -29,21 +29,21 @@ feature -- Access
 
 feature -- Status report
 
-	valid_key (k: H): BOOLEAN is
+	valid_key (k: H): BOOLEAN
 			-- Is `k' a valid key?
 		deferred
 		end
 
 feature -- Element change
 
-	put (v: G; k: H) is
+	put (v: G; k: H)
 			-- Associate value `v' with key `k'.
 		require
 			valid_key: valid_key (k)
 		deferred
 		end
 
-	force (v: G; k: H) is
+	force (v: G; k: H)
 			-- Associate value `v' with key `k'.
 		require
 			valid_key: valid_key (k)
@@ -54,11 +54,11 @@ feature -- Element change
 
 feature {NONE} -- Inapplicable
 
-	bag_put (v: G) is
+	bag_put (v: G)
 		do
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

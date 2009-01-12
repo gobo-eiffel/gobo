@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Data structures of the most general kind,
@@ -18,12 +18,12 @@ deferred class BOX [G] inherit
 
 feature -- Status report
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		deferred
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

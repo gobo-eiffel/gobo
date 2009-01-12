@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Sequential lists whose items are sorted in ascending order
@@ -22,7 +22,7 @@ deferred class PART_SORTED_LIST [G -> PART_COMPARABLE] inherit
 
 feature -- Access
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does structure include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -38,7 +38,7 @@ feature -- Access
 			end
 		end
 
-	search_after (v: like item) is
+	search_after (v: like item)
 			-- Go to first position with item greater
 			-- than or equal to `v'.
 		do
@@ -53,7 +53,7 @@ feature -- Access
 			argument_less_than_item: (not after) implies (v <= item)
 		end
 
-	search_before (v: like item) is
+	search_before (v: like item)
 			-- Go to last position with item less
 			-- than or equal to `v'.
 		do
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Element change
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Put `v' at proper position in list.
 			-- The cursor ends up on the newly inserted
 			-- item.
@@ -80,7 +80,7 @@ feature -- Element change
 			item_inserted: item = v
 		end
 
-	merge (other: LINEAR [G]) is
+	merge (other: LINEAR [G])
 			-- Add all items from `other' at their proper positions.
 		do
 			from
@@ -98,10 +98,10 @@ feature -- Element change
 feature -- Status report
 
 
-	sorted: BOOLEAN is
+	sorted: BOOLEAN
 		deferred
 		end
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

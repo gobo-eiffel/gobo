@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Values that may be hashed into an integer index, 
 		for use as keys in hash tables

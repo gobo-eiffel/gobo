@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Constants used by memory management.
 		This class may be used as ancestor by classes needing its facilities.
@@ -14,22 +14,22 @@ class
 
 feature -- Access
 
-	Total_memory: INTEGER is 0
+	Total_memory: INTEGER = 0
 			-- Code for all the memory managed
 			-- by the garbage collector
 
-	Eiffel_memory: INTEGER is 1
+	Eiffel_memory: INTEGER = 1
 			-- Code for the Eiffel memory managed
 			-- by the garbage collector
 
-	C_memory: INTEGER is 2
+	C_memory: INTEGER = 2
 			-- Code for the C memory managed
 			-- by the garbage collector
 
-	Full_collector: INTEGER is 0
+	Full_collector: INTEGER = 0
 			-- Statistics for full collections
 
-	Incremental_collector: INTEGER is 1;
+	Incremental_collector: INTEGER = 1;
 			-- Statistics for incremental collections
 
 end

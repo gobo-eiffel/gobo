@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File name abstraction"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -22,7 +22,7 @@ create {FILE_NAME}
 
 feature {NONE} -- Initialization
 
-	make_temporary_name is
+	make_temporary_name
 			-- Create a temporary filename.
 		local
 			p: POINTER
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the file name valid for the operating system?
 		local
 			any: ANY
@@ -43,7 +43,7 @@ feature -- Status report
 			Result := eif_is_file_valid ($any)
 		end
 
-	is_file_name_valid (f_name: STRING): BOOLEAN is
+	is_file_name_valid (f_name: STRING): BOOLEAN
 			-- Is `f_name' a valid file name part for the operating system?
 		local
 			any: ANY
@@ -52,7 +52,7 @@ feature -- Status report
 			Result := eif_is_file_name_valid ($any)
 		end
 
-	is_extension_valid (ext: STRING): BOOLEAN is
+	is_extension_valid (ext: STRING): BOOLEAN
 			-- Is `ext' a valid extension for the operating system?
 		local
 			any: ANY
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_file_name (file_name: STRING) is
+	set_file_name (file_name: STRING)
 			-- Set the value of the file name part.
 		require
 			string_exists: file_name /= Void
@@ -84,7 +84,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	add_extension (ext: STRING) is
+	add_extension (ext: STRING)
 			-- Append the extension `ext' to the file name
 		require
 			string_exists: ext /= Void
@@ -97,7 +97,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	new_string (n: INTEGER): like Current is
+	new_string (n: INTEGER): like Current
 			-- New instance of current with space for at least `n' characters.
 		do
 			create Result.string_make (n)
@@ -105,27 +105,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	eif_append_file_name (s, p, v: POINTER) is
+	eif_append_file_name (s, p, v: POINTER)
 		external
 			"C signature (EIF_REFERENCE, EIF_CHARACTER *, EIF_CHARACTER *) use %"eif_path_name.h%""
 		end
 
-	eif_is_file_name_valid (p: POINTER): BOOLEAN is
+	eif_is_file_name_valid (p: POINTER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	eif_is_extension_valid (p: POINTER): BOOLEAN is
+	eif_is_extension_valid (p: POINTER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	eif_is_file_valid (p: POINTER): BOOLEAN is
+	eif_is_file_valid (p: POINTER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	c_tempnam (d, n: POINTER): POINTER is
+	c_tempnam (d, n: POINTER): POINTER
 		external
 			"C signature (char *, char *): EIF_POINTER use <stdio.h>"
 		alias

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Circular chains implemented by resizable arrays"
@@ -49,7 +49,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create a circular chain with `n' items.
 		require
 			at_least_one: n >= 1
@@ -59,13 +59,13 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		do
 			Result := list.item
 		end
 
-	cursor: CIRCULAR_CURSOR is
+	cursor: CIRCULAR_CURSOR
 			-- Current cursor position
 		do
 			create Result.make (list.cursor, internal_exhausted, starter)
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		do
 			Result := list.count
@@ -81,19 +81,19 @@ feature -- Measurement
 
 feature -- Status report
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			Result := list.full
 		end
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := list.readable
 		end
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		do
 			if {c_c: CIRCULAR_CURSOR} p then
@@ -102,13 +102,13 @@ feature -- Status report
 			end
 		end
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be written?
 		do
 			Result := list.writable
 		end
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor on first item?
 		do
 			if not is_empty then
@@ -120,7 +120,7 @@ feature -- Status report
 			end
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor on last item?
 		do
 			if not is_empty then
@@ -134,7 +134,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
 			if {c_c: CIRCULAR_CURSOR} p then
@@ -143,14 +143,14 @@ feature -- Cursor movement
 				starter := c_c.starter
 			end
 		end
-	set_start is
+	set_start
 			-- Select current item as the first.
 		do
 			starter := standard_index
 			internal_exhausted := False
 		end
 
-	start is
+	start
 			-- Move to position currently selected as first.
 		do
 			internal_exhausted := False
@@ -165,34 +165,34 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace current item by `v'.
 		do
 			list.replace (v)
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
 			list.merge_right (other.list)
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
 			list.put_right (v)
 		end
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
 			list.put_front (v)
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor except if it was `off'.
 		do
@@ -200,14 +200,14 @@ feature -- Element change
 			if standard_index = 0 then list.forth end
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
 			list.merge_left (other.list)
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -216,7 +216,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require else
@@ -230,7 +230,7 @@ feature -- Removal
 			end
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require else
@@ -245,7 +245,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			list.wipe_out
@@ -255,7 +255,7 @@ feature -- Removal
 
 feature {ARRAYED_CIRCULAR} -- Implementation
 
-	fix_start_for_remove is
+	fix_start_for_remove
 			-- Before deletion, update starting position if necessary.
 		do
 			if count = 1 or starter = 0 then
@@ -272,7 +272,7 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 	starter: INTEGER
 			-- The position currently selected as first
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -282,89 +282,89 @@ feature {ARRAYED_CIRCULAR} -- Implementation
 
 	list: ARRAYED_LIST [G]
 
-	standard_after: BOOLEAN is
+	standard_after: BOOLEAN
 			do
 				Result := list.after
 			end
 
-	standard_back is
+	standard_back
 			do
 				list.back
 			end
 
-	standard_before: BOOLEAN is
+	standard_before: BOOLEAN
 			do
 				Result := list.before
 			end
 
-	standard_finish is
+	standard_finish
 			do
 				list.finish
 			end
 
-	standard_forth is
+	standard_forth
 			do
 				list.forth
 			end
 
-	standard_go_i_th (i: INTEGER) is
+	standard_go_i_th (i: INTEGER)
 			do
 				list.go_i_th (i)
 			end
 
-	standard_index: INTEGER is
+	standard_index: INTEGER
 			do
 				Result := list.index
 			end
 
-	standard_isfirst: BOOLEAN is
+	standard_isfirst: BOOLEAN
 			do
 				Result := list.isfirst
 			end
 
-	standard_islast: BOOLEAN is
+	standard_islast: BOOLEAN
 			do
 				Result := list.islast
 			end
 
-	standard_move (i: INTEGER) is
+	standard_move (i: INTEGER)
 			do
 				list.move (i)
 			end
 
-	standard_off: BOOLEAN is
+	standard_off: BOOLEAN
 			do
 				Result := list.off
 			end
 
-	standard_remove is
+	standard_remove
 			do
 				list.remove
 			end
 
-	standard_remove_left is
+	standard_remove_left
 			do
 				list.remove_left
 			end
 
-	standard_remove_right is
+	standard_remove_right
 			do
 				list.remove_right
 			end
 
-	standard_search (v: G) is
+	standard_search (v: G)
 			do
 				list.search (v)
 			end
 
-	standard_start is
+	standard_start
 			do
 				list.start
 			end
 
 feature {NONE} -- Inapplicable
 
-	l_forth is
+	l_forth
 		do
 		end
 
@@ -372,7 +372,7 @@ invariant
 	non_negative_count: count >= 0
 	valid_starter: starter >= 0 and starter <= count
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

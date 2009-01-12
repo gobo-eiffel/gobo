@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Stream of data stored in non Eiffel memory"
 	library: "Free implementation of ELKS library"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_size: INTEGER) is
+	make (a_size: INTEGER)
 			-- Initialize current with `a_size' bytes.
 		require
 			valid_size: a_size >= 0
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			is_resizable_set: is_resizable
 		end
 
-	make_from_pointer (an_area: POINTER; a_size: INTEGER) is
+	make_from_pointer (an_area: POINTER; a_size: INTEGER)
 			-- Initialize Current with `an_area' and `a_size'.
 			-- Current will not be resizable as we do not know
 			-- who created `an_area'.
@@ -56,19 +56,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of bytes in Current.
 		do
 			Result := internal_area.count
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of bytes in Current.
 		do
 			Result := internal_area.count
 		end
 
-	area: POINTER is
+	area: POINTER
 			-- Memory area that holds data.
 		do
 			Result := internal_area.item
@@ -76,7 +76,7 @@ feature -- Access
 			non_void_area: Result /= default_pointer
 		end
 
-	item alias "[]", at alias "@" (i: INTEGER): INTEGER_8 assign put is
+	item alias "[]", at alias "@" (i: INTEGER): INTEGER_8 assign put
 			-- Entry at index `i'.
 		require
 			valid_index: valid_index (i)
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < capacity)
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_count, set_capacity (n: INTEGER) is
+	set_count, set_capacity (n: INTEGER)
 		require
 			valid_index: valid_index (n - 1)
 		do
@@ -108,7 +108,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put (v: INTEGER_8; i: INTEGER) is
+	put (v: INTEGER_8; i: INTEGER)
 			-- Replace `i'-th entry by `v'.
 		require
 			valid_index: valid_index (i)
@@ -118,7 +118,7 @@ feature -- Element change
 			inserted: item (i) = v
 		end
 
-	force (v: INTEGER_8; i: INTEGER) is
+	force (v: INTEGER_8; i: INTEGER)
 			-- Replace `i'-th entry by `v'.
 			-- If `i' is out of bound, reallocate Current.
 		require
@@ -132,7 +132,7 @@ feature -- Element change
 			inserted: item (i) = v
 		end
 
-	append (other: like Current) is
+	append (other: like Current)
 			-- Append `other' at the end of Current.
 		require
 			other_not_void: other /= Void
@@ -147,7 +147,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -156,7 +156,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy other in Current
 		do
 			area.memory_free
@@ -166,7 +166,7 @@ feature -- Duplication
 
 feature {NONE} -- Disposal
 
-	dispose is
+	dispose
 			-- Release `area'.
 		do
 			area.item.memory_free

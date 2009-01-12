@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Two-dimensional arrays"
@@ -39,7 +39,7 @@ create
 
 feature -- Initialization
 
-	make (nb_rows, nb_columns: INTEGER) is
+	make (nb_rows, nb_columns: INTEGER)
 			-- Create a two dimensional array which has `nb_rows'
 			-- rows and `nb_columns' columns,
 			-- with lower bounds starting at 1.
@@ -54,7 +54,7 @@ feature -- Initialization
 			new_count: count = height * width
 		end
 
-	initialize (v: G) is
+	initialize (v: G)
 			-- Make each entry have value `v'.
 		local
 			row, column: INTEGER
@@ -78,7 +78,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item alias "[]" (row, column: INTEGER): G assign put is
+	item alias "[]" (row, column: INTEGER): G assign put
 			-- Entry at coordinates (`row', `column')
 		require
 			valid_row: (1 <= row) and (row <= height)
@@ -97,7 +97,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (v: like item; row, column: INTEGER) is
+	put (v: like item; row, column: INTEGER)
 			-- Assign item `v' at coordinates (`row', `column').
 		require
 			valid_row: 1 <= row and row <= height
@@ -106,7 +106,7 @@ feature -- Element change
 			array_put (v, (row - 1) * width + column)
 		end
 
-	force (v: like item; row, column: INTEGER) is
+	force (v: like item; row, column: INTEGER)
 			-- Assign item `v' at coordinates (`row', `column').
 			-- Resize if necessary.
 		require
@@ -119,7 +119,7 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			height := 0
@@ -129,7 +129,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (nb_rows, nb_columns: INTEGER) is
+	resize (nb_rows, nb_columns: INTEGER)
 			-- Rearrange array so that it can accommodate
 			-- `nb_rows' rows and `nb_columns' columns,
 			-- without losing any previously
@@ -176,7 +176,7 @@ feature -- Resizing
 
 feature {NONE} -- Implementation
 
-	transfer (new: like Current; in_old, in_new, nb: INTEGER) is
+	transfer (new: like Current; in_old, in_new, nb: INTEGER)
 			-- Copy `nb' items, starting from `in_old',
 			-- to `new', starting from `in_new'.
 			-- Do not copy out_of_bounds items.
@@ -199,7 +199,7 @@ invariant
 
 	items_number: count = width * height
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

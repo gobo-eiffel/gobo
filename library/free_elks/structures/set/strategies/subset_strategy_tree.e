@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 		Strategies for calculating several features for subsets represented
@@ -16,7 +16,7 @@ class SUBSET_STRATEGY_TREE [G -> COMPARABLE] inherit
 
 feature -- Comparison
 
-	disjoint (set1, set2: BINARY_SEARCH_TREE_SET [G]): BOOLEAN is
+	disjoint (set1, set2: BINARY_SEARCH_TREE_SET [G]): BOOLEAN
 			-- Are `set1' and `set2' disjoint?
 		do
 			from
@@ -42,7 +42,7 @@ feature -- Comparison
 	
 feature -- Basic operations
 
-	symdif (set1, set2: BINARY_SEARCH_TREE_SET [G]) is
+	symdif (set1, set2: BINARY_SEARCH_TREE_SET [G])
 			-- Remove all items of `set1' that are also in `set2', and add all
 			-- items of `set2' not already present in `set1'.
 		do
@@ -56,7 +56,7 @@ feature -- Basic operations
 			end
 		end
 	
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

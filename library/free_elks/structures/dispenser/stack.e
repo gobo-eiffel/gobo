@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Stacks (last-in, first-out dispensers), without commitment
@@ -24,21 +24,21 @@ deferred class STACK [G] inherit
 
 feature -- Element change
 
-	extend, force, put (v: like item) is
+	extend, force, put (v: like item)
 			-- Push `v' onto top.
 		deferred
 		ensure then
 			item_pushed: item = v
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace top item by `v'.
 		do
 			remove
 			extend (v)
 		end
 
-	fill (other: LINEAR [G]) is
+	fill (other: LINEAR [G])
 			-- Fill with as many items of `other' as possible.
 			-- Fill items with greatest index from `other' first.
 			-- Items inserted with lowest index (from `other') will
@@ -66,7 +66,7 @@ feature -- Element change
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

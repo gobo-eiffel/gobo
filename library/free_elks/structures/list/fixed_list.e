@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Lists with fixed maximum numbers of items, implemented by arrays"
@@ -84,7 +84,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an empty list.
 		do
 			array_make (1, n)
@@ -94,7 +94,7 @@ feature -- Initialization
 			new_count: count = 0
 		end
 
-	make_filled (n: INTEGER) is
+	make_filled (n: INTEGER)
 			-- Create a list with `n' void elements.
 		do
 			array_make (1, n)
@@ -109,25 +109,25 @@ feature -- Access
 	index: INTEGER
 		-- Current position in the list
 
-	item: G is
+	item: G
 			-- Current item
 		do
 			Result := area.item (index - 1)
 		end
 
-	first: G is
+	first: G
 			-- Item at first position
 		do
 			Result := area.item (0)
 		end
 
-	last: like first is
+	last: like first
 			-- Item at last position
 		do
 			Result := area.item (count - 1)
 		end
 
-	cursor: ARRAYED_LIST_CURSOR is
+	cursor: ARRAYED_LIST_CURSOR
 			-- Current cursor position
 		do
 			create Result.make (index)
@@ -139,25 +139,25 @@ feature -- Measurement
 
 feature -- Status report
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		do
 			Result := (count < capacity)
 		end
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed?
 		do
 			Result := not is_empty
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is the list full?
 		do
 			Result := count = capacity
 		end
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Is `p' a valid cursor?
 		do
 			if {fl_c: ARRAYED_LIST_CURSOR} p then
@@ -167,7 +167,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		do
 			index := index + i
@@ -178,37 +178,37 @@ feature -- Cursor movement
 			end
 		end
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			index := 1
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 		do
 			index := count
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position, if any.
 		do
 			index := index + 1
 		end
 
-	back is
+	back
 			-- Move cursor to previous position, if any.
 		do
 			index := index - 1
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		do
 			index := i
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to element remembered in `p'.
 		do
 			if {fl_c: ARRAYED_LIST_CURSOR} p then
@@ -218,7 +218,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put (v: like first) is
+	put (v: like first)
 			-- Replace current item by `v'.
 			-- (Synonym for `replace')
 		require else
@@ -227,13 +227,13 @@ feature -- Element change
 			replace (v)
 		end
 
-	replace (v: like first) is
+	replace (v: like first)
 			-- Replace current item by `v'.
 		do
 			put_i_th (v, index)
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 			-- Move index to the current item.
 		do
@@ -242,7 +242,7 @@ feature -- Element change
 			force_i_th (v, count)
 		end
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor)
@@ -266,7 +266,7 @@ feature -- Element change
 
 feature -- Transformation
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
 		local
@@ -279,7 +279,7 @@ feature -- Transformation
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-list beginning at cursor position
 			-- and having min (`n', `count' - `index' + 1) items
 		local
@@ -302,7 +302,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	force (v: like item) is
+	force (v: like item)
 			-- Not used since extend is not always applicable.
 		do
 		end
@@ -311,7 +311,7 @@ invariant
 
 	empty_means_storage_empty: is_empty implies all_default
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

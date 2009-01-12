@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for recursive trees"
@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make (active_node, parent_of_active: like active;
-			aft, bef, bel: BOOLEAN) is
+			aft, bef, bel: BOOLEAN)
 			-- Create a cursor and set it up on `active_node'.
 		do
 			active := active_node
@@ -49,7 +49,7 @@ feature {RECURSIVE_CURSOR_TREE} -- Status report
 	below: BOOLEAN;
 			-- Is there no valid cursor position below cursor?
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

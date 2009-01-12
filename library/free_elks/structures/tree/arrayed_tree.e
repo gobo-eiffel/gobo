@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Trees where the children of each node are kept in an array"
@@ -38,7 +38,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER; v: G) is
+	make (n: INTEGER; v: G)
 			-- Create node with item `v'.
 			-- Allocate space for `n' children.
 		require
@@ -56,7 +56,7 @@ feature -- Access
 	parent: ?like child
 			-- Parent of current node
 
-	left_sibling: like parent is
+	left_sibling: like parent
 			-- Left neighbor if any
 		local
 			p: like parent
@@ -67,7 +67,7 @@ feature -- Access
 			end
 		end
 
-	right_sibling: like parent is
+	right_sibling: like parent
 			-- Right neighbor if any
 		local
 			p: like parent
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Element change
 
-	child_put, child_replace (v: like item) is
+	child_put, child_replace (v: like item)
 			-- Replace current child item with `v'.
 		local
 			c: like child
@@ -96,7 +96,7 @@ feature -- Element change
 			end
 		end
 
-	replace_child (n: like child) is
+	replace_child (n: like child)
 			-- Make `n' the node's current child.
 		do
 			if object_comparison then
@@ -114,7 +114,7 @@ feature -- Element change
 			child_replaced: n.parent = Current
 		end
 
-	child_extend (v: like item) is
+	child_extend (v: like item)
 			-- Add `v' at end.
 			-- Do not move child cursor.
 		local
@@ -129,7 +129,7 @@ feature -- Element change
 			al_extend (n)
 		end
 
-	child_put_left (v: like item) is
+	child_put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move child cursor.
 		local
@@ -144,7 +144,7 @@ feature -- Element change
 			al_put_left (n)
 		end
 
-	child_put_right (v: like item) is
+	child_put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move child cursor.
 		local
@@ -159,7 +159,7 @@ feature -- Element change
 			al_put_right (n)
 		end
 
-	put_child_left (n: like child) is
+	put_child_left (n: like child)
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -172,7 +172,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	put_child_right (n: like child) is
+	put_child_right (n: like child)
 			-- Add `n' to the right of the cursor position.
 			-- Do not move cursor.
 		do
@@ -185,7 +185,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	put_child (n: like child) is
+	put_child (n: like child)
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
@@ -198,7 +198,7 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	merge_tree_before (other: ARRAYED_TREE [G]) is
+	merge_tree_before (other: ARRAYED_TREE [G])
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -211,7 +211,7 @@ feature -- Element change
 			al_merge_left (l_list)
 		end
 
-	merge_tree_after (other: ARRAYED_TREE [G]) is
+	merge_tree_after (other: ARRAYED_TREE [G])
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -226,7 +226,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_child is
+	remove_child
 			-- Remove child at cursor position.
 			-- Move cursor to the next sibling, or `after' if none.
 		local
@@ -239,7 +239,7 @@ feature -- Removal
 			al_remove
 		end
 
-	remove_left_child is
+	remove_left_child
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -247,7 +247,7 @@ feature -- Removal
 			remove_child
 		end
 
-	remove_right_child is
+	remove_right_child
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -256,7 +256,7 @@ feature -- Removal
 			child_back
 		end
 
-	forget_left is
+	forget_left
 			-- Forget all left siblings.
 		local
 			i: INTEGER
@@ -279,7 +279,7 @@ feature -- Removal
 			end
 		end
 
-	forget_right is
+	forget_right
 			-- Forget all right siblings.
 		local
 			i: INTEGER
@@ -304,7 +304,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
@@ -333,19 +333,19 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add `v' as new child.
 		do
 		end
 
-	set_child (n: like parent) is
+	set_child (n: like parent)
 			-- Set child to `n'.
 		do
 		end
 
 feature {ARRAYED_TREE} -- Implementation
 
-	new_node: like Current is
+	new_node: like Current
 			-- A newly created instance of the same type,
 			-- with the same arity and node value.
 			-- This feature may be redefined in descendants so as to
@@ -354,7 +354,7 @@ feature {ARRAYED_TREE} -- Implementation
 			create Result.make (arity, item)
 		end
 
-	duplicate_all: like Current is
+	duplicate_all: like Current
 			-- Copy of sub-tree including all children
 		local
 			pos: CURSOR
@@ -378,7 +378,7 @@ feature {ARRAYED_TREE} -- Implementation
 			child_go_to (pos)
 		end
 
-	fill_subtree (other: TREE [G]) is
+	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'
 		local
 			temp: like parent
@@ -401,20 +401,20 @@ feature {ARRAYED_TREE} -- Implementation
 			end
 		end
 
-	attach_to_parent (n: like parent) is
+	attach_to_parent (n: like parent)
 			-- Make `n' parent of current node;
 		do
 			parent := n
 		end
 
-	clone_node (n: like Current): like Current is
+	clone_node (n: like Current): like Current
 			-- Clone node `n'.
 		do
 			create Result.make (n.arity, n.item)
 			Result.copy_node (n)
 		end
 
-	copy_node (n: like Current) is
+	copy_node (n: like Current)
 			-- Copy content of `n' except tree data into Current.
 		local
 			l_arrayed_list: like arrayed_list
@@ -433,20 +433,20 @@ feature {NONE} -- Implementation
 	arrayed_list: ARRAYED_LIST [ARRAYED_TREE [G]]
 			-- arrayed list of arrayed_tree.
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- A newly created instance of the same type.
 		do
 			create Result.make (0, item)
 		end
 
-	new_cell (v: like item): like Current is
+	new_cell (v: like item): like Current
 			-- New node with value `v' and no children.
 		do
 			create Result.make (0, v)
 			Result.attach_to_parent (Current)
 		end
 
-	position_in_parent: INTEGER is
+	position_in_parent: INTEGER
 			-- Position of current node in parent
 		local
 			p: like parent
@@ -457,7 +457,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attach (other: ARRAYED_TREE [G]) is
+	attach (other: ARRAYED_TREE [G])
 			-- Attach all children of `other' to current node.
 			-- Put `other' in mode `off'.
 		local
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	do_all_internal (an_agent: PROCEDURE [ANY, TUPLE [G]]; a_tree_node: ARRAYED_TREE [G]) is
+	do_all_internal (an_agent: PROCEDURE [ANY, TUPLE [G]]; a_tree_node: ARRAYED_TREE [G])
 			-- Apply action to every child.
 		require
 			non_void_agent: an_agent /= Void
@@ -500,117 +500,117 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	child: ARRAYED_TREE [G] is
+	child: ARRAYED_TREE [G]
 		do
 			Result := arrayed_list.item
 		end
 
-	array_item (n: INTEGER): ARRAYED_TREE [G] is
+	array_item (n: INTEGER): ARRAYED_TREE [G]
 		do
 			Result := arrayed_list.i_th (n)
 		end
 
-	last_child: like first_child is
+	last_child: like first_child
 		do
 			Result := arrayed_list.last
 		end
 
-	first_child: like parent is
+	first_child: like parent
 		do
 			Result := arrayed_list.first
 		end
 
-	search_child (v: ARRAYED_TREE [like item]) is
+	search_child (v: ARRAYED_TREE [like item])
 		do
 			arrayed_list.search (v)
 		end
 
-	readable_child: BOOLEAN is
+	readable_child: BOOLEAN
 		do
 			Result := arrayed_list.readable
 		end
 
-	writable_child: BOOLEAN is
+	writable_child: BOOLEAN
 		do
 			Result := arrayed_list.writable
 		end
 
-	arity: INTEGER is
+	arity: INTEGER
 		do
 			Result := arrayed_list.count
 		end
 
-	child_start is
+	child_start
 		do
 			arrayed_list.start
 		end
 
-	child_finish is
+	child_finish
 		do
 			arrayed_list.finish
 		end
 
-	child_forth is
+	child_forth
 		do
 			arrayed_list.forth
 		end
 
-	child_back is
+	child_back
 		do
 			arrayed_list.back
 		end
 
-	child_go_i_th (i: INTEGER) is
+	child_go_i_th (i: INTEGER)
 		do
 			arrayed_list.go_i_th (i)
 		end
 
-	child_index: INTEGER is
+	child_index: INTEGER
 		do
 			Result := arrayed_list.index
 		end
 
-	child_off: BOOLEAN is
+	child_off: BOOLEAN
 		do
 			Result := arrayed_list.off
 		end
 
-	child_after: BOOLEAN is
+	child_after: BOOLEAN
 		do
 			Result := arrayed_list.after
 		end
 
-	child_before: BOOLEAN is
+	child_before: BOOLEAN
 		do
 			Result := arrayed_list.before
 		end
 
-	child_cursor: CURSOR is
+	child_cursor: CURSOR
 		do
 			Result := arrayed_list.cursor
 		end
 
-	child_go_to (p: CURSOR) is
+	child_go_to (p: CURSOR)
 		do
 			arrayed_list.go_to (p)
 		end
 
-	index_of (v: ARRAYED_TREE [like item]; i: INTEGER): INTEGER is
+	index_of (v: ARRAYED_TREE [like item]; i: INTEGER): INTEGER
 		do
 			Result := arrayed_list.index_of (v, i)
 		end
 
-	prune (n: like child) is
+	prune (n: like child)
 		do
 			arrayed_list.prune (n)
 		end
 
-	wipe_out is
+	wipe_out
 		do
 			arrayed_list.wipe_out
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move child
 		obsolete
 			"Use feature `child_move' instead"
@@ -618,12 +618,12 @@ feature -- Access
 			child_move (i)
 		end
 
-	child_move (i: INTEGER) is
+	child_move (i: INTEGER)
 		do
 			arrayed_list.move (i)
 		end
 
-	do_all (an_agent: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (an_agent: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `an_agent' to every child nodes in the tree.
 		do
 			do_all_internal (an_agent, Current)
@@ -631,97 +631,97 @@ feature -- Access
 
 feature {NONE} -- private access arrayed_list
 
-	al_make (n: INTEGER)is
+	al_make (n: INTEGER)
 		do
 			arrayed_list.make (n)
 		end
 
-	al_extend (v: ARRAYED_TREE [like item]) is
+	al_extend (v: ARRAYED_TREE [like item])
 		do
 			arrayed_list.extend (v)
 		end
 
-	al_duplicate (n: INTEGER): ARRAYED_LIST [like Current] is
+	al_duplicate (n: INTEGER): ARRAYED_LIST [like Current]
 		do
 			Result := arrayed_list.duplicate (n)
 		end
 
-	al_remove is
+	al_remove
 		do
 			arrayed_list.remove
 		end
 
-	al_remove_left is
+	al_remove_left
 		do
 			arrayed_list.remove_left
 		end
 
-	al_remove_right is
+	al_remove_right
 		do
 			arrayed_list.remove_right
 		end
 
-	al_put_left (v: ARRAYED_TREE [like item]) is
+	al_put_left (v: ARRAYED_TREE [like item])
 		do
 			arrayed_list.put_left (v)
 		end
 
-	al_put_right (v: ARRAYED_TREE [like item]) is
+	al_put_right (v: ARRAYED_TREE [like item])
 		do
 			arrayed_list.put_right (v)
 		end
 
-	al_merge_left (v: ARRAYED_LIST [ARRAYED_TREE [like item]]) is
+	al_merge_left (v: ARRAYED_LIST [ARRAYED_TREE [like item]])
 		do
 			arrayed_list.merge_left (v)
 		end
 
-	al_merge_right (v: ARRAYED_LIST [ARRAYED_TREE [like item]]) is
+	al_merge_right (v: ARRAYED_LIST [ARRAYED_TREE [like item]])
 		do
 			arrayed_list.merge_right (v)
 		end
 
-	al_object_comparison: BOOLEAN is
+	al_object_comparison: BOOLEAN
 		do
 			Result := arrayed_list.object_comparison
 		end
 
-	al_full: BOOLEAN is
+	al_full: BOOLEAN
 		do
 			Result := arrayed_list.full
 		end
 
-	al_extendible: BOOLEAN is
+	al_extendible: BOOLEAN
 		do
 			Result := arrayed_list.extendible
 		end
 
-	al_put (v: ARRAYED_TREE [like item]) is
+	al_put (v: ARRAYED_TREE [like item])
 		do
 			arrayed_list.put (v)
 		end
 
-	al_replace (v: ARRAYED_TREE [G]) is
+	al_replace (v: ARRAYED_TREE [G])
 		do
 			arrayed_list.replace (v)
 		end
 
-	al_fill (other: CONTAINER [ARRAYED_TREE [G]]) is
+	al_fill (other: CONTAINER [ARRAYED_TREE [G]])
 		do
 			arrayed_list.fill (other)
 		end
 
-	al_lin_rep: LINEAR [ARRAYED_TREE [G]] is
+	al_lin_rep: LINEAR [ARRAYED_TREE [G]]
 		do
 			Result := arrayed_list.linear_representation
 		end
 
-	al_has (v: ARRAYED_TREE [like item]): BOOLEAN is
+	al_has (v: ARRAYED_TREE [like item]): BOOLEAN
 		do
 			Result := arrayed_list.has (v)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cursors for linked trees"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature {LINKED_TREE} -- Access
 	active: ?LINKED_TREE [G];
 			-- Current node
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

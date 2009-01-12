@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Facilities for tuning up the garbage collection mechanism.
 		This class may be used as ancestor by classes needing its facilities.
@@ -19,7 +19,7 @@ inherit
 
 feature -- Measurement
 
-	memory_statistics (memory_type: INTEGER): MEM_INFO is
+	memory_statistics (memory_type: INTEGER): MEM_INFO
 			-- Memory usage information for `memory_type'
 		require
 			type_ok:
@@ -30,7 +30,7 @@ feature -- Measurement
 			create Result.make (memory_type)
 		end
 
-	gc_statistics (collector_type: INTEGER): GC_INFO is
+	gc_statistics (collector_type: INTEGER): GC_INFO
 			-- Garbage collection information for `collector_type'.
 		require
 			type_ok:
@@ -42,7 +42,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	memory_threshold: INTEGER is
+	memory_threshold: INTEGER
 			-- Minimum amount of bytes to be allocated before
 			-- starting an automatic garbage collection.
 		external
@@ -51,7 +51,7 @@ feature -- Status report
 			"eif_mem_tget"
 		end
 
-	collection_period: INTEGER is
+	collection_period: INTEGER
 			-- Period of full collection.
 			-- If the environment variable EIF_FULL_COLLECTION_PERIOD
 			-- is defined, it is set to the closest reasonable
@@ -63,7 +63,7 @@ feature -- Status report
 			"eif_mem_pget"
 		end
 
-	coalesce_period: INTEGER is
+	coalesce_period: INTEGER
 			-- Period of full coalesce (in number of collections)
 			-- If the environment variable EIF_FULL_COALESCE_PERIOD
 			-- is defined, it is set to the closest reasonable
@@ -75,7 +75,7 @@ feature -- Status report
 			"eif_coalesce_period"
 		end
 
-	collecting: BOOLEAN is
+	collecting: BOOLEAN
 			-- Is garbage collection enabled?
 		external
 			"C use %"eif_memory.h%""
@@ -83,7 +83,7 @@ feature -- Status report
 			"eif_gc_ison"
 		end
 
-	largest_coalesced_block: INTEGER is
+	largest_coalesced_block: INTEGER
 			-- Size of largest coalesced block since last call to
 			-- `largest_coalesced'; 0 if none.
 		external
@@ -92,7 +92,7 @@ feature -- Status report
 			"eif_mem_largest"
 		end
 
-	max_mem: INTEGER is
+	max_mem: INTEGER
 			-- Maximum amount of bytes the run-time can allocate.
 		external
 			"C use %"eif_memory.h%""
@@ -100,7 +100,7 @@ feature -- Status report
 			"eif_get_max_mem"
 		end
 
-	chunk_size: INTEGER is
+	chunk_size: INTEGER
 			-- Minimal size of a memory chunk. The run-time always
 			-- allocates a multiple of this size.
 			-- If the environment variable EIF_MEMORY_CHUNK
@@ -112,7 +112,7 @@ feature -- Status report
 			"eif_get_chunk_size"
 		end
 
-	tenure: INTEGER is
+	tenure: INTEGER
 			-- Maximum age of object before being considered
 			-- as old (old objects are not scanned during
 			-- partial collection).
@@ -125,7 +125,7 @@ feature -- Status report
 			"eif_tenure"
 		end
 
-	generation_object_limit: INTEGER is
+	generation_object_limit: INTEGER
 			-- Maximum size of object in generational scavenge zone.
 			-- If the environment variable EIF_GS_LIMIT
 			-- is defined, it is set to the closest reasonable
@@ -136,7 +136,7 @@ feature -- Status report
 			"eif_generation_object_limit"
 		end
 
-	scavenge_zone_size: INTEGER is
+	scavenge_zone_size: INTEGER
 			-- Size of generational scavenge zone.
 			-- If the environment variable EIF_MEMORY_SCAVENGE
 			-- is defined, it is set to the closest reasonable
@@ -150,25 +150,25 @@ feature -- Status report
 
 feature -- Status report
 
-	referers (an_object: ANY): SPECIAL [ANY] is
+	referers (an_object: ANY): SPECIAL [ANY]
 			-- Objects that refer to `an_object'.
 		do
 			Result := find_referers (an_object, special_any_dynamic_type)
 		end
 
-	objects_instance_of (an_object: ANY): SPECIAL [ANY] is
+	objects_instance_of (an_object: ANY): SPECIAL [ANY]
 			-- Objects that have same dynamic type as `an_object'.
 		do
 			Result := objects_instance_of_type (internal_.dynamic_type (an_object))
 		end
 
-	objects_instance_of_type (a_type_id: INTEGER): SPECIAL [ANY] is
+	objects_instance_of_type (a_type_id: INTEGER): SPECIAL [ANY]
 			-- Objects that have same dynamic type as `an_object'.
 		do
 			Result := find_instance_of (a_type_id, special_any_dynamic_type)
 		end
 
-	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER] is
+	memory_map: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER]
 			-- Retrieves all object in system as a table indexed by dynamic type
 			-- where elements are all instances of a given data type.
 		local
@@ -237,7 +237,7 @@ feature -- Status report
 			end
 		end
 
-	memory_count_map: HASH_TABLE [INTEGER, INTEGER] is
+	memory_count_map: HASH_TABLE [INTEGER, INTEGER]
 			-- Number of instances per dynamic type present in system.
 			-- Same as `memory_map' except that no references on the objects themselves
 			-- is kept.
@@ -274,7 +274,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	execute_without_collection (a_action: PROCEDURE [ANY, TUPLE]) is
+	execute_without_collection (a_action: PROCEDURE [ANY, TUPLE])
 			-- Execute `a_action' with the garbage collector disabled.
 			-- If `a_action' modifies the status of `collecting', we restore
 			-- it no matter what at the end.
@@ -308,7 +308,7 @@ feature -- Status setting
 			retry
 		end
 
-	collection_off is
+	collection_off
 			-- Disable garbage collection.
 		external
 			"C use %"eif_memory.h%""
@@ -316,7 +316,7 @@ feature -- Status setting
 			"eif_gc_stop"
 		end
 
-	collection_on is
+	collection_on
 			-- Enable garbage collection.
 		external
 			"C use %"eif_memory.h%""
@@ -324,7 +324,7 @@ feature -- Status setting
 			"eif_gc_run"
 		end
 
-	allocate_fast is
+	allocate_fast
 			-- Enter ``speed'' mode: will optimize speed of memory
 			-- allocation rather than memory usage.
 		external
@@ -333,7 +333,7 @@ feature -- Status setting
 			"eif_mem_speed"
 		end
 
-	allocate_compact is
+	allocate_compact
 			-- Enter ``memory'' mode: will try to compact memory
 			-- before requesting more from the operating system.
 		external
@@ -342,7 +342,7 @@ feature -- Status setting
 			"eif_mem_slow"
 		end
 
-	allocate_tiny is
+	allocate_tiny
 			-- Enter ``tiny'' mode: will enter ``memory'' mode
 			-- after having freed as much memory as possible.
 		external
@@ -351,19 +351,19 @@ feature -- Status setting
 			"eif_mem_tiny"
 		end
 
-	enable_time_accounting is
+	enable_time_accounting
 			-- Enable GC time accouting, accessible in `gc_statistics'.
 		do
 			gc_monitoring (True)
 		end
 
-	disable_time_accounting is
+	disable_time_accounting
 			-- Disable GC time accounting (default).
 		do
 			gc_monitoring (False)
 		end
 
-	set_memory_threshold (value: INTEGER) is
+	set_memory_threshold (value: INTEGER)
 			-- Set a new `memory_threshold' in bytes. Whenever the memory
 			-- allocated for Eiffel reaches this value, an automatic
 			-- collection is performed.
@@ -375,7 +375,7 @@ feature -- Status setting
 			"eif_mem_tset"
 		end
 
-	set_collection_period (value: INTEGER) is
+	set_collection_period (value: INTEGER)
 			-- Set `collection_period'. Every `value' collection,
 			-- the Garbage collector will perform a collection
 			-- on the whole memory (full collection), otherwise
@@ -388,7 +388,7 @@ feature -- Status setting
 			"eif_mem_pset"
 		end
 
-	set_coalesce_period (value: INTEGER) is
+	set_coalesce_period (value: INTEGER)
 			-- Set `coalesce_period'. Every `value' collection,
 			-- the Garbage Collector will coalesce
 			-- the whole memory.
@@ -400,7 +400,7 @@ feature -- Status setting
 			"eif_set_coalesce_period"
 		end
 
-	set_max_mem (value: INTEGER) is
+	set_max_mem (value: INTEGER)
 			-- Set the maximum amount of memory the run-time can allocate.
 		require
 			positive_value: value > 0
@@ -412,7 +412,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			-- Default version does nothing; redefine in descendants
@@ -423,7 +423,7 @@ feature -- Removal
 		do
 		end
 
-	free (object: ANY) is
+	free (object: ANY)
 			-- Free `object', by-passing garbage collection.
 			-- Erratic behavior will result if the object is still
 			-- referenced.
@@ -431,7 +431,7 @@ feature -- Removal
 			"built_in static"
 		end
 
-	full_coalesce is
+	full_coalesce
 			-- Coalesce the whole memory: merge adjacent free
 			-- blocks to reduce fragmentation. Useful, when
 			-- a lot of memory is allocated with garbage collector off.
@@ -441,14 +441,14 @@ feature -- Removal
 			"eif_mem_coalesc"
 		end
 
-	collect is
+	collect
 			-- Force a partial collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		external
 			"C use %"eif_memory.h%""
 		end
 
-	full_collect is
+	full_collect
 			-- Force a full collection cycle if garbage
 			-- collection is enabled; do nothing otherwise.
 		external
@@ -459,7 +459,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	gc_monitoring (flag: BOOLEAN) is
+	gc_monitoring (flag: BOOLEAN)
 			-- Set up GC monitoring according to `flag'
 		external
 			"C use %"eif_memory.h%""
@@ -467,22 +467,22 @@ feature {NONE} -- Implementation
 			"eif_gc_mon"
 		end
 
-	find_referers (target: ANY; result_type: INTEGER): SPECIAL [ANY] is
+	find_referers (target: ANY; result_type: INTEGER): SPECIAL [ANY]
 		external
 			"built_in static"
 		end
 
-	find_instance_of (dtype, result_type: INTEGER): SPECIAL [ANY] is
+	find_instance_of (dtype, result_type: INTEGER): SPECIAL [ANY]
 		external
 			"C signature (EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
 		end
 
-	find_all_instances (result_type: INTEGER): SPECIAL [ANY] is
+	find_all_instances (result_type: INTEGER): SPECIAL [ANY]
 		external
 			"C signature (EIF_INTEGER): EIF_REFERENCE use %"eif_traverse.h%""
 		end
 
-	special_any_dynamic_type: INTEGER is
+	special_any_dynamic_type: INTEGER
 			-- Dynamic type ID of an instance of `SPECIAL [ANY]'
 		local
 			a: ARRAY [ANY]
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			Result := internal_.dynamic_type (spec)
 		end
 
-	internal_: INTERNAL is
+	internal_: INTERNAL
 			-- Internal features
 		once
 			create Result

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Sets implemented by linked lists"
@@ -38,7 +38,7 @@ create
 
 feature -- Element change
 
-	put, extend (v: G) is
+	put, extend (v: G)
 			-- Ensure that set includes `v'.
 		do
 			if is_empty or else not has (v) then
@@ -48,14 +48,14 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 		-- Remove `v' if present.
 		do
 			start
 			ll_prune (v)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

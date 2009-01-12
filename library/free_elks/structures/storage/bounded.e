@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Bounded data structures, with a notion of capacity."
@@ -15,20 +15,20 @@ deferred class BOUNDED [G] inherit
 
 feature -- Measurement
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of items that may be stored
 		deferred
 		end
 
 feature -- Status report
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure full?
 		do
 			Result := (count = capacity)
 		end
 
-	resizable: BOOLEAN is
+	resizable: BOOLEAN
 			-- May `capacity' be changed?
 		deferred
 		end
@@ -38,7 +38,7 @@ invariant
 	valid_count: count <= capacity
 	full_definition: full = (count = capacity)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

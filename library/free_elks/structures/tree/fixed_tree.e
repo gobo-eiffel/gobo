@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Trees where each node has a fixed number of children
@@ -40,7 +40,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER; v: G) is
+	make (n: INTEGER; v: G)
 			-- Create node with `n' void children and item `v'.
 		require
 			valid_number_of_children: n >= 0
@@ -53,7 +53,7 @@ feature -- Initialization
 			node_arity: arity = 0
 		end
 
-	make_filled (n: INTEGER; v: G) is
+	make_filled (n: INTEGER; v: G)
 			-- Create node with `n' void children and item `v'.
 		require
 			valid_number_of_children: n >= 0
@@ -83,7 +83,7 @@ feature -- Access
 	parent: ?FIXED_TREE [G]
 			-- Parent of current node
 
-	child_item: like item is
+	child_item: like item
 			-- Item of active child
 		local
 			c: like child
@@ -95,7 +95,7 @@ feature -- Access
 			Result := c.item
 		end
 
-	left_sibling: like parent is
+	left_sibling: like parent
 			-- Left neighbor, if any
 		local
 			p: like parent
@@ -108,7 +108,7 @@ feature -- Access
 			end
 		end
 
-	right_sibling: like parent is
+	right_sibling: like parent
 			-- Right neighbor, if any
 		local
 			p: like parent
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Status report
 
-	child_contractable: BOOLEAN is
+	child_contractable: BOOLEAN
 			-- May items be removed?
 		do
 			Result := not child_off
@@ -129,12 +129,12 @@ feature -- Status report
 			Result = not child_off
 		end
 
-	full: BOOLEAN is True
+	full: BOOLEAN = True
 			-- Is tree full?
 
 feature -- Element change
 
-	child_put, child_replace (v: like item) is
+	child_put, child_replace (v: like item)
 			-- Replace current child item with `v'
 		local
 			c: like child
@@ -150,7 +150,7 @@ feature -- Element change
 			end
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of current node.
 		require
 			is_not_root: not is_root
@@ -167,7 +167,7 @@ feature -- Element change
 			item_put: {l: like left_sibling} left_sibling and then l.item = v
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of current node.
 		require
 			is_not_root: not is_root
@@ -184,7 +184,7 @@ feature -- Element change
 			item_put: {r: like right_sibling} right_sibling and then r.item = v
 		end
 
-	put_child (n: like new_node) is
+	put_child (n: like new_node)
 			-- Make `n' the node's child.
 		require else
 			not_full: arity < capacity
@@ -201,7 +201,7 @@ feature -- Element change
 			child_replaced: n.parent = Current
 		end
 
-	replace_child (n: like new_node) is
+	replace_child (n: like new_node)
 			-- Make `n' the node's child.
 		do
 			if object_comparison then
@@ -215,7 +215,7 @@ feature -- Element change
 			child_replaced: n.parent = Current
 		end
 
-	put_left_sibling (other: like new_node) is
+	put_left_sibling (other: like new_node)
 			-- Make `other' the left sibling of current node.
 		require
 			is_not_root: not is_root
@@ -232,7 +232,7 @@ feature -- Element change
 			left_sibling_replaced: left_sibling = other
 		end
 
-	put_right_sibling (other: like new_node) is
+	put_right_sibling (other: like new_node)
 			-- Make `other' the right sibling of current node.
 		require
 			is_not_root: not is_root
@@ -251,7 +251,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_child is
+	remove_child
 			-- Remove active child.
 		do
 			fl_replace (Void)
@@ -259,7 +259,7 @@ feature -- Removal
 			child_removed: child = Void
 		end
 
-	forget_left is
+	forget_left
 			-- Forget all left siblings.
 		local
 			i: INTEGER
@@ -282,7 +282,7 @@ feature -- Removal
 			end
 		end
 
-	forget_right is
+	forget_right
 			-- Forget all right siblings.
 		local
 			i: INTEGER
@@ -307,7 +307,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
@@ -336,7 +336,7 @@ feature -- Duplication
 
 feature {FIXED_TREE} -- Implementation
 
-	new_node: like Current is
+	new_node: like Current
 			-- Instance of class `like Current'.
 			-- New allocated node of arity `arity'
 			-- and node value `item'
@@ -344,7 +344,7 @@ feature {FIXED_TREE} -- Implementation
 			create Result.make (arity, item)
 		end
 
-	duplicate_all: like Current is
+	duplicate_all: like Current
 			-- Copy of sub-tree including all children
 		local
 			pos: CURSOR
@@ -368,7 +368,7 @@ feature {FIXED_TREE} -- Implementation
 			child_go_to (pos)
 		end
 
-	fill_subtree (other: TREE [G]) is
+	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'
 		local
 			temp: like parent
@@ -391,7 +391,7 @@ feature {FIXED_TREE} -- Implementation
 			end
 		end
 
-	attach_to_parent (n: like parent) is
+	attach_to_parent (n: like parent)
 			-- Make `n' parent of current node
 			-- and set `position_in_parent'.
 		do
@@ -408,14 +408,14 @@ feature {NONE} -- Implementation
 	position_in_parent: INTEGER
 			-- Position of current node in parent
 
-	extendible: BOOLEAN is False;
+	extendible: BOOLEAN = False;
 			-- May new items be added?
 
 feature {FIXED_TREE} -- Implementation
 
 	fixed_list: FIXED_LIST [?FIXED_TREE [G]]
 
-	set_fixed_list (a_list: like fixed_list) is
+	set_fixed_list (a_list: like fixed_list)
 			-- Set `fixed_list' with `a_list'
 		require
 			non_void_list: a_list /= Void
@@ -427,7 +427,7 @@ feature {FIXED_TREE} -- Implementation
 
 feature -- Redefinition
 
-	child_capacity: INTEGER is
+	child_capacity: INTEGER
 			-- Maximal number of children
 		do
 			Result := fixed_list.count
@@ -435,14 +435,14 @@ feature -- Redefinition
 
 feature {FIXED_TREE} -- Implementation
 
-	clone_node (n: like Current): like Current is
+	clone_node (n: like Current): like Current
 			-- Clone node `n'.
 		do
 			create Result.make (n.arity, n.item)
 			Result.copy_node (n)
 		end
 
-	copy_node (n: like Current) is
+	copy_node (n: like Current)
 			-- Copy content of `n' except tree data into Current.
 		local
 			l_list: like fixed_list
@@ -460,185 +460,185 @@ feature {FIXED_TREE} -- Implementation
 
 feature -- Access
 
-	child: like parent is
+	child: like parent
 		do
 			Result := fixed_list.item
 		end
 
-	array_item (n: INTEGER): ?FIXED_TREE [G] is
+	array_item (n: INTEGER): ?FIXED_TREE [G]
 		do
 			Result := fixed_list.i_th (n)
 		end
 
-	last_child: like first_child is
+	last_child: like first_child
 		do
 			Result := fixed_list.last
 		end
 
-	first_child: like parent is
+	first_child: like parent
 		do
 			Result := fixed_list.first
 		end
 
-	search_child (v: FIXED_TREE [like item]) is
+	search_child (v: FIXED_TREE [like item])
 		do
 			fixed_list.search (v)
 		end
 
 	arity: INTEGER
 
-	child_start is
+	child_start
 		do
 			fixed_list.start
 		end
 
-	child_finish is
+	child_finish
 		do
 			fixed_list.finish
 		end
 
-	child_forth is
+	child_forth
 		do
 			fixed_list.forth
 		end
 
-	child_back is
+	child_back
 		do
 			fixed_list.back
 		end
 
-	child_go_i_th (i: INTEGER) is
+	child_go_i_th (i: INTEGER)
 		do
 			fixed_list.go_i_th (i)
 		end
 
-	child_index: INTEGER is
+	child_index: INTEGER
 		do
 			Result := fixed_list.index
 		end
 
-	child_off: BOOLEAN is
+	child_off: BOOLEAN
 		do
 			Result := fixed_list.off
 		end
 
-	child_after: BOOLEAN is
+	child_after: BOOLEAN
 		do
 			Result := fixed_list.after
 		end
 
-	child_before: BOOLEAN is
+	child_before: BOOLEAN
 		do
 			Result := fixed_list.before
 		end
 
-	child_cursor: CURSOR is
+	child_cursor: CURSOR
 		do
 			Result := fixed_list.cursor
 		end
 
-	child_go_to (p: CURSOR) is
+	child_go_to (p: CURSOR)
 		do
 			fixed_list.go_to (p)
 		end
 
-	index_of (v: FIXED_TREE [like item]; i: INTEGER): INTEGER is
+	index_of (v: FIXED_TREE [like item]; i: INTEGER): INTEGER
 		do
 			Result := fixed_list.index_of (v, i)
 		end
 
-	prune (n: like new_node) is
+	prune (n: like new_node)
 		do
 		end
 
-	wipe_out is
+	wipe_out
 		do
 			create fixed_list.make (fixed_list.count)
 		end
 
-	put_i_th (v: FIXED_TREE [like item]; n: INTEGER) is
+	put_i_th (v: FIXED_TREE [like item]; n: INTEGER)
 		do
 			fixed_list.put_i_th (v, n)
 		end
 
-	array_make (min_index: INTEGER; max_index: INTEGER) is
+	array_make (min_index: INTEGER; max_index: INTEGER)
 		do
 			fixed_list.array_make (min_index, max_index)
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 		do
 			Result := fixed_list.capacity
 		end
 
 feature {NONE} -- private access fixed_list
 
-	fl_make (n: INTEGER)is
+	fl_make (n: INTEGER)
 		do
 			fixed_list.make (n)
 		end
 
-	fl_make_filled (n: INTEGER) is
+	fl_make_filled (n: INTEGER)
 		do
 			fixed_list.make_filled (n)
 		end
 
-	fl_extend (v: FIXED_TREE [like item]) is
+	fl_extend (v: FIXED_TREE [like item])
 		do
 			fixed_list.extend (v)
 		end
 
-	fl_duplicate (n: INTEGER): FIXED_LIST [?like Current] is
+	fl_duplicate (n: INTEGER): FIXED_LIST [?like Current]
 		do
 			Result := fixed_list.duplicate (n)
 		end
 
-	fl_remove is
+	fl_remove
 		do
 			fixed_list.remove
 		end
 
-	fl_object_comparison: BOOLEAN is
+	fl_object_comparison: BOOLEAN
 		do
 			Result := fixed_list.object_comparison
 		end
 
-	fl_full: BOOLEAN is
+	fl_full: BOOLEAN
 		do
 			Result := fixed_list.full
 		end
 
-	fl_extendible: BOOLEAN is
+	fl_extendible: BOOLEAN
 		do
 			Result := fixed_list.extendible
 		end
 
-	fl_put (v: FIXED_TREE [like item]) is
+	fl_put (v: FIXED_TREE [like item])
 		do
 			fixed_list.put (v)
 		end
 
-	fl_replace (v: ?FIXED_TREE [G]) is
+	fl_replace (v: ?FIXED_TREE [G])
 		do
 			fixed_list.replace (v)
 		end
 
-	fl_fill (other: CONTAINER [FIXED_TREE [G]]) is
+	fl_fill (other: CONTAINER [FIXED_TREE [G]])
 		do
 			--fixed_list.fill (other)
 		end
 
-	fl_lin_rep: LINEAR [?FIXED_TREE [G]] is
+	fl_lin_rep: LINEAR [?FIXED_TREE [G]]
 		do
 			Result := fixed_list.linear_representation
 		end
 
-	fl_has (v: FIXED_TREE [like item]): BOOLEAN is
+	fl_has (v: FIXED_TREE [like item]): BOOLEAN
 		do
 			Result := fixed_list.has (v)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

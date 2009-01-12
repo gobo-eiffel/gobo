@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sequences of immutable 32-bit characters, accessible through integer indices
 		in a contiguous range.

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Prime number properties"
@@ -21,11 +21,11 @@ class PRIMES inherit
 
 feature -- Access
 
-	Smallest_prime: INTEGER is 2
+	Smallest_prime: INTEGER = 2
 
-	Smallest_odd_prime: INTEGER is 3
+	Smallest_odd_prime: INTEGER = 3
 
-	higher_prime (n: INTEGER): INTEGER is
+	higher_prime (n: INTEGER): INTEGER
 			-- Lowest prime greater than or equal to `n'
 		do
 			if n <= Smallest_prime then
@@ -49,7 +49,7 @@ feature -- Access
 			end
 		end
 
-	lower_prime (n: INTEGER): INTEGER is
+	lower_prime (n: INTEGER): INTEGER
 			-- Greatest prime lower than or equal to `n'
 		require
 			argument_big_enough: n >= Smallest_prime
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	all_lower_primes (n: INTEGER): ARRAY [BOOLEAN] is
+	all_lower_primes (n: INTEGER): ARRAY [BOOLEAN]
 			-- Array of `n' boolean values, where the
 			-- value at index `i' is true if and only if
 			-- `i' is prime.
@@ -114,7 +114,7 @@ feature -- Access
 			end
 		end
 
-	is_prime (n: INTEGER): BOOLEAN is
+	is_prime (n: INTEGER): BOOLEAN
 			-- Is `n' a prime number?
 		local
 			divisor: INTEGER
@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-	i_th (i: INTEGER): INTEGER is
+	i_th (i: INTEGER): INTEGER
 			-- The `i'-th prime number
 		local
 			candidates: ARRAY [BOOLEAN]
@@ -173,10 +173,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	precomputed_primes_count: INTEGER is 200
+	precomputed_primes_count: INTEGER = 200
 			-- Number of precomputed prime numbers.
 
-	internal_precomputed_primes: ARRAY [INTEGER] is
+	internal_precomputed_primes: ARRAY [INTEGER]
 			-- First `Precomputed_primes_count' prime numbers.
 		local
 			candidates: ARRAY [BOOLEAN]
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			upper_valid: Result.upper = Precomputed_primes_count
 		end
 
-	approximated_i_th (n: INTEGER): INTEGER is
+	approximated_i_th (n: INTEGER): INTEGER
 			-- Approximation of `n'-th prime number.
 		require
 			n_positive: n > 0

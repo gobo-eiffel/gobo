@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Real values, double precision"
 	external_name: "System.Double"
 	assembly: "mscorlib"
@@ -38,7 +38,7 @@ convert
 
 feature -- Comparison
 
-	is_less alias "<" (other: REAL_64): BOOLEAN is
+	is_less alias "<" (other: REAL_64): BOOLEAN
 			-- Is `other' greater than current double?
 		external
 			"built_in"
@@ -46,34 +46,34 @@ feature -- Comparison
 
 feature -- Conversion
 
-	truncated_to_integer: INTEGER_32 is
+	truncated_to_integer: INTEGER_32
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		external
 			"built_in"
 		end
 
-	truncated_to_integer_64: INTEGER_64 is
+	truncated_to_integer_64: INTEGER_64
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		external
 			"built_in"
 		end
 
-	truncated_to_real: REAL_32 is
+	truncated_to_real: REAL_32
 			-- Real part (Same sign, largest absolute
 			-- value no greater than current object's)
 		external
 			"built_in"
 		end
 
-	ceiling_real_64: REAL_64 is
+	ceiling_real_64: REAL_64
 			-- Smallest integral value no smaller than current object
 		external
 			"built_in"
 		end
 
-	floor_real_64: REAL_64 is
+	floor_real_64: REAL_64
 			-- Greatest integral value no greater than current object
 		external
 			"built_in"
@@ -81,43 +81,43 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	plus alias "+" (other: REAL_64): REAL_64 is
+	plus alias "+" (other: REAL_64): REAL_64
 			-- Sum with `other'
 		external
 			"built_in"
 		end
 
-	minus alias "-" (other: REAL_64): REAL_64 is
+	minus alias "-" (other: REAL_64): REAL_64
 			-- Result of subtracting `other'
 		external
 			"built_in"
 		end
 
-	product alias "*" (other: REAL_64): REAL_64 is
+	product alias "*" (other: REAL_64): REAL_64
 			-- Product with `other'
 		external
 			"built_in"
 		end
 
-	quotient alias "/" (other: REAL_64): REAL_64 is
+	quotient alias "/" (other: REAL_64): REAL_64
 			-- Division by `other'
 		external
 			"built_in"
 		end
 
-	power alias "^" (other: REAL_64): REAL_64 is
+	power alias "^" (other: REAL_64): REAL_64
 			-- Current double to the power `other'
 		external
 			"built_in"
 		end
 
-	identity alias "+": REAL_64 is
+	identity alias "+": REAL_64
 			-- Unary plus
 		external
 			"built_in"
 		end
 
-	opposite alias "-": REAL_64 is
+	opposite alias "-": REAL_64
 			-- Unary minus
 		external
 			"built_in"
@@ -125,7 +125,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of double value
 		external
 			"built_in"

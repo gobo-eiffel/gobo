@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fake abstraction of a .NET NATIVE_ARRAY in a non-.NET system"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"

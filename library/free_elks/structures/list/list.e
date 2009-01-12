@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Sequential lists, without commitment to a particular representation"
@@ -22,7 +22,7 @@ deferred class LIST [G] inherit
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `other' contain the same elements?
 		do
 			if Current = other then
@@ -71,13 +71,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := (index = count + 1)
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := (index = 0)
@@ -85,7 +85,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		deferred
@@ -98,7 +98,7 @@ invariant
 	before_definition: before = (index = 0)
 	after_definition: after = (index = count + 1)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

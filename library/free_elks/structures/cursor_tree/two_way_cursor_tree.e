@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursor trees implemented in two-way linked representation"
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an empty tree.
 		local
 			dummy: G
@@ -38,7 +38,7 @@ feature -- Initialization
 			is_empty: is_empty
 		end
 
-	make_root (v: G) is
+	make_root (v: G)
 			-- Create a tree with `v' as root.
 		local
 			dummy: G
@@ -50,12 +50,12 @@ feature -- Initialization
 
 feature -- Status report
 
-	full: BOOLEAN is False
+	full: BOOLEAN = False
 			-- Is tree filled to capacity? (Answer: no.)
 
-	prunable: BOOLEAN is True
+	prunable: BOOLEAN = True
 
-	is_leaf: BOOLEAN is
+	is_leaf: BOOLEAN
 		do
 			if not off then
 				Result := not below and then active.arity = 0
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Access
 
-	cursor: TWO_WAY_CURSOR_TREE_CURSOR [G] is
+	cursor: TWO_WAY_CURSOR_TREE_CURSOR [G]
 			-- Current cursor position
 		do
 			create Result.make (active, active_parent, after, before, below)
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_right (v: G) is
+	put_right (v: G)
 			-- Add `v' to the right of cursor position.
 		local
 			a: ?like active
@@ -108,7 +108,7 @@ feature -- Element change
 			end
 		end
 
-	put_root (v: G) is
+	put_root (v: G)
 			-- Put `v' as root of an empty tree.
 		require
 			is_empty: is_empty
@@ -130,7 +130,7 @@ feature -- Element change
 			count = 1
 		end
 
-	put_child (v: G) is
+	put_child (v: G)
 			-- Put `v' as child of a leaf.
 		require
 			is_leaf: is_leaf
@@ -141,7 +141,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	subtree: like Current is
+	subtree: like Current
 			-- Subtree rooted at current node.
 		do
 			create Result.make_root (item)
@@ -150,7 +150,7 @@ feature -- Duplication
 
 feature {LINKED_CURSOR_TREE} -- Implementation
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 	active: TWO_WAY_TREE [G];
 			-- Current node
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

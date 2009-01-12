@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Collections of items, where each item may occur zero
@@ -22,7 +22,7 @@ deferred class BAG [G] inherit
 
 feature -- Measurement
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in structure
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -33,14 +33,14 @@ feature -- Measurement
 
 feature -- Element change
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add a new occurrence of `v'.
 		deferred
 		ensure then
 			one_more_occurrence: occurrences (v) = old (occurrences (v)) + 1
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

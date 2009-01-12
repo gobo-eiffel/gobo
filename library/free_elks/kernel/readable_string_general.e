@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestors to all STRING classes. Read-only interface."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -31,14 +31,14 @@ inherit
 
 feature -- Access
 
-	code (i: INTEGER): NATURAL_32 is
+	code (i: INTEGER): NATURAL_32
 			-- Code at position `i'
 		require
 			valid_index: valid_index (i)
 		deferred
 		end
 
-	index_of_code (c: like code; start_index: INTEGER): INTEGER is
+	index_of_code (c: like code; start_index: INTEGER): INTEGER
 			-- Position of first occurrence of `c' at or after `start_index';
 			-- 0 if none.
 		require
@@ -70,57 +70,57 @@ feature -- Access
 
 feature -- Status report
 
-	is_immutable: BOOLEAN is
+	is_immutable: BOOLEAN
 			-- Can the character sequence of `Current' be changed?
 		do
 			Result := False
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of characters in Current
 		deferred
 		ensure
 			count_non_negative: Result >= 0
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of characters allocated in Current
 		deferred
 		ensure
 			capacity_non_negative: Result >= 0
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of the string?
 		deferred
 		end
 
-	valid_code (v: like code): BOOLEAN is
+	valid_code (v: like code): BOOLEAN
 			-- Is `v' a valid code for Current?
 		deferred
 		end
 
-	is_string_8: BOOLEAN is
+	is_string_8: BOOLEAN
 			-- Is `Current' a sequence of CHARACTER_8?
 		deferred
 		end
 
-	is_string_32: BOOLEAN is
+	is_string_32: BOOLEAN
 			-- Is `Current' a sequence of CHARACTER_32?
 		deferred
 		end
 
-	is_valid_as_string_8: BOOLEAN is
+	is_valid_as_string_8: BOOLEAN
 			-- Is `Current' convertible to a sequence of CHARACTER_8 without information loss?
 		deferred
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is structure empty?
 		deferred
 		end
 
-	has_code (c: like code): BOOLEAN is
+	has_code (c: like code): BOOLEAN
 			-- Does string include `c'?
 		local
 			i, nb: INTEGER
@@ -143,7 +143,7 @@ feature -- Status report
 				(Result = substring (2, count).has_code (c))
 		end
 
-	same_string (a_other: READABLE_STRING_GENERAL): BOOLEAN is
+	same_string (a_other: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_other' represent the same string as `Current'?
 		require
 			a_other_not_void: a_other /= Void
@@ -175,7 +175,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	frozen to_cil: SYSTEM_STRING is
+	frozen to_cil: SYSTEM_STRING
 			-- Create an instance of SYSTEM_STRING using characters
 			-- of Current between indices `1' and `count'.
 		require
@@ -186,7 +186,7 @@ feature -- Conversion
 			to_cil_not_void: Result /= Void
 		end
 
-	to_string_8: STRING_8 is
+	to_string_8: STRING_8
 			-- Convert `Current' as a STRING_8.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -197,7 +197,7 @@ feature -- Conversion
 			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
 		end
 
-	as_string_8: STRING_8 is
+	as_string_8: STRING_8
 			-- Convert `Current' as a STRING_8. If a code of `Current' is
 			-- node a valid code for a STRING_8 it is replaced with the null
 			-- character.
@@ -230,7 +230,7 @@ feature -- Conversion
 			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
 		end
 
-	as_string_32, to_string_32: STRING_32 is
+	as_string_32, to_string_32: STRING_32
 			-- Convert `Current' as a STRING_32.
 		local
 			i, nb: INTEGER
@@ -257,7 +257,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	substring (start_index, end_index: INTEGER): like Current is
+	substring (start_index, end_index: INTEGER): like Current
 			-- Copy of substring containing all characters at indices
 			-- between `start_index' and `end_index'
 		deferred
@@ -271,12 +271,12 @@ feature -- Duplication
 
 feature {NONE} -- Assertion helper
 
-	elks_checking: BOOLEAN is False
+	elks_checking: BOOLEAN = False
 			-- Are ELKS checkings verified? Must be True when changing implementation of STRING_GENERAL or descendant.
 
 feature {NONE} -- Implementation
 
-	string_searcher: STRING_SEARCHER is
+	string_searcher: STRING_SEARCHER
 			-- Facilities to search string in another string.
 		once
 			create Result.make
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			string_searcher_not_void: Result /= Void
 		end
 
-	c_string_provider: C_STRING is
+	c_string_provider: C_STRING
 			-- To create Eiffel strings from C string.
 		once
 			create Result.make_empty (0)
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			c_string_provider_not_void: Result /= Void
 		end
 
-	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR
 			-- Convertor used to convert string to integer or natural
 		once
 			create Result.make
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			ctoi_convertor_not_void: Result /= Void
 		end
 
-	ctor_convertor: STRING_TO_REAL_CONVERTOR is
+	ctor_convertor: STRING_TO_REAL_CONVERTOR
 			-- Convertor used to convert string to real or double
 		once
 			create Result.make
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			ctor_convertor_not_void: Result /= Void
 		end
 
-	dotnet_convertor: SYSTEM_STRING_FACTORY is
+	dotnet_convertor: SYSTEM_STRING_FACTORY
 			-- Convertor used to convert from and to SYSTEM_STRING.
 		once
 			create Result

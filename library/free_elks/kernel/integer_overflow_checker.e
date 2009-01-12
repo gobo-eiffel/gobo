@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String - Integer/Natural conversion overflow checker"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create integer_overflow_state1.make (type_count * 2 + 1)
@@ -56,7 +56,7 @@ feature{NONE} -- Initialization
 
 feature -- Overflow checking
 
-	will_overflow (part1: like max_natural_type; part2: like max_natural_type; type: INTEGER; sign: INTEGER): BOOLEAN is
+	will_overflow (part1: like max_natural_type; part2: like max_natural_type; type: INTEGER; sign: INTEGER): BOOLEAN
 			-- Will `part1' * 10 + `part2' with `sign' overflow
 			-- if we convert it to an number of `type'?			
 		require

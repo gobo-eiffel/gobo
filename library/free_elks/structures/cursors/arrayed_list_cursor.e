@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for arrayed lists"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (current_index: INTEGER) is
+	make (current_index: INTEGER)
 			-- Create a cursor and set it up on `current_index'.
 		do
 			index := current_index
@@ -29,7 +29,7 @@ feature {ARRAYED_LIST, FIXED_LIST, BINARY_TREE} -- Access
 	index: INTEGER;
 		-- Index of current item
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

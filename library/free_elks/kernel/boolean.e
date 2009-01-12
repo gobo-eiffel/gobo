@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Truth values, with the boolean operations"
 	external_name: "System.Boolean"
 	assembly: "mscorlib"
@@ -31,44 +31,44 @@ convert
 
 feature -- Basic operations
 
-	conjuncted alias "and" (other: BOOLEAN): BOOLEAN is
+	conjuncted alias "and" (other: BOOLEAN): BOOLEAN
 			-- Boolean conjunction with `other'
 		external
 			"built_in"
 		end
 
-	conjuncted_semistrict alias "and then" (other: BOOLEAN): BOOLEAN is
+	conjuncted_semistrict alias "and then" (other: BOOLEAN): BOOLEAN
 			-- Boolean semi-strict conjunction with `other'
 		external
 			"built_in"
 		end
 
-	implication alias "implies" (other: BOOLEAN): BOOLEAN is
+	implication alias "implies" (other: BOOLEAN): BOOLEAN
 			-- Boolean implication of `other'
 			-- (semi-strict)
 		external
 			"built_in"
 		end
 
-	negated alias "not": BOOLEAN is
+	negated alias "not": BOOLEAN
 			-- Negation
 		external
 			"built_in"
 		end
 
-	disjuncted alias "or" (other: BOOLEAN): BOOLEAN is
+	disjuncted alias "or" (other: BOOLEAN): BOOLEAN
 			-- Boolean disjunction with `other'
 		external
 			"built_in"
 		end
 
-	disjuncted_semistrict alias "or else" (other: BOOLEAN): BOOLEAN is
+	disjuncted_semistrict alias "or else" (other: BOOLEAN): BOOLEAN
 			-- Boolean semi-strict disjunction with `other'
 		external
 			"built_in"
 		end
 
-	disjuncted_exclusive alias "xor" (other: BOOLEAN): BOOLEAN is
+	disjuncted_exclusive alias "xor" (other: BOOLEAN): BOOLEAN
 			-- Boolean exclusive or with `other'
 		external
 			"built_in"

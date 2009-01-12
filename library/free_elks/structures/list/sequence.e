@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Finite sequences: structures where existing items are arranged
@@ -26,14 +26,14 @@ deferred class SEQUENCE [G] inherit
 
 feature -- Status report
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := not off
 		end
 
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		do
 			Result := not off
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Element change
 
-	force (v: like item) is
+	force (v: like item)
 			-- Add `v' to end.
 		require
 			extendible: extendible
@@ -52,7 +52,7 @@ feature -- Element change
 			item_inserted: has (v)
 		end
 
-	append (s: SEQUENCE [G]) is
+	append (s: SEQUENCE [G])
 			-- Append a copy of `s'.
 		require
 			argument_not_void: s /= Void
@@ -75,7 +75,7 @@ feature -- Element change
 	 		new_count: count >= old count
 		end
 
-	put (v: like item) is
+	put (v: like item)
 			-- Add `v' to end.
 		do
 			extend (v)
@@ -85,7 +85,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove the first occurrence of `v' if any.
 			-- If no such occurrence go `off'.
 		do
@@ -96,7 +96,7 @@ feature -- Removal
 			end
 		end
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of `v'; go `off'.
 		do
 			from
@@ -111,7 +111,7 @@ feature -- Removal
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 			Dispensers: containers for which clients have no say
@@ -22,13 +22,13 @@ deferred class DISPENSER [G] inherit
 
 feature -- Status report
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := not is_empty
 		end
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		do
 			Result := not is_empty
@@ -36,14 +36,14 @@ feature -- Status report
 
 feature -- Element change
 
-	append (s: SEQUENCE [G]) is
+	append (s: SEQUENCE [G])
 			-- Append a copy of `s'.
 			-- (Synonym for `fill')
 		do
 			fill (s)
 		end
 
-	extend, force, put (v: like item) is
+	extend, force, put (v: like item)
 			-- Add item `v'.
 		deferred
 		end
@@ -53,7 +53,7 @@ invariant
 	readable_definition: readable = not is_empty
 	writable_definition: writable = not is_empty
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 		Strategies for computing several features of subsets. The computing
@@ -16,7 +16,7 @@ deferred class
 
 feature -- Comparison
 
-	disjoint (set1, set2: TRAVERSABLE_SUBSET [G]): BOOLEAN is
+	disjoint (set1, set2: TRAVERSABLE_SUBSET [G]): BOOLEAN
 			-- Are `set1' and `set2' disjoint?
 		require
 			sets_exist: set1 /= Void and set2 /= Void
@@ -26,7 +26,7 @@ feature -- Comparison
 	
 feature -- Basic operations
 
-	symdif (set1, set2: TRAVERSABLE_SUBSET [G]) is
+	symdif (set1, set2: TRAVERSABLE_SUBSET [G])
 			-- Remove all items of `set1' that are also in `set2', and add all
 			-- items of `set2' not already present in `set1'.
 		require
@@ -35,7 +35,7 @@ feature -- Basic operations
 		deferred
 		end
 	
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

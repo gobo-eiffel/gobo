@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Infinite containers."
@@ -18,10 +18,10 @@ deferred class INFINITE [G] inherit
 
 feature -- Status report
 
-	is_empty: BOOLEAN is False
+	is_empty: BOOLEAN = False
 			-- Is structure empty? (Answer: no.)
 
-	full: BOOLEAN is True
+	full: BOOLEAN = True
 			-- The structure is complete
 
 invariant
@@ -29,7 +29,7 @@ invariant
 	never_empty: not is_empty
 	always_full: full
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

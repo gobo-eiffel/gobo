@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sequences of 32-bit characters, accessible through integer indices
 		in a contiguous range. Read-only interface.
@@ -424,7 +424,7 @@ feature -- Comparison
 			valid_result: as_lower ~ other.as_lower implies Result
 		end
 
-	same_string (other: READABLE_STRING_32): BOOLEAN is
+	same_string (other: READABLE_STRING_32): BOOLEAN
 			-- Do `Current' and `other' have same character sequence?
 		require
 			other_not_void: other /= Void
@@ -471,7 +471,7 @@ feature -- Status report
 	is_string_32: BOOLEAN = True
 			-- <Precursor>
 
-	is_valid_as_string_8: BOOLEAN is
+	is_valid_as_string_8: BOOLEAN
 			-- <Precursor>
 		local
 			i, nb: INTEGER

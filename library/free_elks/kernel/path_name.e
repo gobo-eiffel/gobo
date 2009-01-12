@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path name abstraction"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -25,13 +25,13 @@ inherit
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create path name object.
 		do
 			string_make (0)
 		end
 
-	make_from_string (p: STRING) is
+	make_from_string (p: STRING)
 			-- Create path name object and initialize it with the
 			-- path name `p'
 		require
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is the path name equal to `other'?
 		local
 			o_area: like area
@@ -60,7 +60,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_directory_name_valid (dir_name: STRING): BOOLEAN is
+	is_directory_name_valid (dir_name: STRING): BOOLEAN
 			-- Is `dir_name' a valid subdirectory part for the operating system?
 		require
 			exists: dir_name /= Void
@@ -71,7 +71,7 @@ feature -- Status report
 			Result := eif_is_directory_name_valid ($any)
 		end
 
-	is_volume_name_valid (vol_name: STRING): BOOLEAN is
+	is_volume_name_valid (vol_name: STRING): BOOLEAN
 			-- Is `vol_name' a valid volume name for the operating system?
 		require
 			exists: vol_name /= Void
@@ -82,14 +82,14 @@ feature -- Status report
 			Result := eif_is_volume_name_valid ($any)
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the path name valid for the operating system?
 		deferred
 		end
 
 feature -- Status setting
 
-	set_volume (volume_name: STRING) is
+	set_volume (volume_name: STRING)
 			-- Set the volume part of the path name to `volume_name'.
 		require
 			string_exists: volume_name /= Void
@@ -101,7 +101,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	extend, set_subdirectory (directory_name: STRING) is
+	extend, set_subdirectory (directory_name: STRING)
 			-- Append the subdirectory `directory_name' to the path name.
 		require
 			string_exists: directory_name /= Void
@@ -122,7 +122,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	set_directory (directory_name: STRING) is
+	set_directory (directory_name: STRING)
 			-- Set the absolute directory part of the path name to `directory_name'.
 		require
 			string_exists: directory_name /= Void
@@ -143,7 +143,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	extend_from_array (directories: ARRAY [STRING]) is
+	extend_from_array (directories: ARRAY [STRING])
 			-- Append the subdirectories from `directories' to the path name.
 		require
 			array_exists: directories /= Void and then not (directories.is_empty)
@@ -165,42 +165,42 @@ feature -- Status setting
 
 feature {NONE} -- Externals
 
-	eif_is_volume_name_valid (p: POINTER): BOOLEAN is
+	eif_is_volume_name_valid (p: POINTER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	eif_is_directory_name_valid (p: POINTER): BOOLEAN is
+	eif_is_directory_name_valid (p: POINTER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	eif_append_directory (s, p, v: POINTER) is
+	eif_append_directory (s, p, v: POINTER)
 		external
 			"C signature (EIF_REFERENCE, EIF_CHARACTER *, EIF_CHARACTER *) use %"eif_path_name.h%""
 		end
 
-	eif_set_directory (s, p, v: POINTER) is
+	eif_set_directory (s, p, v: POINTER)
 		external
 			"C signature (EIF_REFERENCE, EIF_CHARACTER *, EIF_CHARACTER *) use %"eif_path_name.h%""
 		end
 
-	eif_path_name_compare (s, t: POINTER; length: INTEGER): BOOLEAN is
+	eif_path_name_compare (s, t: POINTER; length: INTEGER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *, EIF_CHARACTER *, EIF_INTEGER): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	eif_volume_name (s: POINTER): ?STRING is
+	eif_volume_name (s: POINTER): ?STRING
 		external
 			"C signature (EIF_CHARACTER *): EIF_REFERENCE use %"eif_path_name.h%""
 		end
 
-	eif_extracted_paths (s: POINTER): ?ARRAY [STRING] is
+	eif_extracted_paths (s: POINTER): ?ARRAY [STRING]
 		external
 			"C signature (EIF_CHARACTER *): EIF_REFERENCE use %"eif_path_name.h%""
 		end
 
-	c_strlen (ptr: POINTER): INTEGER is
+	c_strlen (ptr: POINTER): INTEGER
 		external
 			"C signature (char *): EIF_INTEGER use <string.h>"
 		alias

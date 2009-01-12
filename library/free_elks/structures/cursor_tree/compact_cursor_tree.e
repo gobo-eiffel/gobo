@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Compact trees as active structures that may be traversed using a cursor"
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (i: INTEGER) is
+	make (i: INTEGER)
 			-- Create an empty tree.
 			-- `i' is an estimate of the number of nodes.
 		do
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Access
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does structure include an occurrence of `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -58,7 +58,7 @@ feature -- Access
 			Result := item_table.has (v)
 		end
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -71,13 +71,13 @@ feature -- Access
 			Result := item_table.occurrences (v)
 		end
 
-	item: G is
+	item: G
 			-- Current item
 		do
 			Result := item_table.item (active)
 		end
 
-	cursor: COMPACT_TREE_CURSOR is
+	cursor: COMPACT_TREE_CURSOR
 			-- Current cursor position
 		do
 			create Result.make (active, after, before, below, above)
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Measurement
 
-	arity: INTEGER is
+	arity: INTEGER
 			-- Number of children
 		local
 			index: INTEGER
@@ -100,7 +100,7 @@ feature -- Measurement
 			end
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in subtree
 		do
 			Result := last - free_list_count - 1
@@ -117,7 +117,7 @@ feature -- Status report
 	above: BOOLEAN
 			-- Is there no valid cursor position above the cursor?
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor on first sibling?
 		local
 			index: INTEGER
@@ -134,7 +134,7 @@ feature -- Status report
 			end
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor on last sibling?
 		do
 			if not off then
@@ -142,7 +142,7 @@ feature -- Status report
 			end
 		end
 
-	is_root: BOOLEAN is
+	is_root: BOOLEAN
 			-- Is cursor on root?
 	 	do
 			if not off then
@@ -151,21 +151,21 @@ feature -- Status report
 		end
 
 
-	full: BOOLEAN is False
+	full: BOOLEAN = False
 			-- Is tree filled to capacity? (Answer: no.)
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 		do
 			Result := count = 0
 		end
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 		do
 			Result := True
 		end
 
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		do
 			if {temp: COMPACT_TREE_CURSOR} p then
@@ -175,7 +175,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	back is
+	back
 			-- Move cursor one position backward.
 		local
 			index, next: INTEGER
@@ -218,7 +218,7 @@ feature -- Cursor movement
 			end
 		end
 
-	forth is
+	forth
 			-- Move cursor one position forward.
 		do
 			if below then
@@ -239,7 +239,7 @@ feature -- Cursor movement
 			end
 		end
 
-	up is
+	up
 			-- Move cursor one level upward, to parent
 			-- or `above' if `is_root' holds.
 		local
@@ -265,7 +265,7 @@ feature -- Cursor movement
 			before := False
 		end
 
-	down (i: INTEGER) is
+	down (i: INTEGER)
 			-- Move cursor one level downward:
 			-- to `i'-th child if there is one,
 			-- or `after' if `i' = `arity' + 1,
@@ -312,7 +312,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
 			if {temp: COMPACT_TREE_CURSOR} p then
@@ -330,7 +330,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace current item by `v'
 		require else
 			is_writable: writable
@@ -338,7 +338,7 @@ feature -- Element change
 			item_table.put (v, active)
 		end
 
-	put_right (v: G) is
+	put_right (v: G)
 			-- Add a leaf `v' to the right of cursor position.
 		local
 			new: INTEGER
@@ -364,7 +364,7 @@ feature -- Element change
 			end
 		end
 
-	put_left (v: G) is
+	put_left (v: G)
 			-- Add `v' to the left of current position.
 		require else
 			not_above: not above
@@ -387,7 +387,7 @@ feature -- Element change
 			active := new
 		end
 
-	put_front (v: G) is
+	put_front (v: G)
 			-- Add a leaf `v' as first child.
 			-- If `above' and `is_empty', make `v' the root value
 		local
@@ -418,7 +418,7 @@ feature -- Element change
 			end
 		end
 
-	put_parent (v: G) is
+	put_parent (v: G)
 			-- insert a new node, with value v, as parent of
 			-- current node and
 			-- with the same position
@@ -444,7 +444,7 @@ feature -- Element change
 			end
 		end
 
-	extend (v: G) is
+	extend (v: G)
 		local
 			new, index, next: INTEGER
 		do
@@ -478,7 +478,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove node at cursor position
 			-- (and consequently the corresponding subtree).
 			-- Move cursor to next sibling, or `after' if none.
@@ -522,7 +522,7 @@ feature -- Removal
 			not_before: not before
 		end
 
-	remove_node is
+	remove_node
 			-- Remove node at cursor position; insert children into
 			-- parent's children at current position; move cursor up.
 			-- If node is root, it must not have more than one child.
@@ -570,7 +570,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			item_table.conservative_resize (1, Block_threshold + 1)
@@ -593,7 +593,7 @@ feature -- Removal
 
 feature {COMPACT_CURSOR_TREE} -- Implementation
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 	active: INTEGER
 			-- Index of current item
 
-	Removed_mark: INTEGER is - 1
+	Removed_mark: INTEGER = - 1
 			-- Mark for removed child in `first_child_table'
 
 	last: INTEGER
@@ -627,7 +627,7 @@ feature {NONE} -- Implementation
 	free_list_count: INTEGER
 			-- Number of empty spaces in `item_table'
 
-	remove_subtree (i: INTEGER) is
+	remove_subtree (i: INTEGER)
 		local
 			index, next: INTEGER
 		do
@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_cell_index: INTEGER is
+	new_cell_index: INTEGER
 		do
 			if free_list_index > 0 then
 				Result := free_list_index
@@ -670,13 +670,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	block_threshold: INTEGER is
+	block_threshold: INTEGER
 		do
 			Result := 10
 		end
 
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

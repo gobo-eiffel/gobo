@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for compact trees"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (i: INTEGER; aft, bef, bel, abv: BOOLEAN) is
+	make (i: INTEGER; aft, bef, bel, abv: BOOLEAN)
 			-- Create a cursor and set it up on `i'.
 		do
 			active := i
@@ -48,7 +48,7 @@ feature {COMPACT_CURSOR_TREE} -- Status report
 	above: BOOLEAN;
 		-- Is there no valid cursor position above cursor?
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

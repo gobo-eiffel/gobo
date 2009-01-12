@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor of SPECIAL to perform queries on SPECIAL without knowing its actual generic type."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005, Eiffel Software and others"
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Count of special area		
 		deferred
 		ensure

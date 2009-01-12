@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Directories, in the Unix sense, with creation and exploration features"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (dn: STRING) is
+	make (dn: STRING)
 			-- Create directory object for directory
 			-- of name `dn'.
 		require
@@ -26,7 +26,7 @@ feature -- Initialization
 			mode := Close_directory
 		end
 
-	make_open_read (dn: STRING) is
+	make_open_read (dn: STRING)
 			-- Create directory object for directory
 			-- of name `dn' and open it for reading.
 		require
@@ -36,7 +36,7 @@ feature -- Initialization
 			open_read
 		end
 
-	create_dir is
+	create_dir
 			-- Create a physical directory.
 		require
 			physical_not_exists: not exists
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Access
 
-	readentry is
+	readentry
 			-- Read next directory entry
 			-- make result available in `lastentry'.
 			-- Make result Void if all entries have been read.
@@ -62,7 +62,7 @@ feature -- Access
 	name: STRING
 			-- Directory name
 
-	has_entry (entry_name: STRING): BOOLEAN is
+	has_entry (entry_name: STRING): BOOLEAN
 			-- Has directory the entry `entry_name'?
 			-- The use of `dir_temp' is required not
 			-- to change the position in the current
@@ -87,7 +87,7 @@ feature -- Access
 			dir_temp.close
 		end
 
-	open_read is
+	open_read
 			-- Open directory for reading.
 		local
 			external_name: ANY
@@ -97,7 +97,7 @@ feature -- Access
 			mode := Read_directory
 		end
 
-	close is
+	close
 			-- Close directory.
 		require
 			is_open: not is_closed
@@ -107,7 +107,7 @@ feature -- Access
 			mode := Close_directory
 		end
 
-	start is
+	start
 			-- Go to first entry of directory.
 		require
 			is_opened: not is_closed
@@ -115,7 +115,7 @@ feature -- Access
 			dir_rewind (directory_pointer)
 		end
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Change directory `name' to `new_name'.
 		require
 			new_name_not_void: new_name /= Void
@@ -133,7 +133,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of entries in directory.
 		require
 			directory_exists: exists
@@ -157,7 +157,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [STRING] is
+	linear_representation: ARRAYED_LIST [STRING]
 			-- The entries, in sequential format.
 		local
 			dir_temp: DIRECTORY
@@ -188,13 +188,13 @@ feature -- Status report
 	lastentry: ?STRING
 			-- Last entry read by `readentry'
 
-	is_closed: BOOLEAN is
+	is_closed: BOOLEAN
 			-- Is current directory closed?
 		do
 			Result := mode = Close_directory
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is directory empty?
 		require
 			directory_exists: exists
@@ -204,7 +204,7 @@ feature -- Status report
 			Result := (count = 2)
 		end
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is directory empty?
 		obsolete
 			"Use `is_empty' instead"
@@ -212,7 +212,7 @@ feature -- Status report
 			Result := is_empty
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the directory exist?
 		local
 			external_name: ANY
@@ -221,7 +221,7 @@ feature -- Status report
 			Result := eif_dir_exists ($external_name)
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Is the directory readable?
 		require
 			directory_exists: exists
@@ -232,7 +232,7 @@ feature -- Status report
 			Result := eif_dir_is_readable ($external_name)
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Is the directory executable?
 		require
 			directory_exists: exists
@@ -243,7 +243,7 @@ feature -- Status report
 			Result := eif_dir_is_executable ($external_name)
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Is the directory writable?
 		require
 			directory_exists: exists
@@ -256,7 +256,7 @@ feature -- Status report
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Delete directory if empty.
 		require
 			directory_exists: exists
@@ -268,7 +268,7 @@ feature -- Removal
 			eif_dir_delete ($external_name)
 		end
 
-	delete_content is
+	delete_content
 			-- Delete all files located in directory and subdirectories.
 		require
 			directory_exists: exists
@@ -309,7 +309,7 @@ feature -- Removal
 			end
 		end
 
-	recursive_delete is
+	recursive_delete
 			-- Delete directory and all content contained within.
 		require
 			directory_exists: exists
@@ -324,7 +324,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		is
+		
 			-- Delete all files located in directory and subdirectories.
 			--
 			-- `action' is called each time `file_number' files has
@@ -414,7 +414,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		is
+		
 			-- Delete directory and all content contained within.
 			--
 			-- `action' is called each time `file_number' files has
@@ -437,7 +437,7 @@ feature -- Removal
 			end
 		end
 
-	dispose is
+	dispose
 			-- Ensure this medium is closed when garbage collected.
 		do
 			if not is_closed then
@@ -456,71 +456,71 @@ feature {NONE} -- Implementation
 			-- Status mode of the directory.
 			-- Possible values are the following:
 
-	Close_directory: INTEGER is 1
+	Close_directory: INTEGER = 1
 
-	Read_directory: INTEGER is 2
+	Read_directory: INTEGER = 2
 
-	file_mkdir (dir_name: POINTER) is
+	file_mkdir (dir_name: POINTER)
 			-- Make directory `dir_name'.
 		external
 			"C signature (char *) use %"eif_file.h%""
 		end
 
-	dir_open (dir_name: POINTER): POINTER is
+	dir_open (dir_name: POINTER): POINTER
 			-- Open the directory `dir_name'.
 		external
 			"C signature (char *): EIF_POINTER use %"eif_dir.h%""
 		end
 
-	dir_rewind (dir_ptr: POINTER) is
+	dir_rewind (dir_ptr: POINTER)
 			-- Rewind the directory `dir_ptr'.
 		external
 			"C use %"eif_dir.h%""
 		end
 
-	dir_close (dir_ptr: POINTER) is
+	dir_close (dir_ptr: POINTER)
 			-- Close the directory `dir_ptr'.
 		external
 			"C use %"eif_dir.h%""
 		end
 
-	dir_next (dir_ptr: POINTER): ?STRING is
+	dir_next (dir_ptr: POINTER): ?STRING
 			-- Return the next entry for directory 'dir_ptr'.
 		external
 			"C use %"eif_dir.h%""
 		end
 
-	eif_dir_delete (dir_name: POINTER) is
+	eif_dir_delete (dir_name: POINTER)
 			-- Delete the directory `dir_name'.
 		external
 			"C signature (char *) use %"eif_dir.h%""
 		end
 
-	eif_dir_exists (dir_name: POINTER): BOOLEAN is
+	eif_dir_exists (dir_name: POINTER): BOOLEAN
 			-- Does the directory `dir_name' exist?
 		external
 			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
-	eif_dir_is_readable (dir_name: POINTER): BOOLEAN is
+	eif_dir_is_readable (dir_name: POINTER): BOOLEAN
 			-- Is `dir_name' readable?
 		external
 			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
-	eif_dir_is_executable (dir_name: POINTER): BOOLEAN is
+	eif_dir_is_executable (dir_name: POINTER): BOOLEAN
 			-- Is `dir_name' executable?
 		external
 			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
-	eif_dir_is_writable (dir_name: POINTER): BOOLEAN is
+	eif_dir_is_writable (dir_name: POINTER): BOOLEAN
 			-- Is `dir_name' writable?
 		external
 			"C signature (char *): EIF_BOOLEAN use %"eif_dir.h%""
 		end
 
-	eif_dir_rename (old_name, new_name: POINTER) is
+	eif_dir_rename (old_name, new_name: POINTER)
 			-- Change directory name from `old_name' to `new_name'.
 		external
 			"C signature (char *, char *) use %"eif_file.h%""

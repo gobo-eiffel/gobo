@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing delayed calls to a boolean function,
 		with some arguments possibly still open.

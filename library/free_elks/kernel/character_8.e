@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Characters, with comparison operations and an ASCII code"
 	external_name: "System.Char"
 	assembly: "mscorlib"

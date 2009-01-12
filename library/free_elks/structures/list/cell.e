@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cells containing an item"
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Element change
 
-	put, replace (v: like item) is
+	put, replace (v: like item)
 			-- Make `v' the cell's `item'.
 		do
 			item := v
@@ -31,7 +31,7 @@ feature -- Element change
 			item_inserted: item = v
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

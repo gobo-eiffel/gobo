@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to objects meant to be exchanged with non-Eiffel software."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"
@@ -25,7 +25,7 @@ convert
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		external
 			"built_in"
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Operations
 
-	plus alias "+" (offset: INTEGER): POINTER is
+	plus alias "+" (offset: INTEGER): POINTER
 			-- Pointer moved by an offset of `offset' bytes.
 		external
 			"built_in"
@@ -41,7 +41,7 @@ feature -- Operations
 
 feature -- Conversion
 
-	to_integer_32: INTEGER_32 is
+	to_integer_32: INTEGER_32
 			-- Convert `item' into an INTEGER_32 value.
 		external
 			"built_in"
@@ -49,7 +49,7 @@ feature -- Conversion
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of pointer value
 		external
 			"built_in"

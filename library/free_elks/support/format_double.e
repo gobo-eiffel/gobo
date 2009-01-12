@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Formatter for non-integral numbers"
@@ -36,7 +36,7 @@ create
 
 feature -- Initialization
 
-	make (w, d: INTEGER) is
+	make (w, d: INTEGER)
 		require
 			reasonable_field: w >= 1
 			reasonable_decimals: d <= w
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Status setting
 
-	point_decimal is
+	point_decimal
 			-- Use . as the decimal point.
 		do
 			decimal := '.'
@@ -79,7 +79,7 @@ feature -- Status setting
 			decimal = '.'
 		end
 
-	comma_decimal is
+	comma_decimal
 			-- Use , as the decimal point.
 		do
 			decimal := ','
@@ -87,7 +87,7 @@ feature -- Status setting
 			decimal = ','
 		end
 
-	set_decimals (d: INTEGER) is
+	set_decimals (d: INTEGER)
 			-- `d' decimals to be displayed.
 		require
 			d <= width
@@ -97,7 +97,7 @@ feature -- Status setting
 			decimals = d
 		end
 
-	separate_after_decimal is
+	separate_after_decimal
 			-- Use separators after the decimal.
 		do
 			after_decimal_separate := True
@@ -105,7 +105,7 @@ feature -- Status setting
 			after_decimal_separate
 		end
 
-	no_separate_after_decimal is
+	no_separate_after_decimal
 			-- Do not use separators after the decimal.
 		do
 			after_decimal_separate := False
@@ -113,7 +113,7 @@ feature -- Status setting
 			not after_decimal_separate
 		end
 
-	underscore_separate is
+	underscore_separate
 			-- Set the separator to be underscore.
 		do
 			separator := '_'
@@ -122,7 +122,7 @@ feature -- Status setting
 			after_decimal_separate
 		end
 
-	comma_separate is
+	comma_separate
 			-- Set the separator to be comma.
 		do
 			separator := ','
@@ -131,7 +131,7 @@ feature -- Status setting
 			after_decimal_separate
 		end
 
-	remove_separator is
+	remove_separator
 			-- Remove the separator.
 		do
 			separator := '%U'
@@ -140,7 +140,7 @@ feature -- Status setting
 			not after_decimal_separate
 		end
 
-	show_zero is
+	show_zero
 			-- Show 0.5 as 0.5 .
 		do
 			zero_not_shown := False
@@ -148,7 +148,7 @@ feature -- Status setting
 			not zero_not_shown
 		end
 
-	hide_zero is
+	hide_zero
 			-- Show 0.5 as .5 .
 		do
 			zero_not_shown := True
@@ -158,7 +158,7 @@ feature -- Status setting
 
 feature -- Conversion
 
-	formatted (d: DOUBLE): STRING is
+	formatted (d: DOUBLE): STRING
 			-- Format `d'.
 		local
 			sign: INTEGER
@@ -213,7 +213,7 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	pad_fraction (f: DOUBLE): STRING is
+	pad_fraction (f: DOUBLE): STRING
 			-- Stretch or shrink `f' to length `decimals' .
 		do
 			Result := f.out
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			Result.count = decimals
 		end
 
-	separate_fraction (s: STRING): STRING is
+	separate_fraction (s: STRING): STRING
 			-- Apply separators to the fraction.
 		require
 			efficiency: separator /= '%U'

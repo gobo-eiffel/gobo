@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"The objects available from the environment at time of execution"
@@ -14,13 +14,13 @@ class EXECUTION_ENVIRONMENT
 
 feature -- Access
 
-	command_line: ARGUMENTS is
+	command_line: ARGUMENTS
 			-- Command line that was used to start current execution
 		once
 			create Result
 		end
 
-	current_working_directory: STRING is
+	current_working_directory: STRING
 			-- Directory of current execution
 		external
 			"C use %"eif_dir.h%""
@@ -30,7 +30,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	default_shell: STRING is
+	default_shell: STRING
 			-- Default shell
 		local
 			s: ?STRING
@@ -43,7 +43,7 @@ feature -- Access
 			end
 		end
 
-	get (s: STRING): ?STRING is
+	get (s: STRING): ?STRING
 			-- Value of `s' if it is an environment variable and has been set;
 			-- void otherwise.
 		require
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	home_directory_name: ?STRING is
+	home_directory_name: ?STRING
 			-- Directory name corresponding to the home directory.
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
@@ -69,7 +69,7 @@ feature -- Access
 			Result := eif_home_directory_name
 		end
 
-	root_directory_name: STRING is
+	root_directory_name: STRING
 			-- Directory name corresponding to the root directory.
 		require
 			root_directory_supported: Operating_environment.root_directory_supported
@@ -79,7 +79,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	starting_environment_variables: HASH_TABLE [STRING, STRING] is
+	starting_environment_variables: HASH_TABLE [STRING, STRING]
 			-- Table of environment variables when current process starts,
 			-- indexed by variable name
 		local
@@ -112,7 +112,7 @@ feature -- Status
 
 feature -- Status setting
 
-	change_working_directory (path: STRING) is
+	change_working_directory (path: STRING)
 			-- Set the current directory to `path'
 		local
 			ext: ANY
@@ -121,7 +121,7 @@ feature -- Status setting
 			return_code := eif_chdir ($ext)
 		end
 
-	put (value, key: STRING) is
+	put (value, key: STRING)
 			-- Set the environment variable `key' to `value'.
 		require
 			key_exists: key /= Void
@@ -145,7 +145,7 @@ feature -- Status setting
 				((get (key) ~ value.string) or else (value.is_empty and then (get (key) = Void)))
 		end
 
-	system (s: STRING) is
+	system (s: STRING)
 			-- Pass to the operating system a request to execute `s'.
 			-- If `s' is empty, use the default shell as command.
 		require
@@ -161,7 +161,7 @@ feature -- Status setting
 			return_code := system_call (l_cstr.item)
 		end
 
-	launch (s: STRING) is
+	launch (s: STRING)
 			-- Pass to the operating system an asynchronous request to
 			-- execute `s'.
 			-- If `s' is empty, use the default shell as command.
@@ -178,7 +178,7 @@ feature -- Status setting
 			asynchronous_system_call (l_cstr.item)
 		end
 
-	sleep (nanoseconds: INTEGER_64) is
+	sleep (nanoseconds: INTEGER_64)
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
 		require
@@ -189,7 +189,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	environ: HASH_TABLE [C_STRING, STRING] is
+	environ: HASH_TABLE [C_STRING, STRING]
 			-- Environment variable memory set by current execution,
 			-- indexed by environment variable name. Needed otherwise
 			-- we would corrupt memory after freeing memory used by
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 		end
 
-	i_th_environ (i: INTEGER): POINTER is
+	i_th_environ (i: INTEGER): POINTER
 			-- Environment variable at `i'-th position of `eif_environ'.
 		require
 			i_valid: i >=0
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	separated_variables (a_var: STRING): ?TUPLE [value: STRING; key: STRING] is
+	separated_variables (a_var: STRING): ?TUPLE [value: STRING; key: STRING]
 			-- Given an environment variable `a_var' in form of "key=value",
 			-- return separated key and value.
 			-- Return Void if `a_var' is in incorrect format.
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External
 
-	eif_getenv (s: POINTER): POINTER is
+	eif_getenv (s: POINTER): POINTER
 			-- Value of environment variable `s'
 		external
 			"C use <stdlib.h>"
@@ -262,7 +262,7 @@ feature {NONE} -- External
 			"getenv"
 		end
 
-	eif_putenv (v: POINTER): INTEGER is
+	eif_putenv (v: POINTER): INTEGER
 			-- Set `v' in environment.
 		external
 			"C use <stdlib.h>"
@@ -270,13 +270,13 @@ feature {NONE} -- External
 			"putenv"
 		end
 
-	eif_chdir (path: POINTER): INTEGER is
+	eif_chdir (path: POINTER): INTEGER
 			-- Set the current directory to `path'
 		external
 			"C use %"eif_dir.h%""
 		end
 
-	system_call (s: POINTER): INTEGER is
+	system_call (s: POINTER): INTEGER
 			-- Pass to the operating system a request to execute `s'.
 		external
 			"C blocking use %"eif_misc.h%""
@@ -284,7 +284,7 @@ feature {NONE} -- External
 			"eif_system"
 		end
 
-	asynchronous_system_call (s: POINTER) is
+	asynchronous_system_call (s: POINTER)
 			-- Pass to the operating system an asynchronous request to execute `s'.
 		external
 			"C blocking use %"eif_misc.h%""
@@ -292,19 +292,19 @@ feature {NONE} -- External
 			"eif_system_asynchronous"
 		end
 
-	eif_home_directory_name: ?STRING is
+	eif_home_directory_name: ?STRING
 			-- Directory name corresponding to the home directory
 		external
 			"C use %"eif_path_name.h%""
 		end
 
-	eif_root_directory_name: STRING is
+	eif_root_directory_name: STRING
 			-- Directory name corresponding to the root directory
 		external
 			"C use %"eif_path_name.h%""
 		end
 
-	eif_sleep (nanoseconds: INTEGER_64) is
+	eif_sleep (nanoseconds: INTEGER_64)
 			-- Suspend thread execution for interval specified in
 			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
 		require

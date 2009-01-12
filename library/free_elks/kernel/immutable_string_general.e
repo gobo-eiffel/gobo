@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestors to all immutable STRING classes."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -17,7 +17,7 @@ inherit
 
 feature -- Status report
 
-	is_immutable: BOOLEAN is True
+	is_immutable: BOOLEAN = True
 			-- Can the character sequence of `Current' be changed?
 
 invariant

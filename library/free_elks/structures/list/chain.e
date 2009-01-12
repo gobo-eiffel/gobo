@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Possibly circular sequences of items,
@@ -61,7 +61,7 @@ deferred class CHAIN [G] inherit
 
 feature -- Access
 
-	first: like item is
+	first: like item
 			-- Item at first position
 		require
 			not_empty: not is_empty
@@ -74,7 +74,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	last: like item is
+	last: like item
 			-- Item at last position
 		require
 			not_empty: not is_empty
@@ -87,7 +87,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does chain include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -100,7 +100,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	index_of (v: like item; i: INTEGER): INTEGER is
+	index_of (v: like item; i: INTEGER): INTEGER
 			-- Index of `i'-th occurrence of item identical to `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -113,7 +113,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	i_th alias "[]", at alias "@" (i: INTEGER): like item assign put_i_th is
+	i_th alias "[]", at alias "@" (i: INTEGER): like item assign put_i_th
 			-- Item at `i'-th position
 		local
 			pos: CURSOR
@@ -126,7 +126,7 @@ feature -- Access
 
 feature -- Measurement
 
-	occurrences (v: like item): INTEGER is
+	occurrences (v: like item): INTEGER
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -138,7 +138,7 @@ feature -- Measurement
 			go_to (pos)
 		end
 
-	index_set: INTEGER_INTERVAL is
+	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
 		do
 			create Result.make (1, count)
@@ -148,7 +148,7 @@ feature -- Measurement
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 			-- (No effect if empty)
 		do
@@ -159,7 +159,7 @@ feature -- Cursor movement
 			at_first: not is_empty implies isfirst
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 			-- (No effect if empty)
 		do
@@ -170,7 +170,7 @@ feature -- Cursor movement
 			at_last: not is_empty implies islast
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the absolute value of `i'
 			-- is too big.
@@ -208,7 +208,7 @@ feature -- Cursor movement
 			expected_index: (not exhausted) implies (index = old index + i)
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		require
 			valid_cursor_index: valid_cursor_index (i)
@@ -220,7 +220,7 @@ feature -- Cursor movement
 
  feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within allowable bounds?
 		do
 			Result := (i >= 1) and (i <= count)
@@ -229,7 +229,7 @@ feature -- Cursor movement
 		end
 
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor at first position?
 		do
 			Result := not is_empty and (index = 1)
@@ -237,7 +237,7 @@ feature -- Cursor movement
 			valid_position: Result implies not is_empty
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position?
 		do
 			Result := not is_empty and (index = count)
@@ -245,14 +245,14 @@ feature -- Cursor movement
 			valid_position: Result implies not is_empty
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := (index = 0) or (index = count + 1)
 		end
 
 
-	valid_cursor_index (i: INTEGER): BOOLEAN is
+	valid_cursor_index (i: INTEGER): BOOLEAN
 			-- Is `i' correctly bounded for cursor movement?
 		do
 			Result := (i >= 0) and (i <= count + 1)
@@ -262,7 +262,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put (v: like item) is
+	put (v: like item)
 			-- Replace current item by `v'.
 			-- (Synonym for `replace')
 		do
@@ -271,7 +271,7 @@ feature -- Element change
 	 		same_count: count = old count
 		end
 
-	put_i_th (v: like item; i: INTEGER) is
+	put_i_th (v: like item; i: INTEGER)
 			-- Put `v' at `i'-th position.
 		local
 			pos: CURSOR
@@ -282,7 +282,7 @@ feature -- Element change
 			go_to (pos)
 		end
 
-	append (s: SEQUENCE [G]) is
+	append (s: SEQUENCE [G])
 			-- Append a copy of `s'.
 		local
 			l: like s
@@ -305,7 +305,7 @@ feature -- Element change
 			go_to (l_cursor)
 		end
 
-	fill (other: CONTAINER [G]) is
+	fill (other: CONTAINER [G])
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current structure
 			-- need not be the same.
@@ -328,7 +328,7 @@ feature -- Element change
 		end
 feature -- Transformation
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
 		require
@@ -352,7 +352,7 @@ feature -- Transformation
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
@@ -365,7 +365,7 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	remove is
+	remove
 			-- Remove current item.
 		do
 		end
@@ -380,7 +380,7 @@ invariant
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
 	index_set_has_same_count: index_set.count = count
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

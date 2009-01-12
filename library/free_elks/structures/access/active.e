@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		``Active'' data structures, which at every stage have
@@ -20,7 +20,7 @@ deferred class ACTIVE [G] inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		require
 			readable: readable
@@ -29,19 +29,19 @@ feature -- Access
 
 feature -- Status report
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		deferred
 		end
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		deferred
 		end
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace current item by `v'.
 		require
 			writable: writable
@@ -52,7 +52,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove current item.
 		require
 			prunable: prunable
@@ -65,7 +65,7 @@ invariant
 	writable_constraint: writable implies readable
 	empty_constraint: is_empty implies (not readable) and (not writable)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

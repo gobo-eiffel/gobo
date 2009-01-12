@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Pseudo-random number sequence, linear congruential method"
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize structure using a default seed.
 		do
 			set_seed (default_seed)
@@ -36,7 +36,7 @@ feature -- Initialization
 			seed_set: seed = default_seed
 		end
 
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Initialize sequence using `s' as the `seed'.
 		require
 			non_negative: s >= 0
@@ -50,28 +50,28 @@ feature -- Initialization
 
 feature -- Access
 
-	default_seed: INTEGER is
+	default_seed: INTEGER
 			-- Default value 123,457;
 			-- may be redefined for a new generator.
 		once
 			Result := 123_457
 		end
 
-	modulus: INTEGER is
+	modulus: INTEGER
 			-- Default value 2^31 -1 = 2,147,483,647;
 			-- may be redefined for a new generator.
 		once
 			Result := 2_147_483_647
 		end
 
-	multiplier: INTEGER is
+	multiplier: INTEGER
 			-- Default value 7^5 = 16,807;
 			-- may be redefined for a new generator.
 		once
 			Result := 16_807
 		end
 
-	increment: INTEGER is
+	increment: INTEGER
 			-- Default value 0;
 			-- may be redefined for a new generator.
 		once
@@ -81,7 +81,7 @@ feature -- Access
 	seed: INTEGER
 			-- Seed for sequence.
 
-	next_random (n: INTEGER): INTEGER is
+	next_random (n: INTEGER): INTEGER
 			-- Next random number after `n'
 			-- in pseudo-random order
 		require
@@ -92,7 +92,7 @@ feature -- Access
 			in_range: (Result < modulus) and (Result >= 0)
 		end
 
-	has (n: INTEGER): BOOLEAN is
+	has (n: INTEGER): BOOLEAN
 			-- Will `n' be part of the random number sequence?
 		do
 			Result := (n < modulus) and (n >= 0)
@@ -100,7 +100,7 @@ feature -- Access
 			only_: Result = (n < modulus and n >= 0)
 		end
 
-	i_th (i: INTEGER): INTEGER is
+	i_th (i: INTEGER): INTEGER
 			-- The `i'-th random number
 		local
 			count: INTEGER
@@ -126,7 +126,7 @@ feature -- Access
 			in_range: (Result < modulus) and (Result >= 0)
 		end
 
-	real_item: REAL is
+	real_item: REAL
 			-- The current random number as a real between 0 and 1
 		local
 			r1, r2: REAL
@@ -136,7 +136,7 @@ feature -- Access
 			Result := r1 / r2
 		end
 
-	double_item: DOUBLE is
+	double_item: DOUBLE
 			-- The current random number as a double between 0 and 1
 		local
 			d: DOUBLE
@@ -145,7 +145,7 @@ feature -- Access
 			Result := d / dmod
 		end
 
-	real_i_th (i: INTEGER): REAL is
+	real_i_th (i: INTEGER): REAL
 			-- The `i'-th random number as a real between 0 and 1
 		require
 			positive_argument: i > 0
@@ -157,7 +157,7 @@ feature -- Access
 			Result := r1 / r2
 		end
 
-	double_i_th (i: INTEGER): DOUBLE is
+	double_i_th (i: INTEGER): DOUBLE
 			-- The `i'-th random number as a double between 0 and 1
 		require
 			positive_argument: i > 0
@@ -170,7 +170,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	randomize (xn: INTEGER): INTEGER is
+	randomize (xn: INTEGER): INTEGER
 			-- Next item
 		local
 			x: DOUBLE
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			Result := x.truncated_to_integer
 		end
 
-	double_mod (x, m: DOUBLE): DOUBLE is
+	double_mod (x, m: DOUBLE): DOUBLE
 			-- `x' modulo `m'
 		do
 			Result := x - (floor (x / m) * m)
@@ -193,19 +193,19 @@ feature {NONE} -- Implementation
 	last_result: INTEGER
 			-- Value from last call to `item'
 
-	dmod: DOUBLE is
+	dmod: DOUBLE
 			-- Double value for modulus
 		once
 			Result := modulus
 		end
 
-	dmul: DOUBLE is
+	dmul: DOUBLE
 			-- Double value for multiplier
 		once
 			Result := multiplier
 		end
 
-	dinc: DOUBLE is
+	dinc: DOUBLE
 			-- Double value for increment
 		once
 			Result := increment

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Queues with a bounded physical size, implemented by arrays"
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create queue for at most `n' items.
 		require
 			non_negative_argument: n >= 0
@@ -44,13 +44,13 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Oldest item.
 		do
 			Result := fl.item (out_index)
 		end
 
-	item_for_iteration: G is
+	item_for_iteration: G
 			-- Element at current iteration position
 		require
 			not_off: not off
@@ -58,7 +58,7 @@ feature -- Access
 			Result := fl.item (index)
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does queue include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -129,13 +129,13 @@ feature -- Access
 
 feature -- Measurement
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of items that may be kept.
 		do
 			Result := fl.capacity - 1
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		local
 			size: INTEGER
@@ -146,7 +146,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		local
 			size: INTEGER
@@ -159,24 +159,24 @@ feature -- Status report
 				end
 		end
 
-	prunable: BOOLEAN is True
+	prunable: BOOLEAN = True
 
-	resizable: BOOLEAN is True
+	resizable: BOOLEAN = True
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 		do
 			Result := not full
 		end
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			index := out_index
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 		local
 			size: INTEGER
@@ -189,7 +189,7 @@ feature -- Cursor movement
 			end
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position.
 		do
 			index := (index + 1) \\ fl.capacity
@@ -197,14 +197,14 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	extend, force, put (v: G) is
+	extend, force, put (v: G)
 			-- Add `v' as newest element.
 		do
 			fl.put (v, in_index)
 			in_index := (in_index + 1) \\ fl.capacity
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace oldest item by `v'.
 		do
 			fl.put (v, out_index)
@@ -212,17 +212,17 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove oldest item.
 		do
 			out_index := (out_index + 1) \\ fl.capacity
 		end
 
-	prune (v: like item) is
+	prune (v: like item)
 		do
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			out_index := 0
@@ -231,7 +231,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (in the original insertion order)
 		local
@@ -284,7 +284,7 @@ feature {BOUNDED_QUEUE} -- Implementation
 
 feature -- Measurement
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 		do
 			if object_comparison then
 				fl.compare_objects
@@ -298,7 +298,7 @@ invariant
 
 	extendible_definition: extendible = not full
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

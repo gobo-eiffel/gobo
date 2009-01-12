@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String to real/double convertor"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create leading_separators.make_from_string (" ")
@@ -33,25 +33,25 @@ feature {NONE} -- Initialization
 
 feature -- Status reporting
 
-	conversion_type_valid (type: INTEGER): BOOLEAN is
+	conversion_type_valid (type: INTEGER): BOOLEAN
 			-- Is conversion type `type' valid?
 		do
 			Result := real_double_type_valid (type)
 		end
 
-	overflowed: BOOLEAN is
+	overflowed: BOOLEAN
 			-- Is real number parsed so far overflowed?
 		do
 			Result := False
 		end
 
-	underflowed: BOOLEAN is
+	underflowed: BOOLEAN
 			-- Is real number parsed so far underflowed?
 		do
 			Result := False
 		end
 
-	parse_successful: BOOLEAN is
+	parse_successful: BOOLEAN
 			-- This only means we didn't enter an invalid state when parsing,
 			-- it doesn't mean that we have got an valid double/real number.
 			-- You need to check `is_double' or `is_real'.
@@ -59,7 +59,7 @@ feature -- Status reporting
 			Result := (last_state /= 9)
 		end
 
-	separators_valid (separators: STRING): BOOLEAN is
+	separators_valid (separators: STRING): BOOLEAN
 			-- Are separators contained in `separators' valid?
 		local
 			i: INTEGER
@@ -84,31 +84,31 @@ feature -- Status reporting
 			end
 		end
 
-	is_integral_double: BOOLEAN is
+	is_integral_double: BOOLEAN
 			-- Is character sequence that has been parsed represents a valid double?
 		do
 			Result := (last_state > 1 and last_state < 9) and (not needs_digit)
 		end
 
-	is_integral_real: BOOLEAN is
+	is_integral_real: BOOLEAN
 			-- Is character sequence that has been parsed represents a valid real?	
 		do
 			Result := is_integral_double
 		end
 
-	is_part_of_double: BOOLEAN is
+	is_part_of_double: BOOLEAN
 			-- Is character sequence that has been parsed so far a valid start part of double?
 		do
 			Result := last_state /= 9
 		end
 
-	is_part_of_real: BOOLEAN is
+	is_part_of_real: BOOLEAN
 			-- Is character sequence that has been parsed so far a valid start part of real?
 		do
 			Result := is_part_of_double
 		end
 
-	parsed_double: DOUBLE is
+	parsed_double: DOUBLE
 			-- Parsed double value
 		do
 			if has_negative_exponent then
@@ -124,7 +124,7 @@ feature -- Status reporting
 			end
 		end
 
-	parsed_real: REAL is
+	parsed_real: REAL
 			-- Parsed real value
 		do
 			Result := parsed_double
@@ -132,7 +132,7 @@ feature -- Status reporting
 
 feature -- Status setting
 
-	reset (type: INTEGER) is
+	reset (type: INTEGER)
 			-- Reset current convertor to parse real number string of type `type'.
 		do
 			conversion_type := type
@@ -160,7 +160,7 @@ feature -- Status setting
 
 feature -- Parse
 
-	parse_string_with_type (s: READABLE_STRING_GENERAL; type: INTEGER) is
+	parse_string_with_type (s: READABLE_STRING_GENERAL; type: INTEGER)
 			-- Parse string `s' as real number of type `type'.
 		local
 			i: INTEGER
@@ -178,7 +178,7 @@ feature -- Parse
 			end
 		end
 
-	parse_character (c: CHARACTER) is
+	parse_character (c: CHARACTER)
 			-- Parse character `c'.
 		do
 				-- Parse according to the following specification:

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Priority queues implemented as heaps"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate heap space.
 		do
 			array_make (1, n)
@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Entry at top of heap.
 		do
 			Result := i_th (1)
@@ -64,7 +64,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items
 
-	index_set: INTEGER_INTERVAL is
+	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
 		do
 			create Result.make (1, count)
@@ -74,24 +74,24 @@ feature -- Measurement
 
 feature -- Status report
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May items be added?
 		do
 			Result := not full
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			Result := (count = capacity)
 		end
 
-	prunable: BOOLEAN is True
+	prunable: BOOLEAN = True
 			-- May items be removed? (Answer: yes.)
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -123,7 +123,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	force (v: like item) is
+	force (v: like item)
 			-- Add item `v' at its proper position.
 		do
 			if full then
@@ -132,7 +132,7 @@ feature -- Element change
 			put (v)
 		end
 
-	put (v: like item) is
+	put (v: like item)
 			-- Insert item `v' at its proper position.
 		local
 			i: INTEGER
@@ -151,7 +151,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove item of highest value.
 		local
 			i, j: INTEGER
@@ -181,7 +181,7 @@ feature -- Removal
 			area.put_default (count)
 		end
 
-	prune (v: G) is
+	prune (v: G)
 			-- Remove first occurrence of `v' if any.
 		local
 			i, nb: INTEGER
@@ -239,7 +239,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			count := 0
@@ -248,7 +248,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (Sorted according to decreasing priority)
 		local
@@ -267,7 +267,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- New priority queue containing `n' greatest items of Current.
 		require
 			n_positive: n >= 0
@@ -304,13 +304,13 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	replace (v: like item) is
+	replace (v: like item)
 		do
 		end
 
 feature {NONE} -- Comparison
 
-	safe_less_than (a, b: G): BOOLEAN is
+	safe_less_than (a, b: G): BOOLEAN
 			-- Same as `a < b' when `a' and `b' are not Void.
 			-- If `a' is Void and `b' is not, then True
 			-- Otherwise False
@@ -332,7 +332,7 @@ invariant
 
 	empty_means_storage_empty: is_empty implies all_default
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

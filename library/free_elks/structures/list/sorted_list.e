@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Sequential lists where the cells are sorted in ascending order
@@ -19,7 +19,7 @@ deferred class SORTED_LIST [G -> COMPARABLE] inherit
 
 feature -- Measurement
 
-	min: like item is
+	min: like item
 			-- Minimum item
 		require
 			not_empty: not is_empty
@@ -30,7 +30,7 @@ feature -- Measurement
 			-- smallest: For every item `it' in list, `Result' <= `it'
 		end
 
-	max: like item is
+	max: like item
 			-- Maximum item
 		require
 			not_empty: not is_empty
@@ -41,7 +41,7 @@ feature -- Measurement
 			-- largest: For every item `it' in list, `it' <= `Result'
 		end
 
-	median: like item is
+	median: like item
 			-- Median item
 		require
 			not_empty: not is_empty
@@ -52,7 +52,7 @@ feature -- Measurement
 		end
 
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

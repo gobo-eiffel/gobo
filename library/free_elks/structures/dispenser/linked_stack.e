@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Unbounded stacks implemented as linked lists"
 	legal: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at the first position
 		local
 			f: like first_element
@@ -63,26 +63,26 @@ feature -- Access
 
 feature -- Element change
 
-	force (v: like item) is
+	force (v: like item)
 			-- Push `v' onto top.
 		do
 			put_front (v)
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Push `v' onto top.
 		do
 			put_front (v)
 		end
 
-	put (v: like item) is
+	put (v: like item)
 		do
 			put_front (v)
 		end
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove item on top.
 		do
 			start
@@ -91,7 +91,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (order is reverse of original order of insertion)
 		local
@@ -112,7 +112,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): ?like Current is
+	duplicate (n: INTEGER): ?like Current
 			-- New stack containing the `n' latest items inserted
 			-- in current stack.
 			-- If `n' is greater than `count', identical to current stack.
@@ -141,7 +141,7 @@ feature -- Duplication
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

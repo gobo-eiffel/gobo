@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Trees implemented using a two way linked list representation"
@@ -107,7 +107,7 @@ create
 
 feature -- Initialization
 
-	make (v: like item) is
+	make (v: like item)
 			-- Create single node with item `v'.
 		do
 			put (v)
@@ -124,7 +124,7 @@ feature -- Access
 
 	last_child: like parent
 
-	child_cursor: TWO_WAY_TREE_CURSOR [G] is
+	child_cursor: TWO_WAY_TREE_CURSOR [G]
 			-- Current cursor position
 		do
 			create Result.make (child, child_after, child_before)
@@ -132,7 +132,7 @@ feature -- Access
 
 feature -- Status report
 
-	child_islast: BOOLEAN is
+	child_islast: BOOLEAN
 			-- Is cursor under last child?
 		do
 			Result := not is_leaf and Precursor {TWO_WAY_LIST}
@@ -140,7 +140,7 @@ feature -- Status report
 
 feature {RECURSIVE_CURSOR_TREE} -- Element change
 
-	set_child (n: like parent) is
+	set_child (n: like parent)
 			-- Set the child of parent to `n'.
 		do
 			child := n
@@ -150,7 +150,7 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 feature -- Element change
 
-	put_child (n: like new_cell) is
+	put_child (n: like new_cell)
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		local
@@ -178,14 +178,14 @@ feature -- Element change
 			arity := arity + 1
 		end
 
-	replace_child (n: like new_cell) is
+	replace_child (n: like new_cell)
 			-- Replace current child by `n'.
 		do
 			remove_child
 			put_child_right (n)
 		end
 
-	put_child_left (n: like new_cell) is
+	put_child_left (n: like new_cell)
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -194,7 +194,7 @@ feature -- Element change
 			child_forth; child_forth
 		end
 
-	put_child_right (n: like new_cell) is
+	put_child_right (n: like new_cell)
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		local
@@ -229,7 +229,7 @@ feature -- Element change
 			arity := arity + 1
 		end
 
-	merge_tree_before (other: like new_cell) is
+	merge_tree_before (other: like new_cell)
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -238,7 +238,7 @@ feature -- Element change
 			twl_merge_left (other)
 		end
 
-	merge_tree_after (other: like new_cell) is
+	merge_tree_after (other: like new_cell)
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -247,7 +247,7 @@ feature -- Element change
 			twl_merge_right (other)
 		end
 
-	prune (n: like new_cell) is
+	prune (n: like new_cell)
 			-- Prune `n' from children.
 		local
 			l_child: like first_child
@@ -307,7 +307,7 @@ feature -- Removal
 
 feature {TWO_WAY_TREE} -- Implementation
 
-	new_cell (v: like item): TWO_WAY_TREE [G] is
+	new_cell (v: like item): TWO_WAY_TREE [G]
 			-- New cell containing `v'
 		do
 			create Result.make (v)
@@ -317,7 +317,7 @@ feature {TWO_WAY_TREE} -- Implementation
 			Result.attach_to_parent (Current)
 		end
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- A newly created instance of the same type, with
 			-- the same node value.
 			-- This feature may be redefined in descendants so as to
@@ -326,20 +326,20 @@ feature {TWO_WAY_TREE} -- Implementation
 			create Result.make (item)
 		end
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- <Precursor>
 		do
 			Result := new_tree
 		end
 
-	clone_node (n: like Current): like Current is
+	clone_node (n: like Current): like Current
 			-- Clone node `n'.
 		do
 			create Result.make (n.item)
 			Result.copy_node (n)
 		end
 
-	copy_node (n: like Current) is
+	copy_node (n: like Current)
 			-- Copy content of `n' except tree data into Current.
 		do
 			standard_copy (n)
@@ -357,7 +357,7 @@ feature {TWO_WAY_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	attach (other: like new_cell) is
+	attach (other: like new_cell)
 				-- Attach all children of `other' to current node.
 		local
 			cursor: like child_cursor
@@ -382,7 +382,7 @@ invariant
 
 	off_constraint: (child = Void) implies child_off
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

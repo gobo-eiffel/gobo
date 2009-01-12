@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestors to all STRING classes."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -21,7 +21,7 @@ convert
 
 feature -- Settings
 
-	put_code (v: like code; i: INTEGER) is
+	put_code (v: like code; i: INTEGER)
 			-- Put code `v' at position `i'.
 		require
 			valid_code: valid_code (v)
@@ -36,7 +36,7 @@ feature -- Settings
 
 feature {STRING_HANDLER} -- Settings
 
-	set_count (number: INTEGER) is
+	set_count (number: INTEGER)
 			-- Set `count' to `number' of characters.
 		require
 			valid_count: 0 <= number and number <= capacity
@@ -45,7 +45,7 @@ feature {STRING_HANDLER} -- Settings
 			new_count: count = number
 		end
 
-	set_internal_hash_code (v: like internal_hash_code) is
+	set_internal_hash_code (v: like internal_hash_code)
 			-- Set `internal_hash_code' with `v'.
 		require
 			v_nonnegative: v >= 0
@@ -57,7 +57,7 @@ feature {STRING_HANDLER} -- Settings
 
 feature -- Element change
 
-	append_code (c: like code) is
+	append_code (c: like code)
 			-- Append `c' at end.
 		require
 			valid_code: valid_code (c)
@@ -76,7 +76,7 @@ feature -- Element change
 			stable_before: elks_checking implies substring (1, count - 1) ~ (old twin)
 		end
 
-	append (s: READABLE_STRING_GENERAL) is
+	append (s: READABLE_STRING_GENERAL)
 			-- Append a copy of `s' at end.
 		require
 			argument_not_void: s /= Void
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th character.
 		require
 			valid_index: valid_index (i)
@@ -123,7 +123,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (newsize: INTEGER) is
+	resize (newsize: INTEGER)
 			-- Rearrange string so that it can accommodate
 			-- at least `newsize' characters.
 			-- Do not lose any previously entered character.

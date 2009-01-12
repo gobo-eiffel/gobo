@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Sets represented as arrayed lists"
 	legal: "See notice at end of class."
@@ -44,7 +44,7 @@ create {ARRAYED_SET}
 
 feature -- Element change
 
-	put, extend (v: G) is
+	put, extend (v: G)
 			-- Insert `v' if not present.
 		do
 			if is_empty or else not has (v) then
@@ -54,14 +54,14 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove `v' if present.
 		do
 			start
 			al_prune (v)
 		end
 	
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

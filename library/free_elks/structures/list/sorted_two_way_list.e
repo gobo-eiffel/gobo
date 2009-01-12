@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Two-way lists, kept sorted."
@@ -37,7 +37,7 @@ create {SORTED_TWO_WAY_LIST}
 
 feature -- Element change
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Put `v' at proper position in list.
 			-- Move cursor to newly inserted item.
 		do
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all items identical to `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -68,7 +68,7 @@ feature -- Removal
 
 feature -- Transformation
 
-	sort is
+	sort
 			-- Sort all items.
 			-- Has O(`count' * log (`count')) complexity.
 			--| Uses comb-sort (BYTE February '91)
@@ -118,7 +118,7 @@ feature -- Transformation
 
 feature -- Status report
 
-	sorted: BOOLEAN is
+	sorted: BOOLEAN
 			-- Is the structure sorted?
 		local
 			c: CURSOR
@@ -145,7 +145,7 @@ feature -- Status report
 
 feature {SORTED_TWO_WAY_LIST} -- Implementation
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -153,7 +153,7 @@ feature {SORTED_TWO_WAY_LIST} -- Implementation
 			create Result.make
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

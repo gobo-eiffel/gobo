@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to objects containing a unicode character value"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2006, Eiffel Software and others"

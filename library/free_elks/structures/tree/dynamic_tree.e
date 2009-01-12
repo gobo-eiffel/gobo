@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Trees with a dynamically modifiable structure"
@@ -26,12 +26,12 @@ feature -- Access
 
 feature -- Status report
 
-	extendible: BOOLEAN is True
+	extendible: BOOLEAN = True
 			-- May new items be added?
 
 feature {RECURSIVE_CURSOR_TREE} -- Element change
 
-	set_child (n: like parent) is
+	set_child (n: like parent)
 			-- Set the child of parent to `n'.
 		require
 			non_void_argument: n /= Void
@@ -40,19 +40,19 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 feature -- Element change
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' as new child.
 		do
 			child_extend (v)
 		end
 
-	child_extend (v: like item) is
+	child_extend (v: like item)
 			-- Add `v' to the list of children.
 			-- Do not move child cursor.
 		deferred
 		end
 
-	child_put_left (v: like item) is
+	child_put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move child cursor.
 		require
@@ -60,7 +60,7 @@ feature -- Element change
 		deferred
 		end
 
-	child_put_right (v: like item) is
+	child_put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move child cursor.
 		require
@@ -68,7 +68,7 @@ feature -- Element change
 		deferred
 		end
 
-	put_child_left (n: like parent) is
+	put_child_left (n: like parent)
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -77,7 +77,7 @@ feature -- Element change
 		deferred
 		end
 
-	put_child_right (n: like parent) is
+	put_child_right (n: like parent)
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -86,7 +86,7 @@ feature -- Element change
 		deferred
 		end
 
-	merge_tree_before (other: like first_child) is
+	merge_tree_before (other: like first_child)
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -98,7 +98,7 @@ feature -- Element change
 			other_is_leaf: other.is_leaf
 		end
 
-	merge_tree_after (other: like first_child) is
+	merge_tree_after (other: like first_child)
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -112,7 +112,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_left_child is
+	remove_left_child
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -123,7 +123,7 @@ feature -- Removal
 	 		new_child_index: child_index = old child_index - 1
 		end
 
-	remove_right_child is
+	remove_right_child
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -134,7 +134,7 @@ feature -- Removal
 	 		new_child_index: child_index = old child_index
 		end
 
-	remove_child is
+	remove_child
 			-- Remove child at cursor position.
 			-- Move cursor to next sibling, or `after' if none.
 		require
@@ -147,7 +147,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	fill_from_binary (b: BINARY_TREE [G]) is
+	fill_from_binary (b: BINARY_TREE [G])
 			-- Fill from a binary tree representation.
 			-- Left child becomes first child.
 			-- Right child becomes right sibling.
@@ -177,7 +177,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children
@@ -204,7 +204,7 @@ feature -- Duplication
 
 feature {DYNAMIC_TREE} -- Implementation
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -214,7 +214,7 @@ feature {DYNAMIC_TREE} -- Implementation
 			result_item: Result.item = item
 		end
 
-	duplicate_all: like Current is
+	duplicate_all: like Current
 			-- Copy of sub-tree including all children
 		local
 			pos: CURSOR
@@ -237,7 +237,7 @@ feature {DYNAMIC_TREE} -- Implementation
 			child_go_to (pos)
 		end
 
-	fill_subtree (other: TREE [G]) is
+	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'.
 		local
 			c: like child
@@ -272,7 +272,7 @@ invariant
 	extendible_definition: extendible
 	child_after_definition: child_after = (child_index = arity + 1)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

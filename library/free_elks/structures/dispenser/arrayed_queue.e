@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Unbounded queues, implemented by resizable arrays"
@@ -51,7 +51,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create queue for at most `n' items.
 		require
 			non_negative_argument: n >= 0
@@ -66,13 +66,13 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Oldest item.
 		do
 			Result := area.item (out_index - lower)
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does queue include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		local
 			l_capacity: like capacity
@@ -118,7 +118,7 @@ feature -- Measurement
 			end
 		end
 
-	index_set: INTEGER_INTERVAL is
+	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
 		do
 			create Result.make (1, count)
@@ -128,26 +128,26 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_empty, off: BOOLEAN is
+	is_empty, off: BOOLEAN
 			-- Is the structure empty?
 		do
 			Result := (in_index = out_index)
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 			-- (Answer: no.)
 		do
 			Result := False
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May items be added? (Answer: yes.)
 		do
 			Result := True
 		end
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Element change
 
-	extend, put, force (v: G) is
+	extend, put, force (v: G)
 			-- Add `v' as newest item.
 		local
 			l_in_index: like in_index
@@ -175,7 +175,7 @@ feature -- Element change
 			in_index := l_in_index
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace oldest item by `v'.
 		do
 			put_i_th (v, out_index)
@@ -183,7 +183,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove oldest item.
 		local
 			l_out_index: like out_index
@@ -199,7 +199,7 @@ feature -- Removal
 			out_index := l_out_index
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			clear_all
@@ -209,7 +209,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (in the original insertion order)
 		local
@@ -230,22 +230,22 @@ feature -- Conversion
 
 feature {NONE} -- Inapplicable
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 		do
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position.
 		do
 		end
 
-	valid_index_set: BOOLEAN is
+	valid_index_set: BOOLEAN
 		do
 			Result := True
 		end
@@ -258,7 +258,7 @@ feature {ARRAYED_QUEUE} -- Implementation
 	in_index: INTEGER
 			-- Position for next insertion
 
-	grow is
+	grow
 		local
 			i, j: INTEGER
 		do
@@ -289,7 +289,7 @@ invariant
 	empty_means_storage_empty: is_empty implies all_default
 
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for linked lists"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (active_element: like active; aft, bef: BOOLEAN) is
+	make (active_element: like active; aft, bef: BOOLEAN)
 			-- Create a cursor and set it up on `active_element'.
 		do
 			active := active_element
@@ -42,7 +42,7 @@ invariant
 	not_both: not (before and after)
 	no_active_not_on: active = Void implies (before or after)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

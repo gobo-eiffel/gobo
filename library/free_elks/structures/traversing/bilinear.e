@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Structures that may be traversed forward and backward"
@@ -32,7 +32,7 @@ deferred class BILINEAR [G] inherit
 
 feature -- Access
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := before or after
@@ -40,12 +40,12 @@ feature -- Access
 
 feature -- Cursor movement
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		deferred
 		end
 
-	back is
+	back
 			-- Move to previous position.
 		require
 			not_before: not before
@@ -54,7 +54,7 @@ feature -- Cursor movement
 			-- moved_forth_after_start: (not before) implies index = old index - 1
 		end
 
-	search (v: like item) is
+	search (v: like item)
 			-- Move to first position (at or after current
 			-- position) where `item' and `v' are equal.
 			-- If structure does not include `v' ensure that
@@ -73,7 +73,7 @@ invariant
 	not_both: not (after and before)
 	before_constraint: before implies off
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

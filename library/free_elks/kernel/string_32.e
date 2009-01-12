@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sequences of 32-bit characters, accessible through integer indices
 		in a contiguous range.
@@ -148,7 +148,7 @@ feature -- Initialization
 			shared_implementation: Result.shared_with (s)
 		end
 
-	remake (n: INTEGER) is
+	remake (n: INTEGER)
 			-- Allocate space for at least `n' characters.
 		obsolete
 			"Use `make' instead"
@@ -174,16 +174,16 @@ feature -- Access
 
 feature -- Status report
 
-	extendible: BOOLEAN is True
+	extendible: BOOLEAN = True
 			-- May new items be added? (Answer: yes.)
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
 		end
 
-	changeable_comparison_criterion: BOOLEAN is False
+	changeable_comparison_criterion: BOOLEAN = False
 
 feature -- Element change
 
@@ -276,7 +276,7 @@ feature -- Element change
 					s + substring (end_index + 1, count))))
 		end
 
-	replace_substring_all (original, new: like Current) is
+	replace_substring_all (original, new: like Current)
 			-- Replace every occurrence of `original' with `new'.
 		require
 			original_exists: original /= Void

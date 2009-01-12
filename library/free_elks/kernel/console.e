@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Commonly used console input and output mechanisms. 
 		This class may be used as ancestor by classes needing its facilities.
@@ -52,7 +52,7 @@ create {STD_FILES}
 
 feature -- Initialization
 
-	make_open_stdin (fn: STRING) is
+	make_open_stdin (fn: STRING)
 			-- Create an unix standard input file.
 		do
 			make (fn)
@@ -60,7 +60,7 @@ feature -- Initialization
 			set_read_mode
 		end
 
-	make_open_stdout (fn: STRING) is
+	make_open_stdout (fn: STRING)
 			-- Create an unix standard output file.
 		do
 			make (fn)
@@ -68,7 +68,7 @@ feature -- Initialization
 			set_write_mode
 		end
 
-	make_open_stderr (fn: STRING) is
+	make_open_stderr (fn: STRING)
 			-- Create an unix standard error file.
 		do
 			make (fn)
@@ -78,25 +78,25 @@ feature -- Initialization
 
 feature -- Status report
 
-	end_of_file: BOOLEAN is
+	end_of_file: BOOLEAN
 			-- Have we reached the end of file?
 		do
 			Result := console_eof (file_pointer)
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does file exist?
 		do
 			Result := True
 		end
 
-	count: INTEGER is 1
+	count: INTEGER = 1
 			-- Useless for CONSOLE class.
 			--| `count' is non null not to invalidate invariant clauses.
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- This is closed by the operating system at completion.
 		do
 			-- file_close (file_pointer)
@@ -104,28 +104,28 @@ feature -- Removal
 
 feature {NONE} -- Cursor movement
 
-	back is
+	back
 			-- Not supported on console
 		do
 		end
 
 feature -- Input
 
-	read_real, readreal is
+	read_real, readreal
 			-- Read a new real from standard input.
 			-- Make result available in `last_real'.
 		do
 			last_real := console_readreal (file_pointer)
 		end
 
-	read_double, readdouble is
+	read_double, readdouble
 			-- Read a new double from standard input.
 			-- Make result available in `last_double'.
 		do
 			last_double := console_readdouble (file_pointer)
 		end
 
-	read_line, readline is
+	read_line, readline
 			-- Read a string until new line or end of file.
 			-- Make result available in `last_string'.
 			-- New line will be consumed but not part of `last_string'.
@@ -135,7 +135,7 @@ feature -- Input
 			read_line_thread_aware
 		end
 
-	read_line_thread_aware is
+	read_line_thread_aware
 			-- <Precursor>
 		require else
 			is_readable: file_readable
@@ -170,7 +170,7 @@ feature -- Input
 			end
 		end
 
-	read_stream, readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER)
  			-- Read a string of at most `nb_char' bound characters
 			-- from standard input.
 			-- Make result available in `last_string'.
@@ -178,7 +178,7 @@ feature -- Input
 			read_stream_thread_aware (nb_char)
 		end
 
-	read_stream_thread_aware (nb_char: INTEGER) is
+	read_stream_thread_aware (nb_char: INTEGER)
 			-- <Precursor>
 		local
 			new_count: INTEGER
@@ -201,14 +201,14 @@ feature -- Input
 			end
 		end
 
-	read_word, readword is
+	read_word, readword
 			-- Read a new word from standard input.
 			-- Make result available in `last_string'.
 		do
 			read_word_thread_aware
 		end
 
-	read_word_thread_aware is
+	read_word_thread_aware
 			-- <Precursor>
 		local
 			str_cap: INTEGER
@@ -242,14 +242,14 @@ feature -- Input
 			separator := console_separator (file_pointer) -- Look ahead
 		end
 
-	read_character, readchar is
+	read_character, readchar
 			-- Read a new character from standard input.
 			-- Make result available in `last_character'.
 		do
 			last_character := console_readchar (file_pointer)
 		end
 
-	next_line is
+	next_line
 			-- Move to next input line on standard input.
 		do
 			console_next_line (file_pointer)
@@ -257,13 +257,13 @@ feature -- Input
 
 feature -- Output
 
-	put_character, putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER)
 			-- Write `c' at end of default output.
 		do
 			console_pc (file_pointer, c)
 		end
 
-	put_string, putstring (s: STRING) is
+	put_string, putstring (s: STRING)
 			-- Write `s' at end of default output.
 		local
 			external_s: ANY
@@ -274,19 +274,19 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL) is
+	put_real, putreal (r: REAL)
 			-- Write `r' at end of default output.
 		do
 			console_pr (file_pointer, r)
 		end
 
-	put_double, putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE)
 			-- Write `d' at end of default output.
 		do
 			console_pd (file_pointer, d)
 		end
 
-	put_boolean, putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN)
 			-- Write `b' at end of default output.
 		do
 			if b then
@@ -296,7 +296,7 @@ feature -- Output
 			end
 		end
 
-	put_new_line, new_line is
+	put_new_line, new_line
 			-- Write line feed at end of default output.
 		do
 			console_tnwl (file_pointer)
@@ -305,13 +305,13 @@ feature -- Output
 feature {NONE} -- Inapplicable
 
 
-	is_empty: BOOLEAN is False
+	is_empty: BOOLEAN = False
 			-- Useless for CONSOLE class.
 			--| `empty' is false not to invalidate invariant clauses.
 
 feature {NONE} -- Implementation
 
-	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR
 			-- Convertor used to parse string to integer or natural
 		once
 			create Result.make
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			Result.set_trailing_separators_acceptable (False)
 		end
 
-	read_integer_with_no_type is
+	read_integer_with_no_type
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
 		do
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			consume_characters
 		end
 
-	consume_characters is
+	consume_characters
 			-- Consume all characters from current position
 			-- until we meet a new-line character.
 		do
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -350,85 +350,85 @@ feature {NONE} -- Implementation
 			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
 		end
 
-	console_def (number: INTEGER): POINTER is
+	console_def (number: INTEGER): POINTER
 			-- Convert `number' to the corresponding
 			-- file descriptor.
 		external
 			"C use %"eif_console.h%""
 		end
 
-	console_eof (file: POINTER): BOOLEAN is
+	console_eof (file: POINTER): BOOLEAN
 		external
 			"C signature (FILE *): EIF_BOOLEAN use %"eif_console.h%""
 		end
 
-	console_separator (file: POINTER): CHARACTER is
+	console_separator (file: POINTER): CHARACTER
 			-- ASCII code of character following last word read
 		external
 			"C signature (FILE *): EIF_CHARACTER use %"eif_console.h%""
 		end
 
-	console_ps (file: POINTER; s_name: POINTER; length: INTEGER) is
+	console_ps (file: POINTER; s_name: POINTER; length: INTEGER)
 			-- Write string `s' at end of `file'
 		external
 			"C signature (FILE *, char *, EIF_INTEGER) use %"eif_console.h%""
 		end
 
-	console_pr (file: POINTER; r: REAL) is
+	console_pr (file: POINTER; r: REAL)
 			-- Write real `r' at end of `file'
 		external
 			"C signature (FILE *, EIF_REAL) use %"eif_console.h%""
 		end
 
-	console_pc (file: POINTER; c: CHARACTER) is
+	console_pc (file: POINTER; c: CHARACTER)
 			-- Write character `c' at end of `file'
 		external
 			"C signature (FILE *, EIF_CHARACTER) use %"eif_console.h%""
 		end
 
-	console_pd (file: POINTER; d: DOUBLE) is
+	console_pd (file: POINTER; d: DOUBLE)
 			-- Write double `d' at end of `file'
 		external
 			"C signature (FILE *, EIF_DOUBLE) use %"eif_console.h%""
 		end
 
-	console_pi (file: POINTER; i: INTEGER) is
+	console_pi (file: POINTER; i: INTEGER)
 			-- Write integer `i' at end of `file'
 		external
 			"C signature (FILE *, EIF_INTEGER) use %"eif_console.h%""
 		end
 
-	console_tnwl (file: POINTER) is
+	console_tnwl (file: POINTER)
 			-- Write a new_line to `file'
 		external
 			"C signature (FILE *) use %"eif_console.h%""
 		end
 
-	console_readreal (file: POINTER): REAL is
+	console_readreal (file: POINTER): REAL
 			-- Read a real number from the console
 		external
 			"C blocking signature (FILE *): EIF_REAL use %"eif_console.h%""
 		end
 
-	console_readchar (file: POINTER): CHARACTER is
+	console_readchar (file: POINTER): CHARACTER
 			-- Read a character from the console
 		external
 			"C blocking signature (FILE *): EIF_CHARACTER use %"eif_console.h%""
 		end
 
-	console_readint (file: POINTER): INTEGER is
+	console_readint (file: POINTER): INTEGER
 			-- Read an integer from the console
 		external
 			"C blocking signature (FILE *): EIF_INTEGER use %"eif_console.h%""
 		end
 
-	console_readdouble (file: POINTER): DOUBLE is
+	console_readdouble (file: POINTER): DOUBLE
 			-- Read a double from the console
 		external
 			"C blocking signature (FILE *): EIF_DOUBLE use %"eif_console.h%""
 		end
 
-	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
+	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
 			-- Read a string excluding white space and stripping
 			-- leading white space from `file' into `a_string'.
 			-- White space characters are: blank, new_line,
@@ -439,25 +439,25 @@ feature {NONE} -- Implementation
 			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
-	console_readline (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
+	console_readline (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER
 			-- Read a stream from the console
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
-	console_next_line (file: POINTER) is
+	console_next_line (file: POINTER)
 			-- Move to next input line on standard input.
 		external
 			"C blocking signature (FILE *) use %"eif_console.h%""
 		end
 
-	console_readstream (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
+	console_readstream (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER
 			-- Read a stream from the console
 		external
 			"C blocking signature (FILE *, char *, EIF_INTEGER): EIF_INTEGER use %"eif_console.h%""
 		end
 
-	file_close (file: POINTER) is
+	file_close (file: POINTER)
 			-- Close `file'
 		external
 			"C signature (FILE *) use %"eif_console.h%""

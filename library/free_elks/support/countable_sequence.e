@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Infinite sequences, indexed by integers"
@@ -39,7 +39,7 @@ feature -- Access
 	index: INTEGER
 			-- Index of current position
 
-	item: G is
+	item: G
 			-- Item at current position
 		do
 			Result := i_th (index)
@@ -47,32 +47,32 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is False
+	after: BOOLEAN = False
 			-- Is current position past last item? (Answer: no.)
 
-	extendible: BOOLEAN is False
+	extendible: BOOLEAN = False
 			-- May items be added? (Answer: no.)
 
-	prunable: BOOLEAN is False
+	prunable: BOOLEAN = False
 			-- May items be removed? (Answer: no.)
 
-	readable: BOOLEAN is True
+	readable: BOOLEAN = True
 			-- Is there a current item that may be read?
 			-- (Answer: yes.)
 
-	writable: BOOLEAN is False
+	writable: BOOLEAN = False
 			-- Is there a current item that may be written?
 			-- (Answer: no.)
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position.
 		do
 			index := index + 1
 		end
 
-	start is
+	start
 			-- Move to first position.
 		do
 			index := 1
@@ -80,46 +80,46 @@ feature -- Cursor movement
 
 feature {NONE} -- Inapplicable
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add `v' at end.
 		do
 		end
 
-	finish is
+	finish
 			-- Move to last position.
 		do
 		ensure then
 			failure: False
 		end
 
-	linear_representation: LINEAR [G] is
+	linear_representation: LINEAR [G]
 			-- Representation as a linear structure
 		do
 				-- Make sure Result is attached.
 			create {LINKED_LIST [G]} Result.make
 		end
 
-	prune (v: G) is
+	prune (v: G)
 			-- Remove first occurrence of `v', if any.
 		do
 		end
 
-	put (v: G) is
+	put (v: G)
 			-- Add `v' to the right of current position.
 		do
 		end
 
-	remove is
+	remove
 			-- Remove item to the right of current position.
 		do
 		end
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace by `v' item at current position.
 		do
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 		end

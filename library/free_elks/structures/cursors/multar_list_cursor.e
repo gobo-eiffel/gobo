@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for multi-array trees"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (active_element: like active; current_active_index, current_index: INTEGER) is
+	make (active_element: like active; current_active_index, current_index: INTEGER)
 			-- Create a cursor and set it up on `active_element'.
 		do
 			active := active_element
@@ -37,7 +37,7 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 	index: INTEGER;
 		-- Index in array_sequence list
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

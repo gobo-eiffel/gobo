@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Basic mathematical constants.
@@ -16,12 +16,12 @@ class
 
 feature -- Access
 
-	Pi: DOUBLE is 3.14159265358979323846
+	Pi: DOUBLE = 3.14159265358979323846
 
-	Sqrt2: DOUBLE is 1.41421356237309504880
+	Sqrt2: DOUBLE = 1.41421356237309504880
 			-- Square root of 2
 
-	Euler: DOUBLE is 2.7182818284590452354;
+	Euler: DOUBLE = 2.7182818284590452354;
 			-- Logarithm base
 
 end

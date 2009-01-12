@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Find out if two paths corresponds to exactly the same file."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2006, Eiffel Software and others"
@@ -11,7 +11,7 @@ class
 
 feature -- Comparison
 
-	same_files (a_path1, a_path2: STRING): BOOLEAN is
+	same_files (a_path1, a_path2: STRING): BOOLEAN
 			-- Are `a_path1' and `a_path1'
 		require
 			a_path1_not_void: a_path1 /= Void
@@ -28,7 +28,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	c_same_files (a_path1, a_path2: POINTER): BOOLEAN is
+	c_same_files (a_path1, a_path2: POINTER): BOOLEAN
 			-- Do C paths `a_path1' and `a_path2' represent the same file?
 		require
 			a_path1_not_null: a_path1 /= default_pointer

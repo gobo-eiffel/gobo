@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Unbounded queues implemented as linked lists"
@@ -58,7 +58,7 @@ create {LINKED_QUEUE}
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create linked queue.
 		do
 			after := True
@@ -66,7 +66,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Oldest item
 		local
 			a: like active
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Element change
 
-	put, extend, force (v: G) is
+	put, extend, force (v: G)
 			-- Add `v' as newest item.
 		do
 			put_front (v)
@@ -95,7 +95,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 			-- (order is same as original order of insertion)
 		do
@@ -114,7 +114,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- New queue containing the `n' oldest items in current queue.
 			-- If `n' is greater than `count', identical to current queue.
 		local
@@ -133,7 +133,7 @@ feature -- Duplication
 			go_to (l_cur)
 		end
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
@@ -170,14 +170,14 @@ feature -- Duplication
 
 feature {NONE} -- Not applicable
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove one occurrence of `v'.
 			-- Not available.
 		do
 			-- Do nothing
 		end
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of `v'.
 			-- Not available
 		do
@@ -188,7 +188,7 @@ invariant
 
 	is_always_after: not is_empty implies after
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

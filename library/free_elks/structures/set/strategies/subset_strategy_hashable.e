@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 		Strategies for calculating several features for subsets containing
@@ -16,7 +16,7 @@ class SUBSET_STRATEGY_HASHABLE [G] inherit
 
 feature -- Comparison
 
-	disjoint (set1, set2: TRAVERSABLE_SUBSET [G]): BOOLEAN is
+	disjoint (set1, set2: TRAVERSABLE_SUBSET [G]): BOOLEAN
 			-- Are `set1' and `set2' disjoint?
 		local
 			hash: HASH_TABLE [G, INTEGER]
@@ -88,7 +88,7 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	symdif (set1, set2: TRAVERSABLE_SUBSET [G]) is
+	symdif (set1, set2: TRAVERSABLE_SUBSET [G])
 			-- Remove all items of `set1' that are also in `set2', and add all
 			-- items of `set2' not already present in `set1'.
 		local
@@ -146,7 +146,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

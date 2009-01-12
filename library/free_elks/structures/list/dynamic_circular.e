@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dynamically modifiable circular chains"
@@ -30,7 +30,7 @@ deferred class DYNAMIC_CIRCULAR [G] inherit
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `count') items.
 		local
@@ -51,7 +51,7 @@ feature -- Duplication
 			go_to (pos)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

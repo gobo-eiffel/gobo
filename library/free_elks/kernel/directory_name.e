@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Directory name abstraction"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
@@ -19,7 +19,7 @@ create {DIRECTORY_NAME}
 
 feature
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the directory name valid?
 		local
 			any: ANY
@@ -30,7 +30,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	new_string (n: INTEGER): like Current is
+	new_string (n: INTEGER): like Current
 			-- New instance of current with space for at least `n' characters.
 		do
 			create Result.string_make (n)
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Externals
 
-	eif_is_directory_valid (p: POINTER): BOOLEAN is
+	eif_is_directory_valid (p: POINTER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
 		end

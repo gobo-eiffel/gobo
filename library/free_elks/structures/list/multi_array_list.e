@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Lists implemented as sequences of arrays, the last of which may
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (b: INTEGER) is
+	make (b: INTEGER)
 			-- Create an empty list, setting block_size to b
 		do
 			block_size := b
@@ -40,25 +40,25 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at cursor position
 		do
 			Result := active.item.item
 		end
 
-	first: like item is
+	first: like item
 			-- Item at first position
 		do
 			Result := first_element.item.first
 		end
 
-	last: like item is
+	last: like item
 			-- Item at last position
 		do
 			Result := last_element.item.last
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does list include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -77,7 +77,7 @@ feature -- Access
 	index: INTEGER
 			-- Current cursor index
 
-	cursor: MULTAR_LIST_CURSOR [G] is
+	cursor: MULTAR_LIST_CURSOR [G]
 			-- Current cursor position
 		do
 			create Result.make (active, active.item.index, index)
@@ -98,12 +98,12 @@ feature -- Measurement
 
 feature -- Status report
 
-	full: BOOLEAN is
+	full: BOOLEAN
 		do
 			Result := False
 		end
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		do
 			if {al_c: MULTAR_LIST_CURSOR [G]} p then
@@ -115,7 +115,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 			-- (No effect if empty)
 		do
@@ -124,7 +124,7 @@ feature -- Cursor movement
 			index := 1
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 			-- (No effect if empty)
 		do
@@ -133,7 +133,7 @@ feature -- Cursor movement
 			index := count
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
@@ -155,7 +155,7 @@ feature -- Cursor movement
 			index := index + 1
 		end
 
-	back is
+	back
 			-- Move cursor to previous position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
@@ -177,7 +177,7 @@ feature -- Cursor movement
 			index := index - 1
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the offset is too big.
 		local
@@ -247,7 +247,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'
 		do
 			if {al_c: MULTAR_LIST_CURSOR [G]} p then
@@ -257,7 +257,7 @@ feature -- Cursor movement
 			end
 		end
 
-	search (v: like item) is
+	search (v: like item)
 			-- Move cursor to first position (at or after current
 			-- cursor position) where `item' and `v' are equal.
  			-- (Reference or object equality,
@@ -312,13 +312,13 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace current item by `v'.
 		do
 			active.item.replace (v)
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 		local
 			current_array: ARRAYED_LIST [G]
@@ -335,7 +335,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' at the beginning.
 			-- Do not move cursor.
 		local
@@ -361,7 +361,7 @@ feature -- Element change
 			end
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of current position.
 			-- Do not move cursor.
 		local
@@ -411,7 +411,7 @@ feature -- Element change
 			count := count + 1
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the left of current position.
 			-- Do not move cursor.
 		do
@@ -423,7 +423,7 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			count := 0
@@ -435,7 +435,7 @@ feature -- Removal
 			last_element := first_element
 		end
 
-	remove is
+	remove
 			-- Remove current item
 		local
 			current_array: ARRAYED_LIST [G]
@@ -488,20 +488,20 @@ feature -- Removal
 			count := count - 1
 		end
 
-	remove_left is
+	remove_left
 		do
 			back
 			remove
 		end
 
-	remove_right is
+	remove_right
 		do
 			forth
 			remove
 			back
 		end
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 		local
 			cell: ?like active
 			new_active: ?like active
@@ -563,7 +563,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-list beginning at cursor position
 			-- and having min (`n', `count' - `index' + 1) items
 		local
@@ -585,7 +585,7 @@ feature -- Duplication
 
 feature {MULTI_ARRAY_LIST} -- Implementation
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -593,7 +593,7 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 			create Result.make (block_size)
 		end
 
-	active_array: ARRAYED_LIST [G] is
+	active_array: ARRAYED_LIST [G]
 			-- Array_sequence at cursor position
 		require
 			active_exists: active /= Void
@@ -607,7 +607,7 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_cell (a: ARRAYED_LIST [G]): like first_element is
+	new_cell (a: ARRAYED_LIST [G]): like first_element
 		do
 			create Result.put (a)
 		end
@@ -618,7 +618,7 @@ invariant
 	readable_definition: readable = not off
 	extendible_definition: extendible
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

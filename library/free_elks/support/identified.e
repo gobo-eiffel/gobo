@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	frozen object_id: INTEGER is
+	frozen object_id: INTEGER
 			-- Unique for current object in any given session
 		do
 			if internal_id = 0 then
@@ -34,7 +34,7 @@ feature -- Access
 			valid_id: Result > 0 implies id_object (Result) = Current
 		end
 
-	frozen id_object (an_id: INTEGER): ?IDENTIFIED is
+	frozen id_object (an_id: INTEGER): ?IDENTIFIED
 			-- Object associated with `an_id' (void if no such object)
 		do
 			if an_id > 0 then
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Status report
 
-	frozen id_freed: BOOLEAN is
+	frozen id_freed: BOOLEAN
 			-- Has `Current' been removed from the table?
 			--| It could also mean that it was not yet added to the table.
 		do
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Removal
 
-	frozen free_id is
+	frozen free_id
 			-- Free the entry associated with `object_id' if any.
 			--| The `object_id' is reset to -1 to prevent reassigning
 			--| a new id to the same object.
@@ -76,7 +76,7 @@ feature -- Removal
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 			--| `object_id' is not taken into consideration
@@ -91,7 +91,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 			--| `object_id' will return a different value for the two
@@ -106,7 +106,7 @@ feature -- Duplication
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Free the entry associated with `object_id' if any
 			--| If `dispose' is redefined, the redefinition has to
 			--| call `free_id'

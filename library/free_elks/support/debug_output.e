@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide an output in debugger"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005, Eiffel Software and others"
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Status report
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		deferred
 		ensure

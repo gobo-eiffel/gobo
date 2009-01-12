@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Data structures whose items may be compared
@@ -19,7 +19,7 @@ deferred class COMPARABLE_STRUCT [G -> COMPARABLE] inherit
 
 feature -- Measurement
 
-	min: like item is
+	min: like item
 			-- Minimum item
 		require
 			min_max_available
@@ -41,7 +41,7 @@ feature -- Measurement
 		--	smallest: For every item `it' in structure, `Result' <= `it'
 		end
 
-	max: like item is
+	max: like item
 			-- Maximum item
 		require
 			min_max_available
@@ -63,7 +63,7 @@ feature -- Measurement
 		--	largest: For every item `it' in structure, `it' <= `Result'
 		end
 
-	min_max_available: BOOLEAN is
+	min_max_available: BOOLEAN
 			-- Can min and max be computed?
 		do
 			Result := not is_empty
@@ -73,7 +73,7 @@ feature -- Measurement
 
 feature {NONE} -- Inapplicable
 
-	index: INTEGER is
+	index: INTEGER
 		do
 		end
 
@@ -81,7 +81,7 @@ invariant
 
 	empty_constraint: min_max_available implies not is_empty
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

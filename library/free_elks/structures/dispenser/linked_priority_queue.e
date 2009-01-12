@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Priority queues implemented as sorted lists"
@@ -42,7 +42,7 @@ create {LINKED_PRIORITY_QUEUE}
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Entry at top of heap.
 		do
 			Result := i_th (count)
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove item of highest value.
 		do
 			go_i_th (count)
@@ -60,14 +60,14 @@ feature -- Removal
 
 feature -- Element change
 
-	put (v: like item) is
+	put (v: like item)
 			-- Insert item `v' at its proper position.
 		do
 			extend (v)
 		end
 
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

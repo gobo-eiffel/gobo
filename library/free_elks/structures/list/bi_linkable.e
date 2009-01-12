@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Linkable cells with a reference to the left and right neighbors"
@@ -28,7 +28,7 @@ feature -- Access
 
 feature {CELL, CHAIN} -- Implementation
 
-	put_right (other: ?like Current) is
+	put_right (other: ?like Current)
 			-- Put `other' to the right of current cell.
 		local
 			l_right: like right
@@ -45,7 +45,7 @@ feature {CELL, CHAIN} -- Implementation
 			end
 		end
 
-	put_left (other: ?like Current) is
+	put_left (other: ?like Current)
 			-- Put `other' to the left of current cell.
 		local
 			l: like left
@@ -62,7 +62,7 @@ feature {CELL, CHAIN} -- Implementation
 			chained: left = other
 		end
 
-	forget_right is
+	forget_right
 			-- Remove links with right neighbor.
 		local
 			l_right: like right
@@ -77,7 +77,7 @@ feature {CELL, CHAIN} -- Implementation
 	 			({r: like right} old right) implies r.left = Void
 		end
 
-	forget_left is
+	forget_left
 			-- Remove links with left neighbor.
 		local
 			l: like left
@@ -95,7 +95,7 @@ feature {CELL, CHAIN} -- Implementation
 
 feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 
-	simple_put_right (other: ?like Current) is
+	simple_put_right (other: ?like Current)
 			-- Set `right' to `other'
 		local
 			l_right: like right
@@ -107,7 +107,7 @@ feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 			right := other
 		end
 
-	simple_put_left (other: ?like Current) is
+	simple_put_left (other: ?like Current)
 			-- Set `left' to `other' is
 		local
 			l: like left
@@ -119,13 +119,13 @@ feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 			left := other
 		end
 
-	simple_forget_right is
+	simple_forget_right
 			-- Remove right link (do nothing to right neighbor).
 		do
 			right := Void
 		end
 
-	simple_forget_left is
+	simple_forget_left
 			-- Remove left link (do nothing to left neighbor).
 		do
 			left := Void
@@ -140,7 +140,7 @@ invariant
 	left_symmetry:
 		{l: like left} left implies (l.right = Current)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Queues (first-in, first-out dispensers), without commitment 
@@ -22,12 +22,12 @@ deferred class QUEUE [G] inherit
 
 feature -- Element change
 
-	 force (v: like item) is
+	 force (v: like item)
 			-- Add `v' as newest item.
 		deferred
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

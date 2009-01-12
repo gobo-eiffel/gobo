@@ -1,4 +1,4 @@
-indexing
+note
 	Warning: "[
 		If you are precompiling a subset of EiffelBase, it is 
 		preferable NOT to remove this class from the subset. 

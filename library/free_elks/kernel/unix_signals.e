@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Constants used for signal handling.
@@ -15,7 +15,7 @@ class
 
 feature -- Access
 
-	meaning (sig: INTEGER): ?STRING is
+	meaning (sig: INTEGER): ?STRING
 			-- A message in English describing what `sig' is
 		do
 			if is_defined (sig) then
@@ -24,7 +24,7 @@ feature -- Access
 		end
 
 
-	is_defined (sig: INTEGER): BOOLEAN is
+	is_defined (sig: INTEGER): BOOLEAN
 			-- Is `sig' a signal defined for this platform?
 		external
 			"C use %"eif_sig.h%""
@@ -32,237 +32,237 @@ feature -- Access
 			"esigdefined"
 		end
 
-	is_ignored (sig: INTEGER): BOOLEAN is
+	is_ignored (sig: INTEGER): BOOLEAN
 			-- Is `sig' currently set to be ignored?
 		do
 			Result := not is_caught (sig)
 		end
 
-	Sighup: INTEGER is
+	Sighup: INTEGER
 			-- Code for ``Hangup'' signal
 		once
 			Result := c_signal_map (1)
 		end
 
-	Sigint: INTEGER is
+	Sigint: INTEGER
 			-- Code for ``Interrupt'' signal
 		once
 			Result := c_signal_map (2)
 		end
 
-	Sigquit: INTEGER is
+	Sigquit: INTEGER
 			-- Code for ``Quit'' signal
 		once
 			Result := c_signal_map (3)
 		end
 
-	Sigill: INTEGER is
+	Sigill: INTEGER
 			-- Code for ``Illegal instruction'' signal
 		once
 			Result := c_signal_map (4)
 		end
 
-	Sigtrap: INTEGER is
+	Sigtrap: INTEGER
 			-- Code for ``Trace trap'' signal
 		once
 			Result := c_signal_map (5)
 		end
 
-	Sigabrt: INTEGER is
+	Sigabrt: INTEGER
 			-- Code for ``Abort'' signal
 		once
 			Result := c_signal_map (6)
 		end
 
-	Sigiot: INTEGER is
+	Sigiot: INTEGER
 			-- Code for ``IOT instruction'' signal
 		once
 			Result := c_signal_map (7)
 		end
 
-	Sigemt: INTEGER is
+	Sigemt: INTEGER
 			-- Code for ``EMT instruction'' signal
 		once
 			Result := c_signal_map (8)
 		end
 
-	Sigfpe: INTEGER is
+	Sigfpe: INTEGER
 			-- Code for ``Floating point exception'' signal
 			--| (Already caught by Eiffel run-time)
 		once
 			Result := c_signal_map (9)
 		end
 
-	Sigkill: INTEGER is
+	Sigkill: INTEGER
 			-- Code for ``Terminator'' signal
 		once
 			Result := c_signal_map (10)
 		end
 
-	Sigbus: INTEGER is
+	Sigbus: INTEGER
 			-- Code for ``Bus error'' signal
 		once
 			Result := c_signal_map (11)
 		end
 
-	Sigsegv: INTEGER is
+	Sigsegv: INTEGER
 			-- Code for ``Segmentation violation'' signal
 		once
 			Result := c_signal_map (12)
 		end
 
-	Sigsys: INTEGER is
+	Sigsys: INTEGER
 			-- Code for ``Bad argument to system call'' signal
 		once
 			Result := c_signal_map (13)
 		end
 
-	Sigpipe: INTEGER is
+	Sigpipe: INTEGER
 			-- Code for ``Broken pipe'' signal
 		once
 			Result := c_signal_map (14)
 		end
 
-	Sigalrm: INTEGER is
+	Sigalrm: INTEGER
 			-- Code for ``Alarm clock'' signal
 		once
 			Result := c_signal_map (15)
 		end
 
-	Sigterm: INTEGER is
+	Sigterm: INTEGER
 			-- Code for ``Software termination'' signal
 		once
 			Result := c_signal_map (16)
 		end
 
-	Sigusr1: INTEGER is
+	Sigusr1: INTEGER
 			-- Code for ``User-defined signal #1''
 		once
 			Result := c_signal_map (17)
 		end
 
-	Sigusr2: INTEGER is
+	Sigusr2: INTEGER
 			-- Code for ``User-defined signal #2''
 		once
 			Result := c_signal_map (18)
 		end
 
-	Sigchld: INTEGER is
+	Sigchld: INTEGER
 			-- Code for ``Death of a child'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (19)
 		end
 
-	Sigcld: INTEGER is
+	Sigcld: INTEGER
 			-- Code for ``Death of a child'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (20)
 		end
 
-	Sigio: INTEGER is
+	Sigio: INTEGER
 			-- Code for ``Pending I/O on a descriptor'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (21)
 		end
 
-	Sigpoll: INTEGER is
+	Sigpoll: INTEGER
 			-- Code for ``Selectable event pending'' signal
 		once
 			Result := c_signal_map (22)
 		end
 
-	Sigttin: INTEGER is
+	Sigttin: INTEGER
 			-- Code for ``Tty input from background'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (23)
 		end
 
-	Sigttou: INTEGER is
+	Sigttou: INTEGER
 			-- Code for ``Tty output from background'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (24)
 		end
 
-	Sigstop: INTEGER is
+	Sigstop: INTEGER
 			-- Code for ``Stop'' signal
 		once
 			Result := c_signal_map (25)
 		end
 
-	Sigtstp: INTEGER is
+	Sigtstp: INTEGER
 			-- Code for ``Stop from tty'' signal
 		once
 			Result := c_signal_map (26)
 		end
 
-	Sigxcpu: INTEGER is
+	Sigxcpu: INTEGER
 			-- Code for ``Cpu time limit exceeded'' signal
 		once
 			Result := c_signal_map (27)
 		end
 
-	Sigxfsz: INTEGER is
+	Sigxfsz: INTEGER
 			-- Code for ``File size limit exceeded'' signal
 		once
 			Result := c_signal_map (28)
 		end
 
-	Sigvtalarm: INTEGER is
+	Sigvtalarm: INTEGER
 			-- Code for ``Virtual time alarm'' signal
 		once
 			Result := c_signal_map (29)
 		end
 
-	Sigpwr: INTEGER is
+	Sigpwr: INTEGER
 			-- Code for ``Power-fail'' signal
 		once
 			Result := c_signal_map (30)
 		end
 
-	Sigprof: INTEGER is
+	Sigprof: INTEGER
 			-- Code for ``Profiling timer alarm'' signal
 		once
 			Result := c_signal_map (31)
 		end
 
-	Sigwinch: INTEGER is
+	Sigwinch: INTEGER
 			-- Code for ``Window size changed'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (32)
 		end
 
-	Sigwind: INTEGER is
+	Sigwind: INTEGER
 			-- Code for ``Window change'' signal
 		once
 			Result := c_signal_map (33)
 		end
 
-	Sigphone: INTEGER is
+	Sigphone: INTEGER
 			-- Code for ``Line status change'' signal
 		once
 			Result := c_signal_map (34)
 		end
 
-	Siglost: INTEGER is
+	Siglost: INTEGER
 			-- Code for ``Resource lost'' signal
 		once
 			Result := c_signal_map (35)
 		end
 
-	Sigurg: INTEGER is
+	Sigurg: INTEGER
 			-- Code for ``Urgent condition on socket'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (36)
 		end
 
-	Sigcont: INTEGER is
+	Sigcont: INTEGER
 			-- Code for ``Continue after stop'' signal.
 			-- Signal ignored by default
 		once
@@ -271,7 +271,7 @@ feature -- Access
 
 feature -- Status report
 
-	signal: INTEGER is
+	signal: INTEGER
 			-- Code of last signal
 		external
 			"C use %"eif_sig.h%""
@@ -281,7 +281,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	catch (sig: INTEGER) is
+	catch (sig: INTEGER)
 			-- Make sure that future occurrences of `sig'
 			-- will be treated as exceptions.
 			-- (This is the default for all signals.)
@@ -292,7 +292,7 @@ feature -- Status setting
 			"esigcatch"
 		end
 
-	ignore (sig: INTEGER) is
+	ignore (sig: INTEGER)
 			-- Make sure that future occurrences of `sig'
 			-- will be ignored. (This is not the default.)
 			-- No effect if signal not defined.
@@ -302,7 +302,7 @@ feature -- Status setting
 			"esigignore"
 		end
 
-	reset_all_default is
+	reset_all_default
 			-- Make sure that all exceptions will lead to their
 			-- default handling.
 		external
@@ -311,7 +311,7 @@ feature -- Status setting
 			"esigresall"
 		end
 
-	reset_default (sig: INTEGER) is
+	reset_default (sig: INTEGER)
 			-- Make sure that exception of code code will lead
 			-- to its default action.
 		require
@@ -324,7 +324,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	is_caught (sig: INTEGER): BOOLEAN is
+	is_caught (sig: INTEGER): BOOLEAN
 			-- Is `sig' currently set to be caught?
 		external
 			"C use %"eif_sig.h%""
@@ -332,14 +332,14 @@ feature {NONE} -- Implementation
 			"esigiscaught"
 		end
 
-	c_signal_map (i: INTEGER): INTEGER is
+	c_signal_map (i: INTEGER): INTEGER
 		external
 			"C use %"eif_sig.h%""
 		alias
 			"esigmap"
 		end
 
-	c_signal_name (i: INTEGER): POINTER is
+	c_signal_name (i: INTEGER): POINTER
 		external
 			"C use %"eif_sig.h%""
 		alias

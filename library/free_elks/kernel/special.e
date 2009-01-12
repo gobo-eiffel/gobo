@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Special objects: homogeneous sequences of values,
 		used to represent arrays and strings

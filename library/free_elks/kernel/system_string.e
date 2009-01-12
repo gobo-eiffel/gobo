@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fake abstraction of a .NET SYSTEM_STRING in a non-.NET system"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	length: INTEGER is do end
+	length: INTEGER do end
 
 invariant
 	is_dotnet: {PLATFORM}.is_dotnet

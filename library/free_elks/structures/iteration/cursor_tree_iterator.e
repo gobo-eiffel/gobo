@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects that are able to iterate over cursor trees, 
@@ -101,38 +101,38 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	pre_start, breadth_start is
+	pre_start, breadth_start
 			-- Move cursor of `target' to root position
 			-- (first position in preorder and breadth-first).
 		do
 			target.start
 		end
 
-	post_start is
+	post_start
 			-- Move cursor of `target' to first position in postorder.
 		do
 			target.postorder_start
 		end
 
-	pre_forth is
+	pre_forth
 			-- Move cursor of `target' to next position in preorder.
 		do
 			target.preorder_forth
 		end
 
-	post_forth is
+	post_forth
 			-- Move cursor of `target' to next position in postorder.
 		do
 			target.postorder_forth
 		end
 
-	breadth_forth is
+	breadth_forth
 			-- Move cursor of `target' to next position in breadth-first.
 		do
 			target.breadth_forth
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

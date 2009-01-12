@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contiguous integer intervals"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (min_index, max_index: INTEGER) is
+	make (min_index, max_index: INTEGER)
 			-- Set up interval to have bounds `min_index' and
 			-- `max_index' (empty if `min_index' > `max_index')
 		do
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	adapt (other: INTEGER_INTERVAL) is
+	adapt (other: INTEGER_INTERVAL)
 			-- Reset to be the same interval as `other'.
 		require
 			other_not_void: other /= Void
@@ -86,7 +86,7 @@ feature -- Access
 	lower_defined: BOOLEAN
 			-- Is there a lower bound?
 
-	lower: INTEGER is
+	lower: INTEGER
 			-- Smallest value in interval
 		require
 			lower_defined: lower_defined
@@ -97,7 +97,7 @@ feature -- Access
 	upper_defined: BOOLEAN
 			-- Is there an upper bound?
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Largest value in interval
 		require
 			upper_defined: upper_defined
@@ -105,13 +105,13 @@ feature -- Access
 			Result := upper_internal
 		end
 
-	item alias "[]", at alias "@" (i: INTEGER): INTEGER is
+	item alias "[]", at alias "@" (i: INTEGER): INTEGER
 			-- Entry at index `i', if in index interval
 		do
 			Result := i
 		end
 
-	has, valid_index (v: INTEGER): BOOLEAN is
+	has, valid_index (v: INTEGER): BOOLEAN
 			-- Does `v' appear in interval?
 		do
 			Result :=
@@ -125,7 +125,7 @@ feature -- Access
 
 feature -- Measurement
 
-	occurrences (v: INTEGER): INTEGER is
+	occurrences (v: INTEGER): INTEGER
 			-- Number of times `v' appears in structure
 		do
 			if has (v) then
@@ -136,7 +136,7 @@ feature -- Measurement
 			zero_otherwise: Result /= 1 implies Result = 0
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of items in interval
 			-- (here the same thing as `count')
 		do
@@ -146,7 +146,7 @@ feature -- Measurement
 			Result := count
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in interval
 		do
 			check
@@ -159,7 +159,7 @@ feature -- Measurement
 			definition: Result = upper - lower + 1
 		end
 
-	index_set: INTEGER_INTERVAL is
+	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
 			-- (here: the interval itself)
 		do
@@ -170,7 +170,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is array made of the same items as `other'?
 		do
 			Result :=
@@ -184,7 +184,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	all_cleared: BOOLEAN is
+	all_cleared: BOOLEAN
 			-- Are all items set to default values?
 		do
 			Result := ((lower = 0) and (upper = 0))
@@ -192,14 +192,14 @@ feature -- Status report
 			iff_at_zero: Result = ((lower = 0) and (upper = 0))
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 			-- Answer: yes
 		do
 			Result := True
 		end
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May individual items be removed?
 			-- Answer: no
 		do
@@ -208,7 +208,7 @@ feature -- Status report
 
 feature -- Element change
 
-	extend, put (v: INTEGER) is
+	extend, put (v: INTEGER)
 			-- Make sure that interval goes all the way
 			-- to `v' (up or down).
 		do
@@ -224,7 +224,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (min_index, max_index: INTEGER) is
+	resize (min_index, max_index: INTEGER)
 			-- Rearrange interval to go from at most
 			-- `min_index' to at least `max_index',
 			-- encompassing previous bounds.
@@ -233,7 +233,7 @@ feature -- Resizing
 			upper_internal := max_index.max (upper)
 		end
 
-	resize_exactly (min_index, max_index: INTEGER) is
+	resize_exactly (min_index, max_index: INTEGER)
 			-- Rearrange interval to go from
 			-- `min_index' to `max_index'.
 		do
@@ -241,7 +241,7 @@ feature -- Resizing
 			upper_internal := max_index
 		end
 
-	grow (i: INTEGER) is
+	grow (i: INTEGER)
 			-- Ensure that capacity is at least `i'.
 		do
 			if capacity < i then
@@ -254,7 +254,7 @@ feature -- Resizing
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			lower_defined := True
@@ -265,7 +265,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	as_array: ARRAY [INTEGER] is
+	as_array: ARRAY [INTEGER]
 			-- Plain array containing interval's items
 		require
 			finite: upper_defined and lower_defined
@@ -286,7 +286,7 @@ feature -- Conversion
 			same_upper: Result.upper = upper
 		end
 
-	to_c: ANY is
+	to_c: ANY
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
 		obsolete
@@ -298,7 +298,7 @@ feature -- Conversion
 			Result := Current
 		end
 
-	linear_representation: LINEAR [INTEGER] is
+	linear_representation: LINEAR [INTEGER]
 			-- Representation as a linear structure
 		do
 			check
@@ -309,7 +309,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reset to be the same interval as `other'.
 		do
 			lower_internal := other.lower_internal
@@ -323,7 +323,7 @@ feature -- Duplication
 			same_upper_defined: upper_defined = other.upper_defined
 		end
 
-	subinterval (start_pos, end_pos: INTEGER): like Current is
+	subinterval (start_pos, end_pos: INTEGER): like Current
 			-- Interval made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		do
@@ -332,7 +332,7 @@ feature -- Duplication
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [INTEGER]]) is
+	do_all (action: PROCEDURE [ANY, TUPLE [INTEGER]])
 			-- Apply `action' to every item of current interval.
 		require
 			action_exists: action /= Void
@@ -353,7 +353,7 @@ feature -- Iteration
 
 	for_all (condition:
 				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
-			BOOLEAN is
+			BOOLEAN
 			-- Do all interval's values satisfy `condition'?
 		require
 			finite: upper_defined and lower_defined
@@ -376,7 +376,7 @@ feature -- Iteration
 
 	exists (condition:
 				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
-			BOOLEAN is
+			BOOLEAN
 			-- Does at least one of  interval's values
 			-- satisfy `condition'?
 		require
@@ -400,7 +400,7 @@ feature -- Iteration
 
 	exists1 (condition:
 				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
-			BOOLEAN is
+			BOOLEAN
 			-- Does exactly one of  interval's values
 			-- satisfy `condition'?
 		require
@@ -415,7 +415,7 @@ feature -- Iteration
 
 	hold_count (condition:
 				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
-			INTEGER is
+			INTEGER
 			-- Number of  interval's values that
 			-- satisfy `condition'
 		require
@@ -450,13 +450,13 @@ feature {INTEGER_INTERVAL} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	prune (v: INTEGER) is
+	prune (v: INTEGER)
 			-- Remove one occurrence of `v' if any.
 			-- Not applicable here.
 		do
 		end
 
-	indexable_put (v: INTEGER; k: INTEGER) is
+	indexable_put (v: INTEGER; k: INTEGER)
 			-- Associate value `v' with key `k'.
 			-- Not applicable here.
 		do

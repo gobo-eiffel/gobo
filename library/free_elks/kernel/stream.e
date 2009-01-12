@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of the STORABLE mechanism with streams."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -18,14 +18,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create stream object with a default_size of 100 bytes
 		do
 			buffer_size := 200
 			create_c_buffer
 		end
 
-	make_with_size (n: INTEGER) is
+	make_with_size (n: INTEGER)
 			-- Create stream object with a default_size of `n' bytes
 		do
 			buffer_size := n
@@ -34,18 +34,18 @@ feature -- Initialization
 
 feature -- Status report
 
-	support_storable: BOOLEAN is True
+	support_storable: BOOLEAN = True
 			-- Can medium be used to store an Eiffel structure?
 
 feature -- Access
 
-	item: POINTER is
+	item: POINTER
 			-- Direct access to stored/retrieved data
 		do
 			Result := c_buffer (internal_buffer_access)
 		end
 
-	buffer: POINTER is
+	buffer: POINTER
 			-- C buffer correspond to the Eiffel STREAM
 		obsolete
 			"Use `item' instead to directly access stored/retrieved data"
@@ -59,13 +59,13 @@ feature -- Access
 	object_stored_size: INTEGER
 			-- Size of last stored object.
 
-	create_c_buffer is
+	create_c_buffer
 			-- Create the C memory corresponding to the C buffer.
 		do
 			internal_buffer_access := c_malloc (buffer_size)
 		end
 
-	retrieved: ANY is
+	retrieved: ANY
 			-- Retrieved object structure
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Element change
 
-	basic_store (object: ANY) is
+	basic_store (object: ANY)
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
@@ -94,7 +94,7 @@ feature -- Element change
 			object_stored_size := size
 		end
 
-	general_store (object: ANY) is
+	general_store (object: ANY)
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable from other systems for same platform
@@ -109,7 +109,7 @@ feature -- Element change
 			object_stored_size := size
 		end
 
-	independent_store (object: ANY) is
+	independent_store (object: ANY)
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable from other systems for the same or other
@@ -121,7 +121,7 @@ feature -- Element change
 			object_stored_size := size
 		end
 
-	set_additional_size (new_size: INTEGER) is
+	set_additional_size (new_size: INTEGER)
 			-- Set `new_size' to BUFFER_SIZE, internal value used to
 			-- increment `buffer_size' during storable operations.
 		external
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 	internal_buffer_access: POINTER
 			-- Access to C buffer pointed by `item'.
 
-	c_buffer (a_buf: POINTER): POINTER is
+	c_buffer (a_buf: POINTER): POINTER
 			-- Dereferenced pointer of `a_buf'
 		require
 			a_buf_not_null: a_buf /= default_pointer
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			"return (*(EIF_POINTER *) $a_buf);"
 		end
 
-	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
+	c_stream_basic_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER
 			-- Store object structure reachable form current object
 			-- Return new size of `internal_buffer_access'.
 		external
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			"stream_estore"
 		end
 
-	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
+	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER
 			-- Store object structure reachable form current object
 			-- Return new size of `internal_buffer_access'.
 		external
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			"stream_eestore"
 		end
 
-	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
+	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER
 			-- Store object structure reachable form current object
 			-- Return new size of `internal_buffer_access'.
 		external
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			"stream_sstore"
 		end
 
-	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; stream_buffer_position: INTEGER; c_real_size: POINTER): ANY is
+	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; stream_buffer_position: INTEGER; c_real_size: POINTER): ANY
 			-- Object structured retrieved from stream of pointer
 			-- `stream_ptr'
 		external
@@ -181,14 +181,14 @@ feature {NONE} -- Implementation
 			"stream_eretrieve"
 		end
 
-	c_malloc (size: INTEGER): POINTER is
+	c_malloc (size: INTEGER): POINTER
 		external
 			"C use %"eif_store.h%""
 		alias
 			"stream_malloc"
 		end
 
-	c_free (buf: POINTER) is
+	c_free (buf: POINTER)
 		external
 			"C signature (EIF_POINTER *) use %"eif_store.h%""
 		alias
@@ -197,32 +197,32 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	exists: BOOLEAN is True
+	exists: BOOLEAN = True
 			-- Stream exists in any cases.
 
-	is_open_read: BOOLEAN is True
+	is_open_read: BOOLEAN = True
 			-- Stream opens for input.
 
-	is_open_write: BOOLEAN is True
+	is_open_write: BOOLEAN = True
 			-- Stream opens for output.
 
-	is_readable: BOOLEAN is True
+	is_readable: BOOLEAN = True
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Is stream executable?
 		do
 			Result := False
 		end
 
-	is_writable: BOOLEAN is True
+	is_writable: BOOLEAN = True
 			-- Stream is writable.
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		do
 			Result := True
@@ -233,7 +233,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	close is
+	close
 			-- Close medium.
 		do
 			is_closed := True
@@ -243,7 +243,7 @@ feature -- Status setting
 
 feature -- Output
 
-	put_new_line, new_line is
+	put_new_line, new_line
 			-- Write a new line character to medium
 		require else
 			stream_exists: exists
@@ -251,72 +251,72 @@ feature -- Output
 			put_character ('%N')
 		end
 
-	put_string, putstring (s: STRING) is
+	put_string, putstring (s: STRING)
 			-- Write `s' to medium.
 		do
 		end
 
-	put_character, putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER)
 			-- Write `c' to medium.
 		do
 		end
 
-	put_real, putreal (r: REAL) is
+	put_real, putreal (r: REAL)
 			-- Write `r' to medium.
 		do
 		end
 
-	put_integer, putint, put_integer_32 (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_integer_8 (i: INTEGER_8) is
+	put_integer_8 (i: INTEGER_8)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_integer_16 (i: INTEGER_16) is
+	put_integer_16 (i: INTEGER_16)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_integer_64 (i: INTEGER_64) is
+	put_integer_64 (i: INTEGER_64)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_natural_8 (i: NATURAL_8) is
+	put_natural_8 (i: NATURAL_8)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_natural_16 (i: NATURAL_16) is
+	put_natural_16 (i: NATURAL_16)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_natural, put_natural_32 (i: NATURAL_32) is
+	put_natural, put_natural_32 (i: NATURAL_32)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_natural_64 (i: NATURAL_64) is
+	put_natural_64 (i: NATURAL_64)
 			-- Write `i' to medium.
 		do
 		end
 
-	put_boolean, putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN)
 			-- Write `b' to medium.
 		do
 		end
 
-	put_double, putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE)
 			-- Write `d' to medium.
 		do
 		end
 
-	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		do
@@ -324,87 +324,87 @@ feature -- Output
 
 feature -- Input
 
-	read_real, readreal is
+	read_real, readreal
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		do
 		end
 
-	read_double, readdouble is
+	read_double, readdouble
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		do
 		end
 
-	read_character, readchar is
+	read_character, readchar
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		do
 		end
 
-	read_integer, readint, read_integer_32 is
+	read_integer, readint, read_integer_32
 			-- Read a new integer.
 			-- Make result available in `last_integer'.
 		do
 		end
 
-	read_integer_8 is
+	read_integer_8
 			-- Read a new integer.
 			-- Make result available in `last_integer_8'.
 		do
 		end
 
-	read_integer_16 is
+	read_integer_16
 			-- Read a new integer.
 			-- Make result available in `last_integer_16'.
 		do
 		end
 
-	read_integer_64 is
+	read_integer_64
 			-- Read a new integer.
 			-- Make result available in `last_integer_64'.
 		do
 		end
 
-	read_natural_8 is
+	read_natural_8
 			-- Read a new natural.
 			-- Make result available in `last_natural_8'.
 		do
 		end
 
-	read_natural_16 is
+	read_natural_16
 			-- Read a new natural.
 			-- Make result available in `last_natural_16'.
 		do
 		end
 
-	read_natural, read_natural_32 is
+	read_natural, read_natural_32
 			-- Read a new natural.
 			-- Make result available in `last_natural'.
 		do
 		end
 
-	read_natural_64 is
+	read_natural_64
 			-- Read a new natural.
 			-- Make result available in `last_natural_64'.
 		do
 		end
 
-	read_stream, readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of medium is encountered.
 			-- Make result available in `last_string'.
 		do
 		end
 
-	read_line, readline is
+	read_line, readline
 			-- Read characters until a new line or
 			-- end of medium.
 			-- Make result available in `last_string'.
 		do
 		end
 
-	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
 		do
@@ -412,17 +412,17 @@ feature -- Input
 
 feature {NONE} -- Not exported
 
-	name: ?STRING is
+	name: ?STRING
 			-- Not meaningful
 		do
 		end
 
-	handle: INTEGER is
+	handle: INTEGER
 			-- Handle to medium
 		do
 		end
 
-	handle_available: BOOLEAN is
+	handle_available: BOOLEAN
 			-- Is the handle available after class has been
 			-- created?
 		do

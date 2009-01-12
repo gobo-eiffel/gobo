@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a memory structure."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize current with given `structure_size'.
 		local
 			null: POINTER
@@ -23,7 +23,7 @@ feature -- Initialization
 			not_shared: not shared
 		end
 
-	make_by_pointer (a_ptr: POINTER) is
+	make_by_pointer (a_ptr: POINTER)
 			-- Initialize current with `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -40,7 +40,7 @@ feature -- Access
 	shared: BOOLEAN
 			-- Is current memory area shared with others?
 
-	item: POINTER is
+	item: POINTER
 			-- Access to memory area.
 		local
 			m: like managed_pointer
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		deferred
 		ensure

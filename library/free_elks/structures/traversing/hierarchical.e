@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Hierarchical structures in which each item has zero or
@@ -19,7 +19,7 @@ deferred class HIERARCHICAL [G] inherit
 
 feature -- Access
 
-	successor_count: INTEGER is
+	successor_count: INTEGER
 			-- Number of successors of current element
 		require
 			not_off: not off
@@ -28,14 +28,14 @@ feature -- Access
 
 feature -- Cursor movement
 
-	up is
+	up
 			-- Move to predecessor.
 		require
 			not_off: not off
 		deferred
 		end
 
-	down (i: INTEGER) is
+	down (i: INTEGER)
 			-- Move to `i'-th successor.
 		require
 			not_off: not off
@@ -47,7 +47,7 @@ invariant
 
 	non_negative_successor_count: successor_count >= 0
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

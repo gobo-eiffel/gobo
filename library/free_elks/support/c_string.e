@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A low-level string class to solve some garbage %
 		%collector problems (mainly objects moving around) when %
 		%interfacing with C APIs."
@@ -26,7 +26,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: READABLE_STRING_GENERAL) is
+	make (a_string: READABLE_STRING_GENERAL)
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -35,7 +35,7 @@ feature --{NONE} -- Initialization
 			set_string (a_string)
 		end
 
-	make_empty (a_length: INTEGER) is
+	make_empty (a_length: INTEGER)
 			-- Make an empty C string of `a_length' characters.
 			-- C memory area is not initialized.
 		require
@@ -45,7 +45,7 @@ feature --{NONE} -- Initialization
 			count := 0
 		end
 
-	make_by_pointer (a_ptr: POINTER) is
+	make_by_pointer (a_ptr: POINTER)
 			-- Make a copy of string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -53,7 +53,7 @@ feature --{NONE} -- Initialization
 			make_by_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
 
-	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- Make a copy of first `a_length' byte of string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -64,7 +64,7 @@ feature --{NONE} -- Initialization
 			managed_data.item.memory_copy (a_ptr, a_length)
 		end
 
-	make_shared_from_pointer (a_ptr: POINTER) is
+	make_shared_from_pointer (a_ptr: POINTER)
 			-- New instance sharing `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -72,7 +72,7 @@ feature --{NONE} -- Initialization
 			make_shared_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
 
-	make_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	make_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- New instance sharing `a_ptr' of `a_length' byte.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -84,7 +84,7 @@ feature --{NONE} -- Initialization
 
 feature -- Initialization
 
-	set_shared_from_pointer (a_ptr: POINTER) is
+	set_shared_from_pointer (a_ptr: POINTER)
 			-- Share `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -92,7 +92,7 @@ feature -- Initialization
 			set_shared_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
 
-	set_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	set_shared_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- Share `a_ptr' of `a_length' byte.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -106,7 +106,7 @@ feature -- Initialization
 			end
 		end
 
-	share_from_pointer (a_ptr: POINTER) is
+	share_from_pointer (a_ptr: POINTER)
 			-- New instance sharing `a_ptr'.
 --		obsolete
 --			"Use `make_shared_from_pointer' to create object and `set_shared_from_pointer' to modify it."
@@ -116,7 +116,7 @@ feature -- Initialization
 			share_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
 
-	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- New instance sharing `a_ptr' of `a_length' byte.
 --		obsolete
 --			"Use `make_shared_from_pointer_and_count' to create object and `set_shared_from_pointer_and_count' to modify it."
@@ -134,7 +134,7 @@ feature -- Initialization
 
 feature -- Access
 
-	substring (start_pos, end_pos: INTEGER): STRING is
+	substring (start_pos, end_pos: INTEGER): STRING
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos'.
 		require
@@ -152,7 +152,7 @@ feature -- Access
 			susbstring_not_void: Result /= Void
 		end
 
-	string: STRING is
+	string: STRING
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
 			Result := substring (1, c_strlen (item))
@@ -160,7 +160,7 @@ feature -- Access
 			string_not_void: Result /= Void
 		end
 
-	copy_to_string (a_string: STRING_GENERAL; source_index, destination_index, n: INTEGER) is
+	copy_to_string (a_string: STRING_GENERAL; source_index, destination_index, n: INTEGER)
 			-- Copy `n' characters of `Current' from `source_index' position to `a_string' at
 			-- `destination_index'. Other characters of `a_string' remain unchanged.
 		require
@@ -188,7 +188,7 @@ feature -- Access
 			end
 		end
 
-	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string'.
 		require
@@ -215,7 +215,7 @@ feature -- Access
 			end
 		end
 
-	read_string_into (a_string: STRING_GENERAL) is
+	read_string_into (a_string: STRING_GENERAL)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string' replacing any
 			-- existing characters.
@@ -226,7 +226,7 @@ feature -- Access
 			read_substring_into (a_string, 1, count)
 		end
 
-	read_substring_into_character_8_area (a_area: SPECIAL [CHARACTER_8]; start_pos, end_pos: INTEGER) is
+	read_substring_into_character_8_area (a_area: SPECIAL [CHARACTER_8]; start_pos, end_pos: INTEGER)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_area'.
 		require
@@ -254,7 +254,7 @@ feature -- Access
 			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]
 		end
 
-	read_substring_into_character_32_area (a_area: SPECIAL [CHARACTER_32]; start_pos, end_pos: INTEGER) is
+	read_substring_into_character_32_area (a_area: SPECIAL [CHARACTER_32]; start_pos, end_pos: INTEGER)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_area'.
 		require
@@ -274,7 +274,7 @@ feature -- Access
 			until
 				i > nb
 			loop
-				a_area.put (l_data.read_natural_32 (i).to_character_32, j)
+				a_area.put (l_data.read_natural_8 (i).to_character_32, j)
 				i := i + 1
 				j := j + 1
 			end
@@ -282,7 +282,7 @@ feature -- Access
 			copied: -- for i in 0..end_pos - start_pos, a_area [i] = Current [i + start_pos]			
 		end
 
-	item: POINTER is
+	item: POINTER
 			-- Get pointer to allocated area.
 		do
 			Result := managed_data.item
@@ -295,13 +295,13 @@ feature -- Access
 
 feature -- Measurement
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of characters in Current.
 		do
 			Result := managed_data.count
 		end
 
-	bytes_count: INTEGER is
+	bytes_count: INTEGER
 			-- Number of bytes represented by the string.
 		do
 			Result := count
@@ -310,12 +310,12 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of characters in Current.
 
-	character_size: INTEGER is 1
+	character_size: INTEGER = 1
 			-- Size of a character
 
 feature -- Element change
 
-	set_string (a_string: READABLE_STRING_GENERAL) is
+	set_string (a_string: READABLE_STRING_GENERAL)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -324,7 +324,7 @@ feature -- Element change
 			set_substring (a_string, 1, a_string.count)
 		end
 
-	set_substring (a_string: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER) is
+	set_substring (a_string: READABLE_STRING_GENERAL; start_pos, end_pos: INTEGER)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -355,7 +355,7 @@ feature -- Element change
 			managed_data.put_natural_8 (0, nb)
 		end
 
-	set_count (a_count: INTEGER) is
+	set_count (a_count: INTEGER)
 			-- Set `count' with `a_count'.
 			-- Note: Current content from index `1' to
 			-- `count.min (a_count)' is unchanged.
@@ -373,7 +373,7 @@ feature -- Element change
 			count_set: count = a_count
 		end
 
-	fill_blank is
+	fill_blank
 			-- Fill Current with zeros.
 		do
 			fill_value (0)
@@ -381,7 +381,7 @@ feature -- Element change
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
 		end
 
-	fill_value (a_value: INTEGER_8) is
+	fill_value (a_value: INTEGER_8)
 			-- Fill Current with `a_value'.
 		do
 			managed_data.item.memory_set (a_value, managed_data.count)
@@ -391,7 +391,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	c_strlen (ptr: POINTER): INTEGER is
+	c_strlen (ptr: POINTER): INTEGER
 		external
 			"C signature (char *): EIF_INTEGER use <string.h>"
 		alias

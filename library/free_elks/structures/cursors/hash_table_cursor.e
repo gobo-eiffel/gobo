@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for hash table traversal"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (pos: INTEGER) is
+	make (pos: INTEGER)
 			-- Create a new cursor.
 		do
 			position := pos
@@ -32,7 +32,7 @@ feature {HASH_TABLE} -- Access
 	position: INTEGER;
 			-- Cursor position
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

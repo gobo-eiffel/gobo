@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects that are able to iterate over traversable structures,
@@ -18,7 +18,7 @@ deferred class
 	
 feature -- Initialization
 
-	set (s: like target) is
+	set (s: like target)
 			-- Make `s' the new target of iterations.
 		require
 			target_exists: s /= Void
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status report
 
-	invariant_value: BOOLEAN is
+	invariant_value: BOOLEAN
 			-- Is the invariant satisfied?
 			-- (Redefinitions of this feature will usually involve
 			-- `target'; if so, make sure that the result is defined
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `action' to every item of `target'.
 		require
 			action_exists: action /= Void
@@ -55,7 +55,7 @@ feature -- Iteration
 			target.do_all (action)
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' satisfying `test'.
 		require
 			action_exists: action /= Void
@@ -64,7 +64,7 @@ feature -- Iteration
 			target.do_if (action, test)
 		end
 
-	do_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one satisfying `test'.
 			-- (Apply to full list if no item satisfies `test').
@@ -74,7 +74,7 @@ feature -- Iteration
 		deferred
 		end
 
-	do_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one not satisfying `test'.
 			-- (Apply to full list if all items satisfy `test').
@@ -84,7 +84,7 @@ feature -- Iteration
 		deferred
 		end
 
-	until_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	until_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one satisfying `test'.
 			-- (Apply to full list if no items satisfy `test'.)
@@ -94,7 +94,7 @@ feature -- Iteration
 		deferred
 		end
 
-	while_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	while_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one satisfying not `test'.
 			-- (Apply to full list if all items satisfy `test'.)
@@ -104,14 +104,14 @@ feature -- Iteration
 		deferred
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item of `target'?
 		require
 			test_exists: test /= Void
 		deferred
 		end
 		
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items of `target'?
 		require
 			test_exists: test /= Void
@@ -122,7 +122,7 @@ invariant
 
 	traversable_exists: target /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

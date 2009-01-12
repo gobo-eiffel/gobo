@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Infinite containers whose items are in one-to-one 
@@ -17,14 +17,14 @@ deferred class COUNTABLE [G] inherit
 
 feature -- Access
 
-	item (i: INTEGER): G is
+	item (i: INTEGER): G
 			-- The `i'-th item
 		require
 			positive_argument: i > 0
 		deferred
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

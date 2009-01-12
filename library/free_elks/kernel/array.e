@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Sequences of values, all of the same type or of a conforming one,
@@ -44,7 +44,7 @@ convert
 
 feature -- Initialization
 
-	make (min_index, max_index: INTEGER) is
+	make (min_index, max_index: INTEGER)
 			-- Allocate array; set index interval to
 			-- `min_index' .. `max_index'; set all values to default.
 			-- (Make array empty if `min_index' = `max_index' + 1).
@@ -65,7 +65,7 @@ feature -- Initialization
 			items_set: all_default
 		end
 
-	make_from_array (a: ARRAY [G]) is
+	make_from_array (a: ARRAY [G])
 			-- Initialize from the items of `a'.
 			-- (Useful in proper descendants of class `ARRAY',
 			-- to initialize an array-like object from a manifest array.)
@@ -77,7 +77,7 @@ feature -- Initialization
 			upper := a.upper
 		end
 
-	make_from_cil (na: NATIVE_ARRAY [like item]) is
+	make_from_cil (na: NATIVE_ARRAY [like item])
 			-- Initialize array from `na'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -90,13 +90,13 @@ feature -- Initialization
 
 feature -- Access
 
-	item alias "[]", at alias "@" (i: INTEGER): G assign put is
+	item alias "[]", at alias "@" (i: INTEGER): G assign put
 			-- Entry at index `i', if in index interval
 		do
 			Result := area.item (i - lower)
 		end
 
-	entry (i: INTEGER): G is
+	entry (i: INTEGER): G
 			-- Entry at index `i', if in index interval
 		require
 			valid_key: valid_index (i)
@@ -104,7 +104,7 @@ feature -- Access
 			Result := item (i)
 		end
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does `v' appear in array?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -141,7 +141,7 @@ feature -- Measurement
 	upper: INTEGER
 			-- Maximum index
 
-	count, capacity: INTEGER is
+	count, capacity: INTEGER
 			-- Number of available indices
 		do
 			Result := upper - lower + 1
@@ -149,7 +149,7 @@ feature -- Measurement
 			consistent_with_bounds: Result = upper - lower + 1
 		end
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in structure
 		local
 			i: INTEGER
@@ -179,7 +179,7 @@ feature -- Measurement
 			end
 		end
 
-	index_set: INTEGER_INTERVAL is
+	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
 		do
 			create Result.make (lower, upper)
@@ -191,7 +191,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is array made of the same items as `other'?
 		local
 			i: INTEGER
@@ -219,7 +219,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	all_default: BOOLEAN is
+	all_default: BOOLEAN
 			-- Are all items set to default values?
 		do
 			Result := area.all_default (0, upper - lower)
@@ -229,13 +229,13 @@ feature -- Status report
 				subarray (lower, upper - 1).all_default))
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity? (Answer: yes)
 		do
 			Result := True
 		end
 
-	same_items (other: like Current): BOOLEAN is
+	same_items (other: like Current): BOOLEAN
 			-- Do `other' and Current have same items?
 		require
 			other_not_void: other /= Void
@@ -250,7 +250,7 @@ feature -- Status report
 				(other.subarray (other.lower, other.upper - 1)))))
 		end
 
-	all_cleared: BOOLEAN is
+	all_cleared: BOOLEAN
 			-- Are all items set to default values?
 		obsolete
 			"Use `all_default' instead"
@@ -258,39 +258,39 @@ feature -- Status report
 			Result := all_default
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of the array?
 		do
 			Result := (lower <= i) and then (i <= upper)
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May items be added?
 			-- (Answer: no, although array may be resized.)
 		do
 			Result := False
 		end
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: no.)
 		do
 			Result := False
 		end
 
-	valid_index_set: BOOLEAN is
+	valid_index_set: BOOLEAN
 		do
 			Result := index_set.count = count
 		end
 
 feature -- Element change
 
-	put (v: like item; i: INTEGER) is
+	put (v: like item; i: INTEGER)
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		do
 			area.put (v, i - lower)
 		end
 
-	enter (v: like item; i: INTEGER) is
+	enter (v: like item; i: INTEGER)
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		require
 			valid_key: valid_index (i)
@@ -298,7 +298,7 @@ feature -- Element change
 			area.put (v, i - lower)
 		end
 
-	force (v: like item; i: INTEGER) is
+	force (v: like item; i: INTEGER)
 			-- Assign item `v' to `i'-th entry.
 			-- Always applicable: resize the array if `i' falls out of
 			-- currently defined bounds; preserve existing items.
@@ -314,7 +314,7 @@ feature -- Element change
 			higher_count: count >= old count
 		end
 
-	subcopy (other: ARRAY [like item]; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (other: ARRAY [like item]; start_pos, end_pos, index_pos: INTEGER)
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to current array starting at index `index_pos'.
 		require
@@ -333,7 +333,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `action' to every item, from first to last.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -358,7 +358,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -386,7 +386,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 		require
 			test_not_void: test /= Void
@@ -409,7 +409,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 		require
 			test_not_void: test /= Void
@@ -433,7 +433,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
 			-- Apply `action' to every item, from first to last.
 			-- `action' receives item and its index.
 			-- Semantics not guaranteed if `action' changes the structure;
@@ -462,7 +462,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]) is
+	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- `action' and `test' receive the item and its index.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
@@ -496,7 +496,7 @@ feature -- Iteration
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Make array empty.
 		obsolete
 			"Not applicable since not `prunable'. Use `discard_items' instead."
@@ -504,7 +504,7 @@ feature -- Removal
 			discard_items
 		end
 
-	discard_items is
+	discard_items
 			-- Reset all items to default values with reallocation.
 		do
 			make_area (capacity)
@@ -512,7 +512,7 @@ feature -- Removal
 			default_items: all_default
 		end
 
-	clear_all is
+	clear_all
 			-- Reset all items to default values.
 		do
 			area.clear_all
@@ -524,7 +524,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	grow (i: INTEGER) is
+	grow (i: INTEGER)
 			-- Change the capacity to at least `i'.
 		do
 			if i > capacity then
@@ -532,7 +532,7 @@ feature -- Resizing
 			end
 		end
 
-	conservative_resize (min_index, max_index: INTEGER) is
+	conservative_resize (min_index, max_index: INTEGER)
 			-- Rearrange array so that it can accommodate
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
@@ -567,7 +567,7 @@ feature -- Resizing
 			no_high_lost: upper = max_index or else upper = old upper
 		end
 
-	resize (min_index, max_index: INTEGER) is
+	resize (min_index, max_index: INTEGER)
 			-- Rearrange array so that it can accommodate
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
@@ -584,7 +584,7 @@ feature -- Resizing
 
 feature -- Conversion
 
-	to_c: ANY is
+	to_c: ANY
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
 		require
@@ -593,7 +593,7 @@ feature -- Conversion
 			Result := area
 		end
 
-	to_cil: NATIVE_ARRAY [G] is
+	to_cil: NATIVE_ARRAY [G]
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
 		require
@@ -604,7 +604,7 @@ feature -- Conversion
 			to_cil_not_void: Result /= Void
 		end
 
-	to_special: SPECIAL [G] is
+	to_special: SPECIAL [G]
 			-- 'area'.
 		do
 			Result := area
@@ -612,7 +612,7 @@ feature -- Conversion
 			to_special_not_void: Result /= Void
 		end
 
-	linear_representation: LINEAR [G] is
+	linear_representation: LINEAR [G]
 			-- Representation as a linear structure
 		local
 			temp: ARRAYED_LIST [G]
@@ -632,7 +632,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying all the items of `other'.
 			-- (This is also used by `clone'.)
 		do
@@ -644,7 +644,7 @@ feature -- Duplication
 			equal_areas: area ~ other.area
 		end
 
-	subarray (start_pos, end_pos: INTEGER): ARRAY [G] is
+	subarray (start_pos, end_pos: INTEGER): ARRAY [G]
 			-- Array made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		require
@@ -666,13 +666,13 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	prune (v: G) is
+	prune (v: G)
 			-- Remove first occurrence of `v' if any.
 			-- (Precondition is False.)
 		do
 		end
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add `v' to structure.
 			-- (Precondition is False.)
 		do
@@ -680,7 +680,7 @@ feature {NONE} -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	auto_resize (min_index, max_index: INTEGER) is
+	auto_resize (min_index, max_index: INTEGER)
 			-- Rearrange array so that it can accommodate
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation
 			upper := new_upper
 		end
 
-	empty_area: BOOLEAN is
+	empty_area: BOOLEAN
 			-- Is `area' empty?
 		do
 			Result := area = Void or else area.count = 0

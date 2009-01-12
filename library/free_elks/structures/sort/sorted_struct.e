@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Structures whose items are sorted according to a total order relation"
@@ -33,7 +33,7 @@ deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 
 feature -- Measurement
 
-	min: like item is
+	min: like item
 			-- Minimum item
 		require else
 			is_sorted: sorted
@@ -47,7 +47,7 @@ feature -- Measurement
 		--		 `Result' = `i_th' (`first_position')
 		end
 
-	max: like item is
+	max: like item
 			-- Maximum item
 		require else
 			is_sorted: sorted
@@ -61,7 +61,7 @@ feature -- Measurement
 		--		 `Result' = `i_th' (`last_position')
 		end
 
-	median: like item is
+	median: like item
 			-- Median element
 		deferred
 		ensure
@@ -73,7 +73,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	sorted: BOOLEAN is
+	sorted: BOOLEAN
 			-- Is structure sorted?
 		local
 			m: like item
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Transformation
 
-	sort is
+	sort
 			-- Sort structure.
 		deferred
 		ensure
@@ -106,11 +106,11 @@ feature -- Transformation
 
 feature {NONE} -- Inapplicable
 
-	putt (v: like item) is
+	putt (v: like item)
 		do
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

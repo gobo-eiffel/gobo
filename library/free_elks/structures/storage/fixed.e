@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Finite structures whose item count cannot be changed"
@@ -16,14 +16,14 @@ deferred class FIXED [G] inherit
 
 feature -- Status report
 
-	resizable: BOOLEAN is False
+	resizable: BOOLEAN = False
 			-- May `capacity' be changed? (Answer: no.)
 
 invariant
 
 	not_resizable: not resizable
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

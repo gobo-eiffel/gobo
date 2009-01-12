@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Sets whose items may be compared according to a total order relation"
@@ -31,7 +31,7 @@ deferred class COMPARABLE_SET [G -> COMPARABLE] inherit
 
 feature -- Measurement
 
-	min: G is
+	min: G
 			-- Minimum item
 		require
 			not_empty: not is_empty
@@ -41,7 +41,7 @@ feature -- Measurement
 			-- smallest: For every item `it' in set, `Result' <= `it'
 		end
 
-	max: G is
+	max: G
 			-- Maximum item
 		require
 			not_empty: not is_empty
@@ -51,7 +51,7 @@ feature -- Measurement
 			-- largest: For every item `it' in set, `element' <= `it'
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Sorted sets implemented as binary search trees"
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create set.
 		do
 			before := True
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in tree
 		local
 			t: like tree
@@ -46,7 +46,7 @@ feature -- Measurement
 			end
 		end
 
-	min: like item is
+	min: like item
 			-- Minimum item in tree
 		local
 			t: like tree
@@ -58,7 +58,7 @@ feature -- Measurement
 			Result := t.min
 		end
 
-	max: like item is
+	max: like item
 			-- Maximum item in tree
 		local
 			t: like tree
@@ -70,7 +70,7 @@ feature -- Measurement
 			Result := t.max
 		end
 
-	item: G is
+	item: G
 			-- Current item
 		local
 			a: like active_node
@@ -84,16 +84,16 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is set empty?
 		do
 			Result := tree = Void
 		end
 
-	extendible: BOOLEAN is True
+	extendible: BOOLEAN = True
 		-- Can new items be added? (Answer: yes.)
 
-	prunable: BOOLEAN is True
+	prunable: BOOLEAN = True
 		-- Can items be removed? (Answer: yes.)
 
 	after: BOOLEAN
@@ -102,7 +102,7 @@ feature -- Status report
 	before: BOOLEAN
 		-- Is there no valid cursor position to the left of cursor?
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Is there a node with item `v' in tree?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -115,7 +115,7 @@ feature -- Status report
 			end
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 			-- `off' only if tree `is_empty' or if
 			-- it is `before' or `after'.
@@ -125,7 +125,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first node.
 		local
 			t: like tree
@@ -140,7 +140,7 @@ feature -- Cursor movement
 			end
 		end
 
-	finish is
+	finish
 			-- Move cursor to last node.
 		local
 			t: like tree
@@ -155,7 +155,7 @@ feature -- Cursor movement
 			end
 		end
 
-	forth is
+	forth
 			-- Move cursor to next node.
 		local
 			prev_node: like tree
@@ -195,7 +195,7 @@ feature -- Cursor movement
 			end
 		end
 
-	back is
+	back
 			-- Move cursor to previous node.
 		local
 			prev_node: like tree
@@ -237,7 +237,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put, extend (v: like item) is
+	put, extend (v: like item)
 			-- Put `v' at proper position in set
 			-- (unless one already exists).
 		require else
@@ -255,13 +255,13 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			tree := Void
 		end
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove `v'.
 		local
 			t: like tree
@@ -272,7 +272,7 @@ feature -- Removal
 			end
 		end
 
-	remove is
+	remove
 			-- Remove current item.
 		do
 			prune (item)
@@ -280,7 +280,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): BINARY_SEARCH_TREE_SET [G] is
+	duplicate (n: INTEGER): BINARY_SEARCH_TREE_SET [G]
 			-- New structure containing min (`n', `count')
 			-- items from current structure
 		local
@@ -299,7 +299,7 @@ feature {BINARY_SEARCH_TREE_SET} -- Implementation
 
 	active_node: like tree
 
-	set_tree (t: like tree) is
+	set_tree (t: like tree)
 			-- Set `tree' and `active_node' to `t'
 		do
 			tree := t
@@ -308,7 +308,7 @@ feature {BINARY_SEARCH_TREE_SET} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_tree (v: like item): like tree is
+	new_tree (v: like item): like tree
 			-- New allocated node with `item' set to `v'
 		do
 			create Result.make (v)
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 		end
 
 	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]):
-								SUBSET_STRATEGY [G] is
+								SUBSET_STRATEGY [G]
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
 		do
@@ -336,7 +336,7 @@ invariant
 	comparison_mode_equal: {t: like tree} tree implies
 				object_comparison = t.object_comparison
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

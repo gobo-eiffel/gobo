@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unicode characters, with comparison operations"
 	assembly: "mscorlib"
 	external_name: "System.UInt32"

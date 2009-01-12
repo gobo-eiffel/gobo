@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to objects containing a boolean value"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"

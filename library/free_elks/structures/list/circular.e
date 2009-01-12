@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Circular chains, without commitment to a particular representation"
@@ -24,7 +24,7 @@ deferred class CIRCULAR [G] inherit
 
 feature -- Access
 
-	first: G is
+	first: G
 			-- Item at position currently defined as first
 		local
 			pos: INTEGER
@@ -35,7 +35,7 @@ feature -- Access
 			move (pos - 1)
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Current cursor index, with respect to position
 			-- currently defined as first
 		local
@@ -54,7 +54,7 @@ feature -- Access
 			go_to (p)
 		end
 
-	last: like first is
+	last: like first
 			-- Item at position currently defined as last
 		local
 			pos: INTEGER
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_cursor_index (i: INTEGER): BOOLEAN is
+	valid_cursor_index (i: INTEGER): BOOLEAN
 			-- Is `i' a possible cursor position?
 		do
 			Result := (i >= 0) and (i <= count)
@@ -76,7 +76,7 @@ feature -- Status report
 			valid_cursor_index_definition: Result = ((i >= 0) and (i <= count))
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := is_empty and standard_after
@@ -84,7 +84,7 @@ feature -- Status report
 			empty_and_std_after: Result = (is_empty and standard_after)
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := is_empty and standard_before
@@ -92,7 +92,7 @@ feature -- Status report
 			empty_and_std_before: Result = (is_empty and standard_before)
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := is_empty
@@ -100,7 +100,7 @@ feature -- Status report
 			only_when_empty: Result = is_empty
 		end
 
-	exhausted: BOOLEAN is
+	exhausted: BOOLEAN
 			-- Has structure been completely explored?
 		do
 			Result := is_empty or internal_exhausted
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move cursor to next item, cyclically.
 		do
 			if islast then
@@ -122,7 +122,7 @@ feature -- Cursor movement
 			moved_forth_at_end: (old index = count) implies (index = 1)
 		end
 
-	back is
+	back
 			-- Move cursor to previous item, cyclically.
 		do
 			if isfirst then
@@ -134,7 +134,7 @@ feature -- Cursor movement
 			end
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor to `i'-th item from current position,
 			-- cyclically.
 		local
@@ -159,7 +159,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position from current start, cyclically.
 		require else
 			index_big_enough: i>= 1
@@ -169,7 +169,7 @@ feature -- Cursor movement
 			move (i - 1)
 		end
 
-	set_start is
+	set_start
 			-- Define current position as the first.
 		require
 			not_empty: not is_empty
@@ -178,7 +178,7 @@ feature -- Cursor movement
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove item at cursor position.
 			-- Move cursor to right neighbor (cyclically).
 			-- If removed item was at current starting position,
@@ -195,7 +195,7 @@ feature -- Removal
 
 feature {CIRCULAR} -- Implementation
 
-	fix_start_for_remove is
+	fix_start_for_remove
 			-- Before deletion, update starting position if necessary.
 		deferred
 		end
@@ -203,69 +203,69 @@ feature {CIRCULAR} -- Implementation
 	internal_exhausted: BOOLEAN
 			-- Has last `forth' or `back' operation exhausted the structure?
 
-	standard_after: BOOLEAN is
+	standard_after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 			-- (Non-cyclically)
 		deferred
 		end
 
-	standard_back is
+	standard_back
 			-- Move cursor to previous element, non-cyclically.
 		deferred
 		end
 
-	standard_before: BOOLEAN is
+	standard_before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 			-- (Non-cyclically)
 		deferred
 		end
 
-	standard_finish is
+	standard_finish
 			-- Move cursor to last element.
 		deferred
 		end
 
-	standard_forth is
+	standard_forth
 			-- Move cursor to next element, non-cyclically.
 		deferred
 		end
 
-	standard_isfirst: BOOLEAN is
+	standard_isfirst: BOOLEAN
 			-- Is cursor at first position, non-cyclically?
 		deferred
 		end
 
-	standard_islast: BOOLEAN is
+	standard_islast: BOOLEAN
 			-- Is cursor at last position, non-cyclically?
 		deferred
 		end
 
-	standard_move (i: INTEGER) is
+	standard_move (i: INTEGER)
 			-- Move cursor to `i'-th element, non-cyclically.
 		deferred
 		end
 
-	standard_go_i_th (i: INTEGER) is
+	standard_go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th element, non-cyclically.
 		deferred
 		end
 
-	standard_index: INTEGER is
+	standard_index: INTEGER
 			-- Current cursor index, non-cyclically
 		deferred
 		end
 
-	standard_remove is
+	standard_remove
 			-- Remove, non-cyclically.
 		deferred
 		end
 
-	standard_search (v: like first) is
+	standard_search (v: like first)
 			-- Search non-cyclically.
 		deferred
 		end
 
-	standard_start is
+	standard_start
 			-- Move cursor to first element.
 		deferred
 		end
@@ -276,7 +276,7 @@ invariant
 	not_after_unless_empty: after implies is_empty
 	not_off_unless_empty: off implies is_empty
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

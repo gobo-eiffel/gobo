@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that may be stored and retrieved along with all their dependents.
 		This class may be used as ancestor by classes needing its facilities.
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	retrieved (medium: IO_MEDIUM): ANY is
+	retrieved (medium: IO_MEDIUM): ANY
 			-- Retrieved object structure, from external
 			-- representation previously stored in `medium'.
 			-- To access resulting object under correct type,
@@ -35,7 +35,7 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	retrieve_by_name (file_name: STRING): ?ANY is
+	retrieve_by_name (file_name: STRING): ?ANY
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_discard_pointers (v: BOOLEAN) is
+	set_discard_pointers (v: BOOLEAN)
 			-- If `v' it will discard POINTER values and replace them by
 			-- the `default_pointer' pointer. Otherwise it keeps the original value.
 		external
@@ -70,7 +70,7 @@ feature -- Setting
 			"eif_set_discard_pointer_values"
 		end
 
-	set_new_independent_format (v: BOOLEAN) is
+	set_new_independent_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.0 storable format for
 			-- storing.
 		external
@@ -79,7 +79,7 @@ feature -- Setting
 			"eif_set_new_independent_format"
 		end
 
-	set_new_recoverable_format (v: BOOLEAN) is
+	set_new_recoverable_format (v: BOOLEAN)
 			-- If `v' it will use ISE Eiffel 5.3 storable format for
 			-- storing with ability to recover when there is a type mismatch.
 		external
@@ -90,7 +90,7 @@ feature -- Setting
 
 feature -- Element change
 
-	basic_store (medium: IO_MEDIUM) is
+	basic_store (medium: IO_MEDIUM)
 			-- Produce on `medium' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable within current system only.
@@ -103,7 +103,7 @@ feature -- Element change
 			medium.basic_store (Current)
 		end
 
-	general_store (medium: IO_MEDIUM) is
+	general_store (medium: IO_MEDIUM)
 			-- Produce on `medium' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable from other systems for same platform
@@ -120,7 +120,7 @@ feature -- Element change
 			medium.general_store (Current)
 		end
 
-	independent_store (medium: IO_MEDIUM) is
+	independent_store (medium: IO_MEDIUM)
 			-- Produce on `medium' an external representation of the
 			-- entire object structure reachable from current object.
 			-- Retrievable from other systems for the same or other
@@ -134,7 +134,7 @@ feature -- Element change
 			medium.independent_store (Current)
 		end
 
-	store_by_name (file_name: STRING) is
+	store_by_name (file_name: STRING)
 			-- Produce on file called `file_name' an external
 			-- representation of the entire object structure
 			-- reachable from current object.

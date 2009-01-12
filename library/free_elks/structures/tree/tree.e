@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Trees, without commitment to a particular representation"
@@ -24,19 +24,19 @@ feature -- Access
 	parent: ?TREE [G]
 			-- Parent of current node
 
-	child: like parent is
+	child: like parent
 			-- Current child node
 		require
 			readable: readable_child
 		deferred
 		end
 
-	item: G is
+	item: G
 			-- Item in current node
 		deferred
 		end
 
-	child_item: like item is
+	child_item: like item
 			-- Item in current child node
 		require
 			readable: child_readable
@@ -50,33 +50,33 @@ feature -- Access
 			Result := c.item
 		end
 
-	child_cursor: CURSOR is
+	child_cursor: CURSOR
 			-- Current cursor position
 		deferred
 		end
 
-	child_index: INTEGER is
+	child_index: INTEGER
 			-- Index of current child
 		deferred
 		ensure
 			valid_index: Result >= 0 and Result <= arity + 1
 		end
 
-	first_child: like parent is
+	first_child: like parent
 			-- Leftmost child
 		require
 			is_not_leaf: not is_leaf
 		deferred
 		end
 
-	last_child: like first_child is
+	last_child: like first_child
 			-- Right most child
 		require
 			is_not_leaf: not is_leaf
 		deferred
 		end
 
-	left_sibling: like parent is
+	left_sibling: like parent
 			-- Left neighbor (if any)
 		require
 			is_not_root: not is_root
@@ -86,7 +86,7 @@ feature -- Access
 			right_is_current: (Result /= Void) implies (Result.right_sibling = Current)
 		end
 
-	right_sibling: like parent is
+	right_sibling: like parent
 			-- Right neighbor (if any)
 		require
 			is_not_root: not is_root
@@ -98,18 +98,18 @@ feature -- Access
 
 feature -- Measurement
 
-	arity: INTEGER is
+	arity: INTEGER
 			-- Number of children
 		deferred
 		end
 
-	child_capacity: INTEGER is
+	child_capacity: INTEGER
 			-- Maximal number of children
 		do
 			Result := arity
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		do
 			Result := subtree_count + 1
@@ -117,7 +117,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `other' contain the same elements?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -134,7 +134,7 @@ feature -- Comparison
 			end
 		end
 
-	node_is_equal (other: like Current): BOOLEAN is
+	node_is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to Current?
 		require
 			other_not_void: other /= Void
@@ -148,72 +148,72 @@ feature -- Comparison
 
 feature -- Status report
 
-	readable: BOOLEAN is True
+	readable: BOOLEAN = True
 
-	child_readable: BOOLEAN is
+	child_readable: BOOLEAN
 			-- Is there a current `child_item' to be read?
 		do
 			Result := not child_off and then (child /= Void)
 		end
 
-	readable_child: BOOLEAN is
+	readable_child: BOOLEAN
 			-- Is there a current child to be read?
 		do
 			Result := not child_off
 		end
 
-	writable: BOOLEAN is True
+	writable: BOOLEAN = True
 			-- Is there a current item that may be modified?
 
-	child_writable: BOOLEAN is
+	child_writable: BOOLEAN
 			-- Is there a current `child_item' that may be modified?
 		do
 			Result := not child_off and then (child /= Void)
 		end
 
-	writable_child: BOOLEAN is
+	writable_child: BOOLEAN
 			-- Is there a current child that may be modified?
 		do
 			Result := not child_off
 		end
 
-	child_off: BOOLEAN is
+	child_off: BOOLEAN
 			-- Is there no current child?
 		do
 			Result := child_before or child_after
 		end
 
-	child_before: BOOLEAN is
+	child_before: BOOLEAN
 			-- Is there no valid child position to the left of cursor?
 		do
 			Result := child_index = 0
 		end
 
-	child_after: BOOLEAN is
+	child_after: BOOLEAN
 			-- Is there no valid child position to the right of cursor?
 		do
 			Result := child_index = child_capacity + 1
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is structure empty of items?
 		do
 			Result := False
 		end
 
-	is_leaf: BOOLEAN is
+	is_leaf: BOOLEAN
 			-- Are there no children?
 		do
 			Result := arity = 0
 		end
 
-	is_root: BOOLEAN is
+	is_root: BOOLEAN
 			-- Is there no parent?
 		do
 			Result := parent = Void
 		end
 
-	child_isfirst: BOOLEAN is
+	child_isfirst: BOOLEAN
 			-- Is cursor under first child?
 		do
 			Result := not is_leaf and child_index = 1
@@ -221,7 +221,7 @@ feature -- Status report
 			not_is_leaf: Result implies not is_leaf
 		end
 
-	child_islast: BOOLEAN is
+	child_islast: BOOLEAN
 			-- Is cursor under last child?
 		do
 			Result := not is_leaf and child_index = child_capacity
@@ -229,7 +229,7 @@ feature -- Status report
 			not_is_leaf: Result implies not is_leaf
 		end
 
-	valid_cursor_index (i: INTEGER): BOOLEAN is
+	valid_cursor_index (i: INTEGER): BOOLEAN
 			-- Is `i' correctly bounded for cursor movement?
 		do
 			Result := (i >= 0) and (i <= child_capacity + 1)
@@ -238,7 +238,7 @@ feature -- Status report
 				(i <= child_capacity + 1)
 		end
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does subtree include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -250,7 +250,7 @@ feature -- Status report
 			end
 		end
 
-	is_sibling (other: like parent): BOOLEAN is
+	is_sibling (other: like parent): BOOLEAN
 			-- Are current node and `other' siblings?
 		require
 			other_exists: other /= Void
@@ -264,32 +264,32 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	child_go_to (p: CURSOR) is
+	child_go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		deferred
 		end
 
-	child_start is
+	child_start
 			-- Move cursor to first child.
 		deferred
 		end
 
-	child_finish is
+	child_finish
 			-- Move cursor to last child.
 		deferred
 		end
 
-	child_forth is
+	child_forth
 			-- Move cursor to next child.
 		deferred
 		end
 
-	child_back is
+	child_back
 			-- Move cursor to previous child.
 		deferred
 		end
 
-	child_go_i_th (i: INTEGER) is
+	child_go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th child.
 		deferred
 		ensure then
@@ -298,7 +298,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	sprout is
+	sprout
 			-- Make current node a root.
 		local
 			p: like parent
@@ -309,7 +309,7 @@ feature -- Element change
 			end
 		end
 
-	put, replace (v: like item) is
+	put, replace (v: like item)
 			-- Replace element at cursor position by `v'.
 		require
 			is_writable: writable
@@ -318,7 +318,7 @@ feature -- Element change
 			item_inserted: item = v
 		end
 
-	child_put, child_replace (v: like item) is
+	child_put, child_replace (v: like item)
 			-- Put `v' at current child position.
 		require
 			child_writable: child_writable
@@ -327,7 +327,7 @@ feature -- Element change
 			item_inserted: child_item = v
 		end
 
-	put_child (n: like parent) is
+	put_child (n: like parent)
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		require
@@ -335,7 +335,7 @@ feature -- Element change
 		deferred
 		end
 
-	replace_child (n: like parent) is
+	replace_child (n: like parent)
 			-- Put `n' at current child position.
 		require
 			writable_child: writable_child
@@ -345,7 +345,7 @@ feature -- Element change
 			child_replaced: child = n
 		end
 
-	prune (n: like Current) is
+	prune (n: like Current)
 			-- Remove `n' from the children.
 		require
 			is_child: n.parent = Current
@@ -354,7 +354,7 @@ feature -- Element change
 			n_is_root: n.is_root
 		end
 
-	fill (other: TREE [G]) is
+	fill (other: TREE [G])
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current node
 			-- need not be the same.
@@ -365,26 +365,26 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all children.
 		deferred
 		ensure
 			is_leaf: is_leaf
 		end
 
-	forget_left is
+	forget_left
 			-- Forget all left siblings.
 		deferred
 		end
 
-	forget_right is
+	forget_right
 			-- Forget all right siblings.
 		deferred
 		end
 
 feature -- Conversion
 
-	linear_representation: LINEAR [G] is
+	linear_representation: LINEAR [G]
 			-- Representation as a linear structure
 		local
 			al: ARRAYED_LIST [G]
@@ -396,7 +396,7 @@ feature -- Conversion
 			Result := al
 		end
 
-	binary_representation: BINARY_TREE [G] is
+	binary_representation: BINARY_TREE [G]
 			-- Convert to binary tree representation:
 			-- first child becomes left child,
 			-- right sibling becomes right child.
@@ -434,7 +434,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Copy contents from `other'.
 		local
 			i: INTEGER
@@ -463,7 +463,7 @@ feature -- Duplication
 			child_go_i_th (old_idx)
 		end
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
@@ -475,7 +475,7 @@ feature -- Duplication
 
 feature {TREE} -- Implementation
 
-	subtree_has (v: G): BOOLEAN is
+	subtree_has (v: G): BOOLEAN
 			-- Do children include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -512,7 +512,7 @@ feature {TREE} -- Implementation
 			child_go_to (cursor)
 		end
 
-	subtree_count: INTEGER is
+	subtree_count: INTEGER
 			-- Number of items in children
 		local
 			pos: CURSOR
@@ -534,7 +534,7 @@ feature {TREE} -- Implementation
 			child_go_to (pos)
 		end
 
-	fill_list (al: ARRAYED_LIST [G]) is
+	fill_list (al: ARRAYED_LIST [G])
 			-- Fill `al' with all the children's items.
 		local
 			c: like child
@@ -553,7 +553,7 @@ feature {TREE} -- Implementation
 			end
 		end
 
-	attach_to_parent (n: like parent) is
+	attach_to_parent (n: like parent)
 			-- Make `n' parent of current node.
 		do
 			parent := n
@@ -563,22 +563,22 @@ feature {TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	fill_subtree (s: TREE [G]) is
+	fill_subtree (s: TREE [G])
 			-- Fill children with children of `other'.
 		deferred
 		end
 
-	remove is
+	remove
 			-- Remove current item
 		do
 		end
 
-	child_remove is
+	child_remove
 			-- Remove item of current child
 		do
 		end
 
-	tree_is_equal (t1, t2: like Current): BOOLEAN is
+	tree_is_equal (t1, t2: like Current): BOOLEAN
 			-- Are `t1' and `t2' recursively equal?
 		require
 			trees_exist: t1 /= Void and t2 /= Void
@@ -724,7 +724,7 @@ feature {NONE} -- Implementation
 			t2.child_go_to (l_other_cursor)
 		end
 
- 	tree_copy (other, tmp_tree: like Current) is
+ 	tree_copy (other, tmp_tree: like Current)
 			-- Generic implementation of `copy'. `other' is copied onto
 			-- `Current'. `tmp_tree' is used as temporary storage during
 			-- copying. Since it cannot be created locally because of the
@@ -859,7 +859,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	copy_node (n: like Current) is
+	copy_node (n: like Current)
 			-- Copy content of `n' except tree data into Current.
 		require
 			is_root: is_root
@@ -876,7 +876,7 @@ feature {NONE} -- Implementation
 
 feature {TREE} -- Implementation
 
-	clone_node (n: like Current): like Current is
+	clone_node (n: like Current): like Current
 			-- Clone node `n'.
 		require
 			not_void: n /= Void
@@ -897,7 +897,7 @@ invariant
 			child_islast = (not is_leaf and child_index = child_capacity)
 	child_after_definition: child_after = (child_index >= child_capacity + 1)
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

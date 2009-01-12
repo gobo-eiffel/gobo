@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Objects that are able to iterate over linear structures"
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	set (s: like target) is
+	set (s: like target)
 			-- Make `s' the new target of iterations.
 		do
 			target := s
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- The item at cursor position in `target'
 		require
 			not_off: not target.off
@@ -39,7 +39,7 @@ feature -- Access
 			Result := target.item
 		end
 
-	item_tuple: TUPLE [G] is
+	item_tuple: TUPLE [G]
 			-- Tuple containing a single element,
 			-- the item at cursor position in `target'''
 		require
@@ -54,25 +54,25 @@ feature -- Access
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position of `target'.
 		do
 			target.start
 		end
 
-	forth is
+	forth
 			-- Move to next position of `target'.
 		do
 			target.forth
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is position of `target' off?
 		do
 			Result := target.off
 		end
 
-	exhausted: BOOLEAN is
+	exhausted: BOOLEAN
 			-- Is `target' exhausted?
 		do
 			Result := target.exhausted
@@ -80,7 +80,7 @@ feature -- Cursor movement
 
 feature -- Iteration
 
-	do_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one not satisfying `test'.
 			-- (from the `start' of `target')
@@ -91,7 +91,7 @@ feature -- Iteration
 			finished: not exhausted implies not test.item (item_tuple)
 		end
 
-	continue_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	continue_while (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one not satisfying `test'
 			-- (from the current position of `target').
@@ -112,7 +112,7 @@ feature -- Iteration
 			finished: not exhausted implies not test.item (item_tuple)
 		end
 
-	while_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	while_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one not satisfying `test'.
 			-- (Apply to full list if all items satisfy `test'.)
@@ -123,7 +123,7 @@ feature -- Iteration
 			finished: not exhausted implies not test.item (item_tuple)
 		end
 
-	while_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	while_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one not satisfying `test'.
 		do
@@ -140,7 +140,7 @@ feature -- Iteration
 			finished: not exhausted implies not test.item (item_tuple)
 		end
 
-	until_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	until_do (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- but excluding first one satisfying `test'.
 			-- (Apply to full list if no item satisfies `test'.)
@@ -151,7 +151,7 @@ feature -- Iteration
 			achieved: not exhausted implies test.item (item_tuple)
 		end
 
-	until_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	until_continue (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' from current
 			-- position, up to but excluding first one satisfying `test'.
 		require
@@ -171,7 +171,7 @@ feature -- Iteration
 			invariant_satisfied: invariant_value
 		end
 
-	do_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one satisfying `test'.
 		do
@@ -181,7 +181,7 @@ feature -- Iteration
 			achieved: not exhausted implies test.item (item_tuple)
 		end
 
-	continue_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])is
+	continue_until (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item of `target' up to
 			-- and including first one satisfying `test'.
 			-- (from the current position of `target').
@@ -202,7 +202,7 @@ feature -- Iteration
 			achieved: not exhausted implies test.item (item_tuple)
 		end
 
-	search (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; b: BOOLEAN) is
+	search (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; b: BOOLEAN)
 			-- Search the first item of `target' for which `test'
 			-- has the same value as `b' (both true or both false).
 		do
@@ -210,7 +210,7 @@ feature -- Iteration
 			continue_search (test, b)
 		end
 
-	continue_search (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; b: BOOLEAN) is
+	continue_search (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]; b: BOOLEAN)
 			-- Search the first item of `target'
 			-- satisfying: `test' equals to `b'
 			-- (from the current position of `target').
@@ -227,7 +227,7 @@ feature -- Iteration
 			found: not exhausted = (b = test.item (item_tuple))
 		end
 
-	do_for (action: PROCEDURE [ANY, TUPLE [G]]; i, n, k: INTEGER) is
+	do_for (action: PROCEDURE [ANY, TUPLE [G]]; i, n, k: INTEGER)
 			-- Apply `action' to every `k'-th item,
 			-- `n' times if possible, starting from `i'-th.
 		require
@@ -253,7 +253,7 @@ feature -- Iteration
 			continue_for (action, n, k)
 		end
 
-	continue_for (action: PROCEDURE [ANY, TUPLE [G]]; n, k: INTEGER) is
+	continue_for (action: PROCEDURE [ANY, TUPLE [G]]; n, k: INTEGER)
 			-- Apply `action' to every `k'-th item,
 			-- `n' times if possible.
 		require
@@ -287,7 +287,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Does `test' return true for
 			-- all items of `target'?
 		do
@@ -295,7 +295,7 @@ feature -- Iteration
 			Result := exhausted
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Does `test' return true for
 			-- at least one item of `target'?
 		do
@@ -314,7 +314,7 @@ invariant
 	internal_item_tuple_exists: internal_item_tuple /= Void
 	item_tuple_exists: not exhausted implies item_tuple /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

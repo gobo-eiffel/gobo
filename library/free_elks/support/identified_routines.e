@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects identified, uniquely during any session, by an integer"
 	library: "Free implementation of ELKS library"
@@ -11,7 +11,7 @@ class IDENTIFIED_ROUTINES
 
 feature -- Basic operations
 
-	eif_id_object (an_id: INTEGER): ?ANY is
+	eif_id_object (an_id: INTEGER): ?ANY
 			-- Object associated with `an_id'
 		require
 			an_id_non_negative: an_id >= 0
@@ -19,7 +19,7 @@ feature -- Basic operations
 			"built_in"
 		end
 
-	eif_object_id (an_object: ANY): INTEGER is
+	eif_object_id (an_object: ANY): INTEGER
 			-- New identifier for `an_object'
 		external
 			"built_in"
@@ -28,7 +28,7 @@ feature -- Basic operations
 			inserted: eif_id_object (Result) = an_object
 		end
 
-	eif_object_id_free (an_id: INTEGER) is
+	eif_object_id_free (an_id: INTEGER)
 			-- Free the entry `an_id'
 		require
 			an_id_non_negative: an_id >= 0

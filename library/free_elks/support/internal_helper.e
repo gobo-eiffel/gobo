@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper for routines in INTERNAL class."
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
@@ -11,14 +11,14 @@ class
 
 feature -- Status report
 
-	is_pre_ecma_mapping_disabled: BOOLEAN is
+	is_pre_ecma_mapping_disabled: BOOLEAN
 			-- Are we mapping old names to new ECMA names?
 			-- False means mapping STRING to STRING_8, INTEGER to INTEGER_32,...
 		do
 			Result := False
 		end
 
-	is_valid_type_string (s: STRING): BOOLEAN is
+	is_valid_type_string (s: STRING): BOOLEAN
 			-- Is `s' a valid string representation for a TYPE.
 		local
 			l_type_name: STRING
@@ -72,7 +72,7 @@ feature -- Status report
 			end
 		end
 
-	mapped_type (a_type: STRING): STRING is
+	mapped_type (a_type: STRING): STRING
 			-- If `is_pre_ecma_mapping_disabled' `a_type', otherwise
 			-- the mapped typed.
 		require
@@ -98,14 +98,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_pre_ecma_mapping is
+	enable_pre_ecma_mapping
 			-- Set `is_pre_ecma_mapping_disabled' to False.
 		obsolete
 			"Use an instance of INTERNAL instead."
 		do
 		end
 
-	disable_pre_ecma_mapping is
+	disable_pre_ecma_mapping
 			-- Set `is_pre_ecma_mapping_disabled' to True.
 		obsolete
 			"Use an instance of ECMA_INTERNAL instead."
@@ -114,7 +114,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation: status report
 
-	is_valid_identifier (s: STRING): BOOLEAN is
+	is_valid_identifier (s: STRING): BOOLEAN
 			-- Is `s' a valid Eiffel identifier?
 		require
 			name_not_void: s /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation: status report
 
 feature {NONE} -- Decompose string type
 
-	parameters_decomposition (a_str: STRING): ?ARRAYED_LIST [STRING] is
+	parameters_decomposition (a_str: STRING): ?ARRAYED_LIST [STRING]
 			-- Decompose `a_str' which should be of the form "A, B, D [G], H [E ,F]"
 			-- into a list of strings "A", "B", "D [G]", "H [E, F]"
 			-- If decomposition is not possible, Void.
@@ -201,7 +201,7 @@ feature {NONE} -- Decompose string type
 
 feature {NONE} -- ECMA mapping helper
 
-	pre_ecma_type_mapping: HASH_TABLE [STRING, STRING] is
+	pre_ecma_type_mapping: HASH_TABLE [STRING, STRING]
 			-- Mapping between pre-ECMA type naming and new names.
 		once
 			create Result.make (12)

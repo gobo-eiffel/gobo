@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Structures whose items may be accessed sequentially, one-way"
@@ -20,7 +20,7 @@ deferred class LINEAR [G] inherit
 
 feature -- Access
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does structure include an occurrence of `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -32,7 +32,7 @@ feature -- Access
 			Result := not exhausted
 		end
 
-	index_of (v: like item; i: INTEGER): INTEGER is
+	index_of (v: like item; i: INTEGER): INTEGER
 			-- Index of `i'-th occurrence of `v'.
 			-- 0 if none.
 			-- (Reference or object equality,
@@ -76,7 +76,7 @@ feature -- Access
 			non_negative_result: Result >= 0
 		end
 
-	search (v: like item) is
+	search (v: like item)
 			-- Move to first position (at or after current
 			-- position) where `item' and `v' are equal.
 			-- (Reference or object equality,
@@ -105,12 +105,12 @@ feature -- Access
 				 implies v = item
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position
 		deferred
 		end
 
-	occurrences (v: like item): INTEGER is
+	occurrences (v: like item): INTEGER
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -127,7 +127,7 @@ feature -- Access
 			end
 		end
 
-	item_for_iteration: G is
+	item_for_iteration: G
 			-- Item at current position
 		require
 			not_off: not off
@@ -137,7 +137,7 @@ feature -- Access
 
 feature -- Status report
 
-	exhausted: BOOLEAN is
+	exhausted: BOOLEAN
 			-- Has structure been completely explored?
 		do
 			Result := off
@@ -145,12 +145,12 @@ feature -- Status report
 			exhausted_when_off: off implies Result
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		deferred
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := is_empty or after
@@ -158,12 +158,12 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	finish is
+	finish
 			-- Move to last position.
 		deferred
 		end
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		require
@@ -175,7 +175,7 @@ feature -- Cursor movement
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -205,7 +205,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -237,7 +237,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -268,7 +268,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -304,7 +304,7 @@ feature -- Iteration
 
 feature -- Conversion
 
-	linear_representation: LINEAR [G] is
+	linear_representation: LINEAR [G]
 			-- Representation as a linear structure
 		do
 			Result := Current
@@ -314,7 +314,7 @@ invariant
 
 	after_constraint: after implies off
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

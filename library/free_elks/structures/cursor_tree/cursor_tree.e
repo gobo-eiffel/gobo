@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Trees as active structures that may be traversed using a cursor"
@@ -62,7 +62,7 @@ deferred class CURSOR_TREE [G] inherit
 
 feature -- Access
 
-	parent_item: G is
+	parent_item: G
 			-- Item in parent.
 		require
 			not_on_root: not is_root
@@ -75,7 +75,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	child_item (i: INTEGER): G is
+	child_item (i: INTEGER): G
 			-- Item in `i'-th child
 		require
 			argument_within_bounds: i >= 1 and then i <= arity
@@ -89,7 +89,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does structure include an occurrence of `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -101,7 +101,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 		local
 			pos: CURSOR
 		do
@@ -112,7 +112,7 @@ feature -- Access
 
 feature -- Measurement
 
-	depth: INTEGER is
+	depth: INTEGER
 			-- Depth of the tree
 		local
 			pos: CURSOR
@@ -125,7 +125,7 @@ feature -- Measurement
 			end
 		end
 
-	level: INTEGER is
+	level: INTEGER
 			-- Level of current node in tree
 			-- (Root is on level 1)
 		local
@@ -142,7 +142,7 @@ feature -- Measurement
 			go_to (pos)
 		end
 
-	breadth: INTEGER is
+	breadth: INTEGER
 			-- Breadth of current level
 		local
 			l: INTEGER
@@ -159,25 +159,25 @@ feature -- Measurement
 
 feature -- Status report
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := not off
 		end
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		do
 			Result := not off
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		do
 			Result := not above and then (level = 1) implies is_empty
 		end
 
-	is_leaf: BOOLEAN is
+	is_leaf: BOOLEAN
 			-- Is cursor on a leaf?
 		do
 			if not off then
@@ -185,24 +185,24 @@ feature -- Status report
 			end
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 			-- (True if `is_empty')
 		do
 			Result := (after or before or below or above)
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		deferred
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 		deferred
 		end
 
-	above: BOOLEAN is
+	above: BOOLEAN
 			-- Is there no valid cursor position above cursor?
 		deferred
 		end
@@ -210,22 +210,22 @@ feature -- Status report
 	below: BOOLEAN
 			-- Is there no valid cursor position below cursor?
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor on first sibling?
 		deferred
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor on last sibling?
 		deferred
 		end
 
-	is_root: BOOLEAN is
+	is_root: BOOLEAN
 			-- Is cursor on root?
 		deferred
 		end
 
-	valid_cursor_index (i: INTEGER): BOOLEAN is
+	valid_cursor_index (i: INTEGER): BOOLEAN
 			-- Can cursor be moved to `i'-th child?
 			-- 0 is before and `arity' + 1 is after.
 		do
@@ -234,7 +234,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to root.
 			-- Leave cursor `off' if `is_empty'.
 		do
@@ -246,7 +246,7 @@ feature -- Cursor movement
 			on_root_unless_empty: not is_empty implies is_root
 		end
 
-	go_last_child is
+	go_last_child
 			-- Go to the last child of current parent.
 			-- No effect if below
 		require else
@@ -256,17 +256,17 @@ feature -- Cursor movement
 			down (arity)
 		end
 
-	back is
+	back
 			-- Move cursor one position backward.
 		deferred
 		end
 
-	forth is
+	forth
 			-- Move cursor one position forward.
 		deferred
 		end
 
-	up is
+	up
 			-- Move cursor one level upward to parent,
 			-- or `above' if `is_root' holds.
 		require else
@@ -279,7 +279,7 @@ feature -- Cursor movement
 			coherency: (not old off and above) = (old is_root)
 		end
 
-	down (i: INTEGER) is
+	down (i: INTEGER)
 			-- Move cursor one level downward:
 			-- to `i'-th child if there is one,
 			-- or `after' if `i' = `arity' + 1,
@@ -298,7 +298,7 @@ feature -- Cursor movement
 		end
 
 
-	preorder_forth is
+	preorder_forth
 			-- Move cursor to next position in preorder.
 			-- If the active node is the last in
 			-- preorder, the cursor ends up `off'.
@@ -316,7 +316,7 @@ feature -- Cursor movement
 			end
 		end
 
-	postorder_forth is
+	postorder_forth
 			-- Move cursor to next position in postorder.
 			-- If the active node is the last in
 			-- postorder, the cursor ends up `off'.
@@ -336,7 +336,7 @@ feature -- Cursor movement
 			end
 		end
 
-	breadth_forth is
+	breadth_forth
 			-- Move cursor to next position in breadth-first order.
 			-- If the active node is the last in
 			-- breadth-first order, the cursor ends up `off'.
@@ -352,7 +352,7 @@ feature -- Cursor movement
 			end
 		end
 
-	start_on_level (l: INTEGER) is
+	start_on_level (l: INTEGER)
 			-- Move the cursor to the first position
 			-- of the `l'-th level counting from root.
 		require
@@ -365,7 +365,7 @@ feature -- Cursor movement
 			is_first: isfirst
 		end
 
-	level_forth is
+	level_forth
 			-- Move cursor to next position of current level.
 		do
 			if not above and then not islast then
@@ -383,7 +383,7 @@ feature -- Cursor movement
 			end
 		end
 
-	level_back is
+	level_back
 			-- Move cursor to previous position of current level.
 		do
 			if not isfirst then
@@ -401,7 +401,7 @@ feature -- Cursor movement
 			end
 		end
 
-	postorder_start is
+	postorder_start
 			-- Move cursor to first position in postorder.
 			-- Leave cursor off if tree is empty.
 		do
@@ -416,14 +416,14 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put (v: G) is
+	put (v: G)
 			-- Put `v' at cursor position.
 			-- (Synonym for `replace')
 		do
 			replace (v)
 		end
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add `v' after last child.
 			-- Make `v' the `first_child' if `below' and place
 			-- cursor `before'.
@@ -440,7 +440,7 @@ feature -- Element change
 			end
 		end
 
-	put_left (v: G) is
+	put_left (v: G)
 			-- Add `v' to the left of cursor position.
 		require
 			not_before: not before
@@ -453,7 +453,7 @@ feature -- Element change
 			forth
 		end
 
-	put_right (v: G) is
+	put_right (v: G)
 			-- Add `v' to the right of cursor position.
 		require
 			not_after: not after
@@ -462,7 +462,7 @@ feature -- Element change
 		deferred
 		end
 
-	fill (other: CURSOR_TREE [G]) is
+	fill (other: CURSOR_TREE [G])
 			-- Fill with as many items of `other'
 			-- as possible.
 			-- The representations of `other' and current structure
@@ -480,7 +480,7 @@ feature -- Element change
 			end
 		end
 
-	fill_from_active (other: CURSOR_TREE [G]) is
+	fill_from_active (other: CURSOR_TREE [G])
 			-- Copy subtree of `other''s active node
 			-- onto active node of current tree.
 		require
@@ -503,7 +503,7 @@ feature -- Element change
 			end
 		end
 
-	merge_right (other: CURSOR_TREE [G]) is
+	merge_right (other: CURSOR_TREE [G])
 			-- Merge the items of `other' into current structure to
 			-- the right of cursor position.
 		require
@@ -535,7 +535,7 @@ feature -- Element change
 			end
 		end
 
-	merge_left (other: CURSOR_TREE [G]) is
+	merge_left (other: CURSOR_TREE [G])
 			-- Merge the items of `other' into current structure to
 			-- the left of cursor position.
 		require
@@ -550,7 +550,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	subtree: like Current is
+	subtree: like Current
 			-- Subtree rooted at current node
 		require
 			not_off: not off
@@ -563,7 +563,7 @@ feature -- Duplication
 			Result.fill_from_active (Current)
 		end
 
-	parent_tree: like Current is
+	parent_tree: like Current
 			-- Subtree rooted at parent
 		require
 			not_on_root: not is_root
@@ -577,7 +577,7 @@ feature -- Duplication
 			go_to (pos)
 		end
 
-	child_tree (i: INTEGER): like Current is
+	child_tree (i: INTEGER): like Current
 			-- Subtree rooted at `i'-th child
 		require
 			argument_within_bounds: i >= 1 and then i <= arity
@@ -593,14 +593,14 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	prune (v: G) is
+	prune (v: G)
 			-- Remove item `v'.
 		do
 		end
 
 feature {CURSOR_TREE} -- Implementation
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -610,7 +610,7 @@ feature {CURSOR_TREE} -- Implementation
 			result_is_empty: Result.is_empty
 		end
 
-	go_above is
+	go_above
 			-- Move the cursor above the tree
 		do
 			from
@@ -623,7 +623,7 @@ feature {CURSOR_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	depth_from_active: INTEGER is
+	depth_from_active: INTEGER
 			-- Depth of subtree starting at active
 		do
 			if not off and then arity = 0 then
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	breadth_of_level_from_active (a_level: INTEGER): INTEGER is
+	breadth_of_level_from_active (a_level: INTEGER): INTEGER
 			-- Breadth of level `level' of subtree starting at current node
 		do
 			if (a_level = 2) or else is_leaf then
@@ -659,7 +659,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	start_on_level_from_active (l: INTEGER) is
+	start_on_level_from_active (l: INTEGER)
 			-- Move the cursor to the first position
 			-- of the `l'-th level counting from active.
 		require
@@ -679,7 +679,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Not applicable
 
-	index: INTEGER is
+	index: INTEGER
 		do
 		end
 
@@ -701,7 +701,7 @@ invariant
 	before_constaint: before implies not (after or above)
 	empty_below_constraint: (is_empty and (after or before)) implies below
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

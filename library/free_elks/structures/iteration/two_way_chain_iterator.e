@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects that are able to iterate over two-way chains,
@@ -75,19 +75,19 @@ feature -- Access
 
 feature -- Cursor movement
 
-	finish is
+	finish
 			-- Move cursor of `target' to last position.
 		do
 			target.finish
 		end
 
-	back is
+	back
 			-- Move cursor of `target' backward one position.
 		do
 			target.back
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

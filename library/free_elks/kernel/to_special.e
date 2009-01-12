@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to special objects, for direct access to arrays and strings"
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2004, Eiffel Software and others"
@@ -18,7 +18,7 @@ feature -- Access
 
 feature {NONE} -- Initialization
 
-	make_area (n: INTEGER) is
+	make_area (n: INTEGER)
 			-- Creates a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item alias "[]", at alias "@" (i: INTEGER): T assign put is
+	item alias "[]", at alias "@" (i: INTEGER): T assign put
 			-- Entry at index `i', if in index interval
 		require
 			valid_index: valid_index (i)
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < area.count)
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: T; i: INTEGER) is
+	put (v: T; i: INTEGER)
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		require
 			valid_index: valid_index (i)
@@ -60,7 +60,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	set_area (other: like area) is
+	set_area (other: like area)
 			-- Make `other' the new `area'
 		do
 			area := other

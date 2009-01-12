@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for circular lists"
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (curs: like cursor; int: BOOLEAN; start: INTEGER) is
+	make (curs: like cursor; int: BOOLEAN; start: INTEGER)
 			-- Create a cursor and set it up on `active_element'.
 		do
 			cursor := curs
@@ -39,7 +39,7 @@ feature {CIRCULAR} -- Implementation
 	starter: INTEGER;
 			-- Index of start position
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

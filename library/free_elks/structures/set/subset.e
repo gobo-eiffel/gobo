@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Subsets with the associated operations,
@@ -19,7 +19,7 @@ deferred class SUBSET [G] inherit
 
 feature -- Comparison
 
-	is_subset (other: SUBSET [G]): BOOLEAN is
+	is_subset (other: SUBSET [G]): BOOLEAN
 			-- Is current set a subset of `other'?
 		require
 			set_exists: other /= Void
@@ -27,7 +27,7 @@ feature -- Comparison
 		deferred
 		end
 
-	is_superset (other: SUBSET [G]): BOOLEAN is
+	is_superset (other: SUBSET [G]): BOOLEAN
 			-- Is current set a superset of `other'?
 		require
 			set_exists: other /= Void
@@ -36,7 +36,7 @@ feature -- Comparison
 			Result := other.is_subset (Current)
 		end
 
-	disjoint (other: SUBSET [G]): BOOLEAN is
+	disjoint (other: SUBSET [G]): BOOLEAN
 			-- Do current set and `other' have no items in common?
 			-- (This feature is redefined in all descendants. The default
 			-- implementation given here is only to stay backward-compatible
@@ -58,7 +58,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	merge (other: CONTAINER [G]) is
+	merge (other: CONTAINER [G])
 			-- Add all items of `other'.
 		require
 			set_exists: other /= Void
@@ -68,7 +68,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- New structure containing min (`n', `count')
 			-- items from current structure
 		require
@@ -81,7 +81,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	intersect (other: SUBSET [G]) is
+	intersect (other: SUBSET [G])
 			-- Remove all items not in `other'.
 		require
 			set_exists: other /= Void
@@ -91,7 +91,7 @@ feature -- Basic operations
 			is_subset_other: is_subset (other)
 		end
 
-	subtract (other: SUBSET [G]) is
+	subtract (other: SUBSET [G])
 			-- Remove all items also in `other'.
 		require
 			set_exists: other /= Void
@@ -101,7 +101,7 @@ feature -- Basic operations
 			is_disjoint: disjoint (other)
 		end
 
-	symdif (other: SUBSET [G]) is
+	symdif (other: SUBSET [G])
 			-- Remove all items also in `other', and add all
 			-- items of `other' not already present.
 			-- (This feature is redefined in all descendants. The default
@@ -119,7 +119,7 @@ feature -- Basic operations
 			subtract (temp)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
