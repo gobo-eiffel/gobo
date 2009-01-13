@@ -194,7 +194,7 @@ feature -- Access
 		once
 			create Result.make (6, 3, 7, 4554)
 		ensure
-			ise_6_2_7_2906: Result /= Void
+			ise_6_3_7_4554_not_void: Result /= Void
 		end
 
 	ise_6_3_latest: UT_VERSION is
@@ -211,6 +211,16 @@ feature -- Access
 			create Result.make (6, 4, 0, 0)
 		ensure
 			ise_6_4_0_not_void: Result /= Void
+		end
+
+	ise_6_4_7_6592: UT_VERSION is
+			-- ISE 6.4.7.6592
+			-- First release where keywords 'attribute' and 'note'
+			-- are accepted by default.
+		once
+			create Result.make (6, 4, 7, 6592)
+		ensure
+			ise_6_4_7_6592_not_void: Result /= Void
 		end
 
 	ise_6_4_latest: UT_VERSION is

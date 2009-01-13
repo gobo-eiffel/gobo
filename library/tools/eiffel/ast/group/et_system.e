@@ -1664,8 +1664,8 @@ feature -- Compilation setting
 		do
 			ise_version := a_version
 			if ise_version /= Void then
-				set_use_attribute_keyword (ise_version >= ise_6_3_7_4554)
-				set_use_note_keyword (ise_version >= ise_6_2_7_2567)
+				set_use_attribute_keyword (ise_version >= ise_6_4_7_6592)
+				set_use_note_keyword (ise_version >= ise_6_4_7_6592)
 				set_use_reference_keyword (True)
 			elseif ecma_version /= Void then
 				set_ecma_version (ecma_version)
