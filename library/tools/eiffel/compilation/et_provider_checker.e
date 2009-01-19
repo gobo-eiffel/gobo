@@ -100,13 +100,25 @@ feature {NONE} -- Cluster dependence constraints
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			l_overridden_class: ET_CLASS
+			l_scm_write_mapping: ET_CLUSTER_SCM_WRITE_MAPPING
+			l_mapped_cluster: ET_CLUSTER
 		do
 			if current_class.is_preparsed then
 				l_group := current_class.group
 				if l_group.is_cluster then
 					l_cluster := l_group.cluster
 					l_provider_constraint := l_cluster.provider_constraint
-					if l_cluster.overridden_constraint_enabled then
+					if l_cluster.scm_mapping_constraint_enabled then
+						l_scm_write_mapping := l_cluster.scm_write_mapping_recursive
+						if l_scm_write_mapping /= Void then
+							l_mapped_cluster := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (l_cluster, l_scm_write_mapping.current_cluster)
+							if l_mapped_cluster /= Void then
+								l_provider_constraint := l_mapped_cluster.provider_constraint
+							else
+								l_provider_constraint := Void
+							end
+						end
+					elseif l_cluster.overridden_constraint_enabled then
 						l_overridden_class := current_class.non_override_overridden_class
 						if l_overridden_class /= Void then
 							l_group := l_overridden_class.group
@@ -131,7 +143,17 @@ feature {NONE} -- Cluster dependence constraints
 							if l_provider_group.is_cluster then
 								l_cluster := l_provider_group.cluster
 								l_dependant_constraint := l_cluster.dependant_constraint
-								if l_cluster.overridden_constraint_enabled then
+								if l_cluster.scm_mapping_constraint_enabled then
+									l_scm_write_mapping := l_cluster.scm_write_mapping_recursive
+									if l_scm_write_mapping /= Void then
+										l_mapped_cluster := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (l_cluster, l_scm_write_mapping.current_cluster)
+										if l_mapped_cluster /= Void then
+											l_dependant_constraint := l_mapped_cluster.dependant_constraint
+										else
+											l_dependant_constraint := Void
+										end
+									end
+								elseif l_cluster.overridden_constraint_enabled then
 									l_overridden_class := l_provider.non_override_overridden_class
 									if l_overridden_class /= Void then
 										l_provider_group := l_overridden_class.group

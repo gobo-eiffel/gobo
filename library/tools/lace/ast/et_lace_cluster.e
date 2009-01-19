@@ -37,13 +37,13 @@ feature {NONE} -- Initialization
 			pathname_id := a_pathname
 			is_relative := (a_pathname = Void)
 			universe := a_universe
-			set_overridden_constraint_enabled (True)
+			set_scm_mapping_constraint_enabled (True)
 		ensure
 			name_id_set: name_id = a_name
 			pathname_id_set: pathname_id = a_pathname
 			universe_set: universe = a_universe
 			is_relative: is_relative = (a_pathname = Void)
-			overridden_constraint_enabled: overridden_constraint_enabled
+			scm_mapping_constraint_enabled: scm_mapping_constraint_enabled
 		end
 
 feature -- Access

@@ -66,6 +66,36 @@ feature -- Status report
 			-- Is the pathname of current cluster relative to the
 			-- pathname of its parent cluster?
 
+	is_relative_to (a_cluster: ET_CLUSTER): BOOLEAN
+			-- Is the pathname of current cluster relative to the
+			-- pathname of its ancestor `a_cluster'?
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_cluster_is_ancestor: has_ancestor (a_cluster)
+		local
+			l_parent: ET_CLUSTER
+		do
+			if a_cluster = Current then
+				Result := True
+			else
+				from
+					l_parent := parent
+					Result := is_relative
+				until
+					l_parent = Void
+				loop
+					if l_parent = a_cluster then
+						l_parent := Void
+					elseif not l_parent.is_recursive then
+						Result := False
+						l_parent := Void
+					else
+						l_parent := l_parent.parent
+					end
+				end
+			end
+		end
+
 	is_override: BOOLEAN
 			-- Is current cluster an override cluster?
 			-- In other words, do classes in this cluster and other override
@@ -85,6 +115,32 @@ feature -- Status report
 			-- Has current cluster not been explicitly declared
 			-- but is instead the result of the fact that its
 			-- parent is a recursive cluster?
+
+	has_ancestor (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Is `a_cluster' the current cluster itself,
+			-- or recursively one of its parents?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_parent: ET_CLUSTER
+		do
+			if a_cluster = Current then
+				Result := True
+			else
+				from
+					l_parent := parent
+				until
+					l_parent = Void
+				loop
+					if l_parent = a_cluster then
+						Result := True
+						l_parent := Void
+					else
+						l_parent := l_parent.parent
+					end
+				end
+			end
+		end
 
 	has_subcluster (a_cluster: ET_CLUSTER): BOOLEAN is
 			-- Is `a_cluster' (recursively) one of the subclusters
@@ -285,6 +341,7 @@ feature -- Nested
 			end
 		ensure
 			not_void_if_has: has_cluster_by_name (a_names) implies Result /= Void
+			has_ancestor: Result /= Void implies Result.has_ancestor (Current)
 		end
 
 	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER is
@@ -311,6 +368,44 @@ feature -- Nested
 			end
 		ensure
 			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
+			has_ancestor: Result /= Void implies Result.has_ancestor (Current)
+		end
+
+	cluster_with_relative_pathname_to (a_cluster, a_ancestor: ET_CLUSTER): ET_CLUSTER is
+			-- Cluster in either current cluster or one of its subclusters (recursively)
+			-- whose relative pathname to current cluster is the same as the relative
+			-- pathname between `a_cluster' and `a_ancestor'
+			--
+			-- Add missing implicit subclusters if needed.
+			-- Void if not such cluster.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_ancestor_not_void: a_ancestor /= Void
+			a_ancestor_is_ancestor: a_cluster.has_ancestor (a_ancestor)
+			a_cluster_is_relative: a_cluster.is_relative_to (a_ancestor)
+		local
+			l_cluster_pathname, l_ancestor_pathname: KI_PATHNAME
+			l_trailing_items: ARRAY [STRING]
+			l_full_pathname: STRING
+			l_cluster: ET_CLUSTER
+		do
+			l_cluster_pathname := file_system.string_to_pathname (a_cluster.absolute_pathname)
+			l_ancestor_pathname := file_system.string_to_pathname (a_ancestor.absolute_pathname)
+			l_trailing_items := l_ancestor_pathname.trailing_items (l_cluster_pathname)
+			if l_trailing_items.is_empty then
+				Result := Current
+			elseif is_recursive then
+				Result := cluster_by_name (l_trailing_items)
+			else
+				l_full_pathname := file_system.nested_pathname (absolute_pathname, l_trailing_items)
+				l_cluster := cluster_with_absolute_pathname (l_full_pathname)
+				if l_cluster /= Void and then l_cluster.is_relative_to (Current) then
+					Result := l_cluster
+				end
+			end
+		ensure
+			has_ancestor: Result /= Void implies Result.has_ancestor (Current)
+			is_relative: Result /= Void implies Result.is_relative_to (Current)
 		end
 
 	subclusters: ET_CLUSTERS
@@ -341,6 +436,12 @@ feature -- Dependence constraints
 			-- of its subclusters) be considered as part of the cluster of their
 			-- overridden classes when dealing with provider/dependant constraints?
 
+	scm_mapping_constraint_enabled: BOOLEAN
+			-- When a SCM write mapping is applicable to current cluster, should
+			-- its classes be considered as part of the corresponding cluster
+			-- relative to the master cluster when dealing with provider/dependant
+			-- constraints?
+
 feature -- SCM mappings
 
 	scm_read_mapping: ET_CLUSTER_SCM_READ_MAPPING
@@ -366,6 +467,9 @@ feature -- SCM mappings
 			elseif parent /= Void and is_relative then
 				Result := parent.scm_read_mapping_recursive
 			end
+		ensure
+			has_ancestor: Result /= Void implies has_ancestor (Result.current_cluster)
+			is_relative: Result /= Void implies is_relative_to (result.current_cluster)
 		end
 
 	scm_write_mapping_recursive: ET_CLUSTER_SCM_WRITE_MAPPING is
@@ -379,6 +483,9 @@ feature -- SCM mappings
 			elseif parent /= Void and is_relative then
 				Result := parent.scm_write_mapping_recursive
 			end
+		ensure
+			has_ancestor: Result /= Void implies has_ancestor (Result.current_cluster)
+			is_relative: Result /= Void implies is_relative_to (result.current_cluster)
 		end
 
 	scm_mapping_recursive: ET_CLUSTER_SCM_MAPPING is
@@ -396,6 +503,9 @@ feature -- SCM mappings
 			elseif parent /= Void and is_relative then
 				Result := parent.scm_mapping_recursive
 			end
+		ensure
+			has_ancestor: Result /= Void implies has_ancestor (Result.current_cluster)
+			is_relative: Result /= Void implies is_relative_to (result.current_cluster)
 		end
 
 feature -- Measurement
@@ -503,12 +613,29 @@ feature -- Status setting
 	set_overridden_constraint_enabled (b: BOOLEAN) is
 			-- Set `overridden_constraint_enabled' to `b'.
 		do
+			if b then
+				scm_mapping_constraint_enabled := False
+			end
 			overridden_constraint_enabled := b
 			if subclusters /= Void then
 				subclusters.set_overridden_constraint_enabled (b)
 			end
 		ensure
 			overridden_constraint_enabled_set: overridden_constraint_enabled = b
+		end
+
+	set_scm_mapping_constraint_enabled (b: BOOLEAN) is
+			-- Set `scm_mapping_constraint_enabled' to `b'.
+		do
+			if b then
+				overridden_constraint_enabled := False
+			end
+			scm_mapping_constraint_enabled := b
+			if subclusters /= Void then
+				subclusters.set_scm_mapping_constraint_enabled (b)
+			end
+		ensure
+			scm_mapping_constraint_enabled_set: scm_mapping_constraint_enabled = b
 		end
 
 feature -- Setting
@@ -728,5 +855,6 @@ feature -- Processing
 invariant
 
 	is_cluster: is_cluster
+	not_both_constraints_enabled: not (scm_mapping_constraint_enabled and overridden_constraint_enabled)
 
 end
