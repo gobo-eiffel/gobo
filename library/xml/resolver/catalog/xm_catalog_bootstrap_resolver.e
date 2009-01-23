@@ -102,14 +102,10 @@ feature -- Access
 	Reserved_directory_path: STRING is
 			-- Path to directory containing latest schemas
 		once
-			Result := Execution_environment.variable_value ("GOBO")
-			Result := unix_file_system.pathname_from_file_system (Result, file_system)
-			if Result /= Void and then Result.item (Result.count) = '/' then
-				Result := STRING_.appended_string (Result, "misc/")
-			else
-				Result := STRING_.appended_string (Result, "/misc/")
-			end
-			Result := file_system.pathname_from_file_system (Result, unix_file_system)
+			Result := file_system.pathname ("${GOBO}", "misc")
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			reserved_directory_path_not_void: Result /= Void
 		end
 
 	Xml_catalog_dtd: STRING is

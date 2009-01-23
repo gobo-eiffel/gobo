@@ -110,17 +110,18 @@ feature -- Status report
 feature -- Status setting
 
 	set_no_filtering is
-			-- Change this into a pure pass-through filter
+			-- Change this into a pure pass-through filter.
 		do
 			is_filtering := False
 			is_error := False
+			attribute_types := Void
 			acceptable_media_types := Void
 		ensure
 			not_filtering: not is_filtering
 		end
 
 	set_xpointer (an_xpointer: STRING) is
-			-- Use `an_xpointer' as the XPointer
+			-- Use `an_xpointer' as the XPointer.
 		require
 			xpointer_not_void: an_xpointer /= Void
 		local
@@ -567,7 +568,7 @@ invariant
 
 	resolver_not_void: resolver /= Void
 	xpointer_error: is_error implies error_message /= Void
-	attribute_types_not_void: attribute_types /= Void
+	attribute_types_not_void: is_filtering implies attribute_types /= Void
 	acceptable_media_types: is_filtering implies acceptable_media_types /= Void and then acceptable_media_types.equality_tester = media_type_tester
 
 end

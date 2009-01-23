@@ -19,7 +19,7 @@ inherit
 			out,
 			is_equal
 		end
-		
+
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
@@ -27,7 +27,7 @@ inherit
 			out,
 			is_equal
 		end
-		
+
 create
 
 	make,
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			no_prefix: not has_prefix
 			default_namespace: uri.count = 0
 		end
-		
+
 feature -- Access
 
 	ns_prefix: STRING
@@ -70,29 +70,23 @@ feature -- Status report
 			-- Are the two namespaces equal?
 		do
 			Result := (uri = other.uri) or else
-				(uri /= Void and then STRING_.same_string (uri, other.uri))
+				(STRING_.same_string (uri, other.uri))
 		ensure then
 			definition: Result = STRING_.same_string (uri, other.uri)
 		end
-	
+
 	hash_code: INTEGER is
-			-- Hash code of URI.
+			-- Hash code of URI
 		do
-			if uri /= Void then
-				Result := uri.hash_code
-			end
+			Result := uri.hash_code
 		end
-	
+
 	out: STRING is
-			-- Out.
+			-- Out
 		do
-			if uri = Void then
-				Result := ""
-			else
-				Result := uri
-			end
+			Result := uri
 		end
-	
+
 feature -- Status report
 
 	same_prefix (other: XM_NAMESPACE): BOOLEAN is
@@ -106,7 +100,7 @@ feature -- Status report
 			same_prefix: Result implies
 				(ns_prefix = other.ns_prefix or else STRING_.same_string (ns_prefix, other.ns_prefix))
 		end
-		
+
 	has_prefix: BOOLEAN is
 			-- Is there an explicit prefix?
 			-- (not a default namespace declaration)
@@ -115,7 +109,7 @@ feature -- Status report
 		ensure
 			definition: Result = (ns_prefix /= Void and then ns_prefix.count > 0)
 		end
-		
+
 invariant
 
 	uri_not_void: uri /= Void
