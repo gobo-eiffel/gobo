@@ -71,7 +71,8 @@ feature {NONE} -- Initialization
 			count := s.count
 			internal_hash_code := 0
 			if Current /= s then
-				area := area.twin
+				create area.make (count + 1)
+				area.copy_data (s.area, s.area_lower, 0, count)
 			end
 		ensure
 			not_shared_implementation: Current /= s implies not shared_with (s)
@@ -255,7 +256,7 @@ feature -- Access
 		do
 			Result := string_searcher.substring_index (Current, other, start_pos, end_pos)
 		ensure
-			correct_place: Result > 0 implies other ~ substring (Result, Result + other.count - 1)
+			correct_place: Result > 0 implies other.same_string (substring (Result, Result + other.count - 1))
 			-- forall x : start_pos..Result
 			--	not substring (x, x+other.count -1).is_equal (other)
 		end
@@ -379,7 +380,7 @@ feature -- Comparison
 			else
 				l_count := count
 				if l_count = other.count then
-					Result := str_strict_cmp (area, other.area, l_count) = 0
+					Result := area.same_items (other.area, other.area_lower, area_lower, l_count)
 				end
 			end
 		end
@@ -391,7 +392,7 @@ feature -- Comparison
 			other_not_void: other /= Void
 		local
 			l_area, l_other_area: like area
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 		do
 			if other = Current then
 				Result := True
@@ -402,14 +403,18 @@ feature -- Comparison
 						l_area := area
 						l_other_area := other.area
 						Result := True
+						i := area_lower
+						j := other.area_lower
+						nb := area_lower + nb
 					until
 						i = nb
 					loop
-						if l_area.item (i).as_lower /= l_other_area.item (i).as_lower then
+						if l_area.item (i).as_lower /= l_other_area.item (j).as_lower then
 							Result := False
 							i := nb - 1 -- Jump out of loop
 						end
 						i := i + 1
+						j := j + 1
 					end
 				end
 			end
@@ -428,7 +433,7 @@ feature -- Comparison
 				Result := True
 			elseif other.count = count then
 				if same_type (other) then
-					Result := area.same_items (other.area, 0, 0, count)
+					Result := area.same_items (other.area, other.area_lower, area_lower, count)
 				else
 					Result := same_string_general (other)
 				end
@@ -447,12 +452,12 @@ feature -- Comparison
 				other_count := other.count
 				current_count := count
 				if other_count = current_count then
-					Result := str_strict_cmp (other.area, area, other_count) > 0
+					Result := str_strict_cmp (other.area, area, other.area_lower, area_lower, other_count) > 0
 				else
 					if current_count < other_count then
-						Result := str_strict_cmp (other.area, area, current_count) >= 0
+						Result := str_strict_cmp (other.area, area, other.area_lower, area_lower, current_count) >= 0
 					else
-						Result := str_strict_cmp (other.area, area, other_count) > 0
+						Result := str_strict_cmp (other.area, area, other.area_lower, area_lower, other_count) > 0
 					end
 				end
 			end
@@ -517,7 +522,7 @@ feature -- Status report
 		require
 			argument_not_void: s /= Void
 		local
-			i: INTEGER
+			i, j, nb: INTEGER
 			l_area, l_s_area: like area
 		do
 			if Current = s then
@@ -528,12 +533,19 @@ feature -- Status report
 					from
 						l_area := area
 						l_s_area := s.area
+						j := area_lower + i
+						i := s.area_upper + 1
+						nb := s.area_lower
 						Result := True
 					until
-						i = 0 or not Result
+						i = nb
 					loop
 						i := i - 1
-						Result := l_area.item (i) = l_s_area.item (i)
+						j := j - 1
+						if l_area.item (j) /= l_s_area.item (i) then
+							Result := False
+							i := nb -- Jump out of loop
+						end
 					end
 				end
 			end
@@ -546,7 +558,7 @@ feature -- Status report
 		require
 			argument_not_void: s /= Void
 		local
-			i, j: INTEGER
+			i, j, nb: INTEGER
 			l_area, l_s_area: like area
 		do
 			if Current = s then
@@ -558,13 +570,19 @@ feature -- Status report
 					from
 						l_area := area
 						l_s_area := s.area
+						j := area_upper + 1
+						i := s.area_upper + 1
+						nb := s.area_lower
 						Result := True
 					until
-						i = 0 or not Result
+						i = nb
 					loop
 						i := i - 1
 						j := j - 1
-						Result := l_area.item (j) = l_s_area.item (i)
+						if l_area.item (j) /= l_s_area.item (i) then
+							Result := False
+							i := nb -- Jump out of loop
+						end
 					end
 				end
 			end
@@ -1088,30 +1106,34 @@ feature {NONE} -- Implementation
 			Result := l_convertor.is_integral_integer
 		end
 
-	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER
-			-- Compare `this' and `other' strings
-			-- for the first `nb' characters.
+	str_strict_cmp (this, other: like area; this_index, other_index, n: INTEGER): INTEGER
+			-- Compare `n' characters from `this' starting at `this_index' with
+			-- `n' characters from and `other' starting at `other_index'.
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'
 		require
-			this_not_void: this /= Void or else nb = 0
+			this_not_void: this /= Void
 			other_not_void: other /= Void
-			nb_non_negative: nb >= 0
-			nb_valid: (this /= Void implies nb <= this.count) and nb <= other.count
+			n_non_negative: n >= 0
+			n_valid: n <= (this.upper - this_index + 1) and n <= (other.upper - other_index + 1)
 		local
-			i, l_current_code, l_other_code: INTEGER
+			i, j, nb, l_current_code, l_other_code: INTEGER
 		do
 			from
+				i := this_index
+				nb := i + n
+				j := other_index
 			until
 				i = nb
 			loop
 				l_current_code := this.item (i).code
-				l_other_code := other.item (i).code
+				l_other_code := other.item (j).code
 				if l_current_code /= l_other_code then
 					Result := l_current_code - l_other_code
 					i := nb - 1 -- Jump out of loop
 				end
 				i := i + 1
+				j := j + 1
 			end
 		end
 
@@ -1171,7 +1193,7 @@ feature {NONE} -- Implementation
 			from
 				i := end_index
 			until
-				i < start_index
+				i <= j
 			loop
 				c := a.item (i)
 				a.put (a.item (j), i)
@@ -1185,6 +1207,23 @@ feature {READABLE_STRING_8, READABLE_STRING_32} -- Implementation
 
 	area: SPECIAL [CHARACTER_8]
 			-- Storage for characters
+
+	area_lower: INTEGER
+			-- Minimum index
+		do
+		ensure
+			area_lower_non_negative: Result >= 0
+			area_lower_valid: Result <= area.upper
+		end
+
+	area_upper: INTEGER
+			-- Maximum index
+		do
+			Result := area_lower + count - 1
+		ensure
+			area_upper_valid: Result <= area.upper
+			area_upper_in_bound: area_lower <= Result + 1
+		end
 
 invariant
 	area_not_void: area /= Void

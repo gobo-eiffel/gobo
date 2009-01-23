@@ -340,20 +340,17 @@ feature -- Iteration
 		require
 			action_not_void: action /= Void
 		local
-			t: TUPLE [G]
 			i, nb: INTEGER
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
-				nb := capacity - 1
+				nb := count - 1
 				l_area := area
 			until
 				i > nb
 			loop
-				t.put (l_area.item (i), 1)
-				action.call (t)
+				action.call ([l_area.item (i)])
 				i := i + 1
 			end
 		end
@@ -366,21 +363,18 @@ feature -- Iteration
 			action_not_void: action /= Void
 			test_not_void: test /= Void
 		local
-			t: TUPLE [G]
 			i, nb: INTEGER
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
-				nb := capacity - 1
+				nb := count - 1
 				l_area := area
 			until
 				i > nb
 			loop
-				t.put (l_area.item (i), 1)
-				if test.item (t) then
-					action.call (t)
+				if test.item ([l_area.item (i)]) then
+					action.call ([l_area.item (i)])
 				end
 				i := i + 1
 			end
@@ -391,20 +385,17 @@ feature -- Iteration
 		require
 			test_not_void: test /= Void
 		local
-			t: TUPLE [G]
 			i, nb: INTEGER
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
-				nb := capacity - 1
+				nb := count - 1
 				l_area := area
 			until
 				i > nb or Result
 			loop
-				t.put (l_area.item (i), 1)
-				Result := test.item (t)
+				Result := test.item ([l_area.item (i)])
 				i := i + 1
 			end
 		end
@@ -414,21 +405,18 @@ feature -- Iteration
 		require
 			test_not_void: test /= Void
 		local
-			t: TUPLE [G]
 			i, nb: INTEGER
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
-				nb := capacity - 1
+				nb := count - 1
 				l_area := area
 				Result := True
 			until
 				i > nb or not Result
 			loop
-				t.put (l_area.item (i), 1)
-				Result := test.item (t)
+				Result := test.item ([l_area.item (i)])
 				i := i + 1
 			end
 		end
@@ -441,22 +429,18 @@ feature -- Iteration
 		require
 			action_not_void: action /= Void
 		local
-			t: TUPLE [G, INTEGER]
 			i, j, nb: INTEGER
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
 				j := lower
-				nb := capacity - 1
+				nb := count - 1
 				l_area := area
 			until
 				i > nb
 			loop
-				t.put (l_area.item (i), 1)
-				t.put (j, 2)
-				action.call (t)
+				action.call ([l_area.item (i), j])
 				j := j + 1
 				i := i + 1
 			end
@@ -471,23 +455,19 @@ feature -- Iteration
 			action_not_void: action /= Void
 			test_not_void: test /= Void
 		local
-			t: TUPLE [G, INTEGER]
 			i, j, nb: INTEGER
 			l_area: like area
 		do
 			from
-				create t
 				i := 0
 				j := lower
-				nb := capacity - 1
+				nb := count - 1
 				l_area := area
 			until
 				i > nb
 			loop
-				t.put (l_area.item (i), 1)
-				t.put (j, 2)
-				if test.item (t) then
-					action.call (t)
+				if test.item ([l_area.item (i), j]) then
+					action.call ([l_area.item (i), j])
 				end
 				j := j + 1
 				i := i + 1

@@ -12,18 +12,8 @@ note
 
 class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 
-	PRIORITY_QUEUE [G]
-		undefine
-			copy, is_equal,
-			prune_all, append, readable, writable, fill
-		select
-			put, remove, item
-		end
-
 	SORTED_TWO_WAY_LIST [G]
 		rename
-			remove as sl_remove,
-			put as sl_put,
 			item as sl_item
 		export
 			{NONE} all
@@ -32,11 +22,25 @@ class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 				first_element, last_element, valid_cursor, sl_item
 			{ANY}
 				off
+		redefine
+			put, remove
+		end
+
+	PRIORITY_QUEUE [G]
+		rename
+			item as sl_item
+		export
+			{LINKED_PRIORITY_QUEUE} sl_item
+		undefine
+			copy, is_equal,
+			prune_all, append, readable, writable, fill
+		redefine
+			put, remove
 		end
 
 create
 	make
-	
+
 create {LINKED_PRIORITY_QUEUE}
 	make_sublist
 
@@ -54,7 +58,7 @@ feature -- Removal
 			-- Remove item of highest value.
 		do
 			go_i_th (count)
-			sl_remove
+			Precursor {SORTED_TWO_WAY_LIST}
 			go_i_th (count)
 		end
 

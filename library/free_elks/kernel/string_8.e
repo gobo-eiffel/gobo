@@ -267,7 +267,7 @@ feature -- Element change
 				--| Set new count
 			set_count (new_size)
 				--| We copy the substring.
-			l_area.copy_data (s.area, 0, start_index - 1, s_count)
+			l_area.copy_data (s.area, s.area_lower, start_index - 1, s_count)
 		ensure
 			new_count: count = old count + old s.count - end_index + start_index - 1
 			replaced: elks_checking implies
@@ -275,7 +275,7 @@ feature -- Element change
 					s + substring (end_index + 1, count))))
 		end
 
-	replace_substring_all (original, new: like Current)
+	replace_substring_all (original, new: READABLE_STRING_8)
 			-- Replace every occurrence of `original' with `new'.
 		require
 			original_exists: original /= Void
@@ -283,7 +283,7 @@ feature -- Element change
 			original_not_empty: not original.is_empty
 		local
 			l_first_pos, l_next_pos: INTEGER
-			l_orig_count, l_new_count, l_count: INTEGER
+			l_orig_count, l_new_count, l_new_lower, l_count: INTEGER
 			l_area, l_new_area: like area
 			l_offset: INTEGER
 			l_string_searcher: like string_searcher
@@ -301,10 +301,11 @@ feature -- Element change
 						from
 							l_area := area
 							l_new_area := new.area
+							l_new_lower := new.area_lower
 						until
 							l_first_pos = 0
 						loop
-							l_area.copy_data (l_new_area, 0, l_first_pos - 1, l_new_count)
+							l_area.copy_data (l_new_area, l_new_lower, l_first_pos - 1, l_new_count)
 							if l_first_pos + l_new_count <= l_count then
 								l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_new_count, l_count)
 							else
@@ -318,11 +319,12 @@ feature -- Element change
 							l_next_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_orig_count, l_count)
 							l_area := area
 							l_new_area := new.area
+							l_new_lower := new.area_lower
 						until
 							l_next_pos = 0
 						loop
 								-- Copy new string into Current
-							l_area.copy_data (l_new_area, 0, l_first_pos - 1 - l_offset, l_new_count)
+							l_area.copy_data (l_new_area, l_new_lower, l_first_pos - 1 - l_offset, l_new_count)
 								-- Shift characters between `l_first_pos' and `l_next_pos'
 							l_area.overlapping_move (l_first_pos + l_orig_count - 1,
 								l_first_pos + l_new_count - 1 - l_offset, l_next_pos - l_first_pos - l_orig_count)
@@ -336,7 +338,7 @@ feature -- Element change
 						end
 							-- Perform final substitution:
 							-- Copy new string into Current
-						l_area.copy_data (l_new_area, 0, l_first_pos - 1 - l_offset, l_new_count)
+						l_area.copy_data (l_new_area, l_new_lower, l_first_pos - 1 - l_offset, l_new_count)
 							-- Shift characters between `l_first_pos' and the end of the string
 						l_area.overlapping_move (l_first_pos + l_orig_count - 1,
 							l_first_pos + l_new_count - 1 - l_offset, l_count + 1 - l_first_pos - l_orig_count)
@@ -371,7 +373,7 @@ feature -- Element change
 		do
 			fill_with (' ')
 		ensure
-			same_size: (count = old count) and (capacity >= old capacity)
+			same_size: (count = old count) and (capacity = old capacity)
 			all_blank: elks_checking implies occurrences (' ') = count
 		end
 
@@ -392,11 +394,11 @@ feature -- Element change
 		do
 			l_count := count
 			if l_count /= 0 then
-				area.fill_with (c, 0, count - 1)
+				area.fill_with (c, 0, l_count - 1)
 				internal_hash_code := 0
 			end
 		ensure
-			same_count: (count = old count) and (capacity >= old capacity)
+			same_count: (count = old count) and (capacity = old capacity)
 			filled: elks_checking implies occurrences (c) = count
 		end
 
@@ -407,7 +409,7 @@ feature -- Element change
 		do
 			fill_with (c)
 		ensure
-			same_count: (count = old count) and (capacity >= old capacity)
+			same_count: (count = old count) and (capacity = old capacity)
 			filled: elks_checking implies occurrences (c) = count
 		end
 
@@ -655,7 +657,7 @@ feature -- Element change
 				if l_new_size > capacity then
 					resize (l_new_size + additional_space)
 				end
-				area.copy_data (s.area, 0, l_count, l_s_count)
+				area.copy_data (s.area, s.area_lower, l_count, l_s_count)
 				count := l_new_size
 				internal_hash_code := 0
 			end
@@ -1119,7 +1121,7 @@ feature -- Element change
 				l_area.overlapping_move (pos, pos + l_s_count, count - pos)
 
 					-- Copy string `s' at index `pos'.
-				l_area.copy_data (s.area, 0, pos, l_s_count)
+				l_area.copy_data (s.area, s.area_lower, pos, l_s_count)
 
 				count := new_size
 				internal_hash_code := 0

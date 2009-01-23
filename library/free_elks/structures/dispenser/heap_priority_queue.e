@@ -37,7 +37,7 @@ class HEAP_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 			full, prunable, prune,
 			put, extendible, wipe_out,
 			linear_representation,
-			index_set, is_equal
+			index_set, is_equal, extend
 		end
 
 create
@@ -147,6 +147,12 @@ feature -- Element change
 				i := i // 2
 			end
 			put_i_th (v, i)
+		end
+
+	extend (v: like item)
+			-- <Precursor>
+		do
+			put (v)
 		end
 
 feature -- Removal

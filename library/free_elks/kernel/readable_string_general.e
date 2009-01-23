@@ -205,7 +205,7 @@ feature -- Conversion
 			i, nb: INTEGER
 			l_code: like code
 		do
-			if is_string_8 and then {l_result: STRING_8} Current then
+			if {l_result: STRING_8} Current then
 				Result := l_result
 			else
 				nb := count
@@ -227,7 +227,7 @@ feature -- Conversion
 			end
 		ensure
 			as_string_8_not_void: Result /= Void
-			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
+			identity: (same_type ("") and Result = Current) or (not same_type ("") and Result /= Current)
 		end
 
 	as_string_32, to_string_32: STRING_32
@@ -235,7 +235,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			if is_string_32 and then {l_result: STRING_32} Current then
+			if {l_result: STRING_32} Current then
 				Result := l_result
 			else
 				nb := count
@@ -252,7 +252,7 @@ feature -- Conversion
 			end
 		ensure
 			as_string_32_not_void: Result /= Void
-			identity: (is_string_32 and Result = Current) or (not is_string_32 and Result /= Current)
+			identity: (same_type (create {STRING_32}.make_empty) and Result = Current) or (not same_type (create {STRING_32}.make_empty) and Result /= Current)
 		end
 
 feature -- Duplication

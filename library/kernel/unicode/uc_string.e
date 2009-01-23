@@ -66,15 +66,17 @@ inherit
 				share,
 				shared_with,
 				area,
-				old_is_empty,
 				mirror,
 				is_case_insensitive_equal,
 				valid_code,
 				to_string_32
 			{ANY}
 				is_string_8,
-				valid_index
-			{NONE} all
+				valid_index,
+				old_is_empty
+-- TODO: `area_lower' need to be exported, but this feature does not exist
+-- in ISE 6.2 and 6.3. So we need to comment out the line below.
+--			{NONE} all
 		undefine
 			infix ">",
 			infix "<=",
@@ -92,6 +94,7 @@ inherit
 			substring,
 			append_string,
 			replace_substring,
+			replace_substring_all,
 			append,
 			index_of,
 			has,
@@ -184,6 +187,7 @@ inherit
 			substring,
 			append_string,
 			replace_substring,
+			replace_substring_all,
 			append,
 			index_of,
 			has,
@@ -2402,6 +2406,95 @@ feature -- Element change
 					end
 					set_count (count + a_string_count - a_range)
 					put_substring_at_byte_index (str, 1, a_string_count, new_count, k)
+				end
+			end
+		end
+
+-- TODO: ISE 6.2 version because there is a flat Degree 3 error when using version from 6.4
+-- with the signature of `replace_substring' of the current class.
+	replace_substring_all (original, new: like Current) is
+			-- Replace every occurrence of `original' with `new'.
+		local
+			l_first_pos, l_next_pos: INTEGER
+			l_orig_count, l_new_count, l_count: INTEGER
+			l_area, l_new_area: like area
+			l_offset: INTEGER
+			l_string_searcher: like string_searcher
+		do
+			if not is_empty then
+				l_count := count
+				l_string_searcher := string_searcher
+				l_string_searcher.initialize_deltas (original)
+				l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, 1, l_count)
+				if l_first_pos > 0 then
+					l_orig_count := original.count
+					l_new_count := new.count
+					if l_orig_count = l_new_count then
+							-- String will not be resized, simply perform character substitution
+						from
+							l_area := area
+							l_new_area := new.area
+						until
+							l_first_pos = 0
+						loop
+							l_area.copy_data (l_new_area, 0, l_first_pos - 1, l_new_count)
+							if l_first_pos + l_new_count <= l_count then
+								l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_new_count, l_count)
+							else
+								l_first_pos := 0
+							end
+						end
+					elseif l_orig_count > l_new_count then
+							-- New string is smaller than previous string, we can optimize
+							-- substitution by only moving block between two occurrences of `orginal'.
+						from
+							l_next_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_orig_count, l_count)
+							l_area := area
+							l_new_area := new.area
+						until
+							l_next_pos = 0
+						loop
+								-- Copy new string into Current
+							l_area.copy_data (l_new_area, 0, l_first_pos - 1 - l_offset, l_new_count)
+								-- Shift characters between `l_first_pos' and `l_next_pos'
+							l_area.overlapping_move (l_first_pos + l_orig_count - 1,
+								l_first_pos + l_new_count - 1 - l_offset, l_next_pos - l_first_pos - l_orig_count)
+							l_first_pos := l_next_pos
+							l_offset := l_offset + (l_orig_count - l_new_count)
+							if l_first_pos + l_new_count <= l_count then
+								l_next_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_orig_count, l_count)
+							else
+								l_next_pos := 0
+							end
+						end
+							-- Perform final substitution:
+							-- Copy new string into Current
+						l_area.copy_data (l_new_area, 0, l_first_pos - 1 - l_offset, l_new_count)
+							-- Shift characters between `l_first_pos' and the end of the string
+						l_area.overlapping_move (l_first_pos + l_orig_count - 1,
+							l_first_pos + l_new_count - 1 - l_offset, l_count + 1 - l_first_pos - l_orig_count)
+								-- Perform last substitution
+						l_offset := l_offset + (l_orig_count - l_new_count)
+
+							-- Update `count'
+						set_count (l_count - l_offset)
+					else
+							-- Optimization is harder as we don't know how many times we need to resize
+							-- the string. For now, we do like we did in our previous implementation
+						from
+						until
+							l_first_pos = 0
+						loop
+							replace_substring (new, l_first_pos, l_first_pos + l_orig_count - 1)
+							l_count := count
+							if l_first_pos + l_new_count <= l_count then
+								l_first_pos := l_string_searcher.substring_index_with_deltas (Current, original, l_first_pos + l_new_count, l_count)
+							else
+								l_first_pos := 0
+							end
+						end
+					end
+					internal_hash_code := 0
 				end
 			end
 		end
