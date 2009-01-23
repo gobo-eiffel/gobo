@@ -8,6 +8,8 @@ Version 3.10 - ?
 
 	* Added support for keyword 'note' as a replacement of 'indexing'.
 	  See bug#2499770.
+	* Fixed bug where object-test local was not recognized as such when
+	  appearing as target of an agent declaration.
 
 Version 3.9 - 20 November 2008
 
