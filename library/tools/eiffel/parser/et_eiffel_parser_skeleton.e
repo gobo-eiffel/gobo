@@ -1059,6 +1059,12 @@ feature {NONE} -- AST factory
 						an_identifier.set_local (True)
 					end
 				end
+				if a_seed = 0 and then last_object_tests /= Void then
+					a_seed := last_object_tests.index_of (an_identifier)
+					if a_seed /= 0 then
+						an_identifier.set_object_test_local (True)
+					end
+				end
 			end
 		end
 
