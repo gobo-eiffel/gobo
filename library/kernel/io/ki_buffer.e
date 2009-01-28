@@ -19,7 +19,11 @@ feature -- Access
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
-		deferred
+		do
+				-- TODO: This routine should be deferred, but there is
+				-- a bug with ISE Eiffel 5.1.5 and 5.2 in the generated
+				-- C code in finalized mode, and having this
+				-- routine effective is a workaround.
 		end
 
 feature -- Measurement
@@ -38,7 +42,11 @@ feature -- Element change
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
-		deferred
+		do
+				-- TODO: This routine should be deferred, but there is
+				-- a bug with ISE Eiffel 5.1.5 and 5.2 in the generated
+				-- C code in finalized mode, and having this
+				-- routine effective is a workaround.
 		ensure
 			inserted: item (i) = v
 		end
