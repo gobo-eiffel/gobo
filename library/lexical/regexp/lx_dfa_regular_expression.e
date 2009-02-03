@@ -101,7 +101,7 @@ feature -- Element change
 			a_dfa: LX_FULL_DFA
 			a_full_tables: LX_FULL_TABLES
 			a_string: STRING
-			nb: INTEGER
+			j, nb: INTEGER
 		do
 			wipe_out
 			create an_error_handler.make_null
@@ -119,6 +119,18 @@ feature -- Element change
 			end
 			if nb > 0 and then a_regexp.item (nb) = '$' then
 				has_dollar := True
+					-- Check whether the dollar sign has been escaped.
+					-- If it's preceded by an odd number of backslashes,
+					-- then the dollar sign is escaped and therefore stands
+					-- for the dollar character and not as a meta-character.
+				from
+					j := nb - 1
+				until
+					j < 1 or else a_regexp.item (j) /= '\'
+				loop
+					has_dollar := not has_dollar
+					j := j - 1
+				end
 			else
 				has_dollar := False
 			end
