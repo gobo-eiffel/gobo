@@ -113,6 +113,7 @@ feature {NONE} -- Cluster dependence constraints
 						if l_scm_write_mapping /= Void then
 							l_mapped_cluster := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (l_cluster, l_scm_write_mapping.current_cluster)
 							if l_mapped_cluster /= Void then
+								l_group := l_mapped_cluster
 								l_provider_constraint := l_mapped_cluster.provider_constraint
 							else
 								l_provider_constraint := Void
@@ -148,6 +149,7 @@ feature {NONE} -- Cluster dependence constraints
 									if l_scm_write_mapping /= Void then
 										l_mapped_cluster := l_scm_write_mapping.master_cluster.cluster_with_relative_pathname_to (l_cluster, l_scm_write_mapping.current_cluster)
 										if l_mapped_cluster /= Void then
+											l_provider_group := l_mapped_cluster
 											l_dependant_constraint := l_mapped_cluster.dependant_constraint
 										else
 											l_dependant_constraint := Void
