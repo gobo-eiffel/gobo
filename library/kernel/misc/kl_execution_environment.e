@@ -26,13 +26,6 @@ inherit
 			value as variable_value
 		end
 
-#ifdef GE
-	GE_EXECUTION_ENVIRONMENT
-
-#else
-	EXECUTION_ENVIRONMENT
-
-#endif
 feature -- Access
 
 	variable_value (a_variable: STRING): STRING is
@@ -58,7 +51,7 @@ feature -- Setting
 			a_variable_not_empty: a_variable.count > 0
 			a_value_not_void: a_value /= Void
 		do
-			put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
+			environment_impl.put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
 		ensure
 			-- This setting may fail on certain platforms, hence the
 			-- following commented postcondition:

@@ -76,11 +76,6 @@
 			<argument name="gepp_dir" value="misc"/>
 			<argument name="gepp_file" value="kl_eiffel_compiler"/>
 		</geant>
-		<geant target="ge2e">
-			<argument name="spec_dir" value="spec"/>
-			<argument name="gepp_dir" value="misc"/>
-			<argument name="gepp_file" value="kl_execution_environment"/>
-		</geant>
 	</target>
 
 </project>
