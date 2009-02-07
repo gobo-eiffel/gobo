@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			p: POINTER
 		do
 			p := c_tempnam (p, p)
-			make_from_c_pointer (p)
+			make_from_c (p)
 			p.memory_free
 		end
 

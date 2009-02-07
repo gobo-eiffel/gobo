@@ -57,7 +57,7 @@ feature -- Access
 			ext := s.to_c
 			c_string := eif_getenv ($ext)
 			if c_string /= void_pointer then
-				create Result.make_from_c_pointer (c_string)
+				create Result.make_from_c (c_string)
 			end
 		end
 
@@ -94,7 +94,7 @@ feature -- Access
 			until
 				l_ptr = default_pointer
 			loop
-				l_curr_var := separated_variables (create {STRING}.make_from_c_pointer (l_ptr))
+				l_curr_var := separated_variables (create {STRING}.make_from_c (l_ptr))
 				if l_curr_var /= Void then
 					Result.force (l_curr_var.value, l_curr_var.key)
 				end

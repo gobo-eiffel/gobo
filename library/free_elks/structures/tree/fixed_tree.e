@@ -58,8 +58,9 @@ feature -- Initialization
 		require
 			valid_number_of_children: n >= 0
 		local
-			l_default: G
+			l_default: ?G
 		do
+			check l_default_attached: l_default /= Void end
 			arity := n
 			create fixed_list.make_filled (n)
 			replace (v)

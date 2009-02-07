@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 		local
 			l_key: STRING
 		do
-			create l_key.make_from_c_pointer (ckey)
+			create l_key.make_from_c (ckey)
 			put (value, l_key)
 		end
 

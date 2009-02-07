@@ -82,28 +82,6 @@ feature {NONE} -- Initialization
 	make_from_c (c_string: POINTER)
 			-- Initialize from contents of `c_string',
 			-- a string created by some C function
---		obsolete
---			"Use `make_from_c_pointer' to create object and `from_c' to modify it."
-		require
-			c_string_exists: c_string /= default_pointer
-		local
-			l_count: INTEGER
-		do
-			c_string_provider.set_shared_from_pointer (c_string)
-			l_count := c_string_provider.count
-			if area = Void then
-				create area.make (l_count + 1)
-			elseif l_count >= area.count then
-				area := area.aliased_resized_area (l_count + 1)
-			end
-			count := l_count
-			internal_hash_code := 0
-			c_string_provider.read_substring_into_character_32_area (area, 1, l_count)
-		end
-
-	make_from_c_pointer (c_string: POINTER)
-			-- Create new instance from contents of `c_string',
-			-- a string created by some C function
 		require
 			c_string_exists: c_string /= default_pointer
 		local
@@ -115,6 +93,17 @@ feature {NONE} -- Initialization
 			count := l_count
 			internal_hash_code := 0
 			c_string_provider.read_substring_into_character_32_area (area, 1, l_count)
+		end
+
+	make_from_c_pointer (c_string: POINTER)
+			-- Create new instance from contents of `c_string',
+			-- a string created by some C function
+		obsolete
+			"Use `make_from_c'."
+		require
+			c_string_exists: c_string /= default_pointer
+		do
+			make_from_c (c_string)
 		end
 
 	make_from_cil (a_system_string: SYSTEM_STRING)

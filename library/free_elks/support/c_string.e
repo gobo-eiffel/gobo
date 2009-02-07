@@ -20,11 +20,9 @@ create
 	make_by_pointer,
 	make_by_pointer_and_count,
 	make_shared_from_pointer,
-	make_shared_from_pointer_and_count,
-	share_from_pointer,
-	share_from_pointer_and_count
+	make_shared_from_pointer_and_count
 
-feature --{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_string: READABLE_STRING_GENERAL)
 			-- Make a C string from `a_string'.
@@ -108,28 +106,23 @@ feature -- Initialization
 
 	share_from_pointer (a_ptr: POINTER)
 			-- New instance sharing `a_ptr'.
---		obsolete
---			"Use `make_shared_from_pointer' to create object and `set_shared_from_pointer' to modify it."
+		obsolete
+			"Use `make_shared_from_pointer' to create object and `set_shared_from_pointer' to modify it."
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 		do
-			share_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
+			set_shared_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
 
 	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- New instance sharing `a_ptr' of `a_length' byte.
---		obsolete
---			"Use `make_shared_from_pointer_and_count' to create object and `set_shared_from_pointer_and_count' to modify it."
+		obsolete
+			"Use `make_shared_from_pointer_and_count' to create object and `set_shared_from_pointer_and_count' to modify it."
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
 			a_length_non_negative: a_length >= 0
 		do
-			count := a_length
-			if managed_data = Void or else not managed_data.is_shared then
-				create managed_data.share_from_pointer (a_ptr, a_length + 1)
-			else
-				managed_data.set_from_pointer (a_ptr, a_length + 1)
-			end
+			set_shared_from_pointer_and_count (a_ptr, a_length)
 		end
 
 feature -- Access

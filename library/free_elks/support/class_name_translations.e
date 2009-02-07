@@ -45,8 +45,8 @@ feature -- Initialization
 			cnt := class_translation_count
 			make (cnt)
 			from i := 0 until i = cnt loop
-				create o.make_from_c_pointer (class_translation_old (i))
-				create n.make_from_c_pointer (class_translation_new (i))
+				create o.make_from_c (class_translation_old (i))
+				create n.make_from_c (class_translation_new (i))
 				put (n, o)
 				i := i + 1
 			end
