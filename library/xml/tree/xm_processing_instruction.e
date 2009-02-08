@@ -15,7 +15,7 @@ class XM_PROCESSING_INSTRUCTION
 inherit
 
 	XM_DOCUMENT_NODE
-	
+
 	XM_ELEMENT_NODE
 
 create
@@ -40,11 +40,12 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 			data_set: data = a_data
 		end
-	
+
 	make_last (a_parent: XM_ELEMENT; a_target: like target; a_data: like data) is
 			-- Create a new processing instruction node,
 			-- and add it to parent.
 		require
+			a_parent_not_void: a_parent /= Void
 			a_target_not_void: a_target /= Void
 			a_data_not_void: a_data /= Void
 		do
@@ -57,11 +58,12 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 			data_set: data = a_data
 		end
-	
+
 	make_last_in_document (a_parent: XM_DOCUMENT; a_target: like target; a_data: like data) is
 			-- Create a new processing instruction node.
 			-- and add it to parent.
 		require
+			a_parent_not_void: a_parent /= Void
 			a_target_not_void: a_target /= Void
 			a_data_not_void: a_data /= Void
 		do
@@ -74,7 +76,7 @@ feature {NONE} -- Initialization
 			target_set: target = a_target
 			data_set: data = a_data
 		end
-		
+
 feature -- Access
 
 	target: STRING
@@ -98,7 +100,7 @@ feature -- Setting
 		ensure
 			set: target = a_target
 		end
-		
+
 	set_data (a_data: STRING) is
 			-- Set data.
 		require
@@ -108,7 +110,7 @@ feature -- Setting
 		ensure
 			set: data = a_data
 		end
-		
+
 feature -- Processing
 
 	process (a_processor: XM_NODE_PROCESSOR) is
