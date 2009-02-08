@@ -19,6 +19,8 @@ inherit
 	C_DATE
 		rename
 			millisecond_now as millisecond
+		export
+			{NONE} all
 		undefine
 			default_create
 		end
@@ -32,6 +34,9 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new system clock.
 		do
+				-- There is an implicit invariant which
+				-- expects `internal_item' to be non-void.
+			create internal_item.make (0)
 		end
 
 feature -- Access
