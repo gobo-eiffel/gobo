@@ -49,6 +49,7 @@ feature -- Test
 			-- Test object equality with Void.
 		local
 			a: ANY
+			s1, s2: STRING
 		do
 			assert ("equal1", Void ~ Void)
 			assert ("not_equal1", Void /~ 2)
@@ -56,6 +57,12 @@ feature -- Test
 			assert ("equal2", a ~ Void)
 			assert ("not_equal3", 2 /~ a)
 			assert ("not_equal4", a /~ "gobo")
+			s1 := Void
+			s1 := "gobo"
+			s2 := "gobo"
+			s2 := Void
+			assert ("not_equal5", s1 /~ s2)
+			assert ("not_equal6", s2 /~ s1)
 		end
 
 	test_polymorphic is

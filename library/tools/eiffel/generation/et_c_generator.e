@@ -8569,11 +8569,15 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 						current_file.put_string (c_eif_false)
 					else
 						current_file.put_character ('(')
-						if l_left_type_set.can_be_void then
-								-- We know for sure that the right operand cannot be Void.
+						if l_right_type_set.can_be_void then
+								-- We know for sure that the left operand cannot be Void.
+								-- Indeed, either `l_left_type_set.can_be_void' is False or we
+								-- already tested that it is not Void above in the case where
+								-- 'l_left_type_set.can_be_void and l_right_type_set.can_be_void'
+								-- is True.
 							current_file.put_character ('(')
 							current_file.put_character ('(')
-							print_expression (l_left_operand)
+							print_expression (l_right_operand)
 							current_file.put_character (')')
 							current_file.put_character (' ')
 							current_file.put_string (l_not_equal)
@@ -8581,11 +8585,12 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 							current_file.put_string (c_eif_void)
 							current_file.put_character (')')
 							current_file.put_string (l_and_then)
-						elseif l_right_type_set.can_be_void then
-								-- We know for sure that the left operand cannot be Void.
+						elseif l_left_type_set.can_be_void then
+								-- We know for sure that the right operand cannot be Void.
+								-- It has been tested just above.
 							current_file.put_character ('(')
 							current_file.put_character ('(')
-							print_expression (l_right_operand)
+							print_expression (l_left_operand)
 							current_file.put_character (')')
 							current_file.put_character (' ')
 							current_file.put_string (l_not_equal)
