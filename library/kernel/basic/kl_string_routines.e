@@ -35,22 +35,6 @@ inherit
 
 feature -- Initialization
 
-	make (n: INTEGER): STRING is
-			-- Create an empty string. Try to allocate space
-			-- for at least `n' characters.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[040930] Use 'create Result.make (n)' instead."
-		require
-			non_negative_n: n >= 0
-		do
-			create Result.make (n)
-		ensure
-			string_not_void: Result /= Void
-			string_type: ANY_.same_types (Result, "")
-			empty_string: Result.count = 0
-		end
-
 	make_from_string (s: STRING): STRING is
 			-- Initialize from the character sequence of `s'.
 			-- `s' is considered with its characters which do not fit
@@ -101,35 +85,6 @@ feature -- Initialization
 			initialized: elks_same_string (Result, s)
 		end
 
-	make_empty: STRING is
-			-- Create empty string.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041001] Use 'create Result.make_empty' instead."
-		do
-			create Result.make_empty
-		ensure
-			string_not_void: Result /= Void
-			string_type: ANY_.same_types (Result, "")
-			empty: Result.count = 0
-		end
-
-	make_filled (c: CHARACTER; n: INTEGER): STRING is
-			-- Create string of length `n' filled with `c'.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041001] Use 'create Result.make_filled (c, n)' instead."
-		require
-			valid_count: n >= 0
-		do
-			create Result.make_filled (c, n)
-		ensure
-			string_not_void: Result /= Void
-			string_type: ANY_.same_types (Result, "")
-			count_set: Result.count = n
-			filled: Result.occurrences (c) = Result.count
-		end
-
 	make_buffer (n: INTEGER): STRING is
 			-- Create a new string containing `n' characters.
 			-- (Not in ELKS 2001 STRING)
@@ -172,38 +127,6 @@ feature -- Status report
 			recurse: (a_string.count >= other.count and then
 				not elks_same_string (other, a_string.substring (1, other.count))) implies
 				(Result = has_substring (a_string.substring (2, a_string.count), other))
-		end
-
-	is_integer (a_string: STRING): BOOLEAN is
-			-- Is `a_string' only made up of characters 0-9?
-		obsolete
-			"[070302] Use `is_decimal' instead."
-		require
-			a_string_not_void: a_string /= Void
-		local
-			i, nb: INTEGER
-			c: CHARACTER
-		do
-			nb := a_string.count
-			if nb = 0 then
-				Result := False
-			else
-				Result := True
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					c := a_string.item (i)
-					if c < '0' or c > '9' then
-						Result := False
-							-- Jump out of the loop.
-						i := nb + 1
-					else
-						i := i + 1
-					end
-				end
-			end
 		end
 
 	is_decimal (a_string: STRING): BOOLEAN is
@@ -578,45 +501,6 @@ feature -- Access
 			valid_utf32: utf32.valid_utf32 (utf32.bom_le + Result)
 		end
 
-	string (a_string: STRING): STRING is
-			-- New STRING having the same character sequence as `a_string'
-			-- where characters which do not fit in a CHARACTER are
-			-- replaced by a '%U'
-			-- (Extended from ELKS 2001 STRING)
-		obsolete
-			"[041001] Use 'a_string.string' instead."
-		require
-			a_string_not_void: a_string /= Void
-		do
-			Result := a_string.string
-		ensure
-			string_not_void: Result /= Void
-			string_type: ANY_.same_types (Result, "")
-			first_item: a_string.count > 0 implies Result.item (1) = a_string.item (1)
-			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).string)
-		end
-
-	substring (a_string: STRING; start_index, end_index: INTEGER): STRING is
-			-- New object containing all characters of `a_string'
-			-- from `start_index' to `end_index' inclusive
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[040922] Use a_string.substring (start_index, end_index) instead."
-		require
-			a_string_not_void: a_string /= Void
-			valid_start_index: 1 <= start_index
-			valid_end_index: end_index <= a_string.count
-			meaningful_interval: start_index <= end_index + 1
-		do
-			Result := a_string.substring (start_index, end_index)
-		ensure
-			substring_not_void: Result /= Void
-			substring_same_type: ANY_.same_types (Result, a_string)
-			substring_count: Result.count = end_index - start_index + 1
-			first_item: Result.count > 0 implies Result.item (1) = a_string.item (start_index)
-			recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal (a_string.substring (start_index + 1, end_index))
-		end
-
 	substring_index (a_string, other: STRING; start_index: INTEGER): INTEGER is
 			-- Index of first occurrence of `other' at or after `start_index' in
 			-- `a_string'; 0 if none. `a_string' and `other' are considered with
@@ -879,26 +763,6 @@ feature -- Comparison
 					end
 				end
 			end
-		ensure
-			definition: Result = (a_string.count = other.count and then
-				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and
-				(a_string.count >= 2 implies same_string (a_string.substring (2, a_string.count), other.substring (2, a_string.count))))))
-			elks_same_string: Result implies elks_same_string (a_string, other)
-		end
-
-	same_unicode_string (a_string, other: STRING): BOOLEAN is
-			-- Do `a_string' and `other' have the same unicode character sequence?
-			-- Note: the difference with `elks_same_string' is that here the
-			-- implementation uses STRING.item_code instead of STRING.item
-			-- and hence characters which have different codes are not
-			-- considered equal even if they do not fit into a CHARACTER.
-		obsolete
-			"[020722] Use `same_string' instead."
-		require
-			a_string_not_void: a_string /= Void
-			other_not_void: other /= Void
-		do
-			Result := same_string (a_string, other)
 		ensure
 			definition: Result = (a_string.count = other.count and then
 				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and
@@ -1442,38 +1306,6 @@ feature -- Element change
 			replaced_first_substring_not_void: Result /= Void
 		end
 
-	fill_with (a_string: STRING; c: CHARACTER) is
-			-- Replace every character in `a_string' with `c'.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041002] Use 'a_string.fill_with (c)' instead."
-		require
-			a_string_not_void: a_string /= Void
-		do
-			a_string.fill_with (c)
-		ensure
-			same_count: old a_string.count = a_string.count
-			filled: a_string.occurrences (c) = a_string.count
-		end
-
-	insert_character (a_string: STRING; c: CHARACTER; i: INTEGER) is
-			-- Insert `c' at index `i' in `a_string', shifting characters
-			-- between ranks `i' and `count' rightwards.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041002] Use 'a_string.insert_character (c)' instead."
-		require
-			a_string_not_void: a_string /= Void
-			valid_insertion_index: 1 <= i and i <= a_string.count + 1
-		do
-			a_string.insert_character (c, i)
-		ensure
-			one_more_character: a_string.count = old a_string.count + 1
-			inserted: a_string.item (i) = c
-			stable_before_i: a_string.substring (1, i - 1).is_equal (old a_string.substring (1, i - 1))
-			stable_after_i: a_string.substring (i + 1, a_string.count).is_equal (old a_string.substring (i, a_string.count))
-		end
-
 feature -- Conversion
 
 	as_string (a_string: STRING): STRING is
@@ -1500,74 +1332,6 @@ feature -- Conversion
 			as_string_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
 			aliasing: ANY_.same_types (a_string, "") implies Result = a_string
-		end
-
-	to_lower (a_string: STRING): STRING is
-			-- Lower case version of `a_string'
-			-- (Do not alter `a_string'.)
-		obsolete
-			"[041004] Use 'a_string.as_lower' instead."
-		require
-			a_string_not_void: a_string /= Void
-		do
-			Result := a_string.as_lower
-		ensure
-			lower_string_not_void: Result /= Void
-			lower_string_same_type: ANY_.same_types (Result, a_string)
-			same_count: Result.count = a_string.count
-			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_lower (a_string.item (1))
-			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_lower)
-		end
-
-	to_upper (a_string: STRING): STRING is
-			-- Upper case version of `a_string'
-			-- (Do not alter `a_string'.)
-		obsolete
-			"[041004] Use 'a_string.as_upper' instead."
-		require
-			a_string_not_void: a_string /= Void
-		do
-			Result := a_string.as_upper
-		ensure
-			upper_string_not_void: Result /= Void
-			upper_string_same_type: ANY_.same_types (Result, a_string)
-			same_count: Result.count = a_string.count
-			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_upper (a_string.item (1))
-			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_upper)
-		end
-
-	as_lower (a_string: STRING): STRING is
-			-- New object with all letters in lower case
-			-- (Extended from ELKS 2001 STRING)
-		obsolete
-			"[041004] Use 'a_string.as_lower' instead."
-		require
-			a_string_not_void: a_string /= Void
-		do
-			Result := a_string.as_lower
-		ensure
-			as_lower_not_void: Result /= Void
-			as_lower_same_type: ANY_.same_types (Result, a_string)
-			length: Result.count = a_string.count
-			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_lower (a_string.item (1))
-			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_lower)
-		end
-
-	as_upper (a_string: STRING): STRING is
-			-- New object with all letters in upper case
-			-- (Extended from ELKS 2001 STRING)
-		obsolete
-			"[041004] Use 'a_string.as_upper' instead."
-		require
-			a_string_not_void: a_string /= Void
-		do
-			Result := a_string.as_upper
-		ensure
-			as_upper_not_void: Result /= Void
-			as_upper_same_type: ANY_.same_types (Result, a_string)
-			length: Result.count = a_string.count
-			anchor: a_string.count > 0 implies Result.item (1) = CHARACTER_.as_upper (a_string.item (1))
-			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (a_string.substring (2, a_string.count).as_upper)
 		end
 
 	hexadecimal_to_integer (a_string: STRING): INTEGER is
@@ -1694,83 +1458,6 @@ feature -- Removal
 				(a_string.item_code (a_string.count) /= ('%T').code) and
 				(a_string.item_code (a_string.count) /= ('%R').code) and
 				(a_string.item_code (a_string.count) /= ('%N').code))
-		end
-
-	keep_head (a_string: STRING; n: INTEGER) is
-			-- Remove all the characters of `a_string' except for the first `n';
-			-- if `n' > `a_string.count', do nothing.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041002] Use a_string.keep_head (n) instead."
-		require
-			a_string_not_void: a_string /= Void
-			n_non_negative: n >= 0
-		do
-			a_string.keep_head (n)
-		ensure
-			kept: a_string.is_equal (old a_string.substring (1, n.min (a_string.count)))
-		end
-
-	keep_tail (a_string: STRING; n: INTEGER) is
-			-- Remove all the characters of `a_string' except for the last `n';
-			-- if `n' > `a_string.count', do nothing.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041002] Use a_string.keep_tail (n) instead."
-		require
-			a_string_not_void: a_string /= Void
-			n_non_negative: n >= 0
-		do
-			a_string.keep_tail (n)
-		ensure
-			kept: a_string.is_equal (old a_string.substring (a_string.count - n.min (a_string.count) + 1, a_string.count))
-		end
-
-	remove_head (a_string: STRING; n: INTEGER) is
-			-- Remove the first `n' characters of `a_string';
-			-- if `n' > `a_string.count', remove all.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041002] Use a_string.remove_head (n) instead."
-		require
-			a_string_not_void: a_string /= Void
-			n_non_negative: n >= 0
-		do
-			a_string.remove_head (n)
-		ensure
-			removed: a_string.is_equal (old a_string.substring (n.min (a_string.count) + 1, a_string.count))
-		end
-
-	remove_tail (a_string: STRING; n: INTEGER) is
-			-- Remove the last `n' characters of `a_string';
-			-- if `n' > `a_string.count', remove all.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041002] Use a_string.remove_tail (n) instead."
-		require
-			a_string_not_void: a_string /= Void
-			n_non_negative: n >= 0
-		do
-			a_string.remove_tail (n)
-		ensure
-			removed: a_string.is_equal (old a_string.substring (1, a_string.count - n.min (a_string.count)))
-		end
-
-	remove_substring (a_string: STRING; start_index, end_index: INTEGER) is
-			-- Remove all characters of `a_string' from `start_index'
-			-- to `end_index' inclusive.
-			-- (ELKS 2001 STRING)
-		obsolete
-			"[041002] Use a_string.remove_substring (start_index, end_index) instead."
-		require
-			a_string_not_void: a_string /= Void
-			valid_start_index: 1 <= start_index
-			valid_end_index: end_index <= a_string.count
-			meaningful_interval: start_index <= end_index + 1
-		do
-			a_string.remove_substring (start_index, end_index)
-		ensure
-			removed: a_string.is_equal (old a_string.substring (1, start_index - 1) + old a_string.substring (end_index + 1, a_string.count))
 		end
 
 	wipe_out (a_string: STRING) is

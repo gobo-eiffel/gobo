@@ -125,20 +125,6 @@ feature -- Element change
 --			copied: forall i in 0 .. (end_pos - start_pos), an_array.item (index_pos + i) = other.item (start_pos + i)
 		end
 
-feature -- Removal
-
-	clear_all (an_array: ARRAY [G]) is
-			-- Reset all items to default values.
-		obsolete
-			"[040929] Use `an_array.clear_all' instead."
-		require
-			an_array_not_void: an_array /= Void
-		do
-			an_array.clear_all
-		ensure
---			all_cleared: forall i in an_array.lower .. an_array.upper, an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
-		end
-
 feature -- Resizing
 
 	resize (an_array: ARRAY [G]; min_index, max_index: INTEGER) is

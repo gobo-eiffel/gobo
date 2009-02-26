@@ -26,21 +26,6 @@ create
 
 feature -- Test
 
-	test_make is
-			-- Test feature `make'.
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.make (3)
-			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", ANY_.same_types (a_string, "")) 
-			assert_integers_equal ("is_empty1", 0, a_string.count) 
-			a_string := STRING_.make (0)
-			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", ANY_.same_types (a_string, "")) 
-			assert_integers_equal ("is_empty2", 0, a_string.count) 
-		end
-
 	test_make_from_string is
 			-- Test feature `make_from_string'.
 		local
@@ -50,49 +35,23 @@ feature -- Test
 		do
 			foo := STRING_.cloned_string ("foo")
 			a_string := STRING_.make_from_string (foo)
-			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", ANY_.same_types (a_string, "")) 
-			assert ("new_string1", a_string /= foo) 
-			assert_equal ("same_string1", "foo", a_string) 
+			assert ("not_void1", a_string /= Void)
+			assert ("string_type1", ANY_.same_types (a_string, ""))
+			assert ("new_string1", a_string /= foo)
+			assert_equal ("same_string1", "foo", a_string)
 			create uc_string.make_from_string ("bar")
 			a_string := STRING_.make_from_string (uc_string)
-			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", ANY_.same_types (a_string, "")) 
-			assert ("new_string2", a_string /= uc_string) 
-			assert_equal ("same_string2", "bar", a_string) 
+			assert ("not_void2", a_string /= Void)
+			assert ("string_type2", ANY_.same_types (a_string, ""))
+			assert ("new_string2", a_string /= uc_string)
+			assert_equal ("same_string2", "bar", a_string)
 			uc_string.put_item_code (too_big_character, 2)
 			a_string := STRING_.make_from_string (uc_string)
-			assert ("not_void3", a_string /= Void) 
-			assert ("string_type3", ANY_.same_types (a_string, "")) 
-			assert ("new_string3", a_string /= uc_string) 
+			assert ("not_void3", a_string /= Void)
+			assert ("string_type3", ANY_.same_types (a_string, ""))
+			assert ("new_string3", a_string /= uc_string)
 			bnullr := STRING_.cloned_string ("b%Ur")
-			assert_equal ("same_string3", bnullr, a_string) 
-		end
-
-	test_make_empty is
-			-- Test feature `make_empty'.
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.make_empty
-			assert ("not_void", a_string /= Void) 
-			assert ("string_type", ANY_.same_types (a_string, "")) 
-			assert_integers_equal ("is_empty", 0, a_string.count) 
-		end
-
-	test_make_filled is
-			-- Test feature `make_filled'.
-		local
-			a_string: STRING
-		do
-			a_string := STRING_.make_filled ('G', 4)
-			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", ANY_.same_types (a_string, "")) 
-			assert_equal ("filled1", "GGGG",  a_string) 
-			a_string := STRING_.make_filled ('s', 0)
-			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", ANY_.same_types (a_string, "")) 
-			assert_equal ("filled2", "",  a_string) 
+			assert_equal ("same_string3", bnullr, a_string)
 		end
 
 	test_make_buffer is
@@ -101,13 +60,13 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := STRING_.make_buffer (4)
-			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", ANY_.same_types (a_string, "")) 
-			assert_integers_equal ("count1", 4,  a_string.count) 
+			assert ("not_void1", a_string /= Void)
+			assert ("string_type1", ANY_.same_types (a_string, ""))
+			assert_integers_equal ("count1", 4,  a_string.count)
 			a_string := STRING_.make_buffer (0)
-			assert ("not_void2", a_string /= Void) 
-			assert ("string_type2", ANY_.same_types (a_string, "")) 
-			assert_integers_equal ("count2", 0,  a_string.count) 
+			assert ("not_void2", a_string /= Void)
+			assert ("string_type2", ANY_.same_types (a_string, ""))
+			assert_integers_equal ("count2", 0,  a_string.count)
 		end
 
 	test_has_substring is
@@ -117,29 +76,29 @@ feature -- Test
 			uc_string1, uc_string2: UC_UTF8_STRING
 		do
 			a_string1 := STRING_.cloned_string ("foobar")
-			assert ("has1", STRING_.has_substring (a_string1, "oo")) 
-			assert ("has2", STRING_.has_substring (a_string1, "foobar")) 
-			assert ("has3", STRING_.has_substring (a_string1, a_string1)) 
-			assert ("has4", STRING_.has_substring (a_string1, "")) 
-			assert ("not_has1", not STRING_.has_substring (a_string1, "gobo")) 
+			assert ("has1", STRING_.has_substring (a_string1, "oo"))
+			assert ("has2", STRING_.has_substring (a_string1, "foobar"))
+			assert ("has3", STRING_.has_substring (a_string1, a_string1))
+			assert ("has4", STRING_.has_substring (a_string1, ""))
+			assert ("not_has1", not STRING_.has_substring (a_string1, "gobo"))
 			create uc_string1.make_from_string ("bar")
-			assert ("has5", STRING_.has_substring (a_string1, uc_string1)) 
+			assert ("has5", STRING_.has_substring (a_string1, uc_string1))
 			uc_string1.put_item_code (too_big_character, 2)
-			assert ("not_has2", not STRING_.has_substring (a_string1, uc_string1)) 
+			assert ("not_has2", not STRING_.has_substring (a_string1, uc_string1))
 			a_string1.put ('%U', 5)
-			assert ("has6", STRING_.has_substring (a_string1, uc_string1)) 
+			assert ("has6", STRING_.has_substring (a_string1, uc_string1))
 			create uc_string1.make_from_string ("gobo-eiffel")
 			uc_string1.put_item_code (too_big_character, 5)
-			assert ("has7", STRING_.has_substring (uc_string1, "gobo")) 
-			assert ("has8", STRING_.has_substring (uc_string1, "")) 
+			assert ("has7", STRING_.has_substring (uc_string1, "gobo"))
+			assert ("has8", STRING_.has_substring (uc_string1, ""))
 			create uc_string2.make_from_string ("boteif")
 			uc_string2.put_item_code (too_big_character2, 3)
-			assert ("has9", STRING_.has_substring (uc_string1, uc_string2)) 
+			assert ("has9", STRING_.has_substring (uc_string1, uc_string2))
 			uc_string2.put ('-', 3)
-			assert ("not_has3", not STRING_.has_substring (uc_string1, uc_string2)) 
+			assert ("not_has3", not STRING_.has_substring (uc_string1, uc_string2))
 			uc_string1.put ('-', 5)
-			assert ("has10", STRING_.has_substring (uc_string1, uc_string2)) 
-			assert ("has11", STRING_.has_substring (uc_string1, uc_string1)) 
+			assert ("has10", STRING_.has_substring (uc_string1, uc_string2))
+			assert ("has11", STRING_.has_substring (uc_string1, uc_string1))
 		end
 
 	test_is_decimal is
@@ -204,31 +163,6 @@ feature -- Test
 			assert ("is_hexa4", STRING_.is_hexadecimal (uc_string))
 			uc_string.put_item_code (9878, 2)
 			assert ("not_hexa3", not STRING_.is_hexadecimal (uc_string))
-		end
-
-	test_string is
-			-- Test feature `string'.
-		local
-			a_string1, a_string2: STRING
-			uc_string: UC_UTF8_STRING
-		do
-			a_string1 := STRING_.cloned_string ("foo")
-			a_string2 := STRING_.string (a_string1)
-			assert ("not_void1", a_string2 /= Void)
-			assert ("string_type1", ANY_.same_types (a_string2, "")) 
-			assert ("new_string1", a_string2 /= a_string1) 
-			assert_equal ("value1", "foo", a_string2) 
-			create uc_string.make_from_string ("bar")
-			a_string2 := STRING_.string (uc_string)
-			assert ("not_void2", a_string2 /= Void)
-			assert ("string_type2", ANY_.same_types (a_string2, "")) 
-			assert_equal ("value2", "bar", a_string2) 
-			uc_string.put_item_code (too_big_character, 2)
-			a_string2 := STRING_.string (uc_string)
-			assert ("not_void3", a_string2 /= Void)
-			assert ("string_type3", ANY_.same_types (a_string2, "")) 
-			a_string1 := STRING_.cloned_string ("b%Ur")
-			assert_equal ("value3", a_string1, a_string2) 
 		end
 
 	test_to_utf16_be is
@@ -379,33 +313,6 @@ feature -- Test
 			assert_integers_equal ("fourth_byte4", 0, a_byte_string.item_code (4))
 		end
 
-	test_substring is
-			-- Test feature `substring'.
-		local
-			a_string1, a_string2: STRING
-			uc_string1: UC_UTF8_STRING
-			uc_string2: STRING
-		do
-			a_string1 := STRING_.cloned_string ("foobar")
-			a_string2 := STRING_.substring (a_string1, 2, 1)
-			assert ("not_void1", a_string2 /= Void)
-			assert ("same_type1", ANY_.same_types (a_string2, a_string1)) 
-			assert ("new_string1", a_string2 /= a_string1) 
-			assert_equal ("value1", "", a_string2) 
-			a_string2 := STRING_.substring (a_string1, 4, 6)
-			assert ("not_void2", a_string2 /= Void)
-			assert ("same_type2", ANY_.same_types (a_string2, a_string1)) 
-			assert ("new_string2", a_string2 /= a_string1) 
-			assert_equal ("value2", "bar", a_string2) 
-			create uc_string1.make_from_string ("bar")
-			uc_string1.put_item_code (432, 1)
-			uc_string2 := STRING_.substring (uc_string1, 1, 3)
-			assert ("not_void3", uc_string2 /= Void)
-			assert ("same_type3", ANY_.same_types (uc_string2, uc_string1)) 
-			assert ("new_string3", uc_string2 /= uc_string1) 
-			assert_equal ("value3", "%%/432/ar", uc_string2.out) 
-		end
-
 	test_substring_index is
 			-- Test feature `substring_index'.
 		local
@@ -436,9 +343,9 @@ feature -- Test
 			a_string, a_string2: STRING
 		do
 			a_string := STRING_.cloned_string ("foobar")
-			assert ("hash_code1", STRING_.case_insensitive_hash_code (a_string) = STRING_.case_insensitive_hash_code (a_string)) 
+			assert ("hash_code1", STRING_.case_insensitive_hash_code (a_string) = STRING_.case_insensitive_hash_code (a_string))
 			a_string2 := STRING_.cloned_string ("fOoBaR")
-			assert ("hash_code2", STRING_.case_insensitive_hash_code (a_string) = STRING_.case_insensitive_hash_code (a_string2)) 
+			assert ("hash_code2", STRING_.case_insensitive_hash_code (a_string) = STRING_.case_insensitive_hash_code (a_string2))
 		end
 
 	test_concat is
@@ -533,69 +440,69 @@ feature -- Test
 			a_string1 := "foobar"
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 6)
-			assert_equal ("replaced1", "toto", a_string.out) 
+			assert_equal ("replaced1", "toto", a_string.out)
 			a_string1 := "foobar"
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 1)
-			assert_equal ("replaced2", "totooobar", a_string.out) 
+			assert_equal ("replaced2", "totooobar", a_string.out)
 			a_string1 := "foobar"
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 6)
-			assert_equal ("replaced3", "foototo", a_string.out) 
+			assert_equal ("replaced3", "foototo", a_string.out)
 			a_string1 := "foobar"
 			create a_string2.make_from_string ("")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 2, 4)
-			assert_equal ("replaced4", "far", a_string.out) 
+			assert_equal ("replaced4", "far", a_string.out)
 			if not operating_system.is_dotnet then
 					-- Bug in ISE 5.5 for .NET.
 				a_string1 := "foobar"
 				a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
-				assert_equal ("replaced5", "foofoobar", a_string.out) 
+				assert_equal ("replaced5", "foofoobar", a_string.out)
 			end
 			a_string1 := "foobar"
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 3)
-			assert_equal ("replaced6", "foototobar", a_string.out) 
+			assert_equal ("replaced6", "foototobar", a_string.out)
 			a_string1 := "foobar"
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 6)
-			assert_equal ("replaced7", "toto", a_string.out) 
+			assert_equal ("replaced7", "toto", a_string.out)
 			a_string1 := "foobar"
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 1)
-			assert_equal ("replaced8", "totooobar", a_string.out) 
+			assert_equal ("replaced8", "totooobar", a_string.out)
 			a_string1 := "foobar"
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 6)
-			assert_equal ("replaced9", "foototo", a_string.out) 
+			assert_equal ("replaced9", "foototo", a_string.out)
 			a_string1 := "foobar"
 			a_string3 := ""
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 2, 4)
-			assert_equal ("replaced10", "far", a_string.out) 
+			assert_equal ("replaced10", "far", a_string.out)
 			a_string1 := "foobar"
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 3)
-			assert_equal ("replaced11", "foototobar", a_string.out) 
+			assert_equal ("replaced11", "foototobar", a_string.out)
 			a_string1 := "foobar"
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 6)
-			assert_equal ("replaced12", "toto", a_string.out) 
+			assert_equal ("replaced12", "toto", a_string.out)
 			a_string1 := "foobar"
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 1)
-			assert_equal ("replaced13", "totooobar", a_string.out) 
+			assert_equal ("replaced13", "totooobar", a_string.out)
 			a_string1 := "foobar"
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 6)
-			assert_equal ("replaced14", "foototo", a_string.out) 
+			assert_equal ("replaced14", "foototo", a_string.out)
 			a_string1 := "foobar"
 			create a_string4.make_from_string ("")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 2, 4)
-			assert_equal ("replaced15", "far", a_string.out) 
+			assert_equal ("replaced15", "far", a_string.out)
 			a_string1 := "foobar"
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 3)
-			assert_equal ("replaced16", "foototobar", a_string.out) 
+			assert_equal ("replaced16", "foototobar", a_string.out)
 		end
 
 	test_replaced_substring2 is
@@ -610,66 +517,66 @@ feature -- Test
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 6)
-			assert_equal ("replaced1", "toto", a_string.out) 
+			assert_equal ("replaced1", "toto", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 1)
-			assert_equal ("replaced2", "totooobar", a_string.out) 
+			assert_equal ("replaced2", "totooobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 6)
-			assert_equal ("replaced3", "foototo", a_string.out) 
+			assert_equal ("replaced3", "foototo", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 2, 4)
-			assert_equal ("replaced4", "far", a_string.out) 
+			assert_equal ("replaced4", "far", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
-			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			assert_equal ("replaced5", "foofoobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 3)
-			assert_equal ("replaced6", "foototobar", a_string.out) 
+			assert_equal ("replaced6", "foototobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 6)
-			assert_equal ("replaced7", "toto", a_string.out) 
+			assert_equal ("replaced7", "toto", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 1)
-			assert_equal ("replaced8", "totooobar", a_string.out) 
+			assert_equal ("replaced8", "totooobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 6)
-			assert_equal ("replaced9", "foototo", a_string.out) 
+			assert_equal ("replaced9", "foototo", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := ""
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 2, 4)
-			assert_equal ("replaced10", "far", a_string.out) 
+			assert_equal ("replaced10", "far", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 3)
-			assert_equal ("replaced11", "foototobar", a_string.out) 
+			assert_equal ("replaced11", "foototobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 6)
-			assert_equal ("replaced12", "toto", a_string.out) 
+			assert_equal ("replaced12", "toto", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 1)
-			assert_equal ("replaced13", "totooobar", a_string.out) 
+			assert_equal ("replaced13", "totooobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 6)
-			assert_equal ("replaced14", "foototo", a_string.out) 
+			assert_equal ("replaced14", "foototo", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 2, 4)
-			assert_equal ("replaced15", "far", a_string.out) 
+			assert_equal ("replaced15", "far", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 3)
-			assert_equal ("replaced16", "foototobar", a_string.out) 
+			assert_equal ("replaced16", "foototobar", a_string.out)
 		end
 
 	test_replaced_substring3 is
@@ -684,66 +591,66 @@ feature -- Test
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 6)
-			assert_equal ("replaced1", "toto", a_string.out) 
+			assert_equal ("replaced1", "toto", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 1, 1)
-			assert_equal ("replaced2", "totooobar", a_string.out) 
+			assert_equal ("replaced2", "totooobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 6)
-			assert_equal ("replaced3", "foototo", a_string.out) 
+			assert_equal ("replaced3", "foototo", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 2, 4)
-			assert_equal ("replaced4", "far", a_string.out) 
+			assert_equal ("replaced4", "far", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string := STRING_.replaced_substring (a_string1, a_string1, 4, 6)
-			assert_equal ("replaced5", "foofoobar", a_string.out) 
+			assert_equal ("replaced5", "foofoobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string2.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string2, 4, 3)
-			assert_equal ("replaced6", "foototobar", a_string.out) 
+			assert_equal ("replaced6", "foototobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 6)
-			assert_equal ("replaced7", "toto", a_string.out) 
+			assert_equal ("replaced7", "toto", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 1, 1)
-			assert_equal ("replaced8", "totooobar", a_string.out) 
+			assert_equal ("replaced8", "totooobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 6)
-			assert_equal ("replaced9", "foototo", a_string.out) 
+			assert_equal ("replaced9", "foototo", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := ""
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 2, 4)
-			assert_equal ("replaced10", "far", a_string.out) 
+			assert_equal ("replaced10", "far", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			a_string3 := "toto"
 			a_string := STRING_.replaced_substring (a_string1, a_string3, 4, 3)
-			assert_equal ("replaced11", "foototobar", a_string.out) 
+			assert_equal ("replaced11", "foototobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 6)
-			assert_equal ("replaced12", "toto", a_string.out) 
+			assert_equal ("replaced12", "toto", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 1, 1)
-			assert_equal ("replaced13", "totooobar", a_string.out) 
+			assert_equal ("replaced13", "totooobar", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 6)
-			assert_equal ("replaced14", "foototo", a_string.out) 
+			assert_equal ("replaced14", "foototo", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 2, 4)
-			assert_equal ("replaced15", "far", a_string.out) 
+			assert_equal ("replaced15", "far", a_string.out)
 			create a_string1.make_from_string ("foobar")
 			create a_string4.make_from_string ("toto")
 			a_string := STRING_.replaced_substring (a_string1, a_string4, 4, 3)
-			assert_equal ("replaced16", "foototobar", a_string.out) 
+			assert_equal ("replaced16", "foototobar", a_string.out)
 		end
 
 	test_replaced_first_substring1 is
@@ -782,22 +689,22 @@ feature -- Test
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
-			assert_equal ("replaced1_21", a_expt, a_got) 
+			assert_equal ("replaced1_21", a_expt, a_got)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
-			assert_equal ("replaced1_22", a_expt, a_got) 
+			assert_equal ("replaced1_22", a_expt, a_got)
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
-			assert_equal ("replaced1_23", a_expt, a_got) 
+			assert_equal ("replaced1_23", a_expt, a_got)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_got := STRING_.replaced_first_substring (a_text, s_old, s_new)
-			assert_equal ("replaced1_24", a_expt, a_got) 
+			assert_equal ("replaced1_24", a_expt, a_got)
 
 			s_old := "-"
 			s_new:= "#-"
@@ -963,25 +870,25 @@ feature -- Test
 			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_21", a_expt, a_got.out) 
+			assert_equal ("replaced1_21", a_expt, a_got.out)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_22", a_expt, a_got.out) 
+			assert_equal ("replaced1_22", a_expt, a_got.out)
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "foo#bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_23", a_expt, a_got.out) 
+			assert_equal ("replaced1_23", a_expt, a_got.out)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "#foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_first_substring (a_uc_string, s_old, s_new)
-			assert_equal ("replaced1_24", a_expt, a_got.out) 
+			assert_equal ("replaced1_24", a_expt, a_got.out)
 
 			s_old := "-"
 			s_new:= "#-"
@@ -1160,22 +1067,22 @@ feature -- Test
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
 			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
-			assert_equal ("replaced1_21", a_expt, a_got) 
+			assert_equal ("replaced1_21", a_expt, a_got)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
 			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
-			assert_equal ("replaced1_22", a_expt, a_got) 
+			assert_equal ("replaced1_22", a_expt, a_got)
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
 			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
-			assert_equal ("replaced1_23", a_expt, a_got) 
+			assert_equal ("replaced1_23", a_expt, a_got)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
 			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
-			assert_equal ("replaced1_24", a_expt, a_got) 
+			assert_equal ("replaced1_24", a_expt, a_got)
 
 			s_old := "-"
 			s_new:= "##"
@@ -1341,25 +1248,25 @@ feature -- Test
 			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_21", a_expt, a_got.out) 
+			assert_equal ("replaced2_21", a_expt, a_got.out)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar"
 			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_22", a_expt, a_got.out) 
+			assert_equal ("replaced2_22", a_expt, a_got.out)
 
 			a_text := "foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_23", a_expt, a_got.out) 
+			assert_equal ("replaced2_23", a_expt, a_got.out)
 
 			a_text := "-foo-bar-foo-bar-foo-bar-foo-bar-foo-bar-"
 			a_expt := "#foo#bar#foo#bar#foo#bar#foo#bar#foo#bar#"
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
-			assert_equal ("replaced2_24", a_expt, a_got.out) 
+			assert_equal ("replaced2_24", a_expt, a_got.out)
 
 			s_old := "-"
 			s_new:= "##"
@@ -1543,104 +1450,6 @@ feature -- Test
 			assert ("same5", STRING_.same_string (uc_string1, uc_string2))
 		end
 
-	test_fill_with is
-			-- Test feature `fill_with'.
-		local
-			a_string: STRING
-			uc_string: UC_UTF8_STRING
-		do
-			a_string := STRING_.cloned_string ("foo")
-			STRING_.fill_with (a_string, 'a')
-			assert_equal ("fill1", "aaa", a_string)
-			create uc_string.make_from_string ("bar")
-			uc_string.put_item_code (345, 2)
-			STRING_.fill_with (uc_string, 'z')
-			assert_equal ("fill2", "zzz", uc_string.out)
-		end
-
-	test_insert_character is
-			-- Test feature `insert_character'.
-		local
-			a_string: STRING
-			uc_string: UC_UTF8_STRING
-		do
-			a_string := STRING_.cloned_string ("foo")
-			STRING_.insert_character (a_string, 'a', 2)
-			assert_equal ("insert1", "faoo", a_string)
-			create uc_string.make_from_string ("bar")
-			uc_string.put_item_code (345, 2)
-			STRING_.insert_character (uc_string, 'z', 1)
-			assert_equal ("insert2", "zb%%/345/r", uc_string.out)
-		end
-
-	test_to_lower is
-			-- Test feature `to_lower'.
-		local
-			a_string, a_string2: STRING
-			uc_string: UC_UTF8_STRING
-			uc_string2: STRING
-		do
-			a_string := STRING_.cloned_string ("FoO")
-			a_string2 := STRING_.to_lower (a_string)
-			assert ("new_string1", a_string2 /= a_string)
-			assert_equal ("lower1", "foo", a_string2)
-			create uc_string.make_from_string ("bAR")
-			uc_string2 := STRING_.to_lower (uc_string)
-			assert ("new_string2", uc_string2 /= uc_string)
-			assert_equal ("lower2", "bar", uc_string2.out)
-		end
-
-	test_to_upper is
-			-- Test feature `to_upper'.
-		local
-			a_string, a_string2: STRING
-			uc_string: UC_UTF8_STRING
-			uc_string2: STRING
-		do
-			a_string := STRING_.cloned_string ("Foo")
-			a_string2 := STRING_.to_upper (a_string)
-			assert ("new_string1", a_string2 /= a_string)
-			assert_equal ("upper1", "FOO", a_string2)
-			create uc_string.make_from_string ("bAr")
-			uc_string2 := STRING_.to_upper (uc_string)
-			assert ("new_string2", uc_string2 /= uc_string)
-			assert_equal ("upper2", "BAR", uc_string2.out)
-		end
-
-	test_as_lower is
-			-- Test feature `as_lower'.
-		local
-			a_string, a_string2: STRING
-			uc_string: UC_UTF8_STRING
-			uc_string2: STRING
-		do
-			a_string := STRING_.cloned_string ("FoO")
-			a_string2 := STRING_.as_lower (a_string)
-			assert ("new_string1", a_string2 /= a_string)
-			assert_equal ("lower1", "foo", a_string2)
-			create uc_string.make_from_string ("bAR")
-			uc_string2 := STRING_.as_lower (uc_string)
-			assert ("new_string2", uc_string2 /= uc_string)
-			assert_equal ("lower2", "bar", uc_string2.out)
-		end
-
-	test_as_upper is
-			-- Test feature `as_upper'.
-		local
-			a_string, a_string2: STRING
-			uc_string: UC_UTF8_STRING
-			uc_string2: STRING
-		do
-			a_string := STRING_.cloned_string ("Foo")
-			a_string2 := STRING_.as_upper (a_string)
-			assert ("new_string1", a_string2 /= a_string)
-			assert_equal ("upper1", "FOO", a_string2)
-			create uc_string.make_from_string ("bAr")
-			uc_string2 := STRING_.as_upper (uc_string)
-			assert ("new_string2", uc_string2 /= uc_string)
-			assert_equal ("upper2", "BAR", uc_string2.out)
-		end
-
 	test_left_adjust is
 			-- Test feature `left_adjust'.
 		local
@@ -1649,24 +1458,24 @@ feature -- Test
 		do
 			a_string := STRING_.cloned_string ("foobar")
 			STRING_.left_adjust (a_string)
-			assert_equal ("left_adjust1", "foobar", a_string) 
+			assert_equal ("left_adjust1", "foobar", a_string)
 			a_string.put (' ', 1)
 			a_string.put ('%T', 2)
 			a_string.put ('%N', 3)
 			a_string.put ('%R', 4)
 			STRING_.left_adjust (a_string)
-			assert_equal ("left_adjust2", "ar", a_string) 
+			assert_equal ("left_adjust2", "ar", a_string)
 			create uc_string.make_from_string ("foobar")
 			uc_string.put_item_code (567, 1)
 			uc_string.put_item_code (432, 6)
 			STRING_.left_adjust (uc_string)
-			assert_equal ("left_adjust3", "%%/567/ooba%%/432/", uc_string.out) 
+			assert_equal ("left_adjust3", "%%/567/ooba%%/432/", uc_string.out)
 			uc_string.put (' ', 1)
 			uc_string.put ('%T', 2)
 			uc_string.put ('%N', 3)
 			uc_string.put ('%R', 4)
 			STRING_.left_adjust (uc_string)
-			assert_equal ("left_adjust4", "a%%/432/", uc_string.out) 
+			assert_equal ("left_adjust4", "a%%/432/", uc_string.out)
 		end
 
 	test_right_adjust is
@@ -1677,93 +1486,24 @@ feature -- Test
 		do
 			a_string := STRING_.cloned_string ("foobar")
 			STRING_.right_adjust (a_string)
-			assert_equal ("right_adjust1", "foobar", a_string) 
+			assert_equal ("right_adjust1", "foobar", a_string)
 			a_string.put (' ', 3)
 			a_string.put ('%T', 4)
 			a_string.put ('%N', 5)
 			a_string.put ('%R', 6)
 			STRING_.right_adjust (a_string)
-			assert_equal ("right_adjust2", "fo", a_string) 
+			assert_equal ("right_adjust2", "fo", a_string)
 			create uc_string.make_from_string ("foobar")
 			uc_string.put_item_code (567, 1)
 			uc_string.put_item_code (432, 6)
 			STRING_.right_adjust (uc_string)
-			assert_equal ("right_adjust3", "%%/567/ooba%%/432/", uc_string.out) 
+			assert_equal ("right_adjust3", "%%/567/ooba%%/432/", uc_string.out)
 			uc_string.put (' ', 3)
 			uc_string.put ('%T', 4)
 			uc_string.put ('%N', 5)
 			uc_string.put ('%R', 6)
 			STRING_.right_adjust (uc_string)
-			assert_equal ("right_adjust4", "%%/567/o", uc_string.out) 
-		end
-
-	test_keep_head is
-			-- Test feature `keep_head'.
-		local
-			a_string: STRING
-			uc_string: UC_UTF8_STRING
-		do
-			a_string := STRING_.cloned_string ("foobar")
-			STRING_.keep_head (a_string, 10)
-			assert_equal ("head1", "foobar", a_string) 
-			STRING_.keep_head (a_string, 6)
-			assert_equal ("head2", "foobar", a_string) 
-			STRING_.keep_head (a_string, 3)
-			assert_equal ("head3", "foo", a_string) 
-			STRING_.keep_head (a_string, 0)
-			assert_equal ("head4", "", a_string) 
-			create uc_string.make_from_string ("foobar")
-			uc_string.put_item_code (567, 3)
-			STRING_.keep_head (uc_string, 10)
-			assert_equal ("head5", "fo%%/567/bar", uc_string.out) 
-			STRING_.keep_head (uc_string, 6)
-			assert_equal ("head6", "fo%%/567/bar", uc_string.out) 
-			STRING_.keep_head (uc_string, 3)
-			assert_equal ("head7", "fo%%/567/", uc_string.out) 
-			STRING_.keep_head (uc_string, 0)
-			assert_equal ("head8", "", uc_string.out) 
-		end
-
-	test_keep_tail is
-			-- Test feature `keep_tail'.
-		local
-			a_string: STRING
-			uc_string: UC_UTF8_STRING
-		do
-			a_string := STRING_.cloned_string ("foobar")
-			STRING_.keep_tail (a_string, 10)
-			assert_equal ("tail1", "foobar", a_string) 
-			STRING_.keep_tail (a_string, 6)
-			assert_equal ("tail2", "foobar", a_string) 
-			STRING_.keep_tail (a_string, 3)
-			assert_equal ("tail3", "bar", a_string) 
-			STRING_.keep_tail (a_string, 0)
-			assert_equal ("tail4", "", a_string) 
-			create uc_string.make_from_string ("foobar")
-			uc_string.put_item_code (567, 3)
-			STRING_.keep_tail (uc_string, 10)
-			assert_equal ("tail5", "fo%%/567/bar", uc_string.out) 
-			STRING_.keep_tail (uc_string, 6)
-			assert_equal ("tail6", "fo%%/567/bar", uc_string.out) 
-			STRING_.keep_tail (uc_string, 3)
-			assert_equal ("tail7", "bar", uc_string.out) 
-			STRING_.keep_tail (uc_string, 0)
-			assert_equal ("tail8", "", uc_string.out) 
-		end
-
-	test_remove_substring is
-			-- Test feature `remove_substring'.
-		local
-			a_string: STRING
-			uc_string: UC_UTF8_STRING
-		do
-			a_string := STRING_.cloned_string ("foobar")
-			STRING_.remove_substring (a_string, 2, 4)
-			assert_equal ("remove1", "far", a_string)
-			create uc_string.make_from_string ("foobar")
-			uc_string.put_item_code (365, 3)
-			STRING_.remove_substring (uc_string, 2, 4)
-			assert_equal ("remove2", "far", uc_string.out)
+			assert_equal ("right_adjust4", "%%/567/o", uc_string.out)
 		end
 
 	test_wipe_out is
@@ -1787,11 +1527,11 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := STRING_.make_buffer (4)
-			assert ("not_void1", a_string /= Void) 
-			assert ("string_type1", ANY_.same_types (a_string, "")) 
-			assert_integers_equal ("count1", 4,  a_string.count) 
+			assert ("not_void1", a_string /= Void)
+			assert ("string_type1", ANY_.same_types (a_string, ""))
+			assert_integers_equal ("count1", 4,  a_string.count)
 			STRING_.resize_buffer (a_string, 6)
-			assert_integers_equal ("count2", 6,  a_string.count) 
+			assert_integers_equal ("count2", 6,  a_string.count)
 		end
 
 	test_hexadecimal_to_integer is

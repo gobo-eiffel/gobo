@@ -103,18 +103,4 @@ feature -- Resizing
 			count_set: Result.count = n
 		end
 
-feature -- Removal
-
-	clear_all (an_array: SPECIAL [G]) is
-			-- Reset all items to default values.
-		obsolete
-			"[040930] Use `an_array.clear_all instead."
-		require
-			an_array_not_void: an_array /= Void
-		do
-			an_array.clear_all
-		ensure
---			all_cleared: forall i in 0..(an_array.count - 1), an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
-		end
-
 end

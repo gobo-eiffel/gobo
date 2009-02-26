@@ -100,17 +100,6 @@ feature -- Parsing
 			yyparse
 		end
 
-	parse (a_file: KI_CHARACTER_INPUT_STREAM) is
-			-- Parse Ace file `a_file'.
-		obsolete
-			"[030724] Use `parse_file (a_file)' instead."
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-		do
-			parse_file (a_file)
-		end
-
 feature -- Access
 
 	last_system: ET_LACE_SYSTEM

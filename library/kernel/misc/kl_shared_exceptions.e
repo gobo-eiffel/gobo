@@ -23,16 +23,4 @@ feature -- Access
 			exceptions_not_void: Result /= Void
 		end
 
-feature -- Obsolete
-
-	exceptions_: KL_EXCEPTIONS is
-			-- Exception handling
-		obsolete
-			"[040101] Use `Exceptions' instead."
-		once
-			Result := Exceptions
-		ensure
-			exceptions_not_void: Result /= Void
-		end
-
 end

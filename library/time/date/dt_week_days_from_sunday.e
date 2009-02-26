@@ -15,17 +15,6 @@ class DT_WEEK_DAYS_FROM_SUNDAY
 inherit
 
 	DT_GREGORIAN_CALENDAR
-		rename
-			Monday as obsolete_monday,
-			Tuesday as obsolete_tuesday,
-			Wednesday as obsolete_wednesday,
-			Thursday as obsolete_thursday,
-			Friday as obsolete_friday,
-			Saturday as obsolete_saturday,
-			Sunday as obsolete_sunday,
-			previous_day as obsolete_previous_day,
-			next_day as obsolete_next_day
-		end
 
 feature -- Access
 

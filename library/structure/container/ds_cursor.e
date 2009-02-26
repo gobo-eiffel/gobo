@@ -68,16 +68,6 @@ feature -- Status report
 			Result implies container.valid_cursor (other)
 		end
 
-	is_valid: BOOLEAN is
-			-- Is cursor valid?
-		obsolete
-			"Backward compatibility with Gobo 1.4"
-		do
-			Result := True
-		ensure
-			definition: Result = True
-		end
-
 feature -- Cursor movement
 
 	go_to (other: like Current) is

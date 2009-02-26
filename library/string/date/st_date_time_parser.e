@@ -15,17 +15,6 @@ deferred class ST_DATE_TIME_PARSER
 inherit
 
 	DT_GREGORIAN_CALENDAR
-		rename
-			Sunday as obsolete_sunday,
-			Monday as obsolete_monday,
-			Tuesday as obsolete_tuesday,
-			Wednesday as obsolete_wednesday,
-			Thursday as obsolete_thursday,
-			Friday as obsolete_friday,
-			Saturday as obsolete_saturday,
-			next_day as obsolete_next_day,
-			previous_day as obsolete_previous_day
-		end
 
 feature -- Access
 

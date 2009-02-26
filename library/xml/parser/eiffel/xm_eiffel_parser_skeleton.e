@@ -154,19 +154,6 @@ feature {NONE} -- Implementation
 			on_finish
 		end
 
-feature -- Obsolete
-
-	parse_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
-			-- Parse XML Document from input stream.
-		obsolete
-			"[020815] Use `parse_from_stream' instead."
-		require
-			a_stream_not_void: a_stream /= Void
-			is_open_read: a_stream.is_open_read
-		do
-			parse_from_stream (a_stream)
-		end
-
 feature -- Namespace mode
 
 	disable_namespaces is

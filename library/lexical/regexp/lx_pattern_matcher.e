@@ -85,14 +85,4 @@ feature -- Access
 			definition_second: Result /= Void implies Result.second = captured_end_position (0)
 		end
 
-feature -- Obsolete
-
-	compiled: BOOLEAN is
-			-- Has pattern been sucessfully compiled?
-		obsolete
-			"[020706] Use `is_compiled' instead."
-		do
-			Result := is_compiled
-		end
-
 end

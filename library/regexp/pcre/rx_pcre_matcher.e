@@ -109,16 +109,6 @@ feature -- Compilation
 			end
 		end
 
-feature -- Status report
-
-	is_matcher_active: BOOLEAN is
-			-- Matcher active state
-		obsolete
-			"[020710] Use `is_matching' instead."
-		do
-			Result := is_matching
-		end
-
 feature -- Access
 
 	captured_start_position (n: INTEGER): INTEGER is

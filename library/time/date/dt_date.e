@@ -142,25 +142,6 @@ feature -- Access
 			Result := week_number (year, month, day)
 		end
 
-	week_day: INTEGER is
-			-- Day of week for `Current'
-		obsolete
-			"[041224] Use `day_of_week' instead."
-		local
-			d: INTEGER
-		do
-				-- 1 January 1970 is a Thursday.
-				-- (Thursday - Sunday = 4)
-			d := day_count + 4
-			if d < 0 then
-				Result := Saturday - ((-(d + 1)) \\ Days_in_week)
-			else
-				Result := Sunday + d \\ Days_in_week
-			end
-		ensure
-			valid_day: Result >= Sunday and Result <= Saturday
-		end
-
 	day_of_week: DT_WEEK_DAY is
 			-- Day of week for `Current'
 		do

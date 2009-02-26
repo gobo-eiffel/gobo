@@ -119,35 +119,6 @@ feature -- Conversion
 			valid_utf8: utf8.valid_utf8 (Result)
 		end
 
-feature -- Obsolete
-
-	as_character: CHARACTER is
-			-- Character represented by entity
-		obsolete
-			"[020814] Use `to_character' instead."
-		require
-			is_valid: is_valid
-			small_enough: code <= Platform.Maximum_character_code
-		do
-			Result := to_character
-		ensure
-			same_code: Result.code = code
-		end
-
-	as_string: STRING is
-			-- UTF-8 string from character code
-		obsolete
-			"[020814] Use `to_utf8' instead."
-		require
-			valid: is_valid
-		do
-			Result := to_utf8
-		ensure
-			to_utf8_not_void: Result /= Void
-			string_type: ANY_.same_types (Result, "")
-			valid_utf8: utf8.valid_utf8 (Result)
-		end
-
 invariant
 
 	code_positive: code >= 0

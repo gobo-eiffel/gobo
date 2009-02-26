@@ -7,9 +7,6 @@ construction.
 
 Clusters:
 
-command
-    Executable commands. Useful to encapsulate actions or to build
-    history (undo-redo) mechanism.
 config
     Parser of config files made up of name/value pairs and preprocessor
     instructions.

@@ -27,16 +27,4 @@ feature -- Access
 			platform_not_void: Result /= Void
 		end
 
-feature -- Obsolete
-
-	platform_: KL_PLATFORM is
-			-- Platform-dependent properties
-		obsolete
-			"[040101] Use `Platform' instead."
-		once
-			Result := Platform
-		ensure
-			platform_not_void: Result /= Void
-		end
-
 end

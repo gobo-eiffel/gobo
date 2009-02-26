@@ -110,15 +110,15 @@ feature -- Test
 			d1: DT_DATE
 		do
 			create d1.make (1970, 1, 1)
-			assert_integers_equal ("week_day1", Thursday, d1.week_day)
+			assert ("day_of_week1", d1.day_of_week.is_thursday)
 			assert_integers_equal ("year_day1", 1, d1.year_day)
 			assert_integers_equal ("day_count1", 0, d1.day_count)
 			create d1.make (2000, 3, 31)
-			assert_integers_equal ("week_day2", Friday, d1.week_day)
+			assert ("day_of_week2", d1.day_of_week.is_friday)
 			assert_integers_equal ("year_day2", 91, d1.year_day)
 			assert_integers_equal ("day_count2", 11047, d1.day_count)
 			create d1.make (1968, 2, 24)
-			assert_integers_equal ("week_day3", Saturday, d1.week_day)
+			assert ("day_of_week3", d1.day_of_week.is_saturday)
 			assert_integers_equal ("year_day3", 55, d1.year_day)
 			assert_integers_equal ("day_count3", -677, d1.day_count)
 		end

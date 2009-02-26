@@ -179,36 +179,6 @@ feature -- Test
 			assert_integers_equal ("december_2000", 335, gc.days_at_month (gc.December, 2000))
 		end
 
-	test_next_day is
-			-- Test feature `next_day' of class DT_GREGORIAN_CALENDAR.
-		local
-			gc: DT_GREGORIAN_CALENDAR
-		do
-			create gc
-			assert_integers_equal ("sunday", gc.Monday, gc.next_day (gc.Sunday))
-			assert_integers_equal ("monday", gc.Tuesday, gc.next_day (gc.Monday))
-			assert_integers_equal ("tuesday", gc.Wednesday, gc.next_day (gc.Tuesday))
-			assert_integers_equal ("wednesday", gc.Thursday, gc.next_day (gc.Wednesday))
-			assert_integers_equal ("thursday", gc.Friday, gc.next_day (gc.Thursday))
-			assert_integers_equal ("friday", gc.Saturday, gc.next_day (gc.Friday))
-			assert_integers_equal ("saturday", gc.Sunday, gc.next_day (gc.Saturday))
-		end
-
-	test_previous_day is
-			-- Test feature `previous_day' of class DT_GREGORIAN_CALENDAR.
-		local
-			gc: DT_GREGORIAN_CALENDAR
-		do
-			create gc
-			assert_integers_equal ("sunday", gc.Saturday, gc.previous_day (gc.Sunday))
-			assert_integers_equal ("monday", gc.Sunday, gc.previous_day (gc.Monday))
-			assert_integers_equal ("tuesday", gc.Monday, gc.previous_day (gc.Tuesday))
-			assert_integers_equal ("wednesday", gc.Tuesday, gc.previous_day (gc.Wednesday))
-			assert_integers_equal ("thursday", gc.Wednesday, gc.previous_day (gc.Thursday))
-			assert_integers_equal ("friday", gc.Thursday, gc.previous_day (gc.Friday))
-			assert_integers_equal ("saturday", gc.Friday, gc.previous_day (gc.Saturday))
-		end
-
 	test_epoch_days is
 			-- Test feature `epoch_days' of class DT_GREGORIAN_CALENDAR.
 		local
@@ -262,21 +232,6 @@ feature -- Test
 		do
 			create gc
 			assert_integers_equal ("days_in_week", 7, gc.Days_in_week)
-		end
-
-	test_week_day_numbers is
-			-- Test feature week day numbers of class DT_GREGORIAN_CALENDAR.
-		local
-			gc: DT_GREGORIAN_CALENDAR
-		do
-			create gc
-			assert_integers_equal ("sunday", 1, gc.Sunday)
-			assert_integers_equal ("monday", 2, gc.Monday)
-			assert_integers_equal ("tuesday", 3, gc.Tuesday)
-			assert_integers_equal ("wednesday", 4, gc.Wednesday)
-			assert_integers_equal ("thursday", 5, gc.Thursday)
-			assert_integers_equal ("friday", 6, gc.Friday)
-			assert_integers_equal ("saturday", 7, gc.Saturday)
 		end
 
 	test_time_constants is

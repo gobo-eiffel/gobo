@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			-- Clear objects in semantic value stacks so that
 			-- they can be collected by the garbage collector.
 		do
-			yy_special_routines.clear_all (yyvs)
+			yyvs.clear_all
 		end
 
 	yy_push_last_value (yychar1: INTEGER) is

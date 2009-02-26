@@ -28,14 +28,6 @@ feature -- Status report
 			Result := True
 		end
 
-	is_expat_available: BOOLEAN is
-			-- Is Expat XML parser available?
-		obsolete
-			"[020812] Use `is_expat_parser_available' instead."
-		do
-			Result := is_expat_parser_available
-		end
-
 feature -- Access
 
 	new_expat_parser: XM_PARSER is

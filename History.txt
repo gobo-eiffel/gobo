@@ -16,6 +16,11 @@ Version 3.10 - ?
 	* Fixed bug where object-test local was not recognized as such when
 	  appearing as target of an agent declaration.
 
+	Miscellaneous:
+
+	* Removed classes and features that had been marked as obsolete
+	  in 2004 or before.
+
 Version 3.9 - 20 November 2008
 
 	geant:

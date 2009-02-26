@@ -771,19 +771,6 @@ feature {TS_TEST_HANDLER} -- Files
 
 feature {TS_TEST_HANDLER} -- Containers
 
-	assert_array (a_tag: STRING; expected, actual: ARRAY [ANY]) is
-			-- Assert that `expected' and `actual' have the same items
-			-- in the same order (use '=' for item comparison).
-		obsolete
-			"[010806] Use 'assert_arrays_same (a_tag, expected, actual)' instead"
-		require
-			a_tag_not_void: a_tag /= Void
-			expected_not_void: expected /= Void
-			actual_not_void: actual /= Void
-		do
-			assert_arrays_same (a_tag, expected, actual)
-		end
-
 	assert_arrays_same (a_tag: STRING; expected, actual: ARRAY [ANY]) is
 			-- Assert that `expected' and `actual' have the same items
 			-- in the same order (use '=' for item comparison).
@@ -916,19 +903,6 @@ feature {TS_TEST_HANDLER} -- Containers
 			assertions.set_exception_on_error (False)
 			assert_arrays_equal (a_tag, expected, actual)
 			assertions.set_exception_on_error (l_fatal)
-		end
-
-	assert_iarray (a_tag: STRING; expected, actual: ARRAY [INTEGER]) is
-			-- Assert that `expected' and `actual' have the same items
-			-- in the same order (use '=' for item comparison).
-		obsolete
-			"[010806] Use 'assert_iarrays_same (a_tag, expected, actual)' instead"
-		require
-			a_tag_not_void: a_tag /= Void
-			expected_not_void: expected /= Void
-			actual_not_void: actual /= Void
-		do
-			assert_iarrays_same (a_tag, expected, actual)
 		end
 
 	assert_iarrays_same (a_tag: STRING; expected, actual: ARRAY [INTEGER]) is

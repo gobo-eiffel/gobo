@@ -43,16 +43,6 @@ feature -- Access
 	unknown_vendor: STRING is "unknown"
 			-- Unknown Eiffel vendor
 
-	hact_vendor: STRING is
-			-- Halstenbach vendor
-		obsolete
-			"[040922] HACT not supported anymore."
-		once
-			Result := "hact"
-		ensure
-			vendor_not_void: Result /= Void
-		end
-
 	se_vendor: STRING is
 			-- SmartEiffel vendor
 		obsolete
@@ -89,16 +79,6 @@ feature -- Status report
 			Result := (vendor = ise_vendor)
 		ensure
 			definition: Result = (vendor = ise_vendor)
-		end
-
-	is_hact: BOOLEAN is
-			-- Has this program been compiled with Halstenbach?
-		obsolete
-			"[040922] HACT not supported anymore."
-		once
-			Result := False
-		ensure
-			definition: not Result
 		end
 
 	is_se: BOOLEAN is
