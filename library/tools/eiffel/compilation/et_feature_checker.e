@@ -6370,14 +6370,14 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
 				end
-				if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
-						-- ISE does not support object-tests in preconditions.
+				if current_system.is_ise and then current_system.ise_version < ise_6_3_7_5660 then
+						-- ISE did not support object-tests in preconditions before 6.3.7.5660.
 					if current_inline_agent = Void and in_precondition then
 -- TODO: check the case where we are in the precondition of an inline agent.
 						set_fatal_error
 						error_handler.report_vuot4a_error (current_class, an_expression)
 					end
-						-- ISE does not support object-tests in preconditions.
+						-- ISE did not support object-tests in check instructions before 6.3.7.5660.
 					if in_check_instruction then
 						set_fatal_error
 						error_handler.report_vuot4b_error (current_class, an_expression)

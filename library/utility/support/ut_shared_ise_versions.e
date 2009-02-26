@@ -197,6 +197,15 @@ feature -- Access
 			ise_6_3_7_4554_not_void: Result /= Void
 		end
 
+	ise_6_3_7_5660: UT_VERSION is
+			-- ISE 6.3.7.5660
+			-- First release that accepts object-tests in preconditions and check instructions.
+		once
+			create Result.make (6, 3, 7, 5660)
+		ensure
+			ise_6_3_7_5660_not_void: Result /= Void
+		end
+
 	ise_6_3_latest: UT_VERSION is
 			-- After the last release ISE 6.3
 		once
