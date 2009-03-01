@@ -14,7 +14,6 @@
 		<option name="abstract" value="true"/>
 		<cluster name="error"/>
 		<cluster name="formatter"/>
-		<cluster name="command"/>
 		<cluster name="config"/>
 		<cluster name="support"/>
 		<cluster name="transcoder"/>
