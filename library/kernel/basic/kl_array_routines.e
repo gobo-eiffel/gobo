@@ -60,6 +60,36 @@ feature -- Status report
 			end
 		end
 
+	has_void (a_array: ARRAY [G]): BOOLEAN is
+			-- Does 'Void' appear in `an_array' (use '=' for item comparison).
+			-- Reason why we don't use `has (Void)' directly:
+			-- * the actual generic parameter may be attached and
+			--   'Void' would not conform to it.
+		require
+			a_array_not_void: a_array /= Void
+		local
+			i, nb: INTEGER
+			l_array: ?ARRAY [?G]
+		do
+			l_array ?= a_array
+			if l_array /= Void then
+				from
+					i := l_array.lower
+					nb := l_array.upper
+				until
+					i > nb
+				loop
+					if l_array.item (i) = Void then
+						Result := True
+							-- Jump out of the loop.
+						i := nb + 1
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
 feature -- Access
 
 	subarray (an_array: ARRAY [G]; start_pos, end_pos, min_index: INTEGER): ARRAY [G] is

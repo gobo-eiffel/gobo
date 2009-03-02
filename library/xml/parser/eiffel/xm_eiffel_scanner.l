@@ -1001,17 +1001,9 @@ feature -- Scanning
 						yy_done
 					loop
 						if yy_ec /= Void then
-							if yy_content_area /= Void then
-								yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
-							else
-								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
-							end
+							yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
 						else
-							if yy_content_area /= Void then
-								yy_c := yy_content_area.item (yy_cp).code
-							else
-								yy_c := yy_content.item (yy_cp).code
-							end
+							yy_c := yy_content_area.item (yy_cp).code
 						end
 						if
 							not yyReject_or_variable_trail_context and then

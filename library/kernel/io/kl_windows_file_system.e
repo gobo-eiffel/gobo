@@ -576,9 +576,9 @@ feature -- Pathname handling
 			-- pathname conversion use `pathname_from_file_system'.)
 		local
 			i, nb: INTEGER
-			a_drive: STRING
-			a_hostname: STRING
-			a_sharename: STRING
+			a_drive: ?STRING
+			a_hostname: ?STRING
+			a_sharename: ?STRING
 		do
 			create Result.make (50)
 			nb := a_pathname.count

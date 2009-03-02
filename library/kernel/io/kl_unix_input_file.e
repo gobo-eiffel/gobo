@@ -52,11 +52,7 @@ feature -- Input
 			c: CHARACTER
 			is_eof: BOOLEAN
 		do
-			if last_string = Void then
-				create last_string.make (256)
-			else
-				last_string.clear_all
-			end
+			last_string.clear_all
 			is_eof := True
 			a_target := last_string
 			from
@@ -87,11 +83,7 @@ feature -- Input
 			-- input file unchanged if no line separator
 			-- was found.
 		do
-			if last_string = Void then
-				create last_string.make (256)
-			else
-				last_string.clear_all
-			end
+			last_string.clear_all
 			read_character
 			if not end_of_file then
 				if last_character = '%N' then

@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
+			create last_string.make_empty
 			string := a_string
 			location := 0
 			end_of_input := False
@@ -112,11 +113,7 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			if last_string = Void then
-				create last_string.make (256)
-			else
-				STRING_.wipe_out (last_string)
-			end
+			last_string.clear_all
 			from
 				i := 1
 			until
@@ -145,11 +142,7 @@ feature -- Input
 			c: CHARACTER
 			is_eof: BOOLEAN
 		do
-			if last_string = Void then
-				create last_string.make (256)
-			else
-				STRING_.wipe_out (last_string)
-			end
+			last_string.clear_all
 			is_eof := True
 			a_target := last_string
 			from
@@ -180,11 +173,7 @@ feature -- Input
 			-- input stream unchanged if no line separator
 			-- was found.
 		do
-			if last_string = Void then
-				create last_string.make (256)
-			else
-				STRING_.wipe_out (last_string)
-			end
+			last_string.clear_all
 			read_character
 			if not end_of_input then
 				if last_character = '%N' then

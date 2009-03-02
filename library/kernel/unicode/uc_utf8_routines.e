@@ -227,13 +227,13 @@ feature -- Measurement
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
 		local
-			a_utf8: UC_UTF8_STRING
-			a_uc_string: UC_STRING
+			a_utf8: ?UC_UTF8_STRING
+			a_uc_string: ?UC_STRING
 			s, e: INTEGER
 			i: INTEGER
 			even_end_index: INTEGER
 			c: CHARACTER
-			l_string_8: STRING
+			l_string_8: ?STRING
 		do
 			if start_index <= end_index then
 				if ANY_.same_types (a_string, dummy_string) then
@@ -391,7 +391,7 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 			i, nb: INTEGER
 		do
 			uc_string ?= a_string

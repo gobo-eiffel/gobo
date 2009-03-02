@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: G): BOOLEAN is
+	test (v, u: ?G): BOOLEAN is
 			-- Are `v' and `u' considered equal?
 			-- (Use `equal' by default.)
 		do

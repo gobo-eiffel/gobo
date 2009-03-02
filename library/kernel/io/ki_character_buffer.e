@@ -85,9 +85,10 @@ feature -- Conversion
 	as_special: SPECIAL [CHARACTER] is
 			-- 'SPECIAL [CHARACTER]' version of current character buffer;
 			-- Characters are indexed starting at 1;
-			-- May return void in some descendants, and the result may share
-			-- the internal data with `Current'
-		do
+			-- Note that the result may share the internal data with `Current'.
+		deferred
+		ensure
+			as_special_not_void: Result /= Void
 		end
 
 feature -- Element change

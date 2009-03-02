@@ -23,7 +23,7 @@ feature -- Status report
 			Result := obj1.same_type (obj2)
 		end
 
-	same_objects (obj1, obj2: ANY): BOOLEAN is
+	same_objects (obj1, obj2: ?ANY): BOOLEAN is
 			-- Are `obj1' and `obj2' the same object?
 			-- Useful as a way to workaround VWEQ validity rule
 			-- (when running flat Degree 3 for example):
@@ -36,7 +36,7 @@ feature -- Status report
 			definition: Result = (obj1 = obj2)
 		end
 
-	equal_objects (obj1, obj2: ANY): BOOLEAN is
+	equal_objects (obj1, obj2: ?ANY): BOOLEAN is
 			-- Are `obj1' and `obj2' considered equal?
 		do
 			if obj1 = obj2 then
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	to_any (an_any: ANY): ANY is
+	to_any (an_any: ?ANY): ?ANY is
 			-- Return `an_any';
 			-- This can be used to workaround VWEQ validy rule:
 			--    my_hashable := my_string

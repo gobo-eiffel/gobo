@@ -5,7 +5,7 @@ indexing
 		"Routines that ought to be in class STRING"
 
 	remark: "[
-		"Unless otherwise specified in their preconditions,
+		Unless otherwise specified in their preconditions,
 		the features of this class can deal with UC_STRING
 		whenever a STRING is expected.
 	]"
@@ -49,7 +49,7 @@ feature -- Initialization
 			s_not_void: s /= Void
 		local
 			i, j, nb: INTEGER
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			if ANY_.same_types (s, dummy_string) then
 				create Result.make_from_string (s)
@@ -308,7 +308,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 			non_negative_n: n >= 0
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			if ANY_.same_types (a_string, dummy_string) then
 				create Result.make (n)
@@ -334,7 +334,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, nb, a_code, a_high, a_low, a_surrogate: INTEGER
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
@@ -381,7 +381,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, nb, a_code, a_high, a_low, a_surrogate: INTEGER
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
@@ -428,7 +428,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, j, k, l, m, nb, a_code: INTEGER
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
@@ -468,7 +468,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 		local
 			i, j, k, l, m, nb, a_code: INTEGER
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
@@ -519,7 +519,7 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code: INTEGER
-			other_unicode: UC_STRING
+			other_unicode: ?UC_STRING
 			k, end_index: INTEGER
 			found: BOOLEAN
 			max_code: INTEGER
@@ -668,7 +668,7 @@ feature -- Access
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
@@ -729,7 +729,7 @@ feature -- Comparison
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 			i, nb: INTEGER
 		do
 			if other = a_string then
@@ -849,7 +849,7 @@ feature -- Comparison
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 			i, nb, nb1, nb2: INTEGER
 			a1, a2: CHARACTER
 			c1, c2: INTEGER
@@ -1081,7 +1081,7 @@ feature -- Element change
 			a_string_not_void: a_string /= Void
 			other_not_void: other /= Void
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			uc_string ?= a_string
 			if uc_string /= Void then
@@ -1126,7 +1126,7 @@ feature -- Element change
 			e_small_enough: e <= other.count
 			valid_interval: s <= e + 1
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 			i: INTEGER
 		do
 			uc_string ?= a_string
@@ -1182,7 +1182,7 @@ feature -- Element change
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			if ANY_.same_types (a_string, other) then
 				a_string.replace_substring (other, start_index, end_index)
@@ -1212,7 +1212,7 @@ feature -- Element change
 			e_small_enough: e <= other.count
 			valid_interval: s <= e + 1
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 			i: INTEGER
 		do
 			uc_string ?= a_string
@@ -1316,7 +1316,7 @@ feature -- Conversion
 		require
 			a_string_not_void: a_string /= Void
 		local
-			uc_string: UC_STRING
+			uc_string: ?UC_STRING
 		do
 			if ANY_.same_types (a_string, dummy_string) then
 				Result := a_string

@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			name := a_name
+			last_entry := Dummy_entry
 			old_make (STRING_.as_string (a_name))
 		end
 
@@ -72,7 +73,7 @@ feature -- Access
 			-- (Note: this query returns the new object after
 			-- each call to `read_entry'.)
 
-	filenames: ARRAY [STRING] is
+	filenames: ?ARRAY [STRING] is
 			-- Names of readable files in current directory;
 			-- Void if current directory could not be searched
 		local
@@ -119,7 +120,7 @@ feature -- Access
 			end
 		end
 
-	directory_names: ARRAY [STRING] is
+	directory_names: ?ARRAY [STRING] is
 			-- Names of readable subdirectories in current directory;
 			-- Void if current directory could not be searched
 			-- (Do not include parent and current directory names.)
@@ -271,7 +272,7 @@ feature -- Basic operations
 				old_close
 				lastentry := Void
 				entry_buffer := Void
-				last_entry := Void
+				last_entry := Dummy_entry
 			end
 		rescue
 			if not rescued then
@@ -308,7 +309,7 @@ feature -- Basic operations
 			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
 			-- if it already existed or `name' is a nested directory
-			-- name and its parent directory does not exist and 
+			-- name and its parent directory does not exist and
 			-- could not be created.
 		local
 			a_dirname: STRING
@@ -572,15 +573,24 @@ feature -- Input
 	read_entry is
 			-- Read next entry in directory.
 			-- Make result available in `last_entry'.
+		local
+			l_last_entry: ?STRING
+			l_entry_buffer: like entry_buffer
 		do
-			if entry_buffer /= Void then
-				last_entry := entry_buffer.item
-				entry_buffer := entry_buffer.right
+			l_entry_buffer := entry_buffer
+			if l_entry_buffer /= Void then
+				last_entry := l_entry_buffer.item
+				entry_buffer := l_entry_buffer.right
 			elseif old_end_of_input then
 				end_of_input := True
 			else
 				readentry
-				last_entry := lastentry
+				l_last_entry := lastentry
+				if l_last_entry /= Void then
+					last_entry := l_last_entry
+				else
+					last_entry := Dummy_entry
+				end
 				end_of_input := old_end_of_input
 			end
 		end
@@ -591,10 +601,12 @@ feature -- Input
 			-- call to a read routine.
 		local
 			a_cell: like entry_buffer
+			l_entry_buffer: like entry_buffer
 		do
 			create a_cell.make (an_entry)
-			if entry_buffer /= Void then
-				a_cell.put_right (entry_buffer)
+			l_entry_buffer := entry_buffer
+			if l_entry_buffer /= Void then
+				a_cell.put_right (l_entry_buffer)
 			end
 			entry_buffer := a_cell
 			last_entry := an_entry
@@ -603,8 +615,16 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	entry_buffer: KL_LINKABLE [STRING]
+	entry_buffer: ?KL_LINKABLE [STRING]
 			-- Unread entries
+
+	valid_entry_buffer (a_buffer: like entry_buffer): BOOLEAN is
+			-- Is `a_buffer' a valid buffer for unread entries?
+		do
+			Result := a_buffer /= Void implies valid_unread_entry (a_buffer.item)
+		ensure
+			definition: Result = (a_buffer /= Void implies valid_unread_entry (a_buffer.item))
+		end
 
 	old_end_of_input: BOOLEAN is
 			-- Have all entries been read
@@ -640,6 +660,6 @@ feature {NONE} -- Implementation
 invariant
 
 	string_name_is_string: ANY_.same_types (string_name, "")
-	no_void_bufferred_entry: entry_buffer /= Void implies entry_buffer.item /= Void
+	valid_entry_buffer: valid_entry_buffer (entry_buffer)
 
 end

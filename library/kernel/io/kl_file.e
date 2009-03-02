@@ -138,7 +138,7 @@ feature -- Status report
 
 	same_physical_file (other_name: STRING): BOOLEAN is
 			-- Are current file and file named `other_name'
-			-- the same physical file? Return False if one 
+			-- the same physical file? Return False if one
 			-- or both files don't exist. (Return True if
 			-- it was impossible to determine whether the
 			-- files were physically the same files.)
@@ -148,7 +148,8 @@ feature -- Status report
 		local
 			absolute_name1, absolute_name2: STRING
 			canonical_name1, canonical_name2: STRING
-			a_name, saved_string_name: STRING
+			a_name: STRING
+			saved_string_name: ?STRING
 			string_other_name: STRING
 			i: INTEGER
 			rescued: BOOLEAN
@@ -217,7 +218,9 @@ feature -- Status report
 					end
 				end
 			else
-				string_name := saved_string_name
+				if saved_string_name /= Void then
+					string_name := saved_string_name
+				end
 				Result := True
 			end
 		rescue
@@ -258,7 +261,7 @@ feature -- Basic operations
 		local
 			rescued: BOOLEAN
 			string_new_name: STRING
-			saved_string_name: STRING
+			saved_string_name: ?STRING
 		do
 			if not rescued then
 				saved_string_name := string_name
@@ -276,7 +279,7 @@ feature -- Basic operations
 						end
 					end
 				end
-			else
+			elseif saved_string_name /= Void then
 				string_name := saved_string_name
 			end
 		rescue
@@ -424,6 +427,7 @@ feature {NONE} -- Implementation
 			string_not_empty: not fn.is_empty
 		deferred
 		ensure
+			string_name_not_void: string_name /= Void
 			file_named: string_name.is_equal (fn)
 			file_closed: old_is_closed
 		end
@@ -506,6 +510,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	string_name_not_void: string_name /= Void
 	string_name_is_string: ANY_.same_types (string_name, "")
 
 end

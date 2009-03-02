@@ -18,6 +18,8 @@ inherit
 
 	KL_IMPORTED_ANY_ROUTINES
 
+	KL_IMPORTED_ARRAY_ROUTINES
+
 feature {NONE} -- Initialization
 
 	make is
@@ -518,7 +520,7 @@ feature -- Pathname handling
 			a_dirname_not_void: a_dirname /= Void
 			a_pathnames_not_void: a_pathnames /= Void
 			a_pathnames_not_empty: a_pathnames.count > 0
-			no_void_pathname: not a_pathnames.has (Void)
+			no_void_pathname: not STRING_ARRAY_.has_void (a_pathnames)
 --			a_pathnames_relative: forall p in `a_pathnames', is_relative_pathname (p)
 		deferred
 		ensure

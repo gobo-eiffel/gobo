@@ -39,7 +39,6 @@ feature -- Input
 			nb_large_enough: nb > 0
 		deferred
 		ensure
-			last_string_not_void: not end_of_input implies last_string /= Void
 			last_string_count_small_enough: not end_of_input implies last_string.count <= nb
 			character_read: not end_of_input implies last_string.count > 0
 		end
@@ -97,7 +96,8 @@ feature -- Access
 			not_end_of_input: not end_of_input
 		deferred
 		ensure
-			string_type: Result /= Void implies ANY_.same_types (Result, "")
+			last_string_not_void: Result /= Void
+			string_type: ANY_.same_types (Result, "")
 		end
 
 feature -- Status report

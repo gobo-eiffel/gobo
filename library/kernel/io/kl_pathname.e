@@ -64,20 +64,27 @@ feature -- Access
 
 	item (i: INTEGER): STRING is
 			-- Pathname component at `i'-th position
+		local
+			s: ?STRING
 		do
-			Result := components.item (i)
+			s := components.item (i)
+			check
+					 -- Implied by `i_large_enough' and `i_small_enough'.
+				s_not_void: s /= Void
+			end
+			Result := s
 		end
 
-	drive: STRING
+	drive: ?STRING
 			-- Drive of pathname if present,
 			-- Void otherwise
 
-	hostname: STRING
+	hostname: ?STRING
 			-- Hostname of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
 
-	sharename: STRING
+	sharename: ?STRING
 			-- Sharename of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
@@ -140,7 +147,7 @@ feature -- Element change
 			-- Append components `a_names' to pathname.
 		require
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+			no_void_name: not STRING_ARRAY_.has_void (a_names)
 			no_empty_name: not a_names.there_exists (agent {STRING}.is_empty)
 		local
 			i, nb: INTEGER
@@ -239,7 +246,7 @@ feature -- Duplication
 
 feature {KL_PATHNAME} -- Implementation
 
-	components: ARRAY [STRING]
+	components: ARRAY [?STRING]
 			-- Components in pathname
 
 feature {NONE} -- Constants

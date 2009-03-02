@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 	make (a_stream: like base_stream) is
 			-- Create a new base64 decoding stream.
 		do
+			create last_string.make_empty
 			Precursor (a_stream)
 			create codes.make (1, 4)
 			create decoded_triplet.make_filled (' ', 3)
@@ -52,11 +53,7 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			if last_string = Void then
-				create last_string.make (nb)
-			else
-				STRING_.wipe_out (last_string)
-			end
+			last_string.clear_all
 			from i := 1 until i > nb loop
 				read_character
 				if not end_of_input then
@@ -96,6 +93,10 @@ feature -- Access
 
 	last_string: STRING
 			-- Last string read
+			-- (Note: this query always return the same object.
+			-- Therefore a clone should be used if the result
+			-- is to be kept beyond the next call to this feature.
+			-- However `last_string' is not shared between file objects.)
 
 	last_character: CHARACTER
 			-- Last item read

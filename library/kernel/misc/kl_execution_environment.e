@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	variable_value (a_variable: STRING): STRING is
+	variable_value (a_variable: STRING): ?STRING is
 			-- Value of environment variable `a_variable',
 			-- Void if `a_variable' has not been set;
 			-- Note: If `a_variable' is a UC_STRING or descendant, then

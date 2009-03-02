@@ -18,7 +18,7 @@ feature -- Status report
 			-- Is underlying operating system Windows-like?
 		local
 			cwd: STRING
-			gobo_os, os: STRING
+			gobo_os, os: ?STRING
 		once
 			gobo_os := variable_value ("GOBO_OS")
 			if gobo_os /= Void and then gobo_os.count > 0 then
@@ -46,7 +46,7 @@ feature -- Status report
 			-- Is underlying operating system Unix-like?
 		local
 			cwd: STRING
-			gobo_os: STRING
+			gobo_os: ?STRING
 		once
 			gobo_os := variable_value ("GOBO_OS")
 			if gobo_os /= Void and then gobo_os.count > 0 then
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 
 	current_working_directory: STRING is
 			-- Name of current working directory;
-			-- Return absolute pathname with the naming 
+			-- Return absolute pathname with the naming
 			-- convention of the underlying file system
 			-- (Return a new object at each call.)
 		do
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			current_working_directory_not_void: Result /= Void
 		end
 
-	variable_value (a_variable: STRING): STRING is
+	variable_value (a_variable: STRING): ?STRING is
 			-- Value of environment variable `a_variable',
 			-- Void if `a_variable' has not been set
 		require

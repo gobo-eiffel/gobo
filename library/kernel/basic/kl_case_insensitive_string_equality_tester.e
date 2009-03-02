@@ -23,7 +23,7 @@ inherit
 
 feature -- Status report
 
-	test (s1, s2: STRING): BOOLEAN is
+	test (s1, s2: ?STRING): BOOLEAN is
 			-- Are `s1' and `s2' considered equal?
 			-- Use case-insensitive comparison.
 		do

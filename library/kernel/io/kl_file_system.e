@@ -84,7 +84,7 @@ feature -- File handling
 
 	same_physical_file (a_filename1, a_filename2: STRING): BOOLEAN is
 			-- Are files named `a_filename1' and `a_filename2'
-			-- the same physical file? Return False if one 
+			-- the same physical file? Return False if one
 			-- or both files don't exist. (Return True if
 			-- it was impossible to determine whether the
 			-- files were physically the same files.)
@@ -135,7 +135,7 @@ feature -- File handling
 							a_file1.close
 							a_file2.close
 							done := True
-						elseif not a_file1.last_string.is_equal (a_file2.last_string) then
+						elseif not a_file1.last_string.same_string (a_file2.last_string) then
 							Result := False
 							a_file1.close
 							a_file2.close
@@ -349,7 +349,7 @@ feature -- Directory handling
 			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
 			-- if it already existed or `name' is a nested directory
-			-- name and its parent directory does not exist and 
+			-- name and its parent directory does not exist and
 			-- could not be created.
 			-- (`a_dirname' should follow the pathname convention
 			-- of the underlying platform. For pathname conversion
@@ -399,7 +399,7 @@ feature -- Working directory
 
 	cwd, current_working_directory: STRING is
 			-- Name of current working directory;
-			-- Return absolute pathname with the naming 
+			-- Return absolute pathname with the naming
 			-- convention of the underlying file system
 			-- (Return a new object at each call.)
 		do

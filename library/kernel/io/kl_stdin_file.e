@@ -56,7 +56,8 @@ inherit
 				is_open_write
 			{NONE} all
 		redefine
-			file_readable
+			file_readable,
+			last_string
 		end
 
 create
@@ -68,6 +69,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new standard input file.
 		do
+			create last_string.make_empty
 			make_open_stdin ("stdin")
 			end_of_file := False
 		ensure
@@ -77,6 +79,13 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	last_string: STRING
+			-- Last string read
+			-- (Note: this query always return the same object.
+			-- Therefore a clone should be used if the result
+			-- is to be kept beyond the next call to this feature.
+			-- However `last_string' is not shared between file objects.)
 
 	eol: STRING is "%N"
 			-- Line separator
@@ -97,10 +106,13 @@ feature -- Input
 	read_character is
 			-- Read the next character in standard input file.
 			-- Make the result available in `last_character'.
+		local
+			l_character_buffer: like character_buffer
 		do
-			if character_buffer /= Void then
-				last_character := character_buffer.item
-				character_buffer := character_buffer.right
+			l_character_buffer := character_buffer
+			if l_character_buffer /= Void then
+				last_character := l_character_buffer.item
+				character_buffer := l_character_buffer.right
 			elseif old_end_of_file then
 				end_of_file := True
 			else
@@ -115,10 +127,12 @@ feature -- Input
 			-- call to a read routine.
 		local
 			a_cell: like character_buffer
+			l_character_buffer: like character_buffer
 		do
 			create a_cell.make (a_character)
-			if character_buffer /= Void then
-				a_cell.put_right (character_buffer)
+			l_character_buffer := character_buffer
+			if l_character_buffer /= Void then
+				a_cell.put_right (l_character_buffer)
 			end
 			character_buffer := a_cell
 			last_character := a_character
@@ -135,9 +149,7 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			if last_string = Void then
-				create last_string.make (nb)
-			elseif last_string.capacity < nb then
+			if last_string.capacity < nb then
 				last_string.resize (nb)
 			end
 			if character_buffer = Void then
@@ -165,18 +177,12 @@ feature -- Input
 			-- file are: '%N', '%R%N and '%R'.
 		local
 			done: BOOLEAN
-			a_target: STRING
 			c: CHARACTER
 			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do
-			if last_string = Void then
-				create last_string.make (256)
-			else
-				last_string.clear_all
-			end
+			last_string.clear_all
 			is_eof := True
-			a_target := last_string
 			from
 			until
 				done
@@ -216,11 +222,7 @@ feature -- Input
 			-- Line separators recognized by current standard
 			-- input file are: '%N', '%R%N and '%R'.
 		do
-			if last_string = Void then
-				create last_string.make (256)
-			else
-				last_string.clear_all
-			end
+			last_string.clear_all
 			read_character
 			if not end_of_file then
 				inspect last_character
@@ -256,17 +258,20 @@ feature -- Input
 			i, j: INTEGER
 			k, nb2: INTEGER
 			tmp_string: STRING
+			a_buff: like character_buffer
 		do
 			from
 				j := pos
+				a_buff := character_buffer
 			until
-				i = nb or character_buffer = Void
+				i = nb or a_buff = Void
 			loop
 				i := i + 1
-				a_string.put (character_buffer.item, j)
-				character_buffer := character_buffer.right
+				a_string.put (a_buff.item, j)
+				a_buff := a_buff.right
 				j := j + 1
 			end
+			character_buffer := a_buff
 			if i < nb then
 				if not old_end_of_file then
 					if ANY_.same_types (a_string, dummy_string) then
@@ -304,7 +309,7 @@ feature -- Input
 			-- in standard input file, there is no guarantee that they
 			-- will all be read.)
 		local
-			char_buffer: KL_CHARACTER_BUFFER
+			char_buffer: ?KL_CHARACTER_BUFFER
 		do
 			char_buffer ?= a_buffer
 			if char_buffer /= Void then
@@ -316,7 +321,7 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	character_buffer: KL_LINKABLE [CHARACTER]
+	character_buffer: ?KL_LINKABLE [CHARACTER]
 			-- Unread characters
 
 	file_readable: BOOLEAN is

@@ -26,12 +26,24 @@ inherit
 			open as open_read,
 			is_open as is_open_read
 		redefine
-			close
+			make, close
 		end
 
 	STRING_HANDLER
 
 	KL_IMPORTED_ANY_ROUTINES
+
+feature {NONE} -- Initialization
+
+	make (a_name: like name) is
+			-- Create a new file named `a_name'.
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		do
+			create last_string.make_empty
+			precursor (a_name)
+		end
 
 feature -- Access
 
@@ -61,10 +73,13 @@ feature -- Input
 	read_character is
 			-- Read the next character in input file.
 			-- Make the result available in `last_character'.
+		local
+			l_character_buffer: like character_buffer
 		do
-			if character_buffer /= Void then
-				last_character := character_buffer.item
-				character_buffer := character_buffer.right
+			l_character_buffer := character_buffer
+			if l_character_buffer /= Void then
+				last_character := l_character_buffer.item
+				character_buffer := l_character_buffer.right
 			elseif old_end_of_file then
 				end_of_file := True
 			else
@@ -79,10 +94,12 @@ feature -- Input
 			-- call to a read routine.
 		local
 			a_cell: like character_buffer
+			l_character_buffer: like character_buffer
 		do
 			create a_cell.make (a_character)
-			if character_buffer /= Void then
-				a_cell.put_right (character_buffer)
+			l_character_buffer := character_buffer
+			if l_character_buffer /= Void then
+				a_cell.put_right (l_character_buffer)
 			end
 			character_buffer := a_cell
 			last_character := a_character
@@ -99,9 +116,7 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			if last_string = Void then
-				create last_string.make (nb)
-			elseif last_string.capacity < nb then
+			if last_string.capacity < nb then
 				last_string.resize (nb)
 			end
 			if character_buffer = Void then
@@ -132,17 +147,20 @@ feature -- Input
 			tmp_string: STRING
 			k, nb2: INTEGER
 			i: INTEGER
+			l_character_buffer: like character_buffer
 		do
 			from
 				j := pos
+				l_character_buffer := character_buffer
 			until
-				i = nb or character_buffer = Void
+				i = nb or l_character_buffer = Void
 			loop
 				i := i + 1
-				a_string.put (character_buffer.item, j)
-				character_buffer := character_buffer.right
+				a_string.put (l_character_buffer.item, j)
+				l_character_buffer := l_character_buffer.right
 				j := j + 1
 			end
+			character_buffer := l_character_buffer
 			if i < nb then
 				if not old_end_of_file then
 					if ANY_.same_types (a_string, dummy_string) then
@@ -179,7 +197,7 @@ feature -- Input
 			-- in the input file, there is no guarantee that they
 			-- will all be read.)
 		local
-			char_buffer: KL_CHARACTER_BUFFER
+			char_buffer: ?KL_CHARACTER_BUFFER
 		do
 			char_buffer ?= a_buffer
 			if char_buffer /= Void then
@@ -234,7 +252,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	character_buffer: KL_LINKABLE [CHARACTER]
+	character_buffer: ?KL_LINKABLE [CHARACTER]
 			-- Unread characters
 
 	file_readable: BOOLEAN is

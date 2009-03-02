@@ -21,7 +21,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: STRING): BOOLEAN is
+	test (v, u: ?STRING): BOOLEAN is
 			-- Are `v' and `u' considered equal?
 			-- They are considered equal if they have the same number of
 			-- characters and these characters (possibly unicode characters,

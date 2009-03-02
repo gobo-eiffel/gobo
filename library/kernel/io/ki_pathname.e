@@ -34,6 +34,27 @@ inherit
 			is_equal
 		end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+		undefine
+			is_equal
+		end
+
+	KL_SHARED_STRING_EQUALITY_TESTER
+		rename
+			string_equality_tester as other_string_equality_tester
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
+	UC_SHARED_STRING_EQUALITY_TESTER
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 feature -- Status report
 
 	is_relative: BOOLEAN is
@@ -107,20 +128,20 @@ feature -- Access
 			item_not_empty: not Result.is_empty
 		end
 
-	drive: STRING is
+	drive: ?STRING is
 			-- Drive of pathname if present,
 			-- Void otherwise
 		deferred
 		end
 
-	hostname: STRING is
+	hostname: ?STRING is
 			-- Hostname of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
 		deferred
 		end
 
-	sharename: STRING is
+	sharename: ?STRING is
 			-- Sharename of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
@@ -155,7 +176,7 @@ feature -- Access
 			end
 		ensure
 			trailing_items_not_void: Result /= Void
-			no_void_item: not Result.has (Void)
+			no_void_item: not STRING_ARRAY_.has_void (Result)
 			no_empty_item: not Result.there_exists (agent {STRING}.is_empty)
 			count: Result.count = (a_pathname.count - count).max (0)
 		end
@@ -221,15 +242,9 @@ feature -- Comparison
 				if
 					nb <= a_pathname.count and
 					is_relative = a_pathname.is_relative and
-					((drive = Void and a_pathname.drive = Void) or else
-					((drive /= Void and a_pathname.drive /= Void) and then
-					STRING_.same_string (drive, a_pathname.drive))) and
-					((hostname = Void and a_pathname.hostname = Void) or else
-					((hostname /= Void and a_pathname.hostname /= Void) and then
-					STRING_.same_string (hostname, a_pathname.hostname))) and
-					((sharename = Void and a_pathname.sharename = Void) or else
-					((sharename /= Void and a_pathname.sharename /= Void) and then
-					STRING_.same_string (sharename, a_pathname.sharename)))
+					string_equality_tester.test (drive, a_pathname.drive) and
+					string_equality_tester.test (hostname, a_pathname.hostname) and
+					string_equality_tester.test (sharename, a_pathname.sharename)
 				then
 					Result := True
 					from
@@ -263,15 +278,9 @@ feature -- Comparison
 				if
 					nb <= a_pathname.count and
 					is_relative = a_pathname.is_relative and
-					((drive = Void and a_pathname.drive = Void) or else
-					((drive /= Void and a_pathname.drive /= Void) and then
-					STRING_.same_case_insensitive (drive, a_pathname.drive))) and
-					((hostname = Void and a_pathname.hostname = Void) or else
-					((hostname /= Void and a_pathname.hostname /= Void) and then
-					STRING_.same_case_insensitive (hostname, a_pathname.hostname))) and
-					((sharename = Void and a_pathname.sharename = Void) or else
-					((sharename /= Void and a_pathname.sharename /= Void) and then
-					STRING_.same_case_insensitive (sharename, a_pathname.sharename)))
+					case_insensitive_string_equality_tester.test (drive, a_pathname.drive) and
+					case_insensitive_string_equality_tester.test (hostname, a_pathname.hostname) and
+					case_insensitive_string_equality_tester.test (sharename, a_pathname.sharename)
 				then
 					Result := True
 					from

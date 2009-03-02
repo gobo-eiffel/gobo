@@ -56,7 +56,7 @@ feature -- Status report
 			definition: Result = (greater_than (u, v) or order_equal (u, v))
 		end
 
-	test (v, u: G): BOOLEAN is
+	test (v, u: ?G): BOOLEAN is
 			-- Are `v' and `u' considered equal?
 		do
 			if v = u then

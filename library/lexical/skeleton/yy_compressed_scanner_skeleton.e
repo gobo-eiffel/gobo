@@ -146,17 +146,9 @@ feature -- Scanning
 						yy_done
 					loop
 						if yy_ec /= Void then
-							if yy_content_area /= Void then
-								yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
-							else
-								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
-							end
+							yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
 						else
-							if yy_content_area /= Void then
-								yy_c := yy_content_area.item (yy_cp).code
-							else
-								yy_c := yy_content.item (yy_cp).code
-							end
+							yy_c := yy_content_area.item (yy_cp).code
 						end
 						if not yyReject_or_variable_trail_context and then yy_accept.item (yy_current_state) /= 0 then
 								-- Save the backing-up info before computing
@@ -289,9 +281,9 @@ feature -- Scanning
 						yy_matched_count := yy_cp - yy_bp - 1
 							-- Note that here we test for `yy_end' "<="
 							-- to the position of the first EOB in the buffer,
-							-- since `yy_end' will already have been 
+							-- since `yy_end' will already have been
 							-- incremented past the NULL character (since all
-							-- states make transitions on EOB to the 
+							-- states make transitions on EOB to the
 							-- end-of-buffer state). Contrast this with the
 							-- test in `read_character'.
 						if yy_end <= input_buffer.count + 1 then
@@ -349,7 +341,7 @@ feature -- Scanning
 								yy_bp := yy_start + yy_more_len
 								yy_goto := yyFind_action
 							else
-									-- Only the EOB character has been matched, 
+									-- Only the EOB character has been matched,
 									-- so treat this as a final EOF.
 								if wrap then
 									yy_bp := yy_start
@@ -487,18 +479,14 @@ feature {NONE} -- Implementation
 				yy_cp >= yy_nb
 			loop
 					-- Find the next state.
-				if yy_content_area /= Void then
-					yy_c := yy_content_area.item (yy_cp).code
-				else
-					yy_c := yy_content.item (yy_cp).code
-				end
+				yy_c := yy_content_area.item (yy_cp).code
 				if yy_c = 0 then
 					yy_c := yyNull_equiv_class
 				elseif yy_ec /= Void then
 					yy_c := yy_ec.item (yy_c)
 				end
 				if not yyReject_or_variable_trail_context then
-						-- Save the backing-up info before computing the 
+						-- Save the backing-up info before computing the
 						-- next state because we always compute one more
 						-- state than needed - we always proceed until
 						-- we reach a jam state.
