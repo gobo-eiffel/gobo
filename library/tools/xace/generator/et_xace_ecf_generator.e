@@ -165,13 +165,14 @@ feature {NONE} -- Output
 			a_file.put_string (" name=%"")
 			print_quote_escaped_string (a_library.name, a_file)
 			a_file.put_string ("%" library_target=%"")
+			print_quote_escaped_string (a_library.name, a_file)
 			a_file.put_line ("%">")
 			print_indentation (1, a_file)
 			a_file.put_string ("<target name=%"")
 			print_quote_escaped_string (a_library.name, a_file)
 			a_file.put_line ("%">")
 			print_indentation (2, a_file)
-			a_file.put_string ("<root all_classes=%"true%"/>")
+			a_file.put_line ("<root all_classes=%"true%"/>")
 				-- Options and settings.
 			l_option := a_library.options
 			if l_option /= Void then
