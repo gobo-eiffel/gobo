@@ -16,15 +16,6 @@ inherit
 
 	KI_SYSTEM_CLOCK
 
-	C_DATE
-		rename
-			millisecond_now as millisecond
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-
 create
 
 	make
@@ -34,9 +25,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new system clock.
 		do
-				-- There is an implicit invariant which
-				-- expects `internal_item' to be non-void.
-			create internal_item.make (0)
 		end
 
 feature -- Access
@@ -59,32 +47,59 @@ feature -- Access
 	second: INTEGER
 			-- Second
 
+	millisecond: INTEGER
+			-- Millisecond
+
 feature -- Setting
 
 	set_local_time is
 			-- Set clock to current local time.
+		local
+			l_clock: ?C_DATE
 		do
-			is_utc := False
-			update
-			year := year_now
-			month := month_now
-			day := day_now
-			hour := hour_now
-			minute := minute_now
-			second := second_now
+			l_clock := local_clock
+			if l_clock = Void then
+				create l_clock
+				local_clock := l_clock
+			else
+				l_clock.update
+			end
+			year := l_clock.year_now
+			month := l_clock.month_now
+			day := l_clock.day_now
+			hour := l_clock.hour_now
+			minute := l_clock.minute_now
+			second := l_clock.second_now
+			millisecond := l_clock.millisecond_now
 		end
 
 	set_utc_time is
 			-- Set clock to current UTC time.
+		local
+			l_clock: ?C_DATE
 		do
-			is_utc := True
-			update
-			year := year_now
-			month := month_now
-			day := day_now
-			hour := hour_now
-			minute := minute_now
-			second := second_now
+			l_clock := utc_clock
+			if l_clock = Void then
+				create l_clock.make_utc
+				utc_clock := l_clock
+			else
+				l_clock.update
+			end
+			year := l_clock.year_now
+			month := l_clock.month_now
+			day := l_clock.day_now
+			hour := l_clock.hour_now
+			minute := l_clock.minute_now
+			second := l_clock.second_now
+			millisecond := l_clock.millisecond_now
 		end
+
+feature {NONE} -- Implementation
+
+	utc_clock: ?C_DATE
+			-- Clock in UTC time
+
+	local_clock: ?C_DATE
+			-- Clock in local time
 
 end
