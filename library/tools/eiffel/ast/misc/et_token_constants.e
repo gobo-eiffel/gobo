@@ -154,14 +154,6 @@ feature -- Class names
 			integer_64_class_name_not_void: Result /= Void
 		end
 
-	kl_any_routines_class_name: ET_CLASS_NAME is
-			-- "KL_ANY_ROUTINES" class name
-		once
-			create {ET_IDENTIFIER} Result.make (capitalized_kl_any_routines_name)
-		ensure
-			kl_any_routines_class_name_not_void: Result /= Void
-		end
-
 	memory_class_name: ET_CLASS_NAME is
 			-- "MEMORY" class name
 		once
@@ -900,14 +892,6 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (element_size_name)
 		ensure
 			element_size_feature_name_not_void: Result /= Void
-		end
-
-	equal_objects_feature_name: ET_FEATURE_NAME is
-			-- 'equal_objects' feature name
-		once
-			create {ET_IDENTIFIER} Result.make (equal_objects_name)
-		ensure
-			equal_objects_feature_name_not_void: Result /= Void
 		end
 
 	find_referers_feature_name: ET_FEATURE_NAME is
@@ -2687,7 +2671,6 @@ feature -- Keyword and symbol names
 	capitalized_integer_16_name: STRING is "INTEGER_16"
 	capitalized_integer_32_name: STRING is "INTEGER_32"
 	capitalized_integer_64_name: STRING is "INTEGER_64"
-	capitalized_kl_any_routines_name: STRING is "KL_ANY_ROUTINES"
 	capitalized_memory_name: STRING is "MEMORY"
 	capitalized_native_array_name: STRING is "NATIVE_ARRAY"
 	capitalized_natural_name: STRING is "NATURAL"
@@ -2851,9 +2834,6 @@ feature -- Keyword and symbol names
 
 	element_size_name: STRING is "element_size"
 		-- Name of Eiffel feature 'element_size'
-
-	equal_objects_name: STRING is "equal_objects"
-		-- Name of Eiffel feature 'equal_objects'
 
 	find_referers_name: STRING is "find_referers"
 		-- Name of Eiffel feature 'find_referers'

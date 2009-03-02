@@ -6405,11 +6405,7 @@ feature {NONE} -- Expression generation
 			i, nb: INTEGER
 		do
 			l_source_type := a_source_type_set.static_type
-			if current_feature.is_tilde_feature (current_dynamic_system) then
-					-- No CAT-call in the feature that is supposed to simulate
-					-- the forthcoming '~' operator introduced in ECMA Eiffel 367.
-				l_has_non_conforming_types := False
-			elseif not l_source_type.conforms_to_type (a_target_type) then
+			if not l_source_type.conforms_to_type (a_target_type) then
 					-- Make sure that CAT-call errors will be reported at run-time.
 				nb := a_source_type_set.count
 				l_non_conforming_types := attachment_dynamic_type_ids
@@ -14160,19 +14156,9 @@ feature {NONE} -- Polymorphic call functions generation
 								else
 									l_standalone_type_set.set_static_type (current_dynamic_system.any_type)
 								end
-								if l_call.is_equal_in_tilde_feature (current_dynamic_system) then
-										-- This is a call to 'is_equal' in the feature that is supposed
-										-- to simulate the forthcoming '~' operator introduced in
-										-- ECMA Eiffel 367 (this feature is KL_ANY_ROUTINES.equal_objects).
-										-- Therefore, we know that at run-time the type of the argument
-										-- will be the same as the type of the target of 'is_equal' (there
-										-- is a call to 'same_type' just before to ascertain that).
-									l_standalone_type_set.put_type (a_target_type)
-								else
-									l_standalone_type_set.put_types (l_argument_type_set)
-									if not l_argument_type_set.is_never_void then
-										l_standalone_type_set.propagate_can_be_void (l_argument_type_set)
-									end
+								l_standalone_type_set.put_types (l_argument_type_set)
+								if not l_argument_type_set.is_never_void then
+									l_standalone_type_set.propagate_can_be_void (l_argument_type_set)
 								end
 								i := i + 1
 							end

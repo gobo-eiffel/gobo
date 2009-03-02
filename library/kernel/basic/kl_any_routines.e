@@ -41,15 +41,11 @@ feature -- Status report
 		do
 			if obj1 = obj2 then
 				Result := True
-			elseif obj1 = Void then
-				Result := False
-			elseif obj2 = Void then
-				Result := False
-			elseif same_types (obj1, obj2) then
-				Result := obj1.is_equal (obj2)
+			else
+				Result := obj1 ~ obj2
 			end
 		ensure
-			same_types: Result and (obj1 /= Void and obj2 /= Void) implies same_types (obj1, obj2)
+			definition: Result = (obj1 ~ obj2)
 		end
 
 feature -- Conversion

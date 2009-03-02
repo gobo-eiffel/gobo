@@ -3,6 +3,9 @@ Version 3.10 - ?
 	Gobo Eiffel Kernel Library:
 
 	* Added features `same_*_pathnames' to class KI_FILE_SYSTEM.
+	* Features `test' in class KL_EQUALITY_TESTER and `equal_objects' in
+	  class KL_ANY_ROUTINES now use the new ECMA construct '~' instead
+	  of the combination `same_type' and then `is_equal'.
 
 	Gobo Eiffel Lexical Library:
 

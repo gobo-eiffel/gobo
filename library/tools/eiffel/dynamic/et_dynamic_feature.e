@@ -344,19 +344,6 @@ feature -- Status report
 			definition: Result = static_feature.is_once
 		end
 
-	is_tilde_feature (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
-			-- Is current feature supposed to simulate the forthcoming
-			-- '~' operator introduced in ECMA Eiffel 367?
-			-- (This feature is KL_ANY_ROUTINES.equal_objects.)
-		require
-			a_system_not_void: a_system /= Void
-		local
-			l_feature: ET_FEATURE
-		do
-			l_feature := static_feature.implementation_feature
-			Result := l_feature.implementation_class.name.same_class_name (tokens.kl_any_routines_class_name) and then l_feature.name.same_feature_name (tokens.equal_objects_feature_name)
-		end
-
 	is_precursor: BOOLEAN is
 			-- Is current feature a precursor?
 		do

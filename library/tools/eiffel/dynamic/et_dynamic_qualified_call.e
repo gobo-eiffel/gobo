@@ -49,18 +49,6 @@ feature -- Access
 
 feature -- Static report
 
-	is_equal_in_tilde_feature (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
-			-- Is current call a call to 'is_equal' in the feature that is supposed
-			-- to simulate the forthcoming '~' operator introduced in ECMA Eiffel 367?
-			-- (This feature is KL_ANY_ROUTINES.equal_objects.)
-		require
-			a_system_not_void: a_system /= Void
-		do
-			if current_feature.is_tilde_feature (a_system) then
-				Result := target_type_set.static_type = a_system.any_type and then static_call.name.same_call_name (tokens.is_equal_feature_name)
-			end
-		end
-
 	is_tuple_label: BOOLEAN is
 			-- Is current call a call to a Tuple label?
 		do

@@ -16,12 +16,6 @@ inherit
 
 	DS_CONTAINER [G]
 
-	KL_IMPORTED_ANY_ROUTINES
-		undefine
-			copy,
-			is_equal
-		end
-
 feature -- Status report
 
 	has (v: G): BOOLEAN is
@@ -63,7 +57,7 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			Result := ANY_.equal_objects (equality_tester, other.equality_tester)
+			Result := equality_tester ~ other.equality_tester
 		end
 
 	equality_tester_settable (a_tester: like equality_tester): BOOLEAN is

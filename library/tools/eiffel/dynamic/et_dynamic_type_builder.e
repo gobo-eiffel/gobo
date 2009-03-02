@@ -666,16 +666,11 @@ feature {NONE} -- CAT-calls
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 		do
-			if a_call.current_feature.is_tilde_feature (current_dynamic_system) then
-				-- This feature is supposed to simulate the forthcoming
-				-- '~' operator introduced in ECMA Eiffel 367.
-			else
-				l_target_type_set := a_call.target_type_set
-				nb := l_target_type_set.count
-				from i := 1 until i > nb loop
-					check_catcall_target_validity (l_target_type_set.dynamic_type (i), a_call)
-					i := i + 1
-				end
+			l_target_type_set := a_call.target_type_set
+			nb := l_target_type_set.count
+			from i := 1 until i > nb loop
+				check_catcall_target_validity (l_target_type_set.dynamic_type (i), a_call)
+				i := i + 1
 			end
 		end
 

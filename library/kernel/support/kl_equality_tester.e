@@ -16,23 +16,16 @@ inherit
 
 	ANY
 
-	KL_IMPORTED_ANY_ROUTINES
-		export {NONE} all end
-
 feature -- Status report
 
 	test (v, u: ?G): BOOLEAN is
 			-- Are `v' and `u' considered equal?
-			-- (Use `equal' by default.)
+			-- (Use '~' by default.)
 		do
 			if v = u then
 				Result := True
-			elseif v = Void then
-				Result := False
-			elseif u = Void then
-				Result := False
 			else
-				Result := ANY_.equal_objects (v, u)
+				Result := v ~ u
 			end
 		end
 

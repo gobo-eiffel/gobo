@@ -25,9 +25,6 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
-	KL_IMPORTED_ANY_ROUTINES
-		export {NONE} all end
-
 feature -- Access
 
 	logger: TS_TEST_LOGGER is
@@ -119,7 +116,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
-			l_condition := ANY_.equal_objects (expected, actual)
+			l_condition := expected ~ actual
 			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_equal_message (a_tag, expected, actual)
@@ -150,7 +147,7 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
-			l_condition := not ANY_.equal_objects (expected, actual)
+			l_condition := expected /~ actual
 			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_not_equal_message (a_tag, expected, actual)
@@ -868,7 +865,7 @@ feature {TS_TEST_HANDLER} -- Containers
 				loop
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i1)
-					if not ANY_.equal_objects (expected_item, actual_item) then
+					if expected_item /~ actual_item then
 						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
