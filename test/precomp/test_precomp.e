@@ -111,7 +111,7 @@ feature {NONE} -- Precompilation
 			end
 			assert_execute ("gexace " + define_option + "--library=ise " + xace_filename + output_log)
 				-- Eiffel precompilation.
-			assert_execute ("ec -precompile -batch -ace ise.ace" + output_log)
+			assert_execute ("ecb -precompile -batch -config ise.ecf" + output_log)
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)
