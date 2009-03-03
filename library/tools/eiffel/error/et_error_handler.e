@@ -221,6 +221,22 @@ feature -- Cluster errors
 			end
 		end
 
+	report_gcscm_error (a_cluster: ET_CLUSTER; a_message: STRING) is
+			-- Report GCSCM error: there was an error when retrieving the
+			-- SCM mapping description for `a_cluster', as explained in
+			-- `a_message'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_message_not_void: a_message /= Void
+		local
+			an_error: ET_CLUSTER_ERROR
+		do
+			if reportable_gcscm_error (a_cluster) then
+				create an_error.make_gcscm (a_cluster, a_message)
+				report_cluster_error (an_error)
+			end
+		end
+
 feature -- Cluster error status
 
 	reportable_gcaaa_error (a_cluster: ET_CLUSTER): BOOLEAN is
@@ -252,6 +268,15 @@ feature -- Cluster error status
 
 	reportable_gcpro_error (a_cluster: ET_CLUSTER): BOOLEAN is
 			-- Can a GCPRO error be reported when it
+			-- appears in `a_cluster'?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := True
+		end
+
+	reportable_gcscm_error (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Can a GCSCM error be reported when it
 			-- appears in `a_cluster'?
 		require
 			a_cluster_not_void: a_cluster /= Void

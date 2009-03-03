@@ -21,7 +21,8 @@ create
 	make_gcaaa,
 	make_gcaab,
 	make_gcdep,
-	make_gcpro
+	make_gcpro,
+	make_gcscm
 
 feature {NONE} -- Initialization
 
@@ -177,6 +178,30 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = constraint cluster list
 		end
 
+	make_gcscm (a_cluster: like cluster; a_message: STRING) is
+			-- Create a new GCSCM error: there was an error when retrieving
+			-- the SCM mapping description for `a_cluster', as explained in
+			-- `a_message'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_message_not_void: a_message /= Void
+		do
+			code := gcscm_template_code
+			etl_code := gcscm_etl_code
+			default_template := gcscm_default_template
+			cluster := a_cluster
+			create parameters.make (1, 3)
+			parameters.put (etl_code, 1)
+			parameters.put (cluster.full_lower_name ('/'), 2)
+			parameters.put (a_message, 3)
+		ensure
+			cluster_set: cluster = a_cluster
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = cluster full name
+			-- dollar3: $3 = message
+		end
+
 feature -- Access
 
 	cluster: ET_CLUSTER
@@ -200,18 +225,21 @@ feature {NONE} -- Implementation
 	gcaab_default_template: STRING is "[$1] cluster $2: cannot read Eiffel file '$3'."
 	gcdep_default_template: STRING is "[$1] cluster $2: class $3 (from cluster $4) is a provider of class $5 (from cluster $6) which is not contained in any of the clusters $7."
 	gcpro_default_template: STRING is "[$1] cluster $2: class $3 (from cluster $4) depends on class $5 (from cluster $6) which is not contained in any of the clusters $7."
+	gcscm_default_template: STRING is "[$1] cluster $2: $3"
 			-- Default templates
 
 	gcaaa_etl_code: STRING is "GCAAA"
 	gcaab_etl_code: STRING is "GCAAB"
 	gcdep_etl_code: STRING is "GCDEP"
 	gcpro_etl_code: STRING is "GCPRO"
+	gcscm_etl_code: STRING is "GCSCM"
 			-- ETL validity codes
 
 	gcaaa_template_code: STRING is "gcaaa"
 	gcaab_template_code: STRING is "gcaab"
 	gcdep_template_code: STRING is "gcdep"
 	gcpro_template_code: STRING is "gcpro"
+	gcscm_template_code: STRING is "gcscm"
 			-- Template error codes
 
 invariant
