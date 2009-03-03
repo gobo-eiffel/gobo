@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class KL_STRING
+class KL_STRING
 
 inherit
 
@@ -23,5 +23,9 @@ inherit
 			infix "@" as at alias "@",
 			infix "+" as plus alias "+"
 		end
+
+create
+
+	make
 
 end
