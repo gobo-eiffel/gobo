@@ -1017,7 +1017,7 @@ feature {NONE} -- Constants
 			-- Type used when no type has been specified
 		once
 			if grammar.types.is_empty then
-				create Result.make (0, "ANY")
+				create Result.make (0, Void, "ANY")
 			else
 				Result := grammar.types.first
 			end

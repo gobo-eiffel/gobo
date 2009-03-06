@@ -527,17 +527,25 @@ feature {NONE} -- Factory
 			symbol_not_void: Result /= Void
 		end
 
-	new_type (a_name: STRING): PR_TYPE is
+	new_type (a_type_mark: STRING; a_name: STRING): PR_TYPE is
 			-- Type named `a_name'; Create a new type if
 			-- it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			upper_name: STRING
 			an_id: INTEGER
 		do
-			upper_name := a_name.as_upper
+			if a_type_mark /= Void then
+				create upper_name.make (a_type_mark.count + a_name.count + 1)
+				upper_name.append_string (a_type_mark.as_upper)
+				upper_name.append_character (' ')
+				upper_name.append_string (a_name.as_upper)
+			else
+				upper_name := a_name.as_upper
+			end
 			types.search (upper_name)
 			if types.found then
 				Result := types.found_item
@@ -545,7 +553,7 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				create Result.make (an_id, a_name)
+				create Result.make (an_id, a_type_mark, a_name)
 				types.force_new (Result, upper_name)
 				last_grammar.put_type (Result)
 			end
@@ -553,17 +561,25 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_basic_type (a_name: STRING): PR_TYPE is
+	new_basic_type (a_type_mark: STRING; a_name: STRING): PR_TYPE is
 			-- Basic type named `a_name'; Create a new type if
 			-- it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			upper_name: STRING
 			an_id: INTEGER
 		do
-			upper_name := a_name.as_upper
+			if a_type_mark /= Void then
+				create upper_name.make (a_type_mark.count + a_name.count + 1)
+				upper_name.append_string (a_type_mark.as_upper)
+				upper_name.append_character (' ')
+				upper_name.append_string (a_name.as_upper)
+			else
+				upper_name := a_name.as_upper
+			end
 			types.search (upper_name)
 			if types.found then
 				Result := types.found_item
@@ -571,7 +587,7 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				create {PR_BASIC_TYPE} Result.make (an_id, a_name)
+				create {PR_BASIC_TYPE} Result.make (an_id, a_type_mark, a_name)
 				types.force_new (Result, upper_name)
 				last_grammar.put_type (Result)
 			end
@@ -579,13 +595,14 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_generic_type (a_name: STRING; generics: DS_ARRAYED_LIST [PR_TYPE]): PR_TYPE is
+	new_generic_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_TYPE]): PR_TYPE is
 			-- Type named `a_name' with generic parameters `generics';
 			-- Create a new type if it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
 			valid_generics: generics /= Void implies not generics.has (Void)
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			upper_name: STRING
 			an_id: INTEGER
@@ -594,7 +611,7 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				create Result.make_generic (an_id, a_name, generics)
+				create Result.make_generic (an_id, a_type_mark, a_name, generics)
 				upper_name := Result.name.as_upper
 				types.search (upper_name)
 				if types.found then
@@ -604,23 +621,63 @@ feature {NONE} -- Factory
 					last_grammar.put_type (Result)
 				end
 			else
-				Result := new_type (a_name)
+				Result := new_type (a_type_mark, a_name)
 			end
 		ensure
 			type_not_void: Result /= Void
 		end
 
-	new_anchored_type (a_name: STRING): PR_TYPE is
-			-- Anchored type of  the form "like `a_name'";
+	new_labeled_tuple_type (a_type_mark: STRING; a_name: STRING; generics: DS_ARRAYED_LIST [PR_LABELED_TYPE]): PR_TYPE is
+			-- Labeled Tuple type named `a_name' with generic parameters `generics';
 			-- Create a new type if it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
+			valid_generics: generics /= Void implies not generics.has (Void)
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
+		local
+			upper_name: STRING
+			an_id: INTEGER
+		do
+			if generics /= Void then
+					-- Types are indexed from 1.
+					-- (0 used to be reserved for no-type)
+				an_id := last_grammar.types.count + 1
+				create Result.make_labeled_tuple (an_id, a_type_mark, a_name, generics)
+				upper_name := Result.name.as_upper
+				types.search (upper_name)
+				if types.found then
+					Result := types.found_item
+				else
+					types.force_new (Result, upper_name)
+					last_grammar.put_type (Result)
+				end
+			else
+				Result := new_type (a_type_mark, a_name)
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	new_anchored_type (a_type_mark: STRING; a_name: STRING): PR_TYPE is
+			-- Anchored type of the form "like `a_name'";
+			-- Create a new type if it does not exist yet.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_long_enough: a_name.count > 0
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			lower_name: STRING
 			an_id: INTEGER
 		do
-			lower_name := a_name.as_lower
+			if a_type_mark /= Void then
+				create lower_name.make (a_type_mark.count + a_name.count + 1)
+				lower_name.append_string (a_type_mark.as_lower)
+				lower_name.append_character (' ')
+				lower_name.append_string (a_name.as_lower)
+			else
+				lower_name := a_name.as_lower
+			end
 			types.search (lower_name)
 			if types.found then
 				Result := types.found_item
@@ -628,12 +685,59 @@ feature {NONE} -- Factory
 					-- Types are indexed from 1.
 					-- (0 used to be reserved for no-type)
 				an_id := last_grammar.types.count + 1
-				create Result.make_anchored (an_id, a_name)
+				create Result.make_anchored (an_id, a_type_mark, a_name)
 				types.force_new (Result, lower_name)
 				last_grammar.put_type (Result)
 			end
 		ensure
 			type_not_void: Result /= Void
+		end
+
+	new_like_current_type (a_type_mark: STRING): PR_TYPE is
+			-- Anchored type of the form "like Current";
+			-- Create a new type if it does not exist yet.
+		require
+			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
+		local
+			lower_name: STRING
+			an_id: INTEGER
+		do
+			if a_type_mark /= Void then
+				create lower_name.make (a_type_mark.count + 13)
+				lower_name.append_string (a_type_mark.as_lower)
+				lower_name.append_character (' ')
+				lower_name.append_string (like_current_lower_name)
+			else
+				lower_name := like_current_lower_name
+			end
+			types.search (lower_name)
+			if types.found then
+				Result := types.found_item
+			else
+					-- Types are indexed from 1.
+					-- (0 used to be reserved for no-type)
+				an_id := last_grammar.types.count + 1
+				create Result.make_like_current (an_id, a_type_mark)
+				types.force_new (Result, lower_name)
+				last_grammar.put_type (Result)
+			end
+		ensure
+			type_not_void: Result /= Void
+		end
+
+	new_labeled_type (a_labels: DS_ARRAYED_LIST [STRING]; a_type: PR_TYPE): PR_LABELED_TYPE is
+			-- New labeled type
+		require
+			a_labels_not_void: a_labels /= Void
+			a_labels_not_empty: not a_labels.is_empty
+			no_void_label: not a_labels.has (Void)
+			a_type_not_void: a_type /= Void
+		do
+			create Result.make (a_labels, a_type)
+		ensure
+			type_not_void: Result /= Void
+			labels_set: Result.labels = a_labels
+			type_set: Result.type = a_type
 		end
 
 	new_action (a_text: STRING): DP_COMMAND is
@@ -665,7 +769,7 @@ feature {NONE} -- Implementation
 			a_type: PR_TYPE
 		do
 				-- Make sure ANY is the first type in grammar.
-			a_type := new_type ("ANY")
+			a_type := new_type (Void, "ANY")
 				-- Error token. The token id value 256
 				-- is specified by POSIX.
 			a_token := new_token ("error")
@@ -1287,6 +1391,9 @@ feature {NONE} -- Constants
 	Initial_max_nb_types: INTEGER is 300
 			-- Initial maximum number of types
 
+	like_current_lower_name: STRING is "like current"
+			-- Type name for 'like Current', in lower-case
+
 	No_action: DP_COMMAND is
 			-- Do nothing semantic action
 		once
@@ -1299,7 +1406,7 @@ feature {NONE} -- Constants
 			-- Type used when no type has been specified:
 			--   %token token_name
 		once
-			Result := new_type ("ANY")
+			Result := new_type (Void, "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end
@@ -1307,7 +1414,7 @@ feature {NONE} -- Constants
 	Unknown_type: PR_TYPE is
 			-- Type used when type is not known
 		once
-			Result := new_type ("ANY")
+			Result := new_type (Void, "ANY")
 		ensure
 			no_type_not_void: Result /= Void
 		end

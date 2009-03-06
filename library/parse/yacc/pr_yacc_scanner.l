@@ -70,12 +70,56 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 						last_token := T_INTEGER
 						last_string_value := text
 					}
+	[iI][nN][tT][eE][gG][eE][rR]_8	{
+						last_token := T_INTEGER_8
+						last_string_value := text
+					}
+	[iI][nN][tT][eE][gG][eE][rR]_16	{
+						last_token := T_INTEGER_16
+						last_string_value := text
+					}
+	[iI][nN][tT][eE][gG][eE][rR]_32	{
+						last_token := T_INTEGER_32
+						last_string_value := text
+					}
+	[iI][nN][tT][eE][gG][eE][rR]_64	{
+						last_token := T_INTEGER_64
+						last_string_value := text
+					}
+	[nN][aA][tT][uU][rR][aA][lL]	{
+						last_token := T_NATURAL
+						last_string_value := text
+					}
+	[nN][aA][tT][uU][rR][aA][lL]_8	{
+						last_token := T_NATURAL_8
+						last_string_value := text
+					}
+	[nN][aA][tT][uU][rR][aA][lL]_16	{
+						last_token := T_NATURAL_16
+						last_string_value := text
+					}
+	[nN][aA][tT][uU][rR][aA][lL]_32	{
+						last_token := T_NATURAL_32
+						last_string_value := text
+					}
+	[nN][aA][tT][uU][rR][aA][lL]_64	{
+						last_token := T_NATURAL_64
+						last_string_value := text
+					}
 	[bB][oO][oO][lL][eE][aA][nN]	{
 						last_token := T_BOOLEAN
 						last_string_value := text
 					}
 	[rR][eE][aA][lL]	{
 						last_token := T_REAL
+						last_string_value := text
+					}
+	[rR][eE][aA][lL]_32	{
+						last_token := T_REAL_32
+						last_string_value := text
+					}
+	[rR][eE][aA][lL]_64	{
+						last_token := T_REAL_64
 						last_string_value := text
 					}
 	[dD][oO][uU][bB][lL][eE]	{
@@ -86,12 +130,48 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 						last_token := T_CHARACTER
 						last_string_value := text
 					}
+	[cC][hH][aA][rR][aA][cC][tT][eE][rR]_8	{
+						last_token := T_CHARACTER_8
+						last_string_value := text
+					}
+	[cC][hH][aA][rR][aA][cC][tT][eE][rR]_32	{
+						last_token := T_CHARACTER_32
+						last_string_value := text
+					}
 	[pP][oO][iI][nN][tT][eE][rR]	{
 						last_token := T_POINTER
 						last_string_value := text
 					}
+	[tT][uU][pP][lL][eE]	{
+						last_token := T_TUPLE
+						last_string_value := text
+					}
 	[lL][iI][kK][eE]	{
 						last_token := T_LIKE
+						last_string_value := text
+					}
+	[cC][uU][rR][rR][eE][nN][tT]	{
+						last_token := T_CURRENT
+						last_string_value := text
+					}
+	[eE][xX][pP][aA][nN][dD][eE][dD]	{
+						last_token := T_EXPANDED
+						last_string_value := text
+					}
+	[rR][eE][fF][eE][rR][eE][nN][cC][eE]	{
+						last_token := T_REFERENCE
+						last_string_value := text
+					}
+	[sS][eE][pP][aA][rR][aA][tT][eE]	{
+						last_token := T_SEPARATE
+						last_string_value := text
+					}
+	[aA][tT][tT][aA][cC][hH][eE][dD]	{
+						last_token := T_ATTACHED
+						last_string_value := text
+					}
+	[dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
+						last_token := T_DETACHABLE
 						last_string_value := text
 					}
 	[a-z][a-z0-9_]*	{

@@ -6,7 +6,7 @@ indexing
 		"Parsers for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,16 +33,24 @@ create
 %token T_2PERCENTS T_UNKNOWN
 
 %token <STRING> T_EIFFEL T_IDENTIFIER T_ACTION T_USER_CODE T_CHAR T_STR
-%token <STRING> T_INTEGER T_BOOLEAN T_CHARACTER T_REAL T_DOUBLE T_POINTER
-%token <STRING> T_LIKE
+%token <STRING> T_BOOLEAN T_POINTER T_TUPLE
+%token <STRING> T_INTEGER T_INTEGER_8 T_INTEGER_16 T_INTEGER_32 T_INTEGER_64
+%token <STRING> T_NATURAL T_NATURAL_8 T_NATURAL_16 T_NATURAL_32 T_NATURAL_64
+%token <STRING> T_REAL T_REAL_32 T_REAL_64 T_DOUBLE
+%token <STRING> T_CHARACTER T_CHARACTER_8 T_CHARACTER_32
+%token <STRING> T_LIKE T_CURRENT T_EXPANDED T_REFERENCE T_SEPARATE T_ATTACHED T_DETACHABLE
 %token <INTEGER> T_NUMBER T_ERROR '|' ':'
 
 %type <STRING> Identifier
+%type <STRING> Type_mark_opt Attached_type_mark_opt
 %type <PR_TOKEN> Terminal Token_declaration Left_declaration Right_declaration Nonassoc_declaration
 %type <PR_TYPE> Eiffel_type
 %type <DS_ARRAYED_LIST [PR_TYPE]> Eiffel_type_list Eiffel_generics
+%type <DS_ARRAYED_LIST [PR_LABELED_TYPE]> Eiffel_labeled_type_list Eiffel_labeled_generics
+%type <PR_LABELED_TYPE> Eiffel_labeled_type
+%type <DS_ARRAYED_LIST [STRING]> Eiffel_identifier_list
 
-%expect 8
+%expect 29
 
 %start Grammar
 
@@ -116,42 +124,146 @@ Symbol_type: -- Empty
 		}
 	;
 
-Eiffel_type: T_IDENTIFIER
+Eiffel_type: Type_mark_opt T_IDENTIFIER
 		{
-			$$ := new_type ($1)
+			$$ := new_type ($1, $2)
 		}
-	| T_INTEGER
+	| Type_mark_opt T_INTEGER
 		{
-			$$ := new_basic_type ($1)
+			$$ := new_basic_type ($1, $2)
 		}
-	| T_BOOLEAN
+	| Type_mark_opt T_INTEGER_8
 		{
-			$$ := new_basic_type ($1)
+			$$ := new_basic_type ($1, $2)
 		}
-	| T_CHARACTER
+	| Type_mark_opt T_INTEGER_16
 		{
-			$$ := new_basic_type ($1)
+			$$ := new_basic_type ($1, $2)
 		}
-	| T_REAL
+	| Type_mark_opt T_INTEGER_32
 		{
-			$$ := new_basic_type ($1)
+			$$ := new_basic_type ($1, $2)
 		}
-	| T_DOUBLE
+	| Type_mark_opt T_INTEGER_64
 		{
-			$$ := new_basic_type ($1)
+			$$ := new_basic_type ($1, $2)
 		}
-	| T_POINTER
+	| Type_mark_opt T_NATURAL
 		{
-			$$ := new_basic_type ($1)
+			$$ := new_basic_type ($1, $2)
 		}
-	| T_IDENTIFIER Eiffel_generics
+	| Type_mark_opt T_NATURAL_8
 		{
-			$$ := new_generic_type ($1, $2)
+			$$ := new_basic_type ($1, $2)
 		}
-	| T_LIKE T_IDENTIFIER
+	| Type_mark_opt T_NATURAL_16
 		{
-			$$ := new_anchored_type ($2)
+			$$ := new_basic_type ($1, $2)
 		}
+	| Type_mark_opt T_NATURAL_32
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_NATURAL_64
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_BOOLEAN
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_CHARACTER
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_CHARACTER_8
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_CHARACTER_32
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_REAL
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_REAL_32
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_REAL_64
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_DOUBLE
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_POINTER
+		{
+			$$ := new_basic_type ($1, $2)
+		}
+	| Type_mark_opt T_IDENTIFIER '[' ']'
+		{
+			$$ := new_type ($1, $2)
+		}
+	| Type_mark_opt T_IDENTIFIER Eiffel_generics
+		{
+			$$ := new_generic_type ($1, $2, $3)
+		}
+	| Attached_type_mark_opt T_TUPLE
+		{
+			$$ := new_type ($1, $2)
+		}
+	| Attached_type_mark_opt T_TUPLE '[' ']'
+		{
+			$$ := new_type ($1, $2)
+		}
+	| Attached_type_mark_opt T_TUPLE Eiffel_generics
+		{
+			$$ := new_generic_type ($1, $2, $3)
+		}
+	| Attached_type_mark_opt T_TUPLE Eiffel_labeled_generics
+		{
+			$$ := new_labeled_tuple_type ($1, $2, $3)
+		}
+	| Attached_type_mark_opt T_LIKE T_IDENTIFIER
+		{
+			$$ := new_anchored_type ($1, $3)
+		}
+	| Attached_type_mark_opt T_LIKE T_CURRENT
+		{
+			$$ := new_like_current_type ($1)
+		}
+	;
+
+Type_mark_opt: -- Empty
+	| T_EXPANDED
+		{ $$ := $1 }
+	| T_REFERENCE
+		{ $$ := $1 }
+	| T_SEPARATE
+		{ $$ := $1 }
+	| T_ATTACHED
+		{ $$ := $1 }
+	| T_DETACHABLE
+		{ $$ := $1 }
+	| '!'
+		{ $$ := "!" }
+	| '?'
+		{ $$ := "?" }
+	;
+
+Attached_type_mark_opt: -- Empty
+	| T_ATTACHED
+		{ $$ := $1 }
+	| T_DETACHABLE
+		{ $$ := $1 }
+	| '!'
+		{ $$ := "!" }
+	| '?'
+		{ $$ := "?" }
 	;
 
 Eiffel_generics: '[' Eiffel_type_list ']'
@@ -160,16 +272,48 @@ Eiffel_generics: '[' Eiffel_type_list ']'
 		}
 	;
 
-Eiffel_type_list: -- Empty
-		{
-			$$ := Void
-		}
-	| Eiffel_type
+Eiffel_type_list: Eiffel_type
 		{
 			create $$.make (5)
 			$$.force_last ($1)
 		}
 	| Eiffel_type_list ',' Eiffel_type
+		{
+			$$ := $1
+			$$.force_last ($3)
+		}
+	;
+
+Eiffel_labeled_generics: '[' Eiffel_labeled_type_list ']'
+		{
+			$$ := $2
+		}
+	;
+
+Eiffel_labeled_type_list: Eiffel_labeled_type
+		{
+			create $$.make (5)
+			$$.force_last ($1)
+		}
+	| Eiffel_labeled_type_list ';' Eiffel_labeled_type
+		{
+			$$ := $1
+			$$.force_last ($3)
+		}
+	;
+
+Eiffel_labeled_type: Eiffel_identifier_list ':' Eiffel_type
+		{
+			$$ := new_labeled_type ($1, $3)
+		}
+	;
+
+Eiffel_identifier_list: T_IDENTIFIER
+		{
+			create $$.make (5)
+			$$.force_last ($1)
+		}
+	| Eiffel_identifier_list ',' T_IDENTIFIER
 		{
 			$$ := $1
 			$$.force_last ($3)
@@ -428,17 +572,57 @@ Identifier: T_IDENTIFIER
 		{ $$ := $1 }
 	| T_INTEGER
 		{ $$ := $1 }
+	| T_INTEGER_8
+		{ $$ := $1 }
+	| T_INTEGER_16
+		{ $$ := $1 }
+	| T_INTEGER_32
+		{ $$ := $1 }
+	| T_INTEGER_64
+		{ $$ := $1 }
+	| T_NATURAL
+		{ $$ := $1 }
+	| T_NATURAL_8
+		{ $$ := $1 }
+	| T_NATURAL_16
+		{ $$ := $1 }
+	| T_NATURAL_32
+		{ $$ := $1 }
+	| T_NATURAL_64
+		{ $$ := $1 }
 	| T_BOOLEAN
 		{ $$ := $1 }
 	| T_CHARACTER
 		{ $$ := $1 }
+	| T_CHARACTER_8
+		{ $$ := $1 }
+	| T_CHARACTER_32
+		{ $$ := $1 }
 	| T_REAL
+		{ $$ := $1 }
+	| T_REAL_32
+		{ $$ := $1 }
+	| T_REAL_64
 		{ $$ := $1 }
 	| T_DOUBLE
 		{ $$ := $1 }
 	| T_POINTER
 		{ $$ := $1 }
+	| T_TUPLE
+		{ $$ := $1 }
 	| T_LIKE
+		{ $$ := $1 }
+	| T_CURRENT
+		{ $$ := $1 }
+	| T_EXPANDED
+		{ $$ := $1 }
+	| T_REFERENCE
+		{ $$ := $1 }
+	| T_SEPARATE
+		{ $$ := $1 }
+	| T_ATTACHED
+		{ $$ := $1 }
+	| T_DETACHABLE
 		{ $$ := $1 }
 	;
 

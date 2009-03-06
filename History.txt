@@ -6,6 +6,14 @@ Version 3.10 - ?
 	  "true" and "false". This can be useful when automatically generating
 	  geant build files. See bug#2657770.
 
+	geyacc:
+
+	* When specifying Eiffel types in the %token and %type clauses, in addition
+	  to what was accepted so far, it is now possible to use 'like Current',
+	  labeled tuples (e.g. 'TUPLE [i, j: INTEGER; s: STRING]') and type marks
+	  such as 'expanded', 'reference', 'separate', 'attached', 'detachable',
+	  '!' and '?'. See bug#2618271.
+
 	Gobo Eiffel Kernel Library:
 
 	* Added features `same_*_pathnames' to class KI_FILE_SYSTEM.
