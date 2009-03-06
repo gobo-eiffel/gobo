@@ -8515,7 +8515,7 @@ feature {NONE} -- Agent validity
 -- TODO: like argument
 				if
 					current_system.predicate_class.is_preparsed and then
-					a_type.same_named_type (current_system.boolean_class, current_type, current_type)
+					a_type.same_named_type (current_system.boolean_class, current_type, a_context)
 				then
 					an_agent_class := current_system.predicate_class
 					create a_parameters.make_with_capacity (2)
@@ -8830,7 +8830,7 @@ feature {NONE} -- Agent validity
 -- TODO: like argument
 				if
 					current_system.predicate_class.is_preparsed and then
-					a_type.same_named_type (current_system.boolean_class, current_type, current_type)
+					a_type.same_named_type (current_system.boolean_class, current_type, a_context)
 				then
 					an_agent_class := current_system.predicate_class
 					create a_parameters.make_with_capacity (2)
@@ -8955,7 +8955,7 @@ feature {NONE} -- Agent validity
 				l_target_type := tokens.like_current
 				if
 					current_system.predicate_class.is_preparsed and then
-					l_type.same_named_type (current_system.boolean_class, current_type, current_type)
+					l_type.same_named_type (current_system.boolean_class, current_type, a_context)
 				then
 					l_agent_class := current_system.predicate_class
 					create l_parameters.make_with_capacity (2)
@@ -9224,7 +9224,7 @@ feature {NONE} -- Agent validity
 -- TODO: like argument
 				if
 					current_system.predicate_class.is_preparsed and then
-					a_result_type.same_named_type (current_system.boolean_class, current_type, current_type)
+					a_result_type.same_named_type (current_system.boolean_class, current_type, a_context)
 				then
 					an_agent_class := current_system.predicate_class
 					create a_parameters.make_with_capacity (2)
@@ -9359,7 +9359,7 @@ feature {NONE} -- Agent validity
 				create l_tuple_type.make (Void, l_open_operands, current_system.tuple_class)
 				if
 					current_system.predicate_class.is_preparsed and then
-					l_type.same_named_type (current_system.boolean_class, current_type, current_type)
+					l_type.same_named_type (current_system.boolean_class, current_type, a_context)
 				then
 					l_agent_class := current_system.predicate_class
 					create l_parameters.make_with_capacity (2)
@@ -9801,7 +9801,7 @@ feature {NONE} -- Agent validity
 				if not has_fatal_error then
 					if
 						current_system.predicate_class.is_preparsed and then
-						a_type.same_named_type (current_system.boolean_class, current_type, current_type)
+						a_type.same_named_type (current_system.boolean_class, current_type, a_context)
 					then
 						an_agent_class := current_system.predicate_class
 						create a_parameters.make_with_capacity (2)

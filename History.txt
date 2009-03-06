@@ -18,6 +18,10 @@ Version 3.10 - ?
 	  See bug#2499770.
 	* Fixed bug where object-test local was not recognized as such when
 	  appearing as target of an agent declaration.
+	* Fixed bug where the type of an agent was not correctly determined
+	  when the result type of the corresponding function contained a formal
+	  generic parameter. It ended up being 'FUNCTION [ANY, TUPLE, BOOLEAN]'
+	  instead of 'PREDICATE [ANY, TUPLE]'. See bug#2667604.
 
 	Miscellaneous:
 
