@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			-- Note: `a_append' = True implies that `a_file' has been opened in append mode, otherwise
 			-- in normal write mode. `a_append' is passed in only as information in case
 			-- append/write-mode dependent actions need to be performed.
-			-- TODO: shouldn't `KL_OUTPUT_FILE.is_open_append' be exported so that this information is  directly available?
+			-- TODO: shouldn't `KL_OUTPUT_FILE.is_open_append' be exported so that this information is directly available?
 		require
 			a_message_not_void: a_message /= Void
 			a_file_not_void: a_file /= Void

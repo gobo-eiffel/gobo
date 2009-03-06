@@ -77,8 +77,8 @@ feature -- Status report
 			Project_variables_resolver.set_variables (project.variables)
 
 				-- Set default execution conditions:
-			if_condition := true
-			unless_condition := false
+			if_condition := True
+			unless_condition := False
 				-- Look for an 'if' XML attribute
 			if has_attribute (If_attribute_name) then
 				a_string := xml_element.attribute_by_name (If_attribute_name).value

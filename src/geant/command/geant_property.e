@@ -1,14 +1,14 @@
 indexing
 
-    description:
+	description:
 
-        "Properties for Geant tasks and commands"
+		"Properties for Geant tasks and commands"
 
-    library: "Gobo Eiffel Ant"
-    copyright: "Copyright (c) 2008, Sven Ehrke and others"
-    license: "MIT License"
-    date: "$Date$"
-    revision: "$Revision$"
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2008, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class GEANT_PROPERTY [G]
 
@@ -16,8 +16,8 @@ inherit
 
 	ANY
 
-    GEANT_SHARED_PROPERTIES
-        export {NONE} all end
+	GEANT_SHARED_PROPERTIES
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 

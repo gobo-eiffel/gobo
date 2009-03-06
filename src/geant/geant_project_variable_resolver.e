@@ -94,6 +94,8 @@ feature -- Access
 			-- Is `a_condition' True?;
 			-- used for "if" and "unless" attributes;
 			-- possible forms:
+			-- "true": always True
+			-- "false": always False
 			-- "$foo": True if variable `foo' is defined
 			-- "${foo}": True if variable `foo' is defined
 			-- "$foo=bar" | "${foo}=bar" | "bar=$foo" | "bar=${foo}":
@@ -111,10 +113,14 @@ feature -- Access
 			create a_splitter.make_with_separators ("=")
 			a_tokens := a_splitter.split_greedy (a_condition)
 			if a_tokens.count = 1 then
-					-- `a_condition' should be in form "$foo";
-					-- Check if $foo is defined.
+					-- If `a_condition' is not "true" or "false", then it should be of
+					-- the form "$foo". In this latter case, check if $foo is defined.
 				s := a_tokens.item (1)
-				if s.count > 3 and then (s.item (1) = '$' and s.item (2) = '{' and s.item (s.count) = '}') then
+				if STRING_.same_case_insensitive (s, false_attribute_value) then
+					Result := False
+				elseif STRING_.same_case_insensitive (s, true_attribute_value) then
+					Result := True
+				elseif s.count > 3 and then (s.item (1) = '$' and s.item (2) = '{' and s.item (s.count) = '}') then
 						-- Handle "${bar}" form:
 					s := s.substring (3, s.count - 1)
 					Result := has (s)
@@ -126,7 +132,7 @@ feature -- Access
 					exit_application (1, <<"geant: incorrect conditional: '", a_condition, "%'">>)
 				end
 			elseif a_tokens.count = 2 then
-					-- `a_condition' should be in form "$foo=bar";
+					-- `a_condition' should be of the form "$foo=bar";
 					-- Check if $foo equals "bar".
 					-- TODO: Do this more efficiently:
 				create a_string_interpreter.make
@@ -203,6 +209,24 @@ feature -- Setting
 			variables := a_variables
 		ensure
 			variables_set: variables = a_variables
+		end
+
+feature {NONE} -- Constants
+
+	True_attribute_value: STRING is
+			-- "true" attribute value
+		once
+			Result := "true"
+		ensure
+			attribute_value_not_void: Result /= Void
+		end
+
+	False_attribute_value: STRING is
+			-- "false" attribute value
+		once
+			Result := "false"
+		ensure
+			attribute_value_not_void: Result /= Void
 		end
 
 end

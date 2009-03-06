@@ -1,5 +1,11 @@
 Version 3.10 - ?
 
+	geant:
+
+	* Extended the attributes 'if' and 'unless' to accept the values
+	  "true" and "false". This can be useful when automatically generating
+	  geant build files. See bug#2657770.
+
 	Gobo Eiffel Kernel Library:
 
 	* Added features `same_*_pathnames' to class KI_FILE_SYSTEM.

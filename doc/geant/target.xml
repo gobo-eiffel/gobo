@@ -68,13 +68,15 @@
 				<term>if</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>
-					execute target only if the variable used in the attributevalue is defined. If the
+					execute target only if the variable used in the attribute value is defined. If the
 					value is '$some_var' for example and the variable name 'some_var' is defined the target
 					will be executed (but only if evaluation of attribute 'unless' does not prevent this).
 					Note that the variable can also reference an environment variable like '$WINDIR' for example.
-					In addition to simply checking if a variable is defined or not it is also possible if it's
+					In addition to simply checking if a variable is defined or not it is also possible to check if its
 					value is equal to a certain string. This is done like this: '${some_var}=some_value'. At the
-					moment only equality comparison is supported.
+					moment only equality comparison is supported. For convenience (when automatically generating
+					geant build files), it is also accepted to pass "true" or "false" as attribute value. In
+					that case the target is executed only if the attribute value is "true".
 					</para>
 				</listitem>
 				<listitem>
@@ -90,7 +92,7 @@
 					<para><emphasis>Description: </emphasis>
 					The description of attribute 'if' is valid for this attribute as well with the difference
 					that the evaluation of the attribute value is negated. Thus this means the target is
-					executed only if the variable referenced in the attributevalue is not defined etc.
+					executed only if the variable referenced in the attribute value is not defined etc.
 					(but only if evaluation of attribute 'if' does not prevent this)
 					</para>
 				</listitem>

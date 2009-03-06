@@ -1,14 +1,14 @@
 indexing
 
-    description:
+	description:
 
-        "STRING properties for Geant tasks and commands"
+		"STRING properties for Geant tasks and commands"
 
-    library: "Gobo Eiffel Ant"
-    copyright: "Copyright (c) 2008, Sven Ehrke and others"
-    license: "MIT License"
-    date: "$Date$"
-    revision: "$Revision$"
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2008, Sven Ehrke and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class GEANT_STRING_PROPERTY
 
