@@ -13,6 +13,12 @@ Version 3.10 - ?
 	  labeled tuples (e.g. 'TUPLE [i, j: INTEGER; s: STRING]') and type marks
 	  such as 'expanded', 'reference', 'separate', 'attached', 'detachable',
 	  '!' and '?'. See bug#2618271.
+	* When declaring '%token <EIFFEL_TYPE> ...', the generated parser
+	  expects to find token values in the variable `last_<eiffel_type>_value',
+	  where all non-alphanumeric characters in the type name EIFFEL_TYPE
+	  are replaced by underscores. It is now possible to customize the
+	  name of this variable to `last_<alias_name>_value' by declaring
+	  '%token <EIFFEL_TYPE as alias_name> ...'. See bug#2621302.
 
 	Gobo Eiffel Kernel Library:
 

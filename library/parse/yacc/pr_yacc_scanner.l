@@ -174,6 +174,10 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 						last_token := T_DETACHABLE
 						last_string_value := text
 					}
+	[aA][sS]	{
+						last_token := T_AS
+						last_string_value := text
+					}
 	[a-z][a-z0-9_]*	{
 						last_token := T_IDENTIFIER
 						last_string_value := text

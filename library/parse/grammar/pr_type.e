@@ -208,13 +208,22 @@ feature -- Access
 	name: STRING
 			-- Type name
 
+	alias_name: STRING
+			-- Name to be used in `last_value_name', typically "last_<alias_name>_value".
+			-- Use `name' instead if `alias_name' is Void or empty.
+
 	last_value_name: STRING is
 			-- Name of last value entity
 		local
+			l_name: STRING
 			i, nb: INTEGER
 			c: CHARACTER
 		do
-			nb := name.count
+			l_name := alias_name
+			if l_name = Void or else l_name.is_empty then
+				l_name := name
+			end
+			nb := l_name.count
 			create Result.make (nb + 11)
 			Result.append_string ("last_")
 			from
@@ -222,7 +231,7 @@ feature -- Access
 			until
 				i > nb
 			loop
-				c := name.item (i)
+				c := l_name.item (i)
 				inspect c
 				when '0' .. '9', 'a' .. 'z', '_' then
 					Result.append_character (c)
@@ -246,6 +255,16 @@ feature -- Access
 			-- Hash value
 		do
 			Result := id
+		end
+
+feature -- Setting
+
+	set_alias_name (a_name: like alias_name) is
+			-- Set `alias_name' to `a_name'.
+		do
+			alias_name := a_name
+		ensure
+			alias_name_set: alias_name = a_name
 		end
 
 feature -- Output

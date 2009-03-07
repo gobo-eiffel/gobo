@@ -33,7 +33,7 @@ create
 %token T_2PERCENTS T_UNKNOWN
 
 %token <STRING> T_EIFFEL T_IDENTIFIER T_ACTION T_USER_CODE T_CHAR T_STR
-%token <STRING> T_BOOLEAN T_POINTER T_TUPLE
+%token <STRING> T_BOOLEAN T_POINTER T_TUPLE T_AS
 %token <STRING> T_INTEGER T_INTEGER_8 T_INTEGER_16 T_INTEGER_32 T_INTEGER_64
 %token <STRING> T_NATURAL T_NATURAL_8 T_NATURAL_16 T_NATURAL_32 T_NATURAL_64
 %token <STRING> T_REAL T_REAL_32 T_REAL_64 T_DOUBLE
@@ -50,7 +50,7 @@ create
 %type <PR_LABELED_TYPE> Eiffel_labeled_type
 %type <DS_ARRAYED_LIST [STRING]> Eiffel_identifier_list
 
-%expect 29
+%expect 30
 
 %start Grammar
 
@@ -80,11 +80,11 @@ Declaration: T_EIFFEL
 		{
 			last_grammar.eiffel_header.force_last ($1)
 		}
-	| T_TOKEN Symbol_type Token_declaration_list
+	| T_TOKEN Token_symbol_type Token_declaration_list
 		{
 			type := Void
 		}
-	| T_TYPE Symbol_type Type_declaration_list
+	| T_TYPE Type_symbol_type Type_declaration_list
 		{
 			type := Void
 		}
@@ -114,7 +114,22 @@ Declaration: T_EIFFEL
 		}
 	;
 
-Symbol_type: -- Empty
+Token_symbol_type: -- Empty
+		{
+			type := No_type
+		}
+	| '<' Eiffel_type '>'
+		{
+			type := $2
+		}
+	| '<' Eiffel_type T_AS Identifier '>'
+		{
+			type := $2
+			type.set_alias_name ($4)
+		}
+	;
+
+Type_symbol_type: -- Empty
 		{
 			type := No_type
 		}
@@ -623,6 +638,8 @@ Identifier: T_IDENTIFIER
 	| T_ATTACHED
 		{ $$ := $1 }
 	| T_DETACHABLE
+		{ $$ := $1 }
+	| T_AS
 		{ $$ := $1 }
 	;
 
