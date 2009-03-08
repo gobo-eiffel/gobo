@@ -121,11 +121,12 @@ Token_symbol_type: -- Empty
 	| '<' Eiffel_type '>'
 		{
 			type := $2
+			set_no_alias_name (type)
 		}
 	| '<' Eiffel_type T_AS Identifier '>'
 		{
 			type := $2
-			type.set_alias_name ($4)
+			set_alias_name (type, $4)
 		}
 	;
 

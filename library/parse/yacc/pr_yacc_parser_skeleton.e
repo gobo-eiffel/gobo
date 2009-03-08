@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			create terminal_symbols.make (Initial_max_nb_tokens)
 			create nonterminal_symbols.make (Initial_max_nb_variables)
 			create types.make (Initial_max_nb_types)
+			create last_value_names.make (Initial_max_nb_types)
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -57,6 +58,7 @@ feature -- Initialization
 			terminal_symbols.wipe_out
 			nonterminal_symbols.wipe_out
 			types.wipe_out
+			last_value_names.wipe_out
 			rule := Void
 			precedence_token := Void
 			start_symbol := Void
@@ -888,6 +890,70 @@ feature {NONE} -- Implementation
 			precedence_set: a_token.precedence = a_precedence
 		end
 
+	set_alias_name (a_type: PR_TYPE; a_name: STRING) is
+			-- Set alias name of `a_type' to `a_name'.
+		require
+			a_type_not_void: a_type /= Void
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		local
+			l_old_alias_name: STRING
+			l_last_value_name: STRING
+			l_no_type: PR_TYPE
+		do
+			l_old_alias_name := a_type.alias_name
+			if l_old_alias_name /= Void then
+				if not STRING_.same_case_insensitive (l_old_alias_name, a_name) then
+					if l_old_alias_name.is_empty then
+						report_alias_name_not_defined_error (a_type, a_name)
+					else
+						report_alias_name_defined_twice_error (a_type, l_old_alias_name, a_name)
+					end
+				end
+			else
+				a_type.set_alias_name (a_name)
+				l_no_type := No_type
+				l_last_value_name := a_type.last_value_name
+				last_value_names.search (l_last_value_name)
+				if last_value_names.found then
+					report_last_value_name_used_twice_error (l_last_value_name, last_value_names.found_item, a_type)
+				elseif a_type /= l_no_type and then l_no_type.last_value_name.same_string (l_last_value_name) then
+					report_last_value_name_used_twice_error (l_last_value_name, l_no_type, a_type)
+				else
+					last_value_names.force_last_new (a_type, l_last_value_name)
+				end
+			end
+		end
+
+	set_no_alias_name (a_type: PR_TYPE) is
+			-- Set no alias name to `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_old_alias_name: STRING
+			l_last_value_name: STRING
+			l_no_type: PR_TYPE
+		do
+			l_old_alias_name := a_type.alias_name
+			if l_old_alias_name /= Void then
+				if not l_old_alias_name.is_empty then
+					report_alias_name_undefined_error (a_type, l_old_alias_name)
+				end
+			else
+				a_type.set_alias_name ("")
+				l_no_type := No_type
+				l_last_value_name := a_type.last_value_name
+				last_value_names.search (l_last_value_name)
+				if last_value_names.found then
+					report_last_value_name_used_twice_error (l_last_value_name, last_value_names.found_item, a_type)
+				elseif a_type /= l_no_type and then l_no_type.last_value_name.same_string (l_last_value_name) then
+					report_last_value_name_used_twice_error (l_last_value_name, l_no_type, a_type)
+				else
+					last_value_names.force_last_new (a_type, l_last_value_name)
+				end
+			end
+		end
+
 	set_token_id (a_token: PR_TOKEN; an_id: INTEGER) is
 			-- Set `token_id' of `a_token' to `an_id'.
 		require
@@ -1043,7 +1109,10 @@ feature {NONE} -- Access
 
 	types: DS_HASH_TABLE [PR_TYPE, STRING]
 			-- Types already created so far indexed
-			-- by type names in uppercase
+			-- by type names in uppercase (or in lowercase in case of anchored types)
+
+	last_value_names: DS_HASH_TABLE [PR_TYPE, STRING]
+			-- Types indexed by their 'last_value_name'
 
 feature {NONE} -- Status report
 
@@ -1080,6 +1149,75 @@ feature {NONE} -- Error handling
 			error_handler.report_error (an_error)
 			successful := False
 		ensure then
+			not_successful: not successful
+		end
+
+	report_alias_name_defined_twice_error (a_type: PR_TYPE; a_old_alias_name, a_new_alias_name: STRING) is
+			-- Report that the alias name for token type `a_type' has been defined twice.
+			-- The same alias name should be repeated in each %token declaration with a given type.
+		require
+			a_type_not_void: a_type /= Void
+			a_old_alias_name_not_void: a_old_alias_name /= Void
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+		local
+			an_error: PR_ALIAS_NAME_DEFINED_TWICE_ERROR
+		do
+			create an_error.make (filename, line_nb, a_type, a_old_alias_name, a_new_alias_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_alias_name_not_defined_error (a_type: PR_TYPE; a_new_alias_name: STRING) is
+			-- Report that the alias name for token type `a_type',
+			-- which was not defined so far, is now being defined as `a_new_alias_name'.
+			-- The alias name should be repeated in each %token declaration with a given type.
+		require
+			a_type_not_void: a_type /= Void
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+		local
+			an_error: PR_ALIAS_NAME_NOT_DEFINED_ERROR
+		do
+			create an_error.make (filename, line_nb, a_type, a_new_alias_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_alias_name_undefined_error (a_type: PR_TYPE; a_old_alias_name: STRING) is
+			-- Report that the alias name for token type `a_type',
+			-- which was defined as `a_old_alias_name', is being undefined.
+			-- The alias name should be repeated in each %token declaration with a given type.
+		require
+			filename_not_void: filename /= Void
+			a_type_not_void: a_type /= Void
+			a_old_alias_name_not_void: a_old_alias_name /= Void
+		local
+			an_error: PR_ALIAS_NAME_UNDEFINED_ERROR
+		do
+			create an_error.make (filename, line_nb, a_type, a_old_alias_name)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_last_value_name_used_twice_error (a_last_value_name: STRING; a_type1, a_type2: PR_TYPE) is
+			-- Report that `a_last_value_name' is the name of the variable
+			-- used to pass values for tokens both of type `a_type1' and `a_type2'.
+		require
+			a_last_value_name_not_void: a_last_value_name /= Void
+			a_type1_not_void: a_type1 /= Void
+			a_type2_not_void: a_type2 /= Void
+		local
+			an_error: PR_LAST_VALUE_NAME_USED_TWICE_ERROR
+		do
+			create an_error.make (filename, line_nb, a_last_value_name, a_type1, a_type2)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
 			not_successful: not successful
 		end
 
@@ -1405,7 +1543,7 @@ feature {NONE} -- Constants
 	No_type: PR_TYPE is
 			-- Type used when no type has been specified:
 			--   %token token_name
-		once
+		do
 			Result := new_type (Void, "ANY")
 		ensure
 			no_type_not_void: Result /= Void
@@ -1413,7 +1551,7 @@ feature {NONE} -- Constants
 
 	Unknown_type: PR_TYPE is
 			-- Type used when type is not known
-		once
+		do
 			Result := new_type (Void, "ANY")
 		ensure
 			no_type_not_void: Result /= Void
@@ -1428,6 +1566,8 @@ invariant
 	no_void_nonterminal_symbol: not nonterminal_symbols.has_item (Void)
 	types_not_void: types /= Void
 	no_void_type: not types.has_item (Void)
+	last_value_names_not_void: last_value_names /= Void
+	no_void_last_value_name_type: not last_value_names.has_item (Void)
 	start_symbol_name_not_void: start_symbol /= Void implies start_symbol.first /= Void
 	action_factory_not_void: action_factory /= Void
 
