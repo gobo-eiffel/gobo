@@ -244,8 +244,8 @@ feature -- Access
 			end
 			Result.append_string ("_value")
 		ensure
-			last_value_name_not_void: last_value_name /= Void
-			last_value_name_not_empty: last_value_name.count > 0
+			last_value_name_not_void: Result /= Void
+			last_value_name_not_empty: Result.count > 0
 		end
 
 	id: INTEGER
