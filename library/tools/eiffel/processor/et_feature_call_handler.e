@@ -32,6 +32,7 @@ inherit
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
+			process_binary_integer_constant,
 			process_bit_feature,
 			process_bracket_expression,
 			process_c1_character_constant,
@@ -90,6 +91,7 @@ inherit
 			process_manifest_type,
 			process_object_equality_expression,
 			process_object_test,
+			process_octal_integer_constant,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -659,6 +661,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_creation_instruction (an_instruction)
+		end
+
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_integer_constant (a_constant)
 		end
 
 	process_bit_feature (a_type: ET_BIT_FEATURE) is
@@ -1797,6 +1806,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 			process_expression (an_expression.expression)
 			reset_fatal_error (had_error or has_fatal_error)
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_integer_constant (a_constant)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is

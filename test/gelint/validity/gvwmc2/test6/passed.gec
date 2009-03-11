@@ -1,0 +1,2 @@
+[GVWMC-2] class AA (19,9): integer constant '-9223372036854775809' is not representable as an instance of 'INTEGER_64'.
+----

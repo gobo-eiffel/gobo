@@ -55,8 +55,48 @@ feature -- Output
 			-- Regexp: 0|(-?[1-9][0-9]*)
 		require
 			is_open_write: is_open_write
+		do
+			put_integer_64 (i)
+		end
+
+	put_integer_8 (i: INTEGER_8) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|(-?[1-9][0-9]*)
+		require
+			is_open_write: is_open_write
+		do
+			put_integer_64 (i)
+		end
+
+	put_integer_16 (i: INTEGER_16) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|(-?[1-9][0-9]*)
+		require
+			is_open_write: is_open_write
+		do
+			put_integer_64 (i)
+		end
+
+	put_integer_32 (i: INTEGER_32) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|(-?[1-9][0-9]*)
+		require
+			is_open_write: is_open_write
+		do
+			put_integer_64 (i)
+		end
+
+	put_integer_64 (i: INTEGER_64) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|(-?[1-9][0-9]*)
+		require
+			is_open_write: is_open_write
 		local
-			k, j: INTEGER
+			k, j: INTEGER_64
 		do
 			if i = 0 then
 				put_character ('0')
@@ -68,58 +108,130 @@ feature -- Output
 				inspect k \\ 10
 				when 0 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('1')
 				when 1 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('2')
 				when 2 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('3')
 				when 3 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('4')
 				when 4 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('5')
 				when 5 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('6')
 				when 6 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('7')
 				when 7 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('8')
 				when 8 then
 					if j /= 0 then
-						put_integer (j)
+						put_integer_64 (j)
 					end
 					put_character ('9')
 				when 9 then
-					put_integer (j + 1)
+					put_integer_64 (j + 1)
 					put_character ('0')
 				end
 			else
 				k := i
 				j := k // 10
 				if j /= 0 then
-					put_integer (j)
+					put_integer_64 (j)
+				end
+				inspect k \\ 10
+				when 0 then
+					put_character ('0')
+				when 1 then
+					put_character ('1')
+				when 2 then
+					put_character ('2')
+				when 3 then
+					put_character ('3')
+				when 4 then
+					put_character ('4')
+				when 5 then
+					put_character ('5')
+				when 6 then
+					put_character ('6')
+				when 7 then
+					put_character ('7')
+				when 8 then
+					put_character ('8')
+				when 9 then
+					put_character ('9')
+				end
+			end
+		end
+
+	put_natural_8 (i: NATURAL_8) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|([1-9][0-9]*)
+		require
+			is_open_write: is_open_write
+		do
+			put_natural_64 (i)
+		end
+
+	put_natural_16 (i: NATURAL_16) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|([1-9][0-9]*)
+		require
+			is_open_write: is_open_write
+		do
+			put_natural_64 (i)
+		end
+
+	put_natural_32 (i: NATURAL_32) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|([1-9][0-9]*)
+		require
+			is_open_write: is_open_write
+		do
+			put_natural_64 (i)
+		end
+
+	put_natural_64 (i: NATURAL_64) is
+			-- Write decimal representation
+			-- of `i' to output stream.
+			-- Regexp: 0|([1-9][0-9]*)
+		require
+			is_open_write: is_open_write
+		local
+			k, j: NATURAL_64
+		do
+			if i = 0 then
+				put_character ('0')
+			else
+				k := i
+				j := k // 10
+				if j /= 0 then
+					put_natural_64 (j)
 				end
 				inspect k \\ 10
 				when 0 then

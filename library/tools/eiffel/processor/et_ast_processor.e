@@ -172,6 +172,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+		deferred
+		end
+
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		require
@@ -1034,6 +1041,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
 		deferred
 		end
 

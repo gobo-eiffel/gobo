@@ -229,6 +229,22 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+			a_sign: ET_SYMBOL_OPERATOR
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			a_sign := a_constant.sign
+			if a_sign /= Void then
+				a_sign.process (Current)
+			end
+		end
+
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		do
@@ -2194,6 +2210,22 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.type.process (Current)
 			an_expression.right_brace.process (Current)
 			an_expression.expression.process (Current)
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			a_type: ET_TARGET_TYPE
+			a_sign: ET_SYMBOL_OPERATOR
+		do
+			a_type := a_constant.cast_type
+			if a_type /= Void then
+				a_type.process (Current)
+			end
+			a_sign := a_constant.sign
+			if a_sign /= Void then
+				a_sign.process (Current)
+			end
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is

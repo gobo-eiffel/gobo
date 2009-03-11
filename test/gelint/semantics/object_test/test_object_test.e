@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test semantics of recursive object-tests"
+		"Test semantics of object-tests"
 
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
 	license: "MIT License"

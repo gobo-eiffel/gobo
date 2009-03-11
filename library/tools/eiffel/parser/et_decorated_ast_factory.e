@@ -115,6 +115,7 @@ inherit
 			new_semicolon_symbol,
 			new_tilde_symbol,
 			new_times_symbol,
+			new_binary_integer_constant,
 			new_bit_constant,
 			new_break,
 			new_c1_character_constant,
@@ -124,6 +125,7 @@ inherit
 			new_free_operator,
 			new_hexadecimal_integer_constant,
 			new_identifier,
+			new_octal_integer_constant,
 			new_regular_integer_constant,
 			new_regular_manifest_string,
 			new_regular_real_constant,
@@ -1203,6 +1205,14 @@ feature -- Eiffel symbols
 
 feature -- AST leaves
 
+	new_binary_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BINARY_INTEGER_CONSTANT is
+			-- New integer constant in binary format
+		do
+			create Result.make (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (True, a_scanner))
+		end
+
 	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BIT_CONSTANT is
 			-- New bit constant
 		do
@@ -1267,6 +1277,14 @@ feature -- AST leaves
 			-- New identifier
 		do
 			Result := a_scanner.last_identifier
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (True, a_scanner))
+		end
+
+	new_octal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_OCTAL_INTEGER_CONSTANT is
+			-- New integer constant in octal format
+		do
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (True, a_scanner))
 		end

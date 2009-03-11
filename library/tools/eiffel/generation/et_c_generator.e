@@ -24,6 +24,7 @@ inherit
 			process_attribute,
 			process_bang_instruction,
 			process_bit_constant,
+			process_binary_integer_constant,
 			process_bracket_expression,
 			process_c1_character_constant,
 			process_c2_character_constant,
@@ -67,6 +68,7 @@ inherit
 			process_manifest_type,
 			process_object_equality_expression,
 			process_object_test,
+			process_octal_integer_constant,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -5282,10 +5284,9 @@ feature {NONE} -- Instruction generation
 								end
 								if l_lower_integer /= Void and l_upper_integer /= Void then
 									from
-										l_lower_integer.compute_value
-										l_upper_integer.compute_value
-										k := l_lower_integer.value
-										nb3 := l_upper_integer.value
+-- TODO: check type of inspect value.
+										k := l_lower_integer.to_integer_32
+										nb3 := l_upper_integer.to_integer_32
 									until
 										k > nb3
 									loop
@@ -6736,6 +6737,14 @@ feature {NONE} -- Expression generation
 			print_attribute_type_id_name (a_target_type, current_file)
 		end
 
+	print_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Print `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+		do
+			print_integer_constant (a_constant)
+		end
+
 	print_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Print `a_constant'.
 		require
@@ -7839,57 +7848,8 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			l_temp: ET_IDENTIFIER
-			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
-			if in_operand then
-				if in_target then
-					in_operand := False
-					l_dynamic_type := dynamic_type_set (a_constant).static_type
-					l_temp := new_temp_variable (l_dynamic_type)
-					print_indentation
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_hexadecimal_integer_constant (a_constant)
-					current_file.put_character (';')
-					current_file.put_new_line
-					l_temp.set_index (a_constant.index)
-					operand_stack.force (l_temp)
-					in_operand := True
-				else
-					operand_stack.force (a_constant)
-				end
-			else
-				l_dynamic_type := dynamic_type_set (a_constant).static_type
-				print_type_cast (l_dynamic_type, current_file)
-				current_file.put_character ('(')
-				if l_dynamic_type = current_dynamic_system.integer_8_type then
-					current_file.put_string (c_ge_int8)
-				elseif l_dynamic_type = current_dynamic_system.integer_16_type then
-					current_file.put_string (c_ge_int16)
-				elseif l_dynamic_type = current_dynamic_system.integer_32_type then
-					current_file.put_string (c_ge_int32)
-				elseif l_dynamic_type = current_dynamic_system.integer_64_type then
-					current_file.put_string (c_ge_int64)
-				elseif l_dynamic_type = current_dynamic_system.natural_8_type then
-					current_file.put_string (c_ge_nat8)
-				elseif l_dynamic_type = current_dynamic_system.natural_16_type then
-					current_file.put_string (c_ge_nat16)
-				elseif l_dynamic_type = current_dynamic_system.natural_32_type then
-					current_file.put_string (c_ge_nat32)
-				elseif l_dynamic_type = current_dynamic_system.natural_64_type then
-					current_file.put_string (c_ge_nat64)
-				else
-					current_file.put_string (c_ge_int32)
-				end
-				current_file.put_character ('(')
-				current_file.put_string (a_constant.literal)
-				current_file.put_character (')')
-				current_file.put_character (')')
-			end
+			print_integer_constant (a_constant)
 		end
 
 	print_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
@@ -7906,6 +7866,150 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			an_expression_not_void: an_expression /= Void
 		do
 			print_qualified_call_expression (an_expression)
+		end
+
+	print_integer_constant (a_constant: ET_INTEGER_CONSTANT) is
+			-- Check validity of `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+		local
+			l_temp: ET_IDENTIFIER
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_integer_32_value: INTEGER_32
+			l_integer_64_value: INTEGER_64
+		do
+			if in_operand then
+				if in_target then
+					in_operand := False
+					l_dynamic_type := dynamic_type_set (a_constant).static_type
+					l_temp := new_temp_variable (l_dynamic_type)
+					print_indentation
+					print_temp_name (l_temp, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_integer_constant (a_constant)
+					current_file.put_character (';')
+					current_file.put_new_line
+					l_temp.set_index (a_constant.index)
+					operand_stack.force (l_temp)
+					in_operand := True
+				else
+					operand_stack.force (a_constant)
+				end
+			else
+				l_dynamic_type := dynamic_type_set (a_constant).static_type
+				print_type_cast (l_dynamic_type, current_file)
+				current_file.put_character ('(')
+				if l_dynamic_type = current_dynamic_system.integer_8_type then
+					if not a_constant.is_integer_8 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_int8)
+						current_file.put_character ('(')
+						current_file.put_integer_8 (a_constant.to_integer_8)
+						current_file.put_character (')')
+					end
+				elseif l_dynamic_type = current_dynamic_system.integer_16_type then
+					if not a_constant.is_integer_16 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_int16)
+						current_file.put_character ('(')
+						current_file.put_integer_16 (a_constant.to_integer_16)
+						current_file.put_character (')')
+					end
+				elseif l_dynamic_type = current_dynamic_system.integer_32_type then
+					if not a_constant.is_integer_32 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_int32)
+						current_file.put_character ('(')
+						l_integer_32_value := a_constant.to_integer_32
+						if l_integer_32_value = {INTEGER_32}.Min_value then
+							current_file.put_character ('-')
+							current_file.put_integer_32 ({INTEGER_32}.Max_value)
+							current_file.put_string (")-1")
+						else
+							current_file.put_integer_32 (l_integer_32_value)
+							current_file.put_character (')')
+						end
+					end
+				elseif l_dynamic_type = current_dynamic_system.integer_64_type then
+					if not a_constant.is_integer_64 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_int64)
+						current_file.put_character ('(')
+						l_integer_64_value := a_constant.to_integer_64
+						if l_integer_64_value = {INTEGER_64}.Min_value then
+							current_file.put_character ('-')
+							current_file.put_integer_64 ({INTEGER_64}.Max_value)
+							current_file.put_string (")-1")
+						else
+							current_file.put_integer_64 (l_integer_64_value)
+							current_file.put_character (')')
+						end
+					end
+				elseif l_dynamic_type = current_dynamic_system.natural_8_type then
+					if not a_constant.is_natural_8 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_nat8)
+						current_file.put_character ('(')
+						current_file.put_natural_8 (a_constant.to_natural_8)
+						current_file.put_character (')')
+					end
+				elseif l_dynamic_type = current_dynamic_system.natural_16_type then
+					if not a_constant.is_natural_16 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_nat16)
+						current_file.put_character ('(')
+						current_file.put_natural_16 (a_constant.to_natural_16)
+						current_file.put_character (')')
+					end
+				elseif l_dynamic_type = current_dynamic_system.natural_32_type then
+					if not a_constant.is_natural_32 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_nat32)
+						current_file.put_character ('(')
+						current_file.put_natural_32 (a_constant.to_natural_32)
+						current_file.put_character (')')
+					end
+				elseif l_dynamic_type = current_dynamic_system.natural_64_type then
+					if not a_constant.is_natural_64 then
+							-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						current_file.put_string (c_ge_nat64)
+						current_file.put_character ('(')
+						current_file.put_natural_64 (a_constant.to_natural_64)
+						current_file.put_character (')')
+					end
+				else
+						-- Internal error: we should have gotten an error in ET_FEATURE_CHECKER.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				current_file.put_character (')')
+			end
 		end
 
 	print_local_variable (a_name: ET_IDENTIFIER) is
@@ -8871,6 +8975,14 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			end
 		end
 
+	print_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Print `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+		do
+			print_integer_constant (a_constant)
+		end
+
 	print_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Print `an_expression'.
 		require
@@ -9413,101 +9525,8 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			-- Check validity of `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			i, nb: INTEGER
-			l_literal: STRING
-			l_negative: BOOLEAN
-			l_buffer: STRING
-			l_temp: ET_IDENTIFIER
-			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
-			if in_operand then
-				if in_target then
-					in_operand := False
-					l_dynamic_type := dynamic_type_set (a_constant).static_type
-					l_temp := new_temp_variable (l_dynamic_type)
-					print_indentation
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_regular_integer_constant (a_constant)
-					current_file.put_character (';')
-					current_file.put_new_line
-					l_temp.set_index (a_constant.index)
-					operand_stack.force (l_temp)
-					in_operand := True
-				else
-					operand_stack.force (a_constant)
-				end
-			else
-				l_dynamic_type := dynamic_type_set (a_constant).static_type
-				print_type_cast (l_dynamic_type, current_file)
-				current_file.put_character ('(')
-				if l_dynamic_type = current_dynamic_system.integer_8_type then
-					current_file.put_string (c_ge_int8)
-				elseif l_dynamic_type = current_dynamic_system.integer_16_type then
-					current_file.put_string (c_ge_int16)
-				elseif l_dynamic_type = current_dynamic_system.integer_32_type then
-					current_file.put_string (c_ge_int32)
-				elseif l_dynamic_type = current_dynamic_system.integer_64_type then
-					current_file.put_string (c_ge_int64)
-				elseif l_dynamic_type = current_dynamic_system.natural_8_type then
-					current_file.put_string (c_ge_nat8)
-				elseif l_dynamic_type = current_dynamic_system.natural_16_type then
-					current_file.put_string (c_ge_nat16)
-				elseif l_dynamic_type = current_dynamic_system.natural_32_type then
-					current_file.put_string (c_ge_nat32)
-				elseif l_dynamic_type = current_dynamic_system.natural_64_type then
-					current_file.put_string (c_ge_nat64)
-				else
-					current_file.put_string (c_ge_int32)
-				end
-				current_file.put_character ('(')
-				if a_constant.is_negative then
-					current_file.put_character ('-')
-					l_negative := True
-				end
-				l_literal := a_constant.literal
-				nb := l_literal.count
-					-- Remove leading zeros.
-				from
-					i := 1
-				until
-					i > nb or else l_literal.item (i) /= '0'
-				loop
-					i := i + 1
-				end
-				if i > nb then
-					current_file.put_character ('0')
-					current_file.put_character (')')
-				else
-					if l_negative and (nb - i + 1) >= 10 then
-						create l_buffer.make (nb - i + 1)
-						from until i > nb loop
-							l_buffer.append_character (l_literal.item (i))
-							i := i + 1
-						end
-						if l_buffer.is_equal ("2147483648") then
-								-- INTEGER.Min_value.
-							current_file.put_string ("2147483647)-1")
-						elseif l_buffer.is_equal ("9223372036854775808") then
-								-- INTEGER_64.Min_value.
-							current_file.put_string ("9223372036854775807)-1")
-						else
-							current_file.put_string (l_buffer)
-							current_file.put_character (')')
-						end
-					else
-						from until i > nb loop
-							current_file.put_character (l_literal.item (i))
-							i := i + 1
-						end
-						current_file.put_character (')')
-					end
-				end
-				current_file.put_character (')')
-			end
+			print_integer_constant (a_constant)
 		end
 
 	print_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
@@ -9887,6 +9906,20 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			end
 		end
 
+	print_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+			if in_operand then
+				operand_stack.force (an_expression)
+			else
+-- TODO.
+print ("ET_C_GENERATOR.print_strip_expression%N")
+				current_file.put_string (c_eif_void)
+			end
+		end
+
 	print_target_expression (an_expression: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print `an_expression' when appearing as the target of a call.
 			-- `a_target_type' is one of the possible dynamic types of `an_expression'.
@@ -9944,20 +9977,6 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			an_operand.process (Current)
 			call_target_type := old_target_type
 			in_operand := old_in_operand
-		end
-
-	print_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
-			-- Print `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
-		do
-			if in_operand then
-				operand_stack.force (an_expression)
-			else
--- TODO.
-print ("ET_C_GENERATOR.print_strip_expression%N")
-				current_file.put_string (c_eif_void)
-			end
 		end
 
 	print_temporary_variable (a_name: ET_IDENTIFIER) is
@@ -10066,105 +10085,8 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
-		local
-			i, nb: INTEGER
-			l_literal: STRING
-			l_negative: BOOLEAN
-			l_buffer: STRING
-			l_temp: ET_IDENTIFIER
-			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
-			if in_operand then
-				if in_target then
-					in_operand := False
-					l_dynamic_type := dynamic_type_set (a_constant).static_type
-					l_temp := new_temp_variable (l_dynamic_type)
-					print_indentation
-					print_temp_name (l_temp, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_underscored_integer_constant (a_constant)
-					current_file.put_character (';')
-					current_file.put_new_line
-					l_temp.set_index (a_constant.index)
-					operand_stack.force (l_temp)
-					in_operand := True
-				else
-					operand_stack.force (a_constant)
-				end
-			else
-				l_dynamic_type := dynamic_type_set (a_constant).static_type
-				print_type_cast (l_dynamic_type, current_file)
-				current_file.put_character ('(')
-				if l_dynamic_type = current_dynamic_system.integer_8_type then
-					current_file.put_string (c_ge_int8)
-				elseif l_dynamic_type = current_dynamic_system.integer_16_type then
-					current_file.put_string (c_ge_int16)
-				elseif l_dynamic_type = current_dynamic_system.integer_32_type then
-					current_file.put_string (c_ge_int32)
-				elseif l_dynamic_type = current_dynamic_system.integer_64_type then
-					current_file.put_string (c_ge_int64)
-				elseif l_dynamic_type = current_dynamic_system.natural_8_type then
-					current_file.put_string (c_ge_nat8)
-				elseif l_dynamic_type = current_dynamic_system.natural_16_type then
-					current_file.put_string (c_ge_nat16)
-				elseif l_dynamic_type = current_dynamic_system.natural_32_type then
-					current_file.put_string (c_ge_nat32)
-				elseif l_dynamic_type = current_dynamic_system.natural_64_type then
-					current_file.put_string (c_ge_nat64)
-				else
-					current_file.put_string (c_ge_int32)
-				end
-				current_file.put_character ('(')
-				if a_constant.is_negative then
-					current_file.put_character ('-')
-					l_negative := True
-				end
-				l_literal := a_constant.literal
-				nb := l_literal.count
-					-- Remove leading zeros.
-				from
-					i := 1
-				until
-					i > nb or else (l_literal.item (i) /= '0' and l_literal.item (i) /= '_')
-				loop
-					i := i + 1
-				end
-				if i > nb then
-					current_file.put_character ('0')
-					current_file.put_character (')')
-				else
-					if l_negative and (nb - i + 1) >= 10 then
-						create l_buffer.make (nb - i + 1)
-						from until i > nb loop
-							if l_literal.item (i) /= '_' then
-								l_buffer.append_character (l_literal.item (i))
-							end
-							i := i + 1
-						end
-						if l_buffer.is_equal ("2147483648") then
-								-- INTEGER.Min_value.
-							current_file.put_string ("2147483647)-1")
-						elseif l_buffer.is_equal ("9223372036854775808") then
-								-- INTEGER_64.Min_value.
-							current_file.put_string ("9223372036854775807)-1")
-						else
-							current_file.put_string (l_buffer)
-							current_file.put_character (')')
-						end
-					else
-						from until i > nb loop
-							if l_literal.item (i) /= '_' then
-								current_file.put_character (l_literal.item (i))
-							end
-							i := i + 1
-						end
-						current_file.put_character (')')
-					end
-				end
-				current_file.put_character (')')
-			end
+			print_integer_constant (a_constant)
 		end
 
 	print_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
@@ -26132,6 +26054,12 @@ feature {ET_AST_NODE} -- Processing
 			print_bang_instruction (an_instruction)
 		end
 
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			print_binary_integer_constant (a_constant)
+		end
+
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		do
@@ -26430,6 +26358,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_object_test (an_expression)
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			print_octal_integer_constant (a_constant)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is

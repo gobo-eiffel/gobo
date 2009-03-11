@@ -31,6 +31,7 @@ inherit
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
+			process_binary_integer_constant,
 			process_bit_feature,
 			process_bit_n,
 			process_braced_type_list,
@@ -117,6 +118,7 @@ inherit
 			process_manifest_tuple,
 			process_object_equality_expression,
 			process_object_test,
+			process_octal_integer_constant,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -595,6 +597,34 @@ feature {ET_AST_NODE} -- Processing
 			if l_call /= Void then
 				l_call.process (Current)
 			end
+		end
+
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			l_cast_type: ET_TARGET_TYPE
+			l_sign: ET_SYMBOL
+			l_type: ET_TYPE
+		do
+			l_cast_type := a_constant.cast_type
+			if l_cast_type /= Void then
+					-- The AST may or may not contain the braces.
+					-- So we have to print them explicitly here.
+				l_type := l_cast_type.type
+				tokens.left_brace_symbol.process (Current)
+				l_type.type.process (Current)
+				tokens.right_brace_symbol.process (Current)
+				comment_finder.add_excluded_node (l_type)
+				comment_finder.find_comments (l_cast_type, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
+			l_sign := a_constant.sign
+			if l_sign /= Void then
+				l_sign.process (Current)
+			end
+			print_string (a_constant.literal)
+			process_break (a_constant.break)
 		end
 
 	process_bit_feature (a_type: ET_BIT_FEATURE) is
@@ -3928,6 +3958,34 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		local
+			l_cast_type: ET_TARGET_TYPE
+			l_sign: ET_SYMBOL
+			l_type: ET_TYPE
+		do
+			l_cast_type := a_constant.cast_type
+			if l_cast_type /= Void then
+					-- The AST may or may not contain the braces.
+					-- So we have to print them explicitly here.
+				l_type := l_cast_type.type
+				tokens.left_brace_symbol.process (Current)
+				l_type.type.process (Current)
+				tokens.right_brace_symbol.process (Current)
+				comment_finder.add_excluded_node (l_type)
+				comment_finder.find_comments (l_cast_type, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
+			l_sign := a_constant.sign
+			if l_sign /= Void then
+				l_sign.process (Current)
+			end
+			print_string (a_constant.literal)
+			process_break (a_constant.break)
+		end
+
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -5082,36 +5140,56 @@ feature {ET_AST_NODE} -- Processing
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		local
-			a_sign: ET_SYMBOL
-			a_type: ET_TARGET_TYPE
+			l_cast_type: ET_TARGET_TYPE
+			l_sign: ET_SYMBOL
+			l_type: ET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			l_cast_type := a_constant.cast_type
+			if l_cast_type /= Void then
+					-- The AST may or may not contain the braces.
+					-- So we have to print them explicitly here.
+				l_type := l_cast_type.type
+				tokens.left_brace_symbol.process (Current)
+				l_type.type.process (Current)
+				tokens.right_brace_symbol.process (Current)
+				comment_finder.add_excluded_node (l_type)
+				comment_finder.find_comments (l_cast_type, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			l_sign := a_constant.sign
+			if l_sign /= Void then
+				l_sign.process (Current)
 			end
-			file.put_string (a_constant.literal)
+			print_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
 
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		local
-			a_sign: ET_SYMBOL
-			a_type: ET_TARGET_TYPE
+			l_cast_type: ET_TARGET_TYPE
+			l_sign: ET_SYMBOL
+			l_type: ET_TYPE
 		do
-			a_type := a_constant.cast_type
-			if a_type /= Void then
-				a_type.process (Current)
+			l_cast_type := a_constant.cast_type
+			if l_cast_type /= Void then
+					-- The AST may or may not contain the braces.
+					-- So we have to print them explicitly here.
+				l_type := l_cast_type.type
+				tokens.left_brace_symbol.process (Current)
+				l_type.type.process (Current)
+				tokens.right_brace_symbol.process (Current)
+				comment_finder.add_excluded_node (l_type)
+				comment_finder.find_comments (l_cast_type, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
 			end
-			a_sign := a_constant.sign
-			if a_sign /= Void then
-				a_sign.process (Current)
+			l_sign := a_constant.sign
+			if l_sign /= Void then
+				l_sign.process (Current)
 			end
-			file.put_string (a_constant.literal)
+			print_string (a_constant.literal)
 			process_break (a_constant.break)
 		end
 

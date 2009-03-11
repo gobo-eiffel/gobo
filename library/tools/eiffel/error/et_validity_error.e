@@ -5,7 +5,7 @@ indexing
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -189,6 +189,7 @@ create
 	make_vqmc1a,
 	make_vqmc2a,
 	make_vqmc3a,
+	make_vqmc3b,
 	make_vqmc4a,
 	make_vqmc5a,
 	make_vqmc6a,
@@ -257,6 +258,7 @@ create
 	make_vwbe0a,
 	make_vweq0a,
 	make_vweq0b,
+	make_vwmq0a,
 	make_vwst1a,
 	make_vwst1b,
 	make_vwst2a,
@@ -284,7 +286,8 @@ create
 	make_gvuia0a,
 	make_gvuia0b,
 	make_gvuil0a,
-	make_gvuil0b
+	make_gvuil0b,
+	make_gvwmc2a
 
 feature {NONE} -- Initialization
 
@@ -8043,11 +8046,12 @@ feature {NONE} -- Initialization
 		end
 
 	make_vqmc3a (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Create a new VQMC-3 error: `an_attribute', declared in `a_class_impl' introduces
+			-- Create a new VQMC-3 error: `an_attribute', declared in `a_class_impl', introduces
 			-- an integer constant but its type is not "INTEGER" when viewed from one of its
 			-- descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.264
+			-- ECMA 367-2: p.100
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -8085,6 +8089,63 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
 			-- dollar8: $8 = type
+		end
+
+	make_vqmc3b (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_INTEGER_CONSTANT) is
+			-- Create a new VQMC-3 error: `a_attribute', declared in `a_class_impl', introduces
+			-- an integer constant `a_constant' but its value is not representable as an instance
+			-- of its integer type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ETL2: p.264
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		local
+			l_literal: STRING
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.type.position
+			code := template_code (vqmc3b_template_code)
+			etl_code := vqmc3_etl_code
+			default_template := default_message_template (vqmc3b_default_template)
+			if a_constant.sign = Void then
+				l_literal := a_constant.literal
+			elseif a_constant.sign.is_minus then
+				l_literal := "-" + a_constant.literal
+			else
+				l_literal := "+" + a_constant.literal
+			end
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_attribute.type.to_text, 8)
+			parameters.put (l_literal, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = integer type
+			-- dollar9: $9 = integer value
 		end
 
 	make_vqmc4a (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
@@ -11223,6 +11284,49 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base type of right operand
 		end
 
+	make_vwmq0a (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT) is
+			-- Create a new VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "INTEGER".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.cast_type.position
+			code := template_code (vwmq0a_template_code)
+			etl_code := vwmq_etl_code
+			default_template := default_message_template (vwmq0a_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constant.cast_type.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = cast type
+		end
+
 	make_vwst1a (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
 			-- Create a new VWST-1 error: `a_name', appearing in a strip
 			-- expression in `a_class', is not the final name of a feature
@@ -12453,6 +12557,60 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local variable name
 		end
 
+	make_gvwmc2a (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT; a_type: ET_NAMED_TYPE) is
+			-- Create a new GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the integer type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_literal: STRING
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.value_position
+			code := template_code (gvwmc2a_template_code)
+			etl_code := gvwmc2_etl_code
+			default_template := default_message_template (gvwmc2a_default_template)
+			if a_constant.sign = Void then
+				l_literal := a_constant.literal
+			elseif a_constant.sign.is_minus then
+				l_literal := "-" + a_constant.literal
+			else
+				l_literal := "+" + a_constant.literal
+			end
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (l_literal, 7)
+			parameters.put (a_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = constant value
+			-- dollar8: $8 = integer type
+		end
+
 feature -- Access
 
 	class_impl: ET_CLASS
@@ -12689,6 +12847,7 @@ feature {NONE} -- Implementation
 	vqmc1a_default_template: STRING is "boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING is "character constant attribute `$7' is not declared of type CHARACTER."
 	vqmc3a_default_template: STRING is "integer constant attribute `$7' is not declared of type INTEGER."
+	vqmc3b_default_template: STRING is "integer value '$9' in constant attribute `$7' is not representable as an instance of '$8'."
 	vqmc4a_default_template: STRING is "real constant attribute `$7' is not declared of type REAL or DOUBLE."
 	vqmc5a_default_template: STRING is "string constant attribute `$7' is not declared of type STRING."
 	vqmc6a_default_template: STRING is "bit constant attribute `$7' is not declared of Bit_type."
@@ -12757,6 +12916,7 @@ feature {NONE} -- Implementation
 	vwbe0a_default_template: STRING is "boolean expression of non-BOOLEAN type '$7'."
 	vweq0a_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
 	vweq0b_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
+	vwmq0a_default_template: STRING is "type '$7' in the integer constant is not one of the sized variants of INTEGER."
 	vwst1a_default_template: STRING is "feature name `$7' is not the final name of a feature in class $5."
 	vwst1b_default_template: STRING is "feature name `$7' is not the final name of an attribute in class $5."
 	vwst2a_default_template: STRING is "feature name `$7' appears twice in strip expression."
@@ -12785,6 +12945,7 @@ feature {NONE} -- Implementation
 	gvuia0b_default_template: STRING is "`$7' is a formal argument of an inline agent and hence cannot be an instruction."
 	gvuil0a_default_template: STRING is "`$7' is a local variable of feature `$8' and hence cannot be an instruction."
 	gvuil0b_default_template: STRING is "`$7' is a local variable of an inline agent and hence cannot be an instruction."
+	gvwmc2a_default_template: STRING is "integer constant '$7' is not representable as an instance of '$8'."
 	gvzzz0a_default_template: STRING is "validity error"
 			-- Default templates
 
@@ -12903,6 +13064,7 @@ feature {NONE} -- Implementation
 	vuot4_etl_code: STRING is "VUOT-4"
 	vwbe_etl_code: STRING is "VWBE"
 	vweq_etl_code: STRING is "VWEQ"
+	vwmq_etl_code: STRING is "VWMQ"
 	vwst1_etl_code: STRING is "VWST-1"
 	vwst2_etl_code: STRING is "VWST-2"
 	vxrt_etl_code: STRING is "VXRT"
@@ -12924,6 +13086,7 @@ feature {NONE} -- Implementation
 	gvual_etl_code: STRING is "GVUAL"
 	gvuia_etl_code: STRING is "GVUIA"
 	gvuil_etl_code: STRING is "GVUIL"
+	gvwmc2_etl_code: STRING is "GVWMC-2"
 	gvzzz_etl_code: STRING is "GVZZZ"
 			-- ETL validity codes
 
@@ -13112,6 +13275,7 @@ feature {NONE} -- Implementation
 	vqmc1a_template_code: STRING is "vqmc1a"
 	vqmc2a_template_code: STRING is "vqmc2a"
 	vqmc3a_template_code: STRING is "vqmc3a"
+	vqmc3b_template_code: STRING is "vqmc3b"
 	vqmc4a_template_code: STRING is "vqmc4a"
 	vqmc5a_template_code: STRING is "vqmc5a"
 	vqmc6a_template_code: STRING is "vqmc6a"
@@ -13180,6 +13344,7 @@ feature {NONE} -- Implementation
 	vwbe0a_template_code: STRING is "vwbe0a"
 	vweq0a_template_code: STRING is "vweq0a"
 	vweq0b_template_code: STRING is "vweq0b"
+	vwmq0a_template_code: STRING is "vwmq0a"
 	vwst1a_template_code: STRING is "vwst1a"
 	vwst1b_template_code: STRING is "vwst1b"
 	vwst2a_template_code: STRING is "vwst2a"
@@ -13208,6 +13373,7 @@ feature {NONE} -- Implementation
 	gvuia0b_template_code: STRING is "gvuia0b"
 	gvuil0a_template_code: STRING is "gvuil0a"
 	gvuil0b_template_code: STRING is "gvuil0b"
+	gvwmc2a_template_code: STRING is "gvwmc2a"
 	gvzzz0a_template_code: STRING is "gvzzz0a"
 			-- Template error codes
 

@@ -935,6 +935,16 @@ feature -- Eiffel symbols
 
 feature -- AST leaves
 
+	new_binary_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BINARY_INTEGER_CONSTANT is
+			-- New integer constant in binary format
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: (0[bB](_*[0-1]+_*)+).recognizes (a_scanner.last_literal)
+		do
+			create Result.make (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
 	new_bit_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BIT_CONSTANT is
 			-- New bit constant
 		require
@@ -1005,7 +1015,7 @@ feature -- AST leaves
 			-- New integer constant in hexadecimal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (0[xX][0-9a-fA-F]+).recognizes (a_scanner.last_literal)
+			-- valid_literal: (0[xX](_*[0-9a-fA-F]+_*)+).recognizes (a_scanner.last_literal)
 		do
 			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1018,6 +1028,16 @@ feature -- AST leaves
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := a_scanner.last_identifier
+			Result.set_position (a_scanner.line, a_scanner.column)
+		end
+
+	new_octal_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_OCTAL_INTEGER_CONSTANT is
+			-- New integer constant in octal format
+		require
+			a_scanner_not_void: a_scanner /= Void
+			-- valid_literal: (0[cC](_*[0-7]+_*)+).recognizes (a_scanner.last_literal)
+		do
+			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 

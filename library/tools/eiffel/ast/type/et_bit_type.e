@@ -118,11 +118,10 @@ feature -- Size
 		do
 			if size = No_size then
 				if constant /= Void then
-					constant.compute_value
-					if constant.has_value_error then
+					if not constant.is_integer_32 then
 						size := Invalid_size
 					else
-						size := constant.value
+						size := constant.to_integer_32
 						if size < 0 then
 							size := Invalid_size
 						end

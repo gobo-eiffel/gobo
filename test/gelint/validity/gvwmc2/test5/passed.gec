@@ -1,0 +1,2 @@
+[GVWMC-2] class AA (19,9): integer constant '18446744073709551616' is not representable as an instance of 'NATURAL_64'.
+----

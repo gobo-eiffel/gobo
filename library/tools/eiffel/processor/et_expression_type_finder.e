@@ -24,6 +24,7 @@ inherit
 			make
 		redefine
 			process_bit_constant,
+			process_binary_integer_constant,
 			process_bracket_expression,
 			process_c1_character_constant,
 			process_c2_character_constant,
@@ -53,6 +54,7 @@ inherit
 			process_manifest_type,
 			process_object_equality_expression,
 			process_object_test,
+			process_octal_integer_constant,
 			process_old_expression,
 			process_once_function_inline_agent,
 			process_once_manifest_string,
@@ -393,6 +395,17 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Expression processing
+
+	find_binary_integer_constant_type (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- `a_context' represents the type in which `a_constant' appears.
+			-- It will be altered on exit to represent the type of `a_constant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_constant_not_void: a_constant /= Void
+			a_context_not_void: a_context /= Void
+		do
+			find_integer_constant_type (a_constant, a_context)
+		end
 
 	find_bit_constant_type (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- `a_context' represents the type in which `a_constant' appears.
@@ -956,15 +969,8 @@ feature {NONE} -- Expression processing
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_type: ET_CLASS_TYPE
 		do
-			reset_fatal_error (False)
-			l_type := a_constant.type
-			if l_type = Void then
-				l_type := universe_impl.integer_class
-			end
-			a_context.force_last (l_type)
+			find_integer_constant_type (a_constant, a_context)
 		end
 
 	find_infix_cast_expression_type (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -1438,6 +1444,17 @@ feature {NONE} -- Expression processing
 					a_context.force_last (l_type)
 				end
 			end
+		end
+
+	find_octal_integer_constant_type (a_constant: ET_OCTAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- `a_context' represents the type in which `a_constant' appears.
+			-- It will be altered on exit to represent the type of `a_constant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_constant_not_void: a_constant /= Void
+			a_context_not_void: a_context /= Void
+		do
+			find_integer_constant_type (a_constant, a_context)
 		end
 
 	find_old_expression_type (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -2918,6 +2935,12 @@ feature {NONE} -- Agent validity
 
 feature {ET_AST_NODE} -- Processing
 
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			find_binary_integer_constant_type (a_constant, current_context)
+		end
+
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		do
@@ -3104,6 +3127,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			find_object_test_type (an_expression, current_context)
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			find_octal_integer_constant_type (a_constant, current_context)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is

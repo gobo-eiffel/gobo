@@ -127,6 +127,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+		end
+
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		do
@@ -739,6 +744,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is
 			-- Process `an_expression'.
+		do
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
 		do
 		end
 

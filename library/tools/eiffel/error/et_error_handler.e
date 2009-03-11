@@ -5,7 +5,7 @@ indexing
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -4365,11 +4365,12 @@ feature -- Validity errors
 		end
 
 	report_vqmc3a_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
-			-- Report VQMC-3 error: `an_attribute', declared in `a_class_impl' introduces
+			-- Report VQMC-3 error: `an_attribute', declared in `a_class_impl', introduces
 			-- an integer constant but its type is not "INTEGER" when viewed from one of its
 			-- descendants `a_class' (possibly itself).
 			--
 			-- ETL2: p.264
+			-- ECMA 367-2: p.100
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -4381,6 +4382,28 @@ feature -- Validity errors
 		do
 			if reportable_vqmc3_error (a_class) then
 				create an_error.make_vqmc3a (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc3b_error (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_INTEGER_CONSTANT) is
+			-- Report VQMC-3 error: `a_attribute', declared in `a_class_impl', introduces
+			-- an integer constant `a_constant' but its value is not representable as an instance
+			-- of its integer type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ETL2: p.264
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc3_error (a_class) then
+				create an_error.make_vqmc3b (a_class, a_class_impl, a_attribute, a_constant)
 				report_validity_error (an_error)
 			end
 		end
@@ -5776,6 +5799,27 @@ feature -- Validity errors
 			end
 		end
 
+	report_vwmq0a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT) is
+			-- Report VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "INTEGER".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwmq_error (a_class) then
+				create an_error.make_vwmq0a (a_class, a_class_impl, a_constant)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vwst1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
 			-- Report VWST-1 error: `a_name', appearing in a strip
 			-- expression in `a_class', is not the final name of a feature
@@ -6326,6 +6370,27 @@ feature -- Validity errors
 		do
 			if reportable_gvuil_error (a_class) then
 				create an_error.make_gvuil0b (a_class, a_name, an_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvwmc2a_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT; a_type: ET_NAMED_TYPE) is
+			-- Report GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the integer type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvwmc2_error (a_class) then
+				create an_error.make_gvwmc2a (a_class, a_class_impl, a_constant, a_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -7472,6 +7537,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vwmq_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VWMQ error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vwst1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VWST-1 error be reported when it
 			-- appears in `a_class'?
@@ -7674,6 +7749,16 @@ feature -- Validity error status
 
 	reportable_gvuil_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVUIL error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvwmc2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVWMC-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

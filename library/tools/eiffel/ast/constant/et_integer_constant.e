@@ -5,7 +5,7 @@ indexing
 		"Eiffel integer constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,9 +58,106 @@ feature -- Access
 	literal: STRING
 			-- Literal integer absolute value
 
-	value: INTEGER
-			-- Integer value set by last call
-			-- to `compute_value'
+	value: NATURAL_64
+			-- Integer absolute value corresponding to
+			-- `literal' if it fits into a NATURAL_64,
+			-- `has_overflow' is True otherwise
+
+	to_integer_8: INTEGER_8 is
+			-- INTEGER_8 value of current integer constant
+		require
+			is_integer_8: is_integer_8
+		do
+			if is_negative then
+				if value = integer_8_min_value_abs then
+					Result := {INTEGER_8}.Min_value
+				else
+					Result := -value.as_integer_8
+				end
+			else
+				Result := value.as_integer_8
+			end
+		end
+
+	to_integer_16: INTEGER_16 is
+			-- INTEGER_16 value of current integer constant
+		require
+			is_integer_16: is_integer_16
+		do
+			if is_negative then
+				if value = integer_16_min_value_abs then
+					Result := {INTEGER_16}.Min_value
+				else
+					Result := -value.as_integer_16
+				end
+			else
+				Result := value.as_integer_16
+			end
+		end
+
+	to_integer_32: INTEGER_32 is
+			-- INTEGER_32 value of current integer constant
+		require
+			is_integer_32: is_integer_32
+		do
+			if is_negative then
+				if value = integer_32_min_value_abs then
+					Result := {INTEGER_32}.Min_value
+				else
+					Result := -value.as_integer_32
+				end
+			else
+				Result := value.as_integer_32
+			end
+		end
+
+	to_integer_64: INTEGER_64 is
+			-- INTEGER_64 value of current integer constant
+		require
+			is_integer_64: is_integer_64
+		do
+			if is_negative then
+				if value = integer_64_min_value_abs then
+					Result := {INTEGER_64}.Min_value
+				else
+					Result := -value.as_integer_64
+				end
+			else
+				Result := value.as_integer_64
+			end
+		end
+
+	to_natural_8: NATURAL_8 is
+			-- NATURAL_8 value of current integer constant
+		require
+			is_natural_8: is_natural_8
+		do
+			Result := value.as_natural_8
+		end
+
+	to_natural_16: NATURAL_16 is
+			-- NATURAL_16 value of current integer constant
+		require
+			is_natural_16: is_natural_16
+		do
+			Result := value.as_natural_16
+		end
+
+	to_natural_32: NATURAL_32 is
+			-- NATURAL_32 value of current integer constant
+		require
+			is_natural_32: is_natural_32
+		do
+			Result := value.as_natural_32
+		end
+
+	to_natural_64: NATURAL_64 is
+			-- NATURAL_64 value of current integer constant
+		require
+			is_natural_64: is_natural_64
+		do
+			Result := value
+		end
 
 	sign: ET_SYMBOL_OPERATOR
 			-- Sign; Void if none
@@ -83,6 +180,19 @@ feature -- Access
 			else
 				Result := Current
 			end
+		end
+
+	value_position: ET_POSITION is
+			-- Position of first character of current node in source code,
+			-- without taking into account the cast type
+		do
+			if sign /= Void then
+				Result := sign.position
+			else
+				Result := Current
+			end
+		ensure
+			value_position_not_void: Result /= Void
 		end
 
 	first_position: ET_POSITION is
@@ -128,9 +238,116 @@ feature -- Status report
 	is_integer_constant: BOOLEAN is True
 			-- Is current constant an integer constant?
 
-	has_value_error: BOOLEAN
-			-- Has an overflow or underflow occurred during
-			-- the last computation of `value'?
+	is_hexadecimal: BOOLEAN is
+			-- Is current constant in hexadecimal format
+		do
+			Result := False
+		end
+
+	is_binary: BOOLEAN is
+			-- Is current constant in binary format
+		do
+			Result := False
+		end
+
+	has_overflow: BOOLEAN
+			-- Is the integer absolute value too large to fit into a NATURAL_64?
+
+	is_integer_8: BOOLEAN is
+			-- Is current integer constant representable as an INTEGER_8?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := value <= integer_8_min_value_abs
+			else
+				Result := value <= {INTEGER_8}.Max_value.as_natural_64
+			end
+		end
+
+	is_integer_16: BOOLEAN is
+			-- Is current integer constant representable as an INTEGER_16?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := value <= integer_16_min_value_abs
+			else
+				Result := value <= {INTEGER_16}.Max_value.as_natural_64
+			end
+		end
+
+	is_integer_32: BOOLEAN is
+			-- Is current integer constant representable as an INTEGER_32?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := value <= integer_32_min_value_abs
+			else
+				Result := value <= {INTEGER_32}.Max_value.as_natural_64
+			end
+		end
+
+	is_integer_64: BOOLEAN is
+			-- Is current integer constant representable as an INTEGER_64?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := value <= integer_64_min_value_abs
+			else
+				Result := value <= {INTEGER_64}.Max_value.as_natural_64
+			end
+		end
+
+	is_natural_8: BOOLEAN is
+			-- Is current integer constant representable as a NATURAL_8?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := False
+			else
+				Result := value <= {NATURAL_8}.Max_value
+			end
+		end
+
+	is_natural_16: BOOLEAN is
+			-- Is current integer constant representable as a NATURAL_16?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := False
+			else
+				Result := value <= {NATURAL_16}.Max_value
+			end
+		end
+
+	is_natural_32: BOOLEAN is
+			-- Is current integer constant representable as a NATURAL_32?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := False
+			else
+				Result := value <= {NATURAL_32}.Max_value
+			end
+		end
+
+	is_natural_64: BOOLEAN is
+			-- Is current integer constant representable as a NATURAL_64?
+		do
+			if has_overflow then
+				Result := False
+			elseif is_negative then
+				Result := False
+			else
+				Result := True
+			end
+		end
 
 feature -- Setting
 
@@ -158,16 +375,6 @@ feature -- Setting
 			type_set: type = a_type
 		end
 
-feature -- Basic operations
-
-	compute_value is
-			-- Compute value of current integer constant.
-			-- Make result available in `value' or set
-			-- `has_value_error' to true if an overflow or
-			-- underflow occurred during computation.
-		deferred
-		end
-
 feature -- Type conversion
 
 	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
@@ -180,35 +387,78 @@ feature -- Type conversion
 			l_system: ET_SYSTEM
 		do
 			if cast_type = Void then
--- TODO: check that the value of `Current' can be represented in `a_target_type'.
 				l_target_base_class := a_target_type.base_class
 				if not l_target_base_class.is_preparsed then
 					-- No conversion to non-existing type.
 				else
 					l_system := l_target_base_class.current_system
 					if l_target_base_class = l_system.integer_8_class then
-						Result := l_system.integer_8_convert_feature
+						if is_integer_8 then
+							Result := l_system.integer_8_convert_feature
+						end
 					elseif l_target_base_class = l_system.integer_16_class then
-						Result := l_system.integer_16_convert_feature
+						if is_integer_16 then
+							Result := l_system.integer_16_convert_feature
+						end
 					elseif l_target_base_class = l_system.integer_32_class then
-						Result := l_system.integer_32_convert_feature
+						if is_integer_32 then
+							Result := l_system.integer_32_convert_feature
+						end
 					elseif l_target_base_class = l_system.integer_64_class then
-						Result := l_system.integer_64_convert_feature
+						if is_integer_64 then
+							Result := l_system.integer_64_convert_feature
+						end
 					elseif l_target_base_class = l_system.natural_8_class then
-						Result := l_system.natural_8_convert_feature
+						if is_natural_8 then
+							Result := l_system.natural_8_convert_feature
+						end
 					elseif l_target_base_class = l_system.natural_16_class then
-						Result := l_system.natural_16_convert_feature
+						if is_natural_16 then
+							Result := l_system.natural_16_convert_feature
+						end
 					elseif l_target_base_class = l_system.natural_32_class then
-						Result := l_system.natural_32_convert_feature
+						if is_natural_32 then
+							Result := l_system.natural_32_convert_feature
+						end
 					elseif l_target_base_class = l_system.natural_64_class then
-						Result := l_system.natural_64_convert_feature
+						if is_natural_64 then
+							Result := l_system.natural_64_convert_feature
+						end
 					elseif l_target_base_class = l_system.real_32_class then
+-- TODO: check that it can be represented as a REAL_32.
 						Result := l_system.real_32_convert_feature
 					elseif l_target_base_class = l_system.real_64_class then
+-- TODO: check that it can be represented as a REAL_64.
 						Result := l_system.real_64_convert_feature
 					end
 				end
 			end
+		end
+
+feature {NONE} -- Constants
+
+	integer_8_min_value_abs: NATURAL_64 is
+			-- Absolute value of {INTEGER_8}.Min_value
+		once
+			Result := (-({INTEGER_8}.Min_value + 1)).as_natural_64 + 1
+		end
+
+	integer_16_min_value_abs: NATURAL_64 is
+			-- Absolute value of {INTEGER_16}.Min_value
+		once
+			Result := (-({INTEGER_16}.Min_value + 1)).as_natural_64 + 1
+		end
+
+	integer_32_min_value_abs: NATURAL_64 is
+			-- Absolute value of {INTEGER_32}.Min_value
+		once
+			Result := (-({INTEGER_32}.Min_value + 1)).as_natural_64 + 1
+		end
+
+	integer_64_min_value_abs: NATURAL_64 is
+			-- Absolute value of {INTEGER_64}.Min_value
+		once
+			Result := (-({INTEGER_64}.Min_value + 1)).as_natural_64 + 1
 		end
 
 invariant

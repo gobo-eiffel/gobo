@@ -1073,36 +1073,44 @@ feature {NONE} -- Breaks
 			-- Internal code corresponding to a break that
 			-- follows an hexadecimal integer
 
-	real_break: INTEGER is 7
+	ointeger_break: INTEGER is 7
+			-- Internal code corresponding to a break that
+			-- follows an octal integer
+
+	binteger_break: INTEGER is 8
+			-- Internal code corresponding to a break that
+			-- follows binary integer
+
+	real_break: INTEGER is 9
 			-- Internal code corresponding to a break that
 			-- follows a real
 
-	ureal_break: INTEGER is 8
+	ureal_break: INTEGER is 10
 			-- Internal code corresponding to a break that
 			-- follows a real with underscores
 
-	bit_break: INTEGER is 9
+	bit_break: INTEGER is 11
 			-- Internal code corresponding to a break that
 			-- follows a bit
 
-	string_break: INTEGER is 10
+	string_break: INTEGER is 12
 			-- Internal code corresponding to a break that
 			-- follows a manifest string
 
-	str_freeop_break: INTEGER is 11
+	str_freeop_break: INTEGER is 13
 			-- Internal code corresponding to a break that
 			-- follows a manifest string containing the
 			-- name of a freeop
 
-	str_special_break: INTEGER is 12
+	str_special_break: INTEGER is 14
 			-- Internal code corresponding to a break that
 			-- follows a manifest string with special characters
 
-	str_verbatim_break: INTEGER is 13
+	str_verbatim_break: INTEGER is 15
 			-- Internal code corresponding to a break that
 			-- follows a verbatim manifest string
 
-	str_left_aligned_verbatim_break: INTEGER is 14
+	str_left_aligned_verbatim_break: INTEGER is 16
 			-- Internal code corresponding to a break that
 			-- follows a left-aligned verbatim manifest string
 
@@ -3418,6 +3426,12 @@ feature {NONE} -- Processing
 			when hinteger_break then
 				last_token := E_INTEGER
 				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
+			when ointeger_break then
+				last_token := E_INTEGER
+				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
+			when binteger_break then
+				last_token := E_INTEGER
+				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			when real_break then
 				last_token := E_REAL
 				last_et_real_constant_value := ast_factory.new_regular_real_constant (Current)

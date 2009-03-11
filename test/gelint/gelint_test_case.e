@@ -340,7 +340,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp5.compile (a_pattern5)
 			assert ("cannot compile regexp '" + a_pattern5 + "'", a_regexp5.is_compiled)
 			a_regexp5.optimize
-			a_pattern6 := "(Eiffel C/C\+\+ Compilation Tool - Version:)|(Copyright Eiffel Software)|(Microsoft \(R\) Incremental Linker Version)|(Copyright \(C\) Microsoft Corporation)|(You must now run \%"finish_freezing.exe\%" in:)|(Ttest[0-9]+[\\/]\.[\\/]EIFGENs[\\/]aa[\\/][WF]_code)"
+			a_pattern6 := "(Eiffel C/C\+\+ Compilation Tool - Version:)|(Copyright Eiffel Software)|(Microsoft \(R\) Incremental Linker Version)|(Microsoft \(R\) Windows \(R\) Resource Compiler Version)|(Copyright \(C\) Microsoft Corporation)|(You must now run \%"finish_freezing(\.exe)?\%" in:)|(Ttest[0-9]+[\\/](\.[\\/])?EIFGENs[\\/]aa[\\/][WF]_code)"
 			create a_regexp6.make
 			a_regexp6.compile (a_pattern6)
 			assert ("cannot compile regexp '" + a_pattern6 + "'", a_regexp6.is_compiled)

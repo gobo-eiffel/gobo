@@ -120,12 +120,16 @@
 				of argument "do_clean".
 			-->
 		<set name="do_clean" value="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="gvwmc2"/>
+		<geant file="build.eant" target="clean" dir="gvwmc2" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="veen8"/>
 		<geant file="build.eant" target="clean" dir="veen8" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="vjar"/>
 		<geant file="build.eant" target="clean" dir="vjar" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="vpir1"/>
 		<geant file="build.eant" target="clean" dir="vpir1" if="${do_clean}=true"/>
+		<geant file="build.eant" target="${target}" dir="vqmc3"/>
+		<geant file="build.eant" target="clean" dir="vqmc3" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="vtct"/>
 		<geant file="build.eant" target="clean" dir="vtct" if="${do_clean}=true"/>
 		<geant file="build.eant" target="${target}" dir="vuex1"/>

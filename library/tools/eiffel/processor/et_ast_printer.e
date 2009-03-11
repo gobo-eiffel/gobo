@@ -20,11 +20,13 @@ inherit
 		redefine
 			make_null,
 			process_break,
+			process_binary_integer_constant,
 			process_bit_constant,
 			process_c1_character_constant,
 			process_c2_character_constant,
 			process_c3_character_constant,
 			process_hexadecimal_integer_constant,
+			process_octal_integer_constant,
 			process_regular_integer_constant,
 			process_underscored_integer_constant,
 			process_regular_real_constant,
@@ -91,6 +93,14 @@ feature -- Setting
 
 feature {ET_AST_NODE} -- Processing
 
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			precursor (a_constant)
+			file.put_string (a_constant.literal)
+			process_break (a_constant.break)
+		end
+
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		do
@@ -141,6 +151,14 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			precursor (a_constant)
+			file.put_string (a_constant.literal)
+			process_break (a_constant.break)
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do
 			precursor (a_constant)

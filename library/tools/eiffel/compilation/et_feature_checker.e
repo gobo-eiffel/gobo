@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,6 +28,7 @@ inherit
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
+			process_binary_integer_constant,
 			process_bit_constant,
 			process_bracket_expression,
 			process_c1_character_constant,
@@ -76,6 +77,7 @@ inherit
 			process_manifest_type,
 			process_object_equality_expression,
 			process_object_test,
+			process_octal_integer_constant,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -631,6 +633,7 @@ feature {NONE} -- Feature validity
 			l_bit_type: ET_BIT_TYPE
 			l_integer_constant: ET_INTEGER_CONSTANT
 			l_real_constant: ET_REAL_CONSTANT
+			l_context: ET_NESTED_TYPE_CONTEXT
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -669,29 +672,61 @@ feature {NONE} -- Feature validity
 				elseif l_constant.is_integer_constant then
 					l_integer_constant ?= l_constant
 					check is_integer_constant: l_integer_constant /= Void end
+					if l_integer_constant.cast_type /= Void then
+							-- Check that the cast type is valid, and that the manifest value
+							-- is representable as an instance of the cast type.
+						l_context := new_context (current_type)
+						check_integer_constant_validity (l_integer_constant, l_context)
+						had_error := had_error or has_fatal_error
+						free_context (l_context)
+					end
 					if l_type.same_named_type (current_system.integer_8_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_integer_8 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.integer_8_class)
 					elseif l_type.same_named_type (current_system.integer_16_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_integer_16 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.integer_16_class)
 					elseif l_type.same_named_type (current_system.integer_32_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_integer_32 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.integer_32_class)
 					elseif l_type.same_named_type (current_system.integer_64_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_integer_64 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.integer_64_class)
 					elseif l_type.same_named_type (current_system.natural_8_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_natural_8 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.natural_8_class)
 					elseif l_type.same_named_type (current_system.natural_16_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_natural_16 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.natural_16_class)
 					elseif l_type.same_named_type (current_system.natural_32_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_natural_32 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.natural_32_class)
 					elseif l_type.same_named_type (current_system.natural_64_class, current_type, current_type) then
-							-- Valid with ISE Eiffel. To be checked with other compilers.
+						if not l_integer_constant.is_natural_64 then
+							set_fatal_error
+							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
+						end
 						l_integer_constant.set_type (current_system.natural_64_class)
 					else
 						set_fatal_error
@@ -4055,6 +4090,18 @@ feature {NONE} -- Instruction validity
 
 feature {NONE} -- Expression validity
 
+	check_binary_integer_constant_validity (a_constant: ET_BINARY_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `a_constant'.
+			-- `a_context' represents the type in which `a_constant' appears.
+			-- It will be altered on exit to represent the type of `a_constant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_constant_not_void: a_constant /= Void
+			a_context_not_void: a_context /= Void
+		do
+			check_integer_constant_validity (a_constant, a_context)
+		end
+
 	check_bit_constant_validity (a_constant: ET_BIT_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `a_constant'.
 			-- `a_context' represents the type in which `a_constant' appears.
@@ -5221,92 +5268,8 @@ feature {NONE} -- Expression validity
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
-		local
-			l_class_type: ET_CLASS_TYPE
-			l_class: ET_CLASS
-			l_type: ET_CLASS_TYPE
-			l_literal: STRING
-			l_cast_type: ET_TARGET_TYPE
 		do
-			has_fatal_error := False
-			l_cast_type := a_constant.cast_type
-			if l_cast_type /= Void then
--- TODO: make sure that `l_cast_type' is a valid type.
--- For example 'INTEGER [STRING]' is not valid.
-				l_class_type ?= l_cast_type.type.named_type (current_class)
-			else
-				l_class_type ?= current_target_type.named_type
-			end
-			if l_class_type /= Void then
-				l_class := l_class_type.base_class
-				if l_class = current_system.integer_8_class then
-					l_type := l_class
-					report_integer_8_constant (a_constant)
-				elseif l_class = current_system.integer_16_class then
-					l_type := l_class
-					report_integer_16_constant (a_constant)
-				elseif l_class = current_system.integer_32_class then
-					l_type := l_class
-					report_integer_32_constant (a_constant)
-				elseif l_class = current_system.integer_64_class then
-					l_type := l_class
-					report_integer_64_constant (a_constant)
-				elseif l_class = current_system.natural_8_class then
-					l_type := l_class
-					report_natural_8_constant (a_constant)
-				elseif l_class = current_system.natural_16_class then
-					l_type := l_class
-					report_natural_16_constant (a_constant)
-				elseif l_class = current_system.natural_32_class then
-					l_type := l_class
-					report_natural_32_constant (a_constant)
-				elseif l_class = current_system.natural_64_class then
-					l_type := l_class
-					report_natural_64_constant (a_constant)
-				end
-			end
-			if l_type = Void then
-				if l_cast_type /= Void then
--- TODO: invalid cast type, it should be an integer type.
-				end
-				l_literal := a_constant.literal
-				inspect l_literal.count
-				when 4 then
-						-- 0[xX][a-fA-F0-9]{2}
-					l_type := current_system.integer_8_class
-					report_integer_8_constant (a_constant)
-				when 6 then
-						-- 0[xX][a-fA-F0-9]{4}
-					l_type := current_system.integer_16_class
-					report_integer_16_constant (a_constant)
-				when 10 then
-						-- 0[xX][a-fA-F0-9]{8}
-					l_type := current_system.integer_32_class
-					report_integer_32_constant (a_constant)
-				when 18 then
-						-- 0[xX][a-fA-F0-9]{16}
-					l_type := current_system.integer_64_class
-					report_integer_64_constant (a_constant)
-				else
-					l_class := universe_impl.integer_class
-					l_type := l_class
-					if l_class = current_system.integer_8_class then
-						report_integer_8_constant (a_constant)
-					elseif l_class = current_system.integer_16_class then
-						report_integer_16_constant (a_constant)
-					elseif l_class = current_system.integer_32_class then
-						report_integer_32_constant (a_constant)
-					elseif l_class = current_system.integer_64_class then
-						report_integer_64_constant (a_constant)
-					else
--- TODO: invalid type mapping for integer.
-						l_type := current_system.integer_32_class
-						report_integer_32_constant (a_constant)
-					end
-				end
-			end
-			a_constant.set_type (l_type)
-			a_context.force_last (l_type)
+			check_integer_constant_validity (a_constant, a_context)
 		end
 
 	check_infix_cast_expression_validity (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -5728,6 +5691,21 @@ feature {NONE} -- Expression validity
 			-- `a_context' represents the type in which `a_constant' appears.
 			-- It will be altered on exit to represent the type of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+			--
+			-- An integer constant is of the form:
+			--    [manifest_type] manifest_value
+			-- where the manifest_type is optional.
+			-- We have to check that:
+			--  * if 'manifest_type' is provided:
+			--    * it is a valid type, and is one of the sized integer types.
+			--    * 'manifest_value' is representable as an instance of 'manifest_type'.
+			--  * otherwise, try to determine whether 'manifest_value' is representable
+			--    as an instance of the type expected in the surrounding context.
+			--  * otherwise, the constant will be of type "INTEGER_32" if 'manifest_value'
+			--    is representable as an INTEGER_32, will be of type "INTEGER_64" if it
+			--    is representable as an INTEGER_64, will be of type "NATURAL_64" if it
+			--    is represenable as a NATURAL_64.
+			--  * otherwise, report an overflow error.
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
@@ -5736,66 +5714,140 @@ feature {NONE} -- Expression validity
 			l_class: ET_CLASS
 			l_type: ET_CLASS_TYPE
 			l_cast_type: ET_TARGET_TYPE
+			l_sign: ET_SYMBOL_OPERATOR
 		do
 			has_fatal_error := False
 			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
--- TODO: make sure that `l_cast_type' is a valid type.
--- For example 'INTEGER [STRING]' is not valid.
-				l_class_type ?= l_cast_type.type.named_type (a_context)
+					-- Make sure that `l_cast_type' is a valid type.
+					-- For example 'INTEGER_32 [STRING]' is not valid.
+				check_type_validity (l_cast_type.type)
+				if not has_fatal_error then
+					l_class_type ?= l_cast_type.type.named_type (a_context)
+				end
 			else
 				l_class_type ?= current_target_type.named_type
 			end
 			if l_class_type /= Void then
 				l_class := l_class_type.base_class
 				if l_class = current_system.integer_8_class then
-					l_type := l_class
-					report_integer_8_constant (a_constant)
+					if not a_constant.is_integer_8 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_integer_8_constant (a_constant)
+					end
 				elseif l_class = current_system.integer_16_class then
-					l_type := l_class
-					report_integer_16_constant (a_constant)
+					if not a_constant.is_integer_16 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_integer_16_constant (a_constant)
+					end
 				elseif l_class = current_system.integer_32_class then
-					l_type := l_class
-					report_integer_32_constant (a_constant)
+					if not a_constant.is_integer_32 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_integer_32_constant (a_constant)
+					end
 				elseif l_class = current_system.integer_64_class then
-					l_type := l_class
-					report_integer_64_constant (a_constant)
+					if not a_constant.is_integer_64 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_integer_64_constant (a_constant)
+					end
 				elseif l_class = current_system.natural_8_class then
-					l_type := l_class
-					report_natural_8_constant (a_constant)
+					if not a_constant.is_natural_8 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_natural_8_constant (a_constant)
+					end
 				elseif l_class = current_system.natural_16_class then
-					l_type := l_class
-					report_natural_16_constant (a_constant)
+					if not a_constant.is_natural_16 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_natural_16_constant (a_constant)
+					end
 				elseif l_class = current_system.natural_32_class then
-					l_type := l_class
-					report_natural_32_constant (a_constant)
+					if not a_constant.is_natural_32 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_natural_32_constant (a_constant)
+					end
 				elseif l_class = current_system.natural_64_class then
-					l_type := l_class
-					report_natural_64_constant (a_constant)
+					if not a_constant.is_natural_64 then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
+					else
+						l_type := l_class
+						report_natural_64_constant (a_constant)
+					end
 				end
 			end
-			if l_type = Void then
+			if not has_fatal_error and l_type = Void then
 				if l_cast_type /= Void then
--- TODO: invalid cast type, it should be an integer type.
-				end
-				l_class := universe_impl.integer_class
-				l_type := l_class
-				if l_class = current_system.integer_8_class then
-					report_integer_8_constant (a_constant)
-				elseif l_class = current_system.integer_16_class then
-					report_integer_16_constant (a_constant)
-				elseif l_class = current_system.integer_32_class then
-					report_integer_32_constant (a_constant)
-				elseif l_class = current_system.integer_64_class then
-					report_integer_64_constant (a_constant)
+						-- Error: invalid cast type, it should be an integer type.
+					set_fatal_error
+					error_handler.report_vwmq0a_error (current_class, current_class_impl, a_constant)
+				elseif a_constant.is_integer_32 then
+					if (a_constant.is_hexadecimal or a_constant.is_binary) and then (a_constant.sign = Void and a_constant.value > {INTEGER_32}.Max_value.as_natural_64) then
+							-- ISE Eiffel considers that:
+							--   {INTEGER_32} 0xFFFFFFFF
+							-- and:
+							--   i: INTEGER_32
+							--   i := 0xFFFFFFFF
+							-- as valid (and mean -1), when appearing without an integer type
+							-- context, then its type is INTEGER_64 and its value is 4294967295.
+						l_type := current_system.integer_64_class
+						report_integer_64_constant (a_constant)
+					else
+						l_type := current_system.integer_32_class
+						report_integer_32_constant (a_constant)
+					end
+				elseif a_constant.is_integer_64 then
+					if (a_constant.is_hexadecimal or a_constant.is_binary) and then (a_constant.sign = Void and a_constant.value > {INTEGER_64}.Max_value.as_natural_64) then
+							-- ISE Eiffel considers that:
+							--   {INTEGER_64} 0xFFFFFFFFFFFFFFFF
+							-- and:
+							--   i: INTEGER_64
+							--   i := 0xFFFFFFFFFFFFFFFF
+							-- as valid (and mean -1), when appearing without an integer type
+							-- context, then its type is NATURAL_64 and its value is 18446744073709551615.
+						l_type := current_system.natural_64_class
+						report_natural_64_constant (a_constant)
+					else
+						l_type := current_system.integer_64_class
+						report_integer_64_constant (a_constant)
+					end
+				elseif a_constant.is_natural_64 then
+					l_type := current_system.natural_64_class
+					report_natural_64_constant (a_constant)
 				else
--- TODO: invalid type mapping for integer.
-					l_type := current_system.integer_32_class
-					report_integer_32_constant (a_constant)
+					set_fatal_error
+					l_sign := a_constant.sign
+					if l_sign /= Void and then l_sign.is_minus then
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_system.integer_64_class)
+					else
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_system.natural_64_class)
+					end
 				end
 			end
-			a_constant.set_type (l_type)
-			a_context.force_last (l_type)
+			if l_type /= Void then
+				a_constant.set_type (l_type)
+				a_context.force_last (l_type)
+			end
 		end
 
 	check_local_variable_validity (a_name: ET_IDENTIFIER; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -6456,6 +6508,18 @@ feature {NONE} -- Expression validity
 					end
 				end
 			end
+		end
+
+	check_octal_integer_constant_validity (a_constant: ET_OCTAL_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `a_constant'.
+			-- `a_context' represents the type in which `a_constant' appears.
+			-- It will be altered on exit to represent the type of `a_constant'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_constant_not_void: a_constant /= Void
+			a_context_not_void: a_context /= Void
+		do
+			check_integer_constant_validity (a_constant, a_context)
 		end
 
 	check_old_expression_validity (an_expression: ET_OLD_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -11069,6 +11133,12 @@ feature {ET_AST_NODE} -- Processing
 			check_bang_instruction_validity (an_instruction)
 		end
 
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			check_binary_integer_constant_validity (a_constant, current_context)
+		end
+
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		do
@@ -11365,6 +11435,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_object_test_validity (an_expression, current_context)
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			check_octal_integer_constant_validity (a_constant, current_context)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is

@@ -35,6 +35,7 @@ inherit
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
+			process_binary_integer_constant,
 			process_bit_constant,
 			process_bit_feature,
 			process_bit_n,
@@ -150,6 +151,7 @@ inherit
 			process_manifest_type,
 			process_object_equality_expression,
 			process_object_test,
+			process_octal_integer_constant,
 			process_old_expression,
 			process_once_function,
 			process_once_function_inline_agent,
@@ -399,6 +401,15 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_instruction) then
 				precursor (an_instruction)
+			end
+		end
+
+	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			if not excluded_nodes.has (a_constant) then
+				precursor (a_constant)
+				process_break (a_constant.break)
 			end
 		end
 
@@ -1339,6 +1350,15 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_expression) then
 				precursor (an_expression)
+			end
+		end
+
+	process_octal_integer_constant (a_constant: ET_OCTAL_INTEGER_CONSTANT) is
+			-- Process `a_constant'.
+		do
+			if not excluded_nodes.has (a_constant) then
+				precursor (a_constant)
+				process_break (a_constant.break)
 			end
 		end
 
