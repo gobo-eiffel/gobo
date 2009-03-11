@@ -5731,68 +5731,68 @@ feature {NONE} -- Expression validity
 			if l_class_type /= Void then
 				l_class := l_class_type.base_class
 				if l_class = current_system.integer_8_class then
-					if not a_constant.is_integer_8 then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					if a_constant.is_integer_8 then
 						l_type := l_class
 						report_integer_8_constant (a_constant)
+					elseif l_cast_type /= Void then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
 					end
 				elseif l_class = current_system.integer_16_class then
-					if not a_constant.is_integer_16 then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					if a_constant.is_integer_16 then
 						l_type := l_class
 						report_integer_16_constant (a_constant)
+					elseif l_cast_type /= Void then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
 					end
 				elseif l_class = current_system.integer_32_class then
-					if not a_constant.is_integer_32 then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					if a_constant.is_integer_32 then
 						l_type := l_class
 						report_integer_32_constant (a_constant)
+					elseif l_cast_type /= Void then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
 					end
 				elseif l_class = current_system.integer_64_class then
-					if not a_constant.is_integer_64 then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					if a_constant.is_integer_64 then
 						l_type := l_class
 						report_integer_64_constant (a_constant)
+					elseif l_cast_type /= Void then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
 					end
 				elseif l_class = current_system.natural_8_class then
-					if not a_constant.is_natural_8 then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					if a_constant.is_natural_8 then
 						l_type := l_class
 						report_natural_8_constant (a_constant)
+					elseif l_cast_type /= Void then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
 					end
 				elseif l_class = current_system.natural_16_class then
-					if not a_constant.is_natural_16 then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					if a_constant.is_natural_16 then
 						l_type := l_class
 						report_natural_16_constant (a_constant)
+					elseif l_cast_type /= Void then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
 					end
 				elseif l_class = current_system.natural_32_class then
-					if not a_constant.is_natural_32 then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					if a_constant.is_natural_32 then
 						l_type := l_class
 						report_natural_32_constant (a_constant)
-					end
-				elseif l_class = current_system.natural_64_class then
-					if not a_constant.is_natural_64 then
+					elseif l_cast_type /= Void then
 						set_fatal_error
 						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					else
+					end
+				elseif l_class = current_system.natural_64_class then
+					if a_constant.is_natural_64 then
 						l_type := l_class
 						report_natural_64_constant (a_constant)
+					elseif l_cast_type /= Void then
+						set_fatal_error
+						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
 					end
 				end
 			end
