@@ -22,13 +22,13 @@ create
 
 feature -- Test
 
-	test_character_bytes is
-			-- Test feature 'character_bytes'.
+	test_character_8_bytes is
+			-- Test feature 'character_8_bytes'.
 		local
 			p: PLATFORM
 		do
 			create p
-			assert ("character_bytes", p.character_bytes >= 1)
+			assert ("character_8_bytes", p.character_8_bytes >= 1)
 		end
 
 	test_integer_8_bytes is

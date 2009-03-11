@@ -275,11 +275,11 @@ feature -- Test
 			assert ("mod1", i1 \\ i2 = i3)
 			i1 := 21
 			i2 := -10
-			i3 := 1 
+			i3 := 1
 			assert ("mod2", i1 \\ i2 = i3)
 			i1 := -21
 			i2 := 9
-			i3 := -3 
+			i3 := -3
 			assert ("mod3", i1 \\ i2 = i3)
 		end
 
@@ -319,15 +319,15 @@ feature -- Test
 			assert ("plus1", +i1 = i2)
 		end
 
-	test_to_character is
-			-- Test feature 'to_character'.
+	test_to_character_8 is
+			-- Test feature 'to_character_8'.
 		local
 			i: INTEGER_8
-			c: CHARACTER
+			c: CHARACTER_8
 		do
 			i := 97
 			c := 'a'
-			assert ("to_character1", i.to_character = c)
+			assert ("to_character_8_1", i.to_character_8 = c)
 		end
 
 	test_to_real is

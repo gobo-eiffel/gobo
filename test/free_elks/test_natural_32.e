@@ -293,15 +293,15 @@ feature -- Test
 			assert ("plus1", +i1 = i2)
 		end
 
-	test_to_character is
-			-- Test feature 'to_character'.
+	test_to_character_8 is
+			-- Test feature 'to_character_8'.
 		local
 			i: NATURAL_32
-			c: CHARACTER
+			c: CHARACTER_8
 		do
 			i := 97
 			c := 'a'
-			assert ("to_character1", i.to_character = c)
+			assert ("to_character_8_1", i.to_character_8 = c)
 		end
 
 	test_to_real_32 is
