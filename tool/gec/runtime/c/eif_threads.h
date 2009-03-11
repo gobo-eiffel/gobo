@@ -36,6 +36,7 @@ extern "C" {
 #define eif_thr_default_priority() 0
 #define eif_thr_create_with_args(current_obj, init_func, priority, policy, detach)
 #define eif_thr_sleep(nanoseconds)
+#define eif_thr_cond_wait_with_timeout(a_cond_ptr,a_mutex_ptr,a_timeout) 0
 
 #endif
 
