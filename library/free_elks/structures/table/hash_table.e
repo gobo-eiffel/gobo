@@ -13,7 +13,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class HASH_TABLE [G, K -> HASHABLE] inherit
+class HASH_TABLE [G, K -> ?HASHABLE] inherit
 
 	UNBOUNDED [?G]
 		rename
@@ -1409,7 +1409,7 @@ note
 			end
 		]"
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

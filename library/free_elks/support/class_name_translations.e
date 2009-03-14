@@ -31,7 +31,6 @@ inherit
 		end
 
 create
-
 	default_create
 
 feature -- Initialization

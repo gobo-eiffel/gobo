@@ -447,10 +447,11 @@ feature -- Element change
 			if other_last_element /= Void then
 				other_first_element := other.first_element
 				other_count := other.count
-					check
-						other_first_element /= Void
-						other_last_element /= Void
-					end
+				other.wipe_out
+				check
+					other_first_element /= Void
+					other_last_element /= Void
+				end
 				if is_empty then
 					first_element := other_first_element
 					active := first_element
@@ -465,7 +466,6 @@ feature -- Element change
 					other_last_element.put_right (active)
 				end
 				count := count + other_count
-				other.wipe_out
 			end
 		end
 
@@ -482,10 +482,11 @@ feature -- Element change
 			if other_last_element /= Void then
 				other_first_element := other.first_element
 				other_count := other.count
-					check
-						other_first_element /= Void
-						other_last_element /= Void
-					end
+				other.wipe_out
+				check
+					other_first_element /= Void
+					other_last_element /= Void
+				end
 				a := active
 				if a = Void then
 					first_element := other_first_element
@@ -497,7 +498,6 @@ feature -- Element change
 					a.put_right (other_first_element)
 				end
 				count := count + other_count
-				other.wipe_out
 			end
 		end
 
@@ -605,30 +605,32 @@ feature -- Duplication
 			cur: ?LINKED_LIST_CURSOR [G]
 			obj_comparison: BOOLEAN
 		do
-			obj_comparison := other.object_comparison
-			standard_copy (other)
-			if not other.is_empty then
-				internal_wipe_out
-				if {l_cur: LINKED_LIST_CURSOR [G]} other.cursor then
-					cur := l_cur
+			if other /= Current then
+				obj_comparison := other.object_comparison
+				standard_copy (other)
+				if not other.is_empty then
+					internal_wipe_out
+					if {l_cur: LINKED_LIST_CURSOR [G]} other.cursor then
+						cur := l_cur
+					end
+					from
+						other.start
+					until
+						other.off
+					loop
+						extend (other.item)
+							-- For speeding up next insertion, we go
+							-- to the end, that way `extend' does not
+							-- need to traverse the list completely.
+						finish
+						other.forth
+					end
+					if cur /= Void then
+						other.go_to (cur)
+					end
 				end
-				from
-					other.start
-				until
-					other.off
-				loop
-					extend (other.item)
-						-- For speeding up next insertion, we go
-						-- to the end, that way `extend' does not
-						-- need to traverse the list completely.
-					finish
-					other.forth
-				end
-				if cur /= Void then
-					other.go_to (cur)
-				end
+				object_comparison := obj_comparison
 			end
-			object_comparison := obj_comparison
 		end
 
 feature {LINKED_LIST} -- Implementation

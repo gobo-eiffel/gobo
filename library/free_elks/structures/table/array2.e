@@ -124,6 +124,8 @@ feature -- Removal
 		do
 			height := 0
 			width := 0
+			lower := 1
+			upper := 0
 			discard_items
 		end
 

@@ -69,13 +69,13 @@ create
 	make_from_cil
 
 convert
-	to_cil: {SYSTEM_STRING},
-	make_from_cil ({SYSTEM_STRING}),
+	to_cil: {SYSTEM_STRING, ?SYSTEM_STRING},
+	make_from_cil ({SYSTEM_STRING, !SYSTEM_STRING, ?SYSTEM_STRING}),
 	as_string_32: {READABLE_STRING_32, ?READABLE_STRING_32, STRING_32, ?STRING_32}
 
 feature -- Initialization
 
-	make_from_cil (a_system_string: SYSTEM_STRING)
+	make_from_cil (a_system_string: ?SYSTEM_STRING)
 			-- Initialize Current with `a_system_string'.
 		local
 			l_count: INTEGER
@@ -84,7 +84,7 @@ feature -- Initialization
 				l_count := a_system_string.length
 			end
 			make (l_count)
-			if l_count > 0 then
+			if l_count > 0 and then a_system_string /= Void then
 				set_count (l_count)
 				dotnet_convertor.read_system_string_into (a_system_string, Current)
 			end
