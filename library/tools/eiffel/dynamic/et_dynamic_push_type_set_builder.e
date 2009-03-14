@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type set builders where types are pushed to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ inherit
 			propagate_creation_dynamic_type,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_like_argument_dynamic_types,
-			propagate_object_test_dynamic_types,
+			propagate_named_object_test_dynamic_types,
 			propagate_tuple_label_result_dynamic_types,
 			propagate_tuple_label_argument_dynamic_types,
 			propagate_qualified_call_target_dynamic_types,
@@ -804,7 +804,7 @@ feature {NONE} -- Implementation
 			a_formal_type_set.put_target (an_actual_type_set, current_dynamic_system)
 		end
 
-	propagate_object_test_dynamic_types (a_object_test: ET_OBJECT_TEST) is
+	propagate_named_object_test_dynamic_types (a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Propagate dynamic types of the expression of `a_object_test'
 			-- to the dynamic type set of the local of `a_object_test'.
 		local

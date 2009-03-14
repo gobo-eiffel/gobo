@@ -5,7 +5,7 @@ indexing
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,8 +59,10 @@ inherit
 			process_loop_invariants,
 			process_manifest_array,
 			process_manifest_tuple,
+			process_named_object_test,
 			process_object_equality_expression,
 			process_object_test,
+			process_old_object_test,
 			process_once_function,
 			process_once_function_inline_agent,
 			process_once_procedure,
@@ -749,6 +751,12 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			an_expression.expression.process (Current)
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -757,6 +765,12 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			an_expression.expression.process (Current)
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
 			-- Process `an_expression'.
 		do
 			an_expression.expression.process (Current)

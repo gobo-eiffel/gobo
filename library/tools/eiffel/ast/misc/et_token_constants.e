@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2204,6 +2204,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	attached_keyword: ET_KEYWORD is
+			-- 'attached' keyword
+		once
+			create Result.make_attached
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	attribute_keyword: ET_KEYWORD is
 			-- 'attribute' keyword
 		once
@@ -2280,6 +2288,14 @@ feature -- Keywords
 			-- 'deferred' keyword
 		once
 			create Result.make_deferred
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	detachable_keyword: ET_KEYWORD is
+			-- 'detachable' keyword
+		once
+			create Result.make_detachable
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -3136,6 +3152,7 @@ feature -- Keyword and symbol names
 	and_then_keywords_name: STRING is "and then"
 	as_keyword_name: STRING is "as"
 	assign_keyword_name: STRING is "assign"
+	attached_keyword_name: STRING is "attached"
 	attribute_keyword_name: STRING is "attribute"
 	check_keyword_name: STRING is "check"
 	class_keyword_name: STRING is "class"
@@ -3145,6 +3162,7 @@ feature -- Keyword and symbol names
 	current_keyword_name: STRING is "current"
 	debug_keyword_name: STRING is "debug"
 	deferred_keyword_name: STRING is "deferred"
+	detachable_keyword_name: STRING is "detachable"
 	do_keyword_name: STRING is "do"
 	else_keyword_name: STRING is "else"
 	elseif_keyword_name: STRING is "elseif"

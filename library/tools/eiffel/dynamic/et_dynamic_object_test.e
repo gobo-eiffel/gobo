@@ -5,7 +5,7 @@ indexing
 		"Eiffel object-tests at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	object_test: ET_OBJECT_TEST
+	object_test: ET_NAMED_OBJECT_TEST
 			-- Object-test
 
 	position: ET_POSITION is

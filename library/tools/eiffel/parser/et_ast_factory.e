@@ -5,7 +5,7 @@ indexing
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -84,6 +84,16 @@ feature -- Eiffel keywords
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := tokens.assign_keyword
+		end
+
+	new_attached_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'attached' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
+		do
+			create Result.make_attached
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_attribute_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -166,6 +176,16 @@ feature -- Eiffel keywords
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
 			Result := tokens.deferred_keyword
+		end
+
+	new_detachable_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'detachable' keyword
+		require
+			a_scanner_not_void: a_scanner /= Void
+			last_literal_not_empty: a_scanner.last_literal_count > 0
+		do
+			create Result.make_detachable
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_do_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
@@ -2818,6 +2838,17 @@ feature -- AST nodes
 			end
 		end
 
+	new_named_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
+			-- New named object-test expression
+		do
+			if a_name /= Void and a_expression /= Void then
+				create Result.make (a_type, a_expression, a_name)
+				if a_attached /= Void and then not a_attached.position.is_null then
+					Result.set_attached_keyword (a_attached)
+				end
+			end
+		end
+
 	new_none_clients (a_left, a_right: ET_SYMBOL): ET_CLIENTS is
 			-- Client list of the form {}
 		do
@@ -2847,21 +2878,21 @@ feature -- AST nodes
 			end
 		end
 
+	new_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
+			-- New object-test expression
+		do
+			if a_expression /= Void then
+				create Result.make (a_type, a_expression)
+				if a_attached /= Void and then not a_attached.position.is_null then
+					Result.set_attached_keyword (a_attached)
+				end
+			end
+		end
+
 	new_obsolete_message (an_obsolete: ET_KEYWORD; a_message: ET_MANIFEST_STRING): ET_OBSOLETE is
 			-- New obsolete clause
 		do
 			Result := a_message
-		end
-
-	new_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
-			-- New object-test expression
-		do
-			if a_name /= Void and a_type /= Void and a_expression /= Void then
-				create Result.make (a_name, a_type, a_expression)
-				if a_left_brace /= Void and then not a_left_brace.position.is_null then
-					Result.set_left_brace (a_left_brace)
-				end
-			end
 		end
 
 	new_old_expression (an_old: ET_KEYWORD; e: ET_EXPRESSION): ET_OLD_EXPRESSION is
@@ -2871,6 +2902,17 @@ feature -- AST nodes
 				create Result.make (e)
 				if an_old /= Void and then not an_old.position.is_null then
 					Result.set_old_keyword (an_old)
+				end
+			end
+		end
+
+	new_old_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OLD_OBJECT_TEST is
+			-- New object-test expression
+		do
+			if a_name /= Void and a_type /= Void and a_expression /= Void then
+				create Result.make (a_name, a_type, a_expression)
+				if a_left_brace /= Void and then not a_left_brace.position.is_null then
+					Result.set_left_brace (a_left_brace)
 				end
 			end
 		end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,7 @@ inherit
 			new_and_keyword,
 			new_as_keyword,
 			new_assign_keyword,
+			new_attached_keyword,
 			new_attribute_keyword,
 			new_check_keyword,
 			new_class_keyword,
@@ -31,6 +32,7 @@ inherit
 			new_current_keyword,
 			new_debug_keyword,
 			new_deferred_keyword,
+			new_detachable_keyword,
 			new_do_keyword,
 			new_else_keyword,
 			new_elseif_keyword,
@@ -272,12 +274,14 @@ inherit
 			new_manifest_string_list,
 			new_manifest_tuple,
 			new_manifest_type,
+			new_named_object_test,
 			new_none_clients,
 			new_null_export,
 			new_null_instruction,
 			new_object_test,
 			new_obsolete_message,
 			new_old_expression,
+			new_old_object_test,
 			new_once_compound,
 			new_once_function,
 			new_once_function_inline_agent,
@@ -398,6 +402,15 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
+	new_attached_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'attached' keyword
+		do
+			create Result.make_attached
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_attribute_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'attribute' keyword
 		do
@@ -474,6 +487,15 @@ feature -- Eiffel keywords
 			-- New 'deferred' keyword
 		do
 			create Result.make_deferred
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_detachable_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'detachable' keyword
+		do
+			create Result.make_detachable
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -3047,6 +3069,20 @@ feature -- AST nodes
 			end
 		end
 
+	new_named_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
+			-- New named object-test expression
+		do
+			if a_name /= Void and a_expression /= Void then
+				create Result.make (a_type, a_expression, a_name)
+				if a_attached /= Void then
+					Result.set_attached_keyword (a_attached)
+				end
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
+			end
+		end
+
 	new_none_clients (a_left, a_right: ET_SYMBOL): ET_CLIENTS is
 			-- Client list of the form {}
 		do
@@ -3071,19 +3107,13 @@ feature -- AST nodes
 			Result := a_semicolon
 		end
 
-	new_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
+	new_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
 			-- New object-test expression
 		do
-			if a_name /= Void and a_type /= Void and a_expression /= Void then
-				create Result.make (a_name, a_type, a_expression)
-				if a_left_brace /= Void then
-					Result.set_left_brace (a_left_brace)
-				end
-				if a_colon /= Void then
-					Result.set_colon (a_colon)
-				end
-				if a_right_brace /= Void then
-					Result.set_right_brace (a_right_brace)
+			if a_expression /= Void then
+				create Result.make (a_type, a_expression)
+				if a_attached /= Void then
+					Result.set_attached_keyword (a_attached)
 				end
 			end
 		end
@@ -3105,6 +3135,23 @@ feature -- AST nodes
 				create Result.make (e)
 				if an_old /= Void then
 					Result.set_old_keyword (an_old)
+				end
+			end
+		end
+
+	new_old_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OLD_OBJECT_TEST is
+			-- New object-test expression
+		do
+			if a_name /= Void and a_type /= Void and a_expression /= Void then
+				create Result.make (a_name, a_type, a_expression)
+				if a_left_brace /= Void then
+					Result.set_left_brace (a_left_brace)
+				end
+				if a_colon /= Void then
+					Result.set_colon (a_colon)
+				end
+				if a_right_brace /= Void then
+					Result.set_right_brace (a_right_brace)
 				end
 			end
 		end

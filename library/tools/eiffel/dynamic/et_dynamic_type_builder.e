@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,6 +65,7 @@ inherit
 			report_manifest_array,
 			report_manifest_tuple,
 			report_manifest_type,
+			report_named_object_test,
 			report_natural_8_constant,
 			report_natural_16_constant,
 			report_natural_32_constant,
@@ -2503,6 +2504,34 @@ feature {NONE} -- Event handling
 			end
 		end
 
+	report_named_object_test (a_object_test: ET_NAMED_OBJECT_TEST; a_local_type: ET_TYPE_CONTEXT) is
+			-- Report that the object-test `a_object_test' with local
+			-- of type `a_local_type' has been processed.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+					-- Object-tests are of type "BOOLEAN".
+				l_dynamic_type := current_dynamic_system.boolean_type
+				mark_type_alive (l_dynamic_type)
+				if a_object_test.index = 0 and boolean_index.item /= 0 then
+					a_object_test.set_index (boolean_index.item)
+				end
+				set_dynamic_type_set (l_dynamic_type, a_object_test)
+				if boolean_index.item = 0 then
+					boolean_index.put (a_object_test.index)
+				end
+					-- Take care of the type of the object-test local.
+				l_dynamic_type := current_dynamic_system.dynamic_type (tokens.like_current, a_local_type)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+					-- An object-test local is assumed to be never Void.
+				l_dynamic_type_set.set_never_void
+				set_dynamic_type_set (l_dynamic_type_set, a_object_test.name)
+				propagate_named_object_test_dynamic_types (a_object_test)
+			end
+		end
+
 	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT) is
 			-- Report that a natural_8 has been processed.
 		local
@@ -2608,14 +2637,8 @@ feature {NONE} -- Event handling
 
 	report_object_test (a_object_test: ET_OBJECT_TEST) is
 			-- Report that the object-test `a_object_test' has been processed.
-			-- Note: The type of the object-test local is still viewed from
-			-- the implementation class of `current_feature'. Its formal
-			-- generic parameters need to be resolved in `current_class'
-			-- before using it.
 		local
-			l_resolved_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Object-tests are of type "BOOLEAN".
@@ -2628,20 +2651,10 @@ feature {NONE} -- Event handling
 				if boolean_index.item = 0 then
 					boolean_index.put (a_object_test.index)
 				end
-					-- Take care of the type of the object-test local.
-				l_resolved_type := resolved_formal_parameters (a_object_test.type, current_class_impl, current_type)
-				if not has_fatal_error then
-					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
-					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-						-- An object-test local is assumed to be never Void.
-					l_dynamic_type_set.set_never_void
-					set_dynamic_type_set (l_dynamic_type_set, a_object_test.name)
-					propagate_object_test_dynamic_types (a_object_test)
-				end
 			end
 		end
 
-	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_OBJECT_TEST) is
+	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Report that a call to object-test local `a_name' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -6182,7 +6195,7 @@ feature {NONE} -- Implementation
 			-- Do nothing.
 		end
 
-	propagate_object_test_dynamic_types (a_object_test: ET_OBJECT_TEST) is
+	propagate_named_object_test_dynamic_types (a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Propagate dynamic types of the expression of `a_object_test'
 			-- to the dynamic type set of the local of `a_object_test'.
 		require

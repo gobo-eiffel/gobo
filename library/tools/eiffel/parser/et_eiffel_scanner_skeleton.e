@@ -5,7 +5,7 @@ indexing
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,11 +113,25 @@ feature -- Access
 
 feature -- Status report
 
+	use_attached_keyword: BOOLEAN is
+			-- Should 'attached' be considered as
+			-- a keyword (otherwise identifier)?
+		do
+			Result := current_system.use_attached_keyword
+		end
+
 	use_attribute_keyword: BOOLEAN is
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
 		do
 			Result := current_system.use_attribute_keyword
+		end
+
+	use_detachable_keyword: BOOLEAN is
+			-- Should 'detachable' be considered as
+			-- a keyword (otherwise identifier)?
+		do
+			Result := current_system.use_detachable_keyword
 		end
 
 	use_note_keyword: BOOLEAN is
@@ -871,6 +885,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.and_keyword_name)
 			Result.force_new (-1, tokens.as_keyword_name)
 			Result.force_new (-1, tokens.assign_keyword_name)
+			Result.force_new (-1, tokens.attached_keyword_name)
 			Result.force_new (-1, tokens.attribute_keyword_name)
 			Result.force_new (-1, tokens.check_keyword_name)
 			Result.force_new (-1, tokens.class_keyword_name)
@@ -880,6 +895,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.current_keyword_name)
 			Result.force_new (-1, tokens.debug_keyword_name)
 			Result.force_new (-1, tokens.deferred_keyword_name)
+			Result.force_new (-1, tokens.detachable_keyword_name)
 			Result.force_new (-1, tokens.do_keyword_name)
 			Result.force_new (-1, tokens.else_keyword_name)
 			Result.force_new (-1, tokens.elseif_keyword_name)
@@ -2264,6 +2280,46 @@ feature {NONE} -- Processing
 				end
 			when 8 then
 				inspect text_item (1)
+				when 'a', 'A' then
+					inspect text_item (2)
+					when 't', 'T' then
+						inspect text_item (3)
+						when 't', 'T' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 'c', 'C' then
+									inspect text_item (6)
+									when 'h', 'H' then
+										inspect text_item (7)
+										when 'e', 'E' then
+											inspect text_item (8)
+											when 'd', 'D' then
+												if use_attached_keyword then
+													last_token := E_ATTACHED
+													last_et_keyword_value := ast_factory.new_attached_keyword (Current)
+												end
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
 				when 'c', 'C' then
 					inspect text_item (2)
 					when 'r', 'R' then
@@ -2752,6 +2808,61 @@ feature {NONE} -- Processing
 													if use_reference_keyword then
 														last_token := E_REFERENCE
 														last_et_keyword_value := ast_factory.new_reference_keyword (Current)
+													end
+												else
+													-- Do nothing.
+												end
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 10 then
+				inspect text_item (1)
+				when 'd', 'D' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 't', 'T' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 'c', 'C' then
+									inspect text_item (6)
+									when 'h', 'H' then
+										inspect text_item (7)
+										when 'a', 'A' then
+											inspect text_item (8)
+											when 'b', 'B' then
+												inspect text_item (9)
+												when 'l', 'L' then
+													inspect text_item (10)
+													when 'e', 'E' then
+														if use_detachable_keyword then
+															last_token := E_DETACHABLE
+															last_et_keyword_value := ast_factory.new_detachable_keyword (Current)
+														end
+													else
+														-- Do nothing.
 													end
 												else
 													-- Do nothing.

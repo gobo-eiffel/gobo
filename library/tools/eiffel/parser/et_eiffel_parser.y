@@ -45,6 +45,7 @@ create
 %token <ET_KEYWORD> E_RESCUE E_SELECT E_STRIP E_WHEN
 %token <ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
 %token <ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
+%token <ET_KEYWORD> E_ATTACHED E_DETACHABLE
 %token <ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST E_ASSIGN
 %token <ET_AGENT_KEYWORD> E_AGENT
 %token <ET_PRECURSOR_KEYWORD> E_PRECURSOR
@@ -145,9 +146,9 @@ create
 %type <ET_EXPORT> New_export_item
 %type <ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
 %type <ET_EXPRESSION> Expression Call_chain
-%type <ET_EXPRESSION> Precursor_expression Manifest_type Address_mark
+%type <ET_EXPRESSION> Precursor_expression Address_mark
 %type <ET_EXPRESSION> Call_expression Bracket_target
-%type <ET_EXPRESSION> Binary_expression Non_binary_expression
+%type <ET_EXPRESSION> Binary_expression Non_binary_expression Non_binary_and_typed_expression
 %type <ET_EXPRESSION_ITEM> Expression_comma
 %type <ET_EXTENDED_FEATURE_NAME> Extended_feature_name
 %type <ET_EXTERNAL_ALIAS> External_name_opt
@@ -213,7 +214,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 52
+%expect 54
 %start Class_declarations
 
 %%
@@ -751,6 +752,10 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_ATTACHED Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' Class_name Constraint_actual_parameters_opt
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -775,6 +780,10 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| E_ATTACHED E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
 		{
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -801,6 +810,10 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_ATTACHED Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE Class_name Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' Class_name Constraint_actual_parameters_opt
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -825,6 +838,10 @@ Constraint_type_no_identifier: Class_name Constraint_actual_parameters
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Constraint_tuple_actual_parameters
 		{ $$ := new_constraint_named_type (Void, $1, $2) }
+	| E_ATTACHED E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
+	| E_DETACHABLE E_TUPLE Constraint_tuple_actual_parameters_opt
+		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| '!' E_TUPLE Constraint_tuple_actual_parameters_opt
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2535,6 +2552,10 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_ATTACHED Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_DETACHABLE Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' Class_name Actual_parameters_opt
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2559,6 +2580,10 @@ Type_no_class_name: Class_name Actual_parameters
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type (Void, $1, $2) }
+	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '!' E_TUPLE Tuple_actual_parameters_opt
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2585,6 +2610,10 @@ Type_no_identifier: Class_name Actual_parameters
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_ATTACHED Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_DETACHABLE Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' Class_name Actual_parameters_opt
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2609,6 +2638,10 @@ Type_no_identifier: Class_name Actual_parameters
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters
 		{ $$ := new_tuple_type (Void, $1, $2) }
+	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '!' E_TUPLE Tuple_actual_parameters_opt
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2637,6 +2670,10 @@ Type_no_bang_identifier: Class_name
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
+	| E_ATTACHED Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
+	| E_DETACHABLE Class_name Actual_parameters_opt
+		{ $$ := new_named_type ($1, $2, $3) }
 	| '!' Class_name Actual_parameters
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2661,6 +2698,10 @@ Type_no_bang_identifier: Class_name
 		{ $$ := new_bit_feature ($1, $2)  }
 	| E_TUPLE Tuple_actual_parameters_opt
 		{ $$ := new_tuple_type (Void, $1, $2) }
+	| E_ATTACHED E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
+	| E_DETACHABLE E_TUPLE Tuple_actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2, $3) }
 	| '!' E_TUPLE Tuple_actual_parameters
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2843,6 +2884,10 @@ Tuple_labeled_actual_parameter_semicolon: Identifier ':' Type ';'
 
 Anchored_type: E_LIKE Identifier
 		{ $$ := ast_factory.new_like_feature (Void, $1, $2) }
+	| E_ATTACHED E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
+	| E_DETACHABLE E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature ($1, $2, $3) }
 	| '!' E_LIKE Identifier
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2861,6 +2906,10 @@ Anchored_type: E_LIKE Identifier
 		}
 	| E_LIKE E_CURRENT
 		{ $$ := ast_factory.new_like_current (Void, $1, $2) }
+	| E_ATTACHED E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
+	| E_DETACHABLE E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current ($1, $2, $3) }
 	| '!' E_LIKE E_CURRENT
 		{ 
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
@@ -2887,6 +2936,22 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6))
+			end
+		}
+	| E_ATTACHED E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
+			end
+		}
+	| E_DETACHABLE E_LIKE '{' Type '}' '.' Identifier
+		{
+			if not current_system.qualified_anchored_types_enabled then
+				raise_error
+			else
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
@@ -3499,13 +3564,27 @@ Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_object_equality_expression ($1, $2, $3) }
 	;
 
-Non_binary_expression: Bracket_target
+Non_binary_expression: Non_binary_and_typed_expression
+		{ $$ := $1 }
+	| Typed_integer_constant
+		{ $$ := $1 }
+	| Typed_real_constant
+		{ $$ := $1 }
+	| '{' Type '}'
+		{ $$ := ast_factory.new_manifest_type ($1, $2, $3) }
+	;
+
+Non_binary_and_typed_expression: Bracket_target
 		{ $$ := $1 }
 	| Bracket_expression
 		{ $$ := $1 }
 	| Create_expression
 		{ $$ := $1 }
 	| Manifest_tuple
+		{ $$ := $1 }
+	| E_INTEGER
+	 	{ $$ := $1 }
+	| E_REAL
 		{ $$ := $1 }
 	| '+' Non_binary_expression %prec E_NOT
 		{ $$ := new_prefix_plus_expression ($1, $2) }
@@ -3517,14 +3596,22 @@ Non_binary_expression: Bracket_target
 		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
 	| E_OLD Non_binary_expression
 		{ $$ := ast_factory.new_old_expression ($1, $2) }
-	| '{' E_IDENTIFIER ':' Type '}' Expression %prec E_NOT
+	| '{' Identifier ':' Type '}' Non_binary_expression %prec E_NOT
 		{
 			if current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
 				raise_error
 			else
-				$$ := new_object_test ($1, $2, $3, $4, $5, $6)
+				$$ := new_old_object_test ($1, $2, $3, $4, $5, $6)
 			end
 		}
+	| E_ATTACHED Non_binary_and_typed_expression %prec E_NOT
+		{ $$ := ast_factory.new_object_test ($1, Void, $2) }
+	| E_ATTACHED '{' Type '}' Non_binary_and_typed_expression %prec E_NOT
+		{ $$ := ast_factory.new_object_test ($1, ast_factory.new_target_type ($2, $3, $4), $5) }
+	| E_ATTACHED Non_binary_and_typed_expression E_AS Identifier
+		{ $$ := new_named_object_test ($1, Void, $2, $3, $4) }
+	| E_ATTACHED '{' Type '}' Non_binary_and_typed_expression E_AS Identifier
+		{ $$ := new_named_object_test ($1, ast_factory.new_target_type ($2, $3, $4), $5, $6, $7) }
 	;
 
 Bracket_target: Call_expression
@@ -3540,16 +3627,6 @@ Bracket_target: Call_expression
 	| Parenthesized_expression
 		{ $$ := $1 }
 	| Boolean_constant
-		{ $$ := $1 }
-	| E_INTEGER
-	 	{ $$ := $1 }
-	| E_REAL
-		{ $$ := $1 }
-	| Typed_integer_constant
-		{ $$ := $1 }
-	| Typed_real_constant
-		{ $$ := $1 }
-	| Manifest_type
 		{ $$ := $1 }
 	| Call_agent
 		{ $$ := $1 }
@@ -3633,10 +3710,6 @@ Parenthesized_expression: Left_parenthesis Expression ')'
 			remove_counter
 		 	$$ := ast_factory.new_parenthesized_expression ($1, $2, $3)
 		 }
-	;
-
-Manifest_type: '{' Type '}'
-		{ $$ := ast_factory.new_manifest_type ($1, $2, $3) }
 	;
 
 Manifest_array: E_LARRAY E_RARRAY

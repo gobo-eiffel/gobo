@@ -59,7 +59,7 @@ feature -- Validity checking
 			-- Check validity of `a_type' written in `a_current_feature_impl' in
 			-- `a_current_class_impl' viewed from `a_current_type'. Resolve
 			-- identifiers (such as 'like identifier', 'BIT identifier',
-			-- 'like {A}.identifier or 'like a.identifier')  in type `a_type'
+			-- 'like {A}.identifier or 'like a.identifier') in type `a_type'
 			-- if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require

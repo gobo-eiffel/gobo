@@ -45,6 +45,10 @@ Version 3.10 - ?
 	* Only pre-ECMA formats were supported for integer manifest constants.
 	  Now all formats (decimal, hexadecimal, octal and binary) are supported
 	  to be compliant with ECMA and ISE. See bug#2682414.
+	* Support the new syntax, using keywords, for attached and detachable
+	  types (e.g. 'attached FOO' or 'detachable BAR') and for object-tests
+	  (e.g. 'attached {T} exp as x' with '{T}' and 'x' optional). See
+	  bug#2682694.
 
 	Miscellaneous:
 

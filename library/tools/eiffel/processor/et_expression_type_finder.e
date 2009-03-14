@@ -5,7 +5,7 @@ indexing
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,10 +52,12 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_named_object_test,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
 			process_old_expression,
+			process_old_object_test,
 			process_once_function_inline_agent,
 			process_once_manifest_string,
 			process_once_procedure_inline_agent,
@@ -694,7 +696,7 @@ feature {NONE} -- Expression processing
 			l_typed_pointer_class: ET_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 			l_object_tests: ET_OBJECT_TEST_LIST
 			l_class_impl: ET_CLASS
 		do
@@ -830,17 +832,27 @@ feature {NONE} -- Expression processing
 							-- Class TYPED_POINTER has been found in the universe.
 							-- Use ISE's implementation: the type of '$object_test_local' is
 							-- 'TYPED_POINTER [<type-of-object_test_local>]'.
-							-- Contrary to the types appearing in the signatures, types of
-							-- object-test locals in the AST are those found in the implementation
-							-- class of `current_feature', and hence need to be resolved in
-							-- `current_type'.
 						l_type := l_object_test.type
-						l_resolved_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-						if not has_fatal_error then
-							create l_actuals.make_with_capacity (1)
-							l_actuals.put_first (l_resolved_type)
-							create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-							a_context.force_last (l_typed_pointer_type)
+						if l_type /= Void then
+								-- Contrary to the types appearing in the signatures, types of
+								-- object-test locals in the AST are those found in the implementation
+								-- class of `current_feature', and hence need to be resolved in
+								-- `current_type'.
+							l_resolved_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
+							if not has_fatal_error then
+								create l_actuals.make_with_capacity (1)
+								l_actuals.put_first (l_resolved_type)
+								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+								a_context.force_last (l_typed_pointer_type)
+							end
+						else
+							find_expression_type (l_object_test.expression, a_context, current_system.any_type)
+							if not has_fatal_error then
+								create l_actuals.make_with_capacity (1)
+								l_actuals.put_first (tokens.like_current)
+								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+								a_context.force_last (l_typed_pointer_type)
+							end
 						end
 					else
 							-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
@@ -1415,7 +1427,7 @@ feature {NONE} -- Expression processing
 		local
 			l_seed: INTEGER
 			l_type: ET_TYPE
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 			l_object_tests: ET_OBJECT_TEST_LIST
 		do
 			reset_fatal_error (False)
@@ -1435,13 +1447,18 @@ feature {NONE} -- Expression processing
 				error_handler.report_giaaa_error
 			else
 				l_object_test := l_object_tests.object_test (l_seed)
-					-- Contrary to the types appearing in the signatures, types of
-					-- object-test locals in the AST are those found in the implementation
-					-- class of `current_feature', and hence need to be resolved in
-					-- `current_type'.
-				l_type := resolved_formal_parameters (l_object_test.type, current_class_impl, current_type)
-				if not has_fatal_error then
-					a_context.force_last (l_type)
+				l_type := l_object_test.type
+				if l_type /= Void then
+						-- Contrary to the types appearing in the signatures, types of
+						-- object-test locals in the AST are those found in the implementation
+						-- class of `current_feature', and hence need to be resolved in
+						-- `current_type'.
+					l_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
+					if not has_fatal_error then
+						a_context.force_last (l_type)
+					end
+				else
+					find_expression_type (l_object_test.expression, a_context, current_system.any_type)
 				end
 			end
 		end
@@ -3117,6 +3134,12 @@ feature {ET_AST_NODE} -- Processing
 			find_manifest_type_type (an_expression, current_context)
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			find_object_test_type (an_expression, current_context)
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -3139,6 +3162,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			find_old_expression_type (an_expression, current_context)
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			find_object_test_type (an_expression, current_context)
 		end
 
 	process_once_function_inline_agent (an_expression: ET_ONCE_FUNCTION_INLINE_AGENT) is

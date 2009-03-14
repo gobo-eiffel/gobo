@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -149,10 +149,12 @@ inherit
 			process_manifest_string_list,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_named_object_test,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
 			process_old_expression,
+			process_old_object_test,
 			process_once_function,
 			process_once_function_inline_agent,
 			process_once_manifest_string,
@@ -1337,6 +1339,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
+			end
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -1363,6 +1373,14 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			if not excluded_nodes.has (an_expression) then
+				precursor (an_expression)
+			end
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
 			-- Process `an_expression'.
 		do
 			if not excluded_nodes.has (an_expression) then

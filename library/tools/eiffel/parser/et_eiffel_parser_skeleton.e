@@ -5,7 +5,7 @@ indexing
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -872,10 +872,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_type_mark := a_constraint.type_mark
 			a_formal := a_formals.formal_parameter_by_name (a_name)
 			if a_formal /= Void then
-				if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
+				if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 						-- A formal parameter type is not a class type.
 						-- It cannot be prefixed by 'expanded' or 'reference'.
-						-- But it can be prefixed by '!' or '?'.
+						-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
 					report_syntax_error (a_type_mark.position)
 					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index)
 				else
@@ -888,10 +888,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				end
 				a_base_class.set_in_system (True)
 				if a_base_class = current_system.tuple_class then
-					if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
+					if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 							-- A TUPLE type is not a class type. It cannot
 							-- be prefixed by 'expanded' or 'reference'.
-							-- But it can be prefixed by '!' or '?'.
+							-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
 						report_syntax_error (a_type_mark.position)
 						Result := ast_factory.new_tuple_type (Void, a_name, Void, a_base_class)
 					else
@@ -924,10 +924,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_type_mark := a_constraint.type_mark
 			a_formal := a_formals.formal_parameter_by_name (a_name)
 			if a_formal /= Void then
-				if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
+				if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 						-- A formal parameter type is not a class type.
 						-- It cannot be prefixed by 'expanded' or 'reference'.
-						-- But it can be prefixed by '!' or '?'.
+						-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
 					report_syntax_error (a_type_mark.position)
 				end
 					-- A formal parameter cannot have actual generic parameters.
@@ -942,10 +942,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					end
 					a_base_class.set_in_system (True)
 					if a_base_class = current_system.tuple_class then
-						if a_type_mark /= Void and then not (a_type_mark.is_question_mark or a_type_mark.is_bang) then
+						if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
 								-- A TUPLE type is not a class type. It cannot
 								-- be prefixed by 'expanded' or 'reference'.
-								-- But it can be prefixed by '!' or '?'.
+								-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
 							report_syntax_error (a_type_mark.position)
 							Result := ast_factory.new_tuple_type (Void, a_name, a_parameters, a_base_class)
 						else
@@ -1409,6 +1409,23 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_named_object_test (a_attached: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_expression: ET_EXPRESSION; a_as: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
+			-- New named object-test expression
+		local
+			l_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_named_object_test (a_attached, a_type, a_expression, a_as, a_name)
+			if Result /= Void then
+				if last_object_tests = Void then
+					last_object_tests := new_object_test_list
+				end
+				last_object_tests.force_last (Result)
+				l_name := Result.name
+				l_name.set_object_test_local (True)
+				l_name.set_seed (last_object_tests.count)
+			end
+		end
+
 	new_named_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
 			-- New Eiffel class type or formal generic paramater
 		local
@@ -1471,12 +1488,12 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OBJECT_TEST is
+	new_old_object_test (a_left_brace: ET_SYMBOL; a_name: ET_IDENTIFIER; a_colon: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_expression: ET_EXPRESSION): ET_OLD_OBJECT_TEST is
 			-- New object-test expression
 		local
 			l_name: ET_IDENTIFIER
 		do
-			Result := ast_factory.new_object_test (a_left_brace, a_name, a_colon, a_type, a_right_brace, a_expression)
+			Result := ast_factory.new_old_object_test (a_left_brace, a_name, a_colon, a_type, a_right_brace, a_expression)
 			if Result /= Void then
 				if last_object_tests = Void then
 					last_object_tests := new_object_test_list

@@ -5,7 +5,7 @@ indexing
 		"Eiffel object-test scope builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 	ET_AST_NULL_PROCESSOR
 		redefine
 			process_infix_expression,
-			process_object_test,
+			process_named_object_test,
+			process_old_object_test,
 			process_parenthesized_expression,
 			process_prefix_expression
 		end
@@ -107,7 +108,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
 			-- Process `an_expression'.
 		do
 			if not is_negated then
@@ -120,6 +121,12 @@ feature {ET_AST_NODE} -- Processing
 					scope.add_object_test (an_expression)
 				end
 			end
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			process_named_object_test (an_expression)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is

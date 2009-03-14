@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Eiffel lists of object-tests"
+		"Eiffel lists of object-tests with a local name"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_OBJECT_TEST_LIST
 
 inherit
 
-	ET_TAIL_LIST [ET_OBJECT_TEST]
+	ET_TAIL_LIST [ET_NAMED_OBJECT_TEST]
 
 create
 
@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	object_test (i: INTEGER): ET_OBJECT_TEST is
+	object_test (i: INTEGER): ET_NAMED_OBJECT_TEST is
 			-- Object-test at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -75,7 +75,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_SPECIAL_ROUTINES [ET_OBJECT_TEST] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_NAMED_OBJECT_TEST] is
 			-- Fixed array routines
 		once
 			create Result

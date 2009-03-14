@@ -24,7 +24,9 @@ inherit
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
 		undefine
+			is_attached,
 			is_deferred,
+			is_detachable,
 			is_expanded,
 			is_reference,
 			is_separate
@@ -36,6 +38,7 @@ create
 	make_all,
 	make_as,
 	make_assign,
+	make_attached,
 	make_attribute,
 	make_check,
 	make_class,
@@ -44,6 +47,7 @@ create
 	make_creation,
 	make_debug,
 	make_deferred,
+	make_detachable,
 	make_do,
 	make_else,
 	make_elseif,
@@ -153,6 +157,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_attached is
+			-- Create a new 'attached' keyword.
+		do
+			code := tokens.attached_keyword_code
+			make_token (tokens.attached_keyword_name)
+		ensure
+			is_attached: is_attached
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_attribute is
 			-- Create a new 'attribute' keyword.
 		do
@@ -248,6 +263,17 @@ feature {NONE} -- Initialization
 			make_token (tokens.deferred_keyword_name)
 		ensure
 			is_deferred: is_deferred
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_detachable is
+			-- Create a new 'detachable' keyword.
+		do
+			code := tokens.detachable_keyword_code
+			make_token (tokens.detachable_keyword_name)
+		ensure
+			is_detachable: is_detachable
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -840,6 +866,12 @@ feature -- Status report
 			Result := (code = tokens.assign_keyword_code)
 		end
 
+	is_attached: BOOLEAN is
+			-- Is current keyword 'attached'?
+		do
+			Result := (code = tokens.attached_keyword_code)
+		end
+
 	is_attribute: BOOLEAN is
 			-- Is current keyword 'attribute'?
 		do
@@ -892,6 +924,12 @@ feature -- Status report
 			-- Is current keyword 'deferred'?
 		do
 			Result := (code = tokens.deferred_keyword_code)
+		end
+
+	is_detachable: BOOLEAN is
+			-- Is current keyword 'detachable'?
+		do
+			Result := (code = tokens.detachable_keyword_code)
 		end
 
 	is_do: BOOLEAN is

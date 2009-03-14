@@ -75,10 +75,12 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_named_object_test,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
 			process_old_expression,
+			process_old_object_test,
 			process_once_function,
 			process_once_function_inline_agent,
 			process_once_manifest_string,
@@ -148,6 +150,7 @@ feature {NONE} -- Initialization
 			current_target_type := tokens.unknown_class
 			free_context (current_context)
 				-- Object-tests.
+			create current_object_test_types.make_map (50)
 			create current_object_test_scope.make
 			create object_test_scope_builder.make
 		end
@@ -248,6 +251,11 @@ feature -- Validity checking
 						end
 					end
 				end
+				from current_object_test_types.start until current_object_test_types.after loop
+					free_context (current_object_test_types.item_for_iteration)
+					current_object_test_types.forth
+				end
+				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -369,6 +377,11 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_precondition := old_in_precondition
+				from current_object_test_types.start until current_object_test_types.after loop
+					free_context (current_object_test_types.item_for_iteration)
+					current_object_test_types.forth
+				end
+				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -473,6 +486,11 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_postcondition := old_in_postcondition
+				from current_object_test_types.start until current_object_test_types.after loop
+					free_context (current_object_test_types.item_for_iteration)
+					current_object_test_types.forth
+				end
+				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -577,6 +595,11 @@ feature -- Validity checking
 				end
 				in_assertion := old_in_assertion
 				in_invariant := old_in_invariant
+				from current_object_test_types.start until current_object_test_types.after loop
+					free_context (current_object_test_types.item_for_iteration)
+					current_object_test_types.forth
+				end
+				current_object_test_types.wipe_out
 				current_object_test_scope.wipe_out
 				current_class := old_class
 				current_type := old_type
@@ -1304,7 +1327,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			args: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_enclosing_agent: ET_INLINE_AGENT
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1521,7 +1544,7 @@ feature {NONE} -- Locals/Formal arguments validity
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_enclosing_agent: ET_INLINE_AGENT
 			l_type: ET_TYPE
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -1647,7 +1670,7 @@ feature {NONE} -- Locals/Formal arguments validity
 
 	check_object_tests_validity (a_object_tests: ET_OBJECT_TEST_LIST; a_feature: ET_FEATURE) is
 			-- Check validity of `a_object_tests' of `a_feature'.
-			-- These are all the object-tests declared in `a_feature'.
+			-- These are all the named object-tests declared in `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that the validity of the declared types of the object-test
@@ -1659,8 +1682,8 @@ feature {NONE} -- Locals/Formal arguments validity
 			consistent: a_feature = current_feature
 		local
 			i, j, nb: INTEGER
-			l_object_test: ET_OBJECT_TEST
-			l_other_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
+			l_other_object_test: ET_NAMED_OBJECT_TEST
 			l_name: ET_IDENTIFIER
 		do
 			has_fatal_error := False
@@ -1704,8 +1727,8 @@ feature {NONE} -- Locals/Formal arguments validity
 			consistent: an_agent = current_inline_agent
 		local
 			i, j, nb: INTEGER
-			l_object_test: ET_OBJECT_TEST
-			l_other_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
+			l_other_object_test: ET_NAMED_OBJECT_TEST
 			l_name: ET_IDENTIFIER
 		do
 			has_fatal_error := False
@@ -4780,7 +4803,7 @@ feature {NONE} -- Expression validity
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_class_impl: ET_CLASS
 			l_object_tests: ET_OBJECT_TEST_LIST
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 		do
 			has_fatal_error := False
 			l_name := an_expression.name
@@ -4837,17 +4860,28 @@ feature {NONE} -- Expression validity
 										-- Class TYPED_POINTER has been found in the universe.
 										-- Use ISE's implementation: the type of '$object_test_local' is
 										-- 'TYPED_POINTER [<type-of-object_test_local>]'.
-									l_type := l_object_test.type
-									create l_actuals.make_with_capacity (1)
-									l_actuals.put_first (l_type)
-									create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-									report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
-									a_context.force_last (l_typed_pointer_type)
-									if not l_type.is_base_type then
-											-- The type of the object-test local contains formal generic parameters
-											-- or anchored types whose resolved value may vary in various
-											-- descendant classes/types.
-										report_current_type_needed
+									current_object_test_types.search (l_object_test)
+									if not current_object_test_types.found then
+											-- Internal error: the type of the object-test local should
+											-- have been determined when processing the object-test itself.
+											-- And this should have already been done this we are in the
+											-- scope of that object-test.
+										set_fatal_error
+										error_handler.report_giaaa_error
+									else
+										a_context.copy_type_context (current_object_test_types.found_item)
+										create l_actuals.make_with_capacity (1)
+										l_actuals.put_first (tokens.like_current)
+										create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+										report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
+										a_context.force_last (l_typed_pointer_type)
+										l_type := l_object_test.type
+										if l_type /= Void and then not l_type.is_base_type then
+												-- The type of the object-test local contains formal generic parameters
+												-- or anchored types whose resolved value may vary in various
+												-- descendant classes/types.
+											report_current_type_needed
+										end
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
@@ -5100,19 +5134,23 @@ feature {NONE} -- Expression validity
 								-- Class TYPED_POINTER has been found in the universe.
 								-- Use ISE's implementation: the type of '$object_test_local' is
 								-- 'TYPED_POINTER [<type-of-object_test_local>]'.
-								-- Contrary to the types appearing in the signatures, types of
-								-- object-test locals in the AST are those found in the implementation
-								-- class of `current_feature', and hence need to be resolved in
-								-- `current_type'.
-							l_type := l_object_test.type
-							l_resolved_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-							if not has_fatal_error then
+							current_object_test_types.search (l_object_test)
+							if not current_object_test_types.found then
+									-- Internal error: the type of the object-test local should
+									-- have been determined when processing the object-test itself.
+									-- And this should have already been done this we are in the
+									-- scope of that object-test.
+								set_fatal_error
+								error_handler.report_giaaa_error
+							else
+								a_context.copy_type_context (current_object_test_types.found_item)
 								create l_actuals.make_with_capacity (1)
-								l_actuals.put_first (l_resolved_type)
+								l_actuals.put_first (tokens.like_current)
 								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
 								report_typed_pointer_expression (an_expression, l_typed_pointer_type, a_context)
 								a_context.force_last (l_typed_pointer_type)
-								if not l_type.is_base_type then
+								l_type := l_object_test.type
+								if l_type /= Void and then not l_type.is_base_type then
 										-- The type of the object-test local contains formal generic parameters
 										-- or anchored types whose resolved value may vary in various
 										-- descendant classes/types.
@@ -6229,6 +6267,147 @@ feature {NONE} -- Expression validity
 			end
 		end
 
+	check_named_object_test_validity (an_expression: ET_NAMED_OBJECT_TEST; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+			-- `a_context' represents the type in which `an_expression' appears.
+			-- It will be altered on exit to represent the type of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		local
+			l_other_object_test: ET_NAMED_OBJECT_TEST
+			l_type: ET_TYPE
+			l_had_error: BOOLEAN
+			l_expression_context: ET_NESTED_TYPE_CONTEXT
+			l_name: ET_IDENTIFIER
+			l_feature: ET_FEATURE
+			i, j, nb: INTEGER
+			l_enclosing_agent: ET_INLINE_AGENT
+			args: ET_FORMAL_ARGUMENT_LIST
+			l_locals: ET_LOCAL_VARIABLE_LIST
+		do
+			has_fatal_error := False
+			l_expression_context := new_context (current_type)
+			l_type := an_expression.type
+			if l_type /= Void then
+				check_type_validity (l_type)
+				if not has_fatal_error then
+						-- Contrary to the types appearing in the signatures, types of
+						-- object-test locals in the AST are those found in the implementation
+						-- class of `current_feature', and hence need to be resolved in
+						-- `current_type'.
+					l_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
+				end
+				if has_fatal_error then
+						-- The type is not valid. We will consider that it is of
+						-- type 'ANY' when checking the validity of the expression.
+					l_had_error := True
+					check_expression_validity (an_expression.expression, l_expression_context, current_system.any_type)
+					has_fatal_error := has_fatal_error or l_had_error
+				else
+					l_expression_context.force_last (l_type)
+					check_expression_validity (an_expression.expression, a_context, l_expression_context)
+					a_context.reset (current_type)
+				end
+			else
+				check_expression_validity (an_expression.expression, l_expression_context, current_system.any_type)
+			end
+			current_object_test_types.force_last (l_expression_context, an_expression)
+				-- Check object-test local name clashes (see VUOT-1, in ECMA-367-2 p.127).
+			if current_class = current_class_impl then
+				l_name := an_expression.name
+				l_feature := current_class.named_query (l_name)
+				if l_feature /= Void then
+						-- This object-test local has the same name as the
+						-- final name of a feature in `current_class'.
+					set_fatal_error
+					error_handler.report_vuot1a_error (current_class, an_expression, l_feature)
+				else
+					l_feature := current_class.named_procedure (l_name)
+					if l_feature /= Void then
+							-- This object-test local has the same name as the
+							-- final name of a feature in `current_class'.
+						set_fatal_error
+						error_handler.report_vuot1a_error (current_class, an_expression, l_feature)
+					end
+				end
+				if current_inline_agent /= Void then
+					enclosing_inline_agents.force_last (current_inline_agent)
+					nb := enclosing_inline_agents.count
+					from i := 1 until i > nb loop
+						l_enclosing_agent := enclosing_inline_agents.item (i)
+						args := l_enclosing_agent.formal_arguments
+						if args /= Void then
+							j := args.index_of (l_name)
+							if j /= 0 then
+									-- This object-test local has the same name as a formal
+									-- argument of an enclosing inline agent.
+								set_fatal_error
+								error_handler.report_vuot1b_error (current_class, an_expression, args.formal_argument (j))
+							end
+						end
+						l_locals := l_enclosing_agent.locals
+						if l_locals /= Void then
+							j := l_locals.index_of (l_name)
+							if j /= 0 then
+									-- This object-test local has the same name as a
+									-- local variable of an enclosing inline agent.
+								set_fatal_error
+								error_handler.report_vuot1c_error (current_class, an_expression, l_locals.local_variable (j))
+							end
+						end
+						i := i + 1
+					end
+					enclosing_inline_agents.remove_last
+				end
+				args := current_feature.arguments
+				if args /= Void then
+					j := args.index_of (l_name)
+					if j /= 0 then
+							-- This object-test local has the same name as a formal
+							-- argument of the enclosing feature.
+						set_fatal_error
+						error_handler.report_vuot1b_error (current_class, an_expression, args.formal_argument (j))
+					end
+				end
+				l_locals := current_feature.locals
+				if l_locals /= Void then
+					j := l_locals.index_of (l_name)
+					if j /= 0 then
+							-- This object-test local has the same name as a
+							-- local variable of the enclosing feature.
+						set_fatal_error
+						error_handler.report_vuot1c_error (current_class, an_expression, l_locals.local_variable (j))
+					end
+				end
+				l_other_object_test := current_object_test_scope.object_test (l_name)
+				if l_other_object_test /= Void then
+						-- This object-test appears in the scope of another
+						-- object-test local with the same name.
+					set_fatal_error
+					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
+				end
+				if current_system.is_ise and then current_system.ise_version < ise_6_3_7_5660 then
+						-- ISE did not support object-tests in preconditions before 6.3.7.5660.
+					if current_inline_agent = Void and in_precondition then
+-- TODO: check the case where we are in the precondition of an inline agent.
+						set_fatal_error
+						error_handler.report_vuot4a_error (current_class, an_expression)
+					end
+						-- ISE did not support object-tests in check instructions before 6.3.7.5660.
+					if in_check_instruction then
+						set_fatal_error
+						error_handler.report_vuot4b_error (current_class, an_expression)
+					end
+				end
+			end
+			if not has_fatal_error then
+				a_context.force_last (current_system.boolean_class)
+				report_named_object_test (an_expression, l_expression_context)
+			end
+		end
+
 	check_object_equality_expression_validity (an_expression: ET_OBJECT_EQUALITY_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `an_expression'.
 			-- `a_context' represents the type in which `an_expression' appears.
@@ -6320,124 +6499,38 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_other_object_test: ET_OBJECT_TEST
 			l_type: ET_TYPE
 			l_had_error: BOOLEAN
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
-			l_name: ET_IDENTIFIER
-			l_feature: ET_FEATURE
-			i, j, nb: INTEGER
-			l_enclosing_agent: ET_INLINE_AGENT
-			args: ET_FORMAL_ARGUMENT_LIST
-			l_locals: ET_LOCAL_VARIABLE_LIST
 		do
 			has_fatal_error := False
-			l_type := an_expression.type
-			check_type_validity (l_type)
 			l_expression_context := new_context (current_type)
-			if has_fatal_error then
-					-- The type is not valid. We will consider that it is of
-					-- type 'ANY' when checking the validity of the expression.
-				l_had_error := True
-				l_expression_context.force_last (current_system.any_type)
-			else
-				l_expression_context.force_last (l_type)
-			end
-			check_expression_validity (an_expression.expression, a_context, l_expression_context)
-			free_context (l_expression_context)
-			if l_had_error then
-				set_fatal_error
-			end
-				-- Check object-test local name clashes (see VUOT-1, in ECMA-367-2 p.127).
-			if current_class = current_class_impl then
-				l_name := an_expression.name
-				l_feature := current_class.named_query (l_name)
-				if l_feature /= Void then
-						-- This object-test local has the same name as the
-						-- final name of a feature in `current_class'.
-					set_fatal_error
-					error_handler.report_vuot1a_error (current_class, an_expression, l_feature)
+			l_type := an_expression.type
+			if l_type /= Void then
+				check_type_validity (l_type)
+				if not has_fatal_error then
+						-- Contrary to the types appearing in the signatures, types of
+						-- object-test locals in the AST are those found in the implementation
+						-- class of `current_feature', and hence need to be resolved in
+						-- `current_type'.
+					l_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
+				end
+				if has_fatal_error then
+						-- The type is not valid. We will consider that it is of
+						-- type 'ANY' when checking the validity of the expression.
+					l_had_error := True
+					check_expression_validity (an_expression.expression, l_expression_context, current_system.any_type)
+					has_fatal_error := has_fatal_error or l_had_error
 				else
-					l_feature := current_class.named_procedure (l_name)
-					if l_feature /= Void then
-							-- This object-test local has the same name as the
-							-- final name of a feature in `current_class'.
-						set_fatal_error
-						error_handler.report_vuot1a_error (current_class, an_expression, l_feature)
-					end
+					l_expression_context.force_last (l_type)
+					check_expression_validity (an_expression.expression, a_context, l_expression_context)
+					a_context.reset (current_type)
 				end
-				if current_inline_agent /= Void then
-					enclosing_inline_agents.force_last (current_inline_agent)
-					nb := enclosing_inline_agents.count
-					from i := 1 until i > nb loop
-						l_enclosing_agent := enclosing_inline_agents.item (i)
-						args := l_enclosing_agent.formal_arguments
-						if args /= Void then
-							j := args.index_of (l_name)
-							if j /= 0 then
-									-- This object-test local has the same name as a formal
-									-- argument of an enclosing inline agent.
-								set_fatal_error
-								error_handler.report_vuot1b_error (current_class, an_expression, args.formal_argument (j))
-							end
-						end
-						l_locals := l_enclosing_agent.locals
-						if l_locals /= Void then
-							j := l_locals.index_of (l_name)
-							if j /= 0 then
-									-- This object-test local has the same name as a
-									-- local variable of an enclosing inline agent.
-								set_fatal_error
-								error_handler.report_vuot1c_error (current_class, an_expression, l_locals.local_variable (j))
-							end
-						end
-						i := i + 1
-					end
-					enclosing_inline_agents.remove_last
-				end
-				args := current_feature.arguments
-				if args /= Void then
-					j := args.index_of (l_name)
-					if j /= 0 then
-							-- This object-test local has the same name as a formal
-							-- argument of the enclosing feature.
-						set_fatal_error
-						error_handler.report_vuot1b_error (current_class, an_expression, args.formal_argument (j))
-					end
-				end
-				l_locals := current_feature.locals
-				if l_locals /= Void then
-					j := l_locals.index_of (l_name)
-					if j /= 0 then
-							-- This object-test local has the same name as a
-							-- local variable of the enclosing feature.
-						set_fatal_error
-						error_handler.report_vuot1c_error (current_class, an_expression, l_locals.local_variable (j))
-					end
-				end
-				l_other_object_test := current_object_test_scope.object_test (l_name)
-				if l_other_object_test /= Void then
-						-- This object-test appears in the scope of another
-						-- object-test local with the same name.
-					set_fatal_error
-					error_handler.report_vuot1d_error (current_class, an_expression, l_other_object_test)
-				end
-				if current_system.is_ise and then current_system.ise_version < ise_6_3_7_5660 then
-						-- ISE did not support object-tests in preconditions before 6.3.7.5660.
-					if current_inline_agent = Void and in_precondition then
--- TODO: check the case where we are in the precondition of an inline agent.
-						set_fatal_error
-						error_handler.report_vuot4a_error (current_class, an_expression)
-					end
-						-- ISE did not support object-tests in check instructions before 6.3.7.5660.
-					if in_check_instruction then
-						set_fatal_error
-						error_handler.report_vuot4b_error (current_class, an_expression)
-					end
-				end
+			else
+				check_expression_validity (an_expression.expression, l_expression_context, current_system.any_type)
 			end
+			free_context (l_expression_context)
 			if not has_fatal_error then
-				a_context.reset (current_type)
 				a_context.force_last (current_system.boolean_class)
 				report_object_test (an_expression)
 			end
@@ -6452,9 +6545,8 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_seed: INTEGER
-			l_type: ET_TYPE
 			l_object_tests: ET_OBJECT_TEST_LIST
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 		do
 			has_fatal_error := False
 			l_seed := a_name.seed
@@ -6481,8 +6573,18 @@ feature {NONE} -- Expression validity
 					else
 						l_seed := l_object_test.name.seed
 						a_name.set_seed (l_seed)
-						a_context.force_last (l_object_test.type)
-						report_object_test_local (a_name, l_object_test)
+						current_object_test_types.search (l_object_test)
+						if not current_object_test_types.found then
+								-- Internal error: the type of the object-test local should
+								-- have been determined when processing the object-test itself.
+								-- And this should have already been done this we are in the
+								-- scope of that object-test.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							a_context.copy_type_context (current_object_test_types.found_item)
+							report_object_test_local (a_name, l_object_test)
+						end
 					end
 				end
 			else
@@ -6497,13 +6599,16 @@ feature {NONE} -- Expression validity
 					error_handler.report_giaaa_error
 				else
 					l_object_test := l_object_tests.object_test (l_seed)
-						-- Contrary to the types appearing in the signatures, types of
-						-- object-test locals in the AST are those found in the implementation
-						-- class of `current_feature', and hence need to be resolved in
-						-- `current_type'.
-					l_type := resolved_formal_parameters (l_object_test.type, current_class_impl, current_type)
-					if not has_fatal_error then
-						a_context.force_last (l_type)
+					current_object_test_types.search (l_object_test)
+					if not current_object_test_types.found then
+							-- Internal error: the type of the object-test local should
+							-- have been determined when processing the object-test itself.
+							-- And this should have already been done this we are in the
+							-- scope of that object-test.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						a_context.copy_type_context (current_object_test_types.found_item)
 						report_object_test_local (a_name, l_object_test)
 					end
 				end
@@ -10464,6 +10569,17 @@ feature {NONE} -- Event handling
 		do
 		end
 
+	report_named_object_test (a_object_test: ET_NAMED_OBJECT_TEST; a_local_type: ET_TYPE_CONTEXT) is
+			-- Report that the object-test `a_object_test' with local
+			-- of type `a_local_type' has been processed.
+		require
+			no_error: not has_fatal_error
+			a_object_test_not_void: a_object_test /= Void
+			a_local_type_not_void: a_local_type /= Void
+			a_local_type_valid: a_local_type.is_valid_context
+		do
+		end
+
 	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT) is
 			-- Report that a natural_8 has been processed.
 		require
@@ -10506,17 +10622,13 @@ feature {NONE} -- Event handling
 
 	report_object_test (a_object_test: ET_OBJECT_TEST) is
 			-- Report that the object-test `a_object_test' has been processed.
-			-- Note: The type of the object-test local is still viewed from
-			-- the implementation class of `current_feature'. Its formal
-			-- generic parameters need to be resolved in `current_class'
-			-- before using it.
 		require
 			no_error: not has_fatal_error
 			a_object_test_not_void: a_object_test /= Void
 		do
 		end
 
-	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_OBJECT_TEST) is
+	report_object_test_local (a_name: ET_IDENTIFIER; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Report that a call to object-test local `a_name' has been processed.
 		require
 			no_error: not has_fatal_error
@@ -11425,6 +11537,12 @@ feature {ET_AST_NODE} -- Processing
 			check_manifest_type_validity (an_expression, current_context)
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			check_named_object_test_validity (an_expression, current_context)
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -11447,6 +11565,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_old_expression_validity (an_expression, current_context)
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			check_named_object_test_validity (an_expression, current_context)
 		end
 
 	process_once_function (a_feature: ET_ONCE_FUNCTION) is
@@ -11696,6 +11820,9 @@ feature {NONE} -- Access
 			-- Type of the target of expression being processed
 
 feature {NONE} -- Object-tests
+
+	current_object_test_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_NAMED_OBJECT_TEST]
+			-- Types of object-test locals
 
 	current_object_test_scope: ET_OBJECT_TEST_SCOPE
 			-- Object-tests for which we are currently in the
@@ -12130,6 +12257,8 @@ invariant
 	no_void_unused_context: not unused_contexts.has (Void)
 	current_target_type_not_void: current_target_type /= Void
 		-- Object-tests
+	current_object_test_types_not_void: current_object_test_types /= Void
+	no_void_object_test_type: not current_object_test_types.has_item (Void)
 	current_object_test_scope_not_void: current_object_test_scope /= Void
 	object_test_scope_builder_not_void: object_test_scope_builder /= Void
 

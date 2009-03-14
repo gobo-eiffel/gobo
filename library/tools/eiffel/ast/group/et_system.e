@@ -1179,8 +1179,16 @@ feature -- Compilation options setting
 
 feature -- Parser status report
 
+	use_attached_keyword: BOOLEAN
+			-- Should 'attached' be considered as
+			-- a keyword (otherwise identifier)?
+
 	use_attribute_keyword: BOOLEAN
 			-- Should 'attribute' be considered as
+			-- a keyword (otherwise identifier)?
+
+	use_detachable_keyword: BOOLEAN
+			-- Should 'detachable' be considered as
 			-- a keyword (otherwise identifier)?
 
 	use_note_keyword: BOOLEAN
@@ -1227,12 +1235,28 @@ feature -- Parser status report
 
 feature -- Parser setting
 
+	set_use_attached_keyword (b: BOOLEAN) is
+			-- Set `use_attached_keyword' to `b'.
+		do
+			use_attached_keyword := b
+		ensure
+			use_attached_keyword_set: use_attached_keyword = b
+		end
+
 	set_use_attribute_keyword (b: BOOLEAN) is
 			-- Set `use_attribute_keyword' to `b'.
 		do
 			use_attribute_keyword := b
 		ensure
 			use_attribute_keyword_set: use_attribute_keyword = b
+		end
+
+	set_use_detachable_keyword (b: BOOLEAN) is
+			-- Set `use_detachable_keyword' to `b'.
+		do
+			use_detachable_keyword := b
+		ensure
+			use_detachable_keyword_set: use_detachable_keyword = b
 		end
 
 	set_use_note_keyword (b: BOOLEAN) is
@@ -1257,6 +1281,8 @@ feature -- Parser setting
 			set_use_attribute_keyword (True)
 			set_use_note_keyword (True)
 			set_use_reference_keyword (True)
+			set_use_attached_keyword (True)
+			set_use_detachable_keyword (True)
 		end
 
 	set_unknown_builtin_reported (b: BOOLEAN) is
@@ -1650,6 +1676,8 @@ feature -- Compilation setting
 				set_use_attribute_keyword (True)
 				set_use_note_keyword (True)
 				set_use_reference_keyword (False)
+				set_use_attached_keyword (True)
+				set_use_detachable_keyword (True)
 			elseif ise_version /= Void then
 				set_ise_version (ise_version)
 			else
@@ -1667,6 +1695,8 @@ feature -- Compilation setting
 				set_use_attribute_keyword (ise_version >= ise_6_4_7_6592)
 				set_use_note_keyword (ise_version >= ise_6_4_7_6592)
 				set_use_reference_keyword (True)
+				set_use_attached_keyword (ise_version >= ise_6_4_7_7252)
+				set_use_detachable_keyword (ise_version >= ise_6_4_7_7252)
 			elseif ecma_version /= Void then
 				set_ecma_version (ecma_version)
 			else

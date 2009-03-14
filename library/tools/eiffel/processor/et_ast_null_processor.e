@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -737,6 +737,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -753,6 +758,11 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
 			-- Process `an_expression'.
 		do
 		end

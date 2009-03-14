@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Eiffel type marks (e.g. 'expanded', 'reference', 'separate', 'deferred', '!' or '?')"
+		"Eiffel type marks (e.g. 'attached', 'detachable', 'expanded', 'reference', 'separate', 'deferred', '!' or '?')"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

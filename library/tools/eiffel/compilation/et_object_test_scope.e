@@ -8,7 +8,7 @@ indexing
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Access
 
-	object_test (a_name: ET_IDENTIFIER): ET_OBJECT_TEST is
+	object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
 			-- If we are currently in the scope of object-test local `a_name',
 			-- then return its associated object-test, otherwise Void
 			-- (Ignore hidden object-test locals.)
@@ -83,7 +83,7 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			i, nb: INTEGER
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 		do
 			i := object_tests.count
 			nb := hidden_count + 1
@@ -100,7 +100,7 @@ feature -- Access
 			object_test_not_void: has_local (a_name) = (Result /= Void)
 		end
 
-	hidden_object_test (a_name: ET_IDENTIFIER): ET_OBJECT_TEST is
+	hidden_object_test (a_name: ET_IDENTIFIER): ET_NAMED_OBJECT_TEST is
 			-- If we are currently in the scope of object-test local `a_name' although
 			-- it has been hidden, then return its associated object-test, otherwise Void
 			-- (We are probably currently analyzing an inline agent and `a_name'
@@ -109,7 +109,7 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			i: INTEGER
-			l_object_test: ET_OBJECT_TEST
+			l_object_test: ET_NAMED_OBJECT_TEST
 		do
 			i := hidden_count
 			from until i < 1 loop
@@ -125,7 +125,7 @@ feature -- Access
 			object_test_not_void: has_hidden_local (a_name) = (Result /= Void)
 		end
 
-	object_tests: DS_ARRAYED_LIST [ET_OBJECT_TEST]
+	object_tests: DS_ARRAYED_LIST [ET_NAMED_OBJECT_TEST]
 			-- Object-tests for which we are currently within scope their locals
 			-- (Hidden object-tests are stored between indexes 1 and `hidden_count'.)
 
@@ -149,7 +149,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	add_object_test (a_object_test: ET_OBJECT_TEST) is
+	add_object_test (a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Indicate that we are currently within the scope
 			-- of the local of `a_object_test'.
 		require

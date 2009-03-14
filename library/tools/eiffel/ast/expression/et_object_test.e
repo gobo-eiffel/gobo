@@ -5,7 +5,7 @@ indexing
 		"Eiffel object-test expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,22 +25,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_type: like type; a_expression: like expression) is
+	make (a_type: like declared_type; a_expression: like expression) is
 			-- Create a new object-test expression.
 		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
 			a_expression_not_void: a_expression /= Void
 		do
-			left_brace := tokens.left_brace_symbol
-			name := a_name
-			colon := tokens.colon_symbol
-			type := a_type
-			right_brace := tokens.right_brace_symbol
+			attached_keyword := tokens.attached_keyword
+			declared_type := a_type
 			expression := a_expression
 		ensure
-			name_set: name = a_name
-			type_set: type = a_type
+			declared_type_set: declared_type = a_type
 			expression_set: expression = a_expression
 		end
 
@@ -48,46 +42,60 @@ feature -- Initialization
 
 	reset is
 			-- Reset expression as it was just after it was last parsed.
+		local
+			l_type: ET_TYPE
 		do
-			name.reset
-			type.reset
+			l_type := type
+			if l_type /= Void then
+				l_type.reset
+			end
 			expression.reset
 		end
 
 feature -- Access
 
-	left_brace: ET_SYMBOL
-			-- '{' symbol
+	attached_keyword: ET_KEYWORD
+			-- 'attached' keyword
 
-	name: ET_IDENTIFIER
-			-- Name of object-test local
+	declared_type: ET_TARGET_TYPE
+			-- Type declared in the object test, surrounded by braces
 
-	colon: ET_SYMBOL
-			-- ':' symbol
-
-	type: ET_TYPE
-			-- Type of object-test local
-
-	right_brace: ET_SYMBOL
-			-- '}' symbol
+	type: ET_TYPE is
+			-- Type expected for the expression
+		do
+			if declared_type /= Void then
+				Result := declared_type.type
+			end
+		end
 
 	expression: ET_EXPRESSION
-			-- Expression being text
+			-- Expression being tested
+
+	name: ET_IDENTIFIER is
+			-- Name of object-test local, if any
+		do
+			-- Result := Void
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := left_brace.position
+			Result := attached_keyword.position
 			if Result.is_null then
-				Result := name.position
+				if declared_type /= Void then
+					Result := declared_type.position
+				end
+				if Result.is_null then
+					Result := expression.position
+				end
 			end
 		end
 
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		do
-			Result := left_brace
+			Result := attached_keyword
 		end
 
 	last_leaf: ET_AST_LEAF is
@@ -104,34 +112,14 @@ feature -- Access
 
 feature -- Setting
 
-	set_left_brace (a_brace: like left_brace) is
-			-- Set `left_brace' to `a_brace'.
+	set_attached_keyword (a_attached: like attached_keyword) is
+			-- Set `attached_keyword' to `a_attached'.
 		require
-			a_brace_not_void: a_brace /= Void
+			a_attached_not_void: a_attached /= Void
 		do
-			left_brace := a_brace
+			attached_keyword := a_attached
 		ensure
-			left_brace_set: left_brace = a_brace
-		end
-
-	set_right_brace (a_brace: like right_brace) is
-			-- Set `right_brace' to `a_brace'.
-		require
-			a_brace_not_void: a_brace /= Void
-		do
-			right_brace := a_brace
-		ensure
-			right_brace_set: right_brace = a_brace
-		end
-
-	set_colon (a_colon: like colon) is
-			-- Set `colon' to `a_colon'.
-		require
-			a_colon_not_void: a_colon /= Void
-		do
-			colon := a_colon
-		ensure
-			colon_set: colon = a_colon
+			attached_keyword_set: attached_keyword = a_attached
 		end
 
 feature -- Processing
@@ -144,11 +132,7 @@ feature -- Processing
 
 invariant
 
-	name_not_void: name /= Void
-	type_not_void: type /= Void
 	expression_not_void: expression /= Void
-	left_brace_not_void: left_brace /= Void
-	right_brace_not_void: right_brace /= Void
-	colon_not_void: colon /= Void
+	attached_keyword_not_void: attached_keyword /= Void
 
 end

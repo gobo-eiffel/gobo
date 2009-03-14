@@ -7863,7 +7863,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local variable name
 		end
 
-	make_vpir1e (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+	make_vpir1e (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Create a new VPIR-1 error: `arg' in inline agent `an_agent' has
 			-- the same name as object-test local `a_object_test' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
@@ -7909,7 +7909,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = argument name
 		end
 
-	make_vpir1f (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+	make_vpir1f (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Create a new VPIR-1 error: `a_local' in inline agent `an_agent' has
 			-- the same name as object-test local `a_object_test' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
@@ -10823,7 +10823,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base class of target of the call
 		end
 
-	make_vuot1a (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+	make_vuot1a (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE) is
 			-- Create a new VUOT-1 error: The local of `a_object_test' has the same
 			-- name as `a_feature' in `a_class'.
 			--
@@ -10862,7 +10862,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1b (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT) is
+	make_vuot1b (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT) is
 			-- Create a new VUOT-1 error: The local of `a_object_test' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
@@ -10902,7 +10902,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1c (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE) is
+	make_vuot1c (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE) is
 			-- Create a new VUOT-1 error: The local of `a_object_test' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
@@ -10942,7 +10942,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1d (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+	make_vuot1d (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST) is
 			-- Create a new VUOT-1 error: `a_object_test1' appears in the scope
 			-- of the local of `a_object_test2' with the same local name.
 			--
@@ -10981,7 +10981,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot3a (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+	make_vuot3a (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE) is
 			-- Create a new VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
 			-- the same `a_feature' of `a_class' or in the same inline agent.
@@ -11025,7 +11025,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
-	make_vuot3b (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+	make_vuot3b (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST) is
 			-- Create a new VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
 			-- the invariant of `a_class' or in the same inline agent.
@@ -11066,7 +11066,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot4a (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+	make_vuot4a (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Create a new VUOT-4 error: ISE does not support object-tests in preconditions.
 			--
 			-- Only in ISE.
@@ -11104,7 +11104,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot4b (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+	make_vuot4b (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Create a new VUOT-4 error: ISE does not support object-tests in check instructions.
 			--
 			-- Only in ISE.

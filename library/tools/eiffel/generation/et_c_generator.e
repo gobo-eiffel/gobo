@@ -5,7 +5,7 @@ indexing
 		"C code generators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,10 +66,12 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_named_object_test,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
 			process_old_expression,
+			process_old_object_test,
 			process_once_function,
 			process_once_function_inline_agent,
 			process_once_manifest_string,
@@ -8836,21 +8838,34 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_source: ET_EXPRESSION
 			l_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_source_type: ET_DYNAMIC_TYPE
-			l_target: ET_IDENTIFIER
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type: ET_DYNAMIC_TYPE
 			nb_conforming_types: INTEGER
 			nb_non_conforming_types: INTEGER
 			l_can_be_void: BOOLEAN
+			l_name: ET_IDENTIFIER
+			l_type: ET_TYPE
+			l_resolved_type: ET_TYPE
+			had_error: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_source := an_expression.expression
 			l_source_type_set := dynamic_type_set (l_source)
 			l_source_type := l_source_type_set.static_type
-			l_target := an_expression.name
-			l_target_type_set := dynamic_type_set (l_target)
-			l_target_type := l_target_type_set.static_type
+			l_name := an_expression.name
+			l_type := an_expression.type
+			if l_name /= Void then
+				l_target_type_set := dynamic_type_set (l_name)
+				l_target_type := l_target_type_set.static_type
+			elseif l_type /= Void then
+				had_error := has_fatal_error
+				l_resolved_type := resolved_formal_parameters (l_type)
+				has_fatal_error := has_fatal_error or had_error
+				l_target_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type.base_type)
+			else
+				l_target_type := l_source_type
+			end
 			if in_operand then
 				print_operand (l_source)
 				fill_call_operands (1)
@@ -8872,22 +8887,29 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				current_file.put_character (' ')
 			end
 				-- Declaration of the object-test local.
-			current_function_header_buffer.put_character ('%T')
-			print_type_declaration (l_target_type, current_function_header_buffer)
-			current_function_header_buffer.put_character (' ')
-			print_object_test_local_name (l_target, current_function_header_buffer)
-			current_function_header_buffer.put_character (';')
-			current_function_header_buffer.put_new_line
+			if l_name /= Void then
+				current_function_header_buffer.put_character ('%T')
+				print_type_declaration (l_target_type, current_function_header_buffer)
+				current_function_header_buffer.put_character (' ')
+				print_object_test_local_name (l_name, current_function_header_buffer)
+				current_function_header_buffer.put_character (';')
+				current_function_header_buffer.put_new_line
+			end
 				-- Check type conformance.
 			nb := l_source_type_set.count
-			from i := 1 until i > nb loop
-				l_dynamic_type := l_source_type_set.dynamic_type (i)
-				if l_dynamic_type.conforms_to_type (l_target_type) then
-					nb_conforming_types := nb_conforming_types + 1
-				else
-					nb_non_conforming_types := nb_non_conforming_types + 1
+			if l_type = Void then
+				nb_conforming_types := nb
+				nb_non_conforming_types := 0
+			else
+				from i := 1 until i > nb loop
+					l_dynamic_type := l_source_type_set.dynamic_type (i)
+					if l_dynamic_type.conforms_to_type (l_target_type) then
+						nb_conforming_types := nb_conforming_types + 1
+					else
+						nb_non_conforming_types := nb_non_conforming_types + 1
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 			if nb_non_conforming_types = 0 then
 					-- All types in the source type set conform to the target type.
@@ -8898,16 +8920,20 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 					current_file.put_character ('?')
 					current_file.put_character ('(')
 				end
-				current_file.put_character ('(')
-				print_object_test_local_name (l_target, current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-				current_file.put_string (c_eif_true)
-				current_file.put_character (')')
+				if l_name /= Void then
+					current_file.put_character ('(')
+					print_object_test_local_name (l_name, current_file)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					print_attachment_expression (call_operands.first, l_source_type_set, l_target_type)
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_string (c_eif_true)
+					current_file.put_character (')')
+				else
+					current_file.put_string (c_eif_true)
+				end
 				if l_can_be_void then
 					current_file.put_character (')')
 					current_file.put_character (':')
@@ -8921,11 +8947,13 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				current_object_tests.force_last (an_expression)
 				print_object_test_function_name (current_object_tests.count, current_feature, current_type, current_file)
 				current_file.put_character ('(')
-				current_file.put_character ('&')
-				print_object_test_local_name (l_target, current_file)
-				current_file.put_character (',')
-				current_file.put_character (' ')
 				print_expression (call_operands.first)
+				if l_name /= Void then
+					current_file.put_character (',')
+					current_file.put_character (' ')
+					current_file.put_character ('&')
+					print_object_test_local_name (l_name, current_file)
+				end
 				current_file.put_character (')')
 			end
 			if in_operand then
@@ -11310,10 +11338,10 @@ feature {NONE} -- Object-test generation
 			-- Print function corresponding to `i'-th object-test `a_object_test'
 			-- to `current_file' and its signature to `header_file'.
 			-- This function will return True or False depending if it's
-			-- successful or not, and when successful it will attach
-			-- the value of the expression passed as second argument
-			-- to the object-test local whose address is passed as first
-			-- argument.
+			-- successful or not. And if the object-test has a local name,
+			-- then it will attach, when the object-test is successful,
+			-- the value of the expression passed as first argument to the
+			-- object-test local whose address is passed as second argument.
 		require
 			a_object_test_not_void: a_object_test /= Void
 		local
@@ -11330,11 +11358,26 @@ feature {NONE} -- Object-test generation
 			l_target_argument: ET_IDENTIFIER
 			l_source_argument: ET_IDENTIFIER
 			l_can_be_void: BOOLEAN
+			l_name: ET_IDENTIFIER
+			l_type: ET_TYPE
+			l_resolved_type: ET_TYPE
+			had_error: BOOLEAN
 		do
+			l_name := a_object_test.name
+			l_type := a_object_test.type
 			l_source_type_set := dynamic_type_set (a_object_test.expression)
-			l_target_type_set := dynamic_type_set (a_object_test.name)
-			l_target_type := l_target_type_set.static_type
 			l_source_type := l_source_type_set.static_type
+			if l_name /= Void then
+				l_target_type_set := dynamic_type_set (l_name)
+				l_target_type := l_target_type_set.static_type
+			elseif l_type /= Void then
+				had_error := has_fatal_error
+				l_resolved_type := resolved_formal_parameters (l_type)
+				has_fatal_error := has_fatal_error or had_error
+				l_target_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type.base_type)
+			else
+				l_target_type := l_source_type
+			end
 				-- Print signature to `header_file' and `current_file'.
 			old_file := current_file
 			current_file := current_function_header_buffer
@@ -11349,26 +11392,28 @@ feature {NONE} -- Object-test generation
 			print_object_test_function_name (i, current_feature, current_type, current_file)
 			header_file.put_character ('(')
 			current_file.put_character ('(')
-			l_target_argument := formal_argument (1)
-			print_type_declaration (l_target_type, header_file)
-			header_file.put_character ('*')
-			header_file.put_character (' ')
-			print_argument_name (l_target_argument, header_file)
-			header_file.put_character (',')
-			header_file.put_character (' ')
-			print_type_declaration (l_target_type, current_file)
-			current_file.put_character ('*')
-			current_file.put_character (' ')
-			print_argument_name (l_target_argument, current_file)
-			current_file.put_character (',')
-			current_file.put_character (' ')
-			l_source_argument := formal_argument (2)
+			l_source_argument := formal_argument (1)
 			print_type_declaration (l_source_type, header_file)
 			header_file.put_character (' ')
 			print_argument_name (l_source_argument, header_file)
 			print_type_declaration (l_source_type, current_file)
 			current_file.put_character (' ')
 			print_argument_name (l_source_argument, current_file)
+			if l_name /= Void then
+				l_target_argument := formal_argument (2)
+				header_file.put_character (',')
+				header_file.put_character (' ')
+				print_type_declaration (l_target_type, header_file)
+				header_file.put_character ('*')
+				header_file.put_character (' ')
+				print_argument_name (l_target_argument, header_file)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				print_type_declaration (l_target_type, current_file)
+				current_file.put_character ('*')
+				current_file.put_character (' ')
+				print_argument_name (l_target_argument, current_file)
+			end
 			header_file.put_character (')')
 			current_file.put_character (')')
 			header_file.put_character (';')
@@ -11436,15 +11481,17 @@ feature {NONE} -- Object-test generation
 				end
 				if l_non_conforming_types.is_empty then
 						-- Direct assignment.
-					print_indentation
-					current_file.put_character ('*')
-					print_argument_name (l_target_argument, current_file)
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					print_attachment_expression (l_source_argument, l_source_type_set, l_target_type)
-					current_file.put_character (';')
-					current_file.put_new_line
+					if l_name /= Void then
+						print_indentation
+						current_file.put_character ('*')
+						print_argument_name (l_target_argument, current_file)
+						current_file.put_character (' ')
+						current_file.put_character ('=')
+						current_file.put_character (' ')
+						print_attachment_expression (l_source_argument, l_source_type_set, l_target_type)
+						current_file.put_character (';')
+						current_file.put_new_line
+					end
 					print_indentation
 					current_file.put_string (c_return)
 					current_file.put_character (' ')
@@ -11494,20 +11541,22 @@ feature {NONE} -- Object-test generation
 						current_file.put_character (':')
 						current_file.put_new_line
 						indent
-						print_indentation
-						current_file.put_character ('*')
-						print_argument_name (l_target_argument, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-						if l_source_type_set.is_never_void then
-							conforming_type_set.set_never_void
+						if l_name /= Void then
+							print_indentation
+							current_file.put_character ('*')
+							print_argument_name (l_target_argument, current_file)
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+							if l_source_type_set.is_never_void then
+								conforming_type_set.set_never_void
+							end
+							print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
+							conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
+							current_file.put_character (';')
+							current_file.put_new_line
 						end
-						print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
-						conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
-						current_file.put_character (';')
-						current_file.put_new_line
 						print_indentation
 						current_file.put_string (c_return)
 						current_file.put_character (' ')
@@ -11528,20 +11577,22 @@ feature {NONE} -- Object-test generation
 							j := j + 1
 						end
 						indent
-						print_indentation
-						current_file.put_character ('*')
-						print_argument_name (l_target_argument, current_file)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
-						if l_source_type_set.is_never_void then
-							conforming_type_set.set_never_void
+						if l_name /= Void then
+							print_indentation
+							current_file.put_character ('*')
+							print_argument_name (l_target_argument, current_file)
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							conforming_type_set.reset_with_types (l_source_type, l_conforming_types)
+							if l_source_type_set.is_never_void then
+								conforming_type_set.set_never_void
+							end
+							print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
+							conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
+							current_file.put_character (';')
+							current_file.put_new_line
 						end
-						print_attachment_expression (l_source_argument, conforming_type_set, l_target_type)
-						conforming_type_set.reset_with_types (current_dynamic_system.none_type, Void)
-						current_file.put_character (';')
-						current_file.put_new_line
 						print_indentation
 						current_file.put_string (c_return)
 						current_file.put_character (' ')
@@ -25240,7 +25291,7 @@ feature {NONE} -- Feature name generation
 			else
 -- TODO: long names
 				short_names := True
-				print_local_name (a_name, a_file)
+				print_object_test_local_name (a_name, a_file)
 				short_names := False
 			end
 		end
@@ -26348,6 +26399,12 @@ feature {ET_AST_NODE} -- Processing
 			print_manifest_type (an_expression)
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			print_object_test (an_expression)
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -26370,6 +26427,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_old_expression (an_expression)
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			print_object_test (an_expression)
 		end
 
 	process_once_function (a_feature: ET_ONCE_FUNCTION) is

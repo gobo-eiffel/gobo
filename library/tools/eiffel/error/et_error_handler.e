@@ -4274,7 +4274,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1e_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+	report_vpir1e_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Report VPIR-1 error: `arg' in inline agent `an_agent' has
 			-- the same name as object-test local `a_object_test' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
@@ -4298,7 +4298,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1f_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_OBJECT_TEST) is
+	report_vpir1f_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Report VPIR-1 error: `a_local' in inline agent `an_agent' has
 			-- the same name as object-test local `a_object_test' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
@@ -5574,7 +5574,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1a_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+	report_vuot1a_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE) is
 			-- Report VUOT-1 error: The local of `a_object_test' has the same
 			-- name as `a_feature' in `a_class'.
 			--
@@ -5593,7 +5593,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1b_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT) is
+	report_vuot1b_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; arg: ET_FORMAL_ARGUMENT) is
 			-- Report VUOT-1 error: The local of `a_object_test' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
@@ -5613,7 +5613,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1c_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE) is
+	report_vuot1c_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_local: ET_LOCAL_VARIABLE) is
 			-- Report VUOT-1 error: The local of `a_object_test' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
@@ -5633,7 +5633,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1d_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+	report_vuot1d_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST) is
 			-- Report VUOT-1 error: `a_object_test1' appears in the scope
 			-- of the local of `a_object_test2' with the same local name.
 			--
@@ -5652,7 +5652,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot3a_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST; a_feature: ET_FEATURE) is
+	report_vuot3a_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE) is
 			-- Report VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
 			-- the same `a_feature' of `a_class' or in the same inline agent.
@@ -5674,7 +5674,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot3b_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_OBJECT_TEST) is
+	report_vuot3b_error (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST) is
 			-- Report VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
 			-- the invariant of `a_class' or in the same inline agent.
@@ -5695,7 +5695,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot4a_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+	report_vuot4a_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Report VUOT-4 error: ISE does not support object-tests in preconditions.
 			--
 			-- Only in ISE.
@@ -5713,7 +5713,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot4b_error (a_class: ET_CLASS; a_object_test: ET_OBJECT_TEST) is
+	report_vuot4b_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST) is
 			-- Report VUOT-4 error: ISE does not support object-tests in check instructions.
 			--
 			-- Only in ISE.

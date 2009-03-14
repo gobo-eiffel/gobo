@@ -232,6 +232,15 @@ feature -- Access
 			ise_6_4_7_6592_not_void: Result /= Void
 		end
 
+	ise_6_4_7_7252: UT_VERSION is
+			-- ISE 6.4.7.7252
+			-- First release that accepts keywords 'attached' and 'detachable'.
+		once
+			create Result.make (6, 4, 7, 7252)
+		ensure
+			ise_6_4_7_7252_not_void: Result /= Void
+		end
+
 	ise_6_4_latest: UT_VERSION is
 			-- After the last release ISE 6.4
 		once

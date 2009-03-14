@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -89,10 +89,12 @@ inherit
 			process_manifest_array,
 			process_manifest_tuple,
 			process_manifest_type,
+			process_named_object_test,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
 			process_old_expression,
+			process_old_object_test,
 			process_once_function,
 			process_once_function_inline_agent,
 			process_once_manifest_string,
@@ -1786,6 +1788,13 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_object_test (an_expression)
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1798,11 +1807,15 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			had_error: BOOLEAN
+			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
 			if anchored_types_enabled then
-				process_type (an_expression.type)
-				had_error := has_fatal_error
+				l_type := an_expression.type
+				if l_type /= Void then
+					process_type (l_type)
+					had_error := has_fatal_error
+				end
 			end
 			process_expression (an_expression.expression)
 			reset_fatal_error (had_error or has_fatal_error)
@@ -1820,6 +1833,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
 			process_expression (an_expression.expression)
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+			-- Process `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		do
+			process_object_test (an_expression)
 		end
 
 	process_once_function (a_feature: ET_ONCE_FUNCTION) is

@@ -5,7 +5,7 @@ indexing
 		"Eiffel object-test finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,9 @@ inherit
 
 	ET_AST_ITERATOR
 		redefine
+			process_named_object_test,
 			process_object_test,
+			process_old_object_test,
 			process_do_function_inline_agent,
 			process_do_procedure_inline_agent,
 			process_external_function_inline_agent,
@@ -37,7 +39,7 @@ feature -- Access
 feature -- Basic operations
 
 	find_object_tests (a_ast_node: ET_AST_NODE; a_object_tests: ET_OBJECT_TEST_SCOPE) is
-			-- Find all object-tests in `a_ast_node' and recursively its sub-nodes,
+			-- Find all named object-tests in `a_ast_node' and recursively its sub-nodes,
 			-- and make them available in `a_object_tests'.
 			-- Do not traverse inline agents.
 		require
@@ -54,13 +56,25 @@ feature -- Basic operations
 
 feature {ET_AST_NODE} -- Processing
 
-	process_object_test (an_expression: ET_OBJECT_TEST) is
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
 			-- Process `an_expression'.
 		do
 			if object_tests /= Void then
 				object_tests.add_object_test (an_expression)
 			end
 			an_expression.expression.process (Current)
+		end
+
+	process_object_test (an_expression: ET_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			an_expression.expression.process (Current)
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			process_named_object_test (an_expression)
 		end
 
 	process_do_function_inline_agent (an_expression: ET_DO_FUNCTION_INLINE_AGENT) is

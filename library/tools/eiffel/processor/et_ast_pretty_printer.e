@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST pretty printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -116,10 +116,12 @@ inherit
 			process_manifest_array,
 			process_manifest_string_list,
 			process_manifest_tuple,
+			process_named_object_test,
 			process_object_equality_expression,
 			process_object_test,
 			process_octal_integer_constant,
 			process_old_expression,
+			process_old_object_test,
 			process_once_function,
 			process_once_function_inline_agent,
 			process_once_manifest_string,
@@ -3935,6 +3937,32 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right_symbol.process (Current)
 		end
 
+	process_named_object_test (an_expression: ET_NAMED_OBJECT_TEST) is
+			-- Process `an_expression'.
+		local
+			l_declared_type: ET_TARGET_TYPE
+			l_type: ET_TYPE
+		do
+			an_expression.attached_keyword.process (Current)
+			print_space
+			l_declared_type := an_expression.declared_type
+			if l_declared_type /= Void then
+				l_type := l_declared_type.type
+				tokens.left_brace_symbol.process (Current)
+				l_type.process (Current)
+				tokens.right_brace_symbol.process (Current)
+				comment_finder.add_excluded_node (l_type)
+				comment_finder.find_comments (l_declared_type, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
+			an_expression.expression.process (Current)
+			print_space
+			an_expression.as_keyword.process (Current)
+			print_space
+			an_expression.name.process (Current)
+		end
+
 	process_object_equality_expression (an_expression: ET_OBJECT_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
@@ -3947,14 +3975,23 @@ feature {ET_AST_NODE} -- Processing
 
 	process_object_test (an_expression: ET_OBJECT_TEST) is
 			-- Process `an_expression'.
+		local
+			l_declared_type: ET_TARGET_TYPE
+			l_type: ET_TYPE
 		do
-			an_expression.left_brace.process (Current)
-			an_expression.name.process (Current)
-			an_expression.colon.process (Current)
+			an_expression.attached_keyword.process (Current)
 			print_space
-			an_expression.type.process (Current)
-			an_expression.right_brace.process (Current)
-			print_space
+			l_declared_type := an_expression.declared_type
+			if l_declared_type /= Void then
+				l_type := l_declared_type.type
+				tokens.left_brace_symbol.process (Current)
+				l_type.process (Current)
+				tokens.right_brace_symbol.process (Current)
+				comment_finder.add_excluded_node (l_type)
+				comment_finder.find_comments (l_declared_type, comment_list)
+				comment_finder.reset_excluded_nodes
+				print_space
+			end
 			an_expression.expression.process (Current)
 		end
 
@@ -3990,6 +4027,19 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			an_expression.old_keyword.process (Current)
+			print_space
+			an_expression.expression.process (Current)
+		end
+
+	process_old_object_test (an_expression: ET_OLD_OBJECT_TEST) is
+			-- Process `an_expression'.
+		do
+			an_expression.left_brace.process (Current)
+			an_expression.name.process (Current)
+			an_expression.colon.process (Current)
+			print_space
+			an_expression.type.process (Current)
+			an_expression.right_brace.process (Current)
 			print_space
 			an_expression.expression.process (Current)
 		end
