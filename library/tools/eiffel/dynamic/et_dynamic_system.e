@@ -120,6 +120,10 @@ feature -- Status report
 	catcall_warning_mode: BOOLEAN
 			-- Are CAT-call errors considered just as warnings?
 
+	full_class_checking: BOOLEAN
+			-- Should the whole content of classes to be checked (even
+			-- features not reachable from the root creation procedure)?
+
 feature -- Status setting
 
 	set_catcall_error_mode (b: BOOLEAN) is
@@ -136,6 +140,14 @@ feature -- Status setting
 			catcall_warning_mode := b
 		ensure
 			catcall_warning_mode_set: catcall_warning_mode = b
+		end
+
+	set_full_class_checking (b: BOOLEAN) is
+			-- Set `full_class_checking' to `b'.
+		do
+			full_class_checking := b
+		ensure
+			full_class_checking_set: full_class_checking = b
 		end
 
 feature -- Types
@@ -452,9 +464,16 @@ feature -- Types
 					-- No dynamic type yet with this base class.
 					-- Add the new dynamic type and keep track
 					-- of its associated index.
-				l_base_class.process (current_system.interface_checker)
-				if not l_base_class.interface_checked or else l_base_class.has_interface_error then
-					set_fatal_error
+				if full_class_checking then
+					l_base_class.process (current_system.implementation_checker)
+					if not l_base_class.implementation_checked or else l_base_class.has_implementation_error then
+						set_fatal_error
+					end
+				else
+					l_base_class.process (current_system.interface_checker)
+					if not l_base_class.interface_checked or else l_base_class.has_interface_error then
+						set_fatal_error
+					end
 				end
 				Result := new_dynamic_type (a_type, a_context)
 				dynamic_types.force_last (Result)

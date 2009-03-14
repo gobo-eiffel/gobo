@@ -3,7 +3,7 @@
 <!--
 	description: "Eiffel Ant RelaxNG specification"
 	system: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2008, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2009, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -95,6 +95,7 @@
 				<ref name="exec"/>
 				<ref name="exit"/>
 				<ref name="geant"/>
+				<ref name="gec"/>
 				<ref name="gelex"/>
 				<ref name="geyacc"/>
 				<ref name="gepp"/>
@@ -277,6 +278,41 @@
 					</optional>
 				</group>
 				<ref name="fileset"/>
+			</choice>
+		</element>
+	</define>
+	<define name="gec">
+		<element name="gec">
+			<ref name="dir_if_unless"/>
+			<optional>
+				<attribute name="exit_code_variable"/>
+			</optional>
+			<choice>
+				<group>
+					<attribute name="ace"/>
+					<optional>
+						<attribute name="finalize"/>
+					</optional>
+					<optional>
+						<attribute name="gelint"/>
+					</optional>
+					<optional>
+						<attribute name="cat"/>
+					</optional>
+					<optional>
+						<attribute name="split"/>
+					</optional>
+					<optional>
+						<attribute name="split_size"/>
+					</optional>
+					<optional>
+						<attribute name="c_compile"/>
+					</optional>
+					<optional>
+						<attribute name="gc"/>
+					</optional>
+				</group>
+				<attribute name="clean"/>
 			</choice>
 		</element>
 	</define>

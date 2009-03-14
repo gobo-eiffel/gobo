@@ -70,7 +70,8 @@
 		<set name="finalize" value="false" if="${debug}"/>
 		<set name="split" value="true"/>
 		<set name="split" value="false" if="${no_split}"/>
-		<gec ace="compile_ge.xace" finalize="${finalize}" c_compile="false" catcall="error" split="${split}"/>
+		<set name="gelint_option" value="false" unless="${gelint_option}"/>
+		<gec ace="compile_ge.xace" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}"/>
 		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>

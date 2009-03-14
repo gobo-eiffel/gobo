@@ -5,7 +5,7 @@ indexing
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2006, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2009, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,6 +77,9 @@ feature -- Access
 	finalize: BOOLEAN
 			-- Should system be compiled in finalized mode?
 
+	gelint: BOOLEAN
+			-- Should gelint be run on the full content of each class being compiled?
+
 	catcall_mode: STRING
 			-- Should CAT-calls be considered as fatal errors, as warnings or just ignored?
 
@@ -122,6 +125,14 @@ feature -- Setting
 			finalize := b
 		ensure
 			finalize_set: finalize = b
+		end
+
+	set_gelint (b: BOOLEAN) is
+			-- Set `gelint' to `b'.
+		do
+			gelint := b
+		ensure
+			gelint_set: gelint = b
 		end
 
 	set_catcall_mode (a_mode: STRING) is
@@ -321,6 +332,9 @@ feature -- Command-line
 			Result.append_string ("gec ")
 			if finalize then
 				Result.append_string ("--finalize ")
+			end
+			if gelint then
+				Result.append_string ("--gelint ")
 			end
 			if not c_compile then
 				Result.append_string ("--cc=no ")

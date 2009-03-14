@@ -6,7 +6,7 @@
 		"Gec Tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gec_task">
 <chapterinfo>
 	<copyright>
-		<year>2006</year>
+		<year>2006-2009</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
@@ -55,7 +55,20 @@
 			<varlistentry>
 				<term>finalize</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Finalize</para>
+					<para><emphasis>Description: </emphasis>Should system be compiled in finalized mode?</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>gelint</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Should gelint be run on the full content of each class being compiled?</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
@@ -174,6 +187,9 @@
             <attribute name="finalize"/>
           </optional>
           <optional>
+            <attribute name="gelint"/>
+          </optional>
+          <optional>
             <attribute name="cat"/>
           </optional>
           <optional>
@@ -185,8 +201,14 @@
           <optional>
             <attribute name="c_compile"/>
           </optional>
+          <optional>
+            <attribute name="gc"/>
+          </optional>
         </group>
         <attribute name="clean"/>
+        <optional>
+          <attribute name="exit_code_variable"/>
+        </optional>
       </choice>
     </element>
   </define>

@@ -5,7 +5,7 @@ indexing
 		"Gec tasks"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,10 @@ feature {NONE} -- Initialization
 				-- finalize.
 			if has_attribute (Finalize_attribute_name) then
 				command.set_finalize (boolean_value (Finalize_attribute_name))
+			end
+				-- gelint.
+			if has_attribute (Gelint_attribute_name) then
+				command.set_gelint (boolean_value (Gelint_attribute_name))
 			end
 				-- cat.
 			if has_attribute (Catcall_attribute_name) then
@@ -162,6 +166,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for "gc"
 		once
 			Result := "gc"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Gelint_attribute_name: STRING is
+			-- Name of xml attribute for "gelint"
+		once
+			Result := "gelint"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0

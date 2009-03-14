@@ -207,6 +207,11 @@ feature {NONE} -- Processing
 -- TODO.
 			end
 			create l_system.make (a_system)
+			if is_gelint then
+				a_system.set_flat_mode (True)
+				a_system.set_flat_dbc_mode (True)
+				l_system.set_full_class_checking (True)
+			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
 			l_system.set_catcall_warning_mode (catcall_warning_mode)
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
@@ -293,6 +298,12 @@ feature -- Status report
 			Result := finalize_flag.was_found
 		end
 
+	is_gelint: BOOLEAN is
+			-- Should gelint be run on the full content of each class being compiled?
+		do
+			Result := gelint_flag.was_found
+		end
+
 	catcall_error_mode: BOOLEAN is
 			-- Are CAT-call errors considered as fatal errors?
 		do
@@ -358,6 +369,9 @@ feature -- Argument parsing
 	finalize_flag: AP_FLAG
 			-- Flag for '--finalize'
 
+	gelint_flag: AP_FLAG
+			-- Flag for '--gelint'
+
 	c_compile_option: AP_BOOLEAN_OPTION
 			-- Option for '--cc=<no|yes>'
 
@@ -393,6 +407,10 @@ feature -- Argument parsing
 			create finalize_flag.make_with_long_form ("finalize")
 			finalize_flag.set_description ("Compile with optimizations turned on.")
 			a_parser.options.force_last (finalize_flag)
+				-- gelint.
+			create gelint_flag.make_with_long_form ("gelint")
+			gelint_flag.set_description ("Run gelint on the full content of each class being compiled.")
+			a_parser.options.force_last (gelint_flag)
 				-- catcall
 			create catcall_option.make_with_long_form ("catcall")
 			catcall_option.set_description ("Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? (default: warning)")
