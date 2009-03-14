@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test semantics of object-tests"
+		"Test semantics of object-tests, using the old syntax"
 
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
 	license: "MIT License"
