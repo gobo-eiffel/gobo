@@ -727,18 +727,20 @@ feature {NONE} -- Factory
 			type_not_void: Result /= Void
 		end
 
-	new_labeled_type (a_labels: DS_ARRAYED_LIST [STRING]; a_type: PR_TYPE): PR_LABELED_TYPE is
+	new_labeled_type (a_label: STRING; a_type: PR_TYPE): PR_LABELED_TYPE is
 			-- New labeled type
 		require
-			a_labels_not_void: a_labels /= Void
-			a_labels_not_empty: not a_labels.is_empty
-			no_void_label: not a_labels.has (Void)
+			a_label_not_void: a_label /= Void
 			a_type_not_void: a_type /= Void
+		local
+			l_labels: DS_ARRAYED_LIST [STRING]
 		do
-			create Result.make (a_labels, a_type)
+			create l_labels.make (5)
+			l_labels.put_first (a_label)
+			create Result.make (l_labels, a_type)
 		ensure
 			type_not_void: Result /= Void
-			labels_set: Result.labels = a_labels
+			labels_set: Result.labels.first = a_label
 			type_set: Result.type = a_type
 		end
 
