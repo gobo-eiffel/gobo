@@ -26,6 +26,7 @@
 	</target>
 
 	<target name="init_system">
+		<set name="gelint_option" value="true"/>
 		<set name="system" value="xobject_test"/>
 		<set name="category" value="object_test"/>
 		<set name="system_dir" value="${GOBO}/test/gelint/semantics/${category}"/>

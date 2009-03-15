@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TEST_OBJECT_TEST
+class TEST_OLD_OBJECT_TEST
 
 inherit
 
