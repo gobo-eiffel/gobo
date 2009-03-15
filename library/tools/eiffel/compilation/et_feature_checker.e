@@ -311,6 +311,7 @@ feature -- Validity checking
 			l_feature_impl: ET_FEATURE
 			l_class_impl: ET_CLASS
 			l_current_class: ET_CLASS
+			l_old_scope: INTEGER
 		do
 			has_fatal_error := False
 			l_feature_impl := a_current_feature_impl.implementation_feature
@@ -355,6 +356,7 @@ feature -- Validity checking
 				else
 					boolean_type := current_system.boolean_class
 					l_assertion_context := new_context (current_type)
+					l_old_scope := current_object_test_scope.count
 					nb := a_preconditions.count
 					from i := 1 until i > nb loop
 						l_expression := a_preconditions.assertion (i).expression
@@ -369,9 +371,14 @@ feature -- Validity checking
 								error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
 							end
 							l_assertion_context.wipe_out
+								-- The scope of object-test locals can cover the following assertions
+								-- in the same precondition clause because it's as if they were separated
+								-- by "and then" operators.
+							object_test_scope_builder.build_scope (l_expression, current_object_test_scope)
 						end
 						i := i + 1
 					end
+					current_object_test_scope.keep_object_tests (l_old_scope)
 					free_context (l_assertion_context)
 					has_fatal_error := has_fatal_error or had_error
 				end

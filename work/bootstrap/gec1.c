@@ -4791,7 +4791,7 @@ if (t1==851) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.conforms_to_type */
-T1 T184x13628T0(T0* C, T0* a1)
+T1 T184x13638T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4814,7 +4814,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.seeded_dynamic_query */
-T0* T184x13652T6T0(T0* C, T6 a1, T0* a2)
+T0* T184x13662T6T0(T0* C, T6 a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4837,7 +4837,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_basic */
-T1 T184x13624(T0* C)
+T1 T184x13634(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4860,7 +4860,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_expanded */
-T1 T184x13674(T0* C)
+T1 T184x13684(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4883,7 +4883,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.base_type */
-T0* T184x13632(T0* C)
+T0* T184x13642(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4906,7 +4906,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_agent_type */
-T1 T184x13622(T0* C)
+T1 T184x13632(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4929,7 +4929,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.seeded_dynamic_procedure */
-T0* T184x13653T6T0(T0* C, T6 a1, T0* a2)
+T0* T184x13663T6T0(T0* C, T6 a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4952,7 +4952,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.base_class */
-T0* T184x13633(T0* C)
+T0* T184x13643(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4975,7 +4975,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.dynamic_query */
-T0* T184x13650T0T0(T0* C, T0* a1, T0* a2)
+T0* T184x13660T0T0(T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -4998,7 +4998,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.dynamic_procedure */
-T0* T184x13651T0T0(T0* C, T0* a1, T0* a2)
+T0* T184x13661T0T0(T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5021,7 +5021,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.queries */
-T0* T184x13648(T0* C)
+T0* T184x13658(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5044,7 +5044,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.id */
-T6 T184x13640(T0* C)
+T6 T184x13650(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5067,7 +5067,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.attribute_count */
-T6 T184x13644(T0* C)
+T6 T184x13654(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5090,7 +5090,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_special */
-T1 T184x13623(T0* C)
+T1 T184x13633(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5113,7 +5113,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_builtin_attribute */
-T1 T184x13655T0T6T0(T0* C, T0* a1, T6 a2, T0* a3)
+T1 T184x13665T0T6T0(T0* C, T0* a1, T6 a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5136,7 +5136,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.meta_type */
-T0* T184x13634(T0* C)
+T0* T184x13644(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5159,7 +5159,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.has_generic_expanded_attributes */
-T1 T184x13647(T0* C)
+T1 T184x13657(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5182,7 +5182,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_generic */
-T1 T184x13621(T0* C)
+T1 T184x13631(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5205,7 +5205,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.has_nested_reference_attributes */
-T1 T184x13646(T0* C)
+T1 T184x13656(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5251,7 +5251,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.is_alive */
-T1 T184x13617(T0* C)
+T1 T184x13627(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5274,7 +5274,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.next_type */
-T0* T184x13668(T0* C)
+T0* T184x13678(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5297,7 +5297,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.procedure_calls */
-T0* T184x13658(T0* C)
+T0* T184x13668(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5320,7 +5320,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.query_calls */
-T0* T184x13657(T0* C)
+T0* T184x13667(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5343,7 +5343,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.procedures */
-T0* T184x13649(T0* C)
+T0* T184x13659(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5366,7 +5366,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.static_type */
-T0* T184x13679(T0* C)
+T0* T184x13689(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -5389,7 +5389,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.has_static */
-T1 T184x13625(T0* C)
+T1 T184x13635(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -6381,7 +6381,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.name */
-T0* T192x12087(T0* C)
+T0* T192x12097(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6404,7 +6404,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.is_tuple_label */
-T1 T192x12095(T0* C)
+T1 T192x12105(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6427,7 +6427,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.seed */
-T6 T192x12089(T0* C)
+T6 T192x12099(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6450,7 +6450,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.lower_name */
-T0* T192x12088(T0* C)
+T0* T192x12098(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6496,7 +6496,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.same_feature_name */
-T1 T192x12085T0(T0* C, T0* a1)
+T1 T192x12095T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6519,7 +6519,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.is_object_test_local */
-T1 T192x12093(T0* C)
+T1 T192x12103(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6542,7 +6542,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.is_local */
-T1 T192x12092(T0* C)
+T1 T192x12102(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6565,7 +6565,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.is_argument */
-T1 T192x12094(T0* C)
+T1 T192x12104(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6634,7 +6634,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.object_test_local_name */
-T0* T192x12129(T0* C)
+T0* T192x12139(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6657,7 +6657,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.local_name */
-T0* T192x12127(T0* C)
+T0* T192x12137(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6680,7 +6680,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.argument_name */
-T0* T192x12128(T0* C)
+T0* T192x12138(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6703,7 +6703,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.is_prefix */
-T1 T192x12117(T0* C)
+T1 T192x12127(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6726,7 +6726,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.is_infix */
-T1 T192x12097(T0* C)
+T1 T192x12107(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -6768,7 +6768,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.overloaded_alias_name */
-T0* T193x14411(T0* C)
+T0* T193x14421(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6787,7 +6787,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.alias_name */
-T0* T193x14407(T0* C)
+T0* T193x14417(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6806,7 +6806,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.overloaded_name */
-T0* T193x14410(T0* C)
+T0* T193x14420(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6825,7 +6825,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.name */
-T0* T193x14490(T0* C)
+T0* T193x14500(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6844,7 +6844,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.is_exported_to */
-T1 T193x14452T0(T0* C, T0* a1)
+T1 T193x14462T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6863,7 +6863,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.first_seed */
-T6 T193x14493(T0* C)
+T6 T193x14503(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6882,7 +6882,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.arguments_count */
-T6 T193x14451(T0* C)
+T6 T193x14461(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6901,7 +6901,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.is_creation_exported_to */
-T1 T193x14454T0T0(T0* C, T0* a1, T0* a2)
+T1 T193x14464T0T0(T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6920,7 +6920,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.arguments */
-T0* T193x14492(T0* C)
+T0* T193x14502(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6939,7 +6939,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.has_seed */
-T1 T193x14488T6(T0* C, T6 a1)
+T1 T193x14498T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6958,7 +6958,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.is_frozen */
-T1 T193x14434(T0* C)
+T1 T193x14444(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6977,7 +6977,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.is_deferred */
-T1 T193x14435(T0* C)
+T1 T193x14445(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -6996,7 +6996,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.implementation_class */
-T0* T193x14503(T0* C)
+T0* T193x14513(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -7015,7 +7015,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.new_synonym */
-T0* T193x14475T0(T0* C, T0* a1)
+T0* T193x14485T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -7034,7 +7034,7 @@ if (t1==988) {
 }
 
 /* Call to ET_QUERY.lower_name */
-T0* T194x14406(T0* C)
+T0* T194x14416(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7065,7 +7065,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.type */
-T0* T194x14491(T0* C)
+T0* T194x14501(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7127,7 +7127,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.first_seed */
-T6 T194x14493(T0* C)
+T6 T194x14503(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7158,7 +7158,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_attribute */
-T1 T194x14437(T0* C)
+T1 T194x14447(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7189,7 +7189,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.assigner */
-T0* T194x14558(T0* C)
+T0* T194x14568(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7220,7 +7220,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_exported_to */
-T1 T194x14452T0(T0* C, T0* a1)
+T1 T194x14462T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7251,7 +7251,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.arguments_count */
-T6 T194x14451(T0* C)
+T6 T194x14461(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7282,7 +7282,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.overloaded_alias_name */
-T0* T194x14411(T0* C)
+T0* T194x14421(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7313,7 +7313,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.alias_name */
-T0* T194x14407(T0* C)
+T0* T194x14417(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7344,7 +7344,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.overloaded_name */
-T0* T194x14410(T0* C)
+T0* T194x14420(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7375,7 +7375,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.name */
-T0* T194x14490(T0* C)
+T0* T194x14500(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7406,7 +7406,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.arguments */
-T0* T194x14492(T0* C)
+T0* T194x14502(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7437,7 +7437,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.has_seed */
-T1 T194x14488T6(T0* C, T6 a1)
+T1 T194x14498T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7468,7 +7468,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.implementation_feature */
-T0* T194x14522(T0* C)
+T0* T194x14532(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7499,7 +7499,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_unique_attribute */
-T1 T194x14439(T0* C)
+T1 T194x14449(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7530,7 +7530,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_constant_attribute */
-T1 T194x14438(T0* C)
+T1 T194x14448(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7561,7 +7561,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.implementation_class */
-T0* T194x14503(T0* C)
+T0* T194x14513(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7592,7 +7592,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_once */
-T1 T194x14442(T0* C)
+T1 T194x14452(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7623,7 +7623,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_infixable */
-T1 T194x14443(T0* C)
+T1 T194x14453(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7654,7 +7654,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_prefixable */
-T1 T194x14444(T0* C)
+T1 T194x14454(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7685,7 +7685,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_bracketable */
-T1 T194x14445(T0* C)
+T1 T194x14455(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7716,7 +7716,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_frozen */
-T1 T194x14434(T0* C)
+T1 T194x14444(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7747,7 +7747,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.is_deferred */
-T1 T194x14435(T0* C)
+T1 T194x14445(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -7778,7 +7778,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.new_synonym */
-T0* T194x14475T0(T0* C, T0* a1)
+T0* T194x14485T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -11053,7 +11053,7 @@ if (t1==62) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.static_type */
-T0* T202x13679(T0* C)
+T0* T202x13689(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11088,7 +11088,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.is_never_void */
-T1 T202x13675(T0* C)
+T1 T202x13685(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11123,7 +11123,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.can_be_void */
-T1 T202x13676(T0* C)
+T1 T202x13686(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11158,7 +11158,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.dynamic_type */
-T0* T202x13688T6(T0* C, T6 a1)
+T0* T202x13698T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11193,7 +11193,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.count */
-T6 T202x13690(T0* C)
+T6 T202x13700(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11228,7 +11228,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.has_expanded */
-T1 T202x13694(T0* C)
+T1 T202x13704(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11263,7 +11263,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.is_expanded */
-T1 T202x13674(T0* C)
+T1 T202x13684(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11298,7 +11298,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.is_empty */
-T1 T202x13691(T0* C)
+T1 T202x13701(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11333,7 +11333,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.special_type */
-T0* T202x13689(T0* C)
+T0* T202x13699(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11368,7 +11368,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.dynamic_types */
-T0* T202x13684(T0* C)
+T0* T202x13694(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -11395,7 +11395,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.has_type */
-T1 T202x13692T0(T0* C, T0* a1)
+T1 T202x13702T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -12629,7 +12629,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_EXPRESSION.index */
-T6 T229x12172(T0* C)
+T6 T229x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -12848,7 +12848,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_EXPRESSION.is_current */
-T1 T229x12152(T0* C)
+T1 T229x12162(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -13067,7 +13067,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_EXPRESSION.manifest_constant_convert_feature */
-T0* T229x12155T0T0(T0* C, T0* a1, T0* a2)
+T0* T229x12165T0T0(T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -13286,7 +13286,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_EXPRESSION.is_never_void */
-T1 T229x12151(T0* C)
+T1 T229x12161(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -13505,7 +13505,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_FEATURE.lower_name */
-T0* T233x14406(T0* C)
+T0* T233x14416(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13552,7 +13552,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.name */
-T0* T233x14490(T0* C)
+T0* T233x14500(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13599,7 +13599,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.has_seed */
-T1 T233x14488T6(T0* C, T6 a1)
+T1 T233x14498T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13646,7 +13646,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.first_seed */
-T6 T233x14493(T0* C)
+T6 T233x14503(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13693,7 +13693,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_deferred */
-T1 T233x14435(T0* C)
+T1 T233x14445(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13740,7 +13740,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.arguments */
-T0* T233x14492(T0* C)
+T0* T233x14502(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13787,7 +13787,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.version */
-T6 T233x14418(T0* C)
+T6 T233x14428(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13834,7 +13834,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_once */
-T1 T233x14442(T0* C)
+T1 T233x14452(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13881,7 +13881,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_exported_to */
-T1 T233x14452T0(T0* C, T0* a1)
+T1 T233x14462T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13928,7 +13928,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.clients */
-T0* T233x14505(T0* C)
+T0* T233x14515(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -13975,7 +13975,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.implementation_feature */
-T0* T233x14522(T0* C)
+T0* T233x14532(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14022,7 +14022,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.implementation_class */
-T0* T233x14503(T0* C)
+T0* T233x14513(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14069,7 +14069,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.extended_name */
-T0* T233x14408(T0* C)
+T0* T233x14418(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14116,7 +14116,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.alias_name */
-T0* T233x14407(T0* C)
+T0* T233x14417(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14163,7 +14163,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.signature_has_formal_types */
-T1 T233x14433T0(T0* C, T0* a1)
+T1 T233x14443T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14210,7 +14210,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_procedure */
-T1 T233x14441(T0* C)
+T1 T233x14451(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14257,7 +14257,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.type */
-T0* T233x14491(T0* C)
+T0* T233x14501(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14304,7 +14304,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.id */
-T6 T233x14417(T0* C)
+T6 T233x14427(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14351,7 +14351,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_unique_attribute */
-T1 T233x14439(T0* C)
+T1 T233x14449(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14398,7 +14398,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_constant_attribute */
-T1 T233x14438(T0* C)
+T1 T233x14448(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14445,7 +14445,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_attribute */
-T1 T233x14437(T0* C)
+T1 T233x14447(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14492,7 +14492,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.other_seeds */
-T0* T233x14494(T0* C)
+T0* T233x14504(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14539,7 +14539,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_frozen */
-T1 T233x14434(T0* C)
+T1 T233x14444(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14586,7 +14586,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_infixable */
-T1 T233x14443(T0* C)
+T1 T233x14453(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14633,7 +14633,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_prefixable */
-T1 T233x14444(T0* C)
+T1 T233x14454(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14680,7 +14680,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_bracketable */
-T1 T233x14445(T0* C)
+T1 T233x14455(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14727,7 +14727,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.renamed_feature */
-T0* T233x14476T0(T0* C, T0* a1)
+T0* T233x14486T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14774,7 +14774,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.undefined_feature */
-T0* T233x14477T0(T0* C, T0* a1)
+T0* T233x14487T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14821,7 +14821,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.postconditions */
-T0* T233x14414(T0* C)
+T0* T233x14424(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14868,7 +14868,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.preconditions */
-T0* T233x14413(T0* C)
+T0* T233x14423(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14915,7 +14915,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.same_version */
-T1 T233x14458T0(T0* C, T0* a1)
+T1 T233x14468T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -14962,7 +14962,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_dotnet */
-T1 T233x14487(T0* C)
+T1 T233x14497(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15009,7 +15009,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.has_assertions_error */
-T1 T233x14509(T0* C)
+T1 T233x14519(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15056,7 +15056,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.assertions_checked */
-T1 T233x14508(T0* C)
+T1 T233x14518(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15103,7 +15103,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.has_implementation_error */
-T1 T233x14507(T0* C)
+T1 T233x14517(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15150,7 +15150,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.implementation_checked */
-T1 T233x14506(T0* C)
+T1 T233x14516(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15197,7 +15197,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.first_precursor */
-T0* T233x14502(T0* C)
+T0* T233x14512(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15244,7 +15244,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.other_precursors */
-T0* T233x14420(T0* C)
+T0* T233x14430(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15338,7 +15338,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.arguments_count */
-T6 T233x14451(T0* C)
+T6 T233x14461(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15385,7 +15385,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.is_query */
-T1 T233x14440(T0* C)
+T1 T233x14450(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -15478,7 +15478,7 @@ if (t1==994) {
 }
 
 /* Call to ET_QUALIFIED_FEATURE_NAME.feature_name */
-T0* T234x12136(T0* C)
+T0* T234x12146(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -15501,7 +15501,7 @@ if (t1==994) {
 }
 
 /* Call to ET_CALL_COMPONENT.name */
-T0* T259x12199(T0* C)
+T0* T259x12209(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -15536,7 +15536,7 @@ if (t1==1117) {
 }
 
 /* Call to ET_CALL_COMPONENT.arguments */
-T0* T259x12200(T0* C)
+T0* T259x12210(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -15606,7 +15606,7 @@ if (t1==1117) {
 }
 
 /* Call to ET_CALL_COMPONENT.is_tuple_label */
-T1 T259x12202(T0* C)
+T1 T259x12212(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -15641,7 +15641,7 @@ if (t1==1117) {
 }
 
 /* Call to ET_CALL_NAME.lower_name */
-T0* T260x12088(T0* C)
+T0* T260x12098(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=816) {
@@ -15743,7 +15743,7 @@ if (t1==995) {
 }
 
 /* Call to ET_CALL_NAME.seed */
-T6 T260x12089(T0* C)
+T6 T260x12099(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -15790,7 +15790,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_CALL_NAME.is_tuple_label */
-T1 T260x12095(T0* C)
+T1 T260x12105(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -15837,7 +15837,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_or_else */
-T1 T260x12111(T0* C)
+T1 T260x12121(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -15892,7 +15892,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_implies */
-T1 T260x12105(T0* C)
+T1 T260x12115(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -15947,7 +15947,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_and_then */
-T1 T260x12099(T0* C)
+T1 T260x12109(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16002,7 +16002,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.precursor_keyword */
-T0* T260x12126(T0* C)
+T0* T260x12136(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=810) {
@@ -16045,7 +16045,7 @@ if (t1==994) {
 }
 
 /* Call to ET_CALL_NAME.is_precursor */
-T1 T260x12124(T0* C)
+T1 T260x12134(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=810) {
@@ -16119,7 +16119,7 @@ if (t1==995) {
 }
 
 /* Call to ET_CALL_NAME.is_prefix_not */
-T1 T260x12121(T0* C)
+T1 T260x12131(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16174,7 +16174,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_prefix_plus */
-T1 T260x12119(T0* C)
+T1 T260x12129(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16229,7 +16229,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_prefix_minus */
-T1 T260x12118(T0* C)
+T1 T260x12128(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16284,7 +16284,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_dotdot */
-T1 T260x12116(T0* C)
+T1 T260x12126(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16339,7 +16339,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_xor */
-T1 T260x12115(T0* C)
+T1 T260x12125(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16394,7 +16394,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_times */
-T1 T260x12114(T0* C)
+T1 T260x12124(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16449,7 +16449,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_power */
-T1 T260x12113(T0* C)
+T1 T260x12123(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16504,7 +16504,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_plus */
-T1 T260x12112(T0* C)
+T1 T260x12122(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16559,7 +16559,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_or */
-T1 T260x12110(T0* C)
+T1 T260x12120(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16614,7 +16614,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_mod */
-T1 T260x12109(T0* C)
+T1 T260x12119(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16669,7 +16669,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_minus */
-T1 T260x12108(T0* C)
+T1 T260x12118(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16724,7 +16724,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_lt */
-T1 T260x12107(T0* C)
+T1 T260x12117(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16779,7 +16779,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_le */
-T1 T260x12106(T0* C)
+T1 T260x12116(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16834,7 +16834,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_gt */
-T1 T260x12104(T0* C)
+T1 T260x12114(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16889,7 +16889,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_ge */
-T1 T260x12103(T0* C)
+T1 T260x12113(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16944,7 +16944,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_divide */
-T1 T260x12101(T0* C)
+T1 T260x12111(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -16999,7 +16999,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_div */
-T1 T260x12100(T0* C)
+T1 T260x12110(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -17054,7 +17054,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_infix_and */
-T1 T260x12098(T0* C)
+T1 T260x12108(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -17109,7 +17109,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.is_bracket */
-T1 T260x12122(T0* C)
+T1 T260x12132(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -17164,7 +17164,7 @@ if (t1==1001) {
 }
 
 /* Call to ET_CALL_NAME.same_call_name */
-T1 T260x12125T0(T0* C, T0* a1)
+T1 T260x12135T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -17195,7 +17195,7 @@ if (t1==995) {
 }
 
 /* Call to ET_CALL_NAME.feature_name */
-T0* T260x12130(T0* C)
+T0* T260x12140(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -17218,7 +17218,7 @@ if (t1==994) {
 }
 
 /* Call to ET_AGENT.target */
-T0* T263x16675(T0* C)
+T0* T263x16685(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -17249,7 +17249,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_AGENT.arguments */
-T0* T263x16676(T0* C)
+T0* T263x16686(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -17280,7 +17280,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_AGENT.is_inline_agent */
-T1 T263x16681(T0* C)
+T1 T263x16691(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -17311,7 +17311,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_AGENT.implicit_target_position */
-T0* T263x16685(T0* C)
+T0* T263x16695(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -17342,7 +17342,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_AGENT.implicit_result */
-T0* T263x16677(T0* C)
+T0* T263x16687(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -17373,7 +17373,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_AGENT.is_procedure */
-T1 T263x16679(T0* C)
+T1 T263x16689(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1138) {
@@ -17411,7 +17411,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_AGENT.index */
-T6 T263x12172(T0* C)
+T6 T263x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -17442,7 +17442,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_AGENT.is_qualified_call */
-T1 T263x16678(T0* C)
+T1 T263x16688(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -17473,7 +17473,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_OBJECT_TEST.index */
-T6 T264x12172(T0* C)
+T6 T264x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=668) {
@@ -17488,7 +17488,7 @@ if (t1==264) {
 }
 
 /* Call to ET_OBJECT_TEST.type */
-T0* T264x16691(T0* C)
+T0* T264x16701(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=668) {
@@ -17503,7 +17503,7 @@ if (t1==264) {
 }
 
 /* Call to ET_OBJECT_TEST.name */
-T0* T264x16693(T0* C)
+T0* T264x16703(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=668) {
@@ -17518,7 +17518,7 @@ if (t1==264) {
 }
 
 /* Call to ET_OBJECT_TEST.expression */
-T0* T264x16692(T0* C)
+T0* T264x16702(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=668) {
@@ -17533,7 +17533,7 @@ if (t1==264) {
 }
 
 /* Call to ET_MANIFEST_STRING.index */
-T6 T269x12172(T0* C)
+T6 T269x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -17548,7 +17548,7 @@ if (t1==740) {
 }
 
 /* Call to ET_MANIFEST_STRING.cast_type */
-T0* T269x16740(T0* C)
+T0* T269x16750(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -17578,7 +17578,7 @@ if (t1==740) {
 }
 
 /* Call to ET_MANIFEST_STRING.type */
-T0* T269x16741(T0* C)
+T0* T269x16751(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -17593,7 +17593,7 @@ if (t1==740) {
 }
 
 /* Call to ET_MANIFEST_STRING.value */
-T0* T269x16738(T0* C)
+T0* T269x16748(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -17608,7 +17608,7 @@ if (t1==740) {
 }
 
 /* Call to ET_CONSTANT.is_bit_constant */
-T1 T270x16754(T0* C)
+T1 T270x16764(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -17675,7 +17675,7 @@ if (t1==858) {
 }
 
 /* Call to ET_CONSTANT.is_string_constant */
-T1 T270x16753(T0* C)
+T1 T270x16763(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -17742,7 +17742,7 @@ if (t1==858) {
 }
 
 /* Call to ET_CONSTANT.is_real_constant */
-T1 T270x16752(T0* C)
+T1 T270x16762(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -17809,7 +17809,7 @@ if (t1==858) {
 }
 
 /* Call to ET_CONSTANT.is_integer_constant */
-T1 T270x16751(T0* C)
+T1 T270x16761(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -17876,7 +17876,7 @@ if (t1==858) {
 }
 
 /* Call to ET_CONSTANT.is_character_constant */
-T1 T270x16750(T0* C)
+T1 T270x16760(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -17943,7 +17943,7 @@ if (t1==858) {
 }
 
 /* Call to ET_CONSTANT.is_boolean_constant */
-T1 T270x16749(T0* C)
+T1 T270x16759(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -18010,7 +18010,7 @@ if (t1==858) {
 }
 
 /* Call to ET_CONSTANT.index */
-T6 T270x12172(T0* C)
+T6 T270x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -18297,7 +18297,7 @@ if (t1==1035) {
 }
 
 /* Call to ET_ARGUMENT_OPERANDS.actual_argument */
-T0* T277x12166T6(T0* C, T6 a1)
+T0* T277x12176T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -18536,7 +18536,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_ARGUMENT_OPERANDS.count */
-T6 T277x12167(T0* C)
+T6 T277x12177(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -18775,7 +18775,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_ARGUMENT_OPERANDS.is_empty */
-T1 T277x12164(T0* C)
+T1 T277x12174(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -19014,7 +19014,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_EXPRESSION_ITEM.expression */
-T0* T280x12156(T0* C)
+T0* T280x12166(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -19452,7 +19452,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_OPERAND.index */
-T6 T283x12172(T0* C)
+T6 T283x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1088) {
@@ -19691,7 +19691,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_OPERAND.is_open_operand */
-T1 T283x12171(T0* C)
+T1 T283x12181(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1088) {
@@ -19930,7 +19930,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_AGENT_TARGET.index */
-T6 T285x12172(T0* C)
+T6 T285x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=257) {
@@ -19984,7 +19984,7 @@ if (t1==1102) {
 }
 
 /* Call to ET_AGENT_TARGET.is_open_operand */
-T1 T285x12171(T0* C)
+T1 T285x12181(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=257) {
@@ -20011,7 +20011,7 @@ if (t1==1102) {
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND.is_open_operand */
-T1 T287x12171(T0* C)
+T1 T287x12181(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -20242,7 +20242,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND.index */
-T6 T287x12172(T0* C)
+T6 T287x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -20473,7 +20473,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_ACTUAL_ARGUMENTS.actual_argument */
-T0* T294x12166T6(T0* C, T6 a1)
+T0* T294x12176T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -20700,7 +20700,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_ACTUAL_ARGUMENTS.count */
-T6 T294x12167(T0* C)
+T6 T294x12177(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -20927,7 +20927,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_ACTUAL_ARGUMENTS.is_empty */
-T1 T294x12164(T0* C)
+T1 T294x12174(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -21154,7 +21154,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_DYNAMIC_TYPES.dynamic_type */
-T0* T297x13688T6(T0* C, T6 a1)
+T0* T297x13698T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -21193,7 +21193,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPES.count */
-T6 T297x13690(T0* C)
+T6 T297x13700(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -21232,7 +21232,7 @@ if (t1==443) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.has_implementation_error */
-T1 T311x14507(T0* C)
+T1 T311x14517(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21283,7 +21283,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.implementation_feature */
-T0* T311x14522(T0* C)
+T0* T311x14532(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21334,7 +21334,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.has_assertions_error */
-T1 T311x14509(T0* C)
+T1 T311x14519(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21385,7 +21385,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.as_feature */
-T0* T311x14516(T0* C)
+T0* T311x14526(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21436,7 +21436,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.is_feature */
-T1 T311x14500(T0* C)
+T1 T311x14510(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21487,7 +21487,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.first_precursor */
-T0* T311x14502(T0* C)
+T0* T311x14512(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21538,7 +21538,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.locals */
-T0* T311x14520(T0* C)
+T0* T311x14530(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21589,7 +21589,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.arguments */
-T0* T311x14519(T0* C)
+T0* T311x14529(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21640,7 +21640,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.implementation_class */
-T0* T311x14503(T0* C)
+T0* T311x14513(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21691,7 +21691,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.type */
-T0* T311x14518(T0* C)
+T0* T311x14528(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21742,7 +21742,7 @@ if (t1==984) {
 }
 
 /* Call to ET_STANDALONE_CLOSURE.clients */
-T0* T311x14505(T0* C)
+T0* T311x14515(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -21793,7 +21793,7 @@ if (t1==984) {
 }
 
 /* Call to ET_CLUSTER.is_abstract */
-T1 T338x12600(T0* C)
+T1 T338x12610(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21808,7 +21808,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.is_read_only */
-T1 T338x12666(T0* C)
+T1 T338x12676(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21823,7 +21823,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.is_override */
-T1 T338x12665(T0* C)
+T1 T338x12675(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21838,7 +21838,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.full_lower_name */
-T0* T338x12676T2(T0* C, T2 a1)
+T0* T338x12686T2(T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21853,7 +21853,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.full_pathname */
-T0* T338x12677(T0* C)
+T0* T338x12687(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21868,7 +21868,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.is_implicit */
-T1 T338x12608(T0* C)
+T1 T338x12618(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21883,7 +21883,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.is_preparsed */
-T1 T338x12667(T0* C)
+T1 T338x12677(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21898,7 +21898,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.dependant_constraint */
-T0* T338x12627(T0* C)
+T0* T338x12637(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21913,7 +21913,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.parent */
-T0* T338x12684(T0* C)
+T0* T338x12694(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21928,7 +21928,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.provider_constraint */
-T0* T338x12626(T0* C)
+T0* T338x12636(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21943,7 +21943,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.subclusters */
-T0* T338x12625(T0* C)
+T0* T338x12635(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21958,7 +21958,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.is_valid_directory_name */
-T1 T338x12614T0(T0* C, T0* a1)
+T1 T338x12624T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21973,7 +21973,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.is_recursive */
-T1 T338x12602(T0* C)
+T1 T338x12612(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -21988,7 +21988,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.is_valid_eiffel_filename */
-T1 T338x12613T0(T0* C, T0* a1)
+T1 T338x12623T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -22003,7 +22003,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.scm_write_mapping */
-T0* T338x12631(T0* C)
+T0* T338x12641(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -22018,7 +22018,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.scm_read_mapping */
-T0* T338x12630(T0* C)
+T0* T338x12640(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -22033,7 +22033,7 @@ if (t1==159) {
 }
 
 /* Call to XM_NODE.parent */
-T0* T341x10884(T0* C)
+T0* T341x10894(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1558) {
@@ -22079,7 +22079,7 @@ if (t1==143) {
 }
 
 /* Call to ET_GROUP.cluster */
-T0* T425x12680(T0* C)
+T0* T425x12690(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22102,7 +22102,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.full_lower_name */
-T0* T425x12676T2(T0* C, T2 a1)
+T0* T425x12686T2(T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22125,7 +22125,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.is_dotnet_assembly */
-T1 T425x12662(T0* C)
+T1 T425x12672(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22148,7 +22148,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.is_cluster */
-T1 T425x12661(T0* C)
+T1 T425x12671(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22171,7 +22171,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.full_pathname */
-T0* T425x12677(T0* C)
+T0* T425x12687(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22194,7 +22194,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.universe */
-T0* T425x12669(T0* C)
+T0* T425x12679(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22217,7 +22217,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.current_system */
-T0* T425x12670(T0* C)
+T0* T425x12680(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22240,7 +22240,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.is_override */
-T1 T425x12665(T0* C)
+T1 T425x12675(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22263,7 +22263,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.dotnet_assembly */
-T0* T425x12681(T0* C)
+T0* T425x12691(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22286,7 +22286,7 @@ if (t1==554) {
 }
 
 /* Call to ET_GROUP.is_none */
-T1 T425x12663(T0* C)
+T1 T425x12673(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=375) {
@@ -22309,7 +22309,7 @@ if (t1==554) {
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.alias_name */
-T0* T436x12134(T0* C)
+T0* T436x12144(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -22336,7 +22336,7 @@ if (t1==994) {
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.feature_name */
-T0* T436x12133(T0* C)
+T0* T436x12143(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -22390,7 +22390,7 @@ if (t1==994) {
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.same_extended_feature_name */
-T1 T436x12135T0(T0* C, T0* a1)
+T1 T436x12145T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -22436,7 +22436,7 @@ if (t1==509) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.is_applicable_encoding */
-T1 T470x24336T0(T0* C, T0* a1)
+T1 T470x24346T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -22474,7 +22474,7 @@ if (t1==509) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.last_value */
-T0* T470x24347(T0* C)
+T0* T470x24357(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -22512,7 +22512,7 @@ if (t1==509) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.error_position */
-T0* T470x24345(T0* C)
+T0* T470x24355(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -22531,7 +22531,7 @@ if (t1==509) {
 }
 
 /* Call to ET_CLOSURE.locals */
-T0* T563x14520(T0* C)
+T0* T563x14530(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
@@ -22606,7 +22606,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_CLOSURE.type */
-T0* T563x14518(T0* C)
+T0* T563x14528(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
@@ -22681,7 +22681,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_CLOSURE.arguments */
-T0* T563x14519(T0* C)
+T0* T563x14529(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
@@ -22756,7 +22756,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_CLOSURE.object_tests */
-T0* T563x14521(T0* C)
+T0* T563x14531(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=983) {
@@ -22831,7 +22831,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_INLINE_AGENT.implicit_result */
-T0* T642x16677(T0* C)
+T0* T642x16687(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -22858,7 +22858,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INLINE_AGENT.formal_arguments */
-T0* T642x14519(T0* C)
+T0* T642x14529(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -22885,7 +22885,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INLINE_AGENT.actual_arguments */
-T0* T642x16676(T0* C)
+T0* T642x16686(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -22912,7 +22912,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INLINE_AGENT.target */
-T0* T642x16675(T0* C)
+T0* T642x16685(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -22939,7 +22939,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INLINE_AGENT.locals */
-T0* T642x14520(T0* C)
+T0* T642x14530(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -22966,7 +22966,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INLINE_AGENT.type */
-T0* T642x14518(T0* C)
+T0* T642x14528(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -23008,7 +23008,7 @@ if (t1==158) {
 }
 
 /* Call to ET_ECF_CONDITION.is_enabled */
-T1 T707x25380T0(T0* C, T0* a1)
+T1 T707x25390T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=710) {
@@ -23043,7 +23043,7 @@ if (t1==713) {
 }
 
 /* Call to ET_FEATURE_CALL_EXPRESSION.name */
-T0* T726x12199(T0* C)
+T0* T726x12209(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1110) {
@@ -23066,7 +23066,7 @@ if (t1==1114) {
 }
 
 /* Call to ET_FEATURE_CALL_EXPRESSION.target */
-T0* T726x12198(T0* C)
+T0* T726x12208(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1110) {
@@ -23089,7 +23089,7 @@ if (t1==1114) {
 }
 
 /* Call to ET_FEATURE_CALL_EXPRESSION.arguments */
-T0* T726x12200(T0* C)
+T0* T726x12210(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1110) {
@@ -23112,7 +23112,7 @@ if (t1==1114) {
 }
 
 /* Call to ET_FEATURE_CALL_EXPRESSION.arguments_count */
-T6 T726x12197(T0* C)
+T6 T726x12207(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1042) {
@@ -23131,7 +23131,7 @@ if (t1==1114) {
 }
 
 /* Call to ET_FEATURE_CALL_EXPRESSION.index */
-T6 T726x12172(T0* C)
+T6 T726x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1110) {
@@ -23154,7 +23154,7 @@ if (t1==1114) {
 }
 
 /* Call to ET_FEATURE_CALL_EXPRESSION.is_tuple_label */
-T1 T726x12202(T0* C)
+T1 T726x12212(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1110) {
@@ -24473,7 +24473,7 @@ if (t1==913) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.index */
-T6 T805x12172(T0* C)
+T6 T805x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -24488,7 +24488,7 @@ if (t1==845) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.cast_type */
-T0* T805x26352(T0* C)
+T0* T805x26362(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -24503,7 +24503,7 @@ if (t1==845) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.value */
-T2 T805x26351(T0* C)
+T2 T805x26361(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -24518,7 +24518,7 @@ if (t1==845) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_32 */
-T6 T813x26704(T0* C)
+T6 T813x26714(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24541,7 +24541,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.cast_type */
-T0* T813x26711(T0* C)
+T0* T813x26721(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24564,7 +24564,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.literal */
-T0* T813x26700(T0* C)
+T0* T813x26710(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24587,7 +24587,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.sign */
-T0* T813x26710(T0* C)
+T0* T813x26720(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24610,7 +24610,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.value_position */
-T0* T813x26714(T0* C)
+T0* T813x26724(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24633,7 +24633,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_negative */
-T1 T813x26718(T0* C)
+T1 T813x26728(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24656,7 +24656,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.index */
-T6 T813x12172(T0* C)
+T6 T813x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24679,7 +24679,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_64 */
-T1 T813x26730(T0* C)
+T1 T813x26740(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24702,7 +24702,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.value */
-T11 T813x26701(T0* C)
+T11 T813x26711(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24725,7 +24725,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_binary */
-T1 T813x26721(T0* C)
+T1 T813x26731(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24748,7 +24748,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_hexadecimal */
-T1 T813x26720(T0* C)
+T1 T813x26730(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24771,7 +24771,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_64 */
-T1 T813x26726(T0* C)
+T1 T813x26736(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24794,7 +24794,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_32 */
-T1 T813x26725(T0* C)
+T1 T813x26735(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24817,7 +24817,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_32 */
-T1 T813x26729(T0* C)
+T1 T813x26739(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24840,7 +24840,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_16 */
-T1 T813x26728(T0* C)
+T1 T813x26738(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24863,7 +24863,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_natural_8 */
-T1 T813x26727(T0* C)
+T1 T813x26737(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24886,7 +24886,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_16 */
-T1 T813x26724(T0* C)
+T1 T813x26734(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24909,7 +24909,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.is_integer_8 */
-T1 T813x26723(T0* C)
+T1 T813x26733(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24932,7 +24932,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_64 */
-T11 T813x26709(T0* C)
+T11 T813x26719(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24955,7 +24955,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_32 */
-T10 T813x26708(T0* C)
+T10 T813x26718(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -24978,7 +24978,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_16 */
-T9 T813x26707(T0* C)
+T9 T813x26717(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -25001,7 +25001,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_natural_8 */
-T8 T813x26706(T0* C)
+T8 T813x26716(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -25024,7 +25024,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_64 */
-T7 T813x26705(T0* C)
+T7 T813x26715(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -25047,7 +25047,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_16 */
-T5 T813x26703(T0* C)
+T5 T813x26713(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -25070,7 +25070,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.to_integer_8 */
-T4 T813x26702(T0* C)
+T4 T813x26712(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -25151,7 +25151,7 @@ if (t1==1037) {
 }
 
 /* Call to ET_FEATURE_NAME_ITEM.feature_name */
-T0* T904x12133(T0* C)
+T0* T904x12143(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -25235,7 +25235,7 @@ if (t1==1035) {
 }
 
 /* Call to ET_LIKE_TYPE.like_keyword */
-T0* T910x27117(T0* C)
+T0* T910x27127(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1032) {
@@ -25254,7 +25254,7 @@ if (t1==1035) {
 }
 
 /* Call to ET_LIKE_TYPE.type_mark */
-T0* T910x27116(T0* C)
+T0* T910x27126(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1032) {
@@ -25440,7 +25440,7 @@ if (t1==1037) {
 }
 
 /* Call to ET_CONVERT_FEATURE.name */
-T0* T957x22160(T0* C)
+T0* T957x22170(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=964) {
@@ -25455,7 +25455,7 @@ if (t1==403) {
 }
 
 /* Call to ET_CONVERT_FEATURE.is_convert_to */
-T1 T957x22159(T0* C)
+T1 T957x22169(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=964) {
@@ -25470,7 +25470,7 @@ if (t1==403) {
 }
 
 /* Call to ET_CONVERT_FEATURE.is_convert_from */
-T1 T957x22158(T0* C)
+T1 T957x22168(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=964) {
@@ -25650,7 +25650,7 @@ if (t1==1035) {
 }
 
 /* Call to ET_ASSIGNER.feature_name */
-T0* T975x12138(T0* C)
+T0* T975x12148(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -25673,7 +25673,7 @@ if (t1==994) {
 }
 
 /* Call to ET_EXTERNAL_LANGUAGE.manifest_string */
-T0* T985x16758(T0* C)
+T0* T985x16768(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -25688,7 +25688,7 @@ if (t1==740) {
 }
 
 /* Call to ET_EXTERNAL_ALIAS.manifest_string */
-T0* T986x16759(T0* C)
+T0* T986x16769(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -25703,7 +25703,7 @@ if (t1==740) {
 }
 
 /* Call to ET_ALIAS_NAME.same_call_name */
-T1 T997x12125T0(T0* C, T0* a1)
+T1 T997x12135T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25730,7 +25730,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.same_alias_name */
-T1 T997x25637T0(T0* C, T0* a1)
+T1 T997x25647T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25757,7 +25757,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_infix_minus */
-T1 T997x12108(T0* C)
+T1 T997x12118(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25784,7 +25784,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_infix_plus */
-T1 T997x12112(T0* C)
+T1 T997x12122(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25811,7 +25811,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_prefix_minus */
-T1 T997x12118(T0* C)
+T1 T997x12128(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25838,7 +25838,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_prefix_plus */
-T1 T997x12119(T0* C)
+T1 T997x12129(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25865,7 +25865,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.alias_lower_name */
-T0* T997x25625(T0* C)
+T0* T997x25635(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25946,7 +25946,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_infix */
-T1 T997x12097(T0* C)
+T1 T997x12107(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -25973,7 +25973,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_infixable */
-T1 T997x25621(T0* C)
+T1 T997x25631(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -26000,7 +26000,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_prefixable */
-T1 T997x25620(T0* C)
+T1 T997x25630(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -26027,7 +26027,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_bracket */
-T1 T997x12122(T0* C)
+T1 T997x12132(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -26054,7 +26054,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.is_prefix */
-T1 T997x12117(T0* C)
+T1 T997x12127(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -26081,7 +26081,7 @@ if (t1==995) {
 }
 
 /* Call to ET_CONDITIONAL.expression */
-T0* T1051x12157(T0* C)
+T0* T1051x12167(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -26288,7 +26288,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_CHOICE.upper */
-T0* T1078x12186(T0* C)
+T0* T1078x12196(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=851) {
@@ -26335,7 +26335,7 @@ if (t1==1086) {
 }
 
 /* Call to ET_CHOICE.is_range */
-T1 T1078x12184(T0* C)
+T1 T1078x12194(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=851) {
@@ -26382,7 +26382,7 @@ if (t1==1086) {
 }
 
 /* Call to ET_CHOICE.lower */
-T0* T1078x12185(T0* C)
+T0* T1078x12195(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=851) {
@@ -26429,7 +26429,7 @@ if (t1==1086) {
 }
 
 /* Call to ET_CHOICE_ITEM.choice */
-T0* T1080x12188(T0* C)
+T0* T1080x12198(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=851) {
@@ -26519,7 +26519,7 @@ if (t1==859) {
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND_ITEM.agent_actual_argument */
-T0* T1148x12175(T0* C)
+T0* T1148x12185(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -26746,7 +26746,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_ASSERTION_ITEM.assertion */
-T0* T1153x12161(T0* C)
+T0* T1153x12171(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -27160,7 +27160,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.flattened_feature */
-T0* T1179x14495(T0* C)
+T0* T1179x14505(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27215,7 +27215,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.inherited_feature */
-T0* T1179x14497(T0* C)
+T0* T1179x14507(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27270,7 +27270,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_inherited */
-T1 T1179x14484(T0* C)
+T1 T1179x14494(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27325,7 +27325,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.redeclared_feature */
-T0* T1179x14498(T0* C)
+T0* T1179x14508(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27380,7 +27380,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_redeclared */
-T1 T1179x14485(T0* C)
+T1 T1179x14495(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27435,7 +27435,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.adapted_feature */
-T0* T1179x14499(T0* C)
+T0* T1179x14509(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27490,7 +27490,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.immediate_feature */
-T0* T1179x14496(T0* C)
+T0* T1179x14506(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27545,7 +27545,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_immediate */
-T1 T1179x14483(T0* C)
+T1 T1179x14493(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27600,7 +27600,7 @@ if (t1==989) {
 }
 
 /* Call to ET_FLATTENED_FEATURE.is_adapted */
-T1 T1179x14486(T0* C)
+T1 T1179x14496(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -27685,7 +27685,7 @@ if (t1==535) {
 }
 
 /* Call to ET_FORMAL_PARAMETER_TYPE.index */
-T6 T1309x27019(T0* C)
+T6 T1309x27029(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=900) {
@@ -27799,7 +27799,7 @@ if (t1==857) {
 }
 
 /* Call to ET_OPERATOR.is_prefix_not */
-T1 T1316x12121(T0* C)
+T1 T1316x12131(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=816) {
@@ -27814,7 +27814,7 @@ if (t1==810) {
 }
 
 /* Call to ET_OPERATOR.is_infix_and_then */
-T1 T1316x12099(T0* C)
+T1 T1316x12109(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -27837,7 +27837,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_OPERATOR.is_infix_and */
-T1 T1316x12098(T0* C)
+T1 T1316x12108(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -27860,7 +27860,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_OPERATOR.is_infix_implies */
-T1 T1316x12105(T0* C)
+T1 T1316x12115(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -27883,7 +27883,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_OPERATOR.is_infix_or_else */
-T1 T1316x12111(T0* C)
+T1 T1316x12121(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -27906,7 +27906,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_OPERATOR.is_infix_or */
-T1 T1316x12110(T0* C)
+T1 T1316x12120(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -27944,7 +27944,7 @@ if (t1==810) {
 }
 
 /* Call to ET_OPERATOR.is_tuple_label */
-T1 T1316x12095(T0* C)
+T1 T1316x12105(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -27967,7 +27967,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_ASSERTION.expression */
-T0* T1317x12159(T0* C)
+T0* T1317x12169(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -28174,7 +28174,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.first_feature */
-T0* T1502x30703(T0* C)
+T0* T1502x30713(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1500) {
@@ -28189,7 +28189,7 @@ if (t1==1180) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.replicated_feature */
-T0* T1502x30702(T0* C)
+T0* T1502x30712(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1500) {
@@ -28204,7 +28204,7 @@ if (t1==1180) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.has_replication */
-T1 T1502x30701(T0* C)
+T1 T1502x30711(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1500) {
@@ -28219,7 +28219,7 @@ if (t1==1180) {
 }
 
 /* Call to ET_REPLICABLE_FEATURE.selected_count */
-T6 T1502x30704(T0* C)
+T6 T1502x30714(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1500) {
@@ -28234,7 +28234,7 @@ if (t1==1180) {
 }
 
 /* Call to ET_ROUTINE.implementation_feature */
-T0* T1574x14522(T0* C)
+T0* T1574x14532(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -28269,7 +28269,7 @@ if (t1==988) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE_INLINE_AGENT.implicit_result */
-T0* T1695x16677(T0* C)
+T0* T1695x16687(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1138) {
@@ -28288,7 +28288,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE.arguments */
-T0* T1696x14492(T0* C)
+T0* T1696x14502(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -28307,7 +28307,7 @@ if (t1==983) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE.implementation_feature */
-T0* T1696x14522(T0* C)
+T0* T1696x14532(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -28326,7 +28326,7 @@ if (t1==983) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE.is_once */
-T1 T1696x14442(T0* C)
+T1 T1696x14452(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=981) {
@@ -28345,7 +28345,7 @@ if (t1==983) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE_CLOSURE.locals */
-T0* T1698x14520(T0* C)
+T0* T1698x14530(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=988) {
@@ -28380,7 +28380,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE_CLOSURE.compound */
-T0* T1698x17245(T0* C)
+T0* T1698x17255(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=988) {
@@ -28415,7 +28415,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_INTERNAL_ROUTINE_CLOSURE.rescue_clause */
-T0* T1698x17247(T0* C)
+T0* T1698x17257(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=988) {
@@ -28450,7 +28450,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_FREE_NAME.free_operator_name */
-T0* T1726x25658(T0* C)
+T0* T1726x25668(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=810) {
@@ -28488,7 +28488,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FREE_NAME.is_infix_freeop */
-T1 T1726x12102(T0* C)
+T1 T1726x12112(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=810) {
@@ -28522,7 +28522,7 @@ if (t1==134) {
 }
 
 /* Call to ET_LIKE_IDENTIFIER.name */
-T0* T1780x27460(T0* C)
+T0* T1780x27470(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1035) {
@@ -28552,7 +28552,7 @@ if (t1==1030) {
 }
 
 /* Call to ET_CONVERT_EXPRESSION.expression */
-T0* T1783x31545(T0* C)
+T0* T1783x31555(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1836) {
@@ -28567,7 +28567,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_CONVERT_EXPRESSION.convert_feature */
-T0* T1783x31546(T0* C)
+T0* T1783x31556(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1836) {
@@ -28582,7 +28582,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_CONVERT_EXPRESSION.index */
-T6 T1783x12172(T0* C)
+T6 T1783x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1836) {
@@ -28597,7 +28597,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_ADDRESS_EXPRESSION.index */
-T6 T1791x12172(T0* C)
+T6 T1791x12182(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1106) {
@@ -28616,7 +28616,7 @@ if (t1==1107) {
 }
 
 /* Call to ET_QUERY_INLINE_AGENT.type */
-T0* T1793x14518(T0* C)
+T0* T1793x14528(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1138) {
@@ -28631,7 +28631,7 @@ if (t1==1136) {
 }
 
 /* Call to ET_QUERY_INLINE_AGENT.formal_arguments */
-T0* T1793x14519(T0* C)
+T0* T1793x14529(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1138) {
@@ -28646,7 +28646,7 @@ if (t1==1136) {
 }
 
 /* Call to ET_PROCEDURE_INLINE_AGENT.formal_arguments */
-T0* T1794x14519(T0* C)
+T0* T1794x14529(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1141) {
@@ -29088,7 +29088,7 @@ if (t1==37) {
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_new_line */
-void T68x9892(T0* C)
+void T68x9896(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=214) {
@@ -29103,7 +29103,7 @@ if (t1==212) {
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_character */
-void T68x9910T2(T0* C, T2 a1)
+void T68x9914T2(T0* C, T2 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=214) {
@@ -29118,7 +29118,7 @@ if (t1==212) {
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_string */
-void T68x9894T0(T0* C, T0* a1)
+void T68x9898T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=214) {
@@ -29133,7 +29133,7 @@ if (t1==212) {
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_integer */
-void T68x9896T6(T0* C, T6 a1)
+void T68x9900T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=214) {
@@ -29148,7 +29148,7 @@ if (t1==212) {
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.append */
-void T68x9911T0(T0* C, T0* a1)
+void T68x9915T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=214) {
@@ -29163,7 +29163,7 @@ if (t1==212) {
 }
 
 /* Call to KI_TEXT_OUTPUT_STREAM.put_line */
-void T68x9891T0(T0* C, T0* a1)
+void T68x9895T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=214) {
@@ -29178,7 +29178,7 @@ if (t1==212) {
 }
 
 /* Call to XM_CALLBACKS_FILTER.set_next */
-void T117x11101T0(T0* C, T0* a1)
+void T117x11111T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29193,7 +29193,7 @@ if (t1==109) {
 }
 
 /* Call to XM_CALLBACKS.on_xml_declaration */
-void T118x11157T0T0T1(T0* C, T0* a1, T0* a2, T1 a3)
+void T118x11167T0T0T1(T0* C, T0* a1, T0* a2, T1 a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29212,7 +29212,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_error */
-void T118x11158T0(T0* C, T0* a1)
+void T118x11168T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29231,7 +29231,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_start_tag_finish */
-void T118x11163(T0* C)
+void T118x11173(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29250,7 +29250,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_finish */
-void T118x11156(T0* C)
+void T118x11166(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29269,7 +29269,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_attribute */
-void T118x11162T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
+void T118x11172T0T0T0T0(T0* C, T0* a1, T0* a2, T0* a3, T0* a4)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29288,7 +29288,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_end_tag */
-void T118x11164T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T118x11174T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29307,7 +29307,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_start_tag */
-void T118x11161T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T118x11171T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29326,7 +29326,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_content */
-void T118x11165T0(T0* C, T0* a1)
+void T118x11175T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29345,7 +29345,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_processing_instruction */
-void T118x11159T0T0(T0* C, T0* a1, T0* a2)
+void T118x11169T0T0(T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29364,7 +29364,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_comment */
-void T118x11160T0(T0* C, T0* a1)
+void T118x11170T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29383,7 +29383,7 @@ if (t1==459) {
 }
 
 /* Call to XM_CALLBACKS.on_start */
-void T118x11155(T0* C)
+void T118x11165(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=110) {
@@ -29402,7 +29402,7 @@ if (t1==459) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_query_call */
-void T184x13659T0(T0* C, T0* a1)
+void T184x13669T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29425,7 +29425,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_procedure_call */
-void T184x13660T0(T0* C, T0* a1)
+void T184x13670T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29448,7 +29448,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_target */
-void T184x13681T0T0(T0* C, T0* a1, T0* a2)
+void T184x13691T0T0(T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29471,7 +29471,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_static */
-void T184x13631T1(T0* C, T1 a1)
+void T184x13641T1(T0* C, T1 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29494,7 +29494,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_object_equality_expression */
-void T184x13664T0(T0* C, T0* a1)
+void T184x13674T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29517,7 +29517,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.put_equality_expression */
-void T184x13663T0(T0* C, T0* a1)
+void T184x13673T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29540,7 +29540,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_alive */
-void T184x13629(T0* C)
+void T184x13639(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29563,7 +29563,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_meta_type */
-void T184x13642T0(T0* C, T0* a1)
+void T184x13652T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29586,7 +29586,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_next_type */
-void T184x13669T0(T0* C, T0* a1)
+void T184x13679T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29609,7 +29609,7 @@ if (t1==275) {
 }
 
 /* Call to ET_DYNAMIC_TYPE.set_id */
-void T184x13643T6(T0* C, T6 a1)
+void T184x13653T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -29662,7 +29662,7 @@ if (t1==62) {
 }
 
 /* Call to ET_FEATURE_NAME.set_seed */
-void T192x12090T6(T0* C, T6 a1)
+void T192x12100T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -29685,7 +29685,7 @@ if (t1==994) {
 }
 
 /* Call to ET_FEATURE_NAME.reset */
-void T192x12086(T0* C)
+void T192x12096(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -29708,7 +29708,7 @@ if (t1==994) {
 }
 
 /* Call to ET_PROCEDURE.reset_after_features_flattened */
-void T193x14403(T0* C)
+void T193x14413(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -29727,7 +29727,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.reset */
-void T193x14402(T0* C)
+void T193x14412(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -29746,7 +29746,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.set_object_tests */
-void T193x14523T0(T0* C, T0* a1)
+void T193x14533T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -29765,7 +29765,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.set_frozen_keyword */
-void T193x14469T0(T0* C, T0* a1)
+void T193x14479T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -29784,7 +29784,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.reset_assertions_checked */
-void T193x14515(T0* C)
+void T193x14525(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -29803,7 +29803,7 @@ if (t1==988) {
 }
 
 /* Call to ET_PROCEDURE.reset_implementation_checked */
-void T193x14512(T0* C)
+void T193x14522(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -29822,7 +29822,7 @@ if (t1==988) {
 }
 
 /* Call to ET_QUERY.reset_after_features_flattened */
-void T194x14403(T0* C)
+void T194x14413(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -29853,7 +29853,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.reset */
-void T194x14402(T0* C)
+void T194x14412(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -29884,7 +29884,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.set_object_tests */
-void T194x14523T0(T0* C, T0* a1)
+void T194x14533T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -29915,7 +29915,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.set_frozen_keyword */
-void T194x14469T0(T0* C, T0* a1)
+void T194x14479T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -29946,7 +29946,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.reset_assertions_checked */
-void T194x14515(T0* C)
+void T194x14525(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -29977,7 +29977,7 @@ if (t1==981) {
 }
 
 /* Call to ET_QUERY.reset_implementation_checked */
-void T194x14512(T0* C)
+void T194x14522(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=305) {
@@ -30392,7 +30392,7 @@ if (t1==63) {
 		T67f617(C, a1);
 }
 } else {
-		T322f54(C, a1);
+		T322f53(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30415,7 +30415,7 @@ if (t1==63) {
 		T67f616(C, a1);
 }
 } else {
-		T322f53(C, a1);
+		T322f52(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30438,7 +30438,7 @@ if (t1==63) {
 		T67f618(C, a1);
 }
 } else {
-		T322f55(C, a1);
+		T322f54(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30461,7 +30461,7 @@ if (t1==63) {
 		T67f615(C, a1);
 }
 } else {
-		T322f52(C, a1);
+		T322f51(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30484,7 +30484,7 @@ if (t1==63) {
 		T67f613(C, a1);
 }
 } else {
-		T322f50(C, a1);
+		T322f49(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30507,7 +30507,7 @@ if (t1==63) {
 		T67f614(C, a1);
 }
 } else {
-		T322f51(C, a1);
+		T322f50(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30943,7 +30943,7 @@ if (t1==63) {
 		T67f599(C, a1);
 }
 } else {
-		T322f36(C, a1);
+		T322f37(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30966,7 +30966,7 @@ if (t1==63) {
 		T67f598(C, a1);
 }
 } else {
-		T322f35(C, a1);
+		T322f36(C, a1);
 }
 } else {
 if (t1==759) {
@@ -30989,7 +30989,7 @@ if (t1==63) {
 		T67f597(C, a1);
 }
 } else {
-		T322f34(C, a1);
+		T322f35(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31012,7 +31012,7 @@ if (t1==63) {
 		T67f596(C, a1);
 }
 } else {
-		T322f33(C, a1);
+		T322f34(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31081,7 +31081,7 @@ if (t1==63) {
 		T67f605(C, a1);
 }
 } else {
-		T322f42(C, a1);
+		T322f43(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31104,7 +31104,7 @@ if (t1==63) {
 		T67f604(C, a1);
 }
 } else {
-		T322f41(C, a1);
+		T322f42(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31127,7 +31127,7 @@ if (t1==63) {
 		T67f603(C, a1);
 }
 } else {
-		T322f40(C, a1);
+		T322f41(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31150,7 +31150,7 @@ if (t1==63) {
 		T67f602(C, a1);
 }
 } else {
-		T322f39(C, a1);
+		T322f40(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31173,7 +31173,7 @@ if (t1==63) {
 		T67f601(C, a1);
 }
 } else {
-		T322f38(C, a1);
+		T322f39(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31242,7 +31242,7 @@ if (t1==63) {
 		T67f600(C, a1);
 }
 } else {
-		T322f37(C, a1);
+		T322f38(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31288,7 +31288,7 @@ if (t1==63) {
 		T67f595(C, a1);
 }
 } else {
-		T322f32(C, a1);
+		T322f33(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31311,7 +31311,7 @@ if (t1==63) {
 		T67f606(C, a1);
 }
 } else {
-		T322f43(C, a1);
+		T322f15(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31391,7 +31391,7 @@ if (t1==63) {
 		T67f612(C, a1);
 }
 } else {
-		T322f49(C, a1);
+		T322f13(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31414,7 +31414,7 @@ if (t1==63) {
 		T67f579(C, a1);
 }
 } else {
-		T322f16(C, a1);
+		T322f12(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31437,7 +31437,7 @@ if (t1==63) {
 		T67f580(C, a1);
 }
 } else {
-		T322f17(C, a1);
+		T322f11(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31460,7 +31460,7 @@ if (t1==63) {
 		T67f584(C, a1);
 }
 } else {
-		T322f21(C, a1);
+		T322f10(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31738,7 +31738,7 @@ if (t1==63) {
 		T67f590(C, a1);
 }
 } else {
-		T322f27(C, a1);
+		T322f29(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31761,7 +31761,7 @@ if (t1==63) {
 		T67f589(C, a1);
 }
 } else {
-		T322f26(C, a1);
+		T322f28(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31784,7 +31784,7 @@ if (t1==63) {
 		T67f588(C, a1);
 }
 } else {
-		T322f25(C, a1);
+		T322f27(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31807,7 +31807,7 @@ if (t1==63) {
 		T67f587(C, a1);
 }
 } else {
-		T322f24(C, a1);
+		T322f26(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31830,7 +31830,7 @@ if (t1==63) {
 		T67f586(C, a1);
 }
 } else {
-		T322f23(C, a1);
+		T322f25(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31853,7 +31853,7 @@ if (t1==63) {
 		T67f585(C, a1);
 }
 } else {
-		T322f22(C, a1);
+		T322f24(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31876,7 +31876,7 @@ if (t1==63) {
 		T67f594(C, a1);
 }
 } else {
-		T322f31(C, a1);
+		T322f32(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31899,7 +31899,7 @@ if (t1==63) {
 		T67f592(C, a1);
 }
 } else {
-		T322f29(C, a1);
+		T322f31(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31922,7 +31922,7 @@ if (t1==63) {
 		T67f583(C, a1);
 }
 } else {
-		T322f20(C, a1);
+		T322f23(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31945,7 +31945,7 @@ if (t1==63) {
 		T67f582(C, a1);
 }
 } else {
-		T322f19(C, a1);
+		T322f22(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31968,7 +31968,7 @@ if (t1==63) {
 		T67f581(C, a1);
 }
 } else {
-		T322f18(C, a1);
+		T322f21(C, a1);
 }
 } else {
 if (t1==759) {
@@ -31991,7 +31991,7 @@ if (t1==63) {
 		T67f578(C, a1);
 }
 } else {
-		T322f15(C, a1);
+		T322f20(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32014,7 +32014,7 @@ if (t1==63) {
 		T67f577(C, a1);
 }
 } else {
-		T322f14(C, a1);
+		T322f19(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32037,7 +32037,7 @@ if (t1==63) {
 		T67f576(C, a1);
 }
 } else {
-		T322f13(C, a1);
+		T322f18(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32060,7 +32060,7 @@ if (t1==63) {
 		T67f575(C, a1);
 }
 } else {
-		T322f12(C, a1);
+		T322f17(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32083,7 +32083,7 @@ if (t1==63) {
 		T67f591(C, a1);
 }
 } else {
-		T322f28(C, a1);
+		T322f30(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32106,7 +32106,7 @@ if (t1==63) {
 		T67f574(C, a1);
 }
 } else {
-		T322f11(C, a1);
+		T322f16(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32283,7 +32283,7 @@ if (t1==63) {
 		T67f593(C, a1);
 }
 } else {
-		T322f30(C, a1);
+		T322f14(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32344,7 +32344,7 @@ if (t1==63) {
 		T67f573(C, a1);
 }
 } else {
-		T322f10(C, a1);
+		T322f8(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32466,7 +32466,7 @@ if (t1==63) {
 		T67f571(C, a1);
 }
 } else {
-		T322f8(C, a1);
+		T322f9(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32489,7 +32489,7 @@ if (t1==63) {
 		T67f572(C, a1);
 }
 } else {
-		T322f9(C, a1);
+		T322f7(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32512,7 +32512,7 @@ if (t1==63) {
 		T67f570(C, a1);
 }
 } else {
-		T322f7(C, a1);
+		T322f6(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32535,7 +32535,7 @@ if (t1==63) {
 		T67f514(C, a1);
 }
 } else {
-		T322f6(C, a1);
+		T322f5(C, a1);
 }
 } else {
 if (t1==759) {
@@ -32822,7 +32822,7 @@ if (t1==1035) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.put_target */
-void T202x13681T0T0(T0* C, T0* a1, T0* a2)
+void T202x13691T0T0(T0* C, T0* a1, T0* a2)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -32857,7 +32857,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.set_never_void */
-void T202x13678(T0* C)
+void T202x13688(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -32892,7 +32892,7 @@ if (t1==443) {
 }
 
 /* Call to ET_DYNAMIC_TYPE_SET.propagate_can_be_void */
-void T202x13687T0(T0* C, T0* a1)
+void T202x13697T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -33312,7 +33312,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_EXPRESSION.reset */
-void T229x12158(T0* C)
+void T229x12168(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -33531,7 +33531,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_EXPRESSION.set_index */
-void T229x12173T6(T0* C, T6 a1)
+void T229x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=857) {
@@ -33781,7 +33781,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_other_seeds */
-void T233x14466T0(T0* C, T0* a1)
+void T233x14476T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -33828,7 +33828,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_first_seed */
-void T233x14465T6(T0* C, T6 a1)
+void T233x14475T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -33875,7 +33875,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_clients */
-void T233x14457T0(T0* C, T0* a1)
+void T233x14467T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -33922,7 +33922,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.resolve_inherited_signature */
-void T233x14478T0(T0* C, T0* a1)
+void T233x14488T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -33969,7 +33969,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_version */
-void T233x14462T6(T0* C, T6 a1)
+void T233x14472T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34016,7 +34016,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_other_precursors */
-void T233x14468T0(T0* C, T0* a1)
+void T233x14478T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34063,7 +34063,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_first_precursor */
-void T233x14467T0(T0* C, T0* a1)
+void T233x14477T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34110,7 +34110,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.reset_postconditions */
-void T233x14473(T0* C)
+void T233x14483(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34157,7 +34157,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.reset_preconditions */
-void T233x14472(T0* C)
+void T233x14482(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34204,7 +34204,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_implementation_class */
-void T233x14463T0(T0* C, T0* a1)
+void T233x14473T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34251,7 +34251,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_implementation_feature */
-void T233x14464T0(T0* C, T0* a1)
+void T233x14474T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34298,7 +34298,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_id */
-void T233x14459T6(T0* C, T6 a1)
+void T233x14469T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34345,7 +34345,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_implementation_error */
-void T233x14511(T0* C)
+void T233x14521(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34392,7 +34392,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_implementation_checked */
-void T233x14510(T0* C)
+void T233x14520(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34439,7 +34439,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_assertions_error */
-void T233x14514(T0* C)
+void T233x14524(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34486,7 +34486,7 @@ if (t1==988) {
 }
 
 /* Call to ET_FEATURE.set_assertions_checked */
-void T233x14513(T0* C)
+void T233x14523(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=444) {
@@ -34533,7 +34533,7 @@ if (t1==988) {
 }
 
 /* Call to ET_CALL_NAME.set_seed */
-void T260x12090T6(T0* C, T6 a1)
+void T260x12100T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -34580,7 +34580,7 @@ if (t1==1111) {
 }
 
 /* Call to ET_AGENT.set_arguments */
-void T263x16684T0(T0* C, T0* a1)
+void T263x16694T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1139) {
@@ -34642,7 +34642,7 @@ if (t1==1140) {
 }
 
 /* Call to ET_MANIFEST_STRING.set_index */
-void T269x12173T6(T0* C, T6 a1)
+void T269x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -34657,7 +34657,7 @@ if (t1==740) {
 }
 
 /* Call to ET_MANIFEST_STRING.set_type */
-void T269x16747T0(T0* C, T0* a1)
+void T269x16757T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=846) {
@@ -34672,7 +34672,7 @@ if (t1==740) {
 }
 
 /* Call to ET_CONSTANT.set_index */
-void T270x12173T6(T0* C, T6 a1)
+void T270x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -34806,7 +34806,7 @@ if (t1==858) {
 }
 
 /* Call to ET_OPERAND.set_index */
-void T283x12173T6(T0* C, T6 a1)
+void T283x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1088) {
@@ -35072,7 +35072,7 @@ if (t1==1102) {
 }
 
 /* Call to ET_AGENT_TARGET.set_index */
-void T285x12173T6(T0* C, T6 a1)
+void T285x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=257) {
@@ -35099,7 +35099,7 @@ if (t1==1102) {
 }
 
 /* Call to ET_AGENT_TARGET.reset */
-void T285x12170(T0* C)
+void T285x12180(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=257) {
@@ -35353,7 +35353,7 @@ if (t1==1835) {
 }
 
 /* Call to ET_AGENT_ARGUMENT_OPERAND.reset */
-void T287x12170(T0* C)
+void T287x12180(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=859) {
@@ -35599,7 +35599,7 @@ if (t1==717) {
 }
 
 /* Call to ET_CLUSTER.process */
-void T338x12660T0(T0* C, T0* a1)
+void T338x12670T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -35614,7 +35614,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.set_dependant_constraint */
-void T338x12649T0(T0* C, T0* a1)
+void T338x12659T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -35629,7 +35629,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.set_provider_constraint */
-void T338x12648T0(T0* C, T0* a1)
+void T338x12658T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -35644,7 +35644,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.add_recursive_cluster */
-void T338x12653T0(T0* C, T0* a1)
+void T338x12663T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -35659,7 +35659,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.set_preparsed */
-void T338x12643T1(T0* C, T1 a1)
+void T338x12653T1(T0* C, T1 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -35674,7 +35674,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.set_scm_write_mapping */
-void T338x12651T0(T0* C, T0* a1)
+void T338x12661T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -35689,7 +35689,7 @@ if (t1==159) {
 }
 
 /* Call to ET_CLUSTER.set_scm_read_mapping */
-void T338x12650T0(T0* C, T0* a1)
+void T338x12660T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=332) {
@@ -35704,7 +35704,7 @@ if (t1==159) {
 }
 
 /* Call to XM_NODE.process */
-void T341x10894T0(T0* C, T0* a1)
+void T341x10904T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1558) {
@@ -35727,7 +35727,7 @@ if (t1==1559) {
 }
 
 /* Call to XM_NODE.node_set_parent */
-void T341x10892T0(T0* C, T0* a1)
+void T341x10902T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1558) {
@@ -35788,7 +35788,7 @@ if (t1==378) {
 }
 
 /* Call to ET_EXTENDED_FEATURE_NAME.reset */
-void T436x12132(T0* C)
+void T436x12142(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -35815,7 +35815,7 @@ if (t1==994) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.close_input */
-void T470x24332(T0* C)
+void T470x24342(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -35834,7 +35834,7 @@ if (t1==509) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_input_from_resolver */
-void T470x24331T0(T0* C, T0* a1)
+void T470x24341T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -35853,7 +35853,7 @@ if (t1==509) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_encoding */
-void T470x24337T0(T0* C, T0* a1)
+void T470x24347T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -35872,7 +35872,7 @@ if (t1==509) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.push_start_condition_dtd_ignore */
-void T470x24328(T0* C)
+void T470x24338(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -35910,7 +35910,7 @@ if (t1==509) {
 }
 
 /* Call to XM_EIFFEL_SCANNER.set_input_stream */
-void T470x24330T0(T0* C, T0* a1)
+void T470x24340T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=505) {
@@ -35929,7 +35929,7 @@ if (t1==509) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.set_index */
-void T805x12173T6(T0* C, T6 a1)
+void T805x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -35944,7 +35944,7 @@ if (t1==845) {
 }
 
 /* Call to ET_CHARACTER_CONSTANT.set_type */
-void T805x26358T0(T0* C, T0* a1)
+void T805x26368T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -35959,7 +35959,7 @@ if (t1==845) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_index */
-void T813x12173T6(T0* C, T6 a1)
+void T813x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -35982,7 +35982,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_type */
-void T813x26733T0(T0* C, T0* a1)
+void T813x26743T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -36005,7 +36005,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_sign */
-void T813x26731T0(T0* C, T0* a1)
+void T813x26741T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -36028,7 +36028,7 @@ if (t1==851) {
 }
 
 /* Call to ET_INTEGER_CONSTANT.set_cast_type */
-void T813x26732T0(T0* C, T0* a1)
+void T813x26742T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -36108,7 +36108,7 @@ if (t1==1035) {
 }
 
 /* Call to ET_ASSIGNER.reset */
-void T975x12137(T0* C)
+void T975x12147(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=993) {
@@ -36131,7 +36131,7 @@ if (t1==994) {
 }
 
 /* Call to ET_ALIAS_NAME.reset */
-void T997x12086(T0* C)
+void T997x12096(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -36158,7 +36158,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.set_infix */
-void T997x25635(T0* C)
+void T997x25645(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -36185,7 +36185,7 @@ if (t1==995) {
 }
 
 /* Call to ET_ALIAS_NAME.set_prefix */
-void T997x25634(T0* C)
+void T997x25644(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=994) {
@@ -36275,7 +36275,7 @@ if (t1==1059) {
 }
 
 /* Call to ET_INSTRUCTION.reset */
-void T1038x12203(T0* C)
+void T1038x12213(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1049) {
@@ -36338,7 +36338,7 @@ if (t1==1059) {
 }
 
 /* Call to ET_CHOICE.reset */
-void T1078x12183(T0* C)
+void T1078x12193(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=851) {
@@ -36385,7 +36385,7 @@ if (t1==1086) {
 }
 
 /* Call to ET_CHOICE_CONSTANT.reset */
-void T1083x12183(T0* C)
+void T1083x12193(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=850) {
@@ -36443,7 +36443,7 @@ if (t1==535) {
 }
 
 /* Call to ET_OPERATOR.reset */
-void T1316x12086(T0* C)
+void T1316x12096(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=829) {
@@ -36673,7 +36673,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_ASSERTION.reset */
-void T1317x12158(T0* C)
+void T1317x12168(T0* C)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=858) {
@@ -36880,7 +36880,7 @@ if (t1==1141) {
 }
 
 /* Call to ET_DYNAMIC_TARGET.put_type_from_type_set */
-void T1544x13685T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
+void T1544x13695T0T0T0(T0* C, T0* a1, T0* a2, T0* a3)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -36931,7 +36931,7 @@ if (t1==728) {
 }
 
 /* Call to ET_DYNAMIC_TARGET.propagate_can_be_void */
-void T1544x13687T0(T0* C, T0* a1)
+void T1544x13697T0(T0* C, T0* a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=267) {
@@ -36982,7 +36982,7 @@ if (t1==728) {
 }
 
 /* Call to ET_ADDRESS_EXPRESSION.set_index */
-void T1791x12173T6(T0* C, T6 a1)
+void T1791x12183T6(T0* C, T6 a1)
 {
 	int t1 = ((T0*)(C))->id;
 if (t1<=1106) {
@@ -53691,7 +53691,7 @@ void T80f11(T0* C, T0* a1)
 /* KL_STDERR_FILE.put_new_line */
 void T80f15(T0* C)
 {
-	T80f12(C, ge322ov9893);
+	T80f12(C, ge322ov9897);
 }
 
 /* KL_STDERR_FILE.put_string */
@@ -53874,19 +53874,19 @@ T1 T2f5(T2* C, T2 a1)
 }
 
 /* UC_UTF8_STRING.utf8 */
-unsigned char ge370os10715 = '\0';
-T0* ge370ov10715;
+unsigned char ge370os10719 = '\0';
+T0* ge370ov10719;
 T0* T733f38(T0* C)
 {
 	T0* R = 0;
-	if (ge370os10715) {
-		return ge370ov10715;
+	if (ge370os10719) {
+		return ge370ov10719;
 	} else {
-		ge370os10715 = '\1';
-		ge370ov10715 = R;
+		ge370os10719 = '\1';
+		ge370ov10719 = R;
 	}
 	R = T732c36();
-	ge370ov10715 = R;
+	ge370ov10719 = R;
 	return R;
 }
 
@@ -53942,19 +53942,19 @@ T1 T6f13(T6* C, T6 a1)
 }
 
 /* KL_PLATFORM.maximum_character_code */
-unsigned char ge351os12797 = '\0';
-T6 ge351ov12797;
+unsigned char ge351os12807 = '\0';
+T6 ge351ov12807;
 T6 T174f1(T0* C)
 {
 	T6 R = 0;
-	if (ge351os12797) {
-		return ge351ov12797;
+	if (ge351os12807) {
+		return ge351ov12807;
 	} else {
-		ge351os12797 = '\1';
-		ge351ov12797 = R;
+		ge351os12807 = '\1';
+		ge351ov12807 = R;
 	}
 	R = ((T6)(GE_int32(255)));
-	ge351ov12797 = R;
+	ge351ov12807 = R;
 	return R;
 }
 
@@ -55647,7 +55647,7 @@ T6 T732f22(T0* C, T0* a1, T6 a2, T6 a3)
 	t1 = (T6f13(&a2, a3));
 	if (t1) {
 		t2 = (T732f25(C));
-		t1 = (T83f1(GE_void(t2), a1, ge383ov25501));
+		t1 = (T83f1(GE_void(t2), a1, ge383ov25511));
 		if (t1) {
 			l8 = a1;
 			t3 = ((T6)((a3)%((T6)(GE_int32(2)))));
@@ -55845,19 +55845,19 @@ T6 T733f53(T0* C, T6 a1, T6 a2)
 }
 
 /* UC_UTF8_ROUTINES.dummy_uc_string */
-unsigned char ge383os25502 = '\0';
-T0* ge383ov25502;
+unsigned char ge383os25512 = '\0';
+T0* ge383ov25512;
 T0* T732f27(T0* C)
 {
 	T0* R = 0;
-	if (ge383os25502) {
-		return ge383ov25502;
+	if (ge383os25512) {
+		return ge383ov25512;
 	} else {
-		ge383os25502 = '\1';
-		ge383ov25502 = R;
+		ge383os25512 = '\1';
+		ge383ov25512 = R;
 	}
 	R = T82c8();
-	ge383ov25502 = R;
+	ge383ov25512 = R;
 	return R;
 }
 
@@ -56016,7 +56016,7 @@ void T733f75(T0* C, T0* a1)
 	T0* l7 = 0;
 	T1 l8 = 0;
 	t1 = (T733f49(C));
-	t2 = (T83f1(GE_void(t1), a1, ge373ov10704));
+	t2 = (T83f1(GE_void(t1), a1, ge373ov10708));
 	if (t2) {
 		t1 = (T733f38(C));
 		t3 = (((((T0*)(GE_void(a1)))->id==17)?((T17*)(a1))->a2:((T733*)(a1))->a1));
@@ -56121,19 +56121,19 @@ void T733f75(T0* C, T0* a1)
 }
 
 /* UC_UTF8_STRING.dummy_uc_string */
-unsigned char ge373os10705 = '\0';
-T0* ge373ov10705;
+unsigned char ge373os10709 = '\0';
+T0* ge373ov10709;
 T0* T733f51(T0* C)
 {
 	T0* R = 0;
-	if (ge373os10705) {
-		return ge373ov10705;
+	if (ge373os10709) {
+		return ge373ov10709;
 	} else {
-		ge373os10705 = '\1';
-		ge373ov10705 = R;
+		ge373os10709 = '\1';
+		ge373ov10709 = R;
 	}
 	R = T82c8();
-	ge373ov10705 = R;
+	ge373ov10709 = R;
 	return R;
 }
 
@@ -56194,7 +56194,7 @@ void T733f79(T0* C, T0* a1, T6 a2, T6 a3, T6 a4, T6 a5)
 	t1 = (T6f1(&a4, (T6)(GE_int32(0))));
 	if (t1) {
 		t2 = (T733f49(C));
-		t1 = (T83f1(GE_void(t2), a1, ge373ov10704));
+		t1 = (T83f1(GE_void(t2), a1, ge373ov10708));
 		if (t1) {
 			l9 = a1;
 			t3 = ((T6)((a3)-(a2)));
@@ -56805,19 +56805,19 @@ T0* T128f2(T0* C)
 }
 
 /* KL_UNIX_FILE_SYSTEM.execution_environment */
-unsigned char ge309os9951 = '\0';
-T0* ge309ov9951;
+unsigned char ge309os9955 = '\0';
+T0* ge309ov9955;
 T0* T74f20(T0* C)
 {
 	T0* R = 0;
-	if (ge309os9951) {
-		return ge309ov9951;
+	if (ge309os9955) {
+		return ge309ov9955;
 	} else {
-		ge309os9951 = '\1';
-		ge309ov9951 = R;
+		ge309os9955 = '\1';
+		ge309ov9955 = R;
 	}
 	R = T128c4();
-	ge309ov9951 = R;
+	ge309ov9955 = R;
 	return R;
 }
 
@@ -56986,14 +56986,14 @@ T0* T73f11(T0* C)
 T0* T73f22(T0* C)
 {
 	T0* R = 0;
-	if (ge309os9951) {
-		return ge309ov9951;
+	if (ge309os9955) {
+		return ge309ov9955;
 	} else {
-		ge309os9951 = '\1';
-		ge309ov9951 = R;
+		ge309os9955 = '\1';
+		ge309ov9955 = R;
 	}
 	R = T128c4();
-	ge309ov9951 = R;
+	ge309ov9955 = R;
 	return R;
 }
 
@@ -57176,8 +57176,8 @@ T0* T74c30(void)
 }
 
 /* KL_OPERATING_SYSTEM.is_unix */
-unsigned char ge349os9919 = '\0';
-T1 ge349ov9919;
+unsigned char ge349os9923 = '\0';
+T1 ge349ov9923;
 T1 T69f2(T0* C)
 {
 	T1 t1;
@@ -57186,11 +57186,11 @@ T1 T69f2(T0* C)
 	T1 R = 0;
 	T0* l1 = 0;
 	T0* l2 = 0;
-	if (ge349os9919) {
-		return ge349ov9919;
+	if (ge349os9923) {
+		return ge349ov9923;
 	} else {
-		ge349os9919 = '\1';
-		ge349ov9919 = R;
+		ge349os9923 = '\1';
+		ge349ov9923 = R;
 	}
 	l2 = (T69f3(C, GE_ms8("GOBO_OS", 7)));
 	t1 = ((l2)!=(EIF_VOID));
@@ -57202,7 +57202,7 @@ T1 T69f2(T0* C)
 		t1 = (T17f22(GE_void(l2), GE_ms8("unix", 4)));
 		if (t1) {
 			R = EIF_TRUE;
-			ge349ov9919 = R;
+			ge349ov9923 = R;
 		}
 	} else {
 		l1 = (T69f4(C));
@@ -57211,7 +57211,7 @@ T1 T69f2(T0* C)
 		if (t1) {
 			t3 = (T17f10(GE_void(l1), (T6)(GE_int32(1))));
 			R = (((((t3) == ((T2)('/'))))));
-			ge349ov9919 = R;
+			ge349ov9923 = R;
 		}
 	}
 	return R;
@@ -57228,19 +57228,19 @@ T0* T69f4(T0* C)
 }
 
 /* KL_OPERATING_SYSTEM.execution_environment */
-unsigned char ge349os9923 = '\0';
-T0* ge349ov9923;
+unsigned char ge349os9927 = '\0';
+T0* ge349ov9927;
 T0* T69f5(T0* C)
 {
 	T0* R = 0;
-	if (ge349os9923) {
-		return ge349ov9923;
+	if (ge349os9927) {
+		return ge349ov9927;
 	} else {
-		ge349os9923 = '\1';
-		ge349ov9923 = R;
+		ge349os9927 = '\1';
+		ge349ov9927 = R;
 	}
 	R = T128c4();
-	ge349ov9923 = R;
+	ge349ov9927 = R;
 	return R;
 }
 
@@ -57420,8 +57420,8 @@ T0* T17f15(T0* C, T6 a1)
 }
 
 /* KL_OPERATING_SYSTEM.is_windows */
-unsigned char ge349os9918 = '\0';
-T1 ge349ov9918;
+unsigned char ge349os9922 = '\0';
+T1 ge349ov9922;
 T1 T69f1(T0* C)
 {
 	T1 t1;
@@ -57431,11 +57431,11 @@ T1 T69f1(T0* C)
 	T0* l1 = 0;
 	T0* l2 = 0;
 	T0* l3 = 0;
-	if (ge349os9918) {
-		return ge349ov9918;
+	if (ge349os9922) {
+		return ge349ov9922;
 	} else {
-		ge349os9918 = '\1';
-		ge349ov9918 = R;
+		ge349os9922 = '\1';
+		ge349ov9922 = R;
 	}
 	l2 = (T69f3(C, GE_ms8("GOBO_OS", 7)));
 	t1 = ((l2)!=(EIF_VOID));
@@ -57447,7 +57447,7 @@ T1 T69f1(T0* C)
 		t1 = (T17f22(GE_void(l2), GE_ms8("windows", 7)));
 		if (t1) {
 			R = EIF_TRUE;
-			ge349ov9918 = R;
+			ge349ov9922 = R;
 		}
 	} else {
 		l3 = (T69f3(C, GE_ms8("OS", 2)));
@@ -57457,7 +57457,7 @@ T1 T69f1(T0* C)
 		}
 		if (t1) {
 			R = EIF_TRUE;
-			ge349ov9918 = R;
+			ge349ov9922 = R;
 		} else {
 			l1 = (T69f4(C));
 			t2 = (((T17*)(GE_void(l1)))->a2);
@@ -57471,7 +57471,7 @@ T1 T69f1(T0* C)
 				}
 				if (t1) {
 					R = EIF_TRUE;
-					ge349ov9918 = R;
+					ge349ov9922 = R;
 				} else {
 					t3 = (T17f10(GE_void(l1), (T6)(GE_int32(1))));
 					t1 = (((((t3) == ((T2)('\\'))))));
@@ -57481,7 +57481,7 @@ T1 T69f1(T0* C)
 					}
 					if (t1) {
 						R = EIF_TRUE;
-						ge349ov9918 = R;
+						ge349ov9922 = R;
 					}
 				}
 			}
@@ -57539,7 +57539,7 @@ T1 T98f7(T0* C)
 /* KL_STDOUT_FILE.put_new_line */
 void T81f13(T0* C)
 {
-	T81f11(C, ge324ov9893);
+	T81f11(C, ge324ov9897);
 }
 
 /* KL_STDOUT_FILE.put_integer */
