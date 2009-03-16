@@ -75,8 +75,8 @@ feature -- Element change
 	put_right (v: G)
 			-- Add `v' to the right of cursor position.
 		local
-			a: ?like active
-			c: ?like active
+			a: detachable like active
+			c: detachable like active
 		do
 			if below then
 				a := active
@@ -114,7 +114,7 @@ feature -- Element change
 			is_empty: is_empty
 		local
 			a: like active
-			c: ?like active
+			c: detachable like active
 		do
 			a := above_node
 			if a /= Void then

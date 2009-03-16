@@ -20,7 +20,7 @@ create
 
 feature {TWO_WAY_TREE} -- Access
 
-	active: ?TWO_WAY_TREE [G];
+	active: detachable TWO_WAY_TREE [G];
 			-- Current node
 
 note

@@ -118,7 +118,7 @@ feature -- Output
 			-- Printable representation of translations
 		local
 			k: STRING
-			i: ?STRING
+			i: detachable STRING
 		do
 			from
 				create Result.make (25 + count * 40)
@@ -143,7 +143,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	add_translation (new_name, old_name: ?STRING)
+	add_translation (new_name, old_name: detachable STRING)
 			-- Add a translation entry mapping class `old_name' in the
 			-- storing system to class `new_name' in the retrieving system.
 		local

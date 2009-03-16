@@ -19,7 +19,7 @@ create
 
 feature {TWO_WAY_LIST} -- Implementation
 
-	active: ?BI_LINKABLE [G];
+	active: detachable BI_LINKABLE [G];
 			-- Current element in linked list
 
 note

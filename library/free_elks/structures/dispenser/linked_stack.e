@@ -112,7 +112,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): ?like Current
+	duplicate (n: INTEGER): detachable like Current
 			-- New stack containing the `n' latest items inserted
 			-- in current stack.
 			-- If `n' is greater than `count', identical to current stack.

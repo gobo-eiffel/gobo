@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {RECURSIVE_CURSOR_TREE} -- Access
 
-	active: ?DYNAMIC_TREE [G]
+	active: detachable DYNAMIC_TREE [G]
 			-- Current node
 
 	active_parent: like active

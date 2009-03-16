@@ -34,11 +34,11 @@ feature -- Access
 			valid_id: Result > 0 implies id_object (Result) = Current
 		end
 
-	frozen id_object (an_id: INTEGER): ?IDENTIFIED
+	frozen id_object (an_id: INTEGER): detachable IDENTIFIED
 			-- Object associated with `an_id' (void if no such object)
 		do
 			if an_id > 0 then
-				if {l_result: IDENTIFIED} eif_id_object (an_id) then
+				if attached {IDENTIFIED} eif_id_object (an_id) as l_result then
 					Result := l_result
 				end
 			end

@@ -76,7 +76,7 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 		local
 			a: like active_parent
-			c: ?like active
+			c: detachable like active
 		do
 			if below then
 				a := active
@@ -113,7 +113,7 @@ feature -- Element change
 		require
 			is_empty: is_empty
 		local
-			a: ?like active
+			a: detachable like active
 		do
 			above_node.child_put_right (v)
 			active_parent := above_node

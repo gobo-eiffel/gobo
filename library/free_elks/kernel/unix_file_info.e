@@ -114,7 +114,7 @@ feature -- Access
 			Result := file_group (group_id)
 		end
 
-	file_name: ?STRING
+	file_name: detachable STRING
 			-- File name to which information applies
 
 feature -- Status report
@@ -221,7 +221,7 @@ feature -- Status report
 			file_name_attached: file_name /= Void
 		local
 			ext_name: ANY
-			f: ?STRING
+			f: detachable STRING
 		do
 			f := file_name
 			if f /= Void then
@@ -236,7 +236,7 @@ feature -- Status report
 			file_name_attached: file_name /= Void
 		local
 			ext_name: ANY
-			f: ?STRING
+			f: detachable STRING
 		do
 			f := file_name
 			if f /= Void then
@@ -251,7 +251,7 @@ feature -- Status report
 			file_name_attached: file_name /= Void
 		local
 			ext_name: ANY
-			f: ?STRING
+			f: detachable STRING
 		do
 			f := file_name
 			if f /= Void then

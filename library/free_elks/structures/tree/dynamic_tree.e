@@ -21,7 +21,7 @@ deferred class DYNAMIC_TREE [G] inherit
 
 feature -- Access
 
-	parent: ?DYNAMIC_TREE [G]
+	parent: detachable DYNAMIC_TREE [G]
 			-- Parent of current node.
 
 feature -- Status report
@@ -153,7 +153,7 @@ feature -- Conversion
 			-- Right child becomes right sibling.
 			-- Any right child of `b' is ignored.
 		local
-			current_node: ?BINARY_TREE [G]
+			current_node: detachable BINARY_TREE [G]
 			c: like child
 		do
 			replace (b.item)
@@ -241,7 +241,7 @@ feature {DYNAMIC_TREE} -- Implementation
 			-- Fill children with children of `other'.
 		local
 			c: like child
-			o: ?TREE [G]
+			o: detachable TREE [G]
 		do
 			from
 				other.child_start

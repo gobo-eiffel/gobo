@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 	process_sign (s: STRING; sn: INTEGER): STRING
 			-- Process sign related values.
 		local
-			sstring: ?STRING
+			sstring: detachable STRING
 		do
 			Result := s
 			if bracketted_negative and sn = -1 then

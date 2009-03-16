@@ -58,7 +58,7 @@ feature -- Initialization
 		require
 			valid_number_of_children: n >= 0
 		local
-			l_default: ?G
+			l_default: detachable G
 		do
 			check l_default_attached: l_default /= Void end
 			arity := n
@@ -81,7 +81,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: ?FIXED_TREE [G]
+	parent: detachable FIXED_TREE [G]
 			-- Parent of current node
 
 	child_item: like item
@@ -165,7 +165,7 @@ feature -- Element change
 				p.child_replace (v)
 			end
 		ensure
-			item_put: {l: like left_sibling} left_sibling and then l.item = v
+			item_put: attached left_sibling as l and then l.item = v
 		end
 
 	put_right (v: like item)
@@ -182,7 +182,7 @@ feature -- Element change
 				p.child_replace (v)
 			end
 		ensure
-			item_put: {r: like right_sibling} right_sibling and then r.item = v
+			item_put: attached right_sibling as r and then r.item = v
 		end
 
 	put_child (n: like new_node)
@@ -373,7 +373,7 @@ feature {FIXED_TREE} -- Implementation
 			-- Fill children with children of `other'
 		local
 			temp: like parent
-			c: ?TREE [G]
+			c: detachable TREE [G]
 		do
 			from
 				other.child_start
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 
 feature {FIXED_TREE} -- Implementation
 
-	fixed_list: FIXED_LIST [?FIXED_TREE [G]]
+	fixed_list: FIXED_LIST [detachable FIXED_TREE [G]]
 
 	set_fixed_list (a_list: like fixed_list)
 			-- Set `fixed_list' with `a_list'
@@ -466,7 +466,7 @@ feature -- Access
 			Result := fixed_list.item
 		end
 
-	array_item (n: INTEGER): ?FIXED_TREE [G]
+	array_item (n: INTEGER): detachable FIXED_TREE [G]
 		do
 			Result := fixed_list.i_th (n)
 		end
@@ -589,7 +589,7 @@ feature {NONE} -- private access fixed_list
 			fixed_list.extend (v)
 		end
 
-	fl_duplicate (n: INTEGER): FIXED_LIST [?like Current]
+	fl_duplicate (n: INTEGER): FIXED_LIST [detachable like Current]
 		do
 			Result := fixed_list.duplicate (n)
 		end
@@ -619,7 +619,7 @@ feature {NONE} -- private access fixed_list
 			fixed_list.put (v)
 		end
 
-	fl_replace (v: ?FIXED_TREE [G])
+	fl_replace (v: detachable FIXED_TREE [G])
 		do
 			fixed_list.replace (v)
 		end
@@ -629,7 +629,7 @@ feature {NONE} -- private access fixed_list
 			--fixed_list.fill (other)
 		end
 
-	fl_lin_rep: LINEAR [?FIXED_TREE [G]]
+	fl_lin_rep: LINEAR [detachable FIXED_TREE [G]]
 		do
 			Result := fixed_list.linear_representation
 		end

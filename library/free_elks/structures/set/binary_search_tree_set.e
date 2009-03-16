@@ -295,7 +295,7 @@ feature -- Duplication
 
 feature {BINARY_SEARCH_TREE_SET} -- Implementation
 
-	tree: ?BINARY_SEARCH_TREE [G]
+	tree: detachable BINARY_SEARCH_TREE [G]
 
 	active_node: like tree
 
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
 		do
-			if {h: HASHABLE} v then
+			if attached {HASHABLE} v as h then
 				create {SUBSET_STRATEGY_HASHABLE [G]} Result
 			elseif object_comparison and same_type (other) then
 				create {SUBSET_STRATEGY_TREE [G]} Result
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	comparison_mode_equal: {t: like tree} tree implies
+	comparison_mode_equal: attached tree as t implies
 				object_comparison = t.object_comparison
 
 note

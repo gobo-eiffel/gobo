@@ -38,7 +38,7 @@ create
 	make_from_cil
 
 convert
-	to_cil: {NATIVE_ARRAY [G], ?NATIVE_ARRAY [G]},
+	to_cil: {NATIVE_ARRAY [G], detachable NATIVE_ARRAY [G]},
 	to_special: {SPECIAL [G]},
 	make_from_cil ({NATIVE_ARRAY [G]})
 
@@ -225,7 +225,7 @@ feature -- Status report
 			Result := area.all_default (0, upper - lower)
 		ensure
 			definition: Result = (count = 0 or else
-				((not {i: like item} item (upper) or else i = i.default) and
+				((not attached {like item} item (upper) as i or else i = i.default) and
 				subarray (lower, upper - 1).all_default))
 		end
 

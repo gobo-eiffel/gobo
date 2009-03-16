@@ -141,7 +141,7 @@ feature -- Status report
 		local
 			pos: like cursor
 		do
-			if {temp: like cursor} p then
+			if attached {like cursor} p as temp then
 				if temp.active = above_node or temp.before or
 					temp.after or temp.below
 				then
@@ -167,7 +167,7 @@ feature -- Cursor movement
 			-- Move cursor one position backward.
 		local
 			a: like active_parent
-			c: ?like active
+			c: detachable like active
 		do
 			if below then
 				after := False
@@ -193,7 +193,7 @@ feature -- Cursor movement
 			-- Move cursor one position forward.
 		local
 			a: like active_parent
-			c: ?like active
+			c: detachable like active
 		do
 			if below then
 				before := False
@@ -219,7 +219,7 @@ feature -- Cursor movement
 			-- Move cursor one level upward to parent,
 			-- or `above' if `is_root' holds.
 		local
-			a: ?like active
+			a: detachable like active
 		do
 			if below then
 				below := False
@@ -243,7 +243,7 @@ feature -- Cursor movement
 			-- or `before' if `i' = 0.
 		local
 			a: like active
-			c: ?like active
+			c: detachable like active
 		do
 			if i = 0 then
 				if arity = 0 then
@@ -288,7 +288,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
-			if {temp: like cursor} p then
+			if attached {like cursor} p as temp then
 				unchecked_go (temp)
 			else
 				check
@@ -338,7 +338,7 @@ feature -- Removal
 			-- (and consequently the corresponding
 			-- subtree). Cursor moved up one level.
 		local
-			a: ?like active
+			a: detachable like active
 		do
 			corresponding_child
 			a := active_parent
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 	active: DYNAMIC_TREE [G]
 			-- Current node
 
-	active_parent: ?like active
+	active_parent: detachable like active
 			-- Parent of current node
 
 	above_node: like active
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 			-- whether `p' is a valid cursor position
 			-- or not.
 		local
-			a: ?like active
+			a: detachable like active
 		do
 			active_parent := p.active_parent
 			a := p.active
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	coherency: not above implies ({a: like active_parent} active_parent and then a.child = active)
+	coherency: not above implies (attached active_parent as a and then a.child = active)
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

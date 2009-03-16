@@ -1609,7 +1609,7 @@ feature {NONE} -- Implementation
 			create last_string.make (default_last_string_size.max (a_min_size))
 		ensure
 			last_string_attached: last_string /= Void
-			capacity_set: {l: like last_string} last_string and then l.capacity >= a_min_size
+			capacity_set: attached last_string as l and then l.capacity >= a_min_size
 		end
 
 	default_last_string_size: INTEGER = 256

@@ -116,7 +116,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: ?like new_cell
+	parent: detachable like new_cell
 			-- Parent node
 
 	first_child: like parent

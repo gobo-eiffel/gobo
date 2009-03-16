@@ -106,7 +106,7 @@ feature -- Status report
 	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		do
-			if {al_c: MULTAR_LIST_CURSOR [G]} p then
+			if attached {MULTAR_LIST_CURSOR [G]} p as al_c then
 				Result := (al_c /= Void)
 					and then valid_cursor_index (al_c.index)
 					and then al_c.active.item.valid_cursor_index (al_c.active_index)
@@ -137,7 +137,7 @@ feature -- Cursor movement
 			-- Move cursor to next position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
-			a: ?like active
+			a: detachable like active
 		do
 			if not is_empty then
 				current_array := active.item
@@ -159,7 +159,7 @@ feature -- Cursor movement
 			-- Move cursor to previous position, if any.
 		local
 			current_array: ARRAYED_LIST [G]
-			a: ?like active
+			a: detachable like active
 		do
 			if not is_empty then
 				current_array := active.item
@@ -182,7 +182,7 @@ feature -- Cursor movement
 			-- may end up `off' if the offset is too big.
 		local
 			counter: INTEGER
-			cell: ?like active
+			cell: detachable like active
 			current_array: ARRAYED_LIST [G]
 		do
 			cell := active
@@ -250,7 +250,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'
 		do
-			if {al_c: MULTAR_LIST_CURSOR [G]} p then
+			if attached {MULTAR_LIST_CURSOR [G]} p as al_c then
 				active := al_c.active
 				active.item.go_i_th (al_c.active_index)
 				index := al_c.index
@@ -265,7 +265,7 @@ feature -- Cursor movement
 		local
 			current_array: ARRAYED_LIST [G]
 			old_index: INTEGER
-			cell: ?like active
+			cell: detachable like active
 		do
 			cell := active
 			current_array := cell.item
@@ -368,7 +368,7 @@ feature -- Element change
 			cell: like first_element
 			current_array: ARRAYED_LIST [G]
 			pos, cut: INTEGER
-			l: ?like first_element
+			l: detachable like first_element
 		do
 			current_array := active_array
 				check is_empty implies after end
@@ -439,8 +439,8 @@ feature -- Removal
 			-- Remove current item
 		local
 			current_array: ARRAYED_LIST [G]
-			new_active: ?like active
-			e: ?like first_element
+			new_active: detachable like active
+			e: detachable like first_element
 		do
 			current_array := active.item
 			current_array.remove
@@ -503,10 +503,10 @@ feature -- Removal
 
 	prune_all (v: like item)
 		local
-			cell: ?like active
-			new_active: ?like active
+			cell: detachable like active
+			new_active: detachable like active
 			array: ARRAYED_LIST [G]
-			e: ?like first_element
+			e: detachable like first_element
 		do
 			from
 				cell := first_element

@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			-- Strategy to calculate several subset features selected depending
 			-- on the dynamic type of `v' and `other'
 		do
-			if {h: HASHABLE} v then
+			if attached {HASHABLE} v as h then
 				create {SUBSET_STRATEGY_HASHABLE [G]} Result
 			else
 				create {SUBSET_STRATEGY_GENERIC [G]} Result

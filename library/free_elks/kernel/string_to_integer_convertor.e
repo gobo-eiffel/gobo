@@ -110,7 +110,7 @@ feature -- String parsing
 			reset (type)
 			i := 0
 			l_c := s.count
-			if {l_str8: STRING_8} s then
+			if attached {STRING_8} s as l_str8 then
 				from
 					l_area8 := l_str8.area
 				until
@@ -119,7 +119,7 @@ feature -- String parsing
 					parse_character (l_area8.item (i))
 					i := i + 1
 				end
-			elseif {l_str32: STRING_32} s then
+			elseif attached {STRING_32} s as l_str32 then
 				from
 					l_area32 := l_str32.area
 				until

@@ -119,11 +119,11 @@ feature -- Status report
 	exponentiable (other: NUMERIC): BOOLEAN
 			-- May current object be elevated to the power `other'?
 		do
-			if {integer_value: INTEGER_32_REF} other then
+			if attached {INTEGER_32_REF} other as integer_value then
 				Result := integer_value.item >= 0 or item /= 0
-			elseif {real_value: REAL_32_REF} other then
+			elseif attached {REAL_32_REF} other as real_value then
 				Result := real_value.item >= 0.0 or item /= 0
-			elseif {double_value: REAL_64_REF} other then
+			elseif attached {REAL_64_REF} other as double_value then
 				Result := double_value.item >= 0.0 or item /= 0
 			end
 		ensure then

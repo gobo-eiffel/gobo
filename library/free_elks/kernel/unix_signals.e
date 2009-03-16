@@ -15,7 +15,7 @@ class
 
 feature -- Access
 
-	meaning (sig: INTEGER): ?STRING
+	meaning (sig: INTEGER): detachable STRING
 			-- A message in English describing what `sig' is
 		do
 			if is_defined (sig) then

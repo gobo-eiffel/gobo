@@ -146,7 +146,7 @@ feature -- Status report
 		local
 			temp, sought: like first_element
 		do
-			if {ll_c: like cursor} p then
+			if attached {like cursor} p as ll_c then
 				from
 					temp := first_element
 					sought := ll_c.active
@@ -201,7 +201,7 @@ feature -- Cursor movement
 			-- Move cursor to last position.
 			-- (Go before if empty)
 		local
-			p: ?like new_cell
+			p: detachable like new_cell
 		do
 			from
 				p := active
@@ -314,7 +314,7 @@ feature -- Cursor movement
 		local
 
 		do
-			if {ll_c: like cursor} p then
+			if attached {like cursor} p as ll_c then
 				after := ll_c.after
 				before := ll_c.before
 				if before then
@@ -393,7 +393,7 @@ feature -- Element change
 			end
 		ensure then
 			previous_exists: previous /= Void
-			item_inserted: {q: like previous} previous and then q.item = v
+			item_inserted: attached previous as q and then q.item = v
 		end
 
 	put_right (v: like item)
@@ -419,8 +419,8 @@ feature -- Element change
 			count := count + 1
 		ensure then
 			next_exists: next /= Void
-			item_inserted: not old before implies ({n: like next} next and then n.item = v)
-			item_inserted_before: old before implies ({c: like active} active and then c.item = v)
+			item_inserted: not old before implies (attached next as n and then n.item = v)
+			item_inserted_before: old before implies (attached active as c and then c.item = v)
 		end
 
 	replace (v: like item)
@@ -602,7 +602,7 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
-			cur: ?LINKED_LIST_CURSOR [G]
+			cur: detachable LINKED_LIST_CURSOR [G]
 			obj_comparison: BOOLEAN
 		do
 			if other /= Current then
@@ -610,7 +610,7 @@ feature -- Duplication
 				standard_copy (other)
 				if not other.is_empty then
 					internal_wipe_out
-					if {l_cur: LINKED_LIST_CURSOR [G]} other.cursor then
+					if attached {LINKED_LIST_CURSOR [G]} other.cursor as l_cur then
 						cur := l_cur
 					end
 					from
@@ -690,7 +690,7 @@ feature {LINKED_LIST} -- Implementation
 	active: like first_element
 			-- Element at cursor position
 
-	first_element: ?like new_cell
+	first_element: detachable like new_cell
 			-- Head of list
 
 	last_element: like first_element

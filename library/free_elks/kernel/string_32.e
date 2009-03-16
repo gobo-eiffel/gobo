@@ -70,13 +70,13 @@ create
 	make_from_cil
 
 convert
-	to_cil: {SYSTEM_STRING, ?SYSTEM_STRING},
-	make_from_cil ({SYSTEM_STRING, !SYSTEM_STRING, ?SYSTEM_STRING}),
-	as_string_8: {READABLE_STRING_8, ?READABLE_STRING_8, STRING_8, ?STRING_8}
+	to_cil: {SYSTEM_STRING, detachable SYSTEM_STRING},
+	make_from_cil ({SYSTEM_STRING, attached SYSTEM_STRING, detachable SYSTEM_STRING}),
+	as_string_8: {READABLE_STRING_8, detachable READABLE_STRING_8, STRING_8, detachable STRING_8}
 
 feature -- Initialization
 
-	make_from_cil (a_system_string: ?SYSTEM_STRING)
+	make_from_cil (a_system_string: detachable SYSTEM_STRING)
 			-- Initialize Current with `a_system_string'.
 		local
 			l_count: INTEGER
@@ -631,7 +631,7 @@ feature -- Element change
 			prepend (r.out)
 		end
 
-	prepend_string (s: ?READABLE_STRING_32)
+	prepend_string (s: detachable READABLE_STRING_32)
 			-- Prepend a copy of `s', if not void, at front.
 		do
 			if s /= Void then
@@ -642,7 +642,7 @@ feature -- Element change
 	append_string_general (s: READABLE_STRING_GENERAL)
 			-- Append a copy of `s' at end.
 		do
-			if {l_s32: READABLE_STRING_32} s then
+			if attached {READABLE_STRING_32} s as l_s32 then
 				append (l_s32)
 			else
 				Precursor {STRING_GENERAL} (s)
@@ -681,7 +681,7 @@ feature -- Element change
 			Result.append (s)
 		end
 
-	append_string (s: ?READABLE_STRING_32)
+	append_string (s: detachable READABLE_STRING_32)
 			-- Append a copy of `s', if not void, at end.
 		do
 			if s /= Void then

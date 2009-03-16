@@ -23,12 +23,12 @@ create {CHAIN}
 
 feature -- Access
 
-	left: ?like Current
+	left: detachable like Current
 			-- Left neighbor
 
 feature {CELL, CHAIN} -- Implementation
 
-	put_right (other: ?like Current)
+	put_right (other: detachable like Current)
 			-- Put `other' to the right of current cell.
 		local
 			l_right: like right
@@ -45,7 +45,7 @@ feature {CELL, CHAIN} -- Implementation
 			end
 		end
 
-	put_left (other: ?like Current)
+	put_left (other: detachable like Current)
 			-- Put `other' to the left of current cell.
 		local
 			l: like left
@@ -74,7 +74,7 @@ feature {CELL, CHAIN} -- Implementation
 			end
 		ensure then
 	 		right_not_chained:
-	 			({r: like right} old right) implies r.left = Void
+	 			(attached {like right} old right as r) implies r.left = Void
 		end
 
 	forget_left
@@ -90,12 +90,12 @@ feature {CELL, CHAIN} -- Implementation
 		ensure
 			left_not_chained:
 			left = Void or else
-				({p: like left} old left implies p.right = Void)
+				(attached {like left} old left as p implies p.right = Void)
 		end
 
 feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 
-	simple_put_right (other: ?like Current)
+	simple_put_right (other: detachable like Current)
 			-- Set `right' to `other'
 		local
 			l_right: like right
@@ -107,7 +107,7 @@ feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 			right := other
 		end
 
-	simple_put_left (other: ?like Current)
+	simple_put_left (other: detachable like Current)
 			-- Set `left' to `other' is
 		local
 			l: like left
@@ -136,9 +136,9 @@ feature {BI_LINKABLE, TWO_WAY_LIST} -- Implementation
 invariant
 
 	right_symmetry:
-		{r: like right} right implies (r.left = Current)
+		attached right as r implies (r.left = Current)
 	left_symmetry:
-		{l: like left} left implies (l.right = Current)
+		attached left as l implies (l.right = Current)
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."

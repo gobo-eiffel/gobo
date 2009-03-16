@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: ?BINARY_TREE [G]
+	parent: detachable BINARY_TREE [G]
 			-- Parent of current node
 
 	child_index: INTEGER
@@ -543,7 +543,7 @@ feature {NONE} -- Implementation
 		local
 			c: like left_child
 		do
-			if {l_other: like Current} other then
+			if attached {like Current} other as l_other then
 				if not l_other.is_leaf then
 					c := l_other.left_child
 					if c /= Void then

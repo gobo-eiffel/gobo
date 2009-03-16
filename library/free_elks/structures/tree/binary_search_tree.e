@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: ?BINARY_SEARCH_TREE [G]
+	parent: detachable BINARY_SEARCH_TREE [G]
 			-- Parent of current node
 
  	has (v: like item): BOOLEAN
@@ -81,7 +81,7 @@ feature -- Access
 			end
 		end
 
-	tree_item (v: like item): ?like Current
+	tree_item (v: like item): detachable like Current
 			-- Node whose item is equal to `v' (object_comparison)
 			-- otherwise default value.
 		require
@@ -457,7 +457,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			end
 		end
 
-	pruned (v: like item; par: ?like Current): ?like Current
+	pruned (v: like item; par: detachable like Current): detachable like Current
 			-- Prune `v'.
 			-- (`par' is the parent node of the current node, needed to update
 			-- `parent' correctly.)

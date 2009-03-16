@@ -104,7 +104,7 @@ feature -- Element change
 		local
 			l: LINEAR [G]
 		do
-			if {lin_rep: LINEAR [G]} other then
+			if attached {LINEAR [G]} other as lin_rep then
 				l := lin_rep
 			else
 					-- `other' is not a descendant of LINEAR, therefore  we

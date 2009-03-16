@@ -205,7 +205,7 @@ feature -- Conversion
 			i, nb: INTEGER
 			l_code: like code
 		do
-			if {l_result: STRING_8} Current then
+			if attached {STRING_8} Current as l_result then
 				Result := l_result
 			else
 				nb := count
@@ -235,7 +235,7 @@ feature -- Conversion
 		local
 			i, nb: INTEGER
 		do
-			if {l_result: STRING_32} Current then
+			if attached {STRING_32} Current as l_result then
 				Result := l_result
 			else
 				nb := count

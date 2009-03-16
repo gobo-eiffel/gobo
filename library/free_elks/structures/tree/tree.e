@@ -21,7 +21,7 @@ deferred class TREE [G] inherit
 
 feature -- Access
 
-	parent: ?TREE [G]
+	parent: detachable TREE [G]
 			-- Parent of current node
 
 	child: like parent
@@ -401,7 +401,7 @@ feature -- Conversion
 			-- first child becomes left child,
 			-- right sibling becomes right child.
 		local
-			current_sibling: ?BINARY_TREE [G]
+			current_sibling: detachable BINARY_TREE [G]
 			c: like first_child
 		do
 			create Result.make (item)
@@ -888,7 +888,7 @@ feature {TREE} -- Implementation
 
 invariant
 
-	tree_consistency: child_readable implies ({c: like child} child and then c.parent = Current)
+	tree_consistency: child_readable implies (attached child as c and then c.parent = Current)
 	leaf_definition: is_leaf = (arity = 0)
 	child_off_definition: child_off = child_before or child_after
 	child_before_definition: child_before = (child_index = 0)

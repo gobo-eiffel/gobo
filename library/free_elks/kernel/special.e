@@ -150,7 +150,7 @@ feature -- Status report
 			index_big_enough: i >= 0
 			index_small_enough: i < count
 		local
-			default_value: ?T
+			default_value: detachable T
 		do
 			Result := item (i) = default_value
 		end

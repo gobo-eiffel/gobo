@@ -13,16 +13,16 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class HASH_TABLE [G, K -> ?HASHABLE] inherit
+class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 
-	UNBOUNDED [?G]
+	UNBOUNDED [detachable G]
 		rename
 			has as has_item
 		redefine
 			has_item, copy, is_equal
 		end
 
-	TABLE [?G, K]
+	TABLE [detachable G, K]
 		rename
 			has as has_item,
 			wipe_out as clear_all,
@@ -55,7 +55,7 @@ feature -- Initialization
 			-- if more than `n' items are inserted.
 		local
 			clever: PRIMES
-			l_default_value: ?G
+			l_default_value: detachable G
 			l_size: INTEGER
 		do
 			create clever
@@ -131,10 +131,10 @@ feature -- Initialization
 
 feature -- Access
 
-	found_item: ?G
+	found_item: detachable G
 			-- Item, if any, yielded by last search operation
 
-	item alias "[]", at alias "@" (key: K): ?G assign  table_force
+	item alias "[]", at alias "@" (key: K): detachable G assign  table_force
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		local
@@ -168,7 +168,7 @@ feature -- Access
 			-- Is there an item in the table with key `key'? Set `found_item' to the found item.
 		local
 			old_position: INTEGER
-			l_default_value: ?G
+			l_default_value: detachable G
 		do
 			old_position := position
 			internal_search (key)
@@ -185,7 +185,7 @@ feature -- Access
 			item_if_found: found implies (found_item = item (key))
 		end
 
-	has_item (v: ?G): BOOLEAN
+	has_item (v: detachable G): BOOLEAN
 			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -274,7 +274,7 @@ feature -- Measurement
 	capacity: INTEGER
 			-- Number of items that may be stored.
 
-	occurrences (v: ?G): INTEGER
+	occurrences (v: detachable G): INTEGER
 			-- Number of table items equal to `v'.
 		local
 			old_iteration_position: INTEGER
@@ -399,7 +399,7 @@ feature -- Status report
 		local
 			cursor_position: INTEGER
 		do
-			if {ht_cursor: HASH_TABLE_CURSOR} c then
+			if attached {HASH_TABLE_CURSOR} c as ht_cursor then
 				cursor_position := ht_cursor.position
 				Result :=
 						(is_off_position (cursor_position)) or else
@@ -413,10 +413,10 @@ feature -- Status report
 			-- Is `k' a valid key?
 		local
 			l_internal: INTERNAL
-			l_default_key: ?K
+			l_default_key: detachable K
 			l_index, i, nb: INTEGER
 			l_name: STRING
-			l_cell: CELL [?K]
+			l_cell: CELL [detachable K]
 		do
 			Result := True
 			debug ("prevent_hash_table_catcall")
@@ -482,7 +482,7 @@ feature -- Cursor movement
 			c_not_void: c /= Void
 			valid_cursor: valid_cursor (c)
 		do
-			if {ht_cursor: HASH_TABLE_CURSOR} c then
+			if attached {HASH_TABLE_CURSOR} c as ht_cursor then
 				iteration_position := ht_cursor.position
 			end
 		end
@@ -493,7 +493,7 @@ feature -- Cursor movement
 			-- `found_item' to item associated with `key'.
 		local
 			old_position: INTEGER
-			l_default_value: ?G
+			l_default_value: detachable G
 		do
 			old_position := position
 			internal_search (key)
@@ -508,7 +508,7 @@ feature -- Cursor movement
 			item_if_found: found implies (found_item = item (key))
 		end
 
-	search_item: ?G
+	search_item: detachable G
 		obsolete
 			"Use found_item instead."
 		do
@@ -531,7 +531,7 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		local
-			l_default_key: ?K
+			l_default_key: detachable K
 			l_pos: like position
 		do
 			internal_search (key)
@@ -627,7 +627,7 @@ feature -- Element change
 		require
 			not_present: not has (key)
 		local
-			l_default_key: ?K
+			l_default_key: detachable K
 			l_pos: like position
 		do
 			search_for_insertion (key)
@@ -758,8 +758,8 @@ feature -- Removal
 			-- If not, set `not_found'.
 			-- Reset `found_item' to its default value if `removed'.
 		local
-			l_default_key: ?K
-			l_default_value: ?G
+			l_default_key: detachable K
+			l_default_value: detachable G
 			l_pos: like position
 		do
 			internal_search (key)
@@ -794,7 +794,7 @@ feature -- Removal
 	clear_all, wipe_out
 			-- Reset all items to default values; reset status.
 		local
-			l_default_value: ?G
+			l_default_value: detachable G
 		do
 			content.clear_all
 			keys.clear_all
@@ -861,17 +861,17 @@ feature {NONE} -- Transformation
 				-- need to convert those ARRAY instances into SPECIAL instances.
 
 				-- Convert `content' from ARRAY to SPECIAL
-			if {array_content: ARRAY [G]} mismatch_information.item ("content") then
+			if attached {ARRAY [G]} mismatch_information.item ("content") as array_content then
 				content := array_content.area
 			end
 
 				-- Convert `keys' from ARRAY to SPECIAL
-			if {array_keys: ARRAY [K]} mismatch_information.item ("keys") then
+			if attached {ARRAY [K]} mismatch_information.item ("keys") as array_keys then
 				keys := array_keys.area
 			end
 
 				-- Convert `deleted_marks' from ARRAY to SPECIAL
-			if {array_marks: ARRAY [BOOLEAN]} mismatch_information.item ("deleted_marks") then
+			if attached {ARRAY [BOOLEAN]} mismatch_information.item ("deleted_marks") as array_marks then
 				deleted_marks := array_marks.area
 			end
 
@@ -1050,7 +1050,7 @@ feature {NONE} -- Implementation
 			Result := content.item (capacity)
 		end
 
-	computed_default_key: ?K
+	computed_default_key: detachable K
 			-- Default key
 			-- (For performance reasons, used only in assertions;
 			-- elsewhere, see use of local entity `l_default_key'.)
@@ -1058,7 +1058,7 @@ feature {NONE} -- Implementation
 			-- No instructions necessary (returns default value of type K)
 		end
 
-	computed_default_value: ?G
+	computed_default_value: detachable G
 			-- Default value of type G
 			-- (For performance reasons, used only in assertions;
 			-- elsewhere, see use of local entity `l_default_value'.)
@@ -1073,7 +1073,7 @@ feature {NONE} -- Implementation
 			-- If not, set `position' to possible position for insertion,
 			-- and set status to `found' or `not_found'.
 		local
-			l_default_key: ?K
+			l_default_key: detachable K
 			hash_value, increment, l_pos, l_capacity: INTEGER
 			first_deleted_position: INTEGER
 			stop: BOOLEAN
@@ -1143,7 +1143,7 @@ feature {NONE} -- Implementation
 		require
 			not_present: not has (key)
 		local
-			l_default_key: ?K
+			l_default_key: detachable K
 			hash_value, increment, l_pos, l_capacity: INTEGER
 			l_deleted_marks: like deleted_marks
 			l_keys: like keys
@@ -1176,7 +1176,7 @@ feature {NONE} -- Implementation
 				(position = capacity) = (key = computed_default_key)
 		end
 
-	key_at (n: INTEGER): ?K
+	key_at (n: INTEGER): detachable K
 			-- Key at position `n'
 		require
 			in_bounds: n >= 0 and n < capacity
@@ -1300,20 +1300,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	prune (v: ?G)
+	prune (v: detachable G)
 			-- Remove one occurrence of `v' if any.
 		do
 		end
 
-	collection_extend (v: ?G)
+	collection_extend (v: detachable G)
 			-- Insert a new occurrence of `v'.
 		do
 		end
 
-	table_force (new: ?G; key: K)
+	table_force (new: detachable G; key: K)
 		local
-			l_default_key: ?K
-			l_default_value: ?G
+			l_default_key: detachable K
+			l_default_value: detachable G
 		do
 			internal_search (key)
 			if not_found then
@@ -1336,7 +1336,7 @@ feature {NONE} -- Inapplicable
 			else
 				found_item := content.item (position)
 			end
-			if {l_g: G} new then
+			if attached {G} new as l_g then
 				content.put (l_g, position)
 			else
 				content.put_default (position)

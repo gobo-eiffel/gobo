@@ -146,7 +146,7 @@ feature -- Status report
 	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		do
-			if {c_c: CIRCULAR_CURSOR} p then
+			if attached {CIRCULAR_CURSOR} p as c_c then
 				Result := list.valid_cursor (c_c.cursor)
 			end
 		end
@@ -186,7 +186,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
-			if {c_c: CIRCULAR_CURSOR} p then
+			if attached {CIRCULAR_CURSOR} p as c_c then
 				list.go_to (c_c.cursor)
 				internal_exhausted := c_c.internal_exhausted
 				starter := c_c.starter

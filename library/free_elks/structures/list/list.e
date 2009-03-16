@@ -33,8 +33,8 @@ feature -- Comparison
 						(count = other.count)
 				if Result and not is_empty then
 					if
-						{c1: CURSOR} cursor and then
-						{c2: CURSOR} other.cursor
+						attached {CURSOR} cursor as c1 and then
+						attached {CURSOR} other.cursor as c2
 					then
 						from
 							start

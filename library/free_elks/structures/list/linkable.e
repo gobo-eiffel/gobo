@@ -26,12 +26,12 @@ create {CHAIN}
 
 feature -- Access
 
-	right: ?like Current
+	right: detachable like Current
 			-- Right neighbor
 
 feature {CELL, CHAIN} -- Implementation
 
-	put_right (other: ?like Current)
+	put_right (other: detachable like Current)
 			-- Put `other' to the right of current cell.
 		do
 			right := other

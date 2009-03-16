@@ -34,7 +34,7 @@ feature -- Comparison
 				not Result or else (set1.after and set2.after)
 			loop
 				if not set1.after then
-					if {h1: HASHABLE} set1.item then
+					if attached {HASHABLE} set1.item as h1 then
 						c := h1.hash_code
 					else
 						check
@@ -61,7 +61,7 @@ feature -- Comparison
 					set1.forth
 				end
 				if Result and then not set2.after then
-					if {h2: HASHABLE} set2.item then
+					if attached {HASHABLE} set2.item as h2 then
 						c := h2.hash_code
 					else
 						check
@@ -95,14 +95,14 @@ feature -- Basic operations
 			hash: HASH_TABLE [G, INTEGER]
 			c: INTEGER
 			eq: BOOLEAN
-			h: ?G
+			h: detachable G
 		do
 			create hash.make (set1.count + set2.count)
 			if set1.object_comparison then
 				hash.compare_objects
 			end
 			from set1.start until set1.after loop
-				if {h1: HASHABLE} set1.item then
+				if attached {HASHABLE} set1.item as h1 then
 					hash.put (set1.item, h1.hash_code)
 				else
 					check
@@ -114,7 +114,7 @@ feature -- Basic operations
 				set1.forth
 			end
 			from set2.start until set2.after loop
-				if {h2: HASHABLE} set2.item then
+				if attached {HASHABLE} set2.item as h2 then
 					c := h2.hash_code
 					hash.search (c)
 					if hash.found then

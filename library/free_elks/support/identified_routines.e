@@ -11,7 +11,7 @@ class IDENTIFIED_ROUTINES
 
 feature -- Basic operations
 
-	eif_id_object (an_id: INTEGER): ?ANY
+	eif_id_object (an_id: INTEGER): detachable ANY
 			-- Object associated with `an_id'
 		require
 			an_id_non_negative: an_id >= 0

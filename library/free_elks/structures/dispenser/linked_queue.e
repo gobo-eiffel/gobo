@@ -137,14 +137,14 @@ feature -- Duplication
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
-			cur: ?like cursor
+			cur: detachable like cursor
 			obj_comparison: BOOLEAN
 		do
 			obj_comparison := other.object_comparison
 			standard_copy (other)
 			if not other.is_empty then
 				internal_wipe_out
-				if {l_cur: like cursor} other.cursor then
+				if attached {like cursor} other.cursor as l_cur then
 					cur := l_cur
 				end
 				from

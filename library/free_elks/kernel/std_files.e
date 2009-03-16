@@ -39,7 +39,7 @@ feature -- Access
 			error_not_void: Result /= Void
 		end
 
-	default_output: ?PLAIN_TEXT_FILE
+	default_output: detachable PLAIN_TEXT_FILE
 			-- Default output
 
 	standard_default: PLAIN_TEXT_FILE
@@ -48,7 +48,7 @@ feature -- Access
 			--| Useful if a class inherits from STD_FILES and
 			--| and a `putint' is applied without standard setting.
 		local
-			r: ?PLAIN_TEXT_FILE
+			r: detachable PLAIN_TEXT_FILE
 		do
 			r := default_output
 			if r = Void then
@@ -119,7 +119,7 @@ feature -- Status report
 			Result := input.last_real
 		end
 
-	last_string, laststring: ?STRING
+	last_string, laststring: detachable STRING
 			-- Last string read by `read_line',
 			-- `read_stream', or `read_word'
 		do

@@ -21,7 +21,7 @@ inherit
 		end
 
 convert
-	to_cil: {SYSTEM_STRING, ?SYSTEM_STRING},
+	to_cil: {SYSTEM_STRING, detachable SYSTEM_STRING},
 	as_string_8: {STRING_8},
 	as_string_32: {READABLE_STRING_32, STRING_32}
 
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			make_from_c (c_string)
 		end
 
-	make_from_cil (a_system_string: ?SYSTEM_STRING)
+	make_from_cil (a_system_string: detachable SYSTEM_STRING)
 			-- Initialize Current with `a_system_string'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -264,7 +264,7 @@ feature -- Access
 	string_representation: STRING_8
 			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_8}
 		do
-			if same_type (create {STRING_8}.make_empty) and then {l_s8: STRING_8} Current then
+			if same_type (create {STRING_8}.make_empty) and then attached {STRING_8} Current as l_s8 then
 				Result := l_s8
 			else
 				Result := string

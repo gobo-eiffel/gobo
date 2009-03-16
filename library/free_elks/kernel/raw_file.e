@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 	integer_buffer: MANAGED_POINTER
 			-- Buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
 		local
-			r: ?MANAGED_POINTER
+			r: detachable MANAGED_POINTER
 		do
 			r := internal_integer_buffer
 			if r = Void then
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			Result := r
 		end
 
-	internal_integer_buffer: ?MANAGED_POINTER
+	internal_integer_buffer: detachable MANAGED_POINTER
 			-- Internal integer buffer
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER

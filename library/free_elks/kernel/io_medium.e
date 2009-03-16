@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	name: ?STRING
+	name: detachable STRING
 			-- Medium name
 		deferred
 		end
@@ -100,7 +100,7 @@ feature -- Status report
 	last_character: CHARACTER
 			-- Last character read by `read_character'
 
-	last_string: ?STRING
+	last_string: detachable STRING
 			-- Last string read
 
 	last_integer: INTEGER
@@ -503,7 +503,7 @@ feature -- Obsolete
 			Result := last_character
 		end
 
-	laststring: ?STRING
+	laststring: detachable STRING
 			-- Last string read
 		do
 			Result := last_string

@@ -181,10 +181,10 @@ feature -- Iteration
 			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
-			c: ?CURSOR
-			cs: ?CURSOR_STRUCTURE [G]
+			c: detachable CURSOR
+			cs: detachable CURSOR_STRUCTURE [G]
 		do
-			if {acs: CURSOR_STRUCTURE [G]} Current then
+			if attached {CURSOR_STRUCTURE [G]} Current as acs then
 				cs := acs
 				c := acs.cursor
 			end
@@ -211,10 +211,10 @@ feature -- Iteration
 			-- in such a case, apply iterator to clone of structure instead.
 		local
 			t: TUPLE [G]
-			c: ?CURSOR
-			cs: ?CURSOR_STRUCTURE [G]
+			c: detachable CURSOR
+			cs: detachable CURSOR_STRUCTURE [G]
 		do
-			if {acs: CURSOR_STRUCTURE [G]} Current then
+			if attached {CURSOR_STRUCTURE [G]} Current as acs then
 				cs := acs
 				c := acs.cursor
 			end
@@ -242,13 +242,13 @@ feature -- Iteration
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		local
-			c: ?CURSOR
-			cs: ? CURSOR_STRUCTURE [G]
+			c: detachable CURSOR
+			cs: detachable  CURSOR_STRUCTURE [G]
 			t: TUPLE [G]
 		do
 			create t
 
-			if {acs: CURSOR_STRUCTURE [G]} Current then
+			if attached {CURSOR_STRUCTURE [G]} Current as acs then
 				cs := acs
 				c := acs.cursor
 			end
@@ -273,13 +273,13 @@ feature -- Iteration
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		local
-			c: ?CURSOR
-			cs: ? CURSOR_STRUCTURE [G]
+			c: detachable CURSOR
+			cs: detachable  CURSOR_STRUCTURE [G]
 			t: TUPLE [G]
 		do
 			create t
 
-			if {acs: CURSOR_STRUCTURE [G]} Current then
+			if attached {CURSOR_STRUCTURE [G]} Current as acs then
 				cs := acs
 				c := acs.cursor
 			end

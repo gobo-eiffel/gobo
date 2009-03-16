@@ -168,7 +168,7 @@ feature -- Status report
 	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		do
-			if {temp: COMPACT_TREE_CURSOR} p then
+			if attached {COMPACT_TREE_CURSOR} p as temp then
 				Result := (first_child_table.item (temp.active) /= Removed_mark)
 			end
 		end
@@ -315,7 +315,7 @@ feature -- Cursor movement
 	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
-			if {temp: COMPACT_TREE_CURSOR} p then
+			if attached {COMPACT_TREE_CURSOR} p as temp then
 				active := temp.active
 				after := temp.after
 				before := temp.before

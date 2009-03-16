@@ -412,7 +412,7 @@ feature -- Input
 
 feature {NONE} -- Not exported
 
-	name: ?STRING
+	name: detachable STRING
 			-- Not meaningful
 		do
 		end

@@ -190,12 +190,12 @@ feature {NONE} -- Externals
 			"C signature (EIF_CHARACTER *, EIF_CHARACTER *, EIF_INTEGER): EIF_BOOLEAN use %"eif_path_name.h%""
 		end
 
-	eif_volume_name (s: POINTER): ?STRING
+	eif_volume_name (s: POINTER): detachable STRING
 		external
 			"C signature (EIF_CHARACTER *): EIF_REFERENCE use %"eif_path_name.h%""
 		end
 
-	eif_extracted_paths (s: POINTER): ?ARRAY [STRING]
+	eif_extracted_paths (s: POINTER): detachable ARRAY [STRING]
 		external
 			"C signature (EIF_CHARACTER *): EIF_REFERENCE use %"eif_path_name.h%""
 		end

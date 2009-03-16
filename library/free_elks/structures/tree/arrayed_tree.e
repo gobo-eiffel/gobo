@@ -53,7 +53,7 @@ feature -- Initialization
 
 feature -- Access
 
-	parent: ?like child
+	parent: detachable like child
 			-- Parent of current node
 
 	left_sibling: like parent
@@ -382,7 +382,7 @@ feature {ARRAYED_TREE} -- Implementation
 			-- Fill children with children of `other'
 		local
 			temp: like parent
-			c: ?TREE [G]
+			c: detachable TREE [G]
 		do
 			from
 				other.child_start

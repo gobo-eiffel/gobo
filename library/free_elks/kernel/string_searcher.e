@@ -234,7 +234,7 @@ feature {NONE} -- Implementation: Access
 	deltas: SPECIAL [INTEGER]
 			-- Record shifting deltas.
 
-	deltas_array: ?SPECIAL [like deltas]
+	deltas_array: detachable SPECIAL [like deltas]
 			-- Record shifting deltas for fuzzy search.
 
 feature {NONE} -- Implementation
@@ -304,7 +304,7 @@ feature {NONE} -- Implementation
 			deltas_array := l_deltas_array
 		ensure
 			deltas_array_not_void: deltas_array /= Void
-			deltas_array_count_set:  {delta: SPECIAL [like deltas]} deltas_array and then delta.count = fuzzy + 1
+			deltas_array_count_set:  attached {SPECIAL [like deltas]} deltas_array as delta and then delta.count = fuzzy + 1
 		end
 
 invariant

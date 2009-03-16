@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature {LINKED_LIST} -- Implementation
 
-	active: ?LINKABLE [G]
+	active: detachable LINKABLE [G]
 			-- Current element in linked list
 
 	after: BOOLEAN

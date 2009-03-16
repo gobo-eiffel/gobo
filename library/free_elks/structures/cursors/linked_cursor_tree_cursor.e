@@ -20,7 +20,7 @@ create
 
 feature {LINKED_CURSOR_TREE} -- Access
 
-	active: ?LINKED_TREE [G];
+	active: detachable LINKED_TREE [G];
 			-- Current node
 
 note

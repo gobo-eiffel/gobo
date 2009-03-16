@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	internal_item: POINTER
 			-- Pointer holding value when shared.
 
-	managed_pointer: ?MANAGED_POINTER
+	managed_pointer: detachable MANAGED_POINTER
 			-- Hold memory area in a managed way.
 
 invariant
