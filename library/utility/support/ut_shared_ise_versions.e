@@ -5,7 +5,7 @@ indexing
 		"Shared ISE Eiffel version numbers"
 
 	library: "Gobo Eiffel Utility Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -235,6 +235,9 @@ feature -- Access
 	ise_6_4_7_7252: UT_VERSION is
 			-- ISE 6.4.7.7252
 			-- First release that accepts keywords 'attached' and 'detachable'.
+			-- First release that accepts to have several object-tests with
+			-- the same local name in a given feature or inline agent, provided
+			-- that their scopes do not overlap.
 		once
 			create Result.make (6, 4, 7, 7252)
 		ensure

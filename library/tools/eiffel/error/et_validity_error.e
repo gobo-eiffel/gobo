@@ -251,6 +251,7 @@ create
 	make_vuot1b,
 	make_vuot1c,
 	make_vuot1d,
+	make_vuot1e,
 	make_vuot3a,
 	make_vuot3b,
 	make_vuot4a,
@@ -10981,6 +10982,46 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
+	make_vuot1e (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_expression: ET_EXPRESSION) is
+			-- Create a new VUOT-1 error: `a_object_test1' and `a_object_test2'
+			-- appearing in `a_expression' have the same local name.
+			--
+			-- Not in ECMA yet
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_object_test1_not_void: a_object_test1 /= Void
+			a_object_test2_not_void: a_object_test2 /= Void
+			a_expression_not_void: a_expression /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_object_test1.name.position
+			code := template_code (vuot1e_template_code)
+			etl_code := vuot1_etl_code
+			default_template := default_message_template (vuot1e_default_template)
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_object_test1.name.lower_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = object-test local name
+		end
+
 	make_vuot3a (a_class: ET_CLASS; a_object_test1, a_object_test2: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE) is
 			-- Create a new VUOT-3 error: The local of `a_object_test1' has
 			-- the same name as the local of `a_object_test2' appearing in
@@ -12909,6 +12950,7 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING is "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING is "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING is "object-test with local name '$6' appears in the scope of another object-test local with the same name."
+	vuot1e_default_template: STRING is "object-test with local name '$6' appears in the same expression as another object-test with the same local name."
 	vuot3a_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING is "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
 	vuot4a_default_template: STRING is "ISE does not support object-tests in preconditions."
@@ -13337,6 +13379,7 @@ feature {NONE} -- Implementation
 	vuot1b_template_code: STRING is "vuot1b"
 	vuot1c_template_code: STRING is "vuot1c"
 	vuot1d_template_code: STRING is "vuot1d"
+	vuot1e_template_code: STRING is "vuot1e"
 	vuot3a_template_code: STRING is "vuot3a"
 	vuot3b_template_code: STRING is "vuot3b"
 	vuot4a_template_code: STRING is "vuot4a"

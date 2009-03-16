@@ -153,6 +153,7 @@ feature {NONE} -- Initialization
 			create current_object_test_types.make_map (50)
 			create current_object_test_scope.make
 			create object_test_scope_builder.make
+			create current_expression_object_tests.make (dummy_expression)
 		end
 
 feature -- Status report
@@ -1701,10 +1702,10 @@ feature {NONE} -- Locals/Formal arguments validity
 					l_name := l_object_test.name
 					l_name.set_object_test_local (True)
 					l_name.set_seed (i)
-					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
-							-- ISE has a validity rule VUOT-3 which forbids two object-tests
-							-- in the same feature (or in the same inline agent) to have the
-							-- same local name.
+					if current_system.is_ise and then current_system.ise_version < ise_6_4_7_7252 then
+							-- ISE used to have a validity rule VUOT-3 which forbids two
+							-- object-tests in the same feature (or in the same inline
+							-- agent) to have the same local name.
 						from j := 1 until j >= i loop
 							l_other_object_test := a_object_tests.object_test (j)
 							if l_other_object_test.name.same_identifier (l_name) then
@@ -1746,10 +1747,10 @@ feature {NONE} -- Locals/Formal arguments validity
 					l_name := l_object_test.name
 					l_name.set_object_test_local (True)
 					l_name.set_seed (i)
-					if current_system.is_ise and then current_system.ise_version >= ise_6_1_0 then
-							-- ISE has a validity rule VUOT-3 which forbids two object-tests
-							-- in the same feature (or in the same inline agent) to have the
-							-- same local name.
+					if current_system.is_ise and then current_system.ise_version < ise_6_4_7_7252 then
+							-- ISE used to have a validity rule VUOT-3 which forbids two
+							-- object-tests in the same feature (or in the same inline
+							-- agent) to have the same local name.
 						from j := 1 until j >= i loop
 							l_other_object_test := a_object_tests.object_test (j)
 							if l_other_object_test.name.same_identifier (l_name) then
@@ -6293,6 +6294,7 @@ feature {NONE} -- Expression validity
 			l_enclosing_agent: ET_INLINE_AGENT
 			args: ET_FORMAL_ARGUMENT_LIST
 			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_outermost_expression: ET_EXPRESSION
 		do
 			has_fatal_error := False
 			l_expression_context := new_context (current_type)
@@ -6408,10 +6410,38 @@ feature {NONE} -- Expression validity
 						error_handler.report_vuot4b_error (current_class, an_expression)
 					end
 				end
+				if current_expression_object_tests.has_object_test (l_name) then
+						-- Two object-tests with the same local name appear in the same
+						-- expression. This is forbidden to avoid scope intersection,
+						-- i.e. two object-tests with the same local name and whose
+						-- scopes can overlap. For example:
+						--
+						--   if attached exp1 as x and attached exp2 as x then
+						--      x.do_something
+						--   end
+					set_fatal_error
+					l_other_object_test := current_expression_object_tests.object_test (l_name)
+					l_outermost_expression := current_expression_object_tests.expression
+					error_handler.report_vuot1e_error (current_class, an_expression, l_other_object_test, l_outermost_expression)
+				else
+					current_expression_object_tests.add_object_test (an_expression)
+				end
 			end
 			if not has_fatal_error then
 				a_context.force_last (current_system.boolean_class)
 				report_named_object_test (an_expression, l_expression_context)
+			else
+					-- Make sure that `report_named_object_test' is called anyway
+					-- in order to avoid an internal error to be reported when we
+					-- try to determine the dynamic type set of the corresponding
+					-- object-test local when it appears as an expression in its
+					-- scope. This is so because even though we got a validity error
+					-- with the object-test, we might try to check the validity of
+					-- subsequent expressions/intructions contained in the scope
+					-- in order to be able to report as many errors as possible.
+				has_fatal_error := False
+				report_named_object_test (an_expression, l_expression_context)
+				has_fatal_error := True
 			end
 		end
 
@@ -8324,13 +8354,21 @@ feature {NONE} -- Expression validity
 		local
 			old_context: ET_NESTED_TYPE_CONTEXT
 			old_target_type: ET_TYPE_CONTEXT
+			l_is_outermost_expression: BOOLEAN
 		do
 			has_fatal_error := False
 			old_target_type := current_target_type
 			current_target_type := a_target_type
 			old_context := current_context
 			current_context := a_context
+			if current_expression_object_tests.expression = dummy_expression then
+				l_is_outermost_expression := True
+				current_expression_object_tests.reset (an_expression)
+			end
 			an_expression.process (Current)
+			if l_is_outermost_expression then
+				current_expression_object_tests.reset (dummy_expression)
+			end
 			if not has_fatal_error then
 				report_expression_supplier (a_context, current_class, current_feature)
 			end
@@ -11831,6 +11869,9 @@ feature {NONE} -- Object-tests
 	current_object_test_types: DS_HASH_TABLE [ET_NESTED_TYPE_CONTEXT, ET_NAMED_OBJECT_TEST]
 			-- Types of object-test locals
 
+	current_expression_object_tests: ET_EXPRESSION_OBJECT_TESTS
+			-- Object-tests appearing in the outermost expression being processed
+
 	current_object_test_scope: ET_OBJECT_TEST_SCOPE
 			-- Object-tests for which we are currently in the
 			-- scope of their locals
@@ -12230,6 +12271,14 @@ feature {NONE} -- Constants
 			dummy_feature_not_void: Result /= Void
 		end
 
+	dummy_expression: ET_EXPRESSION is
+			-- Dummy expression
+		once
+			create {ET_CURRENT} Result.make
+		ensure
+			dummy_expression_not_void: Result /= Void
+		end
+
 invariant
 
 	current_feature_not_void: current_feature /= Void
@@ -12268,5 +12317,6 @@ invariant
 	no_void_object_test_type: not current_object_test_types.has_item (Void)
 	current_object_test_scope_not_void: current_object_test_scope /= Void
 	object_test_scope_builder_not_void: object_test_scope_builder /= Void
+	current_expression_object_tests_not_void: current_expression_object_tests /= Void
 
 end

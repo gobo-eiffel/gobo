@@ -113,11 +113,10 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not is_negated then
 				if scope /= Void then
--- TODO: report error when there is an object-test local scope intersection, e.g.
--- two object-tests with the same local name and whose scope can overlap.
--- Note that this cannot currently happen with ISE's VUOT-3 restriction,
--- which guarantees that there are no two object-test with the same local
--- name in a given feature.
+						-- Note that object-test local scope intersection (i.e.
+						-- two object-tests with the same local name and whose
+						-- scopes can overlap) is already taken care of with the
+						-- validity rule VUOT-1.
 					scope.add_object_test (an_expression)
 				end
 			end

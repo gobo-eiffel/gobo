@@ -320,7 +320,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp1.compile (a_pattern1)
 			assert ("cannot compile regexp '" + a_pattern1 + "'", a_regexp1.is_compiled)
 			a_regexp1.optimize
-			a_pattern2 := "(\[ *[0-9]+%% - *[0-9]+\] (Degree -?[0-9]+|Generating Auxiliary Files))|(Features done: [0-9]+\sFeatures to go: [0-9]+)"
+			a_pattern2 := "(\[ *[0-9]+%% - *[0-9]+\] (Degree -?[0-9]+|Generating Auxiliary Files))|(Features done: [0-9]+\sFeatures to go: [0-9]+)|(Degree 6: Examining System)|(Degree 5: Parsing Classes)|(Degree 4: Analyzing Inheritance)|(Degree 3: Checking Types)|(Degree 2: Generating Byte Code)|(Degree -1: Generating Code)"
 			create a_regexp2.make
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
