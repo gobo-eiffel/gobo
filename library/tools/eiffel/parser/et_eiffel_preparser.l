@@ -6,7 +6,7 @@ indexing
 		"Eiffel preparsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,8 +101,32 @@ create
 [cC][lL][aA][sS][sS]	{
 				class_keyword_found := True
 			}
+[aA][tT][tT][aA][cC][hH][eE][dD]	{
+				if use_attached_keyword then
+					-- Do nothing.
+				elseif class_keyword_found then
+					last_token := E_IDENTIFIER
+					last_literal_start := 1
+					last_literal_end := 9
+					last_break_end := 0
+					last_comment_end := 0
+					last_classname := ast_factory.new_identifier (Current)
+				end
+			}
 [aA][tT][tT][rR][iI][bB][uU][tT][eE]	{
 				if use_attribute_keyword then
+					-- Do nothing.
+				elseif class_keyword_found then
+					last_token := E_IDENTIFIER
+					last_literal_start := 1
+					last_literal_end := 9
+					last_break_end := 0
+					last_comment_end := 0
+					last_classname := ast_factory.new_identifier (Current)
+				end
+			}
+[dD][eE][tT][aA][cC][hH][aA][bB][lL][eE]	{
+				if use_detachable_keyword then
 					-- Do nothing.
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
@@ -600,23 +624,67 @@ create
 			}
 [0-9]+(_+[0-9]+)+	{
 			}
-_+[0-9]+(_+[0-9]+)+	{
+(_+[0-9]+)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
 				error_handler.report_SIFU_error (filename, current_position)
-
-				last_token := E_INTERR
+				last_token := E_INTEGER
 			}
-[0-9]+(_+[0-9]+)+_+	{
+([0-9]+_+)+	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
 				error_handler.report_SILU_error (filename, current_position)
-
-				last_token := E_INTERR
+				last_token := E_INTEGER
 			}
-0[xX][0-9a-fA-F]+	{
+0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)*	{
+			}
+0[xX](_+[0-9a-fA-F]+)+	{
+					-- Syntax error: an underscore may not be
+					-- the first character of an integer.
+				set_syntax_error
+				error_handler.report_SIFU_error (filename, current_position)
+				last_token := E_INTEGER
+			}
+0[xX]([0-9a-fA-F]+_+)+	{
+					-- Syntax error: an underscore may not be
+					-- the last character of an integer.
+				set_syntax_error
+				error_handler.report_SILU_error (filename, current_position)
+				last_token := E_INTEGER
+			}
+0[cC][0-7]+(_+[0-7]+)*	{
+			}
+0[cC](_+[0-7]+)+	{
+					-- Syntax error: an underscore may not be
+					-- the first character of an integer.
+				set_syntax_error
+				error_handler.report_SIFU_error (filename, current_position)
+				last_token := E_INTEGER
+			}
+0[cC]([0-7]+_+)+	{
+					-- Syntax error: an underscore may not be
+					-- the last character of an integer.
+				set_syntax_error
+				error_handler.report_SILU_error (filename, current_position)
+				last_token := E_INTEGER
+			}
+0[bB][0-1]+(_+[0-1]+)*	{
+			}
+0[bB](_+[0-1]+)+	{
+					-- Syntax error: an underscore may not be
+					-- the first character of an integer.
+				set_syntax_error
+				error_handler.report_SIFU_error (filename, current_position)
+				last_token := E_INTEGER
+			}
+0[bB]([0-1]+_+)+	{
+					-- Syntax error: an underscore may not be
+					-- the last character of an integer.
+				set_syntax_error
+				error_handler.report_SILU_error (filename, current_position)
+				last_token := E_INTEGER
 			}
 
 

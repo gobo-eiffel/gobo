@@ -794,7 +794,7 @@ CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 				more
 				set_start_condition (BREAK)
 			}
-_+[0-9]+(_+[0-9]+)+	{
+(_+[0-9]+)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -806,7 +806,7 @@ _+[0-9]+(_+[0-9]+)+	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-_+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -818,7 +818,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-[0-9]+(_+[0-9]+)+_+	{
+([0-9]+_+)+	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -830,7 +830,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_underscored_integer_constant (Current)
 			}
-[0-9]+(_+[0-9]+)+_+/([ \t\r\n]|"--")	{
+([0-9]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -842,7 +842,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[xX][0-9a-fA-F]+	{
+0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)*	{
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -850,7 +850,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
-0[xX][0-9a-fA-F]+/([ \t\r\n]|"--")	{
+0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)*/([ \t\r\n]|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -858,23 +858,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)+	{
-				last_token := E_INTEGER
-				last_literal_start := 1
-				last_literal_end := text_count
-				last_break_end := 0
-				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
-			}
-0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)+/([ \t\r\n]|"--")	{
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := hinteger_break
-				more
-				set_start_condition (BREAK)
-			}
-0[xX]_+[0-9a-fA-F]+(_+[0-9a-fA-F]+)+	{
+0[xX](_+[0-9a-fA-F]+)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -886,7 +870,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
-0[xX]_+[0-9a-fA-F]+(_+[0-9a-fA-F]+)+/([ \t\r\n]|"--")	{
+0[xX](_+[0-9a-fA-F]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -898,7 +882,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)+_+	{
+0[xX]([0-9a-fA-F]+_+)+	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -910,7 +894,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
-0[xX][0-9a-fA-F]+(_+[0-9a-fA-F]+)+_+/([ \t\r\n]|"--")	{
+0[xX]([0-9a-fA-F]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -922,7 +906,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[cC][0-7]+	{
+0[cC][0-7]+(_+[0-7]+)*	{
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -930,7 +914,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
-0[cC][0-7]+/([ \t\r\n]|"--")	{
+0[cC][0-7]+(_+[0-7]+)*/([ \t\r\n]|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -938,23 +922,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[cC][0-7]+(_+[0-7]+)+	{
-				last_token := E_INTEGER
-				last_literal_start := 1
-				last_literal_end := text_count
-				last_break_end := 0
-				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
-			}
-0[cC][0-7]+(_+[0-7]+)+/([ \t\r\n]|"--")	{
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := ointeger_break
-				more
-				set_start_condition (BREAK)
-			}
-0[cC]_+[0-7]+(_+[0-7]+)+	{
+0[cC](_+[0-7]+)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -966,7 +934,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
-0[cC]_+[0-7]+(_+[0-7]+)+/([ \t\r\n]|"--")	{
+0[cC](_+[0-7]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -978,7 +946,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[cC][0-7]+(_+[0-7]+)+_+	{
+0[cC]([0-7]+_+)+	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -990,7 +958,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_octal_integer_constant (Current)
 			}
-0[cC][0-7]+(_+[0-7]+)+_+/([ \t\r\n]|"--")	{
+0[cC]([0-7]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -1002,7 +970,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[bB][0-1]+	{
+0[bB][0-1]+(_+[0-1]+)*	{
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -1010,7 +978,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
-0[bB][0-1]+/([ \t\r\n]|"--")	{
+0[bB][0-1]+(_+[0-1]+)*/([ \t\r\n]|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count
@@ -1018,23 +986,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[bB][0-1]+(_+[0-1]+)+	{
-				last_token := E_INTEGER
-				last_literal_start := 1
-				last_literal_end := text_count
-				last_break_end := 0
-				last_comment_end := 0
-				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
-			}
-0[bB][0-1]+(_+[0-1]+)+/([ \t\r\n]|"--")	{
-				last_text_count := text_count
-				last_literal_start := 1
-				last_literal_end := last_text_count
-				break_kind := binteger_break
-				more
-				set_start_condition (BREAK)
-			}
-0[bB]_+[0-1]+(_+[0-1]+)+	{
+0[bB](_+[0-1]+)+	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -1046,7 +998,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
-0[bB]_+[0-1]+(_+[0-1]+)+/([ \t\r\n]|"--")	{
+0[bB](_+[0-1]+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the first character of an integer.
 				set_syntax_error
@@ -1058,7 +1010,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				more
 				set_start_condition (BREAK)
 			}
-0[bB][0-1]+(_+[0-1]+)+_+	{
+0[bB]([0-1]+_+)+	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
@@ -1070,7 +1022,7 @@ _+[0-9]+(_+[0-9]+)+/([ \t\r\n]|"--")	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_binary_integer_constant (Current)
 			}
-0[bB][0-1]+(_+[0-1]+)+_+/([ \t\r\n]|"--")	{
+0[bB]([0-1]+_+)+/([ \t\r\n]|"--")	{
 					-- Syntax error: an underscore may not be
 					-- the last character of an integer.
 				set_syntax_error
