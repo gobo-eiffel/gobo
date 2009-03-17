@@ -5,7 +5,7 @@ indexing
 		"Eiffel class interface checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -229,7 +229,7 @@ feature {NONE} -- Signature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			signature_checker.check_signature_validity (a_feature, current_class)
+			signature_checker.check_signature_validity (a_feature, current_class, True)
 			if signature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end

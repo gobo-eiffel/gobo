@@ -5,7 +5,7 @@ indexing
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,9 +33,6 @@ inherit
 		export {NONE} all end
 
 	ET_SHARED_CLASS_NAME_TESTER
-		export {NONE} all end
-
-	ET_SHARED_ERROR_HANDLERS
 		export {NONE} all end
 
 create
@@ -1543,21 +1540,16 @@ feature {NONE} -- Signature validity
 			-- Check signature validity for redeclarations and joinings.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			l_error_handler: ET_ERROR_HANDLER
 		do
 			if not has_signature_error then
-					-- Use a null error handler because errors will not be reported at this stage.
+					-- Errors will not be reported at this stage.
 					-- This is postponed to the next compilation pass if the signature
 					-- of some features contains qualified types (e.g. of the for 'like a.b')
 					-- requiring features from other classes to be flattened (e.g. to determine
 					-- the type of feature 'b' in the base class of 'like a').
 					-- For simplicity, all validity errors related to signature conformance
 					-- are reported during the interface checking compilation pass.
-				l_error_handler := current_system.error_handler
-				current_system.set_error_handler (null_error_handler)
-				signature_checker.check_signature_validity (a_feature, current_class)
-				current_system.set_error_handler (l_error_handler)
+				signature_checker.check_signature_validity (a_feature, current_class, False)
 				if signature_checker.has_fatal_error then
 					current_class.set_redeclared_signatures_checked (False)
 				end
