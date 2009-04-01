@@ -1421,7 +1421,7 @@ feature {NONE} -- Implementation
 			Result.put (lower_case_mapping_plane_0_segment_255, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	lower_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
@@ -1735,7 +1735,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_lower_case_mapping_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	all_empty_lower_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
@@ -2000,7 +2000,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_lower_case_mapping_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
@@ -3506,7 +3506,7 @@ feature {NONE} -- Implementation
 			Result.put (title_case_mapping_plane_0_segment_255, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	title_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
@@ -3820,7 +3820,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_title_case_mapping_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	all_empty_title_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
@@ -4085,7 +4085,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_title_case_mapping_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	title_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
@@ -5587,7 +5587,7 @@ feature {NONE} -- Implementation
 			Result.put (upper_case_mapping_plane_0_segment_255, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	upper_case_mapping_plane_1_segment_4: ARRAY [DS_ARRAYED_LIST [INTEGER]] is
@@ -5901,7 +5901,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_upper_case_mapping_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	all_empty_upper_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
@@ -6166,7 +6166,7 @@ feature {NONE} -- Implementation
 			Result.put (all_empty_upper_case_mapping_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is

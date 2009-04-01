@@ -39,6 +39,7 @@ feature -- Test
 			assert ("Aleph is other letter", is_other_letter (1488))
 			assert ("Aleph is a letter", is_letter (1488))
 			assert ("Aleph is alphabetic", is_alphabetic (1488))
+			assert ("Unassigned code-point is not alphabetic", not is_alphabetic (196608))
 			assert ("MAI HAN_AKAT is alphabetic", is_alphabetic (3633))
 			assert ("MAI HAN_AKAT is not in letter categories", not is_letter (3633))
 			assert ("Variation selector-253 is a non-spacing mark", is_nonspacing_mark (917996))

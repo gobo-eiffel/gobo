@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 			Result.put (lower_code_plane_0_segment_255, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	lower_code_plane_1_segment_4: ARRAY [INTEGER] is
@@ -1096,7 +1096,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_lower_code_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	empty_lower_code_plane: SPECIAL [ARRAY [INTEGER]] is
@@ -1361,7 +1361,7 @@ feature {NONE} -- Implementation
 			Result.put (empty_lower_code_segment, 255)
 		ensure
 			result_not_void: Result /= Void
-			sub_arrays_not_void: True -- all items are non-Void
+			sub_arrays_not_void: True --not Result.has (Void)
 		end
 
 	lower_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is

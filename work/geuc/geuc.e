@@ -2087,7 +2087,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2121,7 +2121,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2390,7 +2390,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2424,7 +2424,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2486,7 +2486,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2520,7 +2520,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2594,7 +2594,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2627,7 +2627,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2842,7 +2842,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2857,6 +2857,8 @@ feature {NONE} -- Implementation
 			plane_name_not_empty: not a_plane_name.is_empty
 			segment_name_not_void: a_segment_name /= Void
 			segment_name_not_empty: not a_segment_name.is_empty
+		local
+			i: INTEGER
 		do
 			a_output_file.put_string ("%T")
 			a_output_file.put_string (a_plane_name)
@@ -2864,9 +2866,15 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
 			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			from  until i > 255 loop
+				a_output_file.put_string ("%T%T%TResult.put (create {ARRAY [BOOLEAN]}.make (1, 256), ")
+				a_output_file.put_string (i.out)
+				a_output_file.put_string (")%N")
+				i := i + 1
+			end
 			a_output_file.put_string ("%T%Tensure%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
-			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
+			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
