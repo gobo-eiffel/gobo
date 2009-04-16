@@ -158,6 +158,8 @@ feature -- Test
 			assert_equal ("test12", "31.41", format ("$.2G", << double_cell (31.4149) >>))
 			assert_equal ("test13", "31.42", format ("$.2G", << double_cell (31.41501) >>))
 			assert_equal ("test14", "3.14E+02", format ("$.2G", << double_cell (314.15) >>))
+				-- Make sure that the + sign is displayed.
+			assert_equal ("test15", "+1.000000", format ("$+G", << double_cell (1.0) >>))
 		end
 
 	test_other_examples is
@@ -224,14 +226,14 @@ feature -- Test
 				-----------------------------------------------------------------------
 				-- You may specify following format flags:
 				-- =======================================
-				-- '-' Means left alignment (by default value aligns to rigth)
+				-- '-' Means left alignment (by default value aligns to right)
 				--
-				-- '^' Means center alignment (by default value aligns to rigth)
+				-- '^' Means center alignment (by default value aligns to right)
 				--
 				-- '+' Prefix  the  output value with a sign (+ or -) if the output
 				--     value is of a signed type. (by default only '-' printed)
 				--
-				-- ' ' Similar to '+' but add space chacacter instead of plus.
+				-- ' ' Similar to '+' but add space character instead of plus.
 				--
 				-- '0' If width is prefixed with 0, zeros are added until the
 				--     minimum width is reached (by default added spaces)
@@ -239,10 +241,10 @@ feature -- Test
 				-- Restrictions:
 				--    (' ' after '+') and ('0' with '-','^') combinations are incorrect
 				-----------------------------------------------------------------------
-			a_format := "$05i $04x $6o $u $c $B $-.3s $00.5e $+7.8f "
+			a_format := "$05i $+i gobo$ i $04x $6o $u $c $B $-.3s $00.5e $+7.8f gobo$ 7.8f"
 			assert_equal ("test7",
-				"-0123 0100    400 123 c True som 3.14159e+00 3.14159346 ",
-				format (a_format, <<integer_cell (-123), integer_cell (256), integer_cell (256), integer_cell (123), character_cell ('c'), boolean_cell (True), "some string", double_cell (3.1415934563), double_cell (3.1415934563)>>))
+				"-0123 +33 gobo 44 0100    400 123 c True som 3.14159e+00 +3.14159346 gobo 3.14159346",
+				format (a_format, <<integer_cell (-123), integer_cell (33), integer_cell (44), integer_cell (256), integer_cell (256), integer_cell (123), character_cell ('c'), boolean_cell (True), "some string", double_cell (3.1415934563), double_cell (3.1415934563), double_cell (3.1415934563)>>))
 
 			a_format := "($^10s) ($^10i) ($^10e) "
 			assert_equal ("test8",

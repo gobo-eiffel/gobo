@@ -443,7 +443,7 @@ feature {NONE} -- Formatting
 									a_formatter.set_padding_character ('0')
 								end
 								if a_space_prefix then
-									a_formatter.set_plus_sign_enabled (False)
+									a_formatter.set_space_sign_enabled (True)
 								end
 								if a_plus_sign then
 									a_formatter.set_plus_sign_enabled (True)

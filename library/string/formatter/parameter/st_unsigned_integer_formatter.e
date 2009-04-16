@@ -37,6 +37,7 @@ feature -- Formatting
 			-- Format `a_parameter' to `a_stream'.
 		do
 			plus_sign_enabled := False
+			space_sign_enabled := False
 			precursor (a_parameter, a_stream)
 		end
 

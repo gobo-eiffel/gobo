@@ -117,11 +117,13 @@ feature -- Formatting
 						i := i - 1
 					end
 				end
-				if plus_sign_enabled or a_parameter < 0 then
+				if plus_sign_enabled or space_sign_enabled or a_parameter < 0 then
 					if a_parameter < 0 then
 						a_sign := '-'
-					else
+					elseif plus_sign_enabled then
 						a_sign := '+'
+					else
+						a_sign := ' '
 					end
 					inspect alignment
 					when align_left then

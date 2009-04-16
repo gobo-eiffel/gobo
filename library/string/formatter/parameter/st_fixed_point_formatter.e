@@ -43,6 +43,9 @@ feature -- Formatting
 				decimal_formatter.set_width (1)
 				if fsign = -1 and integer_part = 0 then
 					string_output_stream.put_character ('-')
+				else
+					decimal_formatter.set_space_sign_enabled (space_sign_enabled)
+					decimal_formatter.set_plus_sign_enabled (plus_sign_enabled)
 				end
 				decimal_formatter.integer_format_to (integer_part, string_output_stream)
 				double_buffer.append_string (fractional_part)
@@ -55,6 +58,8 @@ feature -- Formatting
 					double_buffer.append_string (fractional_part)
 					right_format_to (double_buffer, a_stream)
 				else
+					decimal_formatter.set_space_sign_enabled (space_sign_enabled)
+					decimal_formatter.set_plus_sign_enabled (plus_sign_enabled)
 					if width - fractional_part.count < 1 then
 						decimal_formatter.set_width (1)
 					else
@@ -68,6 +73,9 @@ feature -- Formatting
 				decimal_formatter.set_width (1)
 				if fsign = -1 and integer_part = 0 then
 					string_output_stream.put_character ('-')
+				else
+					decimal_formatter.set_space_sign_enabled (space_sign_enabled)
+					decimal_formatter.set_plus_sign_enabled (plus_sign_enabled)
 				end
 				decimal_formatter.integer_format_to (integer_part, string_output_stream)
 				double_buffer.append_string (fractional_part)

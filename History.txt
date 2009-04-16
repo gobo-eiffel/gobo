@@ -37,6 +37,11 @@ Version 3.10 - ?
 	* Fixed bug in LX_DFA_REGULAR_EXPRESSION where `compile ("foo\$")' was
 	  setting `has_dollar' to True even though the dollar sign was escaped.
 
+	Gobo Eiffel String Library:
+
+	* Fixed bug in the string formatter where the flags '+' and space where
+	  not taken into account. See bug#2768748.
+
 	Gobo Eiffel Tools Library:
 
 	* Added support for keyword 'note' as a replacement of 'indexing'.

@@ -52,6 +52,8 @@ feature -- Formatting
 			STRING_.wipe_out (double_buffer)
 			string_output_stream.set_string (double_buffer)
 			decimal_formatter.reset_options
+			decimal_formatter.set_space_sign_enabled (space_sign_enabled)
+			decimal_formatter.set_plus_sign_enabled (plus_sign_enabled)
 			decimal_formatter.integer_format_to (integer_part, string_output_stream)
 			double_buffer.append_string (fractional_part)
 			if is_lowercase then
