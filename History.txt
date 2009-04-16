@@ -42,6 +42,10 @@ Version 3.10 - ?
 	* Fixed bug in the string formatter where the flags '+' and space where
 	  not taken into account. See bug#2768748.
 
+	Gobo Eiffel Time Library:
+
+	* Added class DT_STOPWATCH in cluster 'stopwatch'.
+
 	Gobo Eiffel Tools Library:
 
 	* Added support for keyword 'note' as a replacement of 'indexing'.

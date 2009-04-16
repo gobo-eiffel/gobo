@@ -19,6 +19,8 @@ clock
     Clocks, system clock, customizable clocks.
 date
     Date, time and duration classes.
+stopwatch
+    Stopwatches.
 time_zone
     Time zones, date/time conversions. (STILL UNDER DEVELOPMENT)
 
@@ -27,4 +29,4 @@ is provided in "$GOBO/doc/time". Examples for this library can
 be found in "$GOBO/example/time".
 
 --
-Copyright (c) 2000-2005, Eric Bezault and others
+Copyright (c) 2000-2009, Eric Bezault and others

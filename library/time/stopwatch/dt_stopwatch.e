@@ -1,0 +1,102 @@
+indexing
+
+	description:
+
+		"Simple stopwatches"
+
+	library: "Gobo Eiffel Time Library"
+	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class DT_STOPWATCH
+
+inherit
+
+	DT_SHARED_SYSTEM_CLOCK
+
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new stopwatch.
+		do
+		end
+
+feature -- Access
+
+	elapsed_time: DT_DATE_TIME_DURATION is
+			-- Elapsed time
+		do
+			if start_time /= Void then
+				if stop_time /= Void then
+					Result := stop_time.canonical_duration (start_time)
+				else
+					Result := system_clock.date_time_now.canonical_duration (start_time)
+				end
+			else
+				create Result.make (0, 0, 0, 0, 0, 0)
+			end
+		ensure
+			elapsed_time_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	is_started: BOOLEAN is
+			-- Has stopwatch been started?
+		do
+			Result := start_time /= Void and stop_time = Void
+		ensure
+			definition: Result = (start_time /= Void and stop_time = Void)
+		end
+
+feature -- Basic operations
+
+	reset is
+			-- Reset stopwatch.
+		do
+			start_time := Void
+			stop_time := Void
+		ensure
+			not_started: not is_started
+			no_start_time: start_time = Void
+			no_stop_time: stop_time = Void
+		end
+
+	start is
+			-- Start stopwatch.
+		do
+			start_time := system_clock.date_time_now
+			stop_time := Void
+		ensure
+			started: is_started
+			start_time: start_time /= Void
+			no_stop_time: stop_time = Void
+		end
+
+	stop is
+			-- Stop stopwatch.
+		require
+			started: is_started
+		do
+			stop_time := system_clock.date_time_now
+		ensure
+			not_started: not is_started
+			start_time: start_time /= Void
+			stop_time: stop_time /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	start_time: DT_DATE_TIME
+			-- Time when stopwatch was started
+
+	stop_time: DT_DATE_TIME
+			-- Time when stopwatch was stopped
+
+end

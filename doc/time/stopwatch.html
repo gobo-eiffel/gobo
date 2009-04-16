@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Clocks</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Stopwatches</strong></font></td>
+        <td align="right"><a href="clock.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="flatshort/index.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<h2>Simple Stopwatches</h2>
+
+<p><font color="#008080"><em><tt>DT_STOPWATCH</tt></em></font>
+implements a simple stopwatch that can be used for low precision
+timing of program excution speed. Since <font color="#008080"><em><tt>DT_STOPWATCH</tt></em></font>
+relies on the <a href="clock.html#system">system time</a>, the
+actual timing results will depend on what other processes are
+running, memory usage and CPU load. However if the timing of
+different executions is done under similar system load you will
+get comparable timing results that can be useful for quick
+evaluation of code changes on performance.</p>
+
+<p>For detailed analysis of program execution time and
+bottlenecks you should of course use the profiling tools
+available on your platform.</p>
+
+<h2>Possible Extensions</h2>
+
+<p>Some additional features that could be added to <font
+color="#008080"><em><tt>DT_STOPWATCH</tt></em></font> are:</p>
+
+<blockquote>
+    <pre><em>elapsed_times</em><font face="Courier New">: </font><em>DS_LIST</em><font
+face="Courier New"> [</font><em>DT_DATE_TIME_DURATION</em><font
+face="Courier New">]
+        -- All elapsed times since the creation of the stopwatch</font></pre>
+</blockquote>
+
+<blockquote>
+    <pre><em>average_elapsed_time</em><font face="Courier New">: </font><em>DT_DATE_TIME_DURATION</em><font
+face="Courier New">
+        -- The average elapsed time over all start/stop measurements</font></pre>
+</blockquote>
+
+<p>Other stopwatch classes could be implemented so that they
+could rely on <a href="clock.html#customizable">customized clocks</a>,
+for example clocks running twice as fast as the system clock.</p>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 2009</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 16 April 2009</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$ 
+$Revision$"
+            --> 
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img
+        src="../image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="../index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="clock.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="flatshort/index.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>

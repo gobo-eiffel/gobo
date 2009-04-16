@@ -4,7 +4,7 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Time Library"
 		library: "Gobo Eiffel Time Library"
-		copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+		copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -14,6 +14,7 @@
 		<option name="abstract" value="true"/>
 		<cluster name="clock"/>
 		<cluster name="date"/>
+		<cluster name="stopwatch"/>
 		<cluster name="time_zone"/>
 	</cluster>
 </library>
