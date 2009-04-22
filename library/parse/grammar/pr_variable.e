@@ -253,12 +253,12 @@ invariant
 
 	non_terminal: not is_terminal
 	rules_not_void: rules /= Void
-	no_void_rule: not rules.has (Void)
+	no_void_rule: not rules.has_void
 --	derivable_rules: forall rule in rules, rule.lhs = Current
 	transitions_not_void: transitions /= Void
-	no_void_transition: not transitions.has (Void)
+	no_void_transition: not transitions.has_void
 --	valid_transitions: forall t in transitions, t.symbol = Current
-	no_void_first: not firsts.has (Void)
-	no_void_derive: not derives.has (Void)
+	no_void_first: not firsts.has_void
+	no_void_derive: not derives.has_void
 
 end

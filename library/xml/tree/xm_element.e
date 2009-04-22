@@ -437,7 +437,7 @@ feature -- Access
 			end
 		ensure
 			namespace_declarations_not_void: Result /= Void
-			no_void_declaration: not Result.has (Void)
+			no_void_declaration: not Result.has_void
 		end
 
 	attributes: DS_LIST [XM_ATTRIBUTE] is

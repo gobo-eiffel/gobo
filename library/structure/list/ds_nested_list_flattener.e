@@ -35,7 +35,7 @@ feature -- Basic operations
 			-- could be accessed remotely.
 		require
 			nested_lists_not_void: nested_lists /= Void
-			no_void_nested_list: not nested_lists.has (Void)
+			no_void_nested_list: not nested_lists.has_void
 		local
 			a_cursor: DS_LINEAR_CURSOR [DS_NESTED_LIST [G]]
 			pending: DS_ARRAYED_STACK [DS_NESTED_LIST [G]]
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 		require
 			a_list_not_void: a_list /= Void
 			pending_not_void: pending /= Void
-			no_void_pending: not pending.has (Void)
+			no_void_pending: not pending.has_void
 			a_list_not_pending: not pending.has (a_list)
 		local
 			remote_cursor: DS_LINEAR_CURSOR [DS_NESTED_LIST [G]]

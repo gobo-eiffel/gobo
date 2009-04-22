@@ -536,8 +536,8 @@ invariant
 	description_not_void: description /= Void
 	error_handler_not_void: error_handler /= Void
 	name_definitions_not_void: name_definitions /= Void
-	no_void_name_definition: not name_definitions.has_item (Void)
+	no_void_name_definition: not name_definitions.has_void_item
 	character_classes_not_void: character_classes /= Void
-	no_void_character_class: not character_classes.has_item (Void)
+	no_void_character_class: not character_classes.has_void_item
 
 end

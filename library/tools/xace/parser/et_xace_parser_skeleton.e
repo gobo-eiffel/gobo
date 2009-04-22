@@ -77,7 +77,7 @@ feature -- Access
 		deferred
 		ensure
 			parsed_libraries_not_void: Result /= Void
-			no_void_library: not Result.has_item (Void)
+			no_void_library: not Result.has_void_item
 		end
 
 feature -- Status report

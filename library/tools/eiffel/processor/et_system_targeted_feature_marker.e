@@ -632,7 +632,7 @@ feature {NONE} -- Descendants cache
 			end
 		ensure
 			descendants_not_void: Result /= Void
-			no_void_descendant: not Result.has (Void)
+			no_void_descendant: not Result.has_void
 		end
 
 	add_to_descendants (a_class, a_other_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])
@@ -643,7 +643,7 @@ feature {NONE} -- Descendants cache
 			a_class_not_void: a_class /= Void
 			a_other_class_not_void: a_other_class /= Void
 			a_descendants_not_void: a_descendants /= Void
-			no_void_descendants: not a_descendants.has (Void)
+			no_void_descendants: not a_descendants.has_void
 		do
 			if not a_other_class.in_system then
 				-- Ignore this class: not in the compiled system.
@@ -660,15 +660,15 @@ feature {NONE} -- Descendants cache
 				a_descendants.force_last (a_other_class)
 			end
 		ensure
-			no_void_descendants: not a_descendants.has (Void)
+			no_void_descendants: not a_descendants.has_void
 		end
 
 invariant
 
 	used_features_not_void: used_features /= Void
-	no_void_used_feature: not used_features.has (Void)
+	no_void_used_feature: not used_features.has_void
 	descendants_cache_not_void: descendants_cache /= Void
-	no_void_descendant_list: not descendants_cache.has_item (Void)
-	no_void_descendants: not descendants_cache.there_exists (agent {DS_ARRAYED_LIST [ET_CLASS]}.has (Void))
+	no_void_descendant_list: not descendants_cache.has_void_item
+	no_void_descendants: not descendants_cache.there_exists (agent {DS_ARRAYED_LIST [ET_CLASS]}.has_void)
 
 end

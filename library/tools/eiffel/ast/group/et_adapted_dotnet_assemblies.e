@@ -139,6 +139,6 @@ feature {NONE} -- Constants
 invariant
 
 	dotnet_assemblies_not_void: dotnet_assemblies /= Void
-	not_void_dotnet_assembly: not dotnet_assemblies.has (Void)
+	not_void_dotnet_assembly: not dotnet_assemblies.has_void
 
 end

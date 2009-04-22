@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			an_actual_value_not_void: an_actual_value /= Void
 			an_expected_values_not_void: an_expected_values /= Void
 			an_expected_values_not_empty: not an_expected_values.is_empty
-			no_void_expected_value: not an_expected_values.has (Void)
+			no_void_expected_value: not an_expected_values.has_void
 			a_position_not_void: a_position /= Void
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]

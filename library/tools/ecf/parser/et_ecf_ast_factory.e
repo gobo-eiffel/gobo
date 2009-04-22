@@ -192,8 +192,8 @@ feature -- AST factory
 	new_file_rule (a_exclude, a_include: DS_HASH_SET [STRING]): ET_ECF_FILE_RULE is
 			-- New file rule
 		require
-			no_void_exclude: a_exclude /= Void implies not a_exclude.has (Void)
-			no_void_include: a_include /= Void implies not a_include.has (Void)
+			no_void_exclude: a_exclude /= Void implies not a_exclude.has_void
+			no_void_include: a_include /= Void implies not a_include.has_void
 		do
 			create Result.make (a_exclude, a_include)
 		ensure

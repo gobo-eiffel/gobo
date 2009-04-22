@@ -100,8 +100,8 @@ feature -- Setting
 invariant
 
 	primary_variables_not_void: primary_variables /= Void
-	no_void_primary_variable: not primary_variables.has (Void)
-	no_void_primary_value: not primary_variables.has_item (Void)
+	no_void_primary_variable: not primary_variables.has_void
+	no_void_primary_value: not primary_variables.has_void_item
 	secondary_variables_not_void: secondary_variables /= Void
 --	no_cycle: `secondary_variable', or recursively its secondary variables, does not already have `Current' as secondary variables
 

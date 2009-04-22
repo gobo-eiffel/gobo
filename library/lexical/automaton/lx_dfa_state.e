@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			-- (Note: `nfa_states' may be altered.)
 		require
 			nfa_states_not_void: nfa_states /= Void
-			no_void_state: not nfa_states.has (Void)
+			no_void_state: not nfa_states.has_void
 			valid_bounds: min <= max + 1
 		local
 			i, nb: INTEGER
@@ -291,11 +291,11 @@ feature {LX_DFA_STATE} -- Implementation
 invariant
 
 	states_not_void: states /= Void
-	no_void_states: not states.has (Void)
+	no_void_states: not states.has_void
 	transitions_not_void: transitions /= Void
 	accepted_rules_not_void: accepted_rules /= Void
-	no_void_accepted_rule: not accepted_rules.has (Void)
+	no_void_accepted_rule: not accepted_rules.has_void
 	accepted_head_rules_not_void: accepted_head_rules /= Void
-	no_void_accepted_head_rule: not accepted_head_rules.has (Void)
+	no_void_accepted_head_rule: not accepted_head_rules.has_void
 
 end

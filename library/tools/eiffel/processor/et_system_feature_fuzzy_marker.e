@@ -609,17 +609,17 @@ feature {NONE} -- Implementation
 		require
 			a_class_not_void: a_class /= Void
 			a_redeclarations_not_void: a_redeclarations /= Void
-			no_void_redeclaration: not a_redeclarations.has (Void)
+			no_void_redeclaration: not a_redeclarations.has_void
 		do
 			a_class.features_do_declared_if (agent a_redeclarations.force_last, agent {ET_FEATURE}.is_redeclaration (a_class))
 			a_class.features_do_inherited_if (agent a_redeclarations.force_last, agent {ET_FEATURE}.is_join (a_class))
 		ensure
-			no_void_redeclaration: not a_redeclarations.has (Void)
+			no_void_redeclaration: not a_redeclarations.has_void
 		end
 
 invariant
 
 	used_features_not_void: used_features /= Void
-	no_void_used_feature: not used_features.has (Void)
+	no_void_used_feature: not used_features.has_void
 
 end

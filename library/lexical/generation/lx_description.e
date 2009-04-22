@@ -407,7 +407,7 @@ feature -- Setting
 			-- Set `rules' to `r'.
 		require
 			r_not_void: r /= Void
-			no_void_rule: not r.has (Void)
+			no_void_rule: not r.has_void
 		do
 			rules := r
 		ensure
@@ -418,7 +418,7 @@ feature -- Setting
 			-- Set `eof_rules' to `r'.
 		require
 			r_not_void: r /= Void
-			no_void_rule: not r.has (Void)
+			no_void_rule: not r.has_void
 		do
 			eof_rules := r
 		ensure
@@ -482,13 +482,13 @@ feature {NONE} -- Constants
 invariant
 
 	rules_not_void: rules /= Void
-	no_void_rule: not rules.has (Void)
+	no_void_rule: not rules.has_void
 	eof_rules_not_void: eof_rules /= Void
-	no_void_eof_rule: not eof_rules.has (Void)
+	no_void_eof_rule: not eof_rules.has_void
 	start_conditions_not_void: start_conditions /= Void
 	positive_characters_count: characters_count > 0
 	eiffel_header_not_void: eiffel_header /= Void
-	no_void_eiffel_header: not eiffel_header.has (Void)
+	no_void_eiffel_header: not eiffel_header.has_void
 	array_size_positive: array_size >= 0
 
 end

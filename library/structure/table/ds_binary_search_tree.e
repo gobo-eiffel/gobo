@@ -20,13 +20,15 @@ inherit
 
 	DS_BILINEAR_TABLE [G, K]
 		undefine
-			value
+			value, has_void
 		end
 
 	DS_BINARY_SEARCH_TREE_CONTAINER [G, K]
 		rename
 			has as has_item,
-			has_key as has
+			has_void as has_void_item,
+			has_key as has,
+			has_void_key as has_void
 		export
 			{ANY}
 				key_comparator_settable

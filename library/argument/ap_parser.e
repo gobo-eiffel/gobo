@@ -243,7 +243,7 @@ feature -- Parser
 			-- Parse `a_list' of arguments.
 		require
 			a_list_not_void: a_list /= Void
-			no_void_argument: not a_list.has (Void)
+			no_void_argument: not a_list.has_void
 			valid_options: valid_options
 		do
 			reset_parser
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 invariant
 
 	options_not_void: options /= Void
-	no_option_is_void: not options.has (Void)
+	no_option_is_void: not options.has_void
 	alternative_options_lists_not_void: alternative_options_lists /= Void
 	application_description_not_void: application_description /= Void
 	paramaters_description_not_void: parameters_description /= Void

@@ -248,6 +248,6 @@ invariant
 	abort_count_positive: abort_count >= 0
 	assertion_count_positive: assertion_count >= 0
 	results_not_void: results /= Void
-	no_void_result: not results.has (Void)
+	no_void_result: not results.has_void
 
 end

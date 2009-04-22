@@ -108,6 +108,12 @@ feature -- Status report
 			Result := items.has (v)
 		end
 
+	has_void: BOOLEAN is
+			-- Is Void included in the list of items to be sorted?
+		do
+			Result := items.has_void
+		end
+
 	is_sorted: BOOLEAN is
 			-- Have items been sorted?
 		do

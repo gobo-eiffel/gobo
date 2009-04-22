@@ -758,7 +758,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			-- Deeply clone `cdata_section_elements'.
 		require
 			cdata_section_elements_not_empty: some_cdata_section_elements /= Void
-			no_void_elements: not some_cdata_section_elements.has (Void)
+			no_void_elements: not some_cdata_section_elements.has_void
 		local
 			l_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
@@ -775,7 +775,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			-- Deeply clone `used_character_maps'.
 		require
 			used_character_maps_not_empty: some_used_character_maps /= Void
-			no_void_elements: not some_used_character_maps.has (Void)
+			no_void_elements: not some_used_character_maps.has_void
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 		do
@@ -792,8 +792,8 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			-- Deeply clone `string_property_map'.
 		require
 			string_property_map_not_empty: a_string_property_map /= Void
-			no_void_elements: not a_string_property_map.has_item (Void)
-			no_void_keys: not a_string_property_map.has (Void)
+			no_void_elements: not a_string_property_map.has_void_item
+			no_void_keys: not a_string_property_map.has_void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
@@ -809,7 +809,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			-- Deeply clone `boolean_property_map'.
 		require
 			boolean_property_map_not_empty: a_boolean_property_map /= Void
-			no_void_keys: not a_boolean_property_map.has (Void)
+			no_void_keys: not a_boolean_property_map.has_void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [BOOLEAN, STRING]
 		do
@@ -825,7 +825,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			-- Deeply clone `precedence_property_map'.
 		require
 			precedence_property_map_not_empty: a_precedence_property_map /= Void
-			no_void_keys: not a_precedence_property_map.has (Void)
+			no_void_keys: not a_precedence_property_map.has_void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [INTEGER, STRING]
 		do

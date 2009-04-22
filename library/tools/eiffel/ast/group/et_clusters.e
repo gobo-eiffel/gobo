@@ -568,6 +568,6 @@ feature {NONE} -- Constants
 invariant
 
 	clusters_not_void: clusters /= Void
-	not_void_cluster: not clusters.has (Void)
+	not_void_cluster: not clusters.has_void
 
 end

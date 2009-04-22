@@ -206,6 +206,6 @@ feature {NONE} -- Constants
 invariant
 
 	libraries_not_void: libraries /= Void
-	not_void_library: not libraries.has (Void)
+	not_void_library: not libraries.has_void
 
 end

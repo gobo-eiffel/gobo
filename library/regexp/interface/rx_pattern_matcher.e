@@ -307,7 +307,7 @@ feature -- Multiple matching
 		require
 			compiled: is_compiled
 			an_input_not_void: an_input /= Void
-			no_void_input: not an_input.has (Void)
+			no_void_input: not an_input.has_void
 			an_output_not_void: an_output /= Void
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]
@@ -336,7 +336,7 @@ feature -- Multiple matching
 		require
 			compiled: is_compiled
 			an_input_not_void: an_input /= Void
-			no_void_input: not an_input.has (Void)
+			no_void_input: not an_input.has_void
 			an_output_not_void: an_output /= Void
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]

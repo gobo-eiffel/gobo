@@ -532,8 +532,8 @@ invariant
 	no_suppliers_not_void: no_suppliers /= Void
 	no_suppliers_empty: no_suppliers.is_empty
 	precursor_procedures_not_void: precursor_procedures /= Void
-	no_void_precursor_procedure: not precursor_procedures.has (Void)
+	no_void_precursor_procedure: not precursor_procedures.has_void
 	precursor_queries_not_void: precursor_queries /= Void
-	no_void_precursor_query: not precursor_queries.has (Void)
+	no_void_precursor_query: not precursor_queries.has_void
 
 end

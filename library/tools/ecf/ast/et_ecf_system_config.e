@@ -85,6 +85,6 @@ invariant
 	name_not_void: name /= Void
 	filename_not_void: filename /= Void
 	clients_not_void: clients /= Void
-	no_void_client: not clients.has (Void)
+	no_void_client: not clients.has_void
 
 end

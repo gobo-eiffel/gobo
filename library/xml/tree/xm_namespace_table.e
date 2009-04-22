@@ -78,7 +78,7 @@ feature -- Element change
 			-- the list.
 		require
 			l_not_void: l /= Void
-			no_void_namespace: not l.has (Void)
+			no_void_namespace: not l.has_void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NAMESPACE]
 			a_namespace: XM_NAMESPACE

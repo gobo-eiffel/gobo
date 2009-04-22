@@ -107,6 +107,6 @@ feature {AP_PARSER} -- Parser Interface
 invariant
 
 	possible_values_not_void: possible_values /= Void
-	no_void_possible_value: not possible_values.has (Void)
+	no_void_possible_value: not possible_values.has_void
 
 end

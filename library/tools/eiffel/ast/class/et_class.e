@@ -1143,7 +1143,7 @@ feature -- Ancestors
 			end
 		ensure
 			descendants_not_void: Result /= Void
-			no_void_descendant: not Result.has (Void)
+			no_void_descendant: not Result.has_void
 		end
 
 	add_to_descendants (a_class: ET_CLASS; a_descendants: DS_ARRAYED_LIST [ET_CLASS])
@@ -1153,7 +1153,7 @@ feature -- Ancestors
 		require
 			a_class_not_void: a_class /= Void
 			a_descendants_not_void: a_descendants /= Void
-			no_void_descendants: not a_descendants.has (Void)
+			no_void_descendants: not a_descendants.has_void
 		do
 			if a_class /= Current then
 				if ancestors_built and then has_ancestor (a_class) then
@@ -1161,7 +1161,7 @@ feature -- Ancestors
 				end
 			end
 		ensure
-			no_void_descendants: not a_descendants.has (Void)
+			no_void_descendants: not a_descendants.has_void
 		end
 
 	parents: ET_PARENT_LIST
@@ -1431,11 +1431,11 @@ feature -- Features
 		require
 			a_name_not_void: a_name /= Void
 			a_list_not_void: a_list /= Void
-			no_void_item: not a_list.has (Void)
+			no_void_item: not a_list.has_void
 		do
 			queries.add_overloaded_features (a_name, a_list)
 		ensure
-			no_void_item: not a_list.has (Void)
+			no_void_item: not a_list.has_void
 		end
 
 	add_overloaded_procedures (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_PROCEDURE]) is
@@ -1443,11 +1443,11 @@ feature -- Features
 		require
 			a_name_not_void: a_name /= Void
 			a_list_not_void: a_list /= Void
-			no_void_item: not a_list.has (Void)
+			no_void_item: not a_list.has_void
 		do
 			procedures.add_overloaded_features (a_name, a_list)
 		ensure
-			no_void_item: not a_list.has (Void)
+			no_void_item: not a_list.has_void
 		end
 
 	queries: ET_QUERY_LIST
@@ -1705,7 +1705,7 @@ feature -- Suppliers/Providers
 	set_suppliers (a_suppliers: like suppliers) is
 			-- Set `suppliers' to `a_suppliers'.
 		require
-			no_void_supplier: a_suppliers /= Void implies not a_suppliers.has (Void)
+			no_void_supplier: a_suppliers /= Void implies not a_suppliers.has_void
 		do
 			suppliers := a_suppliers
 		ensure
@@ -1719,7 +1719,7 @@ feature -- Suppliers/Providers
 	set_providers (a_providers: like providers) is
 			-- Set `providers' to `a_providers'.
 		require
-			no_void_provider: a_providers /= Void implies not a_providers.has (Void)
+			no_void_provider: a_providers /= Void implies not a_providers.has_void
 		do
 			providers := a_providers
 		ensure
@@ -1939,8 +1939,8 @@ invariant
 	end_keyword_not_void: end_keyword /= Void
 	named_type: is_named_type
 	valid_context: is_valid_context
-	no_void_supplier: suppliers /= Void implies not suppliers.has (Void)
-	no_void_provider: providers /= Void implies not providers.has (Void)
+	no_void_supplier: suppliers /= Void implies not suppliers.has_void
+	no_void_provider: providers /= Void implies not providers.has_void
 	ancestors_error: has_ancestors_error implies ancestors_built
 	flattening_error: has_flattening_error implies features_flattened
 	interface_error: has_interface_error implies interface_checked

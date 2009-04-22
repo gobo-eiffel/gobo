@@ -102,6 +102,6 @@ invariant
 
 	expression_not_void: expression /= Void
 	object_tests_not_void: object_tests /= Void
-	no_void_object_test: not object_tests.has_item (Void)
+	no_void_object_test: not object_tests.has_void_item
 
 end

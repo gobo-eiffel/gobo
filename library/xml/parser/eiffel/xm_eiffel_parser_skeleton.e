@@ -502,7 +502,7 @@ feature {NONE} -- DTD
 		require
 			ele_not_void: ele_name /= Void
 			some_attributes_not_void: some_attributes /= Void
-			no_void_attributes: not some_attributes.has (Void)
+			no_void_attributes: not some_attributes.has_void
 		local
 			a_cursor: DS_LINEAR_CURSOR [XM_DTD_ATTRIBUTE_CONTENT]
 		do
@@ -936,6 +936,6 @@ invariant
 
 	scanner_not_void: scanner /= Void
 	scanners_not_void: scanners /= Void
-	no_void_scanner: not scanners.has (Void)
+	no_void_scanner: not scanners.has_void
 
 end

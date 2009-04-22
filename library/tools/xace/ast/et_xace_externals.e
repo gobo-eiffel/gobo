@@ -92,10 +92,10 @@ feature -- Element change
 invariant
 
 	c_compiler_options_not_void: c_compiler_options /= Void
-	no_void_c_compiler_option: not c_compiler_options.has (Void)
+	no_void_c_compiler_option: not c_compiler_options.has_void
 	include_directories_not_void: include_directories /= Void
-	no_void_include_directory: not include_directories.has (Void)
+	no_void_include_directory: not include_directories.has_void
 	link_libraries_not_void: link_libraries /= Void
-	no_void_link_library: not link_libraries.has (Void)
+	no_void_link_library: not link_libraries.has_void
 
 end

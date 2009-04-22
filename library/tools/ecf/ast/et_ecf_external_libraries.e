@@ -106,6 +106,6 @@ feature {NONE} -- Constants
 invariant
 
 	external_libraries_not_void: external_libraries /= Void
-	no_void_external_library: not external_libraries.has (Void)
+	no_void_external_library: not external_libraries.has_void
 
 end

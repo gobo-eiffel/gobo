@@ -274,6 +274,6 @@ feature -- Traversal
 
 invariant
 
-	no_void_start_condition: not has (Void)
+	no_void_start_condition: not has_void
 
 end

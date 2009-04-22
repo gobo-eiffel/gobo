@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		require
 			a_cluster_not_void: a_cluster /= Void
 			a_names_not_void: a_names /= Void
-			no_void_name: not a_names.has (Void)
+			no_void_name: not a_names.has_void
 		do
 			current_cluster := a_cluster
 			group_names := a_names
@@ -110,6 +110,6 @@ invariant
 
 	current_cluster_not_void: current_cluster /= Void
 	group_names_not_void: group_names /= Void
-	no_void_group_name: not group_names.has (Void)
+	no_void_group_name: not group_names.has_void
 
 end

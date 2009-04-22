@@ -483,12 +483,12 @@ invariant
 
 	ast_factory_not_void: ast_factory /= Void
 	named_clusters_not_void: named_clusters /= Void
-	no_void_named_cluster: not named_clusters.has_item (Void)
+	no_void_named_cluster: not named_clusters.has_void_item
 	override_cluster_names_not_void: override_cluster_names /= Void
-	no_void_override_cluster_name: not override_cluster_names.has (Void)
+	no_void_override_cluster_name: not override_cluster_names.has_void
 	external_include_pathnames_not_void: external_include_pathnames /= Void
-	no_void_external_include_pathname: not external_include_pathnames.has (Void)
+	no_void_external_include_pathname: not external_include_pathnames.has_void
 	external_object_pathnames_not_void: external_object_pathnames /= Void
-	no_void_external_object_pathname: not external_object_pathnames.has (Void)
+	no_void_external_object_pathname: not external_object_pathnames.has_void
 
 end

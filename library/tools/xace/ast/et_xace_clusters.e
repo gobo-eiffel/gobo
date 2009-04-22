@@ -119,7 +119,7 @@ feature -- Basic operations
 			-- of subclusters to `an_export'.
 		require
 			an_export_not_void: an_export /= Void
-			no_void_export: not an_export.has (Void)
+			no_void_export: not an_export.has_void
 		local
 			i, nb: INTEGER
 		do
@@ -129,7 +129,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 		ensure
-			no_void_export: not an_export.has (Void)
+			no_void_export: not an_export.has_void
 		end
 
 	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT]) is
@@ -137,7 +137,7 @@ feature -- Basic operations
 			-- of subclusters to `a_components'.
 		require
 			a_components_not_void: a_components /= Void
-			no_void_component: not a_components.has (Void)
+			no_void_component: not a_components.has_void
 		local
 			i, nb: INTEGER
 		do
@@ -147,7 +147,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 		ensure
-			no_void_component: not a_components.has (Void)
+			no_void_component: not a_components.has_void
 		end
 
 	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY]) is
@@ -155,7 +155,7 @@ feature -- Basic operations
 			-- of subclusters to `an_assemblies'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
-			no_void_assembly: not an_assemblies.has (Void)
+			no_void_assembly: not an_assemblies.has_void
 		local
 			i, nb: INTEGER
 		do
@@ -165,7 +165,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 		ensure
-			no_void_assembly: not an_assemblies.has (Void)
+			no_void_assembly: not an_assemblies.has_void
 		end
 
 	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER]) is
@@ -173,7 +173,7 @@ feature -- Basic operations
 			-- `an_override_clusters' if they are top level override clusters.
 		require
 			an_override_clusters_not_void: an_override_clusters /= Void
-			no_void_override_cluster: not an_override_clusters.has (Void)
+			no_void_override_cluster: not an_override_clusters.has_void
 		local
 			i, nb: INTEGER
 		do
@@ -183,7 +183,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 		ensure
-			no_void_override_cluster: not an_override_clusters.has (Void)
+			no_void_override_cluster: not an_override_clusters.has_void
 		end
 
 	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER]) is
@@ -192,7 +192,7 @@ feature -- Basic operations
 			-- that is otherwise described by the ECF file.
 		require
 			an_ecf_clusters_not_void: an_ecf_clusters /= Void
-			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
+			no_void_ecf_cluster: not an_ecf_clusters.has_void
 		local
 			i, nb: INTEGER
 		do
@@ -202,7 +202,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 		ensure
-			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
+			no_void_ecf_cluster: not an_ecf_clusters.has_void
 		end
 
 end

@@ -65,7 +65,7 @@ feature -- Feature adaptation resolving
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			old_class: ET_CLASS
 			a_parents: ET_PARENT_LIST
@@ -99,7 +99,7 @@ feature -- Feature adaptation resolving
 			free_redeclared_feature := redeclared_feature_list
 			current_class := old_class
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 feature {NONE} -- Feature recording
@@ -108,7 +108,7 @@ feature {NONE} -- Feature recording
 			-- Add to `a_features' features declared in `current_class'.
 		require
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			l_query: ET_QUERY
 			l_queries: ET_QUERY_LIST
@@ -174,7 +174,7 @@ feature {NONE} -- Feature recording
 				i := i + 1
 			end
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
@@ -185,7 +185,7 @@ feature {NONE} -- Feature recording
 		require
 			a_parent_not_void: a_parent /= Void
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			a_class: ET_CLASS
 			has_rename: BOOLEAN
@@ -487,7 +487,7 @@ feature {NONE} -- Feature recording
 				select_table.wipe_out
 			end
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 feature {NONE} -- Feature adaptation
@@ -727,7 +727,7 @@ feature {NONE} -- Replication
 			-- in `a_features'.
 		require
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			l_feature: ET_FLATTENED_FEATURE
 			l_adapted_feature: ET_ADAPTED_FEATURE
@@ -943,25 +943,25 @@ feature {NONE} -- Implementation
 invariant
 
 	rename_table_not_void: rename_table /= Void
-	no_void_rename: not rename_table.has_item (Void)
-	no_void_rename_old_name: not rename_table.has (Void)
+	no_void_rename: not rename_table.has_void_item
+	no_void_rename_old_name: not rename_table.has_void
 	renamed_feature_names: rename_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	export_table_not_void: export_table /= Void
-	no_void_export: not export_table.has (Void)
+	no_void_export: not export_table.has_void
 	exported_feature_names: export_table.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	undefine_table_not_void: undefine_table /= Void
-	no_void_undefine: not undefine_table.has (Void)
+	no_void_undefine: not undefine_table.has_void
 	undefined_feature_names: undefine_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	redefine_table_not_void: redefine_table /= Void
-	no_void_redefine: not redefine_table.has (Void)
+	no_void_redefine: not redefine_table.has_void
 	redefined_feature_names: redefine_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	select_table_not_void: select_table /= Void
-	no_void_select: not select_table.has (Void)
+	no_void_select: not select_table.has_void
 	selected_feature_names: select_table.keys.for_all (agent {ET_CALL_NAME}.is_feature_name)
 	replicable_features_not_void: replicable_features /= Void
-	no_void_replicable_feature: not replicable_features.has_item (Void)
+	no_void_replicable_feature: not replicable_features.has_void_item
 	alias_mapping_not_void: alias_mapping /= Void
-	no_void_mapped_alias: not alias_mapping.has (Void)
-	no_void_mapped_feature_name: not alias_mapping.has_item (Void)
+	no_void_mapped_alias: not alias_mapping.has_void
+	no_void_mapped_feature_name: not alias_mapping.has_void_item
 
 end

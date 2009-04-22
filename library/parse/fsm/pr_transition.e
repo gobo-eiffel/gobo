@@ -83,7 +83,7 @@ invariant
 
 	source_not_void: source /= Void
 	target_not_void: target /= Void
-	no_void_following_tokens: not following_tokens.has (Void)
-	no_void_included_tokens: not included_tokens.has (Void)
+	no_void_following_tokens: not following_tokens.has_void
+	no_void_included_tokens: not included_tokens.has_void
 
 end

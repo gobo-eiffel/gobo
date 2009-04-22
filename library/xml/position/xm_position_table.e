@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 invariant
 
 	table_not_void: table /= Void
-	no_void_pair: not table.has (Void)
+	no_void_pair: not table.has_void
 	-- no_void_position: forall p in table, p.first /= Void
 	-- no_void_node: forall p in table, p.second /= Void
 

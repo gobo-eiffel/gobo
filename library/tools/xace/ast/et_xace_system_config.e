@@ -146,13 +146,13 @@ feature -- Basic operations
 			-- all clusters and subclusters to `an_export'.
 		require
 			an_export_not_void: an_export /= Void
-			no_void_export: not an_export.has (Void)
+			no_void_export: not an_export.has_void
 		do
 			if clusters /= Void then
 				clusters.merge_exported_features (an_export)
 			end
 		ensure
-			no_void_export: not an_export.has (Void)
+			no_void_export: not an_export.has_void
 		end
 
 end

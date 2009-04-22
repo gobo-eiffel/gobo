@@ -42,7 +42,7 @@ feature -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_suppliers_not_void: a_suppliers /= Void
-			no_void_supplier: not a_suppliers.has (Void)
+			no_void_supplier: not a_suppliers.has_void
 		do
 			current_class := a_class
 			supplier_classes := a_suppliers
@@ -356,7 +356,7 @@ invariant
 	current_class_not_void: current_class /= Void
 	current_class_preparsed: current_class.is_preparsed
 	supplier_classes_not_void: supplier_classes /= Void
-	no_void_supplier_class: not supplier_classes.has (Void)
+	no_void_supplier_class: not supplier_classes.has_void
 	type_checker_not_void: type_checker /= Void
 
 end

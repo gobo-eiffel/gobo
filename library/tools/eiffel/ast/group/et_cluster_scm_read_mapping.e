@@ -31,6 +31,6 @@ feature -- Access
 invariant
 
 	scm_write_mappings_not_void: scm_write_mappings /= Void
-	not_void_scm_write_mapping: not scm_write_mappings.has (Void)
+	not_void_scm_write_mapping: not scm_write_mappings.has_void
 
 end

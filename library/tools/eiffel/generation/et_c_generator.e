@@ -574,7 +574,7 @@ feature {NONE} -- Compilation script generation
 			end
 		ensure
 			c_config_not_void: Result /= Void
-			no_void_variables: not Result.has_item (Void)
+			no_void_variables: not Result.has_void_item
 			cc_defined: Result.has ("cc")
 			link_defined: Result.has ("link")
 			exe_defined: Result.has ("exe")
@@ -13835,7 +13835,7 @@ feature {NONE} -- Polymorphic call functions generation
 			a_last_call_not_void: a_last_call /= Void
 			a_target_dynamic_type_ids_not_void: a_target_dynamic_type_ids /= Void
 			a_target_dynamic_types_not_void: a_target_dynamic_types /= Void
-			no_void_target_dynamic_type: not a_target_dynamic_types.has_item (Void)
+			no_void_target_dynamic_type: not a_target_dynamic_types.has_void_item
 			consistent_count: a_target_dynamic_types.count = a_target_dynamic_type_ids.count
 			l_large_enough: l >= 1
 			l_small_enough: l <= u
@@ -14789,7 +14789,7 @@ feature {NONE} -- Deep features generation
 			a_target_static_type_not_void: a_target_static_type /= Void
 			a_target_dynamic_type_ids_not_void: a_target_dynamic_type_ids /= Void
 			a_target_dynamic_types_not_void: a_target_dynamic_types /= Void
-			no_void_target_dynamic_type: not a_target_dynamic_types.has_item (Void)
+			no_void_target_dynamic_type: not a_target_dynamic_types.has_void_item
 			consistent_count: a_target_dynamic_types.count = a_target_dynamic_type_ids.count
 			l_large_enough: l >= 1
 			l_small_enough: l <= u
@@ -27716,65 +27716,64 @@ invariant
 	current_type_not_void: current_type /= Void
 	type_checker_not_void: type_checker /= Void
 	operand_stack_not_void: operand_stack /= Void
-	no_void_operand: not operand_stack.has (Void)
+	no_void_operand: not operand_stack.has_void
 	call_operands_not_void: call_operands /= Void
-	no_void_call_operand: not call_operands.has (Void)
+	no_void_call_operand: not call_operands.has_void
 	conforming_type_set_not_void: conforming_type_set /= Void
 	conforming_types_not_void: conforming_types /= Void
 	non_conforming_types_not_void: non_conforming_types /= Void
 	attachment_dynamic_type_ids_not_void: attachment_dynamic_type_ids /= Void
 	target_dynamic_type_ids_not_void: target_dynamic_type_ids /= Void
 	target_dynamic_types_not_void: target_dynamic_types /= Void
-	no_void_target_dynamic_type: not target_dynamic_types.has_item (Void)
+	no_void_target_dynamic_type: not target_dynamic_types.has_void_item
 	equality_type_set_not_void: equality_type_set /= Void
 	equality_common_types_not_void: equality_common_types /= Void
 	standalone_type_sets_not_void: standalone_type_sets /= Void
-	no_void_standalone_type_set: not standalone_type_sets.has (Void)
 	deep_twin_types_not_void: deep_twin_types /= Void
-	no_void_deep_twin_type: not deep_twin_types.has (Void)
+	no_void_deep_twin_type: not deep_twin_types.has_void
 	deep_equal_types_not_void: deep_equal_types /= Void
-	no_void_deep_equal_type: not deep_equal_types.has (Void)
+	no_void_deep_equal_type: not deep_equal_types.has_void
 	deep_feature_target_type_sets_not_void: deep_feature_target_type_sets /= Void
-	no_void_deep_feature_target_type_set: not deep_feature_target_type_sets.has_item (Void)
-	no_void_deep_feature_static_target_type: not deep_feature_target_type_sets.has (Void)
+	no_void_deep_feature_target_type_set: not deep_feature_target_type_sets.has_void_item
+	no_void_deep_feature_static_target_type: not deep_feature_target_type_sets.has_void
 	current_agents_not_void: current_agents /= Void
-	no_void_agent: not current_agents.has (Void)
+	no_void_agent: not current_agents.has_void
 	agent_instruction_not_void: agent_instruction /= Void
 	agent_expression_not_void: agent_expression /= Void
 	agent_target_not_void: agent_target /= Void
 	agent_arguments_not_void: agent_arguments /= Void
 	agent_open_operands_not_void: agent_open_operands /= Void
-	no_void_agent_open_operand: not agent_open_operands.has (Void)
+	no_void_agent_open_operand: not agent_open_operands.has_void
 	agent_closed_operands_not_void: agent_closed_operands /= Void
-	no_void_agent_closed_operand: not agent_closed_operands.has (Void)
+	no_void_agent_closed_operand: not agent_closed_operands.has_void
 	agent_closed_operands_type_not_void: agent_closed_operands_type /= Void
 	wrapper_expression_not_void: wrapper_expression /= Void
 	manifest_array_types_not_void: manifest_array_types /= Void
-	no_void_manifest_array_type: not manifest_array_types.has (Void)
+	no_void_manifest_array_type: not manifest_array_types.has_void
 	big_manifest_array_types_not_void: big_manifest_array_types /= Void
-	no_void_big_manifest_array_type: not big_manifest_array_types.has (Void)
+	no_void_big_manifest_array_type: not big_manifest_array_types.has_void
 	manifest_tuple_types_not_void: manifest_tuple_types /= Void
-	no_void_manifest_tuple_type: not manifest_tuple_types.has (Void)
+	no_void_manifest_tuple_type: not manifest_tuple_types.has_void
 	current_object_tests_not_void: current_object_tests /= Void
-	no_void_current_object_test: not current_object_tests.has (Void)
+	no_void_current_object_test: not current_object_tests.has_void
 	current_object_equalities_not_void: current_object_equalities /= Void
-	no_void_current_object_equality: not current_object_equalities.has (Void)
+	no_void_current_object_equality: not current_object_equalities.has_void
 	current_equalities_not_void: current_equalities /= Void
-	no_void_current_equality: not current_equalities.has (Void)
+	no_void_current_equality: not current_equalities.has_void
 	called_features_not_void: called_features /= Void
-	no_void_called_feature: not called_features.has (Void)
+	no_void_called_feature: not called_features.has_void
 	once_features_not_void: once_features /= Void
-	no_void_once_feature: not once_features.has (Void)
+	no_void_once_feature: not once_features.has_void
 	-- once_feature_constraint: forall f in once_features, f = f.implementation_feature
 	constant_features_not_void: constant_features /= Void
-	no_void_constant_feature: not constant_features.has (Void)
+	no_void_constant_feature: not constant_features.has_void
 	-- constant_feature_constraint: forall f in constant_features, f = f.implementation_feature
 	inline_constants_not_void: inline_constants /= Void
-	no_void_inline_constant: not inline_constants.has (Void)
+	no_void_inline_constant: not inline_constants.has_void
 	dispose_procedures_not_void: dispose_procedures /= Void
 		-- Temporary variables.
 	temp_variables_not_void: temp_variables /= Void
-	no_void_temp_variable: not temp_variables.has (Void)
+	no_void_temp_variable: not temp_variables.has_void
 	used_temp_variables_not_void: used_temp_variables /= Void
 	used_temp_variables_count: used_temp_variables.count <= temp_variables.count
 	free_temp_variables_not_void: free_temp_variables /= Void
@@ -27783,27 +27782,27 @@ invariant
 	frozen_temp_variables_count: frozen_temp_variables.count = used_temp_variables.count
 		--
 	included_header_filenames_not_void: included_header_filenames /= Void
-	no_void_included_header_filename: not included_header_filenames.has (Void)
+	no_void_included_header_filename: not included_header_filenames.has_void
 	included_runtime_header_files_not_void: included_runtime_header_files /= Void
-	no_void_included_runtime_header_file: not included_runtime_header_files.has (Void)
+	no_void_included_runtime_header_file: not included_runtime_header_files.has_void
 	included_runtime_c_files_not_void: included_runtime_c_files /= Void
-	no_void_included_runtime_c_file: not included_runtime_c_files.has (Void)
+	no_void_included_runtime_c_file: not included_runtime_c_files.has_void
 	c_filenames_not_void: c_filenames /= Void
-	no_void_c_filename: not c_filenames.has (Void)
-	no_void_c_file_extension: not c_filenames.has_item (Void)
+	no_void_c_filename: not c_filenames.has_void
+	no_void_c_file_extension: not c_filenames.has_void_item
 		-- Rescue clauses.
 	locals_written_not_void: locals_written /= Void
-	no_void_local_written: not locals_written.has (Void)
+	no_void_local_written: not locals_written.has_void
 	locals_written_in_body_not_void: locals_written_in_body /= Void
-	no_void_local_written_in_body: not locals_written_in_body.has (Void)
+	no_void_local_written_in_body: not locals_written_in_body.has_void
 	locals_written_in_rescue_not_void: locals_written_in_rescue /= Void
-	no_void_local_written_in_rescue: not locals_written_in_rescue.has (Void)
+	no_void_local_written_in_rescue: not locals_written_in_rescue.has_void
 	locals_read_not_void: locals_read /= Void
-	no_void_local_read: not locals_read.has (Void)
+	no_void_local_read: not locals_read.has_void
 	locals_read_in_body_not_void: locals_read_in_body /= Void
-	no_void_local_read_in_body: not locals_read_in_body.has (Void)
+	no_void_local_read_in_body: not locals_read_in_body.has_void
 	locals_read_in_rescue_not_void: locals_read_in_rescue /= Void
-	no_void_local_read_in_rescue: not locals_read_in_rescue.has (Void)
+	no_void_local_read_in_rescue: not locals_read_in_rescue.has_void
 		-- Regular expressions for external features.
 	external_c_regexp_not_void: external_c_regexp /= Void
 	external_c_regexp_compiled: external_c_regexp.is_compiled
@@ -27831,14 +27830,14 @@ invariant
 	split_threshold_positive: split_threshold > 0
 	system_name_not_void: system_name /= Void
 	dynamic_type_id_set_names_not_void: dynamic_type_id_set_names /= Void
-	no_void_dynamic_type_id_set_name: not dynamic_type_id_set_names.has_item (Void)
-	no_void_dynamic_type_id_set: not dynamic_type_id_set_names.has (Void)
+	no_void_dynamic_type_id_set_name: not dynamic_type_id_set_names.has_void_item
+	no_void_dynamic_type_id_set: not dynamic_type_id_set_names.has_void
 	current_dynamic_type_sets_not_void: current_dynamic_type_sets /= Void
 	extra_dynamic_type_sets_not_void: extra_dynamic_type_sets /= Void
 	agent_tuple_item_expressions_not_void: agent_tuple_item_expressions /= Void
 	agent_manifest_tuple_not_void: agent_manifest_tuple /= Void
 	formal_arguments_not_void: formal_arguments /= Void
-	no_void_formal_argument: not formal_arguments.has (Void)
+	no_void_formal_argument: not formal_arguments.has_void
 	current_call_info_not_void: current_call_info /= Void
 
 end

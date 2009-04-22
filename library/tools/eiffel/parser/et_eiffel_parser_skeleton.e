@@ -6356,20 +6356,20 @@ invariant
 	last_keywords_not_void: last_keywords /= Void
 	last_symbols_not_void: last_symbols /= Void
 	assertions_not_void: assertions /= Void
-	no_void_assertion: not assertions.has (Void)
+	no_void_assertion: not assertions.has_void
 	queries_not_void: queries /= Void
-	no_void_query: not queries.has (Void)
+	no_void_query: not queries.has_void
 	-- queries_registered: forall f in queries, f.is_registered
 	procedures_not_void: procedures /= Void
-	no_void_procedure: not procedures.has (Void)
+	no_void_procedure: not procedures.has_void
 	-- procedures_registered: forall f in procedures, f.is_registered
 	constraints_not_void: constraints /= Void
 	providers_not_void: providers /= Void
-	no_void_provider: not providers.has (Void)
+	no_void_provider: not providers.has_void
 		-- Object-tests.
 	last_object_tests_stack_not_void: last_object_tests_stack /= Void
 	last_object_tests_pool_not_void: last_object_tests_pool /= Void
-	no_void_last_object_tests_in_pool: not last_object_tests_pool.has (Void)
+	no_void_last_object_tests_in_pool: not last_object_tests_pool.has_void
 		-- Input buffer.
 	eiffel_buffer_not_void: eiffel_buffer /= Void
 

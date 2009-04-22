@@ -51,7 +51,7 @@ feature -- Basic operations
 		ensure
 			result_not_void: Result /= Void
 			result_has_at_least_one_element: Result.count >= 1
-			result_items_not_void: not Result.has (Void)
+			result_items_not_void: not Result.has_void
 		end
 
 	split_on_first (s: STRING; c: CHARACTER): DS_PAIR [STRING, STRING] is

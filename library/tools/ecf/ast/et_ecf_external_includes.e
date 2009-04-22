@@ -106,6 +106,6 @@ feature {NONE} -- Constants
 invariant
 
 	external_includes_not_void: external_includes /= Void
-	no_void_external_include: not external_includes.has (Void)
+	no_void_external_include: not external_includes.has_void
 
 end

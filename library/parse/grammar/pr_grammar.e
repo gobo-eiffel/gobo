@@ -678,14 +678,14 @@ feature {NONE} -- Constants
 invariant
 
 	tokens_not_void: tokens /= Void
-	no_void_token: not tokens.has (Void)
+	no_void_token: not tokens.has_void
 	variables_not_void: variables /= Void
-	no_void_variable: not variables.has (Void)
+	no_void_variable: not variables.has_void
 	types_not_void: types /= Void
-	no_void_type: not types.has (Void)
+	no_void_type: not types.has_void
 	rules_not_void: rules /= Void
-	no_void_rule: not rules.has (Void)
+	no_void_rule: not rules.has_void
 	eiffel_header_not_void: eiffel_header /= Void
-	no_void_eiffel_header: not eiffel_header.has (Void)
+	no_void_eiffel_header: not eiffel_header.has_void
 
 end

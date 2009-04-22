@@ -1038,7 +1038,7 @@ invariant
 	full_reference_not_void: full_reference /= Void
 	full_reference_is_valid: not Url_encoding.has_excluded_characters (full_reference)
 	path_items_not_void: path_items /= Void
-	no_void_path_item: not path_items.has (Void)
+	no_void_path_item: not path_items.has_void
 	-- no_empty_path_item: not path_items.has ("")
 		-- Contraints on parsed `authority'.
 	user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) /= 0

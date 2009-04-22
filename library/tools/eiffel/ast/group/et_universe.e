@@ -359,7 +359,7 @@ feature -- Access
 			end
 		ensure
 			classes_not_void: Result /= Void
-			no_void_class: not Result.has (Void)
+			no_void_class: not Result.has_void
 		end
 
 	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
@@ -389,7 +389,7 @@ feature -- Access
 			end
 		ensure
 			classes_not_void: Result /= Void
-			no_void_class: not Result.has (Void)
+			no_void_class: not Result.has_void
 		end
 
 	current_system: ET_SYSTEM
@@ -1260,10 +1260,10 @@ invariant
 
 	current_system_not_void: current_system /= Void
 	classes_not_void: classes /= Void
-	no_void_class: not classes.has_item (Void)
+	no_void_class: not classes.has_void_item
 		-- Class mapping.
 	mapped_classes_not_void: mapped_classes /= Void
-	no_void_mapped_class: not mapped_classes.has_item (Void)
+	no_void_mapped_class: not mapped_classes.has_void_item
 	character_class_not_void: character_class /= Void
 	character_ref_class_not_void: character_ref_class /= Void
 	character_type_not_void: character_type /= Void

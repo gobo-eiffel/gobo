@@ -976,7 +976,7 @@ feature {NONE} -- Building
 			-- Build `yy_rules'.
 		require
 			rules_not_void: rules /= Void
-			no_void_rule: not rules.has (Void)
+			no_void_rule: not rules.has_void
 		local
 			i, nb: INTEGER
 		do
@@ -999,7 +999,7 @@ feature {NONE} -- Building
 			-- Rules are indexed by rule ids.
 		require
 			rules_not_void: rules /= Void
-			no_void_rule: not rules.has (Void)
+			no_void_rule: not rules.has_void
 --			valid_rules: forall rule in rules, rule.id >= l and rule.id <= u
 		local
 			i, nb: INTEGER
@@ -1091,7 +1091,7 @@ feature {NONE} -- Constants
 invariant
 
 	minimum_symbol: minimum_symbol = 1
-	no_void_eiffel_header: eiffel_header /= Void implies not eiffel_header.has (Void)
+	no_void_eiffel_header: eiffel_header /= Void implies not eiffel_header.has_void
 	characters_count_positive: characters_count > 0
 	array_size_positive: array_size >= 0
 	input_filename_not_void: input_filename /= Void

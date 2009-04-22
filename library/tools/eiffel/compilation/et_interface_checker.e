@@ -437,11 +437,11 @@ invariant
 	parent3_checker_not_void: parent_checker3 /= Void
 	qualified_anchored_type_checker_not_void: qualified_anchored_type_checker /= Void
 	named_features_not_void: named_features /= Void
-	no_void_named_feature: not named_features.has_item (Void)
+	no_void_named_feature: not named_features.has_void_item
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
 	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
 	signature_checker_not_void: signature_checker /= Void
 	classes_to_be_processed_not_void: classes_to_be_processed /= Void
-	no_void_class_to_be_processed: not classes_to_be_processed.has (Void)
+	no_void_class_to_be_processed: not classes_to_be_processed.has_void
 
 end

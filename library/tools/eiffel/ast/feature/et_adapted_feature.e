@@ -311,6 +311,6 @@ invariant
 	parent_feature_not_void: parent_feature /= Void
 	is_adapted: is_adapted
 	-- valid_replicated_seeds: replicated_seeds /= Void implies forall a_seed in replicated_seeds, has_seed (a_seed)
-	no_void_replicated_features: replicated_features /= Void implies not replicated_features.has (Void)
+	no_void_replicated_features: replicated_features /= Void implies not replicated_features.has_void
 
 end

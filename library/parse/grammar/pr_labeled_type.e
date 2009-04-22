@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		require
 			a_labels_not_void: a_labels /= Void
 			a_labels_not_empty: not a_labels.is_empty
-			no_void_label: not a_labels.has (Void)
+			no_void_label: not a_labels.has_void
 			a_type_not_void: a_type /= Void
 		do
 			labels := a_labels
@@ -45,7 +45,7 @@ invariant
 
 	labels_not_void: labels /= Void
 	labels_not_empty: not labels.is_empty
-	no_void_label: not labels.has (Void)
+	no_void_label: not labels.has_void
 	type_not_void: type /= Void
 
 end

@@ -98,6 +98,6 @@ feature {NONE} -- Implementation
 invariant
 
 	tests_not_void: tests /= Void
-	no_void_test: not tests.has (Void)
+	no_void_test: not tests.has_void
 
 end

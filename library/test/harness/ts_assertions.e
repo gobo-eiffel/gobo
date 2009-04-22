@@ -147,7 +147,7 @@ feature {NONE} -- Constants
 invariant
 
 	error_messages_not_void: error_messages /= Void
-	no_void_error_message: not error_messages.has (Void)
+	no_void_error_message: not error_messages.has_void
 	count_positive: count >= 0
 
 end

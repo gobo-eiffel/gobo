@@ -66,6 +66,6 @@ invariant
 
 	strictly_positive_fingerprint: fingerprint > 0
 	key_definitions_not_void: key_definitions /= Void
-	no_void_definitions: not key_definitions.has (Void)
+	no_void_definitions: not key_definitions.has_void
 
 end

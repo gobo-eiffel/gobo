@@ -122,8 +122,8 @@ invariant
 
 	rule_not_void: rule /= Void
 	lookaheads_not_void: lookaheads /= Void
-	no_void_lookahead_token: not lookaheads.has (Void)
+	no_void_lookahead_token: not lookaheads.has_void
 	transitions_not_void: transitions /= Void
-	no_void_transition: not transitions.has (Void)
+	no_void_transition: not transitions.has_void
 
 end

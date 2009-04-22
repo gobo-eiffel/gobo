@@ -150,7 +150,7 @@ feature -- Reporting errors
 			an_attribute_name_not_empty: an_attribute_name.count > 0
 			an_actual_value_not_void: an_actual_value /= Void
 			an_expected_values_not_void: an_expected_values /= Void
-			no_void_expected_value: not an_expected_values.has (Void)
+			no_void_expected_value: not an_expected_values.has_void
 			a_position_not_void: a_position /= Void
 		deferred
 		end

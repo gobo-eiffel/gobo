@@ -158,7 +158,7 @@ feature {NONE} -- Generation
 			-- Print `a_rhs' to `a_file'.
 		require
 			a_rhs_not_void: a_rhs /= Void
-			no_void_rhs: not a_rhs.has (Void)
+			no_void_rhs: not a_rhs.has_void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local

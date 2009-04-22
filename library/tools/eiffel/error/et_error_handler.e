@@ -1120,7 +1120,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_cyle_not_void: a_cycle /= Void
-			no_void_formal: not a_cycle.has (Void)
+			no_void_formal: not a_cycle.has_void
 			is_cycle: a_cycle.count >= 2
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -1194,7 +1194,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_cyle_not_void: a_cycle /= Void
-			no_void_formal: not a_cycle.has (Void)
+			no_void_formal: not a_cycle.has_void
 			is_cycle: a_cycle.count >= 2
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -3206,7 +3206,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_cycle_not_void: a_cycle /= Void
-			no_void_class: not a_cycle.has (Void)
+			no_void_class: not a_cycle.has_void
 			is_cycle: a_cycle.count >= 2
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -3821,7 +3821,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			replicated_features_not_void: replicated_features /= Void
-			no_void_feature: not replicated_features.has (Void)
+			no_void_feature: not replicated_features.has_void
 			replicated: replicated_features.count >= 2
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -3843,7 +3843,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			replicated_features_not_void: replicated_features /= Void
-			no_void_feature: not replicated_features.has (Void)
+			no_void_feature: not replicated_features.has_void
 			-- all_selected: forall f in replicated_features, f.has_select
 			replicated: replicated_features.count >= 2
 		local
@@ -5072,7 +5072,7 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_cycle_not_void: a_cycle /= Void
-			no_void_anchor: not a_cycle.has (Void)
+			no_void_anchor: not a_cycle.has_void
 			is_cycle: a_cycle.count >= 2
 		local
 			an_error: ET_VALIDITY_ERROR

@@ -1029,12 +1029,12 @@ invariant
 
 	states_not_void: states /= Void
 	has_states: not states.is_empty
-	no_void_state: not states.has (Void)
+	no_void_state: not states.has_void
 	grammar_not_void: grammar /= Void
 	valid_grammar: grammar.start_symbol /= Void
 --	positions_sorted: forall state in states, state.positions_sorted
 	cached_states_not_void: cached_states /= Void
-	no_void_state_list: not cached_states.has_item (Void)
+	no_void_state_list: not cached_states.has_void_item
 --	no_void_cached_state: forall state_list in cached_states, forall state in state_list, state /= Void
 
 end

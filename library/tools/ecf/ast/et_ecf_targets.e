@@ -162,6 +162,6 @@ feature {NONE} -- Constants
 invariant
 
 	targets_not_void: targets /= Void
-	no_void_target: not targets.has (Void)
+	no_void_target: not targets.has_void
 
 end

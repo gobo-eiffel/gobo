@@ -5579,7 +5579,7 @@ feature {NONE} -- Comments
 			-- Comments are followed by a new-line.
 		require
 			a_comments_not_void: a_comments /= Void
-			no_void_comment: not a_comments.has (Void)
+			no_void_comment: not a_comments.has_void
 			all_comments: a_comments.for_all (agent {ET_BREAK}.has_comment)
 		do
 			a_comments.do_all (agent print_indented_comment)
@@ -5592,7 +5592,7 @@ feature {NONE} -- Comments
 			-- Comments are followed by a new-line.
 		require
 			a_comments_not_void: a_comments /= Void
-			no_void_comment: not a_comments.has (Void)
+			no_void_comment: not a_comments.has_void
 			all_comments: a_comments.for_all (agent {ET_BREAK}.has_comment)
 		local
 			i, nb: INTEGER
@@ -5628,7 +5628,7 @@ invariant
 	file_is_open_write: file.is_open_write
 	comment_finder_not_void: comment_finder /= Void
 	comment_list_not_void: comment_list /= Void
-	no_void_comment: not comment_list.has (Void)
+	no_void_comment: not comment_list.has_void
 	all_comments: comment_list.for_all (agent {ET_BREAK}.has_comment)
 
 end

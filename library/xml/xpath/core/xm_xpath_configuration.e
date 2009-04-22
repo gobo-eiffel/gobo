@@ -228,6 +228,6 @@ invariant
 
 	collection_resolver_not_void: initialized implies collection_resolver /= Void
 	system_properties_not_void: initialized implies system_properties /= Void
-	no_void_namespace: initialized implies not system_properties.has (Void)
+	no_void_namespace: initialized implies not system_properties.has_void
 
 end

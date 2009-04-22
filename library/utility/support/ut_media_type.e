@@ -166,6 +166,6 @@ invariant
 	subtype_not_empty: subtype.count > 0
 	subtype_is_lower_case: subtype.is_equal (subtype.as_lower)
 	parameters_not_void: parameters /= Void
-	no_void_parameter: not parameters.has_item (Void)
+	no_void_parameter: not parameters.has_void_item
 
 end

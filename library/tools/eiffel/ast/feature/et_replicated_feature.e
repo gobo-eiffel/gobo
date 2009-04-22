@@ -82,7 +82,7 @@ invariant
 
 	has_replication: has_replication
 	features_not_void: features /= Void
-	no_void_feature: not features.has (Void)
+	no_void_feature: not features.has_void
 	two_or_more_features: features.count >= 2
 	-- inherted_features: forall f in features, f.is_inherited
 

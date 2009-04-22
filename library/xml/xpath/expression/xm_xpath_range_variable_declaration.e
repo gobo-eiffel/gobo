@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 invariant
 
 	references_not_void: not references.has_void
-	all_references_not_void: not references.has (Void)
+	all_references_not_void: not references.has_void
 	name_not_void: variable_name /= Void and then variable_name.count > 0
 	required_type_not_void: required_type /= Void
 

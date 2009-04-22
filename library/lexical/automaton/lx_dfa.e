@@ -96,7 +96,7 @@ feature -- Access
 			end
 		ensure
 			start_states_not_void: Result /= Void
-			no_void_state: not Result.has (Void)
+			no_void_state: not Result.has_void
 			start_states_count: Result.count = start_states_count
 		end
 
@@ -367,7 +367,7 @@ feature {NONE} -- Constants
 invariant
 
 	states_not_void: states /= Void
-	no_void_state: not states.has (Void)
+	no_void_state: not states.has_void
 	at_least_one_state: not states.is_empty
 	positive_start_states_count: start_states_count > 0
 	start_states_count_small_enough: start_states_count <= states.count

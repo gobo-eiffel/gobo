@@ -222,7 +222,7 @@ feature -- Basic operations
 		require
 			a_node_not_void: a_node /= Void
 			a_list_not_void: a_list /= Void
-			no_void_comment: not a_list.has (Void)
+			no_void_comment: not a_list.has_void
 			all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
 		local
 			old_list: DS_ARRAYED_LIST [ET_BREAK]
@@ -232,7 +232,7 @@ feature -- Basic operations
 			a_node.process (Current)
 			comment_list := old_list
 		ensure
-			no_void_comment: not a_list.has (Void)
+			no_void_comment: not a_list.has_void
 			all_comments: a_list.for_all (agent {ET_BREAK}.has_comment)
 		end
 
@@ -1735,9 +1735,9 @@ feature {NONE} -- Implementation
 invariant
 
 	comment_list_not_void: comment_list /= Void
-	no_void_comment: not comment_list.has (Void)
+	no_void_comment: not comment_list.has_void
 	all_comments: comment_list.for_all (agent {ET_BREAK}.has_comment)
 	excluded_nodes_not_void: excluded_nodes /= Void
-	no_void_excluded_nod: not excluded_nodes.has (Void)
+	no_void_excluded_nod: not excluded_nodes.has_void
 
 end

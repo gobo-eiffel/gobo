@@ -49,11 +49,37 @@ feature -- Status report
 		deferred
 		end
 
+	valid_void_key: BOOLEAN is
+			-- Is Void a valid key?
+		local
+			k: ?K
+			l_current: ?DS_TABLE [G, ?K]
+		do
+			l_current ?= Current
+			if l_current /= Void and k = Void then
+				Result := l_current.valid_key (k)
+			end
+		end
+
 	has (k: K): BOOLEAN is
 			-- Is there an item associated with `k'?
 		deferred
 		ensure
 			valid_key: Result implies valid_key (k)
+		end
+
+	has_void: BOOLEAN is
+			-- Is there an item associated with Void?
+		local
+			k: ?K
+			l_current: ?DS_TABLE [G, ?K]
+		do
+			l_current ?= Current
+			if l_current /= Void and k = Void then
+				Result := l_current.has (k)
+			end
+		ensure
+			valid_key: Result implies valid_void_key
 		end
 
 feature -- Element change

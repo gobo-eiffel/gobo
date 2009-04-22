@@ -259,13 +259,7 @@ feature -- Status report
 			end
 		end
 
-feature {NONE} -- Status report
-
-	valid_key (k: K): BOOLEAN is
-			-- Is `k' a valid key?
-		do
-			Result := True
-		end
+feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
 	has_key (a_key: K): BOOLEAN is
 			-- Is there an item associated with `a_key'?
@@ -274,6 +268,27 @@ feature {NONE} -- Status report
 			if root_node /= Void then
 				search_node (a_key)
 				Result := found_node /= Void
+			end
+		end
+
+feature {NONE} -- Status report
+
+	valid_key (k: K): BOOLEAN is
+			-- Is `k' a valid key?
+		do
+			Result := True
+		end
+
+	has_void_key: BOOLEAN is
+			-- Is there an item associated with Void?
+			-- (Performance: O(height).)
+		local
+			k: ?K
+			l_current: ?DS_BINARY_SEARCH_TREE_CONTAINER [G, ?K]
+		do
+			l_current ?= Current
+			if l_current /= Void and k = Void then
+				Result := l_current.has_key (k)
 			end
 		end
 

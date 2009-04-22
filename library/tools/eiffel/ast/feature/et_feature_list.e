@@ -244,7 +244,7 @@ feature -- Basic operations
 		require
 			a_name_not_void: a_name /= Void
 			a_list_not_void: a_list /= Void
-			no_void_item: not a_list.has (Void)
+			no_void_item: not a_list.has_void
 		local
 			i: INTEGER
 			l_feature: like item
@@ -287,7 +287,7 @@ feature -- Basic operations
 				end
 			end
 		ensure
-			no_void_item: not a_list.has (Void)
+			no_void_item: not a_list.has_void
 		end
 
 feature -- Iteration

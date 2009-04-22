@@ -61,6 +61,6 @@ invariant
 	class_name_not_void: class_name /= Void
 	class_name_not_empty: class_name.count > 0
 	options_not_void: options /= Void
-	no_void_feature_option: feature_options /= Void implies not feature_options.has (Void)
+	no_void_feature_option: feature_options /= Void implies not feature_options.has_void
 
 end

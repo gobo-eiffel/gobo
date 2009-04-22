@@ -1879,18 +1879,18 @@ feature {NONE} -- Constants
 invariant
 
 	named_features_not_void: named_features /= Void
-	no_void_named_feature: not named_features.has_item (Void)
+	no_void_named_feature: not named_features.has_void_item
 	aliased_features_not_void: aliased_features /= Void
-	no_void_aliased_feature: not aliased_features.has_item (Void)
+	no_void_aliased_feature: not aliased_features.has_void_item
 	queries_not_void: queries /= Void
-	no_void_query_not_void: not queries.has (Void)
+	no_void_query_not_void: not queries.has_void
 	procedures_not_void: procedures /= Void
-	no_void_procedure_not_void: not procedures.has (Void)
+	no_void_procedure_not_void: not procedures.has_void
 	clients_list_not_void: clients_list /= Void
-	not_void_clients: not clients_list.has (Void)
+	not_void_clients: not clients_list.has_void
 	client_classes_not_void: client_classes /= Void
-	no_void_client_class: not client_classes.has (Void)
-	no_void_clients: not client_classes.has_item (Void)
+	no_void_client_class: not client_classes.has_void
+	no_void_clients: not client_classes.has_void_item
 	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
 	dotnet_feature_adaptation_resolver_not_void: dotnet_feature_adaptation_resolver /= Void
 	identifier_type_resolver_not_void: identifier_type_resolver /= Void
@@ -1900,6 +1900,6 @@ invariant
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
 	precursor_checker_not_void: precursor_checker /= Void
 	precursors_not_void: precursors /= Void
-	no_void_precursor: not precursors.has_item (Void)
+	no_void_precursor: not precursors.has_void_item
 
 end

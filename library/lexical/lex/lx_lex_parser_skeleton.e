@@ -1283,7 +1283,7 @@ feature {NONE} -- Constants
 invariant
 
 	pending_rules_not_void: pending_rules /= Void
-	no_void_pending_rule: not pending_rules.has (Void)
+	no_void_pending_rule: not pending_rules.has_void
 	start_condition_stack_not_void: start_condition_stack /= Void
 	action_factory_not_void: action_factory /= Void
 	old_singleton_lines_not_void: old_singleton_lines /= Void

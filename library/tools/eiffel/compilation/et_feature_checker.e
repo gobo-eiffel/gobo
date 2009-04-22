@@ -11942,7 +11942,7 @@ feature {NONE} -- Overloading (useful in .NET)
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has (Void)
+			no_void_feature: not a_features.has_void
 			an_actuals_not_void: an_actuals /= Void
 			-- same_arguments_count: for all f in a_features, f.arguments_count = an_actuals.count
 			a_target_context_not_void: a_target_context /= Void
@@ -12173,7 +12173,7 @@ feature {NONE} -- Overloading (useful in .NET)
 				end
 			end
 		ensure
-			no_void_feature: not a_features.has (Void)
+			no_void_feature: not a_features.has_void
 		end
 
 	overloaded_procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
@@ -12285,7 +12285,7 @@ invariant
 	current_feature_impl_not_void: current_feature_impl /= Void
 	current_feature_impl_constraint: current_feature_impl = current_feature_impl.implementation_feature
 	enclosing_inline_agents_not_void: enclosing_inline_agents /= Void
-	no_void_enclosing_inline_agent: not enclosing_inline_agents.has (Void)
+	no_void_enclosing_inline_agent: not enclosing_inline_agents.has_void
 	current_type_not_void: current_type /= Void
 	current_type_valid: current_type.is_valid_context
 	current_class_definition: current_class = current_type.base_class
@@ -12295,26 +12295,26 @@ invariant
 	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `current_feature_impl'
 	type_checker_not_void: type_checker /= Void
 	overloaded_procedures_not_void: overloaded_procedures /= Void
-	no_void_overloaded_procedure: not overloaded_procedures.has (Void)
+	no_void_overloaded_procedure: not overloaded_procedures.has_void
 	unused_overloaded_procedures_list_not_void: unused_overloaded_procedures_list /= Void
-	no_void_unused_overloaded_procedures: not unused_overloaded_procedures_list.has (Void)
+	no_void_unused_overloaded_procedures: not unused_overloaded_procedures_list.has_void
 	-- SE 1.2r7 crashes when compiling this line:
 	-- empty_unused_overloaded_procedures: unused_overloaded_procedures_list.for_all (agent {DS_ARRAYED_LIST [ET_PROCEDURE]}.is_empty)
 	overloaded_queries_not_void: overloaded_queries /= Void
-	no_void_overloaded_queries: not overloaded_queries.has (Void)
+	no_void_overloaded_queries: not overloaded_queries.has_void
 	unused_overloaded_queries_list_not_void: unused_overloaded_queries_list /= Void
-	no_void_unused_overloaded_queries: not unused_overloaded_queries_list.has (Void)
+	no_void_unused_overloaded_queries: not unused_overloaded_queries_list.has_void
 	-- SE 1.2r7 crashes when compiling this line:
 	-- empty_unused_overloaded_queries: unused_overloaded_queries_list.for_all (agent {DS_ARRAYED_LIST [ET_QUERY]}.is_empty)
 	best_overloaded_features_not_void: best_overloaded_features /= Void
-	no_void_best_overloaded_feature: not best_overloaded_features.has (Void)
+	no_void_best_overloaded_feature: not best_overloaded_features.has_void
 	current_context_not_void: current_context /= Void
 	unused_contexts_not_void: unused_contexts /= Void
-	no_void_unused_context: not unused_contexts.has (Void)
+	no_void_unused_context: not unused_contexts.has_void
 	current_target_type_not_void: current_target_type /= Void
 		-- Object-tests
 	current_object_test_types_not_void: current_object_test_types /= Void
-	no_void_object_test_type: not current_object_test_types.has_item (Void)
+	no_void_object_test_type: not current_object_test_types.has_void_item
 	current_object_test_scope_not_void: current_object_test_scope /= Void
 	object_test_scope_builder_not_void: object_test_scope_builder /= Void
 	current_expression_object_tests_not_void: current_expression_object_tests /= Void

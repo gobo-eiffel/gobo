@@ -117,7 +117,7 @@ feature -- Status report
 			-- Is there an empty string in this sequence?
 		require
 			a_linear_not_void: a_linear /= Void
-			no_void_item: not a_linear.has (Void)
+			no_void_item: not a_linear.has_void
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 		do
@@ -154,7 +154,7 @@ feature -- Operation(s)
 		ensure
 			separators_as_sequence: split (separators).is_empty
 			split_not_void: Result /= Void
-			no_void_item: not Result.has (Void)
+			no_void_item: not Result.has_void
 			no_empty_item: not has_empty (Result)
 			count_ceiling: Result.count <= a_string.count // 2 + 1
 			last_escape_character_verbatim: (a_string.count >= 2
@@ -177,7 +177,7 @@ feature -- Operation(s)
 		ensure
 			separators_as_character: split_greedy (separators).count = separators.count + 1
 			split_character_not_void: Result /= Void
-			no_void_item: not Result.has (Void)
+			no_void_item: not Result.has_void
 			count_ceiling: Result.count <= a_string.count + 1
 			last_escape_character_verbatim: (a_string.count >= 2
 				and then a_string.item (a_string.count) = escape_character
@@ -192,7 +192,7 @@ feature -- Operation(s)
 		require
 			has_escape_character: has_escape_character
 			a_linear_not_void: a_linear /= Void
-			no_void_item: not a_linear.has (Void)
+			no_void_item: not a_linear.has_void
 			no_empty_item: not has_empty (a_linear)
 		do
 			Result := do_join (a_linear, False)
@@ -209,7 +209,7 @@ feature -- Operation(s)
 		require
 			has_escape_character: has_escape_character
 			a_linear_not_void: a_linear /= Void
-			no_void_item: not a_linear.has (Void)
+			no_void_item: not a_linear.has_void
 		do
 			Result := do_join (a_linear, True)
 		ensure
@@ -224,7 +224,7 @@ feature -- Operation(s)
 			-- are NOT escaped, see `join' for escaping version.
 		require
 			a_linear_not_void: a_linear /= Void
-			no_void_item: not a_linear.has (Void)
+			no_void_item: not a_linear.has_void
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			a_separator: STRING
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			split_not_void: Result /= Void
-			no_void_item: not Result.has (Void)
+			no_void_item: not Result.has_void
 		end
 
 	do_join (a_linear: DS_LINEAR [STRING]; a_greedy: BOOLEAN): STRING is
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 		require
 			has_escape_character: has_escape_character
 			a_linear_not_void: a_linear /= Void
-			no_void_item: not a_linear.has (Void)
+			no_void_item: not a_linear.has_void
 		local
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			a_separator: STRING

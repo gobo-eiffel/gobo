@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 invariant
 
 	variables_not_void: variables /= Void
-	no_void_variable_name: not variables.has (Void)
-	no_void_variable_value: not variables.has_item (Void)
+	no_void_variable_name: not variables.has_void
+	no_void_variable_value: not variables.has_void_item
 
 end

@@ -304,7 +304,7 @@ feature -- Basic operations
 			-- of subclusters to `an_export'.
 		require
 			an_export_not_void: an_export /= Void
-			no_void_export: not an_export.has (Void)
+			no_void_export: not an_export.has_void
 		local
 			an_exported_feature: ET_XACE_EXPORTED_FEATURE
 			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
@@ -338,7 +338,7 @@ feature -- Basic operations
 				subclusters.merge_exported_features (an_export)
 			end
 		ensure
-			no_void_export: not an_export.has (Void)
+			no_void_export: not an_export.has_void
 		end
 
 	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT]) is
@@ -346,7 +346,7 @@ feature -- Basic operations
 			-- of subclusters to `a_components'.
 		require
 			a_components_not_void: a_components /= Void
-			no_void_component: not a_components.has (Void)
+			no_void_component: not a_components.has_void
 		local
 			a_component: ET_XACE_COMPONENT
 		do
@@ -360,7 +360,7 @@ feature -- Basic operations
 				subclusters.merge_components (a_components)
 			end
 		ensure
-			no_void_component: not a_components.has (Void)
+			no_void_component: not a_components.has_void
 		end
 
 	merge_assemblies (an_assemblies: DS_LIST [ET_XACE_ASSEMBLY]) is
@@ -368,7 +368,7 @@ feature -- Basic operations
 			-- of subclusters to `an_assemblies'.
 		require
 			an_assemblies_not_void: an_assemblies /= Void
-			no_void_assembly: not an_assemblies.has (Void)
+			no_void_assembly: not an_assemblies.has_void
 		local
 			an_assembly: ET_XACE_ASSEMBLY
 		do
@@ -386,7 +386,7 @@ feature -- Basic operations
 				subclusters.merge_assemblies (an_assemblies)
 			end
 		ensure
-			no_void_assembly: not an_assemblies.has (Void)
+			no_void_assembly: not an_assemblies.has_void
 		end
 
 	merge_override_clusters (an_override_clusters: DS_LIST [ET_XACE_CLUSTER]) is
@@ -395,7 +395,7 @@ feature -- Basic operations
 			-- found recursively in its subclusters.
 		require
 			an_override_clusters_not_void: an_override_clusters /= Void
-			no_void_override_cluster: not an_override_clusters.has (Void)
+			no_void_override_cluster: not an_override_clusters.has_void
 		do
 			if is_override then
 				an_override_clusters.force_last (Current)
@@ -403,7 +403,7 @@ feature -- Basic operations
 				subclusters.merge_override_clusters (an_override_clusters)
 			end
 		ensure
-			no_void_override_cluster: not an_override_clusters.has (Void)
+			no_void_override_cluster: not an_override_clusters.has_void
 		end
 
 	merge_ecf_clusters (an_ecf_clusters: DS_LIST [ET_XACE_CLUSTER]) is
@@ -412,7 +412,7 @@ feature -- Basic operations
 			-- that is otherwise described by the ECF file.
 		require
 			an_ecf_clusters_not_void: an_ecf_clusters /= Void
-			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
+			no_void_ecf_cluster: not an_ecf_clusters.has_void
 		do
 			if options /= Void and then options.is_ecf_library_declared then
 				an_ecf_clusters.force_last (Current)
@@ -421,7 +421,7 @@ feature -- Basic operations
 				subclusters.merge_ecf_clusters (an_ecf_clusters)
 			end
 		ensure
-			no_void_ecf_cluster: not an_ecf_clusters.has (Void)
+			no_void_ecf_cluster: not an_ecf_clusters.has_void
 		end
 
 feature {NONE} -- Implementation
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			-- Does `a_set' contain `v' in a case-insensitive way?
 		require
 			a_set_not_void: a_set /= Void
-			no_void_item: not a_set.has (Void)
+			no_void_item: not a_set.has_void
 			v_not_void: v /= Void
 		local
 			a_cursor: DS_HASH_SET_CURSOR [STRING]
@@ -467,6 +467,6 @@ invariant
 
 	library_prefix_not_void: library_prefix /= Void
 	cluster_prefix_not_void: cluster_prefix /= Void
-	no_void_class_option: class_options /= Void implies not class_options.has (Void)
+	no_void_class_option: class_options /= Void implies not class_options.has_void
 
 end

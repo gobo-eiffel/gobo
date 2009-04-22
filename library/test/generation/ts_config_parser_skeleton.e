@@ -146,7 +146,7 @@ feature -- AST factory
 			a_compile_not_void: a_compile /= Void
 			an_execute_not_void: an_execute /= Void
 			a_clusters_not_void: a_clusters /= Void
-			no_void_cluster: not a_clusters.has (Void)
+			no_void_cluster: not a_clusters.has_void
 		do
 			create Result.make (a_root_class, a_testgen, a_compile, an_execute, a_clusters)
 		ensure

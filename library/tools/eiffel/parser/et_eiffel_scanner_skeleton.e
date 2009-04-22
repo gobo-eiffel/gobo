@@ -983,7 +983,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.times_symbol_name)
 		ensure
 			strings_not_void: Result /= Void
-			no_void_string: not Result.has (Void)
+			no_void_string: not Result.has_void
 		end
 
 	string_buffer: STRING is

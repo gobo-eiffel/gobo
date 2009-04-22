@@ -187,7 +187,7 @@ feature -- Setting
 			-- Set `parsed_libraries' to `a_libraries'.
 		require
 			a_libraries_not_void: a_libraries /= Void
-			no_void_library: not a_libraries.has_item (Void)
+			no_void_library: not a_libraries.has_void_item
 		do
 			parsed_libraries := a_libraries
 		ensure

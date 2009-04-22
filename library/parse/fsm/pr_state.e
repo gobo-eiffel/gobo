@@ -454,7 +454,7 @@ feature -- Conflicts
 			end
 		ensure
 			conflicts_not_void: Result /= Void
-			no_void_conflict: not Result.has (Void)
+			no_void_conflict: not Result.has_void
 		end
 
 	shift_reduce_count: INTEGER is
@@ -869,12 +869,12 @@ invariant
 	valid_id: id >= 0
 	accessing_symbol_not_void: accessing_symbol /= Void
 	positions_not_void: positions /= Void
-	no_void_position: not positions.has (Void)
+	no_void_position: not positions.has_void
 	shifts_not_void: shifts /= Void
-	no_void_shift: not shifts.has (Void)
+	no_void_shift: not shifts.has_void
 	reductions_not_void: reductions /= Void
-	no_void_reduction: not reductions.has (Void)
+	no_void_reduction: not reductions.has_void
 	errors_not_void: errors /= Void
-	no_void_error: not errors.has (Void)
+	no_void_error: not errors.has_void
 
 end

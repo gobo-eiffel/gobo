@@ -94,6 +94,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	no_void_proto: not has (Void)
+	no_void_proto: not has_void
 
 end

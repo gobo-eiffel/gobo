@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			if nmtokens_type /= Void then Result.put_new (nmtokens_type, Nmtokens_type_code) end
 		ensure
 			type_map_not_void: Result /= Void
-			no_void_type: not Result.has_item (Void)
+			no_void_type: not Result.has_void_item
 		end
 
 	fingerprint_map: DS_HASH_TABLE [INTEGER, STRING] is

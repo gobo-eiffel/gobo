@@ -91,8 +91,8 @@ invariant
 	name_not_void: name /= Void
 	positive_id: id >= 0
 	patterns_not_void: patterns /= Void
-	no_void_pattern: not patterns.has (Void)
+	no_void_pattern: not patterns.has_void
 	bol_patterns_not_void: bol_patterns /= Void
-	no_void_bol_pattern: not bol_patterns.has (Void)
+	no_void_bol_pattern: not bol_patterns.has_void
 
 end

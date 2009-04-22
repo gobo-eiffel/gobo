@@ -270,7 +270,7 @@ feature {ET_INTERFACE_CHECKER} -- Access
 			-- Set `classes_to_be_processed' to `a_classes'.
 		require
 			a_classes_not_void: a_classes /= Void
-			no_void_class_to_be_processed: not a_classes.has (Void)
+			no_void_class_to_be_processed: not a_classes.has_void
 		do
 			classes_to_be_processed := a_classes
 		ensure
@@ -280,6 +280,6 @@ feature {ET_INTERFACE_CHECKER} -- Access
 invariant
 
 	classes_to_be_processed_not_void: classes_to_be_processed /= Void
-	no_void_class_to_be_processed: not classes_to_be_processed.has (Void)
+	no_void_class_to_be_processed: not classes_to_be_processed.has_void
 
 end

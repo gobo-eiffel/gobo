@@ -31,7 +31,7 @@ feature -- Access
 		deferred
 		ensure
 			remote_items_not_void: Result /= Void
-			no_void_remote: not Result.has (Void)
+			no_void_remote: not Result.has_void
 		end
 
 feature {DS_NESTED_LIST_FLATTENER} -- Implementation

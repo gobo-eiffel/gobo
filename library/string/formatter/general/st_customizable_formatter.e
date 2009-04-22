@@ -141,6 +141,6 @@ feature {NONE} -- Parameter formatters
 invariant
 
 	parameter_formatters_not_void: parameter_formatters /= Void
-	no_void_parameter_formatter: not parameter_formatters.has_item (Void)
+	no_void_parameter_formatter: not parameter_formatters.has_void_item
 
 end

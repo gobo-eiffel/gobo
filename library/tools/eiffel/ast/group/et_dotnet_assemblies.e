@@ -131,6 +131,6 @@ feature {NONE} -- Constants
 invariant
 
 	assemblies_not_void: assemblies /= Void
-	not_void_assembly: not assemblies.has (Void)
+	not_void_assembly: not assemblies.has_void
 
 end

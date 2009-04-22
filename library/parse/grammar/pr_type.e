@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
 			generics_not_void: generics /= Void
-			no_void_generic_parameter: not generics.has (Void)
+			no_void_generic_parameter: not generics.has_void
 			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			i, nb: INTEGER
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
 			generics_not_void: generics /= Void
-			no_void_generic_parameter: not generics.has (Void)
+			no_void_generic_parameter: not generics.has_void
 			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			i, nb: INTEGER

@@ -32,6 +32,7 @@ inherit
 	DS_LEFT_LEANING_RED_BLACK_TREE_CONTAINER [G, G]
 		rename
 			has_key as has,
+			has_void_key as has_void,
 			key_comparator as equality_tester,
 			key_comparator_settable as equality_tester_settable,
 			set_key_comparator as set_equality_tester

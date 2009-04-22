@@ -822,7 +822,7 @@ feature -- Option values
 			end
 		ensure
 			arguments_not_void: Result /= Void
-			no_void_argument: not Result.has (Void)
+			no_void_argument: not Result.has_void
 		end
 
 	assembly: STRING is
@@ -970,7 +970,7 @@ feature -- Option values
 			end
 		ensure
 			c_compiler_options_not_void: Result /= Void
-			no_void_c_compiler_option: not Result.has (Void)
+			no_void_c_compiler_option: not Result.has_void
 		end
 
 	dead_code_removal: DS_HASH_SET [STRING] is
@@ -1006,7 +1006,7 @@ feature -- Option values
 			end
 		ensure
 			debug_tag_not_void: Result /= Void
-			no_void_debug_tag: not Result.has (Void)
+			no_void_debug_tag: not Result.has_void
 		end
 
 	debugger: BOOLEAN is
@@ -1089,7 +1089,7 @@ feature -- Option values
 			end
 		ensure
 			exclude_not_void: Result /= Void
-			no_void_exclude: not Result.has (Void)
+			no_void_exclude: not Result.has_void
 		end
 
 	export_option: STRING is
@@ -1216,7 +1216,7 @@ feature -- Option values
 			end
 		ensure
 			header_not_void: Result /= Void
-			no_void_header: not Result.has (Void)
+			no_void_header: not Result.has_void
 		end
 
 	high_memory_compiler: BOOLEAN is
@@ -1249,7 +1249,7 @@ feature -- Option values
 			end
 		ensure
 			include_not_void: Result /= Void
-			no_void_include: not Result.has (Void)
+			no_void_include: not Result.has_void
 		end
 
 	inlining: DS_HASH_SET [STRING] is
@@ -1340,7 +1340,7 @@ feature -- Option values
 			end
 		ensure
 			link_not_void: Result /= Void
-			no_void_link: not Result.has (Void)
+			no_void_link: not Result.has_void
 		end
 
 	linker: STRING is
@@ -1527,7 +1527,7 @@ feature -- Option values
 			end
 		ensure
 			override_cluster_not_void: Result /= Void
-			no_void_override_cluster: not Result.has (Void)
+			no_void_override_cluster: not Result.has_void
 		end
 
 	portable_code_generation: BOOLEAN is
@@ -3852,7 +3852,7 @@ feature -- Valid values
 		ensure
 			valid_assertion_not_void: Result /= Void
 			valid_assertion_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3865,7 +3865,7 @@ feature -- Valid values
 		ensure
 			valid_assertion_not_void: Result /= Void
 			valid_assertion_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3882,7 +3882,7 @@ feature -- Valid values
 		ensure
 			valid_dead_code_removal_not_void: Result /= Void
 			valid_dead_code_removal_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3897,7 +3897,7 @@ feature -- Valid values
 		ensure
 			valid_garbage_collector_not_void: Result /= Void
 			valid_garbage_collector_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3914,7 +3914,7 @@ feature -- Valid values
 		ensure
 			valid_inlining_not_void: Result /= Void
 			valid_inlining_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3928,7 +3928,7 @@ feature -- Valid values
 		ensure
 			valid_layout_not_void: Result /= Void
 			valid_layout_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3942,7 +3942,7 @@ feature -- Valid values
 		ensure
 			valid_linker_not_void: Result /= Void
 			valid_linker_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3958,7 +3958,7 @@ feature -- Valid values
 		ensure
 			valid_target_not_void: Result /= Void
 			valid_target_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3972,7 +3972,7 @@ feature -- Valid values
 		ensure
 			valid_target_not_void: Result /= Void
 			valid_target_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -3988,7 +3988,7 @@ feature -- Valid values
 		ensure
 			valid_warning_not_void: Result /= Void
 			valid_warning_not_empty: not Result.is_empty
-			no_void_value: not Result.has (Void)
+			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
@@ -4288,7 +4288,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_arguments_not_void: Result /= Void
-			no_void_argument: not Result.has (Void)
+			no_void_argument: not Result.has_void
 		end
 
 	default_array_optimization: BOOLEAN is False
@@ -4362,7 +4362,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_c_compiler_options_not_void: Result /= Void
-			no_void_c_compiler_option: not Result.has (Void)
+			no_void_c_compiler_option: not Result.has_void
 		end
 
 	default_dead_code_removal: DS_HASH_SET [STRING] is
@@ -4386,7 +4386,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_debug_tag_not_void: Result /= Void
-			no_void_debug_tag: not Result.has (Void)
+			no_void_debug_tag: not Result.has_void
 		end
 
 	default_debugger: BOOLEAN is False
@@ -4423,7 +4423,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_exclude_not_void: Result /= Void
-			no_void_exclude: not Result.has (Void)
+			no_void_exclude: not Result.has_void
 		end
 
 	default_export_option: STRING is
@@ -4477,7 +4477,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_header_not_void: Result /= Void
-			no_void_header: not Result.has (Void)
+			no_void_header: not Result.has_void
 		end
 
 	default_high_memory_compiler: BOOLEAN is False
@@ -4493,7 +4493,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_include_not_void: Result /= Void
-			no_void_include: not Result.has (Void)
+			no_void_include: not Result.has_void
 		end
 
 	default_inlining: DS_HASH_SET [STRING] is
@@ -4537,7 +4537,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_link_not_void: Result /= Void
-			no_void_link: not Result.has (Void)
+			no_void_link: not Result.has_void
 		end
 
 	default_linker: STRING is
@@ -4624,7 +4624,7 @@ feature -- Default values
 			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_override_cluster_not_void: Result /= Void
-			no_void_override_cluster: not Result.has (Void)
+			no_void_override_cluster: not Result.has_void
 		end
 
 	default_portable_code_generation: BOOLEAN is False

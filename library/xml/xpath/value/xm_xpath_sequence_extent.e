@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			-- Create from a list of items.
 		require
 			list_not_void: a_list /= Void
-			no_void_items: not a_list.has (Void)
+			no_void_items: not a_list.has_void
 		do
 			make_value
 			make_from_linear (a_list)

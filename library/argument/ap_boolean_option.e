@@ -51,7 +51,7 @@ feature -- Constants
 			Result.put_last ("f")
 		ensure
 			false_strings_not_void: Result /= Void
-			no_void_false_string: not Result.has (Void)
+			no_void_false_string: not Result.has_void
 		end
 
 	true_strings: DS_LIST [STRING] is
@@ -66,7 +66,7 @@ feature -- Constants
 			Result.put_last ("t")
 		ensure
 			true_strings_not_void: Result /= Void
-			no_void_true_string: not Result.has (Void)
+			no_void_true_string: not Result.has_void
 		end
 
 feature -- Access

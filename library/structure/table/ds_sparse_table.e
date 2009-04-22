@@ -30,7 +30,8 @@ inherit
 	DS_SPARSE_CONTAINER [G, K]
 		rename
 			make as make_sparse_container,
-			has as has_item
+			has as has_item,
+			has_void as has_void_item
 		redefine
 			search,
 			new_cursor,

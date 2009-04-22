@@ -432,7 +432,7 @@ invariant
 	valid_id: id >= 1
 	lhs_not_void: lhs /= Void
 	rhs_not_void: rhs /= Void
-	no_void_rhs: not rhs.has (Void)
+	no_void_rhs: not rhs.has_void
 	action_not_void: action /= Void
 	error_actions_not_void: error_actions /= Void
 	error_actions_count: error_actions.count = rhs.count

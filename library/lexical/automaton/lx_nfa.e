@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			-- Create a new NFA with `some_states' as states.
 		require
 			some_states_not_void: some_states /= Void
-			no_void_states: not some_states.has (Void)
+			no_void_states: not some_states.has_void
 			start_and_final: some_states.count >= 2
 		do
 			states := some_states
@@ -540,7 +540,7 @@ feature {NONE} -- Constants
 invariant
 
 	states_not_void: states /= Void
-	no_void_state: not states.has (Void)
+	no_void_state: not states.has_void
 	start_and_final: states.count >= 2
 	final_state: not final_state.has_transition
 --	valid_transitions: forall state in states,

@@ -128,7 +128,7 @@ feature -- Access
 			Result.sort (Rule_sorter)
 		ensure
 			rules_not_void: Result /= Void
-			no_void_rule: not Result.has (Void)
+			no_void_rule: not Result.has_void
 		end
 
 feature {NONE} -- Generation

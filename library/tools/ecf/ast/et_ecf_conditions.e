@@ -166,6 +166,6 @@ feature {NONE} -- Constants
 invariant
 
 	conditions_not_void: conditions /= Void
-	no_void_condition: not conditions.has (Void)
+	no_void_condition: not conditions.has_void
 
 end

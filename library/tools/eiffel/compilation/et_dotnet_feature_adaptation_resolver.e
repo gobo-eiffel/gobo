@@ -54,7 +54,7 @@ feature -- Feature adaptation resolving
 			a_class_preparsed: a_class.is_preparsed
 			a_class_is_dotnet: a_class.is_dotnet
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			old_class: ET_CLASS
 			a_parents: ET_PARENT_LIST
@@ -98,7 +98,7 @@ feature -- Feature adaptation resolving
 			free_redeclared_feature := redeclared_feature_list
 			current_class := old_class
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 feature {NONE} -- Feature recording
@@ -108,7 +108,7 @@ feature {NONE} -- Feature recording
 			-- declared in its assembly.
 		require
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			l_query: ET_QUERY
 			l_queries: ET_QUERY_LIST
@@ -153,7 +153,7 @@ feature {NONE} -- Feature recording
 				i := i + 1
 			end
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 	add_current_feature (a_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
@@ -162,7 +162,7 @@ feature {NONE} -- Feature recording
 		require
 			a_feature_not_void: a_feature /= Void
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			l_name: ET_FEATURE_NAME
 			other_feature: ET_FLATTENED_FEATURE
@@ -196,7 +196,7 @@ feature {NONE} -- Feature recording
 				end
 			end
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 	add_inherited_features (a_parent: ET_PARENT; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
@@ -204,7 +204,7 @@ feature {NONE} -- Feature recording
 		require
 			a_parent_not_void: a_parent /= Void
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			l_class: ET_CLASS
 			l_queries: ET_QUERY_LIST
@@ -275,7 +275,7 @@ feature {NONE} -- Feature recording
 				i := i + 1
 			end
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 	add_inherited_feature (a_parent: ET_PARENT; a_parent_feature, a_heir_feature: ET_DOTNET_FEATURE; a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
@@ -286,7 +286,7 @@ feature {NONE} -- Feature recording
 			a_parent_feature_not_void: a_parent_feature /= Void
 			a_heir_feature_not_void: a_heir_feature /= Void
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			l_parent_class_impl: ET_CLASS
 			l_heir_class_impl: ET_CLASS
@@ -339,14 +339,14 @@ feature {NONE} -- Feature recording
 				end
 			end
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 	add_any_features (a_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]) is
 			-- Add to `a_features' features inherited from class "ANY".
 		require
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		local
 			l_any: ET_CLASS
 			l_any_parent: ET_PARENT
@@ -438,7 +438,7 @@ feature {NONE} -- Feature recording
 				i := i + 1
 			end
 		ensure
-			no_void_feature: not a_features.has_item (Void)
+			no_void_feature: not a_features.has_void_item
 		end
 
 feature {NONE} -- Features
@@ -531,10 +531,10 @@ feature {NONE} -- Implementation
 invariant
 
 	dotnet_features_not_void: dotnet_features /= Void
-	no_void_dotnet_feature: not dotnet_features.has (Void)
+	no_void_dotnet_feature: not dotnet_features.has_void
 	-- no_inherited: for all f in dotnet_features, not f.is_inherited
 	other_dotnet_features_not_void: other_dotnet_features /= Void
-	no_void_other_dotnet_features: not other_dotnet_features.has_item (Void)
-	-- no_other_inherited: for all l in other_dotnet_features, l /= Void and then not l.has (Void) and then for all f in l, not f.is_inherited
+	no_void_other_dotnet_features: not other_dotnet_features.has_void_item
+	-- no_other_inherited: for all l in other_dotnet_features, l /= Void and then not l.has_void and then for all f in l, not f.is_inherited
 
 end

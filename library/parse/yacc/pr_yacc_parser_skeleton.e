@@ -603,7 +603,7 @@ feature {NONE} -- Factory
 		require
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
-			valid_generics: generics /= Void implies not generics.has (Void)
+			valid_generics: generics /= Void implies not generics.has_void
 			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			upper_name: STRING
@@ -635,7 +635,7 @@ feature {NONE} -- Factory
 		require
 			a_name_not_void: a_name /= Void
 			a_name_long_enough: a_name.count > 0
-			valid_generics: generics /= Void implies not generics.has (Void)
+			valid_generics: generics /= Void implies not generics.has_void
 			a_type_mark_not_empty: a_type_mark /= Void implies not a_type_mark.is_empty
 		local
 			upper_name: STRING
@@ -1563,13 +1563,13 @@ invariant
 
 	last_grammar_not_void: last_grammar /= Void
 	terminal_symbols_not_void: terminal_symbols /= Void
-	no_void_terminal_symbol: not terminal_symbols.has_item (Void)
+	no_void_terminal_symbol: not terminal_symbols.has_void_item
 	nonterminal_symbols_not_void: nonterminal_symbols /= Void
-	no_void_nonterminal_symbol: not nonterminal_symbols.has_item (Void)
+	no_void_nonterminal_symbol: not nonterminal_symbols.has_void_item
 	types_not_void: types /= Void
-	no_void_type: not types.has_item (Void)
+	no_void_type: not types.has_void_item
 	last_value_names_not_void: last_value_names /= Void
-	no_void_last_value_name_type: not last_value_names.has_item (Void)
+	no_void_last_value_name_type: not last_value_names.has_void_item
 	start_symbol_name_not_void: start_symbol /= Void implies start_symbol.first /= Void
 	action_factory_not_void: action_factory /= Void
 

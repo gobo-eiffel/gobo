@@ -156,6 +156,6 @@ feature -- Element change
 
 invariant
 
-	no_void_template: not has (Void)
+	no_void_template: not has_void
 
 end

@@ -53,7 +53,7 @@ feature -- Element change
 		require
 			a_classnot_void: a_class /= Void
 			feature_names_not_void: feature_names /= Void
-			no_void_feature_name: not feature_names.has (Void)
+			no_void_feature_name: not feature_names.has_void
 			class_prefix_not_void: class_prefix /= Void
 		local
 			a_pair: DS_PAIR [DS_LIST [STRING], STRING]
@@ -93,7 +93,7 @@ feature -- Generation
 		require
 			a_class_not_void: a_class /= Void
 			feature_names_not_void: feature_names /= Void
-			no_void_feature_name: not feature_names.has (Void)
+			no_void_feature_name: not feature_names.has_void
 			class_prefix_not_void: class_prefix /= Void
 		local
 			cannot_write: UT_CANNOT_WRITE_TO_FILE_ERROR
@@ -381,10 +381,10 @@ feature {NONE} -- Implementation
 invariant
 
 	testcases_not_void: testcases /= Void
-	no_void_class_name: not testcases.has (Void)
-	no_void_testcase: not testcases.has_item (Void)
+	no_void_class_name: not testcases.has_void
+	no_void_testcase: not testcases.has_void_item
 --	feature_names_not_void: forall item in testcases, item.first /= Void
---	no_void_feature_names: forall item in testcases, not item.has (Void)
+--	no_void_feature_names: forall item in testcases, not item.has_void
 --	class_prefix_not_void: forall item in testcases, item.second /= Void
 	error_handler_not_void: error_handler /= Void
 	tester_parent_not_void: tester_parent /= Void

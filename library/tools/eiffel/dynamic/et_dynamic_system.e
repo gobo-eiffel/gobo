@@ -1707,7 +1707,7 @@ invariant
 
 	current_system_not_void: current_system /= Void
 	dynamic_types_not_void: dynamic_types /= Void
-	no_void_dynamic_type: not dynamic_types.has (Void)
+	no_void_dynamic_type: not dynamic_types.has_void
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
 	boolean_type_not_void: boolean_type /= Void

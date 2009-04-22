@@ -30,10 +30,12 @@ feature -- Status report
 	has_void: BOOLEAN is
 			-- Does container include Void?
 		local
-			v: G
+			v: ?G
+			l_current: ?DS_SEARCHABLE [?G]
 		do
-			if v = Void then
-				Result := has (v)
+			l_current ?= Current
+			if l_current /= Void and v = Void then
+				Result := l_current.has (v)
 			end
 		ensure
 			not_empty: Result implies not is_empty

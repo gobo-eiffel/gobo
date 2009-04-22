@@ -129,7 +129,7 @@ feature -- Setting
 	set_classname_mapping (a_mapping: like classname_mapping) is
 			-- Set `classname_mapping' to `a_mapping'.
 		require
-			no_void_classname: a_mapping /= Void implies not a_mapping.has_item (Void)
+			no_void_classname: a_mapping /= Void implies not a_mapping.has_void_item
 		do
 			classname_mapping := a_mapping
 		ensure
@@ -306,7 +306,7 @@ invariant
 
 	is_dotnet_assembly: is_dotnet_assembly
 	self_adapted: dotnet_assembly = Current
-	no_void_classname: classname_mapping /= Void implies not classname_mapping.has_item (Void)
+	no_void_classname: classname_mapping /= Void implies not classname_mapping.has_void_item
 
 
 end

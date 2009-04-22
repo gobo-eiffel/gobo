@@ -729,7 +729,7 @@ feature {NONE} -- Output
 			-- Print include directories `an_includes' to `a_file'.
 		require
 			an_includes_not_void: an_includes /= Void
-			no_void_include: not an_includes.has (Void)
+			no_void_include: not an_includes.has_void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -756,7 +756,7 @@ feature {NONE} -- Output
 			-- Print C compiler options `an_options' to `a_file'.
 		require
 			an_options_not_void: an_options /= Void
-			no_void_option: not an_options.has (Void)
+			no_void_option: not an_options.has_void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -783,7 +783,7 @@ feature {NONE} -- Output
 			-- Print link libraries `a_link_libraries' to `a_file'.
 		require
 			a_libraries_not_void: a_libraries /= Void
-			no_void_library: not a_libraries.has (Void)
+			no_void_library: not a_libraries.has_void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write

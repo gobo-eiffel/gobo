@@ -113,6 +113,6 @@ feature {NONE} -- Constants
 invariant
 
 	file_rules_not_void: file_rules /= Void
-	no_void_file_rule: not file_rules.has (Void)
+	no_void_file_rule: not file_rules.has_void
 
 end

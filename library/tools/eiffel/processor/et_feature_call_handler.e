@@ -2871,7 +2871,7 @@ invariant
 	current_feature_impl_not_void: current_feature_impl /= Void
 	current_feature_impl_constraint: current_feature_impl = current_feature_impl.implementation_feature
 	enclosing_inline_agents_not_void: enclosing_inline_agents /= Void
-	no_void_enclosing_inline_agent: not enclosing_inline_agents.has (Void)
+	no_void_enclosing_inline_agent: not enclosing_inline_agents.has_void
 	current_type_not_void: current_type /= Void
 	current_type_valid: current_type.is_valid_context
 	current_class_definition: current_class = current_type.base_class

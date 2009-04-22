@@ -106,6 +106,6 @@ feature {NONE} -- Constants
 invariant
 
 	external_objects_not_void: external_objects /= Void
-	no_void_external_object: not external_objects.has (Void)
+	no_void_external_object: not external_objects.has_void
 
 end

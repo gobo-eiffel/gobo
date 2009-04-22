@@ -821,7 +821,7 @@ feature {NONE} -- Output
 			-- Return True if the end keyword needs to be printed.
 		require
 			an_option_list_not_void: an_option_list /= Void
-			no_void_option: not an_option_list.has (Void)
+			no_void_option: not an_option_list.has_void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -1011,9 +1011,9 @@ feature {NONE} -- Output
 			-- `a_directories' to `a_file'.
 		require
 			a_c_compiler_options_not_void: a_c_compiler_options /= Void
-			no_void_c_compiler_option: not a_c_compiler_options.has (Void)
+			no_void_c_compiler_option: not a_c_compiler_options.has_void
 			a_directories_not_void: a_directories /= Void
-			no_void_directory: not a_directories.has (Void)
+			no_void_directory: not a_directories.has_void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
@@ -1063,7 +1063,7 @@ feature {NONE} -- Output
 			-- Print `a_libraries' to `a_file'.
 		require
 			a_libraries_not_void: a_libraries /= Void
-			no_void_library: not a_libraries.has (Void)
+			no_void_library: not a_libraries.has_void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local

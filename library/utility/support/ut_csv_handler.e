@@ -39,7 +39,7 @@ feature -- Input
 		require
 			a_row_not_void: a_row /= Void
 			a_cells_not_void: a_cells /= Void
-			no_void_cell: not a_cells.has (Void)
+			no_void_cell: not a_cells.has_void
 		local
 			i, nb: INTEGER
 			l_cell: STRING
@@ -77,7 +77,7 @@ feature -- Input
 			end
 			a_cells.force_last (l_cell.substring (1, l_cell.count))
 		ensure
-			no_void_cell: not a_cells.has (Void)
+			no_void_cell: not a_cells.has_void
 		end
 
 	read_file (a_file: KI_TEXT_INPUT_STREAM; a_action: PROCEDURE [ANY, TUPLE [DS_ARRAYED_LIST [STRING]]]) is

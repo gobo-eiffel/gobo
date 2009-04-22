@@ -29,7 +29,9 @@ inherit
 	DS_RED_BLACK_TREE_CONTAINER [G, K]
 		rename
 			has as has_item,
-			has_key as has
+			has_void as has_void_item,
+			has_key as has,
+			has_void_key as has_void
 		redefine
 			root_node
 		end

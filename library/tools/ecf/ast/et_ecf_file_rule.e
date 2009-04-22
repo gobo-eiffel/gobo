@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 	make (a_exclude: like exclude; a_include: like include) is
 			-- Create a new file rule.
 		require
-			no_void_exclude: a_exclude /= Void implies not a_exclude.has (Void)
-			no_void_include: a_include /= Void implies not a_include.has (Void)
+			no_void_exclude: a_exclude /= Void implies not a_exclude.has_void
+			no_void_include: a_include /= Void implies not a_include.has_void
 		do
 			exclude := a_exclude
 			include := a_include
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	no_void_exclude: exclude /= Void implies not exclude.has (Void)
-	no_void_include: include /= Void implies not include.has (Void)
+	no_void_exclude: exclude /= Void implies not exclude.has_void
+	no_void_include: include /= Void implies not include.has_void
 
 end

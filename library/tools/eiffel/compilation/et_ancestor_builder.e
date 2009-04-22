@@ -489,10 +489,10 @@ feature {NONE} -- Parents validity
 invariant
 
 	class_sorter_not_void: class_sorter /= Void
-	no_void_class_in_sorter: not class_sorter.has (Void)
+	no_void_class_in_sorter: not class_sorter.has_void
 	-- classes_in_sorter_preparsed: forall c in `class_sorter', c.is_preparsed
 	ancestors_not_void: ancestors /= Void
-	no_void_ancestor: not ancestors.has_item (Void)
+	no_void_ancestor: not ancestors.has_void_item
 	parent_checker_not_void: parent_checker /= Void
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
 	parent_context_not_void: parent_context /= Void

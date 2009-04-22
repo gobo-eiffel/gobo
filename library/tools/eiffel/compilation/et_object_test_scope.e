@@ -215,7 +215,7 @@ feature -- Element change
 invariant
 
 	object_tests_not_void: object_tests /= Void
-	no_void_object_test: not object_tests.has (Void)
+	no_void_object_test: not object_tests.has_void
 	hidden_count_not_negative: hidden_count >= 0
 	hidden_count_small_enough: hidden_count <= count
 

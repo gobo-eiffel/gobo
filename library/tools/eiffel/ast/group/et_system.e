@@ -1148,7 +1148,7 @@ feature -- Compilation options setting
 			-- Set `external_include_pathnames' to `a_pathnames'.
 		require
 			a_pathnames_not_void: a_pathnames /= Void
-			no_void_pathname: not a_pathnames.has (Void)
+			no_void_pathname: not a_pathnames.has_void
 		do
 			external_include_pathnames := a_pathnames
 		ensure
@@ -1159,7 +1159,7 @@ feature -- Compilation options setting
 			-- Set `external_object_pathnames' to `a_pathnames'.
 		require
 			a_pathnames_not_void: a_pathnames /= Void
-			no_void_pathname: not a_pathnames.has (Void)
+			no_void_pathname: not a_pathnames.has_void
 		do
 			external_object_pathnames := a_pathnames
 		ensure
@@ -1170,7 +1170,7 @@ feature -- Compilation options setting
 			-- Set `external_library_pathnames' to `a_pathnames'.
 		require
 			a_pathnames_not_void: a_pathnames /= Void
-			no_void_pathname: not a_pathnames.has (Void)
+			no_void_pathname: not a_pathnames.has_void
 		do
 			external_library_pathnames := a_pathnames
 		ensure
@@ -2268,10 +2268,10 @@ invariant
 	null_processor_not_void: null_processor /= Void
 		-- Compilation options.
 	external_include_pathnames_not_void: external_include_pathnames /= Void
-	no_void_external_include_pathname: not external_include_pathnames.has (Void)
+	no_void_external_include_pathname: not external_include_pathnames.has_void
 	external_object_pathnames_not_void: external_object_pathnames /= Void
-	no_void_external_object_pathname: not external_object_pathnames.has (Void)
+	no_void_external_object_pathname: not external_object_pathnames.has_void
 	external_library_pathnames_not_void: external_library_pathnames /= Void
-	no_void_external_library_pathname: not external_library_pathnames.has (Void)
+	no_void_external_library_pathname: not external_library_pathnames.has_void
 
 end

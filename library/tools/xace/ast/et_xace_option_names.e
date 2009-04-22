@@ -308,7 +308,7 @@ feature -- Option codes
 			Result.put_new (wedit_code, wedit_name)
 		ensure
 			options_code_not_void: Result /= Void
-			no_void_option_name: not Result.has (Void)
+			no_void_option_name: not Result.has_void
 		end
 
 feature -- Option values

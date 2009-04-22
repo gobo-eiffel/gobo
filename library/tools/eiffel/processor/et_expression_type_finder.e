@@ -3471,7 +3471,7 @@ invariant
 	type_checker_not_void: type_checker /= Void
 	current_context_not_void: current_context /= Void
 	unused_contexts_not_void: unused_contexts /= Void
-	no_void_unused_context: not unused_contexts.has (Void)
+	no_void_unused_context: not unused_contexts.has_void
 	current_target_type_not_void: current_target_type /= Void
 
 end

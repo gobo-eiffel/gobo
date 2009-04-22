@@ -871,7 +871,7 @@ feature {NONE} -- Output
 			-- Print class options `an_option_list' to `a_file'.
 		require
 			an_option_list_not_void: an_option_list /= Void
-			no_void_option: not an_option_list.has (Void)
+			no_void_option: not an_option_list.has_void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
@@ -902,7 +902,7 @@ feature {NONE} -- Output
 			-- Print feature options `an_option_list' to `a_file'.
 		require
 			an_option_list_not_void: an_option_list /= Void
-			no_void_option: not an_option_list.has (Void)
+			no_void_option: not an_option_list.has_void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write

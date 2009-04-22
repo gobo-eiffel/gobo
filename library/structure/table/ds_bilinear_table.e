@@ -18,7 +18,8 @@ inherit
 
 	DS_BILINEAR [G]
 		rename
-			has as has_item
+			has as has_item,
+			has_void as has_void_item
 		redefine
 			new_cursor
 		end

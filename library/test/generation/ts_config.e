@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_compile_not_void: a_compile /= Void
 			an_execute_not_void: an_execute /= Void
 			a_clusters_not_void: a_clusters /= Void
-			no_void_cluster: not a_clusters.has (Void)
+			no_void_cluster: not a_clusters.has_void
 		do
 			root_class := a_root
 			testgen := a_testgen
@@ -151,6 +151,6 @@ invariant
 	compile_not_void: compile /= Void
 	execute_not_void: execute /= Void
 	clusters_not_void: clusters /= Void
-	no_void_cluster: not clusters.has (Void)
+	no_void_cluster: not clusters.has_void
 
 end
