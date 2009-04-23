@@ -31,12 +31,17 @@ feature -- Access
 
 	elapsed_time: DT_DATE_TIME_DURATION is
 			-- Elapsed time
+		local
+			l_start_time: like stop_time
+			l_stop_time: like start_time
 		do
-			if start_time /= Void then
-				if stop_time /= Void then
-					Result := stop_time.canonical_duration (start_time)
+			l_start_time := start_time
+			if l_start_time /= Void then
+				l_stop_time := stop_time
+				if l_stop_time /= Void then
+					Result := l_stop_time.canonical_duration (l_start_time)
 				else
-					Result := system_clock.date_time_now.canonical_duration (start_time)
+					Result := system_clock.date_time_now.canonical_duration (l_start_time)
 				end
 			else
 				create Result.make (0, 0, 0, 0, 0, 0)
@@ -93,10 +98,10 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	start_time: DT_DATE_TIME
+	start_time: ?DT_DATE_TIME
 			-- Time when stopwatch was started
 
-	stop_time: DT_DATE_TIME
+	stop_time: ?DT_DATE_TIME
 			-- Time when stopwatch was stopped
 
 end

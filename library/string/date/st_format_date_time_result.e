@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: STRING
+	value: ?STRING
 			-- Formatted value
 
-	message: STRING
+	message: ?STRING
 			-- Error message
 
-	code: STRING
+	code: ?STRING
 			-- XSLT error code
 
 feature -- Status report

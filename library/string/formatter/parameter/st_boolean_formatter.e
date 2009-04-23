@@ -25,7 +25,7 @@ feature -- Status report
 	valid_parameter (a_parameter: ANY): BOOLEAN is
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
-			a_cell: DS_CELL [BOOLEAN]
+			a_cell: ?DS_CELL [BOOLEAN]
 		do
 			a_cell ?= a_parameter
 			Result := a_cell /= Void
@@ -38,10 +38,11 @@ feature -- Formatting
 			-- (Use DS_CELL [BOOLEAN] because in SE 2.1
 			-- BOOLEAN does not conform to ANY.)
 		local
-			a_cell: DS_CELL [BOOLEAN]
+			a_cell: ?DS_CELL [BOOLEAN]
 		do
 			a_cell ?= a_parameter
 			check
+					-- From precondition 'valid_parameter'.
 				valid_parameter: a_cell /= Void
 			end
 			boolean_format_to (a_cell.item, a_stream)

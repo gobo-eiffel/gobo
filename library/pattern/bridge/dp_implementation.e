@@ -12,6 +12,10 @@ indexing
 
 class DP_IMPLEMENTATION
 
+obsolete
+
+	"[090423] This class does not work well in void-safe mode. Please stop using it."
+
 feature {DP_INTERFACE} -- Status report
 
 	can_implement (an_interface: DP_INTERFACE): BOOLEAN is

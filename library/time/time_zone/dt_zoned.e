@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DT_ZONED
+deferred class DT_ZONED
 
 feature -- Access
 

@@ -51,18 +51,18 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	valid_format_and_parameters (a_format: STRING; a_parameters: ARRAY [ANY]): BOOLEAN is
+	valid_format_and_parameters (a_format: STRING; a_parameters: ?ARRAY [?ANY]): BOOLEAN is
 			-- Does `a_format' contain valid formatting specifications and
 			-- do `a_parameters' comply to these formatting specifications?
 		require
 			a_format_not_void: a_format /= Void
 		do
-			if a_parameters = Void or else not ANY_ARRAY_.has (a_parameters, Void) then
+			if a_parameters = Void or else not ANY_ARRAY_.has_void (a_parameters) then
 				do_format_to (a_format, a_parameters, null_output_stream)
 				Result := not has_error
 			end
 		ensure
-			no_void_parameter: Result implies (a_parameters = Void or else not ANY_ARRAY_.has (a_parameters, Void))
+			no_void_parameter: Result implies (a_parameters = Void or else not ANY_ARRAY_.has_void (a_parameters))
 		end
 
 feature -- Formatting
@@ -102,7 +102,7 @@ feature -- Formatting
 			a_format_not_void: a_format /= Void
 			valid_format_and_parameters: valid_format_and_parameters (a_format, a_parameters)
 		local
-			a_stream: KI_CHARACTER_OUTPUT_STREAM
+			a_stream: ?KI_CHARACTER_OUTPUT_STREAM
 		do
 			Result := STRING_.new_empty_string (a_format, a_format.count)
 			a_stream ?= ANY_.to_any (Result)
@@ -129,7 +129,7 @@ feature -- Formatting
 			a_format_not_void: a_format /= Void
 			valid_format_and_parameters: valid_format_and_parameters (a_format, <<a_parameter>>)
 		local
-			a_stream: KI_CHARACTER_OUTPUT_STREAM
+			a_stream: ?KI_CHARACTER_OUTPUT_STREAM
 		do
 			single_parameter.put (a_parameter, 1)
 			Result := STRING_.new_empty_string (a_format, a_format.count)
@@ -149,7 +149,7 @@ feature -- Formatting
 
 feature {NONE} -- Formatting
 
-	do_format_to (a_format: STRING; a_parameters: ARRAY [ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	do_format_to (a_format: STRING; a_parameters: ?ARRAY [?ANY]; a_stream: KI_CHARACTER_OUTPUT_STREAM) is
 			-- Append to `a_stream' the string `a_format' where the
 			-- formatting specifications have been replaced by their
 			-- corresponding formatted parameters from `a_parameters'.
@@ -168,7 +168,7 @@ feature {NONE} -- Formatting
 			i, nb: INTEGER
 			s: INTEGER
 			j, nb2: INTEGER
-			a_formatter: ST_PARAMETER_FORMATTER
+			a_formatter: ?ST_PARAMETER_FORMATTER
 			no_more_flag: BOOLEAN
 			a_left_align: BOOLEAN
 			a_center_align: BOOLEAN
@@ -178,8 +178,8 @@ feature {NONE} -- Formatting
 			no_more_width: BOOLEAN
 			a_width_found: BOOLEAN
 			a_width: INTEGER
-			a_parameter: ANY
-			an_integer_parameter: DS_CELL [INTEGER]
+			a_parameter: ?ANY
+			an_integer_parameter: ?DS_CELL [INTEGER]
 			no_more_precision: BOOLEAN
 			a_precision_found: BOOLEAN
 			a_precision: INTEGER
@@ -328,6 +328,12 @@ feature {NONE} -- Formatting
 								elseif j > nb2 then
 									set_error ("Not enough parameters")
 								else
+									check
+											-- When j <= nb2 it means that we still have
+											-- items in `a_parameters', and therefore that
+											-- `a_parameters' is not Void.
+										a_parameters_not_void: a_parameters /= Void
+									end
 									a_parameter := a_parameters.item (j)
 									an_integer_parameter ?= a_parameter
 									if an_integer_parameter /= Void then
@@ -398,6 +404,12 @@ feature {NONE} -- Formatting
 									elseif j > nb2 then
 										set_error ("Not enough parameters")
 									else
+										check
+												-- When j <= nb2 it means that we still have
+												-- items in `a_parameters', and therefore that
+												-- `a_parameters' is not Void.
+											a_parameters_not_void: a_parameters /= Void
+										end
 										a_parameter := a_parameters.item (j)
 										an_integer_parameter ?= a_parameter
 										if an_integer_parameter /= Void then
@@ -457,8 +469,16 @@ feature {NONE} -- Formatting
 								if j > nb2 then
 									set_error ("Not enough parameters")
 								else
+									check
+											-- When j <= nb2 it means that we still have
+											-- items in `a_parameters', and therefore that
+											-- `a_parameters' is not Void.
+										a_parameters_not_void: a_parameters /= Void
+									end
 									a_parameter := a_parameters.item (j)
-									if a_formatter.valid_parameter (a_parameter) then
+									if a_parameter = Void then
+										set_error ("Invalid parameter Void for format specification " + escape_character.out + a_typechar.out)
+									elseif a_formatter.valid_parameter (a_parameter) then
 										a_formatter.format_to (a_parameter, a_stream)
 									else
 										set_error ("Invalid parameter " + a_parameter.out + " for format specification " + escape_character.out + a_typechar.out)
@@ -487,7 +507,7 @@ feature {NONE} -- Formatting
 
 feature {NONE} -- Parameter formatters
 
-	internal_parameter_formatter (a_typechar: CHARACTER): ST_PARAMETER_FORMATTER is
+	internal_parameter_formatter (a_typechar: CHARACTER): ?ST_PARAMETER_FORMATTER is
 			-- Formatter for parameter of type `a_typechar';
 			-- Void if no such parameter formatter
 		deferred
@@ -519,7 +539,7 @@ feature {NONE} -- Constants
 	string_output_stream: KL_STRING_OUTPUT_STREAM
 			-- String output stream used by `format'
 
-	single_parameter: ARRAY [ANY]
+	single_parameter: ARRAY [?ANY]
 			-- Single parameter holder
 
 	empty_string: STRING is ""
@@ -534,7 +554,7 @@ feature {NONE} -- Error handling
 			definition: Result = (error /= Void)
 		end
 
-	error: STRING
+	error: ?STRING
 			-- Error message if the format specification was
 			-- invalid or if the parameters did not conform to the
 			-- specification

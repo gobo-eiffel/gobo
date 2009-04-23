@@ -174,6 +174,6 @@ feature -- Access
 invariant
 
 	parameters_not_void: parameters /= Void
-	no_void_parameter: not STRING_ARRAY_.has (parameters, Void)
+	no_void_parameter: not STRING_ARRAY_.has_void (parameters)
 
 end

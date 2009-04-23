@@ -110,15 +110,17 @@ feature -- Access
 		local
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
+			l_result: ?UC_UTF8_STRING
 		do
-			Result ?= a_source
-			if Result = Void or else not Result.is_empty then
+			l_result ?= a_source
+			if l_result = Void or else not l_result.is_empty then
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, True, changed)
-				if changed.item or Result = Void then
-					Result := string_from_codes (a_decomposition)
+				if changed.item or l_result = Void then
+					l_result := string_from_codes (a_decomposition)
 				end
 			end
+			Result := l_result
 		ensure
 			as_nfd_not_void: Result /= Void
 			is_nfd: is_nfd (Result)
@@ -151,15 +153,17 @@ feature -- Access
 		local
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
+			l_result: ?UC_UTF8_STRING
 		do
-			Result ?= a_source
-			if Result = Void or else not Result.is_empty then
+			l_result ?= a_source
+			if l_result = Void or else not l_result.is_empty then
 				create changed.make (False)
 				a_decomposition := decomposition (a_source, False, changed)
-				if changed.item or Result = Void then
-					Result := string_from_codes (a_decomposition)
+				if changed.item or l_result = Void then
+					l_result := string_from_codes (a_decomposition)
 				end
 			end
+			Result := l_result
 		ensure
 			as_nfkd_not_void: Result /= Void
 			is_nfd: is_nfd (Result)

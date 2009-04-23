@@ -10,7 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DP_INTERFACE
+deferred class DP_INTERFACE
+
+obsolete
+
+	"[090423] This class does not work well in void-safe mode. Please stop using it."
 
 feature {NONE} -- Initialization
 

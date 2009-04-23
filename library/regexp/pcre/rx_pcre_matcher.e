@@ -238,6 +238,7 @@ feature {NONE} -- Matching
 			req_char_ptr: INTEGER
 			p: INTEGER
 			stop: BOOLEAN
+			l_start_bits: like start_bits
 		do
 			subject := a_subject
 			subject_next_start := a_start
@@ -322,14 +323,17 @@ feature {NONE} -- Matching
 							first_matched_index := first_matched_index + 1
 						end
 					end
-				elseif start_bits /= Void then
-						-- Or to a non-unique first char after study.
-					from
-					until
-						first_matched_index > a_end or else
-						start_bits.has (subject.item_code (first_matched_index))
-					loop
-						first_matched_index := first_matched_index + 1
+				else
+					l_start_bits := start_bits
+					if l_start_bits /= Void then
+							-- Or to a non-unique first char after study.
+						from
+						until
+							first_matched_index > a_end or else
+							l_start_bits.has (subject.item_code (first_matched_index))
+						loop
+							first_matched_index := first_matched_index + 1
+						end
 					end
 				end
 				if req_char >= 0 then

@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			-- Create a new regexp compiler.
 		do
 			create byte_code.make (1024)
+			create internal_start_bits.make_empty
 			pattern := STRING_.cloned_string (empty_pattern)
 			reset
 			set_character_case_mapping (default_character_case_mapping)
@@ -474,11 +475,7 @@ feature -- Compilation
 				-- multiline pattern that matches only at "line starts", no further processing at
 				-- present.
 			if not is_anchored and then first_character < 0 and then not is_startline then
-				if internal_start_bits = Void then
-					create internal_start_bits.make_empty
-				else
-					internal_start_bits.wipe_out
-				end
+				internal_start_bits.wipe_out
 				set_start_bits (0, is_caseless)
 			end
 		end
@@ -580,8 +577,10 @@ feature -- Debugging
 			a_file_open_write: a_file.is_open_write
 		local
 			i, j: INTEGER
+			l_start_bits: like start_bits
 		do
-			if start_bits = Void then
+			l_start_bits := start_bits
+			if l_start_bits = Void then
 				a_file.put_string ("Study returned NULL")
 			else
 				a_file.put_string ("Starting character set: ")
@@ -591,7 +590,7 @@ feature -- Debugging
 				until
 					i > 255
 				loop
-					if start_bits.has (i) then
+					if l_start_bits.has (i) then
 						if j > 75 then
 							a_file.put_new_line
 							a_file.put_string ("  ")
@@ -627,7 +626,7 @@ feature -- Debugging
 			a_min, a_max: INTEGER
 			a_set: INTEGER
 			a_position: INTEGER
-			a_position_map: like new_position_map
+			a_position_map: ?like new_position_map
 		do
 			if not a_native_code then
 				a_position_map := new_position_map
@@ -643,6 +642,10 @@ feature -- Debugging
 				if a_native_code then
 					a_position := i
 				else
+					check
+							-- `a_position_map' has been set when `a_native_code' is False.
+						a_position_map_not_void: a_position_map /= Void
+					end
 					a_position := map_position (i, a_position_map)
 				end
 				STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
@@ -653,6 +656,10 @@ feature -- Debugging
 						if a_native_code then
 							a_position := byte_code.integer_item (i + 1)
 						else
+							check
+									-- `a_position_map' has been set when `a_native_code' is False.
+								a_position_map_not_void: a_position_map /= Void
+							end
 							a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
 						end
 						STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
@@ -669,6 +676,10 @@ feature -- Debugging
 							if a_native_code then
 								a_position := byte_code.integer_item (i + 1)
 							else
+								check
+										-- `a_position_map' has been set when `a_native_code' is False.
+									a_position_map_not_void: a_position_map /= Void
+								end
 								a_position := map_position (i + byte_code.integer_item (i + 1), a_position_map) - map_position (i, a_position_map)
 							end
 							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
@@ -683,6 +694,10 @@ feature -- Debugging
 							if a_native_code then
 								a_position := byte_code.integer_item (i + 1)
 							else
+								check
+										-- `a_position_map' has been set when `a_native_code' is False.
+									a_position_map_not_void: a_position_map /= Void
+								end
 								a_position := map_position (i, a_position_map) - map_position (i - byte_code.integer_item (i + 1), a_position_map)
 							end
 							STRING_FORMATTER_.put_left_padded_string (a_file, a_position.out, 3, ' ')
@@ -1212,7 +1227,7 @@ feature {NONE} -- Access
 	internal_start_bits: RX_CHARACTER_SET
 			-- To avoid repeated allocations of the `start_bits' character set
 
-	start_bits: RX_CHARACTER_SET
+	start_bits: ?RX_CHARACTER_SET
 			-- A set of starting characters. This will be filled in by the optimizer
 
 	first_character: INTEGER
@@ -3459,5 +3474,6 @@ invariant
 	end_of_pattern: pattern.item (pattern.count) = '%U'
 	valid_first_character: -1 <= first_character
 	valid_required_character: -2 <= required_character
+	internal_start_bits_not_void: internal_start_bits /= Void
 
 end

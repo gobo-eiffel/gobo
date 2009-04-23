@@ -23,6 +23,8 @@ feature -- Status report
 
 	is_all_whitespace (chars: STRING): BOOLEAN is
 			-- Does `chars' consist only of XML white-space characters?
+		require
+			chars_not_void: chars /= Void
 		local
 			counter: INTEGER
 		do
