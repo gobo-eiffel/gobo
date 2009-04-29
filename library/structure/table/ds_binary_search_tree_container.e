@@ -727,7 +727,9 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 				end
 			end
 		ensure
-			has_key_k_implies_a_cursor_points_to_it: has_key (k) implies a_cursor.position.key = k
+			has_key_k_implies_a_cursor_points_to_it:
+				has_key (k) and k /= Void and a_cursor.position.key /= Void implies
+					key_comparator.order_equal (a_cursor.position.key, k)
 			k_greater_equal_cursor_positions_key:
 				not a_cursor.off and then a_cursor.position.key /= Void and k /= Void implies
 					key_comparator.greater_equal (k, a_cursor.position.key)
@@ -755,7 +757,9 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 				end
 			end
 		ensure
-			has_key_k_implies_a_cursor_points_to_it: has_key (k) implies a_cursor.position.key = k
+			has_key_k_implies_a_cursor_points_to_it:
+				has_key (k) and k /= Void and a_cursor.position.key /= Void implies
+					key_comparator.order_equal (a_cursor.position.key, k)
 			k_less_equal_cursors_key:
 				not a_cursor.off and then a_cursor.position.key /= Void and k /= Void implies
 					key_comparator.less_equal (k, a_cursor.position.key)
