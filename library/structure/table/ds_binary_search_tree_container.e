@@ -701,6 +701,68 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 			end
 		end
 
+feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
+
+	cursor_go_at_or_before_key (a_cursor: like new_cursor; k: K) is
+			-- Move `a_cursor' to last position with a smaller key than `k'.
+		require
+			a_cursor_not_void: a_cursor /= Void
+		local
+			l_was_off: BOOLEAN
+			l_position: like found_node
+		do
+			l_was_off := a_cursor.off
+			if is_empty then
+				a_cursor.set_is_before (True)
+			elseif k = Void then
+				a_cursor.set_is_before (True)
+				if not l_was_off then
+					remove_traversing_cursor (a_cursor)
+				end
+			else
+				search_insert_position (k)
+				a_cursor.set_position (found_node)
+				if found_node.key = Void or else key_comparator.less_than (k, found_node.key) then
+					a_cursor.back
+				end
+			end
+		ensure
+			has_key_k_implies_a_cursor_points_to_it: has_key (k) implies a_cursor.position.key = k
+			k_greater_equal_cursor_positions_key:
+				not a_cursor.off and then a_cursor.position.key /= Void and k /= Void implies
+					key_comparator.greater_equal (k, a_cursor.position.key)
+			a_cursor_not_after: not a_cursor.after
+		end
+
+	cursor_go_at_or_after_key (a_cursor: like new_cursor; k: K) is
+			-- Move `a_cursor' to first position with a greater key than `k'.
+		require
+			a_cursor_not_void: a_cursor /= Void
+		local
+			l_was_off: BOOLEAN
+			l_position: like found_node
+		do
+			l_was_off := a_cursor.off
+			if is_empty then
+				a_cursor.set_is_before (False)
+			elseif k = Void then
+				a_cursor.set_position (first_node)
+			else
+				search_insert_position (k)
+				a_cursor.set_position (found_node)
+				if found_node.key = Void or else key_comparator.greater_than (k, found_node.key) then
+					a_cursor.forth
+				end
+			end
+		ensure
+			has_key_k_implies_a_cursor_points_to_it: has_key (k) implies a_cursor.position.key = k
+			k_less_equal_cursors_key:
+				not a_cursor.off and then a_cursor.position.key /= Void and k /= Void implies
+					key_comparator.less_equal (k, a_cursor.position.key)
+			a_cursor_not_before: not a_cursor.before
+		end
+
+
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 
 	predecessor_for_cursor (v: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]): DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K] is

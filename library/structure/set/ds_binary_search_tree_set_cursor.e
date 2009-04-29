@@ -23,6 +23,9 @@ inherit
 		end
 
 	DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR [G, G]
+		rename
+			go_at_or_before_key as go_at_or_before,
+			go_at_or_after_key as go_at_or_after
 		redefine
 			container,
 			next_cursor

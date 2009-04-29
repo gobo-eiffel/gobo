@@ -90,6 +90,24 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status setting
 			is_before_set: is_before = a_bool
 		end
 
+feature -- Cursor movement
+
+	go_at_or_before_key (a_key: K) is
+			-- Move to last position with a smaller key than `k'.
+		do
+			container.cursor_go_at_or_before_key (Current, a_key)
+		ensure
+			not_after: not after
+		end
+
+	go_at_or_after_key (a_key: K) is
+			-- Move to first position with a greater key than `k'.
+		do
+			container.cursor_go_at_or_after_key (Current, a_key)
+		ensure
+			not_before: not before
+		end
+
 feature {DS_BILINEAR} -- Implementation
 
 	next_cursor: DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR [G, K]
