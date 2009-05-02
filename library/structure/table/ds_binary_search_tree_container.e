@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 			internal_set_key_comparator (a_comparator)
 			count := 0
-			internal_cursor := new_cursor
+			set_internal_cursor (new_cursor)
 		ensure
 			comparator_set: key_comparator = a_comparator
 		end
@@ -840,6 +840,12 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 			end
 		ensure
 			successor_in_same_tree: Result /= Void implies are_nodes_in_same_tree (Result, v)
+		end
+
+	set_internal_cursor (c: like internal_cursor) is
+			-- Set `internal_cursor' to `c'.
+		do
+			internal_cursor := c
 		end
 
 	internal_cursor: like new_cursor

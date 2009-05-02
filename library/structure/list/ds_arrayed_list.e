@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			create special_routines
 			storage := special_routines.make (n + 1)
 			capacity := n
-			internal_cursor := new_cursor
+			set_internal_cursor (new_cursor)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			create special_routines
 			storage := special_routines.make (n + 1)
 			capacity := n
-			internal_cursor := new_cursor
+			set_internal_cursor (new_cursor)
 			create equality_tester
 		ensure
 			empty: is_empty
@@ -278,12 +278,12 @@ feature -- Duplication
 				move_all_cursors_after
 				standard_copy (other)
 				if old_cursor /= Void and then valid_cursor (old_cursor) then
-					internal_cursor := old_cursor
+					set_internal_cursor (old_cursor)
 				else
 						-- Set `internal_cursor' to Void before calling
 						-- `new_cursor' to avoid an invariant violation.
-					internal_cursor := Void
-					internal_cursor := new_cursor
+					set_internal_cursor (Void)
+					set_internal_cursor (new_cursor)
 				end
 				storage := storage.twin
 			end
@@ -891,6 +891,12 @@ feature {NONE} -- Implementation
 			-- Routines that ought to be in SPECIAL
 
 feature {NONE} -- Implementation
+
+	set_internal_cursor (c: like internal_cursor) is
+			-- Set `internal_cursor' to `c'.
+		do
+			internal_cursor := c
+		end
 
 	internal_cursor: like new_cursor
 			-- Internal cursor

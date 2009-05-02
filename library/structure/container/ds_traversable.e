@@ -75,6 +75,13 @@ feature -- Cursor movement
 
 feature {NONE} -- Cursor implementation
 
+	set_internal_cursor (c: like internal_cursor) is
+			-- Set `internal_cursor' to `c'.
+		deferred
+		ensure
+			internal_cursor_set: internal_cursor = c
+		end
+
 	internal_cursor: like new_cursor is
 			-- Internal cursor
 		deferred

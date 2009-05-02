@@ -177,10 +177,12 @@ feature -- Status report
 			-- Does `path_items' not contain relative components like ".."?
 		local
 			a_cursor: DS_LINEAR_CURSOR [UT_URI_STRING]
+			l_path_base_item: like path_base_item
 		do
 			Result := True
-			if has_path_base then
-				Result := not is_dot_dot (path_base_item) and not is_dot (path_base_item)
+			l_path_base_item := path_base_item
+			if l_path_base_item /= Void and then has_path_base then
+				Result := not is_dot_dot (l_path_base_item) and not is_dot (l_path_base_item)
 			end
 			if path_items.count > 0 then
 				Result := not is_dot (path_items.first)
@@ -214,6 +216,7 @@ feature -- Status report
 		do
 			Result := path_base_item /= Void
 		ensure
+			result_implies_path_base_item_not_void: Result implies path_base_item /= Void
 			-- Commented out CPA 2006/10/06 as it fails for gex:/ : no_base: has_path implies (Result = (path.item (path.count) /= '/'))
 		end
 
@@ -244,12 +247,15 @@ feature -- Status report
 
 	has_valid_scheme: BOOLEAN is
 			-- Is scheme set and containing valid characters?
+		local
+			l_scheme: like scheme
 		do
-			Result := scheme /= Void and then (not scheme.is_empty and Url_encoding.is_valid_scheme (scheme))
+			l_scheme := scheme
+			Result := l_scheme /= Void and then (not l_scheme.is_empty and Url_encoding.is_valid_scheme (l_scheme))
 		ensure
 			valid_scheme_not_void: Result implies scheme /= Void
-			valid_scheme_not_empty: Result implies not scheme.is_empty
-			valid_scheme_characters: Result implies Url_encoding.is_valid_scheme (scheme)
+			valid_scheme_not_empty: Result implies {el_scheme: like scheme} scheme and then not el_scheme.is_empty
+			valid_scheme_characters: Result implies {el_scheme2: like scheme} scheme and then Url_encoding.is_valid_scheme (el_scheme2)
 		end
 
 	has_authority: BOOLEAN is
@@ -297,16 +303,23 @@ feature -- Access
 			no_fragment_is_reference: not has_fragment implies STRING_.same_string (Result, full_reference)
 		end
 
-	scheme: STRING
+	scheme: ?STRING
 			-- Scheme used, like "http" or "ftp", anything before the ':'
 
 	scheme_specific_part: STRING is
 			-- Interpretation depends on scheme, everything after the ':'
+		local
+			l_scheme: like scheme
 		do
 			if is_relative then
 				Result := full_reference
 			else
-				Result := full_reference.substring (scheme.count + 2, full_reference.count)
+				l_scheme := scheme
+				check
+						-- `not is_relative' means `is_absolute" means `scheme /= Void'
+					scheme_not_void: l_scheme /= Void
+				end
+				Result := full_reference.substring (l_scheme.count + 2, full_reference.count)
 			end
 		ensure
 			scheme_specific_part_not_void: Result /= Void
@@ -320,11 +333,18 @@ feature -- Components
 			-- Use `parse_authority' to parse the [<userinfo>@]<host>[:<port>] form.
 		require
 			has_authority: has_authority
+		local
+			l_authority_item: like authority_item
 		do
-			Result := authority_item.encoded
+			l_authority_item := authority_item
+			check
+					-- Precondition `has_authority'
+				l_authority_item /= Void
+			end
+			Result := l_authority_item.encoded
 		ensure
 			authority_not_void: Result /= Void
-			definition: STRING_.same_string (Result, authority_item.encoded)
+			definition: {el_authority_item: like authority_item} authority_item and then STRING_.same_string (Result, el_authority_item.encoded)
 			not_next_path_separator: not Result.has ('/')
 			not_next_query_separator: not Result.has ('?')
 			not_next_fragment_separator: not Result.has ('#')
@@ -335,6 +355,7 @@ feature -- Components
 			-- (Item names are kept URL-encoded.)
 		local
 			i, nb: INTEGER
+			l_path_base_item: like path_base_item
 		do
 			create Result.make_empty
 			if has_absolute_path then
@@ -346,8 +367,9 @@ feature -- Components
 				Result.append_character ('/')
 				i := i + 1
 			end
-			if has_path_base then
-				Result := STRING_.appended_string (Result, path_base_item.encoded)
+			l_path_base_item := path_base_item
+			if l_path_base_item /= Void and then has_path_base then
+				Result := STRING_.appended_string (Result, l_path_base_item.encoded)
 			end
 		ensure
 			path_not_void: Result /= Void
@@ -364,8 +386,15 @@ feature -- Components
 			-- path_base = "b" for "s://host/a/b"
 		require
 			has_path_base: has_path_base
+		local
+			l_path_base_item: like path_base_item
 		do
-			Result := path_base_item.encoded
+			l_path_base_item := path_base_item
+			check
+					-- precondition `has_path_base'
+				has_path_base: l_path_base_item /= Void
+			end
+			Result := l_path_base_item.encoded
 		ensure
 			path_base_not_void: Result /= Void
 			not_empty: not Result.is_empty
@@ -376,11 +405,18 @@ feature -- Components
 			-- Anything after the '?' and before '#' if present
 		require
 			has_query: has_query
+		local
+			l_query_item: like query_item
 		do
-			Result := query_item.encoded
+			l_query_item := query_item
+			check
+					-- precondition `has_query'
+				has_query: l_query_item /= Void
+			end
+			Result := l_query_item.encoded
 		ensure
 			query_not_void: Result /= Void
-			definition: STRING_.same_string (Result, query_item.encoded)
+			definition: {el_query_item: like query_item} query_item and then STRING_.same_string (Result, el_query_item.encoded)
 			not_next_separator: not Result.has ('#')
 		end
 
@@ -388,28 +424,35 @@ feature -- Components
 			-- The part after the '#' if present
 		require
 			has_fragment: has_fragment
+		local
+			l_fragment_item: like fragment_item
 		do
-			Result := fragment_item.encoded
+			l_fragment_item := fragment_item
+			check
+					-- precondition `has_fragment'
+				has_fragment: l_fragment_item /= Void
+			end
+			Result := l_fragment_item.encoded
 		ensure
 			fragment_not_void: Result /= Void
-			definition: STRING_.same_string (Result, fragment_item.encoded)
+			definition: {el_fragment_item: like fragment_item} fragment_item and then STRING_.same_string (Result, el_fragment_item.encoded)
 			not_separator: not Result.has ('#')
 		end
 
-	authority_item: UT_URI_STRING
+	authority_item: ?UT_URI_STRING
 			-- Authority if present
 
 	path_items: DS_ARRAYED_LIST [UT_URI_STRING]
 			-- Path in `scheme_specific_part'
 
-	path_base_item: UT_URI_STRING
+	path_base_item: ?UT_URI_STRING
 			-- Last segment, if any, of path
 			-- (See `path_has_base'.)
 
-	query_item: UT_URI_STRING
+	query_item: ?UT_URI_STRING
 			-- Query string if present
 
-	fragment_item: UT_URI_STRING
+	fragment_item: ?UT_URI_STRING
 			-- Fragment string if present
 
 	has_absolute_path: BOOLEAN
@@ -417,12 +460,12 @@ feature -- Components
 
 feature -- If authority is <userinfo>@<host>:<port>
 
-	user_info: STRING
+	user_info: ?STRING
 			-- Optional user info part of a authority
 --		require
 --			has_parsed_authority: has_parsed_authority
 
-	host_port: UT_HOST_PORT
+	host_port: ?UT_HOST_PORT
 			-- Hostname and port number
 --		require
 --			has_parsed_authority: has_parsed_authority
@@ -471,23 +514,29 @@ feature -- If authority is <userinfo>@<host>:<port>
 		local
 			p: INTEGER
 			user_info_present: BOOLEAN
+			l_authority_item: like authority_item
 		do
 				-- Scan for `userinfo'.
-			p := authority_item.encoded.index_of ('@', 1)
+			l_authority_item := authority_item
+			check
+					-- precondition `valid_authority'
+				valid_authority: l_authority_item /= Void
+			end
+			p := l_authority_item.encoded.index_of ('@', 1)
 			user_info_present := p > 1
 			if user_info_present then
 				user_info := authority.substring (1, p - 1)
 			end
 				-- `host_port' is remainder of `authority'.
 			if p = 0 then
-				create host_port.make (authority_item.encoded, default_port)
+				create host_port.make (l_authority_item.encoded, default_port)
 			else
-				check valid_authority_implies: p + 1 < authority_item.encoded.count end
-				create host_port.make (authority_item.encoded.substring (p + 1, authority.count), default_port)
+				check valid_authority_implies: p + 1 < l_authority_item.encoded.count end
+				create host_port.make (l_authority_item.encoded.substring (p + 1, authority.count), default_port)
 			end
 		ensure
 			has_parsed_authority: has_parsed_authority
-			user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) = 1
+			user_info_occurs_in_authority: {el_user_info: like user_info} user_info implies STRING_.substring_index (authority, el_user_info, 1) = 1
 			host_occurs_in_authority: STRING_.substring_index (authority, host, 1) /= 0
 		end
 
@@ -495,21 +544,35 @@ feature -- If authority is <userinfo>@<host>:<port>
 			-- Hostname or IP4 address (RFC2396) or IP6 addresses (RFC2732)
 		require
 			has_authority: has_parsed_authority
+		local
+			l_host_port: like host_port
 		do
-			Result := host_port.host
+			l_host_port := host_port
+			check
+					-- precondition `has_authority'
+				has_authority: l_host_port /= Void
+			end
+			Result := l_host_port.host
 		ensure
 			host_not_void: Result /= Void
-			definition: host = host_port.host
+			definition: {el_host_port: like host_port} host_port and then host = el_host_port.host
 		end
 
 	port: INTEGER is
 			-- Service port number
 		require
 			has_authority: has_parsed_authority
+		local
+			l_host_port: like host_port
 		do
-			Result := host_port.port
+			l_host_port := host_port
+			check
+					-- precondition `has_authority'
+				has_authority: l_host_port /= Void
+			end
+			Result := l_host_port.port
 		ensure
-			definition: port = host_port.port
+			definition: {el_host_port: like host_port} host_port and then port = el_host_port.port
 		end
 
 feature {NONE} -- Parsed authority
@@ -663,10 +726,17 @@ feature {NONE} -- Update cached attributes
 
 	new_full_uri: STRING is
 			-- Reconstructed full URI (without fragment) from components
+		local
+			l_scheme: like scheme
 		do
 			create Result.make_empty
 			if is_absolute then
-				Result := STRING_.appended_string (Result, scheme)
+				l_scheme := scheme
+				check
+						-- condition `is_absolute'
+					is_absolute: l_scheme /= Void
+				end
+				Result := STRING_.appended_string (Result, l_scheme)
 				Result.append_character (':')
 			end
 			if has_authority then
@@ -945,6 +1015,7 @@ feature {NONE} -- Resolve a relative-path reference
 			some_items: like path_items
 			segment: UT_URI_STRING
 			i, nb: INTEGER
+			l_path_base_item: like path_base_item
 		do
 				-- See RFC 2396, section 5.2 step 6 for an implementation.
 				-- Another implementation is used below.
@@ -954,9 +1025,16 @@ feature {NONE} -- Resolve a relative-path reference
 				-- Path items.
 			create some_items.make_from_linear (a_base.path_items)
 				-- Handle path base if relative.
-			if has_path_base and then (is_dot (path_base_item) or is_dot_dot (path_base_item)) then
-				path_items.force_last (path_base_item)
-				path_base_item := Void
+			if has_path_base then
+				l_path_base_item := path_base_item
+				check
+						-- condition `has_path_base'
+					has_path_base: l_path_base_item /= Void
+				end
+				if is_dot (l_path_base_item) or is_dot_dot (l_path_base_item) then
+					path_items.force_last (l_path_base_item)
+					path_base_item := Void
+				end
 			end
 				-- Last segment is part of path if relative.
 			nb := path_items.count
@@ -1041,7 +1119,7 @@ invariant
 	no_void_path_item: not path_items.has_void
 	-- no_empty_path_item: not path_items.has ("")
 		-- Contraints on parsed `authority'.
-	user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) /= 0
-	host_occurs_in_authority: has_parsed_authority implies STRING_.substring_index (authority, host_port.host, 1) /= 0
+	user_info_occurs_in_authority: {l_user_info: like user_info} user_info implies STRING_.substring_index (authority, l_user_info, 1) /= 0
+	host_occurs_in_authority: has_parsed_authority implies {l_host_port: like host_port} host_port and then STRING_.substring_index (authority, l_host_port.host, 1) /= 0
 
 end

@@ -117,6 +117,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_date: like last_cached_date
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -128,7 +129,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_date_string := a_formatted_date
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_date.make (last_cached_date, a_tz)
+							l_date := last_cached_date
+							check
+									-- condition `is_date (...)' ensures with its postcondition `date_cached'
+									-- that last_cached_date is not Void
+								is_date: l_date /= Void
+							end
+							create last_cached_zoned_date.make (l_date, a_tz)
 						end
 					end
 				elseif a_formatted_date.count >= 16 then
@@ -163,7 +170,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_date.make (last_cached_date, a_tz)
+												l_date := last_cached_date
+												check
+														-- condition `is_date (...)' ensures with its postcondition `date_cached'
+														-- that last_cached_date is not Void
+													is_date: l_date /= Void
+												end
+												create last_cached_zoned_date.make (l_date, a_tz)
 											end
 										end
 									end
@@ -182,6 +195,9 @@ feature -- Access
 		local
 			a_splitter: ST_SPLITTER
 			some_components: DS_LIST [STRING]
+			l_date: like last_cached_date
+			l_time: like last_cached_time
+			l_date_time: like last_cached_date_time
 		do
 			if not a_formatted_date_time.is_empty then
 				if STRING_.same_string (a_formatted_date_time, last_cached_date_time_string) then
@@ -195,15 +211,26 @@ feature -- Access
 					some_components := a_splitter.split_greedy (a_formatted_date_time)
 					Result := some_components.count = 2
 					if Result then
-						Result := is_date (some_components.item (1))
-						if Result then
-							Result := is_time (some_components.item (2))
-						end
+						Result := is_date (some_components.item (1)) and then
+									is_time (some_components.item (2))
 						if Result then
 							last_cached_date_time_string := a_formatted_date_time
-							create last_cached_date_time.make_from_date_time (last_cached_date, last_cached_time)
+							l_date := last_cached_date
+							check
+									-- condition `is_date (...)' ensures with its postcondition `date_cached'
+									-- that last_cached_date is not Void
+								is_date: l_date /= Void
+							end
+							l_time := last_cached_time
+							check
+									-- condition `is_time (...)' ensures with its postcondition `time_cached'
+									-- that last_cached_time is not Void
+								is_time: l_time /= Void
+							end
+							create l_date_time.make_from_date_time (l_date, l_time)
+							last_cached_date_time := l_date_time
 							if last_time_carry then
-								last_cached_date_time.add_days (1)
+								l_date_time.add_days (1)
 							end
 						end
 					end
@@ -219,6 +246,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_date_time: like last_cached_date_time
 		do
 			if not a_formatted_date_time.is_empty then
 				if STRING_.same_string (a_formatted_date_time, last_cached_zoned_date_time_string) then
@@ -230,7 +258,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_date_time_string := a_formatted_date_time
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_date_time.make (last_cached_date_time, a_tz)
+							l_date_time := last_cached_date_time
+							check
+									-- condition `is_date_time (...)' ensures with its postcondition `date_time_cached'
+									-- that last_cached_date_time is not Void
+								is_date_time: l_date_time /= Void
+							end
+							create last_cached_zoned_date_time.make (l_date_time, a_tz)
 						end
 					end
 				elseif a_formatted_date_time.count >= 25 then
@@ -265,7 +299,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_date_time.make (last_cached_date_time, a_tz)
+												l_date_time := last_cached_date_time
+												check
+														-- condition `is_date_time (...)' ensures with its postcondition `date_time_cached'
+														-- that last_cached_date_time is not Void
+														is_date_time: l_date_time /= Void
+												end
+												create last_cached_zoned_date_time.make (l_date_time, a_tz)
 											end
 										end
 									end
@@ -356,6 +396,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_time: like last_cached_time
 		do
 			if not a_formatted_time.is_empty then
 				if STRING_.same_string (a_formatted_time, last_cached_zoned_time_string) then
@@ -367,7 +408,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_time_string := a_formatted_time
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_time.make (last_cached_time, a_tz)
+							l_time := last_cached_time
+							check
+									-- condition `is_time (...)' ensures with its postcondition `time_cached'
+									-- that last_cached_time is not Void
+								is_time: l_time /= Void
+							end
+							create last_cached_zoned_time.make (l_time, a_tz)
 						end
 					end
 				elseif a_formatted_time.count >= 14 then
@@ -402,7 +449,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_time.make (last_cached_time, a_tz)
+												l_time := last_cached_time
+												check
+														-- condition `is_time (...)' ensures with its postcondition `time_cached'
+														-- that last_cached_time is not Void
+													is_time: l_time /= Void
+												end
+												create last_cached_zoned_time.make (l_time, a_tz)
 											end
 										end
 									end
@@ -473,6 +526,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_date: like last_cached_date
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -484,7 +538,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_date_string := a_formatted_date
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_date.make (last_cached_date, a_tz)
+							l_date := last_cached_date
+							check
+									-- condition `is_year_month (...)' ensures with its postcondition `year_month_cached'
+									-- that last_cached_date is not Void
+								is_year_month: l_date /= Void
+							end
+							create last_cached_zoned_date.make (l_date, a_tz)
 						end
 					end
 				elseif a_formatted_date.count >= 13 then
@@ -519,7 +579,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_date.make (last_cached_date, a_tz)
+												l_date := last_cached_date
+												check
+														-- condition `is_year_month (...)' ensures with its postcondition `year_month_cached'
+														-- that last_cached_date is not Void
+													is_year_month: l_date /= Void
+												end
+												create last_cached_zoned_date.make (l_date, a_tz)
 											end
 										end
 									end
@@ -578,6 +644,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_date: like last_cached_date
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -589,7 +656,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_date_string := a_formatted_date
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_date.make (last_cached_date, a_tz)
+							l_date := last_cached_date
+							check
+									-- condition `is_year (...)' ensures with its postcondition `year_cached'
+									-- that last_cached_date is not Void
+								is_year: l_date /= Void
+							end
+							create last_cached_zoned_date.make (l_date, a_tz)
 						end
 					end
 				elseif a_formatted_date.count >= 10 then
@@ -624,7 +697,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_date.make (last_cached_date, a_tz)
+												l_date := last_cached_date
+												check
+														-- condition `is_year (...)' ensures with its postcondition `year_cached'
+														-- that last_cached_date is not Void
+													is_year: l_date /= Void
+												end
+												create last_cached_zoned_date.make (l_date, a_tz)
 											end
 										end
 									end
@@ -682,6 +761,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_date: like last_cached_date
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -693,7 +773,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_date_string := a_formatted_date
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_date.make (last_cached_date, a_tz)
+							l_date := last_cached_date
+							check
+									-- condition `is_month_day (...)' ensures with its postcondition `month_day_cached'
+									-- that last_cached_date is not Void
+								is_month_day: l_date /= Void
+							end
+							create last_cached_zoned_date.make (l_date, a_tz)
 						end
 					end
 				elseif a_formatted_date.count = 13 then
@@ -728,7 +814,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_date.make (last_cached_date, a_tz)
+												l_date := last_cached_date
+												check
+														-- condition `is_month_day (...)' ensures with its postcondition `month_day_cached'
+														-- that last_cached_date is not Void
+													is_month_day: l_date /= Void
+												end
+												create last_cached_zoned_date.make (l_date, a_tz)
 											end
 										end
 									end
@@ -782,6 +874,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_date: like last_cached_date
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -793,7 +886,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_date_string := a_formatted_date
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_date.make (last_cached_date, a_tz)
+							l_date := last_cached_date
+							check
+									-- condition `is_day (...)' ensures with its postcondition `day_cached'
+									-- that last_cached_date is not Void
+								is_day: l_date /= Void
+							end
+							create last_cached_zoned_date.make (l_date, a_tz)
 						end
 					end
 				elseif a_formatted_date.count = 11 then
@@ -828,7 +927,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_date.make (last_cached_date, a_tz)
+												l_date := last_cached_date
+												check
+														-- condition `is_day (...)' ensures with its postcondition `day_cached'
+														-- that last_cached_date is not Void
+													is_day: l_date /= Void
+												end
+												create last_cached_zoned_date.make (l_date, a_tz)
 											end
 										end
 									end
@@ -881,6 +986,7 @@ feature -- Access
 			a_count: STRING
 			a_tz: DT_FIXED_OFFSET_TIME_ZONE
 			an_hour, a_minute: INTEGER
+			l_date: like last_cached_date
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
@@ -892,7 +998,13 @@ feature -- Access
 						if Result then
 							last_cached_zoned_date_string := a_formatted_date
 							create a_tz.make_named_hours_minutes ("Z", 0, 0)
-							create last_cached_zoned_date.make (last_cached_date, a_tz)
+							l_date := last_cached_date
+							check
+									-- condition `is_month (...)' ensures with its postcondition `month_cached'
+									-- that last_cached_date is not Void
+								is_month: l_date /= Void
+							end
+							create last_cached_zoned_date.make (l_date, a_tz)
 						end
 					end
 				elseif a_formatted_date.count = 10 then
@@ -927,7 +1039,13 @@ feature -- Access
 												else
 													create a_tz.make_hours_minutes (an_hour, a_minute)
 												end
-												create last_cached_zoned_date.make (last_cached_date, a_tz)
+												l_date := last_cached_date
+												check
+														-- condition `is_month (...)' ensures with its postcondition `month_cached'
+														-- that last_cached_date is not Void
+													is_month: l_date /= Void
+												end
+												create last_cached_zoned_date.make (l_date, a_tz)
 											end
 										end
 									end
@@ -952,102 +1070,168 @@ feature -- Conversion
 			-- Parsed date from `a_formatted_date'
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_date
 		do
 			if a_formatted_date = last_cached_date_string then
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- implied by `last_cached_date_string /= Void' and invariant `last_cached_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_date (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- condition `is_date (...)' ensures with its postcondition `date_cached'
+						-- that last_cached_date is not Void
+					is_date: l_date /= Void
+				end
 			end
+			Result := l_date
 		end
 
 	string_to_zoned_date (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
 			-- Parsed date from `a_formatted_date'
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_zoned_date
 		do
 			if a_formatted_date = last_cached_zoned_date_string then
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- `last_cached_zoned_date_string /= Void' and invariant `last_cached_zoned_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_zoned_date (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- condition `is_zoned_date (...)' ensures with its postcondition `zoned_date_cached'
+						-- that last_cached_zoned_date is not Void
+					is_zoned_date: l_date /= Void
+				end
 			end
+			Result := l_date
 		end
 
 	string_to_date_time (a_formatted_date_time: STRING): DT_DATE_TIME is
 			-- Parsed date-time from `a_formatted_date_time'
 		local
 			valid: BOOLEAN
+			l_date_time: like last_cached_date_time
 		do
 			if a_formatted_date_time = last_cached_date_time_string then
-				Result := last_cached_date_time
+				l_date_time := last_cached_date_time
+				check
+						-- `last_cached_date_time_string /= Void' and invariant `last_cached_date_time_not_void'
+					cached_date_time_not_void: l_date_time /= Void
+				end
 			else
 				valid := is_date_time (a_formatted_date_time)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_date_time
+				l_date_time := last_cached_date_time
+				check
+						-- condition `is_date_time (...)' ensures with its postcondition `date_time_cached'
+						-- that last_cached_date_time is not Void
+					is_date_time: l_date_time /= Void
+				end
 			end
+			Result := l_date_time
 		end
 
 	string_to_zoned_date_time (a_formatted_date_time: STRING): DT_FIXED_OFFSET_ZONED_DATE_TIME is
 			-- Parsed date-time from `a_formatted_date_time'
 		local
 			valid: BOOLEAN
+			l_date_time: like last_cached_zoned_date_time
 		do
 			if a_formatted_date_time = last_cached_zoned_date_time_string then
-				Result := last_cached_zoned_date_time
+				l_date_time := last_cached_zoned_date_time
+				check
+						-- `last_cached_zoned_date_time_string /= Void' and invariant `last_cached_zoned_date_time_not_void'
+					cached_date_time_not_void: l_date_time /= Void
+				end
 			else
 				valid := is_zoned_date_time (a_formatted_date_time)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_date_time
+				l_date_time := last_cached_zoned_date_time
+				check
+						-- condition `is_zoned_date_time (...)' ensures with its postcondition `zoned_date_time_cached'
+						-- that last_cached_zoned_date_time is not Void
+					is_zoned_date_time: l_date_time /= Void
+				end
 			end
+			Result := l_date_time
 		end
 
 	string_to_time (a_formatted_time: STRING): DT_TIME is
 			-- Parsed time from `a_formatted_time'
 		local
 			valid: BOOLEAN
+			l_time: like last_cached_time
 		do
 			if a_formatted_time = last_cached_time_string then
-				Result := last_cached_time
+				l_time := last_cached_time
+				check
+						-- `last_cached_time_string /= Void' and invariant `last_cached_time_not_void'
+					cached_time_not_void: l_time /= Void
+				end
 			else
 				valid := is_time (a_formatted_time)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_time
+				l_time := last_cached_time
+				check
+						-- condition `is_time (...)' ensures with its postcondition `time_cached'
+						-- that last_cached_time is not Void
+					is_time: l_time /= Void
+				end
 			end
+			Result := l_time
 		end
 
 	string_to_zoned_time (a_formatted_time: STRING): DT_FIXED_OFFSET_ZONED_TIME is
 			-- Parsed time from `a_formatted_time'
 		local
 			valid: BOOLEAN
+			l_time: like last_cached_zoned_time
 		do
 			if a_formatted_time = last_cached_zoned_time_string then
-				Result := last_cached_zoned_time
+				l_time := last_cached_zoned_time
+				check
+						-- `last_cached_zoned_time_string /= Void' and invariant `last_cached_zoned_time_not_void'
+					cached_time_not_void: l_time /= Void
+				end
 			else
 				valid := is_zoned_time (a_formatted_time)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_time
+				l_time := last_cached_zoned_time
+				check
+						-- condition `is_zoned_time (...)' ensures with its postcondition `zoned_time_cached'
+						-- that last_cached_zoned_time is not Void
+					is_zoned_time: l_time /= Void
+				end
 			end
+			Result := l_time
 		end
 
 	string_to_year_month (a_formatted_date: STRING): DT_DATE is
@@ -1058,17 +1242,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_date
 		do
 			if a_formatted_date = last_cached_date_string then
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- `last_cached_date_string /= Void' and invariant `last_cached_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_year_month (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- condition `is_year_month (...)' ensures with its postcondition `year_month_cached'
+						-- that last_cached_date is not Void
+					is_year_month: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			year_month_not_void: Result /= Void
 			day_is_one: Result.day = 1
@@ -1082,17 +1277,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_zoned_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_zoned_date
 		do
 			if a_formatted_date = last_cached_zoned_date_string then
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- `last_cached_zoned_date_string /= Void' and invariant `last_cached_zoned_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_zoned_year_month (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- condition `is_zoned_year_month (...)' ensures with its postcondition `year_month_cached'
+						-- that last_cached_date is not Void
+					is_zoned_year_month: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			zoned_year_month_not_void: Result /= Void
 		end
@@ -1105,17 +1311,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_date
 		do
 			if a_formatted_date = last_cached_date_string then
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- `last_cached_date_string /= Void' and invariant `last_cached_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_year (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- condition `is_year (...)' ensures with its postcondition `year_cached'
+						-- that last_cached_date is not Void
+					is_year: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			year_not_void: Result /= Void
 			month_is_one: Result.month = 1
@@ -1130,17 +1347,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_zoned_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_zoned_date
 		do
 			if a_formatted_date = last_cached_zoned_date_string then
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- `last_cached_zoned_date_string /= Void' and invariant `last_cached_zoned_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_zoned_year (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- condition `is_zoned_year (...)' ensures with its postcondition `year_cached'
+						-- that last_cached_date is not Void
+					is_zoned_year: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			zoned_year_not_void: Result /= Void
 		end
@@ -1153,17 +1381,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_date
 		do
 			if a_formatted_date = last_cached_date_string then
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- `last_cached_date_string /= Void' and invariant `last_cached_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_month_day (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- condition `is_month_day (...)' ensures with its postcondition `month_day_cached'
+						-- that last_cached_date is not Void
+					is_month_day: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			month_day_not_void: Result /= Void
 			year_is_one: Result.year = 1
@@ -1177,17 +1416,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_zoned_date
 		do
 			if a_formatted_date = last_cached_zoned_date_string then
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- `last_cached_zoned_date_string /= Void' and invariant `last_cached_zoned_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_zoned_month_day (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- condition `is_zoned_month_day (...)' ensures with its postcondition `month_day_cached'
+						-- that last_cached_date is not Void
+					is_zoned_month_day: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			zoned_month_day_not_void: Result /= Void
 		end
@@ -1200,17 +1450,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_date
 		do
 			if a_formatted_date = last_cached_date_string then
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- `last_cached_date_string /= Void' and invariant `last_cached_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_day (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- condition `is_day (...)' ensures with its postcondition `day_cached'
+						-- that last_cached_date is not Void
+					is_day: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			day_not_void: Result /= Void
 			year_is_one: Result.year = 1
@@ -1225,17 +1486,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_zoned_date
 		do
 			if a_formatted_date = last_cached_zoned_date_string then
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- `last_cached_zoned_date_string /= Void' and invariant `last_cached_zoned_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_zoned_day (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- condition `is_zoned_day (...)' ensures with its postcondition `day_cached'
+						-- that last_cached_date is not Void
+					is_zoned_day: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			zoned_day_not_void: Result /= Void
 		end
@@ -1248,17 +1520,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_date
 		do
 			if a_formatted_date = last_cached_date_string then
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- `last_cached_date_string /= Void' and invariant `last_cached_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_month (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_date
+				l_date := last_cached_date
+				check
+						-- condition `is_month (...)' ensures with its postcondition `month_cached'
+						-- that last_cached_date is not Void
+					is_month: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			month_not_void: Result /= Void
 			year_is_one: Result.year = 1
@@ -1273,17 +1556,28 @@ feature -- Conversion
 			date_string_not_altered_since_call_to_is_date: True
 		local
 			valid: BOOLEAN
+			l_date: like last_cached_zoned_date
 		do
 			if a_formatted_date = last_cached_zoned_date_string then
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- `last_cached_zoned_date_string /= Void' and invariant `last_cached_zoned_date_not_void'
+					cached_date_not_void: l_date /= Void
+				end
 			else
 				valid := is_zoned_month (a_formatted_date)
 				check
 						-- From precondition.
 					valid: valid
 				end
-				Result := last_cached_zoned_date
+				l_date := last_cached_zoned_date
+				check
+						-- condition `is_zoned_month (...)' ensures with its postcondition `month_cached'
+						-- that last_cached_date is not Void
+					is_zoned_month: l_date /= Void
+				end
 			end
+			Result := l_date
 		ensure
 			zoned_month_not_void: Result /= Void
 		end
@@ -1293,19 +1587,19 @@ feature {NONE} -- Implementation
 	last_cached_date_string: STRING
 			-- Last string validated by `is_date'
 
-	last_cached_date: DT_DATE
+	last_cached_date: ?DT_DATE
 			-- Last date validated by `is_date'
 
 	last_cached_zoned_date_string: STRING
 			-- Last string validated by `is_zoned_date'
 
-	last_cached_zoned_date: DT_FIXED_OFFSET_ZONED_DATE
+	last_cached_zoned_date: ?DT_FIXED_OFFSET_ZONED_DATE
 			-- Last date validated by `is_zoned_date'
 
 	last_cached_time_string: STRING
 			-- Last string validated by `is_time'
 
-	last_cached_time: DT_TIME
+	last_cached_time: ?DT_TIME
 			-- Last date validated by `is_time'
 
 	last_time_carry: BOOLEAN
@@ -1314,19 +1608,19 @@ feature {NONE} -- Implementation
 	last_cached_zoned_time_string: STRING
 			-- Last string validated by `is_zoned_time'
 
-	last_cached_zoned_time: DT_FIXED_OFFSET_ZONED_TIME
+	last_cached_zoned_time: ?DT_FIXED_OFFSET_ZONED_TIME
 			-- Last time validated by `is_zoned_time'
 
 	last_cached_date_time_string: STRING
 			-- Last string validated by `is_date_time'
 
-	last_cached_date_time: DT_DATE_TIME
+	last_cached_date_time: ?DT_DATE_TIME
 			-- Last time validated by `is_date_time'
 
 	last_cached_zoned_date_time_string: STRING
 			-- Last string validated by `is_zoned_date_time'
 
-	last_cached_zoned_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
+	last_cached_zoned_date_time: ?DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Last time validated by `is_zoned_date_time'
 
 	year_ok (a_year: STRING; is_negative: BOOLEAN): DS_PAIR [BOOLEAN, INTEGER] is

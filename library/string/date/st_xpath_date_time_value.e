@@ -82,32 +82,62 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	zoned_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
+	zoned_date_time: ?DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Zoned date_time value
 
-	local_date_time: DT_DATE_TIME
+	local_date_time: ?DT_DATE_TIME
 			-- Date_Time value without zone
 
 	date: DT_DATE is
 			-- Date component, ignoring time zone
+		local
+			l_date: ?like date
+			l_zoned_date_time: like zoned_date_time
+			l_local_date_time: like local_date_time
 		do
 			if zoned then
-				Result := zoned_date_time.zoned_date.date
+				l_zoned_date_time := zoned_date_time
+				check 
+						-- condition `zoned'
+					zoned: l_zoned_date_time /= Void 
+				end
+				l_date := l_zoned_date_time.zoned_date.date
 			else
-				Result := local_date_time.date
+				l_local_date_time := local_date_time
+				check 
+						-- condition by `not zoned'
+					not_zoned: l_local_date_time /= Void 
+				end
+				l_date := l_local_date_time.date
 			end
+			Result := l_date
 		ensure
 			result_not_void: Result /= Void
 		end
 
 	time: DT_TIME is
 			-- Time component, ignoring time zone
+		local
+			l_time: DT_TIME
+			l_zoned_date_time: like zoned_date_time
+			l_local_date_time: like local_date_time
 		do
 			if zoned then
-				Result := zoned_date_time.zoned_time.time
+				l_zoned_date_time := zoned_date_time
+				check 
+						-- condition `zoned'
+					zoned: l_zoned_date_time /= Void 
+				end
+				l_time := l_zoned_date_time.zoned_time.time
 			else
-				Result := local_date_time.time
+				l_local_date_time := local_date_time
+				check 
+						-- condition `not zoned'
+					not_zoned: l_local_date_time /= Void 
+				end
+				l_time := l_local_date_time.time
 			end
+			Result := l_time
 		ensure
 			result_not_void: Result /= Void
 		end

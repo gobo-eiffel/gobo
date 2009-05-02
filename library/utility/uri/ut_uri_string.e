@@ -73,11 +73,15 @@ feature -- Access
 	decoded: STRING is
 			-- Decoded string where each %-encoded character
 			-- gives one item in the resulting string
+		local
+			l_decoded_impl: like decoded_impl
 		do
-			if decoded_impl = Void then
-				decoded_impl := Url_encoding.unescape_string (encoded)
+			l_decoded_impl := decoded_impl
+			if l_decoded_impl = Void then
+				l_decoded_impl := Url_encoding.unescape_string (encoded)
+				decoded_impl := l_decoded_impl
 			end
-			Result := decoded_impl
+			Result := l_decoded_impl
 		ensure
 			decoded_not_void: Result /= Void
 		end
@@ -97,10 +101,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	decoded_impl: STRING
+	decoded_impl: ?STRING
 			-- Cache for `decoded'
 
-	decoded_utf8_impl: STRING
+	decoded_utf8_impl: ?STRING
 			-- Cache for `decoded_utf8'
 
 invariant

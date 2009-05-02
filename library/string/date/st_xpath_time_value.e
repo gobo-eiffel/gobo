@@ -63,20 +63,33 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	zoned_time: DT_FIXED_OFFSET_ZONED_TIME
+	zoned_time: ?DT_FIXED_OFFSET_ZONED_TIME
 			-- Zoned time value
 
-	local_time: DT_TIME
+	local_time: ?DT_TIME
 			-- Time value without zone
 
 	time: DT_TIME is
 			-- Time components
+		local
+			l_time: ?like time
+			l_zoned_time: like zoned_time
 		do
 			if zoned then
-				Result := zoned_time.time
+				l_zoned_time := zoned_time
+				check 
+						-- condition `zoned'
+					zoned: l_zoned_time /= Void 
+				end
+				l_time := l_zoned_time.time
 			else
-				Result := local_time
+				l_time := local_time
+				check 
+						-- condition `not zoned'
+					not_zoned: l_time /= Void 
+				end
 			end
+			Result := l_time
 		ensure
 			time_not_void: Result /= Void
 		end

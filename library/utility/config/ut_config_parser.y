@@ -263,7 +263,7 @@ feature -- Error handling
 			-- Report a syntax error.
 		local
 			an_error: UT_SYNTAX_ERROR
-			file_buffer: YY_FILE_BUFFER
+			file_buffer: ?YY_FILE_BUFFER
 			filename: STRING
 		do
 			file_buffer ?= input_buffer

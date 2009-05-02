@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	format_date_time (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
+	format_date_time (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
 			-- Format the result.
 		require
 			a_result_not_void: a_result /= Void
@@ -110,10 +110,10 @@ feature {NONE} -- Implementation
 	maximum_width: INTEGER
 			-- Maximum width for current variable marker
 
-	primary_modifier: STRING
+	primary_modifier: ?STRING
 			-- Specifier in current variable marker
 
-	parse_picture_string (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_language, a_calendar, a_country: STRING) is
+	parse_picture_string (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_picture, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_picture' and format output.
 		require
 			a_result_not_void: a_result /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_marker (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
+	format_marker (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_marker' and format output by appending to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -202,26 +202,19 @@ feature {NONE} -- Implementation
 		local
 			l_specifier: CHARACTER
 			l_modifiers: STRING
-			l_invalid: BOOLEAN
 		do
-			if a_marker.is_empty then
-				l_invalid := True
-			elseif not is_valid_specifier (a_marker.item (1)) then
-				l_invalid := True
+			if a_marker.is_empty or else not is_valid_specifier (a_marker.item (1)) then
+				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker), "XTDE1340"))
 			else
 				l_specifier := a_marker.item (1)
 				l_modifiers := a_marker.substring (2, a_marker.count)
 				STRING_.left_adjust (l_modifiers)
 				STRING_.right_adjust (l_modifiers)
-			end
-			if l_invalid then
-				a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (STRING_.concat ("The picture string has an invalid variable marker: ", a_marker), "XTDE1340"))
-			else
 				parse_and_format_marker (a_result, a_result_string, a_calendar_value, l_specifier, l_modifiers, a_language, a_calendar, a_country)
 			end
 		end
 
-	parse_and_format_marker (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	parse_and_format_marker (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format `a_calendar_value' according to `a_specifier' and `some_modifiers' by appending to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -273,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_not_date_value (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_date_value (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:date.
 		require
 			a_result_not_void: a_result /= Void
@@ -286,7 +279,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_not_time_value (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
+	check_not_time_value (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:time.
 		require
 			a_result_not_void: a_result /= Void
@@ -323,7 +316,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_year (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_year (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format year from `a_calendar_value' and append to `a_result_string'.
 		require
 			a_result_not_void: a_result /= Void
@@ -337,16 +330,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_time_value (a_result, a_calendar_value, "Y specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.absolute_year)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -361,7 +364,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_month (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_month (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -375,21 +378,31 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_integer: INTEGER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_time_value (a_result, a_calendar_value, "M specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", True)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					l_integer := a_calendar_value.month
 					if is_name_modifier then
 						l_string := correctly_cased_name (l_numberer.month_name (l_integer, minimum_width, maximum_width))
 					else
 						create l_number.make_from_integer (l_integer)
-						l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+						l_primary_modifier := primary_modifier
+						check
+								-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+							primary_modifier_not_void: l_primary_modifier /= Void
+						end
+						l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 						if l_string.count < minimum_width then
 							if is_decimal_format then
 								l_string := prepended_with_zeros (l_string)
@@ -408,7 +421,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_month (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_month (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -422,16 +435,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_time_value (a_result, a_calendar_value, "D specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.day_in_month)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -446,7 +469,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_day_in_year (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_in_year (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-year from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -459,17 +482,27 @@ feature {NONE} -- Implementation
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 		local
-			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_string: ?STRING
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_time_value (a_result, a_calendar_value, "d specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.day_in_year)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -480,14 +513,16 @@ feature {NONE} -- Implementation
 						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
 				end
-				if not ANY_.same_types (a_result_string, l_string) then
-					l_string := new_unicode_string (l_string)
+				if l_string /= Void then
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
-				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
 
-	format_day_of_week (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_day_of_week (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-of-week from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -501,21 +536,31 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
 			l_iso_day_number: INTEGER
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_time_value (a_result, a_calendar_value, "F specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "n", True)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					l_iso_day_number := a_calendar_value.week_day_number
 					if is_name_modifier then
 						l_string := correctly_cased_name (l_numberer.day_name (l_iso_day_number, minimum_width, maximum_width))
 					else
 						create l_number.make_from_integer (week_day_number (l_iso_day_number, a_calendar, a_country))
-						l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+						l_primary_modifier := primary_modifier
+						check
+								-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+							primary_modifier_not_void: l_primary_modifier /= Void
+						end
+						l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 						if l_string.count < minimum_width then
 							if is_decimal_format then
 								l_string := prepended_with_zeros (l_string)
@@ -534,7 +579,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_week_in_year (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_year (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-year from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -547,18 +592,28 @@ feature {NONE} -- Implementation
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 		local
-			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_string: ?STRING
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_time_value (a_result, a_calendar_value, "W specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.week_in_year)
 						-- TODO: this is result in ISO calendar - adjust for others, if you can find out what they are!
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -569,14 +624,16 @@ feature {NONE} -- Implementation
 						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
 				end
-				if not ANY_.same_types (a_result_string, l_string) then
-					l_string := new_unicode_string (l_string)
+				if l_string /= Void then
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
-				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
 
-	format_week_in_month (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_week_in_month (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-month from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -589,17 +646,27 @@ feature {NONE} -- Implementation
 			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 		local
-			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_string: ?STRING
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_time_value (a_result, a_calendar_value, "w specifier not allowed for format-time()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.week_in_month)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -610,14 +677,16 @@ feature {NONE} -- Implementation
 						l_string := l_string.substring (l_string.count - maximum_width + 1, l_string.count)
 					end
 				end
-				if not ANY_.same_types (a_result_string, l_string) then
-					l_string := new_unicode_string (l_string)
+				if l_string /= Void then
+					if not ANY_.same_types (a_result_string, l_string) then
+						l_string := new_unicode_string (l_string)
+					end
+					STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 				end
-				STRING_.append_substring_to_string (a_result_string, l_string, 1, l_string.count)
 			end
 		end
 
-	format_hour (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-day from `a_calendar_value' using 24-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -631,16 +700,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_date_value (a_result, a_calendar_value, "H specifier not allowed for format-date()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.hour)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -658,7 +737,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_hour_in_half_day (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_hour_in_half_day (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-half-day from `a_calendar_value' using 12-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -672,16 +751,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_date_value (a_result, a_calendar_value, "h specifier not allowed for format-date()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.half_day_hour)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -699,7 +788,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_am_pm (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_am_pm (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format AM/PM marker from `a_calendar_value' using 24-hour clock.
 		require
 			a_result_not_void: a_result /= Void
@@ -713,7 +802,7 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 		do
 			check_not_date_value (a_result, a_calendar_value, "P specifier not allowed for format-date()")
 			if a_result.item = Void then
@@ -723,6 +812,10 @@ feature {NONE} -- Implementation
 						primary_modifier := "n"
 					end
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					l_string := correctly_cased_name (l_numberer.half_day_name (a_calendar_value.minutes_in_day, minimum_width, maximum_width))
 					if not ANY_.same_types (a_result_string, l_string) then
 						l_string := new_unicode_string (l_string)
@@ -732,7 +825,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_minute (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_minute (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format minute-in-hour from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -746,16 +839,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_date_value (a_result, a_calendar_value, "m specifier not allowed for format-date()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "01", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.minute)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -773,7 +876,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_second (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_second (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format second-in-hour from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -787,16 +890,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: some_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_date_value (a_result, a_calendar_value, "s specifier not allowed for format-date()")
 			if a_result.item = Void then
 				check_modifiers (a_result, some_modifiers, "01", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.second)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						if is_decimal_format then
 							l_string := prepended_with_zeros (l_string)
@@ -814,7 +927,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_millisecond (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_millisecond (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format fractional seconds from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -828,16 +941,26 @@ feature {NONE} -- Implementation
 			modifiers_exist: a_modifiers /= Void
 		local
 			l_string: STRING
-			l_numberer: ST_XSLT_NUMBERER
+			l_numberer: ?ST_XSLT_NUMBERER
 			l_number: MA_DECIMAL
+			l_primary_modifier: like primary_modifier
 		do
 			check_not_date_value (a_result, a_calendar_value, "f specifier not allowed for format-date()")
 			if a_result.item = Void then
 				check_modifiers (a_result, a_modifiers, "1", False)
 				if a_result.item = Void then
 					l_numberer := selected_numberer (a_language)
+					check
+							-- precondition `language_not_empty and language_is_supported'
+						selected_numberer_not_void: l_numberer /= Void
+					end
 					create l_number.make_from_integer (a_calendar_value.millisecond)
-					l_string := l_numberer.formatted_string (l_number, primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
+					l_primary_modifier := primary_modifier
+					check
+							-- condition `a_result.item = Void' and postcondition `primary_modifier_set' from check_modifiers
+						primary_modifier_not_void: l_primary_modifier /= Void
+					end
+					l_string := l_numberer.formatted_string (l_number, l_primary_modifier, 0, "", letter_attribute_value, ordinal_attribute_value)
 					if l_string.count < minimum_width then
 						l_string := appended_with_zeros (l_string)
 					elseif l_string.count > maximum_width then
@@ -865,7 +988,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	format_time_zone (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_time_zone (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from UTC, or as the conventional name from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -906,7 +1029,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_gmt_offset (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_gmt_offset (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -938,7 +1061,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_calendar_name (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_calendar_name (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format calendar name.
 		require
 			a_result_not_void: a_result /= Void
@@ -975,7 +1098,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	format_era (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
+	format_era (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_result_string: STRING; a_calendar_value: ST_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
 			a_result_not_void: a_result /= Void
@@ -1016,11 +1139,20 @@ feature {NONE} -- Implementation
 
 	is_decimal_format: BOOLEAN is
 			-- Does `primary_modifier' indicate a decimal format?
+		require
+			primary_modifier_not_void: primary_modifier /= Void
+		local
+			l_primary_modifier: like primary_modifier
 		do
-			Result := is_zeros_plus_one (primary_modifier) or (primary_modifier.count = 1 and then is_one (primary_modifier.item_code (1)))
+			l_primary_modifier := primary_modifier
+			check
+					-- precondition `primary_modifier_not_void'
+				primary_modifier_not_void: l_primary_modifier /= Void
+			end
+			Result := is_zeros_plus_one (l_primary_modifier) or (l_primary_modifier.count = 1 and then is_one (l_primary_modifier.item_code (1)))
 		end
 
-	check_modifiers (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
+	check_modifiers (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; some_modifiers, a_default: STRING; use_names: BOOLEAN) is
 			-- Check `some_modifiers' for syntax errors.
 		require
 			a_result_not_void: a_result /= Void
@@ -1029,7 +1161,8 @@ feature {NONE} -- Implementation
 			default_modifier_not_empty: a_default /= Void and then not a_default.is_empty
 		local
 			a_splitter: ST_SPLITTER
-			a_modifier, a_message: STRING
+			a_modifier: ?STRING
+			a_message: STRING
 			some_components: DS_LIST [STRING]
 			an_index: INTEGER
 		do
@@ -1045,52 +1178,55 @@ feature {NONE} -- Implementation
 					a_message := STRING_.concat ("More than one comma present in '", some_modifiers)
 					a_message := STRING_.appended_string (a_message, "'")
 					a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
-				elseif some_components.count = 2 then
-					a_modifier := some_components.item (1)
-					if a_modifier.count /= 1 or else (a_modifier.item (1) /= 'i' and a_modifier.item (1) /= 'I') then
-							-- widths are ignored for roman numerals
-						set_widths (a_result, some_components.item (2))
-					end
+					check a_result_item_attached: a_result.item /= Void end
 				else
-					a_modifier := some_modifiers
-					if is_zeros_plus_one (a_modifier) then
-						minimum_width := a_modifier.count
-						maximum_width := a_modifier.count
+					if some_components.count = 2 then
+						a_modifier := some_components.item (1)
+						if a_modifier.count /= 1 or else (a_modifier.item (1) /= 'i' and a_modifier.item (1) /= 'I') then
+								-- widths are ignored for roman numerals
+							set_widths (a_result, some_components.item (2))
+						end
 					else
-						minimum_width := 1
-						maximum_width := Platform.Maximum_integer
-					end
-				end
-				if a_result.item = Void then
-					STRING_.left_adjust (a_modifier)
-					STRING_.right_adjust (a_modifier)
-					an_index := a_modifier.index_of ('t', 1)
-					if an_index > 0 then
-						if an_index = a_modifier.count then
-							is_traditional := True
+						a_modifier := some_modifiers
+						if is_zeros_plus_one (a_modifier) then
+							minimum_width := a_modifier.count
+							maximum_width := a_modifier.count
 						else
-							a_message := STRING_.concat ("Misplaced 't' in '", a_modifier)
-							a_message := STRING_.appended_string (a_message, "'")
-							a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+							minimum_width := 1
+							maximum_width := Platform.Maximum_integer
 						end
 					end
-					an_index := a_modifier.index_of ('o', 1)
-					if an_index > 0 then
-						if an_index = a_modifier.count then
-							is_ordinal := True
-						else
-							a_message := STRING_.concat ("Misplaced 'o' in '", a_modifier)
-							a_message := STRING_.appended_string (a_message, "'")
-							a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+					if a_result.item = Void then
+						STRING_.left_adjust (a_modifier)
+						STRING_.right_adjust (a_modifier)
+						an_index := a_modifier.index_of ('t', 1)
+						if an_index > 0 then
+							if an_index = a_modifier.count then
+								is_traditional := True
+							else
+								a_message := STRING_.concat ("Misplaced 't' in '", a_modifier)
+								a_message := STRING_.appended_string (a_message, "'")
+								a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+							end
+						end
+						an_index := a_modifier.index_of ('o', 1)
+						if an_index > 0 then
+							if an_index = a_modifier.count then
+								is_ordinal := True
+							else
+								a_message := STRING_.concat ("Misplaced 'o' in '", a_modifier)
+								a_message := STRING_.appended_string (a_message, "'")
+								a_result.put (create {ST_FORMAT_DATE_TIME_RESULT}.make_error (a_message, "XTDE1340"))
+							end
 						end
 					end
-				end
-				if a_result.item = Void then
-					if is_traditional or else is_ordinal then
-						a_modifier := a_modifier.substring (1, a_modifier.count - 1)
-					end
-					if not a_modifier.is_empty then
-						set_primary_modifier (a_modifier, use_names)
+					if a_result.item = Void then
+						if is_traditional or else is_ordinal then
+							a_modifier := a_modifier.substring (1, a_modifier.count - 1)
+						end
+						if not a_modifier.is_empty then
+							set_primary_modifier (a_modifier, use_names)
+						end
 					end
 				end
 			end
@@ -1098,7 +1234,7 @@ feature {NONE} -- Implementation
 				primary_modifier := a_default
 			end
 		ensure
-			primary_modifier_set: a_result.item = Void implies primary_modifier /= Void and then not primary_modifier.is_empty
+			primary_modifier_set: a_result.item = Void implies {el_primary_modifier: like primary_modifier} primary_modifier and then not el_primary_modifier.is_empty
 		end
 
 	set_primary_modifier (a_modifier: STRING; use_names: BOOLEAN) is
@@ -1130,7 +1266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_widths (a_result: DS_CELL [ST_FORMAT_DATE_TIME_RESULT]; a_width: STRING) is
+	set_widths (a_result: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]; a_width: STRING) is
 			-- Set widths.
 		require
 			a_result_not_void: a_result /= Void
@@ -1268,12 +1404,19 @@ feature {NONE} -- Implementation
 		require
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
 			is_calendar_supported: is_calendar_supported (a_calendar)
+		local
+			l_result: ?STRING
 		do
 			if STRING_.same_string (a_calendar, Default_calendar) then
-				Result := "Common Era"
+				l_result := "Common Era"
 			elseif STRING_.same_string (a_calendar, Ad_calendar) then
-				Result := "Christian Era"
+				l_result := "Christian Era"
 			end
+			check
+					-- enforce by precondition: is_calendar_supported (a_calendar)
+				l_result /= Void
+			end
+			Result := l_result
 		ensure
 			result_not_empty: Result /= Void and then not Result.is_empty
 		end
@@ -1297,11 +1440,20 @@ feature {NONE} -- Implementation
 
 	is_name_modifier: BOOLEAN is
 			-- Is `primary_modifier' a name request?
+		require
+			primary_modifier_not_void: primary_modifier /= Void
+		local
+			l_primary_modifier: like primary_modifier
 		do
+			l_primary_modifier := primary_modifier
+			check
+					-- precondition `primary_modifier_not_void'
+				primary_modifier_not_void: l_primary_modifier /= Void
+			end
 			if
-				STRING_.same_string (primary_modifier, "n")
-				or else STRING_.same_string (primary_modifier, "N")
-				or else STRING_.same_string (primary_modifier, "Nn")
+				STRING_.same_string (l_primary_modifier, "n")
+				or else STRING_.same_string (l_primary_modifier, "N")
+				or else STRING_.same_string (l_primary_modifier, "Nn")
 			 then
 				Result := True
 			end
@@ -1312,20 +1464,30 @@ feature {NONE} -- Implementation
 		require
 			name_not_void: a_name /= Void
 --			is_capitalized: First letter upper-case, others in lower-case
+			primary_modifier_not_void: primary_modifier /= Void
 			valid_name_modifier: is_name_modifier
+		local
+			l_primary_modifier: like primary_modifier
 		do
+			l_primary_modifier := primary_modifier
+			check
+					-- precondition `primary_modifier_not_void'
+				primary_modifier_not_void: l_primary_modifier /= Void
+			end
 				-- TODO: correct this for Unicode captialization
-			if STRING_.same_string (primary_modifier, "n") then
+			if STRING_.same_string (l_primary_modifier, "n") then
 				Result := a_name.as_lower
-			elseif STRING_.same_string (primary_modifier, "N") then
+			elseif STRING_.same_string (l_primary_modifier, "N") then
 				Result := a_name.as_upper
 			else
 				check
-					capitalized: STRING_.same_string (primary_modifier, "Nn")
+					capitalized: STRING_.same_string (l_primary_modifier, "Nn")
 						-- from pre-condition `valid_name_modifier'
 				end
 				Result := a_name
 			end
+		ensure
+			Result_attached: Result /= Void
 		end
 
 	era (a_calendar_value: ST_XPATH_CALENDAR_VALUE; a_language, a_calendar, a_country: STRING): STRING is

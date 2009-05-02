@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			table := a_table
 			equality_tester := table.key_equality_tester
-			internal_cursor := new_cursor
+			set_internal_cursor (new_cursor)
 		ensure
 			table_set: table = a_table
 		end
@@ -250,6 +250,12 @@ feature -- Removal
 		end
 
 feature {NONE} -- Cursor implementation
+
+	set_internal_cursor (c: like internal_cursor) is
+			-- Set `internal_cursor' to `c'.
+		do
+			internal_cursor := c
+		end
 
 	internal_cursor: like new_cursor
 			-- Internal cursor

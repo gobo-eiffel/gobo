@@ -190,7 +190,7 @@ feature -- Access
 		deferred
 		ensure
 			include_stack_not_void: Result /= Void
-			no_void_buffer: not Result.has (Void)
+			no_void_buffer: not Result.has_void
 		end
 
 	line_nb_stack: DS_STACK [INTEGER] is
@@ -214,7 +214,7 @@ feature -- Element change
 			-- Should current scanner terminate when end of file is reached?
 			-- True unless an include file was being processed.
 		local
-			old_buffer: YY_FILE_BUFFER
+			old_buffer: ?YY_FILE_BUFFER
 			a_file: KI_CHARACTER_INPUT_STREAM
 		do
 			if not include_stack.is_empty then

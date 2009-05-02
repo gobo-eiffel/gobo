@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			free_slot := No_position
 			position := No_position
 			unset_found_item
-			internal_cursor := new_cursor
+			set_internal_cursor (new_cursor)
 		ensure
 			empty: is_empty
 			capacity_set: capacity = n
@@ -353,11 +353,11 @@ feature -- Duplication
 					-- Set `internal_cursor' to Void before calling
 					-- `valid_cursor' and `new_cursor' to avoid an
 					-- invariant violation.
-				internal_cursor := Void
+				set_internal_cursor (Void)
 				if old_cursor /= Void and then valid_cursor (old_cursor) then
-					internal_cursor := old_cursor
+					set_internal_cursor (old_cursor)
 				else
-					internal_cursor := new_cursor
+					set_internal_cursor (new_cursor)
 				end
 				unset_found_item
 				clone_item_storage
@@ -898,6 +898,12 @@ feature {NONE} -- Constants
 			-- are below `Free_watermark' in `clashes'
 
 feature {NONE} -- Cursor movements
+
+	set_internal_cursor (c: like internal_cursor) is
+			-- Set `internal_cursor' to `c'.
+		do
+			internal_cursor := c
+		end
 
 	internal_cursor: like new_cursor
 			-- Internal cursor

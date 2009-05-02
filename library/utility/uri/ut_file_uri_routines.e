@@ -29,10 +29,17 @@ feature -- Filename
 			-- current filesystem rules.
 		require
 			a_uri_not_void: a_uri /= Void
+		local
+			l_path_base_item: ?UT_URI_STRING
 		do
 			Result := file_system.pathname_to_string (uri_to_pathname (a_uri))
 			if a_uri.has_path_base then
-				Result := file_system.pathname (Result, uri_component_to_pathname (a_uri.path_base_item))
+				l_path_base_item := a_uri.path_base_item
+				check
+						-- condition `a_uri.has_path_base'
+					a_uri_has_path_base: l_path_base_item /= Void
+				end
+				Result := file_system.pathname (Result, uri_component_to_pathname (l_path_base_item))
 			end
 			debug ("file_uri")
 				std.output.put_string ("uri_to_filename: ")
@@ -76,10 +83,18 @@ feature -- Pathname
 			a_cursor: DS_ARRAYED_LIST_CURSOR [UT_URI_STRING]
 			a_possible_drive: STRING
 			a_segment: STRING
+			a_uri_authority_item: ?UT_URI_STRING
 		do
 			create Result.make
-			if a_uri.has_authority and then not a_uri.authority_item.decoded.same_string (Localhost_authority) then
-				Result.set_hostname (a_uri.authority)
+			if a_uri.has_authority then
+				a_uri_authority_item := a_uri.authority_item
+				check
+						-- condition `a_uri.has_authority'
+					a_uri_has_authority: a_uri_authority_item /= Void
+				end
+				if not a_uri_authority_item.decoded.same_string (Localhost_authority) then
+					Result.set_hostname (a_uri.authority)
+				end
 			end
 			Result.set_relative (not a_uri.has_absolute_path)
 			a_cursor := a_uri.path_items.new_cursor
@@ -118,14 +133,16 @@ feature -- Pathname
 		local
 			a_path: DS_ARRAYED_LIST [UT_URI_STRING]
 			i, nb: INTEGER
+			s: ?STRING
 		do
 			if a_pathname.is_relative then
 				create Result.make_relative
 				check no_hostname_when_relative: a_pathname.hostname = Void end
 			else
 				create Result.make_absolute (File_scheme)
-				if a_pathname.hostname /= Void then
-					Result.set_authority (hostname_to_authority (a_pathname.hostname))
+				s := a_pathname.hostname
+				if s /= Void then
+					Result.set_authority (hostname_to_authority (s))
 					-- removed for correct canonization - CPA - 20061221: else
 					--	Result.set_authority (hostname_to_authority (Localhost_authority))
 				else
@@ -139,11 +156,15 @@ feature -- Pathname
 			else
 				create a_path.make (nb + 1)
 			end
-			if a_pathname.drive /= Void then
+			s := a_pathname.drive
+			if s /= Void then
 					-- If drive present first item is path.
-				a_path.put_last (pathname_to_uri_component (a_pathname.drive))
-			elseif a_pathname.sharename /= Void then
-				a_path.put_last (pathname_to_uri_component (a_pathname.sharename))
+				a_path.put_last (pathname_to_uri_component (s))
+			else
+				s := a_pathname.sharename
+				if s /= Void then
+					a_path.put_last (pathname_to_uri_component (s))
+				end
 			end
 			from i := 1 until i > nb loop
 				a_path.put_last (pathname_to_uri_component (a_pathname.item (i)))
