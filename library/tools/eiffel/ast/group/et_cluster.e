@@ -84,13 +84,16 @@ feature -- Status report
 				until
 					l_parent = Void
 				loop
-					if l_parent = a_cluster then
-						l_parent := Void
-					elseif not l_parent.is_recursive then
+					if not l_parent.is_recursive then
 						Result := False
 						l_parent := Void
-					else
+					elseif l_parent = a_cluster then
+						l_parent := Void
+					elseif l_parent.is_relative then
 						l_parent := l_parent.parent
+					else
+						Result := False
+						l_parent := Void
 					end
 				end
 			end
@@ -362,7 +365,9 @@ feature -- Nested
 			elseif is_recursive then
 				l_pathname := file_system.string_to_pathname (a_pathname)
 				l_current_pathname := file_system.string_to_pathname (absolute_pathname)
-				Result := cluster_by_name (l_current_pathname.trailing_items (l_pathname))
+				if l_current_pathname.is_case_insensitive_subpathname (l_pathname) then
+					Result := cluster_by_name (l_current_pathname.trailing_items (l_pathname))
+				end
 			elseif subclusters /= Void then
 				Result := subclusters.subcluster_with_absolute_pathname (a_pathname)
 			end
