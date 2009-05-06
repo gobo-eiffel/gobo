@@ -43,12 +43,15 @@ feature -- Action(s)
 	resolve (a_uri: UT_URI) is
 			-- Resolve file URI.
 		local
-			l_path: STRING
+			l_path: ?STRING
 		do
+			last_stream := Void
 			l_path := File_uri.uri_to_filename (a_uri)
-			create {KL_BINARY_INPUT_FILE} last_stream.make (l_path)
-			last_stream.open_read
-			if last_stream.is_open_read then
+			if l_path /= Void then
+				create {KL_BINARY_INPUT_FILE} last_stream.make (l_path)
+				last_stream.open_read
+			end
+			if last_stream /= Void and then last_stream.is_open_read then
 				last_error := Void
 			else
 				last_error := STRING_.concat (Cannot_open_file_error, a_uri.path)
@@ -57,7 +60,7 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: KI_BINARY_INPUT_FILE
+	last_stream: ?KI_BINARY_INPUT_FILE
 			-- File matching stream
 
 	last_error: STRING

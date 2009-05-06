@@ -58,17 +58,22 @@ feature -- Tests
 	test_utf8 is
 			-- Test escaping with UTF8.
 		local
-			a_string: STRING
-			escaped_string: STRING
-			encoder: UT_URL_ENCODING
+			l_string, l_decoded_string: STRING
+			l_escaped_string: STRING
+			l_encoder: UT_URL_ENCODING
 		do
-			create encoder
-			a_string := "%/226/%/137/%/160/"
-			escaped_string := "%%E2%%89%%A0"
-			assert_strings_equal ("utf_encoding", escaped_string, encoder.escape_utf8 (new_unicode_string_from_utf8 (a_string)))
-			assert_strings_equal ("utf_raw_decoding", a_string, encoder.unescape_string (escaped_string))
-			assert_integers_equal ("utf_decoding", 8800, encoder.unescape_utf8 (escaped_string).item_code (1))
-			assert_integers_equal ("utf_decoding_count", 1, encoder.unescape_utf8 (escaped_string).count)
+			create l_encoder
+			l_string := "%/226/%/137/%/160/"
+			l_escaped_string := "%%E2%%89%%A0"
+			assert_strings_equal ("utf_encoding", l_escaped_string, l_encoder.escape_utf8 (new_unicode_string_from_utf8 (l_string)))
+			assert_strings_equal ("utf_raw_decoding", l_string, l_encoder.unescape_string (l_escaped_string))
+			l_decoded_string := l_encoder.unescape_utf8 (l_escaped_string)
+			check
+				l_decoded_string_not_void: l_decoded_string /= Void
+				-- by construction of the test
+			end
+			assert_integers_equal ("utf_decoding_count", 1, l_decoded_string.count)
+			assert_integers_equal ("utf_decoding", 8800, l_decoded_string.item_code (1))
 		end
 
 end

@@ -55,8 +55,9 @@ feature -- Element change
 	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
 			-- Resolve `a_uri' to a sequence of nodes.
 		local
-			a_directory_name: STRING
-			a_directory: KL_DIRECTORY
+			l_directory_name: STRING
+			l_directory: KL_DIRECTORY
+			l_pathname: ?KL_PATHNAME
 		do
 			if a_uri.has_fragment then
 				create last_error.make_from_string ("Fragment identifiers are not allowed on file URIs for fn:collection()", Xpath_errors_uri, "FODC0004", Dynamic_error)
@@ -67,12 +68,15 @@ feature -- Element change
 			elseif a_uri.has_path_base then
 				create last_error.make_from_string ("File URIs for fn:collection() must end in a /", Xpath_errors_uri, "FODC0004", Dynamic_error)
 			else
-				a_directory_name := file_system.pathname_to_string (File_uri.uri_to_pathname(a_uri))
-				if not file_system.directory_exists (a_directory_name) then
+				l_pathname := File_uri.uri_to_pathname(a_uri)
+				if l_pathname /= Void then
+					l_directory_name := file_system.pathname_to_string (l_pathname)
+				end
+				if l_directory_name = Void or else not file_system.directory_exists (l_directory_name) then
 					create last_error.make_from_string ("Directory specified in file: argument to fn:collection() does not exist", Xpath_errors_uri, "FODC0004", Dynamic_error)
 				else
-					create a_directory.make (a_directory_name)
-					resolve_directory (a_uri, a_uri, a_context, a_directory)
+					create l_directory.make (l_directory_name)
+					resolve_directory (a_uri, a_uri, a_context, l_directory)
 				end
 			end
 		end

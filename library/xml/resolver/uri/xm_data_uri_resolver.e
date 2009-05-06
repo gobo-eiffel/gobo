@@ -67,8 +67,12 @@ feature -- Operation(s)
 							else
 								l_data := Url_encoding.unescape_string (data)
 							end
-							create l_string_stream.make (l_data)
-							last_stream := l_string_stream
+							if l_data = Void then
+								set_last_error (STRING_.concat (data, " has escaped characters that do not represent valid UTF-8 (and the content encoding was specified as UTF-8)"))
+							else
+								create l_string_stream.make (l_data)
+								last_stream := l_string_stream
+							end
 						end
 					end
 				end

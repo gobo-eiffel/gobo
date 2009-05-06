@@ -440,35 +440,37 @@ feature {NONE} -- Implementation
 		do
 			a_builder.notify_attribute (Xml_base_type_code, Untyped_atomic_type_code, a_uri.full_uri, 0)
 			create l_file.make (File_uri.uri_to_filename (a_uri))
-			l_info := l_file.file_info
-			ensure_protection_code
-			a_builder.notify_attribute (protection_code, Untyped_atomic_type_code, l_info.protection.out, 0)
-			ensure_type_code
-			a_builder.notify_attribute (type_code, Untyped_atomic_type_code, l_info.type.out, 0)			
-			ensure_inode_code
-			a_builder.notify_attribute (inode_code, Untyped_atomic_type_code, l_info.inode.out, 0)
-			ensure_size_code
-			a_builder.notify_attribute (size_code, Untyped_atomic_type_code, l_info.size.out, 0)
-			ensure_user_code
-			a_builder.notify_attribute (user_code, Untyped_atomic_type_code, l_info.user_id.out, 0)						
-			ensure_group_code
-			a_builder.notify_attribute (group_code, Untyped_atomic_type_code, l_info.group_id.out, 0)
-			ensure_date_code
-			a_builder.notify_attribute (date_code, Untyped_atomic_type_code, l_info.date.out, 0)
-			ensure_access_date_code
-			a_builder.notify_attribute (access_date_code, Untyped_atomic_type_code, l_info.access_date.out, 0)
-			ensure_change_date_code
-			a_builder.notify_attribute (change_date_code, Untyped_atomic_type_code, l_info.change_date.out, 0)
-			ensure_device_code
-			a_builder.notify_attribute (device_code, Untyped_atomic_type_code, l_info.device.out, 0)																		
-			ensure_device_type_code
-			a_builder.notify_attribute (device_type_code, Untyped_atomic_type_code, l_info.device_type.out, 0)
-			ensure_links_code
-			a_builder.notify_attribute (links_code, Untyped_atomic_type_code, l_info.links.out, 0)
-			ensure_owner_name_code
-			a_builder.notify_attribute (owner_name_code, Untyped_atomic_type_code, l_info.owner_name.out, 0)																								
-			ensure_group_name_code
-			a_builder.notify_attribute (group_name_code, Untyped_atomic_type_code, l_info.group_name.out, 0)
+			if l_file /= Void then
+				l_info := l_file.file_info
+				ensure_protection_code
+				a_builder.notify_attribute (protection_code, Untyped_atomic_type_code, l_info.protection.out, 0)
+				ensure_type_code
+				a_builder.notify_attribute (type_code, Untyped_atomic_type_code, l_info.type.out, 0)			
+				ensure_inode_code
+				a_builder.notify_attribute (inode_code, Untyped_atomic_type_code, l_info.inode.out, 0)
+				ensure_size_code
+				a_builder.notify_attribute (size_code, Untyped_atomic_type_code, l_info.size.out, 0)
+				ensure_user_code
+				a_builder.notify_attribute (user_code, Untyped_atomic_type_code, l_info.user_id.out, 0)						
+				ensure_group_code
+				a_builder.notify_attribute (group_code, Untyped_atomic_type_code, l_info.group_id.out, 0)
+				ensure_date_code
+				a_builder.notify_attribute (date_code, Untyped_atomic_type_code, l_info.date.out, 0)
+				ensure_access_date_code
+				a_builder.notify_attribute (access_date_code, Untyped_atomic_type_code, l_info.access_date.out, 0)
+				ensure_change_date_code
+				a_builder.notify_attribute (change_date_code, Untyped_atomic_type_code, l_info.change_date.out, 0)
+				ensure_device_code
+				a_builder.notify_attribute (device_code, Untyped_atomic_type_code, l_info.device.out, 0)																		
+				ensure_device_type_code
+				a_builder.notify_attribute (device_type_code, Untyped_atomic_type_code, l_info.device_type.out, 0)
+				ensure_links_code
+				a_builder.notify_attribute (links_code, Untyped_atomic_type_code, l_info.links.out, 0)
+				ensure_owner_name_code
+				a_builder.notify_attribute (owner_name_code, Untyped_atomic_type_code, l_info.owner_name.out, 0)																								
+				ensure_group_name_code
+				a_builder.notify_attribute (group_name_code, Untyped_atomic_type_code, l_info.group_name.out, 0)
+			end
 		end
 
 end

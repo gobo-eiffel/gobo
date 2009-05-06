@@ -28,7 +28,7 @@ feature -- Escape/unescape data characters
 
 	unescape_string (a_string: STRING): STRING is
 			-- Replace the URI hexadecimal escape sequences in `a_string'
-			-- with the corresponding characters.
+			-- with the corresponding Latin-1 characters.
 		require
 			a_string_not_void: a_string /= Void
 		local

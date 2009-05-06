@@ -57,7 +57,7 @@ feature -- Access
 	system_id: STRING
 			-- System-id of source
 
-	fragment_identifier: STRING
+	fragment_identifier: ?STRING
 			-- Possible decoded fragment identifier
 	
 	default_media_type: UT_MEDIA_TYPE

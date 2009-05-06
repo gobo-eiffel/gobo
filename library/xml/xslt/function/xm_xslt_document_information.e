@@ -124,32 +124,36 @@ feature {NONE} -- Implementation
 			document_not_void: a_document /= Void
 			transformer_not_void: transformer /= Void
 		local
-			a_media_type: UT_MEDIA_TYPE
-			a_fragment_id: STRING
-			a_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
-			a_node: XM_XPATH_NODE
-			in_error: BOOLEAN
+			l_media_type: UT_MEDIA_TYPE
+			l_fragment_id: ?STRING
+			l_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
+			l_node: XM_XPATH_NODE
+			l_error: BOOLEAN
 		do
-			a_fragment_id := a_uri.fragment_item.decoded_utf8
-			if configuration = Void then configuration := transformer.configuration end
-			a_media_type := last_evaluated_media_type
-			if a_media_type = Void then a_media_type := configuration.default_media_type (a_uri.full_uri) end
-			a_media_type_map := configuration.media_type_map
-			a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.assume_html_is_xhtml)
-			if a_media_type_map.may_use_xpointer then
-				Result := xpointer_fragment (a_fragment_id, a_document)
-				in_error := Result = Void
-			elseif a_media_type_map.may_use_id then
-				a_node := a_document.selected_id (a_fragment_id)
-				if a_node = Void then
-					in_error := True
-				else
-					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (a_node)
-				end
+			l_fragment_id := a_uri.fragment_item.decoded_utf8
+			if l_fragment_id = Void then
+				l_error := True
 			else
-				in_error := True
+				if configuration = Void then configuration := transformer.configuration end
+				l_media_type := last_evaluated_media_type
+				if l_media_type = Void then l_media_type := configuration.default_media_type (a_uri.full_uri) end
+				l_media_type_map := configuration.media_type_map
+				l_media_type_map.check_fragment_processing_rules (l_media_type, configuration.assume_html_is_xhtml)
+				if l_media_type_map.may_use_xpointer then
+					Result := xpointer_fragment (l_fragment_id, a_document)
+					l_error := Result = Void
+				elseif l_media_type_map.may_use_id then
+					l_node := a_document.selected_id (l_fragment_id)
+					if l_node = Void then
+						l_error := True
+					else
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (l_node)
+					end
+				else
+					l_error := True
+				end
 			end
-			if in_error then
+			if l_error then
 				create fragment_error_value.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type",
 																			 Xpath_errors_uri, "XTRE1160", Dynamic_error)
 				transformer.report_recoverable_error (fragment_error_value)

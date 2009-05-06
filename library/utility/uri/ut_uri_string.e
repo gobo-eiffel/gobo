@@ -72,7 +72,8 @@ feature -- Access
 
 	decoded: STRING is
 			-- Decoded string where each %-encoded character
-			-- gives one item in the resulting string
+			-- gives one item in the resulting string;
+			-- The encoding is assumed to be Latin-1.
 		local
 			l_decoded_impl: like decoded_impl
 		do
@@ -86,7 +87,7 @@ feature -- Access
 			decoded_not_void: Result /= Void
 		end
 
-	decoded_utf8: STRING is
+	decoded_utf8: ?STRING is
 			-- Decoded string where the percent-encoded characters
 			-- are in the UTF-8 character set
 			-- (This may return a STRING object of another type than STRING)
@@ -95,8 +96,6 @@ feature -- Access
 				decoded_utf8_impl := Url_encoding.unescape_utf8 (encoded)
 			end
 			Result := decoded_utf8_impl
-		ensure
-			decoded_utf8_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

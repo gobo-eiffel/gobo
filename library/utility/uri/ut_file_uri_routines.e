@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Convert file: URI to and from local filesystem names"
+		"Convert file: URI to and from local filesystem names. Percent-encodings in URIs are assumed to be UTF-8"
 
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -24,22 +24,30 @@ inherit
 
 feature -- Filename
 
-	uri_to_filename (a_uri: UT_URI): STRING is
+	uri_to_filename (a_uri: UT_URI): ?STRING is
 			-- Convert URI to filename and then to string using the
 			-- current filesystem rules.
 		require
 			a_uri_not_void: a_uri /= Void
 		local
 			l_path_base_item: ?UT_URI_STRING
+			l_pathname: ?KL_PATHNAME
+			l_path: ?STRING
 		do
-			Result := file_system.pathname_to_string (uri_to_pathname (a_uri))
-			if a_uri.has_path_base then
-				l_path_base_item := a_uri.path_base_item
-				check
+			l_pathname := uri_to_pathname (a_uri)
+			if l_pathname /= Void then
+				Result := file_system.pathname_to_string (l_pathname)
+				if a_uri.has_path_base then
+					l_path_base_item := a_uri.path_base_item
+					check
 						-- condition `a_uri.has_path_base'
-					a_uri_has_path_base: l_path_base_item /= Void
+						a_uri_has_path_base: l_path_base_item /= Void
+					end
+					l_path := uri_component_to_pathname (l_path_base_item)
+					if l_path /= Void then
+						Result := file_system.pathname (Result, l_path)
+					end
 				end
-				Result := file_system.pathname (Result, uri_component_to_pathname (l_path_base_item))
 			end
 			debug ("file_uri")
 				std.output.put_string ("uri_to_filename: ")
@@ -47,11 +55,13 @@ feature -- Filename
 				std.output.put_string (" ")
 				std.output.put_string (a_uri.path)
 				std.output.put_string (" -> ")
-				std.output.put_string (Result)
+				if Result = Void then
+					std.output.put_string ("<Void>")
+				else
+					std.output.put_string (Result)
+				end
 				std.output.put_new_line
 			end
-		ensure
-			filename_not_void: Result /= Void
 		end
 
 	filename_to_uri (a_string: STRING): UT_URI is
@@ -75,7 +85,7 @@ feature -- Filename
 
 feature -- Pathname
 
-	uri_to_pathname (a_uri: UT_URI): KL_PATHNAME is
+	uri_to_pathname (a_uri: UT_URI): ?KL_PATHNAME is
 			-- Convert `a_uri' to a pathname.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -85,44 +95,57 @@ feature -- Pathname
 			a_segment: STRING
 			a_uri_authority_item: ?UT_URI_STRING
 		do
-			create Result.make
-			if a_uri.has_authority then
-				a_uri_authority_item := a_uri.authority_item
-				check
+			if not a_uri.has_valid_scheme or else a_uri.scheme.same_string (File_scheme) then
+				create Result.make
+				if a_uri.has_authority then
+					a_uri_authority_item := a_uri.authority_item
+					check
 						-- condition `a_uri.has_authority'
-					a_uri_has_authority: a_uri_authority_item /= Void
+						a_uri_has_authority: a_uri_authority_item /= Void
+					end
+					if not a_uri_authority_item.decoded.same_string (Localhost_authority) then
+						Result.set_hostname (a_uri.authority)
+					end
 				end
-				if not a_uri_authority_item.decoded.same_string (Localhost_authority) then
-					Result.set_hostname (a_uri.authority)
-				end
-			end
-			Result.set_relative (not a_uri.has_absolute_path)
-			a_cursor := a_uri.path_items.new_cursor
-			a_cursor.start
-			if not a_cursor.after then
+				Result.set_relative (not a_uri.is_opaque and not a_uri.has_absolute_path)
+				a_cursor := a_uri.path_items.new_cursor
+				a_cursor.start
+				if not a_cursor.after then
 					-- First item might be a drive name.
-				a_possible_drive := uri_component_to_pathname (a_cursor.item)
-				if a_uri.has_absolute_path and then is_drive (a_possible_drive) then
-					Result.set_drive (a_possible_drive)
-				else
-					Result.append_name (a_possible_drive)
+					a_possible_drive := uri_component_to_pathname (a_cursor.item)
+					if a_possible_drive = Void then
+						Result := Void
+					else
+						if a_uri.has_absolute_path and then is_drive (a_possible_drive) then
+							Result.set_drive (a_possible_drive)
+						else
+							Result.append_name (a_possible_drive)
+						end
+						-- Remaining items.
+						from a_cursor.forth until a_cursor.after loop
+							a_segment := uri_component_to_pathname (a_cursor.item)
+							if a_segment = Void then
+								Result := Void
+								a_cursor.go_after
+							else
+								Result.append_name (a_segment)
+								a_cursor.forth
+							end
+						end
+					end
 				end
-					-- Remaining items.
-				from a_cursor.forth until a_cursor.after loop
-					a_segment := uri_component_to_pathname (a_cursor.item)
-					Result.append_name (a_segment)
-					a_cursor.forth
+				debug ("file_uri")
+					std.output.put_string ("uri_to_pathname ")
+					std.output.put_string (a_uri.full_reference)
+					std.output.put_character (' ')
+					if Result = Void then
+						std.output.put_string ("<Void>")
+					else
+						std.output.put_string (file_system.pathname_to_string (Result))
+					end
+					std.output.put_new_line
 				end
 			end
-			debug ("file_uri")
-				std.output.put_string ("uri_to_pathname ")
-				std.output.put_string (a_uri.full_reference)
-				std.output.put_character (' ')
-				std.output.put_string (file_system.pathname_to_string (Result))
-				std.output.put_new_line
-			end
-		ensure
-			pathname_not_void: Result /= Void
 		end
 
 	pathname_to_uri (a_pathname: KI_PATHNAME): UT_URI is
@@ -195,14 +218,12 @@ feature {NONE} -- Implementation
 			uri_component_not_void: Result /= Void
 		end
 
-	uri_component_to_pathname (a_uri_string: UT_URI_STRING): STRING is
+	uri_component_to_pathname (a_uri_string: UT_URI_STRING): ?STRING is
 			-- Convert string used in URI component to pathname string
 		require
 			a_uri_string_not_void: a_uri_string /= Void
 		do
 			Result := a_uri_string.decoded_utf8
-		ensure
-			pathname_not_void: Result /= Void
 		end
 
 	is_drive (a_drive: STRING): BOOLEAN is

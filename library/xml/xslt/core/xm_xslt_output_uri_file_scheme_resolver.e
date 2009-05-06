@@ -47,20 +47,24 @@ feature -- Action
 	resolve (a_uri: UT_URI) is
 			-- Resolve `a_uri'.
 		local
-			an_output: XM_OUTPUT
-			a_stream: KL_TEXT_OUTPUT_FILE
+			l_output: XM_OUTPUT
+			l_stream: KL_TEXT_OUTPUT_FILE
+			l_filename: ?STRING
 		do
 			last_result := Void
 			check
 				absolute_path: a_uri.has_absolute_path
 				-- as `a_uri' is absolute, and scheme is "file"
 			end
-			create a_stream.make (File_uri.uri_to_filename (a_uri))
-			a_stream.open_write
-			if a_stream.is_open_write then
-				create an_output
-				an_output.set_output_stream (a_stream)
-				create last_result.make_secondary_stream (an_output, a_stream, a_uri.path)
+			l_filename := File_uri.uri_to_filename (a_uri)
+			if l_filename /= Void then
+				create l_stream.make (l_filename)
+				l_stream.open_write
+			end
+			if l_stream /= Void and then l_stream.is_open_write then
+				create l_output
+				l_output.set_output_stream (l_stream)
+				create last_result.make_secondary_stream (l_output, l_stream, a_uri.path)
 			else
 				error_message := STRING_.concat ("Unable to open ", a_uri.full_reference)
 			end

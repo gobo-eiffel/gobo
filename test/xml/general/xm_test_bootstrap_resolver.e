@@ -53,6 +53,7 @@ feature -- Tests
 		local
 			a_catalog: XM_CATALOG
 		do
+			shared_catalog_manager.reinit
 			shared_catalog_manager.set_debug_level (0)
 			assert ("Catalog has not been parsed before", not shared_catalog_manager.has (catalog_name))
 			a_catalog := shared_catalog_manager.retrieved_catalog (catalog_name)
