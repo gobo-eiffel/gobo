@@ -12344,7 +12344,7 @@ feature {NONE} -- Initialization
 			-- arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
-			-- GVUAA: See ETL2 VUAR
+			-- GVUAL: See ETL2 VUAR
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -12389,7 +12389,7 @@ feature {NONE} -- Initialization
 			-- arguments.
 			--
 			-- Not in ETL as validity error but as syntax error
-			-- GVUAA: See ETL2 VUAR
+			-- GVUAL: See ETL2 VUAR
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
