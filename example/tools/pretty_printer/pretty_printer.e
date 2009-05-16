@@ -39,6 +39,7 @@ feature {NONE} -- Execution
 			a_class: ET_CLASS
 			a_time_stamp: INTEGER
 			a_parser: ET_EIFFEL_PARSER
+			a_eiffel_error_handler: ET_ERROR_HANDLER
 		do
 			Arguments.set_program_name ("pretty_printer")
 			create error_handler.make_standard
@@ -48,25 +49,50 @@ feature {NONE} -- Execution
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
 			a_system.set_ast_factory (an_ast_factory)
+				-- Make sure that syntax errors are reported to standard error.
+			create a_eiffel_error_handler.make_standard
+			a_eiffel_error_handler.set_info_file (std.error)
+			a_system.set_error_handler (a_eiffel_error_handler)
 				-- Make sure that kernel classes are set correctly.
 			a_system.preparse_local
 			create a_cluster.make ("cluster_name", ".", a_system)
 			create a_parser.make
-			if in_filename.is_equal ("-") or in_filename.is_empty then
-				a_parser.parse_file (std.input, "stdin", a_time_stamp, a_cluster)
+			create in_file.make (in_filename)
+			a_time_stamp := in_file.time_stamp
+			in_file.open_read
+			if in_file.is_open_read then
+				a_parser.parse_file (in_file, in_filename, a_time_stamp, a_cluster)
+				in_file.close
 			else
+				report_cannot_read_error (in_filename)
+				Exceptions.die (1)
+			end
+			if a_parser.syntax_error then
+					-- In case of syntax error, copy the input file
+					-- unmodified to the output file.
 				create in_file.make (in_filename)
-				a_time_stamp := in_file.time_stamp
 				in_file.open_read
 				if in_file.is_open_read then
-					a_parser.parse_file (in_file, in_filename, a_time_stamp, a_cluster)
-					in_file.close
+					if out_filename.is_equal ("-") then
+						std.output.append (in_file)
+						in_file.close
+					else
+						create out_file.make (out_filename)
+						out_file.recursive_open_write
+						if out_file.is_open_write then
+							out_file.append (in_file)
+							out_file.close
+							in_file.close
+						else
+							in_file.close
+							report_cannot_write_error (out_filename)
+							Exceptions.die (1)
+						end
+					end
 				else
 					report_cannot_read_error (in_filename)
 					Exceptions.die (1)
 				end
-			end
-			if a_parser.syntax_error then
 				Exceptions.die (1)
 			else
 				if out_filename.is_equal ("-") then
