@@ -1214,6 +1214,19 @@ feature -- Parser status report
 			-- (also known as qualified anchored types or remote
 			-- anchored types) accepted?
 
+	preparse_enabled: BOOLEAN
+			-- Should preparsing be performed even when not necessary?
+			--
+			-- One case when it's not necessary is when analyzing the whole
+			-- system, with "NONE" as root class for example. In that case
+			-- preparsing can be skipped and all classes will be parsed.
+			-- We may want to perform preparsing in that case anyway when
+			-- overridden classes contain syntax errors for example. Since
+			-- these classes are overridden, we don't want to get the
+			-- syntax error messages. If we perform preparsing then the
+			-- overridden classes will not need to be parsed, and no syntax
+			-- error will be reported.
+
 	preparse_shallow_mode: BOOLEAN
 			-- Are filenames are expected to be of the form 'classname.e'?
 
@@ -1317,6 +1330,14 @@ feature -- Parser setting
 			qualified_anchored_types_enabled_set: qualified_anchored_types_enabled = b
 		end
 
+	set_preparse_enabled (b: BOOLEAN) is
+			-- Set `preparse_enabled' to `b'.
+		do
+			preparse_enabled := b
+		ensure
+			preparse_enabled_set: preparse_enabled = b
+		end
+		
 	set_preparse_shallow_mode is
 			-- Set `preparse_shallow_mode' to True.
 		do
@@ -1795,13 +1816,16 @@ feature -- Compilation
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
---			preparse
---			if error_handler.benchmark_shown then
---				print_time (dt1, "Degree 6")
---				dt1 := l_clock.system_clock.date_time_now
---			end
---			compile_degree_5
-			parse_all
+			if preparse_enabled then
+				preparse
+				if error_handler.benchmark_shown then
+					print_time (dt1, "Degree 6")
+					dt1 := l_clock.system_clock.date_time_now
+				end
+				compile_degree_5
+			else
+				parse_all
+			end
 			check_provider_validity
 			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 5")

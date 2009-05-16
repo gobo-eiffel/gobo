@@ -1012,7 +1012,16 @@ feature -- Compilation
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			current_system.parse_all
+			if current_system.preparse_enabled then
+				current_system.preparse
+				if error_handler.benchmark_shown then
+					current_system.print_time (dt1, "Degree 6")
+					dt1 := l_clock.system_clock.date_time_now
+				end
+				current_system.compile_degree_5
+			else
+				current_system.parse_all
+			end
 			if error_handler.benchmark_shown then
 				current_system.print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
