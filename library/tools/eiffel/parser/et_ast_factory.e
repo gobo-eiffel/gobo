@@ -1140,9 +1140,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			if nb > 0 then
-				create Result.make_with_capacity (nb)
-			end
+			create Result.make_with_capacity (nb)
 		end
 
 	new_actual_parameter_comma (a_parameter: ET_ACTUAL_PARAMETER; a_comma: ET_SYMBOL): ET_ACTUAL_PARAMETER_ITEM is
