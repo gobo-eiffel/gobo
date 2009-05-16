@@ -11,7 +11,20 @@ indexing
 class
 	EXCEPTION
 
+feature -- Raise
+
+	raise
+			-- Raise current exception
+		do
+-- TODO
+		end
+
 feature -- Access
+
+	code: INTEGER
+			-- Code of the exception.
+		do
+		end
 
 	message: ?STRING
 			-- Message(Tag) of current exception
@@ -21,6 +34,22 @@ feature -- Access
 		do
 -- TODO
 			Result := ""
+		end
+
+feature -- Status settings
+
+	set_message (a_message: like message)
+			-- Set `message' with `a_message'.
+		do
+-- TODO
+		end
+
+feature {NONE} -- Implementation
+
+	internal_meaning: STRING
+			-- Internal `meaning'
+		once
+			Result := "General exception."
 		end
 
 end
