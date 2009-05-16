@@ -106,13 +106,19 @@ feature {AP_PARSER} -- Parser Interface
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR
+			l_last_option_parameter: ?STRING
 		do
-			if true_strings.has (a_parser.last_option_parameter) then
+			l_last_option_parameter := a_parser.last_option_parameter
+			check 
+					-- Implied by inherited precondition `parameter_if_needed' and Current's value of `needs_parameter'
+				parameter_needed: l_last_option_parameter /= Void 
+			end 
+			if true_strings.has (l_last_option_parameter) then
 				parameters.force_last (True)
-			elseif false_strings.has (a_parser.last_option_parameter) then
+			elseif false_strings.has (l_last_option_parameter) then
 				parameters.force_last (False)
 			else
-				create error.make_invalid_parameter_error (Current, a_parser.last_option_parameter)
+				create error.make_invalid_parameter_error (Current, l_last_option_parameter)
 				a_parser.error_handler.report_error (error)
 			end
 		end

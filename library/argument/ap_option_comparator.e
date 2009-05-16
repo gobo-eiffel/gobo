@@ -24,14 +24,23 @@ feature -- Status report
 			-- Is `u' considered less than `v'?
 		local
 			u_string, v_string: STRING
+			l_long_form: ?STRING
 		do
 			if u.has_long_form then
-				u_string := u.long_form
+				l_long_form := u.long_form
+				check 
+					u_has_long_form : l_long_form /= Void
+				end
+				u_string := l_long_form
 			else
 				u_string := u.short_form.out
 			end
 			if v.has_long_form then
-				v_string := v.long_form
+				l_long_form := v.long_form
+				check 
+					v_has_long_form: l_long_form /= Void
+				end
+				v_string := l_long_form
 			else
 				v_string := v.short_form.out
 			end

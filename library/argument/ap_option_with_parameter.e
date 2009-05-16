@@ -34,6 +34,8 @@ feature -- Access
 
 	example: STRING is
 			-- Example for the usage of the option
+		local
+			l_long_form: like long_form
 		do
 			create Result.make (20)
 			if not is_mandatory then
@@ -46,7 +48,12 @@ feature -- Access
 				Result.append_string (parameter_description)
 			else
 				Result.append_character (long_option_introduction)
-				Result.append_string (long_form)
+				l_long_form := long_form
+				check 
+						-- implied by inherited invariant has_short_or_long
+					has_short_or_long: l_long_form /= Void 
+				end
+				Result.append_string (l_long_form)
 				if not needs_parameter then
 					Result.append_character ('[')
 				end
@@ -83,7 +90,7 @@ feature -- Access
 	parameter_description: STRING
 			-- Name of the parameter
 
-	parameter: G is
+	parameter: ?G is
 			-- Last value give to the option
 		require
 			was_found: was_found
@@ -91,7 +98,7 @@ feature -- Access
 			Result := parameters.last
 		end
 
-	parameters: DS_LIST [G] is
+	parameters: DS_LIST [?G] is
 			-- All parameters given to the option
 		deferred
 		end

@@ -39,11 +39,13 @@ feature {NONE} -- Initialization
 			-- Create an argument parser containing a help option.
 		local
 			help_alternative_options_list: AP_ALTERNATIVE_OPTIONS_LIST
+			l_help_option: like help_option
 		do
 			make_empty
-			create help_option.make (help_text_short_option, help_text_long_option)
-			help_option.set_description (help_text_description)
-			create help_alternative_options_list.make (help_option)
+			create l_help_option.make (help_text_short_option, help_text_long_option)
+			help_option := l_help_option
+			l_help_option.set_description (help_text_description)
+			create help_alternative_options_list.make (l_help_option)
 			alternative_options_lists.force_last (help_alternative_options_list)
 		end
 
@@ -68,19 +70,19 @@ feature -- Access
 	error_handler: AP_ERROR_HANDLER
 			-- Error handler for this argument parser
 
-	help_option: AP_DISPLAY_HELP_FLAG
+	help_option: ?AP_DISPLAY_HELP_FLAG
 			-- Automatically generated option to display the help text
 
 	options: DS_LIST [AP_OPTION]
 			-- List of all available options
 
-	parameters: DS_LIST [STRING]
+	parameters: ?DS_LIST [STRING]
 			-- All argument that were not part of any option
 
 	parameters_description: STRING
 			-- Description of the parameters
 
-	last_option_parameter: STRING
+	last_option_parameter: ?STRING
 			-- Last parameter that was passed to an option
 
 	all_options: DS_LIST [AP_OPTION] is
@@ -166,6 +168,7 @@ feature -- Status report
 			an_option_not_void: an_option /= Void
 		local
 			l_option: AP_OPTION
+			l_long_form: ?STRING
 		do
 			from
 				options.start
@@ -173,7 +176,11 @@ feature -- Status report
 				options.after
 			loop
 				l_option := options.item_for_iteration
-				if l_option.has_long_form and then l_option.long_form.same_string (an_option) then
+				l_long_form := l_option.long_form
+				if l_long_form /= Void and then	l_long_form.same_string (an_option) then
+					check
+						has_long_form: l_option.has_long_form
+					end
 					Result := True
 					options.go_after
 				else
@@ -230,7 +237,7 @@ feature -- Parser
 			-- Parse `an_array' of arguments.
 		require
 			an_array_not_void: an_array /= Void
-			no_void_argument: not STRING_ARRAY_.has (an_array, Void)
+			no_void_argument: not STRING_ARRAY_.has_void (an_array)
 			valid_options: valid_options
 		local
 			args: DS_ARRAYED_LIST [STRING]
@@ -247,13 +254,12 @@ feature -- Parser
 			valid_options: valid_options
 		do
 			reset_parser
-			argument_list := a_list
 			from
-				argument_list.start
+				a_list.start
 			until
-				argument_list.after
+				a_list.after
 			loop
-				parse_argument
+				parse_argument (a_list)
 			end
 			check_options_after_parsing
 			if error_handler.has_error then
@@ -337,6 +343,7 @@ feature -- Validity checks
 			l_option: AP_OPTION
 			long_set: DS_LINKED_LIST [STRING]
 			short_set: DS_LINKED_LIST [CHARACTER]
+			l_long_form: ?STRING
 		do
 			Result := True
 			create long_set.make
@@ -357,8 +364,12 @@ feature -- Validity checks
 						short_set.force_last (l_option.short_form)
 					end
 					if l_option.has_long_form and Result then
-						Result := valid_long_form (l_option.long_form) and not long_set.has (l_option.long_form)
-						long_set.force_last (l_option.long_form)
+						l_long_form := l_option.long_form
+						check
+							l_option_has_long_form : l_long_form /= Void
+						end
+						Result := valid_long_form (l_long_form) and not long_set.has (l_long_form)
+						long_set.force_last (l_long_form)
 					end
 					i := i + 1
 				end
@@ -369,6 +380,7 @@ feature -- Validity checks
 			-- Are all options correctly set up?
 		local
 			aol: AP_ALTERNATIVE_OPTIONS_LIST
+			l_long_form: ?STRING
 		do
 			if all_valid_short_and_long_form (options) then
 				Result := True
@@ -385,7 +397,11 @@ feature -- Validity checks
 							Result := not has_short_option (aol.introduction_option.short_form)
 						end
 						if aol.introduction_option.has_long_form and Result then
-							Result := not has_long_option (aol.introduction_option.long_form)
+							l_long_form := aol.introduction_option.long_form
+							check
+								aol_introduction_option_has_long_form: l_long_form /= Void
+							end
+							Result := not has_long_option (l_long_form)
 						end
 					end
 					alternative_options_lists.forth
@@ -396,10 +412,7 @@ feature -- Validity checks
 
 feature {NONE} -- Implementation
 
-	argument_list: DS_LIST [STRING]
-			-- List of arguments passed to the parser
-
-	current_options: DS_LIST [AP_OPTION]
+	current_options: ?DS_LIST [AP_OPTION]
 			-- The current list of options for parsing
 			-- Defaults to `options', and can be changed by parsing an
 			-- introduction_option of one of the alternative_options_lists.
@@ -410,16 +423,24 @@ feature {NONE} -- Implementation
 	check_options_after_parsing is
 			-- Check if all mandatory options were passed to the program and
 			-- options were not given too often.
+		require
+			current_options_not_void: current_options /= Void
 		local
 			o: AP_OPTION
 			error: AP_ERROR
+			l_current_options: like current_options
 		do
+			l_current_options := current_options
+			check
+				-- Implied by precondition `current_options_not_void'
+				current_options_not_void: l_current_options /= Void
+			end
 			from
-				current_options.start
+				l_current_options.start
 			until
-				current_options.after
+				l_current_options.after
 			loop
-				o := current_options.item_for_iteration
+				o := l_current_options.item_for_iteration
 				if o.is_mandatory and not o.was_found then
 					create error.make_missing_option_error (o)
 					error_handler.report_error (error)
@@ -428,58 +449,71 @@ feature {NONE} -- Implementation
 					create error.make_surplus_option_error (o)
 					error_handler.report_error (error)
 				end
-				current_options.forth
+				l_current_options.forth
 			end
 		end
 
-	parse_argument is
+	parse_argument (a_argument_list: DS_LIST [STRING]) is
 			-- Parse the current argument.
 		require
-			option_available: not argument_list.off
+			parameters_not_void: parameters /= Void
+			a_argument_list_attached: a_argument_list /= Void
+			option_available: not a_argument_list.off
 		local
 			l_argument: STRING
 			length: INTEGER
+			l_parameters: like parameters
 		do
-			l_argument := argument_list.item_for_iteration
+			l_parameters := parameters
+			check
+					-- Implied by precondition `parameters_not_void'
+				parameters_not_void: l_parameters /= Void
+			end
+
+			l_argument := a_argument_list.item_for_iteration
 			length := l_argument.count
 			if length >= 2 and then l_argument.item (1) = short_option_introduction then
 				if l_argument.item (2) = long_option_introduction then
 					if length = 2 then
 						from
-							argument_list.forth
+							a_argument_list.forth
 						until
-							argument_list.after
+							a_argument_list.after
 						loop
-							parameters.force_last (argument_list.item_for_iteration)
-							argument_list.forth
+							l_parameters.force_last (a_argument_list.item_for_iteration)
+							a_argument_list.forth
 						end
 					else
-						parse_long
+						parse_long (a_argument_list)
 					end
 				else
-					parse_short
+					parse_short (a_argument_list)
 				end
 			else
-				parameters.force_last (l_argument)
-				argument_list.forth
+				l_parameters.force_last (l_argument)
+				a_argument_list.forth
 			end
 		end
 
-	parse_long is
+	parse_long (a_argument_list: DS_LIST [STRING]) is
 			-- Parse a long argument.
 		require
-			current_is_long_option: argument_list.item_for_iteration.count >= 2 and then
-				(argument_list.item_for_iteration.item (1) = short_option_introduction and
-			 	argument_list.item_for_iteration.item (2) = long_option_introduction)
+			a_argument_list_attached: a_argument_list /= Void
+			a_argument_list_not_off: not a_argument_list.off
+--			current_is_long_option: {rl_item: STRING} a_argument_list.item_for_iteration and then rl_item.count >= 2 and then
+--				(rl_item.item (1) = short_option_introduction and rl_item.item (2) = long_option_introduction)
 		local
 			l_argument: STRING
 			option_string: STRING
-			option, o: AP_OPTION
+			option: ?AP_OPTION
+			o: AP_OPTION
 			parameter_position: INTEGER
-			parameter: STRING
+			parameter: ?STRING
 			error: AP_ERROR
+			l_current_options: like current_options
+			l_long_form: ?STRING
 		do
-			l_argument := argument_list.item_for_iteration
+			l_argument := a_argument_list.item_for_iteration
 			parameter_position := l_argument.index_of (long_option_parameter_introduction, 3)
 			if parameter_position > 0 then
 				option_string := l_argument.substring (3, parameter_position - 1)
@@ -495,25 +529,38 @@ feature {NONE} -- Implementation
 					option /= Void or alternative_options_lists.after
 				loop
 					o := alternative_options_lists.item_for_iteration.introduction_option
-					if o.has_long_form and then STRING_.same_string (o.long_form, option_string) then
-						option := o
-						current_options := alternative_options_lists.item_for_iteration
+					if o.has_long_form then
+						l_long_form := o.long_form
+						check
+							o_has_long_form: l_long_form /= Void
+						end
+						if STRING_.same_string (l_long_form, option_string) then
+							option := o
+							current_options := alternative_options_lists.item_for_iteration
+						end
 					end
 					alternative_options_lists.forth
 				end
 				is_first_option := False
 			end
-			if option = Void then
+			l_current_options := current_options
+			if option = Void and l_current_options /= Void then
 				from
-					current_options.start
+					l_current_options.start
 				until
-					option /= Void or current_options.after
+					option /= Void or l_current_options.after
 				loop
-					o := current_options.item_for_iteration
-					if o.has_long_form and then STRING_.same_string (o.long_form, option_string) then
-						option := o
+					o := l_current_options.item_for_iteration
+					if o.has_long_form then
+						l_long_form := o.long_form
+						check
+							o_has_long_form: l_long_form /= Void
+						end
+						if STRING_.same_string (l_long_form, option_string) then
+							option := o
+						end
 					end
-					current_options.forth
+					l_current_options.forth
 				end
 			end
 			if option = Void then
@@ -522,12 +569,12 @@ feature {NONE} -- Implementation
 			else
 				if option.needs_parameter then
 					if parameter = Void then
-						argument_list.forth
-						if argument_list.off then
+						a_argument_list.forth
+						if a_argument_list.off then
 							create error.make_missing_parameter_error (option)
 							error_handler.report_error (error)
 						else
-							parameter := argument_list.item_for_iteration
+							parameter := a_argument_list.item_for_iteration
 						end
 					end
 					if parameter /= Void then
@@ -544,26 +591,31 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if not argument_list.after then
-				argument_list.forth
+			if not a_argument_list.after then
+				a_argument_list.forth
 			end
 		end
 
-	parse_short is
+	parse_short (a_argument_list: DS_LIST [STRING]) is
 			-- Parse a short option.
 		require
-			current_is_short_option: argument_list.item_for_iteration.count > 1 and then
-				(argument_list.item_for_iteration.item (1) = short_option_introduction and
-				 argument_list.item_for_iteration.item (2) /= long_option_introduction)
+			a_argument_list_attached: a_argument_list /= Void
+			a_argument_list_not_off: not a_argument_list.off
+--			current_is_short_option: {rl_item: STRING} a_argument_list.item_for_iteration and then
+--				rl_item.count > 1 and then
+--				(rl_item.item (1) = short_option_introduction and
+--				 rl_item.item (2) /= long_option_introduction)
 		local
 			l_argument: STRING
 			i: INTEGER
 			option_character: CHARACTER
-			option, o: AP_OPTION
-			parameter: STRING
+			option: ?AP_OPTION
+			o: AP_OPTION
+			parameter: ?STRING
 			error: AP_ERROR
+			l_current_options: like current_options
 		do
-			l_argument := argument_list.item_for_iteration
+			l_argument := a_argument_list.item_for_iteration
 			from
 				i := 2
 			until
@@ -586,17 +638,18 @@ feature {NONE} -- Implementation
 					end
 					is_first_option := False
 				end
-				if option = Void then
+				l_current_options := current_options
+				if option = Void and l_current_options /= Void then
 					from
-						current_options.start
+						l_current_options.start
 					until
-						option /= Void or current_options.after
+						option /= Void or l_current_options.after
 					loop
-						o := current_options.item_for_iteration
+						o := l_current_options.item_for_iteration
 						if o.has_short_form and then o.short_form = option_character then
 							option := o
 						end
-						current_options.forth
+						l_current_options.forth
 					end
 				end
 				if option = Void then
@@ -605,9 +658,9 @@ feature {NONE} -- Implementation
 				else
 					if option.needs_parameter then
 						if i = l_argument.count then
-							argument_list.forth
-							if not argument_list.off then
-								parameter := argument_list.item_for_iteration
+							a_argument_list.forth
+							if not a_argument_list.off then
+								parameter := a_argument_list.item_for_iteration
 							end
 						else
 							parameter := l_argument.substring (i + 1, l_argument.count)
@@ -626,8 +679,8 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			if not argument_list.after then
-				argument_list.forth
+			if not a_argument_list.after then
+				a_argument_list.forth
 			end
 		end
 

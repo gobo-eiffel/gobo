@@ -72,6 +72,8 @@ feature -- Access
 
 	example: STRING is
 			-- Example for the usage of the option (short preferred)
+		local
+			l_long_form: like long_form
 		do
 			create Result.make (20)
 			if not is_mandatory then
@@ -81,8 +83,13 @@ feature -- Access
 			if has_short_form then
 				Result.append_string (short_form.out)
 			else
+				l_long_form := long_form
+				check
+						-- invariant has_short_or_long ensures `log_form' is not Void
+					not_has_short_form: l_long_form /= Void
+				end
 				Result.append_character (long_option_introduction)
-				Result.append_string (long_form)
+				Result.append_string (l_long_form)
 			end
 			if not is_mandatory then
 				Result.append_character (']')
@@ -91,14 +98,20 @@ feature -- Access
 			example_not_void: Result /= Void
 		end
 
-	long_form: STRING
+	long_form: ?STRING
 			-- Long form
 
 	name: STRING is
 			-- Name of the option (short or long from)
+		local
+			l_long_form: like long_form
 		do
 			if has_long_form then
-				Result := short_option_introduction.out + long_option_introduction.out + long_form
+				l_long_form := l_long_form
+				check
+					has_long_form: l_long_form /= Void
+				end
+				Result := short_option_introduction.out + long_option_introduction.out + l_long_form
 			else
 				Result := short_option_introduction.out + short_form.out
 			end
@@ -108,21 +121,33 @@ feature -- Access
 
 	names: STRING is
 			-- Names of the option (short and long)
+		local
+			s: ?STRING
+			l_long_form: like long_form
 		do
 			if has_short_form then
-				Result := short_option_introduction.out
-				Result.append_character (short_form)
+				s := short_option_introduction.out
+				s.append_character (short_form)
 			end
 			if has_long_form then
-				if Result = Void then
-					Result := "    "
-				else
-					Result.append_string (", ")
+				l_long_form := long_form
+				check
+					has_long_form: l_long_form /= Void
 				end
-				Result.append_character (short_option_introduction)
-				Result.append_character (long_option_introduction)
-				Result.append_string (long_form)
+				if s = Void then
+					s := "    "
+				else
+					s.append_string (", ")
+				end
+				s.append_character (short_option_introduction)
+				s.append_character (long_option_introduction)
+				s.append_string (l_long_form)
 			end
+			check
+					-- `s' not Void implied by invariant: has_short_or_long
+				has_short_or_long: s /= Void
+			end
+			Result := s
 		ensure
 			names_not_void: Result /= Void
 		end
