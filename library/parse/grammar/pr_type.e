@@ -414,7 +414,11 @@ feature -- Output
 			print_indentation (indent + 1, a_file)
 			a_file.put_string ("yyvs")
 			a_file.put_integer (id)
-			a_file.put_line (".clear_all")
+			a_file.put_string (".fill_with (l_yyvs")
+			a_file.put_integer (id)
+			a_file.put_string ("_default_item, 0, yyvs")
+			a_file.put_integer (id)
+			a_file.put_line (".upper)")
 			print_indentation (indent, a_file)
 			a_file.put_line ("end")
 		end
