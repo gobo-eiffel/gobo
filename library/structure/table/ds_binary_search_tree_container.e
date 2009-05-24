@@ -709,7 +709,6 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 			a_cursor_not_void: a_cursor /= Void
 		local
 			l_was_off: BOOLEAN
-			l_position: like found_node
 		do
 			l_was_off := a_cursor.off
 			if is_empty then
@@ -742,7 +741,6 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 			a_cursor_not_void: a_cursor /= Void
 		local
 			l_was_off: BOOLEAN
-			l_position: like found_node
 		do
 			l_was_off := a_cursor.off
 			if is_empty then
