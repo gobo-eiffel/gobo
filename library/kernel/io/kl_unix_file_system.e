@@ -16,7 +16,8 @@ inherit
 
 	KL_FILE_SYSTEM
 		redefine
-			same_canonical_pathnames
+			same_canonical_pathnames,
+			is_canonical_subpathname
 		end
 
 create
@@ -131,6 +132,47 @@ feature -- Pathname handling
 			p1.set_canonical
 			p2.set_canonical
 			Result := p1.same_pathname (p2)
+		end
+
+	is_subpathname (a_pathname1, a_pathname2: STRING): BOOLEAN is
+			-- Is `a_pathname1' considered as a subpathname of `a_pathname2'
+			-- when viewed from the current file system?
+			-- (`a_pathname1' and `a_pathname2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+			--
+			-- Note that pathnames may be considered equal when viewed
+			-- from one file system but not from another. For example
+			-- Windows is case-insensitive, but Unix is case-sensitive.
+		local
+			p1, p2: KI_PATHNAME
+		do
+			p1 := string_to_pathname (a_pathname1)
+			p2 := string_to_pathname (a_pathname2)
+			Result := p1.is_subpathname (p2)
+		end
+
+	is_canonical_subpathname (a_pathname1, a_pathname2: STRING): BOOLEAN is
+			-- Is the canonical version of `a_pathname1' considered as
+			-- a subpathname of the canonical version of `a_pathname2'
+			-- when viewed from the current file system?
+			-- (`a_pathname1' and `a_pathname2' should follow
+			-- the pathname convention of the underlying
+			-- platform. For pathname conversion use
+			-- KI_FILE_SYSTEM.pathname_from_file_system.)
+			--
+			-- Note that pathnames may be considered equal when viewed
+			-- from one file system but not from another. For example
+			-- Windows is case-insensitive, but Unix is case-sensitive.
+		local
+			p1, p2: KI_PATHNAME
+		do
+			p1 := string_to_pathname (a_pathname1)
+			p2 := string_to_pathname (a_pathname2)
+			p1.set_canonical
+			p2.set_canonical
+			Result := p1.is_subpathname (p2)
 		end
 
 	basename (a_pathname: STRING): STRING is
