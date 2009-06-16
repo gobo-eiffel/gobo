@@ -78,7 +78,8 @@ inherit
 	LX_DFA_PATTERN_MATCHER
 		redefine
 			matches,
-			match_substring
+			match_substring,
+			match_unbounded_substring
 		end
 
 create
@@ -273,7 +274,7 @@ feature -- Matching
 					from
 						i := a_from
 					until
-						i > a_to
+						i > a_to + 1
 					loop
 						e := longest_end_position (a_subject, i)
 						if e = a_to then
@@ -281,7 +282,7 @@ feature -- Matching
 							matched_start := i
 							matched_end := e
 								-- Jump out of the loop.
-							i := a_to + 1
+							i := a_to + 2
 						else
 							i := i + 1
 						end
@@ -290,7 +291,7 @@ feature -- Matching
 					from
 						i := a_from
 					until
-						i > a_to
+						i > a_to + 1
 					loop
 						e := longest_end_position (a_subject, i)
 						if e /= -1 then
@@ -298,12 +299,31 @@ feature -- Matching
 							matched_start := i
 							matched_end := e
 								-- Jump out of the loop.
-							i := a_to + 1
+							i := a_to + 2
 						else
 							i := i + 1
 						end
 					end
 				end
+			end
+		end
+
+	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+			-- Try to match the substring of `a_subject' between
+			-- positions `a_from' and `a_to' with the current pattern.
+			-- Make result available in `has_matched' and the various
+			-- `*_captured_*' features.
+			--
+			-- Note that if `a_from' is not 1, then ^ will not match at position `a_from'.
+			-- And if `a_to' is not `a_subject.count' then $ will not match at position `a_to'.
+		do
+			if (has_caret and a_from /= 1) or (has_dollar and a_to /= a_subject.count) then
+				match_count := 0
+				subject := a_subject
+				subject_start := a_from
+				subject_end := a_to
+			else
+				match_substring (a_subject, a_from, a_to)
 			end
 		end
 

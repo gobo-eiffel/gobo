@@ -191,6 +191,58 @@ feature -- Test
 			assert_strings_equal ("split_item8", "o", a_split.item (8))
 		end
 
+	test_match1 is
+			-- Test feature 'match'.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+			a_regexp.compile ("^oo")
+			assert ("compiled1", a_regexp.is_compiled)
+			a_regexp.match ("foobar")
+				-- Not matched because the "oo" is not at the beginning of the string "foobar".
+			assert ("no_matched1", not a_regexp.has_matched)
+		end
+
+	test_match2 is
+			-- Test feature 'match'.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+			a_regexp.compile ("oo$")
+			assert ("compiled1", a_regexp.is_compiled)
+			a_regexp.match ("foobar")
+				-- Not matched because the "oo" is not at the end of the string "foobar".
+			assert ("no_matched1", not a_regexp.has_matched)
+		end
+
+	test_match_substring1 is
+			-- Test feature 'match_substring'.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+			a_regexp.compile ("^oo")
+			assert ("compiled1", a_regexp.is_compiled)
+			a_regexp.match_substring ("foobar", 2, 5)
+				-- Matched because the "oo" is at the beginning of the substring.
+			assert ("matched1", a_regexp.has_matched)
+		end
+
+	test_match_substring2 is
+			-- Test feature 'match'.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+			a_regexp.compile ("oo$")
+			assert ("compiled1", a_regexp.is_compiled)
+			a_regexp.match_substring ("foobar", 1, 3)
+				-- Matched because the "oo" is at the end of the substring>
+			assert ("matched1", a_regexp.has_matched)
+		end
+
 feature -- Test Input 1
 
 	test_input1_regexp1 is
@@ -245,6 +297,31 @@ feature -- Test replacement
 			assert_equal ("relacement1", "8#0", a_replacement)
 			a_replacement := a_regexp.replace_all ("\1\#0")
 			assert_equal ("relacement2", "abc8#0def", a_replacement)
+		end
+
+	test_replacement2 is
+			-- Test replacement.
+			-- This is to test that there is no infinite loop
+			-- when replacing all occurrences of a pattern that
+			-- matches the empty string.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+			a_replacement: STRING
+		do
+				-- Regexp that can match an empty string at the beginning.
+			create a_regexp.make
+			a_regexp.compile ("^(bye\.)?")
+			assert ("is_compiled1", a_regexp.is_compiled)
+			a_regexp.match (" world")
+			a_replacement := a_regexp.replace_all ("hello")
+			assert_equal ("relacement1", "hello world", a_replacement)
+				-- Regexp that can match an empty string anywhere.
+			create a_regexp.make
+			a_regexp.compile ("(bye\.)?")
+			assert ("is_compiled2", a_regexp.is_compiled)
+			a_regexp.match ("foo")
+			a_replacement := a_regexp.replace_all ("AA")
+			assert_equal ("relacement2", "AAfAAoAAoAA", a_replacement)
 		end
 
 end

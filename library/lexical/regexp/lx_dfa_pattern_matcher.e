@@ -129,6 +129,18 @@ feature -- Matching
 			end
 		end
 
+	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER) is
+			-- Try to match the substring of `a_subject' between
+			-- positions `a_from' and `a_to' with the current pattern.
+			-- Make result available in `has_matched' and the various
+			-- `*_captured_*' features.
+			--
+			-- Note that if `a_from' is not 1, then ^ will not match at position `a_from'.
+			-- And if `a_to' is not `a_subject.count' then $ will not match at position `a_to'.
+		do
+			match_substring (a_subject, a_from, a_to)
+		end
+
 feature -- Resetting
 
 	reset is
