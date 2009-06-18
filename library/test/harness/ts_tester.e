@@ -94,6 +94,10 @@ feature -- Status report
 			-- (Useful when the current tester is root of a test harness
 			-- application, otherwise return False.)
 
+	enabled_test_cases: RX_REGULAR_EXPRESSION
+			-- Only test cases whose name matches this regexp will
+			-- be executed, or execute all test cases is Void
+
 feature -- Status setting
 
 	set_fail_on_rescue (b: BOOLEAN) is
@@ -110,6 +114,16 @@ feature -- Status setting
 			progress_status := b
 		ensure
 			progress_status_set: progress_status = b
+		end
+
+	set_enabled_test_cases (a_regexp: like enabled_test_cases) is
+			-- Set `enabled_test_cases' to `a_regexp'.
+		require
+			compiled: a_regexp /= Void implies a_regexp.is_compiled
+		do
+			enabled_test_cases := a_regexp
+		ensure
+			enabled_test_cases_set: enabled_test_cases = a_regexp
 		end
 
 feature -- Element change
@@ -192,6 +206,7 @@ feature -- Execution
 		do
 			a_suite := suite
 			a_summary.set_fail_on_rescue (fail_on_rescue)
+			a_summary.set_enabled_test_cases (enabled_test_cases)
 			a_suite.execute (a_summary)
 			a_summary.print_summary (a_suite, a_file)
 			if not a_summary.is_successful then
@@ -212,6 +227,8 @@ feature {NONE} -- Command line
 		local
 			i, nb: INTEGER
 			arg: STRING
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_error: UT_MESSAGE
 		do
 			nb := Arguments.argument_count
 			from
@@ -235,6 +252,21 @@ feature {NONE} -- Command line
 				elseif arg.count >= 9 and then arg.substring (1, 9).is_equal ("--define=") then
 					if arg.count > 9 then
 						set_defined_variable (arg.substring (10, arg.count))
+					else
+						report_usage_error
+					end
+				elseif arg.count >= 9 and then arg.substring (1, 9).is_equal ("--filter=") then
+					if arg.count > 9 then
+						arg := arg.substring (10, arg.count)
+						create l_regexp.make
+						l_regexp.compile (arg)
+						l_regexp.set_caseless (True)
+						if l_regexp.is_compiled then
+							set_enabled_test_cases (l_regexp)
+						else
+							create l_error.make ("Invalid regular expression for --filter: " + arg)
+							report_error (l_error)
+						end
 					else
 						report_usage_error
 					end
@@ -305,7 +337,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Tester usage message
 		once
-			create Result.make ("[-a][-p][-D <name>=<value>|--define=<name>=<value>]* [-o filename]")
+			create Result.make ("[-a][-p][-D <name>=<value>|--define=<name>=<value>]* [--filter=<regexp>] [-o filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -319,5 +351,6 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	variables_not_void: variables /= Void
+	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.is_compiled
 
 end

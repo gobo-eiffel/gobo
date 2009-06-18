@@ -232,6 +232,8 @@ feature -- Generation
 						l_test_index := l_test_index + 1
 						if not has_test then
 							a_file.put_line ("%T%Tlocal")
+							a_file.put_line ("%T%T%Tl_regexp: like enabled_test_cases")
+							a_file.put_line ("%T%T%Tl_name: STRING")
 							has_test := True
 						end
 						a_file.put_string ("%T%T%Tl_test")
@@ -254,6 +256,9 @@ feature -- Generation
 					a_cursor.forth
 				end
 				a_file.put_line ("%T%Tdo")
+				if has_test then
+					a_file.put_line ("%T%T%Tl_regexp := enabled_test_cases")
+				end
 				l_test_index := 0
 				from
 					a_cursor.start
@@ -273,25 +278,28 @@ feature -- Generation
 							l_test_features_cursor.after
 						loop
 							l_test_feature_name := l_test_features_cursor.item
-							a_file.put_string ("%T%T%Tcreate l_test")
-							a_file.put_integer (l_test_index)
-							a_file.put_line (".make_default")
-							a_file.put_string ("%T%T%Tl_test")
-							a_file.put_integer (l_test_index)
-							a_file.put_string (".set_test (%"")
+							a_file.put_string ("%T%T%Tl_name := %"")
 							a_file.put_string (l_test_name)
 							a_file.put_character ('.')
 							a_file.put_string (l_test_feature_name)
-							a_file.put_string ("%", agent l_test")
+							a_file.put_line ("%"")
+							a_file.put_line ("%T%T%Tif l_regexp = Void or else l_regexp.recognizes (l_name) then")
+							a_file.put_string ("%T%T%T%Tcreate l_test")
+							a_file.put_integer (l_test_index)
+							a_file.put_line (".make_default")
+							a_file.put_string ("%T%T%T%Tl_test")
+							a_file.put_integer (l_test_index)
+							a_file.put_string (".set_test (l_name, agent l_test")
 							a_file.put_integer (l_test_index)
 							a_file.put_character ('.')
 							a_file.put_string (l_test_feature_name)
 							a_file.put_character (')')
 							a_file.put_new_line
-							a_file.put_string ("%T%T%Tput_test (l_test")
+							a_file.put_string ("%T%T%T%Tput_test (l_test")
 							a_file.put_integer (l_test_index)
 							a_file.put_character (')')
 							a_file.put_new_line
+							a_file.put_line ("%T%T%Tend")
 							l_test_features_cursor.forth
 						end
 					end

@@ -44,6 +44,10 @@ feature -- Status report
 			-- debugging it might be useful to get the full exception
 			-- trace.)
 
+	enabled_test_cases: RX_REGULAR_EXPRESSION
+			-- Only test cases whose name matches this regexp will
+			-- be executed, or execute all test cases is Void
+
 feature -- Status setting
 
 	set_fail_on_rescue (b: BOOLEAN) is
@@ -52,6 +56,16 @@ feature -- Status setting
 			fail_on_rescue := b
 		ensure
 			fail_on_rescue_set: fail_on_rescue = b
+		end
+
+	set_enabled_test_cases (a_regexp: like enabled_test_cases) is
+			-- Set `enabled_test_cases' to `a_regexp'.
+		require
+			compiled: a_regexp /= Void implies a_regexp.is_compiled
+		do
+			enabled_test_cases := a_regexp
+		ensure
+			enabled_test_cases_set: enabled_test_cases = a_regexp
 		end
 
 feature -- Measurement
@@ -249,5 +263,6 @@ invariant
 	assertion_count_positive: assertion_count >= 0
 	results_not_void: results /= Void
 	no_void_result: not results.has_void
+	enabled_test_cases_compiled: enabled_test_cases /= Void implies enabled_test_cases.is_compiled
 
 end

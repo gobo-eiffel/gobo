@@ -143,26 +143,30 @@ feature -- Execution
 			-- Run test and put results in `a_summary'.
 		local
 			l_collecting: BOOLEAN
+			l_enabled_test_cases: RX_REGULAR_EXPRESSION
 		do
-			l_collecting := memory.collecting
-			assertions.reset
-			a_summary.start_test (Current)
-			if a_summary.fail_on_rescue then
-				execute_without_rescue (a_summary)
-			else
-				execute_with_rescue (a_summary)
-			end
-			a_summary.end_test (Current, assertions.count)
-			assertions.reset
-				-- Make sure that the garbage collector is in the
-				-- same state as before running the test.
-			if l_collecting /= memory.collecting then
-				if l_collecting then
-					memory.collection_on
-					memory.full_collect
-					memory.full_coalesce
+			l_enabled_test_cases := a_summary.enabled_test_cases
+			if l_enabled_test_cases = Void or else l_enabled_test_cases.recognizes (name) then
+				l_collecting := memory.collecting
+				assertions.reset
+				a_summary.start_test (Current)
+				if a_summary.fail_on_rescue then
+					execute_without_rescue (a_summary)
 				else
-					memory.collection_off
+					execute_with_rescue (a_summary)
+				end
+				a_summary.end_test (Current, assertions.count)
+				assertions.reset
+					-- Make sure that the garbage collector is in the
+					-- same state as before running the test.
+				if l_collecting /= memory.collecting then
+					if l_collecting then
+						memory.collection_on
+						memory.full_collect
+						memory.full_coalesce
+					else
+						memory.collection_off
+					end
 				end
 			end
 		end
