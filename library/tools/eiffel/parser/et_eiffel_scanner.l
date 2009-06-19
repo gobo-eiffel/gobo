@@ -1173,6 +1173,7 @@ feature -- Scanning
 			yy_rejected_column: INTEGER
 			yy_rejected_position: INTEGER
 			yy_done: BOOLEAN
+			l_content_area: like yy_content_area
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -1225,6 +1226,7 @@ feature -- Scanning
 					end
 					yy_goto := yyMatch
 				when yyMatch then
+					l_content_area := yy_content_area
 						-- Find the next match.
 					from
 						yy_done := False
@@ -1232,9 +1234,17 @@ feature -- Scanning
 						yy_done
 					loop
 						if yy_ec /= Void then
-							yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
+							if l_content_area /= Void then
+								yy_c := yy_ec.item (l_content_area.item (yy_cp).code)
+							else
+								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							end
 						else
-							yy_c := yy_content_area.item (yy_cp).code
+							if l_content_area /= Void then
+								yy_c := l_content_area.item (yy_cp).code
+							else
+								yy_c := yy_content.item (yy_cp).code
+							end
 						end
 						if
 							not yyReject_or_variable_trail_context and then

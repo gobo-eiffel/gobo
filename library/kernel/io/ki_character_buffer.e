@@ -82,13 +82,11 @@ feature -- Conversion
 			same_count: Result.count = count
 		end
 
-	as_special: SPECIAL [CHARACTER] is
+	as_special: ?SPECIAL [CHARACTER] is
 			-- 'SPECIAL [CHARACTER]' version of current character buffer;
 			-- Characters are indexed starting at 1;
 			-- Note that the result may share the internal data with `Current'.
-		deferred
-		ensure
-			as_special_not_void: Result /= Void
+		do
 		end
 
 feature -- Element change

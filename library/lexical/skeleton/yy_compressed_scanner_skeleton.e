@@ -87,6 +87,7 @@ feature -- Scanning
 			yy_rejected_column: INTEGER
 			yy_rejected_position: INTEGER
 			yy_done: BOOLEAN
+			l_content_area: like yy_content_area
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -140,15 +141,24 @@ feature -- Scanning
 					yy_goto := yyMatch
 				when yyMatch then
 						-- Find the next match.
+					l_content_area := yy_content_area
 					from
 						yy_done := False
 					until
 						yy_done
 					loop
 						if yy_ec /= Void then
-							yy_c := yy_ec.item (yy_content_area.item (yy_cp).code)
+							if l_content_area /= Void then
+								yy_c := yy_ec.item (l_content_area.item (yy_cp).code)
+							else
+								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							end
 						else
-							yy_c := yy_content_area.item (yy_cp).code
+							if l_content_area /= Void then
+								yy_c := l_content_area.item (yy_cp).code
+							else
+								yy_c := yy_content.item (yy_cp).code
+							end
 						end
 						if not yyReject_or_variable_trail_context and then yy_accept.item (yy_current_state) /= 0 then
 								-- Save the backing-up info before computing
@@ -457,6 +467,7 @@ feature {NONE} -- Implementation
 		local
 			yy_cp, yy_nb: INTEGER
 			yy_c: INTEGER
+			l_content_area: like yy_content_area
 		do
 				-- Find the start state.
 --	START INLINING
@@ -472,6 +483,7 @@ feature {NONE} -- Implementation
 				yy_state_stack.put (Result, 0)
 				yy_state_count := 1
 			end
+			l_content_area := yy_content_area
 			from
 				yy_cp := yy_start + yy_more_len
 				yy_nb := yy_end
@@ -479,7 +491,11 @@ feature {NONE} -- Implementation
 				yy_cp >= yy_nb
 			loop
 					-- Find the next state.
-				yy_c := yy_content_area.item (yy_cp).code
+				if l_content_area /= Void then
+					yy_c := l_content_area.item (yy_cp).code
+				else
+					yy_c := yy_content.item (yy_cp).code
+				end
 				if yy_c = 0 then
 					yy_c := yyNull_equiv_class
 				elseif yy_ec /= Void then
