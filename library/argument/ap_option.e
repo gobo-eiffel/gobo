@@ -107,7 +107,7 @@ feature -- Access
 			l_long_form: like long_form
 		do
 			if has_long_form then
-				l_long_form := l_long_form
+				l_long_form := long_form
 				check
 					has_long_form: l_long_form /= Void
 				end
