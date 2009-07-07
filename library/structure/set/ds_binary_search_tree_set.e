@@ -243,7 +243,7 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Copy `other' to current.
 		local
-			l_old_cursor_position: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, G]
+			l_old_cursor_position: like root_node
 			l_other_node: like root_node
 		do
 			if other /= Current then
@@ -301,7 +301,7 @@ feature -- Basic operations
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		local
-			l_node: like root_node
+			l_cursor: like new_cursor
 			l_item: G
 		do
 			if other = Current then
@@ -311,14 +311,16 @@ feature -- Basic operations
 			else
 				move_all_cursors_after
 				from
-					l_node := first_node
+					l_cursor := new_cursor
+					l_cursor.start
 				until
-					l_node = Void
+					l_cursor.after
 				loop
-					l_item := l_node.item
-					l_node := successor (l_node)
+					l_item := l_cursor.item
 					if not other.has (l_item) then
-						remove_node (l_node)
+						remove_node (l_cursor.position)
+					else
+						l_cursor.forth
 					end
 				end
 			end
@@ -329,7 +331,7 @@ feature -- Basic operations
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		local
-			l_node: like root_node
+			l_cursor: like new_cursor
 			l_item: G
 		do
 			if other.is_empty then
@@ -339,14 +341,16 @@ feature -- Basic operations
 			else
 				move_all_cursors_after
 				from
-					l_node := first_node
+					l_cursor := new_cursor
+					l_cursor.start
 				until
-					l_node = Void
+					l_cursor.after
 				loop
-					l_item := l_node.item
-					l_node := successor (l_node)
+					l_item := l_cursor.item
 					if other.has (l_item) then
-						remove_node (l_node)
+						remove_node (l_cursor.position)
+					else
+						l_cursor.forth
 					end
 				end
 			end

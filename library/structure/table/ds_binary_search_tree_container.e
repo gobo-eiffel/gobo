@@ -303,7 +303,7 @@ feature {NONE} -- Status report
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 
-	is_node_in_tree (a_node: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]): BOOLEAN is
+	is_node_in_tree (a_node: like root_node): BOOLEAN is
 			-- Is `a_node' in current tree?
 		require
 			a_node_not_void: a_node /= Void
@@ -313,13 +313,13 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Status report
 			end
 		end
 
-	are_nodes_in_same_tree (a_node_1, a_node_2: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]): BOOLEAN is
+	are_nodes_in_same_tree (a_node_1, a_node_2: like root_node): BOOLEAN is
 			-- Has `a_node_1' the same `root_node' as `a_node_2'?
 		require
 			a_node_1_not_void: a_node_1 /= Void
 			a_node_2_not_void: a_node_2 /= Void
 		local
-			l_root_node_1, l_root_node_2: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]
+			l_root_node_1, l_root_node_2: like root_node
 		do
 			from
 				l_root_node_1 := a_node_1
@@ -524,14 +524,14 @@ feature {DS_LINEAR_CURSOR} -- Cursor implementation
 	cursor_forth (a_cursor: like new_cursor) is
 			-- Move `a_cursor' to next position.
 		local
-			l_position: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]
+			l_position: like root_node
 			l_has_cursor, l_add_cursor: BOOLEAN
 		do
 			l_position := a_cursor.position
 			l_has_cursor := l_position /= Void
+			l_add_cursor := True
 			if a_cursor.before then
 				l_position := first_node
-				l_add_cursor := True
 			else
 				l_position := successor_for_cursor (l_position)
 			end
@@ -630,7 +630,7 @@ feature {DS_BILINEAR_CURSOR} -- Cursor implementation
 	cursor_back (a_cursor: like new_cursor) is
 			-- Move `a_cursor' to previous position.
 		local
-			l_position: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]
+			l_position: like root_node
 			l_has_cursor, l_add_cursor: BOOLEAN
 		do
 			l_position := a_cursor.position
@@ -767,7 +767,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER_CURSOR} -- Cursor implementation
 
 feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 
-	predecessor_for_cursor (v: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]): DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K] is
+	predecessor_for_cursor (v: like root_node): like root_node is
 			-- Predecessor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
@@ -805,7 +805,7 @@ feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Cursor implementation
 			predecessor_is_in_tree: Result /= Void implies is_node_in_tree (Result)
 		end
 
-	successor_for_cursor (v: DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K]): DS_BINARY_SEARCH_TREE_CONTAINER_NODE [G, K] is
+	successor_for_cursor (v: like root_node): like root_node is
 			-- Successor of `v' if it exists, Void otherwise
 			-- (Performance: O(height).)
 		require
@@ -1278,7 +1278,7 @@ feature {NONE} -- Removal
 			-- Remove `a_node' from the tree.
 		require
 			a_node_not_void: a_node /= Void
-			a_node_is_from_tree: is_node_in_tree (a_node)
+			a_node_is_in_tree: is_node_in_tree (a_node)
 		local
 			l_in_order_successor: like root_node
 			l_old_cursor_position: like root_node
