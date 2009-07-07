@@ -243,15 +243,14 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Copy `other' to current.
 		local
-			l_old_cursor_position: like root_node
 			l_other_node: like root_node
 		do
 			if other /= Current then
-				if not internal_cursor.off then
-					l_old_cursor_position := internal_cursor.position
+				if internal_cursor = Void then
+					set_internal_cursor (new_cursor)
 				end
-				wipe_out
 				equality_tester := other.equality_tester
+				wipe_out
 				if not other.is_empty then
 					from
 						l_other_node := other.first_node
@@ -259,11 +258,6 @@ feature -- Duplication
 						l_other_node = Void
 					loop
 						put_new (l_other_node.item)
-						if l_old_cursor_position /= Void then
-							if l_old_cursor_position.item = l_other_node.item then
-								internal_cursor.set_position (l_old_cursor_position)
-							end
-						end
 						l_other_node := successor (l_other_node)
 					end
 				end
