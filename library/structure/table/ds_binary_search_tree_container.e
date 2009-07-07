@@ -1725,33 +1725,36 @@ feature {NONE} -- Basic operation
 			-- neither less nor greater than `a_key'.
 			-- (Performance: O(height).)
 		local
+			l_found_node: like root_node
 			l_equality: BOOLEAN
 		do
+			l_found_node := found_node
 			if a_key = Void then
 				if first_node /= Void and then first_node.key = Void then
-					found_node := first_node
+					l_found_node := first_node
 				else
-					found_node := Void
+					l_found_node := Void
 				end
 			else
-				if found_node = Void or else (found_node.key = Void) or else not key_comparator.order_equal (a_key, found_node.key) then
+				if l_found_node = Void or else (l_found_node.key = Void) or else not key_comparator.order_equal (a_key, l_found_node.key) then
 					from
-						found_node := root_node
+						l_found_node := root_node
 					until
-						found_node = Void or else l_equality
+						l_found_node = Void or else l_equality
 					loop
-						if found_node.key = Void then
-							found_node := found_node.right_child
-						elseif key_comparator.less_than (a_key, found_node.key) then
-							found_node := found_node.left_child
-						elseif key_comparator.greater_than (a_key, found_node.key) then
-							found_node := found_node.right_child
+						if l_found_node.key = Void then
+							l_found_node := l_found_node.right_child
+						elseif key_comparator.less_than (a_key, l_found_node.key) then
+							l_found_node := l_found_node.left_child
+						elseif key_comparator.greater_than (a_key, l_found_node.key) then
+							l_found_node := l_found_node.right_child
 						else
 							l_equality := True
 						end
 					end
 				end
 			end
+			found_node := l_found_node
 		end
 
 	search_insert_position (a_key: K) is
@@ -1769,10 +1772,12 @@ feature {NONE} -- Basic operation
 		require
 			tree_not_empty: not is_empty
 		local
+			l_found_node: like root_node
 			l_stop: BOOLEAN
 		do
+			l_found_node := found_node
 			if a_key = Void then
-				found_node := first_node
+				l_found_node := first_node
 				if first_node.key = Void then
 					exact_insert_position_found := True
 				else
@@ -1782,33 +1787,33 @@ feature {NONE} -- Basic operation
 			else
 				exact_insert_position_found := False
 				from
-					found_node := root_node
+					l_found_node := root_node
 					l_stop := False
 				invariant
-					result_not_void: found_node /= Void
+					result_not_void: l_found_node /= Void
 				until
 					l_stop
 				loop
-					if found_node.key = Void then
-						if found_node.right_child /= Void then
-							found_node := found_node.right_child
+					if l_found_node.key = Void then
+						if l_found_node.right_child /= Void then
+							l_found_node := l_found_node.right_child
 						else
 							insert_position_is_left := False
 							l_stop := True
 						end
-					elseif key_comparator.less_than (a_key, found_node.key) then
-						if found_node.left_child = Void then
+					elseif key_comparator.less_than (a_key, l_found_node.key) then
+						if l_found_node.left_child = Void then
 							insert_position_is_left := True
 							l_stop := True
 						else
-							found_node := found_node.left_child
+							l_found_node := l_found_node.left_child
 						end
-					elseif key_comparator.greater_than (a_key, found_node.key) then
-						if found_node.right_child = Void then
+					elseif key_comparator.greater_than (a_key, l_found_node.key) then
+						if l_found_node.right_child = Void then
 							insert_position_is_left := False
 							l_stop := True
 						else
-							found_node := found_node.right_child
+							l_found_node := l_found_node.right_child
 						end
 					else
 						exact_insert_position_found := True
@@ -1816,6 +1821,7 @@ feature {NONE} -- Basic operation
 					end
 				end
 			end
+			found_node := l_found_node
 		ensure
 			result_not_void: found_node /= Void
 			no_left_child: insert_position_is_left and not exact_insert_position_found implies found_node.left_child = Void
