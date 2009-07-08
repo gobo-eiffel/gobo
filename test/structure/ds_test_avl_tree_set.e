@@ -323,6 +323,54 @@ feature -- Test
 			assert ("is_equal3", l_tree_1.is_equal (l_tree_2))
 		end
 
+	test_set_operations
+			-- Test set features.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
+			l_tree_1, l_tree_2, l_tree_3: DS_AVL_TREE_SET [INTEGER]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			create l_tree_2.make (l_comparator)
+			l_tree_1.put_new (1)
+			l_tree_1.put_new (2)
+			l_tree_1.put_new (3)
+			l_tree_1.put_new (4)
+			l_tree_2.put_new (2)
+			l_tree_2.put_new (3)
+			assert ("is_subset1", l_tree_2.is_subset (l_tree_1))
+			assert ("is_superset1", l_tree_1.is_superset (l_tree_2))
+			l_tree_3 := l_tree_1.subtraction (l_tree_2)
+			assert ("is_disjoint1", l_tree_3.is_disjoint (l_tree_2))
+			assert ("is_disjoint2", l_tree_2.is_disjoint (l_tree_3))
+			assert ("count1", l_tree_2.count = 2)
+			assert ("count1", l_tree_3.count = 2)
+			l_tree_1.subtract (l_tree_2)
+			assert ("is_disjoint3", l_tree_1.is_disjoint (l_tree_2))
+			assert ("is_disjoint4", l_tree_2.is_disjoint (l_tree_1))
+			assert ("count3", l_tree_1.count = 2)
+			l_tree_3 := l_tree_1.union (l_tree_2)
+			assert ("is_subset2", l_tree_2.is_subset (l_tree_3))
+			assert ("count4", l_tree_3.count = 4)
+			l_tree_1.merge (l_tree_2)
+			assert ("is_subset3", l_tree_2.is_subset (l_tree_1))
+			assert ("count5", l_tree_1.count = 4)
+			l_tree_3 := l_tree_3.intersection (l_tree_2)
+			assert ("is_equal1", l_tree_3.is_equal (l_tree_2))
+			assert ("count6", l_tree_3.count = 2)
+			l_tree_3 := l_tree_1.twin
+			assert ("count7", l_tree_3.count = 4)
+			l_tree_3.intersect (l_tree_2)
+			assert ("is_equal2", l_tree_3.is_equal (l_tree_2))
+			assert ("count8", l_tree_3.count = 2)
+			l_tree_3 := l_tree_1.symdifference (l_tree_2)
+			assert ("is_disjoint5", l_tree_3.is_disjoint (l_tree_2))
+			assert ("count9", l_tree_3.count = 2)
+			l_tree_1.symdif (l_tree_2)
+			assert ("is_disjoint6", l_tree_1.is_disjoint (l_tree_2))
+			assert ("count10", l_tree_1.count = 2)
+		end
+
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN is
