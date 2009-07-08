@@ -298,6 +298,31 @@ feature -- Test
 			assert ("for_all2", l_set.for_all (agent INTEGER_.is_even))
 		end
 
+	test_copy is
+			-- Test features based on `copy'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_RED_BLACK_TREE_SET [STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new ("one")
+			l_tree_1.put_new ("two")
+			l_tree_1.put_new ("three")
+			l_tree_2 := l_tree_1.twin
+			assert ("l_tree_1_count1", l_tree_1.count = 3)
+			assert ("is_equal1", l_tree_1.is_equal (l_tree_2))
+			l_tree_2.remove ("one")
+			assert ("l_tree_1_count2", l_tree_1.count = 3)
+			assert ("not_is_equal1", not l_tree_1.is_equal (l_tree_2))
+			l_tree_2.copy (l_tree_1)
+			assert ("l_tree_1_count3", l_tree_1.count = 3)
+			assert ("is_equal2", l_tree_1.is_equal (l_tree_2))
+			l_tree_2 := clone (l_tree_1)
+			assert ("l_tree_1_count4", l_tree_1.count = 3)
+			assert ("is_equal3", l_tree_1.is_equal (l_tree_2))
+		end
+
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN is

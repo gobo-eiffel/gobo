@@ -22,7 +22,7 @@ create
 
 feature -- Test
 
-	test_binary_search_tree is
+	test_avl_tree is
 			-- Test the basic table features of binary search tree.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -55,7 +55,7 @@ feature -- Test
 			assert ("empty2", l_tree.is_empty)
 		end
 
-	test_binary_search_tree_cursors is
+	test_avl_tree_cursor is
 			-- Test the cursor implementation for binary search trees.
 		local
 			l_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
@@ -346,6 +346,31 @@ feature -- Test
 				-- Empty tree.
 			create l_tree.make (l_comparator)
 			assert ("empty", l_tree.for_all (agent INTEGER_.is_even))
+		end
+
+	test_copy is
+			-- Test features based on `copy'.
+		local
+			l_comparator: KL_COMPARABLE_COMPARATOR [STRING]
+			l_tree_1, l_tree_2: DS_AVL_TREE [INTEGER, STRING]
+		do
+			create l_comparator.make
+			create l_tree_1.make (l_comparator)
+			l_tree_1.put_new (1, "one")
+			l_tree_1.put_new (2, "two")
+			l_tree_1.put_new (3, "three")
+			l_tree_2 := l_tree_1.twin
+			assert ("l_tree_1_count1", l_tree_1.count = 3)
+			assert ("is_equal1", l_tree_1.is_equal (l_tree_2))
+			l_tree_2.remove ("one")
+			assert ("l_tree_1_count2", l_tree_1.count = 3)
+			assert ("not_is_equal1", not l_tree_1.is_equal (l_tree_2))
+			l_tree_2.copy (l_tree_1)
+			assert ("l_tree_1_count3", l_tree_1.count = 3)
+			assert ("is_equal2", l_tree_1.is_equal (l_tree_2))
+			l_tree_2 := clone (l_tree_1)
+			assert ("l_tree_1_count4", l_tree_1.count = 3)
+			assert ("is_equal3", l_tree_1.is_equal (l_tree_2))
 		end
 
 feature {NONE} -- Implementation
