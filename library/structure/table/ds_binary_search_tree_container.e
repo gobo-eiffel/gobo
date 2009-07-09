@@ -1726,9 +1726,15 @@ feature {NONE} -- Basic operation
 			-- (Performance: O(height).)
 		local
 			l_found_node: like root_node
+			l_key_comparator: like key_comparator
 			l_equality: BOOLEAN
 		do
+				-- Accessing references via local variables is faster. As the
+				-- performance of the binary search trees heavily depends on
+				-- this routine, we can optimize it by accessing `found_node'
+				-- and `key_comparator' via local variables.
 			l_found_node := found_node
+			l_key_comparator := key_comparator
 			if a_key = Void then
 				if first_node /= Void and then first_node.key = Void then
 					l_found_node := first_node
@@ -1736,7 +1742,7 @@ feature {NONE} -- Basic operation
 					l_found_node := Void
 				end
 			else
-				if l_found_node = Void or else (l_found_node.key = Void) or else not key_comparator.order_equal (a_key, l_found_node.key) then
+				if l_found_node = Void or else (l_found_node.key = Void) or else not l_key_comparator.order_equal (a_key, l_found_node.key) then
 					from
 						l_found_node := root_node
 					until
@@ -1744,9 +1750,9 @@ feature {NONE} -- Basic operation
 					loop
 						if l_found_node.key = Void then
 							l_found_node := l_found_node.right_child
-						elseif key_comparator.less_than (a_key, l_found_node.key) then
+						elseif l_key_comparator.less_than (a_key, l_found_node.key) then
 							l_found_node := l_found_node.left_child
-						elseif key_comparator.greater_than (a_key, l_found_node.key) then
+						elseif l_key_comparator.greater_than (a_key, l_found_node.key) then
 							l_found_node := l_found_node.right_child
 						else
 							l_equality := True
@@ -1773,9 +1779,15 @@ feature {NONE} -- Basic operation
 			tree_not_empty: not is_empty
 		local
 			l_found_node: like root_node
+			l_key_comparator: like key_comparator
 			l_stop: BOOLEAN
 		do
+				-- Accessing references via local variables is faster. As the
+				-- performance of the binary search trees heavily depends on
+				-- this routine, we can optimize it by accessing `found_node'
+				-- and `key_comparator' via local variables.
 			l_found_node := found_node
+			l_key_comparator := key_comparator
 			if a_key = Void then
 				l_found_node := first_node
 				if first_node.key = Void then
@@ -1801,14 +1813,14 @@ feature {NONE} -- Basic operation
 							insert_position_is_left := False
 							l_stop := True
 						end
-					elseif key_comparator.less_than (a_key, l_found_node.key) then
+					elseif l_key_comparator.less_than (a_key, l_found_node.key) then
 						if l_found_node.left_child = Void then
 							insert_position_is_left := True
 							l_stop := True
 						else
 							l_found_node := l_found_node.left_child
 						end
-					elseif key_comparator.greater_than (a_key, l_found_node.key) then
+					elseif l_key_comparator.greater_than (a_key, l_found_node.key) then
 						if l_found_node.right_child = Void then
 							insert_position_is_left := False
 							l_stop := True
