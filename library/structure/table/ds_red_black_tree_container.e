@@ -8,7 +8,7 @@ indexing
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,15 @@ inherit
 
 	DS_BINARY_SEARCH_TREE_CONTAINER [G, K]
 		redefine
+			new_cursor,
 			root_node
+		end
+
+feature -- Access
+
+	new_cursor: DS_RED_BLACK_TREE_CONTAINER_CURSOR [G, K] is
+			-- New external cursor
+		deferred
 		end
 
 feature {NONE} -- Element change

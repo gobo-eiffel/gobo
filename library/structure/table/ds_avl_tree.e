@@ -8,7 +8,7 @@ indexing
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,7 @@ inherit
 			on_node_added,
 			on_node_removed
 		redefine
+			new_cursor,
 			root_node
 		end
 
@@ -38,6 +39,14 @@ inherit
 create
 
 	make
+
+feature -- Access
+
+	new_cursor: DS_AVL_TREE_CURSOR [G, K] is
+			-- New external cursor
+		do
+			create Result.make (Current)
+		end
 
 feature {NONE} -- Implementation
 

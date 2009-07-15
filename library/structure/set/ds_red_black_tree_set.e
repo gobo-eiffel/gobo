@@ -8,7 +8,7 @@ indexing
 		It is guaranteed that `height' is always about `log_2 (count)'.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,7 @@ inherit
 			on_root_node_removed,
 			on_node_removed
 		redefine
+			new_cursor,
 			equality_tester,
 			root_node
 		end
@@ -39,6 +40,7 @@ inherit
 			cursor_search_back,
 			has_void
 		redefine
+			new_cursor,
 			equality_tester,
 			root_node
 		end
@@ -48,6 +50,12 @@ create
 	make
 
 feature -- Access
+
+	new_cursor: DS_RED_BLACK_TREE_SET_CURSOR [G] is
+			-- New external cursor
+		do
+			create Result.make (Current)
+		end
 
 	equality_tester: KL_COMPARATOR [G]
 			-- Comparison criterion for items

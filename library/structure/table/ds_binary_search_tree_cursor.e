@@ -5,7 +5,7 @@ indexing
 		"Cursors for in-order traversal of binary search trees"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2009, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,7 @@ inherit
 				key
 		redefine
 			container,
+			position,
 			next_cursor
 		end
 
@@ -38,6 +39,11 @@ feature -- Access
 
 	container: DS_BINARY_SEARCH_TREE [G, K]
 			-- Binary search tree traversed
+
+feature {DS_BINARY_SEARCH_TREE_CONTAINER} -- Access
+
+	position: DS_BINARY_SEARCH_TREE_NODE [G, K]
+			-- Current position in the underlying tree
 
 feature {DS_BILINEAR} -- Implementation
 
