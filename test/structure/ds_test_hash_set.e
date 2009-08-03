@@ -194,6 +194,23 @@ feature -- Test
 			assert ("for_all2", a_set1.for_all (agent INTEGER_.is_even))
 		end
 
+	test_compress is
+			-- Test feature 'compress'.
+		local
+			l_set: DS_HASH_SET [INTEGER]
+		do
+			create l_set.make_default
+			l_set.force (5)
+			l_set.force (6)
+			l_set.force (10)
+			l_set.remove (6)
+			l_set.compress
+			assert ("has_5", l_set.has (5))
+			assert ("no_has_6", not l_set.has (6))
+			assert ("has_10", l_set.has (10))
+			assert_integers_equal ("count", 2, l_set.count)
+		end
+
 feature {NONE} -- Implementation
 
 	same_integers (i, j: INTEGER): BOOLEAN is

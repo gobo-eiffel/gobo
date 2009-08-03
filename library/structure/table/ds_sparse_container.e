@@ -475,6 +475,9 @@ feature -- Optimization
 						if j /= i then
 							item_storage_put (item_storage_item (i), j)
 							key_storage_put (key_storage_item (i), j)
+								-- Make sure that the slot at position `j' is considered as
+								-- a valid slot before calling `move_all_cursors'.
+							clashes_put (No_position, j)
 							move_all_cursors (i, j)
 						end
 					end

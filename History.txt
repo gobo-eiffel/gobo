@@ -42,6 +42,11 @@ Version 3.10 - ?
 	* Fixed bug in the string formatter where the flags '+' and space where
 	  not taken into account. See bug#2768748.
 
+	Gobo Eiffel Structure Library:
+
+	* Fixed assertion violation in feature `compress' from DS_SPARSE_CONTAINER.
+	  See bug#2831433.
+
 	Gobo Eiffel Time Library:
 
 	* Added class DT_STOPWATCH in cluster 'stopwatch'.
