@@ -368,9 +368,6 @@ feature -- Test
 			l_tree_2.copy (l_tree_1)
 			assert ("l_tree_1_count3", l_tree_1.count = 3)
 			assert ("is_equal2", l_tree_1.is_equal (l_tree_2))
-			l_tree_2 := clone (l_tree_1)
-			assert ("l_tree_1_count4", l_tree_1.count = 3)
-			assert ("is_equal3", l_tree_1.is_equal (l_tree_2))
 		end
 
 feature {NONE} -- Implementation
