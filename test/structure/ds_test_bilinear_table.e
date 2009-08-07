@@ -302,7 +302,7 @@ feature {NONE} -- Test
 			assert ("is_1", l_cursor_1.item = 1)
 			l_cursor_2.start
 			l_cursor_3 := l_cursor_1
-			assert ("same_position", l_cursor_2.same_position (l_cursor_3))
+			assert ("same_position", l_cursor_2 ~ l_cursor_3)
 				--
 			l_cursor_2.finish
 			assert ("is_4", l_cursor_2.item = 4)
