@@ -300,13 +300,13 @@ feature -- Status report
 			-- "POINTER", "REAL_32", "REAL_64"?
 
 	is_unknown: BOOLEAN is
-			-- Is current class the "*UNKNOWN*" class?
+			-- Is current class an "*UNKNOWN*" class?
 			-- This class does not conform to any other class,
 			-- not even itself.
 		do
-			Result := (Current = tokens.unknown_class)
+			Result := group /= Void and then group.is_unknown
 		ensure
-			definition: Result = (Current = tokens.unknown_class)
+			definition: Result = (group /= Void and then group.is_unknown)
 		end
 
 feature {ET_SYSTEM} -- Status setting
