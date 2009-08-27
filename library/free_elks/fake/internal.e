@@ -137,6 +137,12 @@ feature
 			print ("TODO: INTERNAL.generic_dynamic_type%N")
 		end
 
+	class_name_of_type (type_id: INTEGER): STRING
+			-- Name of class associated with dynamic type `type_id'.
+		do
+			print ("TODO: INTERNAL.class_name_of_type%N")
+		end
+
 	none_type: INTEGER is -2
 			-- Type ID representation for NONE.
 
