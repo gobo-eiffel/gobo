@@ -45,6 +45,8 @@ feature -- Meta
 			output_constant (Space_s)
 			output (a_content)
 			output_constant (Pi_end)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_name, a_content)
 		end
 
@@ -54,6 +56,8 @@ feature -- Meta
 			output_constant (Comment_start)
 			output (a_content)
 			output_constant (Comment_end)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_content)
 		end
 
@@ -62,36 +66,57 @@ feature -- Tag
 	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print start of start tag.
 		do
+			flush_pending_tag_end
+
 			output_constant (Stag_start)
 			output_name (a_prefix, a_local_part)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Print attribute.
 		do
+			flush_pending_tag_end
+
 			output_constant (Space_s)
 			output_name (a_prefix, a_local_part)
 			output_constant (Eq_s)
 			output_constant (Quot_s)
 			output_quote_escaped (a_value)
 			output_constant (Quot_s)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
 	on_start_tag_finish is
 			-- Print end of start tag.
 		do
-			output_constant (Stag_end)
+			if empty_element_tags_enabled then
+				is_tag_end_pending := True
+			else
+				output_constant (stag_end)
+			end
+			last_call_was_start_tag_finish := True
+
 			Precursor
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Print end tag.
 		do
-			output_constant (Etag_start)
-			output_name (a_prefix, a_local_part)
-			output_constant (Etag_end)
+			if last_call_was_start_tag_finish and empty_element_tags_enabled then
+				output_constant (emptytag_end)
+				is_tag_end_pending := False
+			else
+				output_constant (Etag_start)
+				output_name (a_prefix, a_local_part)
+				output_constant (Etag_end)
+			end
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
@@ -102,8 +127,47 @@ feature -- Content
 			-- NOT atomic: successive content may be different.
 			-- Default: forward event to 'next'.
 		do
+			flush_pending_tag_end
+
 			output_escaped (a_content)
+
+			last_call_was_start_tag_finish := False
 			Precursor (a_content)
+		end
+
+feature -- Settings
+
+	empty_element_tags_enabled: BOOLEAN
+			-- Do we use empty element tags
+			-- i.e. <tag/> instead of <tag><tag/>
+
+	enable_empty_element_tags is
+			-- Use empty element tags
+		do
+			empty_element_tags_enabled := True
+		end
+
+	disable_empty_element_tags is
+			-- Do not use empty element tags
+		do
+			empty_element_tags_enabled := False
+		end
+
+feature {NONE} -- Implementation
+
+	last_call_was_start_tag_finish: BOOLEAN
+			-- Was the last `on_*' feature called `on_start_tag_finished' ?
+
+	is_tag_end_pending: BOOLEAN
+			-- Do we have a pending ">" or "/>" to be written ?
+
+	flush_pending_tag_end is
+			-- Output the pending tag end, if any
+		do
+			if is_tag_end_pending then
+				output_constant (stag_end)
+				is_tag_end_pending := False
+			end
 		end
 
 feature {NONE} -- Escaped

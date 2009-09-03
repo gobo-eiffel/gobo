@@ -73,6 +73,11 @@ Version 3.10 - ?
 	  (e.g. 'attached {T} exp as x' with '{T}' and 'x' optional). See
 	  bug#2682694.
 
+	Gobo Eiffel XML Library:
+
+	* Added option to let the XML pretty printer use empty element tags
+	  <tag/> instead of <tag><tag/>.
+
 	Miscellaneous:
 
 	* Removed classes and features that had been marked as obsolete
