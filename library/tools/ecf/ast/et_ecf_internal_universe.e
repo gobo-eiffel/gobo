@@ -5,7 +5,7 @@ indexing
 		"ECF internal universes (i.e. either systems or libraries)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature -- Setting
 			-- Select `a_target' in `a_state'.
 			-- Update `clusters' and `libraries' accordingly.
 		require
-			not_selected_yet: selected_target /= Void
+			not_selected_yet: selected_target = Void
 			a_target_not_void: a_target /= Void
 			valid_target: targets /= Void and then targets.has (a_target)
 			a_state_not_void: a_state /= Void
