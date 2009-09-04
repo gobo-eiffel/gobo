@@ -89,6 +89,10 @@ create
 	make_variant,
 	make_when
 
+convert
+
+	to_identifier: {ET_IDENTIFIER, ET_FEATURE_NAME, ET_EXTENDED_FEATURE_NAME}
+
 feature {NONE} -- Initialization
 
 	make_agent is
@@ -1230,6 +1234,16 @@ feature -- Status report
 			-- Is current keyword 'xor'?
 		do
 			Result := (code = tokens.infix_xor_code)
+		end
+
+feature -- Conversion
+
+	to_identifier: ET_IDENTIFIER is
+			-- Identifier version of current keyword
+		do
+			create Result.make (text)
+		ensure
+			to_identifier_not_void: Result /= Void
 		end
 
 feature -- Processing
