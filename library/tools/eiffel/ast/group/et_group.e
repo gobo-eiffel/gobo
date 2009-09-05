@@ -63,6 +63,11 @@ feature -- Status report
 		deferred
 		end
 
+	use_obsolete_syntax: BOOLEAN
+			-- Do the classes in the current group use an obsolete syntax
+			-- (e.g. using 'attribute' and 'note' as identifiers instead of
+			-- keywords)?
+
 	is_preparsed: BOOLEAN is
 			-- Has current group already been traversed to look for its classes?
 		deferred
@@ -320,6 +325,16 @@ feature -- Nested
 	parent: ET_GROUP is
 			-- Parent group
 		deferred
+		end
+
+feature -- Status setting
+
+	set_use_obsolete_syntax (b: BOOLEAN) is
+			-- Set `use_obsolete_syntax' to `b'.
+		do
+			use_obsolete_syntax := b
+		ensure
+			use_obsolete_syntax_set: use_obsolete_syntax = b
 		end
 
 feature -- Setting

@@ -122,7 +122,11 @@ feature -- Status report
 			-- Should 'attribute' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_attribute_keyword
+			if group.use_obsolete_syntax then
+				Result := False
+			else
+				Result := current_system.use_attribute_keyword
+			end
 		end
 
 	use_detachable_keyword: BOOLEAN is
@@ -136,7 +140,11 @@ feature -- Status report
 			-- Should 'note' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_note_keyword
+			if group.use_obsolete_syntax then
+				Result := False
+			else
+				Result := current_system.use_note_keyword
+			end
 		end
 
 	use_reference_keyword: BOOLEAN is
