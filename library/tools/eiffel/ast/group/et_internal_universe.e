@@ -3,13 +3,13 @@ indexing
 	description:
 	"[
 		Eiffel class universes whose classes can be found locally
-		in clusters, or exported by libraries or .NET assemlies.
+		in clusters, or imported from libraries or .NET assemlies.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-12-23 16:09:12 +0100 (Tue, 23 Dec 2008) $"
+	revision: "$Revision: 6570 $"
 
 deferred class ET_INTERNAL_UNIVERSE
 
@@ -22,7 +22,11 @@ inherit
 			preparse_recursive,
 			parse_all_local,
 			parse_all_recursive,
-			add_universe_recursive
+			import_classes,
+			add_universe_recursive,
+			universes_do_all,
+			universes_do_if,
+			adapted_universe
 		end
 
 feature {NONE} -- Initialization
@@ -74,44 +78,10 @@ feature -- Access
 			-- Clusters
 
 	libraries: ET_ADAPTED_LIBRARIES
-			-- Libraries
+			-- Libraries that current universe depends on
 
 	dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
-			-- .NET assemblies
-
-	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
-			-- Classes locally declared in current universe indexed by groups;
-			-- Create a new data structure at each call
-		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			l_class: ET_CLASS
-			l_group: ET_GROUP
-			l_classes: DS_ARRAYED_LIST [ET_CLASS]
-		do
-			create Result.make_map (cluster_count)
-			l_cursor := classes.new_cursor
-			from l_cursor.start until l_cursor.after loop
-				from
-					l_class := l_cursor.item
-				until
-					l_class = Void
-				loop
-					if l_class.universe = Current then
-						l_group := l_class.group
-						Result.search (l_group)
-						if Result.found then
-							l_classes := Result.found_item
-						else
-							create l_classes.make (initial_classes_in_group_capacity)
-							Result.force_last_new (l_classes, l_group)
-						end
-						l_classes.force_last (l_class)
-					end
-					l_class := l_class.overridden_class
-				end
-				l_cursor.forth
-			end
-		end
+			-- .NET assemblies that current universe depends on
 
 	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
 			-- Cluster named `a_names' in universe
@@ -141,6 +111,27 @@ feature -- Access
 			Result := clusters.subcluster_with_absolute_pathname (a_pathname)
 		ensure
 			not_void_if_has: has_cluster_with_absolute_pathname (a_pathname) implies Result /= Void
+		end
+
+	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE is
+			-- Universe corresponding to `a_universe' that current universe
+			-- depends on if any, Void otherwise
+			--
+			-- Note that `a_universe' may be imported twice by the current
+			-- universe. Return one of them in that case.
+		local
+			l_library: ET_LIBRARY
+			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
+		do
+			l_library ?= a_universe
+			if l_library /= Void then
+				Result := libraries.adapted_library (l_library)
+			else
+				l_dotnet_assembly ?= a_universe
+				if l_dotnet_assembly /= Void then
+					Result := dotnet_assemblies.adapted_dotnet_assembly (l_dotnet_assembly)
+				end
+			end
 		end
 
 feature -- Measurement
@@ -246,6 +237,21 @@ feature -- Iteration
 			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.clusters_do_explicit_local (an_action))
 		end
 
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+			-- Apply `an_action' to every universe that current universe depends on.
+		do
+			libraries.universes_do_all (an_action)
+			dotnet_assemblies.universes_do_all (an_action)
+		end
+
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+			-- Apply `an_action' to every universe that current universe depends on and
+			-- which satisfies `a_test'.
+		do
+			libraries.universes_do_if (an_action, a_test)
+			dotnet_assemblies.universes_do_if (an_action, a_test)
+		end
+
 	internal_universes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_INTERNAL_UNIVERSE]]) is
 			-- Apply `an_action' on current universe and recursively on
 			-- the internal universes it depends on.
@@ -316,126 +322,116 @@ feature -- Parsing
 
 	preparse_local is
 			-- Build a mapping between class names and their filenames and
-			-- populate `classes' (both with classes declared locally and
-			-- exported by other universes which are assumed to have been
-			-- preparsed before this call), even if the classes have not been
+			-- populate `classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
 			-- are added to `classes', but are not parsed.
 			--
+			-- Note that only classes declared locally will be taken into
+			-- account. Classes from other universes will be imported later,
+			-- when they will have been preparsed as well.
+			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
 		do
-			classes_modified := False
-			classes_added := False
 			if not is_preparsed then
 				is_preparsed := True
-				import_classes
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_preparser))
 			else
 -- TODO: .NET assemblies are currently considered read-only.
--- TODO: take care of classes which have been moved for a library to the current universe
--- or vice-versa.
-				libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_classes_modified (Current))
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				reset_modified_classes
+				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.reset_local_modified_classes)
+				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_local_classes)
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_preparser))
-				if classes_modified then
-						-- A class has been modified (or removed) or
-						-- may have been overridden by a new class.
-					reset_classes_incremental
-				end
 			end
 		end
 
 	preparse_recursive is
 			-- Build a mapping between class names and their filenames and
-			-- populate `classes' (both with classes declared locally and
-			-- exported by other universes which have themselves been preparsed
-			-- recursively during this call), even if the classes have not been
+			-- populate `classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
 			-- are added to `classes', but are not parsed.
 			--
+			-- Note that both locally declared classes and classes imported
+			-- from other universes (after having themselves been preparsed
+			-- recursively) will be taken into account.
+			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
 		local
 			l_assemblies: ET_DOTNET_ASSEMBLIES
 		do
+				-- First preparse locally all dependent universes.
 			create l_assemblies.make_empty
 			dotnet_assemblies.do_all (agent l_assemblies.put_last)
 			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse_local)
-			libraries.do_ordered (agent {ET_LIBRARY}.preparse_local)
+			libraries.do_recursive (agent {ET_LIBRARY}.preparse_local)
 			preparse_local
+				-- Then for each universe, import classes from other universes.
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
+			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
+			import_classes
+				-- Reset incrementally all classes that may have been
+				-- affected by changes made above.
+			if classes_modified then
+				reset_classes_incremental
+			end
 		end
 
 	parse_all_local is
 			-- Parse all classes declared locally in the current universe.
-			-- There is not need to call one of the preparse routines
+			-- There is no need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `classes' will be populated (both with classes
-			-- declared locally and those exported by other universes which
-			-- are assumed to have been preparsed before this call).
+			-- this process and `classes' will be populated.
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
 			-- the classes that have been modified or were not parsed yet.
 			--
+			-- Note that only classes declared locally will be taken into
+			-- account. Classes from other universes will be imported later,
+			-- when they will have been (pre)parsed as well.
+			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
 		do
-			classes_modified := False
-			classes_added := False
 			if not is_preparsed then
 				is_preparsed := True
-				import_classes
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_parser))
 			else
 -- TODO: .NET assemblies are currently considered read-only.
--- TODO: take care of classes which have been moved for a library to the current universe
--- or vice-versa.
-				libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_classes_modified (Current))
 					-- Take care of possibly removed classes (either their old files do not exist
 					-- anymore, or they have been modified and may contain another class).
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				reset_modified_classes
+				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.reset_local_modified_classes)
+				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_local_classes)
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_parser))
-				if classes_modified then
-						-- A class has been modified (or removed) or
-						-- may have been overridden by a new class.
-					reset_classes_incremental
-				end
 			end
 		end
 
 	parse_all_recursive is
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
-			-- depends on. There is not need to call one of the preparse
+			-- depends on. There is no need to call one of the preparse
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
 			-- this process and `classes' will be populated (both with classes
-			-- declared locally and those exported by other universes which
+			-- declared locally and those imported from other universes which
 			-- have themselves been parsed recursively during this call).
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
@@ -444,83 +440,34 @@ feature -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
 		local
 			l_assemblies: ET_DOTNET_ASSEMBLIES
 		do
+				-- First preparse locally all dependent universes.
 			create l_assemblies.make_empty
 			dotnet_assemblies.do_all (agent l_assemblies.put_last)
 			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all_local)
-			libraries.do_ordered (agent {ET_LIBRARY}.parse_all_local)
+			libraries.do_recursive (agent {ET_LIBRARY}.parse_all_local)
 			parse_all_local
+				-- Then for each universe, import classes from other universes.
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
+			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
+			import_classes
+				-- Reset incrementally all classes that may have been
+				-- affected by changes made above.
+			if classes_modified then
+				reset_classes_incremental
+			end
 		end
 
-feature {NONE} -- Parsing
+feature {ET_UNIVERSE} -- Parsing
 
 	import_classes is
 			-- Import classes made available (i.e. exported) by other universes.
 		do
-			if not libraries.is_empty then
-				libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.export_classes (Current))
--- TODO: take into account class renaming and class name clashes with NONE:
-				classes.force_last (current_system.none_class, current_system.none_class.name)
-				if eiffel_class (current_system.any_class.name) /= current_system.any_class then
--- TODO: report error
-				end
-			else
-				classes.force_last (current_system.any_class, current_system.any_class.name)
-				classes.force_last (current_system.arguments_class, current_system.arguments_class.name)
-				classes.force_last (current_system.array_class, current_system.array_class.name)
-				classes.force_last (current_system.bit_class, current_system.bit_class.name)
-				classes.force_last (current_system.boolean_class, current_system.boolean_class.name)
-				classes.force_last (current_system.boolean_ref_class, current_system.boolean_ref_class.name)
-				classes.force_last (current_system.character_8_class, current_system.character_8_class.name)
-				classes.force_last (current_system.character_8_ref_class, current_system.character_8_ref_class.name)
-				classes.force_last (current_system.character_32_class, current_system.character_32_class.name)
-				classes.force_last (current_system.character_32_ref_class, current_system.character_32_ref_class.name)
-				classes.force_last (current_system.disposable_class, current_system.disposable_class.name)
-				classes.force_last (current_system.function_class, current_system.function_class.name)
-				classes.force_last (current_system.identified_routines_class, current_system.identified_routines_class.name)
-				classes.force_last (current_system.integer_8_class, current_system.integer_8_class.name)
-				classes.force_last (current_system.integer_8_ref_class, current_system.integer_8_ref_class.name)
-				classes.force_last (current_system.integer_16_class, current_system.integer_16_class.name)
-				classes.force_last (current_system.integer_16_ref_class, current_system.integer_16_ref_class.name)
-				classes.force_last (current_system.integer_32_class, current_system.integer_32_class.name)
-				classes.force_last (current_system.integer_32_ref_class, current_system.integer_32_ref_class.name)
-				classes.force_last (current_system.integer_64_class, current_system.integer_64_class.name)
-				classes.force_last (current_system.integer_64_ref_class, current_system.integer_64_ref_class.name)
-				classes.force_last (current_system.memory_class, current_system.memory_class.name)
-				classes.force_last (current_system.native_array_class, current_system.native_array_class.name)
-				classes.force_last (current_system.natural_8_class, current_system.natural_8_class.name)
-				classes.force_last (current_system.natural_8_ref_class, current_system.natural_8_ref_class.name)
-				classes.force_last (current_system.natural_16_class, current_system.natural_16_class.name)
-				classes.force_last (current_system.natural_16_ref_class, current_system.natural_16_ref_class.name)
-				classes.force_last (current_system.natural_32_class, current_system.natural_32_class.name)
-				classes.force_last (current_system.natural_32_ref_class, current_system.natural_32_ref_class.name)
-				classes.force_last (current_system.natural_64_class, current_system.natural_64_class.name)
-				classes.force_last (current_system.natural_64_ref_class, current_system.natural_64_ref_class.name)
-				classes.force_last (current_system.none_class, current_system.none_class.name)
-				classes.force_last (current_system.platform_class, current_system.platform_class.name)
-				classes.force_last (current_system.pointer_class, current_system.pointer_class.name)
-				classes.force_last (current_system.pointer_ref_class, current_system.pointer_ref_class.name)
-				classes.force_last (current_system.predicate_class, current_system.predicate_class.name)
-				classes.force_last (current_system.procedure_class, current_system.procedure_class.name)
-				classes.force_last (current_system.real_32_class, current_system.real_32_class.name)
-				classes.force_last (current_system.real_32_ref_class, current_system.real_32_ref_class.name)
-				classes.force_last (current_system.real_64_class, current_system.real_64_class.name)
-				classes.force_last (current_system.real_64_ref_class, current_system.real_64_ref_class.name)
-				classes.force_last (current_system.routine_class, current_system.routine_class.name)
-				classes.force_last (current_system.special_class, current_system.special_class.name)
-				classes.force_last (current_system.string_8_class, current_system.string_8_class.name)
-				classes.force_last (current_system.string_32_class, current_system.string_32_class.name)
-				classes.force_last (current_system.system_object_class, current_system.system_object_class.name)
-				classes.force_last (current_system.system_string_class, current_system.system_string_class.name)
-				classes.force_last (current_system.tuple_class, current_system.tuple_class.name)
-				classes.force_last (current_system.type_class, current_system.type_class.name)
-				classes.force_last (current_system.typed_pointer_class, current_system.typed_pointer_class.name)
-			end
+			classes.do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_imported_classes)
+			libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.export_classes (Current))
 			dotnet_assemblies.do_adapted (agent {ET_ADAPTED_DOTNET_ASSEMBLY}.export_classes (Current))
 		end
 

@@ -5,7 +5,7 @@ indexing
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -140,6 +140,15 @@ feature -- Cluster error status
 	reportable_gcaab_error (a_cluster: ET_CLUSTER): BOOLEAN is
 			-- Can a GCAAB error be reported when it
 			-- appears in `a_cluster'?
+		do
+			Result := False
+		end
+
+feature -- Universe error status
+
+	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Can a VSCN error be reported when it
+			-- appears in `a_universe'?
 		do
 			Result := False
 		end
@@ -680,13 +689,6 @@ feature -- Validity error status
 
 	reportable_vrle2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VRLE-2 error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vscn_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a VSCN error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

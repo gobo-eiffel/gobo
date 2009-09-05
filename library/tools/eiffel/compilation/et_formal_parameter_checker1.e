@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -83,11 +83,11 @@ feature -- Validity checking
 				from i := 1 until i > nb loop
 					a_formal := a_parameters.formal_parameter (i)
 					a_name := a_formal.name
-					if universe.has_class (a_name) then
+					if current_universe.has_class (a_name) then
 							-- The name of a formal parameter cannot be the
 							-- name of a class in the universe.
 						set_fatal_error
-						other_class := universe.eiffel_class (a_name)
+						other_class := current_universe.adapted_class (a_name).actual_class
 						error_handler.report_vcfg1a_error (current_class, a_formal, other_class)
 					else
 						from j := 1 until j >= i loop
@@ -449,7 +449,7 @@ feature {NONE} -- Constraint cycles
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					any_type := current_system.any_class
+					any_type := current_universe.any_type
 					a_parameters_count := a_parameters.count
 					a_sorted_formals := direct_formal_parameter_sorter.sorted_items
 					nb := a_sorted_formals.count

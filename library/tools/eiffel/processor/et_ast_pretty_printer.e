@@ -1029,7 +1029,7 @@ feature {ET_AST_NODE} -- Processing
 				print_new_line
 				print_new_line
 			end
-			a_parents := a_class.parents
+			a_parents := a_class.parent_clause
 			if a_parents /= Void then
 				a_parents.process (Current)
 				process_comments

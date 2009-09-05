@@ -9,7 +9,7 @@ indexing
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -61,9 +61,9 @@ feature {NONE} -- Type validity
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_class: ET_CLASS
+			l_class: ET_NAMED_CLASS
 		do
-			l_class := a_type.base_class
+			l_class := a_type.named_base_class
 			if not l_class.features_flattened or else l_class.has_flattening_error then
 				set_fatal_error
 			end
@@ -76,11 +76,11 @@ feature {NONE} -- Type validity
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_class: ET_CLASS
+			l_class: ET_NAMED_CLASS
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
-			l_class := a_type.base_class
+			l_class := a_type.named_base_class
 			if not l_class.features_flattened or else l_class.has_flattening_error then
 				set_fatal_error
 			else
@@ -115,11 +115,11 @@ feature {NONE} -- Type validity
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_class: ET_CLASS
+			l_class: ET_NAMED_CLASS
 			i, nb: INTEGER
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			l_class := a_type.base_class
+			l_class := a_type.named_base_class
 			if not l_class.features_flattened or else l_class.has_flattening_error then
 				set_fatal_error
 			else

@@ -5,7 +5,7 @@ indexing
 		"ECF systems or libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a new ECF config.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 			a_filename_not_void: a_filename /= Void
 		do
 			name := a_name
@@ -83,6 +84,7 @@ feature -- Setting
 invariant
 
 	name_not_void: name /= Void
+	name_not_empty: not name.is_empty
 	filename_not_void: filename /= Void
 	clients_not_void: clients /= Void
 	no_void_client: not clients.has_void

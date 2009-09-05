@@ -5,7 +5,7 @@ indexing
 		"ECF Eiffel libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,14 +18,17 @@ inherit
 		rename
 			make as make_library
 		redefine
-			name
+			name, library
 		end
 
 	ET_ECF_INTERNAL_UNIVERSE
 		rename
-			make as make_config
+			make as make_config,
+			universe as library
+		undefine
+			kind_name
 		redefine
-			name
+			name, library
 		end
 
 create
@@ -38,11 +41,12 @@ feature {NONE} -- Initialization
 			-- Create a new ECF library.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 			a_filename_not_void: a_filename /= Void
 			a_system_not_void: a_system /= Void
 		do
 			make_config (a_name, a_filename)
-			make_library (a_system)
+			make_library (a_name, a_system)
 		ensure
 			name_set: name = a_name
 			filename_set: filename = a_filename
@@ -53,5 +57,8 @@ feature -- Access
 
 	name: STRING
 			-- Name
-			
+
+	library: ET_LIBRARY
+			-- Eiffel library being adapted
+
 end

@@ -1869,7 +1869,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_client_comma (a_name: ET_CLASS_NAME; a_base_class: ET_CLASS; a_comma: ET_SYMBOL): ET_CLIENT_ITEM is
+	new_client_comma (a_name: ET_CLASS_NAME; a_base_class: ET_NAMED_CLASS; a_comma: ET_SYMBOL): ET_CLIENT_ITEM is
 			-- New client followed by a comma
 		do
 			if a_name /= Void and a_base_class /= Void then

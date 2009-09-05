@@ -5,7 +5,7 @@ indexing
 		"Eiffel adapted class library lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,6 +66,32 @@ feature -- Access
 			library_not_void: Result /= Void
 		end
 
+	adapted_library (a_library: ET_LIBRARY): ET_ADAPTED_LIBRARY is
+			-- Adapted library corresponding to `a_library' in current list
+			--  if any, Void otherwise
+			--
+			-- Note that `a_library' may appear twice by the current
+			-- list. Return one of them in that case.
+		require
+			a_library_not_void: a_library /= Void
+		local
+			i, nb: INTEGER
+			l_adapted_library: ET_ADAPTED_LIBRARY
+		do
+			nb := libraries.count
+			from i := 1 until i > nb loop
+				l_adapted_library := libraries.item (i)
+				if l_adapted_library.library = a_library then
+					Result := l_adapted_library
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		ensure
+			consistent: Result /= Void implies Result.library = a_library
+		end
+
 	libraries: DS_ARRAYED_LIST [like library]
 			-- Adapted libraries
 
@@ -105,6 +131,41 @@ feature -- Iteration
 			nb := libraries.count
 			from i := 1 until i > nb loop
 				an_action.call ([libraries.item (i).library])
+				i := i + 1
+			end
+		end
+
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+			-- Apply `an_action' to every library (viewed as a universe), from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := libraries.count
+			from i := 1 until i > nb loop
+				an_action.call ([libraries.item (i).library])
+				i := i + 1
+			end
+		end
+
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+			-- Apply `an_action' to every library (viewed as a universe) that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_library: ET_LIBRARY
+		do
+			nb := libraries.count
+			from i := 1 until i > nb loop
+				l_library := libraries.item (i).library
+				if a_test.item ([l_library]) then
+					an_action.call ([l_library])
+				end
 				i := i + 1
 			end
 		end

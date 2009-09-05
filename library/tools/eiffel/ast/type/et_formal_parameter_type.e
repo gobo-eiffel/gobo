@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,9 +80,10 @@ feature -- Access
 	index: INTEGER
 			-- Position in list of generic parameters
 
-	base_class (a_context: ET_TYPE_CONTEXT): ET_CLASS is
-			-- Base class of current type when it appears in `a_context'
-			-- (Definition of base class in ETL2 page 198).
+	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS is
+			-- Same as `base_class' except that it returns information about this
+			-- class (e.g. its name) as known from the universe it is used from
+			-- (instead of from the universe it is written in).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		local
@@ -105,7 +106,7 @@ feature -- Access
 						a_formal := a_formals.formal_parameter (an_index)
 						a_base_type := a_formal.constraint_base_type
 						if a_base_type /= Void then
-							Result := a_base_type.base_class
+							Result := a_base_type.named_base_class
 						elseif not a_class.is_preparsed then
 								-- Internal error: we have a formal parameter of a class that
 								-- is not even preparsed (i.e. for which we know nothing,
@@ -117,14 +118,14 @@ feature -- Access
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base class is considered to be
 								-- "ANY" in these two cases.
-							Result := a_class.current_system.any_class
+							Result := a_class.universe.any_type.named_base_class
 						end
 					else
 							-- Internal error: formal parameter not matched.
 						Result := tokens.unknown_class
 					end
 				else
-					Result := an_actual.base_class (a_context.root_context)
+					Result := an_actual.named_base_class (a_context.root_context)
 				end
 			else
 					-- Internal error: formal parameter not matched.
@@ -173,7 +174,7 @@ feature -- Access
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
 								-- "ANY" in these two cases.
-							Result := a_class.current_system.any_type
+							Result := a_class.universe.any_type
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -707,7 +708,7 @@ feature -- Status report
 								-- or a cyclic constraint of the form "[G -> H,
 								-- H -> G]". The base type is considered to be
 								-- "ANY" in these two cases.
-							Result := (a_class = a_base_class.current_system.any_class)
+							Result := (a_class = a_base_class.universe.any_type.base_class)
 						end
 					else
 							-- Internal error: formal parameter not matched.
@@ -748,7 +749,7 @@ feature -- Comparison
 	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -824,7 +825,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -852,7 +853,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -881,7 +882,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -909,7 +910,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_like_current (other: ET_LIKE_CURRENT; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -937,7 +938,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_like_feature (other: ET_LIKE_FEATURE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -965,7 +966,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_qualified_like_identifier (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -994,7 +995,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even

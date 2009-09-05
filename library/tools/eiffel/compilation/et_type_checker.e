@@ -5,7 +5,7 @@ indexing
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -437,7 +437,7 @@ feature -- Type conversion
 			end
 			if Result = Void then
 				a_source_named_type := a_source_type.named_type
-				if a_target_base_class.is_preparsed and then a_target_base_class.current_system.is_dotnet and a_target_base_class = a_target_base_class.current_system.system_object_class then
+				if a_target_base_class.is_preparsed and then a_target_base_class.is_dotnet and a_target_base_class.is_system_object_class then
 						-- Needed for Eiffel for .NET.
 					create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_source_named_type)
 				end

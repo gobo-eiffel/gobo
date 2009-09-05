@@ -5,7 +5,7 @@ indexing
 		"Test features of class ET_AST_PRETTY_PRINTER"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,21 +41,25 @@ feature -- Test
 			an_ast_factory: ET_DECORATED_AST_FACTORY
 			a_cluster: ET_XACE_CLUSTER
 			a_class: ET_CLASS
-			a_filename: STRING
 			a_class_name: ET_IDENTIFIER
+			a_adapted_class: ET_ADAPTED_CLASS
+			a_filename: STRING
 		do
-			create a_system.make
+			create a_system.make ("system_name")
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
 			a_system.set_ast_factory (an_ast_factory)
 			a_system.set_ise_version (ise_latest)
 			a_system.activate_processors
-			create a_cluster.make ("dt_cluster_name", ".", a_system)
 			create a_class_name.make ("PRETTY_PRINTED1")
+			a_class := an_ast_factory.new_class (a_class_name)
+			a_system.register_class (a_class)
+			create a_cluster.make ("dt_cluster_name", ".", a_system)
 			a_filename := input_filename1
-			a_class := a_system.eiffel_class (a_class_name)
 			a_class.set_filename (a_filename)
 			a_class.set_group (a_cluster)
+			a_adapted_class := a_system.adapted_class (a_class_name)
+			a_adapted_class.add_first_local_class (a_class)
 			check_class (a_class)
 		end
 

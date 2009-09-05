@@ -5,7 +5,7 @@ indexing
 		"Lace Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,10 +79,13 @@ feature -- AST factory
 			assembly_not_void: Result /= Void
 		end
 
-	new_system: ET_LACE_SYSTEM is
+	new_system (a_name: STRING): ET_LACE_SYSTEM is
 			-- New Eiffel system
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
-			create Result.make
+			create Result.make (a_name)
 		ensure
 			system_not_void: Result /= Void
 		end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel provider checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,8 +93,9 @@ feature {NONE} -- Cluster dependence constraints
 		local
 			l_group: ET_GROUP
 			l_cluster: ET_CLUSTER
-			l_providers: DS_HASH_SET [ET_CLASS]
-			l_providers_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
+			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_providers_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
+			l_named_provider: ET_NAMED_CLASS
 			l_provider: ET_CLASS
 			l_provider_group: ET_GROUP
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
@@ -135,7 +136,8 @@ feature {NONE} -- Cluster dependence constraints
 				if l_providers /= Void then
 					l_providers_cursor := l_providers.new_cursor
 					from l_providers_cursor.start until l_providers_cursor.after loop
-						l_provider := l_providers_cursor.item
+						l_named_provider := l_providers_cursor.item
+						l_provider := l_named_provider.actual_class
 						if l_provider.is_none then
 							-- Skip this one: no constraint on class NONE.
 						elseif l_provider.is_preparsed then

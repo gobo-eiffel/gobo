@@ -5,7 +5,7 @@ indexing
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,8 +17,6 @@ inherit
 	ET_CLUSTER
 		redefine
 			parent, subclusters,
-			full_name,
-			full_lower_name,
 			full_pathname, full_unix_pathname,
 			is_valid_eiffel_filename,
 			is_valid_directory_name
@@ -57,50 +55,6 @@ feature -- Access
 
 	name: STRING
 			-- Name
-
-	full_name (a_separator: CHARACTER): STRING is
-			-- Full name (use `a_separator' as separator
-			-- between parents' names)
-		local
-			l_library: ET_ECF_LIBRARY
-			l_library_name: STRING
-			l_cluster_name: STRING
-		do
-			Result := precursor (a_separator)
-			if parent = Void then
-				l_library ?= universe
-				if l_library /= Void then
-					l_cluster_name := Result
-					l_library_name := l_library.name
-					Result := STRING_.new_empty_string (l_library_name, l_library_name.count + l_cluster_name.count + 1)
-					Result.append_string (l_library_name)
-					Result.append_character (a_separator)
-					Result := STRING_.appended_string (Result, l_cluster_name)
-				end
-			end
-		end
-
-	full_lower_name (a_separator: CHARACTER): STRING is
-			-- Full lower_name (use `a_separator' as separator
-			-- between parents' names)
-		local
-			l_library: ET_ECF_LIBRARY
-			l_library_name: STRING
-			l_cluster_name: STRING
-		do
-			Result := precursor (a_separator)
-			if parent = Void then
-				l_library ?= universe
-				if l_library /= Void then
-					l_cluster_name := Result
-					l_library_name := l_library.name.as_lower
-					Result := STRING_.new_empty_string (l_library_name, l_library_name.count + l_cluster_name.count + 1)
-					Result.append_string (l_library_name)
-					Result.append_character (a_separator)
-					Result := STRING_.appended_string (Result, l_cluster_name)
-				end
-			end
-		end
 
 	pathname: STRING
 			-- Directory pathname (may be Void)

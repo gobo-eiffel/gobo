@@ -284,6 +284,107 @@ feature -- Cluster error status
 			Result := True
 		end
 
+feature -- Universe errors
+
+	report_universe_error (an_error: ET_UNIVERSE_ERROR) is
+			-- Report universe error.
+		require
+			an_error_not_void: an_error /= Void
+		do
+			has_eiffel_error := True
+			report_info (an_error)
+			if info_file = std.output then
+				info_file.put_line ("----")
+			end
+		end
+
+	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+			-- Report VSCN error: two different classes `a_class1' and `a_class2'
+			-- with the same name corresponding to `a_current_class' in `a_universe'.
+			--
+			-- ETL2: p.38
+		require
+			a_universe_not_void: a_universe /= Void
+			a_current_class_not_void: a_current_class /= Void
+			a_class1_not_void: a_class1 /= Void
+			a_class2_not_void: a_class2 /= Void
+		local
+			an_error: ET_UNIVERSE_ERROR
+		do
+			if reportable_vscn_error (a_universe) then
+				create an_error.make_vscn0a (a_universe, a_current_class, a_class1, a_class2)
+				report_universe_error (an_error)
+			end
+		end
+
+	report_vscn0b_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_override_class: ET_NAMED_CLASS) is
+			-- Report VSCN error: built-in class "NONE" cannot be overridden
+			-- but `a_override_class' corresponding to `a_current_class' in `a_universe'.
+			--
+			-- ETL2: p.38
+		require
+			a_universe_not_void: a_universe /= Void
+			a_current_class_not_void: a_current_class /= Void
+			a_override_class_not_void: a_override_class /= Void
+		local
+			an_error: ET_UNIVERSE_ERROR
+		do
+			if reportable_vscn_error (a_universe) then
+				create an_error.make_vscn0b (a_universe, a_current_class, a_override_class)
+				report_universe_error (an_error)
+			end
+		end
+
+	report_vscn0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+			-- Report VSCN error:  class `a_class1' appearing in a .NET assembly
+			-- cannot be overridden by `a_class2' corresponding to `a_current_class'
+			-- in `a_universe'.
+			--
+			-- ETL2: p.38
+		require
+			a_universe_not_void: a_universe /= Void
+			a_current_class_not_void: a_current_class /= Void
+			a_class1_not_void: a_class1 /= Void
+			a_class2_not_void: a_class2 /= Void
+		local
+			an_error: ET_UNIVERSE_ERROR
+		do
+			if reportable_vscn_error (a_universe) then
+				create an_error.make_vscn0c (a_universe, a_current_class, a_class1, a_class2)
+				report_universe_error (an_error)
+			end
+		end
+
+	report_vscn0d_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_ADAPTED_CLASS) is
+			-- Report VSCN error: class `a_current_class' in `a_universe' cannot
+			-- be overridden both by class `a_class1' and by class `a_class2'.
+			--
+			-- ETL2: p.38
+		require
+			a_universe_not_void: a_universe /= Void
+			a_current_class_not_void: a_current_class /= Void
+			a_class1_not_void: a_class1 /= Void
+			a_class2_not_void: a_class2 /= Void
+		local
+			an_error: ET_UNIVERSE_ERROR
+		do
+			if reportable_vscn_error (a_universe) then
+				create an_error.make_vscn0d (a_universe, a_current_class, a_class1, a_class2)
+				report_universe_error (an_error)
+			end
+		end
+
+feature -- Universe error status
+
+	reportable_vscn_error (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Can a VSCN error be reported when it
+			-- appears in `a_universe'?
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			Result := True
+		end
+
 feature -- .NET assembly errors
 
 	report_assembly_error (an_error: ET_DOTNET_ASSEMBLY_ERROR) is
@@ -4779,231 +4880,6 @@ feature -- Validity errors
 			end
 		end
 
-	report_vscn0a_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			other_class_not_void: other_class /= Void
-			other_class_in_cluster: other_class.is_in_cluster
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0a (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0b_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			other_class_not_void: other_class /= Void
-			other_class_in_dotnet_assenbly: other_class.is_in_dotnet_assembly
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0b (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0c_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			other_class_not_void: other_class /= Void
-			other_class_preparsed: other_class.is_preparsed
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0c (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0d_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_dotnet_assembly: other_class.is_in_dotnet_assembly
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0d (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0e_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assenbly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_preparsed: other_class.is_preparsed
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0e (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0f_error (a_class: ET_CLASS) is
-			-- Report VSCN error: two different classes with the
-			-- same name: built-in class NONE and `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0f (a_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0g_error (a_class: ET_CLASS) is
-			-- Report VSCN error: two different classes with the
-			-- same name: built-in class NONE and `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0g (a_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0h_error (a_class: ET_CLASS) is
-			-- Report VSCN error: built-in class NONE cannot
-			-- be overridden by `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			a_class_in_override: a_class.is_in_override_group
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0h (a_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0i_error (a_class: ET_CLASS) is
-			-- Report VSCN error: built-in class NONE cannot
-			-- be overridden by `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			a_class_in_override: a_class.is_in_override_group
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0i (a_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0j_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: `a_class' in a .NET assembly
-			-- cannot be overridden by `other_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_cluster: other_class.is_in_cluster
-			other_class_in_override: other_class.is_in_override_group
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0j (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0k_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: `a_class' in a .NET assembly
-			-- cannot be overridden by `other_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_dotnet_assembly: other_class.is_in_dotnet_assembly
-			other_class_in_override: other_class.is_in_override_group
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0k (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vscn0l_error (a_class, other_class: ET_CLASS) is
-			-- Report VSCN error: `a_class' in a .NET assembly
-			-- cannot be overridden by `other_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_preparsed: other_class.is_preparsed
-			other_class_in_override: other_class.is_in_override_group
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vscn_error (a_class) then
-				create an_error.make_vscn0l (a_class, other_class)
-				report_validity_error (an_error)
-			end
-		end
-
 	report_vtat1a_error (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE) is
 			-- Report VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
@@ -5836,6 +5712,69 @@ feature -- Validity errors
 		do
 			if reportable_vwmq_error (a_class) then
 				create an_error.make_vwmq0a (a_class, a_class_impl, a_constant)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vwmq0b_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_REAL_CONSTANT) is
+			-- Report VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "REAL".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwmq_error (a_class) then
+				create an_error.make_vwmq0b (a_class, a_class_impl, a_constant)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vwmq0c_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHARACTER_CONSTANT) is
+			-- Report VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "CHARACTER".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwmq_error (a_class) then
+				create an_error.make_vwmq0c (a_class, a_class_impl, a_constant)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vwmq0d_error (a_class, a_class_impl: ET_CLASS; a_constant: ET_MANIFEST_STRING) is
+			-- Report VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "STRING".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwmq_error (a_class) then
+				create an_error.make_vwmq0d (a_class, a_class_impl, a_constant)
 				report_validity_error (an_error)
 			end
 		end
@@ -7349,16 +7288,6 @@ feature -- Validity error status
 
 	reportable_vrlv2_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VRLV-2 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_vscn_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a VSCN error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,13 +14,24 @@ class ET_CLASS
 
 inherit
 
+	ET_NAMED_CLASS
+		undefine
+			copy, is_equal
+		redefine
+			name,
+			hash_code
+		end
+
 	ET_CLASS_TYPE
 		rename
 			make as make_type,
 			reset as reset_type,
 			type_mark as class_mark,
 			actual_parameters as formal_parameters
+		undefine
+			upper_name, lower_name
 		redefine
+			name,
 			class_mark, process,
 			formal_parameters,
 			is_expanded, is_separate,
@@ -29,6 +40,13 @@ inherit
 			is_named_type, is_valid_context,
 			debug_output, copy, is_equal,
 			append_unaliased_to_string
+		end
+
+	ET_SHARED_CLASS_CODES
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
 		end
 
 	HASHABLE
@@ -54,31 +72,18 @@ feature {NONE} -- Initialization
 			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
-			base_class := Current
-			master_class := Current
+			group := tokens.unknown_group
+			named_base_class := Current
 			time_stamp := no_time_stamp
+			class_code := class_codes.class_code (a_name)
 		ensure
 			name_set: name = a_name
 		end
 
-	make_unknown (a_name: like name) is
+	make_unknown is
 			-- Create a new "*UNKNOWN*" class.
-		require
-			a_name_not_void: a_name /= Void
 		do
-			name := a_name
-			id := 0
-			ancestors := tokens.empty_ancestors
-			queries := tokens.empty_queries
-			procedures := tokens.empty_procedures
-			class_keyword := tokens.class_keyword
-			end_keyword := tokens.end_keyword
-			base_class := Current
-			master_class := Current
-			time_stamp := no_time_stamp
-		ensure
-			name_set: name = a_name
-			id_set: id = 0
+			make (tokens.unknown_class_name)
 		end
 
 feature -- Initialization
@@ -86,7 +91,6 @@ feature -- Initialization
 	reset is
 			-- Reset current class as it was when it was created
 			-- (i.e. before it was preparsed or parsed).
-			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_implementation_checked
 			reset_interface_checked
@@ -95,7 +99,7 @@ feature -- Initialization
 			reset_parsed
 			reset_preparsed
 			index := 0
-			in_system := False
+			is_marked := False
 		ensure
 			same_name: name = old name
 			same_id: id = old id
@@ -103,7 +107,6 @@ feature -- Initialization
 
 	reset_after_preparsed is
 			-- Reset current class as it was just after it was last preparsed.
-			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_implementation_checked
 			reset_interface_checked
@@ -124,7 +127,6 @@ feature -- Initialization
 	reset_after_parsed is
 			-- Reset current class as it was just after it was last parsed.
 			-- Do nothing if not parsed.
-			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_implementation_checked
 			reset_interface_checked
@@ -135,8 +137,8 @@ feature -- Initialization
 			if formal_parameters /= Void then
 				formal_parameters.reset
 			end
-			if parents /= Void then
-				parents.reset
+			if parent_clause /= Void then
+				parent_clause.reset
 			end
 			if invariants /= Void then
 				invariants.reset
@@ -162,7 +164,6 @@ feature -- Initialization
 	reset_after_ancestors_built is
 			-- Reset current class as it was just after its ancestors were last built.
 			-- Do nothing if ancestors not built.
-			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_implementation_checked
 			reset_interface_checked
@@ -172,8 +173,8 @@ feature -- Initialization
 			if formal_parameters /= Void then
 				formal_parameters.reset
 			end
-			if parents /= Void then
-				parents.reset
+			if parent_clause /= Void then
+				parent_clause.reset
 			end
 			if invariants /= Void then
 				invariants.reset
@@ -200,7 +201,6 @@ feature -- Initialization
 	reset_after_features_flattened is
 			-- Reset current class as it was just after its features were last flattened.
 			-- Do nothing if features not flattened.
-			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_implementation_checked
 			reset_interface_checked
@@ -229,7 +229,6 @@ feature -- Initialization
 	reset_after_interface_checked is
 			-- Reset current class as it was just after its interface was last checked.
 			-- Do nothing if interface not checked.
-			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			reset_implementation_checked
 			queries.reset_after_features_flattened
@@ -255,7 +254,6 @@ feature -- Initialization
 	reset_errors is
 			-- Reset current class as it was before the first error was reported.
 			-- Errors will be reported again if current class is processed again.
-			-- (Do not alter `overridden_class' and `master_class'.)
 		do
 			if has_syntax_error then
 				reset_implementation_checked
@@ -288,38 +286,112 @@ feature -- Status report
 	is_none: BOOLEAN is
 			-- Is current class a "NONE" class?
 		do
-			Result := group /= Void and then group.is_none
+			Result := group.is_none
 		ensure
-			definition: Result = (group /= Void and then group.is_none)
+			definition: Result = group.is_none
 		end
 
-	is_basic: BOOLEAN
-			-- Is current class one of "BOOLEAN", "CHARACTER_8", "CHARACTER_32",
-			-- "INTEGER_8", "INTEGER_16", "INTEGER_32", "INTEGER_64",
-			-- "NATURAL_8", "NATURAL_16", "NATURAL_32", "NATURAL_64",
-			-- "POINTER", "REAL_32", "REAL_64"?
+	is_basic: BOOLEAN is
+			-- Is current class one of "BOOLEAN", "CHARACTER_8",
+			-- "CHARACTER_32", "INTEGER_8", "INTEGER_16", "INTEGER_32",
+			-- "INTEGER_64", "NATURAL_8", "NATURAL_16", "NATURAL_32",
+			-- "NATURAL_64", "POINTER", "REAL_32", "REAL_64"?
+		do
+			Result := class_codes.is_basic (class_code)
+		end
+
+	is_any_class: BOOLEAN is
+			-- Is current class the "ANY" class?
+		do
+			Result := class_code = class_codes.any_class_code
+		end
+
+	is_array_class: BOOLEAN is
+			-- Is current class the "ARRAY" class?
+		do
+			Result := class_code = class_codes.array_class_code
+		end
+
+	is_boolean_class: BOOLEAN is
+			-- Is current class the "BOOLEAN" class?
+		do
+			Result := class_code = class_codes.boolean_class_code
+		end
+
+	is_disposable_class: BOOLEAN is
+			-- Is current class the "DISPOSABLE" class?
+		do
+			Result := class_code = class_codes.disposable_class_code
+		end
+
+	is_function_class: BOOLEAN is
+			-- Is current class the "FUNCTION" class?
+		do
+			Result := class_code = class_codes.function_class_code
+		end
+
+	is_predicate_class: BOOLEAN is
+			-- Is current class the "PREDICATE" class?
+		do
+			Result := class_code = class_codes.predicate_class_code
+		end
+
+	is_procedure_class: BOOLEAN is
+			-- Is current class the "PROCEDURE" class?
+		do
+			Result := class_code = class_codes.procedure_class_code
+		end
+
+	is_routine_class: BOOLEAN is
+			-- Is current class the "ROUTINE" class?
+		do
+			Result := class_code = class_codes.routine_class_code
+		end
+
+	is_special_class: BOOLEAN is
+			-- Is current class the "SPECIAL" class?
+		do
+			Result := class_code = class_codes.special_class_code
+		end
+
+	is_system_object_class: BOOLEAN is
+			-- Is current class the "SYSTEM_OBJECT" class?
+		do
+			Result := class_code = class_codes.system_object_class_code
+		end
+
+	is_tuple_class: BOOLEAN is
+			-- Is current class the "TUPLE" class?
+		do
+			Result := class_code = class_codes.tuple_class_code
+		end
+
+	is_type_class: BOOLEAN is
+			-- Is current class the "TYPE" class?
+		do
+			Result := class_code = class_codes.type_class_code
+		end
+
+	is_typed_pointer_class: BOOLEAN is
+			-- Is current class the "TYPED_POINTER" class?
+		do
+			Result := class_code = class_codes.typed_pointer_class_code
+		end
 
 	is_unknown: BOOLEAN is
 			-- Is current class an "*UNKNOWN*" class?
 			-- This class does not conform to any other class,
 			-- not even itself.
 		do
-			Result := group /= Void and then group.is_unknown
+			Result := group.is_unknown
 		ensure
-			definition: Result = (group /= Void and then group.is_unknown)
-		end
-
-feature {ET_SYSTEM} -- Status setting
-
-	set_basic (b: BOOLEAN) is
-			-- Set `is_basic' to `b'.
-		do
-			is_basic := b
-		ensure
-			basic_set: is_basic = b
+			definition: Result = group.is_unknown
 		end
 
 feature -- Access
+
+	name: ET_CLASS_NAME
+			-- Name of class
 
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
@@ -405,17 +477,6 @@ feature -- Setting
 			id_set: id = an_id
 		end
 
-	set_name (a_name: like name) is
-			-- Set `name' to `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			same_class_name: name.same_class_name (a_name)
-		do
-			name := a_name
-		ensure
-			name_set: name = a_name
-		end
-
 	set_obsolete_message (an_obsolete_message: like obsolete_message) is
 			-- Set `obsolete_message' to `an_obsolete_message'.
 		do
@@ -497,105 +558,55 @@ feature -- Preparsing
 	universe: ET_UNIVERSE is
 			-- Universe to which current class belongs
 		do
-			if group /= Void then
-				Result := group.universe
-			end
-		ensure
-			universe_not_void_when_preparsed: is_preparsed implies Result /= Void
-		end
-
-	current_system: ET_SYSTEM is
-			-- Surrounding Eiffel system
-			-- (Note: there is a frozen feature called `system' in
-			-- class GENERAL of SmartEiffel 1.0)
-		do
-			if group /= Void then
-				Result := group.current_system
-			end
-		ensure
-			current_system_not_void_when_preparsed: is_preparsed implies Result /= Void
+			Result := group.universe
 		end
 
 	time_stamp: INTEGER
 			-- Time stamp of the file when it was last parsed
 
-	overridden_class: ET_CLASS
-			-- Class that has the same name as current class
-			-- (Name clash is resolved if current class is in an
-			-- override group and `overridden_class' is not.)
-
 	non_override_overridden_class: ET_CLASS is
 			-- First overridden class that is not in an override group;
 			-- Void if no such class
-		do
-			from
-				Result := overridden_class
-			until
-				Result = Void or else not Result.is_in_override_group
-			loop
-				Result := Result.overridden_class
-			end
-		end
-
-	class_in_group (a_group: ET_GROUP): ET_CLASS is
-			-- First class among current class and its overridden classes
-			-- that is in `a_group';
-			-- Void if no such class
-			--
-			-- Note: this function will typically be useful when
-			-- called on `master_class' rather than on `Current'.
-		require
-			a_group_not_void: a_group /= Void
 		local
-			l_class: ET_CLASS
+			l_adapted_class: ET_ADAPTED_CLASS
+			l_imported_class: ET_ADAPTED_CLASS
 		do
-			from
-				l_class := Current
-			until
-				l_class = Void
-			loop
-				if l_class.is_in_group (a_group) then
-					Result := l_class
-					l_class := Void
-				else
-					l_class := l_class.overridden_class
+			l_adapted_class := adapted_class
+			if l_adapted_class.actual_class = Current then
+				Result := l_adapted_class.first_local_non_override_class
+				if Result = Current and then not l_adapted_class.other_local_non_override_classes.is_empty then
+					Result := l_adapted_class.other_local_non_override_classes.first
+				end
+				if Result = Void then
+					l_imported_class := l_adapted_class.first_imported_class
+					if l_imported_class /= Void then
+						Result := l_imported_class.first_local_non_override_class
+					end
 				end
 			end
-		ensure
-			in_group: Result /= Void implies Result.is_in_group (a_group)
 		end
 
-	class_in_group_recursive (a_group: ET_GROUP): ET_CLASS is
-			-- First class among current class and its overridden classes that
-			-- is in `a_group' or recursively one of its subgroups;
-			-- Void if no such class
-			--
-			-- Note: this function will typically be useful when
-			-- called on `master_class' rather than on `Current'.
-		require
-			a_group_not_void: a_group /= Void
-		local
-			l_class: ET_CLASS
+	actual_class: ET_CLASS is
+			-- Actual class
 		do
-			from
-				l_class := Current
-			until
-				l_class = Void
-			loop
-				if l_class.is_in_group_recursive (a_group) then
-					Result := l_class
-					l_class := Void
-				else
-					l_class := l_class.overridden_class
-				end
-			end
-		ensure
-			in_group: Result /= Void implies Result.is_in_group_recursive (a_group)
+			Result := Current
+		ensure then
+			definition: Result = Current
 		end
 
-	master_class: ET_CLASS
-			-- Class known by the universe with same name as current class
-			-- (This class is the current class when it is not overridden.)
+	adapted_class: ET_ADAPTED_CLASS is
+			-- Class named `name' in `universe'
+			--
+			-- Note that it might represent a class other than the current
+			-- class when there are name clashes. In that case, the current
+			-- class is likely to be found in one of the local ('first_local_override_class',
+			-- 'other_local_override_classes', 'first_local_class', 'other_local_classes')
+			-- or imported classes ('first_imported_class', 'other_imported_classes').
+		do
+			Result := universe.adapted_class (name)
+		ensure
+			adapted_class_not_void: Result /= Void
+		end
 
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
@@ -626,44 +637,21 @@ feature -- Preparsing
 			time_stamp_set: time_stamp = a_time_stamp
 		end
 
-	set_overridden_class (a_class: like overridden_class) is
-			-- Set `overridden_class' to `a_class'.
-		do
-			if a_class /= Void then
-				a_class.set_master_class (master_class)
-			end
-			overridden_class := a_class
-		ensure
-			overridden_class_set: overridden_class = a_class
-			master_class_set: a_class /= Void implies a_class.master_class = master_class
-		end
-
-	add_overridden_class (a_class: like overridden_class) is
-			-- Add `a_class' to the end of the chain of overridden classes.
+	add_by_group (a_classes: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP]) is
+			-- Add current class to `a_classes', indexed by groups.
 		require
-			a_class_not_void: a_class /= Void
+			a_classes_not_void: a_classes /= Void
+		local
+			l_class_list: DS_ARRAYED_LIST [ET_CLASS]
 		do
-			if overridden_class /= Void then
-				overridden_class.add_overridden_class (a_class)
+			a_classes.search (group)
+			if a_classes.found then
+				l_class_list := a_classes.found_item
 			else
-				set_overridden_class (a_class)
+				create l_class_list.make (initial_classes_in_group_capacity)
+				a_classes.force_last_new (l_class_list, group)
 			end
-		ensure
-			overridden_class_set: old overridden_class = Void implies overridden_class = a_class
-			master_class_set: a_class.master_class = master_class
-		end
-
-	set_master_class (a_class: like master_class) is
-			-- Set `master_class' to `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			master_class := a_class
-			if overridden_class /= Void then
-				overridden_class.set_master_class (a_class)
-			end
-		ensure
-			master_class_set: master_class = a_class
+			l_class_list.force_last (Current)
 		end
 
 feature -- Preparsing status
@@ -673,10 +661,12 @@ feature -- Preparsing status
 			-- known but the class has not necessarily been parsed yet)?
 			-- This means that the class is in one the universes making
 			-- up the surrounding Eiffel system.
+			-- Note that class "NONE" is considered as preparsed even though
+			-- it does not have an explicit class text.
 		do
-			Result := (group /= Void)
-		ensure
-			group_not_void: Result implies group /= Void
+			Result := not group.is_unknown
+		ensure then
+			definition: Result = not group.is_unknown
 		end
 
 	is_in_group (a_group: ET_GROUP): BOOLEAN is
@@ -695,12 +685,10 @@ feature -- Preparsing status
 		require
 			a_group_not_void: a_group /= Void
 		do
-			if group /= Void then
-				if group = a_group then
-					Result := True
-				else
-					Result := a_group.has_subgroup (group)
-				end
+			if group = a_group then
+				Result := True
+			else
+				Result := a_group.has_subgroup (group)
 			end
 		end
 
@@ -717,9 +705,8 @@ feature -- Preparsing status
 	is_in_cluster: BOOLEAN is
 			-- Is current class in a cluster?
 		do
-			Result := (filename /= Void and then not filename.is_empty and then group /= Void and then group.is_cluster)
+			Result := (filename /= Void and then not filename.is_empty and then group.is_cluster)
 		ensure
-			group_not_void: Result implies group /= Void
 			is_cluster: Result implies group.is_cluster
 			filename_not_void: Result implies filename /= Void
 			filename_not_empty: Result implies not filename.is_empty
@@ -728,84 +715,41 @@ feature -- Preparsing status
 	is_in_dotnet_assembly: BOOLEAN is
 			-- Is current class in a .NET assembly?
 		do
-			Result := group /= Void and then group.is_dotnet_assembly
+			Result := group.is_dotnet_assembly
 		ensure
-			group_not_void: Result implies group /= Void
 			is_dotnet_assembly: Result implies group.is_dotnet_assembly
 		end
 
-	is_override: BOOLEAN is
-			-- Is current class in an override cluster?
-		obsolete
-			"[050911] Use `is_in_override_cluster' instead."
+	is_override (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is current class considered as an override class in `a_universe'?
+			-- This means that current class has been declared in an override
+			-- group and that group is part of `a_universe'.
 		do
-			Result := is_in_override_cluster
+			Result := is_in_override_group and then universe = a_universe
 		end
 
 	is_in_override_group: BOOLEAN is
 			-- Is current class in an override group?
 		do
-			Result := group /= Void and then group.is_override
+			Result := group.is_override
 		ensure
-			group_not_void: Result implies group /= Void
 			is_override: Result implies group.is_override
 		end
 
 	is_in_override_cluster: BOOLEAN is
 			-- Is current class in an override cluster?
 		do
-			Result := filename /= Void and then not filename.is_empty and then group /= Void and then (group.is_cluster and group.is_override)
+			Result := filename /= Void and then not filename.is_empty and then group.is_cluster and then group.is_override
 		ensure
 			is_cluster: Result implies is_in_cluster
 			is_override: Result implies is_in_override_group
-		end
-
-	is_overridden: BOOLEAN is
-			-- Is current class overridden by another class?
-		do
-			Result := (master_class /= Current)
-		ensure
-			definition: Result = (master_class /= Current)
-		end
-
-	is_overriding: BOOLEAN is
-			-- Is current class overriding another class?
-		do
-			Result := (overridden_class /= Void and master_class = Current)
-		ensure
-			definition: Result = (overridden_class /= Void and master_class = Current)
-		end
-
-	has_name_clash: BOOLEAN is
-			-- Is there two classes with the same name?
-			-- (Override groups are taken into account in order to
-			-- determine whether it is a real name clash or not.)
-		local
-			a_class: ET_CLASS
-		do
-			if not is_in_override_group then
-				Result := (overridden_class /= Void)
-			else
-				from
-					a_class := overridden_class
-				until
-					a_class = Void
-				loop
-					if a_class.is_in_override_group then
-						Result := True
-						a_class := Void -- Jump out of the loop.
-					else
-						a_class := a_class.overridden_class
-					end
-				end
-			end
 		end
 
 	reset_preparsed is
 			-- Set `is_preparsed' to False.
 		do
 			filename := Void
-			group := Void
+			group := tokens.unknown_group
 			time_stamp := no_time_stamp
 			is_interface := False
 		ensure
@@ -819,14 +763,6 @@ feature -- Parsing status
 			-- Note that when reporting VTCT errors on a class,
 			-- `is_parsed' is set to True even if it was not
 			-- preparsed (and hence not actually parsed).
-
-	is_parsed_successfully: BOOLEAN is
-			-- Has current class been successfully parsed?
-		do
-			Result := is_parsed and then not has_syntax_error
-		ensure
-			definition: Result = (is_parsed and then not has_syntax_error)
-		end
 
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
@@ -865,7 +801,7 @@ feature -- Parsing status
 			formal_parameters := Void
 			invariants := Void
 			obsolete_message := Void
-			parents := Void
+			parent_clause := Void
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
 			leading_break := Void
@@ -1164,18 +1100,42 @@ feature -- Ancestors
 			no_void_descendants: not a_descendants.has_void
 		end
 
-	parents: ET_PARENT_LIST
-			-- Parents
+	parent_clause: ET_PARENT_LIST
+			-- Parents explicitly specified in the Parent clause
+
+	parents: ET_PARENT_LIST is
+			-- Parents of current class, either declared explicitly in `parent_clause'
+			-- or the implicit parent when no parents have been specified
+			--
+			-- Under .NET, the implicit parent in "SYSTEM_OBJECT_CLASS" if the class
+			-- is not "SYSTEM_OBJECT_CLASS" itself.
+			-- Otherwise the implicit parent if "ANY" if the class is not "ANY"
+			-- itself. As a consequence, "ANY" is the only class with no parents.
+		do
+			Result := parent_clause
+			if Result = Void or else Result.is_empty then
+				if is_any_class then
+						-- "ANY" has no implicit parents.
+					Result := Void
+				elseif is_dotnet and then not is_system_object_class then
+					Result := universe.system_object_parents
+				else
+					Result := universe.any_parents
+				end
+			end
+		ensure
+			parents_not_void: not is_any_class implies Result /= Void
+		end
 
 	ancestors: ET_BASE_TYPE_LIST
 			-- Proper ancestors
 
-	set_parents (a_parents: like parents) is
-			-- Set `parents' to `a_parents'.
+	set_parent_clause (a_parents: like parent_clause) is
+			-- Set `parent_clause' to `a_parents'.
 		do
-			parents := a_parents
+			parent_clause := a_parents
 		ensure
-			parents_set: parents = a_parents
+			parent_clause_set: parent_clause = a_parents
 		end
 
 	set_ancestors (some_ancestors: like ancestors) is
@@ -1192,14 +1152,6 @@ feature -- Ancestor building status
 
 	ancestors_built: BOOLEAN
 			-- Have `ancestors' been built?
-
-	ancestors_built_successfully: BOOLEAN is
-			-- Have `ancestors' been successfully built?
-		do
-			Result := ancestors_built and then not has_ancestors_error
-		ensure
-			definition: Result = (ancestors_built and then not has_ancestors_error)
-		end
 
 	has_ancestors_error: BOOLEAN
 			-- Has a fatal error occurred when building `ancestors'?
@@ -1596,14 +1548,6 @@ feature -- Feature flattening status
 	features_flattened: BOOLEAN
 			-- Have features been flattened?
 
-	features_flattened_successfully: BOOLEAN is
-			-- Have features been successfully flattened?
-		do
-			Result := features_flattened and then not has_flattening_error
-		ensure
-			definition: Result = (features_flattened and then not has_flattening_error)
-		end
-
 	has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
 
@@ -1650,14 +1594,6 @@ feature -- Interface checking status
 	interface_checked: BOOLEAN
 			-- Has the interface of current class been checked?
 
-	interface_checked_successfully: BOOLEAN is
-			-- Has the interface of current class been successfully checked?
-		do
-			Result := interface_checked and then not has_interface_error
-		ensure
-			definition: Result = (interface_checked and then not has_interface_error)
-		end
-
 	has_interface_error: BOOLEAN
 			-- Has a fatal error occurred during interface checking?
 
@@ -1699,7 +1635,7 @@ feature -- Interface checking status
 
 feature -- Suppliers/Providers
 
-	suppliers: DS_HASH_SET [ET_CLASS]
+	suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 			-- Supplier classes of current class
 
 	set_suppliers (a_suppliers: like suppliers) is
@@ -1712,7 +1648,7 @@ feature -- Suppliers/Providers
 			suppliers_set: suppliers = a_suppliers
 		end
 
-	providers: DS_HASH_SET [ET_CLASS]
+	providers: DS_HASH_SET [ET_NAMED_CLASS]
 			-- Provider classes of current class
 			-- (classes whose name appears in the text of current class)
 
@@ -1732,14 +1668,6 @@ feature -- Implementation checking status
 			-- Has the implementation of current class been checked?
 			-- Immediate and redefined (and possibly inherited when in flat mode)
 			-- features and invariant have been checked.
-
-	implementation_checked_successfully: BOOLEAN is
-			-- Has the implementation of current class been successfully checked?
-		do
-			Result := implementation_checked and then not has_implementation_error
-		ensure
-			definition: Result = (implementation_checked and then not has_implementation_error)
-		end
 
 	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
@@ -1795,19 +1723,6 @@ feature -- Invariant
 			invariants_set: invariants = an_invariants
 		end
 
-feature -- System
-
-	in_system: BOOLEAN
-			-- Is current class reachable from the root class?
-
-	set_in_system (b: BOOLEAN) is
-			-- Set `in_system' to `b'.
-		do
-			in_system := b
-		ensure
-			in_system_set: in_system = b
-		end
-
 feature -- Type context
 
 	is_valid_context: BOOLEAN is True
@@ -1822,7 +1737,7 @@ feature -- Duplication
 	cloned_class: ET_CLASS is
 			-- Clone version of current class
 		do
-			create Result.make_unknown (tokens.unknown_class_name)
+			create Result.make_unknown
 			Result.copy (Current)
 		ensure
 			cloned_class_not_void: Result /= Void
@@ -1833,7 +1748,7 @@ feature -- Duplication
 		do
 			if other /= Current then
 				standard_copy (other)
-				base_class := Current
+				named_base_class := Current
 			end
 		end
 
@@ -1842,15 +1757,15 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is current class equal to `other'?
 		local
-			l_class: ET_CLASS
+			l_class: ET_NAMED_CLASS
 		do
 			if other = Current then
 				Result := True
 			else
-				l_class := base_class
-				base_class := other.base_class
+				l_class := named_base_class
+				named_base_class := other.named_base_class
 				Result := standard_is_equal (other)
-				base_class := l_class
+				named_base_class := l_class
 			end
 		end
 
@@ -1900,10 +1815,24 @@ feature -- Processing
 			a_processor.process_class (Current)
 		end
 
+feature -- Actions
+
+	action_wrapper (a_action: PROCEDURE [ANY, TUPLE]) is
+			-- Execute `a_action'.
+			--
+			-- Note: Useful when we want to pass it as an agent which
+			-- requires an open operand of type ET_CLASS.
+		require
+			a_action_not_void: a_action /= Void
+		do
+			a_action.call ([])
+		end
+
 	increment_counter (a_counter: UT_COUNTER) is
 			-- Increment `a_counter'.
-			-- (Useful when we want to pass it as an agent which
-			-- requires an open operand of type ET_CLASS.)
+			--
+			-- Note: Useful when we want to pass it as an agent which
+			-- requires an open operand of type ET_CLASS.
 		require
 			a_counter_not_void: a_counter /= Void
 		do
@@ -1922,14 +1851,27 @@ feature {NONE} -- Constants
 			capacity_positive: Result > 0
 		end
 
+	initial_classes_in_group_capacity: INTEGER is
+			-- Initial capacity for class list when calling `add_by_group'
+		once
+			Result := 20
+		ensure
+			capacity_positive: Result > 0
+		end
+
 	no_time_stamp: INTEGER is -2
 			-- No time stamp marker
+
+feature {NONE} -- Codes
+
+	class_code: NATURAL_8
+			-- Class code (i.e. whether it's a kernel class or not)
 
 invariant
 
 	id_not_negative: id >= 0
 	index_not_negative: index >= 0
-	master_class_not_void: master_class /= Void
+	group_not_void: group /= Void
 	ancestors_not_void: ancestors /= Void
 	queries_not_void: queries /= Void
 	-- queries_registered: forall f in queries, f.is_registered
@@ -1941,9 +1883,5 @@ invariant
 	valid_context: is_valid_context
 	no_void_supplier: suppliers /= Void implies not suppliers.has_void
 	no_void_provider: providers /= Void implies not providers.has_void
-	ancestors_error: has_ancestors_error implies ancestors_built
-	flattening_error: has_flattening_error implies features_flattened
-	interface_error: has_interface_error implies interface_checked
-	implementation_error: has_implementation_error implies implementation_checked
 
 end

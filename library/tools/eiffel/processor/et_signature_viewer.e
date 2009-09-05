@@ -5,7 +5,7 @@ indexing
 		"Eiffel console-mode signature viewers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -247,7 +247,6 @@ feature {NONE} -- Implementation
 			a_name: STRING
 			i, nb: INTEGER
 			c: CHARACTER
-			an_identifier: ET_IDENTIFIER
 			stop: BOOLEAN
 		do
 			last_class := Void
@@ -284,10 +283,8 @@ feature {NONE} -- Implementation
 			end
 			Result := i
 			if not a_name.is_empty then
-				create an_identifier.make (a_name)
-				if universe.has_class (an_identifier) then
-					last_class := universe.eiffel_class (an_identifier)
-				else
+				last_class := universe.class_by_name (a_name)
+				if last_class = Void then
 					output_file.put_string ("No class ")
 					output_file.put_string (a_name)
 					output_file.put_string (" in universe.")
@@ -325,7 +322,7 @@ feature {NONE} -- Implementation
 			Result := parse_class (str, a_position)
 			a_class := last_class
 			if a_class /= Void then
-				if a_class = universe.current_system.tuple_class then
+				if a_class.is_preparsed and then a_class.is_tuple_class then
 						-- Tuples have a variable number of arguments.
 					i := parse_open_bracket (str, Result)
 					if i > str.count + 1 then

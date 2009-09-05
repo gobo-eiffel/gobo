@@ -5,7 +5,7 @@ indexing
 		"Eiffel clients"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,17 +25,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_base_class: like base_class) is
+	make (a_name: like name; a_named_base_class: like named_base_class) is
 			-- Create a client named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			a_base_class_not_void: a_base_class /= Void
+			a_named_base_class_not_void: a_named_base_class /= Void
 		do
 			name := a_name
-			base_class := a_base_class
+			named_base_class := a_named_base_class
 		ensure
 			name_set: name = a_name
-			base_class_set: base_class = a_base_class
+			named_base_class_set: named_base_class = a_named_base_class
 		end
 
 feature -- Access
@@ -43,8 +43,19 @@ feature -- Access
 	name: ET_CLASS_NAME
 			-- Name of client
 
-	base_class: ET_CLASS
+	named_base_class: ET_NAMED_CLASS
+			-- Class visible from the surrounding universe under the name `name'
+			--
+			-- Note that this class may have been written in another library
+			-- with another name.
+
+	base_class: ET_CLASS is
 			-- Base class of client
+		do
+			Result := named_base_class.actual_class
+		ensure then
+			base_class_not_void: Result /= Void
+		end
 
 	client: ET_CLIENT is
 			-- Client in comma-separated list
@@ -90,6 +101,6 @@ feature -- Processing
 invariant
 
 	name_not_void: name /= Void
-	base_class_not_void: base_class /= Void
+	named_base_class_not_void: named_base_class /= Void
 
 end

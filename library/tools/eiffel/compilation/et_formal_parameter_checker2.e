@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal parameter validity checkers, second pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -129,7 +129,7 @@ feature {NONE} -- Constraint validity
 								-- resolving of formal parameters in the constraint.
 							a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
 						else
-							a_constraint := current_system.any_class
+							a_constraint := current_universe.any_type
 						end
 						if not an_actual.conforms_to_type (a_constraint, current_class, current_class) then
 								-- The actual parameter does not conform to the

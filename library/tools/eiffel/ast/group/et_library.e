@@ -5,7 +5,7 @@ indexing
 		"Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,10 +15,18 @@ class ET_LIBRARY
 inherit
 
 	ET_INTERNAL_UNIVERSE
+		rename
+			universe as library
+		redefine
+			library,
+			kind_name
+		end
 
 	ET_ADAPTED_LIBRARY
 		rename
 			make as make_adapted
+		redefine
+			library
 		end
 
 create
@@ -27,20 +35,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: ET_SYSTEM) is
+	make (a_name: STRING; a_system: ET_SYSTEM) is
 			-- Create a new Eiffel class library.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
-			make_from_system (a_system)
-			make_adapted (Current)
+			make_from_system (a_name, a_system)
 		ensure
+			name_set: name = a_name
 			current_system_set: current_system = a_system
 		end
 
 feature -- Access
 
-	name: STRING
-			-- Name of the library if any;
-			-- Void otherwise
+	library: ET_LIBRARY
+			-- Eiffel library being adapted
+
+	kind_name: STRING is
+			-- Kind name (e.g. "assembly", "library", etc.)
+		once
+			Result := "library"
+		end
 
 feature -- Relations
 

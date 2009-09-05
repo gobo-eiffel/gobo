@@ -5,7 +5,7 @@ indexing
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -373,6 +373,5 @@ feature {NONE} -- Access
 invariant
 
 	current_class_impl_not_void: current_class_impl /= Void
-	current_class_impl_preparsed: current_class_impl.is_preparsed
 
 end

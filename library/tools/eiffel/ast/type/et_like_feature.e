@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,9 +104,10 @@ feature -- Access
 			index_positive: Result >= 1
 		end
 
-	base_class (a_context: ET_TYPE_CONTEXT): ET_CLASS is
-			-- Base class of current type when it appears in `a_context'
-			-- (Definition of base class in ETL2 page 198).
+	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS is
+			-- Same as `base_class' except that it returns information about this
+			-- class (e.g. its name) as known from the universe it is used from
+			-- (instead of from the universe it is written in).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		local
@@ -135,7 +136,7 @@ feature -- Access
 							-- current anchored type.
 						Result := tokens.unknown_class
 					else
-						Result := args.item (an_index).type.base_class (a_context)
+						Result := args.item (an_index).type.named_base_class (a_context)
 					end
 				else
 						-- Internal error: an inconsistency has been
@@ -147,7 +148,7 @@ feature -- Access
 				a_class := a_context.base_class
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
-					Result := l_query.type.base_class (a_context)
+					Result := l_query.type.named_base_class (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -967,7 +968,7 @@ feature -- Comparison
 	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -1087,7 +1088,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_like_feature (other: ET_LIKE_FEATURE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even

@@ -5,7 +5,7 @@ indexing
 		"Xace Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2009, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -91,8 +91,16 @@ feature {NONE} -- Xace AST factory
 			l_pathname: STRING
 			l_cursor: DS_LINKED_LIST_CURSOR [STRING]
 			l_options: ET_XACE_OPTIONS
+			l_name_attribute: XM_ATTRIBUTE
 		do
-			create Result.make
+			l_name_attribute := an_element.attribute_by_name (uc_name)
+			if l_name_attribute /= Void and then not l_name_attribute.value.is_empty then
+				create Result.make (l_name_attribute.value)
+			else
+					-- The "name" attribute is not optional.
+					-- The Xace file is not valid.
+				create Result.make ("*unknown*")
+			end
 			l_factory := new_eiffel_ast_factory
 			Result.set_ast_factory (l_factory)
 			l_error_handler := new_eiffel_error_handler

@@ -5,7 +5,7 @@ indexing
 		"ECF root classes and creation procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +55,7 @@ feature -- Element change
 	fill_root (a_system: ET_ECF_SYSTEM) is
 			-- Fill `a_system' with root information.
 		do
-			a_system.set_root_class (class_name)
+			a_system.set_root_type (class_name)
 			a_system.set_root_creation (creation_procedure_name)
 		end
 

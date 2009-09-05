@@ -5,7 +5,7 @@ indexing
 		"ECF Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -214,6 +214,7 @@ feature -- AST factory
 			-- New ECF library
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 			a_filename_not_void: a_filename /= Void
 			a_system_not_void: a_system /= Void
 		do
@@ -264,6 +265,7 @@ feature -- AST factory
 			-- New system
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 			a_filename_not_void: a_filename /= Void
 		do
 			create Result.make (a_name, a_filename)

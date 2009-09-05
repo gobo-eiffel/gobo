@@ -5,7 +5,7 @@ indexing
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,8 +18,7 @@ inherit
 		redefine
 			preparse,
 			parse_all,
-			preparse_local,
-			parse_all_local
+			set_none_type
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -37,10 +36,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_name: STRING) is
 			-- Create a new Eiffel system.
 			-- Error messages will be sent to standard files.
 			-- Use default Eiffel AST factory.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
 			error_handler := tokens.standard_error_handler
 			ast_factory := tokens.default_ast_factory
@@ -54,8 +56,8 @@ feature {NONE} -- Initialization
 			console_application_mode := True
 			alias_transition_mode := True
 			unknown_builtin_reported := True
-			set_basic_classes
 			set_default_class_mapping
+			set_kernel_types
 			create null_processor.make
 			eiffel_preparser := null_processor
 			eiffel_parser := null_processor
@@ -65,6 +67,8 @@ feature {NONE} -- Initialization
 			interface_checker := null_processor
 			implementation_checker := null_processor
 			flat_implementation_checker := null_processor
+			set_system_name (a_name)
+			make_adapted (a_name, Current)
 		end
 
 feature -- Status report
@@ -78,8 +82,8 @@ feature -- Status report
 
 feature -- Access
 
-	root_class: ET_CLASS
-			-- Root class
+	root_type: ET_BASE_TYPE
+			-- Root type
 
 	root_creation: ET_FEATURE_NAME
 			-- Root creation procedure
@@ -90,792 +94,26 @@ feature -- Access
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
 
-feature -- Basic classes
+feature -- Kernel types
 
-	any_class: ET_CLASS
-			-- Class "ANY"
-
-	any_type: ET_CLASS_TYPE
-			-- Class type "ANY"
-
-	any_parent: ET_PARENT
-			-- Default parent
-
-	any_parents: ET_PARENT_LIST
-			-- Default parents
-
-	any_clients: ET_CLIENT_LIST
-			-- Default client clause
-
-	arguments_class: ET_CLASS
-			-- Class "ARGUMENTS"
-
-	array_class: ET_CLASS
-			-- Class "ARRAY"
-
-	array_any_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "ARRAY [ANY]"
-
-	array_none_type: ET_GENERIC_CLASS_TYPE
-			-- Class type "ARRAY [NONE]"
-
-	bit_class: ET_CLASS
-			-- Class "BIT"
-
-	boolean_class: ET_CLASS
-			-- Class "BOOLEAN"
-
-	boolean_ref_class: ET_CLASS
-			-- Class "BOOLEAN_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	character_8_class: ET_CLASS
-			-- Class "CHARACTER_8"
-
-	character_8_ref_class: ET_CLASS
-			-- Class "CHARACTER_8_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	character_32_class: ET_CLASS
-			-- Class "CHARACTER_32"
-
-	character_32_ref_class: ET_CLASS
-			-- Class "CHARACTER_32_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	disposable_class: ET_CLASS
-			-- Class "DISPOSABLE"
-
-	function_class: ET_CLASS
-			-- Class "FUNCTION"
-
-	general_class: ET_CLASS
-			-- Class "GENERAL"
-
-	identified_routines_class: ET_CLASS
-			-- Class "IDENTIFIED_ROUTINES"
-
-	integer_8_class: ET_CLASS
-			-- Class "INTEGER_8"
-
-	integer_8_ref_class: ET_CLASS
-			-- Class "INTEGER_8_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	integer_16_class: ET_CLASS
-			-- Class "INTEGER_16"
-
-	integer_16_ref_class: ET_CLASS
-			-- Class "INTEGER_16_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	integer_32_class: ET_CLASS
-			-- Class "INTEGER_32"
-
-	integer_32_ref_class: ET_CLASS
-			-- Class "INTEGER_32_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	integer_64_class: ET_CLASS
-			-- Class "INTEGER_64"
-
-	integer_64_ref_class: ET_CLASS
-			-- Class "INTEGER_64_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	memory_class: ET_CLASS
-			-- Class "MEMORY"
-
-	native_array_class: ET_CLASS
-			-- Class "NATIVE_ARRAY"
-
-	natural_8_class: ET_CLASS
-			-- Class "NATURAL_8"
-
-	natural_8_ref_class: ET_CLASS
-			-- Class "NATURAL_8_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	natural_16_class: ET_CLASS
-			-- Class "NATURAL_16"
-
-	natural_16_ref_class: ET_CLASS
-			-- Class "NATURAL_16_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	natural_32_class: ET_CLASS
-			-- Class "NATURAL_32"
-
-	natural_32_ref_class: ET_CLASS
-			-- Class "NATURAL_32_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	natural_64_class: ET_CLASS
-			-- Class "NATURAL_64"
-
-	natural_64_ref_class: ET_CLASS
-			-- Class "NATURAL_64_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	none_class: ET_CLASS
-			-- Class "NONE"
-
-	none_type: ET_CLASS_TYPE
-			-- Class type "NONE"
-
-	platform_class: ET_CLASS
-			-- Class "PLATFORM"
-
-	pointer_class: ET_CLASS
-			-- Class "POINTER"
-
-	pointer_ref_class: ET_CLASS
-			-- Class "POINTER_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	predicate_class: ET_CLASS
-			-- Class "PREDICATE"
-
-	procedure_class: ET_CLASS
-			-- Class "PROCEDURE"
-
-	real_32_class: ET_CLASS
-			-- Class "REAL_32"
-
-	real_32_ref_class: ET_CLASS
-			-- Class "REAL_32_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	real_64_class: ET_CLASS
-			-- Class "REAL_64"
-
-	real_64_ref_class: ET_CLASS
-			-- Class "REAL_64_REF"
-			-- (Note that _REF classes are kept for backward compatibility with
-			-- ISE Eiffel, they are not part of ECMA Eiffel.)
-
-	routine_class: ET_CLASS
-			-- Class "ROUTINE"
-
-	special_class: ET_CLASS
-			-- Class "SPECIAL"
-
-	string_8_class: ET_CLASS
-			-- Class "STRING_8"
-
-	string_32_class: ET_CLASS
-			-- Class "STRING_32"
-
-	system_object_class: ET_CLASS
-			-- Class "SYSTEM_OBJECT" (in Eiffel for .NET)
-
-	system_object_parents: ET_PARENT_LIST
-			-- Default parents under .NET
-
-	system_string_class: ET_CLASS
-			-- Class "SYSTEM_STRING" (in Eiffel for .NET)
-
-	tuple_class: ET_CLASS
-			-- Class "TUPLE"
-
-	tuple_type: ET_TUPLE_TYPE
-			-- Type "TUPLE"
-
-	type_class: ET_CLASS
-			-- Class "TYPE"
-
-	typed_pointer_class: ET_CLASS
-			-- Class "TYPED_POINTER"
-
-	set_basic_classes is
-			-- Set basic classes.
+	set_none_type is
+			-- Set type "NONE".
 		local
+			l_name: ET_CLASS_NAME
+			l_adapted_class: ET_ADAPTED_CLASS
 			l_class: ET_CLASS
 			l_none_group: ET_NONE_GROUP
 		do
-				-- Make sure that `array_class' is set before `set_any_class'
-				-- and `set_none_class' are set, otherwise we have calls on
-				-- Void target when called from the creation procedure.
-			array_class := ast_factory.new_class (tokens.array_class_name)
-			register_class (array_class)
-			array_class.set_in_system (True)
-				-- Class "ANY".
-			l_class := ast_factory.new_class (tokens.any_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_any_class (l_class)
-				-- Class "ARGUMENTS".
-			arguments_class := ast_factory.new_class (tokens.arguments_class_name)
-			register_class (arguments_class)
-				-- Class "BIT".
-			bit_class := ast_factory.new_class (tokens.bit_class_name)
-			register_class (bit_class)
-			bit_class.set_in_system (True)
-				-- Class "BOOLEAN".
-			if boolean_class /= Void then
-				boolean_class.set_basic (False)
-			end
-			boolean_class := ast_factory.new_class (tokens.boolean_class_name)
-			register_class (boolean_class)
-			boolean_class.set_basic (True)
-			boolean_class.set_in_system (True)
-				-- Class "BOOLEAN_REF".
-			boolean_ref_class := ast_factory.new_class (tokens.boolean_ref_class_name)
-			register_class (boolean_ref_class)
-				-- Class "CHARACTER_8".
-			l_class := ast_factory.new_class (tokens.character_8_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_character_8_class (l_class)
-				-- Class "CHARACTER_8_REF".
-			character_8_ref_class := ast_factory.new_class (tokens.character_8_ref_class_name)
-			register_class (character_8_ref_class)
-				-- Class "CHARACTER_32".
-			l_class := ast_factory.new_class (tokens.character_32_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_character_32_class (l_class)
-				-- Class "CHARACTER_32_REF".
-			character_32_ref_class := ast_factory.new_class (tokens.character_32_ref_class_name)
-			register_class (character_32_ref_class)
-				-- Class "DISPOSABLE".
-			disposable_class := ast_factory.new_class (tokens.disposable_class_name)
-			register_class (disposable_class)
-				-- Class "FUNCTION".
-			function_class := ast_factory.new_class (tokens.function_class_name)
-			register_class (function_class)
-			function_class.set_in_system (True)
-				-- Class "IDENTIFIER_ROUTINES".
-			identified_routines_class := ast_factory.new_class (tokens.identified_routines_class_name)
-			register_class (identified_routines_class)
-				-- Class "INTEGER_8".
-			l_class := ast_factory.new_class (tokens.integer_8_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_integer_8_class (l_class)
-				-- Class "INTEGER_8_REF".
-			integer_8_ref_class := ast_factory.new_class (tokens.integer_8_ref_class_name)
-			register_class (integer_8_ref_class)
-				-- Class "INTEGER_16".
-			l_class := ast_factory.new_class (tokens.integer_16_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_integer_16_class (l_class)
-				-- Class "INTEGER_16_REF".
-			integer_16_ref_class := ast_factory.new_class (tokens.integer_16_ref_class_name)
-			register_class (integer_16_ref_class)
-				-- Class "INTEGER_32".
-			l_class := ast_factory.new_class (tokens.integer_32_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_integer_32_class (l_class)
-				-- Class "INTEGER_32_REF".
-			integer_32_ref_class := ast_factory.new_class (tokens.integer_32_ref_class_name)
-			register_class (integer_32_ref_class)
-				-- Class "INTEGER_64".
-			l_class := ast_factory.new_class (tokens.integer_64_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_integer_64_class (l_class)
-				-- Class "INTEGER_64_REF".
-			integer_64_ref_class := ast_factory.new_class (tokens.integer_64_ref_class_name)
-			register_class (integer_64_ref_class)
-				-- Class "MEMORY".
-			memory_class := ast_factory.new_class (tokens.memory_class_name)
-			register_class (memory_class)
-				-- Class "NATIVE_ARRAY".
-			native_array_class := ast_factory.new_class (tokens.native_array_class_name)
-			register_class (native_array_class)
-			native_array_class.set_in_system (True)
-				-- Class "NATURAL_8".
-			l_class := ast_factory.new_class (tokens.natural_8_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_natural_8_class (l_class)
-				-- Class "NATURAL_8_REF".
-			natural_8_ref_class := ast_factory.new_class (tokens.natural_8_ref_class_name)
-			register_class (natural_8_ref_class)
-				-- Class "NATURAL_16".
-			l_class := ast_factory.new_class (tokens.natural_16_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_natural_16_class (l_class)
-				-- Class "NATURAL_16_REF".
-			natural_16_ref_class := ast_factory.new_class (tokens.natural_16_ref_class_name)
-			register_class (natural_16_ref_class)
-				-- Class "NATURAL_32".
-			l_class := ast_factory.new_class (tokens.natural_32_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_natural_32_class (l_class)
-				-- Class "NATURAL_32_REF".
-			natural_32_ref_class := ast_factory.new_class (tokens.natural_32_ref_class_name)
-			register_class (natural_32_ref_class)
-				-- Class "NATURAL_64".
-			l_class := ast_factory.new_class (tokens.natural_64_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_natural_64_class (l_class)
-				-- Class "NATURAL_64_REF".
-			natural_64_ref_class := ast_factory.new_class (tokens.natural_64_ref_class_name)
-			register_class (natural_64_ref_class)
-				-- Class "NONE".
-			l_class := ast_factory.new_class (tokens.none_class_name)
+			l_name := tokens.none_class_name
+			l_adapted_class := adapted_class (l_name)
+			l_adapted_class.set_in_system (True)
+			create none_type.make (Void, l_name, l_adapted_class)
+			l_class := ast_factory.new_class (l_name)
 			register_class (l_class)
 			create l_none_group.make (Current)
 			l_class.set_group (l_none_group)
-			l_class.set_in_system (True)
-			set_none_class (l_class)
-				-- Class "PLATFORM".
-			platform_class := ast_factory.new_class (tokens.platform_class_name)
-			register_class (platform_class)
-				-- Class "POINTER".
-			if pointer_class /= Void then
-				pointer_class.set_basic (False)
-			end
-			pointer_class := ast_factory.new_class (tokens.pointer_class_name)
-			register_class (pointer_class)
-			pointer_class.set_basic (True)
-			pointer_class.set_in_system (True)
-				-- Class "POINTER_REF".
-			pointer_ref_class := ast_factory.new_class (tokens.pointer_ref_class_name)
-			register_class (pointer_ref_class)
-				-- Class "PREDICATE".
-			predicate_class := ast_factory.new_class (tokens.predicate_class_name)
-			register_class (predicate_class)
-			predicate_class.set_in_system (True)
-				-- Class "PROCEDURE".
-			procedure_class := ast_factory.new_class (tokens.procedure_class_name)
-			register_class (procedure_class)
-			procedure_class.set_in_system (True)
-				-- Class "REAL_32".
-			l_class := ast_factory.new_class (tokens.real_32_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_real_32_class (l_class)
-				-- Class "REAL_32_REF".
-			real_32_ref_class := ast_factory.new_class (tokens.real_32_ref_class_name)
-			register_class (real_32_ref_class)
-				-- Class "REAL_64".
-			l_class := ast_factory.new_class (tokens.real_64_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_real_64_class (l_class)
-				-- Class "REAL_64_REF".
-			real_64_ref_class := ast_factory.new_class (tokens.real_64_ref_class_name)
-			register_class (real_64_ref_class)
-				-- Class "ROUTINE".
-			routine_class := ast_factory.new_class (tokens.routine_class_name)
-			register_class (routine_class)
-			routine_class.set_in_system (True)
-				-- Class "SPECIAL".
-			special_class := ast_factory.new_class (tokens.special_class_name)
-			register_class (special_class)
-			special_class.set_in_system (True)
-				-- Class "STRING_8".
-			l_class := ast_factory.new_class (tokens.string_8_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_string_8_class (l_class)
-				-- Class "STRING_32".
-			l_class := ast_factory.new_class (tokens.string_32_class_name)
-			register_class (l_class)
-			l_class.set_in_system (True)
-			set_string_32_class (l_class)
-				-- Class "SYSTEM_OBJECT".
-			l_class := ast_factory.new_class (tokens.system_object_class_name)
-			register_class (l_class)
-			set_system_object_class (l_class)
-				-- Class "SYSTEM_STRING".
-			system_string_class := ast_factory.new_class (tokens.system_string_class_name)
-			register_class (system_string_class)
-				-- Class "TUPLE".
-			tuple_class := ast_factory.new_class (tokens.tuple_class_name)
-			register_class (tuple_class)
-			tuple_class.set_in_system (True)
-			create tuple_type.make (Void, Void, tuple_class)
-				-- Class "TYPE".
-			type_class := ast_factory.new_class (tokens.type_class_name)
-			register_class (type_class)
-			type_class.set_in_system (True)
-				-- Class "TYPED_POINTER".
-			typed_pointer_class := ast_factory.new_class (tokens.typed_pointer_class_name)
-			register_class (typed_pointer_class)
-			typed_pointer_class.set_in_system (True)
+			l_adapted_class.add_first_local_class (l_class)
 		end
-
-	set_any_class (a_class: ET_CLASS) is
-			-- Set `any_class' to `a_class'.
-			-- Update `any_type', `any_parent', `any_parents'
-			-- and `array_any_type' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_any_client: ET_CLIENT
-		do
-			any_class := a_class
-				-- Type "ANY".
-			create any_type.make (Void, any_class.name, any_class)
-				-- Implicit parent "ANY".
-			create any_parent.make (any_type, Void, Void, Void, Void, Void)
-			create any_parents.make_with_capacity (1)
-			any_parents.put_first (any_parent)
-				-- Implicit client clause.
-			create any_clients.make_with_capacity (1)
-			create l_any_client.make (tokens.any_class_name, any_class)
-			any_clients.put_first (l_any_client)
-				-- Type "ARRAY [ANY]".
-			create l_parameters.make_with_capacity (1)
-			l_parameters.put_first (any_type)
-			create array_any_type.make (Void, array_class.name, l_parameters, array_class)
-		ensure
-			any_class_set: any_class = a_class
-		end
-
-	set_array_class (a_class: ET_CLASS) is
-			-- Set `array_class' to `a_class'.
-			-- Update `array_any_type' and `array_none_type' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			array_class := a_class
-				-- Type "ARRAY [ANY]".
-			create l_parameters.make_with_capacity (1)
-			l_parameters.put_first (any_type)
-			create array_any_type.make (Void, array_class.name, l_parameters, array_class)
-				-- Type "ARRAY [NONE]".
-			create l_parameters.make_with_capacity (1)
-			l_parameters.put_first (none_type)
-			create array_none_type.make (Void, array_class.name, l_parameters, array_class)
-		ensure
-			array_class_set: array_class = a_class
-		end
-
-	set_character_8_class (a_class: ET_CLASS) is
-			-- Set `character_8_class' to `a_class'.
-			-- Update `character_8_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if character_8_class /= Void then
-				character_8_class.set_basic (False)
-			end
-			character_8_class := a_class
-			character_8_class.set_basic (True)
-				-- Built-in conversion features.
-			create character_8_convert_feature.make (character_8_class)
-		ensure
-			character_8_class_set: character_8_class = a_class
-		end
-
-	set_character_32_class (a_class: ET_CLASS) is
-			-- Set `character_32_class' to `a_class'.
-			-- Update `character_32_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if character_32_class /= Void then
-				character_32_class.set_basic (False)
-			end
-			character_32_class := a_class
-			character_32_class.set_basic (True)
-				-- Built-in conversion features.
-			create character_32_convert_feature.make (character_32_class)
-		ensure
-			character_32_class_set: character_32_class = a_class
-		end
-
-	set_integer_8_class (a_class: ET_CLASS) is
-			-- Set `integer_8_class' to `a_class'.
-			-- Update `integer_8_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if integer_8_class /= Void then
-				integer_8_class.set_basic (False)
-			end
-			integer_8_class := a_class
-			integer_8_class.set_basic (True)
-				-- Built-in conversion features.
-			create integer_8_convert_feature.make (integer_8_class)
-		ensure
-			integer_8_class_set: integer_8_class = a_class
-		end
-
-	set_integer_16_class (a_class: ET_CLASS) is
-			-- Set `integer_16_class' to `a_class'.
-			-- Update `integer_16_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if integer_16_class /= Void then
-				integer_16_class.set_basic (False)
-			end
-			integer_16_class := a_class
-			integer_16_class.set_basic (True)
-				-- Built-in conversion features.
-			create integer_16_convert_feature.make (integer_16_class)
-		ensure
-			integer_16_class_set: integer_16_class = a_class
-		end
-
-	set_integer_32_class (a_class: ET_CLASS) is
-			-- Set `integer_32_class' to `a_class'.
-			-- Update `integer_32_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if integer_32_class /= Void then
-				integer_32_class.set_basic (False)
-			end
-			integer_32_class := a_class
-			integer_32_class.set_basic (True)
-				-- Built-in conversion features.
-			create integer_32_convert_feature.make (integer_32_class)
-		ensure
-			integer_32_class_set: integer_32_class = a_class
-		end
-
-	set_integer_64_class (a_class: ET_CLASS) is
-			-- Set `integer_64_class' to `a_class'.
-			-- Update `integer_64_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if integer_64_class /= Void then
-				integer_64_class.set_basic (False)
-			end
-			integer_64_class := a_class
-			integer_64_class.set_basic (true)
-				-- Built-in conversion features.
-			create integer_64_convert_feature.make (integer_64_class)
-		ensure
-			integer_64_class_set: integer_64_class = a_class
-		end
-
-	set_natural_8_class (a_class: ET_CLASS) is
-			-- Set `natural_8_class' to `a_class'.
-			-- Update `natural_8_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if natural_8_class /= Void then
-				natural_8_class.set_basic (False)
-			end
-			natural_8_class := a_class
-			natural_8_class.set_basic (True)
-				-- Built-in conversion features.
-			create natural_8_convert_feature.make (natural_8_class)
-		ensure
-			natural_8_class_set: natural_8_class = a_class
-		end
-
-	set_natural_16_class (a_class: ET_CLASS) is
-			-- Set `natural_16_class' to `a_class'.
-			-- Update `natural_16_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if natural_16_class /= Void then
-				natural_16_class.set_basic (False)
-			end
-			natural_16_class := a_class
-			natural_16_class.set_basic (True)
-				-- Built-in conversion features.
-			create natural_16_convert_feature.make (natural_16_class)
-		ensure
-			natural_16_class_set: natural_16_class = a_class
-		end
-
-	set_natural_32_class (a_class: ET_CLASS) is
-			-- Set `natural_32_class' to `a_class'.
-			-- Update `natural_32_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if natural_32_class /= Void then
-				natural_32_class.set_basic (False)
-			end
-			natural_32_class := a_class
-			natural_32_class.set_basic (True)
-				-- Built-in conversion features.
-			create natural_32_convert_feature.make (natural_32_class)
-		ensure
-			natural_32_class_set: natural_32_class = a_class
-		end
-
-	set_natural_64_class (a_class: ET_CLASS) is
-			-- Set `natural_64_class' to `a_class'.
-			-- Update `natural_64_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if natural_64_class /= Void then
-				natural_64_class.set_basic (False)
-			end
-			natural_64_class := a_class
-			natural_64_class.set_basic (True)
-				-- Built-in conversion features.
-			create natural_64_convert_feature.make (natural_64_class)
-		ensure
-			natural_64_class_set: natural_64_class = a_class
-		end
-
-	set_none_class (a_class: ET_CLASS) is
-			-- Set `none_class' to `a_class'.
-			-- Update `none_type' and `array_none_type' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			none_class := a_class
-				-- Type "NONE".
-			create none_type.make (Void, none_class.name, none_class)
-				-- Type "ARRAY [NONE]".
-			create l_parameters.make_with_capacity (1)
-			l_parameters.put_first (none_type)
-			create array_none_type.make (Void, array_class.name, l_parameters, array_class)
-		ensure
-			none_class_set: none_class = a_class
-		end
-
-	set_real_32_class (a_class: ET_CLASS) is
-			-- Set `real_32_class' to `a_class'.
-			-- Update `real_32_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if real_32_class /= Void then
-				real_32_class.set_basic (False)
-			end
-			real_32_class := a_class
-			real_32_class.set_basic (True)
-				-- Built-in conversion features.
-			create real_32_convert_feature.make (real_32_class)
-		ensure
-			real_32_class_set: real_32_class = a_class
-		end
-
-	set_real_64_class (a_class: ET_CLASS) is
-			-- Set `real_64_class' to `a_class'.
-			-- Update `real_64_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if real_64_class /= Void then
-				real_64_class.set_basic (False)
-			end
-			real_64_class := a_class
-			real_64_class.set_basic (True)
-				-- Built-in conversion features.
-			create real_64_convert_feature.make (real_64_class)
-		ensure
-			real_64_class_set: real_64_class = a_class
-		end
-
-	set_string_8_class (a_class: ET_CLASS) is
-			-- Set `string_8_class' to `a_class'.
-			-- Update `string_8_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			string_8_class := a_class
-				-- Built-in conversion features.
-			create string_8_convert_feature.make (string_8_class)
-		ensure
-			string_8_class_set: string_8_class = a_class
-		end
-
-	set_string_32_class (a_class: ET_CLASS) is
-			-- Set `string_32_class' to `a_class'.
-			-- Update `string_32_convert_feature' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			string_32_class := a_class
-				-- Built-in conversion features.
-			create string_32_convert_feature.make (string_32_class)
-		ensure
-			string_32_class_set: string_32_class = a_class
-		end
-
-	set_system_object_class (a_class: ET_CLASS) is
-			-- Set `system_object_class' to `a_class'.
-			-- Update `system_object_parents' accordingly.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_system_object_parent: ET_PARENT
-		do
-			system_object_class := a_class
-				-- Implicit parent "SYSTEM_OBJECT".
-			create l_system_object_parent.make (system_object_class, Void, Void, Void, Void, Void)
-			create system_object_parents.make_with_capacity (1)
-			system_object_parents.put_first (l_system_object_parent)
-		ensure
-			system_object_class_set: system_object_class = a_class
-		end
-
-feature -- Built-in convert features
-
-	character_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to CHARACTER_8
-
-	character_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to CHARACTER_32
-
-	integer_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_8
-
-	integer_16_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_16
-
-	integer_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_32
-
-	integer_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to INTEGER_64
-
-	natural_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to NATURAL_8
-
-	natural_16_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to NATURAL_16
-
-	natural_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to NATURAL_32
-
-	natural_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to NATURAL_64
-
-	real_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to REAL_32
-
-	real_64_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to REAL_64
-
-	string_8_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to STRING_8
-
-	string_32_convert_feature: ET_BUILTIN_CONVERT_FEATURE
-			-- Built-in conversion feature to STRING_32
 
 feature -- Feature seeds
 
@@ -1005,30 +243,27 @@ feature -- Inline constant registration
 
 feature -- Setting
 
-	set_root_class (a_name: ET_CLASS_NAME) is
-			-- Set `root_class'.
+	set_root_type (a_name: ET_CLASS_NAME) is
+			-- Set `root_type'.
 		require
 			a_name_not_void: a_name /= Void
+		local
+			l_class: ET_ADAPTED_CLASS
 		do
-			if a_name.same_class_name (tokens.none_class_name) then
-				root_class := none_class
-			elseif a_name.same_class_name (tokens.any_class_name) then
-				root_class := any_class
-			else
-				root_class := eiffel_class (a_name)
-			end
-			root_class.set_in_system (True)
+			l_class := adapted_class (a_name)
+			l_class.set_marked (True)
+			create {ET_CLASS_TYPE} root_type.make (Void, a_name, l_class)
 		ensure
-			root_class_not_void: root_class /= Void
-			root_class_set: root_class.name.same_class_name (a_name)
+			root_type_not_void: root_type /= Void
+			root_type_set: root_type.name.same_class_name (a_name)
 		end
 
-	unset_root_class is
-			-- Unset `root_class'.
+	unset_root_type is
+			-- Unset `root_type'.
 		do
-			root_class := Void
+			root_type := Void
 		ensure
-			root_class_unset: root_class = Void
+			root_type_unset: root_type = Void
 		end
 
 	set_root_creation (a_name: like root_creation) is
@@ -1199,10 +434,6 @@ feature -- Parser status report
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 
-	unknown_builtin_reported: BOOLEAN
-			-- Should unknown built-in features be reported as
-			-- an error when parsing a class?
-
 	providers_enabled: BOOLEAN
 			-- Should providers be built when parsing a class?
 
@@ -1298,14 +529,6 @@ feature -- Parser setting
 			set_use_detachable_keyword (True)
 		end
 
-	set_unknown_builtin_reported (b: BOOLEAN) is
-			-- Set `unknown_builtin_reported' to `b'.
-		do
-			unknown_builtin_reported := b
-		ensure
-			unknown_builtin_reported_set: unknown_builtin_reported = b
-		end
-
 	set_providers_enabled (b: BOOLEAN) is
 			-- Set `providers_enabled' to `b'.
 		do
@@ -1337,7 +560,7 @@ feature -- Parser setting
 		ensure
 			preparse_enabled_set: preparse_enabled = b
 		end
-		
+
 	set_preparse_shallow_mode is
 			-- Set `preparse_shallow_mode' to True.
 		do
@@ -1403,6 +626,9 @@ feature -- Implementation checking status report
 	suppliers_enabled: BOOLEAN
 			-- Should suppliers of classes be computed?
 
+	unknown_builtin_reported: BOOLEAN
+			-- Should unknown built-in features be reported as an error?
+
 feature -- Implementation checking status setting
 
 	set_flat_mode (b: BOOLEAN) is
@@ -1459,49 +685,35 @@ feature -- Implementation checking status setting
 			suppliers_enabled_set: suppliers_enabled = b
 		end
 
+	set_unknown_builtin_reported (b: BOOLEAN) is
+			-- Set `unknown_builtin_reported' to `b'.
+		do
+			unknown_builtin_reported := b
+		ensure
+			unknown_builtin_reported_set: unknown_builtin_reported = b
+		end
+
 feature -- Parsing
 
 	preparse is
 			-- Build a mapping between class names and their filenames and
-			-- populate `classes' (both with classes declared locally and
-			-- exported by other universes which have themselves been preparsed
-			-- recursively during this call), even if the classes have not been
-			-- parsed yet. If current universe had already been reparsed,
+			-- populate `classes', even if the classes have not been
+			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
 			-- are added to `classes', but are not parsed.
 			--
+			-- Note that both locally declared classes and classes imported
+			-- from other universes (after having themselves been preparsed
+			-- recursively) will be taken into account.
+			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
 		do
 			precursor
 			build_scm_read_mappings
 			build_scm_write_mappings
-		end
-
-	preparse_local is
-			-- Build a mapping between class names and their filenames and
-			-- populate `classes' (both with classes declared locally and
-			-- exported by other universes which are assumed to have been
-			-- preparsed before this call), even if the classes have not been
-			-- parsed yet. If current universe had already been reparsed,
-			-- then rebuild the mapping between class names and filenames:
-			-- modified classes are reset and left unparsed and new classes
-			-- are added to `classes', but are not parsed.
-			--
-			-- The queries `current_system.preparse_*_mode' govern the way
-			-- preparsing works. Read the header comments of these features
-			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
-		do
-			precursor
-			if root_class /= Void then
-				root_class := eiffel_class (root_class.name)
-			end
 		end
 
 	parse_all is
@@ -1512,7 +724,7 @@ feature -- Parsing
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
 			-- this process and `classes' will be populated (both with classes
-			-- declared locally and those exported by other universes which
+			-- declared locally and those imported from other universes which
 			-- have themselves been parsed recursively during this call).
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
@@ -1521,37 +733,10 @@ feature -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
 		do
 			precursor
 			build_scm_read_mappings
 			build_scm_write_mappings
-		end
-
-	parse_all_local is
-			-- Parse all classes declared locally in the current universe.
-			-- There is not need to call one of the preparse routines
-			-- beforehand since the current routine will traverse all
-			-- clusters and parse all Eiffel files anyway. The mapping
-			-- between class names and their filenames will be done during
-			-- this process and `classes' will be populated (both with classes
-			-- declared locally and those exported by other universes which
-			-- are assumed to have been preparsed before this call).
-			-- If current universe had already been preparsed, then rebuild
-			-- the mapping between class names and filenames and reparse
-			-- the classes that have been modified or were not parsed yet.
-			--
-			-- The queries `current_system.preparse_*_mode' govern the way
-			-- preparsing works. Read the header comments of these features
-			-- for more details.
-			--
-			-- `classes_modified' and `classes_added' will be updated.
-		do
-			precursor
-			if root_class /= Void then
-				root_class := eiffel_class (root_class.name)
-			end
 		end
 
 	parse_system is
@@ -1562,17 +747,21 @@ feature -- Parsing
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
 		local
+			l_root_class: ET_CLASS
 			l_parsed_class_count: INTEGER
 			l_old_parsed_class_count: INTEGER
 			l_done: BOOLEAN
 		do
-			if root_class /= Void then
-				root_class.process (eiffel_parser)
-				if root_class = none_class then
-					parse_all
-				elseif not root_class.is_preparsed then
+			if root_type = Void then
+				-- Do nothing.
+			elseif root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
+				parse_all
+			else
+				l_root_class := root_type.base_class
+				l_root_class.process (eiffel_parser)
+				if not l_root_class.is_preparsed then
 						-- Error: unknown root class.
-					error_handler.report_gvsrc4a_error (root_class)
+					error_handler.report_gvsrc4a_error (l_root_class)
 				else
 					l_done := False
 					l_old_parsed_class_count := parsed_class_count
@@ -1740,7 +929,11 @@ feature -- Compilation
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
 		do
-			if root_class = Void or root_class = none_class or root_class = any_class then
+			if root_type = Void then
+				compile_all
+			elseif  root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
+				compile_all
+			elseif root_type.same_named_type (any_type, tokens.unknown_class, tokens.unknown_class) then
 				compile_all
 			else
 				compile_system
@@ -2198,81 +1391,6 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	ast_factory_not_void: ast_factory /= Void
-		-- Basic classes.
-	any_class_not_void: any_class /= Void
-	any_type_not_void: any_type /= Void
-	any_parent_not_void: any_parent /= Void
-	any_parents_not_void: any_parents /= Void
-	any_clients_not_void: any_clients /= Void
-	arguments_class_not_void: arguments_class /= Void
-	array_class_not_void: array_class /= Void
-	array_any_type_not_void: array_any_type /= Void
-	array_none_type_not_void: array_none_type /= Void
-	bit_class_not_void: bit_class /= Void
-	boolean_class_not_void: boolean_class /= Void
-	boolean_ref_class_not_void: boolean_ref_class /= Void
-	character_8_class_not_void: character_8_class /= Void
-	character_8_ref_class_not_void: character_8_ref_class /= Void
-	character_32_class_not_void: character_32_class /= Void
-	character_32_ref_class_not_void: character_32_ref_class /= Void
-	disposable_class_not_void: disposable_class /= Void
-	function_class_not_void: function_class /= Void
-	identified_routines_class_not_void: identified_routines_class /= Void
-	integer_8_class_not_void: integer_8_class /= Void
-	integer_8_ref_class_not_void: integer_8_ref_class /= Void
-	integer_16_class_not_void: integer_16_class /= Void
-	integer_16_ref_class_not_void: integer_16_ref_class /= Void
-	integer_32_class_not_void: integer_32_class /= Void
-	integer_32_ref_class_not_void: integer_32_ref_class /= Void
-	integer_64_class_not_void: integer_64_class /= Void
-	integer_64_ref_class_not_void: integer_64_ref_class /= Void
-	memory_class_not_void: memory_class /= Void
-	native_array_class_not_void: native_array_class /= Void
-	natural_8_class_not_void: natural_8_class /= Void
-	natural_8_ref_class_not_void: natural_8_ref_class /= Void
-	natural_16_class_not_void: natural_16_class /= Void
-	natural_16_ref_class_not_void: natural_16_ref_class /= Void
-	natural_32_class_not_void: natural_32_class /= Void
-	natural_32_ref_class_not_void: natural_32_ref_class /= Void
-	natural_64_class_not_void: natural_64_class /= Void
-	natural_64_ref_class_not_void: natural_64_ref_class /= Void
-	none_class_not_void: none_class /= Void
-	none_type_not_void: none_type /= Void
-	platform_class_not_void: platform_class /= Void
-	pointer_class_not_void: pointer_class /= Void
-	pointer_ref_class_not_void: pointer_ref_class /= Void
-	predicate_class_not_void: predicate_class /= Void
-	procedure_class_not_void: procedure_class /= Void
-	real_32_class_not_void: real_32_class /= Void
-	real_32_ref_class_not_void: real_32_ref_class /= Void
-	real_64_class_not_void: real_64_class /= Void
-	real_64_ref_class_not_void: real_64_ref_class /= Void
-	routine_class_not_void: routine_class /= Void
-	special_class_not_void: special_class /= Void
-	string_8_class_not_void: string_8_class /= Void
-	string_32_class_not_void: string_32_class /= Void
-	system_object_class_not_void: system_object_class /= Void
-	system_object_parents_not_void: system_object_parents /= Void
-	system_string_class_not_void: system_string_class /= Void
-	tuple_class_not_void: tuple_class /= Void
-	tuple_type_not_void: tuple_type /= Void
-	type_class_not_void: type_class /= Void
-	typed_pointer_class_not_void: typed_pointer_class /= Void
-		-- Built-in convert features.
-	character_8_convert_feature_not_void: character_8_convert_feature /= Void
-	character_32_convert_feature_not_void: character_32_convert_feature /= Void
-	integer_8_convert_feature_not_void: integer_8_convert_feature /= Void
-	integer_16_convert_feature_not_void: integer_16_convert_feature /= Void
-	integer_32_convert_feature_not_void: integer_32_convert_feature /= Void
-	integer_64_convert_feature_not_void: integer_64_convert_feature /= Void
-	natural_8_convert_feature_not_void: natural_8_convert_feature /= Void
-	natural_16_convert_feature_not_void: natural_16_convert_feature /= Void
-	natural_32_convert_feature_not_void: natural_32_convert_feature /= Void
-	natural_64_convert_feature_not_void: natural_64_convert_feature /= Void
-	real_32_convert_feature_not_void: real_32_convert_feature /= Void
-	real_64_convert_feature_not_void: real_64_convert_feature /= Void
-	string_8_convert_feature_not_void: string_8_convert_feature /= Void
-	string_32_convert_feature_not_void: string_32_convert_feature /= Void
 		-- Feature seeds.
 	default_create_seed_not_negative: default_create_seed >= 0
 	copy_seed_not_negative: copy_seed >= 0

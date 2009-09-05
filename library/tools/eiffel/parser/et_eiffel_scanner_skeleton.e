@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			last_text_count := 1
 			last_literal_start := 1
 			filename := a_filename
-			group := tokens.unknown_class.group
+			group := tokens.unknown_group
 		ensure
 			filename_set: filename = a_filename
 		end
@@ -76,18 +76,16 @@ feature -- Access
 	group: ET_GROUP
 			-- Group to which the class being parsed belongs
 
-	universe: ET_UNIVERSE is
+	current_universe: ET_UNIVERSE is
 			-- Universe to which the class being parsed belongs
 		do
 			Result := group.universe
 		ensure
-			universe_not_void: Result /= Void
+			current_universe_not_void: Result /= Void
 		end
 
 	current_system: ET_SYSTEM is
 			-- Surrounding Eiffel system
-			-- (Note: there is a frozen feature called `system' in
-			-- class GENERAL of SmartEiffel 1.0)
 		do
 			Result := group.current_system
 		ensure

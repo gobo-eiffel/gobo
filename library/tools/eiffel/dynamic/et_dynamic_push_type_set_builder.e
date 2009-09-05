@@ -23,8 +23,6 @@ inherit
 			build_agent_call,
 			report_manifest_array,
 			report_manifest_tuple,
-			report_string_8_constant,
-			report_string_32_constant,
 			propagate_agent_closed_operands_dynamic_types,
 			propagate_argument_dynamic_types,
 			propagate_argument_operand_dynamic_types,
@@ -37,6 +35,7 @@ inherit
 			propagate_creation_dynamic_type,
 			propagate_inline_agent_result_dynamic_types,
 			propagate_like_argument_dynamic_types,
+			propagate_manifest_string_area_dynamic_type,
 			propagate_named_object_test_dynamic_types,
 			propagate_tuple_label_result_dynamic_types,
 			propagate_tuple_label_argument_dynamic_types,
@@ -369,118 +368,6 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_string_8_constant (a_string: ET_MANIFEST_STRING) is
-			-- Report that a string_8 has been processed.
-		local
-			l_string_type: ET_DYNAMIC_TYPE
-			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_area_type_set: ET_DYNAMIC_TYPE_SET
-			l_special_type: ET_DYNAMIC_TYPE
-			l_string_universe: ET_UNIVERSE
-			l_special_universe: ET_UNIVERSE
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_string_type := current_dynamic_system.string_8_type
-				if a_string.index = 0 and string_8_index.item /= 0 then
-					a_string.set_index (string_8_index.item)
-				end
-				mark_type_alive (l_string_type)
-				set_dynamic_type_set (l_string_type, a_string)
-				if string_8_index.item = 0 then
-					string_8_index.put (a_string.index)
-				end
-					-- Make sure that type "SPECIAL [CHARACTER_8]" (used in
-					-- feature 'area') is marked as alive.
-				l_special_type := current_dynamic_system.special_character_8_type
-				mark_type_alive (l_special_type)
-					-- Feature 'area' should be the first in the list of features.
-				l_queries := l_string_type.queries
-				if l_queries.is_empty then
-						-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
-					set_fatal_error
-				else
-					l_area_type_set := l_queries.item (1).result_type_set
-					if l_area_type_set = Void then
-							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
-						set_fatal_error
-					else
-						l_special_type.put_target (l_area_type_set, current_dynamic_system)
-					end
-				end
-					-- Make sure that type "CHARACTER_8" (used as actual generic type
-					-- of "SPECIAL [CHARACTER_8]" in feature 'area') is marked as alive.
-				mark_type_alive (current_dynamic_system.character_8_type)
-					-- Make sure that type "INTEGER" (used in attribute 'count'
-					-- of "STRING_8") is marked as alive.
-				l_string_universe := l_string_type.base_class.universe
-				if l_string_universe /= Void then
-					mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
-				end
-					-- Make sure that type "INTEGER" (used in attribute 'count'
-					-- of "SPECIAL [CHARACTER_8]") is marked as alive.
-				l_special_universe := l_special_type.base_class.universe
-				if l_special_universe /= Void then
-					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
-				end
-			end
-		end
-
-	report_string_32_constant (a_string: ET_MANIFEST_STRING) is
-			-- Report that a string_32 has been processed.
-		local
-			l_string_type: ET_DYNAMIC_TYPE
-			l_queries: ET_DYNAMIC_FEATURE_LIST
-			l_area_type_set: ET_DYNAMIC_TYPE_SET
-			l_special_type: ET_DYNAMIC_TYPE
-			l_string_universe: ET_UNIVERSE
-			l_special_universe: ET_UNIVERSE
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_string_type := current_dynamic_system.string_32_type
-				if a_string.index = 0 and string_32_index.item /= 0 then
-					a_string.set_index (string_32_index.item)
-				end
-				mark_type_alive (l_string_type)
-				set_dynamic_type_set (l_string_type, a_string)
-				if string_32_index.item = 0 then
-					string_32_index.put (a_string.index)
-				end
-					-- Make sure that type "SPECIAL [CHARACTER_32]" (used in
-					-- feature 'area') is marked as alive.
-				l_special_type := current_dynamic_system.special_character_32_type
-				mark_type_alive (l_special_type)
-					-- Feature 'area' should be the first in the list of features.
-				l_queries := l_string_type.queries
-				if l_queries.is_empty then
-						-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
-					set_fatal_error
-				else
-					l_area_type_set := l_queries.item (1).result_type_set
-					if l_area_type_set = Void then
-							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
-						set_fatal_error
-					else
-						l_special_type.put_target (l_area_type_set, current_dynamic_system)
-					end
-				end
-					-- Make sure that type "CHARACTER_32" (used as actual generic type
-					-- of "SPECIAL [CHARACTER_32]" in feature 'area') is marked as alive.
-				mark_type_alive (current_dynamic_system.character_32_type)
-					-- Make sure that type "INTEGER" (used in attribute 'count'
-					-- of "STRING_32") is marked as alive.
-				l_string_universe := l_string_type.base_class.universe
-				if l_string_universe /= Void then
-					mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
-				end
-					-- Make sure that type "INTEGER" (used in attribute 'count'
-					-- of "SPECIAL [CHARACTER_32]") is marked as alive.
-				l_special_universe := l_special_type.base_class.universe
-				if l_special_universe /= Void then
-					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
-				end
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	propagate_agent_closed_operands_dynamic_types (an_agent: ET_AGENT; an_agent_type: ET_DYNAMIC_ROUTINE_TYPE) is
@@ -529,7 +416,7 @@ feature {NONE} -- Implementation
 					l_parameters.put_first (l_dynamic_type_set.static_type.base_type)
 				end
 			end
-			create l_tuple_type.make (Void, l_parameters, current_system.tuple_class)
+			create l_tuple_type.make (Void, l_parameters, current_universe_impl.tuple_type.named_base_class)
 			l_dynamic_tuple_type ?= current_dynamic_system.dynamic_type (l_tuple_type, current_system.any_type)
 			if l_dynamic_tuple_type = Void then
 					-- Internal error: the dynamic type of a Tuple type
@@ -802,6 +689,13 @@ feature {NONE} -- Implementation
 			-- `an_actual_type_set' has a static type which corresponds to the actual type of the argument.
 		do
 			a_formal_type_set.put_target (an_actual_type_set, current_dynamic_system)
+		end
+
+	propagate_manifest_string_area_dynamic_type (a_area_type: ET_DYNAMIC_TYPE; a_area_type_set: ET_DYNAMIC_TYPE_SET; a_string: ET_MANIFEST_STRING) is
+			-- Propagate the dynamic type of the 'area' of manifest string `a_string'
+			-- to its dynamic type set `a_area_type_set'.
+		do
+			a_area_type.put_target (a_area_type_set, current_dynamic_system)
 		end
 
 	propagate_named_object_test_dynamic_types (a_object_test: ET_NAMED_OBJECT_TEST) is

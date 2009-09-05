@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			create signature_checker.make
 			create parent_checker.make
 			create formal_parameter_checker.make
+			create builtin_feature_checker.make
 			create precursor_checker.make
 			create precursors.make_map (20)
 		end
@@ -134,16 +135,6 @@ feature {NONE} -- Processing
 					current_class.set_features_flattened
 						-- Process parents first.
 					a_parents := current_class.parents
-					if a_parents = Void or else a_parents.is_empty then
-						if current_class = current_system.any_class then
-								-- "ANY" has no implicit parents.
-							a_parents := Void
-						elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
-							a_parents := current_system.system_object_parents
-						else
-							a_parents := current_system.any_parents
-						end
-					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
@@ -562,6 +553,7 @@ feature {NONE} -- Feature flattening
 				check_assigners_validity
 				check_creators_validity
 				check_convert_validity
+				check_kernel_features_validity
 			end
 			named_features.wipe_out
 		ensure
@@ -604,6 +596,8 @@ feature {NONE} -- Feature processing
 		do
 			if a_feature.implementation_class /= current_class then
 -- TODO: error: this can happen when processing .NET features.
+			else
+				check_builtin_feature_validity (a_feature)
 			end
 		end
 
@@ -628,6 +622,7 @@ feature {NONE} -- Feature processing
 			i, nb: INTEGER
 		do
 			l_flattened_feature := a_feature.flattened_feature
+			check_builtin_feature_validity (l_flattened_feature)
 			l_dotnet := (current_class.is_dotnet and then l_flattened_feature.is_dotnet)
 			if l_dotnet then
 				if
@@ -1568,6 +1563,124 @@ feature {NONE} -- Signature validity
 			-- features. It can also be that the signature of one of the features of
 			-- `current_class' is based on an unknown class.
 
+feature {NONE} -- Built-in feature validity
+
+	check_builtin_feature_validity (a_feature: ET_FEATURE) is
+			-- Check whether `a_feature' is a known built-in feature,
+			-- and if yes, check the validity of its signature.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			builtin_feature_checker.check_builtin_feature_validity (a_feature)
+			if builtin_feature_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
+		end
+
+	builtin_feature_checker: ET_BUILTIN_FEATURE_CHECKER
+			-- Built-in feature validity checker
+
+feature {NONE} -- Kernel feature validity
+
+	check_kernel_features_validity is
+			-- Check validity of kernel features declared in `current_class'.
+			-- Keep track of their seeds if needed.
+		local
+			l_class: ET_CLASS
+			l_feature: ET_FEATURE
+		do
+			l_class := current_class
+			if l_class.is_any_class then
+					-- ANY.default_create.
+				named_features.search (tokens.default_create_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_default_create_seed (l_feature.first_seed)
+					else
+						set_fatal_error (l_class)
+						error_handler.report_gvkfe4a_error (l_class, l_feature)
+						current_system.set_default_create_seed (0)
+					end
+				else
+					set_fatal_error (l_class)
+					error_handler.report_gvkfe1a_error (l_class, tokens.default_create_feature_name)
+					current_system.set_default_create_seed (0)
+				end
+					-- ANY.copy.
+				named_features.search (tokens.copy_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_copy_seed (l_feature.first_seed)
+					else
+						set_fatal_error (l_class)
+						error_handler.report_gvkfe4a_error (l_class, l_feature)
+						current_system.set_copy_seed (0)
+					end
+				else
+					set_fatal_error (l_class)
+					error_handler.report_gvkfe1a_error (l_class, tokens.copy_feature_name)
+					current_system.set_copy_seed (0)
+				end
+					-- ANY.is_equal.
+				named_features.search (tokens.is_equal_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_is_equal_seed (l_feature.first_seed)
+					else
+						set_fatal_error (l_class)
+						error_handler.report_gvkfe5a_error (l_class, l_feature)
+						current_system.set_is_equal_seed (0)
+					end
+				else
+					set_fatal_error (l_class)
+					error_handler.report_gvkfe1a_error (l_class, tokens.is_equal_feature_name)
+					current_system.set_is_equal_seed (0)
+				end
+			elseif l_class.is_routine_class then
+					-- ROUTINE.call.
+				named_features.search (tokens.call_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_routine_call_seed (l_feature.first_seed)
+					else
+						current_system.set_routine_call_seed (0)
+					end
+				else
+					current_system.set_routine_call_seed (0)
+				end
+			elseif l_class.is_function_class then
+					-- FUNCTION.item.
+				named_features.search (tokens.item_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_query then
+						current_system.set_function_item_seed (l_feature.first_seed)
+					else
+						current_system.set_function_item_seed (0)
+					end
+				else
+					current_system.set_function_item_seed (0)
+				end
+			elseif l_class.is_disposable_class then
+					-- DISPOSABLE.dispose.
+				named_features.search (tokens.dispose_feature_name)
+				if named_features.found then
+					l_feature := named_features.found_item.flattened_feature
+					if l_feature.is_procedure then
+						current_system.set_dispose_seed (l_feature.first_seed)
+					else
+						current_system.set_dispose_seed (0)
+					end
+				else
+					current_system.set_dispose_seed (0)
+				end
+			end
+		end
+
 feature {NONE} -- Formal parameters validity
 
 	check_formal_parameters_validity is
@@ -1898,6 +2011,7 @@ invariant
 	signature_checker_not_void: signature_checker /= Void
 	parent_checker_not_void: parent_checker /= Void
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
+	builtin_feature_checker_not_void: builtin_feature_checker /= Void
 	precursor_checker_not_void: precursor_checker /= Void
 	precursors_not_void: precursors /= Void
 	no_void_precursor: not precursors.has_void_item

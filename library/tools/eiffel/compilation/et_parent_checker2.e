@@ -5,7 +5,7 @@ indexing
 		"Eiffel parent validity second pass checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -48,7 +48,7 @@ feature -- Validity checking
 			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
-			a_parents := current_class.parents
+			a_parents := current_class.parent_clause
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
@@ -56,7 +56,7 @@ feature -- Validity checking
 					i := i + 1
 				end
 			end
-			current_class := a_class
+			current_class := old_class
 		end
 
 feature {NONE} -- Parent validity

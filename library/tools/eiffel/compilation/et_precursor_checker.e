@@ -136,11 +136,11 @@ feature {NONE} -- Precursor validity
 			a_parent_name := a_precursor.parent_name
 			if a_parent_name /= Void then
 				a_class_name := a_parent_name.class_name
-				if not universe.has_class (a_class_name) then
+				if not current_universe.has_class (a_class_name) then
 					set_fatal_error
 					error_handler.report_vdpr2a_error (current_class, a_precursor)
 				else
-					a_class := universe.eiffel_class (a_class_name)
+					a_class := current_universe.adapted_class (a_class_name).actual_class
 					from
 						a_parent_feature := current_feature.parent_feature
 					until
@@ -208,9 +208,9 @@ feature {NONE} -- Precursor validity
 								error_handler.report_vdpr3b_error (current_class, a_precursor, a_feature, a_deferred)
 							end
 						else
-							a_parents := current_class.parents
+							a_parents := current_class.parent_clause
 							if a_parents = Void then
-								if a_class /= current_system.any_class then
+								if not a_class.is_any_class then
 									set_fatal_error
 									error_handler.report_vdpr2a_error (current_class, a_precursor)
 								else

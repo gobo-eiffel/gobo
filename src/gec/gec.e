@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,9 @@ inherit
 		export {NONE} all end
 
 	ET_SHARED_ERROR_HANDLERS
+		export {NONE} all end
+
+	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
 create
@@ -191,7 +194,7 @@ feature {NONE} -- Processing
 		local
 			l_system: ET_DYNAMIC_SYSTEM
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
-			l_class: ET_CLASS
+			l_root_type: ET_BASE_TYPE
 			l_generator: ET_C_GENERATOR
 			l_command: KL_SHELL_COMMAND
 			l_filename: STRING
@@ -217,10 +220,10 @@ feature {NONE} -- Processing
 			create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} l_builder.make (l_system)
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile
-			l_class := a_system.root_class
-			if l_class = Void then
+			l_root_type := a_system.root_type
+			if l_root_type = Void then
 				-- Do nothing.
-			elseif l_class = a_system.none_class then
+			elseif l_root_type.same_named_type (a_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 				-- Do nothing.
 			elseif l_system.has_fatal_error then
 				Exceptions.die (1)
@@ -228,7 +231,7 @@ feature {NONE} -- Processing
 					-- C code generation.
 				l_system_name := a_system.system_name
 				if l_system_name = Void then
-					l_system_name := l_class.lower_name
+					l_system_name := l_root_type.base_class.lower_name
 				end
 				create l_generator.make (l_system)
 				if gc_option.was_found then

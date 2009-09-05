@@ -5,7 +5,7 @@ indexing
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		require
 			a_feature_checker_not_void: a_feature_checker /= Void
 		local
-			l_suppliers: DS_HASH_SET [ET_CLASS]
+			l_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 		do
 			make_class_processor
 			feature_checker := a_feature_checker
@@ -191,7 +191,7 @@ feature {NONE} -- Processing
 			a_parents: ET_PARENT_LIST
 			a_parent_class: ET_CLASS
 			a_error_in_parent: BOOLEAN
-			l_suppliers, l_suppliers2: DS_HASH_SET [ET_CLASS]
+			l_suppliers, l_suppliers2: DS_HASH_SET [ET_NAMED_CLASS]
 			i, nb: INTEGER
 		do
 			old_class := current_class
@@ -203,14 +203,6 @@ feature {NONE} -- Processing
 					current_class.set_implementation_checked
 						-- Process parents first.
 					a_parents := current_class.parents
-					if a_parents = Void or else a_parents.is_empty then
-						if current_class = current_system.any_class then
-								-- "ANY" has no implicit parents.
-							a_parents := Void
-						else
-							a_parents := current_system.any_parents
-						end
-					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
@@ -522,7 +514,7 @@ feature {NONE} -- Suppliers
 	supplier_builder: ET_SUPPLIER_BUILDER
 			-- Supplier builder
 
-	no_suppliers: DS_HASH_SET [ET_CLASS]
+	no_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
 			-- Empty set of supplier classes
 
 invariant

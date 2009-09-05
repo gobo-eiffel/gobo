@@ -5,7 +5,7 @@ indexing
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,19 +34,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_parameters: like actual_parameters; a_base_class: ET_CLASS) is
+	make (a_type_mark: like type_mark; a_parameters: like actual_parameters; a_named_base_class: like named_base_class) is
 			-- Create a new TUPLE type.
 		require
-			a_base_class_not_void: a_base_class /= Void
+			a_named_base_class_not_void: a_named_base_class /= Void
 		do
 			type_mark := a_type_mark
 			tuple_keyword := tokens.tuple_keyword
 			actual_parameters := a_parameters
-			base_class := a_base_class
+			named_base_class := a_named_base_class
 		ensure
 			type_mark_set: type_mark = a_type_mark
 			actual_parameters_set: actual_parameters = a_parameters
-			base_class_set: base_class = a_base_class
+			named_base_class_set: named_base_class = a_named_base_class
 		end
 
 feature -- Access
@@ -82,7 +82,7 @@ feature -- Access
 				if an_actual_parameters /= Void then
 					a_named_parameters := an_actual_parameters.named_types (a_context)
 					if a_named_parameters /= an_actual_parameters then
-						create Result.make (type_mark, a_named_parameters, base_class)
+						create Result.make (type_mark, a_named_parameters, named_base_class)
 						Result.set_tuple_keyword (tuple_keyword)
 					end
 				end
@@ -175,7 +175,7 @@ feature -- Comparison
 	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -215,7 +215,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -351,7 +351,7 @@ feature -- Type processing
 			if an_actual_parameters /= Void then
 				a_resolved_parameters := an_actual_parameters.resolved_formal_parameters (a_parameters)
 				if a_resolved_parameters /= an_actual_parameters then
-					create Result.make (type_mark, a_resolved_parameters, base_class)
+					create Result.make (type_mark, a_resolved_parameters, named_base_class)
 					Result.set_tuple_keyword (tuple_keyword)
 				end
 			end

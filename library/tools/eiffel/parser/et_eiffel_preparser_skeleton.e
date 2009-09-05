@@ -5,7 +5,7 @@ indexing
 		"Eiffel preparser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,9 +71,6 @@ feature -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `universe.classes_modified' and `universe.classes_added' will
-			-- be updated.
 		do
 			preparse_cluster (a_cluster)
 		end
@@ -83,14 +80,11 @@ feature {NONE} -- Parsing
 	preparse_cluster (a_cluster: ET_CLUSTER) is
 			-- Traverse `a_cluster' (recursively) and build a mapping
 			-- between class names and filenames. Classes are added to
-			-- `universe.classes', but are not parsed.
+			-- `current_universe.classes', but are not parsed.
 			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `universe.classes_modified' and `universe.classes_added' will
-			-- be updated.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -125,7 +119,7 @@ feature {NONE} -- Parsing
 									-- This cluster has already been traversed. Therefore
 									-- we are only interested in new or modified classes.
 								if l_classes = Void then
-									l_classes := universe.classes_in_group (a_cluster)
+									l_classes := current_universe.classes_in_group (a_cluster)
 								end
 								l_class := Void
 								nb := l_classes.count
@@ -177,9 +171,6 @@ feature {NONE} -- Parsing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `universe.classes_modified' and `universe.classes_added' will
-			-- be updated.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: not a_filename.is_empty
@@ -189,7 +180,7 @@ feature {NONE} -- Parsing
 			l_time_stamp: INTEGER
 			l_basename: STRING
 			l_class_name: ET_IDENTIFIER
-			l_class: ET_CLASS
+			l_class: ET_ADAPTED_CLASS
 		do
 			if current_system.preparse_shallow_mode then
 					-- With the "shallow" algorithm the time-stamp is only set when
@@ -197,7 +188,7 @@ feature {NONE} -- Parsing
 				l_time_stamp := tokens.unknown_class.time_stamp
 				l_basename := file_system.basename (a_filename)
 				create l_class_name.make (l_basename.substring (1, l_basename.count - 2))
-				l_class := universe.eiffel_class (l_class_name)
+				l_class := current_universe.adapted_class (l_class_name)
 				preparse_class (l_class, a_filename, l_time_stamp)
 			else
 				l_file := tmp_file
@@ -215,26 +206,26 @@ feature {NONE} -- Parsing
 					yy_load_input_buffer
 					read_token
 					if last_classname /= Void then
-						l_class := universe.eiffel_class (last_classname)
+						l_class := current_universe.adapted_class (last_classname)
 						preparse_class (l_class, a_filename, l_time_stamp)
+						if current_system.preparse_multiple_mode then
+							from
+								class_keyword_found := False
+								last_classname := Void
+								read_token
+							until
+								last_classname = Void
+							loop
+								l_class := current_universe.adapted_class (last_classname)
+								preparse_class (l_class, a_filename, l_time_stamp)
+								class_keyword_found := False
+								last_classname := Void
+								read_token
+							end
+						end
 					else
 							-- No class name found.
 						error_handler.report_syntax_error (filename, current_position)
-					end
-					if current_system.preparse_multiple_mode then
-						from
-							class_keyword_found := False
-							last_classname := Void
-							read_token
-						until
-							last_classname = Void
-						loop
-							l_class := universe.eiffel_class (last_classname)
-							preparse_class (l_class, a_filename, l_time_stamp)
-							class_keyword_found := False
-							last_classname := Void
-							read_token
-						end
 					end
 					reset
 					l_file.close
@@ -244,123 +235,38 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	preparse_class (a_class: ET_CLASS; a_filename: STRING; a_time_stamp: INTEGER) is
+	preparse_class (a_class: ET_ADAPTED_CLASS; a_filename: STRING; a_time_stamp: INTEGER) is
 			-- The file `a_filename' with time-stamp `a_time_stamp' is assumed
-			-- to contain a class with the same name as `a_class' in `universe'.
+			-- to contain a class with the same name as `a_class' in `current_universe'.
 			-- Check to see whether this class already existed, and if so whether
 			-- overriding rules apply or whether we have a name clash.
 			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `universe.classes_modified' and `universe.classes_added' will
-			-- be updated.
 		require
 			a_class_not_void: a_class /= Void
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: not a_filename.is_empty
 		local
-			l_other_class: ET_CLASS
+			l_new_class: ET_CLASS
 		do
-			if a_class.is_preparsed then
-				if group.is_override then
-					if a_class.group.is_override then
-							-- Two classes with the same name in two override groups.
-						l_other_class := a_class.cloned_class
-						l_other_class.reset
-						l_other_class.set_filename (a_filename)
-						l_other_class.set_time_stamp (a_time_stamp)
-						l_other_class.set_group (group)
-						a_class.set_overridden_class (l_other_class)
-						if a_class.is_in_cluster then
-							error_handler.report_vscn0a_error (l_other_class, a_class)
-						elseif a_class.is_in_dotnet_assembly then
-							error_handler.report_vscn0b_error (l_other_class, a_class)
-						elseif a_class.is_none then
-							error_handler.report_vscn0f_error (l_other_class)
-						else
-							error_handler.report_vscn0c_error (l_other_class, a_class)
-						end
-					elseif a_class.is_in_dotnet_assembly then
-							-- Cannot override .NET assembly classes.
-						l_other_class := a_class.cloned_class
-						l_other_class.reset
-						l_other_class.set_filename (a_filename)
-						l_other_class.set_time_stamp (a_time_stamp)
-						l_other_class.set_group (group)
-						a_class.set_overridden_class (l_other_class)
-						error_handler.report_vscn0j_error (a_class, l_other_class)
-					elseif a_class.is_none then
-							-- Cannot override built-in class "NONE".
-						l_other_class := a_class.cloned_class
-						l_other_class.reset
-						l_other_class.set_filename (a_filename)
-						l_other_class.set_time_stamp (a_time_stamp)
-						l_other_class.set_group (group)
-						a_class.set_overridden_class (l_other_class)
-						error_handler.report_vscn0h_error (l_other_class)
-					else
-							-- Override.
-						l_other_class := a_class.cloned_class
-						l_other_class.reset_after_parsed
-						a_class.reset
-						a_class.set_filename (a_filename)
-						a_class.set_time_stamp (a_time_stamp)
-						a_class.set_group (group)
-						a_class.set_overridden_class (l_other_class)
-						universe.set_classes_modified (True)
-					end
-				elseif not a_class.group.is_override then
-						-- Two classes with the same name in two non-override groups.
-					l_other_class := a_class.cloned_class
-					l_other_class.reset
-					l_other_class.set_filename (a_filename)
-					l_other_class.set_time_stamp (a_time_stamp)
-					l_other_class.set_group (group)
-					a_class.set_overridden_class (l_other_class)
-					if a_class.is_in_cluster then
-						error_handler.report_vscn0a_error (l_other_class, a_class)
-					elseif a_class.is_in_dotnet_assembly then
-						error_handler.report_vscn0b_error (l_other_class, a_class)
-					elseif a_class.is_none then
-						error_handler.report_vscn0f_error (l_other_class)
-					else
-						error_handler.report_vscn0c_error (l_other_class, a_class)
-					end
-				else
-						-- Overridden.
-					l_other_class := a_class.cloned_class
-					l_other_class.reset
-					l_other_class.set_filename (a_filename)
-					l_other_class.set_time_stamp (a_time_stamp)
-					l_other_class.set_group (group)
-					l_other_class.set_overridden_class (Void)
-					a_class.add_overridden_class (l_other_class)
-				end
-			else
-					-- We need to `reset' when repreparsing, especially
-					-- if the class was used by other classes (some error
-					-- flags may have been set in that case).
-				a_class.reset
-				a_class.set_filename (a_filename)
-				a_class.set_time_stamp (a_time_stamp)
-				a_class.set_group (group)
-				universe.set_classes_added (True)
-			end
+			create l_new_class.make (a_class.name)
+			current_system.register_class (l_new_class)
+			l_new_class.set_filename (a_filename)
+			l_new_class.set_time_stamp (a_time_stamp)
+			l_new_class.set_group (group)
+			a_class.add_last_local_class (l_new_class)
 		end
 
 	preparse_clusters (a_clusters: ET_CLUSTERS) is
 			-- Traverse `a_clusters' (recursively) and build a mapping
 			-- between class names and filenames in each cluster. Classes
-			-- are added to `universe.classes', but are not parsed.
+			-- are added to `current_universe.classes', but are not parsed.
 			--
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
-			--
-			-- `universe.classes_modified' and `universe.classes_added' will
-			-- be updated.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local

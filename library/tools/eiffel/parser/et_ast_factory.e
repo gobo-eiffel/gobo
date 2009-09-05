@@ -1616,7 +1616,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_class_type (a_type_mark: ET_TYPE_MARK; a_name: ET_CLASS_NAME; a_base_class: ET_CLASS): ET_CLASS_TYPE is
+	new_class_type (a_type_mark: ET_TYPE_MARK; a_name: ET_CLASS_NAME; a_base_class: ET_NAMED_CLASS): ET_CLASS_TYPE is
 			-- New Eiffel class type
 		do
 			if a_name /= Void and a_base_class /= Void then
@@ -1624,7 +1624,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_client (a_name: ET_CLASS_NAME; a_base_class: ET_CLASS): ET_CLIENT is
+	new_client (a_name: ET_CLASS_NAME; a_base_class: ET_NAMED_CLASS): ET_CLIENT is
 			-- New client
 		do
 			if a_name /= Void and a_base_class /= Void then
@@ -1632,7 +1632,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_client_comma (a_name: ET_CLASS_NAME; a_base_class: ET_CLASS; a_comma: ET_SYMBOL): ET_CLIENT_ITEM is
+	new_client_comma (a_name: ET_CLASS_NAME; a_base_class: ET_NAMED_CLASS; a_comma: ET_SYMBOL): ET_CLIENT_ITEM is
 			-- New client followed by a comma
 		do
 			if a_name /= Void and a_base_class /= Void then
@@ -2318,7 +2318,7 @@ feature -- AST nodes
 		end
 
 	new_generic_class_type (a_type_mark: ET_TYPE_MARK; a_name: ET_IDENTIFIER;
-		a_generics: like new_actual_parameters; a_base_class: ET_CLASS): ET_GENERIC_CLASS_TYPE is
+		a_generics: like new_actual_parameters; a_base_class: ET_NAMED_CLASS): ET_GENERIC_CLASS_TYPE is
 			-- New Eiffel generic class type
 		do
 			if a_name /= Void and a_generics /= Void and a_base_class /= Void then
@@ -3329,7 +3329,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: like new_actual_parameters; a_base_class: ET_CLASS): ET_TUPLE_TYPE is
+	new_tuple_type (a_type_mark: ET_TYPE_MARK; a_tuple: ET_IDENTIFIER; a_generics: like new_actual_parameters; a_base_class: ET_NAMED_CLASS): ET_TUPLE_TYPE is
 			-- New 'TUPLE' type
 		do
 			if a_base_class /= Void then

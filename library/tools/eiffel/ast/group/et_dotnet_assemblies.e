@@ -5,7 +5,7 @@ indexing
 		".NET assembly lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -119,6 +119,41 @@ feature -- Iteration
 			nb := assemblies.count
 			from i := 1 until i > nb loop
 				an_action.call ([assemblies.item (i)])
+				i := i + 1
+			end
+		end
+		
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+			-- Apply `an_action' to every .NET assembly (viewed as a universe), from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := assemblies.count
+			from i := 1 until i > nb loop
+				an_action.call ([assemblies.item (i)])
+				i := i + 1
+			end
+		end
+
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+			-- Apply `an_action' to every .NET assembly (viewed as a universe) that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
+		do
+			nb := assemblies.count
+			from i := 1 until i > nb loop
+				l_dotnet_assembly := assemblies.item (i)
+				if a_test.item ([l_dotnet_assembly]) then
+					an_action.call ([l_dotnet_assembly])
+				end
 				i := i + 1
 			end
 		end

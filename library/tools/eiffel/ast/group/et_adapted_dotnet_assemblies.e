@@ -5,7 +5,7 @@ indexing
 		"Eiffel adapted .NET assembly lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,6 +66,32 @@ feature -- Access
 			dotnet_assembly_not_void: Result /= Void
 		end
 
+	adapted_dotnet_assembly (a_dotnet_assembly: ET_DOTNET_ASSEMBLY): ET_ADAPTED_DOTNET_ASSEMBLY is
+			-- Adapted .NET assembly corresponding to `a_dotnet_assembly' in current list
+			--  if any, Void otherwise
+			--
+			-- Note that `a_dotnet_assembly' may appear twice by the current
+			-- list. Return one of them in that case.
+		require
+			a_dotnet_assembly_not_void: a_dotnet_assembly /= Void
+		local
+			i, nb: INTEGER
+			l_adapted_dotnet_assembly: ET_ADAPTED_DOTNET_ASSEMBLY
+		do
+			nb := dotnet_assemblies.count
+			from i := 1 until i > nb loop
+				l_adapted_dotnet_assembly := dotnet_assemblies.item (i)
+				if l_adapted_dotnet_assembly.dotnet_assembly = a_dotnet_assembly then
+					Result := l_adapted_dotnet_assembly
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+				i := i + 1
+			end
+		ensure
+			consistent: Result /= Void implies Result.dotnet_assembly = a_dotnet_assembly
+		end
+
 	dotnet_assemblies: DS_ARRAYED_LIST [like dotnet_assembly]
 			-- Adapted .NET assemblies
 
@@ -105,6 +131,41 @@ feature -- Iteration
 			nb := dotnet_assemblies.count
 			from i := 1 until i > nb loop
 				an_action.call ([dotnet_assemblies.item (i).dotnet_assembly])
+				i := i + 1
+			end
+		end
+
+	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
+			-- Apply `an_action' to every .NET assembly (viewed as a universe), from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := dotnet_assemblies.count
+			from i := 1 until i > nb loop
+				an_action.call ([dotnet_assemblies.item (i).dotnet_assembly])
+				i := i + 1
+			end
+		end
+
+	universes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+			-- Apply `an_action' to every .NET assembly (viewed as a universe) that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i, nb: INTEGER
+			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
+		do
+			nb := dotnet_assemblies.count
+			from i := 1 until i > nb loop
+				l_dotnet_assembly := dotnet_assemblies.item (i).dotnet_assembly
+				if a_test.item ([l_dotnet_assembly]) then
+					an_action.call ([l_dotnet_assembly])
+				end
 				i := i + 1
 			end
 		end

@@ -497,7 +497,7 @@ feature {ET_AST_NODE} -- Processing
 			if an_obsolete_message /= Void then
 				an_obsolete_message.process (Current)
 			end
-			a_parents := a_class.parents
+			a_parents := a_class.parent_clause
 			if a_parents /= Void then
 				a_parents.process (Current)
 			end

@@ -5,7 +5,7 @@ indexing
 		"Test config clusters"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -80,6 +80,17 @@ feature -- Access
 	default_test_included: BOOLEAN
 			-- Should 'default_test' be included in generated testcases?
 
+feature -- Status report
+
+	is_testcase_class (a_class: ET_CLASS): BOOLEAN is
+			-- Is `a_class' considered as a testcase class?
+			-- Its name should match `class_regexp'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			Result := class_regexp.recognizes (a_class.name.name)
+		end
+
 feature -- Setting
 
 	set_class_regexp (a_regexp: like class_regexp) is
@@ -123,9 +134,8 @@ feature -- Processing
 			a_cluster: ET_LACE_CLUSTER
 			a_clusters: ET_LACE_CLUSTERS
 			a_system: ET_LACE_SYSTEM
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
-			create a_system.make
+			create a_system.make ("test_generator")
 			a_system.set_error_handler (an_error_handler)
 			create a_cluster.make (name, pathname, a_system)
 			create a_clusters.make (a_cluster)
@@ -133,17 +143,7 @@ feature -- Processing
 			a_system.set_default_keyword_usage
 			a_system.activate_processors
 			a_system.parse_all
-			a_cursor := a_system.classes.new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
-				if class_regexp.recognizes (a_cursor.key.name) then
-					process_class (a_cursor.item, testcases)
-				end
-				a_cursor.forth
-			end
+			a_system.classes_do_if_recursive (agent process_class (?, testcases), agent is_testcase_class)
 		end
 
 	process_class (a_class: ET_CLASS; testcases: TS_TESTCASES) is

@@ -126,16 +126,6 @@ feature {NONE} -- Processing
 					current_class.set_interface_checked
 						-- Process parents first.
 					a_parents := current_class.parents
-					if a_parents = Void or else a_parents.is_empty then
-						if current_class = current_system.any_class then
-								-- "ANY" has no implicit parents.
-							a_parents := Void
-						elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
-							a_parents := current_system.system_object_parents
-						else
-							a_parents := current_system.any_parents
-						end
-					end
 					if a_parents /= Void then
 						nb := a_parents.count
 						from i := 1 until i > nb loop
@@ -366,7 +356,7 @@ feature {NONE} -- Constraint creation validity
 						-- "[G -> H create make end, H -> G]".
 						-- We consider that the base class of the
 						-- constraint in ANY in that case.
-					a_class := current_system.any_class
+					a_class := current_universe.any_type.base_class
 				end
 					-- Build the feature table.
 				a_class.process (current_system.feature_flattener)

@@ -5,7 +5,7 @@ indexing
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,20 +85,22 @@ feature -- Access
 			Result.force_last (a_type)
 		end
 
-	base_class: ET_CLASS is
-			-- Base class of current context
+	named_base_class: ET_NAMED_CLASS is
+			-- Same as `base_class' except that it returns information about this
+			-- class (e.g. its name) as known from the universe it is used from
+			-- (instead of from the universe it is written in)
 		local
 			l_type: ET_TYPE
 		do
 			inspect count
 			when 0 then
-				Result := root_context.base_class
+				Result := root_context.named_base_class
 			when 1 then
-				Result := last.base_class (root_context)
+				Result := last.named_base_class (root_context)
 			else
 				l_type := last
 				remove_last
-				Result := l_type.base_class (Current)
+				Result := l_type.named_base_class (Current)
 				put_last (l_type)
 			end
 		end

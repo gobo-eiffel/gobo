@@ -5,7 +5,7 @@ indexing
 		"Eiffel features being processed through the Feature_adaptation clause"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -236,7 +236,7 @@ feature -- Element change
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_not_merged: a_feature.merged_feature = Void
-			same_name: not is_dotnet implies a_feature.name.same_feature_name (name)
+			same_name: (not is_dotnet and not a_feature.precursor_feature.implementation_class.current_system.alias_transition_mode) implies a_feature.name.same_feature_name (name)
 		local
 			a_seeds: like other_seeds
 			a_seed: INTEGER

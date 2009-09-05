@@ -2,11 +2,13 @@ indexing
 
 	description:
 
-		"Checkers to see whether ancestors of a class need to be rebuilt %
-		%or not after some classes have been modified in the Eiffel system."
+	"[
+		Checkers to see whether ancestor tables of classes need to be rebuilt
+		or not after some classes have been modified in the Eiffel system.
+	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,13 +45,15 @@ feature {NONE} -- Initialization
 feature -- Processing
 
 	process_class (a_class: ET_CLASS) is
-			-- Check whether the ancestors of `a_class' need to be rebuilt
+			-- Check whether the ancestor table of `a_class' needs to be rebuilt
 			-- after some classes have been modified in the Eiffel system. Also
 			-- check whether none of the classes appearing in the parent types
 			-- or formal generic parameter constraints have been modified.
-			-- If `has_ancestors_error' is True, it means that this class
-			-- has not been checked yet. False means that it has already been
-			-- checked. Parent classes will be checked recursively beforehand.
+			-- Parent classes will be checked recursively beforehand.
+			--
+			-- It is assumed that if `a_class.has_ancestors_error' is True, then
+			-- this class has not been checked yet. False means that it has already
+			-- been checked.
 		local
 			a_processor: like Current
 		do
@@ -87,13 +91,15 @@ feature -- Error handling
 feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS) is
-			-- Check whether the ancestors of `a_class' need to be rebuilt
+			-- Check whether the ancestor table of `a_class' needs to be rebuilt
 			-- after some classes have been modified in the Eiffel system. Also
 			-- check whether none of the classes appearing in the parent types
 			-- or formal generic parameter constraints have been modified.
-			-- If `has_ancestors_error' is True, it means that this class
-			-- has not been checked yet. False means that it has already
-			-- been checked. Parent classes will be checked recursively.
+			-- Parent classes will be checked recursively beforehand.
+			--
+			-- It is assumed that if `a_class.has_ancestors_error' is True, then
+			-- this class has not been checked yet. False means that it has already
+			-- been checked.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -107,25 +113,15 @@ feature {NONE} -- Processing
 			old_class := current_class
 			current_class := a_class
 			if current_class.ancestors_built and then current_class.has_ancestors_error then
-					-- The class has been mark with an ancestors error to indicate that
-					-- we need to check whether its ancestors need to be rebuilt or not.
+					-- The class has been marked with an ancestors error to indicate that we
+					-- need to check whether its ancestor tables need to be rebuilt or not.
 					-- It might happen if other classes on which it depends have been
-					-- modified or recursively made invalid. If its ancestors are
+					-- modified or recursively made invalid. If its ancestor table is
 					-- still valid then the error flag will be cleared. Otherwise the
 					-- class will be reset to the previous processing step.
 				current_class.unset_ancestors_error
 					-- Process parents first.
 				a_parents := current_class.parents
-				if a_parents = Void or else a_parents.is_empty then
-					if current_class = current_system.any_class then
-							-- ANY has no implicit parents.
-						a_parents := Void
-					elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
-						a_parents := current_system.system_object_parents
-					else
-						a_parents := current_system.any_parents
-					end
-				end
 				if a_parents /= Void then
 					nb := a_parents.count
 					from i := 1 until i > nb loop
@@ -162,7 +158,7 @@ feature {NONE} -- Formal parameters and parents validity
 	check_formal_parameters_validity is
 			-- Check whether none of the classes appearing in the
 			-- formal generic parameter constraints of `current_class'
-			-- have been modified.
+			-- has been modified.
 		local
 			i, nb: INTEGER
 			l_parameters: ET_FORMAL_PARAMETER_LIST
@@ -189,13 +185,13 @@ feature {NONE} -- Formal parameters and parents validity
 
 	check_parents_validity is
 			-- Check whether none of the classes appearing in the
-			-- parent types of `current_class' have been modified.
+			-- parent types of `current_class' has been modified.
 		local
 			l_parents: ET_PARENT_LIST
 			i, nb: INTEGER
 		do
 			if current_class.ancestors_built then
-				l_parents := current_class.parents
+				l_parents := current_class.parent_clause
 				if l_parents /= Void then
 					nb := l_parents.count
 					from i := 1 until i > nb loop

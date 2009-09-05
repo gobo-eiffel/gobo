@@ -6,7 +6,7 @@ indexing
 		%the name of a formal generic parameter)"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,8 +44,8 @@ feature -- Access
 		do
 			Result := name.lower_name
 		ensure
-			upper_name_not_void: Result /= Void
-			upper_name_not_empty: Result.count > 0
+			lower_name_not_void: Result /= Void
+			lower_name_not_empty: Result.count > 0
 			definition: Result.is_equal (name.name.as_lower)
 		end
 

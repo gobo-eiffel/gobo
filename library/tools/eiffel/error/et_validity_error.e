@@ -208,18 +208,6 @@ create
 	make_vrlv1b,
 	make_vrlv2a,
 	make_vrlv2b,
-	make_vscn0a,
-	make_vscn0b,
-	make_vscn0c,
-	make_vscn0d,
-	make_vscn0e,
-	make_vscn0f,
-	make_vscn0g,
-	make_vscn0h,
-	make_vscn0i,
-	make_vscn0j,
-	make_vscn0k,
-	make_vscn0l,
 	make_vtat1a,
 	make_vtat1b,
 	make_vtat1c,
@@ -260,6 +248,9 @@ create
 	make_vweq0a,
 	make_vweq0b,
 	make_vwmq0a,
+	make_vwmq0b,
+	make_vwmq0c,
+	make_vwmq0d,
 	make_vwst1a,
 	make_vwst1b,
 	make_vwst2a,
@@ -8942,551 +8933,6 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local name
 		end
 
-	make_vscn0a (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			other_class_not_void: other_class /= Void
-			other_class_in_cluster: other_class.is_in_cluster
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0a_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0a_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.filename, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.filename, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class cluster name
-			-- dollar8: $8 = first class filename
-			-- dollar9: $9 = second class cluster name
-			-- dollar10: $10 = second class filename
-		end
-
-	make_vscn0b (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			other_class_not_void: other_class /= Void
-			other_class_in_dotnet_assenbly: other_class.is_in_dotnet_assembly
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0b_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0b_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.filename, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.group.full_pathname, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class cluster name
-			-- dollar8: $8 = first class filename
-			-- dollar9: $9 = second class assembly name
-			-- dollar10: $10 = second class assembly pathname
-		end
-
-	make_vscn0c (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			other_class_not_void: other_class /= Void
-			other_class_preparsed: other_class.is_preparsed
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0c_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0c_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.filename, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.group.full_pathname, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class cluster name
-			-- dollar8: $8 = first class filename
-			-- dollar9: $9 = second class group name
-			-- dollar10: $10 = second class group pathname
-		end
-
-	make_vscn0d (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_dotnet_assembly: other_class.is_in_dotnet_assembly
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0d_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0d_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.group.full_pathname, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.group.full_pathname, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class assembly name
-			-- dollar8: $8 = first class assembly pathname
-			-- dollar9: $9 = second class assembly name
-			-- dollar10: $10 = second class assembly pathname
-		end
-
-	make_vscn0e (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: two different classes `a_class'
-			-- and `other_class' with the same name.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assenbly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_preparsed: other_class.is_preparsed
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0e_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0e_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.group.full_pathname, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.group.full_pathname, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class assembly name
-			-- dollar8: $8 = first class assembly pathname
-			-- dollar9: $9 = second class group name
-			-- dollar10: $10 = second class group pathname
-		end
-
-	make_vscn0f (a_class: ET_CLASS) is
-			-- Create a new VSCN error: two different classes with the
-			-- same name: built-in class NONE and `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0f_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0f_default_template)
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.filename, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = class cluster name
-			-- dollar8: $8 = class filename
-		end
-
-	make_vscn0g (a_class: ET_CLASS) is
-			-- Create a new VSCN error: two different classes with the
-			-- same name: built-in class NONE and `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0g_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0g_default_template)
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.group.full_pathname, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = class assembly name
-			-- dollar8: $8 = class assembly pathname
-		end
-
-	make_vscn0h (a_class: ET_CLASS) is
-			-- Create a new VSCN error: built-in class NONE cannot
-			-- be overridden by `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_cluster: a_class.is_in_cluster
-			a_class_in_override: a_class.is_in_override_group
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0h_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0h_default_template)
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.filename, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = class cluster name
-			-- dollar8: $8 = class filename
-		end
-
-	make_vscn0i (a_class: ET_CLASS) is
-			-- Create a new VSCN error: built-in class NONE cannot
-			-- be overridden by `a_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			a_class_in_override: a_class.is_in_override_group
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0i_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0i_default_template)
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.group.full_pathname, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = class assembly name
-			-- dollar8: $8 = class assembly pathname
-		end
-
-	make_vscn0j (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: `a_class' in a .NET assembly
-			-- cannot be overridden by `other_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_cluster: other_class.is_in_cluster
-			other_class_in_override: other_class.is_in_override_group
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0j_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0j_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.group.full_pathname, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.filename, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class assembly name
-			-- dollar8: $8 = first class assembly pathname
-			-- dollar9: $9 = second class cluster name
-			-- dollar10: $10 = second class filename
-		end
-
-	make_vscn0k (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: `a_class' in a .NET assembly
-			-- cannot be overridden by `other_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_in_dotnet_assembly: other_class.is_in_dotnet_assembly
-			other_class_in_override: other_class.is_in_override_group
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0k_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0k_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.group.full_pathname, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.group.full_pathname, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class assembly name
-			-- dollar8: $8 = first class assembly pathname
-			-- dollar9: $9 = second class assembly name
-			-- dollar10: $10 = second class assembly pathname
-		end
-
-	make_vscn0l (a_class: ET_CLASS; other_class: ET_CLASS) is
-			-- Create a new VSCN error: `a_class' in a .NET assembly
-			-- cannot be overridden by `other_class'.
-			--
-			-- ETL2: p.38
-		require
-			a_class_not_void: a_class /= Void
-			a_class_in_dotnet_assembly: a_class.is_in_dotnet_assembly
-			other_class_not_void: other_class /= Void
-			other_class_preparsed: other_class.is_preparsed
-			other_class_in_override: other_class.is_in_override_group
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := null_position
-			code := template_code (vscn0l_template_code)
-			etl_code := vscn_etl_code
-			default_template := default_message_template (vscn0l_default_template)
-			create parameters.make (1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_class.group.full_lower_name ('/'), 7)
-			parameters.put (a_class.group.full_pathname, 8)
-			parameters.put (other_class.group.full_lower_name ('/'), 9)
-			parameters.put (other_class.group.full_pathname, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = first class assembly name
-			-- dollar8: $8 = first class assembly pathname
-			-- dollar9: $9 = second class group name
-			-- dollar10: $10 = second class group pathname
-		end
-
 	make_vtat1a (a_class: ET_CLASS; a_type: ET_LIKE_FEATURE) is
 			-- Create a new VTAT-1 error: the anchor in the Anchored_type
 			-- must be the final name of a query in `a_class'.
@@ -9679,9 +9125,9 @@ feature {NONE} -- Initialization
 			from a_cursor.start until a_cursor.after loop
 				a_like := a_cursor.item
 				if a_like.is_procedure then
-					a_feature := current_class.seeded_procedure (a_like.seed)
+					a_feature := a_class.seeded_procedure (a_like.seed)
 				else
-					a_feature := current_class.seeded_query (a_like.seed)
+					a_feature := a_class.seeded_query (a_like.seed)
 				end
 				if a_feature /= Void and then a_feature.implementation_class = current_class then
 					if a_like.is_like_argument then
@@ -9709,7 +9155,7 @@ feature {NONE} -- Initialization
 					a_string.append_string (a_like.name.lower_name)
 				else
 						-- Take care of possible renaming.
-					a_query := current_class.seeded_query (a_like.seed)
+					a_query := a_class.seeded_query (a_like.seed)
 					if a_query /= Void then
 						a_string.append_string (a_query.lower_name)
 					else
@@ -9726,7 +9172,7 @@ feature {NONE} -- Initialization
 					a_string.append_string (a_like.name.lower_name)
 				else
 						-- Take care of possible renaming.
-					a_query := current_class.seeded_query (a_like.seed)
+					a_query := a_class.seeded_query (a_like.seed)
 					if a_query /= Void then
 						a_string.append_string (a_query.lower_name)
 					else
@@ -11368,6 +10814,135 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = cast type
 		end
 
+	make_vwmq0b (a_class, a_class_impl: ET_CLASS; a_constant: ET_REAL_CONSTANT) is
+			-- Create a new VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "REAL".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.cast_type.position
+			code := template_code (vwmq0b_template_code)
+			etl_code := vwmq_etl_code
+			default_template := default_message_template (vwmq0b_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constant.cast_type.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = cast type
+		end
+
+	make_vwmq0c (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHARACTER_CONSTANT) is
+			-- Create a new VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "CHARACTER".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.cast_type.position
+			code := template_code (vwmq0c_template_code)
+			etl_code := vwmq_etl_code
+			default_template := default_message_template (vwmq0c_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constant.cast_type.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = cast type
+		end
+
+	make_vwmq0d (a_class, a_class_impl: ET_CLASS; a_constant: ET_MANIFEST_STRING) is
+			-- Create a new VWMQ error: the cast type of `a_constant' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not one of the sized variants of "STRING".
+			--
+			-- ECMA-367-2: p.144
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_cast_type_not_void: a_constant.cast_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.cast_type.position
+			code := template_code (vwmq0d_template_code)
+			etl_code := vwmq_etl_code
+			default_template := default_message_template (vwmq0d_default_template)
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constant.cast_type.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = cast type
+		end
+
 	make_vwst1a (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
 			-- Create a new VWST-1 error: `a_name', appearing in a strip
 			-- expression in `a_class', is not the final name of a feature
@@ -12654,14 +12229,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	class_impl: ET_CLASS
+	class_impl: ET_NAMED_CLASS
 			-- Class where current error was written
 
 	filename: STRING is
 			-- Name of file where current error occurred
+		local
+			l_actual_class: ET_CLASS
 		do
-			if class_impl.is_in_cluster then
-				Result := class_impl.filename
+			l_actual_class := class_impl.actual_class
+			if l_actual_class.is_in_cluster then
+				Result := l_actual_class.filename
 			else
 				Result := "not in a cluster"
 			end
@@ -12907,18 +12485,6 @@ feature {NONE} -- Implementation
 	vrlv1b_default_template: STRING is "local variable name '$7' in inline agent is also the final name of a feature."
 	vrlv2a_default_template: STRING is "local variable name '$7' in feature `$8' is also the name of a formal argument of this feature."
 	vrlv2b_default_template: STRING is "local variable name '$7' in inline agent is also the name of a formal argument of this agent."
-	vscn0a_default_template: STRING is "class appears in files '$8' and '$10'."
-	vscn0b_default_template: STRING is "class appears in file '$8' and assembly '$10'."
-	vscn0c_default_template: STRING is "class appears in file '$8' and group '$10'."
-	vscn0d_default_template: STRING is "class appears in assemblies '$8' and '$10'."
-	vscn0e_default_template: STRING is "class appears in assembly '$8' and group '$10'."
-	vscn0f_default_template: STRING is "built-in class also appears in file '$8'."
-	vscn0g_default_template: STRING is "built-in class also appears in assembly '$8'."
-	vscn0h_default_template: STRING is "built-in class cannot be overridden by class in file '$8'."
-	vscn0i_default_template: STRING is "built-in class cannot be overridden by class in assembly '$8'."
-	vscn0j_default_template: STRING is "class in assembly '$8' cannot be overridden by class in file '$10'."
-	vscn0k_default_template: STRING is "class in assembly '$8' cannot be overridden by class in assembly '$10'."
-	vscn0l_default_template: STRING is "class in assembly '$8' cannot be overridden by class in group '$10'."
 	vtat1a_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query."
 	vtat1b_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query, or an argument of routine `$9'."
 	vtat1c_default_template: STRING is "invalid type '$7': the anchor `$8' must be the final name of a query in class $9."
@@ -12959,6 +12525,9 @@ feature {NONE} -- Implementation
 	vweq0a_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
 	vweq0b_default_template: STRING is "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
 	vwmq0a_default_template: STRING is "type '$7' in the integer constant is not one of the sized variants of INTEGER."
+	vwmq0b_default_template: STRING is "type '$7' in the real constant is not one of the sized variants of REAL."
+	vwmq0c_default_template: STRING is "type '$7' in the character constant is not one of the sized variants of CHARACTER."
+	vwmq0d_default_template: STRING is "type '$7' in the string constant is not one of the sized variants of STRING."
 	vwst1a_default_template: STRING is "feature name `$7' is not the final name of a feature in class $5."
 	vwst1b_default_template: STRING is "feature name `$7' is not the final name of an attribute in class $5."
 	vwst2a_default_template: STRING is "feature name `$7' appears twice in strip expression."
@@ -13086,7 +12655,6 @@ feature {NONE} -- Implementation
 	vrle2_etl_code: STRING is "VRLE-2"
 	vrlv1_etl_code: STRING is "VRLV-1"
 	vrlv2_etl_code: STRING is "VRLV-2"
-	vscn_etl_code: STRING is "VSCN"
 	vtat1_etl_code: STRING is "VTAT-1"
 	vtat2_etl_code: STRING is "VTAT-2"
 	vtbt_etl_code: STRING is "VTBT"
@@ -13336,18 +12904,6 @@ feature {NONE} -- Implementation
 	vrlv1b_template_code: STRING is "vrlv1b"
 	vrlv2a_template_code: STRING is "vrlv2a"
 	vrlv2b_template_code: STRING is "vrlv2b"
-	vscn0a_template_code: STRING is "vscn0a"
-	vscn0b_template_code: STRING is "vscn0b"
-	vscn0c_template_code: STRING is "vscn0c"
-	vscn0d_template_code: STRING is "vscn0d"
-	vscn0e_template_code: STRING is "vscn0e"
-	vscn0f_template_code: STRING is "vscn0f"
-	vscn0g_template_code: STRING is "vscn0g"
-	vscn0h_template_code: STRING is "vscn0h"
-	vscn0i_template_code: STRING is "vscn0i"
-	vscn0j_template_code: STRING is "vscn0j"
-	vscn0k_template_code: STRING is "vscn0k"
-	vscn0l_template_code: STRING is "vscn0l"
 	vtat1a_template_code: STRING is "vtat1a"
 	vtat1b_template_code: STRING is "vtat1b"
 	vtat1c_template_code: STRING is "vtat1c"
@@ -13388,6 +12944,9 @@ feature {NONE} -- Implementation
 	vweq0a_template_code: STRING is "vweq0a"
 	vweq0b_template_code: STRING is "vweq0b"
 	vwmq0a_template_code: STRING is "vwmq0a"
+	vwmq0b_template_code: STRING is "vwmq0b"
+	vwmq0c_template_code: STRING is "vwmq0c"
+	vwmq0d_template_code: STRING is "vwmq0d"
 	vwst1a_template_code: STRING is "vwst1a"
 	vwst1b_template_code: STRING is "vwst1b"
 	vwst2a_template_code: STRING is "vwst2a"

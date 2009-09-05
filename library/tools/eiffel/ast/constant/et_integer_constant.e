@@ -377,60 +377,51 @@ feature -- Setting
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
-			-- This is only possible when there is no explicit type case and the value of the
+			-- This is only possible when there is no explicit type cast and the value of the
 			-- constant can be represented in `a_target_type'.
 			-- Void if no such feature or when not possible.
-		local
-			l_target_base_class: ET_CLASS
-			l_system: ET_SYSTEM
 		do
 			if cast_type = Void then
-				l_target_base_class := a_target_type.base_class
-				if not l_target_base_class.is_preparsed then
-					-- No conversion to non-existing type.
-				else
-					l_system := l_target_base_class.current_system
-					if l_target_base_class = l_system.integer_8_class then
-						if is_integer_8 then
-							Result := l_system.integer_8_convert_feature
-						end
-					elseif l_target_base_class = l_system.integer_16_class then
-						if is_integer_16 then
-							Result := l_system.integer_16_convert_feature
-						end
-					elseif l_target_base_class = l_system.integer_32_class then
-						if is_integer_32 then
-							Result := l_system.integer_32_convert_feature
-						end
-					elseif l_target_base_class = l_system.integer_64_class then
-						if is_integer_64 then
-							Result := l_system.integer_64_convert_feature
-						end
-					elseif l_target_base_class = l_system.natural_8_class then
-						if is_natural_8 then
-							Result := l_system.natural_8_convert_feature
-						end
-					elseif l_target_base_class = l_system.natural_16_class then
-						if is_natural_16 then
-							Result := l_system.natural_16_convert_feature
-						end
-					elseif l_target_base_class = l_system.natural_32_class then
-						if is_natural_32 then
-							Result := l_system.natural_32_convert_feature
-						end
-					elseif l_target_base_class = l_system.natural_64_class then
-						if is_natural_64 then
-							Result := l_system.natural_64_convert_feature
-						end
-					elseif l_target_base_class = l_system.real_32_class then
--- TODO: check that it can be represented as a REAL_32.
-						Result := l_system.real_32_convert_feature
-					elseif l_target_base_class = l_system.real_64_class then
--- TODO: check that it can be represented as a REAL_64.
-						Result := l_system.real_64_convert_feature
+				if a_target_type.same_named_context (a_universe.integer_8_type) then
+					if is_integer_8 then
+						Result := a_universe.integer_8_convert_feature
 					end
+				elseif a_target_type.same_named_context (a_universe.integer_16_type) then
+					if is_integer_16 then
+						Result := a_universe.integer_16_convert_feature
+					end
+				elseif a_target_type.same_named_context (a_universe.integer_32_type) then
+					if is_integer_32 then
+						Result := a_universe.integer_32_convert_feature
+					end
+				elseif a_target_type.same_named_context (a_universe.integer_64_type) then
+					if is_integer_64 then
+						Result := a_universe.integer_64_convert_feature
+					end
+				elseif a_target_type.same_named_context (a_universe.natural_8_type) then
+					if is_natural_8 then
+						Result := a_universe.natural_8_convert_feature
+					end
+				elseif a_target_type.same_named_context (a_universe.natural_16_type) then
+					if is_natural_16 then
+						Result := a_universe.natural_16_convert_feature
+					end
+				elseif a_target_type.same_named_context (a_universe.natural_32_type) then
+					if is_natural_32 then
+						Result := a_universe.natural_32_convert_feature
+					end
+				elseif a_target_type.same_named_context (a_universe.natural_64_type) then
+					if is_natural_64 then
+						Result := a_universe.natural_64_convert_feature
+					end
+				elseif a_target_type.same_named_context (a_universe.real_32_type) then
+-- TODO: check that it can be represented as a REAL_32.
+					Result := a_universe.real_32_convert_feature
+				elseif a_target_type.same_named_context (a_universe.real_64_type) then
+-- TODO: check that it can be represented as a REAL_64.
+					Result := a_universe.real_64_convert_feature
 				end
 			end
 		end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel client/supplier relationship builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,7 +40,6 @@ feature -- Initialization
 			-- will be stored in `a_suppliers'.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
 			a_suppliers_not_void: a_suppliers /= Void
 			no_void_supplier: not a_suppliers.has_void
 		do
@@ -56,7 +55,7 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Client class
 
-	supplier_classes: DS_HASH_SET [ET_CLASS]
+	supplier_classes: DS_HASH_SET [ET_NAMED_CLASS]
 			-- Supplier classes
 
 feature -- Reporting
@@ -67,14 +66,9 @@ feature -- Reporting
 			-- (Note that `a_supplier' may be altered after the execution of
 			-- this routine. Therefore if you want to keep a reference to it
 			-- you should duplicate it or use its base type for example.)
-		local
-			l_class: ET_CLASS
 		do
 			if a_client.base_class = current_class then
-				l_class := a_supplier.base_class
-				if not l_class.is_none then
-					supplier_classes.force_last (l_class)
-				end
+				add_supplier (a_supplier.named_base_class)
 			end
 		end
 
@@ -83,14 +77,9 @@ feature -- Reporting
 			-- of `a_routine' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_client'.)
-		local
-			l_class: ET_CLASS
 		do
 			if a_client.base_class = current_class then
-				l_class := a_supplier.base_class (a_client)
-				if not l_class.is_none then
-					supplier_classes.force_last (l_class)
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -99,14 +88,9 @@ feature -- Reporting
 			-- of `a_query' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_client'.)
-		local
-			l_class: ET_CLASS
 		do
 			if a_client.base_class = current_class then
-				l_class := a_supplier.base_class (a_client)
-				if not l_class.is_none then
-					supplier_classes.force_last (l_class)
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -115,14 +99,9 @@ feature -- Reporting
 			-- in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_client'.)
-		local
-			l_class: ET_CLASS
 		do
 			if a_client.base_class = current_class then
-				l_class := a_supplier.base_class (a_client)
-				if not l_class.is_none then
-					supplier_classes.force_last (l_class)
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -131,14 +110,9 @@ feature -- Reporting
 			-- creation instruction or expression in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_client'.)
-		local
-			l_class: ET_CLASS
 		do
 			if a_client.base_class = current_class then
-				l_class := a_supplier.base_class (a_client)
-				if not l_class.is_none then
-					supplier_classes.force_last (l_class)
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -151,16 +125,12 @@ feature -- Reporting
 			-- base class of `a_client' first before using `a_client'
 			-- as its context.)
 		local
-			l_class: ET_CLASS
 			a_type: ET_TYPE
 		do
 			if a_client.base_class = current_class then
 				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 				if not type_checker.has_fatal_error then
-					l_class := a_type.base_class (a_client)
-					if not l_class.is_none then
-						supplier_classes.force_last (l_class)
-					end
+					add_supplier (a_type.named_base_class (a_client))
 				end
 			end
 		end
@@ -174,16 +144,12 @@ feature -- Reporting
 			-- base class of `a_client' first before using `a_client'
 			-- as its context.)
 		local
-			l_class: ET_CLASS
 			a_type: ET_TYPE
 		do
 			if a_client.base_class = current_class then
 				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 				if not type_checker.has_fatal_error then
-					l_class := a_type.base_class (a_client)
-					if not l_class.is_none then
-						supplier_classes.force_last (l_class)
-					end
+					add_supplier (a_type.named_base_class (a_client))
 				end
 			end
 		end
@@ -197,16 +163,12 @@ feature -- Reporting
 			-- base class of `a_client' first before using `a_client'
 			-- as its context.)
 		local
-			l_class: ET_CLASS
 			a_type: ET_TYPE
 		do
 			if a_client.base_class = current_class then
 				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 				if not type_checker.has_fatal_error then
-					l_class := a_type.base_class (a_client)
-					if not l_class.is_none then
-						supplier_classes.force_last (l_class)
-					end
+					add_supplier (a_type.named_base_class (a_client))
 				end
 			end
 		end
@@ -220,16 +182,12 @@ feature -- Reporting
 			-- base class of `a_client' first before using `a_client'
 			-- as its context.)
 		local
-			l_class: ET_CLASS
 			a_type: ET_TYPE
 		do
 			if a_client.base_class = current_class then
 				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
 				if not type_checker.has_fatal_error then
-					l_class := a_type.base_class (a_client)
-					if not l_class.is_none then
-						supplier_classes.force_last (l_class)
-					end
+					add_supplier (a_type.named_base_class (a_client))
 				end
 			end
 		end
@@ -239,14 +197,21 @@ feature -- Reporting
 			-- qualified anchored type in a feature or invariant in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
 			-- the context of `a_client'.)
-		local
-			l_class: ET_CLASS
 		do
 			if a_client.base_class = current_class then
-				l_class := a_supplier.base_class (a_client)
-				if not l_class.is_none then
-					supplier_classes.force_last (l_class)
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
+			end
+		end
+
+feature {NONE} -- Element change
+
+	add_supplier (a_class: ET_NAMED_CLASS) is
+			-- Add `a_class' to `supplier_classes' if it is not the class "NONE".
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if not a_class.actual_class.is_none then
+				supplier_classes.force_last (a_class)
 			end
 		end
 
@@ -255,7 +220,7 @@ feature {NONE} -- Implementation
 	type_checker: ET_TYPE_CHECKER
 			-- Type checker
 
-	dummy_suppliers: DS_HASH_SET [ET_CLASS] is
+	dummy_suppliers: DS_HASH_SET [ET_NAMED_CLASS] is
 			-- Dummy suppliers
 		once
 			create Result.make (0)
@@ -267,7 +232,6 @@ feature {NONE} -- Implementation
 invariant
 
 	current_class_not_void: current_class /= Void
-	current_class_preparsed: current_class.is_preparsed
 	supplier_classes_not_void: supplier_classes /= Void
 	no_void_supplier_class: not supplier_classes.has_void
 	type_checker_not_void: type_checker /= Void

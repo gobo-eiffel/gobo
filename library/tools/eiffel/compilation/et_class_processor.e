@@ -5,7 +5,7 @@ indexing
 		"Eiffel class processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,18 +35,16 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class being processed
 
-	universe: ET_UNIVERSE is
+	current_universe: ET_UNIVERSE is
 			-- Universe to which `current_class' belongs
 		do
 			Result := current_class.universe
 		ensure
-			universe_not_void: Result /= Void
+			current_universe_not_void: Result /= Void
 		end
 
 	current_system: ET_SYSTEM is
 			-- Surrounding Eiffel system
-			-- (Note: there is a frozen feature called `system' in
-			-- class GENERAL of SmartEiffel 1.0)
 		do
 			Result := current_class.current_system
 		ensure
@@ -66,6 +64,5 @@ feature -- Error handling
 invariant
 
 	current_class_not_void: current_class /= Void
-	current_class_preparsed: current_class.is_preparsed
 
 end

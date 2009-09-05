@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -339,8 +339,8 @@ feature -- Features
 			if queries = empty_features then
 				create queries.make_with_capacity (base_class.queries.count)
 				Result := new_dynamic_query (a_query, a_system)
-				if Result.is_attribute (a_system) then
-					put_attribute (Result, a_system)
+				if Result.is_attribute then
+					put_attribute (Result)
 				else
 					queries.put_last (Result)
 				end
@@ -357,8 +357,8 @@ feature -- Features
 				end
 				if Result = Void then
 					Result := new_dynamic_query (a_query, a_system)
-					if Result.is_attribute (a_system) then
-						put_attribute (Result, a_system)
+					if Result.is_attribute then
+						put_attribute (Result)
 					else
 						queries.force_last (Result)
 					end
@@ -419,8 +419,8 @@ feature -- Features
 				if l_query /= Void then
 					create queries.make_with_capacity (base_class.queries.count)
 					Result := new_dynamic_query (l_query, a_system)
-					if Result.is_attribute (a_system) then
-						put_attribute (Result, a_system)
+					if Result.is_attribute then
+						put_attribute (Result)
 					else
 						queries.put_last (Result)
 					end
@@ -440,8 +440,8 @@ feature -- Features
 					l_query := base_class.seeded_query (a_seed)
 					if l_query /= Void then
 						Result := new_dynamic_query (l_query, a_system)
-						if Result.is_attribute (a_system) then
-							put_attribute (Result, a_system)
+						if Result.is_attribute then
+							put_attribute (Result)
 						else
 							queries.force_last (Result)
 						end
@@ -513,7 +513,7 @@ feature -- Features
 				else
 						-- Check if we have built-in attributes.
 					l_external_function ?= l_query
-					if l_external_function /= Void and then l_external_function.is_builtin and then is_builtin_attribute (l_external_function, l_external_function.builtin_code, a_system) then
+					if l_external_function /= Void and then l_external_function.is_builtin and then is_builtin_attribute (l_external_function, l_external_function.builtin_code) then
 						l_dynamic_feature := dynamic_query (l_external_function, a_system)
 					end
 				end
@@ -521,72 +521,75 @@ feature -- Features
 			end
 		end
 
-	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_code: INTEGER; a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
+	is_builtin_attribute (a_feature: ET_FEATURE; a_builtin_code: INTEGER): BOOLEAN is
 			-- Is built-in feature `a_feature' with code `a_built_code'
 			-- considered as an attribute or not in the current type?
 		require
 			a_feature_not_void: a_feature /= Void
-			a_system_not_void: a_system /= Void
 		do
 			inspect a_builtin_code // builtin_capacity
 			when builtin_boolean_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_boolean_item then
-					Result := (Current /= a_system.boolean_type)
+					Result := not is_basic
 				end
 			when builtin_character_8_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_character_item then
-					Result := (Current /= a_system.character_8_type)
+					Result := not is_basic
 				end
 			when builtin_character_32_class then
 				 if (a_builtin_code \\ builtin_capacity) = builtin_character_item then
-					Result := (Current /= a_system.character_32_type)
+					Result := not is_basic
 				end
 			when builtin_pointer_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_pointer_item then
-					Result := (Current /= a_system.pointer_type)
+					Result := not is_basic
 				end
 			when builtin_integer_8_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.integer_8_type)
+					Result := not is_basic
 				end
 			when builtin_integer_16_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.integer_16_type)
+					Result := not is_basic
 				end
 			when builtin_integer_32_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.integer_32_type)
+					Result := not is_basic
 				end
 			when builtin_integer_64_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.integer_64_type)
+					Result := not is_basic
 				end
 			when builtin_natural_8_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.natural_8_type)
+					Result := not is_basic
 				end
 			when builtin_natural_16_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.natural_16_type)
+					Result := not is_basic
 				end
 			when builtin_natural_32_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.natural_32_type)
+					Result := not is_basic
 				end
 			when builtin_natural_64_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_integer_item then
-					Result := (Current /= a_system.natural_64_type)
+					Result := not is_basic
 				end
 			when builtin_real_32_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_real_item then
-					Result := (Current /= a_system.real_32_type)
+					Result := not is_basic
 				end
 			when builtin_real_64_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_real_item then
-					Result := (Current /= a_system.real_64_type)
+					Result := not is_basic
 				end
 			when builtin_tuple_class then
 				if (a_builtin_code \\ builtin_capacity) = builtin_tuple_object_comparison then
+					Result := True
+				end
+			when builtin_special_class then
+				if (a_builtin_code \\ builtin_capacity) = builtin_special_count then
 					Result := True
 				end
 			else
@@ -598,13 +601,12 @@ feature -- Features
 
 feature {NONE} -- Fetaures
 
-	put_attribute (an_attribute: ET_DYNAMIC_FEATURE; a_system: ET_DYNAMIC_SYSTEM) is
+	put_attribute (an_attribute: ET_DYNAMIC_FEATURE) is
 			-- Add `an_attribute' to `queries'.
 		require
 			an_attribute_not_void: an_attribute /= Void
-			is_attribute: an_attribute.is_attribute (a_system)
+			is_attribute: an_attribute.is_attribute
 			is_query: an_attribute.is_query
-			a_system_not_void: a_system /= Void
 		local
 			l_type: ET_DYNAMIC_TYPE
 		do

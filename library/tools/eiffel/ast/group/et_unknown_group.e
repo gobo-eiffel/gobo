@@ -5,7 +5,7 @@ indexing
 		"Built-in groups for class *UNKNOWN*"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,7 @@ feature -- Access
 	universe: ET_UNIVERSE is
 			-- Surrounding universe
 		do
-			Result := tokens.empty_system
+			Result := tokens.unknown_system
 		end
 
 invariant

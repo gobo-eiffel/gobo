@@ -5,7 +5,7 @@ indexing
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,7 @@ inherit
 	HASHABLE
 	DEBUG_OUTPUT
 	KL_IMPORTED_ANY_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_FILE_SYSTEM
 
@@ -133,7 +134,7 @@ feature -- Access
 		ensure
 			lower_name_not_void: Result /= Void
 			lower_name_not_empty: Result.count > 0
-			definition: Result.is_equal (name.as_lower)
+			definition: Result.same_string (name.as_lower)
 		end
 
 	prefixed_name: STRING is
@@ -150,25 +151,84 @@ feature -- Access
 		deferred
 		end
 
-	full_name (a_separator: CHARACTER): STRING is
-			-- Full name (use `a_separator' as separator
-			-- between parents' names)
+	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+			-- Name of current group relative its parents and its universe down to `a_universe'
+			-- (use `a_separator' as separator between parents' and universes' names)
+			--
+			-- If `a_universe' is `universe' then return the name relative to its
+			-- parents only. Otherwise use one of the shortest paths between
+			-- `a_universe' and `universe', and if no such path exists then return
+			-- the name relative to its parents only.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			l_universe_name: STRING
+			l_group_name: STRING
 		do
-			Result := name
+			if a_universe = universe then
+				Result := name
+			else
+				l_universe_name := universe.relative_name (a_universe, a_separator)
+				l_group_name := relative_name (universe, a_separator)
+				Result := STRING_.new_empty_string (l_universe_name, l_universe_name.count + l_group_name.count + 1)
+				Result.append_string (l_universe_name)
+				Result.append_character (a_separator)
+				Result := STRING_.appended_string (Result, l_group_name)
+			end
+		ensure
+			relative_name_not_void: Result /= Void
+			relative_name_not_empty: Result.count > 0
+		end
+
+	relative_lower_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+			-- Lower-name of current group relative its parents and its universe down to `a_universe'
+			-- (use `a_separator' as separator between parents' and universes' names)
+			--
+			-- If `a_universe' is `universe' then return the name relative to its
+			-- parents only. Otherwise use one of the shortest paths between
+			-- `a_universe' and `universe', and if no such path exists then return
+			-- the name relative to its parents only.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			l_universe_name: STRING
+			l_group_name: STRING
+		do
+			if a_universe = universe then
+				Result := lower_name
+			else
+				l_universe_name := universe.relative_lower_name (a_universe, a_separator)
+				l_group_name := relative_lower_name (universe, a_separator)
+				Result := STRING_.new_empty_string (l_universe_name, l_universe_name.count + l_group_name.count + 1)
+				Result.append_string (l_universe_name)
+				Result.append_character (a_separator)
+				Result := STRING_.appended_string (Result, l_group_name)
+			end
+		ensure
+			relative_lower_name_not_void: Result /= Void
+			relative_lower_name_not_empty: Result.count > 0
+			definition: Result.same_string (relative_name (a_universe, a_separator).as_lower)
+		end
+
+	full_name (a_separator: CHARACTER): STRING is
+			-- Full name, which is the name relative to `current_system'
+			-- (use `a_separator' as separator between parents' and universes' names)
+		do
+			Result := relative_name (current_system, a_separator)
 		ensure
 			full_name_not_void: Result /= Void
 			full_name_not_empty: Result.count > 0
 		end
 
 	full_lower_name (a_separator: CHARACTER): STRING is
-			-- Full lower_name (use `a_separator' as separator
-			-- between parents' names)
+			-- Full lower-name, which is the name relative to `current_system'
+			-- (use `a_separator' as separator between parents' and universes' names)
 		do
-			Result := lower_name
+			Result := relative_lower_name (current_system, a_separator)
 		ensure
 			full_lower_name_not_void: Result /= Void
 			full_lower_name_not_empty: Result.count > 0
-			definition: Result.is_equal (full_name (a_separator).as_lower)
+			definition: Result.same_string (full_name (a_separator).as_lower)
 		end
 
 	full_pathname: STRING is
@@ -236,6 +296,14 @@ feature -- Access
 			check is_dotnet_assembly: is_dotnet_assembly end
 		ensure
 			definition: ANY_.same_objects (Result, Current)
+		end
+
+	kind_name: STRING is
+			-- Kind name (e.g. "cluster", "assembly", etc.)
+		once
+			Result := "group"
+		ensure
+			kind_name_not_void: Result /= Void
 		end
 
 	hash_code: INTEGER is

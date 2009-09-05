@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -155,81 +155,11 @@ feature -- Types
 	boolean_type: ET_DYNAMIC_TYPE
 			-- Type "BOOLEAN"
 
-	character_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "CHARACTER" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.character_class
-			if l_class = current_system.character_8_class then
-				Result := character_8_type
-			elseif l_class = current_system.character_32_class then
-				Result := character_32_type
-			else
-					-- Internal error: unknown class mapping for "CHARACTER".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			character_type_not_void: Result /= Void
-		end
-
-	wide_character_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "WIDE_CHARACTER" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.wide_character_class
-			if l_class = current_system.character_8_class then
-				Result := character_8_type
-			elseif l_class = current_system.character_32_class then
-				Result := character_32_type
-			else
-					-- Internal error: unknown class mapping for "WIDE_CHARACTER".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			wide_character_type_not_void: Result /= Void
-		end
-
 	character_8_type: ET_DYNAMIC_TYPE
 			-- Type "CHARACTER_8"
 
 	character_32_type: ET_DYNAMIC_TYPE
 			-- Type "CHARACTER_32"
-
-	integer_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "INTEGER" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.integer_class
-			if l_class = current_system.integer_8_class then
-				Result := integer_8_type
-			elseif l_class = current_system.integer_16_class then
-				Result := integer_16_type
-			elseif l_class = current_system.integer_32_class then
-				Result := integer_32_type
-			elseif l_class = current_system.integer_64_class then
-				Result := integer_64_type
-			else
-					-- Internal error: unknown class mapping for "INTEGER".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			integer_type_not_void: Result /= Void
-		end
 
 	integer_8_type: ET_DYNAMIC_TYPE
 			-- Type "INTEGER_8"
@@ -243,32 +173,6 @@ feature -- Types
 	integer_64_type: ET_DYNAMIC_TYPE
 			-- Type "INTEGER_64"
 
-	natural_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "NATURAL" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.natural_class
-			if l_class = current_system.natural_8_class then
-				Result := natural_8_type
-			elseif l_class = current_system.natural_16_class then
-				Result := natural_16_type
-			elseif l_class = current_system.natural_32_class then
-				Result := natural_32_type
-			elseif l_class = current_system.natural_64_class then
-				Result := natural_64_type
-			else
-					-- Internal error: unknown class mapping for "NATURAL".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			natural_type_not_void: Result /= Void
-		end
-
 	natural_8_type: ET_DYNAMIC_TYPE
 			-- Type "NATURAL_8"
 
@@ -280,50 +184,6 @@ feature -- Types
 
 	natural_64_type: ET_DYNAMIC_TYPE
 			-- Type "NATURAL_64"
-
-	real_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "REAL" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.real_class
-			if l_class = current_system.real_32_class then
-				Result := real_32_type
-			elseif l_class = current_system.real_64_class then
-				Result := real_64_type
-			else
-					-- Internal error: unknown class mapping for "REAL".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			real_type_not_void: Result /= Void
-		end
-
-	double_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "DOUBLE" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.double_class
-			if l_class = current_system.real_32_class then
-				Result := real_32_type
-			elseif l_class = current_system.real_64_class then
-				Result := real_64_type
-			else
-					-- Internal error: unknown class mapping for "DOUBLE".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			double_type_not_void: Result /= Void
-		end
 
 	real_32_type: ET_DYNAMIC_TYPE
 			-- Type "REAL_32"
@@ -340,55 +200,11 @@ feature -- Types
 	none_type: ET_DYNAMIC_TYPE
 			-- Type "NONE"
 
-	string_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "STRING" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.string_class
-			if l_class = current_system.string_8_class then
-				Result := string_8_type
-			elseif l_class = current_system.string_32_class then
-				Result := string_32_type
-			else
-					-- Internal error: unknown class mapping for "STRING".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			string_type_not_void: Result /= Void
-		end
-
 	string_8_type: ET_DYNAMIC_TYPE
 			-- Type "STRING_8"
 
 	string_32_type: ET_DYNAMIC_TYPE
 			-- Type "STRING_32"
-
-	special_character_type (a_universe: ET_UNIVERSE): ET_DYNAMIC_TYPE is
-			-- Type "SPECIAL [CHARACTER]" when in the context of `a_universe'
-		require
-			a_universe_not_void: a_universe /= Void
-		local
-			l_class: ET_CLASS
-		do
-			l_class := a_universe.character_class
-			if l_class = current_system.character_8_class then
-				Result := special_character_8_type
-			elseif l_class = current_system.character_32_class then
-				Result := special_character_32_type
-			else
-					-- Internal error: unknown class mapping for "CHARACTER".
-				set_fatal_error
-				error_handler.report_giaaa_error
-				Result := unknown_type
-			end
-		ensure
-			special_character_type_not_void: Result /= Void
-		end
 
 	special_character_8_type: ET_DYNAMIC_TYPE
 			-- Type "SPECIAL [CHARACTER_8]"
@@ -410,7 +226,7 @@ feature -- Types
 			i: INTEGER
 			l_type: ET_DYNAMIC_TYPE
 			l_base_class: ET_CLASS
-			l_any: ET_CLASS
+			l_any: ET_CLASS_TYPE
 		do
 			l_base_class := a_type.base_class (a_context)
 			i := l_base_class.index
@@ -418,7 +234,7 @@ feature -- Types
 				l_type := dynamic_types.item (i)
 				if l_type.base_class /= l_base_class then
 					-- Wrong index.
-				elseif not l_base_class.is_generic and l_base_class /= current_system.tuple_class then
+				elseif not l_base_class.is_generic and not l_base_class.is_tuple_class then
 					if a_type.is_type_expanded (a_context) = l_type.is_expanded then
 						Result := l_type
 					elseif l_type.next_type = Void then
@@ -439,7 +255,7 @@ feature -- Types
 				else
 						-- Traverse all dynamic types with the same base class.
 						-- If not found then add this new dynamic type.
-					l_any := current_system.any_class
+					l_any := current_system.any_type
 					from until
 						Result /= Void
 					loop
@@ -521,21 +337,21 @@ feature {NONE} -- Types
 			if l_base_type.same_as_base_class then
 				l_base_type := l_base_class
 			end
-			if l_base_class = current_system.special_class then
+			if l_base_class.is_special_class then
 				Result := new_special_type (l_base_type)
-			elseif l_base_class = current_system.tuple_class then
+			elseif l_base_class.is_tuple_class then
 				Result := new_tuple_type (l_base_type)
-			elseif l_base_class = current_system.array_class then
+			elseif l_base_class.is_array_class then
 				Result := new_array_type (l_base_type)
-			elseif l_base_class = current_system.typed_pointer_class then
+			elseif l_base_class.is_typed_pointer_class then
 				Result := new_typed_pointer_type (l_base_type)
-			elseif l_base_class = current_system.type_class then
+			elseif l_base_class.is_type_class then
 				Result := new_type_type (l_base_type)
-			elseif l_base_class = current_system.procedure_class then
+			elseif l_base_class.is_procedure_class then
 				Result := new_procedure_type (l_base_type)
-			elseif l_base_class = current_system.function_class then
+			elseif l_base_class.is_function_class then
 				Result := new_function_type (l_base_type)
-			elseif l_base_class = current_system.predicate_class then
+			elseif l_base_class.is_predicate_class then
 				Result := new_predicate_type (l_base_type)
 			else
 				create Result.make (l_base_type, l_base_class)
@@ -549,16 +365,17 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_special: a_base_type.base_class = current_system.special_class
+			is_special: a_base_type.base_class.is_special_class
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
-			l_any: ET_CLASS
+			l_any: ET_CLASS_TYPE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_any := current_system.any_class
-			l_base_class := current_system.special_class
+			l_any := current_system.any_type
+			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
 					-- Class SPECIAL should have exactly one generic parameter.
@@ -567,6 +384,11 @@ feature {NONE} -- Types
 				create {ET_DYNAMIC_SPECIAL_TYPE} Result.make (a_base_type, l_base_class, l_item_type_set)
 			else
 				create Result.make (a_base_type, l_base_class)
+			end
+				-- Make feature 'count' alive at the first position in the
+				-- feature list of the "SPECIAL" type.
+			if special_count_feature /= Void then
+				l_dynamic_feature := Result.dynamic_query (special_count_feature, Current)
 			end
 		ensure
 			new_special_type_not_void: Result /= Void
@@ -577,7 +399,7 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_tuple: a_base_type.base_class = current_system.tuple_class
+			is_tuple: a_base_type.base_class.is_tuple_class
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -585,10 +407,10 @@ feature {NONE} -- Types
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
-			l_any: ET_CLASS
+			l_any: ET_CLASS_TYPE
 		do
-			l_any := current_system.any_class
-			l_base_class := current_system.tuple_class
+			l_any := current_system.any_type
+			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
 			if l_actual_parameters /= Void then
 				nb := l_actual_parameters.count
@@ -616,12 +438,12 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_array: a_base_type.base_class = current_system.array_class
+			is_array: a_base_type.base_class.is_array_class
 		local
 			l_base_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_base_class := current_system.array_class
+			l_base_class := a_base_type.base_class
 			create Result.make (a_base_type, l_base_class)
 				-- Make features 'area', and 'lower' and 'upper' alive at the
 				-- first three positions in the feature list of the "ARRAY" type.
@@ -643,12 +465,12 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_typed_pointer: a_base_type.base_class = current_system.typed_pointer_class
+			is_typed_pointer: a_base_type.base_class.is_typed_pointer_class
 		local
 			l_base_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_base_class := current_system.typed_pointer_class
+			l_base_class := a_base_type.base_class
 			create Result.make (a_base_type, l_base_class)
 				-- Make feature 'to_pointer' alive at the first position
 				-- in the feature list of the "TYPED_POINTER" type.
@@ -664,14 +486,14 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_type: a_base_type.base_class = current_system.type_class
+			is_type: a_base_type.base_class.is_type_class
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_any: ET_CLASS
+			l_any: ET_CLASS_TYPE
 		do
-			l_any := current_system.any_class
-			l_base_class := current_system.type_class
+			l_any := current_system.any_type
+			l_base_class := a_base_type.base_class
 			create Result.make (a_base_type, l_base_class)
 				-- Make sure that the meta type of the corresponding type is set.
 			l_actual_parameters := a_base_type.actual_parameters
@@ -688,7 +510,7 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_procedure: a_base_type.base_class = current_system.procedure_class
+			is_procedure: a_base_type.base_class.is_procedure_class
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -696,11 +518,11 @@ feature {NONE} -- Types
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
-			l_any: ET_CLASS
+			l_any: ET_CLASS_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_any := current_system.any_class
-			l_base_class := current_system.procedure_class
+			l_any := current_system.any_type
+			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
 				l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
@@ -747,7 +569,7 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_function: a_base_type.base_class = current_system.function_class
+			is_function: a_base_type.base_class.is_function_class
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -757,11 +579,11 @@ feature {NONE} -- Types
 			l_return_type: ET_DYNAMIC_TYPE
 			l_return_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
-			l_any: ET_CLASS
+			l_any: ET_CLASS_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_any := current_system.any_class
-			l_base_class := current_system.function_class
+			l_any := current_system.any_type
+			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
 				l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
@@ -813,7 +635,7 @@ feature {NONE} -- Types
 		require
 			a_base_type_not_void: a_base_type /= Void
 			is_base_type: a_base_type.is_base_type
-			is_predicate: a_base_type.base_class = current_system.predicate_class
+			is_predicate: a_base_type.base_class.is_predicate_class
 		local
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -823,11 +645,11 @@ feature {NONE} -- Types
 			l_return_type: ET_DYNAMIC_TYPE
 			l_return_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
-			l_any: ET_CLASS
+			l_any: ET_CLASS_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			l_any := current_system.any_class
-			l_base_class := current_system.predicate_class
+			l_any := current_system.any_type
+			l_base_class := a_base_type.base_class
 			l_actual_parameters := a_base_type.actual_parameters
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 2 then
 				l_return_type := boolean_type
@@ -878,10 +700,14 @@ feature -- Compilation
 			-- is received, i.e. `current_system.stop_request' starts returning
 			-- True. No interruption if `current_system.stop_request' is Void.
 		local
-			l_class: ET_CLASS
+			l_root_type: ET_BASE_TYPE
 		do
-			l_class := current_system.root_class
-			if l_class = Void or l_class = current_system.none_class or l_class = current_system.any_class then
+			l_root_type := current_system.root_type
+			if l_root_type = Void then
+				compile_all
+			elseif l_root_type.same_named_type (current_system.none_type, tokens.unknown_class, tokens.unknown_class) then
+				compile_all
+			elseif l_root_type.same_named_type (current_system.any_type, tokens.unknown_class, tokens.unknown_class) then
 				compile_all
 			else
 				compile_system
@@ -896,12 +722,13 @@ feature -- Compilation
 			-- is received, i.e. `current_system.stop_request' starts returning
 			-- True. No interruption if `current_system.stop_request' is Void.
 		local
-			l_class: ET_CLASS
+			l_root_type: ET_BASE_TYPE
 			l_name: ET_FEATURE_NAME
 			l_procedure: ET_PROCEDURE
 			l_query: ET_QUERY
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
+			l_class: ET_CLASS
 		do
 			has_fatal_error := False
 			current_system.activate_processors
@@ -916,12 +743,12 @@ feature -- Compilation
 			end
 			compile_kernel
 			if not current_system.stop_requested then
-				l_class := current_system.root_class
-				if l_class = Void then
+				l_root_type := current_system.root_type
+				if l_root_type = Void then
 						-- Error: missing root class.
 					set_fatal_error
 					error_handler.report_gvsrc3a_error
-				elseif l_class = current_system.none_class then
+				elseif l_root_type.same_named_type (current_system.none_type, tokens.unknown_class, tokens.unknown_class) then
 						-- Error: the root creation feature is not declared as a
 						-- publicly available creation procedure in the root class.
 					l_name := current_system.root_creation
@@ -929,14 +756,15 @@ feature -- Compilation
 						l_name := tokens.default_create_feature_name
 					end
 					set_fatal_error
-					error_handler.report_gvsrc6a_error (l_class, l_name)
-				elseif not l_class.is_preparsed then
-						-- Error: unknown root class.
-					set_fatal_error
-					error_handler.report_gvsrc4a_error (l_class)
+					error_handler.report_gvsrc6a_error (l_root_type.base_class, l_name)
 				else
+					l_class := l_root_type.base_class
 					l_class.process (current_system.eiffel_parser)
-					if not l_class.is_parsed or else l_class.has_syntax_error then
+					if not l_class.is_preparsed then
+							-- Error: unknown root class.
+						set_fatal_error
+						error_handler.report_gvsrc4a_error (l_class)
+					elseif not l_class.is_parsed or else l_class.has_syntax_error then
 							-- Error already reported.
 						set_fatal_error
 					elseif l_class.is_generic then
@@ -979,7 +807,7 @@ feature -- Compilation
 									set_fatal_error
 									error_handler.report_giaaa_error
 								end
-							elseif not l_class.is_creation_directly_exported_to (l_procedure.name, current_system.any_class) then
+							elseif not l_class.is_creation_directly_exported_to (l_procedure.name, current_system.any_type.base_class) then
 								set_fatal_error
 								error_handler.report_gvsrc6a_error (l_class, l_procedure.name)
 							else
@@ -1130,6 +958,7 @@ feature {NONE} -- Compilation
 			l_any: ET_CLASS_TYPE
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_generic_class_type: ET_GENERIC_CLASS_TYPE
+			l_class_type: ET_CLASS_TYPE
 			l_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_area_feature: ET_QUERY
@@ -1140,133 +969,171 @@ feature {NONE} -- Compilation
 		do
 			if not current_system.stop_requested then
 				dynamic_types.wipe_out
-				l_any := current_system.any_class
+				l_any := current_system.any_type
 					-- Type "BOOLEAN".
-				l_class := current_system.boolean_class
+				l_class_type := current_system.boolean_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				boolean_type := dynamic_type (l_class, l_any)
+				boolean_type := dynamic_type (l_class_type, l_any)
 					-- Type "CHARACTER_8".
-				l_class := current_system.character_8_class
+				l_class_type := current_system.character_8_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				character_8_type := dynamic_type (l_class, l_any)
+				character_8_type := dynamic_type (l_class_type, l_any)
 					-- Type "CHARACTER_32".
-				l_class := current_system.character_32_class
+				l_class_type := current_system.character_32_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				character_32_type := dynamic_type (l_class, l_any)
+				character_32_type := dynamic_type (l_class_type, l_any)
 					-- Type "INTEGER_8".
-				l_class := current_system.integer_8_class
+				l_class_type := current_system.integer_8_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_8_type := dynamic_type (l_class, l_any)
+				integer_8_type := dynamic_type (l_class_type, l_any)
 					-- Type "INTEGER_16".
-				l_class := current_system.integer_16_class
+				l_class_type := current_system.integer_16_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_16_type := dynamic_type (l_class, l_any)
+				integer_16_type := dynamic_type (l_class_type, l_any)
 					-- Type "INTEGER_32".
-				l_class := current_system.integer_32_class
+				l_class_type := current_system.integer_32_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_32_type := dynamic_type (l_class, l_any)
+				integer_32_type := dynamic_type (l_class_type, l_any)
 					-- Type "INTEGER_64".
-				l_class := current_system.integer_64_class
+				l_class_type := current_system.integer_64_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				integer_64_type := dynamic_type (l_class, l_any)
+				integer_64_type := dynamic_type (l_class_type, l_any)
 					-- Type "NATURAL_8".
-				l_class := current_system.natural_8_class
+				l_class_type := current_system.natural_8_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_8_type := dynamic_type (l_class, l_any)
+				natural_8_type := dynamic_type (l_class_type, l_any)
 					-- Type "NATURAL_16".
-				l_class := current_system.natural_16_class
+				l_class_type := current_system.natural_16_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_16_type := dynamic_type (l_class, l_any)
+				natural_16_type := dynamic_type (l_class_type, l_any)
 					-- Type "NATURAL_32".
-				l_class := current_system.natural_32_class
+				l_class_type := current_system.natural_32_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_32_type := dynamic_type (l_class, l_any)
+				natural_32_type := dynamic_type (l_class_type, l_any)
 					-- Type "NATURAL_64".
-				l_class := current_system.natural_64_class
+				l_class_type := current_system.natural_64_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				natural_64_type := dynamic_type (l_class, l_any)
+				natural_64_type := dynamic_type (l_class_type, l_any)
 					-- Type "REAL_32".
-				l_class := current_system.real_32_class
+				l_class_type := current_system.real_32_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				real_32_type := dynamic_type (l_class, l_any)
+				real_32_type := dynamic_type (l_class_type, l_any)
 					-- Type "REAL_64".
-				l_class := current_system.real_64_class
+				l_class_type := current_system.real_64_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				real_64_type := dynamic_type (l_class, l_any)
+				real_64_type := dynamic_type (l_class_type, l_any)
 					-- Type "POINTER".
-				l_class := current_system.pointer_class
+				l_class_type := current_system.pointer_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				end
-				pointer_type := dynamic_type (l_class, l_any)
+				pointer_type := dynamic_type (l_class_type, l_any)
+					-- Class "SPECIAL".
+				special_count_feature := Void
+				l_class := current_system.special_any_type.base_class
+				if not l_class.is_preparsed then
+					set_fatal_error
+					error_handler.report_gvknl1a_error (l_class)
+				else
+					l_class.process (current_system.interface_checker)
+					if not l_class.interface_checked or else l_class.has_interface_error then
+							-- Error already reported by the previous
+							-- processing on `l_class'.
+						set_fatal_error
+					else
+							-- Check feature 'count' of class SPECIAL.
+						special_count_feature := l_class.named_query (tokens.count_feature_name)
+						if special_count_feature = Void then
+							l_procedure := l_class.named_procedure (tokens.count_feature_name)
+							if l_procedure /= Void then
+								set_fatal_error
+								error_handler.report_gvkfe2a_error (l_class, l_procedure)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
+							end
+						elseif not special_count_feature.type.same_named_type (l_class.universe.integer_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe3a_error (l_class, special_count_feature, l_class.universe.integer_type)
+							special_count_feature := Void
+						end
+					end
+				end
 					-- Type "SPECIAL [CHARACTER_8]"
-				l_class := current_system.special_class
-				if not l_class.is_preparsed then
-					set_fatal_error
-					error_handler.report_gvknl1a_error (l_class)
-				end
+				l_class := current_system.special_any_type.base_class
 				create l_actual_parameters.make_with_capacity (1)
-				l_actual_parameters.put_first (current_system.character_8_class)
+				l_actual_parameters.put_first (current_system.character_8_type)
 				create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
 				special_character_8_type := dynamic_type (l_generic_class_type, l_any)
 					-- Type "SPECIAL [CHARACTER_32]"
-				l_class := current_system.special_class
-				if not l_class.is_preparsed then
-					set_fatal_error
-					error_handler.report_gvknl1a_error (l_class)
-				end
+				l_class := current_system.special_any_type.base_class
 				create l_actual_parameters.make_with_capacity (1)
-				l_actual_parameters.put_first (current_system.character_32_class)
+				l_actual_parameters.put_first (current_system.character_32_type)
 				create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
 				special_character_32_type := dynamic_type (l_generic_class_type, l_any)
 					-- Type "STRING_8".
-				l_class := current_system.string_8_class
+				l_class_type := current_system.string_8_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 					string_8_type := unknown_type
 				else
-					string_8_type := dynamic_type (l_class, l_any)
+					string_8_type := dynamic_type (l_class_type, l_any)
 					if l_class.has_interface_error then
 							-- Error already reported.
 						set_fatal_error
@@ -1318,7 +1185,7 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type /= integer_type (l_class.universe) then
+							elseif not l_result_type_set.static_type.base_type.same_named_type (l_class.universe.integer_type, l_class, l_class) then
 								set_fatal_error
 								error_handler.report_gvkfe3a_error (l_class, l_count_feature, l_class.universe.integer_type)
 							end
@@ -1326,13 +1193,14 @@ feature {NONE} -- Compilation
 					end
 				end
 					-- Type "STRING_32".
-				l_class := current_system.string_32_class
+				l_class_type := current_system.string_32_type
+				l_class := l_class_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 					string_32_type := unknown_type
 				else
-					string_32_type := dynamic_type (l_class, l_any)
+					string_32_type := dynamic_type (l_class_type, l_any)
 					if l_class.has_interface_error then
 							-- Error already reported.
 						set_fatal_error
@@ -1384,7 +1252,7 @@ feature {NONE} -- Compilation
 									-- Internal error: an attribute should have a result type.
 								set_fatal_error
 								error_handler.report_giaaa_error
-							elseif l_result_type_set.static_type /= integer_type (l_class.universe) then
+							elseif not l_result_type_set.static_type.base_type.same_named_type (l_class.universe.integer_type, l_class, l_class) then
 								set_fatal_error
 								error_handler.report_gvkfe3a_error (l_class, l_count_feature, l_class.universe.integer_type)
 							end
@@ -1395,7 +1263,7 @@ feature {NONE} -- Compilation
 				array_area_feature := Void
 				array_lower_feature := Void
 				array_upper_feature := Void
-				l_class := current_system.array_class
+				l_class := current_system.array_any_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
@@ -1421,9 +1289,9 @@ feature {NONE} -- Compilation
 							set_fatal_error
 							error_handler.report_gvkfe2a_error (l_class, array_area_feature)
 							array_area_feature := Void
-						elseif not array_area_feature.type.same_named_type (current_system.special_class, l_class, l_class) then
+						elseif not array_area_feature.type.same_named_type (current_system.special_any_type.base_class, l_class, l_class) then
 							set_fatal_error
-							error_handler.report_gvkfe3a_error (l_class, array_area_feature, current_system.special_class)
+							error_handler.report_gvkfe3a_error (l_class, array_area_feature, current_system.special_any_type.base_class)
 							array_area_feature := Void
 						end
 						array_lower_feature := l_class.named_query (tokens.lower_feature_name)
@@ -1440,7 +1308,7 @@ feature {NONE} -- Compilation
 							set_fatal_error
 							error_handler.report_gvkfe2a_error (l_class, array_lower_feature)
 							array_lower_feature := Void
-						elseif not array_lower_feature.type.same_named_type (l_class.universe.integer_class, l_class, l_class) then
+						elseif not array_lower_feature.type.same_named_type (l_class.universe.integer_type, l_class, l_class) then
 							set_fatal_error
 							error_handler.report_gvkfe3a_error (l_class, array_lower_feature, l_class.universe.integer_type)
 							array_lower_feature := Void
@@ -1459,7 +1327,7 @@ feature {NONE} -- Compilation
 							set_fatal_error
 							error_handler.report_gvkfe2a_error (l_class, array_upper_feature)
 							array_upper_feature := Void
-						elseif not array_upper_feature.type.same_named_type (l_class.universe.integer_class, l_class, l_class) then
+						elseif not array_upper_feature.type.same_named_type (l_class.universe.integer_type, l_class, l_class) then
 							set_fatal_error
 							error_handler.report_gvkfe3a_error (l_class, array_upper_feature, l_class.universe.integer_type)
 							array_upper_feature := Void
@@ -1468,7 +1336,7 @@ feature {NONE} -- Compilation
 				end
 					-- Class "TYPED_POINTER".
 				typed_pointer_to_pointer_feature := Void
-				l_class := current_system.typed_pointer_class
+				l_class := current_system.typed_pointer_any_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
@@ -1494,9 +1362,9 @@ feature {NONE} -- Compilation
 								set_fatal_error
 								error_handler.report_gvkfe1a_error (l_class, tokens.to_pointer_feature_name)
 							end
-						elseif not typed_pointer_to_pointer_feature.type.same_named_type (current_system.pointer_class, l_class, l_class) then
+						elseif not typed_pointer_to_pointer_feature.type.same_named_type (current_system.pointer_type, l_class, l_class) then
 							set_fatal_error
-							error_handler.report_gvkfe3a_error (l_class, typed_pointer_to_pointer_feature, current_system.pointer_class)
+							error_handler.report_gvkfe3a_error (l_class, typed_pointer_to_pointer_feature, current_system.pointer_type)
 							typed_pointer_to_pointer_feature := Void
 						elseif not typed_pointer_to_pointer_feature.is_attribute then
 							l_external_function ?= typed_pointer_to_pointer_feature
@@ -1510,7 +1378,7 @@ feature {NONE} -- Compilation
 				end
 					-- Class "ROUTINE".
 				routine_closed_operands_feature := Void
-				l_class := current_system.routine_class
+				l_class := current_system.routine_type.base_class
 				if not l_class.is_preparsed then
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
@@ -1556,17 +1424,17 @@ feature {NONE} -- Compilation
 							set_fatal_error
 							error_handler.report_gvkfe2a_error (l_class, routine_is_target_closed_feature)
 							routine_is_target_closed_feature := Void
-						elseif not routine_is_target_closed_feature.type.same_named_type (current_system.boolean_class, l_class, l_class) then
+						elseif not routine_is_target_closed_feature.type.same_named_type (current_system.boolean_type, l_class, l_class) then
 							set_fatal_error
-							error_handler.report_gvkfe3a_error (l_class, routine_is_target_closed_feature, current_system.boolean_class)
+							error_handler.report_gvkfe3a_error (l_class, routine_is_target_closed_feature, current_system.boolean_type)
 							routine_is_target_closed_feature := Void
 						end
 					end
 				end
 					-- Type "ANY".
-				any_type := dynamic_type (current_system.any_class, l_any)
+				any_type := dynamic_type (current_system.any_type, l_any)
 					-- Type "NONE".
-				none_type := dynamic_type (current_system.none_class, l_any)
+				none_type := dynamic_type (current_system.none_type, l_any)
 			end
 		end
 
@@ -1691,6 +1559,9 @@ feature {NONE} -- Features
 
 	array_upper_feature: ET_QUERY
 			-- Expected attribute 'upper' in class "ARRAY"
+
+	special_count_feature: ET_QUERY
+			-- Expected attribute 'count' in class "SPECIAL"
 
 	typed_pointer_to_pointer_feature: ET_QUERY
 			-- Expected attribute 'to_pointer' in class "TYPED_POINTER"

@@ -2,14 +2,16 @@ indexing
 
 	description:
 
-		"Checkers to see whether the implementation of a class needs to be checked again %
-		%or not after some classes have been modified in the Eiffel system."
+	"[
+		Checkers to see whether the implementation of a class needs to be checked again%
+		or not after some classes have been modified in the Eiffel system.
+	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008-09-08 13:38:07 +0200 (Mon, 08 Sep 2008) $"
+	revision: "$Revision: 6501 $"
 
 class ET_IMPLEMENTATION_STATUS_CHECKER
 
@@ -31,11 +33,13 @@ create
 feature -- Processing
 
 	process_class (a_class: ET_CLASS) is
-			-- Check whether the implementation of `a_class' need to be checked
+			-- Check whether the implementation of `a_class' needs to be checked
 			-- again after some classes have been modified in the Eiffel system.
-			-- If `has_implementation_error' is True, it means that this class
-			-- has not been checked yet. False means that it has already
-			-- been checked. Parent classes will be checked recursively.
+			-- Parent classes will be checked recursively beforehand.
+			--
+			-- It is assumed that if `a_class.has_implementation_error' is True, then
+			-- this class has not been checked yet. False means that it has already
+			-- been checked.
 		local
 			a_processor: like Current
 		do
@@ -73,11 +77,13 @@ feature -- Error handling
 feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS) is
-			-- Check whether the implementation of `a_class' need to be checked
+			-- Check whether the implementation of `a_class' needs to be checked
 			-- again after some classes have been modified in the Eiffel system.
-			-- If `has_implementation_error' is True, it means that this class
-			-- has not been checked yet. False means that it has already
-			-- been checked. Parent classes will be checked recursively.
+			-- Parent classes will be checked recursively beforehand.
+			--
+			-- It is assumed that if `a_class.has_implementation_error' is True, then
+			-- this class has not been checked yet. False means that it has already
+			-- been checked.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -91,8 +97,8 @@ feature {NONE} -- Processing
 			old_class := current_class
 			current_class := a_class
 			if current_class.implementation_checked and then current_class.has_implementation_error then
-					-- The class has been mark with an implementation error to indicate that
-					-- we need to check whether its implementation need to be checked again
+					-- The class has been marked with an implementation error to indicate that
+					-- we need to check whether its implementation needs to be checked again
 					-- or not. It might happen if other classes on which it depends have
 					-- been modified or recursively made invalid. If its implementation is still
 					-- valid then the error flag will be cleared. Otherwise the class will
@@ -100,16 +106,6 @@ feature {NONE} -- Processing
 				current_class.unset_implementation_error
 					-- Process parents first.
 				a_parents := current_class.parents
-				if a_parents = Void or else a_parents.is_empty then
-					if current_class = current_system.any_class then
-							-- ANY has no implicit parents.
-						a_parents := Void
-					elseif current_class.is_dotnet and current_class /= current_system.system_object_class then
-						a_parents := current_system.system_object_parents
-					else
-						a_parents := current_system.any_parents
-					end
-				end
 				if a_parents /= Void then
 					nb := a_parents.count
 					from i := 1 until i > nb loop
@@ -138,15 +134,15 @@ feature {NONE} -- Processing
 			implementation_checked: not a_class.implementation_checked or else not a_class.has_implementation_error
 		end
 
-feature {NONE} -- Formal parameters and parents validity
+feature {NONE} -- Suppliers and providers validity
 
 	check_suppliers_validity is
 			-- Check whether none of the supplier classes
-			-- of `current_class' have been modified.
+			-- of `current_class' has been modified.
 		local
-			l_suppliers: DS_HASH_SET [ET_CLASS]
-			l_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
-			l_class: ET_CLASS
+			l_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
+			l_class: ET_NAMED_CLASS
 		do
 			if current_class.implementation_checked then
 				l_suppliers := current_class.suppliers
@@ -174,11 +170,11 @@ feature {NONE} -- Formal parameters and parents validity
 
 	check_providers_validity is
 			-- Check whether none of the provider classes
-			-- of `current_class' have been modified.
+			-- of `current_class' has been modified.
 		local
-			l_providers: DS_HASH_SET [ET_CLASS]
-			l_cursor: DS_HASH_SET_CURSOR [ET_CLASS]
-			l_class: ET_CLASS
+			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
+			l_class: ET_NAMED_CLASS
 		do
 			if current_class.implementation_checked then
 				l_providers := current_class.providers

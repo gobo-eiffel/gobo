@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type set builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -135,38 +135,34 @@ feature -- Generation
 			a_type_alive: a_type.is_alive
 		end
 
-	mark_string_type_alive (a_universe: ET_UNIVERSE) is
-			-- Make sure that `string_type' and its dependent types
-			-- are marked as alive when in the context of `a_universe'.
+	mark_string_type_alive (a_string_type: ET_DYNAMIC_TYPE) is
+			-- Make sure that `a_string_type' and the type of its 'area'
+			-- are marked as alive.
 		require
-			a_universe_not_void: a_universe /= Void
+			a_string_type_not_void: a_string_type /= Void
 		local
-			l_string_type: ET_DYNAMIC_TYPE
-			l_string_universe: ET_UNIVERSE
-			l_special_type: ET_DYNAMIC_TYPE
-			l_special_universe: ET_UNIVERSE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			l_string_type := current_dynamic_system.string_type (a_universe)
-			mark_type_alive (l_string_type)
-			l_string_universe := l_string_type.base_class.universe
-			if l_string_universe /= Void then
-					-- Make sure that type "SPECIAL [CHARACTER]" (used in
-					-- feature 'area') is marked as alive.
-				l_special_type := current_dynamic_system.special_character_type (l_string_universe)
-				mark_type_alive (l_special_type)
-					-- Make sure that type "INTEGER" (used in attribute 'count') is marked as alive.
-				mark_type_alive (current_dynamic_system.integer_type (l_string_universe))
-				l_special_universe := l_special_type.base_class.universe
-				if l_special_universe /= Void then
-						-- Make sure that type "CHARACTER" (used as actual generic type
-						-- of "SPECIAL [CHARACTER]" in feature 'area') is marked as alive.
-					mark_type_alive (current_dynamic_system.character_type (l_special_universe))
-						-- Make sure that type "INTEGER" (used in attribute 'count') is marked as alive.
-					mark_type_alive (current_dynamic_system.integer_type (l_special_universe))
+			mark_type_alive (a_string_type)
+			if a_string_type.attribute_count < 2 then
+					-- Internal error: class "STRING" should have at least the
+					-- features 'area' and 'count' as first features.
+					-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+					-- Attribute 'area'.
+				l_dynamic_type_set := a_string_type.queries.item (1).result_type_set
+				if l_dynamic_type_set = Void then
+						-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					mark_type_alive (l_dynamic_type_set.static_type)
 				end
 			end
 		ensure
-			string_type_alive: current_dynamic_system.string_type (a_universe).is_alive
+			a_string_type_alive: a_string_type.is_alive
 		end
 
 feature -- Error handling

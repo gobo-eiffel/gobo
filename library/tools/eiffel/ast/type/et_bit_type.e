@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -139,13 +139,13 @@ feature -- Comparison
 	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -159,7 +159,7 @@ feature -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same named type?
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -173,7 +173,7 @@ feature -- Comparison
 			-- Do current type appearing in `a_context' and `other' type
 			-- appearing in `other_context' have the same base type?
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -188,13 +188,13 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" is equal to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -232,7 +232,7 @@ feature -- Conformance
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then
@@ -250,7 +250,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- (Note: 'current_system.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
-			if base_class = tokens.unknown_class then
+			if base_class.is_unknown then
 					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
 			elseif other = Current and then other_context = a_context then

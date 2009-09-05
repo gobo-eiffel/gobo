@@ -355,7 +355,7 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					boolean_type := current_system.boolean_class
+					boolean_type := current_universe_impl.boolean_type
 					l_assertion_context := new_context (current_type)
 					l_old_scope := current_object_test_scope.count
 					nb := a_preconditions.count
@@ -366,7 +366,7 @@ feature -- Validity checking
 							check_expression_validity (l_expression, l_assertion_context, boolean_type)
 							if has_fatal_error then
 								-- Do nothing.
-							elseif not l_assertion_context.same_named_type (boolean_type, current_type) then
+							elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
 								set_fatal_error
 								l_named_type := l_assertion_context.named_type
 								error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
@@ -470,7 +470,7 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					boolean_type := current_system.boolean_class
+					boolean_type := current_universe_impl.boolean_type
 					l_assertion_context := new_context (current_type)
 					nb := a_postconditions.count
 					from i := 1 until i > nb loop
@@ -480,7 +480,7 @@ feature -- Validity checking
 							check_expression_validity (l_expression, l_assertion_context, boolean_type)
 							if has_fatal_error then
 								-- Do nothing.
-							elseif not l_assertion_context.same_named_type (boolean_type, current_type) then
+							elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
 								set_fatal_error
 								l_named_type := l_assertion_context.named_type
 								error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
@@ -573,7 +573,7 @@ feature -- Validity checking
 						-- The error should have already been reported.
 					set_fatal_error
 				else
-					boolean_type := current_system.boolean_class
+					boolean_type := current_universe_impl.boolean_type
 					l_assertion_context := new_context (current_type)
 					nb := an_invariants.count
 					from i := 1 until i > nb loop
@@ -583,7 +583,7 @@ feature -- Validity checking
 							check_expression_validity (l_expression, l_assertion_context, boolean_type)
 							if has_fatal_error then
 								-- Do nothing.
-							elseif not l_assertion_context.same_named_type (boolean_type, current_type) then
+							elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
 								set_fatal_error
 								l_named_type := l_assertion_context.named_type
 								error_handler.report_vwbe0a_error (current_class, current_class_impl, l_expression, l_named_type)
@@ -687,14 +687,14 @@ feature {NONE} -- Feature validity
 			if not had_error then
 				l_constant := a_feature.constant
 				if l_constant.is_boolean_constant then
-					if not l_type.same_named_type (current_system.boolean_class, current_type, current_type) then
+					if not l_type.same_named_type (current_universe_impl.boolean_type, current_type, current_class_impl) then
 						set_fatal_error
 						error_handler.report_vqmc1a_error (current_class, current_class_impl, a_feature)
 					end
 				elseif l_constant.is_character_constant then
-					if l_type.same_named_type (current_system.character_8_class, current_type, current_type) then
+					if current_universe_impl.character_8_type.same_named_type (l_type, current_type, current_class_impl) then
 						-- OK.
-					elseif l_type.same_named_type (current_system.character_32_class, current_type, current_type) then
+					elseif current_universe_impl.character_32_type.same_named_type (l_type, current_type, current_class_impl) then
 						-- OK.
 					else
 						set_fatal_error
@@ -711,54 +711,54 @@ feature {NONE} -- Feature validity
 						had_error := had_error or has_fatal_error
 						free_context (l_context)
 					end
-					if l_type.same_named_type (current_system.integer_8_class, current_type, current_type) then
+					if current_universe_impl.integer_8_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_integer_8 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.integer_8_class)
-					elseif l_type.same_named_type (current_system.integer_16_class, current_type, current_type) then
+						l_integer_constant.set_type (current_universe_impl.integer_8_type)
+					elseif current_universe_impl.integer_16_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_integer_16 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.integer_16_class)
-					elseif l_type.same_named_type (current_system.integer_32_class, current_type, current_type) then
+						l_integer_constant.set_type (current_universe_impl.integer_16_type)
+					elseif current_universe_impl.integer_32_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_integer_32 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.integer_32_class)
-					elseif l_type.same_named_type (current_system.integer_64_class, current_type, current_type) then
+						l_integer_constant.set_type (current_universe_impl.integer_32_type)
+					elseif current_universe_impl.integer_64_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_integer_64 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.integer_64_class)
-					elseif l_type.same_named_type (current_system.natural_8_class, current_type, current_type) then
+						l_integer_constant.set_type (current_universe_impl.integer_64_type)
+					elseif current_universe_impl.natural_8_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_natural_8 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.natural_8_class)
-					elseif l_type.same_named_type (current_system.natural_16_class, current_type, current_type) then
+						l_integer_constant.set_type (current_universe_impl.natural_8_type)
+					elseif current_universe_impl.natural_16_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_natural_16 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.natural_16_class)
-					elseif l_type.same_named_type (current_system.natural_32_class, current_type, current_type) then
+						l_integer_constant.set_type (current_universe_impl.natural_16_type)
+					elseif current_universe_impl.natural_32_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_natural_32 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.natural_32_class)
-					elseif l_type.same_named_type (current_system.natural_64_class, current_type, current_type) then
+						l_integer_constant.set_type (current_universe_impl.natural_32_type)
+					elseif current_universe_impl.natural_64_type.same_named_type (l_type, current_type, current_class_impl) then
 						if not l_integer_constant.is_natural_64 then
 							set_fatal_error
 							error_handler.report_vqmc3b_error (current_class, current_class_impl, a_feature, l_integer_constant)
 						end
-						l_integer_constant.set_type (current_system.natural_64_class)
+						l_integer_constant.set_type (current_universe_impl.natural_64_type)
 					else
 						set_fatal_error
 						error_handler.report_vqmc3a_error (current_class, current_class_impl, a_feature)
@@ -766,22 +766,22 @@ feature {NONE} -- Feature validity
 				elseif l_constant.is_real_constant then
 					l_real_constant ?= l_constant
 					check is_real_constant: l_real_constant /= Void end
-					if l_type.same_named_type (current_system.real_32_class, current_type, current_type) then
+					if current_universe_impl.real_32_type.same_named_type (l_type, current_type, current_class_impl) then
 							-- OK.
-						l_real_constant.set_type (current_system.real_32_class)
-					elseif l_type.same_named_type (current_system.real_64_class, current_type, current_type) then
+						l_real_constant.set_type (current_universe_impl.real_32_type)
+					elseif current_universe_impl.real_64_type.same_named_type (l_type, current_type, current_class_impl) then
 							-- OK.
-						l_real_constant.set_type (current_system.real_64_class)
+						l_real_constant.set_type (current_universe_impl.real_64_type)
 					else
 						set_fatal_error
 						error_handler.report_vqmc4a_error (current_class, current_class_impl, a_feature)
 					end
 				elseif l_constant.is_string_constant then
-					if l_type.same_named_type (current_system.string_8_class, current_type, current_type) then
+					if current_universe_impl.string_8_type.same_named_type (l_type, current_type, current_class_impl) then
 						-- OK.
-					elseif l_type.same_named_type (current_system.string_32_class, current_type, current_type) then
+					elseif current_universe_impl.string_32_type.same_named_type (l_type, current_type, current_class_impl) then
 						-- OK.
-					elseif l_type.same_named_type (current_system.system_string_class, current_type, current_type) then
+					elseif current_universe_impl.system_string_type.base_class.is_dotnet and then current_universe_impl.system_string_type.same_named_type (l_type, current_type, current_class_impl) then
 						-- OK: this is an Eiffel for .NET extension.
 					else
 						set_fatal_error
@@ -1244,21 +1244,21 @@ feature {NONE} -- Feature validity
 				had_error := had_error or has_fatal_error
 			end
 			if not had_error then
-				if l_type.same_named_type (current_system.integer_8_class, current_type, current_type) then
+				if current_universe_impl.integer_8_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
-				elseif l_type.same_named_type (current_system.integer_16_class, current_type, current_type) then
+				elseif current_universe_impl.integer_16_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
-				elseif l_type.same_named_type (current_system.integer_32_class, current_type, current_type) then
+				elseif current_universe_impl.integer_32_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
-				elseif l_type.same_named_type (current_system.integer_64_class, current_type, current_type) then
+				elseif current_universe_impl.integer_64_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
-				elseif l_type.same_named_type (current_system.natural_8_class, current_type, current_type) then
+				elseif current_universe_impl.natural_8_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
-				elseif l_type.same_named_type (current_system.natural_16_class, current_type, current_type) then
+				elseif current_universe_impl.natural_16_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
-				elseif l_type.same_named_type (current_system.natural_32_class, current_type, current_type) then
+				elseif current_universe_impl.natural_32_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
-				elseif l_type.same_named_type (current_system.natural_64_class, current_type, current_type) then
+				elseif current_universe_impl.natural_64_type.same_named_type (l_type, current_type, current_class_impl) then
 					-- Valid with ISE Eiffel. To be checked with other compilers.
 				else
 					set_fatal_error
@@ -2035,7 +2035,7 @@ feature {NONE} -- Instruction validity
 									l_seed := l_query.first_seed
 									l_name.set_seed (l_seed)
 								else
-									if l_class = current_system.tuple_class then
+									if l_class.is_tuple_class then
 											-- Check whether this is a tuple label.
 											-- For example:
 											--     target: TUPLE [f: INTEGER]
@@ -2102,7 +2102,7 @@ feature {NONE} -- Instruction validity
 								-- at that time, so no need to report it here again.
 								-- We just need to flag that there is an error.
 							set_fatal_error
-						elseif l_class /= current_system.tuple_class then
+						elseif not l_class.is_tuple_class then
 								-- Internal error: if we got a call to tuple label,
 								-- the class has to be TUPLE because it is not possible
 								-- to inherit from TUPLE.
@@ -2351,21 +2351,7 @@ feature {NONE} -- Instruction validity
 						report_assignment (an_instruction)
 					elseif
 						current_system.is_ise and current_class /= current_class_impl and
-						(current_class = current_system.boolean_class or
-						current_class = current_system.character_8_class or
-						current_class = current_system.character_32_class or
-						current_class = current_system.integer_8_class or
-						current_class = current_system.integer_16_class or
-						current_class = current_system.integer_32_class or
-						current_class = current_system.integer_64_class or
-						current_class = current_system.natural_8_class or
-						current_class = current_system.natural_16_class or
-						current_class = current_system.natural_32_class or
-						current_class = current_system.natural_64_class or
-						current_class = current_system.real_32_class or
-						current_class = current_system.real_64_class or
-						current_class = current_system.pointer_class or
-						current_class = current_system.typed_pointer_class)
+						(current_class.is_basic or current_class.is_typed_pointer_class)
 					then
 							-- Compatibility with ISE 5.6.0610.
 						report_assignment (an_instruction)
@@ -2427,7 +2413,7 @@ feature {NONE} -- Instruction validity
 					set_fatal_error
 					l_target_named_type := l_target_context.named_type
 					error_handler.report_vjrv0a_error (current_class, current_class_impl, l_target, l_target_named_type)
-				elseif current_class_impl /= current_system.any_class or else not current_system.is_ise then
+				elseif not current_class_impl.is_any_class or else not current_system.is_ise then
 						-- Note: Do not report this error if the assignment
 						-- attempt appears in class ANY because of a design
 						-- bug in ISE's class ANY.
@@ -2495,7 +2481,7 @@ feature {NONE} -- Instruction validity
 		do
 			has_fatal_error := False
 			in_check_instruction := True
-			boolean_type := current_system.boolean_class
+			boolean_type := current_universe_impl.boolean_type
 			l_assertion_context := new_context (current_type)
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
@@ -2504,7 +2490,7 @@ feature {NONE} -- Instruction validity
 					check_expression_validity (l_expression, l_assertion_context, boolean_type)
 					if has_fatal_error then
 						had_error := True
-					elseif not l_assertion_context.same_named_type (boolean_type, current_type) then
+					elseif not l_assertion_context.same_named_type (boolean_type, current_class_impl) then
 						set_fatal_error
 						had_error := True
 						l_named_type := l_assertion_context.named_type
@@ -2921,13 +2907,13 @@ feature {NONE} -- Instruction validity
 			l_old_elseif_scope: INTEGER
 		do
 			has_fatal_error := False
-			boolean_type := current_system.boolean_class
+			boolean_type := current_universe_impl.boolean_type
 			l_conditional := an_instruction.conditional.expression
 			l_conditional_context := new_context (current_type)
 			check_expression_validity (l_conditional, l_conditional_context, boolean_type)
 			if has_fatal_error then
 				had_error := True
-			elseif not l_conditional_context.same_named_type (boolean_type, current_type) then
+			elseif not l_conditional_context.same_named_type (boolean_type, current_class_impl) then
 				had_error := True
 				set_fatal_error
 				l_named_type := l_conditional_context.named_type
@@ -2957,7 +2943,7 @@ feature {NONE} -- Instruction validity
 						check_expression_validity (l_conditional, l_conditional_context, boolean_type)
 						if has_fatal_error then
 							had_error := True
-						elseif not l_conditional_context.same_named_type (boolean_type, current_type) then
+						elseif not l_conditional_context.same_named_type (boolean_type, current_class_impl) then
 							had_error := True
 							set_fatal_error
 							l_named_type := l_conditional_context.named_type
@@ -3016,9 +3002,8 @@ feature {NONE} -- Instruction validity
 			l_choice_context: ET_NESTED_TYPE_CONTEXT
 			l_choice_named_type: ET_NAMED_TYPE
 			j, nb2: INTEGER
-			l_value_class: ET_CLASS
-			l_choice_class: ET_CLASS
 			l_constant: ET_CONSTANT
+			l_cast_type: ET_TARGET_TYPE
 		do
 			has_fatal_error := False
 			any_type := current_system.any_type
@@ -3027,25 +3012,25 @@ feature {NONE} -- Instruction validity
 			check_expression_validity (l_expression, l_value_context, any_type)
 			if has_fatal_error then
 				had_error := True
-			elseif l_value_context.same_named_type (current_system.integer_8_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.integer_8_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.integer_16_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.integer_16_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.integer_32_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.integer_32_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.integer_64_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.integer_64_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.natural_8_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.natural_8_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.natural_16_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.natural_16_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.natural_32_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.natural_32_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.natural_64_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.natural_64_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.character_8_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.character_8_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
-			elseif l_value_context.same_named_type (current_system.character_32_class, current_type) then
+			elseif l_value_context.same_named_type (current_universe_impl.character_32_type, current_class_impl) then
 				-- Valid with ISE Eiffel. To be checked with other compilers.
 			else
 				had_error := True
@@ -3078,32 +3063,16 @@ feature {NONE} -- Instruction validity
 							elseif not had_value_error then
 								if l_choice_context.same_named_type (l_value_type, l_value_context) then
 									-- OK.
-								else
-									l_value_class := l_value_context.base_class
-									l_choice_class := l_choice_context.base_class
-									if
-										l_value_class = current_system.integer_16_class and then
-										l_choice_class = current_system.integer_8_class
-									then
-										-- Valid with ISE Eiffel. To be checked with other compilers.
-									elseif
-										l_value_class = current_system.integer_32_class and then
-										(l_choice_class = current_system.integer_8_class or
-										l_choice_class = current_system.integer_16_class)
-									then
-										-- Valid with ISE Eiffel. To be checked with other compilers.
-									elseif
-										l_value_class = current_system.integer_64_class and then
-										(l_choice_class = current_system.integer_8_class or
-										l_choice_class = current_system.integer_16_class or
-										l_choice_class = current_system.integer_32_class)
-									then
-										-- Valid with ISE Eiffel. To be checked with other compilers.
-									elseif
-										l_value_class = current_system.character_32_class and then
-										l_choice_class = current_system.character_8_class
-									then
-										-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif {l_integer_constant: ET_INTEGER_CONSTANT} l_constant then
+									l_cast_type := l_integer_constant.cast_type
+									l_integer_constant.set_cast_type (Void)
+									l_choice_context.wipe_out
+									check_expression_validity (l_integer_constant, l_choice_context, l_value_context)
+									l_integer_constant.set_cast_type (l_cast_type)
+									if has_fatal_error then
+										had_error := True
+									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+										-- OK.
 									else
 										had_error := True
 										set_fatal_error
@@ -3111,6 +3080,29 @@ feature {NONE} -- Instruction validity
 										l_choice_named_type := l_choice_context.named_type
 										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 									end
+								elseif {l_character_constant: ET_CHARACTER_CONSTANT} l_constant then
+									l_cast_type := l_character_constant.cast_type
+									l_character_constant.set_cast_type (Void)
+									l_choice_context.wipe_out
+									check_expression_validity (l_character_constant, l_choice_context, l_value_context)
+									l_character_constant.set_cast_type (l_cast_type)
+									if has_fatal_error then
+										had_error := True
+									elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+										-- OK.
+									else
+										had_error := True
+										set_fatal_error
+										l_value_named_type := l_value_context.named_type
+										l_choice_named_type := l_choice_context.named_type
+										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+									end
+								else
+									had_error := True
+									set_fatal_error
+									l_value_named_type := l_value_context.named_type
+									l_choice_named_type := l_choice_context.named_type
+									error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 								end
 							end
 						end
@@ -3129,32 +3121,16 @@ feature {NONE} -- Instruction validity
 								elseif not had_value_error then
 									if l_choice_context.same_named_type (l_value_type, l_value_context) then
 										-- OK.
-									else
-										l_value_class := l_value_context.base_class
-										l_choice_class := l_choice_context.base_class
-										if
-											l_value_class = current_system.integer_16_class and then
-											l_choice_class = current_system.integer_8_class
-										then
-											-- Valid with ISE Eiffel. To be checked with other compilers.
-										elseif
-											l_value_class = current_system.integer_32_class and then
-											(l_choice_class = current_system.integer_8_class or
-											l_choice_class = current_system.integer_16_class)
-										then
-											-- Valid with ISE Eiffel. To be checked with other compilers.
-										elseif
-											l_value_class = current_system.integer_64_class and then
-											(l_choice_class = current_system.integer_8_class or
-											l_choice_class = current_system.integer_16_class or
-											l_choice_class = current_system.integer_32_class)
-										then
-											-- Valid with ISE Eiffel. To be checked with other compilers.
-										elseif
-											l_value_class = current_system.character_32_class and then
-											l_choice_class = current_system.character_8_class
-										then
-											-- Valid with ISE Eiffel. To be checked with other compilers.
+									elseif {l_integer_constant2: ET_INTEGER_CONSTANT} l_constant then
+										l_cast_type := l_integer_constant2.cast_type
+										l_integer_constant2.set_cast_type (Void)
+										l_choice_context.wipe_out
+										check_expression_validity (l_integer_constant2, l_choice_context, l_value_context)
+										l_integer_constant2.set_cast_type (l_cast_type)
+										if has_fatal_error then
+											had_error := True
+										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+											-- OK.
 										else
 											had_error := True
 											set_fatal_error
@@ -3162,6 +3138,29 @@ feature {NONE} -- Instruction validity
 											l_choice_named_type := l_choice_context.named_type
 											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 										end
+									elseif {l_character_constant2: ET_CHARACTER_CONSTANT} l_constant then
+										l_cast_type := l_character_constant2.cast_type
+										l_character_constant2.set_cast_type (Void)
+										l_choice_context.wipe_out
+										check_expression_validity (l_character_constant2, l_choice_context, l_value_context)
+										l_character_constant2.set_cast_type (l_cast_type)
+										if has_fatal_error then
+											had_error := True
+										elseif l_choice_context.same_named_type (l_value_type, l_value_context) then
+											-- OK.
+										else
+											had_error := True
+											set_fatal_error
+											l_value_named_type := l_value_context.named_type
+											l_choice_named_type := l_choice_context.named_type
+											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
+										end
+									else
+										had_error := True
+										set_fatal_error
+										l_value_named_type := l_value_context.named_type
+										l_choice_named_type := l_choice_context.named_type
+										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 									end
 								end
 							end
@@ -3297,13 +3296,13 @@ feature {NONE} -- Instruction validity
 					had_error := True
 				end
 			end
-			boolean_type := current_system.boolean_class
+			boolean_type := current_universe_impl.boolean_type
 			l_expression := an_instruction.until_conditional.expression
 			l_expression_context := new_context (current_type)
 			check_expression_validity (l_expression, l_expression_context, boolean_type)
 			if has_fatal_error then
 				had_error := True
-			elseif not l_expression_context.same_named_type (boolean_type, current_type) then
+			elseif not l_expression_context.same_named_type (boolean_type, current_class_impl) then
 				had_error := True
 				set_fatal_error
 				l_named_type := l_expression_context.named_type
@@ -3346,7 +3345,7 @@ feature {NONE} -- Instruction validity
 			l_named_type: ET_NAMED_TYPE
 		do
 			has_fatal_error := False
-			boolean_type := current_system.boolean_class
+			boolean_type := current_universe_impl.boolean_type
 			l_expression_context := new_context (current_type)
 			nb := an_invariant.count
 			from i := 1 until i > nb loop
@@ -3354,7 +3353,7 @@ feature {NONE} -- Instruction validity
 				check_expression_validity (l_expression, l_expression_context, boolean_type)
 				if has_fatal_error then
 					had_error := True
-				elseif not l_expression_context.same_named_type (boolean_type, current_type) then
+				elseif not l_expression_context.same_named_type (boolean_type, current_class_impl) then
 					had_error := True
 					set_fatal_error
 					l_named_type := l_expression_context.named_type
@@ -3384,7 +3383,7 @@ feature {NONE} -- Instruction validity
 			has_fatal_error := False
 			l_expression := a_variant.expression
 			if l_expression /= Void then
-				integer_type := universe_impl.integer_class
+				integer_type := current_universe_impl.integer_type
 				l_expression_context := new_context (current_type)
 				check_expression_validity (l_expression, l_expression_context, integer_type)
 				if has_fatal_error then
@@ -4147,7 +4146,7 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			create l_integer_constant.make ((a_constant.literal.count - 1).out)
-			create l_type.make (l_integer_constant, current_system.bit_class)
+			create l_type.make (l_integer_constant, tokens.unknown_class)
 			a_context.force_last (l_type)
 			report_bit_constant (a_constant)
 		end
@@ -4225,48 +4224,60 @@ feature {NONE} -- Expression validity
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_class_type: ET_CLASS_TYPE
-			l_class: ET_CLASS
 			l_type: ET_CLASS_TYPE
 			l_cast_type: ET_TARGET_TYPE
+			l_explicit_type: ET_TYPE
+			l_expected_type: ET_TYPE
+			l_expected_type_context: ET_TYPE_CONTEXT
 		do
 			has_fatal_error := False
+			l_expected_type := tokens.like_current
+			l_expected_type_context := current_target_type
 			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
--- TODO: make sure that `l_cast_type' is a valid type.
--- For example 'CHARACTER [ANY]' is not valid.
-				l_class_type ?= l_cast_type.type.named_type (a_context)
-			else
-				l_class_type ?= current_target_type.named_type
-			end
-			if l_class_type /= Void then
-				l_class := l_class_type.base_class
-				if l_class = current_system.character_8_class then
-					l_type := l_class
-					report_character_8_constant (a_constant)
-				elseif l_class = current_system.character_32_class then
-					l_type := l_class
-					report_character_32_constant (a_constant)
-				end
-			end
-			if l_type = Void then
-				if l_cast_type /= Void then
--- TODO: invalid cast type, it should be a character type.
-				end
-				l_class := universe_impl.character_class
-				l_type := l_class
-				if l_class = current_system.character_8_class then
-					report_character_8_constant (a_constant)
-				elseif l_class = current_system.character_32_class then
-					report_character_32_constant (a_constant)
+					-- Make sure that `l_cast_type' is a valid type.
+					-- For example 'CHARACTER_8 [ANY]' is not valid.
+				l_explicit_type := l_cast_type.type
+				check_type_validity (l_explicit_type)
+				if has_fatal_error then
+					-- Do nothing.
+				elseif not l_explicit_type.is_named_type then
+						-- Error: invalid cast type, it should be a sized variant of "CHARACTER".
+					set_fatal_error
+					error_handler.report_vwmq0c_error (current_class, current_class_impl, a_constant)
 				else
--- TODO: invalid type mapping for character.
-					l_type := current_system.character_8_class
-					report_character_8_constant (a_constant)
+					l_expected_type := l_explicit_type
+					l_expected_type_context := current_class_impl
 				end
 			end
-			a_constant.set_type (l_type)
-			a_context.force_last (l_type)
+			if has_fatal_error then
+				-- Do nothing.
+			elseif current_universe_impl.character_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+-- TODO: check that the value is representable as a "CHARACTER_8".
+				l_type := current_universe_impl.character_8_type
+				report_character_8_constant (a_constant, l_type)
+			elseif current_universe_impl.character_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+-- TODO: check that the value is representable as a "CHARACTER_32".
+				l_type := current_universe_impl.character_32_type
+				report_character_32_constant (a_constant, l_type)
+			end
+			if has_fatal_error then
+				-- Do nothing.
+			elseif l_type /= Void then
+				-- We already found the type.
+			elseif l_explicit_type /= Void then
+					-- Error: invalid cast type, it should be a sized variant of "CHARACTER".
+				set_fatal_error
+				error_handler.report_vwmq0c_error (current_class, current_class_impl, a_constant)
+			else
+-- TODO: check what ISE does here.
+				l_type := current_universe_impl.character_8_type
+				report_character_8_constant (a_constant, l_type)
+			end
+			if l_type /= Void then
+				a_constant.set_type (l_type)
+				a_context.force_last (l_type)
+			end
 		end
 
 	check_convert_builtin_expression_validity (an_expression: ET_CONVERT_BUILTIN_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -4609,13 +4620,14 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_typed_pointer_class: ET_CLASS
+			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_pointer_type: ET_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			has_fatal_error := False
-			l_typed_pointer_class := current_system.typed_pointer_class
-			if l_typed_pointer_class.is_preparsed then
+			l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+			if l_typed_pointer_class.actual_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
 					-- Use ISE's implementation: the type of '$Current' is 'TYPED_POINTER [like Current]'.
 				create l_actuals.make_with_capacity (1)
@@ -4628,8 +4640,9 @@ feature {NONE} -- Expression validity
 				report_current_type_needed
 			else
 					-- Use the ETL2 implementation: the type of '$Current' is POINTER.
-				a_context.force_last (current_system.pointer_class)
-				report_pointer_expression (an_expression)
+				l_pointer_type := current_universe_impl.pointer_type
+				a_context.force_last (l_pointer_type)
+				report_pointer_expression (an_expression, l_pointer_type)
 			end
 		end
 
@@ -4700,7 +4713,7 @@ feature {NONE} -- Expression validity
 						end
 					end
 					if not has_fatal_error then
-						a_context.force_last (current_system.boolean_class)
+						a_context.force_last (current_universe_impl.boolean_type)
 						report_equality_expression (an_expression)
 					end
 				end
@@ -4723,16 +4736,17 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_typed_pointer_class: ET_CLASS
+			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_pointer_type: ET_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 		do
 			has_fatal_error := False
 			any_type := current_system.any_type
-			l_typed_pointer_class := current_system.typed_pointer_class
-			if l_typed_pointer_class.is_preparsed then
+			l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+			if l_typed_pointer_class.actual_class.is_preparsed then
 					-- Class TYPED_POINTER has been found in the universe.
 					-- Use ISE's implementation: the type of '$(expr)' is 'TYPED_POINTER [<type-of-expr>]'.
 				check_expression_validity (an_expression.expression, a_context, any_type)
@@ -4765,8 +4779,9 @@ feature {NONE} -- Expression validity
 				check_expression_validity (an_expression.expression, l_expression_context, any_type)
 				free_context (l_expression_context)
 				if not has_fatal_error then
-					a_context.force_last (current_system.pointer_class)
-					report_pointer_expression (an_expression)
+					l_pointer_type := current_universe_impl.pointer_type
+					a_context.force_last (l_pointer_type)
+					report_pointer_expression (an_expression, l_pointer_type)
 				end
 			end
 		end
@@ -4779,10 +4794,13 @@ feature {NONE} -- Expression validity
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
+		local
+			l_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			a_context.force_last (current_system.boolean_class)
-			report_boolean_constant (a_constant)
+			l_type := current_universe_impl.boolean_type
+			a_context.force_last (l_type)
+			report_boolean_constant (a_constant, l_type)
 		end
 
 	check_feature_address_validity (an_expression: ET_FEATURE_ADDRESS; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -4806,8 +4824,9 @@ feature {NONE} -- Expression validity
 			l_resolved_type: ET_TYPE
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_local: ET_LOCAL_VARIABLE
-			l_typed_pointer_class: ET_CLASS
+			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_pointer_type: ET_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_class_impl: ET_CLASS
 			l_object_tests: ET_OBJECT_TEST_LIST
@@ -4863,8 +4882,8 @@ feature {NONE} -- Expression validity
 								report_object_test_local (l_identifier, l_object_test)
 								l_seed := l_object_test.name.seed
 								l_identifier.set_seed (l_seed)
-								l_typed_pointer_class := current_system.typed_pointer_class
-								if l_typed_pointer_class.is_preparsed then
+								l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+								if l_typed_pointer_class.actual_class.is_preparsed then
 										-- Class TYPED_POINTER has been found in the universe.
 										-- Use ISE's implementation: the type of '$object_test_local' is
 										-- 'TYPED_POINTER [<type-of-object_test_local>]'.
@@ -4893,8 +4912,9 @@ feature {NONE} -- Expression validity
 									end
 								else
 										-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
-									a_context.force_last (current_system.pointer_class)
-									report_pointer_expression (an_expression)
+									l_pointer_type := current_universe_impl.pointer_type
+									a_context.force_last (l_pointer_type)
+									report_pointer_expression (an_expression, l_pointer_type)
 								end
 								already_checked := True
 							end
@@ -4914,8 +4934,9 @@ feature {NONE} -- Expression validity
 								report_procedure_address (an_expression, l_procedure)
 									-- $feature_name is of type POINTER, even
 									-- in ISE and its TYPED_POINTER support.
-								a_context.force_last (current_system.pointer_class)
-								report_pointer_expression (an_expression)
+								l_pointer_type := current_universe_impl.pointer_type
+								a_context.force_last (l_pointer_type)
+								report_pointer_expression (an_expression, l_pointer_type)
 									-- No need to check validity in the context of `current_type' again.
 								already_checked := True
 							else
@@ -4925,8 +4946,8 @@ feature {NONE} -- Expression validity
 									l_name.set_seed (l_seed)
 									if l_query.is_attribute then
 										report_attribute_address (an_expression, l_query)
-										l_typed_pointer_class := current_system.typed_pointer_class
-										if l_typed_pointer_class.is_preparsed then
+										l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+										if l_typed_pointer_class.actual_class.is_preparsed then
 												-- Class TYPED_POINTER has been found in the universe.
 												-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
 											l_type := l_query.type
@@ -4943,8 +4964,9 @@ feature {NONE} -- Expression validity
 											end
 										else
 												-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-											a_context.force_last (current_system.pointer_class)
-											report_pointer_expression (an_expression)
+											l_pointer_type := current_universe_impl.pointer_type
+											a_context.force_last (l_pointer_type)
+											report_pointer_expression (an_expression, l_pointer_type)
 												-- No need to check validity in the context of `current_type' again.
 											already_checked := True
 										end
@@ -4952,8 +4974,9 @@ feature {NONE} -- Expression validity
 										report_function_address (an_expression, l_query)
 											-- $feature_name is of type POINTER, even
 											-- in ISE and its TYPED_POINTER support.
-										a_context.force_last (current_system.pointer_class)
-										report_pointer_expression (an_expression)
+										l_pointer_type := current_universe_impl.pointer_type
+										a_context.force_last (l_pointer_type)
+										report_pointer_expression (an_expression, l_pointer_type)
 											-- No need to check validity in the context of `current_type' again.
 										already_checked := True
 									end
@@ -5024,8 +5047,8 @@ feature {NONE} -- Expression validity
 							l_identifier ?= l_name
 							check is_argument: l_identifier /= Void end
 							report_formal_argument (l_identifier, l_argument)
-							l_typed_pointer_class := current_system.typed_pointer_class
-							if l_typed_pointer_class.is_preparsed then
+							l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+							if l_typed_pointer_class.actual_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
 									-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
 								l_type := l_argument.type
@@ -5045,8 +5068,9 @@ feature {NONE} -- Expression validity
 								end
 							else
 									-- Use the ETL2 implementation: the type of '$argument' is POINTER.
-								a_context.force_last (current_system.pointer_class)
-								report_pointer_expression (an_expression)
+								l_pointer_type := current_universe_impl.pointer_type
+								a_context.force_last (l_pointer_type)
+								report_pointer_expression (an_expression, l_pointer_type)
 							end
 						end
 					end
@@ -5092,8 +5116,8 @@ feature {NONE} -- Expression validity
 							l_identifier ?= l_name
 							check is_local: l_identifier /= Void end
 							report_local_variable (l_identifier, l_local)
-							l_typed_pointer_class := current_system.typed_pointer_class
-							if l_typed_pointer_class.is_preparsed then
+							l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+							if l_typed_pointer_class.actual_class.is_preparsed then
 									-- Class TYPED_POINTER has been found in the universe.
 									-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
 									-- Contrary to the types appearing in the signatures, types of
@@ -5117,8 +5141,9 @@ feature {NONE} -- Expression validity
 								end
 							else
 									-- Use the ETL2 implementation: the type of '$local' is POINTER.
-								a_context.force_last (current_system.pointer_class)
-								report_pointer_expression (an_expression)
+								l_pointer_type := current_universe_impl.pointer_type
+								a_context.force_last (l_pointer_type)
+								report_pointer_expression (an_expression, l_pointer_type)
 							end
 						end
 					end
@@ -5137,8 +5162,8 @@ feature {NONE} -- Expression validity
 						l_identifier ?= l_name
 						check is_object_test_local: l_identifier /= Void end
 						report_object_test_local (l_identifier, l_object_test)
-						l_typed_pointer_class := current_system.typed_pointer_class
-						if l_typed_pointer_class.is_preparsed then
+						l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+						if l_typed_pointer_class.actual_class.is_preparsed then
 								-- Class TYPED_POINTER has been found in the universe.
 								-- Use ISE's implementation: the type of '$object_test_local' is
 								-- 'TYPED_POINTER [<type-of-object_test_local>]'.
@@ -5167,8 +5192,9 @@ feature {NONE} -- Expression validity
 							end
 						else
 								-- Use the ETL2 implementation: the type of '$object_test_local' is POINTER.
-							a_context.force_last (current_system.pointer_class)
-							report_pointer_expression (an_expression)
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
 						end
 					end
 				else
@@ -5184,15 +5210,16 @@ feature {NONE} -- Expression validity
 							report_procedure_address (an_expression, l_procedure)
 								-- $feature_name is of type POINTER, even
 								-- in ISE and its TYPED_POINTER support.
-							a_context.force_last (current_system.pointer_class)
-							report_pointer_expression (an_expression)
+							l_pointer_type := current_universe_impl.pointer_type
+							a_context.force_last (l_pointer_type)
+							report_pointer_expression (an_expression, l_pointer_type)
 						else
 							l_query := current_class.seeded_query (l_seed)
 							if l_query /= Void then
 								if l_query.is_attribute then
 									report_attribute_address (an_expression, l_query)
-									l_typed_pointer_class := current_system.typed_pointer_class
-									if l_typed_pointer_class.is_preparsed then
+									l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+									if l_typed_pointer_class.actual_class.is_preparsed then
 											-- Class TYPED_POINTER has been found in the universe.
 											-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
 										l_type := l_query.type
@@ -5208,15 +5235,17 @@ feature {NONE} -- Expression validity
 										end
 									else
 											-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
-										a_context.force_last (current_system.pointer_class)
-										report_pointer_expression (an_expression)
+										l_pointer_type := current_universe_impl.pointer_type
+										a_context.force_last (l_pointer_type)
+										report_pointer_expression (an_expression, l_pointer_type)
 									end
 								else
 									report_function_address (an_expression, l_query)
 										-- $feature_name is of type POINTER, even
 										-- in ISE and its TYPED_POINTER support.
-									a_context.force_last (current_system.pointer_class)
-									report_pointer_expression (an_expression)
+									l_pointer_type := current_universe_impl.pointer_type
+									a_context.force_last (l_pointer_type)
+									report_pointer_expression (an_expression, l_pointer_type)
 								end
 							else
 									-- Internal error: if we got a seed, `l_query' should not be void.
@@ -5423,7 +5452,7 @@ feature {NONE} -- Expression validity
 								end
 							end
 							if not has_fatal_error then
-								if l_class = current_system.boolean_class then
+								if l_class.is_boolean_class then
 										-- This is useful to know which binary expressions are
 										-- boolean operators between two boolean expressions
 										-- when trying to determine the scope of object-test locals.
@@ -5608,7 +5637,7 @@ feature {NONE} -- Expression validity
 															-- Insert the cast expression in the AST.
 														an_expression.set_left (l_cast_expression)
 														l_target := l_cast_expression
-														if l_class = current_system.boolean_class then
+														if l_class.is_boolean_class then
 																-- This is useful to know which binary expressions are
 																-- boolean operators between two boolean expressions
 																-- when trying to determine the scope of object-test locals.
@@ -5743,7 +5772,7 @@ feature {NONE} -- Expression validity
 			-- where the manifest_type is optional.
 			-- We have to check that:
 			--  * if 'manifest_type' is provided:
-			--    * it is a valid type, and is one of the sized integer types.
+			--    * it is a valid type, and is one of the sized variants of "INTEGER".
 			--    * 'manifest_value' is representable as an instance of 'manifest_type'.
 			--  * otherwise, try to determine whether 'manifest_value' is representable
 			--    as an instance of the type expected in the surrounding context.
@@ -5752,142 +5781,162 @@ feature {NONE} -- Expression validity
 			--    is representable as an INTEGER_64, will be of type "NATURAL_64" if it
 			--    is represenable as a NATURAL_64.
 			--  * otherwise, report an overflow error.
+			--
+			-- Note that ECMA 367-2 says that the type of a manifest integer constant
+			-- with no explicit 'manifest_type' is "INTEGER" (see 8.29.6 "Definition:
+			-- Type of a manifest constant", page 143). So the third bullet above is
+			-- not quite compliant with ECMA. But this is the way it is implemented
+			-- in ISE (as of 6.3.7.60670) to be able to capture large numbers.
+			--
+			-- Note that the sized variants of "INTEGER" include "INTEGER" itself, as
+			-- indicated in ECMA 367-2, 8.30.1 "Definition: Basic types and their sized
+			-- variants", page 147.
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_class_type: ET_CLASS_TYPE
-			l_class: ET_CLASS
 			l_type: ET_CLASS_TYPE
 			l_cast_type: ET_TARGET_TYPE
+			l_explicit_type: ET_TYPE
 			l_sign: ET_SYMBOL_OPERATOR
+			l_expected_type: ET_TYPE
+			l_expected_type_context: ET_TYPE_CONTEXT
 		do
 			has_fatal_error := False
+			l_expected_type := tokens.like_current
+			l_expected_type_context := current_target_type
 			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
 					-- Make sure that `l_cast_type' is a valid type.
 					-- For example 'INTEGER_32 [STRING]' is not valid.
-				check_type_validity (l_cast_type.type)
-				if not has_fatal_error then
-					l_class_type ?= l_cast_type.type.named_type (a_context)
-				end
-			else
-				l_class_type ?= current_target_type.named_type
-			end
-			if l_class_type /= Void then
-				l_class := l_class_type.base_class
-				if l_class = current_system.integer_8_class then
-					if a_constant.is_integer_8 then
-						l_type := l_class
-						report_integer_8_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				elseif l_class = current_system.integer_16_class then
-					if a_constant.is_integer_16 then
-						l_type := l_class
-						report_integer_16_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				elseif l_class = current_system.integer_32_class then
-					if a_constant.is_integer_32 then
-						l_type := l_class
-						report_integer_32_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				elseif l_class = current_system.integer_64_class then
-					if a_constant.is_integer_64 then
-						l_type := l_class
-						report_integer_64_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				elseif l_class = current_system.natural_8_class then
-					if a_constant.is_natural_8 then
-						l_type := l_class
-						report_natural_8_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				elseif l_class = current_system.natural_16_class then
-					if a_constant.is_natural_16 then
-						l_type := l_class
-						report_natural_16_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				elseif l_class = current_system.natural_32_class then
-					if a_constant.is_natural_32 then
-						l_type := l_class
-						report_natural_32_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				elseif l_class = current_system.natural_64_class then
-					if a_constant.is_natural_64 then
-						l_type := l_class
-						report_natural_64_constant (a_constant)
-					elseif l_cast_type /= Void then
-						set_fatal_error
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, l_class)
-					end
-				end
-			end
-			if not has_fatal_error and l_type = Void then
-				if l_cast_type /= Void then
-						-- Error: invalid cast type, it should be an integer type.
+				l_explicit_type := l_cast_type.type
+				check_type_validity (l_explicit_type)
+				if has_fatal_error then
+					-- Do nothing.
+				elseif not l_explicit_type.is_named_type then
+						-- Error: invalid cast type, it should be a sized variant of "INTEGER".
 					set_fatal_error
 					error_handler.report_vwmq0a_error (current_class, current_class_impl, a_constant)
-				elseif a_constant.is_integer_32 then
-					if (a_constant.is_hexadecimal or a_constant.is_binary) and then (a_constant.sign = Void and a_constant.value > {INTEGER_32}.Max_value.as_natural_64) then
-							-- ISE Eiffel considers that:
-							--   {INTEGER_32} 0xFFFFFFFF
-							-- and:
-							--   i: INTEGER_32
-							--   i := 0xFFFFFFFF
-							-- as valid (and mean -1), when appearing without an integer type
-							-- context, then its type is INTEGER_64 and its value is 4294967295.
-						l_type := current_system.integer_64_class
-						report_integer_64_constant (a_constant)
-					else
-						l_type := current_system.integer_32_class
-						report_integer_32_constant (a_constant)
-					end
-				elseif a_constant.is_integer_64 then
-					if (a_constant.is_hexadecimal or a_constant.is_binary) and then (a_constant.sign = Void and a_constant.value > {INTEGER_64}.Max_value.as_natural_64) then
-							-- ISE Eiffel considers that:
-							--   {INTEGER_64} 0xFFFFFFFFFFFFFFFF
-							-- and:
-							--   i: INTEGER_64
-							--   i := 0xFFFFFFFFFFFFFFFF
-							-- as valid (and mean -1), when appearing without an integer type
-							-- context, then its type is NATURAL_64 and its value is 18446744073709551615.
-						l_type := current_system.natural_64_class
-						report_natural_64_constant (a_constant)
-					else
-						l_type := current_system.integer_64_class
-						report_integer_64_constant (a_constant)
-					end
-				elseif a_constant.is_natural_64 then
-					l_type := current_system.natural_64_class
-					report_natural_64_constant (a_constant)
 				else
+					l_expected_type := l_explicit_type
+					l_expected_type_context := current_class_impl
+				end
+			end
+			if has_fatal_error then
+				-- Do nothing.
+			elseif current_universe_impl.integer_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_integer_8 then
+					l_type := current_universe_impl.integer_8_type
+					report_integer_8_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
 					set_fatal_error
-					l_sign := a_constant.sign
-					if l_sign /= Void and then l_sign.is_minus then
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_system.integer_64_class)
-					else
-						error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_system.natural_64_class)
-					end
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.integer_8_type)
+				end
+			elseif current_universe_impl.integer_16_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_integer_16 then
+					l_type := current_universe_impl.integer_16_type
+					report_integer_16_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
+					set_fatal_error
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.integer_16_type)
+				end
+			elseif current_universe_impl.integer_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_integer_32 then
+					l_type := current_universe_impl.integer_32_type
+					report_integer_32_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
+					set_fatal_error
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.integer_32_type)
+				end
+			elseif current_universe_impl.integer_64_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_integer_64 then
+					l_type := current_universe_impl.integer_64_type
+					report_integer_64_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
+					set_fatal_error
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.integer_64_type)
+				end
+			elseif current_universe_impl.natural_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_natural_8 then
+					l_type := current_universe_impl.natural_8_type
+					report_natural_8_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
+					set_fatal_error
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.natural_8_type)
+				end
+			elseif current_universe_impl.natural_16_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_natural_16 then
+					l_type := current_universe_impl.natural_16_type
+					report_natural_16_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
+					set_fatal_error
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.natural_16_type)
+				end
+			elseif current_universe_impl.natural_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_natural_32 then
+					l_type := current_universe_impl.natural_32_type
+					report_natural_32_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
+					set_fatal_error
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.natural_32_type)
+				end
+			elseif current_universe_impl.natural_64_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+				if a_constant.is_natural_64 then
+					l_type := current_universe_impl.natural_64_type
+					report_natural_64_constant (a_constant, l_type)
+				elseif l_explicit_type /= Void then
+					set_fatal_error
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.natural_64_type)
+				end
+			end
+			if has_fatal_error then
+				-- Do nothing.
+			elseif l_type /= Void then
+				-- We already found the type.
+			elseif l_explicit_type /= Void then
+					-- Error: invalid cast type, it should be a sized variant of "INTEGER".
+				set_fatal_error
+				error_handler.report_vwmq0a_error (current_class, current_class_impl, a_constant)
+			elseif a_constant.is_integer_32 then
+				if (a_constant.is_hexadecimal or a_constant.is_binary) and then (a_constant.sign = Void and a_constant.value > {INTEGER_32}.Max_value.as_natural_64) then
+						-- ISE Eiffel considers that:
+						--   {INTEGER_32} 0xFFFFFFFF
+						-- and:
+						--   i: INTEGER_32
+						--   i := 0xFFFFFFFF
+						-- as valid (and mean -1), when appearing without an integer type
+						-- context, then its type is INTEGER_64 and its value is 4294967295.
+					l_type := current_universe_impl.integer_64_type
+					report_integer_64_constant (a_constant, l_type)
+				else
+					l_type := current_universe_impl.integer_32_type
+					report_integer_32_constant (a_constant, l_type)
+				end
+			elseif a_constant.is_integer_64 then
+				if (a_constant.is_hexadecimal or a_constant.is_binary) and then (a_constant.sign = Void and a_constant.value > {INTEGER_64}.Max_value.as_natural_64) then
+						-- ISE Eiffel considers that:
+						--   {INTEGER_64} 0xFFFFFFFFFFFFFFFF
+						-- and:
+						--   i: INTEGER_64
+						--   i := 0xFFFFFFFFFFFFFFFF
+						-- as valid (and mean -1), when appearing without an integer type
+						-- context, then its type is NATURAL_64 and its value is 18446744073709551615.
+					l_type := current_universe_impl.natural_64_type
+					report_natural_64_constant (a_constant, l_type)
+				else
+					l_type := current_universe_impl.integer_64_type
+					report_integer_64_constant (a_constant, l_type)
+				end
+			elseif a_constant.is_natural_64 then
+				l_type := current_universe_impl.natural_64_type
+				report_natural_64_constant (a_constant, l_type)
+			else
+				set_fatal_error
+				l_sign := a_constant.sign
+				if l_sign /= Void and then l_sign.is_minus then
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.integer_64_type)
+				else
+					error_handler.report_gvwmc2a_error (current_class, current_class_impl, a_constant, current_universe_impl.natural_64_type)
 				end
 			end
 			if l_type /= Void then
@@ -5976,7 +6025,7 @@ feature {NONE} -- Expression validity
 			l_item_type: ET_TYPE
 			hybrid_type: BOOLEAN
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
-			array_class: ET_CLASS
+			array_class: ET_NAMED_CLASS
 			l_array_type: ET_CLASS_TYPE
 			l_array_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_array_parameter: ET_TYPE
@@ -5989,12 +6038,12 @@ feature {NONE} -- Expression validity
 -- TODO: check that the type of the manifest array does not depend on the
 -- type of current. Be pessimistic for now and report it.
 			report_current_type_needed
-			array_class := current_system.array_class
+			array_class := current_universe_impl.array_any_type.named_base_class
 				-- Try to find out whether the expected type (i.e. `current_target_type')
 				-- for the manifest array is 'ARRAY [...]'. If this is the case then the
 				-- manifest array will be created of that type.
 			l_array_type ?= current_target_type.named_type
-			if l_array_type /= Void and then l_array_type.base_class = array_class then
+			if l_array_type /= Void and then l_array_type.base_class.is_array_class then
 				l_array_parameters := l_array_type.actual_parameters
 				if l_array_parameters /= Void and then l_array_parameters.count = 1 then
 					l_array_parameter := l_array_parameters.type (1)
@@ -6111,48 +6160,60 @@ feature {NONE} -- Expression validity
 			a_string_not_void: a_string /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_class_type: ET_CLASS_TYPE
-			l_class: ET_CLASS
-			l_type: ET_CLASS
+			l_type: ET_CLASS_TYPE
 			l_cast_type: ET_TARGET_TYPE
+			l_explicit_type: ET_TYPE
+			l_expected_type: ET_TYPE
+			l_expected_type_context: ET_TYPE_CONTEXT
 		do
 			has_fatal_error := False
+			l_expected_type := tokens.like_current
+			l_expected_type_context := current_target_type
 			l_cast_type := a_string.cast_type
 			if l_cast_type /= Void then
--- TODO: make sure that `l_cast_type' is a valid type.
--- For example 'STRING [ANY]' is not valid.
-				l_class_type ?= l_cast_type.type.named_type (a_context)
-			else
-				l_class_type ?= current_target_type.named_type
-			end
-			if l_class_type /= Void then
-				l_class := l_class_type.base_class
-				if l_class = current_system.string_8_class then
-					l_type := l_class
-					report_string_8_constant (a_string)
-				elseif l_class = current_system.string_32_class then
-					l_type := l_class
-					report_string_32_constant (a_string)
-				end
-			end
-			if l_type = Void then
-				if l_cast_type /= Void then
--- TODO: invalid cast type, it should be a string type.
-				end
-				l_class := universe_impl.string_class
-				l_type := l_class
-				if l_class = current_system.string_8_class then
-					report_string_8_constant (a_string)
-				elseif l_class = current_system.string_32_class then
-					report_string_32_constant (a_string)
+					-- Make sure that `l_cast_type' is a valid type.
+					-- For example 'STRING_8 [ANY]' is not valid.
+				l_explicit_type := l_cast_type.type
+				check_type_validity (l_explicit_type)
+				if has_fatal_error then
+					-- Do nothing.
+				elseif not l_explicit_type.is_named_type then
+						-- Error: invalid cast type, it should be a sized variant of "STRING".
+					set_fatal_error
+					error_handler.report_vwmq0d_error (current_class, current_class_impl, a_string)
 				else
--- TODO: invalid type mapping for string.
-					l_type := current_system.string_8_class
-					report_string_8_constant (a_string)
+					l_expected_type := l_explicit_type
+					l_expected_type_context := current_class_impl
 				end
 			end
-			a_string.set_type (l_type)
-			a_context.force_last (l_type)
+			if has_fatal_error then
+				-- Do nothing.
+			elseif current_universe_impl.string_8_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+-- TODO: check that the value is representable as a "STRING_8".
+				l_type := current_universe_impl.string_8_type
+				report_string_8_constant (a_string, l_type)
+			elseif current_universe_impl.string_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+-- TODO: check that the value is representable as a "STRING_32".
+				l_type := current_universe_impl.string_32_type
+				report_string_32_constant (a_string, l_type)
+			end
+			if has_fatal_error then
+				-- Do nothing.
+			elseif l_type /= Void then
+				-- We already found the type.
+			elseif l_explicit_type /= Void then
+					-- Error: invalid cast type, it should be a sized variant of "STRING".
+				set_fatal_error
+				error_handler.report_vwmq0d_error (current_class, current_class_impl, a_string)
+			else
+-- TODO: check what ISE does here.
+				l_type := current_universe_impl.string_8_type
+				report_string_8_constant (a_string, l_type)
+			end
+			if l_type /= Void then
+				a_string.set_type (l_type)
+				a_context.force_last (l_type)
+			end
 		end
 
 	check_manifest_tuple_validity (an_expression: ET_MANIFEST_TUPLE; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -6234,7 +6295,7 @@ feature {NONE} -- Expression validity
 			if had_error then
 				set_fatal_error
 			else
-				create l_tuple_type.make (Void, l_actuals, current_system.tuple_class)
+				create l_tuple_type.make (Void, l_actuals, current_universe_impl.tuple_type.named_base_class)
 				report_manifest_tuple (an_expression, l_tuple_type)
 				a_context.force_last (l_tuple_type)
 			end
@@ -6250,7 +6311,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			l_type: ET_TYPE
-			l_type_class: ET_CLASS
+			l_type_class: ET_NAMED_CLASS
 			l_type_type: ET_GENERIC_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
@@ -6266,7 +6327,7 @@ feature {NONE} -- Expression validity
 						-- descendant classes/types.
 					report_current_type_needed
 				end
-				l_type_class := current_system.type_class
+				l_type_class := current_universe_impl.type_any_type.named_base_class
 				create l_actuals.make_with_capacity (1)
 				l_actuals.put_first (l_type)
 				create l_type_type.make (Void, l_type_class.name, l_actuals, l_type_class)
@@ -6428,7 +6489,7 @@ feature {NONE} -- Expression validity
 				end
 			end
 			if not has_fatal_error then
-				a_context.force_last (current_system.boolean_class)
+				a_context.force_last (current_universe_impl.boolean_type)
 				report_named_object_test (an_expression, l_expression_context)
 			else
 					-- Make sure that `report_named_object_test' is called anyway
@@ -6513,7 +6574,7 @@ feature {NONE} -- Expression validity
 						end
 					end
 					if not has_fatal_error then
-						a_context.force_last (current_system.boolean_class)
+						a_context.force_last (current_universe_impl.boolean_type)
 						report_object_equality_expression (an_expression)
 					end
 				end
@@ -6568,7 +6629,7 @@ feature {NONE} -- Expression validity
 			end
 			free_context (l_expression_context)
 			if not has_fatal_error then
-				a_context.force_last (current_system.boolean_class)
+				a_context.force_last (current_universe_impl.boolean_type)
 				report_object_test (an_expression)
 			end
 		end
@@ -6998,7 +7059,7 @@ feature {NONE} -- Expression validity
 									l_seed := l_query.first_seed
 									l_name.set_seed (l_seed)
 								else
-									if l_class = current_system.tuple_class then
+									if l_class.is_tuple_class then
 											-- Check whether this is a tuple label.
 										l_label ?= l_name
 										if l_label /= Void then
@@ -7025,7 +7086,7 @@ feature {NONE} -- Expression validity
 								end
 							end
 							if not has_fatal_error then
-								if l_class = current_system.boolean_class then
+								if l_class.is_boolean_class then
 										-- This is useful to know which unary and binary expressions
 										-- are boolean operators between boolean expressions
 										-- when trying to determine the scope of object-test locals.
@@ -7058,7 +7119,7 @@ feature {NONE} -- Expression validity
 						l_class.process (current_system.interface_checker)
 						if not l_class.interface_checked or else l_class.has_interface_error then
 							set_fatal_error
-						elseif l_class /= current_system.tuple_class then
+						elseif not l_class.is_tuple_class then
 								-- Report internal error: if we got a call to tuple label,
 								-- the class has to be TUPLE because it is not possible
 								-- to inherit from TUPLE.
@@ -7180,41 +7241,61 @@ feature {NONE} -- Expression validity
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
-			l_class_type: ET_CLASS_TYPE
-			l_class: ET_CLASS
 			l_type: ET_CLASS_TYPE
 			l_cast_type: ET_TARGET_TYPE
+			l_explicit_type: ET_TYPE
+			l_expected_type: ET_TYPE
+			l_expected_type_context: ET_TYPE_CONTEXT
 		do
 			has_fatal_error := False
+			l_expected_type := tokens.like_current
+			l_expected_type_context := current_target_type
 			l_cast_type := a_constant.cast_type
 			if l_cast_type /= Void then
--- TODO: make sure that `l_cast_type' is a valid type.
--- For example 'REAL [STRING]' is not valid.
-				l_class_type ?= l_cast_type.type.named_type (a_context)
+					-- Make sure that `l_cast_type' is a valid type.
+					-- For example 'REAL_32 [STRING]' is not valid.
+				l_explicit_type := l_cast_type.type
+				check_type_validity (l_explicit_type)
+				if has_fatal_error then
+					-- Do nothing.
+				elseif not l_explicit_type.is_named_type then
+						-- Error: invalid cast type, it should be a sized variant of "REAL".
+					set_fatal_error
+					error_handler.report_vwmq0b_error (current_class, current_class_impl, a_constant)
+				else
+					l_expected_type := l_explicit_type
+					l_expected_type_context := current_class_impl
+				end
+			end
+			if has_fatal_error then
+				-- Do nothing.
+			elseif current_universe_impl.real_32_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+-- TODO: check that the value is representable as a "REAL_32".
+				l_type := current_universe_impl.real_32_type
+				report_real_32_constant (a_constant, l_type)
+			elseif current_universe_impl.real_64_type.same_named_type (l_expected_type, l_expected_type_context, current_class_impl) then
+-- TODO: check that the value is representable as a "REAL_64".
+				l_type := current_universe_impl.real_64_type
+				report_real_64_constant (a_constant, l_type)
+			end
+			if has_fatal_error then
+				-- Do nothing.
+			elseif l_type /= Void then
+				-- We already found the type.
+			elseif l_explicit_type /= Void then
+					-- Error: invalid cast type, it should be a sized variant of "REAL".
+				set_fatal_error
+				error_handler.report_vwmq0b_error (current_class, current_class_impl, a_constant)
 			else
-				l_class_type ?= current_target_type.named_type
-			end
-			if l_class_type /= Void then
-				l_class := l_class_type.base_class
-				if l_class = current_system.real_32_class then
-					l_type := l_class
-					report_real_32_constant (a_constant)
-				elseif l_class = current_system.real_64_class then
-					l_type := l_class
-					report_real_64_constant (a_constant)
-				end
-			end
-			if l_type = Void then
-				if l_cast_type /= Void then
--- TODO: invalid cast type, it should be a real type.
-				end
 -- TODO: according to ECMA it should be of type REAL, but ISE
 -- treats it as being REAL_64.
-				l_type := current_system.real_64_class
-				report_real_64_constant (a_constant)
+				l_type := current_universe_impl.real_64_type
+				report_real_64_constant (a_constant, l_type)
 			end
-			a_constant.set_type (l_type)
-			a_context.force_last (l_type)
+			if l_type /= Void then
+				a_constant.set_type (l_type)
+				a_context.force_last (l_type)
+			end
 		end
 
 	check_regular_integer_constant_validity (a_constant: ET_REGULAR_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -7370,8 +7451,9 @@ feature {NONE} -- Expression validity
 		local
 			l_type: ET_TYPE
 			l_resolved_type: ET_TYPE
-			l_typed_pointer_class: ET_CLASS
+			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			l_pointer_type: ET_CLASS_TYPE
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 			l_class_impl: ET_CLASS
 		do
@@ -7460,8 +7542,8 @@ feature {NONE} -- Expression validity
 						end
 					end
 				else
-					l_typed_pointer_class := current_system.typed_pointer_class
-					if l_typed_pointer_class.is_preparsed then
+					l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
+					if l_typed_pointer_class.actual_class.is_preparsed then
 							-- Class TYPED_POINTER has been found in the universe.
 							-- Use ISE's implementation: the type of '$Result' is 'TYPED_POINTER [<type-of-result>]'.
 						l_resolved_type := resolved_formal_parameters (l_type, l_class_impl, current_type)
@@ -7480,8 +7562,9 @@ feature {NONE} -- Expression validity
 						end
 					else
 							-- Use the ETL2 implementation: the type of '$argument' is POINTER.
-						a_context.force_last (current_system.pointer_class)
-						report_pointer_expression (an_expression)
+						l_pointer_type := current_universe_impl.pointer_type
+						a_context.force_last (l_pointer_type)
+						report_pointer_expression (an_expression, l_pointer_type)
 					end
 				end
 			end
@@ -7794,10 +7877,13 @@ feature {NONE} -- Expression validity
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
+		local
+			l_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
-			a_context.force_last (current_system.boolean_class)
-			report_boolean_constant (a_constant)
+			l_type := current_universe_impl.boolean_type
+			a_context.force_last (l_type)
+			report_boolean_constant (a_constant, l_type)
 		end
 
 	check_underscored_integer_constant_validity (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -8285,7 +8371,7 @@ feature {NONE} -- Expression validity
 						-- "NONE" is a descendant of all classes.
 					elseif a_feature.is_exported_to (l_client_class) then
 						-- The feature is exported to `l_client'.
-					elseif l_feature_clients.has_class (current_system.any_class) then
+					elseif l_feature_clients.has_class (current_universe.any_type.base_class) then
 						-- The feature is not exported to `l_client'.
 						-- But if `l_client' is not preparsed, we can still check
 						-- whether `a_feature' be exported to "ANY".
@@ -8328,7 +8414,7 @@ feature {NONE} -- Expression validity
 						-- "NONE" is a descendant of all classes.
 					elseif a_feature.is_exported_to (l_client_class) then
 						-- The feature is exported to `l_client'.
-					elseif l_feature_clients.has_class (current_system.any_class) then
+					elseif l_feature_clients.has_class (current_universe.any_type.base_class) then
 						-- The feature is not exported to `l_client'.
 						-- But if `l_client' is not preparsed, we can still check
 						-- whether `a_feature' be exported to "ANY".
@@ -8505,21 +8591,7 @@ feature {NONE} -- Expression validity
 							end
 						elseif
 							current_system.is_ise and current_class /= current_class_impl and
-							(current_class = current_system.boolean_class or
-							current_class = current_system.character_8_class or
-							current_class = current_system.character_32_class or
-							current_class = current_system.integer_8_class or
-							current_class = current_system.integer_16_class or
-							current_class = current_system.integer_32_class or
-							current_class = current_system.integer_64_class or
-							current_class = current_system.natural_8_class or
-							current_class = current_system.natural_16_class or
-							current_class = current_system.natural_32_class or
-							current_class = current_system.natural_64_class or
-							current_class = current_system.real_32_class or
-							current_class = current_system.real_64_class or
-							current_class = current_system.pointer_class or
-							current_class = current_system.typed_pointer_class)
+							(current_class.is_basic or current_class.is_typed_pointer_class)
 						then
 							-- Compatibility with ISE 5.6.0610.
 						else
@@ -8617,7 +8689,7 @@ feature {NONE} -- Agent validity
 						set_fatal_error
 					else
 						l_expected_class := current_target_type.base_class
-						if l_expected_class = current_system.procedure_class then
+						if l_expected_class.is_procedure_class then
 							l_procedure := current_class.named_procedure (a_name)
 							if l_procedure /= Void then
 								a_name.set_seed (l_procedure.first_seed)
@@ -8708,7 +8780,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -8724,20 +8796,17 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_query, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				a_type := a_query.type
 -- TODO: like argument
-				if
-					current_system.predicate_class.is_preparsed and then
-					a_type.same_named_type (current_system.boolean_class, current_type, a_context)
-				then
-					an_agent_class := current_system.predicate_class
+				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
+					an_agent_class := current_universe_impl.predicate_type.named_base_class
 					create a_parameters.make_with_capacity (2)
 					a_parameters.put_first (a_tuple_type)
 					a_parameters.put_first (current_type)
 					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 				else
-					an_agent_class := current_system.function_class
+					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
 					a_parameters.put_first (a_type)
 					a_parameters.put_first (a_tuple_type)
@@ -8766,7 +8835,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -8782,8 +8851,8 @@ feature {NONE} -- Agent validity
 			check_agent_arguments_validity (an_expression, a_formal_arguments, a_procedure, an_open_operands, a_context)
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
-				an_agent_class := current_system.procedure_class
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
 				a_parameters.put_first (current_type)
@@ -8840,7 +8909,7 @@ feature {NONE} -- Agent validity
 							set_fatal_error
 						else
 							l_expected_class := current_target_type.base_class
-							if l_expected_class = current_system.procedure_class then
+							if l_expected_class.is_procedure_class then
 								l_procedure := a_class.named_procedure (a_name)
 								if l_procedure /= Void then
 									a_name.set_seed (l_procedure.first_seed)
@@ -8859,7 +8928,7 @@ feature {NONE} -- Agent validity
 										check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
 										has_fatal_error := has_fatal_error or had_error
 									else
-										if a_class = current_system.tuple_class then
+										if a_class.is_tuple_class then
 												-- Check whether this is a tuple label.
 											l_label ?= a_name
 											if l_label /= Void then
@@ -8890,7 +8959,7 @@ feature {NONE} -- Agent validity
 									check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								else
-									if a_class = current_system.tuple_class then
+									if a_class.is_tuple_class then
 											-- Check whether this is a tuple label.
 										l_label ?= a_name
 										if l_label /= Void then
@@ -8933,7 +9002,7 @@ feature {NONE} -- Agent validity
 					a_class.process (current_system.interface_checker)
 					if not a_class.interface_checked or else a_class.has_interface_error then
 						set_fatal_error
-					elseif a_class /= current_system.tuple_class then
+					elseif not a_class.is_tuple_class then
 							-- Report internal error: if we got a call to tuple label,
 							-- the class has to be TUPLE because it is not possible
 							-- to inherit from TUPLE.
@@ -9016,7 +9085,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9039,20 +9108,17 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				a_type := a_query.type
 -- TODO: like argument
-				if
-					current_system.predicate_class.is_preparsed and then
-					a_type.same_named_type (current_system.boolean_class, current_type, a_context)
-				then
-					an_agent_class := current_system.predicate_class
+				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
+					an_agent_class := current_universe_impl.predicate_type.named_base_class
 					create a_parameters.make_with_capacity (2)
 					a_parameters.put_first (a_tuple_type)
 					a_parameters.put_first (a_target_type)
 					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 				else
-					an_agent_class := current_system.function_class
+					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
 					a_parameters.put_first (a_type)
 					a_parameters.put_first (a_tuple_type)
@@ -9087,7 +9153,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9110,8 +9176,8 @@ feature {NONE} -- Agent validity
 			has_fatal_error := has_fatal_error or had_error
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
-				an_agent_class := current_system.procedure_class
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
 				a_parameters.put_first (a_target_type)
@@ -9140,7 +9206,7 @@ feature {NONE} -- Agent validity
 			l_type: ET_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_agent_type: ET_GENERIC_CLASS_TYPE
-			l_agent_class: ET_CLASS
+			l_agent_class: ET_NAMED_CLASS
 			l_target_type: ET_TYPE
 		do
 			has_fatal_error := False
@@ -9167,17 +9233,14 @@ feature {NONE} -- Agent validity
 			else
 				l_type := tokens.formal_parameter (l_index)
 				l_target_type := tokens.like_current
-				if
-					current_system.predicate_class.is_preparsed and then
-					l_type.same_named_type (current_system.boolean_class, current_type, a_context)
-				then
-					l_agent_class := current_system.predicate_class
+				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
+					l_agent_class := current_universe_impl.predicate_type.named_base_class
 					create l_parameters.make_with_capacity (2)
-					l_parameters.put_first (current_system.tuple_class)
+					l_parameters.put_first (current_universe_impl.tuple_type)
 					l_parameters.put_first (l_target_type)
 					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
 				else
-					l_agent_class := current_system.function_class
+					l_agent_class := current_universe_impl.function_type.named_base_class
 					create l_parameters.make_with_capacity (3)
 					l_parameters.put_first (l_type)
 					l_parameters.put_first (current_system.tuple_type)
@@ -9235,7 +9298,7 @@ feature {NONE} -- Agent validity
 							set_fatal_error
 						else
 							l_expected_class := current_target_type.base_class
-							if l_expected_class = current_system.procedure_class then
+							if l_expected_class.is_procedure_class then
 								l_procedure := a_class.named_procedure (a_name)
 								if l_procedure /= Void then
 									a_name.set_seed (l_procedure.first_seed)
@@ -9254,7 +9317,7 @@ feature {NONE} -- Agent validity
 										check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
 										has_fatal_error := has_fatal_error or had_error
 									else
-										if a_class = current_system.tuple_class then
+										if a_class.is_tuple_class then
 												-- Check whether this is a tuple label.
 											l_label ?= a_name
 											if l_label /= Void then
@@ -9285,7 +9348,7 @@ feature {NONE} -- Agent validity
 									check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
 									has_fatal_error := has_fatal_error or had_error
 								else
-									if a_class = current_system.tuple_class then
+									if a_class.is_tuple_class then
 											-- Check whether this is a tuple label.
 										l_label ?= a_name
 										if l_label /= Void then
@@ -9326,7 +9389,7 @@ feature {NONE} -- Agent validity
 						a_class.process (current_system.interface_checker)
 						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
-						elseif a_class /= current_system.tuple_class then
+						elseif not a_class.is_tuple_class then
 								-- Report internal error: if we got a call to tuple label,
 								-- the class has to be TUPLE because it is not possible
 								-- to inherit from TUPLE.
@@ -9407,7 +9470,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9433,20 +9496,17 @@ feature {NONE} -- Agent validity
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
 				an_open_operands.put_first (a_target_type)
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 				a_result_type := a_query.type
 -- TODO: like argument
-				if
-					current_system.predicate_class.is_preparsed and then
-					a_result_type.same_named_type (current_system.boolean_class, current_type, a_context)
-				then
-					an_agent_class := current_system.predicate_class
+				if a_result_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
+					an_agent_class := current_universe_impl.predicate_type.named_base_class
 					create a_parameters.make_with_capacity (2)
 					a_parameters.put_first (a_tuple_type)
 					a_parameters.put_first (a_target_type)
 					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 				else
-					an_agent_class := current_system.function_class
+					an_agent_class := current_universe_impl.function_type.named_base_class
 					create a_parameters.make_with_capacity (3)
 					a_parameters.put_first (a_result_type)
 					a_parameters.put_first (a_tuple_type)
@@ -9480,7 +9540,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 			had_error: BOOLEAN
 		do
 			has_fatal_error := False
@@ -9509,8 +9569,8 @@ feature {NONE} -- Agent validity
 			if not has_fatal_error then
 				a_target_type := tokens.like_current
 				an_open_operands.put_first (a_target_type)
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
-				an_agent_class := current_system.procedure_class
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
 				a_parameters.put_first (a_target_type)
@@ -9539,7 +9599,7 @@ feature {NONE} -- Agent validity
 			l_type: ET_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_agent_type: ET_GENERIC_CLASS_TYPE
-			l_agent_class: ET_CLASS
+			l_agent_class: ET_NAMED_CLASS
 			l_target_type: ET_TYPE
 			l_open_operands: ET_ACTUAL_PARAMETER_LIST
 			l_tuple_type: ET_TUPLE_TYPE
@@ -9570,18 +9630,15 @@ feature {NONE} -- Agent validity
 				l_target_type := a_target.type
 				create l_open_operands.make_with_capacity (1)
 				l_open_operands.put_first (l_target_type)
-				create l_tuple_type.make (Void, l_open_operands, current_system.tuple_class)
-				if
-					current_system.predicate_class.is_preparsed and then
-					l_type.same_named_type (current_system.boolean_class, current_type, a_context)
-				then
-					l_agent_class := current_system.predicate_class
+				create l_tuple_type.make (Void, l_open_operands, current_universe_impl.tuple_type.named_base_class)
+				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
+					l_agent_class := current_universe_impl.predicate_type.named_base_class
 					create l_parameters.make_with_capacity (2)
 					l_parameters.put_first (l_tuple_type)
 					l_parameters.put_first (l_target_type)
 					create l_agent_type.make (Void, l_agent_class.name, l_parameters, l_agent_class)
 				else
-					l_agent_class := current_system.function_class
+					l_agent_class := current_universe_impl.function_type.named_base_class
 					create l_parameters.make_with_capacity (3)
 					l_parameters.put_first (l_type)
 					l_parameters.put_first (l_tuple_type)
@@ -9994,7 +10051,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 		do
 			has_fatal_error := False
 			a_formal_arguments := an_expression.formal_arguments
@@ -10005,7 +10062,7 @@ feature {NONE} -- Agent validity
 			end
 			check_agent_arguments_validity (an_expression, a_formal_arguments, Void, an_open_operands, a_context)
 			if not has_fatal_error then
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
 					-- Contrary to the types appearing in the signatures of features, types
 					-- in signatures of inline agents in the AST are those found in the
 					-- implementation class of `current_feature', and hence need to be
@@ -10013,17 +10070,14 @@ feature {NONE} -- Agent validity
 				a_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
 -- TODO: like argument
 				if not has_fatal_error then
-					if
-						current_system.predicate_class.is_preparsed and then
-						a_type.same_named_type (current_system.boolean_class, current_type, a_context)
-					then
-						an_agent_class := current_system.predicate_class
+					if a_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
+						an_agent_class := current_universe_impl.predicate_type.named_base_class
 						create a_parameters.make_with_capacity (2)
 						a_parameters.put_first (a_tuple_type)
 						a_parameters.put_first (current_type)
 						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 					else
-						an_agent_class := current_system.function_class
+						an_agent_class := current_universe_impl.function_type.named_base_class
 						create a_parameters.make_with_capacity (3)
 						a_parameters.put_first (a_type)
 						a_parameters.put_first (a_tuple_type)
@@ -10048,7 +10102,7 @@ feature {NONE} -- Agent validity
 			a_tuple_type: ET_TUPLE_TYPE
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
+			an_agent_class: ET_NAMED_CLASS
 		do
 			has_fatal_error := False
 			a_formal_arguments := an_expression.formal_arguments
@@ -10059,8 +10113,8 @@ feature {NONE} -- Agent validity
 			end
 			check_agent_arguments_validity (an_expression, a_formal_arguments, Void, an_open_operands, a_context)
 			if not has_fatal_error then
-				create a_tuple_type.make (Void, an_open_operands, current_system.tuple_class)
-				an_agent_class := current_system.procedure_class
+				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
+				an_agent_class := current_universe_impl.procedure_type.named_base_class
 				create a_parameters.make_with_capacity (2)
 				a_parameters.put_first (a_tuple_type)
 				a_parameters.put_first (current_type)
@@ -10367,27 +10421,33 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_boolean_constant (a_constant: ET_BOOLEAN_CONSTANT) is
-			-- Report that a boolean has been processed.
+	report_boolean_constant (a_constant: ET_BOOLEAN_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a boolean of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_character_8_constant (a_constant: ET_CHARACTER_CONSTANT) is
-			-- Report that a character_8 has been processed.
+	report_character_8_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a character_8 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_character_32_constant (a_constant: ET_CHARACTER_CONSTANT) is
-			-- Report that a character_32 has been processed.
+	report_character_32_constant (a_constant: ET_CHARACTER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a character_32 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
@@ -10518,35 +10578,43 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_integer_8_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that an integer_8 has been processed.
+	report_integer_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a integer_8 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_integer_16_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that an integer_16 has been processed.
+	report_integer_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a integer_16 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that an integer_32 has been processed.
+	report_integer_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a integer_32 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that an integer_64 has been processed.
+	report_integer_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a integer_64 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
@@ -10625,35 +10693,43 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that a natural_8 has been processed.
+	report_natural_8_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a natural_8 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that a natural_16 has been processed.
+	report_natural_16_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a natural_16 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that a natural_32 has been processed.
+	report_natural_32_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a natural_32 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT) is
-			-- Report that a natural_64 has been processed.
+	report_natural_64_constant (a_constant: ET_INTEGER_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a natural_64 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
@@ -10682,11 +10758,13 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION) is
-			-- Report that a pointer expression has been processed.
+	report_pointer_expression (an_expression: ET_ADDRESS_EXPRESSION; a_type: ET_CLASS_TYPE) is
+			-- Report that a pointer expression of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
@@ -10800,19 +10878,23 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_real_32_constant (a_constant: ET_REAL_CONSTANT) is
-			-- Report that a real_32 has been processed.
+	report_real_32_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE) is
+			-- Report that a real_32 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_real_64_constant (a_constant: ET_REAL_CONSTANT) is
-			-- Report that a real_64 has been processed.
+	report_real_64_constant (a_constant: ET_REAL_CONSTANT; a_type: ET_CLASS_TYPE) is
+		-- Report that a real_64 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
@@ -10862,19 +10944,23 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_string_8_constant (a_string: ET_MANIFEST_STRING) is
-			-- Report that a string_8 has been processed.
+	report_string_8_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE) is
+			-- Report that a string_8 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_string_not_void: a_string /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
-	report_string_32_constant (a_string: ET_MANIFEST_STRING) is
-			-- Report that a string_32 has been processed.
+	report_string_32_constant (a_string: ET_MANIFEST_STRING; a_type: ET_CLASS_TYPE) is
+			-- Report that a string_32 of type `a_type' in the context
+			-- of `current_type' has been processed.
 		require
 			no_error: not has_fatal_error
 			a_string_not_void: a_string /= Void
+			a_type_not_void: a_type /= Void
 		do
 		end
 
@@ -11203,7 +11289,7 @@ feature {NONE} -- Conversion
 						-- Check whether `a_source' is a non-explicitly typed manifest constant which
 						-- has a valid value for `a_target_type'. Useful when trying to convert the
 						-- left-and-side of a binary expression.
-					l_convert_feature := a_source.manifest_constant_convert_feature (a_source_type, a_target_type)
+					l_convert_feature := a_source.manifest_constant_convert_feature (a_source_type, a_target_type, current_universe)
 				end
 				if l_convert_feature /= Void then
 					if l_convert_feature.is_convert_from then
@@ -11850,12 +11936,12 @@ feature {NONE} -- Access
 	current_class_impl: ET_CLASS
 			-- Class where `current_feature_impl' has been written
 
-	universe_impl: ET_UNIVERSE is
+	current_universe_impl: ET_UNIVERSE is
 			-- Universe to which `current_class_impl' belongs
 		do
 			Result := current_class_impl.universe
 		ensure
-			universe_impl_not_void: Result /= Void
+			current_universe_impl_not_void: Result /= Void
 		end
 
 	current_context: ET_NESTED_TYPE_CONTEXT
@@ -11949,7 +12035,7 @@ feature {NONE} -- Overloading (useful in .NET)
 		local
 			l_actual_context: ET_NESTED_TYPE_CONTEXT
 			l_formal_context1: ET_NESTED_TYPE_CONTEXT
-			l_any: ET_CLASS
+			l_any_type: ET_CLASS_TYPE
 			had_error: BOOLEAN
 			j, nb_args: INTEGER
 			i, nb: INTEGER
@@ -11971,7 +12057,7 @@ feature {NONE} -- Overloading (useful in .NET)
 		do
 			has_fatal_error := False
 			l_actual_context := new_context (current_type)
-			l_any := current_system.any_class
+			l_any_type := current_universe.any_type
 			nb := a_features.count
 			nb_args := an_actuals.count
 			if nb_args > 0 then
@@ -12012,7 +12098,7 @@ feature {NONE} -- Overloading (useful in .NET)
 			end
 			from j := 1 until j > nb_args loop
 				l_actual := an_actuals.actual_argument (j)
-				check_expression_validity (l_actual, l_actual_context, l_any)
+				check_expression_validity (l_actual, l_actual_context, l_any_type)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -12291,7 +12377,6 @@ invariant
 	current_class_definition: current_class = current_type.base_class
 	current_class_impl_not_void: current_class_impl /= Void
 	current_class_impl_definition: current_class_impl = current_feature_impl.implementation_class
-	current_class_impl_preparsed: current_class_impl.is_preparsed
 	-- implementation_checked: if inherited, then the code being analyzed has already been checked in implementation class of `current_feature_impl'
 	type_checker_not_void: type_checker /= Void
 	overloaded_procedures_not_void: overloaded_procedures /= Void

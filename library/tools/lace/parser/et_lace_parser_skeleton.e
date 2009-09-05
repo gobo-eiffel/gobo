@@ -5,7 +5,7 @@ indexing
 		"Lace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,7 +87,7 @@ feature -- Parsing
 			reset
 			named_clusters.wipe_out
 			set_input_buffer (new_file_buffer (a_file))
-			last_system := new_system
+			last_system := Void
 			override_cluster_names.wipe_out
 			named_clusters.wipe_out
 			external_include_pathnames.wipe_out
@@ -323,10 +323,13 @@ feature {NONE} -- AST factory
 			subcluster_not_void: Result /= Void
 		end
 
-	new_system: ET_LACE_SYSTEM is
+	new_system (a_name: STRING): ET_LACE_SYSTEM is
 			-- New Eiffel system
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		do
-			Result := ast_factory.new_system
+			Result := ast_factory.new_system (a_name)
 			Result.set_error_handler (ast_factory.new_error_handler)
 			Result.set_ast_factory (ast_factory.new_ast_factory)
 		ensure

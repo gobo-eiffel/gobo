@@ -5,7 +5,7 @@ indexing
 		"Feature adaptation resolvers for .NET classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,13 +72,13 @@ feature -- Feature adaptation resolving
 				-- Using `dotnet_features' helps here because it takes into
 				-- account possibly overloaded feature names when building
 				-- the inheritance links.
-			a_parents := current_class.parents
+			a_parents := current_class.parent_clause
 			if a_parents = Void or else a_parents.is_empty then
-				if current_class = current_system.system_object_class then
+				if current_class.is_system_object_class then
 						-- Features from "ANY" will be added at the end.
 					a_parents := Void
 				else
-					a_parents := current_system.system_object_parents
+					a_parents := current_universe.system_object_parents
 				end
 			end
 			if a_parents /= Void then
@@ -363,7 +363,7 @@ feature {NONE} -- Feature recording
 			l_rename: ET_RENAME
 			l_identifier: ET_IDENTIFIER
 		do
-			l_any := current_system.any_class
+			l_any := current_system.any_type.base_class
 			l_any_parent := current_system.any_parent
 			l_queries := l_any.queries
 			l_procedures := l_any.procedures

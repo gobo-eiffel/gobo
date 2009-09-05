@@ -5,7 +5,7 @@ indexing
 		"Eiffel expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,16 +113,17 @@ feature -- Measurement
 
 feature -- Type conversion
 
-	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT): ET_CONVERT_FEATURE is
+	manifest_constant_convert_feature (a_source_type: ET_TYPE_CONTEXT; a_target_type: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CONVERT_FEATURE is
 			-- Implicit feature to convert `Current' of type `a_source_type' to `a_target_type'.
 			-- This is only possible when `Current' is a manifest constant with no explicit
-			-- type case and the value of the constant can be represented in `a_target_type'.
+			-- type cast and the value of the constant can be represented in `a_target_type'.
 			-- Void if no such feature or when not possible.	
 		require
 			a_source_type_not_void: a_source_type /= Void
 			a_source_context_valid: a_source_type.is_valid_context
 			a_target_type_not_void: a_target_type /= Void
 			a_target_context_valid: a_target_type.is_valid_context
+			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		do
 			-- Result := Void

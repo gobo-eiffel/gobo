@@ -5,7 +5,7 @@ indexing
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			l_external_routine ?= a_feature
 			if l_external_routine /= Void then
 				builtin_code := l_external_routine.builtin_code
-			elseif a_target_type.base_class = a_system.current_system.procedure_class then
+			elseif a_target_type.base_class.is_procedure_class then
 				if a_feature.name.same_feature_name (tokens.call_feature_name) then
 						-- Make sure that PROCEDURE.call is considered as
 						-- a built-in feature when computing dynamic type sets.
@@ -62,10 +62,10 @@ feature {NONE} -- Initialization
 				else
 					builtin_code := builtin_not_builtin
 				end
-			elseif a_target_type.base_class = a_system.current_system.function_class then
+			elseif a_target_type.base_class.is_function_class then
 				l_name := a_feature.name
 				if l_name.same_feature_name (tokens.item_feature_name) then
-						-- Make sure that FUNCTION.iteml is considered as
+						-- Make sure that FUNCTION.item is considered as
 						-- a built-in feature when computing dynamic type sets.
 						-- ISE still consider it as a regular routine.
 					builtin_code := tokens.builtin_function_feature (builtin_function_item)
@@ -273,15 +273,13 @@ feature -- Status report
 	is_static: BOOLEAN
 			-- Is current feature used as a static feature?
 
-	is_function (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
+	is_function: BOOLEAN is
 			-- Is feature a function?
-		require
-			a_system_not_void: a_system /= Void
 		do
 			if static_feature.is_function then
 				if is_builtin then
 						-- The function should not be a built-in attribute.
-					Result := not target_type.is_builtin_attribute (static_feature, builtin_code, a_system)
+					Result := not target_type.is_builtin_attribute (static_feature, builtin_code)
 				else
 					Result := True
 				end
@@ -290,15 +288,13 @@ feature -- Status report
 			query: Result implies is_query
 		end
 
-	is_attribute (a_system: ET_DYNAMIC_SYSTEM): BOOLEAN is
+	is_attribute: BOOLEAN is
 			-- Is feature an attribute?
-		require
-			a_system_not_void: a_system /= Void
 		do
 			if not is_builtin then
 				Result := static_feature.is_attribute
 			else
-				Result := target_type.is_builtin_attribute (static_feature, builtin_code, a_system)
+				Result := target_type.is_builtin_attribute (static_feature, builtin_code)
 			end
 		ensure
 			query: Result implies is_query

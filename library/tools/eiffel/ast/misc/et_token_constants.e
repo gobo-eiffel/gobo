@@ -3400,21 +3400,43 @@ feature -- System
 			-- This class is equal to no other classes, not even itself;
 			-- it does conform to no type, not even itself, and no type
 			-- conforms to it
-		local
-			l_unknown_group: ET_UNKNOWN_GROUP
 		once
-			create Result.make_unknown (unknown_class_name)
-			create l_unknown_group.make
-			Result.set_group (l_unknown_group)
+			create Result.make_unknown
+			Result.set_group (unknown_group)
+			Result.set_parsed
+			Result.set_syntax_error
+			Result.set_ancestors_built
+			Result.set_ancestors_error
+			Result.set_features_flattened
+			Result.set_flattening_error
+			Result.set_interface_checked
+			Result.set_interface_error
+			Result.set_implementation_checked
+			Result.set_implementation_error
 		ensure
 			unknown_class_not_void: Result /= Void
-			unknown_class_preparsed: Result.is_preparsed
+		end
+
+	unknown_group: ET_UNKNOWN_GROUP is
+			-- Shared unknown group
+		once
+			create Result.make
+		ensure
+			unknown_group_not_void: Result /= Void
+		end
+
+	unknown_system: ET_SYSTEM is
+			-- Shared unknown Eiffel system
+		once
+			create Result.make ("*unknown*")
+		ensure
+			unknown_system_not_void: Result /= Void
 		end
 
 	empty_system: ET_SYSTEM is
 			-- Shared empty Eiffel system
 		once
-			create Result.make
+			create Result.make ("*unknown*")
 		ensure
 			empty_system_not_void: Result /= Void
 		end
@@ -3422,7 +3444,7 @@ feature -- System
 	empty_library: ET_LIBRARY is
 			-- Shared empty Eiffel class library
 		once
-			create Result.make (empty_system)
+			create Result.make ("*unknown*", empty_system)
 		ensure
 			empty_library_not_void: Result /= Void
 		end
@@ -3442,6 +3464,26 @@ feature -- System
 			create Result.make
 		ensure
 			default_ast_factory_not_void: Result /= Void
+		end
+
+feature -- Empty lists
+
+	empty_classes: DS_ARRAYED_LIST [ET_CLASS] is
+			-- Shared empty list of classes
+		once
+			create Result.make (0)
+		ensure
+			list_not_void: Result /= Void
+			list_empty: Result.is_empty
+		end
+
+	empty_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS] is
+			-- Shared empty list of adapted classes
+		once
+			create Result.make (0)
+		ensure
+			list_not_void: Result /= Void
+			list_empty: Result.is_empty
 		end
 
 end

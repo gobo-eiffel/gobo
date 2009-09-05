@@ -6,7 +6,7 @@ indexing
 		"Lace parsers"
   
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,6 +40,7 @@ create
 %type <ET_LACE_EXCLUDE> Excludes Exclude_list Cluster_options_opt
 %type <ET_IDENTIFIER> Identifier Root_cluster_opt Creation_procedure_opt Prefix_opt External_items
 %type <ET_LACE_DOTNET_ASSEMBLY> Assembly
+%type <ET_LACE_SYSTEM> System
 %type <ET_ADAPTED_DOTNET_ASSEMBLIES> Assembly_list Assemblies_opt
 
 %start Ace
@@ -47,19 +48,25 @@ create
 %%
 --------------------------------------------------------------------------------
 
-Ace: L_SYSTEM Identifier L_ROOT Identifier Root_cluster_opt Creation_procedure_opt
+Ace: System L_ROOT Identifier Root_cluster_opt Creation_procedure_opt
 	Defaults_opt Clusters_opt Assemblies_opt Externals_opt Generates_opt L_END
 		{
 			set_system (last_system)
+			if $7 /= Void then
+				last_system.set_clusters ($7)
+			end
 			if $8 /= Void then
-				last_system.set_clusters ($8)
+				last_system.set_dotnet_assemblies ($8)
 			end
-			if $9 /= Void then
-				last_system.set_dotnet_assemblies ($9)
-			end
-			last_system.set_system_name ($2.name)
-			last_system.set_root_class ($4)
-			last_system.set_root_creation ($6)
+			last_system.set_root_type ($3)
+			last_system.set_root_creation ($5)
+		}
+	;
+
+System: L_SYSTEM Identifier
+		{
+			last_system := new_system ($2.name)
+			$$ := last_system
 		}
 	;
 

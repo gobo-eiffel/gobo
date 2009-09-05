@@ -5,7 +5,7 @@ indexing
 		"ECF errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1805,7 +1805,7 @@ feature {NONE} -- Implementation
 				l_client_universe := l_adapted_library.universe
 				a_string.append_string ("%N%TUsed in ECF ")
 				a_string.append_string (l_client_universe.filename)
-				l_position := l_adapted_library.name.position
+				l_position := l_adapted_library.name_id.position
 				a_string.append_string (" (")
 				a_string.append_integer (l_position.line)
 				a_string.append_character (',')

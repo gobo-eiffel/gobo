@@ -5,7 +5,7 @@ indexing
 		"ECF Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,8 @@ inherit
 	ET_SYSTEM
 		rename
 			make as make_system
+		redefine
+			name
 		end
 
 	ET_ECF_INTERNAL_UNIVERSE
@@ -24,9 +26,10 @@ inherit
 			preparse,
 			parse_all,
 			preparse_local,
-			parse_all_local
+			parse_all_local,
+			set_none_type
 		redefine
-			make
+			make, name
 		end
 
 create
@@ -39,21 +42,26 @@ feature {NONE} -- Initialization
 			-- Create a new ECF system.
 		do
 			precursor (a_name, a_filename)
-			make_system
+			make_system (a_name)
 		end
+
+feature -- Access
+
+	name: STRING
+			-- Name of system
 
 feature -- Setting
 
 	set_root_class_name (a_name: STRING) is
-			-- Set `root_class_name' to `a_name'.
+			-- Set root class name to `a_name'.
 		local
 			an_identifier: ET_IDENTIFIER
 		do
 			if a_name /= Void and then a_name.count > 0 then
 				create an_identifier.make (a_name)
-				set_root_class (an_identifier)
+				set_root_type (an_identifier)
 			else
-				root_class := Void
+				unset_root_type
 			end
 		end
 

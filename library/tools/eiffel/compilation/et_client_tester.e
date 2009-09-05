@@ -5,7 +5,7 @@ indexing
 		"Eiffel client/supplier relationship testers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -354,7 +354,6 @@ feature {NONE} -- Implementation
 invariant
 
 	current_class_not_void: current_class /= Void
-	current_class_preparsed: current_class.is_preparsed
 	supplier_classes_not_void: supplier_classes /= Void
 	no_void_supplier_class: not supplier_classes.has_void
 	type_checker_not_void: type_checker /= Void

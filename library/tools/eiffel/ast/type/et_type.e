@@ -5,7 +5,7 @@ indexing
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,9 +60,25 @@ feature -- Access
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
-		deferred
+		do
+			Result := named_base_class (a_context).actual_class
 		ensure
 			base_class_not_void: Result /= Void
+		end
+
+	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS is
+			-- Same as `base_class' except that it returns information about this
+			-- class (e.g. its name) as known from the universe it is used from
+			-- (instead of from the universe it is written in).
+			-- Return "*UNKNOWN*" class if unresolved identifier type,
+			-- or unmatched formal generic parameter.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			named_base_class_not_void: Result /= Void
 		end
 
 	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE is
@@ -351,7 +367,7 @@ feature -- Comparison
 	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -405,7 +421,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -424,7 +440,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -443,7 +459,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -462,7 +478,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_like_current (other: ET_LIKE_CURRENT; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -481,7 +497,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_like_feature (other: ET_LIKE_FEATURE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -500,7 +516,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_qualified_like_identifier (other: ET_QUALIFIED_LIKE_IDENTIFIER; other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -519,7 +535,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_tuple_type (other: ET_TUPLE_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even

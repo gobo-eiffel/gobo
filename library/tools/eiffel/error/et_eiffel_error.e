@@ -5,7 +5,7 @@ indexing
 		"Eiffel errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	current_class: ET_CLASS
+	current_class: ET_NAMED_CLASS
 			-- Class where current error occurred
 
-	class_impl: ET_CLASS is
+	class_impl: ET_NAMED_CLASS is
 			-- Class where current error was written
 		do
 			Result := current_class

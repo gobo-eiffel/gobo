@@ -5,7 +5,7 @@ indexing
 		"ECF adapted libraries"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,20 +37,21 @@ feature {NONE} -- Initialization
 			a_filename_not_void: a_filename /= Void
 			a_universe_not_void: a_universe /= Void
 		do
-			name := a_name
+			name_id := a_name
 			filename := a_filename
 			universe := a_universe
-			make_adapted_library (tokens.empty_library)
+			make_adapted_library (a_name.name, tokens.empty_library)
 		ensure
-			name_set: name = a_name
+			name_id_set: name_id = a_name
+			name_set: name = a_name.name
 			filename_set: filename = a_filename
 			universe_set: universe = a_universe
 		end
 
 feature -- Access
 
-	name: ET_IDENTIFIER
-			-- Name
+	name_id: ET_IDENTIFIER
+			-- Name identifier
 
 	filename: ET_IDENTIFIER
 			-- ECF filename
@@ -72,7 +73,7 @@ feature -- Setting
 
 invariant
 
-	name_not_void: name /= Void
+	name_id_not_void: name_id /= Void
 	filename_not_void: filename /= Void
 	universe_not_void: universe /= Void
 

@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,13 +63,14 @@ feature -- Access
 	current_keyword: ET_CURRENT
 			-- 'current' keyword
 
-	base_class (a_context: ET_TYPE_CONTEXT): ET_CLASS is
-			-- Base class of current type when it appears in `a_context'
-			-- (Definition of base class in ETL2 page 198).
+	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS is
+			-- Same as `base_class' except that it returns information about this
+			-- class (e.g. its name) as known from the universe it is used from
+			-- (instead of from the universe it is written in).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		do
-			Result := a_context.base_class
+			Result := a_context.named_base_class
 		end
 
 	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE is
@@ -245,7 +246,7 @@ feature -- Comparison
 	same_syntactical_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even
@@ -285,7 +286,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 	same_syntactical_like_current (other: ET_LIKE_CURRENT; other_context, a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Are current type appearing in `a_context' and `other'
 			-- type appearing in `other_context' the same type?
-			-- (Note: We are NOT comparing the basic types here!
+			-- (Note: We are NOT comparing the base types here!
 			-- Therefore anchored types are considered the same
 			-- only if they have the same anchor. An anchor type
 			-- is not considered the same as any other type even

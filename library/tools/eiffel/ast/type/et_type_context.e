@@ -5,7 +5,7 @@ indexing
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -47,9 +47,22 @@ feature -- Access
 		require
 			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
-		deferred
+		do
+			Result := named_base_class.actual_class
 		ensure
 			base_class_not_void: Result /= Void
+		end
+
+	named_base_class: ET_NAMED_CLASS is
+			-- Same as `base_class' except that it returns information about this
+			-- class (e.g. its name) as known from the universe it is used from
+			-- (instead of from the universe it is written in)
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			named_base_class_not_void: Result /= Void
 		end
 
 	base_type: ET_BASE_TYPE is

@@ -5,7 +5,7 @@ indexing
 		"Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,12 +17,12 @@ inherit
 	ET_GROUP
 		redefine
 			is_cluster, cluster,
-			full_name, full_lower_name,
-			full_pathname, full_unix_pathname
+			relative_name, relative_lower_name,
+			full_pathname, full_unix_pathname,
+			kind_name
 		end
 
 	KL_SHARED_OPERATING_SYSTEM
-	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Status report
 
@@ -221,41 +221,63 @@ feature -- Access
 	universe: ET_UNIVERSE
 			-- Surrounding universe
 
-	full_name (a_separator: CHARACTER): STRING is
-			-- Full name (use `a_separator' as separator
-			-- between parents' names)
+	relative_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+			-- Name of current group relative its parents and its universe down to `a_universe'
+			-- (use `a_separator' as separator between parents' and universes' names)
+			--
+			-- If `a_universe' is `universe' then return the name relative to its
+			-- parents only. Otherwise Use one of the shortest paths between
+			-- `a_universe' and `universe', and if no such path exists then return
+			-- the name relative to its parents only.
 		local
-			parent_name: STRING
-			a_basename: STRING
+			l_parent: like parent
+			l_parent_name: STRING
+			l_basename: STRING
 		do
-			if parent /= Void then
-				parent_name := parent.full_name (a_separator)
-				a_basename := name
-				Result := STRING_.new_empty_string (parent_name, parent_name.count + a_basename.count + 1)
-				Result.append_string (parent_name)
-				Result.append_character (a_separator)
-				Result := STRING_.appended_string (Result, a_basename)
+			if a_universe = universe then
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent_name := l_parent.relative_name (l_parent.universe, a_separator)
+					l_basename := name
+					Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
+					Result.append_string (l_parent_name)
+					Result.append_character (a_separator)
+					Result := STRING_.appended_string (Result, l_basename)
+				else
+					Result := name
+				end
 			else
-				Result := name
+				Result := precursor (a_universe, a_separator)
 			end
 		end
 
-	full_lower_name (a_separator: CHARACTER): STRING is
-			-- Full lower_name (use `a_separator' as separator
-			-- between parents' names)
+	relative_lower_name (a_universe: ET_UNIVERSE; a_separator: CHARACTER): STRING is
+			-- Lower-name of current group relative its parents and its universe down to `a_universe'
+			-- (use `a_separator' as separator between parents' and universes' names)
+			--
+			-- If `a_universe' is `universe' then return the name relative to its
+			-- parents only. Otherwise Use one of the shortest paths between
+			-- `a_universe' and `universe', and if no such path exists then return
+			-- the name relative to its parents only.
 		local
-			parent_name: STRING
-			a_basename: STRING
+			l_parent: like parent
+			l_parent_name: STRING
+			l_basename: STRING
 		do
-			if parent /= Void then
-				parent_name := parent.full_lower_name (a_separator)
-				a_basename := lower_name
-				Result := STRING_.new_empty_string (parent_name, parent_name.count + a_basename.count + 1)
-				Result.append_string (parent_name)
-				Result.append_character (a_separator)
-				Result := STRING_.appended_string (Result, a_basename)
+			if a_universe = universe then
+				l_parent := parent
+				if l_parent /= Void then
+					l_parent_name := l_parent.relative_lower_name (l_parent.universe, a_separator)
+					l_basename := lower_name
+					Result := STRING_.new_empty_string (l_parent_name, l_parent_name.count + l_basename.count + 1)
+					Result.append_string (l_parent_name)
+					Result.append_character (a_separator)
+					Result := STRING_.appended_string (Result, l_basename)
+				else
+					Result := lower_name
+				end
 			else
-				Result := lower_name
+				Result := precursor (a_universe, a_separator)
 			end
 		end
 
@@ -311,6 +333,12 @@ feature -- Access
 			Result := Current
 		ensure then
 			definition: Result = Current
+		end
+
+	kind_name: STRING is
+			-- Kind name (e.g. "cluster", "assembly", etc.)
+		once
+			Result := "cluster"
 		end
 
 feature -- Nested

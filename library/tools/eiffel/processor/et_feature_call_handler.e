@@ -2877,7 +2877,6 @@ invariant
 	current_class_definition: current_class = current_type.base_class
 	current_class_impl_not_void: current_class_impl /= Void
 	current_class_impl_definition: current_class_impl = current_feature_impl.implementation_class
-	current_class_impl_preparsed: current_class_impl.is_preparsed
 	expression_type_finder_not_void: expression_type_finder /= Void
 	type_checker_not_void: type_checker /= Void
 	current_context_not_void: current_context /= Void

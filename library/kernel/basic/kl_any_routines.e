@@ -5,7 +5,7 @@ indexing
 		"Routines that ought to be in class ANY"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2005-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,6 +34,19 @@ feature -- Status report
 			Result := obj1 = obj2
 		ensure
 			definition: Result = (obj1 = obj2)
+		end
+
+	not_same_objects (obj1, obj2: ?ANY): BOOLEAN is
+			-- Are `obj1' and `obj2' not the same object?
+			-- Useful as a way to workaround VWEQ validity rule
+			-- (when running flat Degree 3 for example):
+			--    my_hashable := my_string
+			--    my_comparable := my_string
+			--    ANY_.not_same_objects (my_hashable, my_comparable)
+		do
+			Result := obj1 /= obj2
+		ensure
+			definition: Result = (obj1 /= obj2)
 		end
 
 	equal_objects (obj1, obj2: ?ANY): BOOLEAN is

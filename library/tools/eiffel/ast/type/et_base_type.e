@@ -5,7 +5,7 @@ indexing
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	ET_NAMED_TYPE
 		rename
-			base_class as base_class_in_context
+			base_class as base_class_in_context,
+			named_base_class as named_base_class_in_context
 		redefine
 			reset,
 			reset_qualified_anchored_types,
@@ -64,6 +65,7 @@ inherit
 			base_type_has_class as context_base_type_has_class,
 			named_type_has_class as context_named_type_has_class
 		redefine
+			base_class,
 			is_root_context
 		end
 
@@ -94,17 +96,28 @@ feature -- Initialization
 
 feature -- Access
 
-	base_class: ET_CLASS
-			-- Class on which current type is directly based
-			-- (e.g. a Class_type, a Tuple_type or a Bit_type)
+	base_class: ET_CLASS is
+			-- Base class of current type
+		require else
+			base_class_available: True
+		do
+			Result := named_base_class.actual_class
+		end
 
-	base_class_in_context (a_context: ET_TYPE_CONTEXT): ET_CLASS is
-			-- Base class of current type when it appears in `a_context'
-			-- (Definition of base class in ETL2 page 198).
+	named_base_class: ET_NAMED_CLASS
+			-- Class visible from the surrounding universe under the name `name'
+			--
+			-- Note that this class may have been written in another library
+			-- with another name.
+
+	named_base_class_in_context (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS is
+			-- Same as `base_class' except that it returns information about this
+			-- class (e.g. its name) as known from the universe it is used from
+			-- (instead of from the universe it is written in).
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		do
-			Result := base_class
+			Result := named_base_class
 		end
 
 	actual_parameters: ET_ACTUAL_PARAMETER_LIST is
@@ -714,5 +727,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context
 invariant
 
 	is_root_context: is_root_context
+	named_base_class_not_void: named_base_class /= Void
 
 end
