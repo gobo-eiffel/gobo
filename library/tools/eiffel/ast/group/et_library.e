@@ -72,25 +72,6 @@ feature -- Relations
 			end
 		end
 
-	recursive_add_dependences (a_visited: DS_HASH_TOPOLOGICAL_SORTER [ET_LIBRARY]; other_library: ET_LIBRARY) is
-			-- Add current library to `a_visited', and if `other_library'
-			-- is not void add the dependence link between `other_library'
-			-- and the current library (i.e. `other_library' depends
-			-- on current library). Add recursively the libraries that
-			-- current library depends on as well as the dependence links
-			-- between these libraries.
-		require
-			a_visited_not_void: a_visited /= Void
-		do
-			if not a_visited.has (Current) then
-				a_visited.force (Current)
-				libraries.do_all (agent {ET_LIBRARY}.recursive_add_dependences (a_visited, Current))
-			end
-			if other_library /= Void then
-				a_visited.force_relation (Current, other_library)
-			end
-		end
-
 invariant
 
 	self_adapted: library = Current

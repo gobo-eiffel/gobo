@@ -192,21 +192,6 @@ feature -- Iteration
 			l_visited.do_all (an_action)
 		end
 
-	do_ordered (an_action: PROCEDURE [ANY, TUPLE [ET_LIBRARY]]) is
-			-- Apply `an_action' to every library, and to all libraries
-			-- reachable from them. Each library will be processed only
-			-- after the libraries it depends on have also been processed.
-		require
-			an_action_not_void: an_action /= Void
-		local
-			l_visited: DS_HASH_TOPOLOGICAL_SORTER [ET_LIBRARY]
-		do
-			create l_visited.make (10)
-			do_all (agent {ET_LIBRARY}.recursive_add_dependences (l_visited, Void))
-			l_visited.sort
-			l_visited.sorted_items.do_all (an_action)
-		end
-
 feature {NONE} -- Constants
 
 	Initial_libraries_capacity: INTEGER is 50
