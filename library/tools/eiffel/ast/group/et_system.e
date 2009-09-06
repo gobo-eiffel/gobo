@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			set_kernel_types
 			create null_processor.make
 			eiffel_preparser := null_processor
+			adapted_class_checker := null_processor
 			eiffel_parser := null_processor
 			provider_checker := null_processor
 			ancestor_builder := null_processor
@@ -712,6 +713,7 @@ feature -- Parsing
 			-- for more details.
 		do
 			precursor
+			check_adapted_class_validity
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
@@ -735,6 +737,7 @@ feature -- Parsing
 			-- for more details.
 		do
 			precursor
+			check_adapted_class_validity
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
@@ -1018,8 +1021,8 @@ feature -- Compilation
 				compile_degree_5
 			else
 				parse_all
+				check_provider_validity
 			end
-			check_provider_validity
 			if error_handler.benchmark_shown then
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
@@ -1103,6 +1106,24 @@ feature -- Compilation
 			end
 		end
 
+	check_adapted_class_validity is
+			-- Check for invalid class name clashes and invalid class overriding.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		do
+			adapted_classes_do_recursive_until (agent check_adapted_class, stop_request)
+		end
+
+	check_adapted_class (a_class: ET_ADAPTED_CLASS) is
+			-- Check whether `a_class' represent an invalid class name clash or invalid class overriding.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			a_class.process (adapted_class_checker)
+		end
+
 	parse_class (a_class: ET_CLASS) is
 			-- Parse `a_class'.
 		require
@@ -1177,6 +1198,9 @@ feature -- Processors
 	eiffel_parser: ET_AST_PROCESSOR
 			-- Eiffel parser
 
+	adapted_class_checker: ET_AST_PROCESSOR
+			-- Adapted class checker
+
 	dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER is
 			-- .NET assembly consumer
 		do
@@ -1216,6 +1240,9 @@ feature -- Processors
 			if eiffel_preparser = null_processor then
 				create {ET_EIFFEL_PREPARSER} eiffel_preparser.make
 			end
+			if adapted_class_checker = null_processor then
+				create {ET_ADAPTED_CLASS_CHECKER} adapted_class_checker.make
+			end
 			if eiffel_parser = null_processor then
 				create {ET_EIFFEL_PARSER} eiffel_parser.make
 			end
@@ -1249,6 +1276,16 @@ feature -- Processors
 			eiffel_preparser := a_eiffel_preparser
 		ensure
 			eiffel_preparser_set: eiffel_preparser = a_eiffel_preparser
+		end
+
+	set_adapted_class_checker (a_adapted_class_checker: like adapted_class_checker) is
+			-- Set `adapted_class_checker' to `a_adapted_class_checker'.
+		require
+			a_adapted_class_checker_not_void: a_adapted_class_checker /= Void
+		do
+			adapted_class_checker := a_adapted_class_checker
+		ensure
+			adapted_class_checker_set: adapted_class_checker = a_adapted_class_checker
 		end
 
 	set_eiffel_parser (a_eiffel_parser: like eiffel_parser) is
@@ -1400,6 +1437,7 @@ invariant
 	function_item_seed_not_negative: function_item_seed >= 0
 		-- Processors.
 	eiffel_preparser_not_void: eiffel_preparser /= Void
+	adapted_class_checker_not_void: adapted_class_checker /= Void
 	eiffel_parser_not_void: eiffel_parser /= Void
 	provider_checker_not_void: provider_checker /= Void
 	ancestor_builder_not_void: ancestor_builder /= Void

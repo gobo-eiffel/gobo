@@ -3061,4 +3061,12 @@ feature {ET_CLUSTER} -- Processing
 			-- Do not iterate over classes of `a_cluster'.
 		end
 
+feature {ET_ADAPTED_CLASS} -- Processing
+
+	process_adapted_class (a_class: ET_ADAPTED_CLASS) is
+			-- Process `a_class'.
+		do
+			-- Do not iterate over classes of `a_class'.
+		end
+
 end

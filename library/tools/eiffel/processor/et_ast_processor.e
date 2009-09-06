@@ -1433,4 +1433,13 @@ feature {ET_CLUSTER} -- Processing
 		deferred
 		end
 
+feature {ET_ADAPTED_CLASS} -- Processing
+
+	process_adapted_class (a_class: ET_ADAPTED_CLASS) is
+			-- Process `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		deferred
+		end
+
 end

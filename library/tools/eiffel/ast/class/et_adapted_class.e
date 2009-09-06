@@ -1282,6 +1282,14 @@ feature -- System
 			end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current adapted class.
+		do
+			a_processor.process_adapted_class (Current)
+		end
+
 invariant
 
 	other_local_override_classes_not_void: other_local_override_classes /= Void

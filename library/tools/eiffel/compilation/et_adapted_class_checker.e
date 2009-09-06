@@ -1,9 +1,10 @@
 indexing
 
 	description:
-
-		"Eiffel adapted class checkers."
-
+	"[
+		Eiffel adapted class checkers.
+		Look for invalid class name clashes and invalid class overriding.
+	]"
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2009, Eric Bezault and others"
 	license: "MIT License"
@@ -14,7 +15,11 @@ class ET_ADAPTED_CLASS_CHECKER
 
 inherit
 
-	ANY
+	ET_AST_NULL_PROCESSOR
+		redefine
+			make,
+			process_adapted_class
+		end
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -204,6 +209,14 @@ feature -- Error handling
 			Result := current_system.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
+		end
+
+feature {ET_ADAPTED_CLASS} -- Processing
+
+	process_adapted_class (a_class: ET_ADAPTED_CLASS) is
+			-- Process `a_class'.
+		do
+			check_adapted_class_validity (a_class)
 		end
 
 invariant

@@ -1024,4 +1024,11 @@ feature {ET_CLUSTER} -- Processing
 		do
 		end
 
+feature {ET_ADAPTED_CLASS} -- Processing
+
+	process_adapted_class (a_class: ET_ADAPTED_CLASS) is
+			-- Process `a_class'.
+		do
+		end
+
 end
