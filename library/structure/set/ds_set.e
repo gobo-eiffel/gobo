@@ -186,7 +186,7 @@ feature -- Element change
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 		require
-			extendible: extendible (1)
+			extendible: extendible (1) or else has (v)
 		deferred
 		ensure
 			inserted: has (v) and then item (v) = v
@@ -209,10 +209,12 @@ feature -- Element change
 
 	put_last (v: G) is
 			-- Add `v' to set, replacing any existing item.
-			-- If `v' was not included yet, insert it at 
+			-- If `v' was not included yet, insert it at
 			-- last position if implementation permits.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
+		require else
+			extendible_or_has: extendible (1) or else has (v)
 		deferred
 		ensure then
 			inserted: has (v) and then item (v) = v
@@ -245,7 +247,7 @@ feature -- Element change
 
 	force_last (v: G) is
 			-- Add `v' to set, replacing any existing item.
-			-- If `v' was not included yet, insert it at 
+			-- If `v' was not included yet, insert it at
 			-- last position if implementation permits.
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)

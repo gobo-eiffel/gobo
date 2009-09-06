@@ -318,7 +318,7 @@ feature -- Element change
 			-- Associate `v' with key `k'.
 			-- Do not move cursors.
 		require
-			not_full: not is_full
+			not_full: not is_full or else has (k)
 		local
 			i, h: INTEGER
 		do
@@ -381,7 +381,7 @@ feature -- Element change
 			-- existing item otherwise.
 			-- Do not move cursors.
 		require
-			not_full: not is_full
+			not_full: not is_full or else has (k)
 		local
 			i, h: INTEGER
 		do
