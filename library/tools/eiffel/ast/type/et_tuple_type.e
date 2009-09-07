@@ -5,7 +5,7 @@ indexing
 		"Eiffel TUPLE types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,7 +52,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type_mark: ET_TYPE_MARK
-			-- '!' or '?' symbol
+			-- 'attached' or 'detachable' keyword,
+			-- or '!' or '?' symbol
 
 	tuple_keyword: ET_IDENTIFIER
 			-- 'TUPLE' keyword

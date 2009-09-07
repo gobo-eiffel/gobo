@@ -5,7 +5,7 @@ indexing
 		"Eiffel anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,8 @@ inherit
 feature -- Access
 
 	type_mark: ET_TYPE_MARK is
-			-- '!' or '?' symbol
+			-- 'attached' or 'detachable' keyword,
+			-- or '!' or '?' symbol
 		deferred
 		end
 

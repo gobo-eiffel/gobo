@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1002,7 +1002,7 @@ feature -- Class header
 		end
 
 	class_mark: ET_CLASS_MARK
-			-- 'deferred', 'expanded', 'reference' or 'separate' keyword,
+			-- 'attached', 'detachable', 'deferred', 'expanded', 'reference' or 'separate' keyword,
 			-- or '!' or '?' symbol
 
 	set_class_mark (a_mark: like class_mark) is
