@@ -47,6 +47,10 @@ Version 3.10 - ?
 	* Fixed assertion violation in feature `compress' from DS_SPARSE_CONTAINER.
 	  See bug#2831433.
 
+	* Relaxed precondition of `put' and `put_last' in classes DS_SET and
+	  DS_SPARSE_TABLE (i.e. the ancestors of DS_HASH_SET and DS_HASH_TABLE) to
+	  be "not is_full or else has (k)" instead of just "not is_full".
+
 	Gobo Eiffel Time Library:
 
 	* Added class DT_STOPWATCH in cluster 'stopwatch'.
@@ -68,6 +72,11 @@ Version 3.10 - ?
 	  types (e.g. 'attached FOO' or 'detachable BAR') and for object-tests
 	  (e.g. 'attached {T} exp as x' with '{T}' and 'x' optional). See
 	  bug#2682694.
+
+	Gobo Eiffel XML Library:
+
+	* Added option to let the XML pretty printer use empty element tags
+	  <tag/> instead of <tag><tag/>.
 
 	Miscellaneous:
 

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type_mark: ET_TYPE_MARK
-			-- 'expanded', 'reference' or 'separate' keyword,
+			-- 'attached', 'detachable', 'expanded', 'reference' or 'separate' keyword,
 			-- or '!' or '?' symbol
 
 	base_type (a_context: ET_TYPE_CONTEXT): ET_CLASS_TYPE is

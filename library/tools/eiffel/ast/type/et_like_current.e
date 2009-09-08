@@ -55,7 +55,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type_mark: ET_TYPE_MARK
-			-- '!' or '?' symbol
+			-- 'attached' or 'detachable' keyword,
+			-- or '!' or '?' symbol
 
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword

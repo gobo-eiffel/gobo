@@ -5,7 +5,7 @@ indexing
 		"Eiffel qualified anchored types of the form 'like {A}.b'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type_mark: ET_TYPE_MARK
-			-- '!' or '?' symbol
+			-- 'attached' or 'detachable' keyword,
+			-- or '!' or '?' symbol
 
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword

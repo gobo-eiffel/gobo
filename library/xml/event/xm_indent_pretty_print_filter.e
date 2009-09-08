@@ -70,6 +70,8 @@ feature -- Events
 		do
 			check space_preserved_not_void: space_preserved /= Void end
 
+			flush_pending_tag_end
+
 			if not has_content then
 				if is_root then
 					is_root := False
@@ -105,14 +107,18 @@ feature -- Events
 		do
 			depth := depth - 1
 
-			if not has_content then
-				output_indent_new_line
-				output_indent
+			if last_call_was_start_tag_finish and empty_element_tags_enabled then
+				Precursor (a_namespace, a_prefix, a_local_part)
+			else
+				if not has_content then
+					output_indent_new_line
+					output_indent
+				end
+
+				Precursor (a_namespace, a_prefix, a_local_part)
 			end
+
 			has_content := False
-
-			Precursor (a_namespace, a_prefix, a_local_part)
-
 			space_preserved.remove
 		end
 

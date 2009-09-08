@@ -52,7 +52,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	type_mark: ET_TYPE_MARK
-			-- '!' or '?' symbol
+			-- 'attached' or 'detachable' keyword,
+			-- or '!' or '?' symbol
 
 	tuple_keyword: ET_IDENTIFIER
 			-- 'TUPLE' keyword

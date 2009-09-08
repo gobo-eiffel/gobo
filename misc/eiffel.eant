@@ -163,6 +163,7 @@
 		</delete>
 		<delete file="${system}.pdb"/>
 		<delete file="${system}.ilk"/>
+		<delete file="${system}.suo"/>
 		<geant target="other_clean"/>
 	</target>
 
