@@ -5971,7 +5971,7 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			i, nb: INTEGER
+			i, j, nb: INTEGER
 			had_error: BOOLEAN
 			l_item_type: ET_TYPE
 			hybrid_type: BOOLEAN
@@ -5984,6 +5984,10 @@ feature {NONE} -- Expression validity
 			any_type: ET_CLASS_TYPE
 			l_expression_context: ET_NESTED_TYPE_CONTEXT
 			l_parameter_context: ET_NESTED_TYPE_CONTEXT
+			l_convert_expression: ET_CONVERT_EXPRESSION
+			l_expression_comma: ET_EXPRESSION_COMMA
+			l_item: ET_EXPRESSION_ITEM
+			l_item_expression: ET_EXPRESSION
 		do
 			has_fatal_error := False
 -- TODO: check that the type of the manifest array does not depend on the
@@ -6008,7 +6012,9 @@ feature {NONE} -- Expression validity
 				l_parameter_context.force_last (l_array_parameter)
 				l_expression_context := new_context (current_type)
 				from i := 1 until i > nb loop
-					check_expression_validity (an_expression.expression (i), l_expression_context, l_parameter_context)
+					l_item := an_expression.item (i)
+					l_item_expression := l_item.expression
+					check_expression_validity (l_item_expression, l_expression_context, l_parameter_context)
 					if has_fatal_error then
 						had_error := True
 					else
@@ -6023,7 +6029,20 @@ feature {NONE} -- Expression validity
 								-- The type of this item does not conform to the type of
 								-- the parameter of the expected array type. Try to see
 								-- if it converts to it.
-							if type_checker.convert_feature (l_expression_context, l_parameter_context) = Void then
+							l_convert_expression := convert_expression (l_item_expression, l_expression_context, l_parameter_context)
+							if has_fatal_error then
+								had_error := True
+							elseif l_convert_expression /= Void then
+									-- Insert the conversion feature call in the AST.
+									-- Convertibility should be resolved in the implementation class.
+								check implementation_class: current_class = current_class_impl end
+								l_expression_comma ?= l_item
+								if l_expression_comma /= Void then
+									l_expression_comma.set_expression (l_convert_expression)
+								else
+									an_expression.put (l_convert_expression, i)
+								end
+							else
 									-- It does not conform nor convert. We are out of luck
 									-- and revise our position: We will have to find another
 									-- way to determine the type of the array, and a validity
@@ -6035,10 +6054,26 @@ feature {NONE} -- Expression validity
 									-- type of the manifest array will be an array of that type.
 									-- Otherwise we are out of luck and will consider that it is
 									-- an 'ARRAY [ANY]'.
--- TODO: remove convert features from AST.
 								l_array_type := Void
-							else
--- TODO: insert convert feature in AST.
+									-- We need to remove the convert features that we might
+									-- have added to the AST.
+								if current_class = current_class_impl then
+									from j := 1 until j >= i loop
+										l_item := an_expression.item (j)
+										l_item_expression := l_item.expression
+										l_convert_expression ?= l_item_expression
+										if l_convert_expression /= Void then
+											l_item_expression := l_convert_expression.expression
+											l_expression_comma ?= l_item
+											if l_expression_comma /= Void then
+												l_expression_comma.set_expression (l_item_expression)
+											else
+												an_expression.put (l_item_expression, j)
+											end
+										end
+										j := j + 1
+									end
+								end
 							end
 						end
 					end
