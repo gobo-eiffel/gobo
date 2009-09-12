@@ -2824,6 +2824,8 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			i, nb_args: INTEGER
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_argument_type: ET_DYNAMIC_TYPE
+			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_actual_parameter: ET_DYNAMIC_TYPE
 		do
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
@@ -2853,7 +2855,26 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					end
 					l_argument_type_set := argument_type_set (i)
 					l_argument_type := l_argument_type_set.static_type
-					print_type_declaration (l_argument_type, header_file)
+					if l_argument_type.base_class = current_system.typed_pointer_class then
+							-- The argument is declared of type 'TYPED_POINTER [XX]'.
+							-- In that case we use the corresponding pointer (i.e.
+							-- the first attribute of the object).
+						l_actual_parameters := l_argument_type.base_type.actual_parameters
+						if l_actual_parameters = Void or else l_actual_parameters.is_empty then
+								-- Internal error: TYPED_POINTER [XX] has one generic parameter.
+								-- This should have been checked already.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_actual_parameter := current_dynamic_system.dynamic_type (l_actual_parameters.type (1), current_system.any_type)
+							print_type_declaration (l_actual_parameter, header_file)
+							if l_actual_parameter.is_expanded then
+								header_file.put_character ('*')
+							end
+						end
+					else
+						print_type_declaration (l_argument_type, header_file)
+					end
 					i := i + 1
 				end
 			end
