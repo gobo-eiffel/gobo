@@ -1785,33 +1785,47 @@ feature {NONE} -- Implementation
 			a_template_not_void: a_template /= Void
 		do
 			Result := "[$1] ECF $2 ($3,$4): " + a_template
-			add_client (Result, universe)
+			add_dependent_universes (Result, universe)
 		ensure
 			template_not_void: Result /= Void
 		end
 
-	add_client (a_string: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE) is
-			-- Add to `a_string' information about recursive clients of `a_universe'.
+	add_dependent_universes (a_string: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE) is
+			-- Add to `a_string' information about universes that depends (recursively) on `a_universe'.
+			-- Note: only add one of the paths from the current system to `a_universe'.
 		require
 			a_string_not_void: a_string /= Void
 			a_universe_not_void: a_universe /= Void
 		local
-			l_adapted_library: ET_ECF_ADAPTED_LIBRARY
-			l_client_universe: ET_ECF_INTERNAL_UNIVERSE
+			l_shortest_path: DS_ARRAYED_LIST [ET_ADAPTED_UNIVERSE]
+			l_adapted_universe: ET_ADAPTED_UNIVERSE
+			l_adapted_ecf_library: ET_ECF_ADAPTED_LIBRARY
+			i, nb: INTEGER
 			l_position: ET_POSITION
 		do
-			if not a_universe.clients.is_empty then
-				l_adapted_library := a_universe.clients.first
-				l_client_universe := l_adapted_library.universe
-				a_string.append_string ("%N%TUsed in ECF ")
-				a_string.append_string (l_client_universe.filename)
-				l_position := l_adapted_library.name_id.position
-				a_string.append_string (" (")
-				a_string.append_integer (l_position.line)
-				a_string.append_character (',')
-				a_string.append_integer (l_position.column)
-				a_string.append_character (')')
-				add_client (a_string, l_client_universe)
+			l_shortest_path := a_universe.current_system.shortest_path (a_universe)
+			nb := l_shortest_path.count
+			from i := nb until i < 1 loop
+				l_adapted_universe := l_shortest_path.item (i)
+				l_adapted_ecf_library ?= l_adapted_universe
+				if l_adapted_ecf_library /= Void then
+					a_string.append_string ("%N%TUsed in ECF ")
+					a_string.append_string (l_adapted_ecf_library.universe.filename)
+					l_position := l_adapted_ecf_library.name_id.position
+					a_string.append_string (" (")
+					a_string.append_integer (l_position.line)
+					a_string.append_character (',')
+					a_string.append_integer (l_position.column)
+					a_string.append_character (')')
+				else
+					a_string.append_string ("%N%TUsed in universe ")
+					if i > 1 then
+						a_string.append_string (l_shortest_path.item (i - 1).name)
+					else
+						a_string.append_string (a_universe.current_system.name)
+					end
+				end
+				i := i - 1
 			end
 		end
 

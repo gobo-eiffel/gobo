@@ -356,7 +356,7 @@ feature -- Access
 				l_depths.force_last (l_count, Current)
 				l_cursor := l_depths.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_cursor.key.universes_do_if (agent l_depths.force_last (l_cursor.item + 1, ?), agent l_depths.has)
+					l_cursor.key.universes_do_if (agent l_depths.force_last (l_cursor.item + 1, ?), agent l_depths.not_has)
 					if l_depths.has (a_other) then
 						l_found := True
 						l_cursor.go_after

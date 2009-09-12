@@ -80,10 +80,6 @@ feature -- Access
 	error_handler: ET_ECF_ERROR_HANDLER
 			-- Error handler
 
-	client: ET_ECF_ADAPTED_LIBRARY
-			-- One of the clients of the ECF config being parsed;
-			-- Void if none
-
 	parsed_libraries: DS_HASH_TABLE [ET_ECF_LIBRARY, STRING] is
 			-- Already parsed ECF libraries, indexed by UUID
 		deferred
@@ -103,14 +99,6 @@ feature -- Access
 			-- ISE version to be used when evaluating version conditions
 
 feature -- Setting
-
-	set_client (a_client: like client) is
-			-- Set `client' to `a_client'.
-		do
-			client := a_client
-		ensure
-			client_set: client = a_client
-		end
 
 	set_ise_version (a_version: like ise_version) is
 			-- Set `ise_version' to `a_version'.
@@ -613,56 +601,54 @@ feature {NONE} -- AST factory
 			Result.set_condition (l_conditions)
 		end
 
-	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING; a_system: ET_SYSTEM): ET_ECF_LIBRARY is
+	new_library (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE; a_filename: STRING; a_adapted_library: ET_ECF_ADAPTED_LIBRARY): ET_ECF_LIBRARY is
 			-- New library built from `an_element'
 		require
 			an_element_not_void: an_element /= Void
 			is_system: STRING_.same_case_insensitive (an_element.name, xml_system)
 			a_position_table_not_void: a_position_table /= Void
 			a_filename_not_void: a_filename /= Void
-			a_system_not_void: a_system /= Void
+			a_adapted_library_not_void: a_adapted_library /= Void
 		local
 			l_name: XM_ATTRIBUTE
 			l_uuid: XM_ATTRIBUTE
-			l_unknown_universe: ET_ECF_LIBRARY
+			l_unknown_library: ET_ECF_LIBRARY
 			l_parsed_libraries: like parsed_libraries
+			l_system: ET_SYSTEM
 		do
+			l_system := a_adapted_library.universe.current_system
 			l_uuid := an_element.attribute_by_name (xml_uuid)
 			if l_uuid = Void then
 				l_name := an_element.attribute_by_name (xml_name)
 				if l_name = Void then
-					l_unknown_universe := ast_factory.new_library ("*unknown*", a_filename, a_system)
+					l_unknown_library := ast_factory.new_library ("*unknown*", a_filename, l_system)
 				elseif l_name.value.is_empty then
-					l_unknown_universe := ast_factory.new_library ("*unknown*", a_filename, a_system)
+					l_unknown_library := ast_factory.new_library ("*unknown*", a_filename, l_system)
 				else
-					l_unknown_universe := ast_factory.new_library (l_name.value, a_filename, a_system)
+					l_unknown_library := ast_factory.new_library (l_name.value, a_filename, l_system)
 				end
-				if client /= Void then
-					l_unknown_universe.clients.force_last (client)
-				end
-				error_handler.report_eabo_error (element_name (an_element, a_position_table), l_unknown_universe)
+				a_adapted_library.set_library (l_unknown_library)
+				error_handler.report_eabo_error (element_name (an_element, a_position_table), l_unknown_library)
 			else
 				l_parsed_libraries := parsed_libraries
 				l_parsed_libraries.search (l_uuid.value)
 				if l_parsed_libraries.found then
 						-- Already parsed.
 					Result := l_parsed_libraries.found_item
-					if client /= Void then
-						Result.clients.force_last (client)
-					end
+					a_adapted_library.set_library (Result)
 				else
 					l_name := an_element.attribute_by_name (xml_name)
 					if l_name = Void then
-						l_unknown_universe := ast_factory.new_library ("*unknown*", a_filename, a_system)
-						error_handler.report_eabm_error (element_name (an_element, a_position_table), l_unknown_universe)
+						l_unknown_library := ast_factory.new_library ("*unknown*", a_filename, l_system)
+						a_adapted_library.set_library (l_unknown_library)
+						error_handler.report_eabm_error (element_name (an_element, a_position_table), l_unknown_library)
 					elseif l_name.value.is_empty then
-						l_unknown_universe := ast_factory.new_library ("*unknown*", a_filename, a_system)
-						error_handler.report_eabn_error (attribute_name (l_name, a_position_table), l_unknown_universe)
+						l_unknown_library := ast_factory.new_library ("*unknown*", a_filename, l_system)
+						a_adapted_library.set_library (l_unknown_library)
+						error_handler.report_eabn_error (attribute_name (l_name, a_position_table), l_unknown_library)
 					else
-						Result := ast_factory.new_library (l_name.value, a_filename, a_system)
-						if client /= Void then
-							Result.clients.force_last (client)
-						end
+						Result := ast_factory.new_library (l_name.value, a_filename, l_system)
+						a_adapted_library.set_library (Result)
 						fill_system_config (Result, an_element, a_position_table, Result)
 						l_parsed_libraries.force_last_new (Result, l_uuid.value)
 					end
@@ -1170,7 +1156,6 @@ feature {NONE} -- Element change
 			a_universe_not_void: a_universe /= Void
 			a_state_not_void: a_state /= Void
 		local
-			l_old_client: like client
 			l_libraries: ET_ADAPTED_LIBRARIES
 			l_adapted_library: ET_ECF_ADAPTED_LIBRARY
 			l_library: ET_ECF_LIBRARY
@@ -1204,10 +1189,7 @@ feature {NONE} -- Element change
 						if not l_file.is_open_read then
 							error_handler.report_eabv_error (l_adapted_library.filename, l_filename, a_universe)
 						else
-							l_old_client := l_library_parser.client
-							l_library_parser.set_client (l_adapted_library)
-							l_library_parser.parse_file (l_file)
-							l_library_parser.set_client (l_old_client)
+							l_library_parser.parse_adapted_library (l_file, l_adapted_library)
 							l_file.close
 							l_library := l_library_parser.last_library
 							if l_library = Void then

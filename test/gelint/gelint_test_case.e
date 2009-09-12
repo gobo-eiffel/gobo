@@ -325,7 +325,7 @@ feature {NONE} -- Test ISE Eiffel
 			a_regexp2.compile (a_pattern2)
 			assert ("cannot compile regexp '" + a_pattern2 + "'", a_regexp2.is_compiled)
 			a_regexp2.optimize
-			a_pattern3 := "(Eiffel Compilation Manager)|(Freezing System Changes)|(System Recompiled\.)|(C compilation completed)|(Preparing C compilation\.\.\.)|(Removing Dead Code)|(\s*\(version .*\))|(\s*1 file\(s\) copied\.)"
+			a_pattern3 := "(Eiffel Compilation Manager)|(Freezing System Changes)|(System Recompiled\.)|(C compilation completed)|(Preparing C compilation\.\.\.)|(Removing Dead Code)|(\s*\(version .*\))|(Version .*)|(\s*1 file\(s\) copied\.)"
 			create a_regexp3.make
 			a_regexp3.compile (a_pattern3)
 			assert ("cannot compile regexp '" + a_pattern3 + "'", a_regexp3.is_compiled)
@@ -737,7 +737,8 @@ feature {NONE} -- Output logs
 	output_recognized (a_filename1: STRING; a_directory1: KL_DIRECTORY; a_regexp1: RX_REGULAR_EXPRESSION; a_filename2: STRING): BOOLEAN is
 			-- Is `a_filename1' of the form expected by `a_regexp1' in `a_directory1',
 			-- and then is there no difference between the contents of files named
-			-- `a_filename1' and `a_filename2'?
+			-- `a_filename1' and `a_filename2' (after the environment variables in
+			-- file `a_filename1' have been expanded)?
 		require
 			a_filename1_not_void: a_filename1 /= Void
 			a_filename1_not_empty: a_filename1.count > 0
@@ -748,10 +749,60 @@ feature {NONE} -- Output logs
 			a_filename2_not_empty: a_filename2.count > 0
 		local
 			l_full_filename1: STRING
+			l_file1, l_file2: KI_TEXT_INPUT_FILE
+			done: BOOLEAN
+			l_pattern2: STRING
+			l_regexp2: RX_PCRE_REGULAR_EXPRESSION
 		do
 			if a_regexp1.recognizes (a_filename1) then
+					-- Compile regexp.
+				l_pattern2 := "^Parse error in "
+				create l_regexp2.make
+				l_regexp2.compile (l_pattern2)
+				assert ("cannot compile regexp '" + l_pattern2 + "'", l_regexp2.is_compiled)
+				l_regexp2.optimize
 				l_full_filename1 := file_system.pathname (a_directory1.name, a_filename1)
-				Result := file_system.same_text_files (l_full_filename1, a_filename2)
+				l_file1 := file_system.new_input_file (l_full_filename1)
+				l_file1.open_read
+				if l_file1.is_open_read then
+					l_file2 := file_system.new_input_file (a_filename2)
+					l_file2.open_read
+					if l_file2.is_open_read then
+						Result := True
+						from
+						until
+							done
+						loop
+							l_file1.read_line
+							l_file2.read_line
+							if l_file1.end_of_file then
+								if not l_file2.end_of_file then
+									Result := False
+								end
+								l_file1.close
+								l_file2.close
+								done := True
+							elseif l_file2.end_of_file then
+								Result := False
+								l_file1.close
+								l_file2.close
+								done := True
+							elseif not Execution_environment.interpreted_string (l_file1.last_string).same_string (l_file2.last_string) then
+								if not l_regexp2.matches (l_file2.last_string) or else not Execution_environment.interpreted_string (l_file1.last_string).as_lower.same_string (l_file2.last_string.as_lower) then
+									Result := False
+									l_file1.close
+									l_file2.close
+									done := True
+								end
+							end
+						end
+					else
+						l_file1.close
+						Result := False
+					end
+				else
+					Result := False
+				end
 			end
 		end
 

@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			filename := a_filename
-			create clients.make (10)
 		ensure
 			name_set: name = a_name
 			filename_set: filename = a_filename
@@ -50,10 +49,6 @@ feature -- Access
 
 	library_target: ET_ECF_TARGET
 			-- Library target, if any
-
-	clients: DS_ARRAYED_LIST [ET_ECF_ADAPTED_LIBRARY]
-			-- Clients of the current ECF library;
-			-- Empty if not a ECF library or if no clients found
 
 feature -- Setting
 
@@ -86,7 +81,5 @@ invariant
 	name_not_void: name /= Void
 	name_not_empty: not name.is_empty
 	filename_not_void: filename /= Void
-	clients_not_void: clients /= Void
-	no_void_client: not clients.has_void
 
 end

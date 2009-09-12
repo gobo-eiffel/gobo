@@ -60,8 +60,11 @@
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
+		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
+		<set name="ace_filename" value="compile_ge.xace"/>
+		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
 		<set name="eiffel" value="ge"/>
-		<geant target="xace">
+		<geant target="xace" unless="${ecf_available}=true">
 			<argument name="a_compiler" value="ge"/>
 			<argument name="a_output" value="compile_ge.xace"/>
 		</geant>
@@ -71,7 +74,7 @@
 		<set name="split" value="true"/>
 		<set name="split" value="false" if="${no_split}"/>
 		<set name="gelint_option" value="false" unless="${gelint_option}"/>
-		<gec ace="compile_ge.xace" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}"/>
+		<gec ace="${ace_filename}" finalize="${finalize}" gelint="${gelint_option}" c_compile="false" catcall="error" split="${split}"/>
 		<exec executable=".\${system}.bat" if="${GOBO_OS}=windows"/>
 		<exec executable="./${system}.sh" unless="${GOBO_OS}=windows"/>
 	</target>
@@ -82,8 +85,11 @@
 			Compile in debug mode if ${debug} is defined.
 		</description>
 
+		<available resource="${system_dir}/system.ecf" variable="ecf_available"/>
+		<set name="ace_filename" value="compile_ise.ecf"/>
+		<set name="ace_filename" value="${system_dir}/system.ecf" if="${ecf_available}=true"/>
 		<set name="eiffel" value="ise"/>
-		<geant target="xace">
+		<geant target="xace" unless="${ecf_available}=true">
 			<argument name="a_compiler" value="ise"/>
 			<argument name="a_output" value="compile_ise.ecf"/>
 		</geant>
@@ -95,7 +101,7 @@
 		</delete>
 		<set name="finalize" value="true"/>
 		<set name="finalize" value="false" if="${debug}"/>
-		<ise ace="compile_ise.ecf" system="${system}" finalize="${finalize}" finish_freezing="true"/>
+		<ise ace="${ace_filename}" system="${system}" finalize="${finalize}" finish_freezing="true"/>
 		<set name="codedir" value="W_code" if="${finalize}=false"/>
 		<set name="codedir" value="F_code" if="${finalize}=true"/>
 		<available resource="EIFGENs/${system}/${codedir}/${system}${exe}" variable="file_available"/>
