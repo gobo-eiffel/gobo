@@ -81,7 +81,10 @@ feature -- Access
 		end
 
 	intrinsic_class: ET_NAMED_CLASS
-			-- Class being adapted
+			-- Class being adapted, taking into account only classes declared
+			-- locally in `universe' or imported from universes it depends
+			-- on, but not taking into account overriding classes from other
+			-- universes
 			--
 			-- If the class named `name' is declared locally in `universe',
 			-- then it will be of type ET_CLASS. If it's imported from another

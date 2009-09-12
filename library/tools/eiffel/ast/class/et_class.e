@@ -600,8 +600,8 @@ feature -- Preparsing
 			-- Note that it might represent a class other than the current
 			-- class when there are name clashes. In that case, the current
 			-- class is likely to be found in one of the local ('first_local_override_class',
-			-- 'other_local_override_classes', 'first_local_class', 'other_local_classes')
-			-- or imported classes ('first_imported_class', 'other_imported_classes').
+			-- 'other_local_override_classes', 'first_local_non_override_class',
+			-- 'other_local_non_override_classes').
 		do
 			Result := universe.adapted_class (name)
 		ensure
