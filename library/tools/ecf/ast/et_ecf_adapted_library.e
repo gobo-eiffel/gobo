@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			name_id := a_name
 			filename := a_filename
 			universe := a_universe
-			make_adapted_library (a_name.name, tokens.empty_library)
+			make_adapted_library (a_name.name, tokens.unknown_library)
 		ensure
 			name_id_set: name_id = a_name
 			name_set: name = a_name.name

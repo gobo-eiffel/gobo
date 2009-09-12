@@ -123,7 +123,7 @@ feature {NONE} -- AST factory
 			a_position_table_not_void: a_position_table /= Void
 		do
 			Result := ast_factory.new_system
-			fill_system (Result, an_element, a_position_table, tokens.empty_system)
+			fill_system (Result, an_element, a_position_table, tokens.unknown_system)
 			Result.mount_libraries
 		ensure
 			new_system_not_void: Result /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- AST factory
 			a_position_table_not_void: a_position_table /= Void
 		do
 			Result := ast_factory.new_library
-			fill_library (Result, an_element, a_position_table, tokens.empty_system)
+			fill_library (Result, an_element, a_position_table, tokens.unknown_system)
 			Result.mount_libraries
 		ensure
 			new_library_not_void: Result /= Void

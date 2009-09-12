@@ -3433,20 +3433,12 @@ feature -- System
 			unknown_system_not_void: Result /= Void
 		end
 
-	empty_system: ET_SYSTEM is
-			-- Shared empty Eiffel system
+	unknown_library: ET_LIBRARY is
+			-- Shared unknown Eiffel class library
 		once
-			create Result.make ("*unknown*")
+			create Result.make ("*unknown*", unknown_system)
 		ensure
-			empty_system_not_void: Result /= Void
-		end
-
-	empty_library: ET_LIBRARY is
-			-- Shared empty Eiffel class library
-		once
-			create Result.make ("*unknown*", empty_system)
-		ensure
-			empty_library_not_void: Result /= Void
+			unknown_library_not_void: Result /= Void
 		end
 
 	standard_error_handler: ET_ERROR_HANDLER is

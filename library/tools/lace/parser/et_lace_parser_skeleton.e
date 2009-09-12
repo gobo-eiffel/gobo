@@ -147,7 +147,7 @@ feature {NONE} -- AST factory
 			if last_system /= Void then
 				Result := ast_factory.new_assembly (a_name, a_pathname, last_system)
 			else
-				Result := ast_factory.new_assembly (a_name, a_pathname, tokens.empty_system)
+				Result := ast_factory.new_assembly (a_name, a_pathname, tokens.unknown_system)
 			end
 		ensure
 			assembly_not_void: Result /= Void
@@ -171,7 +171,7 @@ feature {NONE} -- AST factory
 			if last_system /= Void then
 				Result := ast_factory.new_cluster (a_name, a_pathname, last_system)
 			else
-				Result := ast_factory.new_cluster (a_name, a_pathname, tokens.empty_system)
+				Result := ast_factory.new_cluster (a_name, a_pathname, tokens.unknown_system)
 			end
 			named_clusters.force_last (Result, a_name)
 		ensure
@@ -250,7 +250,7 @@ feature {NONE} -- AST factory
 			if last_system /= Void then
 				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, last_system)
 			else
-				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, tokens.empty_system)
+				Result := ast_factory.new_gac_assembly (a_name, an_assembly_name, tokens.unknown_system)
 			end
 			Result.set_assembly_version_id (a_version)
 			Result.set_assembly_culture_id (a_culture)
