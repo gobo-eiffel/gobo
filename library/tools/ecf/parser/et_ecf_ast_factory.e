@@ -59,7 +59,7 @@ feature -- AST factory
 			condition_not_void: Result /= Void
 		end
 
-	new_cluster (a_name, a_pathname: STRING; a_universe: ET_UNIVERSE): ET_ECF_CLUSTER is
+	new_cluster (a_name, a_pathname: STRING; a_universe: ET_ECF_INTERNAL_UNIVERSE): ET_ECF_CLUSTER is
 			-- New cluster
 		require
 			a_name_not_void: a_name /= Void

@@ -44,6 +44,17 @@ feature -- Access
 			-- UUID;
 			-- May be Void when the ECF file described a system
 
+	ecf_namespace: STRING
+			-- ECF namespace
+			--
+			-- May be void if not explicitly specified in ECF file
+
+	ecf_version: UT_VERSION
+			-- ECF version
+			--
+			-- May be void if the ECF namespace has not been explicitly specified
+			-- in the ECF file or if it was not recognized
+
 	targets: ET_ECF_TARGETS
 			-- Targets that appear in the ECF file
 
@@ -78,6 +89,22 @@ feature -- Setting
 			uuid := a_uuid
 		ensure
 			uuid_set: uuid = a_uuid
+		end
+
+	set_ecf_namespace (a_namespace: like ecf_namespace) is
+			-- Set `ecf_namespace' to `a_namespace'.
+		do
+			ecf_namespace := a_namespace
+		ensure
+			ecf_namespace_set: ecf_namespace = a_namespace
+		end
+
+	set_ecf_version (a_version: like ecf_version) is
+			-- Set `ecf_version' to `a_version'.
+		do
+			ecf_version := a_version
+		ensure
+			ecf_version_set: ecf_version = a_version
 		end
 
 invariant

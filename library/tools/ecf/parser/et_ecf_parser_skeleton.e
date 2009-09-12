@@ -1083,6 +1083,7 @@ feature {NONE} -- Element change
 			a_universe_not_void: a_universe /= Void
 		local
 			l_uuid: STRING
+			l_namespace: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_child: XM_ELEMENT
 			l_target: ET_ECF_TARGET
@@ -1092,6 +1093,11 @@ feature {NONE} -- Element change
 			if an_element.has_attribute_by_name (xml_uuid) then
 				l_uuid := an_element.attribute_by_name (xml_uuid).value
 				a_system_config.set_uuid (l_uuid)
+			end
+			if an_element.has_attribute_by_name (xml_xmlns) then
+				l_namespace := an_element.attribute_by_name (xml_xmlns).value
+				a_system_config.set_ecf_namespace (l_namespace)
+				a_system_config.set_ecf_version (ecf_version (l_namespace))
 			end
 			l_cursor := an_element.new_cursor
 			from l_cursor.start until l_cursor.after loop
@@ -1294,6 +1300,30 @@ feature {NONE} -- Implementation
 			a_string_not_void: a_string /= Void
 		do
 			Result := STRING_.same_case_insensitive (a_string, False_constant)
+		end
+
+	ecf_version (a_namespace: STRING): UT_VERSION is
+			-- ECF version corresponding to `a_namespace', or void if not recognized
+		require
+			a_namespace_not_void: a_namespace /= Void
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("[^0-9]-([0-9]+)(-([0-9]+))?(-([0-9]+))?(-([0-9]+))?$")
+			if l_regexp.recognizes (a_namespace) then
+				inspect l_regexp.match_count
+				when 2 then
+					create Result.make_major (l_regexp.captured_substring (1).to_integer)
+				when 4 then
+					create Result.make_major_minor (l_regexp.captured_substring (1).to_integer, l_regexp.captured_substring (3).to_integer)
+				when 6 then
+					create Result.make (l_regexp.captured_substring (1).to_integer, l_regexp.captured_substring (3).to_integer, l_regexp.captured_substring (5).to_integer, 0)
+				when 8 then
+					create Result.make (l_regexp.captured_substring (1).to_integer, l_regexp.captured_substring (3).to_integer, l_regexp.captured_substring (5).to_integer, l_regexp.captured_substring (7).to_integer)
+				else
+				end
+			end
 		end
 
 feature {NONE} -- Constant
