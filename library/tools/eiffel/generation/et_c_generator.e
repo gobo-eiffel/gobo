@@ -2835,7 +2835,7 @@ print ("**** language not recognized: " + l_language_string + "%N")
 					end
 					l_argument_type_set := argument_type_set (i)
 					l_argument_type := l_argument_type_set.static_type
-					if l_argument_type.base_class = current_system.typed_pointer_class then
+					if l_argument_type_set.static_type.base_class.is_typed_pointer_class then
 							-- The argument is declared of type 'TYPED_POINTER [XX]'.
 							-- In that case we use the corresponding pointer (i.e.
 							-- the first attribute of the object).
