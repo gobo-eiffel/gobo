@@ -5,7 +5,7 @@ indexing
 		"ECF XML element names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -121,5 +121,22 @@ feature -- Constants
 
 	xml_version: STRING is "version"
 			-- "version" element name
+
+feature -- Namespaces
+
+	namespace_1_0_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-0-0"
+			-- ECF namespace corresponding to ISE 5.7
+
+	namespace_1_2_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-2-0"
+			-- ECF namespace corresponding to ISE 6.0
+
+	namespace_1_3_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-3-0"
+			-- ECF namespace corresponding to ISE 6.1
+
+	namespace_1_4_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-4-0"
+			-- ECF namespace corresponding to ISE 6.2
+
+	namespace_1_5_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-5-0"
+			-- ECF namespace corresponding to ISE 6.4
 
 end

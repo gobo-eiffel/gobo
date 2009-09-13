@@ -19,10 +19,14 @@ inherit
 			parent, subclusters,
 			full_pathname, full_unix_pathname,
 			is_valid_eiffel_filename,
-			is_valid_directory_name
+			is_valid_directory_name,
+			universe
 		end
 
 	ET_ECF_CONDITIONED
+
+	UT_SHARED_ECF_VERSIONS
+		export {NONE} all end
 
 create
 
@@ -30,18 +34,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_pathname: like pathname; a_universe: ET_UNIVERSE) is
+	make (a_name: like name; a_pathname: like pathname; a_universe: ET_ECF_INTERNAL_UNIVERSE) is
 			-- Create a new cluster.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 			a_universe_not_void: a_universe /= Void
+		local
+			l_ecf_version: UT_VERSION
 		do
 			name := a_name
 			pathname := a_pathname
 			is_relative := (a_pathname = Void)
 			universe := a_universe
 			set_scm_mapping_constraint_enabled (True)
+			l_ecf_version := universe.ecf_version
+			if l_ecf_version /= Void and then l_ecf_version <= ecf_1_4_0 then
+				set_use_obsolete_syntax (True)
+			end
 		ensure
 			name_set: name = a_name
 			pathname_set: pathname = a_pathname
@@ -142,6 +152,9 @@ feature -- Access
 			-- depending on their associated condition, whereas
 			-- some others from parent clusters or targets may be
 			-- included in `file_rules'.
+
+	universe: ET_ECF_INTERNAL_UNIVERSE
+			-- Surrounding universe
 
 feature -- Status report
 
