@@ -122,9 +122,6 @@ feature -- Constants
 	xml_version: STRING is "version"
 			-- "version" element name
 
-	xml_xmlns: STRING is "xmlns"
-			-- "xmlns" attribute name
-
 feature -- Namespaces
 
 	namespace_1_0_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-0-0"

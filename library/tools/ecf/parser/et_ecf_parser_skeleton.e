@@ -1083,7 +1083,8 @@ feature {NONE} -- Element change
 			a_universe_not_void: a_universe /= Void
 		local
 			l_uuid: STRING
-			l_namespace: STRING
+			l_namespace: XM_NAMESPACE
+			l_namespace_uri: STRING
 			l_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			l_child: XM_ELEMENT
 			l_target: ET_ECF_TARGET
@@ -1094,11 +1095,15 @@ feature {NONE} -- Element change
 				l_uuid := an_element.attribute_by_name (xml_uuid).value
 				a_system_config.set_uuid (l_uuid)
 			end
-			if an_element.has_attribute_by_name (xml_xmlns) then
-				l_namespace := an_element.attribute_by_name (xml_xmlns).value
-				a_system_config.set_ecf_namespace (l_namespace)
-				a_system_config.set_ecf_version (ecf_version (l_namespace))
+			l_namespace := an_element.namespace
+			check
+					-- According to the invariant 'has_namespace' in XM_NAMED_NODE,
+					-- the namespace of an element is not void.
+				l_namespace_not_void: l_namespace /= Void
 			end
+			l_namespace_uri := l_namespace.uri
+			a_system_config.set_ecf_namespace (l_namespace_uri)
+			a_system_config.set_ecf_version (ecf_version (l_namespace_uri))
 			l_cursor := an_element.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_child ?= l_cursor.item
@@ -1311,7 +1316,7 @@ feature {NONE} -- Implementation
 		do
 			create l_regexp.make
 			l_regexp.compile ("[^0-9]-([0-9]+)(-([0-9]+))?(-([0-9]+))?(-([0-9]+))?$")
-			if l_regexp.recognizes (a_namespace) then
+			if l_regexp.matches (a_namespace) then
 				inspect l_regexp.match_count
 				when 2 then
 					create Result.make_major (l_regexp.captured_substring (1).to_integer)
