@@ -1337,7 +1337,7 @@ feature -- Parser setting
 		ensure
 			preparse_enabled_set: preparse_enabled = b
 		end
-		
+
 	set_preparse_shallow_mode is
 			-- Set `preparse_shallow_mode' to True.
 		do
@@ -1580,7 +1580,7 @@ feature -- Parsing
 						if stop_requested then
 							l_done := True
 						else
-							classes_do_if_recursive_until (agent parse_class, agent {ET_CLASS}.in_system, stop_request)
+							classes_do_if_recursive_until (agent {ET_CLASS}.process (eiffel_parser), agent {ET_CLASS}.in_system, stop_request)
 							l_parsed_class_count := parsed_class_count
 							l_done := (l_parsed_class_count = l_old_parsed_class_count)
 							l_old_parsed_class_count := l_parsed_class_count
@@ -1850,7 +1850,7 @@ feature -- Compilation
 			-- interruption if `stop_request' is Void.
 		do
 				-- Parse classes.
-			classes_do_if_recursive_until (agent parse_class, agent {ET_CLASS}.is_preparsed, stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (eiffel_parser), agent {ET_CLASS}.is_preparsed, stop_request)
 			check_provider_validity
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Parsed ")
@@ -1869,11 +1869,11 @@ feature -- Compilation
 			-- interruption if `stop_request' is Void.
 		do
 				-- Build ancestors.
-			classes_do_if_recursive_until (agent build_ancestors, agent {ET_CLASS}.is_parsed, stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (ancestor_builder), agent {ET_CLASS}.is_parsed, stop_request)
 				-- Flatten features.
-			classes_do_if_recursive_until (agent flatten_features, agent {ET_CLASS}.ancestors_built, stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (feature_flattener), agent {ET_CLASS}.ancestors_built, stop_request)
 				-- Check interface.
-			classes_do_if_recursive_until (agent check_interface, agent {ET_CLASS}.features_flattened, stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (interface_checker), agent {ET_CLASS}.features_flattened, stop_request)
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Flattened ")
 				error_handler.info_file.put_integer (parsed_class_count)
@@ -1893,75 +1893,11 @@ feature -- Compilation
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
-		do
-				-- Check implementation.
-			classes_do_if_recursive_until (agent check_implementation, agent {ET_CLASS}.interface_checked, stop_request)
-		end
-
-	check_provider_validity is
-			-- Check cluster dependence constraints.
-			--
-			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `stop_request' starts returning True. No
-			-- interruption if `stop_request' is Void.
-		do
-			if cluster_dependence_enabled then
-				classes_do_if_recursive_until (agent check_providers, agent {ET_CLASS}.is_parsed, stop_request)
-			end
-		end
-
-	parse_class (a_class: ET_CLASS) is
-			-- Parse `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			a_class.process (eiffel_parser)
-		end
-
-	check_providers (a_class: ET_CLASS) is
-			-- Check cluster dependence constraints of the providers of `a_class'
-		require
-			a_class_not_void: a_class /= Void
-		do
-			a_class.process (provider_checker)
-		end
-
-	build_ancestors (a_class: ET_CLASS) is
-			-- Build ancestors of `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			a_class.process (ancestor_builder)
-		end
-
-	flatten_features (a_class: ET_CLASS) is
-			-- Flatten features of `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			a_class.process (feature_flattener)
-		end
-
-	check_interface (a_class: ET_CLASS) is
-			-- Check interface of `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			a_class.process (interface_checker)
-		end
-
-	check_implementation (a_class: ET_CLASS) is
-			-- Check implementation of `a_class'.
-			-- `flat_mode' means that the inherited features are checked
-			-- again in the descendant classes.
-			-- `flat_dbc_mode' means that the inherited pre- and postconditions
-			-- are checked again in the redeclaration of features.
-		require
-			a_class_not_void: a_class /= Void
 		local
 			l_checker: ET_IMPLEMENTATION_CHECKER
 			l_processor: ET_AST_PROCESSOR
 		do
+				-- Check implementation.
 			if flat_mode then
 				l_processor := flat_implementation_checker
 			else
@@ -1973,7 +1909,19 @@ feature -- Compilation
 				l_checker.set_flat_dbc_mode (flat_dbc_mode)
 				l_checker.set_suppliers_enabled (suppliers_enabled)
 			end
-			a_class.process (l_processor)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, stop_request)
+		end
+
+	check_provider_validity is
+			-- Check cluster dependence constraints.
+			--
+			-- Note that this operation will be interrupted if a stop request
+			-- is received, i.e. `stop_request' starts returning True. No
+			-- interruption if `stop_request' is Void.
+		do
+			if cluster_dependence_enabled then
+				classes_do_if_recursive_until (agent {ET_CLASS}.process (provider_checker), agent {ET_CLASS}.is_parsed, stop_request)
+			end
 		end
 
 feature -- Processors
@@ -2039,11 +1987,17 @@ feature -- Processors
 				create {ET_INTERFACE_CHECKER} interface_checker.make
 			end
 			if implementation_checker = null_processor then
-				create {ET_IMPLEMENTATION_CHECKER} implementation_checker.make
+				create l_implementation_checker.make
+				l_implementation_checker.set_flat_mode (False)
+				l_implementation_checker.set_flat_dbc_mode (flat_dbc_mode)
+				l_implementation_checker.set_suppliers_enabled (suppliers_enabled)
+				implementation_checker := l_implementation_checker
 			end
 			if flat_implementation_checker = null_processor then
 				create l_implementation_checker.make
 				l_implementation_checker.set_flat_mode (True)
+				l_implementation_checker.set_flat_dbc_mode (flat_dbc_mode)
+				l_implementation_checker.set_suppliers_enabled (suppliers_enabled)
 				flat_implementation_checker := l_implementation_checker
 			end
 		end
