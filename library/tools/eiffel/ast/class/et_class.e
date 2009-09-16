@@ -1828,19 +1828,6 @@ feature -- Actions
 			a_action.call ([])
 		end
 
-	increment_counter (a_counter: UT_COUNTER) is
-			-- Increment `a_counter'.
-			--
-			-- Note: Useful when we want to pass it as an agent which
-			-- requires an open operand of type ET_CLASS.
-		require
-			a_counter_not_void: a_counter /= Void
-		do
-			a_counter.increment
-		ensure
-			increased: a_counter.item = old (a_counter.item) + 1
-		end
-
 feature {NONE} -- Constants
 
 	initial_descendants_capacity: INTEGER is

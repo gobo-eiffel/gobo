@@ -38,6 +38,9 @@ inherit
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
+	KL_IMPORTED_AGENT_ROUTINES
+			export {NONE} all end
+
 	KL_SHARED_FILE_SYSTEM
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -531,7 +534,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_local (agent {ET_CLASS}.increment_counter (l_counter))
+			classes_do_local (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment))
 			Result := l_counter.item
 		ensure
 			class_count_not_negative: Result >= 0
@@ -544,7 +547,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_recursive (agent {ET_CLASS}.increment_counter (l_counter))
+			classes_do_recursive (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment))
 			Result := l_counter.item
 		ensure
 			class_count_not_negative: Result >= 0
@@ -565,7 +568,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_if_local (agent {ET_CLASS}.increment_counter (l_counter), agent {ET_CLASS}.is_parsed)
+			classes_do_if_local (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment), agent {ET_CLASS}.is_parsed)
 			Result := l_counter.item
 		ensure
 			parsed_class_count_not_negative: Result >= 0
@@ -578,7 +581,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_if_recursive (agent {ET_CLASS}.increment_counter (l_counter), agent {ET_CLASS}.is_parsed)
+			classes_do_if_recursive (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment), agent {ET_CLASS}.is_parsed)
 			Result := l_counter.item
 		ensure
 			parsed_class_count_not_negative: Result >= 0
