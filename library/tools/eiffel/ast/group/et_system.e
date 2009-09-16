@@ -1127,15 +1127,7 @@ feature -- Compilation
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
 		do
-			adapted_classes_do_recursive_until (agent check_adapted_class, stop_request)
-		end
-
-	check_adapted_class (a_class: ET_ADAPTED_CLASS) is
-			-- Check whether `a_class' represent an invalid class name clash or invalid class overriding.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			a_class.process (adapted_class_checker)
+			adapted_classes_do_recursive_until (agent {ET_ADAPTED_CLASS}.process (adapted_class_checker), stop_request)
 		end
 
 feature -- Processors
