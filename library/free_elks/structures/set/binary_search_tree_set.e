@@ -268,14 +268,34 @@ feature -- Removal
 		do
 			t := tree
 			if t /= Void then
-				t := t.pruned (v, t.parent)
+				tree := t.pruned (v, t.parent)
 			end
 		end
 
 	remove
 			-- Remove current item.
+		local
+			l_item: like item
+			l_next_item: detachable like item
 		do
-			prune (item)
+			if attached tree as t then
+					-- Let's first get the item we want to remove.
+				l_item := item
+					-- Let's move the cursor to the next item
+				forth
+					-- Store the new item if not after, we will
+					-- use it later to update `active_node'
+				if not after then
+					l_next_item := item
+				end
+					-- Remove item from tree
+				tree := t.pruned (l_item, t.parent)
+					-- If there is still a tree and there was a next item,
+					-- find it in the tree, it will become our new `active_node'.
+				if l_next_item /= Void and attached tree as t2 then
+					active_node := t2.tree_item (l_next_item)
+				end
+			end
 		end
 
 feature -- Duplication

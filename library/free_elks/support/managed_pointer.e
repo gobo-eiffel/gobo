@@ -28,7 +28,7 @@ inherit
 		end
 
 create
-	make, make_from_array, make_from_pointer, share_from_pointer
+	make, make_from_array, make_from_pointer, share_from_pointer, own_from_pointer
 
 feature {NONE} -- Initialization
 
@@ -97,6 +97,22 @@ feature {NONE} -- Initialization
 			item_set: item = a_ptr
 			count_set: count = n
 			is_shared_set: is_shared
+		end
+
+	own_from_pointer (a_ptr: POINTER; n: INTEGER)
+			-- Use directly `a_ptr' with count `n' to hold current data and free
+			-- its associated C memory when Current is collected.
+		require
+			a_ptr_valid: a_ptr = default_pointer implies n = 0
+			n_non_negative: n >= 0
+		do
+			item := a_ptr
+			count := n
+			is_shared := False
+		ensure
+			item_set: item = a_ptr
+			count_set: count = n
+			is_shared_set: not is_shared
 		end
 
 feature -- Settings

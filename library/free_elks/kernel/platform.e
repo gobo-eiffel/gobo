@@ -46,6 +46,12 @@ feature -- Platform
 			"built_in static"
 		end
 
+	is_vxworks: BOOLEAN
+			-- Are we running on VxWorks?
+		external
+			"built_in static"
+		end
+
 	is_little_endian: BOOLEAN
 			-- Is current platform a little endian one?
 		local

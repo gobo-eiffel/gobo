@@ -33,6 +33,9 @@ inherit
 create
 	default_create
 
+create {CLASS_NAME_TRANSLATIONS}
+	make
+
 feature -- Initialization
 
 	default_create

@@ -133,6 +133,22 @@ feature {NONE} -- Implementation: status report
 					loop
 						i := i + 1
 					end
+				elseif s.substring_index (attached_keyword, 1) = 1 then
+					from
+						i := attached_keyword.count + 1
+					until
+						i = nb or not s.item (i).is_space
+					loop
+						i := i + 1
+					end
+				elseif s.substring_index (detachable_keyword, 1) = 1 then
+					from
+						i := detachable_keyword.count + 1
+					until
+						i = nb or not s.item (i).is_space
+					loop
+						i := i + 1
+					end
 				else
 					i := 1
 				end
@@ -222,5 +238,7 @@ feature {NONE} -- ECMA mapping helper
 
 	attached_mark: CHARACTER = '!'
 	detachable_mark: CHARACTER = '?'
+	attached_keyword: STRING = "attached"
+	detachable_keyword: STRING = "detachable"
 			-- Symbols use for attachment marks.
 end

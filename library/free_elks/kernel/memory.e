@@ -222,16 +222,13 @@ feature -- Status report
 				if l_item /= Void then
 					dtype := internal_.dynamic_type (l_item)
 					Result.search (dtype)
-					if Result.found then
-						l_list := Result.found_item
-					end
-					if l_list = Void then
-						create l_list.make_filled (l_memory_count_map.item (dtype))
-						l_list.start
+					if Result.found and then attached Result.found_item as l_found_item then
+						l_list := l_found_item
+					else
+						create l_list.make (l_memory_count_map.item (dtype))
 						Result.put (l_list, dtype)
 					end
-					l_list.put_i_th (l_item, l_list.index)
-					l_list.forth
+					l_list.extend (l_item)
 				end
 				i := i + 1
 			end

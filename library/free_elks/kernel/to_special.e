@@ -28,6 +28,19 @@ feature {NONE} -- Initialization
 			area_allocated: area /= Void and then area.count = n
 		end
 
+	make_filled_area (a_default_value: T; n: INTEGER)
+			-- Creates a special object for `n' entries.
+		require
+			non_negative_argument: n >= 0
+		do
+			create area.make_filled (a_default_value, n)
+		ensure
+			area_allocated: area /= Void
+			capacity_set: area.capacity = n
+			count_set: area.count = n
+			area_filled: area.filled_with (a_default_value, 0, n - 1)
+		end
+
 feature -- Access
 
 	item alias "[]", at alias "@" (i: INTEGER): T assign put

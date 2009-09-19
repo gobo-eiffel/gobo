@@ -1628,8 +1628,6 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_any_generating_type_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
-			when builtin_any_generating_type2 then
-				print_builtin_any_generating_type2_body (a_feature)
 			when builtin_any_generator then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -1859,6 +1857,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_platform_is_vms_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_platform_is_vxworks then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_platform_is_vxworks_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			when builtin_platform_is_windows then
@@ -2331,6 +2335,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				print_builtin_special_base_address_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
+			when builtin_special_capacity then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_special_capacity_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
 			when builtin_special_count then
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
@@ -2451,6 +2461,12 @@ print ("**** language not recognized: " + l_language_string + "%N")
 				fill_call_formal_arguments (a_feature)
 				print_indentation_assign_to_result
 				print_builtin_type_type_id_call (current_feature, current_type, False)
+				print_semicolon_newline
+				call_operands.wipe_out
+			when builtin_type_runtime_name then
+				fill_call_formal_arguments (a_feature)
+				print_indentation_assign_to_result
+				print_builtin_type_runtime_name_call (current_feature, current_type, False)
 				print_semicolon_newline
 				call_operands.wipe_out
 			else
@@ -6617,6 +6633,30 @@ feature {NONE} -- Expression generation
 				current_file.put_string (c_arrow)
 			end
 			print_attribute_routine_function_name (a_target_type, current_file)
+		end
+
+	print_attribute_special_capacity_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print access to 'capacity' pseudo attribute of class SPECIAL applied to object `a_target' of type `a_target_type'.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+		require
+			a_target_not_void: a_target /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			if a_target_type.is_expanded then
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
+				current_file.put_character ('.')
+			else
+				current_file.put_character ('(')
+				print_type_cast (a_target_type, current_file)
+				current_file.put_character ('(')
+				print_non_void_expression (a_target, a_check_void_target)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+			end
+			print_attribute_special_capacity_name (a_target_type, current_file)
 		end
 
 	print_attribute_special_count_access (a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
@@ -12101,6 +12141,8 @@ feature {NONE} -- Query call generation
 				print_builtin_platform_is_unix_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_vms then
 				print_builtin_platform_is_vms_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_platform_is_vxworks then
+				print_builtin_platform_is_vxworks_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_is_windows then
 				print_builtin_platform_is_windows_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_platform_pointer_bytes then
@@ -12337,6 +12379,8 @@ feature {NONE} -- Query call generation
 			inspect a_feature.builtin_code \\ builtin_capacity
 			when builtin_special_base_address then
 				print_builtin_special_base_address_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_special_capacity then
+				print_builtin_special_capacity_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_special_count then
 				print_builtin_special_count_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_special_element_size then
@@ -12399,6 +12443,8 @@ feature {NONE} -- Query call generation
 				print_builtin_type_name_call (a_feature, a_target_type, a_check_void_target)
 			when builtin_type_type_id then
 				print_builtin_type_type_id_call (a_feature, a_target_type, a_check_void_target)
+			when builtin_type_runtime_name then
+				print_builtin_type_runtime_name_call (a_feature, a_target_type, a_check_void_target)
 			else
 				print_non_inlined_query_call (a_feature, a_target_type, a_check_void_target)
 			end
@@ -15345,43 +15391,6 @@ feature {NONE} -- Built-in feature generation
 			current_file.put_character (')')
 		end
 
-	print_builtin_any_generating_type2_body (a_feature: ET_EXTERNAL_ROUTINE) is
-			-- Print to `current_file' the body of `a_feature' corresponding
-			-- to built-in feature 'ANY.generating_type'.
-		require
-			a_feature_not_void: a_feature /= Void
-			valid_feature: current_feature.static_feature = a_feature
-		local
-			l_meta_type: ET_DYNAMIC_TYPE
-		do
--- TODO: this built-in routine could be inlined.
-			l_meta_type := current_type.meta_type
-			if l_meta_type = Void then
-					-- Internal error: the meta type of current type should have been
-					-- computed when analyzing the dynamic type sets of `a_feature'.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				print_indentation
-				print_result_name (current_file)
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('(')
-				print_type_declaration (l_meta_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character ('&')
-				current_file.put_character ('(')
-				current_file.put_string (c_ge_types)
-				current_file.put_character ('[')
-				current_file.put_integer (current_type.id)
-				current_file.put_character (']')
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-			end
-		end
-
 	print_builtin_any_generator_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'ANY.generator'.
@@ -16907,6 +16916,20 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			call_operands_not_empty: not call_operands.is_empty
 		do
 			current_file.put_string (c_eif_is_vms)
+		end
+
+	print_builtin_platform_is_vxworks_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'PLATFORM.is_vxworks'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			current_file.put_string (c_eif_is_vxworks)
 		end
 
 	print_builtin_platform_is_windows_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
@@ -20129,6 +20152,20 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			end
 		end
 
+	print_builtin_special_capacity_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'SPECIAL.capacity'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		do
+			print_attribute_special_capacity_access (call_operands.first, a_target_type, a_check_void_target)
+		end
+
 	print_builtin_special_count_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
 			-- Print to `current_file' a call (static binding) to `a_feature'
 			-- corresponding to built-in feature 'SPECIAL.count'.
@@ -21321,6 +21358,48 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			current_file.put_character (')')
 			current_file.put_string (c_arrow)
 			current_file.put_string (c_type_id)
+		end
+
+	print_builtin_type_runtime_name_call (a_feature: ET_DYNAMIC_FEATURE; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN) is
+			-- Print to `current_file' a call (static binding) to `a_feature'
+			-- corresponding to built-in feature 'TYPE.runtime_name'.
+			-- `a_target_type' is the dynamic type of the target.
+			-- `a_check_void_target' means that we need to check whether the target is Void or not.
+			-- Operands can be found in `call_operands'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_type_not_void: a_target_type /= Void
+			call_operands_not_empty: not call_operands.is_empty
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_string: STRING
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			l_result_type_set := a_feature.result_type_set
+			l_parameters := a_target_type.base_type.actual_parameters
+			if l_parameters = Void or else l_parameters.count < 1 then
+					-- Internal error: we should have already checked by now
+					-- that class TYPE has a generic parameter.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_result_type_set = Void then
+					-- Internal error: `a_feature' is a query.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				l_string := l_parameters.type (1).unaliased_to_text
+				if l_result_type_set.static_type = current_dynamic_system.string_32_type then
+					current_file.put_string (c_ge_ms32)
+				else
+					current_file.put_string (c_ge_ms8)
+				end
+				current_file.put_character ('(')
+				print_escaped_string (l_string)
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_integer (l_string.count)
+				current_file.put_character (')')
+			end
 		end
 
 feature {NONE} -- C function generation
@@ -24330,6 +24409,13 @@ feature {NONE} -- Type generation
 			a_file.put_string ("EIF_REFERENCE)")
 			a_file.put_character (';')
 			a_file.put_new_line
+				-- Attribute `runtime_name'.
+			a_file.put_character ('%T')
+			a_file.put_string ("T0*")
+			a_file.put_character (' ')
+			a_file.put_string ("a1")
+			a_file.put_character (';')
+			a_file.put_new_line
 			a_file.put_character ('}')
 			a_file.put_character (' ')
 			a_file.put_string (c_eif_type)
@@ -24422,6 +24508,10 @@ feature {NONE} -- Type generation
 				else
 					current_file.put_integer (0)
 				end
+					-- Attribute `runtime_name'.
+				current_file.put_character (',')
+				current_file.put_character (' ')
+				current_file.put_integer (0)
 				current_file.put_character ('}')
 				if i /= nb then
 					current_file.put_character (',')
@@ -24929,6 +25019,31 @@ feature {NONE} -- Feature name generation
 -- TODO: long names
 				short_names := True
 				print_attribute_special_item_name (a_type, a_file)
+				short_names := False
+			end
+		end
+
+	print_attribute_special_capacity_name (a_type: ET_DYNAMIC_TYPE; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print to `a_file' the name of the 'capacity' pseudo attribute for 'SPECIAL' objects of type `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			if short_names then
+				if a_type.attribute_count < 1 then
+						-- Internal error: class "SPECIAL" should have at least the
+						-- feature 'count' as first feature.
+						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					print_attribute_name (a_type.queries.first, a_type, a_file)
+				end
+			else
+-- TODO: long names
+				short_names := True
+				print_attribute_special_capacity_name (a_type, a_file)
 				short_names := False
 			end
 		end
@@ -27451,6 +27566,7 @@ feature {NONE} -- Constants
 	c_eif_is_mac: STRING is "EIF_IS_MAC"
 	c_eif_is_unix: STRING is "EIF_IS_UNIX"
 	c_eif_is_vms: STRING is "EIF_IS_VMS"
+	c_eif_is_vxworks: STRING is "EIF_IS_VXWORKS"
 	c_eif_is_windows: STRING is "EIF_IS_WINDOWS"
 	c_eif_mem_free: STRING is "eif_mem_free"
 	c_eif_natural: STRING is "EIF_NATURAL"

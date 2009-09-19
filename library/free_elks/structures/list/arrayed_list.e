@@ -24,16 +24,17 @@ class ARRAYED_LIST [G] inherit
 			put as put_i_th,
 			count as array_count,
 			index_set as array_index_set,
+			make_filled as array_make_filled,
 			bag_put as put,
 			resize as array_resize
 		export
 			{NONE}
 				all
 			{ARRAYED_LIST}
-				array_make, subcopy, area, all_default, upper, lower,
+				array_make, subcopy, area, upper, lower,
 				same_items, subarray
 			{ANY}
-				capacity
+				capacity, all_default
 		undefine
 			linear_representation, prunable, put, is_equal,
 			prune, occurrences, extendible, fill
@@ -56,6 +57,13 @@ class ARRAYED_LIST [G] inherit
 			append, valid_index
 		select
 			count, index_set, i_th, at
+		end
+
+	MISMATCH_CORRECTOR
+		undefine
+			is_equal, copy
+		redefine
+			correct_mismatch
 		end
 
 create
@@ -172,6 +180,18 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		end
+
+	to_array: ARRAY [G]
+			-- Share content to be used as an ARRAY.
+			-- Note that although the content is shared, it might
+			-- not be shared when a resizing occur in either ARRAY or Current.
+		do
+			create Result.make_from_special (area, 1, count)
+		ensure
+			to_array_attached: Result /= Void
+			array_lower_set: Result.lower = 1
+			array_upper_set: Result.upper = count
 		end
 
 feature -- Measurement
@@ -571,6 +591,13 @@ feature -- Transformation
 			old_item := item
 			replace (area.item (i - 1))
 			area.put (old_item, i - 1)
+		end
+
+feature -- Retrieval
+
+	correct_mismatch
+		do
+			Precursor
 		end
 
 feature -- Duplication

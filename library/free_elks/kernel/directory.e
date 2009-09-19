@@ -47,6 +47,71 @@ feature -- Initialization
 			file_mkdir ($external_name)
 		end
 
+	recursive_create_dir
+			-- Create the directory `a_directory_name' recursively.
+			--
+			-- Ex: if /temp/ exists but not /temp/test, calling
+			--     `recursive_create_directory ("/temp/test/toto")'
+			--     will create /temp/test and then /temp/test/toto.
+		require
+			physical_not_exists: not exists
+		local
+			l_directory: DIRECTORY
+			l_new_directory_name: DIRECTORY_NAME
+			l_directories_to_build: ARRAYED_LIST [STRING]
+			l_built_directory: STRING
+			l_loc_directory_name: STRING
+			l_separator_index: INTEGER
+			l_io_exception: IO_FAILURE
+		do
+			create l_directories_to_build.make (10)
+
+				-- Find the first existing directory in the path name
+			from
+				l_built_directory := name.twin
+				l_separator_index := l_built_directory.count
+				create l_directory.make (l_built_directory)
+			until
+				l_directory.exists
+			loop
+				l_separator_index := l_built_directory.last_index_of (Operating_environment.Directory_separator, l_built_directory.count)
+				if l_separator_index = 0 then
+					create l_io_exception
+					l_io_exception.set_message ("Invalid directory: " + l_built_directory)
+					l_io_exception.raise
+				end
+				l_directories_to_build.extend (l_built_directory.substring (l_separator_index + 1, l_built_directory.count))
+				if l_built_directory @ (l_separator_index - 1) = ':' then
+					l_loc_directory_name := l_built_directory.substring (1, l_separator_index)
+				else
+					l_loc_directory_name := l_built_directory.substring (1, l_separator_index - 1)
+				end
+				l_built_directory := l_built_directory.substring (1, l_separator_index - 1)
+				create l_directory.make (l_loc_directory_name)
+			end
+
+				-- Recursively create the directory.
+			from
+				l_directories_to_build.finish
+				create l_new_directory_name.make_from_string (l_built_directory)
+			until
+				l_directories_to_build.before
+			loop
+				l_new_directory_name.extend (l_directories_to_build.item)
+				l_directories_to_build.back
+
+				create l_directory.make (l_new_directory_name)
+				l_directory.create_dir
+				if not l_directory.exists then
+					create l_io_exception
+					l_io_exception.set_message ("Cannot create: " + l_new_directory_name)
+					l_io_exception.raise
+				end
+			end
+		ensure
+			physical_exists: exists
+		end
+
 feature -- Access
 
 	readentry
@@ -324,7 +389,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		
+
 			-- Delete all files located in directory and subdirectories.
 			--
 			-- `action' is called each time `file_number' files has
@@ -414,7 +479,7 @@ feature -- Removal
 			action: PROCEDURE [ANY, TUPLE]
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
-		
+
 			-- Delete directory and all content contained within.
 			--
 			-- `action' is called each time `file_number' files has

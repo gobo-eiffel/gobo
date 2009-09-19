@@ -9,6 +9,9 @@ note
 deferred class
 	ABSTRACT_SPECIAL
 
+inherit
+	DEBUG_OUTPUT
+
 feature -- Measurement
 
 	count: INTEGER
@@ -16,6 +19,16 @@ feature -- Measurement
 		deferred
 		ensure
 			count_non_negative: Result >= 0
+		end
+
+feature -- Output
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make (12)
+			Result.append_string ("count=")
+			Result.append_integer (count)
 		end
 
 end

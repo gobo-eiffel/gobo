@@ -145,28 +145,23 @@ feature -- Input
 			done: BOOLEAN
 			l: like last_string
 			l_old_count, l_new_count: INTEGER
-			l_buffer: C_STRING
+			l_buffer: like read_data_buffer
 		do
-			if last_string = Void then
-				create_last_string (0)
-			end
 			l := last_string
 			l_buffer := read_data_buffer
-			if l /= Void and l_buffer /= Void then
-				from
-					l.clear_all
-					str_cap := l_buffer.capacity
-				until
-					done
-				loop
-					read := console_readline (file_pointer, l_buffer.item, str_cap, 0)
-					l_old_count := l.count
-					l_new_count := l_old_count + read.min (str_cap)
-					done := read <= str_cap
-					l.grow (l_new_count)
-					l.set_count (l_new_count)
-					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
-				end
+			from
+				l.clear_all
+				str_cap := l_buffer.capacity
+			until
+				done
+			loop
+				read := console_readline (file_pointer, l_buffer.item, str_cap, 0)
+				l_old_count := l.count
+				l_new_count := l_old_count + read.min (str_cap)
+				done := read <= str_cap
+				l.grow (l_new_count)
+				l.set_count (l_new_count)
+				l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
 			end
 		end
 
@@ -182,23 +177,17 @@ feature -- Input
 			-- <Precursor>
 		local
 			new_count: INTEGER
-			l_buffer: C_STRING
+			l_buffer: like read_data_buffer
 			l_str: like last_string
 		do
 			l_str := last_string
-			if l_str = Void then
-				create_last_string (nb_char)
-				l_str := last_string
-			end
 			l_buffer := read_data_buffer
-			if l_buffer /= Void and l_str /= Void then
-				l_buffer.set_count (nb_char)
-				new_count := console_readstream (file_pointer, l_buffer.item, nb_char)
-				l_buffer.set_count (new_count)
-				l_str.grow (new_count)
-				l_str.set_count (new_count)
-				l_buffer.read_string_into (l_str)
-			end
+			l_buffer.set_count (nb_char)
+			new_count := console_readstream (file_pointer, l_buffer.item, nb_char)
+			l_buffer.set_count (new_count)
+			l_str.grow (new_count)
+			l_str.set_count (new_count)
+			l_buffer.read_string_into (l_str)
 		end
 
 	read_word, readword
@@ -216,28 +205,23 @@ feature -- Input
 			done: BOOLEAN
 			l: like last_string
 			l_old_count, l_new_count: INTEGER
-			l_buffer: C_STRING
+			l_buffer: like read_data_buffer
 		do
-			if last_string = Void then
-				create_last_string (0)
-			end
 			l := last_string
 			l_buffer := read_data_buffer
-			if l /= Void and then l_buffer /= Void then
-				from
-					l.clear_all
-					str_cap := l_buffer.capacity
-				until
-					done
-				loop
-					read := console_readword (file_pointer, l_buffer.item, str_cap, 0)
-					l_old_count := l.count
-					l_new_count := l_old_count + read.min (str_cap)
-					done := read <= str_cap
-					l.grow (l_new_count)
-					l.set_count (l_new_count)
-					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
-				end
+			from
+				l.clear_all
+				str_cap := l_buffer.capacity
+			until
+				done
+			loop
+				read := console_readword (file_pointer, l_buffer.item, str_cap, 0)
+				l_old_count := l.count
+				l_new_count := l_old_count + read.min (str_cap)
+				done := read <= str_cap
+				l.grow (l_new_count)
+				l.set_count (l_new_count)
+				l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
 			end
 			separator := console_separator (file_pointer) -- Look ahead
 		end

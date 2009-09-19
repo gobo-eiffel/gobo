@@ -44,6 +44,7 @@ feature -- Initialization
 			set_defaults (w)
 			decimals := d
 			decimal := '.'
+			trailing_zeros_shown := True
 		ensure
 			blank_fill: fill_character = ' '
 			show_sign_negative: show_sign_negative
@@ -53,6 +54,7 @@ feature -- Initialization
 			leading_sign: leading_sign
 			decimals_set: decimals = d
 			decimal_point: decimal = '.'
+			trailing_zeros_shown: trailing_zeros_shown
 		end
 
 feature -- Access
@@ -65,6 +67,9 @@ feature -- Access
 
 	zero_not_shown: BOOLEAN
 			-- Show 0.5 as .5 or 0.5?
+
+	trailing_zeros_shown: BOOLEAN
+			-- Show 0.5000 as 0.5 or 0.5000?
 
 	decimal: CHARACTER
 			-- What is used for the decimal
@@ -148,12 +153,28 @@ feature -- Status setting
 			not zero_not_shown
 		end
 
+	show_trailing_zeros
+			-- Show 0.5000 as 0.5000.
+		do
+			trailing_zeros_shown := True
+		ensure
+			trailing_zeros_shown_set: trailing_zeros_shown
+		end
+
 	hide_zero
 			-- Show 0.5 as .5 .
 		do
 			zero_not_shown := True
 		ensure
 			zero_not_shown
+		end
+
+	hide_trailing_zeros
+			-- Show 0.5000 as 0.5, and 0.0000 as 0.0.
+		do
+			trailing_zeros_shown := False
+		ensure
+			trailing_zeros_shown_set: not trailing_zeros_shown
 		end
 
 feature -- Conversion
@@ -215,6 +236,8 @@ feature {NONE} -- Implementation
 
 	pad_fraction (f: DOUBLE): STRING
 			-- Stretch or shrink `f' to length `decimals' .
+		local
+			i: INTEGER
 		do
 			Result := f.out
 			Result.remove_tail (1)
@@ -226,6 +249,17 @@ feature {NONE} -- Implementation
 					Result.count = decimals
 				loop
 					Result.precede ('0')
+				end
+			end
+			if not trailing_zeros_shown then
+					-- Remove all but one trailing zero from the fraction part
+				from
+					i := Result.count
+				until
+					i = 1 or else Result.item (i) /= '0'
+				loop
+					Result.remove (i)
+					i := i - 1
 				end
 			end
 		ensure

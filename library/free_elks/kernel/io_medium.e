@@ -100,7 +100,7 @@ feature -- Status report
 	last_character: CHARACTER
 			-- Last character read by `read_character'
 
-	last_string: detachable STRING
+	last_string: STRING
 			-- Last string read
 
 	last_integer: INTEGER
@@ -503,7 +503,7 @@ feature -- Obsolete
 			Result := last_character
 		end
 
-	laststring: detachable STRING
+	laststring: like last_string
 			-- Last string read
 		do
 			Result := last_string

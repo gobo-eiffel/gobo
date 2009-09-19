@@ -21,8 +21,7 @@ feature -- Initialization
 	make
 			-- Create stream object with a default_size of 100 bytes
 		do
-			buffer_size := 200
-			create_c_buffer
+			make_with_size (200)
 		end
 
 	make_with_size (n: INTEGER)
@@ -30,6 +29,7 @@ feature -- Initialization
 		do
 			buffer_size := n
 			create_c_buffer
+			create last_string.make_empty
 		end
 
 feature -- Status report
