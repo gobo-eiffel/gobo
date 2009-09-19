@@ -14,9 +14,13 @@ frozen class
 
 inherit
 	ABSTRACT_SPECIAL
+		redefine
+			debug_output
+		end
 
 create
 	make,
+	make_filled,
 	make_from_native_array
 
 feature {NONE} -- Initialization
@@ -29,6 +33,19 @@ feature {NONE} -- Initialization
 			"built_in"
 		ensure
 			area_allocated: count = n
+		end
+
+	make_filled (v: T; n: INTEGER)
+			-- Create a special object for `n' entries initialized with `v'.
+		require
+			non_negative_argument: n >= 0
+		do
+			make (n)
+			fill_with (v, 0, n - 1)
+		ensure
+			capacity_set: capacity = n
+			count_set: count = n
+			filled: -- For every `i' in `0' .. `n - 1', `item' (`i') = `v'
 		end
 
 	make_from_native_array (an_array: like native_array)
@@ -136,8 +153,8 @@ feature -- Measurement
 
 	capacity: INTEGER
 			-- Count of special area
-		do
-			Result := count
+		external
+			"built_in"
 		ensure
 			capacity_non_negative: Result >= 0
 		end
@@ -176,6 +193,28 @@ feature -- Status report
 			end
 		ensure
 			valid_on_empty_area: (end_index < start_index) implies Result
+		end
+
+	filled_with (v: T; start_index, end_index: INTEGER): BOOLEAN
+			-- Are all items between index `start_index' and `end_index'
+			-- set to `v'?
+			-- (Use reference equality for comparison.)			
+		require
+			start_index_non_negative: start_index >= 0
+			start_index_not_too_big: start_index <= end_index + 1
+			end_index_valid: end_index < count
+		local
+			i: INTEGER
+		do
+			from
+				Result := True
+				i := start_index
+			until
+				i > end_index or else not Result
+			loop
+				Result := item (i) = v
+				i := i + 1
+			end
 		end
 
 	same_items (other: like Current; other_index, current_index, n: INTEGER): BOOLEAN
@@ -428,6 +467,32 @@ feature -- Resizing
 			preserved: Result.same_items (old twin, 0, 0, old count)
 		end
 
+	aliased_resized_area_with_default (a_default_value: T; n: INTEGER): like Current
+			-- Try to resize `Current' with a count of `n', if not
+			-- possible a new copy. Non yet initialized entries are set to `a_default_value'.
+		require
+			n_non_negative: n > count
+		local
+			i: INTEGER
+			l_old_count: INTEGER
+		do
+			l_old_count := count
+			Result := aliased_resized_area (n)
+			from
+				i := l_old_count
+			until
+				i = n
+			loop
+				Result.put (a_default_value, i)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+			new_count: Result.count = n
+			new_capacity: Result.capacity = n
+			preserved: Result.same_items (old twin, 0, 0, old count)
+		end
+
 feature -- Removal
 
 	clear_all
@@ -478,6 +543,16 @@ feature -- Removal
 			end
 		ensure
 			filled: -- For every `i' in `start_index' .. `end_index', `is_default' (`i')
+		end
+
+feature -- Output
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := Precursor
+			Result.append_string (", capacity=")
+			Result.append_integer (capacity)
 		end
 
 feature {NONE} -- Implementation

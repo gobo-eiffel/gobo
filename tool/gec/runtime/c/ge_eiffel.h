@@ -59,6 +59,14 @@
 #else
 #define EIF_IS_MAC EIF_FALSE
 #endif
+/* VxWorks definition */
+#ifdef EIF_VXWORKS
+#define EIF_IS_VXWORKS EIF_TRUE
+#undef EIF_IS_UNIX
+#define EIF_IS_UNIX EIF_FALSE
+#else
+#define EIF_IS_VXWORKS EIF_FALSE
+#endif
 
 #ifdef __cplusplus
 extern "C" {

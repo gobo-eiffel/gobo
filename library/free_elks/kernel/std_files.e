@@ -119,7 +119,7 @@ feature -- Status report
 			Result := input.last_real
 		end
 
-	last_string, laststring: detachable STRING
+	last_string, laststring: STRING
 			-- Last string read by `read_line',
 			-- `read_stream', or `read_word'
 		do

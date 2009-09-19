@@ -158,7 +158,7 @@ feature -- Output
 		end
 
 invariant
-	involutive_negation: (not (not Current)) ~ (Current)
+	involutive_negation: (not (not Current)).item = item
 	non_contradiction: not ((not Current) and Current)
 	completeness: (not Current) or Current
 

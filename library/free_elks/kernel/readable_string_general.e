@@ -194,7 +194,7 @@ feature -- Conversion
 			Result := as_string_8
 		ensure
 			as_string_8_not_void: Result /= Void
-			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
+			identity: (conforms_to ("") and Result = Current) or (not conforms_to ("") and Result /= Current)
 		end
 
 	as_string_8: STRING_8
@@ -227,7 +227,7 @@ feature -- Conversion
 			end
 		ensure
 			as_string_8_not_void: Result /= Void
-			identity: (same_type ("") and Result = Current) or (not same_type ("") and Result /= Current)
+			identity: (conforms_to ("") and Result = Current) or (not conforms_to ("") and Result /= Current)
 		end
 
 	as_string_32, to_string_32: STRING_32
@@ -252,7 +252,7 @@ feature -- Conversion
 			end
 		ensure
 			as_string_32_not_void: Result /= Void
-			identity: (same_type (create {STRING_32}.make_empty) and Result = Current) or (not same_type (create {STRING_32}.make_empty) and Result /= Current)
+			identity: (conforms_to (create {STRING_32}.make_empty) and Result = Current) or (not conforms_to (create {STRING_32}.make_empty) and Result /= Current)
 		end
 
 feature -- Duplication

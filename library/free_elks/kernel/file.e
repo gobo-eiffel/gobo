@@ -37,6 +37,7 @@ feature -- Initialization
 		do
 			name := fn
 			mode := Closed_file
+			create last_string.make_empty
 		ensure
 			file_named: name = fn
 			file_closed: is_closed
@@ -1333,37 +1334,32 @@ feature -- Input
 			done: BOOLEAN
 			l: like last_string
 		do
-			if last_string = Void then
-				create_last_string (0)
-			end
 			l := last_string
-			if l /= Void then
-				from
-					str_area := l.area
-					str_cap := l.capacity
-				until
-					done
-				loop
-					read := read + file_gs (file_pointer, $str_area, str_cap, read)
-					if read > str_cap then
-							-- End of line not reached yet
-							--|The string must be consistently set before
-							--|resizing.
-						l.set_count (str_cap)
-						if str_cap < 2048 then
-							l.grow (str_cap + 1024)
-						else
-								-- Increase capacity by `Growth_percentage' as
-								-- defined in RESIZABLE.
-							l.automatic_grow
-						end
-						str_cap := l.capacity
-						read := read - 1		-- True amount of byte read
-						str_area := l.area
+			from
+				str_area := l.area
+				str_cap := l.capacity
+			until
+				done
+			loop
+				read := read + file_gs (file_pointer, $str_area, str_cap, read)
+				if read > str_cap then
+						-- End of line not reached yet
+						--|The string must be consistently set before
+						--|resizing.
+					l.set_count (str_cap)
+					if str_cap < 2048 then
+						l.grow (str_cap + 1024)
 					else
-						l.set_count (read)
-						done := True
+							-- Increase capacity by `Growth_percentage' as
+							-- defined in RESIZABLE.
+						l.automatic_grow
 					end
+					str_cap := l.capacity
+					read := read - 1		-- True amount of byte read
+					str_area := l.area
+				else
+					l.set_count (read)
+					done := True
 				end
 			end
 		end
@@ -1378,28 +1374,23 @@ feature -- Input
 			done: BOOLEAN
 			l: like last_string
 			l_old_count, l_new_count: INTEGER
-			l_buffer: C_STRING
+			l_buffer: like read_data_buffer
 		do
-			if last_string = Void then
-				create_last_string (0)
-			end
 			l := last_string
 			l_buffer := read_data_buffer
-			if l /= Void and l_buffer /= Void then
-				from
-					l.clear_all
-					str_cap := l_buffer.capacity
-				until
-					done
-				loop
-					read := file_gs_ta (file_pointer, l_buffer.item, str_cap, 0)
-					l_old_count := l.count
-					l_new_count := l_old_count + read.min (str_cap)
-					done := read <= str_cap
-					l.grow (l_new_count)
-					l.set_count (l_new_count)
-					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
-				end
+			from
+				l.clear_all
+				str_cap := l_buffer.capacity
+			until
+				done
+			loop
+				read := file_gs_ta (file_pointer, l_buffer.item, str_cap, 0)
+				l_old_count := l.count
+				l_new_count := l_old_count + read.min (str_cap)
+				done := read <= str_cap
+				l.grow (l_new_count)
+				l.set_count (l_new_count)
+				l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
 			end
 		end
 
@@ -1414,16 +1405,11 @@ feature -- Input
 			str_area: ANY
 			l: like last_string
 		do
-			if last_string = Void then
-				create_last_string (nb_char)
-			end
 			l := last_string
-			if l /= Void then
-				l.grow (nb_char)
-				str_area := l.area
-				new_count := file_gss (file_pointer, $str_area, nb_char)
-				l.set_count (new_count)
-			end
+			l.grow (nb_char)
+			str_area := l.area
+			new_count := file_gss (file_pointer, $str_area, nb_char)
+			l.set_count (new_count)
 		end
 
 	read_stream_thread_aware (nb_char: INTEGER)
@@ -1432,23 +1418,17 @@ feature -- Input
 			is_readable: file_readable
 		local
 			new_count: INTEGER
-			l_buffer: C_STRING
+			l_buffer: like read_data_buffer
 			l_str: like last_string
 		do
 			l_str := last_string
-			if l_str = Void then
-				create_last_string (nb_char)
-				l_str := last_string
-			end
 			l_buffer := read_data_buffer
-			if l_buffer /= Void and l_str /= Void then
-				l_buffer.set_count (nb_char)
-				new_count := file_gss_ta (file_pointer, l_buffer.item, nb_char)
-				l_buffer.set_count (new_count)
-				l_str.grow (new_count)
-				l_str.set_count (new_count)
-				l_buffer.read_string_into (l_str)
-			end
+			l_buffer.set_count (nb_char)
+			new_count := file_gss_ta (file_pointer, l_buffer.item, nb_char)
+			l_buffer.set_count (new_count)
+			l_str.grow (new_count)
+			l_str.set_count (new_count)
+			l_buffer.read_string_into (l_str)
 		end
 
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
@@ -1476,35 +1456,30 @@ feature -- Input
 			read: INTEGER	-- Amount of bytes already read
 			l: like last_string
 		do
-			if last_string = Void then
-				create_last_string (0)
-			end
 			l := last_string
-			if l /= Void then
-				from
+			from
+				str_area := l.area
+				str_cap := l.capacity
+			until
+				read > str_cap
+			loop
+				read := read +
+					file_gw (file_pointer, $str_area, str_cap, read)
+				if read > str_cap then
+						-- End of word not reached yet.
+					if str_cap < 2048 then
+						l.grow (str_cap + 1024)
+					else
+							-- Increase capacity by `Growth_percentage' as
+							-- defined in RESIZABLE.
+						l.automatic_grow
+					end
 					str_area := l.area
 					str_cap := l.capacity
-				until
-					read > str_cap
-				loop
-					read := read +
-						file_gw (file_pointer, $str_area, str_cap, read)
-					if read > str_cap then
-							-- End of word not reached yet.
-						if str_cap < 2048 then
-							l.grow (str_cap + 1024)
-						else
-								-- Increase capacity by `Growth_percentage' as
-								-- defined in RESIZABLE.
-							l.automatic_grow
-						end
-						str_area := l.area
-						str_cap := l.capacity
-						read := read - 1		-- True amount of byte read
-					else
-						l.set_count (read)
-						read := str_cap + 1	-- End of loop
-					end
+					read := read - 1		-- True amount of byte read
+				else
+					l.set_count (read)
+					read := str_cap + 1	-- End of loop
 				end
 			end
 			separator := file_lh (file_pointer) -- Look ahead
@@ -1526,28 +1501,23 @@ feature -- Input
 			done: BOOLEAN
 			l: like last_string
 			l_old_count, l_new_count: INTEGER
-			l_buffer: C_STRING
+			l_buffer: like read_data_buffer
 		do
-			if last_string = Void then
-				create_last_string (0)
-			end
 			l := last_string
 			l_buffer := read_data_buffer
-			if l /= Void and then l_buffer /= Void then
-				from
-					l.clear_all
-					str_cap := l_buffer.capacity
-				until
-					done
-				loop
-					read := file_gw_ta (file_pointer, l_buffer.item, str_cap, 0)
-					l_old_count := l.count
-					l_new_count := l_old_count + read.min (str_cap)
-					done := read <= str_cap
-					l.grow (l_new_count)
-					l.set_count (l_new_count)
-					l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
-				end
+			from
+				l.clear_all
+				str_cap := l_buffer.capacity
+			until
+				done
+			loop
+				read := file_gw_ta (file_pointer, l_buffer.item, str_cap, 0)
+				l_old_count := l.count
+				l_new_count := l_old_count + read.min (str_cap)
+				done := read <= str_cap
+				l.grow (l_new_count)
+				l.set_count (l_new_count)
+				l_buffer.copy_to_string (l, 1, l_old_count + 1, read.min (str_cap))
 			end
 			separator := file_lh (file_pointer) -- Look ahead
 		ensure
@@ -1568,14 +1538,13 @@ feature -- Convenience
 			l_modulo, l_read, nb: INTEGER
 			l_pos: INTEGER
 			l_old_last_string: like last_string
-			l: like last_string
 		do
 			from
 				l_read := 0
 				nb := count
 				l_modulo := 51200
 				l_old_last_string := last_string
-				last_string := Void
+				create last_string.make (l_modulo)
 				l_pos := position
 				if l_pos /= 0 then
 					go (0)
@@ -1584,10 +1553,7 @@ feature -- Convenience
 				l_read >= nb
 			loop
 				read_stream (l_modulo)
-				l := last_string
-				if l /= Void then
-					file.put_string (l)
-				end
+				file.put_string (last_string)
 				l_read := l_read + l_modulo
 			end
 				-- Restore previous status of Current file.
@@ -1602,6 +1568,8 @@ feature {NONE} -- Implementation
 	create_last_string (a_min_size: INTEGER)
 			-- Create new instance of `last_string' with a least `a_min_size'
 			-- as capacity.
+		obsolete
+			"Implementors should create `last_string' directly."
 		require
 			last_string_void: last_string = Void
 			a_min_size_non_negative: a_min_size >= 0

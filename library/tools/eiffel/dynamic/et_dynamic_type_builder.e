@@ -991,8 +991,6 @@ feature {NONE} -- Feature validity
 				report_builtin_any_generating_type (a_feature)
 			when builtin_any_tagged_out then
 				report_builtin_any_tagged_out (a_feature)
-			when builtin_any_generating_type2 then
-				report_builtin_any_generating_type2 (a_feature)
 			when builtin_any_generator then
 				report_builtin_any_generator (a_feature)
 			when builtin_any_is_deep_equal then
@@ -1161,6 +1159,8 @@ feature {NONE} -- Feature validity
 				report_builtin_platform_is_unix (a_feature)
 			when builtin_platform_is_vms then
 				report_builtin_platform_is_vms (a_feature)
+			when builtin_platform_is_vxworks then
+				report_builtin_platform_is_vxworks (a_feature)
 			when builtin_platform_is_windows then
 				report_builtin_platform_is_windows (a_feature)
 			when builtin_platform_pointer_bytes then
@@ -1381,6 +1381,8 @@ feature {NONE} -- Feature validity
 				report_builtin_special_aliased_resized_area (a_feature)
 			when builtin_special_base_address then
 				report_builtin_special_base_address (a_feature)
+			when builtin_special_capacity then
+				report_builtin_special_capacity (a_feature)
 			when builtin_special_count then
 				report_builtin_special_count (a_feature)
 			when builtin_special_element_size then
@@ -1469,6 +1471,8 @@ feature {NONE} -- Feature validity
 				report_builtin_type_name (a_feature)
 			when builtin_type_type_id then
 				report_builtin_type_type_id (a_feature)
+			when builtin_type_runtime_name then
+				report_builtin_type_runtime_name (a_feature)
 			else
 					-- Internal error: invalid built-in feature.
 					-- Error already reported during parsing.
@@ -3769,30 +3773,6 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_any_generating_type2 (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature 'ANY.generating_type' is being analyzed.
-		require
-			no_error: not has_fatal_error
-			a_feature_not_void: a_feature /= Void
-		local
-			l_result_type: ET_DYNAMIC_TYPE
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_result_type_set := current_dynamic_feature.result_type_set
-				if l_result_type_set = Void then
-						-- Internal error: it was already checked during parsing
-						-- that the signature should be 'type: TYPE [like Current]'.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_result_type := l_result_type_set.static_type
-					mark_type_alive (l_result_type)
-					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
-				end
-			end
-		end
-
 	report_builtin_any_generator (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'ANY.generator' is being analyzed.
 		require
@@ -4283,6 +4263,21 @@ feature {NONE} -- Built-in features
 
 	report_builtin_platform_is_vms (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'PLATFORM.is_vms' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_dynamic_system.boolean_type
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_platform_is_vxworks (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'PLATFORM.is_vxworks' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
@@ -5363,6 +5358,21 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_special_capacity (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'SPECIAL.capacity' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_result_type := current_dynamic_system.integer_type (universe_impl)
+				mark_type_alive (l_result_type)
+				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
 	report_builtin_special_count (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'SPECIAL.count' is being analyzed.
 		require
@@ -5997,6 +6007,18 @@ feature {NONE} -- Built-in features
 				l_result_type := current_dynamic_system.integer_type (universe_impl)
 				mark_type_alive (l_result_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+			end
+		end
+
+	report_builtin_type_runtime_name (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.runtime_name' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				mark_string_type_alive (universe_impl)
+				propagate_builtin_result_dynamic_types (current_dynamic_system.string_type (universe_impl), current_dynamic_feature)
 			end
 		end
 

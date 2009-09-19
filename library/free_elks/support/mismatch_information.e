@@ -29,6 +29,9 @@ inherit
 create {MISMATCH_CORRECTOR}
 	default_create
 
+create {MISMATCH_INFORMATION}
+	make
+
 feature -- Initialization
 
 	default_create

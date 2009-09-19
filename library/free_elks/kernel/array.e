@@ -34,7 +34,9 @@ class ARRAY [G] inherit
 
 create
 	make,
+	make_filled,
 	make_from_array,
+	make_from_special,
 	make_from_cil
 
 convert
@@ -43,6 +45,27 @@ convert
 	make_from_cil ({NATIVE_ARRAY [G]})
 
 feature -- Initialization
+
+	make_filled (a_default_value: G; min_index, max_index: INTEGER)
+			-- Allocate array; set index interval to
+			-- `min_index' .. `max_index'; set all values to default.
+			-- (Make array empty if `min_index' = `max_index' + 1).
+		require
+			valid_bounds: min_index <= max_index + 1
+		local
+			n: INTEGER
+		do
+			lower := min_index
+			upper := max_index
+			if min_index <= max_index then
+				n := max_index - min_index + 1
+			end
+			make_filled_area (a_default_value, n)
+		ensure
+			lower_set: lower = min_index
+			upper_set: upper = max_index
+			items_set: filled_with (a_default_value)
+		end
 
 	make (min_index, max_index: INTEGER)
 			-- Allocate array; set index interval to
@@ -75,6 +98,23 @@ feature -- Initialization
 			area := a.area
 			lower := a.lower
 			upper := a.upper
+		end
+
+	make_from_special (a: SPECIAL [G]; min_index, max_index: INTEGER)
+			-- Initialize Current using items of `a' with index interval
+			-- `min_index' .. `max_index'.
+		require
+			a_attached: a /= Void
+			valid_bounds: min_index <= max_index + 1
+			a_valid_for_bounds: a.count >= max_index - min_index + 1
+		do
+			area := a
+			lower := min_index
+			upper := max_index
+		ensure
+			shared: area = a
+			lower_set: lower = min_index
+			upper_set: upper = max_index
 		end
 
 	make_from_cil (na: NATIVE_ARRAY [like item])
@@ -227,6 +267,15 @@ feature -- Status report
 			definition: Result = (count = 0 or else
 				((not attached {like item} item (upper) as i or else i = i.default) and
 				subarray (lower, upper - 1).all_default))
+		end
+
+	filled_with (v: G): BOOLEAN
+			-- Are all itms set to `v'?
+		do
+			Result := area.filled_with (v, 0, upper - lower)
+		ensure
+			definition: Result = (count = 0 or else
+				(item (upper) = v and subarray (lower, upper - 1).filled_with (v)))
 		end
 
 	full: BOOLEAN
@@ -683,9 +732,7 @@ feature {NONE} -- Implementation
 			new_size := new_upper - new_lower + 1
 			if not empty_area then
 				old_size := area.count
-				if new_size > old_size
-					 and new_size - old_size < additional_space
-				then
+				if new_size > old_size and new_size - old_size < additional_space then
 					new_size := old_size + additional_space
 				end
 			end

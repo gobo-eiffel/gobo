@@ -48,11 +48,19 @@ feature -- Access
 			if shared then
 				Result := internal_item
 			else
-				m :=managed_pointer
+				m := managed_pointer
 				if m /= Void then
 					Result := m.item
 				end
 			end
+		end
+
+feature -- Status report
+
+	exists: BOOLEAN
+			-- Is allocated memory still allocated?
+		do
+			Result := item /= default_pointer
 		end
 
 feature -- Measurement

@@ -168,8 +168,7 @@ feature -- Built-in codes
 	builtin_any_standard_twin: INTEGER is 10
 	builtin_any_deep_twin: INTEGER is 11
 	builtin_any_copy: INTEGER is 12
-	builtin_any_generating_type2: INTEGER is 13
-	builtin_any_is_equal: INTEGER is 14
+	builtin_any_is_equal: INTEGER is 13
 			-- Codes for built-in features from class "ANY"
 
 	builtin_special_feature (a_feature_code: INTEGER): INTEGER is
@@ -187,6 +186,7 @@ feature -- Built-in codes
 	builtin_special_aliased_resized_area: INTEGER is 6
 	builtin_special_base_address: INTEGER is 7
 	builtin_special_put_default: INTEGER is 8
+	builtin_special_capacity: INTEGER is 9
 			-- Codes for built-in features from class "SPECIAL"
 
 	builtin_character_8_class: INTEGER is 3
@@ -327,6 +327,7 @@ feature -- Built-in codes
 	builtin_platform_real_bytes: INTEGER is 11
 	builtin_platform_wide_character_bytes: INTEGER is 12
 	builtin_platform_double_bytes: INTEGER is 13
+	builtin_platform_is_vxworks: INTEGER is 14
 			-- Codes for built-in features from class "PLATFORM"
 
 	builtin_procedure_feature (a_feature_code: INTEGER): INTEGER is
@@ -362,6 +363,7 @@ feature -- Built-in codes
 	builtin_type_generic_parameter_count: INTEGER is 3
 	builtin_type_name: INTEGER is 4
 	builtin_type_type_id: INTEGER is 5
+	builtin_type_runtime_name: INTEGER is 6
 			-- Codes for built-in features from class "TYPE"
 
 	builtin_identified_feature (a_feature_code: INTEGER): INTEGER is

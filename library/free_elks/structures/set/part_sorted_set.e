@@ -53,12 +53,8 @@ feature -- Element change
 			-- Ensure that structure includes `v'.
 		do
 			search_after (v)
-			if after then
+			if after or else v /~ item then
 				put_left (v)
-			else
-				if v ~ item then
-					put_left (v)
-				end
 			end
 		end
 

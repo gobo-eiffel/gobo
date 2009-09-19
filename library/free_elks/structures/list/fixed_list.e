@@ -48,6 +48,7 @@ class FIXED_LIST [G] inherit
 			force as force_i_th,
 			bag_put as put,
 			index_set as array_index_set,
+			make_filled as array_make_filled,
 			extendible as array_extendible
 		export
 			{NONE}

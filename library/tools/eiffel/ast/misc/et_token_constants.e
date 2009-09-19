@@ -710,6 +710,14 @@ feature -- Feature names
 			call_feature_name_not_void: Result /= Void
 		end
 
+	capacity_feature_name: ET_FEATURE_NAME is
+			-- 'capacity' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (capacity_name)
+		ensure
+			capacity_feature_name_not_void: Result /= Void
+		end
+
 	ceiling_real_32_feature_name: ET_FEATURE_NAME is
 			-- 'ceiling_real_32' feature name
 		once
@@ -1316,6 +1324,14 @@ feature -- Feature names
 			is_vms_feature_name_not_void: Result /= Void
 		end
 
+	is_vxworks_feature_name: ET_FEATURE_NAME is
+			-- 'is_vxworks' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_vxworks_name)
+		ensure
+			is_vxworks_feature_name_not_void: Result /= Void
+		end
+
 	is_windows_feature_name: ET_FEATURE_NAME is
 			-- 'is_windowsvms' feature name
 		once
@@ -1699,6 +1715,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (reference_item_name)
 		ensure
 			reference_item_feature_name_not_void: Result /= Void
+		end
+
+	runtime_name_feature_name: ET_FEATURE_NAME is
+			-- 'runtime_name' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (runtime_name_name)
+		ensure
+			runtime_name_feature_name_not_void: Result /= Void
 		end
 
 	same_type_feature_name: ET_FEATURE_NAME is
@@ -2782,6 +2806,9 @@ feature -- Keyword and symbol names
 	call_name: STRING is "call"
 		-- Name of Eiffel feature 'call'
 
+	capacity_name: STRING is "capacity"
+		-- Name of Eiffel feature 'capacity'
+
 	ceiling_real_32_name: STRING is "ceiling_real_32"
 		-- Name of Eiffel feature 'ceiling_real_32'
 
@@ -2932,6 +2959,9 @@ feature -- Keyword and symbol names
 	is_vms_name: STRING is "is_vms"
 		-- Name of Eiffel feature 'is_vms'
 
+	is_vxworks_name: STRING is "is_vxworks"
+		-- Name of Eiffel feature 'is_vxworks'
+
 	is_windows_name: STRING is "is_windows"
 		-- Name of Eiffel feature 'is_windows'
 
@@ -3063,6 +3093,9 @@ feature -- Keyword and symbol names
 
 	reference_item_name: STRING is "reference_item"
 		-- Name of Eiffel feature 'reference_item'
+
+	runtime_name_name: STRING is "runtime_name"
+		-- Name of Eiffel feature 'runtime_name'
 
 	same_type_name: STRING is "same_type"
 		-- Name of Eiffel feature 'same_type'
