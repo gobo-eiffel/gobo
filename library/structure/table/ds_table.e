@@ -68,16 +68,6 @@ feature -- Status report
 			valid_key: Result implies valid_key (k)
 		end
 
-	not_has (k: K): BOOLEAN is
-			-- Is there no item associated with `k'?
-			--
-			-- Note: useful when used as agent.
-		do
-			Result := not has (k)
-		ensure
-			definition: Result = not has (k)
-		end
-
 	has_void: BOOLEAN is
 			-- Is there an item associated with Void?
 		local
