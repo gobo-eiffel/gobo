@@ -105,6 +105,8 @@ feature -- Element change
 			j, nb: INTEGER
 		do
 			wipe_out
+			pattern := a_regexp
+			is_case_insensitive := i
 			create an_error_handler.make_null
 			create a_description.make
 			a_description.set_equiv_classes_used (False)

@@ -37,6 +37,13 @@ Version 3.10 - ?
 	* Fixed bug in LX_DFA_REGULAR_EXPRESSION where `compile ("foo\$")' was
 	  setting `has_dollar' to True even though the dollar sign was escaped.
 
+	* Added features `pattern' and `is_case_insensitive' in class LX_PATTERN_MATCHER.
+
+	Gobo Eiffel Regexp Library:
+
+	* The pattern being matched and the case-sensitiveness are now available
+	  using queries `pattern' and `is_case_insensitive'.
+
 	Gobo Eiffel String Library:
 
 	* Fixed bug in the string formatter where the flags '+' and space where
