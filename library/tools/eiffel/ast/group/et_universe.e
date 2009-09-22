@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 feature -- Initialization
 
 	reset_classes is
-			-- Reset classes (declared in current universe and in universes it depends on)
+			-- Reset classes (declared in current universe and recursively in universes it depends on)
 			-- as they were just after they were last parsed.
 			-- Do nothing if not parsed.
 		do
@@ -85,7 +85,7 @@ feature -- Initialization
 		end
 
 	reset_classes_incremental is
-			-- Reset parts of the classes (declared in current universe and in universes
+			-- Reset parts of the classes (declared in current universe and recursively in universes
 			-- it depends on) which may not be valid anymore because of changes in other
 			-- classes. Re-processing these classes will not affect the parts which didn't
 			-- need to be reset. This allows to perform incremental code analysis or
@@ -169,7 +169,7 @@ feature -- Initialization
 		end
 
 	reset_errors is
-			-- Reset classes (declared in current universe and in universes
+			-- Reset classes (declared in current universe and recursively in universes
 			-- it depends on) as they were before their first error was reported.
 			-- Errors will be reported again if classes are processed again.
 		local
@@ -188,39 +188,93 @@ feature -- Initialization
 
 feature -- Status report
 
-	has_class (a_name: ET_CLASS_NAME): BOOLEAN is
-			-- Is there a class named `a_name' in current universe?
+	has_adapted_class (a_name: ET_CLASS_NAME): BOOLEAN is
+			-- Is there a class named `a_name' when reviewed from current universe?
 			-- Take into account both locally declared classes and
-			-- classes imported from other universe.
+			-- classes imported from other universes.
 		require
 			a_name_not_void: a_name /= Void
 		local
-			l_class: ET_CLASS
+			l_class: ET_ADAPTED_CLASS
 		do
 			classes.search (a_name)
 			if classes.found then
-				l_class := classes.found_item.actual_class
+				l_class := classes.found_item
 				Result := l_class.is_preparsed
 			else
 				mapped_classes.search (a_name)
 				if mapped_classes.found then
-					l_class := mapped_classes.found_item.actual_class
+					l_class := mapped_classes.found_item
 					Result := l_class.is_preparsed
 				end
 			end
 		ensure
-			is_preparsed: Result implies adapted_class (a_name).actual_class.is_preparsed
+			is_preparsed: Result implies adapted_class (a_name).is_preparsed
+		end
+
+	has_adapted_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
+			-- Is there a class named `a_name' when reviewed from current universe,
+			-- or recursively from one of the universes it depends on?
+			-- Take into account both locally declared classes and
+			-- classes imported from other universes.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			l_result: DS_CELL [BOOLEAN]
+		do
+			create l_result.make (False)
+			universes_do_if_recursive_until (agent any_actions.call ({ET_UNIVERSE} ?, agent l_result.put (True)), agent {ET_UNIVERSE}.has_adapted_class (a_name), agent l_result.item)
+			Result := l_result.item
+		end
+
+	has_class (a_name: ET_CLASS_NAME): BOOLEAN is
+			-- Is there a class named `a_name' declared locally in current universe?
+			-- Do not take into account overridden classes.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			l_class: ET_ADAPTED_CLASS
+		do
+			classes.search (a_name)
+			if classes.found then
+				l_class := classes.found_item
+				if l_class.actual_class.universe = Current then
+					Result := True
+				end
+			else
+				mapped_classes.search (a_name)
+				if mapped_classes.found then
+					l_class := mapped_classes.found_item
+					if l_class.actual_class.universe = Current then
+						Result := True
+					end
+				end
+			end
+		end
+
+	has_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
+			-- Is there a class named `a_name' declared locally in current universe,
+			-- or recursively from one of the universes it depends on?
+			-- Do not take into account overridden classes.
+		require
+			a_name_not_void: a_name /= Void
+		local
+			l_result: DS_CELL [BOOLEAN]
+		do
+			create l_result.make (False)
+			universes_do_if_recursive_until (agent any_actions.call ({ET_UNIVERSE} ?, agent l_result.put (True)), agent {ET_UNIVERSE}.has_class (a_name), agent l_result.item)
+			Result := l_result.item
 		end
 
 feature -- Access
 
 	classes: DS_HASH_TABLE [ET_ADAPTED_CLASS, ET_CLASS_NAME]
-			-- Classes in current universe;
+			-- Classes in current universe.
 			-- Contains both locally declared classes and
 			-- classes imported from other universes.
 
 	adapted_class (a_name: ET_CLASS_NAME): ET_ADAPTED_CLASS is
-			-- Class named `a_name' in universe;
+			-- Class named `a_name' when viewed from current universe.
 			-- Add this class to universe if not found,
 			-- in which case it will refer to the unknown class.
 		require
@@ -242,24 +296,26 @@ feature -- Access
 			adapted_class_not_void: Result /= Void
 		end
 
-	class_by_name (a_name: STRING): ET_CLASS is
-			-- Class named `a_name' in universe;
+	adapted_class_by_name (a_name: STRING): ET_ADAPTED_CLASS is
+			-- Class named `a_name' when viewed from current universe.
+			-- Take into account both locally declared classes and
+			-- classes imported from other universes.
 			-- Void if not such class
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 		local
 			l_class_name: ET_IDENTIFIER
-			l_class: ET_CLASS
+			l_class: ET_ADAPTED_CLASS
 		do
 			create l_class_name.make (a_name)
 			classes.search (l_class_name)
 			if classes.found then
-				l_class := classes.found_item.actual_class
+				l_class := classes.found_item
 			else
 				mapped_classes.search (l_class_name)
 				if mapped_classes.found then
-					l_class := mapped_classes.found_item.actual_class
+					l_class := mapped_classes.found_item
 				end
 			end
 			if l_class.is_preparsed then
@@ -267,9 +323,65 @@ feature -- Access
 			end
 		end
 
+	adapted_classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_ADAPTED_CLASS] is
+			-- Classes named `a_name' when viewed from current universe,
+			-- or recursively from one of the universes it depends on.
+			-- Take into account both locally declared classes and
+			-- classes imported from other universes.
+			-- Create a new list at each call.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		do
+			create Result.make (initial_universes_capacity)
+			universes_do_recursive (agent {ET_UNIVERSE}.do_adapted_class_by_name (a_name, agent Result.force_last))
+		ensure
+			classes_not_void: Result /= Void
+			no_void_class: not Result.has_void
+		end
+
+	class_by_name (a_name: STRING): ET_CLASS is
+			-- Class named `a_name' declared locally in current universe.
+			-- Do not take into account overridden classes.
+			-- Void if not such class
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			l_adapted_class: ET_ADAPTED_CLASS
+			l_class: ET_CLASS
+		do
+			l_adapted_class := adapted_class_by_name (a_name)
+			if l_adapted_class /= Void then
+				l_class := l_adapted_class.actual_class
+				if l_class.universe = Current then
+					Result := l_class
+				end
+			end
+		ensure
+			local_class: Result /= Void implies Result.universe = Current
+		end
+
+	classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Class named `a_name' declared locally in current universe
+			-- or recursively in one of the universes it depends on.
+			-- Do not take into account overridden classes.
+			-- Create a new list at each call.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		do
+			create Result.make (initial_universes_capacity)
+			universes_do_recursive (agent {ET_UNIVERSE}.do_class_by_name (a_name, agent Result.force_last))
+		ensure
+			classes_not_void: Result /= Void
+			no_void_class: not Result.has_void
+		end
+
 	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
-			-- Classes declared locally in current universe which are in `a_group';
-			-- Create a new list at each call
+			-- Classes declared locally in current universe which are in `a_group'.
+			-- Overridden classes are also taken into account.
+			-- Create a new list at each call.
 		require
 			a_group_not_void: a_group /= Void
 		do
@@ -282,8 +394,9 @@ feature -- Access
 
 	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
 			-- Classes declared locally in current in universe which are in `a_group'
-			-- or recursively in one of its subgroups;
-			-- Create a new list at each call
+			-- or recursively in one of its subgroups.
+			-- Overridden classes are also taken into account.
+			-- Create a new list at each call.
 		require
 			a_group_not_void: a_group /= Void
 		do
@@ -296,15 +409,17 @@ feature -- Access
 
 	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
 			-- Classes, indexed by groups, declared locally in current universe
-			-- and recursively in universes it depends on;
-			-- Create a new data structure at each call
+			-- and recursively in universes it depends on.
+			-- Overridden classes are also taken into account.
+			-- Create a new data structure at each call.
 		do
 			Result := classes_by_groups_recursive
 		end
 
 	classes_by_groups_local: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
-			-- Classes declared locally in current universe indexed by groups;
-			-- Create a new data structure at each call
+			-- Classes, indexed by groups, declared locally in current universe.
+			-- Overridden classes are also taken into account.
+			-- Create a new data structure at each call.
 		do
 			create Result.make_map (initial_classes_by_groups_capacity)
 			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.add_by_group (Result)))
@@ -312,8 +427,9 @@ feature -- Access
 
 	classes_by_groups_recursive: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
 			-- Classes, indexed by groups, declared locally in current universe
-			-- and recursively in universes it depends on;
-			-- Create a new data structure at each call
+			-- and recursively in universes it depends on.
+			-- Overridden classes are also taken into account.
+			-- Create a new data structure at each call.
 		do
 			create Result.make_map (initial_classes_by_groups_capacity)
 			adapted_classes_do_recursive (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.add_by_group (Result)))
@@ -1809,9 +1925,23 @@ feature -- Iteration
 		local
 			l_visited: DS_HASH_SET [ET_UNIVERSE]
 		do
-			create l_visited.make (10)
+			create l_visited.make (initial_universes_capacity)
 			add_universe_recursive (l_visited)
 			l_visited.do_all (an_action)
+		end
+
+	universes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]) is
+			-- Apply `an_action' on current universe and recursively on
+			-- the universes it depends on which satisfies `a_test'.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			l_visited: DS_HASH_SET [ET_UNIVERSE]
+		do
+			create l_visited.make (initial_universes_capacity)
+			add_universe_recursive (l_visited)
+			l_visited.do_if (an_action, a_test)
 		end
 
 	universes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
@@ -1829,13 +1959,46 @@ feature -- Iteration
 			if a_stop_request = Void then
 				universes_do_recursive (an_action)
 			elseif not a_stop_request.item ([]) then
-				create l_visited.make (10)
+				create l_visited.make (initial_universes_capacity)
 				add_universe_recursive (l_visited)
 				from l_visited.start until l_visited.after loop
 					if a_stop_request.item ([]) then
 						l_visited.go_after
 					else
 						an_action.call ([l_visited.item_for_iteration])
+						l_visited.forth
+					end
+				end
+			end
+		end
+
+	universes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]; a_test: FUNCTION [ANY, TUPLE [ET_UNIVERSE], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on current universe and recursively on
+			-- the universes it depends on which satisfies `a_test'.
+			--
+			-- The iteration will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			l_visited: DS_HASH_SET [ET_UNIVERSE]
+			l_universe: ET_UNIVERSE
+		do
+			if a_stop_request = Void then
+				universes_do_if_recursive (an_action, a_test)
+			elseif not a_stop_request.item ([]) then
+				create l_visited.make (initial_universes_capacity)
+				add_universe_recursive (l_visited)
+				from l_visited.start until l_visited.after loop
+					l_universe := l_visited.item_for_iteration
+					if a_stop_request.item ([]) then
+						l_visited.go_after
+					else
+						if a_test.item ([l_universe]) then
+							an_action.call ([l_universe])
+						end
 						l_visited.forth
 					end
 				end
@@ -1852,6 +2015,43 @@ feature -- Relations
 		do
 			if not a_visited.has (Current) then
 				a_visited.force_last (Current)
+			end
+		end
+
+feature -- Actions
+
+	do_adapted_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
+			-- Execute `a_action' on class named `a_name' when viewed from current universe, if any.
+			-- Take into account both locally declared classes and
+			-- classes imported from other universes.
+			-- Do nothing if not such class.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_action_not_void: a_action /= Void
+		local
+			l_class: ET_ADAPTED_CLASS
+		do
+			l_class := adapted_class_by_name (a_name)
+			if l_class /= Void then
+				a_action.call ([l_class])
+			end
+		end
+
+	do_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_CLASS]]) is
+			-- Execute `a_action' on class named `a_name' declared locally in current universe.
+			-- Do not take into account overridden classes.
+			-- Do nothing if not such class.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_action_not_void: a_action /= Void
+		local
+			l_class: ET_CLASS
+		do
+			l_class := class_by_name (a_name)
+			if l_class /= Void then
+				a_action.call ([l_class])
 			end
 		end
 
@@ -2021,6 +2221,14 @@ feature {NONE} -- Parsing
 		end
 
 feature {NONE} -- Constants
+
+	initial_universes_capacity: INTEGER is
+			-- Initial capacity for containers containing universes
+		once
+			Result := 10
+		ensure
+			capacity_positive: Result > 0
+		end
 
 	initial_classes_in_group_capacity: INTEGER is
 			-- Initial capacity for `classes_in_group'
