@@ -84,7 +84,7 @@ feature -- Test
 				-- We restrict this test to files that contain only one class.
 			a_system.set_preparse_single_mode
 			a_system.activate_processors
-			a_system.preparse
+			a_system.preparse_recursive
 			a_system.classes_do_recursive (agent check_class)
 		end
 

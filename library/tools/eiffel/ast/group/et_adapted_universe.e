@@ -72,7 +72,7 @@ feature -- Exporting classes
 			l_class: ET_ADAPTED_CLASS
 			l_other_class: ET_ADAPTED_CLASS
 		do
-			l_cursor := universe.classes.new_cursor
+			l_cursor := universe.adapted_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
 				if l_class.actual_intrinsic_class.universe = universe then

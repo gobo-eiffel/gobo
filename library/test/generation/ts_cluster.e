@@ -142,7 +142,7 @@ feature -- Processing
 			a_system.set_clusters (a_clusters)
 			a_system.set_default_keyword_usage
 			a_system.activate_processors
-			a_system.parse_all
+			a_system.parse_all_recursive
 			a_system.classes_do_if_recursive (agent process_class (?, testcases), agent is_testcase_class)
 		end
 

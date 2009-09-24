@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel clusters"
+		"Xace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"

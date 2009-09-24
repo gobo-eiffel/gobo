@@ -53,7 +53,7 @@ feature -- Access
 			-- Eiffel library being adapted
 
 	kind_name: STRING is
-			-- Kind name (e.g. "assembly", "library", etc.)
+			-- Name of the kind of universe (e.g. "library", "assembly", etc.)
 		once
 			Result := "library"
 		end

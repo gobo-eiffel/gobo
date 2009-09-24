@@ -52,7 +52,7 @@ feature {NONE} -- Execution
 			a_eiffel_error_handler.set_info_file (std.error)
 			a_system.set_error_handler (a_eiffel_error_handler)
 				-- Make sure that kernel classes are set correctly.
-			a_system.preparse_local
+			a_system.preparse
 			create a_cluster.make ("cluster_name", ".", a_system)
 			create a_parser.make
 			create in_file.make (in_filename)

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"ECF Eiffel libraries"
+		"ECF Eiffel class libraries"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"

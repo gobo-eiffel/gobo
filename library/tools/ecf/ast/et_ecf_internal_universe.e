@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"ECF internal universes (i.e. either systems or libraries)"
+		"ECF Eiffel internal universes (i.e. either systems or libraries)"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"

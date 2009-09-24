@@ -102,8 +102,6 @@ feature -- Access
 
 	current_system: ET_SYSTEM is
 			-- Surrounding Eiffel system
-			-- (Note: there is a frozen feature called `system' in
-			-- class GENERAL of SmartEiffel 1.0)
 		do
 			Result := universe.current_system
 		ensure
@@ -304,7 +302,7 @@ feature -- Access
 		end
 
 	kind_name: STRING is
-			-- Kind name (e.g. "cluster", "assembly", etc.)
+			-- Name of the kind of group (e.g. "cluster", "assembly", etc.)
 		once
 			Result := "group"
 		ensure

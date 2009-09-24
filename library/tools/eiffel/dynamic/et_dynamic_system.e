@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			catcall_error_mode := True
 			current_system := a_system
-			nb := current_system.classes.capacity
+			nb := current_system.adapted_classes.capacity
 			create null_dynamic_type_set_builder.make (Current)
 			set_dynamic_type_set_builder (null_dynamic_type_set_builder)
 			create dynamic_types.make (nb)
@@ -737,7 +737,7 @@ feature -- Compilation
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			current_system.preparse
+			current_system.preparse_recursive
 			if error_handler.benchmark_shown then
 				current_system.print_time (dt1, "Degree 6")
 			end
@@ -841,14 +841,14 @@ feature -- Compilation
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			if current_system.preparse_enabled then
-				current_system.preparse
+				current_system.preparse_recursive
 				if error_handler.benchmark_shown then
 					current_system.print_time (dt1, "Degree 6")
 					dt1 := l_clock.system_clock.date_time_now
 				end
 				current_system.compile_degree_5
 			else
-				current_system.parse_all
+				current_system.parse_all_recursive
 			end
 			if error_handler.benchmark_shown then
 				current_system.print_time (dt1, "Degree 5")
@@ -897,7 +897,7 @@ feature -- Compilation
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			current_system.preparse
+			current_system.preparse_recursive
 			if error_handler.benchmark_shown then
 				current_system.print_time (dt1, "Degree 6")
 			end

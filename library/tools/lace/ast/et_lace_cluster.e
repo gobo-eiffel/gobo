@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel clusters"
+		"Lace Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"

@@ -3,7 +3,7 @@ indexing
 	description:
 	"[
 		Eiffel class universes whose classes can be found locally
-		in clusters, or imported from libraries or .NET assemlies.
+		in clusters, or imported from libraries or .NET assemblies.
 	]"
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
@@ -18,9 +18,9 @@ inherit
 	ET_UNIVERSE
 		redefine
 			initialize,
-			preparse_local,
+			preparse,
 			preparse_recursive,
-			parse_all_local,
+			parse_all,
 			parse_all_recursive,
 			import_classes,
 			add_universe_recursive,
@@ -84,7 +84,7 @@ feature -- Access
 			-- .NET assemblies that current universe depends on
 
 	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
-			-- Cluster named `a_names' in universe
+			-- Cluster named `a_names' in current universe
 			--
 			-- Add missing implicit subclusters if needed.
 			-- Void if not such cluster.
@@ -99,7 +99,7 @@ feature -- Access
 		end
 
 	cluster_with_absolute_pathname (a_pathname: STRING): ET_CLUSTER is
-			-- Cluster with absolute pathname `a_pathname' in universe
+			-- Cluster with absolute pathname `a_pathname' in current universe
 			--
 			-- `a_pathname' is expected to be a canonical absolute pathname.
 			-- Add missing implicit subclusters if needed.
@@ -114,11 +114,12 @@ feature -- Access
 		end
 
 	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE is
-			-- Universe corresponding to `a_universe' that current universe
-			-- depends on if any, Void otherwise
+			-- Adapted version of `a_universe' viewed from current universe
+			-- when it depends on it, Void otherwise
 			--
-			-- Note that `a_universe' may be imported twice by the current
-			-- universe. Return one of them in that case.
+			-- `a_universe' may be a library or assembly from which the current
+			-- universe imports classes. Note that `a_universe' may be imported
+			-- twice by the current universe. Return one of them in that case.
 		local
 			l_library: ET_LIBRARY
 			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
@@ -137,43 +138,77 @@ feature -- Access
 feature -- Measurement
 
 	cluster_count: INTEGER is
-			-- Number (recursively) of non-abstract clusters
+			-- Number of non-abstract clusters and recursively subclusters in current universe
 		do
 			Result := clusters.count
 		ensure
 			cluster_count_not_negavite: Result >= 0
 		end
 
+	cluster_count_recursive: INTEGER is
+			-- Number of non-abstract clusters and recursively subclusters in current universe
+			-- and recursively in the universes it depends on
+		local
+			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
+		do
+			create l_visited.make (initial_universes_capacity)
+			add_internal_universe_recursive (l_visited)
+			from l_visited.start until l_visited.after loop
+				Result := Result + l_visited.item_for_iteration.cluster_count
+				l_visited.forth
+			end
+		ensure
+			cluster_count_not_negavite: Result >= 0
+		end
+
 	override_cluster_count: INTEGER is
-			-- Number (recursively) of non-abstract non-read-only override clusters
+			-- Number of non-abstract non-read-only override clusters and recursively subclusters
+			-- in current universe
 		do
 			Result := clusters.override_count
 		ensure
 			override_cluster_count_not_negavite: Result >= 0
 		end
 
+	override_cluster_count_recursive: INTEGER is
+			-- Number of non-abstract non-read-only override clusters and recursively subclusters
+			-- in current universe and recursively in the universes it depends on
+		local
+			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
+		do
+			create l_visited.make (initial_universes_capacity)
+			add_internal_universe_recursive (l_visited)
+			from l_visited.start until l_visited.after loop
+				Result := Result + l_visited.item_for_iteration.override_cluster_count
+				l_visited.forth
+			end
+		ensure
+			override_cluster_count_not_negavite: Result >= 0
+		end
+
 	read_write_cluster_count: INTEGER is
-			-- Number (recursively) of non-abstract non-read-only clusters
+			-- Number of non-abstract non-read-only clusters and recursively subclusters
+			-- in current universe
 		do
 			Result := clusters.read_write_count
 		ensure
 			read_write_cluster_count_not_negavite: Result >= 0
 		end
 
-	library_count: INTEGER is
-			-- Number of libraries
+	read_write_cluster_count_recursive: INTEGER is
+			-- Number of non-abstract non-read-only clusters and recursively subclusters
+			-- in current universe and recursively in the universes it depends on
+		local
+			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
 		do
-			Result := libraries.count
+			create l_visited.make (initial_universes_capacity)
+			add_internal_universe_recursive (l_visited)
+			from l_visited.start until l_visited.after loop
+				Result := Result + l_visited.item_for_iteration.read_write_cluster_count
+				l_visited.forth
+			end
 		ensure
-			library_count_not_negative: Result >= 0
-		end
-
-	dotnet_assembly_count: INTEGER is
-			-- Number of .NET assemblies
-		do
-			Result := dotnet_assemblies.count
-		ensure
-			dotnet_assembly_count_not_negavite: Result >= 0
+			read_write_cluster_count_not_negavite: Result >= 0
 		end
 
 feature -- Setting
@@ -211,16 +246,25 @@ feature -- Setting
 feature -- Element change
 
 	add_implicit_subclusters is
-			-- Add (recursively) implicit subclusters when clusters are recursive.
+			-- Add to current universe implicit subclusters (recursively) when clusters are recursive.
 			-- Note that these subclusters will otherwise be added when running
-			-- one of the `preparse_*' or `parse_all' routines.
+			-- one of the `preparse*' or `parse_all*' routines.
 		do
 			clusters.add_implicit_subclusters
 		end
 
+	add_implicit_subclusters_recursive is
+			-- Add to current universe and recursively the universes it depends on
+			-- implicit subclusters (recursively) when clusters are recursive.
+			-- Note that these subclusters will otherwise be added when running
+			-- one of the `preparse*' or `parse_all*' routines.
+		do
+			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.add_implicit_subclusters)
+		end
+
 feature -- Iteration
 
-	clusters_do_explicit_local (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
+	clusters_do_explicit (an_action: PROCEDURE [ANY, TUPLE [ET_CLUSTER]]) is
 			-- Apply `an_action' to every non-implicit cluster of current universe
 			-- and recursively their subclusters.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
@@ -234,7 +278,7 @@ feature -- Iteration
 			-- subclusters that are declared in the universes it depends on recursively.
 			-- (Semantics not guaranteed if `an_action' adds or removes clusters.)
 		do
-			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.clusters_do_explicit_local (an_action))
+			internal_universes_do_recursive (agent {ET_INTERNAL_UNIVERSE}.clusters_do_explicit (an_action))
 		end
 
 	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
@@ -260,7 +304,7 @@ feature -- Iteration
 		local
 			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
 		do
-			create l_visited.make (10)
+			create l_visited.make (initial_universes_capacity)
 			add_internal_universe_recursive (l_visited)
 			l_visited.do_all (an_action)
 		end
@@ -280,7 +324,7 @@ feature -- Iteration
 			if a_stop_request = Void then
 				internal_universes_do_recursive (an_action)
 			elseif not a_stop_request.item ([]) then
-				create l_visited.make (10)
+				create l_visited.make (initial_universes_capacity)
 				add_internal_universe_recursive (l_visited)
 				from l_visited.start until l_visited.after loop
 					if a_stop_request.item ([]) then
@@ -320,13 +364,13 @@ feature -- Relations
 
 feature -- Parsing
 
-	preparse_local is
+	preparse is
 			-- Build a mapping between class names and their filenames and
 			-- populate `classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `classes', but are not parsed.
+			-- are added to `adapted_classes', but are not parsed.
 			--
 			-- Note that only classes declared locally will be taken into
 			-- account. Classes from other universes will be imported later,
@@ -354,11 +398,11 @@ feature -- Parsing
 
 	preparse_recursive is
 			-- Build a mapping between class names and their filenames and
-			-- populate `classes', even if the classes have not been
+			-- populate `adapted_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `classes', but are not parsed.
+			-- are added to `adapted_classes', but are not parsed.
 			--
 			-- Note that both locally declared classes and classes imported
 			-- from other universes (after having themselves been preparsed
@@ -374,27 +418,27 @@ feature -- Parsing
 			create l_assemblies.make_empty
 			dotnet_assemblies.do_all (agent l_assemblies.put_last)
 			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse_local)
-			libraries.do_recursive (agent {ET_LIBRARY}.preparse_local)
-			preparse_local
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.preparse)
+			libraries.do_recursive (agent {ET_LIBRARY}.preparse)
+			preparse
 				-- Then for each universe, import classes from other universes.
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
 			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
 			import_classes
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
-			if classes_modified then
-				reset_classes_incremental
+			if classes_modified_recursive then
+				reset_classes_incremental_recursive
 			end
 		end
 
-	parse_all_local is
+	parse_all is
 			-- Parse all classes declared locally in the current universe.
 			-- There is no need to call one of the preparse routines
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `classes' will be populated.
+			-- this process and `adapted_classes' will be populated.
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
 			-- the classes that have been modified or were not parsed yet.
@@ -430,9 +474,9 @@ feature -- Parsing
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `classes' will be populated (both with classes
-			-- declared locally and those imported from other universes which
-			-- have themselves been parsed recursively during this call).
+			-- this process and `adapted_classes' will be populated (both with
+			-- classes declared locally and those imported from other universes
+			-- which have themselves been parsed recursively during this call).
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
 			-- the classes that have been modified or were not parsed yet.
@@ -447,17 +491,17 @@ feature -- Parsing
 			create l_assemblies.make_empty
 			dotnet_assemblies.do_all (agent l_assemblies.put_last)
 			current_system.dotnet_assembly_consumer.consume_assemblies (l_assemblies)
-			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all_local)
-			libraries.do_recursive (agent {ET_LIBRARY}.parse_all_local)
-			parse_all_local
+			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.parse_all)
+			libraries.do_recursive (agent {ET_LIBRARY}.parse_all)
+			parse_all
 				-- Then for each universe, import classes from other universes.
 			dotnet_assemblies.do_recursive (agent {ET_DOTNET_ASSEMBLY}.import_classes)
 			libraries.do_recursive (agent {ET_LIBRARY}.import_classes)
 			import_classes
 				-- Reset incrementally all classes that may have been
 				-- affected by changes made above.
-			if classes_modified then
-				reset_classes_incremental
+			if classes_modified_recursive then
+				reset_classes_incremental_recursive
 			end
 		end
 
@@ -466,7 +510,7 @@ feature {ET_UNIVERSE} -- Parsing
 	import_classes is
 			-- Import classes made available (i.e. exported) by other universes.
 		do
-			classes.do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_imported_classes)
+			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_imported_classes)
 			libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.export_classes (Current))
 			dotnet_assemblies.do_adapted (agent {ET_ADAPTED_DOTNET_ASSEMBLY}.export_classes (Current))
 		end

@@ -16,13 +16,10 @@ inherit
 
 	ET_INTERNAL_UNIVERSE
 		redefine
-			preparse,
-			parse_all,
+			preparse_recursive,
+			parse_all_recursive,
 			set_none_type
 		end
-
-	KL_IMPORTED_STRING_ROUTINES
-			export {NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 			export {NONE} all end
@@ -75,10 +72,25 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_dotnet: BOOLEAN is
-			-- Does current universe contain Eiffel for .NET kernel classes?
+			-- Does current system contain Eiffel for .NET kernel classes?
 			-- Hence follow Eiffel for .NET validity rules.
+		local
+			l_visited: DS_HASH_SET [ET_INTERNAL_UNIVERSE]
 		do
-			Result := dotnet_assemblies /= Void and then dotnet_assemblies.count > 0
+			if not dotnet_assemblies.is_empty then
+				Result := True
+			else
+				create l_visited.make (initial_universes_capacity)
+				add_internal_universe_recursive (l_visited)
+				from l_visited.start until l_visited.after loop
+					if not l_visited.item_for_iteration.dotnet_assemblies.is_empty then
+						Result := True
+						l_visited.go_after
+					else
+						l_visited.forth
+					end
+				end
+			end
 		end
 
 feature -- Access
@@ -119,22 +131,22 @@ feature -- Kernel types
 feature -- Feature seeds
 
 	default_create_seed: INTEGER
-			-- Seed of feature 'default_create' in class ANY
+			-- Seed of feature 'default_create' in class "ANY"
 
 	copy_seed: INTEGER
-			-- Seed of feature 'copy' in class ANY
+			-- Seed of feature 'copy' in class "ANY"
 
 	is_equal_seed: INTEGER
-			-- Seed of feature 'is_equal' in class ANY
+			-- Seed of feature 'is_equal' in class "ANY"
 
 	dispose_seed: INTEGER
-			-- Seed of feature 'dispose' in class DISPOSABLE
+			-- Seed of feature 'dispose' in class "DISPOSABLE"
 
 	routine_call_seed: INTEGER
-			-- Seed of feature 'call' in class ROUTINE
+			-- Seed of feature 'call' in class "ROUTINE"
 
 	function_item_seed: INTEGER
-			-- Seed of feature 'item' in class FUNCTION
+			-- Seed of feature 'item' in class "FUNCTION"
 
 feature -- Feature seeds setting
 
@@ -460,7 +472,7 @@ feature -- Parser status report
 			-- error will be reported.
 
 	preparse_shallow_mode: BOOLEAN
-			-- Are filenames are expected to be of the form 'classname.e'?
+			-- Are filenames expected to be of the form 'classname.e'?
 
 	preparse_single_mode: BOOLEAN
 			-- Is each Eiffel file expected to contain exactly one class?
@@ -696,13 +708,13 @@ feature -- Implementation checking status setting
 
 feature -- Parsing
 
-	preparse is
+	preparse_recursive is
 			-- Build a mapping between class names and their filenames and
-			-- populate `classes', even if the classes have not been
+			-- populate `adapted_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `classes', but are not parsed.
+			-- are added to `adapted_classes', but are not parsed.
 			--
 			-- Note that both locally declared classes and classes imported
 			-- from other universes (after having themselves been preparsed
@@ -718,16 +730,16 @@ feature -- Parsing
 			build_scm_write_mappings
 		end
 
-	parse_all is
+	parse_all_recursive is
 			-- Parse all classes declared locally in the current universe,
 			-- and recursively those that are declared in universes it
 			-- depends on. There is no need to call one of the preparse
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `classes' will be populated (both with classes
-			-- declared locally and those imported from other universes which
-			-- have themselves been parsed recursively during this call).
+			-- this process and `adapted_classes' will be populated (both with
+			-- classes declared locally and those imported from other universes
+			-- which have themselves been parsed recursively during this call).
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
 			-- the classes that have been modified or were not parsed yet.
@@ -758,7 +770,7 @@ feature -- Parsing
 			if root_type = Void then
 				-- Do nothing.
 			elseif root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
-				parse_all
+				parse_all_recursive
 			else
 				l_root_class := root_type.base_class
 				l_root_class.process (eiffel_parser)
@@ -767,13 +779,13 @@ feature -- Parsing
 					error_handler.report_gvsrc4a_error (l_root_class)
 				else
 					l_done := False
-					l_old_parsed_class_count := parsed_class_count
+					l_old_parsed_class_count := parsed_class_count_recursive
 					from until l_done loop
 						if stop_requested then
 							l_done := True
 						else
 							classes_do_if_recursive_until (agent {ET_CLASS}.process (eiffel_parser), agent {ET_CLASS}.in_system, stop_request)
-							l_parsed_class_count := parsed_class_count
+							l_parsed_class_count := parsed_class_count_recursive
 							l_done := (l_parsed_class_count = l_old_parsed_class_count)
 							l_old_parsed_class_count := l_parsed_class_count
 						end
@@ -962,33 +974,33 @@ feature -- Compilation
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			preparse
-			if error_handler.benchmark_shown then
+			preparse_recursive
+			if not stop_requested and then error_handler.benchmark_shown then
 				print_time (dt1, "Degree 6")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			parse_system
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Preparsed ")
-				error_handler.info_file.put_integer (class_count)
+				error_handler.info_file.put_integer (class_count_recursive)
 				error_handler.info_file.put_line (" classes")
 				error_handler.info_file.put_string ("Parsed ")
-				error_handler.info_file.put_integer (parsed_class_count)
+				error_handler.info_file.put_integer (parsed_class_count_recursive)
 				error_handler.info_file.put_line (" classes")
 				error_handler.info_file.put_integer (registered_feature_count)
 				error_handler.info_file.put_line (" features")
 			end
-			if error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_4
-			if error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_3
-			if error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				print_time (dt1, "Degree 3")
 			end
 		end
@@ -1013,27 +1025,27 @@ feature -- Compilation
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			if preparse_enabled then
-				preparse
-				if error_handler.benchmark_shown then
+				preparse_recursive
+				if not stop_requested and then error_handler.benchmark_shown then
 					print_time (dt1, "Degree 6")
 					dt1 := l_clock.system_clock.date_time_now
 				end
 				compile_degree_5
 			else
-				parse_all
+				parse_all_recursive
 				check_provider_validity
 			end
-			if error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_4
-			if error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				print_time (dt1, "Degree 4")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_3
-			if error_handler.benchmark_shown then
+			if not stop_requested and then error_handler.benchmark_shown then
 				print_time (dt1, "Degree 3")
 			end
 		end
@@ -1046,11 +1058,11 @@ feature -- Compilation
 			-- interruption if `stop_request' is Void.
 		do
 				-- Parse classes.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (eiffel_parser), agent {ET_CLASS}.is_preparsed, stop_request)
+			classes_do_recursive_until (agent {ET_CLASS}.process (eiffel_parser), stop_request)
 			check_provider_validity
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Parsed ")
-				error_handler.info_file.put_integer (parsed_class_count)
+				error_handler.info_file.put_integer (parsed_class_count_recursive)
 				error_handler.info_file.put_line (" classes")
 				error_handler.info_file.put_integer (registered_feature_count)
 				error_handler.info_file.put_line (" features")
@@ -1065,14 +1077,14 @@ feature -- Compilation
 			-- interruption if `stop_request' is Void.
 		do
 				-- Build ancestors.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (ancestor_builder), agent {ET_CLASS}.is_parsed, stop_request)
+			classes_do_recursive_until (agent {ET_CLASS}.process (ancestor_builder), stop_request)
 				-- Flatten features.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (feature_flattener), agent {ET_CLASS}.ancestors_built, stop_request)
+			classes_do_recursive_until (agent {ET_CLASS}.process (feature_flattener), stop_request)
 				-- Check interface.
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (interface_checker), agent {ET_CLASS}.features_flattened, stop_request)
+			classes_do_recursive_until (agent {ET_CLASS}.process (interface_checker), stop_request)
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Flattened ")
-				error_handler.info_file.put_integer (parsed_class_count)
+				error_handler.info_file.put_integer (parsed_class_count_recursive)
 				error_handler.info_file.put_line (" classes")
 				error_handler.info_file.put_integer (registered_feature_count)
 				error_handler.info_file.put_line (" features")
@@ -1105,7 +1117,7 @@ feature -- Compilation
 				l_checker.set_flat_dbc_mode (flat_dbc_mode)
 				l_checker.set_suppliers_enabled (suppliers_enabled)
 			end
-			classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, stop_request)
+			classes_do_recursive_until (agent {ET_CLASS}.process (l_processor), stop_request)
 		end
 
 	check_provider_validity is
@@ -1116,7 +1128,7 @@ feature -- Compilation
 			-- interruption if `stop_request' is Void.
 		do
 			if cluster_dependence_enabled then
-				classes_do_if_recursive_until (agent {ET_CLASS}.process (provider_checker), agent {ET_CLASS}.is_parsed, stop_request)
+				classes_do_recursive_until (agent {ET_CLASS}.process (provider_checker), stop_request)
 			end
 		end
 

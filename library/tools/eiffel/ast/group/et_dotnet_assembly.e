@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		".NET assemblies of classes"
+		"Eiffel .NET assemblies of classes"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
@@ -105,11 +105,12 @@ feature -- Access
 			-- .NET assemblies that current universe depends on
 
 	adapted_universe (a_universe: ET_UNIVERSE): ET_ADAPTED_UNIVERSE is
-			-- Universe corresponding to `a_universe' that current universe
-			-- depends on if any, Void otherwise
+			-- Adapted version of `a_universe' viewed from current universe
+			-- when it depends on it, Void otherwise
 			--
-			-- Note that `a_universe' may be imported twice by the current
-			-- universe. Return one of them in that case.
+			-- `a_universe' may be a library or assembly from which the current
+			-- universe imports classes. Note that `a_universe' may be imported
+			-- twice by the current universe. Return one of them in that case.
 		local
 			l_dotnet_assembly: ET_DOTNET_ASSEMBLY
 		do
@@ -131,7 +132,7 @@ feature -- Access
 		end
 
 	kind_name: STRING is
-			-- Kind name (e.g. "cluster", "assembly", "library", etc.)
+			-- Name of the kind of group or universe (e.g. "cluster", "assembly", "library", etc.)
 		once
 			Result := "assembly"
 		end

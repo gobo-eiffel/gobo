@@ -117,7 +117,8 @@ feature -- Status report
 	is_implicit: BOOLEAN
 			-- Has current cluster not been explicitly declared
 			-- but is instead the result of the fact that its
-			-- parent is a recursive cluster?
+			-- parent (or recursively the parent of its parent)
+			-- is a recursive cluster?
 
 	has_ancestor (a_cluster: ET_CLUSTER): BOOLEAN is
 			-- Is `a_cluster' the current cluster itself,
@@ -336,7 +337,7 @@ feature -- Access
 		end
 
 	kind_name: STRING is
-			-- Kind name (e.g. "cluster", "assembly", etc.)
+			-- Name of the kind of group (e.g. "cluster", "assembly", etc.)
 		once
 			Result := "cluster"
 		end
@@ -545,7 +546,7 @@ feature -- Measurement
 
 	count: INTEGER is
 			-- Number (recursively) of non-abstract clusters,
-			-- including current cursor
+			-- including current cluster
 		do
 			if not is_abstract then
 				Result := 1
@@ -559,7 +560,7 @@ feature -- Measurement
 
 	override_count: INTEGER is
 			-- Number (recursively) of non-abstract non-read-only override clusters,
-			-- including current cursor
+			-- including current cluster
 		do
 			if not is_read_only and not is_abstract and is_override then
 				Result := 1
@@ -573,7 +574,7 @@ feature -- Measurement
 
 	read_write_count: INTEGER is
 			-- Number (recursively) of non-abstract non-read-only clusters,
-			-- including current cursor
+			-- including current cluster
 		do
 			if not is_read_only and not is_abstract then
 				Result := 1
@@ -780,7 +781,7 @@ feature -- Element change
 	add_implicit_subclusters is
 			-- Add (recursively) implicit subclusters to current cluster if it is recursive.
 			-- Note that these subclusters will otherwise be added when running one of
-			-- the `preparse_*' or `parse_*_all' routines of ET_UNIVERSE.
+			-- the `preparse*' or `parse_all*' routines of ET_UNIVERSE.
 		local
 			dir_name: STRING
 			dir: KL_DIRECTORY

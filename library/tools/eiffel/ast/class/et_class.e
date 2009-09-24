@@ -1815,19 +1815,6 @@ feature -- Processing
 			a_processor.process_class (Current)
 		end
 
-feature -- Actions
-
-	action_wrapper (a_action: PROCEDURE [ANY, TUPLE]) is
-			-- Execute `a_action'.
-			--
-			-- Note: Useful when we want to pass it as an agent which
-			-- requires an open operand of type ET_CLASS.
-		require
-			a_action_not_void: a_action /= Void
-		do
-			a_action.call ([])
-		end
-
 feature {NONE} -- Constants
 
 	initial_descendants_capacity: INTEGER is
