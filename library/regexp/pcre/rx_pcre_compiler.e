@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 		do
 			create byte_code.make (1024)
 			create internal_start_bits.make_empty
-			pattern := STRING_.cloned_string (empty_pattern)
+			pattern_buffer := STRING_.cloned_string (empty_pattern_buffer)
 			reset
 			set_character_case_mapping (default_character_case_mapping)
 			set_word_set (default_word_set)
@@ -83,6 +83,18 @@ feature -- Status report
 			-- Was last compilation successful?
 		do
 			Result := STRING_.same_string (error_message, err_msg_0)
+		ensure
+			pattern_not_void: Result implies pattern /= Void
+		end
+
+	is_case_insensitive: BOOLEAN is
+			-- Do letters in the pattern match both upper- and lower-case letters?
+			-- This option cannot be changed after compilation.
+			-- (It is equivalent to Perl's /i option.)
+		do
+			Result := is_caseless
+		ensure
+			definition: Result = is_caseless
 		end
 
 	is_caseless: BOOLEAN
@@ -190,6 +202,9 @@ feature -- Status report
 
 feature -- Access
 
+	pattern: STRING
+			-- Pattern being compiled
+
 	byte_code: RX_BYTE_CODE
 			-- Byte code built during compilation
 
@@ -229,6 +244,16 @@ feature -- Status setting
 			anchored_set: is_anchored = False
 			greedy_set: is_greedy = True
 			strict_set: is_strict = False
+		end
+
+	set_case_insensitive (b: BOOLEAN) is
+			-- Set `is_case_insensitive' to `b'.
+		require
+			not_compiled: not is_compiled
+		do
+			set_caseless (b)
+		ensure
+			case_insensitive_set: is_case_insensitive = b
 		end
 
 	set_caseless (b: BOOLEAN) is
@@ -380,8 +405,9 @@ feature -- Compilation
 		local
 			an_option: INTEGER
 		do
-			pattern := a_pattern.twin
-			pattern.append_character ('%U')
+			pattern := a_pattern
+			pattern_buffer := a_pattern.twin
+			pattern_buffer.append_character ('%U')
 			pattern_count := a_pattern.count
 			pattern_position := 1
 			code_index := 0
@@ -455,13 +481,15 @@ feature -- Compilation
 					std.output.put_integer (error_position)
 					std.output.put_string (" character: ")
 					if 1 <= error_position and error_position <= pattern_count then
-						std.output.put_character (pattern.item (error_position))
+						std.output.put_character (pattern_buffer.item (error_position))
 					end
 				end
 				print_compiled_pattern_code (std.output, False)
 				print_compiled_pattern_info (std.output)
 				print_start_bits (std.output)
 			end
+		ensure
+			pattern_set: pattern = a_pattern
 		end
 
 	optimize is
@@ -516,10 +544,12 @@ feature -- Reset
 			-- Do not change the options (see `set_default_options' for the list of options).
 		do
 			set_error (err_msg_99, 99, 0)
-			STRING_.wipe_out (pattern)
-			pattern.append_character ('%U')
+			STRING_.wipe_out (pattern_buffer)
+			pattern_buffer.append_character ('%U')
 			pattern_count := 0
+			pattern := Void
 		ensure
+			no_pattern: pattern = Void
 			not_compiled: not is_compiled
 		end
 
@@ -1209,8 +1239,8 @@ feature {NONE} -- Access
 	code_index: INTEGER
 			-- Position in byte code
 
-	pattern: STRING
-			-- Regular expression pattern being compiled
+	pattern_buffer: STRING
+			-- Buffer containing the regular expression pattern being compiled
 
 	pattern_position: INTEGER
 			-- Current position in `pattern'
@@ -1477,7 +1507,7 @@ feature {NONE} -- Compilation
 						-- terminating ket and the length of the whole bracketed item, and return,
 						-- leaving the pointer at the terminating char. If any of the ims options
 						-- were changed inside the group, compile a resetting opcode following.
-					if pattern.item_code (pattern_position) /= Bar_code then
+					if pattern_buffer.item_code (pattern_position) /= Bar_code then
 						length := byte_code.count - start_bracket
 						byte_code.append_opcode (op_ket)
 						byte_code.append_integer (length)
@@ -1531,7 +1561,7 @@ feature {NONE} -- Compilation
 			until
 				stop or else pattern_position > pattern_count or else error_message /= err_msg_99
 			loop
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 				if c = Left_brace_code and then compile_counted_repeats (previous, prevreqchar, sub_countlits) then
 					previous := 0
 				else
@@ -1579,23 +1609,23 @@ feature {NONE} -- Compilation
 						pattern_position := pattern_position + 1
 						check
 								-- The last character read was '(', and there is at
-								-- least the character '%U' and the end of `pattern'.
-							valid_position: pattern_position <= pattern.count
+								-- least the character '%U' at the end of `pattern_buffer'.
+							valid_position: pattern_position <= pattern_buffer.count
 						end
-						if pattern.item_code (pattern_position) = Question_mark_code then
+						if pattern_buffer.item_code (pattern_position) = Question_mark_code then
 							pattern_position := pattern_position + 1
 							check
 									-- The last character read was '?', and there is at
-									-- least the character '%U' and the end of `pattern'.
-								valid_position: pattern_position <= pattern.count
+									-- least the character '%U' at the end of `pattern_buffer'.
+								valid_position: pattern_position <= pattern_buffer.count
 							end
-							inspect pattern.item_code (pattern_position)
+							inspect pattern_buffer.item_code (pattern_position)
 							when Pound_code then
 									-- Comment skip to ket.
 								from
 									tc := pattern_position + 1
 								until
-									tc > pattern_count or else pattern.item_code (tc) = Right_parenthesis_code
+									tc > pattern_count or else pattern_buffer.item_code (tc) = Right_parenthesis_code
 								loop
 									tc := tc + 1
 								end
@@ -1616,19 +1646,19 @@ feature {NONE} -- Compilation
 								pattern_position := pattern_position + 1
 								check
 										-- The last character read was '(', and there is at
-										-- least the character '%U' and the end of `pattern'.
-									valid_position: pattern_position <= pattern.count
+										-- least the character '%U' at the end of `pattern_buffer'.
+									valid_position: pattern_position <= pattern_buffer.count
 								end
-								inspect pattern.item_code (pattern_position)
+								inspect pattern_buffer.item_code (pattern_position)
 								when Zero_code .. Nine_code then
 									condref := scan_decimal_number (10)
 									check
 											-- `scan_decimal_number' put `pattern_position' at the
 											-- first position that was not a digit, and there is at
-											-- least the character '%U' and the end of `pattern'.
-										valid_position: pattern_position <= pattern.count
+											-- least the character '%U' at the end of `pattern_buffer'.
+										valid_position: pattern_position <= pattern_buffer.count
 									end
-									if pattern.item_code (pattern_position) /= Right_parenthesis_code then
+									if pattern_buffer.item_code (pattern_position) /= Right_parenthesis_code then
 										set_error (err_msg_26, 26, pattern_position)
 									end
 									if condref = 0 then
@@ -1638,15 +1668,15 @@ feature {NONE} -- Compilation
 									end
 								else
 									tc := pattern_position
-									if pattern.item_code (tc) /= Question_mark_code then
+									if pattern_buffer.item_code (tc) /= Question_mark_code then
 										set_error (err_msg_28, 28, pattern_position)
 									else
 										check
 												-- The last character read was '?', and there is at
-												-- least the character '%U' and the end of `pattern'.
-											valid_position: pattern_position <= pattern.count
+												-- least the character '%U' at the end of `pattern_buffer'.
+											valid_position: pattern_position <= pattern_buffer.count
 										end
-										inspect pattern.item_code (tc + 1)
+										inspect pattern_buffer.item_code (tc + 1)
 										when Equal_code, Exclamation_code, Less_than_code then
 												-- Do nothing.
 										else
@@ -1668,10 +1698,10 @@ feature {NONE} -- Compilation
 								pattern_position := pattern_position + 1
 								check
 										-- The last character read was '<', and there is at
-										-- least the character '%U' and the end of `pattern'.
-									valid_position: pattern_position <= pattern.count
+										-- least the character '%U' at the end of `pattern_buffer'.
+									valid_position: pattern_position <= pattern_buffer.count
 								end
-								inspect pattern.item_code (pattern_position)
+								inspect pattern_buffer.item_code (pattern_position)
 								when Equal_code then
 										-- Positive lookbehind.
 									bravalue := op_assertback
@@ -1695,7 +1725,7 @@ feature {NONE} -- Compilation
 							else
 									-- Option setting.
 								from
-									c := pattern.item_code (pattern_position)
+									c := pattern_buffer.item_code (pattern_position)
 									flag := True
 								until
 									c = Right_parenthesis_code or else c = Colon_code or else error_message /= err_msg_99
@@ -1737,10 +1767,10 @@ feature {NONE} -- Compilation
 										pattern_position := pattern_position + 1
 										check
 												-- The last character read was not '%U', and there is at
-												-- least the character '%U' and the end of `pattern'.
-											valid_position: pattern_position <= pattern.count
+												-- least the character '%U' at the end of `pattern_buffer'.
+											valid_position: pattern_position <= pattern_buffer.count
 										end
-										c := pattern.item_code (pattern_position)
+										c := pattern_buffer.item_code (pattern_position)
 									end
 								end
 								if c = Right_parenthesis_code then
@@ -1874,7 +1904,7 @@ feature {NONE} -- Compilation
 										regexp_countlits := regexp_countlits + sub_countlits
 									end
 								end
-								if pattern.item_code (pattern_position) /= Right_parenthesis_code then
+								if pattern_buffer.item_code (pattern_position) /= Right_parenthesis_code then
 										-- Error if hit end of pattern.
 									set_error (err_msg_14, 14, pattern_position)
 								end
@@ -1892,7 +1922,7 @@ feature {NONE} -- Compilation
 							-- Save space to store number of characters.
 						byte_code.append_integer (0)
 						length := 0
-						c := pattern.item_code (pattern_position)
+						c := pattern_buffer.item_code (pattern_position)
 						from
 							flag := False
 						until
@@ -1948,7 +1978,7 @@ feature {NONE} -- Compilation
 								if pattern_position > pattern_count or length >= maxlit then
 									flag := True
 								else
-									c := pattern.item_code (pattern_position)
+									c := pattern_buffer.item_code (pattern_position)
 									flag := meta_set.has (c)
 								end
 							end
@@ -1985,7 +2015,7 @@ feature {NONE} -- Compilation
 			-- Compile character class.
 		require
 			pattern_position_small_enough: pattern_position <= pattern_count
-			is_character_class: pattern.item_code (pattern_position) = Left_bracket_code
+			is_character_class: pattern_buffer.item_code (pattern_position) = Left_bracket_code
 		local
 				-- We have to build a temporary character-map in case the
 				-- class contains only 1 character, because in that
@@ -2004,20 +2034,20 @@ feature {NONE} -- Compilation
 			pattern_position := pattern_position + 1
 			check
 					-- The last character read was '[', and there is at
-					-- least the character '%U' and the end of `pattern'.
-				valid_position: pattern_position <= pattern.count
+					-- least the character '%U' at the end of `pattern_buffer'.
+				valid_position: pattern_position <= pattern_buffer.count
 			end
-			c := pattern.item_code (pattern_position)
+			c := pattern_buffer.item_code (pattern_position)
 			if c = Caret_code then
 					-- If the first character is '^', set the negation flag and skip it.
 				negate_class := True
 				pattern_position := pattern_position + 1
 				check
 						-- The last character read was '^', and there is at
-						-- least the character '%U' and the end of `pattern'.
-					valid_position: pattern_position <= pattern.count
+						-- least the character '%U' at the end of `pattern_buffer'.
+					valid_position: pattern_position <= pattern_buffer.count
 				end
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 			end
 			from
 					-- Keep a count of chars so that we can optimize
@@ -2035,10 +2065,10 @@ feature {NONE} -- Compilation
 					if c = Left_bracket_code then
 						check
 								-- The last character read was '[', and there is at
-								-- least the character '%U' and the end of `pattern'.
-							valid_position: pattern_position <= pattern.count
+								-- least the character '%U' at the end of `pattern_buffer'.
+							valid_position: pattern_position <= pattern_buffer.count
 						end
-						inspect pattern.item_code (pattern_position + 1)
+						inspect pattern_buffer.item_code (pattern_position + 1)
 						when Colon_code, Dot_code, Equal_code then
 							tmp_pat_index := check_posix_syntax (pattern_position)
 						else
@@ -2052,11 +2082,11 @@ feature {NONE} -- Compilation
 							-- [.ch.] and [=ch=] ("collating elements") and fault them, as Perl
 							-- 5.6 does.
 						local_negate := False
-						if pattern.item_code (pattern_position + 1) /= Colon_code then
+						if pattern_buffer.item_code (pattern_position + 1) /= Colon_code then
 							set_error (err_msg_31, 31, pattern_position)
 						else
 							pattern_position := pattern_position + 2
-							if pattern.item_code (pattern_position) = Caret_code then
+							if pattern_buffer.item_code (pattern_position) = Caret_code then
 								pattern_position := pattern_position + 1
 								local_negate := True
 							end
@@ -2119,7 +2149,7 @@ feature {NONE} -- Compilation
 							end
 						end
 						if val >= 0 then
-							if pattern.item_code (pattern_position + 1) = Minus_code and then pattern.item_code (pattern_position + 2) /= Right_bracket_code then
+							if pattern_buffer.item_code (pattern_position + 1) = Minus_code and then pattern_buffer.item_code (pattern_position + 2) /= Right_bracket_code then
 									-- A single character may be followed by '-' to form a range. However,
 									-- Perl does not permit ']' to be the end of the range. A '-' character
 									-- here is treated as a literal.
@@ -2127,7 +2157,7 @@ feature {NONE} -- Compilation
 								if pattern_position > pattern_count then
 									set_error (err_msg_6, 6, pattern_position)
 								else
-									range_end := pattern.item_code (pattern_position)
+									range_end := pattern_buffer.item_code (pattern_position)
 									tmp_pat_index := pattern_position
 									if range_end = Backslash_code then
 											-- The second part of a range can be a single-character escape, but
@@ -2184,7 +2214,7 @@ feature {NONE} -- Compilation
 				end
 				if error_message = err_msg_99 then
 					pattern_position := pattern_position + 1
-					c := pattern.item_code (pattern_position)
+					c := pattern_buffer.item_code (pattern_position)
 				end
 			end
 			if class_charcount = 1 then
@@ -2242,7 +2272,7 @@ feature {NONE} -- Compilation
 					-- If the next character is '?' this is a minimizing repeat, by default,
 					-- but if PCRE_UNGREEDY is set, it works the other way round. Advance to the
 					-- next character.
-				if pattern.item_code (pattern_position + 1) = Question_mark_code then
+				if pattern_buffer.item_code (pattern_position + 1) = Question_mark_code then
 					if greedy_non_default then
 						repeat_type := 1
 					else
@@ -2554,13 +2584,13 @@ feature {NONE} -- Compilation
 			max := -1
 			from
 				i := pattern_position + 1
-				c := pattern.item_code (i)
+				c := pattern_buffer.item_code (i)
 			until
 				c < Zero_code or c > Nine_code
 			loop
 				min := min * 10 + c - Zero_code
 				i := i + 1
-				c := pattern.item_code (i)
+				c := pattern_buffer.item_code (i)
 			end
 			if min > 65535 then
 --	TODO: no such limitation anymore.
@@ -2572,7 +2602,7 @@ feature {NONE} -- Compilation
 					Result := True
 				elseif c = Comma_code then
 					i := i + 1
-					c := pattern.item_code (i)
+					c := pattern_buffer.item_code (i)
 					if c /= Right_brace_code then
 						from
 							max := 0
@@ -2581,7 +2611,7 @@ feature {NONE} -- Compilation
 						loop
 							max := max * 10 + c - Zero_code
 							i := i + 1
-							c := pattern.item_code (i)
+							c := pattern_buffer.item_code (i)
 						end
 					end
 					if c = Right_brace_code then
@@ -2617,24 +2647,24 @@ feature {NONE} -- Posix character classes
 			from
 				set := alpha_set
 				i := a_pattern_position
-				terminator := pattern.item_code (i + 1)
-				if pattern.item_code (i + 2) = Caret_code then
+				terminator := pattern_buffer.item_code (i + 1)
+				if pattern_buffer.item_code (i + 2) = Caret_code then
 					i := i + 3
 				else
 					i := i + 2
 				end
 			until
-				not set.has (pattern.item_code (i))
+				not set.has (pattern_buffer.item_code (i))
 			loop
 				i := i + 1
 			end
-			if pattern.item_code (i) = terminator and then pattern.item_code (i + 1) = Right_bracket_code then
+			if pattern_buffer.item_code (i) = terminator and then pattern_buffer.item_code (i + 1) = Right_bracket_code then
 				Result := i
 			else
 				Result := -1
 			end
 		ensure
-			valid_position: Result /= -1 implies pattern.valid_index (Result)
+			valid_position: Result /= -1 implies pattern_buffer.valid_index (Result)
 		end
 
 	check_posix_name (a_pattern_position, a_len: INTEGER): INTEGER is
@@ -2663,7 +2693,7 @@ feature {NONE} -- Posix character classes
 					until
 						j > a_len
 					loop
-						if a_name.item_code (j) /= pattern.item_code (k) then
+						if a_name.item_code (j) /= pattern_buffer.item_code (k) then
 							Result := -1
 								-- Jump out of the loop.
 							j := a_len + 1
@@ -2694,13 +2724,13 @@ feature {NONE} -- Pattern scanning
 		do
 			stop := pattern_position + a_max_len
 			from
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 			until
 				c > Nine_code or else c < Zero_code or else pattern_position >= stop
 			loop
 				Result := Result * 10 + c - Zero_code
 				pattern_position := pattern_position + 1
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 			end
 		ensure
 			decimal_positive: Result >= 0
@@ -2715,13 +2745,13 @@ feature {NONE} -- Pattern scanning
 		do
 			stop := pattern_position + a_max_len
 			from
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 			until
 				c > Seven_code or else c < Zero_code or else pattern_position >= stop
 			loop
 				Result := Result * 8 + c - Zero_code
 				pattern_position := pattern_position + 1
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 			end
 		ensure
 			octal_positive: Result >= 0
@@ -2736,7 +2766,7 @@ feature {NONE} -- Pattern scanning
 		do
 			stop := pattern_position + a_max_len
 			from
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 			until
 				not xdigit_set.has (c) or else pattern_position >= stop
 			loop
@@ -2748,7 +2778,7 @@ feature {NONE} -- Pattern scanning
 					Result := Result * 16 + c - Lower_a_code + 10
 				end
 				pattern_position := pattern_position + 1
-				c := pattern.item_code (pattern_position)
+				c := pattern_buffer.item_code (pattern_position)
 			end
 		ensure
 			hex_number_positive: Result >= 0
@@ -2769,15 +2799,15 @@ feature {NONE} -- Pattern scanning
 				i := j
 				from
 				until
-					not space_set.has (pattern.item_code (j))
+					not space_set.has (pattern_buffer.item_code (j))
 				loop
 					j := j + 1
 				end
-				if pattern.item_code (j) = Pound_code then
+				if pattern_buffer.item_code (j) = Pound_code then
 					from
 						j := j + 1
 					until
-						j > pattern_count or else pattern.item_code (j) = New_line_code
+						j > pattern_count or else pattern_buffer.item_code (j) = New_line_code
 					loop
 						j := j + 1
 					end
@@ -2804,10 +2834,10 @@ feature {NONE} -- Pattern scanning
 			pattern_position := pattern_position + 1
 			check
 					-- The last character read was '/', and there is at
-					-- least the character '%U' and the end of `pattern'.
-				valid_position: pattern_position <= pattern.count
+					-- least the character '%U' at the end of `pattern_buffer'.
+				valid_position: pattern_position <= pattern_buffer.count
 			end
-			c := pattern.item_code (pattern_position)
+			c := pattern_buffer.item_code (pattern_position)
 			if pattern_position > pattern_count then
 					-- If backslash is at the end of the pattern, it's an error.
 				set_error (err_msg_1, 1, pattern_position)
@@ -2872,10 +2902,10 @@ feature {NONE} -- Pattern scanning
 						pattern_position := pattern_position + 1
 						check
 								-- The last character read was 'c', and there is at
-								-- least the character '%U' and the end of `pattern'.
-							valid_position: pattern_position <= pattern.count
+								-- least the character '%U' at the end of `pattern_buffer'.
+							valid_position: pattern_position <= pattern_buffer.count
 						end
-						c := pattern.item_code (pattern_position)
+						c := pattern_buffer.item_code (pattern_position)
 						if pattern_position > pattern_count then
 							set_error (err_msg_2, 2, pattern_position)
 							Result := 0
@@ -3428,15 +3458,15 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	empty_pattern: STRING is
-			-- Dummy empty pattern
+	empty_pattern_buffer: STRING is
+			-- Dummy empty pattern buffer
 		once
 			Result := "T"
 			Result.put ('%U', 1)
 		ensure
-			empty_pattern_not_void: Result /= Void
-			empty_pattern_not_empty: Result.count > 0
-			end_of_pattern: Result.item (Result.count) = '%U'
+			empty_pattern_buffer_not_void: Result /= Void
+			empty_pattern_buffer_not_empty: Result.count > 0
+			end_of_pattern_buffer: Result.item (Result.count) = '%U'
 		end
 
 	actual_set: RX_CHARACTER_SET is
@@ -3468,10 +3498,10 @@ invariant
 	word_set_not_void: word_set /= Void
 	word_set_not_empty: not word_set.is_empty
 	error_message_not_void: error_message /= Void
-	pattern_not_void: pattern /= Void
-	pattern_count_definition: pattern_count = pattern.count - 1
+	pattern_buffer_not_void: pattern_buffer /= Void
+	pattern_count_definition: pattern_count = pattern_buffer.count - 1
 	pattern_count_positive: pattern_count >= 0
-	end_of_pattern: pattern.item (pattern.count) = '%U'
+	end_of_pattern: pattern_buffer.item (pattern_buffer.count) = '%U'
 	valid_first_character: -1 <= first_character
 	valid_required_character: -2 <= required_character
 	internal_start_bits_not_void: internal_start_bits /= Void

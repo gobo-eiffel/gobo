@@ -146,6 +146,8 @@ feature -- Resetting
 	reset is
 			-- Reset the pattern.
 		do
+			pattern := Void
+			is_case_insensitive := False
 			wipe_out
 			yy_nxt := Void
 			yy_accept := Void

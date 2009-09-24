@@ -74,6 +74,8 @@ feature -- Element change
 			a_full_tables: LX_FULL_TABLES
 		do
 			wipe_out
+			pattern := a_pattern
+			is_case_insensitive := i
 			create an_error_handler.make_null
 			create a_description.make
 			a_description.set_equiv_classes_used (False)

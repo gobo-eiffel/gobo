@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- Create a new pattern matcher.
 		deferred
 		ensure
+			no_pattern: pattern = Void
 			not_compiled: not is_compiled
 			not_matched: not has_matched
 			not_matching: not is_matching
@@ -41,6 +42,7 @@ feature -- Compilation
 			a_pattern_not_void: a_pattern /= Void
 		deferred
 		ensure
+			pattern_set: pattern = a_pattern
 			not_matched: not has_matched
 			not_matching: not is_matching
 		end
@@ -51,6 +53,7 @@ feature -- Resetting
 			-- Reset the pattern.
 		deferred
 		ensure
+			no_pattern: pattern = Void
 			not_compiled: not is_compiled
 			not_matched: not has_matched
 			not_matching: not is_matching
@@ -73,6 +76,8 @@ feature -- Status report
 	is_compiled: BOOLEAN is
 			-- Has pattern been sucessfully compiled?
 		deferred
+		ensure
+			pattern_not_void: Result implies pattern /= Void
 		end
 
 	is_matching: BOOLEAN is
@@ -150,6 +155,11 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	pattern: STRING is
+			-- Pattern being matched
+		deferred
+		end
 
 	subject: STRING
 			-- Last input string passed to the matcher
