@@ -79,7 +79,7 @@ feature -- Access
 	dotnet_assemblies: ET_ADAPTED_DOTNET_ASSEMBLIES
 			-- .NET assemblies
 
-	classes_by_groups: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
+	classes_by_groups, classes_by_groups_recursive: DS_HASH_TABLE [DS_ARRAYED_LIST [ET_CLASS], ET_GROUP] is
 			-- Classes locally declared in current universe indexed by groups;
 			-- Create a new data structure at each call
 		local
@@ -145,7 +145,7 @@ feature -- Access
 
 feature -- Measurement
 
-	cluster_count: INTEGER is
+	cluster_count, cluster_count_recursive: INTEGER is
 			-- Number (recursively) of non-abstract clusters
 		do
 			Result := clusters.count
@@ -153,7 +153,7 @@ feature -- Measurement
 			cluster_count_not_negavite: Result >= 0
 		end
 
-	override_cluster_count: INTEGER is
+	override_cluster_count, override_cluster_count_recursive: INTEGER is
 			-- Number (recursively) of non-abstract non-read-only override clusters
 		do
 			Result := clusters.override_count
@@ -161,7 +161,7 @@ feature -- Measurement
 			override_cluster_count_not_negavite: Result >= 0
 		end
 
-	read_write_cluster_count: INTEGER is
+	read_write_cluster_count, read_write_cluster_count_recursive: INTEGER is
 			-- Number (recursively) of non-abstract non-read-only clusters
 		do
 			Result := clusters.read_write_count
@@ -219,7 +219,7 @@ feature -- Setting
 
 feature -- Element change
 
-	add_implicit_subclusters is
+	add_implicit_subclusters, add_implicit_subclusters_recursive is
 			-- Add (recursively) implicit subclusters when clusters are recursive.
 			-- Note that these subclusters will otherwise be added when running
 			-- one of the `preparse_*' or `parse_all' routines.

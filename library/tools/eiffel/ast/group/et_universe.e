@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset_classes is
+	reset_classes, reset_classes_recursive is
 			-- Reset classes as they were just after they were last parsed.
 			-- Do nothing if not parsed.
 		local
@@ -84,7 +84,7 @@ feature -- Initialization
 			end
 		end
 
-	reset_classes_incremental is
+	reset_classes_incremental, reset_classes_incremental_recursive is
 			-- Reset parts of the classes which may not be valid anymore
 			-- because of changes in other classes. Re-processing these
 			-- classes will not affect the parts which didn't need to be reset.
@@ -228,7 +228,7 @@ feature -- Initialization
 			end
 		end
 
-	reset_errors is
+	reset_errors, reset_errors_recursive is
 			-- Reset classes as they were before their first error was reported.
 			-- Errors will be reported again if classes are processed again.
 		local
@@ -261,7 +261,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	has_class (a_name: ET_CLASS_NAME): BOOLEAN is
+	has_class, has_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
 			-- Is there a class named `a_name' in current universe?
 			-- Take into account both locally declared classes and
 			-- classes exported by other universe.
@@ -334,6 +334,27 @@ feature -- Access
 					Result := mapped_classes.found_item
 				end
 			end
+		end
+
+	classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Class named `a_name' declared locally in current universe
+			-- or recursively in one of the universes it depends on.
+			-- Do not take into account overridden classes.
+			-- Create a new list at each call.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			l_class: ET_CLASS
+		do
+			create Result.make (1)
+			l_class := class_by_name (a_name)
+			if l_class /= Void then
+				Result.put_last (l_class)
+			end
+		ensure
+			classes_not_void: Result /= Void
+			no_void_class: not Result.has_void
 		end
 
 	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is

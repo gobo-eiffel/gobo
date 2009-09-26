@@ -24,7 +24,9 @@ inherit
 			preparse,
 			parse_all,
 			preparse_local,
-			parse_all_local
+			parse_all_local,
+			preparse_recursive,
+			parse_all_recursive
 		redefine
 			make
 		end

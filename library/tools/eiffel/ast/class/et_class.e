@@ -1702,6 +1702,12 @@ feature -- Suppliers/Providers
 	suppliers: DS_HASH_SET [ET_CLASS]
 			-- Supplier classes of current class
 
+	supplier_classes: DS_HASH_SET [ET_CLASS] is
+			-- Supplier classes of current class
+		do
+			Result := suppliers
+		end
+
 	set_suppliers (a_suppliers: like suppliers) is
 			-- Set `suppliers' to `a_suppliers'.
 		require
@@ -1715,6 +1721,13 @@ feature -- Suppliers/Providers
 	providers: DS_HASH_SET [ET_CLASS]
 			-- Provider classes of current class
 			-- (classes whose name appears in the text of current class)
+
+	provider_classes: DS_HASH_SET [ET_CLASS] is
+			-- Provider classes of current class
+			-- (classes whose name appears in the text of current class)
+		do
+			Result := providers
+		end
 
 	set_providers (a_providers: like providers) is
 			-- Set `providers' to `a_providers'.

@@ -3452,6 +3452,14 @@ feature -- System
 			empty_system_not_void: Result /= Void
 		end
 
+	unknown_system: ET_SYSTEM is
+			-- Shared unknown Eiffel system
+		once
+			create Result.make
+		ensure
+			unknown_system_not_void: Result /= Void
+		end
+
 	empty_library: ET_LIBRARY is
 			-- Shared empty Eiffel class library
 		once
