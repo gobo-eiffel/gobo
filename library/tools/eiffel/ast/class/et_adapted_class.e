@@ -36,6 +36,9 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
+	ET_IMPORTED_AGENT_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -1099,7 +1102,7 @@ feature -- Iteration
 				if first_local_override_class /= l_actual_class then
 					a_action.call ([first_local_override_class])
 				end
-				other_local_override_classes.do_if (a_action, agent ANY_.not_same_objects ({ET_CLASS} ?, l_actual_class))
+				other_local_override_classes.do_if (a_action, agent class_actions.negated (?, agent ANY_.same_objects ({ET_CLASS} ?, l_actual_class)))
 			end
 		end
 
@@ -1118,7 +1121,7 @@ feature -- Iteration
 				if first_local_override_class /= l_actual_class then
 					a_action.call ([first_local_non_override_class])
 				end
-				other_local_non_override_classes.do_if (a_action, agent ANY_.not_same_objects ({ET_CLASS} ?, l_actual_class))
+				other_local_non_override_classes.do_if (a_action, agent class_actions.negated (?, agent ANY_.same_objects ({ET_CLASS} ?, l_actual_class)))
 			end
 		end
 

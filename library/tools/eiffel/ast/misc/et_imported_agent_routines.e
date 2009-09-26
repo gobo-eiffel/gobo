@@ -18,6 +18,14 @@ inherit
 
 feature -- Access
 
+	class_actions: KL_AGENT_ROUTINES [ET_CLASS] is
+			-- Routines that ought to be in agent classes
+		once
+			create Result
+		ensure
+			class_actions_not_void: Result /= Void
+		end
+
 	universe_actions: KL_AGENT_ROUTINES [ET_UNIVERSE] is
 			-- Routines that ought to be in agent classes
 		once
