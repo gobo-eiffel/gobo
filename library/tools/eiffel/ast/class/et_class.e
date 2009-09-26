@@ -1636,7 +1636,31 @@ feature -- Interface checking status
 feature -- Suppliers/Providers
 
 	suppliers: DS_HASH_SET [ET_NAMED_CLASS]
+			-- Named supplier classes of current class
+
+	supplier_classes: DS_HASH_SET [ET_CLASS] is
 			-- Supplier classes of current class
+		local
+			l_suppliers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
+			l_class: ET_CLASS
+		do
+			l_suppliers := suppliers
+			if l_suppliers /= Void then
+				create Result.make (l_suppliers.count)
+				l_cursor := l_suppliers.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_class := l_cursor.item.actual_class
+					if not l_class.is_unknown then
+						Result.force_last (l_class)
+					end
+					l_cursor.forth
+				end
+			end
+		ensure
+			no_void_supplier: Result /= Void implies not Result.has_void
+			no_unknown_supplier: Result /= Void implies not Result.there_exists (agent {ET_CLASS}.is_unknown)
+		end
 
 	set_suppliers (a_suppliers: like suppliers) is
 			-- Set `suppliers' to `a_suppliers'.
@@ -1649,8 +1673,33 @@ feature -- Suppliers/Providers
 		end
 
 	providers: DS_HASH_SET [ET_NAMED_CLASS]
+			-- Named provider classes of current class
+			-- (classes whose name appears in the text of current class)
+
+	provider_classess: DS_HASH_SET [ET_CLASS] is
 			-- Provider classes of current class
 			-- (classes whose name appears in the text of current class)
+		local
+			l_providers: DS_HASH_SET [ET_NAMED_CLASS]
+			l_cursor: DS_HASH_SET_CURSOR [ET_NAMED_CLASS]
+			l_class: ET_CLASS
+		do
+			l_providers := providers
+			if l_providers /= Void then
+				create Result.make (l_providers.count)
+				l_cursor := l_providers.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_class := l_cursor.item.actual_class
+					if not l_class.is_unknown then
+						Result.force_last (l_class)
+					end
+					l_cursor.forth
+				end
+			end
+		ensure
+			no_void_provider: Result /= Void implies not Result.has_void
+			no_unknown_provider: Result /= Void implies not Result.there_exists (agent {ET_CLASS}.is_unknown)
+		end
 
 	set_providers (a_providers: like providers) is
 			-- Set `providers' to `a_providers'.
