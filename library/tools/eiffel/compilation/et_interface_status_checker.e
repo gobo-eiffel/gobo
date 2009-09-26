@@ -217,7 +217,7 @@ feature {NONE} -- Formal parameters and parents validity
 			i, nb: INTEGER
 		do
 			if current_class.interface_checked then
-				l_parents := current_class.parent_clause
+				l_parents := current_class.parents
 				if l_parents /= Void then
 					nb := l_parents.count
 					from i := 1 until i > nb loop
