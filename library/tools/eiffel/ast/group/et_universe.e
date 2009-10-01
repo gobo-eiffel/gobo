@@ -241,7 +241,7 @@ feature -- Status report
 			l_result: UT_TRISTATE
 		do
 			create l_result.make_false
-			universes_do_if_recursive_until (agent any_actions.call ({ET_UNIVERSE} ?, agent l_result.set_true), agent {ET_UNIVERSE}.has_adapted_class (a_name), agent l_result.is_true)
+			universes_do_if_recursive_until (agent universe_actions.call (?, agent l_result.set_true), agent {ET_UNIVERSE}.has_adapted_class (a_name), agent l_result.is_true)
 			Result := l_result.is_true
 		end
 
@@ -280,7 +280,7 @@ feature -- Status report
 			l_result: UT_TRISTATE
 		do
 			create l_result.make_false
-			universes_do_if_recursive_until (agent any_actions.call ({ET_UNIVERSE} ?, agent l_result.set_true), agent {ET_UNIVERSE}.has_class (a_name), agent l_result.is_true)
+			universes_do_if_recursive_until (agent universe_actions.call (?, agent l_result.set_true), agent {ET_UNIVERSE}.has_class (a_name), agent l_result.is_true)
 			Result := l_result.is_true
 		end
 
@@ -662,7 +662,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_all (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment))
+			classes_do_all (agent class_actions.call (?, agent l_counter.increment))
 			Result := l_counter.item
 		ensure
 			class_count_not_negative: Result >= 0
@@ -676,7 +676,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_recursive (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment))
+			classes_do_recursive (agent class_actions.call (?, agent l_counter.increment))
 			Result := l_counter.item
 		ensure
 			class_count_not_negative: Result >= 0
@@ -689,7 +689,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_if (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment), agent {ET_CLASS}.is_parsed)
+			classes_do_if (agent class_actions.call (?, agent l_counter.increment), agent {ET_CLASS}.is_parsed)
 			Result := l_counter.item
 		ensure
 			parsed_class_count_not_negative: Result >= 0
@@ -703,7 +703,7 @@ feature -- Measurement
 			l_counter: UT_COUNTER
 		do
 			create l_counter.make (0)
-			classes_do_if_recursive (agent any_actions.call ({ET_CLASS} ?, agent l_counter.increment), agent {ET_CLASS}.is_parsed)
+			classes_do_if_recursive (agent class_actions.call (?, agent l_counter.increment), agent {ET_CLASS}.is_parsed)
 			Result := l_counter.item
 		ensure
 			parsed_class_count_not_negative: Result >= 0
