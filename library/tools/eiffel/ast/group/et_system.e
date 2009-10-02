@@ -83,6 +83,12 @@ feature -- Access
 	root_class: ET_CLASS
 			-- Root class
 
+	root_type: ET_CLASS is
+			-- Root class
+		do
+			Result := root_class
+		end
+
 	root_creation: ET_FEATURE_NAME
 			-- Root creation procedure
 
@@ -127,6 +133,12 @@ feature -- Basic classes
 	boolean_class: ET_CLASS
 			-- Class "BOOLEAN"
 
+	boolean_type: ET_CLASS is
+			-- Class "BOOLEAN"
+		do
+			Result := boolean_class
+		end
+
 	boolean_ref_class: ET_CLASS
 			-- Class "BOOLEAN_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -135,6 +147,12 @@ feature -- Basic classes
 	character_8_class: ET_CLASS
 			-- Class "CHARACTER_8"
 
+	character_8_type: ET_CLASS is
+			-- Class "CHARACTER_8"
+		do
+			Result := character_8_class
+		end
+
 	character_8_ref_class: ET_CLASS
 			-- Class "CHARACTER_8_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -142,6 +160,12 @@ feature -- Basic classes
 
 	character_32_class: ET_CLASS
 			-- Class "CHARACTER_32"
+
+	character_32_type: ET_CLASS is
+			-- Class "CHARACTER_32"
+		do
+			Result := character_32_class
+		end
 
 	character_32_ref_class: ET_CLASS
 			-- Class "CHARACTER_32_REF"
@@ -163,6 +187,12 @@ feature -- Basic classes
 	integer_8_class: ET_CLASS
 			-- Class "INTEGER_8"
 
+	integer_8_type: ET_CLASS is
+			-- Class "INTEGER_8"
+		do
+			Result := integer_8_class
+		end
+
 	integer_8_ref_class: ET_CLASS
 			-- Class "INTEGER_8_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -170,6 +200,12 @@ feature -- Basic classes
 
 	integer_16_class: ET_CLASS
 			-- Class "INTEGER_16"
+
+	integer_16_type: ET_CLASS is
+			-- Class "INTEGER_16"
+		do
+			Result := integer_16_type
+		end
 
 	integer_16_ref_class: ET_CLASS
 			-- Class "INTEGER_16_REF"
@@ -179,6 +215,12 @@ feature -- Basic classes
 	integer_32_class: ET_CLASS
 			-- Class "INTEGER_32"
 
+	integer_32_type: ET_CLASS is
+			-- Class "INTEGER_32"
+		do
+			Result := integer_32_class
+		end
+
 	integer_32_ref_class: ET_CLASS
 			-- Class "INTEGER_32_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -186,6 +228,12 @@ feature -- Basic classes
 
 	integer_64_class: ET_CLASS
 			-- Class "INTEGER_64"
+
+	integer_64_type: ET_CLASS is
+			-- Class "INTEGER_64"
+		do
+			Result := integer_64_class
+		end
 
 	integer_64_ref_class: ET_CLASS
 			-- Class "INTEGER_64_REF"
@@ -201,6 +249,12 @@ feature -- Basic classes
 	natural_8_class: ET_CLASS
 			-- Class "NATURAL_8"
 
+	natural_8_type: ET_CLASS is
+			-- Class "NATURAL_8"
+		do
+			Result := natural_8_class
+		end
+
 	natural_8_ref_class: ET_CLASS
 			-- Class "NATURAL_8_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -208,6 +262,12 @@ feature -- Basic classes
 
 	natural_16_class: ET_CLASS
 			-- Class "NATURAL_16"
+
+	natural_16_type: ET_CLASS is
+			-- Class "NATURAL_16"
+		do
+			Result := natural_16_class
+		end
 
 	natural_16_ref_class: ET_CLASS
 			-- Class "NATURAL_16_REF"
@@ -217,6 +277,12 @@ feature -- Basic classes
 	natural_32_class: ET_CLASS
 			-- Class "NATURAL_32"
 
+	natural_32_type: ET_CLASS is
+			-- Class "NATURAL_32"
+		do
+			Result := natural_32_class
+		end
+
 	natural_32_ref_class: ET_CLASS
 			-- Class "NATURAL_32_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -224,6 +290,12 @@ feature -- Basic classes
 
 	natural_64_class: ET_CLASS
 			-- Class "NATURAL_64"
+
+	natural_64_type: ET_CLASS is
+			-- Class "NATURAL_64"
+		do
+			Result := natural_64_class
+		end
 
 	natural_64_ref_class: ET_CLASS
 			-- Class "NATURAL_64_REF"
@@ -242,6 +314,12 @@ feature -- Basic classes
 	pointer_class: ET_CLASS
 			-- Class "POINTER"
 
+	pointer_type: ET_CLASS is
+			-- Class "POINTER"
+		do
+			Result := pointer_class
+		end
+
 	pointer_ref_class: ET_CLASS
 			-- Class "POINTER_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -256,6 +334,12 @@ feature -- Basic classes
 	real_32_class: ET_CLASS
 			-- Class "REAL_32"
 
+	real_32_type: ET_CLASS is
+			-- Class "REAL_32"
+		do
+			Result := real_32_class
+		end
+
 	real_32_ref_class: ET_CLASS
 			-- Class "REAL_32_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
@@ -263,6 +347,12 @@ feature -- Basic classes
 
 	real_64_class: ET_CLASS
 			-- Class "REAL_64"
+
+	real_64_type: ET_CLASS is
+			-- Class "REAL_64"
+		do
+			Result := real_64_class
+		end
 
 	real_64_ref_class: ET_CLASS
 			-- Class "REAL_64_REF"

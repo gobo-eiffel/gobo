@@ -597,6 +597,22 @@ feature -- Preparsing
 			-- Class known by the universe with same name as current class
 			-- (This class is the current class when it is not overridden.)
 
+	actual_class: ET_CLASS is
+			-- Actual class
+		do
+			Result := Current
+		ensure
+			definition: Result = Current
+		end
+
+	adapted_class: ET_CLASS is
+			-- Class named `name' in `universe'
+		do
+			Result := master_class
+		ensure
+			adapted_class_not_void: Result /= Void
+		end
+
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
 		require
@@ -1170,7 +1186,7 @@ feature -- Ancestors
 	ancestors: ET_BASE_TYPE_LIST
 			-- Proper ancestors
 
-	set_parents (a_parents: like parents) is
+	set_parent_clause, set_parents (a_parents: like parents) is
 			-- Set `parents' to `a_parents'.
 		do
 			parents := a_parents
