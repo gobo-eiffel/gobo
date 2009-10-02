@@ -1676,7 +1676,7 @@ feature -- Suppliers/Providers
 			-- Named provider classes of current class
 			-- (classes whose name appears in the text of current class)
 
-	provider_classess: DS_HASH_SET [ET_CLASS] is
+	provider_classes: DS_HASH_SET [ET_CLASS] is
 			-- Provider classes of current class
 			-- (classes whose name appears in the text of current class)
 		local
