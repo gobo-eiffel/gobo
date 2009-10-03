@@ -586,6 +586,12 @@ feature -- Class mapping
 	wide_character_class: ET_CLASS
 			-- Class "WIDE_CHARACTER"
 
+	wide_character_type: ET_CLASS is
+			-- Class "WIDE_CHARACTER"
+		do
+			Result := wide_character_class
+		end
+
 	wide_character_ref_class: ET_CLASS
 			-- Class "WIDE_CHARACTER_REF"
 			-- (Note that _REF classes are kept for backward compatibility with
