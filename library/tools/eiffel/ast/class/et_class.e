@@ -564,6 +564,37 @@ feature -- Preparsing
 	time_stamp: INTEGER
 			-- Time stamp of the file when it was last parsed
 
+	adapted_class: ET_ADAPTED_CLASS is
+			-- Class named `name' in `universe'
+			--
+			-- Note that it might represent a class other than the current
+			-- class when there are name clashes. In that case, the current
+			-- class is likely to be found in one of the local ('first_local_override_class',
+			-- 'other_local_override_classes', 'first_local_non_override_class',
+			-- 'other_local_non_override_classes').
+		do
+			Result := universe.adapted_class (name)
+		ensure
+			adapted_class_not_void: Result /= Void
+		end
+
+	actual_class: ET_CLASS is
+			-- Actual class
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
+	master_class: ET_CLASS is
+			-- Class known by `universe' with same name as current class
+			-- (This class is the current class when it is not overridden.)
+		do
+			Result := adapted_class.actual_class
+		ensure
+			definition: Result = adapted_class.actual_class
+		end
+
 	non_override_overridden_class: ET_CLASS is
 			-- First overridden class that is not in an override group;
 			-- Void if no such class
@@ -584,28 +615,6 @@ feature -- Preparsing
 					end
 				end
 			end
-		end
-
-	actual_class: ET_CLASS is
-			-- Actual class
-		do
-			Result := Current
-		ensure then
-			definition: Result = Current
-		end
-
-	adapted_class: ET_ADAPTED_CLASS is
-			-- Class named `name' in `universe'
-			--
-			-- Note that it might represent a class other than the current
-			-- class when there are name clashes. In that case, the current
-			-- class is likely to be found in one of the local ('first_local_override_class',
-			-- 'other_local_override_classes', 'first_local_non_override_class',
-			-- 'other_local_non_override_classes').
-		do
-			Result := universe.adapted_class (name)
-		ensure
-			adapted_class_not_void: Result /= Void
 		end
 
 	set_filename (a_name: STRING) is
@@ -726,6 +735,25 @@ feature -- Preparsing status
 			-- group and that group is part of `a_universe'.
 		do
 			Result := is_in_override_group and then universe = a_universe
+		end
+
+	is_overridden: BOOLEAN is
+			-- Is current class overridden by another class?
+		do
+			Result := (master_class /= Current)
+		ensure
+			definition: Result = (master_class /= Current)
+		end
+
+	is_overriding: BOOLEAN is
+			-- Is current class overriding another class?
+		local
+			l_adapted_class: ET_ADAPTED_CLASS
+		do
+			l_adapted_class := adapted_class
+			Result := l_adapted_class.actual_class = Current and l_adapted_class.has_name_clash
+		ensure
+			definition: Result = (master_class = Current and adapted_class.has_name_clash)
 		end
 
 	is_in_override_group: BOOLEAN is
@@ -1798,6 +1826,30 @@ feature -- Duplication
 			if other /= Current then
 				standard_copy (other)
 				named_base_class := Current
+			end
+		end
+
+	copy_ast (other: like Current) is
+			-- Copy from `other' everything but the name, filename, group, time_stamp and id.
+		local
+			l_name: like name
+			l_group: like group
+			l_filename: like filename
+			l_id: like id
+			l_time_stamp: like time_stamp
+		do
+			if other /= Current then
+				l_name := name
+				l_filename := filename
+				l_group := group
+				l_time_stamp := time_stamp
+				l_id := id
+				copy (other)
+				name := l_name
+				filename := l_filename
+				group := l_group
+				time_stamp := l_time_stamp
+				id := l_id
 			end
 		end
 

@@ -191,6 +191,54 @@ feature -- Access
 			-- contains at least one class), a validity error is reported and
 			-- `first_overriding_class' will be used by default.
 
+	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Classes among local, imported and overriding classes
+			-- that are declared in `a_group'
+		require
+			a_group_not_void: a_group /= Void
+		do
+			create Result.make (1)
+			if a_group.is_override then
+				if a_group.universe = universe then
+					local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group))
+				else
+					overriding_classes_do_if (agent {ET_ADAPTED_CLASS}.local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+				end
+			else
+				if a_group.universe = universe then
+					local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group))
+				else
+					imported_classes_do_if (agent {ET_ADAPTED_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+				end
+			end
+		ensure
+			in_group: Result.for_all (agent {ET_CLASS}.is_in_group (a_group))
+		end
+
+	classes_in_group_recursive (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Classes among local, imported and overriding classes
+			-- that are declared in `a_group' or recursively in one of its subgroups
+		require
+			a_group_not_void: a_group /= Void
+		do
+			create Result.make (1)
+			if a_group.is_override then
+				if a_group.universe = universe then
+					local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group))
+				else
+					overriding_classes_do_if (agent {ET_ADAPTED_CLASS}.local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+				end
+			else
+				if a_group.universe = universe then
+					local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group))
+				else
+					imported_classes_do_if (agent {ET_ADAPTED_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+				end
+			end
+		ensure
+			in_group: Result.for_all (agent {ET_CLASS}.is_in_group_recursive (a_group))
+		end
+
 	universe: ET_UNIVERSE
 			-- Universe to which current class belongs
 
@@ -220,6 +268,77 @@ feature -- Status report
 			Result := intrinsic_class.universe = universe
 		ensure
 			definition: Result = (intrinsic_class.universe = universe)
+		end
+
+	is_in_universe (a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current class belong to `a_universe'?
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			Result := (universe = a_universe)
+		ensure
+			definition: Result = (universe = a_universe)
+		end
+
+	has_name_clash: BOOLEAN is
+			-- Is there two intrinsic classes with the same name?
+			-- Intrinsic classes means that classes in universes other than `universe'
+			-- which overrides current class are not taken into account.
+			--
+			-- Note that some name clashes may be valid when a class is declared
+			-- in an override group and the other is not.
+		local
+			nb: INTEGER
+		do
+			if first_local_override_class /= Void then
+				nb := nb + 1
+			end
+			if other_local_override_classes /= Void then
+				nb := nb + other_local_override_classes.count
+			end
+			if first_local_non_override_class /= Void then
+				nb := nb + 1
+			end
+			if other_local_non_override_classes /= Void then
+				nb := nb + other_local_non_override_classes.count
+			end
+			if first_imported_class /= Void then
+				nb := nb + 1
+			end
+			if other_imported_classes /= Void then
+				nb := nb + other_imported_classes.count
+			end
+			Result := (nb >= 2)
+		end
+
+	has_invalid_name_clash: BOOLEAN is
+			-- Is there two intrinsic classes with the same name resulting
+			-- in an invalid name clash?
+			-- Intrinsic classes means that classes in universes other than `universe'
+			-- which overrides current class are not taken into account.
+			--
+			-- Note that some name clashes may be valid when a class is declared
+			-- in an override group and the other is not.
+		local
+			nb: INTEGER
+		do
+			if first_local_override_class /= Void then
+				Result := other_local_override_classes /= Void and then not other_local_override_classes.is_empty
+			else
+				if first_local_non_override_class /= Void then
+					nb := nb + 1
+				end
+				if other_local_non_override_classes /= Void then
+					nb := nb + other_local_non_override_classes.count
+				end
+				if first_imported_class /= Void then
+					nb := nb + 1
+				end
+				if other_imported_classes /= Void then
+					nb := nb + other_imported_classes.count
+				end
+				Result := (nb >= 2)
+			end
 		end
 
 	has_local_class (a_class: ET_CLASS): BOOLEAN is
@@ -1122,6 +1241,67 @@ feature -- Iteration
 					a_action.call ([first_local_non_override_class])
 				end
 				other_local_non_override_classes.do_if (a_action, agent class_actions.negated (?, agent ANY_.same_objects ({ET_CLASS} ?, l_actual_class)))
+			end
+		end
+
+	imported_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
+			-- Apply `a_action' to every class imported from a universe other than `universe'.
+			-- These classes can be found in `first_imported_class' and
+			-- `other_imported_classes'.
+		require
+			a_action_not_void: a_action /= Void
+		do
+			if first_imported_class /= Void then
+				a_action.call ([first_imported_class])
+				other_imported_classes.do_all (a_action)
+			end
+		end
+
+	imported_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]) is
+			-- Apply `a_action' to every class imported from a universe other than `universe'
+			-- that satisfies `a_test'.
+			-- These classes can be found in `first_imported_class' and
+			-- `other_imported_classes'.
+		require
+			a_action_not_void: a_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			if first_imported_class /= Void then
+				if a_test.item ([first_imported_class]) then
+					a_action.call ([first_imported_class])
+				end
+				other_imported_classes.do_if (a_action, a_test)
+			end
+		end
+
+	overriding_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
+			-- Apply `a_action' to every class in universes other than `universe' which
+			-- overrides current class.
+			-- These classes can be found in `first_overriding_class' and
+			-- `other_overriding_classes'.
+		require
+			a_action_not_void: a_action /= Void
+		do
+			if first_overriding_class /= Void then
+				a_action.call ([first_overriding_class])
+				other_overriding_classes.do_all (a_action)
+			end
+		end
+
+	overriding_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]) is
+			-- Apply `a_action' to every class in universes other than `universe' which
+			-- overrides current class and satisfies `a_test'.
+			-- These classes can be found in `first_overriding_class' and
+			-- `other_overriding_classes'.
+		require
+			a_action_not_void: a_action /= Void
+			a_test_not_void: a_test /= Void
+		do
+			if first_overriding_class /= Void then
+				if a_test.item ([first_overriding_class]) then
+					a_action.call ([first_overriding_class])
+				end
+				other_overriding_classes.do_if (a_action, a_test)
 			end
 		end
 
