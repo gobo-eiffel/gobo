@@ -18,10 +18,10 @@ inherit
 
 feature -- Access
 
-	current_class: ET_NAMED_CLASS
+	current_class: ET_CLASS
 			-- Class where current error occurred
 
-	class_impl: ET_NAMED_CLASS is
+	class_impl: ET_CLASS is
 			-- Class where current error was written
 		do
 			Result := current_class

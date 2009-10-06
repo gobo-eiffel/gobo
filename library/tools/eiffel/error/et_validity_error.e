@@ -12229,17 +12229,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	class_impl: ET_NAMED_CLASS
+	class_impl: ET_CLASS
 			-- Class where current error was written
 
 	filename: STRING is
 			-- Name of file where current error occurred
-		local
-			l_actual_class: ET_CLASS
 		do
-			l_actual_class := class_impl.actual_class
-			if l_actual_class.is_in_cluster then
-				Result := l_actual_class.filename
+			if class_impl.is_in_cluster then
+				Result := class_impl.filename
 			else
 				Result := "not in a cluster"
 			end
