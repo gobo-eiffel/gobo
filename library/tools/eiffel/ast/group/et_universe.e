@@ -315,6 +315,18 @@ feature -- Access
 			eiffel_class_not_void: Result /= Void
 		end
 
+	adapted_class (a_name: ET_CLASS_NAME): ET_CLASS is
+			-- Class named `a_name' when viewed from current universe.
+			-- Add this class to universe if not found,
+			-- in which case it will refer to the unknown class.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := eiffel_class (a_name)
+		ensure
+			adapted_class_not_void: Result /= Void
+		end
+
 	class_by_name (a_name: STRING): ET_CLASS is
 			-- Class named `a_name' in universe;
 			-- Void if not such class

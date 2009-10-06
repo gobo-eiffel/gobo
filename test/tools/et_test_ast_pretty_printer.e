@@ -44,7 +44,7 @@ feature -- Test
 			a_filename: STRING
 			a_class_name: ET_IDENTIFIER
 		do
-			create a_system.make
+			create a_system.make_system
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
 			a_system.set_ast_factory (an_ast_factory)

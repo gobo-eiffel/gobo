@@ -21,7 +21,7 @@ inherit
 
 create
 
-	make
+	make_system
 
 feature -- Access
 

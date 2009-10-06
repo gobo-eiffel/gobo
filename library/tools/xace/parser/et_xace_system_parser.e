@@ -92,7 +92,7 @@ feature {NONE} -- Xace AST factory
 			l_cursor: DS_LINKED_LIST_CURSOR [STRING]
 			l_options: ET_XACE_OPTIONS
 		do
-			create Result.make
+			create Result.make_system
 			l_factory := new_eiffel_ast_factory
 			Result.set_ast_factory (l_factory)
 			l_error_handler := new_eiffel_error_handler

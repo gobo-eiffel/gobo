@@ -44,7 +44,7 @@ feature {NONE} -- Execution
 			Arguments.set_program_name ("pretty_printer")
 			create error_handler.make_standard
 			read_arguments
-			create a_system.make
+			create a_system.make_system
 			a_system.set_ise_version (ise_latest)
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)

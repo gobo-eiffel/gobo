@@ -125,7 +125,7 @@ feature -- Processing
 			a_system: ET_LACE_SYSTEM
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
-			create a_system.make
+			create a_system.make_system
 			a_system.set_error_handler (an_error_handler)
 			create a_cluster.make (name, pathname, a_system)
 			create a_clusters.make (a_cluster)

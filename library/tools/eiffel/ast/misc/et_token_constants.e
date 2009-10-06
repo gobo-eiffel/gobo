@@ -3447,7 +3447,7 @@ feature -- System
 	empty_system: ET_SYSTEM is
 			-- Shared empty Eiffel system
 		once
-			create Result.make
+			create Result.make_system
 		ensure
 			empty_system_not_void: Result /= Void
 		end
@@ -3455,7 +3455,7 @@ feature -- System
 	unknown_system: ET_SYSTEM is
 			-- Shared unknown Eiffel system
 		once
-			create Result.make
+			create Result.make_system
 		ensure
 			unknown_system_not_void: Result /= Void
 		end

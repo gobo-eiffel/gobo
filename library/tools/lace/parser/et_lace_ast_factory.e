@@ -82,7 +82,7 @@ feature -- AST factory
 	new_system: ET_LACE_SYSTEM is
 			-- New Eiffel system
 		do
-			create Result.make
+			create Result.make_system
 		ensure
 			system_not_void: Result /= Void
 		end

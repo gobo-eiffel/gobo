@@ -16,7 +16,7 @@ inherit
 
 	ET_SYSTEM
 		rename
-			make as make_system
+			make as old_make
 		end
 
 	ET_ECF_INTERNAL_UNIVERSE

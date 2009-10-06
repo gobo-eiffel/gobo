@@ -14,6 +14,11 @@ class ET_CLASS
 
 inherit
 
+	ET_ADAPTED_CLASS
+		undefine
+			copy, is_equal
+		end
+
 	ET_CLASS_TYPE
 		rename
 			make as make_type,
@@ -601,11 +606,11 @@ feature -- Preparsing
 			-- Actual class
 		do
 			Result := Current
-		ensure
+		ensure then
 			definition: Result = Current
 		end
 
-	adapted_class: ET_CLASS is
+	adapted_class: ET_ADAPTED_CLASS is
 			-- Class named `name' in `universe'
 		do
 			Result := master_class
@@ -826,6 +831,183 @@ feature -- Preparsing status
 			is_interface := False
 		ensure
 			not_preparsed: not is_preparsed
+		end
+
+feature -- Preparsing (Element change)
+
+	add_first_local_override_class (a_class: ET_CLASS) is
+			-- Add `a_class' to `first_local_override_class'. If there was
+			-- already such class, move it to `other_local_override_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_override_class' and
+			-- `add_last_local_override_class' is that here we are sure that
+			-- `intrinsic_class' will be set to `a_class'.
+		local
+			l_overridden_class: ET_CLASS
+		do
+			if is_preparsed then
+				l_overridden_class := cloned_class
+				copy (a_class)
+				set_overridden_class (l_overridden_class)
+			else
+				copy (a_class)
+				set_overridden_class (Void)
+			end
+		end
+
+	add_last_local_override_class (a_class: ET_CLASS) is
+			-- Add `a_class' to `first_local_override_class', if there was
+			-- no such class, otherwise add it to `other_local_override_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_override_class' and
+			-- `add_last_local_override_class' is that here we try to avoid
+			-- having to modify `intrinsic_class'. It will be modified, and hence
+			-- set to `a_class', only if there was no `first_local_override_class'.
+		local
+			l_overridden_class: ET_CLASS
+			l_class: ET_CLASS
+		do
+			if not is_in_override_group then
+				if is_preparsed then
+					l_overridden_class := cloned_class
+					copy (a_class)
+					set_overridden_class (l_overridden_class)
+				else
+					copy (a_class)
+					set_overridden_class (Void)
+				end
+			else
+				from
+					l_class := Current
+					l_overridden_class := overridden_class
+				until
+					l_overridden_class = Void or else not l_overridden_class.is_in_override_group
+				loop
+					l_class := l_overridden_class
+					l_overridden_class := l_class.overridden_class
+				end
+				a_class.set_overridden_class (l_overridden_class)
+				l_class.set_overridden_class (a_class)
+			end
+		end
+
+	add_first_local_non_override_class (a_class: ET_CLASS) is
+			-- Add `a_class' to `first_local_non_override_class'.
+			-- If there was already such class, move it to `other_local_non_override_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_non_override_class' and
+			-- `add_last_local_non_override_class' is that here we try to set
+			-- `intrinsic_class' to `a_class' if possible. This will happen
+			-- if there was no `first_local_override_class'.
+		local
+			l_overridden_class: ET_CLASS
+			l_class: ET_CLASS
+		do
+			if not is_in_override_group then
+				if is_preparsed then
+					l_overridden_class := cloned_class
+					copy (a_class)
+					set_overridden_class (l_overridden_class)
+				else
+					copy (a_class)
+					set_overridden_class (Void)
+				end
+			else
+				from
+					l_class := Current
+					l_overridden_class := overridden_class
+				until
+					l_overridden_class = Void or else not l_overridden_class.is_in_override_group
+				loop
+					l_class := l_overridden_class
+					l_overridden_class := l_class.overridden_class
+				end
+				a_class.set_overridden_class (l_overridden_class)
+				l_class.set_overridden_class (a_class)
+			end
+		end
+
+	add_last_local_non_override_class (a_class: ET_CLASS) is
+			-- Add `a_class' to `first_local_non_override_class', if there was
+			-- no such class, otherwise add it to `other_local_non_override_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+			--
+			-- The difference between `add_first_local_non_override_class' and
+			-- `add_last_local_non_override_class' is that here we try to avoid
+			-- having to modify `intrinsic_class'. It will be modified, and hence
+			-- set to `a_class', only if there was no `first_local_override_class'
+			-- and no `first_local_non_override_class'.
+		local
+			l_class: ET_CLASS
+		do
+			if is_preparsed then
+				from
+					l_class := Current
+				until
+					l_class.overridden_class = Void
+				loop
+					l_class := l_class.overridden_class
+				end
+				a_class.set_overridden_class (Void)
+				l_class.set_overridden_class (a_class)
+			else
+				copy (a_class)
+				set_overridden_class (Void)
+			end
+		end
+
+	remove_local_override_class (a_class: ET_CLASS) is
+			-- Remove `a_class' from `first_local_override_class' and `other_local_override_classes'.
+		local
+			l_class: ET_CLASS
+		do
+			if a_class = Current then
+				if overridden_class /= Void then
+					copy (overridden_class)
+				else
+					reset_preparsed
+				end
+			else
+				from
+					l_class := Current
+				until
+					l_class = Void or else l_class.overridden_class = a_class
+				loop
+					l_class := l_class.overridden_class
+				end
+				if l_class /= Void and then l_class.overridden_class = a_class then
+					l_class.set_overridden_class (a_class.overridden_class)
+				end
+			end
+		end
+
+	remove_local_non_override_class (a_class: ET_CLASS) is
+			-- Remove `a_class' from `first_local_non_override_class' and `other_local_non_override_classes'.
+			-- Update `intrinsic_class' and `is_modified' accordingly.
+		local
+			l_class: ET_CLASS
+		do
+			if a_class = Current then
+				if overridden_class /= Void then
+					copy (overridden_class)
+				else
+					reset_preparsed
+				end
+			else
+				from
+					l_class := Current
+				until
+					l_class = Void or else l_class.overridden_class = a_class
+				loop
+					l_class := l_class.overridden_class
+				end
+				if l_class /= Void and then l_class.overridden_class = a_class then
+					l_class.set_overridden_class (a_class.overridden_class)
+				end
+			end
 		end
 
 feature -- Parsing status
@@ -1863,6 +2045,33 @@ feature -- Duplication
 			if other /= Current then
 				standard_copy (other)
 				base_class := Current
+			end
+		end
+
+	copy_ast (other: like Current) is
+			-- Copy from `other' everything but the name, filename, group, time_stamp and id.
+		local
+			l_name: like name
+			l_group: like group
+			l_filename: like filename
+			l_overridden_class: like overridden_class
+			l_id: like id
+			l_time_stamp: like time_stamp
+		do
+			if other /= Current then
+				l_name := name
+				l_filename := filename
+				l_group := group
+				time_stamp := l_time_stamp
+				l_overridden_class := overridden_class
+				l_id := id
+				copy (other)
+				name := l_name
+				filename := l_filename
+				group := l_group
+				time_stamp := l_time_stamp
+				overridden_class := l_overridden_class
+				id := l_id
 			end
 		end
 

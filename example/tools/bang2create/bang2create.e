@@ -40,7 +40,7 @@ feature -- Execution
 			Arguments.set_program_name ("bang2create")
 			create error_handler.make_standard
 			read_arguments
-			create a_system.make
+			create a_system.make_system
 			create an_ast_factory.make
 			an_ast_factory.set_keep_all_breaks (True)
 			a_system.set_ast_factory (an_ast_factory)

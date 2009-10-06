@@ -35,11 +35,19 @@ inherit
 
 create
 
-	make
+	make, make_system
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_name: STRING) is
+			-- Create a new Eiffel system.
+			-- Error messages will be sent to standard files.
+			-- Use default Eiffel AST factory.
+		do
+			make_system
+		end
+
+	make_system is
 			-- Create a new Eiffel system.
 			-- Error messages will be sent to standard files.
 			-- Use default Eiffel AST factory.
@@ -391,6 +399,16 @@ feature -- Basic classes
 
 	typed_pointer_class: ET_CLASS
 			-- Class "TYPED_POINTER"
+
+	typed_pointer_any_type: ET_GENERIC_CLASS_TYPE is
+			-- Class type "TYPED_POINTER [ANY]"
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			create l_parameters.make_with_capacity (1)
+			l_parameters.put_first (any_type)
+			create Result.make (Void, typed_pointer_class.name, l_parameters, typed_pointer_class)
+		end
 
 	set_basic_classes is
 			-- Set basic classes.

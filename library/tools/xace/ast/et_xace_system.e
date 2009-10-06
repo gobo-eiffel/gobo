@@ -21,7 +21,7 @@ inherit
 
 	ET_XACE_SYSTEM_CONFIG
 		rename
-			make as make_system,
+			make as make_system_config,
 			libraries as mounted_libraries,
 			set_libraries as set_mounted_libraries
 		undefine
@@ -33,7 +33,7 @@ inherit
 
 create
 
-	make
+	make_system
 
 feature -- Access
 
