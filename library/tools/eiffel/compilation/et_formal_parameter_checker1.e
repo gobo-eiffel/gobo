@@ -83,7 +83,7 @@ feature -- Validity checking
 				from i := 1 until i > nb loop
 					a_formal := a_parameters.formal_parameter (i)
 					a_name := a_formal.name
-					if current_universe.has_class (a_name) then
+					if current_universe.has_adapted_class (a_name) then
 							-- The name of a formal parameter cannot be the
 							-- name of a class in the universe.
 						set_fatal_error

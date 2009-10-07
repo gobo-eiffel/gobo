@@ -136,7 +136,7 @@ feature {NONE} -- Precursor validity
 			a_parent_name := a_precursor.parent_name
 			if a_parent_name /= Void then
 				a_class_name := a_parent_name.class_name
-				if not current_universe.has_class (a_class_name) then
+				if not current_universe.has_adapted_class (a_class_name) then
 					set_fatal_error
 					error_handler.report_vdpr2a_error (current_class, a_precursor)
 				else
