@@ -834,40 +834,16 @@ feature -- Compilation
 			dt1: DT_DATE_TIME
 		do
 			has_fatal_error := False
-			current_system.activate_processors
 			activate_dynamic_type_set_builder
-			if error_handler.benchmark_shown then
+			current_system.compile_all
+			if not current_system.stop_requested and then error_handler.benchmark_shown then
 				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			if current_system.preparse_enabled then
-				current_system.preparse_recursive
-				if error_handler.benchmark_shown then
-					current_system.print_time (dt1, "Degree 6")
-					dt1 := l_clock.system_clock.date_time_now
-				end
-				current_system.compile_degree_5
-			else
-				current_system.parse_all_recursive
-			end
-			if error_handler.benchmark_shown then
-				current_system.print_time (dt1, "Degree 5")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			current_system.compile_degree_4
-			if error_handler.benchmark_shown then
-				current_system.print_time (dt1, "Degree 4")
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			current_system.compile_degree_3
-			if error_handler.benchmark_shown then
-				current_system.print_time (dt1, "Degree 3")
 				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_kernel
 			current_system.classes_do_recursive_until (agent compile_all_features, current_system.stop_request)
 			build_dynamic_type_sets
-			if error_handler.benchmark_shown then
+			if not current_system.stop_requested and then error_handler.benchmark_shown then
 				current_system.print_time (dt1, "Degree Dynamic Type Set")
 			end
 		end

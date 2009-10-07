@@ -265,7 +265,13 @@ feature -- Setting
 		do
 			l_class := adapted_class (a_name)
 			l_class.set_marked (True)
-			create {ET_CLASS_TYPE} root_type.make (Void, a_name, l_class)
+			if l_class = any_type.named_base_class then
+				root_type := any_type
+			elseif l_class = none_type.named_base_class then
+				root_type := none_type
+			else
+				create {ET_CLASS_TYPE} root_type.make (Void, a_name, l_class)
+			end
 		ensure
 			root_type_not_void: root_type /= Void
 			root_type_set: root_type.name.same_class_name (a_name)
@@ -771,6 +777,8 @@ feature -- Parsing
 				-- Do nothing.
 			elseif root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
 				parse_all_recursive
+			elseif root_type.same_named_type (any_type, tokens.unknown_class, tokens.unknown_class) then
+				parse_all_recursive
 			else
 				l_root_class := root_type.base_class
 				l_root_class.process (eiffel_parser)
@@ -946,9 +954,9 @@ feature -- Compilation
 		do
 			if root_type = Void then
 				compile_all
-			elseif  root_type.same_named_type (none_type, tokens.unknown_class, tokens.unknown_class) then
+			elseif  root_type = none_type then
 				compile_all
-			elseif root_type.same_named_type (any_type, tokens.unknown_class, tokens.unknown_class) then
+			elseif root_type = any_type then
 				compile_all
 			else
 				compile_system
@@ -1077,11 +1085,11 @@ feature -- Compilation
 			-- interruption if `stop_request' is Void.
 		do
 				-- Build ancestors.
-			classes_do_recursive_until (agent {ET_CLASS}.process (ancestor_builder), stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (ancestor_builder), agent {ET_CLASS}.is_parsed, stop_request)
 				-- Flatten features.
-			classes_do_recursive_until (agent {ET_CLASS}.process (feature_flattener), stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (feature_flattener), agent {ET_CLASS}.ancestors_built, stop_request)
 				-- Check interface.
-			classes_do_recursive_until (agent {ET_CLASS}.process (interface_checker), stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (interface_checker), agent {ET_CLASS}.features_flattened, stop_request)
 			if not stop_requested and then error_handler.benchmark_shown then
 				error_handler.info_file.put_string ("Flattened ")
 				error_handler.info_file.put_integer (parsed_class_count_recursive)
@@ -1117,7 +1125,7 @@ feature -- Compilation
 				l_checker.set_flat_dbc_mode (flat_dbc_mode)
 				l_checker.set_suppliers_enabled (suppliers_enabled)
 			end
-			classes_do_recursive_until (agent {ET_CLASS}.process (l_processor), stop_request)
+			classes_do_if_recursive_until (agent {ET_CLASS}.process (l_processor), agent {ET_CLASS}.interface_checked, stop_request)
 		end
 
 	check_provider_validity is
@@ -1128,7 +1136,7 @@ feature -- Compilation
 			-- interruption if `stop_request' is Void.
 		do
 			if cluster_dependence_enabled then
-				classes_do_recursive_until (agent {ET_CLASS}.process (provider_checker), stop_request)
+				classes_do_if_recursive_until (agent {ET_CLASS}.process (provider_checker), agent {ET_CLASS}.is_parsed, stop_request)
 			end
 		end
 
