@@ -1221,7 +1221,10 @@ feature -- Iteration
 				if first_local_override_class /= l_actual_class then
 					a_action.call ([first_local_override_class])
 				end
-				other_local_override_classes.do_if (a_action, agent class_actions.negated (?, agent ANY_.same_objects ({ET_CLASS} ?, l_actual_class)))
+					-- Note that the actual class, if a local override class,
+					-- will be `first_local_override_class'. It will never be
+					-- stored in `other_local_override_classes'.
+				other_local_override_classes.do_all (a_action)
 			end
 		end
 
@@ -1237,10 +1240,13 @@ feature -- Iteration
 		do
 			if first_local_non_override_class /= Void then
 				l_actual_class := actual_class
-				if first_local_override_class /= l_actual_class then
+				if first_local_non_override_class /= l_actual_class then
 					a_action.call ([first_local_non_override_class])
 				end
-				other_local_non_override_classes.do_if (a_action, agent class_actions.negated (?, agent ANY_.same_objects ({ET_CLASS} ?, l_actual_class)))
+					-- Note that the actual class, if a local override class,
+					-- will be `first_local_override_class'. It will never be
+					-- stored in `other_local_override_classes'.
+				other_local_non_override_classes.do_all (a_action)
 			end
 		end
 
