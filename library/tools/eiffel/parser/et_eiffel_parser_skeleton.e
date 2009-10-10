@@ -1618,23 +1618,8 @@ feature {NONE} -- AST factory
 					error_handler.report_gvscn1a_error (l_new_class, a_name)
 						-- Stop the parsing.
 					accept
-				elseif Result.is_unknown then
-					create Result.make (a_name)
-					current_system.register_class (Result)
-					Result.set_filename (filename)
-					Result.set_group (group)
-					Result.set_parsed
-					Result.set_time_stamp (time_stamp)
-					Result.set_in_system (True)
-					l_adapted_class.add_last_local_class (Result)
-					old_current_class := current_class
-					current_class := Result
-					error_handler.report_compilation_status (Current, current_class)
-					current_class := old_current_class
-					queries.wipe_out
-					procedures.wipe_out
 				else
-					if (Result = current_class) or (Result.is_in_cluster and then (Result.group = group and file_system.same_pathnames (Result.filename, filename))) then
+					if not Result.is_unknown and then ((Result = current_class) or (Result.is_in_cluster and then (Result.group = group and file_system.same_pathnames (Result.filename, filename)))) then
 							-- This is the class we want to parse.
 						if Result.is_parsed then
 -- TODO: find a way to check whether two classes in the same file don't have the same name.
@@ -1643,28 +1628,21 @@ feature {NONE} -- AST factory
 							end
 							Result.reset
 						end
-						Result.set_filename (filename)
-						Result.set_group (group)
 						Result.set_name (a_name)
-						Result.set_parsed
-						Result.set_time_stamp (time_stamp)
-						Result.set_in_system (True)
 					else
-						create l_new_class.make (a_name)
-						l_new_class.set_filename (filename)
-						l_new_class.set_group (group)
-						l_new_class.set_parsed
-						l_new_class.set_time_stamp (time_stamp)
-						l_new_class.set_in_system (True)
-						l_adapted_class.add_last_local_class (l_new_class)
-						Result := l_new_class
-						old_current_class := current_class
-						current_class := Result
-						error_handler.report_compilation_status (Current, current_class)
-						current_class := old_current_class
-						queries.wipe_out
-						procedures.wipe_out
+						create Result.make (a_name)
+						current_system.register_class (Result)
+						l_adapted_class.add_last_local_class (Result)
 					end
+					Result.set_parsed
+					Result.set_time_stamp (time_stamp)
+					Result.set_in_system (True)
+					old_current_class := current_class
+					current_class := Result
+					error_handler.report_compilation_status (Current, current_class)
+					current_class := old_current_class
+					queries.wipe_out
+					procedures.wipe_out
 				end
 			end
 		end
