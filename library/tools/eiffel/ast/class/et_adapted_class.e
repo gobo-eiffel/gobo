@@ -79,7 +79,7 @@ feature -- Element change
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if a_class.group.is_override then
+			if a_class.is_in_override_group then
 				add_first_local_override_class (a_class)
 			else
 				add_first_local_non_override_class (a_class)
@@ -101,7 +101,7 @@ feature -- Element change
 		require
 			a_class_not_void: a_class /= Void
 		do
-			if a_class.group.is_override then
+			if a_class.is_in_override_group then
 				add_last_local_override_class (a_class)
 			else
 				add_last_local_non_override_class (a_class)
@@ -171,8 +171,11 @@ feature -- Element change
 		require
 			a_class_not_void: a_class /= Void
 		do
-			remove_local_override_class (a_class)
-			remove_local_non_override_class (a_class)
+			if a_class.is_in_override_group then
+				remove_local_override_class (a_class)
+			else
+				remove_local_non_override_class (a_class)
+			end
 		end
 
 	remove_local_override_class (a_class: ET_CLASS) is
