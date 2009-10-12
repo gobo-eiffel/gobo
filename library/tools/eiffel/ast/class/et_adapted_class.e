@@ -68,7 +68,9 @@ feature -- Access
 	actual_class: ET_CLASS is
 			-- Actual class
 		do
-			if first_overriding_class /= Void then
+			if mapped_class /= Void then
+				Result := mapped_class.actual_class
+			elseif first_overriding_class /= Void then
 				Result := first_overriding_class.actual_class
 			else
 				Result := intrinsic_class.actual_class
@@ -80,7 +82,11 @@ feature -- Access
 			-- fact that a class may be overridden by classes declared
 			-- in override groups of other universes
 		do
-			Result := intrinsic_class.actual_intrinsic_class
+			if mapped_class /= Void then
+				Result := mapped_class.actual_intrinsic_class
+			else
+				Result := intrinsic_class.actual_intrinsic_class
+			end
 		end
 
 	intrinsic_class: ET_NAMED_CLASS
@@ -191,6 +197,11 @@ feature -- Access
 			-- contains at least one class), a validity error is reported and
 			-- `first_overriding_class' will be used by default.
 
+	mapped_class: ET_ADAPTED_CLASS
+			-- Class that is also known under the name `name' in `universe'.
+			-- For example class "CHARACTER_8" is also known under the name "CHARACTER"
+			-- when "CHARACTER" is mapped to "CHARACTER_8".
+
 	classes_in_group (a_group: ET_GROUP): DS_ARRAYED_LIST [ET_CLASS] is
 			-- Classes among local, imported and overriding classes
 			-- that are declared in `a_group'
@@ -290,6 +301,9 @@ feature -- Status report
 		local
 			nb: INTEGER
 		do
+			if mapped_class /= Void then
+				nb := nb + 1
+			end
 			if first_local_override_class /= Void then
 				nb := nb + 1
 			end
@@ -322,7 +336,9 @@ feature -- Status report
 		local
 			nb: INTEGER
 		do
-			if first_local_override_class /= Void then
+			if mapped_class /= Void then
+				Result := has_name_clash
+			elseif first_local_override_class /= Void then
 				Result := other_local_override_classes /= Void and then not other_local_override_classes.is_empty
 			else
 				if first_local_non_override_class /= Void then
@@ -436,7 +452,9 @@ feature -- Parsing status
 			-- Has current class been parsed?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.is_parsed
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.is_parsed
 				else
 					Result := intrinsic_class.is_parsed
@@ -448,7 +466,9 @@ feature -- Parsing status
 			-- Has a fatal syntax error been detected?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.has_syntax_error
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.has_syntax_error
 				else
 					Result := intrinsic_class.has_syntax_error
@@ -462,7 +482,9 @@ feature -- Ancestor building status
 			-- Have `ancestors' been built?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.ancestors_built
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.ancestors_built
 				else
 					Result := intrinsic_class.ancestors_built
@@ -474,7 +496,9 @@ feature -- Ancestor building status
 			-- Has a fatal error occurred when building `ancestors'?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.has_ancestors_error
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.has_ancestors_error
 				else
 					Result := intrinsic_class.has_ancestors_error
@@ -488,7 +512,9 @@ feature -- Feature flattening status
 			-- Have features been flattened?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.features_flattened
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.features_flattened
 				else
 					Result := intrinsic_class.features_flattened
@@ -500,7 +526,9 @@ feature -- Feature flattening status
 			-- Has a fatal error occurred during feature flattening?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.has_flattening_error
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.has_flattening_error
 				else
 					Result := intrinsic_class.has_flattening_error
@@ -514,7 +542,9 @@ feature -- Interface checking status
 			-- Has the interface of current class been checked?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.interface_checked
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.interface_checked
 				else
 					Result := intrinsic_class.interface_checked
@@ -526,7 +556,9 @@ feature -- Interface checking status
 			-- Has a fatal error occurred during interface checking?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.has_interface_error
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.has_interface_error
 				else
 					Result := intrinsic_class.has_interface_error
@@ -542,7 +574,9 @@ feature -- Implementation checking status
 			-- features and invariant have been checked.
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.implementation_checked
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.implementation_checked
 				else
 					Result := intrinsic_class.implementation_checked
@@ -554,7 +588,9 @@ feature -- Implementation checking status
 			-- Has a fatal error occurred during implementation checking?
 		do
 			if not is_modified then
-				if first_overriding_class /= Void then
+				if mapped_class /= Void then
+					Result := mapped_class.has_implementation_error
+				elseif first_overriding_class /= Void then
 					Result := first_overriding_class.has_implementation_error
 				else
 					Result := intrinsic_class.has_implementation_error
@@ -1029,6 +1065,16 @@ feature -- Element change
 			end
 		ensure
 			all_overriding_classes_removed: first_overriding_class = Void
+		end
+
+	set_mapped_class (a_class: like mapped_class) is
+			-- Set `mapped_class' to `a_class'.
+		do
+			mapped_class := a_class
+			is_modified := True
+			set_marked (is_marked)
+		ensure
+			mapped_class_set: mapped_class = a_class
 		end
 
 feature {NONE} -- Element change

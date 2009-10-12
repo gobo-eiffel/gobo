@@ -70,8 +70,6 @@ feature {NONE} -- Initialization
 		do
 			create adapted_classes.make_map (3000)
 			adapted_classes.set_key_equality_tester (class_name_tester)
-			create mapped_classes.make_map (mappable_class_count)
-			mapped_classes.set_key_equality_tester (class_name_tester)
 		end
 
 feature -- Initialization
@@ -194,7 +192,7 @@ feature -- Initialization
 			l_reparse_needed: UT_TRISTATE
 		do
 			create l_reparse_needed.make_false
-			adapted_classes_do_if (agent any_actions.call ({ET_ADAPTED_CLASS} ?, agent l_reparse_needed.set_true), agent {ET_ADAPTED_CLASS}.has_syntax_error)
+			adapted_classes_do_if (agent adapted_class_actions.call (?, agent l_reparse_needed.set_true), agent adapted_class_actions.conjuncted (?, agent {ET_ADAPTED_CLASS}.is_preparsed, agent {ET_ADAPTED_CLASS}.has_syntax_error))
 			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
 			if l_reparse_needed.is_true then
 					-- Some classes which had a syntax error will be reparsed.
@@ -219,12 +217,6 @@ feature -- Status report
 			if adapted_classes.found then
 				l_class := adapted_classes.found_item
 				Result := l_class.is_preparsed
-			else
-				mapped_classes.search (a_name)
-				if mapped_classes.found then
-					l_class := mapped_classes.found_item
-					Result := l_class.is_preparsed
-				end
 			end
 		ensure
 			is_preparsed: Result implies adapted_class (a_name).is_preparsed
@@ -258,14 +250,6 @@ feature -- Status report
 				l_class := adapted_classes.found_item
 				if l_class.actual_class.universe = Current then
 					Result := True
-				end
-			else
-				mapped_classes.search (a_name)
-				if mapped_classes.found then
-					l_class := mapped_classes.found_item
-					if l_class.actual_class.universe = Current then
-						Result := True
-					end
 				end
 			end
 		end
@@ -302,13 +286,8 @@ feature -- Access
 			if adapted_classes.found then
 				Result := adapted_classes.found_item
 			else
-				mapped_classes.search (a_name)
-				if mapped_classes.found then
-					Result := mapped_classes.found_item
-				else
-					create Result.make (a_name, Current)
-					adapted_classes.force_last_new (Result, a_name)
-				end
+				create Result.make (a_name, Current)
+				adapted_classes.force_last_new (Result, a_name)
 			end
 		ensure
 			adapted_class_not_void: Result /= Void
@@ -330,14 +309,9 @@ feature -- Access
 			adapted_classes.search (l_class_name)
 			if adapted_classes.found then
 				l_class := adapted_classes.found_item
-			else
-				mapped_classes.search (l_class_name)
-				if mapped_classes.found then
-					l_class := mapped_classes.found_item
+				if l_class.is_preparsed then
+					Result := l_class
 				end
-			end
-			if l_class.is_preparsed then
-				Result := l_class
 			end
 		end
 
@@ -1405,11 +1379,6 @@ feature -- Kernel types
 
 feature -- Class mapping
 
-	mapped_classes: DS_HASH_TABLE [ET_ADAPTED_CLASS, ET_CLASS_NAME]
-			-- Mapping between sized basic type names (e.g. INTEGER, STRING)
-			-- and their actual classes (which are stored in `adapted_classes' under
-			-- their actual names) when aliased
-
 	set_default_class_mapping is
 			-- Set sized basic types (STRING, CHARACTER, WIDE_CHARACTER,
 			-- INTEGER, NATURAL, REAL, DOUBLE) to be aliased to their default.
@@ -1558,15 +1527,8 @@ feature -- Class mapping
 		local
 			l_adapted_class: ET_ADAPTED_CLASS
 		do
-			mapped_classes.search (a_alias_name)
-			if mapped_classes.found then
-				l_adapted_class := mapped_classes.found_item
-			else
-				create l_adapted_class.make (a_alias_name, Current)
-				mapped_classes.force_last (l_adapted_class, a_alias_name)
-			end
-			l_adapted_class.remove_all_intrinsic_classes
-			l_adapted_class.add_first_imported_class (adapted_class (a_class_name))
+			l_adapted_class := adapted_class (a_alias_name)
+			l_adapted_class.set_mapped_class (adapted_class (a_class_name))
 		end
 
 feature -- Built-in convert features
@@ -2216,11 +2178,6 @@ feature {NONE} -- Constants
 			capacity_positive: Result > 0
 		end
 
-	mappable_class_count: INTEGER is 13
-			-- Number of mappable classes
-			-- (STRING, CHARACTER, WIDE_CHARACTER, INTEGER, NATURAL, REAL, DOUBLE,
-			-- CHARACTER_REF, WIDE_CHARACTER_REF, INTEGER_REF, NATURAL_REF, REAL_REF, DOUBLE_REF)
-
 invariant
 
 	current_system_not_void: current_system /= Void
@@ -2260,8 +2217,6 @@ invariant
 	type_any_type_not_void: type_any_type /= Void
 	typed_pointer_any_type_not_void: typed_pointer_any_type /= Void
 		-- Class mapping.
-	mapped_classes_not_void: mapped_classes /= Void
-	no_void_mapped_class: not mapped_classes.has_void_item
 	boolean_type_not_void: boolean_type /= Void
 	character_type_not_void: character_type /= Void
 	double_type_not_void: double_type /= Void
