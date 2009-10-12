@@ -287,7 +287,7 @@ feature -- Iteration
 			until
 				l_class = Void
 			loop
-				if l_class.is_in_override_group then
+				if not l_class.is_in_override_group then
 					if a_test.item ([l_class]) then
 						a_action.call ([l_class])
 					end
