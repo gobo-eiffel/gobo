@@ -1754,9 +1754,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_precursor.position
-			code := template_code (vdpr3d_template_code)
+			code := template_code (vdpr3e_template_code)
 			etl_code := vdpr3_etl_code
-			default_template := default_message_template (vdpr3d_default_template)
+			default_template := default_message_template (vdpr3e_default_template)
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
