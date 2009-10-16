@@ -1634,6 +1634,8 @@ feature {NONE} -- AST factory
 						current_system.register_class (Result)
 						l_adapted_class.add_last_local_class (Result)
 					end
+					Result.set_filename (filename)
+					Result.set_group (group)
 					Result.set_parsed
 					Result.set_time_stamp (time_stamp)
 					Result.set_in_system (True)
