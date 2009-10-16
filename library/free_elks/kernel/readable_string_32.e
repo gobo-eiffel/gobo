@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-10-06 21:13:09 +0200 (Tue, 06 Oct 2009) $"
+	revision: "$Revision: 382 $"
 
 deferred class
 	READABLE_STRING_32
@@ -15,13 +15,14 @@ deferred class
 inherit
 	READABLE_STRING_GENERAL
 		rename
-			same_string as same_string_general
+			same_string as same_string_general,
+			plus as plus_string_general
 		redefine
 			copy, is_equal, out
 		end
 
 convert
-	to_cil: {SYSTEM_STRING, detachable SYSTEM_STRING},
+	to_cil: {SYSTEM_STRING},
 	as_string_8: {READABLE_STRING_8, STRING_8},
 	as_string_32: {STRING_32}
 

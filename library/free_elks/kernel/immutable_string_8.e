@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-09-29 02:15:54 +0200 (Tue, 29 Sep 2009) $"
+	revision: "$Revision: 379 $"
 
 class
 	IMMUTABLE_STRING_8
@@ -22,7 +22,8 @@ inherit
 
 	IMMUTABLE_STRING_GENERAL
 		rename
-			same_string as same_string_general
+			same_string as same_string_general,
+			plus as plus_string_general
 		undefine
 			is_equal, out, copy
 		end
@@ -90,7 +91,7 @@ feature {IMMUTABLE_STRING_8} -- Duplication
 			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end
 
-feature -- Elment change
+feature -- Element change
 
 	plus alias "+" (s: READABLE_STRING_8): like Current
 			-- <Precursor>
@@ -100,6 +101,37 @@ feature -- Elment change
 			create a.make (count + s.count + 1)
 			a.copy_data (area, area_lower, 0, count)
 			a.copy_data (s.area, s.area_lower, count, s.count)
+			create Result.make_from_area_and_bounds (a, 0, count + s.count)
+		end
+
+	plus_string_general (s: READABLE_STRING_GENERAL): like Current
+			-- <Precursor>
+		local
+			a, a_8: like area
+			i, j, nb: INTEGER
+			l_s32_area: SPECIAL [CHARACTER_32]
+		do
+			create a.make (count + s.count + 1)
+			a.copy_data (area, area_lower, 0, count)
+			if attached {READABLE_STRING_8} s as l_s8 then
+				a.copy_data (l_s8.area, l_s8.area_lower, count, l_s8.count + 1)
+			elseif attached {READABLE_STRING_32} s as l_s32 then
+				create a_8.make (l_s32.count + 1)
+				from
+					i := 0
+					j := l_s32.area_lower
+					l_s32_area := l_s32.area
+					nb := l_s32.count - 1
+				until
+					i > nb
+				loop
+					a_8.put (l_s32_area [j].to_character_8, i)
+					i := i + 1
+					j := j + 1
+				end
+				a_8.put ('%/000/', i)
+				a.copy_data (a_8, 0, count, nb + 2)
+			end
 			create Result.make_from_area_and_bounds (a, 0, count + s.count)
 		end
 

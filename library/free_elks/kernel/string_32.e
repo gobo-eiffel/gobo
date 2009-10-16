@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: $"
+	revision: "$Revision: $"
 
 class
 	STRING_32
@@ -24,7 +24,8 @@ inherit
 	STRING_GENERAL
 		rename
 			append as append_string_general,
-			same_string as same_string_general
+			same_string as same_string_general,
+			plus as plus_string_general
 		undefine
 			copy, is_equal, out
 		redefine
@@ -70,9 +71,9 @@ create
 	make_from_cil
 
 convert
-	to_cil: {SYSTEM_STRING, detachable SYSTEM_STRING},
-	make_from_cil ({SYSTEM_STRING, attached SYSTEM_STRING, detachable SYSTEM_STRING}),
-	as_string_8: {READABLE_STRING_8, detachable READABLE_STRING_8, STRING_8, detachable STRING_8}
+	to_cil: {SYSTEM_STRING},
+	make_from_cil ({SYSTEM_STRING}),
+	as_string_8: {READABLE_STRING_8, STRING_8}
 
 feature -- Initialization
 
@@ -679,6 +680,14 @@ feature -- Element change
 			Result := new_string (count + s.count)
 			Result.append (Current)
 			Result.append (s)
+		end
+
+	plus_string_general (s: READABLE_STRING_GENERAL): like Current
+			-- <Precursor>
+		do
+			Result := new_string (count + s.count)
+			Result.append (Current)
+			Result.append_string_general (s)
 		end
 
 	append_string (s: detachable READABLE_STRING_32)

@@ -217,7 +217,7 @@ feature -- Measurement
 			encoded_byte_code_small_enough: Result <= 4
 		end
 
-	substring_byte_count (a_string: STRING_GENERAL; start_index, end_index: INTEGER): INTEGER is
+	substring_byte_count (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER): INTEGER is
 			-- Number of bytes needed to encode characters  of
 			-- `a_string' between `start_index' and `end_index'
 			-- inclusive with the UTF-8 encoding
