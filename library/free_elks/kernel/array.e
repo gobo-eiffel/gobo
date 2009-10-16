@@ -8,8 +8,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-10-06 21:13:09 +0200 (Tue, 06 Oct 2009) $"
+	revision: "$Revision: 382 $"
 
 class ARRAY [G] inherit
 
@@ -40,7 +40,7 @@ create
 	make_from_cil
 
 convert
-	to_cil: {NATIVE_ARRAY [G], detachable NATIVE_ARRAY [G]},
+	to_cil: {NATIVE_ARRAY [G]},
 	to_special: {SPECIAL [G]},
 	make_from_cil ({NATIVE_ARRAY [G]})
 

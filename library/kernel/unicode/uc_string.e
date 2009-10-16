@@ -246,7 +246,6 @@ inherit
 	KI_TEXT_OUTPUT_STREAM
 		rename
 			put_character as append_character,
-			put_string as append,
 			put_substring as append_substring,
 			append as append_stream,
 			True_constant as stream_true_constant,
@@ -674,7 +673,7 @@ feature -- Access
 			first_unicode_item: Result.count > 0 implies Result.item_code (1) = item_code (start_index)
 		end
 
-	unicode_substring_index (other: STRING_GENERAL; start_index: INTEGER): INTEGER is
+	unicode_substring_index (other: READABLE_STRING_GENERAL; start_index: INTEGER): INTEGER is
 			-- Index of first occurrence of `other' at or after `start_index';
 			-- 0 if none
 		require
@@ -1064,7 +1063,7 @@ feature -- Access
 			end
 		end
 
-	plus alias "+" (other: STRING): like Current is
+	plus alias "+" (other: READABLE_STRING_8): like Current is
 			-- New object which is a clone of `Current' extended
 			-- by the characters of `other'
 			-- (ELKS 2001 STRING)
@@ -1404,7 +1403,7 @@ feature -- Status report
 			Result := (index_of (c, 1) /= 0)
 		end
 
-	has_unicode_substring (other: STRING_GENERAL): BOOLEAN is
+	has_unicode_substring (other: READABLE_STRING_GENERAL): BOOLEAN is
 			-- Does `Current' contain `other'?
 		require
 			other_not_void: other /= Void
@@ -1497,7 +1496,7 @@ feature -- Comparison
 				item_code (1) = other.item_code (1) and substring (2, count) < other.substring (2, other.count)))
 		end
 
-	same_string (other: STRING): BOOLEAN is
+	same_string (other: READABLE_STRING_8): BOOLEAN is
 			-- Do `Current' and `other' have the same character sequence?
 			-- `Current' is considered with its characters which do not
 			-- fit in a CHARACTER replaced by a '%U'.
@@ -1510,7 +1509,7 @@ feature -- Comparison
 			end
 		end
 
-	same_unicode_string (other: STRING_GENERAL): BOOLEAN is
+	same_unicode_string (other: READABLE_STRING_GENERAL): BOOLEAN is
 			-- Do `Current' and `other' have the same unicode character sequence?
 		require
 			other_not_void: other /= Void
@@ -1800,10 +1799,14 @@ feature -- Element change
 			end
 		end
 
-	append_string_general (s: STRING) is
+	append_string_general (s: READABLE_STRING_GENERAL) is
 			-- Append a copy of `s' at end.
 		do
-			append (s)
+			if {ls: STRING} s then
+				append (ls)
+			else
+				precursor (s)
+			end
 		end
 
 	append_unicode_character (c: UC_CHARACTER) is
@@ -1877,7 +1880,7 @@ feature -- Element change
 			unicode_appended: item_code (count) = c.code
 		end
 
-	append_string (s: ?STRING) is
+	append_string (s: ?READABLE_STRING_8) is
 			-- Append a copy of `s' at end.
 		do
 			if s /= Void then
@@ -1885,7 +1888,14 @@ feature -- Element change
 			end
 		end
 
-	append (a_string: STRING) is
+	
+	put_string (a_string: STRING) is
+			-- Write `a_string' to output stream.
+		do
+			append (a_string)
+		end
+
+	append (a_string: READABLE_STRING_8) is
 			-- Append a copy of `a_string' at end.
 			-- (ELKS 2001 STRING)
 		local
@@ -1901,7 +1911,7 @@ feature -- Element change
 			if ANY_.same_types (a_string, dummy_string) then
 					-- Check if string does not contain non-ascii characters.
 					-- Unfortunately, this is a slow but necessary call.
-				nb := utf8.substring_byte_count (a_string, 1, a_string.count)
+				nb := utf8.substring_byte_count (a_string.as_string_8, 1, a_string.count)
 				if nb = a_string.count then
 						-- If not, we may use the native `append_string'.
 						-- Hopefully this one has a fast move.
