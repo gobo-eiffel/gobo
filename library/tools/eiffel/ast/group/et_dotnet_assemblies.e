@@ -122,7 +122,7 @@ feature -- Iteration
 				i := i + 1
 			end
 		end
-		
+
 	universes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_UNIVERSE]]) is
 			-- Apply `an_action' to every .NET assembly (viewed as a universe), from first to last.
 			-- (Semantics not guaranteed if `an_action' changes the list.)

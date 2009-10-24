@@ -1135,8 +1135,8 @@ feature -- Ancestors
 			-- Parents of current class, either declared explicitly in `parent_clause'
 			-- or the implicit parent when no parents have been specified
 			--
-			-- Under .NET, the implicit parent in "SYSTEM_OBJECT_CLASS" if the class
-			-- is not "SYSTEM_OBJECT_CLASS" itself.
+			-- Under .NET, the implicit parent in the "SYSTEM_OBJECT" class if the class
+			-- is not the "SYSTEM_OBJECT" class itself.
 			-- Otherwise the implicit parent if "ANY" if the class is not "ANY"
 			-- itself. As a consequence, "ANY" is the only class with no parents.
 		do

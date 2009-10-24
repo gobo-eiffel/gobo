@@ -59,6 +59,7 @@ feature {NONE} -- Inialization
 			a_system_not_void: a_system /= Void
 		do
 			pathname := a_pathname
+			create referenced_assemblies.make_empty
 			make_from_system (a_name, a_system)
 		ensure
 			name_set: name = a_name
@@ -169,6 +170,8 @@ feature -- Setting
 
 	set_referenced_assemblies (a_assemblies: like referenced_assemblies) is
 			-- Set `referenced_assemblies' to `a_assemblies'.
+		require
+			a_assemblies_not_void: a_assemblies /= Void
 		do
 			referenced_assemblies := a_assemblies
 		ensure
@@ -206,9 +209,7 @@ feature -- Relations
 		do
 			if not a_visited.has (Current) then
 				a_visited.force_last (Current)
-				if referenced_assemblies /= Void then
-					referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_universe_recursive (a_visited))
-				end
+				referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_universe_recursive (a_visited))
 			end
 		end
 
@@ -220,10 +221,18 @@ feature -- Relations
 		do
 			if not a_visited.has (Current) then
 				a_visited.force_last (Current)
-				if referenced_assemblies /= Void then
-					referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_dotnet_assembly_recursive (a_visited))
-				end
+				referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.add_dotnet_assembly_recursive (a_visited))
 			end
+		end
+
+feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Parsing
+
+	set_preparsed (b: BOOLEAN) is
+			-- Set `is_preparsed' to `b'.
+		do
+			is_preparsed := b
+		ensure
+			preparsed_set: is_preparsed = b
 		end
 
 feature {ET_UNIVERSE} -- Parsing
@@ -232,20 +241,48 @@ feature {ET_UNIVERSE} -- Parsing
 			-- Import classes made available (i.e. exported) by other universes.
 		do
 			import_kernel_classes
+-- With the ISE .NET assembly consumer, we should not import classes from other assemblies.
+--			referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.export_classes (Current))
+			if not adapted_class (tokens.system_object_class_name).is_declared_locally then
+				import_kernel_class (tokens.system_object_class_name)
+			end
 		end
 
 	import_kernel_classes is
 			-- Import kernel classes.
+		do
+			import_kernel_class (tokens.any_class_name)
+			import_kernel_class (tokens.boolean_class_name)
+			import_kernel_class (tokens.character_8_class_name)
+			import_kernel_class (tokens.character_32_class_name)
+			import_kernel_class (tokens.integer_8_class_name)
+			import_kernel_class (tokens.integer_16_class_name)
+			import_kernel_class (tokens.integer_32_class_name)
+			import_kernel_class (tokens.integer_64_class_name)
+			import_kernel_class (tokens.natural_8_class_name)
+			import_kernel_class (tokens.natural_16_class_name)
+			import_kernel_class (tokens.natural_32_class_name)
+			import_kernel_class (tokens.natural_64_class_name)
+			import_kernel_class (tokens.real_32_class_name)
+			import_kernel_class (tokens.real_64_class_name)
+			import_kernel_class (tokens.pointer_class_name)
+			import_kernel_class (tokens.typed_pointer_class_name)
+			import_kernel_class (tokens.native_array_class_name)
+		end
+
+	import_kernel_class (a_class_name: ET_CLASS_NAME) is
+			-- Import kernel class `a_class_name'.
+		require
+			a_class_name_not_void: a_class_name /= Void
 		local
 			l_adapted_class: ET_ADAPTED_CLASS
 			l_other_class: ET_ADAPTED_CLASS
 		do
-			l_other_class := current_system.adapted_class (current_system.any_type.name)
-			l_adapted_class := adapted_class (l_other_class.name)
+			l_other_class := current_system.adapted_class (a_class_name)
+			l_adapted_class := adapted_class (a_class_name)
 			if not l_adapted_class.has_imported_class (l_other_class) then
 				l_adapted_class.add_last_imported_class (l_other_class)
 			end
--- TODO: import all other kernel classes.
 		end
 
 feature {ET_DOTNET_ASSEMBLY_CONSUMER} -- Consuming
@@ -263,6 +300,6 @@ invariant
 	is_dotnet_assembly: is_dotnet_assembly
 	self_adapted: dotnet_assembly = Current
 	no_void_classname: classname_mapping /= Void implies not classname_mapping.has_void_item
-
+	referenced_assemblies_not_void: referenced_assemblies /= Void
 
 end

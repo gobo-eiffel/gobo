@@ -469,7 +469,11 @@ feature -- Access
 				l_depths.force_last (l_count, Current)
 				l_cursor := l_depths.new_cursor
 				from l_cursor.start until l_cursor.after loop
-					l_cursor.key.universes_do_if (agent l_depths.force_last (l_cursor.item + 1, ?), agent universe_actions.negated (?, agent l_depths.has))
+-- Workaround for the bug:
+-- "[Compiler #16375] [er] Bug in finalized mode involving agents and generics"
+-- reported to ISE.
+--					l_cursor.key.universes_do_if (agent l_depths.force_last (l_cursor.item + 1, ?), agent universe_actions.negated (?, agent l_depths.has))
+					l_cursor.key.universes_do_if (agent insert_in_hash_table (l_depths, l_cursor.item + 1, ?), agent universe_actions.negated (?, agent l_depths.has))
 					if l_depths.has (a_other) then
 						l_found := True
 						l_cursor.go_after
@@ -2176,6 +2180,18 @@ feature {NONE} -- Constants
 			Result := 500
 		ensure
 			capacity_positive: Result > 0
+		end
+
+feature {NONE} -- Implementation
+
+	insert_in_hash_table (a_hash_table: DS_HASH_TABLE [INTEGER, ET_UNIVERSE]; a_value: INTEGER; a_key: ET_UNIVERSE) is
+			-- This routine is a workaround for the bug:
+			-- "[Compiler #16375] [er] Bug in finalized mode involving agents and generics"
+			-- reported to ISE.
+		require
+			a_hash_table_not_void: a_hash_table /= Void
+		do
+			a_hash_table.force_last (a_value, a_key)
 		end
 
 invariant
