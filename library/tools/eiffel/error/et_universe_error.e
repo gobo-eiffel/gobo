@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_vscn0a (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	make_vscn0a (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
 			-- Create a new VSCN error: two different classes `a_class1'
 			-- and `a_class2' with the same name corresponding to `a_current_class'
 			-- in `a_universe'.
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second class filename if any
 		end
 
-	make_vscn0b (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_override_class: ET_NAMED_CLASS) is
+	make_vscn0b (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS) is
 			-- Create a new VSCN error: built-in class "NONE" cannot be overridden
 			-- but `a_override_class' corresponding to `a_current_class' in `a_universe'.
 			--
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = override class filename if any
 		end
 
-	make_vscn0c (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	make_vscn0c (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
 			-- Create a new VSCN error:  class `a_class1' appearing in a .NET assembly
 			-- cannot be overridden by `a_class2' corresponding to `a_current_class'
 			-- in `a_universe'.
@@ -190,7 +190,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = second class filename if any
 		end
 
-	make_vscn0d (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_ADAPTED_CLASS) is
+	make_vscn0d (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS) is
 			-- Create a new VSCN error: class `a_current_class' in `a_universe' cannot
 			-- be overridden both by class `a_class1' and by class `a_class2'.
 			--

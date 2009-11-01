@@ -2,10 +2,15 @@ indexing
 
 	description:
 	"[
-		Eiffel adapted classes.
+		Eiffel master classes. A master class not only gives access to
+		the class with a given name that will be taken into account
+		from a given universe (using its query 'actual_class') but also
+		to other classes with the same name in the universe that are not
+		taken into account because of the name clash.
+
 		Note that there is at most one such object per class name in a given universe.
 		For incrementality purposes, we should only keep reference to objects of
-		type ET_ADAPTED_CLASS and not directly to objects of type ET_CLASS. Otherwise
+		type ET_MASTER_CLASS and not directly to objects of type ET_CLASS. Otherwise
 		we will get corrupted information when classes are moved from one library to
 		another for example. We can still get access to the actual class object with
 		the given name when viewed from the surrounding universe using `actual_class'.
@@ -16,7 +21,7 @@ indexing
 	date: "$Date: $"
 	revision: "$Revision: $"
 
-class ET_ADAPTED_CLASS
+class ET_MASTER_CLASS
 
 inherit
 
@@ -55,8 +60,8 @@ feature {NONE} -- Initialization
 			universe := a_universe
 			other_local_override_classes := tokens.empty_classes
 			other_local_non_override_classes := tokens.empty_classes
-			other_imported_classes := tokens.empty_adapted_classes
-			other_overriding_classes := tokens.empty_adapted_classes
+			other_imported_classes := tokens.empty_master_classes
+			other_overriding_classes := tokens.empty_master_classes
 			intrinsic_class := tokens.unknown_class
 		ensure
 			name_set: name = a_name
@@ -90,14 +95,14 @@ feature -- Access
 		end
 
 	intrinsic_class: ET_NAMED_CLASS
-			-- Class being adapted, taking into account only classes declared
+			-- Class being used, taking into account only classes declared
 			-- locally in `universe' or imported from universes it depends
 			-- on, but not taking into account overriding classes from other
 			-- universes
 			--
 			-- If the class named `name' is declared locally in `universe',
 			-- then it will be of type ET_CLASS. If it's imported from another
-			-- universe then it will be of type ET_ADAPTED_CLASS. So we need
+			-- universe then it will be of type ET_MASTER_CLASS. So we need
 			-- to use `actual_class' to have access to the actual class object.
 			--
 			-- In case of conflict, `intrinsic_class' will be one the override
@@ -143,7 +148,7 @@ feature -- Access
 			--
 			-- The first such class, if any, is stored in `first_local_non_override_class'.
 
-	first_imported_class: ET_ADAPTED_CLASS
+	first_imported_class: ET_MASTER_CLASS
 			-- First class, if any, imported from a universe other than `universe'
 			--
 			-- If more than one such class, the other classes are stored in
@@ -156,12 +161,12 @@ feature -- Access
 			-- them in `universe' but they will not be able to override other
 			-- classes in `universe'.
 
-	other_imported_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+	other_imported_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
 			-- Other classes, if any, imported from universes other than `universe'
 			--
 			-- The first such class, if any, is stored in `first_imported_class'.
 
-	first_overriding_class: ET_ADAPTED_CLASS
+	first_overriding_class: ET_MASTER_CLASS
 			-- First class, if any, in universes other than `universe' which
 			-- overrides current class
 			--
@@ -184,7 +189,7 @@ feature -- Access
 			-- above, we have 'c.universe /= universe'. Also note that current class
 			-- will be listed in 'c.first_imported_class' or 'c.other_imported_classes'.
 
-	other_overriding_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+	other_overriding_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
 			-- Other classes, if any, in universes other than `universe' which override
 			-- current class
 			--
@@ -197,7 +202,7 @@ feature -- Access
 			-- contains at least one class), a validity error is reported and
 			-- `first_overriding_class' will be used by default.
 
-	mapped_class: ET_ADAPTED_CLASS
+	mapped_class: ET_MASTER_CLASS
 			-- Class that is also known under the name `name' in `universe'.
 			-- For example class "CHARACTER_8" is also known under the name "CHARACTER"
 			-- when "CHARACTER" is mapped to "CHARACTER_8".
@@ -213,13 +218,13 @@ feature -- Access
 				if a_group.universe = universe then
 					local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group))
 				else
-					overriding_classes_do_if (agent {ET_ADAPTED_CLASS}.local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+					overriding_classes_do_if (agent {ET_MASTER_CLASS}.local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)), agent {ET_MASTER_CLASS}.is_in_universe (a_group.universe))
 				end
 			else
 				if a_group.universe = universe then
 					local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group))
 				else
-					imported_classes_do_if (agent {ET_ADAPTED_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+					imported_classes_do_if (agent {ET_MASTER_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)), agent {ET_MASTER_CLASS}.is_in_universe (a_group.universe))
 				end
 			end
 		ensure
@@ -237,13 +242,13 @@ feature -- Access
 				if a_group.universe = universe then
 					local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group))
 				else
-					overriding_classes_do_if (agent {ET_ADAPTED_CLASS}.local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+					overriding_classes_do_if (agent {ET_MASTER_CLASS}.local_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)), agent {ET_MASTER_CLASS}.is_in_universe (a_group.universe))
 				end
 			else
 				if a_group.universe = universe then
 					local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group))
 				else
-					imported_classes_do_if (agent {ET_ADAPTED_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)), agent {ET_ADAPTED_CLASS}.is_in_universe (a_group.universe))
+					imported_classes_do_if (agent {ET_MASTER_CLASS}.local_non_override_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)), agent {ET_MASTER_CLASS}.is_in_universe (a_group.universe))
 				end
 			end
 		ensure
@@ -398,7 +403,7 @@ feature -- Status report
 			end
 		end
 
-	has_imported_class (a_class: ET_ADAPTED_CLASS): BOOLEAN is
+	has_imported_class (a_class: ET_MASTER_CLASS): BOOLEAN is
 			-- Is `a_class' one of the classes that have been imported from a universe other than `universe'?
 			-- This means that `a_class' is one of the classes in `first_imported_class'
 			-- or `other_imported_classes'?
@@ -412,7 +417,7 @@ feature -- Status report
 			end
 		end
 
-	has_overriding_class (a_class: ET_ADAPTED_CLASS): BOOLEAN is
+	has_overriding_class (a_class: ET_MASTER_CLASS): BOOLEAN is
 			-- Is `a_class' one of the classes that have been declared in universes
 			-- other than `universe' and which override current class?
 			-- This means that `a_class' is one of the classes in `first_overriding_class'
@@ -613,7 +618,7 @@ feature -- Element change
 			-- `first_local_override_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if a_class.group.is_override then
 				add_first_local_override_class (a_class)
@@ -639,7 +644,7 @@ feature -- Element change
 			-- and no `first_local_non_override_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if a_class.group.is_override then
 				add_last_local_override_class (a_class)
@@ -663,7 +668,7 @@ feature -- Element change
 			-- `intrinsic_class' will be set to `a_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_local_override_class /= Void then
 				if other_local_override_classes = tokens.empty_classes then
@@ -688,7 +693,7 @@ feature -- Element change
 			-- set to `a_class', only if there was no `first_local_override_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_local_override_class = Void then
 				first_local_override_class := a_class
@@ -715,7 +720,7 @@ feature -- Element change
 			-- if there was no `first_local_override_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_local_non_override_class /= Void then
 				if other_local_non_override_classes = tokens.empty_classes then
@@ -741,7 +746,7 @@ feature -- Element change
 			-- and no `first_local_non_override_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_local_non_override_class = Void then
 				first_local_non_override_class := a_class
@@ -757,7 +762,7 @@ feature -- Element change
 			a_class_added_last: (old first_local_non_override_class /= Void) implies (not other_local_non_override_classes.is_empty and then other_local_non_override_classes.last = a_class)
 		end
 
-	add_first_imported_class (a_class: ET_ADAPTED_CLASS) is
+	add_first_imported_class (a_class: ET_MASTER_CLASS) is
 			-- Add `a_class' to `first_imported_class'.
 			-- If there was already such class, move it to `other_imported_classes'.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
@@ -769,10 +774,10 @@ feature -- Element change
 			-- `first_local_non_override_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_imported_class /= Void then
-				if other_imported_classes = tokens.empty_adapted_classes then
+				if other_imported_classes = tokens.empty_master_classes then
 					create other_imported_classes.make (2)
 				end
 				other_imported_classes.force_first (first_imported_class)
@@ -786,7 +791,7 @@ feature -- Element change
 			a_class_added_first: first_imported_class = a_class
 		end
 
-	add_last_imported_class (a_class: ET_ADAPTED_CLASS) is
+	add_last_imported_class (a_class: ET_MASTER_CLASS) is
 			-- Add `a_class' to `first_imported_class', if there was
 			-- no such class, otherwise add it to `other_imported_classes'.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
@@ -798,12 +803,12 @@ feature -- Element change
 			-- no `first_local_non_override_class' and no `first_imported_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_imported_class = Void then
 				first_imported_class := a_class
 			else
-				if other_imported_classes = tokens.empty_adapted_classes then
+				if other_imported_classes = tokens.empty_master_classes then
 					create other_imported_classes.make (2)
 				end
 				other_imported_classes.force_last (a_class)
@@ -817,7 +822,7 @@ feature -- Element change
 			a_class_added_last: (old first_imported_class /= Void) implies (not other_imported_classes.is_empty and then other_imported_classes.last = a_class)
 		end
 
-	add_first_overriding_class (a_class: ET_ADAPTED_CLASS) is
+	add_first_overriding_class (a_class: ET_MASTER_CLASS) is
 			-- Add `a_class' to `first_overriding_class'.
 			-- If there was already such class, move it to `other_overriding_classes'.
 			-- Update `is_modified' accordingly.
@@ -827,10 +832,10 @@ feature -- Element change
 			-- `actual_class' will be set to `a_class.actual_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_overriding_class /= Void then
-				if other_overriding_classes = tokens.empty_adapted_classes then
+				if other_overriding_classes = tokens.empty_master_classes then
 					create other_overriding_classes.make (2)
 				end
 				other_overriding_classes.force_first (first_overriding_class)
@@ -842,7 +847,7 @@ feature -- Element change
 			a_class_added_first: first_overriding_class = a_class
 		end
 
-	add_last_overriding_class (a_class: ET_ADAPTED_CLASS) is
+	add_last_overriding_class (a_class: ET_MASTER_CLASS) is
 			-- Add `a_class' to `first_overriding_class', if there was
 			-- no such class, otherwise add it to `other_overriding_classes'.
 			-- Update `is_modified' accordingly.
@@ -854,14 +859,14 @@ feature -- Element change
 			-- `first_overriding_class'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if first_overriding_class = Void then
 				first_overriding_class := a_class
 				is_modified := True
 				set_marked (is_marked)
 			else
-				if other_overriding_classes = tokens.empty_adapted_classes then
+				if other_overriding_classes = tokens.empty_master_classes then
 					create other_overriding_classes.make (2)
 				end
 				other_overriding_classes.force_last (a_class)
@@ -962,7 +967,7 @@ feature -- Element change
 			end
 		end
 
-	remove_imported_class (a_class: ET_ADAPTED_CLASS) is
+	remove_imported_class (a_class: ET_MASTER_CLASS) is
 			-- Remove `a_class' from `first_imported_class' and `other_imported_classes'.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
 		require
@@ -989,8 +994,8 @@ feature -- Element change
 			-- that do not exist anymore in the universe where they had been declared.
 			-- Update `intrinsic_class' and `is_modified' accordingly.
 		local
-			l_class: ET_ADAPTED_CLASS
-			l_other_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_class: ET_MASTER_CLASS
+			l_other_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
 			i, nb: INTEGER
 		do
 			l_other_classes := other_imported_classes
@@ -1030,7 +1035,7 @@ feature -- Element change
 			all_intrinsic_classes_removed: intrinsic_class = tokens.unknown_class
 		end
 
-	remove_overriding_class (a_class: ET_ADAPTED_CLASS) is
+	remove_overriding_class (a_class: ET_MASTER_CLASS) is
 			-- Remove `a_class' from `first_overriding_class' and `other_overriding_classes'.
 			-- Update `is_modified' accordingly.
 		require
@@ -1132,18 +1137,18 @@ feature {NONE} -- Element change
 			intrinsic_class_set: intrinsic_class = a_class
 		end
 
-	mark_overridden (a_class: ET_ADAPTED_CLASS) is
+	mark_overridden (a_class: ET_MASTER_CLASS) is
 			-- Indicate that `a_class' is being overridden by `Current'.
 		require
 			a_class_not_void: a_class /= Void
---			no_cycle: no cycle in graph of adapted classes
+--			no_cycle: no cycle in graph of master classes
 		do
 			if a_class.universe /= universe then
 				a_class.add_last_overriding_class (Current)
 			end
 		end
 
-	unmark_overridden (a_class: ET_ADAPTED_CLASS) is
+	unmark_overridden (a_class: ET_MASTER_CLASS) is
 			-- Indicate that `a_class' is not being overridden by `Current' anymore.
 		require
 			a_class_not_void: a_class /= Void
@@ -1296,7 +1301,7 @@ feature -- Iteration
 			end
 		end
 
-	imported_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
+	imported_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
 			-- Apply `a_action' to every class imported from a universe other than `universe'.
 			-- These classes can be found in `first_imported_class' and
 			-- `other_imported_classes'.
@@ -1309,7 +1314,7 @@ feature -- Iteration
 			end
 		end
 
-	imported_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]) is
+	imported_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]) is
 			-- Apply `a_action' to every class imported from a universe other than `universe'
 			-- that satisfies `a_test'.
 			-- These classes can be found in `first_imported_class' and
@@ -1326,7 +1331,7 @@ feature -- Iteration
 			end
 		end
 
-	overriding_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
+	overriding_classes_do_all (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
 			-- Apply `a_action' to every class in universes other than `universe' which
 			-- overrides current class.
 			-- These classes can be found in `first_overriding_class' and
@@ -1340,7 +1345,7 @@ feature -- Iteration
 			end
 		end
 
-	overriding_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]) is
+	overriding_classes_do_if (a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]) is
 			-- Apply `a_action' to every class in universes other than `universe' which
 			-- overrides current class and satisfies `a_test'.
 			-- These classes can be found in `first_overriding_class' and
@@ -1510,9 +1515,9 @@ feature -- System
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
-			-- Process current adapted class.
+			-- Process current master class.
 		do
-			a_processor.process_adapted_class (Current)
+			a_processor.process_master_class (Current)
 		end
 
 invariant

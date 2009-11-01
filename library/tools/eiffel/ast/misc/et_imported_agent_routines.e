@@ -18,20 +18,20 @@ inherit
 
 feature -- Access
 
-	adapted_class_actions: KL_AGENT_ROUTINES [ET_ADAPTED_CLASS] is
-			-- Routines that ought to be in agent classes
-		once
-			create Result
-		ensure
-			adapted_class_actions_not_void: Result /= Void
-		end
-
 	class_actions: KL_AGENT_ROUTINES [ET_CLASS] is
 			-- Routines that ought to be in agent classes
 		once
 			create Result
 		ensure
 			class_actions_not_void: Result /= Void
+		end
+
+	master_class_actions: KL_AGENT_ROUTINES [ET_MASTER_CLASS] is
+			-- Routines that ought to be in agent classes
+		once
+			create Result
+		ensure
+			master_class_actions_not_void: Result /= Void
 		end
 
 	universe_actions: KL_AGENT_ROUTINES [ET_UNIVERSE] is

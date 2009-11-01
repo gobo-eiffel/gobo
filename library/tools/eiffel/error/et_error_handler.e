@@ -298,7 +298,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
 			-- Report VSCN error: two different classes `a_class1' and `a_class2'
 			-- with the same name corresponding to `a_current_class' in `a_universe'.
 			--
@@ -317,7 +317,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0b_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_override_class: ET_NAMED_CLASS) is
+	report_vscn0b_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_override_class: ET_NAMED_CLASS) is
 			-- Report VSCN error: built-in class "NONE" cannot be overridden
 			-- but `a_override_class' corresponding to `a_current_class' in `a_universe'.
 			--
@@ -335,7 +335,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
+	report_vscn0c_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS) is
 			-- Report VSCN error:  class `a_class1' appearing in a .NET assembly
 			-- cannot be overridden by `a_class2' corresponding to `a_current_class'
 			-- in `a_universe'.
@@ -355,7 +355,7 @@ feature -- Universe errors
 			end
 		end
 
-	report_vscn0d_error (a_universe: ET_UNIVERSE; a_current_class: ET_ADAPTED_CLASS; a_class1, a_class2: ET_ADAPTED_CLASS) is
+	report_vscn0d_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_MASTER_CLASS) is
 			-- Report VSCN error: class `a_current_class' in `a_universe' cannot
 			-- be overridden both by class `a_class1' and by class `a_class2'.
 			--

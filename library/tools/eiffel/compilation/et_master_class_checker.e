@@ -2,7 +2,7 @@ indexing
 
 	description:
 	"[
-		Eiffel adapted class checkers.
+		Eiffel master class checkers.
 		Look for invalid class name clashes and invalid class overriding.
 	]"
 	library: "Gobo Eiffel Tools Library"
@@ -11,14 +11,14 @@ indexing
 	date: "$Date: $"
 	revision: "$Revision: $"
 
-class ET_ADAPTED_CLASS_CHECKER
+class ET_MASTER_CLASS_CHECKER
 
 inherit
 
 	ET_AST_NULL_PROCESSOR
 		redefine
 			make,
-			process_adapted_class
+			process_master_class
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -31,21 +31,21 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a new adapted class checker.
+			-- Create a new master class checker.
 		do
 			create current_class.make (tokens.unknown_class_name, tokens.unknown_system)
 		end
 
 feature -- Validity checking
 
-	check_adapted_class_validity (a_class: ET_ADAPTED_CLASS) is
+	check_master_class_validity (a_class: ET_MASTER_CLASS) is
 			-- Check validity of `a_class'.
 			-- In particular, look for class name clashes.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_class_not_void: a_class /= Void
 		local
-			l_old_class: ET_ADAPTED_CLASS
+			l_old_class: ET_MASTER_CLASS
 		do
 			reset_fatal_error (False)
 			l_old_class := current_class
@@ -64,8 +64,8 @@ feature {NONE} -- Validity checking
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_override_class: ET_CLASS
 			l_non_override_class: ET_CLASS
-			l_imported_class: ET_ADAPTED_CLASS
-			l_imported_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_imported_class: ET_MASTER_CLASS
+			l_imported_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
 			i, nb: INTEGER
 		do
 			l_override_class := current_class.first_local_override_class
@@ -144,8 +144,8 @@ feature {NONE} -- Validity checking
 			-- Check validity of overriding classes.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_other_overriding_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
-			l_overriding_class: ET_ADAPTED_CLASS
+			l_other_overriding_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS]
+			l_overriding_class: ET_MASTER_CLASS
 			i, nb: INTEGER
 		do
 			l_other_overriding_classes := current_class.other_overriding_classes
@@ -163,7 +163,7 @@ feature {NONE} -- Validity checking
 
 feature -- Access
 
-	current_class: ET_ADAPTED_CLASS
+	current_class: ET_MASTER_CLASS
 			-- Class being processed
 
 	current_universe: ET_UNIVERSE is
@@ -211,12 +211,12 @@ feature -- Error handling
 			error_handler_not_void: Result /= Void
 		end
 
-feature {ET_ADAPTED_CLASS} -- Processing
+feature {ET_MASTER_CLASS} -- Processing
 
-	process_adapted_class (a_class: ET_ADAPTED_CLASS) is
+	process_master_class (a_class: ET_MASTER_CLASS) is
 			-- Process `a_class'.
 		do
-			check_adapted_class_validity (a_class)
+			check_master_class_validity (a_class)
 		end
 
 invariant

@@ -243,7 +243,7 @@ feature {ET_UNIVERSE} -- Parsing
 			import_kernel_classes
 -- With the ISE .NET assembly consumer, we should not import classes from other assemblies.
 --			referenced_assemblies.do_all (agent {ET_DOTNET_ASSEMBLY}.export_classes (Current))
-			if not adapted_class (tokens.system_object_class_name).is_declared_locally then
+			if not master_class (tokens.system_object_class_name).is_declared_locally then
 				import_kernel_class (tokens.system_object_class_name)
 			end
 		end
@@ -275,13 +275,13 @@ feature {ET_UNIVERSE} -- Parsing
 		require
 			a_class_name_not_void: a_class_name /= Void
 		local
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_other_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
+			l_other_class: ET_MASTER_CLASS
 		do
-			l_other_class := current_system.adapted_class (a_class_name)
-			l_adapted_class := adapted_class (a_class_name)
-			if not l_adapted_class.has_imported_class (l_other_class) then
-				l_adapted_class.add_last_imported_class (l_other_class)
+			l_other_class := current_system.master_class (a_class_name)
+			l_master_class := master_class (a_class_name)
+			if not l_master_class.has_imported_class (l_other_class) then
+				l_master_class.add_last_imported_class (l_other_class)
 			end
 		end
 

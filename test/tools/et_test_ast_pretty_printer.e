@@ -42,7 +42,7 @@ feature -- Test
 			a_cluster: ET_XACE_CLUSTER
 			a_class: ET_CLASS
 			a_class_name: ET_IDENTIFIER
-			a_adapted_class: ET_ADAPTED_CLASS
+			a_master_class: ET_MASTER_CLASS
 			a_filename: STRING
 		do
 			create a_system.make ("system_name")
@@ -58,8 +58,8 @@ feature -- Test
 			a_filename := input_filename1
 			a_class.set_filename (a_filename)
 			a_class.set_group (a_cluster)
-			a_adapted_class := a_system.adapted_class (a_class_name)
-			a_adapted_class.add_first_local_class (a_class)
+			a_master_class := a_system.master_class (a_class_name)
+			a_master_class.add_first_local_class (a_class)
 			check_class (a_class)
 		end
 

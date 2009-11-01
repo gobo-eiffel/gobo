@@ -771,7 +771,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_name: ET_IDENTIFIER
 			a_formal: ET_FORMAL_PARAMETER
 			a_type_mark: ET_TYPE_MARK
-			a_base_class: ET_ADAPTED_CLASS
+			a_base_class: ET_MASTER_CLASS
 		do
 			a_name := a_constraint.name
 			a_type_mark := a_constraint.type_mark
@@ -787,7 +787,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index)
 				end
 			else
-				a_base_class := current_universe.adapted_class (a_name)
+				a_base_class := current_universe.master_class (a_name)
 				if providers_enabled then
 					providers.force_last (a_base_class)
 				end
@@ -822,7 +822,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_name: ET_IDENTIFIER
 			a_type_mark: ET_TYPE_MARK
 			a_formal: ET_FORMAL_PARAMETER
-			a_base_class: ET_ADAPTED_CLASS
+			a_base_class: ET_MASTER_CLASS
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			a_name := a_constraint.name
@@ -839,7 +839,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				report_syntax_error (a_constraint.actual_parameters.position)
 				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index)
 			else
-				a_base_class := current_universe.adapted_class (a_name)
+				a_base_class := current_universe.master_class (a_name)
 				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, Current)
 				if a_parameters /= Void then
 					if providers_enabled then
@@ -1101,18 +1101,18 @@ feature {NONE} -- AST factory
 	new_client (a_name: ET_CLASS_NAME): ET_CLIENT is
 			-- New client
 		local
-			l_base_class: ET_ADAPTED_CLASS
+			l_base_class: ET_MASTER_CLASS
 		do
-			l_base_class := current_universe.adapted_class (a_name)
+			l_base_class := current_universe.master_class (a_name)
 			Result := ast_factory.new_client (a_name, l_base_class)
 		end
 
 	new_client_comma (a_name: ET_CLASS_NAME; a_comma: ET_SYMBOL): ET_CLIENT_ITEM is
 			-- New client followed by a comma
 		local
-			l_base_class: ET_ADAPTED_CLASS
+			l_base_class: ET_MASTER_CLASS
 		do
-			l_base_class := current_universe.adapted_class (a_name)
+			l_base_class := current_universe.master_class (a_name)
 			Result := ast_factory.new_client_comma (a_name, l_base_class, a_comma)
 		end
 
@@ -1310,7 +1310,7 @@ feature {NONE} -- AST factory
 		local
 			a_parameter: ET_FORMAL_PARAMETER
 			a_last_class: ET_CLASS
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
@@ -1324,7 +1324,7 @@ feature {NONE} -- AST factory
 					end
 					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_parameter.index)
 				else
-					l_class := current_universe.adapted_class (a_name)
+					l_class := current_universe.master_class (a_name)
 					if providers_enabled then
 						providers.force_last (l_class)
 					end
@@ -1345,14 +1345,14 @@ feature {NONE} -- AST factory
 		local
 			a_type: ET_CLASS_TYPE
 			a_last_class: like last_class
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
 				if a_last_class.has_formal_parameter (a_name) then
 					-- Error
 				end
-				l_class := current_universe.adapted_class (a_name)
+				l_class := current_universe.master_class (a_name)
 				if providers_enabled then
 					providers.force_last (l_class)
 				end
@@ -1508,7 +1508,7 @@ feature {NONE} -- AST factory
 		local
 			a_class: ET_NAMED_CLASS
 		do
-			a_class := current_universe.adapted_class (a_tuple)
+			a_class := current_universe.master_class (a_tuple)
 			if providers_enabled then
 				providers.force_last (a_class)
 			end
@@ -1585,15 +1585,15 @@ feature {NONE} -- AST factory
 			old_current_class: ET_CLASS
 			l_basename: STRING
 			l_class_name: ET_IDENTIFIER
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_new_class: ET_CLASS
 		do
 			if a_name /= Void then
-				l_adapted_class := current_universe.adapted_class (a_name)
-				if l_adapted_class.has_local_class (current_class) then
+				l_master_class := current_universe.master_class (a_name)
+				if l_master_class.has_local_class (current_class) then
 					Result := current_class
-				elseif l_adapted_class.first_local_class /= Void then
-					Result := l_adapted_class.first_local_class
+				elseif l_master_class.first_local_class /= Void then
+					Result := l_master_class.first_local_class
 				else
 					Result := tokens.unknown_class
 				end
@@ -1623,8 +1623,8 @@ feature {NONE} -- AST factory
 							-- This is the class we want to parse.
 						if Result.is_parsed then
 -- TODO: find a way to check whether two classes in the same file don't have the same name.
-							if Result = l_adapted_class.actual_class then
-								l_adapted_class.set_modified (True)
+							if Result = l_master_class.actual_class then
+								l_master_class.set_modified (True)
 							end
 							Result.reset
 						end
@@ -1632,7 +1632,7 @@ feature {NONE} -- AST factory
 					else
 						create Result.make (a_name)
 						current_system.register_class (Result)
-						l_adapted_class.add_last_local_class (Result)
+						l_master_class.add_last_local_class (Result)
 					end
 					Result.set_filename (filename)
 					Result.set_group (group)

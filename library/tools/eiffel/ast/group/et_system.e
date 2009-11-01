@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			set_kernel_types
 			create null_processor.make
 			eiffel_preparser := null_processor
-			adapted_class_checker := null_processor
+			master_class_checker := null_processor
 			eiffel_parser := null_processor
 			provider_checker := null_processor
 			ancestor_builder := null_processor
@@ -113,19 +113,19 @@ feature -- Kernel types
 			-- Set type "NONE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_class: ET_CLASS
 			l_none_group: ET_NONE_GROUP
 		do
 			l_name := tokens.none_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create none_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create none_type.make (Void, l_name, l_master_class)
 			l_class := ast_factory.new_class (l_name)
 			register_class (l_class)
 			create l_none_group.make (Current)
 			l_class.set_group (l_none_group)
-			l_adapted_class.add_first_local_class (l_class)
+			l_master_class.add_first_local_class (l_class)
 		end
 
 feature -- Feature seeds
@@ -261,9 +261,9 @@ feature -- Setting
 		require
 			a_name_not_void: a_name /= Void
 		local
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
-			l_class := adapted_class (a_name)
+			l_class := master_class (a_name)
 			l_class.set_marked (True)
 			if l_class = any_type.named_base_class then
 				root_type := any_type
@@ -716,11 +716,11 @@ feature -- Parsing
 
 	preparse_recursive is
 			-- Build a mapping between class names and their filenames and
-			-- populate `adapted_classes', even if the classes have not been
+			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `adapted_classes', but are not parsed.
+			-- are added to `master_classes', but are not parsed.
 			--
 			-- Note that both locally declared classes and classes imported
 			-- from other universes (after having themselves been preparsed
@@ -731,7 +731,7 @@ feature -- Parsing
 			-- for more details.
 		do
 			precursor
-			check_adapted_class_validity
+			check_master_class_validity
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
@@ -743,7 +743,7 @@ feature -- Parsing
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `adapted_classes' will be populated (both with
+			-- this process and `master_classes' will be populated (both with
 			-- classes declared locally and those imported from other universes
 			-- which have themselves been parsed recursively during this call).
 			-- If current universe had already been preparsed, then rebuild
@@ -755,7 +755,7 @@ feature -- Parsing
 			-- for more details.
 		do
 			precursor
-			check_adapted_class_validity
+			check_master_class_validity
 			build_scm_read_mappings
 			build_scm_write_mappings
 		end
@@ -1140,14 +1140,14 @@ feature -- Compilation
 			end
 		end
 
-	check_adapted_class_validity is
+	check_master_class_validity is
 			-- Check for invalid class name clashes and invalid class overriding.
 			--
 			-- Note that this operation will be interrupted if a stop request
 			-- is received, i.e. `stop_request' starts returning True. No
 			-- interruption if `stop_request' is Void.
 		do
-			adapted_classes_do_recursive_until (agent {ET_ADAPTED_CLASS}.process (adapted_class_checker), stop_request)
+			master_classes_do_recursive_until (agent {ET_MASTER_CLASS}.process (master_class_checker), stop_request)
 		end
 
 feature -- Processors
@@ -1158,8 +1158,8 @@ feature -- Processors
 	eiffel_parser: ET_AST_PROCESSOR
 			-- Eiffel parser
 
-	adapted_class_checker: ET_AST_PROCESSOR
-			-- Adapted class checker
+	master_class_checker: ET_AST_PROCESSOR
+			-- Master class checker
 
 	dotnet_assembly_consumer: ET_DOTNET_ASSEMBLY_CONSUMER is
 			-- .NET assembly consumer
@@ -1200,8 +1200,8 @@ feature -- Processors
 			if eiffel_preparser = null_processor then
 				create {ET_EIFFEL_PREPARSER} eiffel_preparser.make
 			end
-			if adapted_class_checker = null_processor then
-				create {ET_ADAPTED_CLASS_CHECKER} adapted_class_checker.make
+			if master_class_checker = null_processor then
+				create {ET_MASTER_CLASS_CHECKER} master_class_checker.make
 			end
 			if eiffel_parser = null_processor then
 				create {ET_EIFFEL_PARSER} eiffel_parser.make
@@ -1244,14 +1244,14 @@ feature -- Processors
 			eiffel_preparser_set: eiffel_preparser = a_eiffel_preparser
 		end
 
-	set_adapted_class_checker (a_adapted_class_checker: like adapted_class_checker) is
-			-- Set `adapted_class_checker' to `a_adapted_class_checker'.
+	set_master_class_checker (a_master_class_checker: like master_class_checker) is
+			-- Set `master_class_checker' to `a_master_class_checker'.
 		require
-			a_adapted_class_checker_not_void: a_adapted_class_checker /= Void
+			a_master_class_checker_not_void: a_master_class_checker /= Void
 		do
-			adapted_class_checker := a_adapted_class_checker
+			master_class_checker := a_master_class_checker
 		ensure
-			adapted_class_checker_set: adapted_class_checker = a_adapted_class_checker
+			master_class_checker_set: master_class_checker = a_master_class_checker
 		end
 
 	set_eiffel_parser (a_eiffel_parser: like eiffel_parser) is
@@ -1403,7 +1403,7 @@ invariant
 	function_item_seed_not_negative: function_item_seed >= 0
 		-- Processors.
 	eiffel_preparser_not_void: eiffel_preparser /= Void
-	adapted_class_checker_not_void: adapted_class_checker /= Void
+	master_class_checker_not_void: master_class_checker /= Void
 	eiffel_parser_not_void: eiffel_parser /= Void
 	provider_checker_not_void: provider_checker /= Void
 	ancestor_builder_not_void: ancestor_builder /= Void

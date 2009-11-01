@@ -370,7 +370,7 @@ feature -- Parsing
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `adapted_classes', but are not parsed.
+			-- are added to `master_classes', but are not parsed.
 			--
 			-- Note that only classes declared locally will be taken into
 			-- account. Classes from other universes will be imported later,
@@ -390,19 +390,19 @@ feature -- Parsing
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.reset_local_modified_classes)
-				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_local_classes)
+				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes)
+				master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_local_classes)
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_preparser))
 			end
 		end
 
 	preparse_recursive is
 			-- Build a mapping between class names and their filenames and
-			-- populate `adapted_classes', even if the classes have not been
+			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `adapted_classes', but are not parsed.
+			-- are added to `master_classes', but are not parsed.
 			--
 			-- Note that both locally declared classes and classes imported
 			-- from other universes (after having themselves been preparsed
@@ -438,7 +438,7 @@ feature -- Parsing
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `adapted_classes' will be populated.
+			-- this process and `master_classes' will be populated.
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
 			-- the classes that have been modified or were not parsed yet.
@@ -461,8 +461,8 @@ feature -- Parsing
 					-- Note that if a file contains two classes and is modified between the
 					-- time we check the first class and the second class then the preparse
 					-- will give inconsistent results and will need to be rerun again.
-				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.reset_local_modified_classes)
-				adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_local_classes)
+				master_classes_do_all (agent {ET_MASTER_CLASS}.reset_local_modified_classes)
+				master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_local_classes)
 				clusters.do_all (agent {ET_CLUSTER}.process (current_system.eiffel_parser))
 			end
 		end
@@ -474,7 +474,7 @@ feature -- Parsing
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `adapted_classes' will be populated (both with
+			-- this process and `master_classes' will be populated (both with
 			-- classes declared locally and those imported from other universes
 			-- which have themselves been parsed recursively during this call).
 			-- If current universe had already been preparsed, then rebuild
@@ -510,7 +510,7 @@ feature {ET_UNIVERSE} -- Parsing
 	import_classes is
 			-- Import classes made available (i.e. exported) by other universes.
 		do
-			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.remove_unknown_imported_classes)
+			master_classes_do_all (agent {ET_MASTER_CLASS}.remove_unknown_imported_classes)
 			libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.export_classes (Current))
 			dotnet_assemblies.do_adapted (agent {ET_ADAPTED_DOTNET_ASSEMBLY}.export_classes (Current))
 		end

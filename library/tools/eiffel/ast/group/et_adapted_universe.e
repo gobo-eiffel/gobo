@@ -68,17 +68,17 @@ feature -- Exporting classes
 		require
 			other_universe_not_void: other_universe /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_ADAPTED_CLASS, ET_CLASS_NAME]
-			l_class: ET_ADAPTED_CLASS
-			l_other_class: ET_ADAPTED_CLASS
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_class: ET_MASTER_CLASS
+			l_other_class: ET_MASTER_CLASS
 		do
-			l_cursor := universe.adapted_classes.new_cursor
+			l_cursor := universe.master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
 				if l_class.actual_intrinsic_class.universe = universe then
 -- TODO: take into account class renaming.
 -- TODO: what to do with aliased classes?
-					l_other_class := other_universe.adapted_class (l_cursor.key)
+					l_other_class := other_universe.master_class (l_cursor.key)
 					if not l_other_class.has_imported_class (l_class) then
 						l_other_class.add_last_imported_class (l_class)
 					end

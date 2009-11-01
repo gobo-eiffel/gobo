@@ -3502,8 +3502,8 @@ feature -- Empty lists
 			list_empty: Result.is_empty
 		end
 
-	empty_adapted_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS] is
-			-- Shared empty list of adapted classes
+	empty_master_classes: DS_ARRAYED_LIST [ET_MASTER_CLASS] is
+			-- Shared empty list of master classes
 		once
 			create Result.make (0)
 		ensure

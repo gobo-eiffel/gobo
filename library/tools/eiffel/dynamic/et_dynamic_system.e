@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			catcall_error_mode := True
 			current_system := a_system
-			nb := current_system.adapted_classes.capacity
+			nb := current_system.master_classes.capacity
 			create null_dynamic_type_set_builder.make (Current)
 			set_dynamic_type_set_builder (null_dynamic_type_set_builder)
 			create dynamic_types.make (nb)

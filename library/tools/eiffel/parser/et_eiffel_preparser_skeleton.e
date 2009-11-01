@@ -180,7 +180,7 @@ feature {NONE} -- Parsing
 			l_time_stamp: INTEGER
 			l_basename: STRING
 			l_class_name: ET_IDENTIFIER
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
 			if current_system.preparse_shallow_mode then
 					-- With the "shallow" algorithm the time-stamp is only set when
@@ -188,7 +188,7 @@ feature {NONE} -- Parsing
 				l_time_stamp := tokens.unknown_class.time_stamp
 				l_basename := file_system.basename (a_filename)
 				create l_class_name.make (l_basename.substring (1, l_basename.count - 2))
-				l_class := current_universe.adapted_class (l_class_name)
+				l_class := current_universe.master_class (l_class_name)
 				preparse_class (l_class, a_filename, l_time_stamp)
 			else
 				l_file := tmp_file
@@ -206,7 +206,7 @@ feature {NONE} -- Parsing
 					yy_load_input_buffer
 					read_token
 					if last_classname /= Void then
-						l_class := current_universe.adapted_class (last_classname)
+						l_class := current_universe.master_class (last_classname)
 						preparse_class (l_class, a_filename, l_time_stamp)
 						if current_system.preparse_multiple_mode then
 							from
@@ -216,7 +216,7 @@ feature {NONE} -- Parsing
 							until
 								last_classname = Void
 							loop
-								l_class := current_universe.adapted_class (last_classname)
+								l_class := current_universe.master_class (last_classname)
 								preparse_class (l_class, a_filename, l_time_stamp)
 								class_keyword_found := False
 								last_classname := Void
@@ -235,7 +235,7 @@ feature {NONE} -- Parsing
 			end
 		end
 
-	preparse_class (a_class: ET_ADAPTED_CLASS; a_filename: STRING; a_time_stamp: INTEGER) is
+	preparse_class (a_class: ET_MASTER_CLASS; a_filename: STRING; a_time_stamp: INTEGER) is
 			-- The file `a_filename' with time-stamp `a_time_stamp' is assumed
 			-- to contain a class with the same name as `a_class' in `current_universe'.
 			-- Check to see whether this class already existed, and if so whether

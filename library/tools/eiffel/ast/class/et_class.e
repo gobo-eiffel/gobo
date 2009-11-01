@@ -564,18 +564,19 @@ feature -- Preparsing
 	time_stamp: INTEGER
 			-- Time stamp of the file when it was last parsed
 
-	adapted_class: ET_ADAPTED_CLASS is
+	master_class: ET_MASTER_CLASS is
 			-- Class named `name' in `universe'
 			--
-			-- Note that it might represent a class other than the current
-			-- class when there are name clashes. In that case, the current
-			-- class is likely to be found in one of the local ('first_local_override_class',
-			-- 'other_local_override_classes', 'first_local_non_override_class',
-			-- 'other_local_non_override_classes').
+			-- Note that the 'actual_class' of the Result might represent
+			-- a class other than the current class when there are name clashes.
+			-- In that case, the current class is likely to be found in one of
+			-- 'first_local_override_class', 'other_local_override_classes',
+			-- 'first_local_non_override_class' or 'other_local_non_override_classes'
+			-- of the Result. See features of class ET_MASTER_CLASS for more details.
 		do
-			Result := universe.adapted_class (name)
+			Result := universe.master_class (name)
 		ensure
-			adapted_class_not_void: Result /= Void
+			master_class_not_void: Result /= Void
 		end
 
 	actual_class: ET_CLASS is
@@ -586,30 +587,21 @@ feature -- Preparsing
 			definition: Result = Current
 		end
 
-	master_class: ET_CLASS is
-			-- Class known by `universe' with same name as current class
-			-- (This class is the current class when it is not overridden.)
-		do
-			Result := adapted_class.actual_class
-		ensure
-			definition: Result = adapted_class.actual_class
-		end
-
 	non_override_overridden_class: ET_CLASS is
 			-- First overridden class that is not in an override group;
 			-- Void if no such class
 		local
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_imported_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
+			l_imported_class: ET_MASTER_CLASS
 		do
-			l_adapted_class := adapted_class
-			if l_adapted_class.actual_class = Current then
-				Result := l_adapted_class.first_local_non_override_class
-				if Result = Current and then not l_adapted_class.other_local_non_override_classes.is_empty then
-					Result := l_adapted_class.other_local_non_override_classes.first
+			l_master_class := master_class
+			if l_master_class.actual_class = Current then
+				Result := l_master_class.first_local_non_override_class
+				if Result = Current and then not l_master_class.other_local_non_override_classes.is_empty then
+					Result := l_master_class.other_local_non_override_classes.first
 				end
 				if Result = Void then
-					l_imported_class := l_adapted_class.first_imported_class
+					l_imported_class := l_master_class.first_imported_class
 					if l_imported_class /= Void then
 						Result := l_imported_class.first_local_non_override_class
 					end
@@ -740,20 +732,20 @@ feature -- Preparsing status
 	is_overridden: BOOLEAN is
 			-- Is current class overridden by another class?
 		do
-			Result := (master_class /= Current)
+			Result := (master_class.actual_class /= Current)
 		ensure
-			definition: Result = (master_class /= Current)
+			definition: Result = (master_class.actual_class /= Current)
 		end
 
 	is_overriding: BOOLEAN is
 			-- Is current class overriding another class?
 		local
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
-			l_adapted_class := adapted_class
-			Result := l_adapted_class.actual_class = Current and l_adapted_class.has_name_clash
+			l_master_class := master_class
+			Result := l_master_class.actual_class = Current and l_master_class.has_name_clash
 		ensure
-			definition: Result = (master_class = Current and adapted_class.has_name_clash)
+			definition: Result = (master_class.actual_class = Current and master_class.has_name_clash)
 		end
 
 	is_in_override_group: BOOLEAN is

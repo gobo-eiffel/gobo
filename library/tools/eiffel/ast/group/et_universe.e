@@ -4,7 +4,7 @@ indexing
 
 	"[
 		Eiffel class universes.
-		An Eiffel universe is a set if classes, some declared locally
+		An Eiffel universe is a set of classes, some declared locally
 		(in the universe's clusters), some imported from other universes
 		(from other libraries or assemblies). No two classes have the same
 		name. All local classes (declared locally) should only depend on
@@ -68,8 +68,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize universe.
 		do
-			create adapted_classes.make_map (3000)
-			adapted_classes.set_key_equality_tester (class_name_tester)
+			create master_classes.make_map (3000)
+			master_classes.set_key_equality_tester (class_name_tester)
 		end
 
 feature -- Initialization
@@ -80,7 +80,7 @@ feature -- Initialization
 			-- Overridden classes are also taken into account.
 			-- Do nothing if a class is not parsed yet.
 		do
-			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed))
+			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed))
 		end
 
 	reset_classes_recursive is
@@ -89,7 +89,7 @@ feature -- Initialization
 			-- Overridden classes are also taken into account.
 			-- Do nothing if a class is not parsed yet.
 		do
-			adapted_classes_do_recursive (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed))
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed))
 		end
 
 	reset_classes_incremental_recursive is
@@ -115,7 +115,7 @@ feature -- Initialization
 		do
 				-- Start by taking care of classes containing errors, and
 				-- also reset overridden classes as they were when last parsed.
-			adapted_classes_do_recursive (agent {ET_ADAPTED_CLASS}.local_classes_do_unless_actual (agent {ET_CLASS}.reset_after_parsed))
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_unless_actual (agent {ET_CLASS}.reset_after_parsed))
 				-- Classes that had an ancestor error need to be reprocessed.
 			classes_do_if_recursive (agent {ET_CLASS}.reset_after_parsed, agent {ET_CLASS}.has_ancestors_error)
 				-- We mark classes with an ancestor error here to indicate that
@@ -173,7 +173,7 @@ feature -- Initialization
 			create l_implementation_status_checker.make
 			classes_do_if_recursive (agent l_implementation_status_checker.process_class, agent {ET_CLASS}.implementation_checked)
 				-- Reset the modified status of all classes.
-			adapted_classes_do_recursive (agent {ET_ADAPTED_CLASS}.set_modified (False))
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.set_modified (False))
 		end
 
 	reset_errors is
@@ -181,7 +181,7 @@ feature -- Initialization
 			-- before their first error was reported.
 			-- Errors will be reported again if classes are processed again.
 		do
-			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
+			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
 		end
 
 	reset_errors_recursive is
@@ -192,8 +192,8 @@ feature -- Initialization
 			l_reparse_needed: UT_TRISTATE
 		do
 			create l_reparse_needed.make_false
-			adapted_classes_do_if (agent adapted_class_actions.call (?, agent l_reparse_needed.set_true), agent adapted_class_actions.conjuncted (?, agent {ET_ADAPTED_CLASS}.is_preparsed, agent {ET_ADAPTED_CLASS}.has_syntax_error))
-			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
+			master_classes_do_if (agent master_class_actions.call (?, agent l_reparse_needed.set_true), agent master_class_actions.conjuncted (?, agent {ET_MASTER_CLASS}.is_preparsed, agent {ET_MASTER_CLASS}.has_syntax_error))
+			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_errors))
 			if l_reparse_needed.is_true then
 					-- Some classes which had a syntax error will be reparsed.
 					-- As a consequence, it is wiser to incrementally reset
@@ -204,26 +204,26 @@ feature -- Initialization
 
 feature -- Status report
 
-	has_adapted_class (a_name: ET_CLASS_NAME): BOOLEAN is
-			-- Is there a class named `a_name' when reviewed from current universe?
+	has_master_class (a_name: ET_CLASS_NAME): BOOLEAN is
+			-- Is there a class named `a_name' when viewed from current universe?
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
 		require
 			a_name_not_void: a_name /= Void
 		local
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
-			adapted_classes.search (a_name)
-			if adapted_classes.found then
-				l_class := adapted_classes.found_item
+			master_classes.search (a_name)
+			if master_classes.found then
+				l_class := master_classes.found_item
 				Result := l_class.is_preparsed
 			end
 		ensure
-			is_preparsed: Result implies adapted_class (a_name).is_preparsed
+			is_preparsed: Result implies master_class (a_name).is_preparsed
 		end
 
-	has_adapted_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
-			-- Is there a class named `a_name' when reviewed from current universe,
+	has_master_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
+			-- Is there a class named `a_name' when viewed from current universe,
 			-- or recursively from one of the universes it depends on?
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
@@ -233,7 +233,7 @@ feature -- Status report
 			l_result: UT_TRISTATE
 		do
 			create l_result.make_false
-			universes_do_if_recursive_until (agent universe_actions.call (?, agent l_result.set_true), agent {ET_UNIVERSE}.has_adapted_class (a_name), agent l_result.is_true)
+			universes_do_if_recursive_until (agent universe_actions.call (?, agent l_result.set_true), agent {ET_UNIVERSE}.has_master_class (a_name), agent l_result.is_true)
 			Result := l_result.is_true
 		end
 
@@ -243,11 +243,11 @@ feature -- Status report
 		require
 			a_name_not_void: a_name /= Void
 		local
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
-			adapted_classes.search (a_name)
-			if adapted_classes.found then
-				l_class := adapted_classes.found_item
+			master_classes.search (a_name)
+			if master_classes.found then
+				l_class := master_classes.found_item
 				if l_class.actual_class.universe = Current then
 					Result := True
 				end
@@ -256,7 +256,7 @@ feature -- Status report
 
 	has_class_recursive (a_name: ET_CLASS_NAME): BOOLEAN is
 			-- Is there a class named `a_name' declared locally in current universe,
-			-- or recursively from one of the universes it depends on?
+			-- or recursively in one of the universes it depends on?
 			-- Do not take into account overridden classes.
 		require
 			a_name_not_void: a_name /= Void
@@ -270,30 +270,37 @@ feature -- Status report
 
 feature -- Access
 
-	adapted_classes: DS_HASH_TABLE [ET_ADAPTED_CLASS, ET_CLASS_NAME]
+	master_classes: DS_HASH_TABLE [ET_MASTER_CLASS, ET_CLASS_NAME]
 			-- Classes visible from current universe.
 			-- Contains both locally declared classes and
 			-- classes imported from other universes.
 
-	adapted_class (a_name: ET_CLASS_NAME): ET_ADAPTED_CLASS is
+	master_class (a_name: ET_CLASS_NAME): ET_MASTER_CLASS is
 			-- Class named `a_name' when viewed from current universe.
 			-- Add this class to universe if not found,
 			-- in which case it will refer to the unknown class.
+			--
+			-- Note that the master class not only gives access to
+			-- the class named `a_name' that will be taken into account
+			-- from current universe (using its query 'actual_class')
+			-- but also to other classes with the same name in the universe
+			-- that are not taken into account because of the name
+			-- clash (see features of class ET_MASTER_CLASS).
 		require
 			a_name_not_void: a_name /= Void
 		do
-			adapted_classes.search (a_name)
-			if adapted_classes.found then
-				Result := adapted_classes.found_item
+			master_classes.search (a_name)
+			if master_classes.found then
+				Result := master_classes.found_item
 			else
 				create Result.make (a_name, Current)
-				adapted_classes.force_last_new (Result, a_name)
+				master_classes.force_last_new (Result, a_name)
 			end
 		ensure
-			adapted_class_not_void: Result /= Void
+			master_class_not_void: Result /= Void
 		end
 
-	adapted_class_by_name (a_name: STRING): ET_ADAPTED_CLASS is
+	master_class_by_name (a_name: STRING): ET_MASTER_CLASS is
 			-- Class named `a_name' when viewed from current universe.
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
@@ -303,19 +310,19 @@ feature -- Access
 			a_name_not_empty: a_name.count > 0
 		local
 			l_class_name: ET_IDENTIFIER
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
 			create l_class_name.make (a_name)
-			adapted_classes.search (l_class_name)
-			if adapted_classes.found then
-				l_class := adapted_classes.found_item
+			master_classes.search (l_class_name)
+			if master_classes.found then
+				l_class := master_classes.found_item
 				if l_class.is_preparsed then
 					Result := l_class
 				end
 			end
 		end
 
-	adapted_classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_ADAPTED_CLASS] is
+	master_classes_by_name_recursive (a_name: STRING): DS_ARRAYED_LIST [ET_MASTER_CLASS] is
 			-- Classes named `a_name' when viewed from current universe,
 			-- or recursively from one of the universes it depends on.
 			-- Take into account both locally declared classes and
@@ -326,7 +333,7 @@ feature -- Access
 			a_name_not_empty: a_name.count > 0
 		do
 			create Result.make (initial_universes_capacity)
-			universes_do_recursive (agent {ET_UNIVERSE}.do_adapted_class_by_name (a_name, agent Result.force_last))
+			universes_do_recursive (agent {ET_UNIVERSE}.do_master_class_by_name (a_name, agent Result.force_last))
 		ensure
 			classes_not_void: Result /= Void
 			no_void_class: not Result.has_void
@@ -340,12 +347,12 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 		local
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_class: ET_CLASS
 		do
-			l_adapted_class := adapted_class_by_name (a_name)
-			if l_adapted_class /= Void then
-				l_class := l_adapted_class.actual_class
+			l_master_class := master_class_by_name (a_name)
+			if l_master_class /= Void then
+				l_class := l_master_class.actual_class
 				if l_class.universe = Current then
 					Result := l_class
 				end
@@ -378,7 +385,7 @@ feature -- Access
 			a_group_not_void: a_group /= Void
 		do
 			create Result.make (initial_classes_in_group_capacity)
-			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)))
+			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group (a_group)))
 		ensure
 			classes_not_void: Result /= Void
 			no_void_class: not Result.has_void
@@ -393,7 +400,7 @@ feature -- Access
 			a_group_not_void: a_group /= Void
 		do
 			create Result.make (initial_classes_in_group_capacity)
-			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)))
+			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_if (agent Result.force_last, agent {ET_CLASS}.is_in_group_recursive (a_group)))
 		ensure
 			classes_not_void: Result /= Void
 			no_void_class: not Result.has_void
@@ -405,7 +412,7 @@ feature -- Access
 			-- Create a new data structure at each call.
 		do
 			create Result.make_map (initial_classes_by_groups_capacity)
-			adapted_classes_do_all (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.add_by_group (Result)))
+			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.add_by_group (Result)))
 		ensure
 			classes_not_void: Result /= Void
 			no_void_list: not Result.has_void_item
@@ -420,7 +427,7 @@ feature -- Access
 			-- Create a new data structure at each call.
 		do
 			create Result.make_map (initial_classes_by_groups_capacity)
-			adapted_classes_do_recursive (agent {ET_ADAPTED_CLASS}.local_classes_do_all (agent {ET_CLASS}.add_by_group (Result)))
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.add_by_group (Result)))
 		ensure
 			classes_not_void: Result /= Void
 			no_void_list: not Result.has_void_item
@@ -863,20 +870,20 @@ feature -- Kernel types
 			-- Set type "ANY".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_any_client: ET_CLIENT
 		do
 			l_name := tokens.any_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create any_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create any_type.make (Void, l_name, l_master_class)
 				-- Implicit parent "ANY".
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
 			any_parents.put_first (any_parent)
 				-- Implicit client clause.
 			create any_clients.make_with_capacity (1)
-			create l_any_client.make (l_name, l_adapted_class)
+			create l_any_client.make (l_name, l_master_class)
 			any_clients.put_first (l_any_client)
 		end
 
@@ -884,40 +891,40 @@ feature -- Kernel types
 			-- Set type with base class "ARRAY".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.array_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 				-- Type "ARRAY [ANY]".
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create array_any_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create array_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_boolean_type is
 			-- Set type "BOOLEAN".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.boolean_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create boolean_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create boolean_type.make (Void, l_name, l_master_class)
 		end
 
 	set_character_type is
 			-- Set type "CHARACTER".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.character_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create character_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create character_type.make (Void, l_name, l_master_class)
 		end
 
 	set_character_8_type is
@@ -925,12 +932,12 @@ feature -- Kernel types
 			-- Update `character_8_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.character_8_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create character_8_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create character_8_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create character_8_convert_feature.make (character_8_type)
 		end
@@ -940,12 +947,12 @@ feature -- Kernel types
 			-- Update `character_32_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.character_32_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create character_32_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create character_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create character_32_convert_feature.make (character_32_type)
 		end
@@ -954,41 +961,41 @@ feature -- Kernel types
 			-- Set type "DOUBLE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.double_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create double_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create double_type.make (Void, l_name, l_master_class)
 		end
 
 	set_function_type is
 			-- Set type with base class "FUNCTION".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.function_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (3)
 			l_parameters.put_first (any_type)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create function_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create function_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_integer_type is
 			-- Set type "INTEGER".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.integer_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create integer_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create integer_type.make (Void, l_name, l_master_class)
 		end
 
 	set_integer_8_type is
@@ -996,12 +1003,12 @@ feature -- Kernel types
 			-- Update `integer_8_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.integer_8_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create integer_8_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create integer_8_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_8_convert_feature.make (integer_8_type)
 		end
@@ -1011,12 +1018,12 @@ feature -- Kernel types
 			-- Update `integer_16_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.integer_16_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create integer_16_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create integer_16_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_16_convert_feature.make (integer_16_type)
 		end
@@ -1026,12 +1033,12 @@ feature -- Kernel types
 			-- Update `integer_32_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.integer_32_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create integer_32_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create integer_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_32_convert_feature.make (integer_32_type)
 		end
@@ -1041,12 +1048,12 @@ feature -- Kernel types
 			-- Update `integer_64_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.integer_64_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create integer_64_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create integer_64_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create integer_64_convert_feature.make (integer_64_type)
 		end
@@ -1055,12 +1062,12 @@ feature -- Kernel types
 			-- Set type "NATURAL".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.natural_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create natural_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create natural_type.make (Void, l_name, l_master_class)
 		end
 
 	set_natural_8_type is
@@ -1068,12 +1075,12 @@ feature -- Kernel types
 			-- Update `natural_8_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.natural_8_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create natural_8_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create natural_8_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_8_convert_feature.make (natural_8_type)
 		end
@@ -1083,12 +1090,12 @@ feature -- Kernel types
 			-- Update `natural_16_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.natural_16_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create natural_16_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create natural_16_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_16_convert_feature.make (natural_16_type)
 		end
@@ -1098,12 +1105,12 @@ feature -- Kernel types
 			-- Update `natural_32_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.natural_32_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create natural_32_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create natural_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_32_convert_feature.make (natural_32_type)
 		end
@@ -1113,12 +1120,12 @@ feature -- Kernel types
 			-- Update `natural_64_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.natural_64_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create natural_64_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create natural_64_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create natural_64_convert_feature.make (natural_64_type)
 		end
@@ -1127,71 +1134,71 @@ feature -- Kernel types
 			-- Set type "NONE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
-			l_none_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
+			l_none_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.none_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create none_type.make (Void, l_name, l_adapted_class)
-			l_none_class := current_system.adapted_class (l_name)
-			l_adapted_class.add_first_imported_class (l_none_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create none_type.make (Void, l_name, l_master_class)
+			l_none_class := current_system.master_class (l_name)
+			l_master_class.add_first_imported_class (l_none_class)
 		end
 
 	set_pointer_type is
 			-- Set type "POINTER".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.pointer_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create pointer_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create pointer_type.make (Void, l_name, l_master_class)
 		end
 
 	set_predicate_type is
 			-- Set type with base class "PREDICATE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.predicate_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create predicate_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create predicate_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_procedure_type is
 			-- Set type with base class "PROCEDURE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.procedure_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create procedure_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create procedure_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_real_type is
 			-- Set type "REAL".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.real_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create real_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create real_type.make (Void, l_name, l_master_class)
 		end
 
 	set_real_32_type is
@@ -1199,12 +1206,12 @@ feature -- Kernel types
 			-- Update `real_32_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.real_32_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create real_32_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create real_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create real_32_convert_feature.make (real_32_type)
 		end
@@ -1214,12 +1221,12 @@ feature -- Kernel types
 			-- Update `real_64_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.real_64_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create real_64_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create real_64_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create real_64_convert_feature.make (real_64_type)
 		end
@@ -1228,44 +1235,43 @@ feature -- Kernel types
 			-- Set type with base class "ROUTINE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.routine_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (2)
 			l_parameters.put_first (tuple_type)
 			l_parameters.put_first (any_type)
-			create routine_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create routine_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_special_type is
 			-- Set type with base class "SPECIAL".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.special_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create special_any_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create special_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
-
 
 	set_string_type is
 			-- Set type "STRING".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.string_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create string_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create string_type.make (Void, l_name, l_master_class)
 		end
 
 	set_string_8_type is
@@ -1273,12 +1279,12 @@ feature -- Kernel types
 			-- Update `string_8_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.string_8_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create string_8_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create string_8_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_8_convert_feature.make (string_8_type)
 		end
@@ -1288,12 +1294,12 @@ feature -- Kernel types
 			-- Update `string_32_convert_feature' accordingly.
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.string_32_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create string_32_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create string_32_type.make (Void, l_name, l_master_class)
 				-- Built-in conversion feature.
 			create string_32_convert_feature.make (string_32_type)
 		end
@@ -1302,13 +1308,13 @@ feature -- Kernel types
 			-- Set type "SYSTEM_OBJECT".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parent: ET_PARENT
 		do
 			l_name := tokens.system_object_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create system_object_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create system_object_type.make (Void, l_name, l_master_class)
 				-- Implicit parent "SYSTEM_OBJECT".
 			create l_parent.make (system_object_type, Void, Void, Void, Void, Void)
 			create system_object_parents.make_with_capacity (1)
@@ -1319,66 +1325,66 @@ feature -- Kernel types
 			-- Set type "SYSTEM_STRING".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.system_string_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create system_string_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create system_string_type.make (Void, l_name, l_master_class)
 		end
 
 	set_tuple_type is
 			-- Set type "TUPLE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.tuple_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create tuple_type.make (Void, Void, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create tuple_type.make (Void, Void, l_master_class)
 		end
 
 	set_type_type is
 			-- Set type with base class "TYPE".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.type_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create type_any_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create type_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_typed_pointer_type is
 			-- Set type with base class "TYPED_POINTER".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			l_name := tokens.typed_pointer_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
 			create l_parameters.make_with_capacity (1)
 			l_parameters.put_first (any_type)
-			create typed_pointer_any_type.make (Void, l_name, l_parameters, l_adapted_class)
+			create typed_pointer_any_type.make (Void, l_name, l_parameters, l_master_class)
 		end
 
 	set_wide_character_type is
 			-- Set type "WIDE_CHARACTER".
 		local
 			l_name: ET_CLASS_NAME
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
 			l_name := tokens.wide_character_class_name
-			l_adapted_class := adapted_class (l_name)
-			l_adapted_class.set_in_system (True)
-			create wide_character_type.make (Void, l_name, l_adapted_class)
+			l_master_class := master_class (l_name)
+			l_master_class.set_in_system (True)
+			create wide_character_type.make (Void, l_name, l_master_class)
 		end
 
 feature -- Class mapping
@@ -1529,10 +1535,10 @@ feature -- Class mapping
 			a_alias_name_not_void: a_alias_name /= Void
 			a_class_name_not_void: a_class_name /= Void
 		local
-			l_adapted_class: ET_ADAPTED_CLASS
+			l_master_class: ET_MASTER_CLASS
 		do
-			l_adapted_class := adapted_class (a_alias_name)
-			l_adapted_class.set_mapped_class (adapted_class (a_class_name))
+			l_master_class := master_class (a_alias_name)
+			l_master_class.set_mapped_class (master_class (a_class_name))
 		end
 
 feature -- Built-in convert features
@@ -1587,10 +1593,10 @@ feature -- Iteration
 		require
 			an_action_not_void: an_action /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_ADAPTED_CLASS, ET_CLASS_NAME]
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
 		do
-			l_cursor := adapted_classes.new_cursor
+			l_cursor := master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item.actual_class
 				if l_class.universe = Current then
@@ -1610,13 +1616,13 @@ feature -- Iteration
 		require
 			an_action_not_void: an_action /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_ADAPTED_CLASS, ET_CLASS_NAME]
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
 		do
 			if a_stop_request = Void then
 				classes_do_all (an_action)
 			elseif not a_stop_request.item ([]) then
-				l_cursor := adapted_classes.new_cursor
+				l_cursor := master_classes.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if a_stop_request.item ([]) then
 						l_cursor.go_after
@@ -1639,10 +1645,10 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_ADAPTED_CLASS, ET_CLASS_NAME]
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
 		do
-			l_cursor := adapted_classes.new_cursor
+			l_cursor := master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item.actual_class
 				if l_class.universe = Current then
@@ -1666,13 +1672,13 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_ADAPTED_CLASS, ET_CLASS_NAME]
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
 		do
 			if a_stop_request = Void then
 				classes_do_if (an_action, a_test)
 			elseif not a_stop_request.item ([]) then
-				l_cursor := adapted_classes.new_cursor
+				l_cursor := master_classes.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if a_stop_request.item ([]) then
 						l_cursor.go_after
@@ -1751,16 +1757,16 @@ feature -- Iteration
 			end
 		end
 
-	adapted_classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
-			-- Apply `an_action' on all classes in `adapted_classes'.
+	master_classes_do_all (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
+			-- Apply `an_action' on all classes in `master_classes'.
 		require
 			an_action_not_void: an_action /= Void
 		do
-			adapted_classes.do_all (an_action)
+			master_classes.do_all (an_action)
 		end
 
-	adapted_classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
-			-- Apply `an_action' on all classes in `adapted_classes'.
+	master_classes_do_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes in `master_classes'.
 			--
 			-- The iteration will be interrupted if a stop request is received
 			-- i.e. `a_stop_request' starts returning True. No interruption if
@@ -1768,12 +1774,12 @@ feature -- Iteration
 		require
 			an_action_not_void: an_action /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_ADAPTED_CLASS, ET_CLASS_NAME]
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
 		do
 			if a_stop_request = Void then
-				adapted_classes_do_all (an_action)
+				master_classes_do_all (an_action)
 			elseif not a_stop_request.item ([]) then
-				l_cursor := adapted_classes.new_cursor
+				l_cursor := master_classes.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if a_stop_request.item ([]) then
 						l_cursor.go_after
@@ -1785,18 +1791,18 @@ feature -- Iteration
 			end
 		end
 
-	adapted_classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]) is
-			-- Apply `an_action' on all classes in `adapted_classes'
+	master_classes_do_if (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]) is
+			-- Apply `an_action' on all classes in `master_classes'
 			-- that satisfy `a_test'.
 		require
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
 		do
-			adapted_classes.do_if (an_action, a_test)
+			master_classes.do_if (an_action, a_test)
 		end
 
-	adapted_classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
-			-- Apply `an_action' on all classes in `adapted_classes'
+	master_classes_do_if_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes in `master_classes'
 			-- that satisfy `a_test'.
 			--
 			-- The iteration will be interrupted if a stop request is received
@@ -1806,13 +1812,13 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
 		local
-			l_cursor: DS_HASH_TABLE_CURSOR [ET_ADAPTED_CLASS, ET_CLASS_NAME]
-			l_class: ET_ADAPTED_CLASS
+			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_class: ET_MASTER_CLASS
 		do
 			if a_stop_request = Void then
-				adapted_classes_do_if (an_action, a_test)
+				master_classes_do_if (an_action, a_test)
 			elseif not a_stop_request.item ([]) then
-				l_cursor := adapted_classes.new_cursor
+				l_cursor := master_classes.new_cursor
 				from l_cursor.start until l_cursor.after loop
 					if a_stop_request.item ([]) then
 						l_cursor.go_after
@@ -1827,17 +1833,17 @@ feature -- Iteration
 			end
 		end
 
-	adapted_classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
-			-- Apply `an_action' on all classes in `adapted_classes' as well as on the classes
+	master_classes_do_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
+			-- Apply `an_action' on all classes in `master_classes' as well as on the classes
 			-- of the universes it depends on recursively.
 		require
 			an_action_not_void: an_action /= Void
 		do
-			universes_do_recursive (agent {ET_UNIVERSE}.adapted_classes_do_all (an_action))
+			universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_all (an_action))
 		end
 
-	adapted_classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
-			-- Apply `an_action' on all classes in `adapted_classes' as well as on the classes
+	master_classes_do_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes in `master_classes' as well as on the classes
 			-- of the universes it depends on recursively.
 			--
 			-- The iteration will be interrupted if a stop request is received
@@ -1847,24 +1853,24 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 		do
 			if a_stop_request = Void then
-				universes_do_recursive (agent {ET_UNIVERSE}.adapted_classes_do_all (an_action))
+				universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_all (an_action))
 			else
-				universes_do_recursive_until (agent {ET_UNIVERSE}.adapted_classes_do_until (an_action, a_stop_request), a_stop_request)
+				universes_do_recursive_until (agent {ET_UNIVERSE}.master_classes_do_until (an_action, a_stop_request), a_stop_request)
 			end
 		end
 
-	adapted_classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]) is
-			-- Apply `an_action' on all classes that satisfy `a_test' in `adapted_classes'
+	master_classes_do_if_recursive (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]) is
+			-- Apply `an_action' on all classes that satisfy `a_test' in `master_classes'
 			-- as well as in the classes of the universes it depends on recursively.
 		require
 			an_action_not_void: an_action /= Void
 			a_test_not_void: a_test /= Void
 		do
-			universes_do_recursive (agent {ET_UNIVERSE}.adapted_classes_do_if (an_action, a_test))
+			universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_if (an_action, a_test))
 		end
 
-	adapted_classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_ADAPTED_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
-			-- Apply `an_action' on all classes that satisfy `a_test' in `adapted_classes'
+	master_classes_do_if_recursive_until (an_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]; a_test: FUNCTION [ANY, TUPLE [ET_MASTER_CLASS], BOOLEAN]; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Apply `an_action' on all classes that satisfy `a_test' in `master_classes'
 			-- as well as in the classes of the universes it depends on recursively.
 			--
 			-- The iteration will be interrupted if a stop request is received
@@ -1875,9 +1881,9 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		do
 			if a_stop_request = Void then
-				universes_do_recursive (agent {ET_UNIVERSE}.adapted_classes_do_if (an_action, a_test))
+				universes_do_recursive (agent {ET_UNIVERSE}.master_classes_do_if (an_action, a_test))
 			else
-				universes_do_recursive_until (agent {ET_UNIVERSE}.adapted_classes_do_if_until (an_action, a_test, a_stop_request), a_stop_request)
+				universes_do_recursive_until (agent {ET_UNIVERSE}.master_classes_do_if_until (an_action, a_test, a_stop_request), a_stop_request)
 			end
 		end
 
@@ -2000,7 +2006,7 @@ feature -- Relations
 
 feature -- Actions
 
-	do_adapted_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_ADAPTED_CLASS]]) is
+	do_master_class_by_name (a_name: STRING; a_action: PROCEDURE [ANY, TUPLE [ET_MASTER_CLASS]]) is
 			-- Execute `a_action' on class named `a_name' when viewed from current universe, if any.
 			-- Take into account both locally declared classes and
 			-- classes imported from other universes.
@@ -2010,9 +2016,9 @@ feature -- Actions
 			a_name_not_empty: a_name.count > 0
 			a_action_not_void: a_action /= Void
 		local
-			l_class: ET_ADAPTED_CLASS
+			l_class: ET_MASTER_CLASS
 		do
-			l_class := adapted_class_by_name (a_name)
+			l_class := master_class_by_name (a_name)
 			if l_class /= Void then
 				a_action.call ([l_class])
 			end
@@ -2040,16 +2046,16 @@ feature -- Parsing
 	is_preparsed: BOOLEAN
 			-- Have the classes declared locally in current universe already
 			-- been preparsed? This means that we already have a mapping between
-			-- class names and their filenames, and that `adapted_classes' has been
+			-- class names and their filenames, and that `master_classes' has been
 			-- populated, even if the classes have not been parsed yet.
 
 	preparse is
 			-- Build a mapping between class names and their filenames and
-			-- populate `adapted_classes', even if the classes have not been
+			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `adapted_classes', but are not parsed.
+			-- are added to `master_classes', but are not parsed.
 			--
 			-- Note that only classes declared locally will be taken into
 			-- account. Classes from other universes will be imported later,
@@ -2066,11 +2072,11 @@ feature -- Parsing
 
 	preparse_recursive is
 			-- Build a mapping between class names and their filenames and
-			-- populate `adapted_classes', even if the classes have not been
+			-- populate `master_classes', even if the classes have not been
 			-- parsed yet. If current universe had already been preparsed,
 			-- then rebuild the mapping between class names and filenames:
 			-- modified classes are reset and left unparsed and new classes
-			-- are added to `adapted_classes', but are not parsed.
+			-- are added to `master_classes', but are not parsed.
 			--
 			-- Note that both locally declared classes and classes imported
 			-- from other universes (after having themselves been preparsed
@@ -2092,7 +2098,7 @@ feature -- Parsing
 			-- beforehand since the current routine will traverse all
 			-- clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `adapted_classes' will be populated.
+			-- this process and `master_classes' will be populated.
 			-- If current universe had already been preparsed, then rebuild
 			-- the mapping between class names and filenames and reparse
 			-- the classes that have been modified or were not parsed yet.
@@ -2117,7 +2123,7 @@ feature -- Parsing
 			-- routines beforehand since the current routine will traverse
 			-- all clusters and parse all Eiffel files anyway. The mapping
 			-- between class names and their filenames will be done during
-			-- this process and `adapted_classes' will be populated (both with
+			-- this process and `master_classes' will be populated (both with
 			-- classes declared locally and those imported from other universes
 			-- which have themselves been parsed recursively during this call).
 			-- If current universe had already been preparsed, then rebuild
@@ -2152,7 +2158,7 @@ feature {NONE} -- Parsing
 			l_modified: UT_TRISTATE
 		do
 			create l_modified.make_false
-			adapted_classes_do_if_recursive_until (agent any_actions.call ({ET_ADAPTED_CLASS} ?, agent l_modified.set_true), agent {ET_ADAPTED_CLASS}.is_modified, agent l_modified.is_true)
+			master_classes_do_if_recursive_until (agent any_actions.call ({ET_MASTER_CLASS} ?, agent l_modified.set_true), agent {ET_MASTER_CLASS}.is_modified, agent l_modified.is_true)
 			Result := l_modified.is_true
 		end
 
@@ -2197,8 +2203,8 @@ feature {NONE} -- Implementation
 invariant
 
 	current_system_not_void: current_system /= Void
-	adapted_classes_not_void: adapted_classes /= Void
-	no_void_adapted_class: not adapted_classes.has_void_item
+	master_classes_not_void: master_classes /= Void
+	no_void_master_class: not master_classes.has_void_item
 		-- Kernel types.
 	any_type_not_void: any_type /= Void
 	any_parent_not_void: any_parent /= Void
