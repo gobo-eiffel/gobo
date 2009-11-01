@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class DS_HEAP_SORTER"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"

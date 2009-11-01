@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class LX_DFA_WILDCARD"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
 	license: "MIT License"

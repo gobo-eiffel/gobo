@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class ST_UNICODE_FULL_CASE_MAPPING"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2006, Colin Adams and others"
 	license: "MIT License"

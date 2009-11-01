@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class DS_MULTIARRAYED_HASH_TABLE"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001-2007, Eric Bezault and others"
 	license: "MIT License"

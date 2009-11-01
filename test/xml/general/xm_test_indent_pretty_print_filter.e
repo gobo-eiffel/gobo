@@ -4,6 +4,7 @@ indexing
 
 		"Test XM_INDENT_PRETTY_PRINT_FILTER and XM_WHITESPACE_NORMALIZER"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Andreas Leitner and others"
 	license: "MIT License"
@@ -53,7 +54,7 @@ feature -- Tests
 				"<doc xml:space=%"preserve%">  z <b> 1</b>x <c></c> </doc>")
 		end
 		
-feature {NONE}
+feature {NONE} -- Implementation
 
 	indent_pretty_print: XM_INDENT_PRETTY_PRINT_FILTER
 			-- Indent filter

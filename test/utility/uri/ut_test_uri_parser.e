@@ -4,6 +4,7 @@ indexing
 
 		"Test URI parsing."
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Utility Library"
 	copyright:"Copyright (c) 2004, Berend de Boer and others"
 	license: "MIT License"

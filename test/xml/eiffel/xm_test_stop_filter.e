@@ -4,6 +4,7 @@ indexing
 
 		"Test parser stop on error filter"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Tests"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"

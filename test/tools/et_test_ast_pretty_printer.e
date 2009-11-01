@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class ET_AST_PRETTY_PRINTER"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
 	license: "MIT License"

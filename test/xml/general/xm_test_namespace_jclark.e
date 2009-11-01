@@ -4,6 +4,7 @@ indexing
 
 		"Test namespace from http://www.jclark.com/xml/xmlns.htm (normalised)"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "MIT License"

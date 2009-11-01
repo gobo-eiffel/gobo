@@ -4,6 +4,7 @@ indexing
 
 		"Test XML tree"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
 	license: "MIT License"

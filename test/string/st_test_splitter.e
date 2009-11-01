@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class ST_SPLITTER"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"

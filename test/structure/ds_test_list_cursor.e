@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class DS_LIST_CURSOR"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "MIT License"

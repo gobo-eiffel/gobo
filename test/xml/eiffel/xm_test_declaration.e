@@ -4,6 +4,7 @@ indexing
 
 		"Test XML declaration events"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"
 	license: "MIT License"
@@ -25,6 +26,7 @@ create
 feature -- Test
 
 	test_valid_utf8 is
+			-- Test that we can handle UTF8 encoding.
 		do
 			assert_declaration ("<?xml version='1.0' encoding='utf-8'?><doc/>", "utf-8", True)
 			assert_declaration ("<?xml version='1.0' encoding=%"utf-8%"?><doc/>", "utf-8", True)

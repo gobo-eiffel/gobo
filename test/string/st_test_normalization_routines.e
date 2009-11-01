@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class ST_UNICODE_NORMALIZATION_ROUTINES"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"

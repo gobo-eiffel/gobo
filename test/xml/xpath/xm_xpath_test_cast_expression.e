@@ -4,6 +4,7 @@ indexing
 
 		"Test XPath Cast Expressions and type constructors"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2001, Colin Adams and others"
 	license: "MIT License"

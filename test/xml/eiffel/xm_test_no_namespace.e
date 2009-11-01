@@ -3,7 +3,8 @@ indexing
 	description:
 	
 		"Test namespace resolution"
-		
+
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "MIT License"

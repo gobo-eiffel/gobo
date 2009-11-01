@@ -4,6 +4,7 @@ indexing
 
 		"Test xmlns generation filter and pretty printing"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"

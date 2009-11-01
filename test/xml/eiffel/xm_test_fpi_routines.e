@@ -4,6 +4,7 @@ indexing
 
 		"Test fpi routines"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML test suite"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"

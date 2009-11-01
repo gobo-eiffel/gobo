@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class DT_WEEK_DAY"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"

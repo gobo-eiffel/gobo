@@ -4,6 +4,7 @@ indexing
 
 		"Test xpointer evaluation for the XPath implementation"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XPointer Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"

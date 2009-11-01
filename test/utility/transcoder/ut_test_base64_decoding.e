@@ -4,6 +4,7 @@ indexing
 
 		"Test base64 decoding routines"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"

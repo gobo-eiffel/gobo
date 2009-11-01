@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class RX_PCRE_REGULAR_EXPRESSION"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2002-2007, Eric Bezault and others"
 	license: "MIT License"

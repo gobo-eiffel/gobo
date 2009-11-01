@@ -4,6 +4,7 @@ indexing
 
 		"Test format-date(), format-time() and format-dateTime()"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"

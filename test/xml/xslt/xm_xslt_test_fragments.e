@@ -1,10 +1,11 @@
 indexing
 
 	description:
-
-	"Test use of fragment identifiers on source and stylesheet URIs.%
-    %Also, stylesheet chaining and xml-stylesheet PI"
-
+	"[
+		Test use of fragment identifiers on source and stylesheet URIs.
+    	Also, stylesheet chaining and xml-stylesheet PI
+	]"
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"

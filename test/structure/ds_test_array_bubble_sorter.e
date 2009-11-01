@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class DS_ARRAY_BUBBLE_SORTER"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
 	license: "MIT License"

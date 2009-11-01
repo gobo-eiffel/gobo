@@ -4,6 +4,7 @@ indexing
 
 		"Test XML byte order marker (BOM)"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
 	license: "MIT License"

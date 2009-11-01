@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class UC_UNICODE_ROUTINES"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "MIT License"
@@ -21,7 +22,7 @@ create
 
 	make_default
 
-feature
+feature -- Tests
 
 	test_valid_code is
 			-- Test code range routines.

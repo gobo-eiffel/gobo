@@ -4,6 +4,7 @@ indexing
 
 		"Test URL encoding routines"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Utility Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "MIT License"

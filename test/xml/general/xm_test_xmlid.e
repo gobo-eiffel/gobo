@@ -4,6 +4,7 @@ indexing
 
 		"Test xml:id processing"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2005, Eric Bezault and others"
 	license: "MIT License"

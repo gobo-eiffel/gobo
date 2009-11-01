@@ -4,6 +4,7 @@ indexing
 
 		"Test XM_FORMATTER"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2003, Andreas Leitner and others"
 	license: "MIT License"

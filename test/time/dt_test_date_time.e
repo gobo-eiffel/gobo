@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class DT_DATE_TIME"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Time Library"
 	copyright: "Copyright (c) 2007, Eric Bezault and others"
 	license: "MIT License"

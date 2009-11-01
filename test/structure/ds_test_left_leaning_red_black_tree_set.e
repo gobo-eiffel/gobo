@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class DS_LEFT_LEANING_RED_BLACK_TREE_SET"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Structure Library"
 	copyright: "Copyright (c) 2008, Daniel Tuser and others"
 	license: "MIT License"

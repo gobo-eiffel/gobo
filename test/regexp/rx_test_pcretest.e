@@ -4,6 +4,7 @@ indexing
 
 		"Run 'pcretest'"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Regexp Library"
 	copyright: "Copyright (c) 2008, Eric Bezault and others"
 	license: "MIT License"

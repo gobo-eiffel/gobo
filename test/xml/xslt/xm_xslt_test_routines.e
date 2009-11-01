@@ -4,6 +4,7 @@ indexing
 
 		"Test character maps and other serialization features."
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
 	license: "MIT License"

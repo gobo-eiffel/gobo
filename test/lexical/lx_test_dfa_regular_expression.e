@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class LX_DFA_REGULAR_EXPRESSION"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Lexical Library"
 	copyright: "Copyright (c) 2009, Eric Bezault and others"
 	license: "MIT License"

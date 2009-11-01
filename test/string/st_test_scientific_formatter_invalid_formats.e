@@ -4,6 +4,7 @@ indexing
 
 		"Test invalid formats in class ST_SCIENTIFIC_FORMATTER"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Berend de Boer and others"
 	license: "MIT License"

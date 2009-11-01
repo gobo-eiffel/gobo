@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class UC_UTF16_ROUTINES"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
 	license: "MIT License"

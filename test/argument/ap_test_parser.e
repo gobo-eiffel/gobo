@@ -4,6 +4,7 @@ indexing
 
 		"Test argument parser"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel Argument Library"
 	copyright: "Copyright (c) 2006, Bernd Schoeller and others"
 	license: "MIT License"

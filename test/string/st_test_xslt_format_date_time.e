@@ -4,6 +4,7 @@ indexing
 
 		"Test features of class ST_XSLT_FORMAT_DATE_TIME"
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2008, Colin Adams and others"
 	license: "MIT License"

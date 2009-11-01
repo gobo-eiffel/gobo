@@ -4,6 +4,7 @@ indexing
 
 		"Test XPath zero-or-one(), exactly-one() and one-or-more() functions."
 
+	test_status: "ok_to_run"
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "MIT License"
