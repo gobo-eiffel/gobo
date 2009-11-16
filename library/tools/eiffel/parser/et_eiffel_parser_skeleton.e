@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/11/01 $"
+	revision: "$Revision: #41 $"
 
 deferred class ET_EIFFEL_PARSER_SKELETON
 
@@ -1629,13 +1629,14 @@ feature {NONE} -- AST factory
 							Result.reset
 						end
 						Result.set_name (a_name)
+						Result.set_group (group)
 					else
 						create Result.make (a_name)
 						current_system.register_class (Result)
+						Result.set_group (group)
 						l_master_class.add_last_local_class (Result)
 					end
 					Result.set_filename (filename)
-					Result.set_group (group)
 					Result.set_parsed
 					Result.set_time_stamp (time_stamp)
 					Result.set_in_system (True)
