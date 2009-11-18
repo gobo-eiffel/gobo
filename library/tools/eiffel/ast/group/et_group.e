@@ -277,8 +277,8 @@ feature -- Access
 			Result := file_system.absolute_pathname (Result)
 			Result := file_system.canonical_pathname (Result)
 		ensure
-			full_aboslute_pathname_not_void: Result /= Void
-			full_aboslute_pathname_not_empty: Result.count > 0
+			aboslute_pathname_not_void: Result /= Void
+			aboslute_pathname_not_empty: Result.count > 0
 		end
 
 	cluster: ET_CLUSTER is

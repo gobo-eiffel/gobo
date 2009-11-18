@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/11/01 $"
+	revision: "$Revision: #18 $"
 
 class ET_SYSTEM
 
@@ -457,7 +457,13 @@ feature -- Parser status report
 			-- Should providers be built when parsing a class?
 
 	cluster_dependence_enabled: BOOLEAN
-			-- Should cluster dependence constraint be checked?
+			-- Should cluster dependence constraints be checked?
+
+	use_cluster_dependence_pathnames: BOOLEAN
+			-- Shold cluster dependence constraints specified in 'providers.txt'
+			-- and 'dependants.txt' files be considered as group pathnames
+			-- (possibly with wildcards)? Otherwise they are considered as
+			-- group names.
 
 	qualified_anchored_types_enabled: BOOLEAN
 			-- Are types of the form 'like a.b' or 'like {A}.b'
@@ -562,6 +568,14 @@ feature -- Parser setting
 			cluster_dependence_enabled := b
 		ensure
 			cluster_dependence_enabled_set: cluster_dependence_enabled = b
+		end
+
+	set_use_cluster_dependence_pathnames (b: BOOLEAN) is
+			-- Set `use_cluster_dependence_pathnames' to `b'.
+		do
+			use_cluster_dependence_pathnames := b
+		ensure
+			use_cluster_dependence_pathnames_set: use_cluster_dependence_pathnames = b
 		end
 
 	set_qualified_anchored_types_enabled (b: BOOLEAN) is

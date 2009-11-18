@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/03/03 $"
+	revision: "$Revision: #10 $"
 
 class ET_CLUSTER_ERROR
 
@@ -87,6 +87,8 @@ feature {NONE} -- Initialization
 			i, nb: INTEGER
 			a_string: STRING
 			l_group_names: DS_ARRAYED_LIST [STRING]
+			l_group_pathnames: DS_HASH_TABLE [LX_WILDCARD, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_WILDCARD, STRING]
 		do
 			code := gcdep_template_code
 			etl_code := gcdep_etl_code
@@ -102,7 +104,20 @@ feature {NONE} -- Initialization
 			l_group_names := a_constraint.group_names
 			nb := l_group_names.count
 			if nb = 0 then
-				a_string := a_constraint.current_cluster.full_lower_name ('/')
+				l_group_pathnames := a_constraint.group_pathnames
+				if not l_group_pathnames.is_empty then
+					create a_string.make (50)
+					l_cursor := l_group_pathnames.new_cursor
+					from l_cursor.start until l_cursor.after loop
+						if not a_string.is_empty then
+							a_string.append_string (", ")
+						end
+						a_string.append_string (l_cursor.key)
+						l_cursor.forth
+					end
+				else
+					a_string := a_constraint.current_cluster.full_lower_name ('/')
+				end
 			else
 				create a_string.make (50)
 				from i := 1 until i > nb loop
@@ -140,6 +155,8 @@ feature {NONE} -- Initialization
 			i, nb: INTEGER
 			a_string: STRING
 			l_group_names: DS_ARRAYED_LIST [STRING]
+			l_group_pathnames: DS_HASH_TABLE [LX_WILDCARD, STRING]
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_WILDCARD, STRING]
 		do
 			code := gcpro_template_code
 			etl_code := gcpro_etl_code
@@ -155,7 +172,20 @@ feature {NONE} -- Initialization
 			l_group_names := a_constraint.group_names
 			nb := l_group_names.count
 			if nb = 0 then
-				a_string := a_constraint.current_cluster.full_lower_name ('/')
+				l_group_pathnames := a_constraint.group_pathnames
+				if not l_group_pathnames.is_empty then
+					create a_string.make (50)
+					l_cursor := l_group_pathnames.new_cursor
+					from l_cursor.start until l_cursor.after loop
+						if not a_string.is_empty then
+							a_string.append_string (", ")
+						end
+						a_string.append_string (l_cursor.key)
+						l_cursor.forth
+					end
+				else
+					a_string := a_constraint.current_cluster.full_lower_name ('/')
+				end
 			else
 				create a_string.make (50)
 				from i := 1 until i > nb loop

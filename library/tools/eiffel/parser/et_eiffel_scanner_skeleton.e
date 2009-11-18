@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/10/25 $"
+	revision: "$Revision: #26 $"
 
 deferred class ET_EIFFEL_SCANNER_SKELETON
 
@@ -222,7 +222,11 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					create l_provider_constraint.make (a_cluster, l_cluster_names)
+					if current_system.use_cluster_dependence_pathnames then
+						create l_provider_constraint.make_with_pathnames (a_cluster, l_cluster_names)
+					else
+						create l_provider_constraint.make (a_cluster, l_cluster_names)
+					end
 				elseif a_cluster.parent /= Void then
 					l_provider_constraint := a_cluster.parent.provider_constraint
 				end
@@ -266,7 +270,11 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					create l_dependant_constraint.make (a_cluster, l_cluster_names)
+					if current_system.use_cluster_dependence_pathnames then
+						create l_dependant_constraint.make_with_pathnames (a_cluster, l_cluster_names)
+					else
+						create l_dependant_constraint.make (a_cluster, l_cluster_names)
+					end
 				elseif a_cluster.parent /= Void then
 					l_dependant_constraint := a_cluster.parent.dependant_constraint
 				end
