@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/10/25 $"
-	revision: "$Revision: #26 $"
+	date: "$Date: 2009/11/19 $"
+	revision: "$Revision: #28 $"
 
 deferred class ET_EIFFEL_SCANNER_SKELETON
 
@@ -200,6 +200,7 @@ feature -- Cluster dependences
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			old_group: ET_GROUP
+			i: INTEGER
 		do
 			old_group := group
 			group := a_cluster
@@ -223,6 +224,19 @@ feature -- Cluster dependences
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
 					if current_system.use_cluster_dependence_pathnames then
+						if not current_system.is_dotnet then
+								-- Remove assembly dlls from the list.
+							from
+								i := l_cluster_names.count
+							until
+								i < 1
+							loop
+								if l_cluster_names.item (i).as_lower.ends_with (".dll") then
+									l_cluster_names.remove (i)
+								end
+								i := i - 1
+							end
+						end
 						create l_provider_constraint.make_with_pathnames (a_cluster, l_cluster_names)
 					else
 						create l_provider_constraint.make (a_cluster, l_cluster_names)
@@ -248,6 +262,7 @@ feature -- Cluster dependences
 			l_cluster_names: DS_ARRAYED_LIST [STRING]
 			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
 			old_group: ET_GROUP
+			i: INTEGER
 		do
 			old_group := group
 			group := a_cluster
@@ -271,6 +286,19 @@ feature -- Cluster dependences
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
 					if current_system.use_cluster_dependence_pathnames then
+						if not current_system.is_dotnet then
+								-- Remove assembly dlls from the list.
+							from
+								i := l_cluster_names.count
+							until
+								i < 1
+							loop
+								if l_cluster_names.item (i).as_lower.ends_with (".dll") then
+									l_cluster_names.remove (i)
+								end
+								i := i - 1
+							end
+						end
 						create l_dependant_constraint.make_with_pathnames (a_cluster, l_cluster_names)
 					else
 						create l_dependant_constraint.make (a_cluster, l_cluster_names)
