@@ -946,6 +946,7 @@ feature -- Element change
 			from i := 1 until i > nb loop
 				if l_other_classes.item (i).is_unknown then
 					l_other_classes.remove (i)
+					nb := nb - 1
 				else
 					i := i + 1
 				end
@@ -955,6 +956,7 @@ feature -- Element change
 			from i := 1 until i > nb loop
 				if l_other_classes.item (i).is_unknown then
 					l_other_classes.remove (i)
+					nb := nb - 1
 				else
 					i := i + 1
 				end
@@ -1006,6 +1008,7 @@ feature -- Element change
 						-- This class does not exist anymore in the
 						-- universe where it had been declared.
 					l_other_classes.remove (i)
+					nb := nb - 1
 				else
 					i := i + 1
 				end
