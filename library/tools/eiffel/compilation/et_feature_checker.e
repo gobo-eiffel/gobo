@@ -1909,8 +1909,7 @@ feature {NONE} -- Instruction validity
 			--    of 'call' (see VBAC-1, ECMA 367-2 p.119).
 			--  * 'f' or the feature with 'alias "[]"' is a query with
 			--    an assigner procedure (see VBAC-2, ECMA 367-2 p.119),
-			--    or 'f' (with no arguments) is a Tuple label (not in ECMA),
-			--    or `f' (with no arguments) is a .NET attribute (not in ECMA).
+			--    or 'f' (with no arguments) is a Tuple label (not in ECMA).
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
@@ -2237,16 +2236,7 @@ feature {NONE} -- Instruction validity
 						an_instruction.set_name (l_name)
 						report_tuple_label_setter (an_instruction, l_target_context)
 					end
-				elseif l_query = Void then
-					-- Do nothing.
-				elseif l_class.is_dotnet and then l_query.is_attribute then
-						-- It is possible to have:
-						--   a.attr := b
-						-- in .NET without explicitly specifying an assigner
-						-- procedure for attribute 'attr'.
-					an_instruction.set_name (l_name)
-					report_dotnet_attribute_setter (an_instruction)
-				else
+				elseif l_query /= Void then
 					check l_class_not_void: l_class /= Void end
 					l_assigner_seed := an_instruction.name.seed
 					if l_assigner_seed = 0 then
@@ -10544,14 +10534,6 @@ feature {NONE} -- Event handling
 			-- This might be needed for optimization purposes.
 		require
 			no_error: not has_fatal_error
-		do
-		end
-
-	report_dotnet_attribute_setter (an_assigner: ET_ASSIGNER_INSTRUCTION) is
-			-- Report that a call to the setter of a .NET attribute has been processed.
-		require
-			no_error: not has_fatal_error
-			an_assigner_not_void: an_assigner /= Void
 		do
 		end
 

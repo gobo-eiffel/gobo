@@ -1837,6 +1837,7 @@ feature -- Assigner validity
 			l_procedure_arguments: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			j, nb_args: INTEGER
+			l_arg_offset: INTEGER
 			l_type, l_other_type: ET_TYPE
 			l_procedure: ET_PROCEDURE
 			l_seed: INTEGER
@@ -1870,16 +1871,23 @@ feature -- Assigner validity
 								error_handler.report_vfac2a_error (current_class, l_feature_name, l_query, l_procedure)
 							else
 								l_type := l_query.type
-								l_other_type := l_procedure_arguments.formal_argument (1).type
+								if current_class.is_dotnet then
+										-- Under .NET the value is passed as the last argument of the assigner.
+									l_other_type := l_procedure_arguments.formal_argument (l_procedure_arguments.count).type
+									l_arg_offset := 0
+								else
+									l_other_type := l_procedure_arguments.formal_argument (1).type
+									l_arg_offset := 1
+								end
 								if not l_type.same_named_type (l_other_type, current_class, current_class) then
 									set_fatal_error (current_class)
 									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 								end
-								nb_args := l_procedure_arguments.count
 								l_query_arguments := l_query.arguments
-								from j := 2 until j > nb_args loop
-									l_type := l_query_arguments.formal_argument (j - 1).type
-									l_other_type := l_procedure_arguments.formal_argument (j).type
+								nb_args := l_procedure_arguments.count - 1
+								from j := 1 until j > nb_args loop
+									l_type := l_query_arguments.formal_argument (j).type
+									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
 									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
@@ -1941,16 +1949,23 @@ feature -- Assigner validity
 								end
 							else
 								l_type := l_query.type
-								l_other_type := l_procedure_arguments.formal_argument (1).type
+								if l_query.implementation_class.is_dotnet then
+										-- Under .NET the value is passed as the last argument of the assigner.
+									l_other_type := l_procedure_arguments.formal_argument (l_procedure_arguments.count).type
+									l_arg_offset := 0
+								else
+									l_other_type := l_procedure_arguments.formal_argument (1).type
+									l_arg_offset := 1
+								end
 								if not l_type.same_named_type (l_other_type, current_class, current_class) then
 									set_fatal_error (current_class)
 									error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 								end
-								nb_args := l_procedure_arguments.count
 								l_query_arguments := l_query.arguments
-								from j := 2 until j > nb_args loop
-									l_type := l_query_arguments.formal_argument (j - 1).type
-									l_other_type := l_procedure_arguments.formal_argument (j).type
+								nb_args := l_procedure_arguments.count - 1
+								from j := 1 until j > nb_args loop
+									l_type := l_query_arguments.formal_argument (j).type
+									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
 									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
