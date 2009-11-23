@@ -54,11 +54,13 @@ feature -- Status report
 feature -- Status setting
 
 	set_ise is
+			-- Set `is_ise' to True.
 		do
 			is_ise := True
 		end
 
 	set_compilers is
+			-- Set `is_ise' and `is_ge' to True.
 		do
 			is_ise := True
 			is_ge := True
