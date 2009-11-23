@@ -32,7 +32,7 @@ inherit
 				old_is_closed,
 				old_put_string,
 				old_is_open_write
-			{NONE} all
+			{RAW_FILE} all
 		end
 
 create
