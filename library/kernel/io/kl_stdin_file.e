@@ -319,16 +319,18 @@ feature -- Input
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	character_buffer: ?KL_LINKABLE [CHARACTER]
-			-- Unread characters
+feature {CONSOLE} -- Implementation
 
 	file_readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
 			Result := is_open_read
 		end
+
+feature {NONE} -- Implementation
+
+	character_buffer: ?KL_LINKABLE [CHARACTER]
+			-- Unread characters
 
 	dummy_string: STRING is ""
 			-- Dummy string
