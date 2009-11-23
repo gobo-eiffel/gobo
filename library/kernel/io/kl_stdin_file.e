@@ -54,7 +54,7 @@ inherit
 				is_closed,
 				put_string,
 				is_open_write
-			{NONE} all
+			{CONSOLE} all
 		redefine
 			file_readable,
 			last_string

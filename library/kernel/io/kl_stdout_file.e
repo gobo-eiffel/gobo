@@ -52,7 +52,7 @@ inherit
 				is_closed,
 				old_put_string,
 				old_is_open_write
-			{NONE} all
+			{CONSOLE} all
 		end
 
 create
