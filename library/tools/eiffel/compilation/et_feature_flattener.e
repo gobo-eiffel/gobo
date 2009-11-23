@@ -1890,7 +1890,7 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
 									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
-										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
+										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
 									end
 									j := j + 1
 								end
@@ -1968,7 +1968,7 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (j + l_arg_offset).type
 									if not l_type.same_named_type (l_other_type, current_class, current_class) then
 										set_fatal_error (current_class)
-										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j - 1)
+										error_handler.report_vfac4a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure, j)
 									end
 									j := j + 1
 								end

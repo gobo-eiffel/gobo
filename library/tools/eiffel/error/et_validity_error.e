@@ -3696,6 +3696,9 @@ feature {NONE} -- Initialization
 			-- of `a_query' declared in `a_class_impl' (an ancestor of `a_class',
 			-- possibly itself) do not have the same deanchored form.
 			--
+			-- Note that under .NET the value is passed as the last argument of the assigner,
+			-- and not as the first one like in Eiffel classic.
+			--
 			-- ECMA 367-2: p.41
 		require
 			a_class_not_void: a_class /= Void
@@ -3744,6 +3747,11 @@ feature {NONE} -- Initialization
 			-- `arg'-th argument of `a_query' declared in `a_class_impl' (an ancestor
 			-- of `a_class', possibly itself) do not have the same deanchored form.
 			--
+			-- Note that under .NET the value is passed as the last argument of the assigner,
+			-- and not as the first one like in Eiffel classic. In that case it's the type
+			-- of the `arg'-th argument of both the assigner procedure and the query that
+			-- are taken into account.
+			--
 			-- ECMA 367-2: p.41
 		require
 			a_class_not_void: a_class /= Void
@@ -3771,7 +3779,15 @@ feature {NONE} -- Initialization
 			parameters.put (a_query.name.lower_name, 7)
 			parameters.put (a_procedure.name.lower_name, 8)
 			parameters.put (arg.out, 9)
-			parameters.put ((arg + 1).out, 10)
+			if a_class_impl.is_dotnet then
+					-- Note that under .NET the value is passed as the last argument of the assigner,
+					-- and not as the first one like in Eiffel classic. In that case it's the type
+					-- of the `arg'-th argument of both the assigner procedure and the query that
+					-- are taken into account.
+				parameters.put (arg.out, 10)
+			else
+				parameters.put ((arg + 1).out, 10)
+			end
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
