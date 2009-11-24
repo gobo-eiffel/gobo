@@ -5384,6 +5384,7 @@ feature {NONE} -- Expression validity
 			l_class: ET_CLASS
 			l_query: ET_QUERY
 			l_procedure: ET_PROCEDURE
+			l_dotnet_function: ET_DOTNET_FUNCTION
 			other_class: ET_CLASS
 			other_query: ET_QUERY
 			other_procedure: ET_PROCEDURE
@@ -5501,17 +5502,98 @@ feature {NONE} -- Expression validity
 						-- Check arguments validity.
 					l_formals := l_query.arguments
 					if l_formals = Void or else l_formals.count /= 1 then
-							-- The number of actual arguments is different from
-							-- the number of formal arguments.
-						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vuar1a_error (current_class, l_name, l_query, l_class)
-						elseif not has_implementation_error (current_feature_impl) then
-								-- Internal error: this error should have been reported when
-								-- processing the implementation of `current_feature_impl' or in
-								-- the feature flattener when redeclaring `l_query' in an
-								-- ancestor of `l_class' or `current_class'.
-							error_handler.report_giaaa_error
+						l_dotnet_function ?= l_query
+						if l_dotnet_function /= Void and then l_dotnet_function.is_static and then l_formals.count = 2 then
+								-- Under .NET, it is possible to have static infix functions with two arguments.
+								-- In that case the left and right operands of the infix call are passed as arguments
+								-- of this function.
+								-- First check that the left-operand conforms or converts to the first formal argument.
+							l_actual := l_target
+							l_actual_context := a_context
+							l_formal := l_formals.formal_argument (1)
+							l_formal_context := a_context
+							l_formal_type := l_formal.type
+							if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context) then
+									-- The actual argument does not conform to the formal argument.
+									-- Try to see if it converts to it.
+								if has_fatal_error then
+									had_error := True
+								end
+								l_formal_context.force_last (l_formal_type)
+								l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
+								l_formal_context.remove_last
+								if has_fatal_error then
+									had_error := True
+								elseif l_convert_expression /= Void then
+										-- Insert the conversion feature call in the AST.
+										-- Convertibility should be resolved in the implementation class.
+									check implementation_class: current_class = current_class_impl end
+									an_expression.set_left (l_convert_expression)
+									l_actual := l_convert_expression
+								else
+									set_fatal_error
+									l_named_actual_type := l_actual_context.named_type
+									l_named_formal_type := l_formal_type.named_type (l_formal_context)
+									error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, l_query, l_class, 1, l_named_actual_type, l_named_formal_type)
+									had_error := True
+								end
+							end
+								-- Then check that the right operand conforms or convert to the second formal argument.
+							l_actual := an_expression.right
+							l_actual_context := new_context (current_type)
+							l_formal := l_formals.formal_argument (2)
+							l_formal_context := a_context
+							l_formal_type := l_formal.type
+							l_formal_context.force_last (l_formal_type)
+							if has_fatal_error then
+								had_error := True
+							end
+							check_expression_validity (l_actual, l_actual_context, l_formal_context)
+							if had_error then
+								set_fatal_error
+							end
+							l_formal_context.remove_last
+							if not has_fatal_error then
+								if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context) then
+										-- The actual argument does not conform to the formal argument.
+										-- Try to see if it converts to it.
+									if has_fatal_error then
+										had_error := True
+									end
+									l_formal_context.force_last (l_formal_type)
+									l_convert_expression := convert_expression (l_actual, l_actual_context, l_formal_context)
+									l_formal_context.remove_last
+									if has_fatal_error then
+										had_error := True
+									elseif l_convert_expression /= Void then
+											-- Insert the conversion feature call in the AST.
+											-- Convertibility should be resolved in the implementation class.
+										check implementation_class: current_class = current_class_impl end
+										an_expression.set_right (l_convert_expression)
+										l_actual := l_convert_expression
+									else
+										set_fatal_error
+										l_named_actual_type := l_actual_context.named_type
+										l_named_formal_type := l_formal_type.named_type (l_formal_context)
+										error_handler.report_vuar2a_error (current_class, current_class_impl, l_name, l_query, l_class, 2, l_named_actual_type, l_named_formal_type)
+										had_error := True
+									end
+								end
+							end
+							free_context (l_actual_context)
+						else
+								-- The number of actual arguments is different from
+								-- the number of formal arguments.
+							set_fatal_error
+							if current_class = current_class_impl then
+								error_handler.report_vuar1a_error (current_class, l_name, l_query, l_class)
+							elseif not has_implementation_error (current_feature_impl) then
+									-- Internal error: this error should have been reported when
+									-- processing the implementation of `current_feature_impl' or in
+									-- the feature flattener when redeclaring `l_query' in an
+									-- ancestor of `l_class' or `current_class'.
+								error_handler.report_giaaa_error
+							end
 						end
 					else
 						l_actual := an_expression.right
@@ -6977,6 +7059,8 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		do
+-- TODO: Under .NET, it is possible to have static prefix functions with one argument.
+-- In that case the target of the prefix call is passed as argument of this function.
 			check_qualified_call_expression_validity (an_expression, a_context)
 		end
 
