@@ -435,6 +435,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
 						end
 						Result := an_ancestor.conforms_to_type (Current, a_context, other_context)
+					elseif base_class.is_system_object_class and then base_class.is_dotnet then
+							-- Under .NET all types are considered to conform to "SYSTEM_OBJECT".
+						Result := True
 					end
 				end
 			end
