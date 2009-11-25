@@ -65,15 +65,25 @@ feature -- Access
 			l_break: ET_BREAK
 		do
 			if semicolon /= Void then
-				Result := semicolon.break
-			else
-				Result := constant.break
+				l_break := semicolon.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
 			end
-			if Result = Void or else not Result.has_comment then
+			if Result = Void then
+				l_break := constant.break
+				if l_break /= Void and then l_break.has_comment then
+					Result := l_break
+				end
+			end
+			if Result = Void then
 				l_break := is_keyword.break
 				if l_break /= Void and then l_break.has_comment then
 					Result := l_break
 				end
+			end
+			if Result = Void then
+				Result := constant.break
 			end
 		end
 
