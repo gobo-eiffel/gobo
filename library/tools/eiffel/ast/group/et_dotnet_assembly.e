@@ -93,10 +93,6 @@ feature -- Access
 	pathname: STRING
 			-- Assembly pathname (may be Void)
 
-	classname_prefix: STRING
-			-- Prefix for classnames of current assembly
-			-- (may be Void)
-
 	classname_mapping: DS_HASH_TABLE [ET_CLASS_NAME, STRING]
 			-- Mapping between names of .NET classes provided
 			-- in current assembly and their Eiffel class name
@@ -149,14 +145,6 @@ feature -- Status setting
 		end
 
 feature -- Setting
-
-	set_classname_prefix (a_prefix: like classname_prefix) is
-			-- Set `classname_prefix_id' to `a_prefix'.
-		do
-			classname_prefix := a_prefix
-		ensure
-			classname_prefix_set: classname_prefix = a_prefix
-		end
 
 	set_classname_mapping (a_mapping: like classname_mapping) is
 			-- Set `classname_mapping' to `a_mapping'.

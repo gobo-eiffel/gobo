@@ -57,8 +57,37 @@ feature -- Access
 			definition: Result.same_string (name.as_lower)
 		end
 
+	classname_prefix: STRING
+			-- Prefix for class names when exporting classes of `universe'
+			-- (may be Void)
+
+	class_renamings: DS_HASH_TABLE [STRING, STRING]
+			-- Class renaming, indexed by old class names in upper-case, when exporting classes of `universe'
+			-- (may be Void)
+
 	universe: ET_UNIVERSE
 			-- Eiffel class universe being adapted
+
+feature -- Setting
+
+	set_classname_prefix (a_prefix: like classname_prefix) is
+			-- Set `classname_prefix' to `a_prefix'.
+		do
+			classname_prefix := a_prefix
+		ensure
+			classname_prefix_set: classname_prefix = a_prefix
+		end
+
+	set_class_renamings (a_renamings: like class_renamings) is
+			-- Set `class_renamings' to `a_renamings'.
+		require
+			no_void_old_class_renamings: a_renamings /= Void implies not a_renamings.has (Void)
+			no_void_new_class_renamings: a_renamings /= Void implies not a_renamings.has_item (Void)
+		do
+			class_renamings := a_renamings
+		ensure
+			class_renamings_set: class_renamings = a_renamings
+		end
 
 feature -- Exporting classes
 
@@ -71,14 +100,23 @@ feature -- Exporting classes
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
 			l_class: ET_MASTER_CLASS
 			l_other_class: ET_MASTER_CLASS
+			l_class_name: ET_CLASS_NAME
+			l_old_class_name: STRING
 		do
 			l_cursor := universe.master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
 				if l_class.actual_intrinsic_class.universe = universe then
--- TODO: take into account class renaming.
 -- TODO: what to do with aliased classes?
-					l_other_class := other_universe.master_class (l_cursor.key)
+						-- Take into account class renaming and classname prefix.
+					l_class_name := l_cursor.key
+					l_old_class_name := l_class_name.upper_name
+					if class_renamings /= Void and then class_renamings.has (l_old_class_name) then
+						create {ET_IDENTIFIER} l_class_name.make (class_renamings.item (l_old_class_name))
+					elseif classname_prefix /= Void then
+						create {ET_IDENTIFIER} l_class_name.make (classname_prefix + l_old_class_name)
+					end
+					l_other_class := other_universe.master_class (l_class_name)
 					if not l_other_class.has_imported_class (l_class) then
 						l_other_class.add_last_imported_class (l_class)
 					end
@@ -91,6 +129,8 @@ invariant
 
 	name_not_void: name /= Void
 	name_not_empty: not name.is_empty
+	no_void_old_class_renamings: class_renamings /= Void implies not class_renamings.has (Void)
+	no_void_new_class_renamings: class_renamings /= Void implies not class_renamings.has_item (Void)
 	universe_not_void: universe /= Void
 
 end
