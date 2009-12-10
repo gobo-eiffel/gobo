@@ -1320,6 +1320,59 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.comma.process (Current)
 		end
 
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		local
+			a_frozen_keyword: ET_TOKEN
+			a_synonym: ET_FEATURE
+			an_indexing: ET_INDEXING_LIST
+			an_obsolete_message: ET_OBSOLETE
+			a_preconditions: ET_PRECONDITIONS
+			a_postconditions: ET_POSTCONDITIONS
+			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
+		do
+			from
+				a_synonym := a_feature
+			until
+				a_synonym = Void
+			loop
+				a_frozen_keyword := a_synonym.frozen_keyword
+				if a_frozen_keyword /= Void then
+					a_frozen_keyword.process (Current)
+				end
+				a_synonym.extended_name.process (Current)
+				a_synonym := a_synonym.synonym
+			end
+			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
+			an_indexing := a_feature.first_indexing
+			if an_indexing /= Void then
+				an_indexing.process (Current)
+			end
+			an_obsolete_message := a_feature.obsolete_message
+			if an_obsolete_message /= Void then
+				an_obsolete_message.process (Current)
+			end
+			a_preconditions := a_feature.preconditions
+			if a_preconditions /= Void then
+				a_preconditions.process (Current)
+			end
+			a_feature.attribute_keyword.process (Current)
+			a_postconditions := a_feature.postconditions
+			if a_postconditions /= Void then
+				a_postconditions.process (Current)
+			end
+			a_feature.end_keyword.process (Current)
+			a_semicolon := a_feature.semicolon
+			if a_semicolon /= Void then
+				a_semicolon.process (Current)
+			end
+		end
+
 	process_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME_COMMA) is
 			-- Process `a_name'.
 		do

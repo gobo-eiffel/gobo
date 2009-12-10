@@ -67,6 +67,7 @@ inherit
 			process_elseif_part_list,
 			process_equality_expression,
 			process_expression_address,
+			process_extended_attribute,
 			process_external_function,
 			process_external_function_inline_agent,
 			process_external_procedure,
@@ -759,6 +760,23 @@ feature {ET_AST_NODE} -- Processing
 			from i := 1 until i > nb loop
 				process_expression (a_list.expression (i))
 				i := i + 1
+			end
+		end
+
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		local
+			a_preconditions: ET_PRECONDITIONS
+			a_postconditions: ET_POSTCONDITIONS
+		do
+			process_type (a_feature.type)
+			a_preconditions := a_feature.preconditions
+			if a_preconditions /= Void then
+				process_preconditions (a_preconditions)
+			end
+			a_postconditions := a_feature.postconditions
+			if a_postconditions /= Void then
+				process_postconditions (a_postconditions)
 			end
 		end
 

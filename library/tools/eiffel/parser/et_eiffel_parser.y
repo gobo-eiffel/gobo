@@ -1905,6 +1905,10 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, Void, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt ';'
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_ATTRIBUTE Postcondition_opt E_END Semicolon_opt
+		{
+			$$ := ast_factory.new_extended_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
+		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Manifest_constant Semicolon_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' Manifest_constant Semicolon_opt

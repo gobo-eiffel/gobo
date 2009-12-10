@@ -76,6 +76,7 @@ inherit
 			process_elseif_part_list,
 			process_equality_expression,
 			process_export_list,
+			process_extended_attribute,
 			process_external_function,
 			process_external_function_inline_agent,
 			process_external_procedure,
@@ -2522,6 +2523,117 @@ feature {ET_AST_NODE} -- Processing
 			else
 				comment_finder.find_comments (a_list, comment_list)
 			end
+		end
+
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		local
+			l_frozen_keyword: ET_TOKEN
+			l_extended_feature_name: ET_EXTENDED_FEATURE_NAME
+			l_feature_name: ET_FEATURE_NAME
+			l_alias_name: ET_ALIAS_NAME
+			l_declared_type: ET_DECLARED_TYPE
+			l_type: ET_TYPE
+			l_synonym: ET_FEATURE
+			l_indexing: ET_INDEXING_LIST
+			l_obsolete_message: ET_OBSOLETE
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
+			l_semicolon: ET_SEMICOLON_SYMBOL
+			l_assigner: ET_ASSIGNER
+			l_obsolete_string: ET_MANIFEST_STRING
+		do
+			from
+				l_synonym := a_feature
+			until
+				l_synonym = Void
+			loop
+				l_frozen_keyword := l_synonym.frozen_keyword
+				if l_frozen_keyword /= Void then
+					l_frozen_keyword.process (Current)
+					print_space
+				end
+				l_extended_feature_name := l_synonym.extended_name
+				l_feature_name := l_extended_feature_name.feature_name
+				l_alias_name := l_extended_feature_name.alias_name
+				l_feature_name.process (Current)
+				if l_alias_name /= Void and not ANY_.same_objects (l_alias_name, l_feature_name) then
+						-- For infix and prefix features, do not repeat the name twice.
+					print_space
+					l_alias_name.process (Current)
+					comment_finder.add_excluded_node (l_alias_name)
+				end
+				comment_finder.add_excluded_node (l_feature_name)
+				comment_finder.find_comments (l_extended_feature_name, comment_list)
+				comment_finder.reset_excluded_nodes
+				l_synonym := l_synonym.synonym
+				if l_synonym /= Void then
+						-- The AST may or may not contain the comma.
+						-- So we have to print it explicitly here.
+					tokens.comma_symbol.process (Current)
+					print_space
+				end
+			end
+				-- The AST may or may not contain the colon.
+				-- So we have to print it explicitly here.
+			l_declared_type := a_feature.declared_type
+			l_type := l_declared_type.type
+			tokens.colon_symbol.process (Current)
+			comment_finder.add_excluded_node (l_type)
+			comment_finder.find_comments (l_declared_type, comment_list)
+			comment_finder.reset_excluded_nodes
+			print_space
+			l_type.process (Current)
+			l_assigner := a_feature.assigner
+			if l_assigner /= Void then
+				print_space
+				l_assigner.process (Current)
+			end
+			print_space
+			indent
+			process_comments
+			print_new_line
+			l_indexing := a_feature.first_indexing
+			if l_indexing /= Void then
+				l_indexing.process (Current)
+				process_comments
+				print_new_line
+			end
+			l_obsolete_message := a_feature.obsolete_message
+			if l_obsolete_message /= Void then
+				tokens.obsolete_keyword.process (Current)
+				l_obsolete_string := l_obsolete_message.manifest_string
+				comment_finder.add_excluded_node (l_obsolete_string)
+				comment_finder.find_comments (l_obsolete_message, comment_list)
+				comment_finder.reset_excluded_nodes
+				indent
+				process_comments
+				print_new_line
+				l_obsolete_string.process (Current)
+				process_comments
+				print_new_line
+				dedent
+			end
+			l_preconditions := a_feature.preconditions
+			if l_preconditions /= Void then
+				l_preconditions.process (Current)
+				process_comments
+			end
+			a_feature.attribute_keyword.process (Current)
+			process_comments
+			print_new_line
+			l_postconditions := a_feature.postconditions
+			if l_postconditions /= Void then
+				l_postconditions.process (Current)
+				process_comments
+			end
+			a_feature.end_keyword.process (Current)
+			l_semicolon := a_feature.semicolon
+			if l_semicolon /= Void then
+					-- Do not print the semicolon, but keep track of its comments if any.
+				process_break (l_semicolon.break)
+			end
+			dedent
 		end
 
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is

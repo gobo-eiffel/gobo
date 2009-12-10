@@ -66,6 +66,7 @@ inherit
 			process_elseif_part_list,
 			process_equality_expression,
 			process_expression_address,
+			process_extended_attribute,
 			process_external_function,
 			process_external_function_inline_agent,
 			process_external_procedure,
@@ -1230,6 +1231,33 @@ feature {ET_AST_NODE} -- Processing
 				process_expression (a_list.expression (i))
 				had_error := had_error or has_fatal_error
 				i := i + 1
+			end
+			reset_fatal_error (had_error)
+		end
+
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		local
+			l_preconditions: ET_PRECONDITIONS
+			l_postconditions: ET_POSTCONDITIONS
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			if anchored_types_enabled then
+				process_type (a_feature.type)
+				had_error := had_error or has_fatal_error
+			end
+			if assertions_enabled then
+				l_preconditions := a_feature.preconditions
+				if l_preconditions /= Void then
+					process_preconditions (l_preconditions)
+					had_error := had_error or has_fatal_error
+				end
+				l_postconditions := a_feature.postconditions
+				if l_postconditions /= Void then
+					process_postconditions (l_postconditions)
+					had_error := had_error or has_fatal_error
+				end
 			end
 			reset_fatal_error (had_error)
 		end

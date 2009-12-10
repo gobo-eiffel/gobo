@@ -437,6 +437,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+		end
+
 	process_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME_COMMA) is
 			-- Process `a_name'.
 		do

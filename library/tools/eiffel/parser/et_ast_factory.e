@@ -2097,6 +2097,25 @@ feature -- AST nodes
 			Result := an_expression
 		end
 
+	new_extended_attribute (a_name: ET_EXTENDED_FEATURE_NAME;
+		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;  a_first_indexing: ET_INDEXING_LIST;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_attribute: ET_KEYWORD;
+		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
+		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
+		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTENDED_ATTRIBUTE is
+			-- New extended attribute declaration
+		do
+			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
+				create Result.make (a_name, a_type, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_postconditions (a_postconditions)
+				Result.set_clients (a_clients)
+				Result.set_first_indexing (a_first_indexing)
+			end
+		end
+
 	new_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME; a_comma: ET_SYMBOL): ET_EXTENDED_FEATURE_NAME is
 			-- New extended_feature_name-comma
 		do

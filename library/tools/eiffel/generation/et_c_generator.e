@@ -50,6 +50,7 @@ inherit
 			process_do_procedure_inline_agent,
 			process_equality_expression,
 			process_expression_address,
+			process_extended_attribute,
 			process_external_function,
 			process_external_function_inline_agent,
 			process_external_procedure,
@@ -4400,6 +4401,15 @@ print ("**** language not recognized: " + l_language_string + "%N")
 			else
 				print_attribute_wrapper (a_feature, False)
 			end
+		end
+
+	print_extended_attribute (a_feature: ET_ATTRIBUTE) is
+			-- Print function wrapper for `a_feature' to `current_file'
+			-- and its signature to `header_file'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			print_attribute (a_feature)
 		end
 
 	print_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
@@ -26224,6 +26234,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			print_expression_address (an_expression)
+		end
+
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			print_extended_attribute (a_feature)
 		end
 
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is

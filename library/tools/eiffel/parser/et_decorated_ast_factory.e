@@ -214,6 +214,7 @@ inherit
 			new_exports,
 			new_expression_address,
 			new_expression_comma,
+			new_extended_attribute,
 			new_extended_feature_name_comma,
 			new_external_alias,
 			new_external_function,
@@ -2354,6 +2355,33 @@ feature -- AST nodes
 				Result := an_expression
 			elseif an_expression /= Void then
 				create {ET_EXPRESSION_COMMA} Result.make (an_expression, a_comma)
+			end
+		end
+
+	new_extended_attribute (a_name: ET_EXTENDED_FEATURE_NAME;
+		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; a_first_indexing: ET_INDEXING_LIST;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_attribute: ET_KEYWORD;
+		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
+		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLIENT_LIST;
+		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTENDED_ATTRIBUTE is
+			-- New extended attribute declaration
+		do
+			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
+				create Result.make (a_name, a_type, a_class)
+				Result.set_assigner (an_assigner)
+				Result.set_obsolete_message (an_obsolete)
+				Result.set_preconditions (a_preconditions)
+				Result.set_postconditions (a_postconditions)
+				Result.set_clients (a_clients)
+				Result.set_first_indexing (a_first_indexing)
+				if a_attribute /= Void then
+					Result.set_attribute_keyword (a_attribute)
+				end
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
+				Result.set_semicolon (a_semicolon)
+				Result.set_feature_clause (a_feature_clause)
 			end
 		end
 

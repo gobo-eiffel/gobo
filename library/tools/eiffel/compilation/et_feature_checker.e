@@ -59,6 +59,7 @@ inherit
 			process_dotnet_procedure,
 			process_equality_expression,
 			process_expression_address,
+			process_extended_attribute,
 			process_external_function,
 			process_external_function_inline_agent,
 			process_external_procedure,
@@ -1049,6 +1050,16 @@ feature {NONE} -- Feature validity
 				had_error := had_error or has_fatal_error
 			end
 			has_fatal_error := had_error
+		end
+
+	check_extended_attribute_validity (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Check validity of `a_feature'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_feature_not_void: a_feature /= Void
+			consistent: a_feature = current_feature
+		do
+			check_attribute_validity (a_feature)
 		end
 
 	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
@@ -11679,6 +11690,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			check_expression_address_validity (an_expression, current_context)
+		end
+
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			check_extended_attribute_validity (a_feature)
 		end
 
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is

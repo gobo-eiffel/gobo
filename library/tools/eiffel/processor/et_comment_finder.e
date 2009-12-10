@@ -94,6 +94,7 @@ inherit
 			process_export_list,
 			process_expression_address,
 			process_expression_comma,
+			process_extended_attribute,
 			process_extended_feature_name_comma,
 			process_external_function,
 			process_external_function_inline_agent,
@@ -880,6 +881,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_expression) then
 				precursor (an_expression)
+			end
+		end
+
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		do
+			if not excluded_nodes.has (a_feature) then
+				precursor (a_feature)
 			end
 		end
 

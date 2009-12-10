@@ -608,6 +608,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_extended_attribute (a_feature: ET_EXTENDED_ATTRIBUTE) is
+			-- Process `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		deferred
+		end
+
 	process_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME_COMMA) is
 			-- Process `a_name'.
 		require
