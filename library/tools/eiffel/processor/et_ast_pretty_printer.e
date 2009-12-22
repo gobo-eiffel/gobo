@@ -5436,14 +5436,12 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_tag: ET_TAG
 			l_identifier: ET_IDENTIFIER
-			l_expression: ET_EXPRESSION
 		do
 			a_variant.variant_keyword.process (Current)
 			indent
 			print_new_line
 			process_comments
 			l_tag := a_variant.tag
-			l_expression := a_variant.expression
 			if l_tag /= Void then
 				l_identifier := l_tag.identifier
 				l_identifier.process (Current)
@@ -5453,13 +5451,9 @@ feature {ET_AST_NODE} -- Processing
 					-- The AST may or may not contain the colon.
 					-- So we have to print it explicitly here.
 				tokens.colon_symbol.process (Current)
-				if l_expression /= Void then
-					print_space
-				end
+				print_space
 			end
-			if l_expression /= Void then
-				l_expression.process (Current)
-			end
+			a_variant.expression.process (Current)
 			process_comments
 			dedent
 		end

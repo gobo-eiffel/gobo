@@ -690,7 +690,6 @@ feature {ET_AST_NODE} -- Processing
 		local
 			an_invariant_part: ET_LOOP_INVARIANTS
 			a_variant_part: ET_VARIANT
-			a_variant_expression: ET_EXPRESSION
 			a_compound: ET_COMPOUND
 		do
 			a_compound := an_instruction.from_compound
@@ -708,10 +707,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			a_variant_part := an_instruction.variant_part
 			if a_variant_part /= Void then
-				a_variant_expression := a_variant_part.expression
-				if a_variant_expression /= Void then
-					a_variant_expression.process (Current)
-				end
+				a_variant_part.expression.process (Current)
 			end
 		end
 

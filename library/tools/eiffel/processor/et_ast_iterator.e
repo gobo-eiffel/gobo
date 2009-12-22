@@ -3052,17 +3052,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_variant'.
 		local
 			a_tag: ET_TAG
-			an_expression: ET_EXPRESSION
 		do
 			a_variant.variant_keyword.process (Current)
 			a_tag := a_variant.tag
 			if a_tag /= Void then
 				a_tag.process (Current)
 			end
-			an_expression := a_variant.expression
-			if an_expression /= Void then
-				an_expression.process (Current)
-			end
+			a_variant.expression.process (Current)
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is

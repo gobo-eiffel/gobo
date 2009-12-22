@@ -3392,23 +3392,19 @@ feature {NONE} -- Instruction validity
 			integer_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
+			integer_type := current_universe_impl.integer_type
 			l_expression := a_variant.expression
-			if l_expression /= Void then
-				integer_type := current_universe_impl.integer_type
-				l_expression_context := new_context (current_type)
-				check_expression_validity (l_expression, l_expression_context, integer_type)
-				if has_fatal_error then
-					had_error := True
-				elseif not l_expression_context.same_named_type (integer_type, current_type) then
-					had_error := True
-					set_fatal_error
-					l_named_type := l_expression_context.named_type
-					error_handler.report_vave0a_error (current_class, current_class_impl, l_expression, l_named_type)
-				end
-				free_context (l_expression_context)
-			else
--- TODO: syntax error.
+			l_expression_context := new_context (current_type)
+			check_expression_validity (l_expression, l_expression_context, integer_type)
+			if has_fatal_error then
+				had_error := True
+			elseif not l_expression_context.same_named_type (integer_type, current_type) then
+				had_error := True
+				set_fatal_error
+				l_named_type := l_expression_context.named_type
+				error_handler.report_vave0a_error (current_class, current_class_impl, l_expression, l_named_type)
 			end
+			free_context (l_expression_context)
 			if had_error then
 				set_fatal_error
 			end

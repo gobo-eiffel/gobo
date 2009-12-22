@@ -2668,14 +2668,9 @@ feature {ET_AST_NODE} -- Processing
 	process_variant (a_variant: ET_VARIANT) is
 			-- Process `a_variant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			l_expression: ET_EXPRESSION
 		do
 			reset_fatal_error (False)
-			l_expression := a_variant.expression
-			if l_expression /= Void then
-				process_expression (l_expression)
-			end
+			process_expression (a_variant.expression)
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is

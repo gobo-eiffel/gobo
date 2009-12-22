@@ -24,6 +24,8 @@ feature {NONE} -- Initialization
 
 	make (a_tag: like tag; an_expression: like expression) is
 			-- Create a new empty loop variant clause.
+		require
+			an_expression_not_void: an_expression /= Void
 		do
 			variant_keyword := tokens.variant_keyword
 			tag := a_tag
@@ -38,9 +40,7 @@ feature -- Initialization
 	reset is
 			-- Reset variant as it was when it was last parsed.
 		do
-			if expression /= Void then
-				expression.reset
-			end
+			expression.reset
 		end
 
 feature -- Access
@@ -62,7 +62,7 @@ feature -- Access
 			if Result.is_null then
 				if tag /= Void then
 					Result := tag.position
-				elseif expression /= Void then
+				else
 					Result := expression.position
 				end
 			end
@@ -77,25 +77,13 @@ feature -- Access
 	last_leaf: ET_AST_LEAF is
 			-- Last leaf node in current node
 		do
-			if expression /= Void then
-				Result := expression.last_leaf
-			elseif tag /= Void then
-				Result := tag.last_leaf
-			else
-				Result := variant_keyword
-			end
+			Result := expression.last_leaf
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
-			if expression /= Void then
-				Result := expression.break
-			elseif tag /= Void then
-				Result := tag.break
-			else
-				Result := variant_keyword.break
-			end
+			Result := expression.break
 		end
 
 feature -- Setting
@@ -121,5 +109,6 @@ feature -- Processing
 invariant
 
 	variant_keyword_not_void: variant_keyword /= Void
+	expression_not_void: expression /= Void
 
 end

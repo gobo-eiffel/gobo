@@ -2524,9 +2524,7 @@ Loop_invariant_clause: E_INVARIANT
 		{ $$ := new_loop_invariants ($1) }
 	;
 
-Variant_clause: E_VARIANT -- Not standard.
-		{ $$ := ast_factory.new_variant ($1, Void, Void) }
-	| E_VARIANT Expression
+Variant_clause: E_VARIANT Expression
 		{ $$ := ast_factory.new_variant ($1, Void, $2) }
 	| E_VARIANT Identifier ':' Expression
 		{ $$ := ast_factory.new_variant ($1, ast_factory.new_tag ($2, $3), $4) }

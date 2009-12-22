@@ -1428,13 +1428,8 @@ feature {ET_AST_NODE} -- Processing
 
 	process_variant (a_variant: ET_VARIANT) is
 			-- Process `a_variant'.
-		local
-			an_expression: ET_EXPRESSION
 		do
-			an_expression := a_variant.expression
-			if an_expression /= Void then
-				process_expression (an_expression)
-			end
+			process_expression (a_variant.expression)
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is

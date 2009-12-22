@@ -3655,9 +3655,11 @@ feature -- AST nodes
 	new_variant (a_variant: ET_KEYWORD; a_tag: ET_TAG; an_expression: ET_EXPRESSION): ET_VARIANT is
 			-- New loop variant
 		do
-			create Result.make (a_tag, an_expression)
-			if a_variant /= Void then
-				Result.set_variant_keyword (a_variant)
+			if an_expression /= Void then
+				create Result.make (a_tag, an_expression)
+				if a_variant /= Void then
+					Result.set_variant_keyword (a_variant)
+				end
 			end
 		end
 
