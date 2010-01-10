@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-11-04 21:02:33 +0100 (Wed, 04 Nov 2009) $"
+	revision: "$Revision: 391 $"
 
 frozen class
 	SPECIAL [T]
@@ -130,6 +130,16 @@ feature -- Access
 			is_dotnet: {PLATFORM}.is_dotnet
 		do
 			create Result
+		end
+
+	to_array: ARRAY [T]
+			-- Build an array representation of Current from `1' to `count'.
+		do
+			create Result.make_from_special (Current, 1, count)
+		ensure
+			to_array_attached: Result /= Void
+			to_array_lower_set: Result.lower = 1
+			to_array_upper_set: Result.upper = count
 		end
 
 feature -- Measurement

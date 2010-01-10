@@ -10,8 +10,8 @@ note
 		]"
 
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-11-24 01:42:12 +0100 (Tue, 24 Nov 2009) $"
+	revision: "$Revision: 396 $"
 
 class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 
@@ -1111,7 +1111,7 @@ feature {NONE} -- Implementation
 			l_default_key: detachable K
 			hash_value, increment, l_pos, l_capacity: INTEGER
 			first_deleted_position: INTEGER
-			stop: BOOLEAN
+			stop: INTEGER
 			l_keys: like keys
 			l_deleted_marks: like deleted_marks
 			l_key: K
@@ -1129,19 +1129,20 @@ feature {NONE} -- Implementation
 					l_keys := keys
 					l_deleted_marks := deleted_marks
 					l_capacity := capacity
+					stop := l_capacity
 					hash_value := key.hash_code
 					increment := 1 + hash_value \\ (l_capacity - 1)
 					l_pos := (hash_value \\ l_capacity) - increment
+					control := not_found_constant
 				until
-					stop
+					stop = 0
 				loop
 						-- Go to next increment.
 					l_pos := (l_pos + increment) \\ l_capacity
 					l_key := l_keys.item (l_pos)
 					if l_key = l_default_key or l_key = Void then
 						if not l_deleted_marks.item (l_pos) then
-							stop := True
-							control := not_found_constant
+							stop := 1
 						elseif first_deleted_position = impossible_position then
 							first_deleted_position := l_pos
 						end
@@ -1152,10 +1153,11 @@ feature {NONE} -- Implementation
 							end
 						end
 						if same_keys (l_key, key) then
-							stop := True
+							stop := 1
 							control := found_constant
 						end
 					end
+					stop := stop - 1
 				end
 				position := l_pos
 			end

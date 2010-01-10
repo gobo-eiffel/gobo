@@ -7,8 +7,8 @@ note
 	copyright: "Copyright (c) 2005-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	names: format_integer;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-11-24 19:58:42 +0100 (Tue, 24 Nov 2009) $"
+	revision: "$Revision: 401 $"
 
 class FORMAT_INTEGER
 
@@ -326,17 +326,17 @@ feature -- Status setting
 	sign_cr_dr
 			-- Set sign for CR/DR
 		do
-			sign_string := "CR DR"
+			sign_string := "CR  DR"
 		ensure
-			sign_string ~ "CR DR"
+			sign_string ~ "CR  DR"
 		end
 
 	sign_dr_cr
 			-- Set sign for DR/CR
 		do
-			sign_string := "DR CR"
+			sign_string := "DR  CR"
 		ensure
-			sign_string ~ "DR CR"
+			sign_string ~ "DR  CR"
 		end
 
 	sign_floating_dollar
@@ -559,7 +559,9 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	sign_string_constraint: sign_string /= Void
+	sign_string_attached: sign_string /= Void
+	sign_string_count: sign_string.count >= 3
+	sign_string_equal_parts: sign_string.count \\ 3 = 0
 	wide_enough: width >= 1
 	no_justification <= justification and justification <= right_justification
 

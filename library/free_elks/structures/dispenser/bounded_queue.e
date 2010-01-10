@@ -10,14 +10,14 @@ note
 	access: fixed, fifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-11-02 22:41:34 +0100 (Mon, 02 Nov 2009) $"
+	revision: "$Revision: 386 $"
 
 class BOUNDED_QUEUE [G] inherit
 
 	QUEUE [G]
 		redefine
-			linear_representation, has
+			has
 		end
 
 	BOUNDED [G]
@@ -248,7 +248,7 @@ feature -- Conversion
 					i := i + 1
 				end
 				from
-					i := 1
+					i := 0
 				until
 					i >= in_index
 				loop

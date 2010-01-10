@@ -1225,6 +1225,7 @@ feature -- Removal
 				l_count := count
 				area.overlapping_move (start_index + nb_removed - 1, start_index - 1, l_count - end_index)
 				count := l_count - nb_removed
+				internal_hash_code := 0
 			end
 		ensure
 			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))

@@ -6,8 +6,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-10-06 21:13:09 +0200 (Tue, 06 Oct 2009) $"
-	revision: "$Revision: 382 $"
+	date: "$Date: 2009-12-01 22:45:32 +0100 (Tue, 01 Dec 2009) $"
+	revision: "$Revision: 406 $"
 
 class
 	STRING_8
@@ -1219,6 +1219,7 @@ feature -- Removal
 				l_count := count
 				area.overlapping_move (start_index + nb_removed - 1, start_index - 1, l_count - end_index)
 				count := l_count - nb_removed
+				internal_hash_code := 0
 			end
 		ensure
 			removed: elks_checking implies Current ~ (old substring (1, start_index - 1) + old substring (end_index + 1, count))

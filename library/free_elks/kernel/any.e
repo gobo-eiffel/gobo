@@ -70,7 +70,7 @@ feature -- Comparison
 		external
 			"built_in"
 		ensure
-			symmetric: Result implies other.is_equal (Current)
+			symmetric: Result implies other ~ Current
 			consistent: standard_is_equal (other) implies Result
 		end
 
@@ -86,37 +86,37 @@ feature -- Comparison
 			symmetric: Result implies other.standard_is_equal (Current)
 		end
 
-	frozen equal (some: detachable ANY; other: like some): BOOLEAN
-			-- Are `some' and `other' either both void or attached
+	frozen equal (a: detachable ANY; b: like a): BOOLEAN
+			-- Are `a' and `b' either both void or attached
 			-- to objects considered equal?
 		do
-			if some = Void then
-				Result := other = Void
+			if a = Void then
+				Result := b = Void
 			else
-				Result := other /= Void and then
-							some.is_equal (other)
+				Result := b /= Void and then
+							a.is_equal (b)
 			end
 		ensure
-			definition: Result = (some = Void and other = Void) or else
-						((some /= Void and other /= Void) and then
-						some.is_equal (other))
+			definition: Result = (a = Void and b = Void) or else
+						((a /= Void and b /= Void) and then
+						a.is_equal (b))
 		end
 
-	frozen standard_equal (some: detachable ANY; other: like some): BOOLEAN
-			-- Are `some' and `other' either both void or attached to
+	frozen standard_equal (a: detachable ANY; b: like a): BOOLEAN
+			-- Are `a' and `b' either both void or attached to
 			-- field-by-field identical objects of the same type?
 			-- Always uses default object comparison criterion.
 		do
-			if some = Void then
-				Result := other = Void
+			if a = Void then
+				Result := b = Void
 			else
-				Result := other /= Void and then
-							some.standard_is_equal (other)
+				Result := b /= Void and then
+							a.standard_is_equal (b)
 			end
 		ensure
-			definition: Result = (some = Void and other = Void) or else
-						((some /= Void and other /= Void) and then
-						some.standard_is_equal (other))
+			definition: Result = (a = Void and b = Void) or else
+						((a /= Void and b /= Void) and then
+						a.standard_is_equal (b))
 		end
 
 	frozen is_deep_equal (other: like Current): BOOLEAN
@@ -131,20 +131,20 @@ feature -- Comparison
 			symmetric: Result implies other.is_deep_equal (Current)
 		end
 
-	frozen deep_equal (some: detachable ANY; other: like some): BOOLEAN
-			-- Are `some' and `other' either both void
+	frozen deep_equal (a: detachable ANY; b: like a): BOOLEAN
+			-- Are `a' and `b' either both void
 			-- or attached to isomorphic object structures?
 		do
-			if some = Void then
-				Result := other = Void
+			if a = Void then
+				Result := b = Void
 			else
-				Result := other /= Void and then some.is_deep_equal (other)
+				Result := b /= Void and then a.is_deep_equal (b)
 			end
 		ensure
-			shallow_implies_deep: standard_equal (some, other) implies Result
-			both_or_none_void: (some = Void) implies (Result = (other = Void))
-			same_type: (Result and (some /= Void)) implies (other /= Void and then some.same_type (other))
-			symmetric: Result implies deep_equal (other, some)
+			shallow_implies_deep: standard_equal (a, b) implies Result
+			both_or_none_void: (a = Void) implies (Result = (b = Void))
+			same_type: (Result and (a /= Void)) implies (b /= Void and then a.same_type (b))
+			symmetric: Result implies deep_equal (b, a)
 		end
 
 feature -- Duplication
@@ -156,7 +156,7 @@ feature -- Duplication
 			"built_in"
 		ensure
 			twin_not_void: Result /= Void
-			is_equal: Result.is_equal (Current)
+			is_equal: Result ~ Current
 		end
 
 	copy (other: like Current)
@@ -168,7 +168,7 @@ feature -- Duplication
 		external
 			"built_in"
 		ensure
-			is_equal: is_equal (other)
+			is_equal: Current ~ other
 		end
 
 	frozen standard_copy (other: like Current)
@@ -196,7 +196,7 @@ feature -- Duplication
 				Result := other.twin
 			end
 		ensure
-			equal: equal (Result, other)
+			equal: Result ~ other
 		end
 
 	frozen standard_clone (other: detachable ANY): like other
@@ -304,12 +304,12 @@ feature -- Output
 			tagged_out_not_void: Result /= Void
 		end
 
-	print (some: detachable ANY)
-			-- Write terse external representation of `some'
+	print (o: detachable ANY)
+			-- Write terse external representation of `o'
 			-- on standard output.
 		do
-			if some /= Void then
-				io.put_string (some.out)
+			if o /= Void then
+				io.put_string (o.out)
 			end
 		end
 

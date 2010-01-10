@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date: 2009-09-29 02:15:54 +0200 (Tue, 29 Sep 2009) $"
-	revision: "$Revision: 379 $"
+	date: "$Date: 2009-12-01 22:45:32 +0100 (Tue, 01 Dec 2009) $"
+	revision: "$Revision: 406 $"
 
 deferred class
 	READABLE_STRING_GENERAL
@@ -71,7 +71,7 @@ feature -- Access
 feature -- Status report
 
 	is_immutable: BOOLEAN
-			-- Can the character sequence of `Current' be changed?
+			-- Can the character sequence of `Current' be not changed?
 		do
 			Result := False
 		end

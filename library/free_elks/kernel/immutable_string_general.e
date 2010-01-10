@@ -3,8 +3,8 @@ note
 	library: "Free implementation of ELKS library"
 	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-12-01 22:45:32 +0100 (Tue, 01 Dec 2009) $"
+	revision: "$Revision: 406 $"
 
 deferred class
 	IMMUTABLE_STRING_GENERAL
@@ -18,7 +18,7 @@ inherit
 feature -- Status report
 
 	is_immutable: BOOLEAN = True
-			-- Can the character sequence of `Current' be changed?
+			-- <Precursor>
 
 invariant
 	immutable: is_immutable
