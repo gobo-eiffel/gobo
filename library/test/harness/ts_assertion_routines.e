@@ -368,7 +368,13 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
-			l_condition := STRING_.same_string (expected, actual)
+			if expected = Void then
+				l_condition := actual = Void
+			elseif actual = Void then
+				l_condition := False
+			else
+				l_condition := STRING_.same_string (expected, actual)
+			end
 			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected, actual)
@@ -399,7 +405,13 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
-			l_condition := not STRING_.same_string (expected, actual)
+			if expected = Void then
+				l_condition := actual /= Void
+			elseif actual = Void then
+				l_condition := True
+			else
+				l_condition := not STRING_.same_string (expected, actual)
+			end
 			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_not_equal_message (a_tag, expected, actual)
@@ -430,7 +442,13 @@ feature {TS_TEST_HANDLER} -- Equality
 			l_condition: BOOLEAN
 		do
 			assertions.add_assertion
-			l_condition := STRING_.same_case_insensitive (expected, actual)
+			if expected = Void then
+				l_condition := actual = Void
+			elseif actual = Void then
+				l_condition := False
+			else
+				l_condition := STRING_.same_case_insensitive (expected, actual)
+			end
 			logger.report_assertion (a_tag, l_condition)
 			if not l_condition then
 				a_message := assert_strings_equal_message (a_tag, expected, actual)
