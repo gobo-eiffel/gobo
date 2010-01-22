@@ -1447,12 +1447,12 @@ feature {NONE} -- Initialization
 							-- This means that the class of this cluster are ignored.
 							-- So we have to get rid of this class.
 						a_class.reset
-						is_modified := (l_actual_class = a_class)
+						is_modified := is_modified or (l_actual_class = a_class)
 					elseif not file_system.file_exists (a_class.filename) then
 							-- The file does not exist anymore.
 							-- So we have to get rid of this class.
 						a_class.reset
-						is_modified := (l_actual_class = a_class)
+						is_modified := is_modified or (l_actual_class = a_class)
 					elseif not l_shallow_mode or else a_class.is_parsed then
 							-- With the "shallow" algorithm the time-stamp is only set when
 							-- parsing the class. Hence the test above.
@@ -1468,7 +1468,7 @@ feature {NONE} -- Initialization
 									-- Force preparsing again because this file may not contain this class anymore.
 								a_class.reset
 							end
-							is_modified := (l_actual_class = a_class)
+							is_modified := is_modified or (l_actual_class = a_class)
 						else
 								-- The time-stamp of the file has not changed.
 								-- Just skip this class.
