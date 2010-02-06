@@ -36,6 +36,15 @@ feature -- Access
 			Result := ""
 		end
 
+	frozen original: EXCEPTION
+			-- The original exception directly triggered current exception
+		do
+-- TODO
+			Result := Current
+		ensure
+			original_not_void: Result /= Void
+		end
+
 feature -- Status settings
 
 	set_message (a_message: like message)
