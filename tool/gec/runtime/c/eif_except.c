@@ -31,34 +31,34 @@ EIF_REFERENCE eename(long except) {
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eename' in 'eif_except.h' not implemented\n");
-	return EIF_VOID;
+	return GE_ms8("Not implemented yet",19);
 }
 
-char* eeltag(void) {
+EIF_REFERENCE eeltag(void) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eeltag' in 'eif_except.h' not implemented\n");
-	return (char *)0;
+	return GE_ms8("Not implemented yet",19);
 }
 
-char* eelrout(void) {
+EIF_REFERENCE eelrout(void) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eelrout' in 'eif_except.h' not implemented\n");
-	return (char *)0;
+	return GE_ms8("Not implemented yet",19);
 }
 
-char* eelclass(void) {
+EIF_REFERENCE eelclass(void) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eelclass' in 'eif_except.h' not implemented\n");
-	return (char *)0;
+	return GE_ms8("Not implemented yet",19);
 }
 
 long eelcode(void) {
@@ -76,16 +76,16 @@ EIF_REFERENCE stack_trace_string(void) {
 	GE_show_console();
 #endif
 	fprintf(stderr, "'stack_trace_string' in 'eif_except.h' not implemented\n");
-	return EIF_VOID;
+	return GE_ms8("Not implemented yet",19);
 }
 
-char* eeotag(void) {
+EIF_REFERENCE eeotag(void) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eeotag' in 'eif_except.h' not implemented\n");
-	return (char *)0;
+	return GE_ms8("Not implemented yet",19);
 }
 
 long eeocode(void) {
@@ -97,22 +97,22 @@ long eeocode(void) {
 	return 0;
 }
 
-char* eeorout(void) {
+EIF_REFERENCE eeorout(void) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eeorout' in 'eif_except.h' not implemented\n");
-	return (char *)0;
+	return GE_ms8("Not implemented yet",19);
 }
 
-char* eeoclass(void) {
+EIF_REFERENCE eeoclass(void) {
 	/* TODO */
 #ifdef EIF_WINDOWS
 	GE_show_console();
 #endif
 	fprintf(stderr, "'eeoclass' in 'eif_except.h' not implemented\n");
-	return (char *)0;
+	return GE_ms8("Not implemented yet",19);
 }
 
 void eecatch(long code) {
