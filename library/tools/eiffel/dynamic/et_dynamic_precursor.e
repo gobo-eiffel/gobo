@@ -19,7 +19,8 @@ inherit
 			make as make_feature
 		redefine
 			is_precursor,
-			dynamic_precursor
+			dynamic_precursor,
+			resolved_formal_parameters
 		end
 
 create
@@ -41,8 +42,7 @@ feature {NONE} -- Initialization
 		do
 			parent_type := a_parent_type
 			current_feature := a_current_feature
-			make_feature (a_feature, a_parent_type, a_system)
-			target_type := a_current_feature.target_type
+			make_feature (a_feature, a_current_feature.target_type, a_system)
 		ensure
 			static_feature_set: static_feature = a_feature
 			parent_type_set: parent_type = a_parent_type
@@ -67,6 +67,24 @@ feature -- Access
 			-- `a_feature' is the precursor of `current_feaure' in `a_parent_type'
 		do
 			Result := current_feature.dynamic_precursor (a_feature, a_parent_type, a_system)
+		end
+
+feature {NONE} -- Implementation
+
+	resolved_formal_parameters (a_type: ET_TYPE): ET_TYPE is
+			-- Replace formal generic parameters in `a_type' (appearing
+			-- in the signature of `static_feature')  by their
+			-- corresponding actual parameters in `target_type'.
+		do
+			Result := type_checker.resolved_formal_parameters (a_type, parent_type.base_class, target_type.base_type)
+		end
+
+	type_checker: ET_TYPE_CHECKER is
+			-- Type checker
+		once
+			create Result.make
+		ensure
+			type_checker_not_void: Result /= Void
 		end
 
 invariant

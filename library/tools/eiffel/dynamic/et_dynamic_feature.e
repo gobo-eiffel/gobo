@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			target_type := a_target_type
 			l_type := a_feature.type
 			if l_type /= Void then
+				l_type := resolved_formal_parameters (l_type)
 				if a_feature.is_constant_attribute or a_feature.is_unique_attribute then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type
@@ -114,6 +115,7 @@ feature {NONE} -- Initialization
 							l_dynamic_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
 						else
 							l_type := arg.type
+							l_type := resolved_formal_parameters (l_type)
 							l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 							l_dynamic_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
 								-- Unless proven otherwise after possible attachments,
@@ -512,6 +514,20 @@ feature -- Output
 			-- String that should be displayed in debugger to represent `Current'
 		do
 			Result := static_feature.debug_output
+		end
+
+feature {NONE} -- Implementation
+
+	resolved_formal_parameters (a_type: ET_TYPE): ET_TYPE is
+			-- Replace formal generic parameters in `a_type' (appearing
+			-- in the signature of `static_feature')  by their
+			-- corresponding actual parameters in `target_type'.
+		require
+			a_type_not_void: a_type /= Void
+		do
+			Result := a_type
+		ensure
+			resolved_type_not_void: Result /= Void
 		end
 
 feature {NONE} -- Constants
