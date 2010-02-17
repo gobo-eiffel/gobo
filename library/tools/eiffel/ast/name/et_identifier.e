@@ -160,6 +160,9 @@ feature -- Initialization
 		do
 			if not is_local and not is_argument then
 				seed := 0
+				if is_tuple_label then
+					set_tuple_label (False)
+				end
 			end
 		end
 
