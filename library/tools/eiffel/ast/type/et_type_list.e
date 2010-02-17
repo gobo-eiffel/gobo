@@ -71,6 +71,92 @@ feature -- Status report
 			end
 		end
 
+feature -- Iteration
+
+	do_all_types (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]]) is
+			-- Apply `an_action' to every type, from first to last.
+			-- (Semantics not guaranteed if `an_action' changes the list.)
+		require
+			an_action_not_void: an_action /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				an_action.call ([storage.item (i).type])
+				i := i - 1
+			end
+		end
+
+	do_types_if (an_action: PROCEDURE [ANY, TUPLE [ET_TYPE]]; a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]) is
+			-- Apply `an_action' to every type that satisfies `a_test', from first to last.
+			-- (Semantics not guaranteed if `an_action' or `a_test' change the list.)
+		require
+			an_action_not_void: an_action /= Void
+			a_test_not_void: a_test /= Void
+		local
+			i: INTEGER
+			l_type: ET_TYPE
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				l_type := storage.item (i).type
+				if a_test.item ([l_type]) then
+					an_action.call ([l_type])
+				end
+				i := i - 1
+			end
+		end
+
+	there_exists_type (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one type?
+			-- (Semantics not guaranteed if `a_test' changes the list.)
+		local
+			i: INTEGER
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				if a_test.item ([storage.item (i).type]) then
+					Result := True
+						-- Jump out of the loop.
+					i := -1
+				else
+					i := i - 1
+				end
+			end
+		end
+
+	for_all_types (a_test: FUNCTION [ANY, TUPLE [ET_TYPE], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all types?
+			-- (Semantics not guaranteed if `a_test' changes the list.)
+		local
+			i: INTEGER
+		do
+			Result := True
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				if not a_test.item ([storage.item (i).type]) then
+					Result := False
+						-- Jump out of the loop.
+					i := -1
+				else
+					i := i - 1
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_SPECIAL_ROUTINES [ET_TYPE_ITEM] is

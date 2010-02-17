@@ -288,6 +288,49 @@ feature -- Iteration
 			end
 		end
 
+	there_exists (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for at least one item?
+			-- (Semantics not guaranteed if `a_test' changes the list.)
+		local
+			i: INTEGER
+		do
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				if a_test.item ([storage.item (i)]) then
+					Result := True
+						-- Jump out of the loop.
+					i := -1
+				else
+					i := i - 1
+				end
+			end
+		end
+
+	for_all (a_test: FUNCTION [ANY, TUPLE [like item], BOOLEAN]): BOOLEAN is
+			-- Is `a_test' true for all items?
+			-- (Semantics not guaranteed if `a_test' changes the list.)
+		local
+			i: INTEGER
+		do
+			Result := True
+			from
+				i := count - 1
+			until
+				i < 0
+			loop
+				if not a_test.item ([storage.item (i)]) then
+					Result := False
+						-- Jump out of the loop.
+					i := -1
+				else
+					i := i - 1
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	storage: SPECIAL [like item]

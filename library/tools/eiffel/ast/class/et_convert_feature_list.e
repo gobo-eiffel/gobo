@@ -71,6 +71,28 @@ feature -- Access
 			convert_feature_not_void: Result /= Void
 		end
 
+	index_of (a_name: ET_FEATURE_NAME): INTEGER is
+			-- Index of convert feature named `a_name';
+			-- 0 if it does not exist
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count - 1
+			from i := 0 until i > nb loop
+				if storage.item (i).convert_feature.name.same_feature_name (a_name) then
+					Result := count - i
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= count
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
