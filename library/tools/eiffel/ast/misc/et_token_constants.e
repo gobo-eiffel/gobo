@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol constants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -152,6 +152,14 @@ feature -- Class names
 			create {ET_IDENTIFIER} Result.make (capitalized_integer_64_name)
 		ensure
 			integer_64_class_name_not_void: Result /= Void
+		end
+
+	internal_class_name: ET_CLASS_NAME is
+			-- "INTEGER_64" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_internal_name)
+		ensure
+			internal_class_name_not_void: Result /= Void
 		end
 
 	memory_class_name: ET_CLASS_NAME is
@@ -638,6 +646,14 @@ feature -- Feature names
 			base_address_feature_name_not_void: Result /= Void
 		end
 
+	base_class_name_feature_name: ET_FEATURE_NAME is
+			-- 'base_class_name' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (base_class_name_name)
+		ensure
+			base_class_name_feature_name_not_void: Result /= Void
+		end
+
 	bit_and_feature_name: ET_FEATURE_NAME is
 			-- 'bit_and' feature name
 		once
@@ -702,6 +718,14 @@ feature -- Feature names
 			boolean_item_feature_name_not_void: Result /= Void
 		end
 
+	boolean_field_feature_name: ET_FEATURE_NAME is
+			-- 'boolean_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (boolean_field_name)
+		ensure
+			boolean_field_feature_name_not_void: Result /= Void
+		end
+
 	call_feature_name: ET_FEATURE_NAME is
 			-- 'call' feature name
 		once
@@ -742,12 +766,28 @@ feature -- Feature names
 			character_8_item_feature_name_not_void: Result /= Void
 		end
 
+	character_8_field_feature_name: ET_FEATURE_NAME is
+			-- 'character_8_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (character_8_field_name)
+		ensure
+			character_8_field_feature_name_not_void: Result /= Void
+		end
+
 	character_32_item_feature_name: ET_FEATURE_NAME is
 			-- 'character_32_item' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (character_32_item_name)
 		ensure
 			character_32_item_feature_name_not_void: Result /= Void
+		end
+
+	character_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'character_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (character_32_field_name)
+		ensure
+			character_32_field_feature_name_not_void: Result /= Void
 		end
 
 	character_bytes_feature_name: ET_FEATURE_NAME is
@@ -900,6 +940,46 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (element_size_name)
 		ensure
 			element_size_feature_name_not_void: Result /= Void
+		end
+
+	field_feature_name: ET_FEATURE_NAME is
+			-- 'field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (field_name)
+		ensure
+			field_feature_name_not_void: Result /= Void
+		end
+
+	field_count_feature_name: ET_FEATURE_NAME is
+			-- 'field_count' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (field_count_name)
+		ensure
+			field_count_feature_name_not_void: Result /= Void
+		end
+
+	field_name_feature_name: ET_FEATURE_NAME is
+			-- 'field_name' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (field_name_name)
+		ensure
+			field_name_feature_name_not_void: Result /= Void
+		end
+
+	field_static_type_feature_name: ET_FEATURE_NAME is
+			-- 'field_static_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (field_static_type_name)
+		ensure
+			field_static_type_feature_name_not_void: Result /= Void
+		end
+
+	field_type_feature_name: ET_FEATURE_NAME is
+			-- 'field_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (field_type_name)
+		ensure
+			field_type_feature_name_not_void: Result /= Void
 		end
 
 	find_referers_feature_name: ET_FEATURE_NAME is
@@ -1196,12 +1276,28 @@ feature -- Feature names
 			integer_8_item_feature_name_not_void: Result /= Void
 		end
 
+	integer_8_field_feature_name: ET_FEATURE_NAME is
+			-- 'integer_8_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_8_field_name)
+		ensure
+			integer_8_field_feature_name_not_void: Result /= Void
+		end
+
 	integer_16_item_feature_name: ET_FEATURE_NAME is
 			-- 'integer_16_item' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (integer_16_item_name)
 		ensure
 			integer_16_item_feature_name_not_void: Result /= Void
+		end
+
+	integer_16_field_feature_name: ET_FEATURE_NAME is
+			-- 'integer_16_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_16_field_name)
+		ensure
+			integer_16_field_feature_name_not_void: Result /= Void
 		end
 
 	integer_32_item_feature_name: ET_FEATURE_NAME is
@@ -1212,12 +1308,28 @@ feature -- Feature names
 			integer_32_item_feature_name_not_void: Result /= Void
 		end
 
+	integer_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'integer_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_32_field_name)
+		ensure
+			integer_32_field_feature_name_not_void: Result /= Void
+		end
+
 	integer_64_item_feature_name: ET_FEATURE_NAME is
 			-- 'integer_64_item' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (integer_64_item_name)
 		ensure
 			integer_64_item_feature_name_not_void: Result /= Void
+		end
+
+	integer_64_field_feature_name: ET_FEATURE_NAME is
+			-- 'integer_64_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (integer_64_field_name)
+		ensure
+			integer_64_field_feature_name_not_void: Result /= Void
 		end
 
 	integer_bytes_feature_name: ET_FEATURE_NAME is
@@ -1274,6 +1386,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (is_equal_name)
 		ensure
 			is_equal_feature_name_not_void: Result /= Void
+		end
+
+	is_expanded_feature_name: ET_FEATURE_NAME is
+			-- 'is_expanded' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (is_expanded_name)
+		ensure
+			is_expanded_feature_name_not_void: Result /= Void
 		end
 
 	is_less_feature_name: ET_FEATURE_NAME is
@@ -1380,6 +1500,14 @@ feature -- Feature names
 			make_feature_name_not_void: Result /= Void
 		end
 
+	max_type_id_feature_name: ET_FEATURE_NAME is
+			-- 'max_type_id' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (max_type_id_name)
+		ensure
+			max_type_id_feature_name_not_void: Result /= Void
+		end
+
 	minus_feature_name: ET_FEATURE_NAME is
 			-- 'minus' feature name
 		once
@@ -1404,12 +1532,28 @@ feature -- Feature names
 			natural_8_item_feature_name_not_void: Result /= Void
 		end
 
+	natural_8_field_feature_name: ET_FEATURE_NAME is
+			-- 'natural_8_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_8_field_name)
+		ensure
+			natural_8_field_feature_name_not_void: Result /= Void
+		end
+
 	natural_16_item_feature_name: ET_FEATURE_NAME is
 			-- 'natural_16_item' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (natural_16_item_name)
 		ensure
 			natural_16_item_feature_name_not_void: Result /= Void
+		end
+
+	natural_16_field_feature_name: ET_FEATURE_NAME is
+			-- 'natural_16_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_16_field_name)
+		ensure
+			natural_16_field_feature_name_not_void: Result /= Void
 		end
 
 	natural_32_code_feature_name: ET_FEATURE_NAME is
@@ -1428,12 +1572,28 @@ feature -- Feature names
 			natural_32_item_feature_name_not_void: Result /= Void
 		end
 
+	natural_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'natural_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_32_field_name)
+		ensure
+			natural_32_field_feature_name_not_void: Result /= Void
+		end
+
 	natural_64_item_feature_name: ET_FEATURE_NAME is
 			-- 'natural_64_item' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (natural_64_item_name)
 		ensure
 			natural_64_item_feature_name_not_void: Result /= Void
+		end
+
+	natural_64_field_feature_name: ET_FEATURE_NAME is
+			-- 'natural_64_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (natural_64_field_name)
+		ensure
+			natural_64_field_feature_name_not_void: Result /= Void
 		end
 
 	negated_feature_name: ET_FEATURE_NAME is
@@ -1490,6 +1650,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (pointer_item_name)
 		ensure
 			pointer_item_feature_name_not_void: Result /= Void
+		end
+
+	pointer_field_feature_name: ET_FEATURE_NAME is
+			-- 'pointer_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (pointer_field_name)
+		ensure
+			pointer_field_feature_name_not_void: Result /= Void
 		end
 
 	power_feature_name: ET_FEATURE_NAME is
@@ -1693,12 +1861,28 @@ feature -- Feature names
 			real_32_item_feature_name_not_void: Result /= Void
 		end
 
+	real_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'real_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (real_32_field_name)
+		ensure
+			real_32_field_feature_name_not_void: Result /= Void
+		end
+
 	real_64_item_feature_name: ET_FEATURE_NAME is
 			-- 'real_64_item' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (real_64_item_name)
 		ensure
 			real_64_item_feature_name_not_void: Result /= Void
+		end
+
+	real_64_field_feature_name: ET_FEATURE_NAME is
+			-- 'real_64_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (real_64_field_name)
+		ensure
+			real_64_field_feature_name_not_void: Result /= Void
 		end
 
 	real_bytes_feature_name: ET_FEATURE_NAME is
@@ -1733,12 +1917,100 @@ feature -- Feature names
 			same_type_feature_name_not_void: Result /= Void
 		end
 
+	set_boolean_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_boolean_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_boolean_field_name)
+		ensure
+			set_boolean_field_feature_name_not_void: Result /= Void
+		end
+
+	set_character_8_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_character_8_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_character_8_field_name)
+		ensure
+			set_character_8_field_feature_name_not_void: Result /= Void
+		end
+
+	set_character_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_character_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_character_32_field_name)
+		ensure
+			set_character_32_field_feature_name_not_void: Result /= Void
+		end
+
+	set_integer_8_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_integer_8_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_integer_8_field_name)
+		ensure
+			set_integer_8_field_feature_name_not_void: Result /= Void
+		end
+
+	set_integer_16_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_integer_16_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_integer_16_field_name)
+		ensure
+			set_integer_16_field_feature_name_not_void: Result /= Void
+		end
+
+	set_integer_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_integer_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_integer_32_field_name)
+		ensure
+			set_integer_32_field_feature_name_not_void: Result /= Void
+		end
+
+	set_integer_64_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_integer_64_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_integer_64_field_name)
+		ensure
+			set_integer_64_field_feature_name_not_void: Result /= Void
+		end
+
 	set_item_feature_name: ET_FEATURE_NAME is
 			-- 'set_item' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (set_item_name)
 		ensure
 			set_item_feature_name_not_void: Result /= Void
+		end
+
+	set_natural_8_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_natural_8_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_natural_8_field_name)
+		ensure
+			set_natural_8_field_feature_name_not_void: Result /= Void
+		end
+
+	set_natural_16_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_natural_16_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_natural_16_field_name)
+		ensure
+			set_natural_16_field_feature_name_not_void: Result /= Void
+		end
+
+	set_natural_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_natural_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_natural_32_field_name)
+		ensure
+			set_natural_32_field_feature_name_not_void: Result /= Void
+		end
+
+	set_natural_64_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_natural_64_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_natural_64_field_name)
+		ensure
+			set_natural_64_field_feature_name_not_void: Result /= Void
 		end
 
 	set_object_comparison_feature_name: ET_FEATURE_NAME is
@@ -1755,6 +2027,38 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (set_operands_name)
 		ensure
 			set_operands_feature_name_not_void: Result /= Void
+		end
+
+	set_pointer_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_pointer_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_pointer_field_name)
+		ensure
+			set_pointer_field_feature_name_not_void: Result /= Void
+		end
+
+	set_real_32_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_real_32_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_real_32_field_name)
+		ensure
+			set_real_32_field_feature_name_not_void: Result /= Void
+		end
+
+	set_real_64_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_real_64_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_real_64_field_name)
+		ensure
+			set_real_64_field_feature_name_not_void: Result /= Void
+		end
+
+	set_reference_field_feature_name: ET_FEATURE_NAME is
+			-- 'set_reference_field' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (set_reference_field_name)
+		ensure
+			set_reference_field_feature_name_not_void: Result /= Void
 		end
 
 	standard_copy_feature_name: ET_FEATURE_NAME is
@@ -1899,6 +2203,14 @@ feature -- Feature names
 			create {ET_IDENTIFIER} Result.make (type_id_name)
 		ensure
 			type_id_feature_name_not_void: Result /= Void
+		end
+
+	type_of_type_feature_name: ET_FEATURE_NAME is
+			-- 'type_of_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (type_of_type_name)
+		ensure
+			type_of_type_feature_name_not_void: Result /= Void
 		end
 
 	upper_feature_name: ET_FEATURE_NAME is
@@ -2711,6 +3023,7 @@ feature -- Keyword and symbol names
 	capitalized_integer_16_name: STRING is "INTEGER_16"
 	capitalized_integer_32_name: STRING is "INTEGER_32"
 	capitalized_integer_64_name: STRING is "INTEGER_64"
+	capitalized_internal_name: STRING is "INTERNAL"
 	capitalized_memory_name: STRING is "MEMORY"
 	capitalized_native_array_name: STRING is "NATIVE_ARRAY"
 	capitalized_natural_name: STRING is "NATURAL"
@@ -2738,436 +3051,550 @@ feature -- Keyword and symbol names
 	capitalized_typed_pointer_name: STRING is "TYPED_POINTER"
 	capitalized_wide_character_name: STRING is "WIDE_CHARACTER"
 	capitalized_unknown_name: STRING is "*UNKNOWN*"
-		-- Eiffel class names
+			-- Eiffel class names
 
 	aliased_resized_area_name: STRING is "aliased_resized_area"
-		-- Name of Eiffel feature 'aliased_resized_area'
+			-- Name of Eiffel feature 'aliased_resized_area'
 
 	area_name: STRING is "area"
-		-- Name of Eiffel feature 'area'
+			-- Name of Eiffel feature 'area'
 
 	argument_name: STRING is "argument"
-		-- Name of Eiffel feature 'argument'
+			-- Name of Eiffel feature 'argument'
 
 	argument_count_name: STRING is "argument_count"
-		-- Name of Eiffel feature 'argument_count'
+			-- Name of Eiffel feature 'argument_count'
 
 	as_integer_8_name: STRING is "as_integer_8"
-		-- Name of Eiffel feature 'as_integer_8'
+			-- Name of Eiffel feature 'as_integer_8'
 
 	as_integer_16_name: STRING is "as_integer_16"
-		-- Name of Eiffel feature 'as_integer_16'
+			-- Name of Eiffel feature 'as_integer_16'
 
 	as_integer_32_name: STRING is "as_integer_32"
-		-- Name of Eiffel feature 'as_integer_32'
+			-- Name of Eiffel feature 'as_integer_32'
 
 	as_integer_64_name: STRING is "as_integer_64"
-		-- Name of Eiffel feature 'as_integer_64'
+			-- Name of Eiffel feature 'as_integer_64'
 
 	as_natural_8_name: STRING is "as_natural_8"
-		-- Name of Eiffel feature 'as_natural_8'
+			-- Name of Eiffel feature 'as_natural_8'
 
 	as_natural_16_name: STRING is "as_natural_16"
-		-- Name of Eiffel feature 'as_natural_16'
+			-- Name of Eiffel feature 'as_natural_16'
 
 	as_natural_32_name: STRING is "as_natural_32"
-		-- Name of Eiffel feature 'as_natural_32'
+			-- Name of Eiffel feature 'as_natural_32'
 
 	as_natural_64_name: STRING is "as_natural_64"
-		-- Name of Eiffel feature 'as_natural_64'
+			-- Name of Eiffel feature 'as_natural_64'
 
 	base_address_name: STRING is "base_address"
-		-- Name of Eiffel feature 'base_address'
+			-- Name of Eiffel feature 'base_address'
+
+	base_class_name_name: STRING is "base_class_name"
+			-- Name of Eiffel feature 'base_class_name'
 
 	bit_and_name: STRING is "bit_and"
-		-- Name of Eiffel feature 'bit_and'
+			-- Name of Eiffel feature 'bit_and'
 
 	bit_not_name: STRING is "bit_not"
-		-- Name of Eiffel feature 'bit_not'
+			-- Name of Eiffel feature 'bit_not'
 
 	bit_or_name: STRING is "bit_or"
-		-- Name of Eiffel feature 'bit_or'
+			-- Name of Eiffel feature 'bit_or'
 
 	bit_shift_left_name: STRING is "bit_shift_left"
-		-- Name of Eiffel feature 'bit_shift_left'
+			-- Name of Eiffel feature 'bit_shift_left'
 
 	bit_shift_right_name: STRING is "bit_shift_right"
-		-- Name of Eiffel feature 'bit_shift_right'
+			-- Name of Eiffel feature 'bit_shift_right'
 
 	bit_xor_name: STRING is "bit_xor"
-		-- Name of Eiffel feature 'bit_xor'
+			-- Name of Eiffel feature 'bit_xor'
 
 	boolean_bytes_name: STRING is "boolean_bytes"
-		-- Name of Eiffel feature 'boolean_bytes'
+			-- Name of Eiffel feature 'boolean_bytes'
+
+	boolean_field_name: STRING is "boolean_field"
+			-- Name of Eiffel feature 'boolean_field'
 
 	boolean_item_name: STRING is "boolean_item"
-		-- Name of Eiffel feature 'boolean_item'
+			-- Name of Eiffel feature 'boolean_item'
 
 	call_name: STRING is "call"
-		-- Name of Eiffel feature 'call'
+			-- Name of Eiffel feature 'call'
 
 	capacity_name: STRING is "capacity"
-		-- Name of Eiffel feature 'capacity'
+			-- Name of Eiffel feature 'capacity'
 
 	ceiling_real_32_name: STRING is "ceiling_real_32"
-		-- Name of Eiffel feature 'ceiling_real_32'
+			-- Name of Eiffel feature 'ceiling_real_32'
 
 	ceiling_real_64_name: STRING is "ceiling_real_64"
-		-- Name of Eiffel feature 'ceiling_real_64'
+			-- Name of Eiffel feature 'ceiling_real_64'
 
 	character_8_item_name: STRING is "character_8_item"
-		-- Name of Eiffel feature 'character_8_item'
+			-- Name of Eiffel feature 'character_8_item'
+
+	character_8_field_name: STRING is "character_8_field"
+			-- Name of Eiffel feature 'character_8_field'
 
 	character_32_item_name: STRING is "character_32_item"
-		-- Name of Eiffel feature 'character_32_item'
+			-- Name of Eiffel feature 'character_32_item'
+
+	character_32_field_name: STRING is "character_32_field"
+			-- Name of Eiffel feature 'character_32_field'
 
 	character_bytes_name: STRING is "character_bytes"
-		-- Name of Eiffel feature 'character_bytes'
+			-- Name of Eiffel feature 'character_bytes'
 
 	closed_operands_name: STRING is "closed_operands"
-		-- Name of Eiffel feature 'closed_operands'
+			-- Name of Eiffel feature 'closed_operands'
 
 	code_name: STRING is "code"
-		-- Name of Eiffel feature 'code'
+			-- Name of Eiffel feature 'code'
 
 	conforms_to_name: STRING is "conforms_to"
-		-- Name of Eiffel feature 'conforms_to'
+			-- Name of Eiffel feature 'conforms_to'
 
 	conjuncted_name: STRING is "conjuncted"
-		-- Name of Eiffel feature 'conjuncted'
+			-- Name of Eiffel feature 'conjuncted'
 
 	conjuncted_semistrict_name: STRING is "conjuncted_semistrict"
-		-- Name of Eiffel feature 'conjuncted_semistrict'
+			-- Name of Eiffel feature 'conjuncted_semistrict'
 
 	copy_name: STRING is "copy"
-		-- Name of Eiffel feature 'copy'
+			-- Name of Eiffel feature 'copy'
 
 	count_name: STRING is "count"
-		-- Name of Eiffel feature 'count'
+			-- Name of Eiffel feature 'count'
 
 	deep_twin_name: STRING is "deep_twin"
-		-- Name of Eiffel feature 'deep_twin'
+			-- Name of Eiffel feature 'deep_twin'
 
 	default_create_name: STRING is "default_create"
-		-- Name of Eiffel feature 'default_create'
+			-- Name of Eiffel feature 'default_create'
 
 	disjuncted_name: STRING is "disjuncted"
-		-- Name of Eiffel feature 'disjuncted'
+			-- Name of Eiffel feature 'disjuncted'
 
 	disjuncted_exclusive_name: STRING is "disjuncted_exclusive"
-		-- Name of Eiffel feature 'disjuncted_exclusive'
+			-- Name of Eiffel feature 'disjuncted_exclusive'
 
 	disjuncted_semistrict_name: STRING is "disjuncted_semistrict"
-		-- Name of Eiffel feature 'disjuncted_semistrict'
+			-- Name of Eiffel feature 'disjuncted_semistrict'
 
 	dispose_name: STRING is "dispose"
-		-- Name of Eiffel feature 'dispose'
+			-- Name of Eiffel feature 'dispose'
 
 	double_bytes_name: STRING is "double_bytes"
-		-- Name of Eiffel feature 'double_bytes'
+			-- Name of Eiffel feature 'double_bytes'
 
 	eif_id_object_name: STRING is "eif_id_object"
-		-- Name of Eiffel feature 'eif_id_object'
+			-- Name of Eiffel feature 'eif_id_object'
 
 	eif_object_id_name: STRING is "eif_object_id"
-		-- Name of Eiffel feature 'eif_object_id'
+			-- Name of Eiffel feature 'eif_object_id'
 
 	eif_object_id_free_name: STRING is "eif_object_id_free"
-		-- Name of Eiffel feature 'eif_object_id_free'
+			-- Name of Eiffel feature 'eif_object_id_free'
 
 	element_size_name: STRING is "element_size"
-		-- Name of Eiffel feature 'element_size'
+			-- Name of Eiffel feature 'element_size'
+
+	field_name: STRING is "field"
+			-- Name of Eiffel feature 'field'
+
+	field_count_name: STRING is "field_count"
+			-- Name of Eiffel feature 'field_count'
+
+	field_name_name: STRING is "field_name"
+			-- Name of Eiffel feature 'field_name'
+
+	field_static_type_name: STRING is "field_static_type"
+			-- Name of Eiffel feature 'field_static_type'
+
+	field_type_name: STRING is "field_type"
+			-- Name of Eiffel feature 'field_type'
 
 	find_referers_name: STRING is "find_referers"
-		-- Name of Eiffel feature 'find_referers'
+			-- Name of Eiffel feature 'find_referers'
 
 	floor_real_32_name: STRING is "floor_real_32"
-		-- Name of Eiffel feature 'floor_real_32'
+			-- Name of Eiffel feature 'floor_real_32'
 
 	floor_real_64_name: STRING is "floor_real_64"
-		-- Name of Eiffel feature 'floor_real_64'
+			-- Name of Eiffel feature 'floor_real_64'
 
 	free_name: STRING is "free"
-		-- Name of Eiffel feature 'free'
+			-- Name of Eiffel feature 'free'
 
 	generating_type_name: STRING is "generating_type"
-		-- Name of Eiffel feature 'generating_type'
+			-- Name of Eiffel feature 'generating_type'
 
 	generator_name: STRING is "generator"
-		-- Name of Eiffel feature 'generator'
+			-- Name of Eiffel feature 'generator'
 
 	generic_parameter_name: STRING is "generic_parameter"
-		-- Name of Eiffel feature 'generic_parameter'
+			-- Name of Eiffel feature 'generic_parameter'
 
 	generic_parameter_count_name: STRING is "generic_parameter_count"
-		-- Name of Eiffel feature 'generic_parameter_count'
+			-- Name of Eiffel feature 'generic_parameter_count'
 
 	hash_code_name: STRING is "hash_code"
-		-- Name of Eiffel feature 'hash_code'
+			-- Name of Eiffel feature 'hash_code'
 
 	identity_name: STRING is "identity"
-		-- Name of Eiffel feature 'identity'
+			-- Name of Eiffel feature 'identity'
 
 	implication_name: STRING is "implication"
-		-- Name of Eiffel feature 'implication'
+			-- Name of Eiffel feature 'implication'
 
 	integer_8_item_name: STRING is "integer_8_item"
-		-- Name of Eiffel feature 'integer_8_item'
+			-- Name of Eiffel feature 'integer_8_item'
+
+	integer_8_field_name: STRING is "integer_8_field"
+			-- Name of Eiffel feature 'integer_8_field'
 
 	integer_16_item_name: STRING is "integer_16_item"
-		-- Name of Eiffel feature 'integer_16_item'
+			-- Name of Eiffel feature 'integer_16_item'
+
+	integer_16_field_name: STRING is "integer_16_field"
+			-- Name of Eiffel feature 'integer_16_field'
 
 	integer_32_item_name: STRING is "integer_32_item"
-		-- Name of Eiffel feature 'integer_32_item'
+			-- Name of Eiffel feature 'integer_32_item'
+
+	integer_32_field_name: STRING is "integer_32_field"
+			-- Name of Eiffel feature 'integer_32_item'
 
 	integer_64_item_name: STRING is "integer_64_item"
-		-- Name of Eiffel feature 'integer_64_item'
+			-- Name of Eiffel feature 'integer_64_item'
+
+	integer_64_field_name: STRING is "integer_64_field"
+			-- Name of Eiffel feature 'integer_64_field'
 
 	integer_bytes_name: STRING is "integer_bytes"
-		-- Name of Eiffel feature 'integer_bytes'
+			-- Name of Eiffel feature 'integer_bytes'
 
 	integer_quotient_name: STRING is "integer_quotient"
-		-- Name of Eiffel feature 'integer_quotient'
+			-- Name of Eiffel feature 'integer_quotient'
 
 	integer_remainder_name: STRING is "integer_remainder"
-		-- Name of Eiffel feature 'integer_remainder'
+			-- Name of Eiffel feature 'integer_remainder'
 
 	is_deep_equal_name: STRING is "is_deep_equal"
-		-- Name of Eiffel feature 'is_deep_equal'
+			-- Name of Eiffel feature 'is_deep_equal'
 
 	is_dotnet_name: STRING is "is_dotnet"
-		-- Name of Eiffel feature 'is_dotnet'
+			-- Name of Eiffel feature 'is_dotnet'
 
 	is_equal_name: STRING is "is_equal"
-		-- Name of Eiffel feature 'is_equal'
+			-- Name of Eiffel feature 'is_equal'
+
+	is_expanded_name: STRING is "is_expanded"
+			-- Name of Eiffel feature 'is_expanded'
 
 	is_less_name: STRING is "is_less"
-		-- Name of Eiffel feature 'is_less'
+			-- Name of Eiffel feature 'is_less'
 
 	is_mac_name: STRING is "is_mac"
-		-- Name of Eiffel feature 'is_mac'
+			-- Name of Eiffel feature 'is_mac'
 
 	is_target_closed_name: STRING is "is_target_closed"
-		-- Name of Eiffel feature 'is_target_closed'
+			-- Name of Eiffel feature 'is_target_closed'
 
 	is_thread_capable_name: STRING is "is_thread_capable"
-		-- Name of Eiffel feature 'is_thread_capable'
+			-- Name of Eiffel feature 'is_thread_capable'
 
 	is_unix_name: STRING is "is_unix"
-		-- Name of Eiffel feature 'is_unix'
+			-- Name of Eiffel feature 'is_unix'
 
 	is_vms_name: STRING is "is_vms"
-		-- Name of Eiffel feature 'is_vms'
+			-- Name of Eiffel feature 'is_vms'
 
 	is_vxworks_name: STRING is "is_vxworks"
-		-- Name of Eiffel feature 'is_vxworks'
+			-- Name of Eiffel feature 'is_vxworks'
 
 	is_windows_name: STRING is "is_windows"
-		-- Name of Eiffel feature 'is_windows'
+			-- Name of Eiffel feature 'is_windows'
 
 	item_name: STRING is "item"
-		-- Name of Eiffel feature 'item'
+			-- Name of Eiffel feature 'item'
 
 	item_code_name: STRING is "item_code"
-		-- Name of Eiffel feature 'item_code'
+			-- Name of Eiffel feature 'item_code'
 
 	last_result_name: STRING is "last_result"
-		-- Name of Eiffel feature 'last_result'
+			-- Name of Eiffel feature 'last_result'
 
 	lower_name: STRING is "lower"
-		-- Name of Eiffel feature 'lower'
+			-- Name of Eiffel feature 'lower'
 
 	make_name: STRING is "make"
-		-- Name of Eiffel feature 'make'
+			-- Name of Eiffel feature 'make'
+
+	max_type_id_name: STRING is "max_type_id"
+			-- Name of Eiffel feature 'max_type_id'
 
 	minus_name: STRING is "minus"
-		-- Name of Eiffel feature 'minus'
+			-- Name of Eiffel feature 'minus'
 
 	name_name: STRING is "name"
-		-- Name of Eiffel feature 'name'
+			-- Name of Eiffel feature 'name'
 
 	natural_8_item_name: STRING is "natural_8_item"
-		-- Name of Eiffel feature 'natural_8_item'
+			-- Name of Eiffel feature 'natural_8_item'
+
+	natural_8_field_name: STRING is "natural_8_field"
+			-- Name of Eiffel feature 'natural_8_field'
 
 	natural_16_item_name: STRING is "natural_16_item"
-		-- Name of Eiffel feature 'natural_16_item'
+			-- Name of Eiffel feature 'natural_16_item'
+
+	natural_16_field_name: STRING is "natural_16_field"
+			-- Name of Eiffel feature 'natural_16_field'
 
 	natural_32_code_name: STRING is "natural_32_code"
-		-- Name of Eiffel feature 'natural_32_code'
+			-- Name of Eiffel feature 'natural_32_code'
 
 	natural_32_item_name: STRING is "natural_32_item"
-		-- Name of Eiffel feature 'natural_32_item'
+			-- Name of Eiffel feature 'natural_32_item'
+
+	natural_32_field_name: STRING is "natural_32_field"
+			-- Name of Eiffel feature 'natural_32_field'
 
 	natural_64_item_name: STRING is "natural_64_item"
-		-- Name of Eiffel feature 'natural_64_item'
+			-- Name of Eiffel feature 'natural_64_item'
+
+	natural_64_field_name: STRING is "natural_64_field"
+			-- Name of Eiffel feature 'natural_64_field'
 
 	negated_name: STRING is "negated"
-		-- Name of Eiffel feature 'negated'
+			-- Name of Eiffel feature 'negated'
 
 	object_comparison_name: STRING is "object_comparison"
-		-- Name of Eiffel feature 'object_comparison'
+			-- Name of Eiffel feature 'object_comparison'
 
 	opposite_name: STRING is "opposite"
-		-- Name of Eiffel feature 'opposite'
+			-- Name of Eiffel feature 'opposite'
 
 	out_name: STRING is "out"
-		-- Name of Eiffel feature 'out'
+			-- Name of Eiffel feature 'out'
 
 	plus_name: STRING is "plus"
-		-- Name of Eiffel feature 'plus'
+			-- Name of Eiffel feature 'plus'
 
 	pointer_bytes_name: STRING is "pointer_bytes"
-		-- Name of Eiffel feature 'pointer_bytes'
+			-- Name of Eiffel feature 'pointer_bytes'
 
 	pointer_item_name: STRING is "pointer_item"
-		-- Name of Eiffel feature 'pointer_item'
+			-- Name of Eiffel feature 'pointer_item'
+
+	pointer_field_name: STRING is "pointer_field"
+			-- Name of Eiffel feature 'pointer_field'
 
 	power_name: STRING is "power"
-		-- Name of Eiffel feature 'power'
+			-- Name of Eiffel feature 'power'
 
 	product_name: STRING is "product"
-		-- Name of Eiffel feature 'product'
+			-- Name of Eiffel feature 'product'
 
 	put_name: STRING is "put"
-		-- Name of Eiffel feature 'put'
+			-- Name of Eiffel feature 'put'
 
 	put_boolean_name: STRING is "put_boolean"
-		-- Name of Eiffel feature 'put_boolean'
+			-- Name of Eiffel feature 'put_boolean'
 
 	put_character_8_name: STRING is "put_character_8"
-		-- Name of Eiffel feature 'put_character_8'
+			-- Name of Eiffel feature 'put_character_8'
 
 	put_character_32_name: STRING is "put_character_32"
-		-- Name of Eiffel feature 'put_character_32'
+			-- Name of Eiffel feature 'put_character_32'
 
 	put_default_name: STRING is "put_default"
-		-- Name of Eiffel feature 'put_default'
+			-- Name of Eiffel feature 'put_default'
 
 	put_integer_8_name: STRING is "put_integer_8"
-		-- Name of Eiffel feature 'put_integer_8'
+			-- Name of Eiffel feature 'put_integer_8'
 
 	put_integer_16_name: STRING is "put_integer_16"
-		-- Name of Eiffel feature 'put_integer_16'
+			-- Name of Eiffel feature 'put_integer_16'
 
 	put_integer_32_name: STRING is "put_integer_32"
-		-- Name of Eiffel feature 'put_integer_32'
+			-- Name of Eiffel feature 'put_integer_32'
 
 	put_integer_64_name: STRING is "put_integer_64"
-		-- Name of Eiffel feature 'put_integer_64'
+			-- Name of Eiffel feature 'put_integer_64'
 
 	put_natural_8_name: STRING is "put_natural_8"
-		-- Name of Eiffel feature 'put_natural_8'
+			-- Name of Eiffel feature 'put_natural_8'
 
 	put_natural_16_name: STRING is "put_natural_16"
-		-- Name of Eiffel feature 'put_natural_16'
+			-- Name of Eiffel feature 'put_natural_16'
 
 	put_natural_32_name: STRING is "put_natural_32"
-		-- Name of Eiffel feature 'put_natural_32'
+			-- Name of Eiffel feature 'put_natural_32'
 
 	put_natural_64_name: STRING is "put_natural_64"
-		-- Name of Eiffel feature 'put_natural_64'
+			-- Name of Eiffel feature 'put_natural_64'
 
 	put_pointer_name: STRING is "put_pointer"
-		-- Name of Eiffel feature 'put_pointer'
+			-- Name of Eiffel feature 'put_pointer'
 
 	put_real_32_name: STRING is "put_real_32"
-		-- Name of Eiffel feature 'put_real_32'
+			-- Name of Eiffel feature 'put_real_32'
 
 	put_real_64_name: STRING is "put_real_64"
-		-- Name of Eiffel feature 'put_real_64'
+			-- Name of Eiffel feature 'put_real_64'
 
 	put_reference_name: STRING is "put_reference"
-		-- Name of Eiffel feature 'put_reference'
+			-- Name of Eiffel feature 'put_reference'
 
 	quotient_name: STRING is "quotient"
-		-- Name of Eiffel feature 'quotient'
+			-- Name of Eiffel feature 'quotient'
 
 	real_32_item_name: STRING is "real_32_item"
-		-- Name of Eiffel feature 'real_32_item'
+			-- Name of Eiffel feature 'real_32_item'
+
+	real_32_field_name: STRING is "real_32_field"
+			-- Name of Eiffel feature 'real_32_field'
 
 	real_64_item_name: STRING is "real_64_item"
-		-- Name of Eiffel feature 'real_64_item'
+			-- Name of Eiffel feature 'real_64_item'
+
+	real_64_field_name: STRING is "real_64_field"
+			-- Name of Eiffel feature 'real_64_field'
 
 	real_bytes_name: STRING is "real_bytes"
-		-- Name of Eiffel feature 'real_bytes'
+			-- Name of Eiffel feature 'real_bytes'
 
 	reference_item_name: STRING is "reference_item"
-		-- Name of Eiffel feature 'reference_item'
+			-- Name of Eiffel feature 'reference_item'
 
 	runtime_name_name: STRING is "runtime_name"
-		-- Name of Eiffel feature 'runtime_name'
+			-- Name of Eiffel feature 'runtime_name'
 
 	same_type_name: STRING is "same_type"
-		-- Name of Eiffel feature 'same_type'
+			-- Name of Eiffel feature 'same_type'
+
+	set_boolean_field_name: STRING is "set_boolean_field"
+			-- Name of Eiffel feature 'set_boolean_field'
+
+	set_character_8_field_name: STRING is "set_character_8_field"
+			-- Name of Eiffel feature 'set_character_8_field'
+
+	set_character_32_field_name: STRING is "set_character_32_field"
+			-- Name of Eiffel feature 'set_character_32_field'
+
+	set_integer_8_field_name: STRING is "set_integer_8_field"
+			-- Name of Eiffel feature 'set_integer_8_field'
+
+	set_integer_16_field_name: STRING is "set_integer_16_field"
+			-- Name of Eiffel feature 'set_integer_16_field'
+
+	set_integer_32_field_name: STRING is "set_integer_32_field"
+			-- Name of Eiffel feature 'set_integer_32_field'
+
+	set_integer_64_field_name: STRING is "set_integer_64_field"
+			-- Name of Eiffel feature 'set_integer_64_field'
 
 	set_item_name: STRING is "set_item"
-		-- Name of Eiffel feature 'set_item'
+			-- Name of Eiffel feature 'set_item'
+
+	set_natural_8_field_name: STRING is "set_natural_8_field"
+			-- Name of Eiffel feature 'set_natural_8_field'
+
+	set_natural_16_field_name: STRING is "set_natural_16_field"
+			-- Name of Eiffel feature 'set_natural_16_field'
+
+	set_natural_32_field_name: STRING is "set_natural_32_field"
+			-- Name of Eiffel feature 'set_natural_32_field'
+
+	set_natural_64_field_name: STRING is "set_natural_64_field"
+			-- Name of Eiffel feature 'set_natural_64_field'
 
 	set_object_comparison_name: STRING is "set_object_comparison"
-		-- Name of Eiffel feature 'set_object_comparison'
+			-- Name of Eiffel feature 'set_object_comparison'
 
 	set_operands_name: STRING is "set_operands"
-		-- Name of Eiffel feature 'set_operands'
+			-- Name of Eiffel feature 'set_operands'
+
+	set_pointer_field_name: STRING is "set_pointer_field"
+			-- Name of Eiffel feature 'set_pointer_field'
+
+	set_real_32_field_name: STRING is "set_real_32_field"
+			-- Name of Eiffel feature 'set_real_32_field'
+
+	set_real_64_field_name: STRING is "set_real_64_field"
+			-- Name of Eiffel feature 'set_real_64_field'
+
+	set_reference_field_name: STRING is "set_reference_field"
+			-- Name of Eiffel feature 'set_reference_field'
 
 	standard_copy_name: STRING is "standard_copy"
-		-- Name of Eiffel feature 'standard_copy'
+			-- Name of Eiffel feature 'standard_copy'
 
 	standard_is_equal_name: STRING is "standard_is_equal"
-		-- Name of Eiffel feature 'standard_is_equal'
+			-- Name of Eiffel feature 'standard_is_equal'
 
 	standard_twin_name: STRING is "standard_twin"
-		-- Name of Eiffel feature 'standard_twin'
+			-- Name of Eiffel feature 'standard_twin'
 
 	tagged_out_name: STRING is "tagged_out"
-		-- Name of Eiffel feature 'tagged_out'
+			-- Name of Eiffel feature 'tagged_out'
 
 	to_character_name: STRING is "to_character"
-		-- Name of Eiffel feature 'tagged_out'
+			-- Name of Eiffel feature 'tagged_out'
 
 	to_character_8_name: STRING is "to_character_8"
-		-- Name of Eiffel feature 'to_character_8'
+			-- Name of Eiffel feature 'to_character_8'
 
 	to_character_32_name: STRING is "to_character_32"
-		-- Name of Eiffel feature 'to_character_32'
+			-- Name of Eiffel feature 'to_character_32'
 
 	to_double_name: STRING is "to_double"
-		-- Name of Eiffel feature 'to_double'
+			-- Name of Eiffel feature 'to_double'
 
 	to_integer_32_name: STRING is "to_integer_32"
-		-- Name of Eiffel feature 'to_integer_32'
+			-- Name of Eiffel feature 'to_integer_32'
 
 	to_pointer_name: STRING is "to_pointer"
-		-- Name of Eiffel feature 'to_pointer'
+			-- Name of Eiffel feature 'to_pointer'
 
 	to_real_name: STRING is "to_real"
-		-- Name of Eiffel feature 'to_real'
+			-- Name of Eiffel feature 'to_real'
 
 	to_real_32_name: STRING is "to_real_32"
-		-- Name of Eiffel feature 'to_real_32'
+			-- Name of Eiffel feature 'to_real_32'
 
 	to_real_64_name: STRING is "to_real_64"
-		-- Name of Eiffel feature 'to_real_64'
+			-- Name of Eiffel feature 'to_real_64'
 
 	truncated_to_integer_name: STRING is "truncated_to_integer"
-		-- Name of Eiffel feature 'truncated_to_integer'
+			-- Name of Eiffel feature 'truncated_to_integer'
 
 	truncated_to_integer_64_name: STRING is "truncated_to_integer_64"
-		-- Name of Eiffel feature 'truncated_to_integer_64'
+			-- Name of Eiffel feature 'truncated_to_integer_64'
 
 	truncated_to_real_name: STRING is "truncated_to_real"
-		-- Name of Eiffel feature 'truncated_to_real'
+			-- Name of Eiffel feature 'truncated_to_real'
 
 	twin_name: STRING is "twin"
-		-- Name of Eiffel feature 'twin'
+			-- Name of Eiffel feature 'twin'
 
 	type_id_name: STRING is "type_id"
-		-- Name of Eiffel feature 'type_id'
+			-- Name of Eiffel feature 'type_id'
+
+	type_of_type_name: STRING is "type_of_type"
+			-- Name of Eiffel feature 'type_id'
 
 	upper_name: STRING is "upper"
-		-- Name of Eiffel feature 'upper'
+			-- Name of Eiffel feature 'upper'
 
 	wide_character_bytes_name: STRING is "wide_character_bytes"
-		-- Name of Eiffel feature 'wide_character_bytes'
+			-- Name of Eiffel feature 'wide_character_bytes'
 
 	capitalized_current_keyword_name: STRING is "Current"
 	capitalized_false_keyword_name: STRING is "False"

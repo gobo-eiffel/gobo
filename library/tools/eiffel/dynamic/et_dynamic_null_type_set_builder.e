@@ -79,6 +79,12 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 		do
 		end
 
+	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+			-- Propagate `a_type' to the dynamic type set of the result of the
+			-- built-in feature `a_feature' corresponding to "INTERNAL.type_of_type".
+		do
+		end
+
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE) is

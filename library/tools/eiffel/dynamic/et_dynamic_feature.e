@@ -50,6 +50,8 @@ feature {NONE} -- Initialization
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
+			target_type := a_target_type
+			dynamic_type_sets := empty_dynamic_type_sets
 			l_external_routine ?= a_feature
 			if l_external_routine /= Void then
 				builtin_code := l_external_routine.builtin_code
@@ -80,7 +82,6 @@ feature {NONE} -- Initialization
 			else
 				builtin_code := builtin_not_builtin
 			end
-			target_type := a_target_type
 			l_type := a_feature.type
 			if l_type /= Void then
 				l_type := resolved_formal_parameters (l_type)
@@ -94,6 +95,17 @@ feature {NONE} -- Initialization
 						-- it is likely that the 'Result' will be Void at some
 						-- point after a GC cycle.
 					result_type_set := l_dynamic_type_set_builder.object_id_dynamic_type_set
+				elseif builtin_code = builtin_internal_feature (builtin_internal_type_of_type) then
+					if a_system.type_of_type_feature /= Void then
+						result_type_set := a_system.type_of_type_feature.result_type_set
+					else
+						l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
+						result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+							-- Unless proven otherwise after possible attachments,
+							-- the result is assumed to be never Void.
+						result_type_set.set_never_void
+						a_system.set_type_of_type_feature (Current)
+					end
 				else
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
@@ -102,7 +114,6 @@ feature {NONE} -- Initialization
 					result_type_set.set_never_void
 				end
 			end
-			dynamic_type_sets := empty_dynamic_type_sets
 			args := a_feature.arguments
 			if args /= Void then
 				nb := args.count

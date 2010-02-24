@@ -5,7 +5,7 @@ indexing
 		"Eiffel token and symbol codes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -358,12 +358,48 @@ feature -- Built-in codes
 		end
 
 	builtin_type_class: INTEGER is 21
-	builtin_type_generating_type: INTEGER is 1
-	builtin_type_generic_parameter: INTEGER is 2
-	builtin_type_generic_parameter_count: INTEGER is 3
-	builtin_type_name: INTEGER is 4
-	builtin_type_type_id: INTEGER is 5
-	builtin_type_runtime_name: INTEGER is 6
+	builtin_type_base_class_name: INTEGER is 41
+	builtin_type_boolean_field: INTEGER is 1
+	builtin_type_character_8_field: INTEGER is 2
+	builtin_type_character_32_field: INTEGER is 3
+	builtin_type_field: INTEGER is 4
+	builtin_type_field_count: INTEGER is 5
+	builtin_type_field_name: INTEGER is 6
+	builtin_type_field_static_type: INTEGER is 7
+	builtin_type_field_type: INTEGER is 8
+	builtin_type_generating_type: INTEGER is 9
+	builtin_type_generic_parameter: INTEGER is 10
+	builtin_type_generic_parameter_count: INTEGER is 11
+	builtin_type_integer_8_field: INTEGER is 12
+	builtin_type_integer_16_field: INTEGER is 13
+	builtin_type_integer_32_field: INTEGER is 14
+	builtin_type_integer_64_field: INTEGER is 15
+	builtin_type_is_expanded: INTEGER is 42
+	builtin_type_name: INTEGER is 16
+	builtin_type_natural_8_field: INTEGER is 17
+	builtin_type_natural_16_field: INTEGER is 18
+	builtin_type_natural_32_field: INTEGER is 19
+	builtin_type_natural_64_field: INTEGER is 20
+	builtin_type_pointer_field: INTEGER is 21
+	builtin_type_real_32_field: INTEGER is 22
+	builtin_type_real_64_field: INTEGER is 23
+	builtin_type_runtime_name: INTEGER is 24
+	builtin_type_set_boolean_field: INTEGER is 25
+	builtin_type_set_character_8_field: INTEGER is 26
+	builtin_type_set_character_32_field: INTEGER is 27
+	builtin_type_set_integer_8_field: INTEGER is 28
+	builtin_type_set_integer_16_field: INTEGER is 29
+	builtin_type_set_integer_32_field: INTEGER is 30
+	builtin_type_set_integer_64_field: INTEGER is 31
+	builtin_type_set_natural_8_field: INTEGER is 32
+	builtin_type_set_natural_16_field: INTEGER is 33
+	builtin_type_set_natural_32_field: INTEGER is 34
+	builtin_type_set_natural_64_field: INTEGER is 35
+	builtin_type_set_pointer_field: INTEGER is 36
+	builtin_type_set_real_32_field: INTEGER is 37
+	builtin_type_set_real_64_field: INTEGER is 38
+	builtin_type_set_reference_field: INTEGER is 39
+	builtin_type_type_id: INTEGER is 40
 			-- Codes for built-in features from class "TYPE"
 
 	builtin_identified_feature (a_feature_code: INTEGER): INTEGER is
@@ -431,5 +467,16 @@ feature -- Built-in codes
 	builtin_memory_find_referers: INTEGER is 1
 	builtin_memory_free: INTEGER is 2
 			-- Codes for built-in features from class "MEMORY"
+
+	builtin_internal_feature (a_feature_code: INTEGER): INTEGER is
+			-- Full code for built-in feature from class "INTERNAL"
+		do
+			Result := builtin_internal_class * builtin_capacity + a_feature_code
+		end
+
+	builtin_internal_class: INTEGER is 25
+	builtin_internal_type_of_type: INTEGER is 1
+	builtin_internal_max_type_id: INTEGER is 2
+			-- Codes for built-in features from class "INTERNAL"
 
 end

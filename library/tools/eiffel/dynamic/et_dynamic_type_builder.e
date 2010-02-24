@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -497,6 +497,15 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 			end
 		end
 
+feature {ET_DYNAMIC_SYSTEM} -- Generation
+
+	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE) is
+			-- Propagate `a_type' to the dynamic type set of the result of the
+			-- built-in feature `a_feature' corresponding to "INTERNAL.type_of_type".
+		do
+			propagate_builtin_result_dynamic_types (a_type, a_feature)
+		end
+
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 
 	build_tuple_item (a_tuple_type: ET_DYNAMIC_TUPLE_TYPE; an_item_feature: ET_DYNAMIC_FEATURE) is
@@ -915,6 +924,13 @@ feature {NONE} -- Feature validity
 				else
 					report_builtin_function (a_feature)
 				end
+			when builtin_internal_class then
+				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_internal_type_of_type then
+					report_builtin_internal_type_of_type (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
 			when builtin_special_class then
 				inspect a_feature.builtin_code \\ builtin_capacity
 				when builtin_special_item then
@@ -931,6 +947,12 @@ feature {NONE} -- Feature validity
 				end
 			when builtin_type_class then
 				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_type_field then
+					report_builtin_type_field (a_feature)
+				when builtin_type_field_count then
+					report_builtin_type_field_count (a_feature)
+				when builtin_type_field_static_type then
+					report_builtin_type_field_static_type (a_feature)
 				when builtin_type_generic_parameter then
 					report_builtin_type_generic_parameter (a_feature)
 				else
@@ -970,6 +992,13 @@ feature {NONE} -- Feature validity
 				inspect a_feature.builtin_code \\ builtin_capacity
 				when builtin_tuple_put_reference then
 					report_builtin_tuple_put_reference (a_feature)
+				else
+					report_builtin_procedure (a_feature)
+				end
+			when builtin_type_class then
+				inspect a_feature.builtin_code \\ builtin_capacity
+				when builtin_type_set_reference_field then
+					report_builtin_type_set_reference_field (a_feature)
 				else
 					report_builtin_procedure (a_feature)
 				end
@@ -2803,6 +2832,15 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
+	report_builtin_internal_type_of_type (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTERNAL.type_of_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			-- Do nothing.
+		end
+
 	report_builtin_special_item (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'SPECIAL.item' is being analyzed.
 		require
@@ -2832,6 +2870,7 @@ feature {NONE} -- Built-in features
 		local
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2846,7 +2885,10 @@ feature {NONE} -- Built-in features
 					l_item_type_sets := l_tuple_type.item_type_sets
 					nb := l_item_type_sets.count
 					from i := 1 until i > nb loop
-						propagate_builtin_formal_argument_dynamic_types (1, l_item_type_sets.item (i))
+						l_item_type_set := l_item_type_sets.item (i)
+						if not l_item_type_set.is_expanded or else not l_item_type_set.static_type.is_basic then
+							propagate_builtin_formal_argument_dynamic_types (1, l_item_type_set)
+						end
 						i := i + 1
 					end
 				end
@@ -2861,6 +2903,7 @@ feature {NONE} -- Built-in features
 		local
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -2875,7 +2918,120 @@ feature {NONE} -- Built-in features
 					l_item_type_sets := l_tuple_type.item_type_sets
 					nb := l_item_type_sets.count
 					from i := 1 until i > nb loop
-						propagate_builtin_result_dynamic_types (l_item_type_sets.item (i), current_dynamic_feature)
+						l_item_type_set := l_item_type_sets.item (i)
+						if not l_item_type_set.is_expanded or else not l_item_type_set.static_type.is_basic then
+							propagate_builtin_result_dynamic_types (l_item_type_set, current_dynamic_feature)
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	report_builtin_type_field_count (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.field_count' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_result_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_parameters := current_type.actual_parameters
+				if l_parameters = Void or else l_parameters.count < 1 then
+						-- Internal error: we should have already checked by now
+						-- that class "TYPE" has a generic parameter.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_parameters.type (1), current_type)
+					l_dynamic_type.use_all_attributes (current_dynamic_system)
+					l_result_type := result_type_set.static_type
+					mark_type_alive (l_result_type)
+					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
+				end
+			end
+		end
+
+	report_builtin_type_field (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.field' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_parameters := current_type.actual_parameters
+				if l_parameters = Void or else l_parameters.count < 1 then
+						-- Internal error: we should have already checked by now
+						-- that class "TYPE" has a generic parameter.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_parameters.type (1), current_type)
+					l_dynamic_type.use_all_attributes (current_dynamic_system)
+					l_queries := l_dynamic_type.queries
+					nb := l_dynamic_type.attribute_count
+					from i := 1 until i > nb loop
+						l_result_type_set := l_queries.item (i).result_type_set
+						if l_result_type_set = Void then
+								-- Internal error: attributes have a result type.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							propagate_builtin_result_dynamic_types (l_result_type_set, current_dynamic_feature)
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	report_builtin_type_field_static_type (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'TYPE.field_static_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type: ET_DYNAMIC_TYPE
+			l_meta_type: ET_DYNAMIC_TYPE
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_parameters := current_type.actual_parameters
+				if l_parameters = Void or else l_parameters.count < 1 then
+						-- Internal error: we should have already checked by now
+						-- that class "TYPE" has a generic parameter.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_parameters.type (1), current_type)
+					l_dynamic_type.use_all_attributes (current_dynamic_system)
+					l_queries := l_dynamic_type.queries
+					nb := l_dynamic_type.attribute_count
+					from i := 1 until i > nb loop
+						l_result_type_set := l_queries.item (i).result_type_set
+						if l_result_type_set = Void then
+								-- Internal error: attributes have a result type.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_result_type := l_result_type_set.static_type
+							l_meta_type := current_dynamic_system.meta_type (l_result_type)
+							mark_type_alive (l_meta_type)
+							propagate_builtin_result_dynamic_types (l_meta_type, current_dynamic_feature)
+						end
 						i := i + 1
 					end
 				end
@@ -2888,12 +3044,10 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
-			l_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_type_class: ET_NAMED_CLASS
 			l_base_type: ET_BASE_TYPE
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_type: ET_TYPE
-			l_type_type: ET_GENERIC_CLASS_TYPE
-			l_type_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_result_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
@@ -2911,18 +3065,54 @@ feature {NONE} -- Built-in features
 							-- We should have already checked by now that the result
 							-- type of the built-in feature TYPE.generic_parameter
 							-- is "TYPE [ANY]".
-						l_type_class := result_type_set.static_type.base_type.named_base_class
 						nb := l_parameters.count
 						from i := 1 until i > nb loop
 							l_type := l_parameters.type (i)
-							create l_type_parameters.make_with_capacity (1)
-							l_type_parameters.put_first (l_type)
-							create l_type_type.make (Void, l_type_class.name, l_type_parameters, l_type_class)
-							l_result_type := current_dynamic_system.dynamic_type (l_type_type, current_type)
+							l_dynamic_type := current_dynamic_system.dynamic_type (l_type, current_type)
+							l_result_type := current_dynamic_system.meta_type (l_dynamic_type)
 							mark_type_alive (l_result_type)
 							propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 							i := i + 1
 						end
+					end
+				end
+			end
+		end
+
+	report_builtin_type_set_reference_field (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'TYPE.set_reference_field' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_parameters := current_type.actual_parameters
+				if l_parameters = Void or else l_parameters.count < 1 then
+						-- Internal error: we should have already checked by now
+						-- that class "TYPE" has a generic parameter.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					l_dynamic_type := current_dynamic_system.dynamic_type (l_parameters.type (1), current_type)
+					l_dynamic_type.use_all_attributes (current_dynamic_system)
+					l_queries := l_dynamic_type.queries
+					nb := l_dynamic_type.attribute_count
+					from i := 1 until i > nb loop
+						l_result_type_set := l_queries.item (i).result_type_set
+						if l_result_type_set = Void then
+								-- Internal error: attributes have a result type.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						elseif not l_result_type_set.is_expanded then
+							propagate_builtin_formal_argument_dynamic_types (3, l_result_type_set)
+						end
+						i := i + 1
 					end
 				end
 			end

@@ -246,6 +246,7 @@ feature -- Types
 							-- possibility into account.
 						Result.set_next_type (l_type.next_type)
 						l_type.set_next_type (Result)
+						propagate_type_of_type_result_type (Result)
 					else
 						check
 							same_expandedness: a_type.is_type_expanded (a_context) = l_type.next_type.is_expanded
@@ -263,13 +264,23 @@ feature -- Types
 							Result := l_type
 						elseif l_type.next_type = Void then
 							Result := new_dynamic_type (a_type, a_context)
-							dynamic_types.force_last (Result)
-								-- `dynamic_type' is re-entrant (`new_dynamic_type' is
-								-- calling it). So at this stage 'l_type.next_type' is
-								-- not necessarily Void anymore. We have to take that
-								-- possibility into account.
-							Result.set_next_type (l_type.next_type)
-							l_type.set_next_type (Result)
+								-- Note that it may happen that 'Result' is already in
+								-- `dynamic_types' if it appears to be the meta type of
+								-- another type. In that case `dynamic_type' is called
+								-- recursively to create that other type in `new_type_type'.
+								-- Then calling `propagate_type_of_type_result_type' on that
+								-- type may call `dynamic_type' again on its meta type (which
+								-- is nothig else but 'Result').
+							if dynamic_types.last /= Result then
+								dynamic_types.force_last (Result)
+									-- `dynamic_type' is re-entrant (`new_dynamic_type' is
+									-- calling it). So at this stage 'l_type.next_type' is
+									-- not necessarily Void anymore. We have to take that
+									-- possibility into account.
+								Result.set_next_type (l_type.next_type)
+								l_type.set_next_type (Result)
+							end
+							propagate_type_of_type_result_type (Result)
 						else
 							l_type := l_type.next_type
 						end
@@ -292,29 +303,66 @@ feature -- Types
 					end
 				end
 				Result := new_dynamic_type (a_type, a_context)
-				dynamic_types.force_last (Result)
-					-- `dynamic_type' is re-entrant (`new_dynamic_type' is calling it).
-					-- So at this stage another type with the same base class may have
-					-- been inserted into `dynamic_types'. We have to take that possibility
-					-- into account.
-				i := l_base_class.index
-				if i >= 1 and i <= dynamic_types.count then
-					l_type := dynamic_types.item (i)
-					if l_type.base_class /= l_base_class then
-							-- Wrong index.
-						l_base_class.set_index (dynamic_types.count)
+					-- Note that it may happen that 'Result' is already in
+					-- `dynamic_types' if it appears to be the meta type of
+					-- another type. In that case `dynamic_type' is called
+					-- recursively to create that other type in `new_type_type'.
+					-- Then calling `propagate_type_of_type_result_type' on that
+					-- type may call `dynamic_type' again on its meta type (which
+					-- is nothig else but 'Result').
+				if dynamic_types.is_empty or else dynamic_types.last /= Result then
+					dynamic_types.force_last (Result)
+						-- `dynamic_type' is re-entrant (`new_dynamic_type' is calling it).
+						-- So at this stage another type with the same base class may have
+						-- been inserted into `dynamic_types'. We have to take that possibility
+						-- into account.
+					i := l_base_class.index
+					if i >= 1 and i <= dynamic_types.count then
+						l_type := dynamic_types.item (i)
+						if l_type.base_class /= l_base_class then
+								-- Wrong index.
+							l_base_class.set_index (dynamic_types.count)
+						else
+								-- Another type has been inserted.
+							Result.set_next_type (l_type.next_type)
+							l_type.set_next_type (Result)
+						end
 					else
-							-- Another type has been inserted.
-						Result.set_next_type (l_type.next_type)
-						l_type.set_next_type (Result)
+							-- No other type has been inserted.
+						l_base_class.set_index (dynamic_types.count)
 					end
-				else
-						-- No other type has been inserted.
-					l_base_class.set_index (dynamic_types.count)
 				end
+				propagate_type_of_type_result_type (Result)
 			end
 		ensure
 			dynamic_type_not_void: Result /= Void
+		end
+
+	meta_type (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE is
+			-- Dynamic type corresponding to the meta type of `a_type';
+			-- Create a new one if it does not exist yet
+			--
+			-- If `a_type' represents the Eiffel type 'T', then
+			-- the meta type will represent the Eiffel type 'TYPE [T]'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_base_type: ET_GENERIC_CLASS_TYPE
+			l_base_class: ET_NAMED_CLASS
+			l_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			Result := a_type.meta_type
+			if Result = Void then
+				l_base_class := current_system.type_any_type.named_base_class
+				create l_parameters.make_with_capacity (1)
+				l_parameters.put_first (a_type.base_type)
+				create l_base_type.make (Void, l_base_class.name, l_parameters, l_base_class)
+				Result := dynamic_type (l_base_type, current_system.any_type)
+				a_type.set_meta_type (Result)
+			end
+		ensure
+			meta_type_not_void: Result /= Void
+			definition: Result = a_type.meta_type
 		end
 
 	dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
@@ -491,15 +539,27 @@ feature {NONE} -- Types
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_any: ET_CLASS_TYPE
+			l_type: ET_DYNAMIC_TYPE
 		do
 			l_any := current_system.any_type
 			l_base_class := a_base_type.base_class
-			create Result.make (a_base_type, l_base_class)
-				-- Make sure that the meta type of the corresponding type is set.
+				-- Check whether the type we want to create is already the
+				-- meta type of the type it is supposed to represent.
+				-- This may happen because of recursive calls to `dynamic_type',
+				-- including the one below, in combination with a call to
+				-- `propagate_type_of_type_result_type' which itself may try
+				-- to create the type that we are currently trying to create.
 			l_actual_parameters := a_base_type.actual_parameters
 			if l_actual_parameters /= Void and then l_actual_parameters.count = 1 then
 					-- Class TYPE should have exactly one generic parameter.
-				dynamic_type (l_actual_parameters.type (1), l_any).set_meta_type (Result)
+				l_type := dynamic_type (l_actual_parameters.type (1), l_any)
+				Result := l_type.meta_type
+				if Result = Void then
+					create Result.make (a_base_type, l_base_class)
+					l_type.set_meta_type (Result)
+				end
+			else
+				create Result.make (a_base_type, l_base_class)
 			end
 		ensure
 			new_type_type_not_void: Result /= Void
@@ -688,6 +748,75 @@ feature {NONE} -- Types
 			end
 		ensure
 			new_predicate_type_not_void: Result /= Void
+		end
+
+	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE) is
+			-- Propagate `a_type' to the dynamic type set of the result of the
+			-- built-in feature corresponding to "INTERNAL.type_of_type".
+		local
+			l_meta_type: ET_DYNAMIC_TYPE
+		do
+			if type_of_type_feature /= Void then
+				if not in_create_meta_type then
+					create_meta_type (a_type)
+					l_meta_type := a_type.meta_type
+					dynamic_type_set_builder.mark_type_alive (l_meta_type)
+					dynamic_type_set_builder.propagate_type_of_type_result_type (l_meta_type, type_of_type_feature)
+				end
+			end
+		end
+
+	create_meta_type (a_type: ET_DYNAMIC_TYPE) is
+			-- Make sure that the meta type of `a_type' has been created,
+			-- and if not then create it.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_old_in_create_meta_type: BOOLEAN
+			l_meta_type: ET_DYNAMIC_TYPE
+		do
+				-- Make sure that we don't create the meta type of the meta type that
+				-- we are about to create, otherwise we wold enter an infinite loop.
+			l_old_in_create_meta_type := in_create_meta_type
+			in_create_meta_type := True
+			l_meta_type := meta_type (a_type)
+			in_create_meta_type := l_old_in_create_meta_type
+		ensure
+			meta_type_created: a_type.meta_type /= Void
+		end
+
+	in_create_meta_type: BOOLEAN
+			-- Flag to avoid recursive call on `create_meta_type'
+
+feature {ET_DYNAMIC_FEATURE} -- Types
+
+	type_of_type_feature: ET_DYNAMIC_FEATURE
+			-- Feature corresponding to "INTERNAL.type_of_type"
+
+	set_type_of_type_feature (a_feature: ET_DYNAMIC_FEATURE) is
+			-- Set `type_of_type_feature' to `a_feature'.
+		local
+			i: INTEGER
+			l_type: ET_DYNAMIC_TYPE
+			l_meta_type: ET_DYNAMIC_TYPE
+		do
+			type_of_type_feature := a_feature
+			if a_feature /= Void then
+				from
+					i := dynamic_types.count
+				until
+					i < 1
+				loop
+					l_type := dynamic_types.item (i)
+					create_meta_type (l_type)
+					l_meta_type := l_type.meta_type
+					dynamic_type_set_builder.mark_type_alive (l_meta_type)
+					dynamic_type_set_builder.propagate_type_of_type_result_type (l_meta_type, a_feature)
+					i := i - 1
+				end
+			end
+		ensure
+			type_of_type_feature_set: type_of_type_feature = a_feature
 		end
 
 feature -- Compilation
