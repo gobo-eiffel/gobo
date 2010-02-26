@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008/12/01 $"
+	revision: "$Revision: #10 $"
 
 deferred class ET_PROCEDURE
 
@@ -64,13 +64,20 @@ feature -- Access
 
 	header_break: ET_BREAK is
 			-- Break which appears where the header comment is expected
+		local
+			l_synonym: ET_FEATURE
 		do
 			if is_keyword /= Void then
 				Result := is_keyword.break
 			elseif arguments /= Void then
 				Result := arguments.break
 			else
-				Result := extended_name.break
+				l_synonym := implementation_feature.synonym
+				if l_synonym /= Void then
+					Result := l_synonym.header_break
+				else
+					Result := extended_name.break
+				end
 			end
 		end
 
