@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1375,6 +1375,20 @@ feature -- Features
 			Result := procedures.named_feature (a_name)
 			if Result = Void then
 				Result := queries.named_feature (a_name)
+			end
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	named_declared_feature (a_name: ET_CALL_NAME): ET_FEATURE is
+			-- Feature named `a_name' declared in current class;
+			-- Void if no such feature
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := procedures.named_declared_feature (a_name)
+			if Result = Void then
+				Result := queries.named_declared_feature (a_name)
 			end
 		ensure
 			registered: Result /= Void implies Result.is_registered

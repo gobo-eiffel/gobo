@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -97,6 +97,54 @@ feature -- Access
 						i := -1 -- Jump out of the loop
 					else
 						i := i - 1
+					end
+				end
+			end
+		end
+
+	named_declared_feature (a_name: ET_CALL_NAME): like item is
+			-- Feature named `a_name' declared in the underlying class;
+			-- Void if no such feature
+		require
+			a_name_not_void: a_name /= Void
+		local
+			i, nb: INTEGER
+			a_feature: like item
+			an_id: ET_IDENTIFIER
+			a_hash_code: INTEGER
+			an_alias_name: ET_ALIAS_NAME
+		do
+				-- This assignment attempt is to avoid too many polymorphic
+				-- calls to `same_feature_name'.
+			an_id ?= a_name
+			if an_id /= Void then
+				a_hash_code := an_id.hash_code
+				nb := count - 1
+				i := count - declared_count
+				from until i > nb loop
+					a_feature := storage.item (i)
+					if a_hash_code = a_feature.hash_code then
+						if an_id.same_feature_name (a_feature.name) then
+							Result := a_feature
+							i := nb + 1 -- Jump out of the loop.
+						else
+							i := i + 1
+						end
+					else
+						i := i + 1
+					end
+				end
+			else
+				nb := count - 1
+				i := count - declared_count
+				from until i > nb loop
+					a_feature := storage.item (i)
+					an_alias_name := a_feature.alias_name
+					if an_alias_name /= Void and then an_alias_name.same_call_name (a_name) then
+						Result := a_feature
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
 					end
 				end
 			end
@@ -197,7 +245,7 @@ feature -- Status report
 		end
 
 	has_inherited_feature (a_feature: ET_FEATURE): BOOLEAN is
-			-- Is `a_feature' part of the (non_redeclared) inherited features?
+			-- Is `a_feature' part of the (non-redeclared) inherited features?
 		require
 			a_feature_not_void: a_feature /= Void
 		local
