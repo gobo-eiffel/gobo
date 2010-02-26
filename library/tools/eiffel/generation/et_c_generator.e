@@ -13968,7 +13968,7 @@ feature {NONE} -- Polymorphic call functions generation
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
-			if l_switch then
+			if l_switch or l_target_dynamic_type_ids.count > 20 then
 					-- Use switch statement.
 				print_indentation
 				current_file.put_string (c_switch)
@@ -14951,7 +14951,7 @@ feature {NONE} -- Deep features generation
 				i := i + 1
 			end
 			l_target_dynamic_type_ids.sort (dynamic_type_id_sorter)
-			if l_switch then
+			if l_switch or l_target_dynamic_type_ids.count > 20 then
 					-- Use switch statement.
 				print_indentation
 				current_file.put_string (c_switch)
