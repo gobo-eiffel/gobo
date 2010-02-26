@@ -179,16 +179,22 @@ feature -- Status report
 			-- Is `object' a special object?
 		require
 			object_not_void: object /= Void
+		local
+			l_special: SPECIAL [detachable ANY]
 		do
-			Result := object.generating_type.conforms_to ({SPECIAL [detachable ANY]})
+			l_special ?= object
+			Result := l_special /= Void
 		end
 
 	is_tuple (object: ANY): BOOLEAN
 			-- Is `object' a TUPLE object?
 		require
 			object_not_void: object /= Void
+		local
+			l_tuple: TUPLE
 		do
-			Result := object.generating_type.conforms_to ({TUPLE})
+			l_tuple ?= object
+			Result := l_tuple /= Void
 		end
 
 	is_tuple_type (type_id: INTEGER): BOOLEAN

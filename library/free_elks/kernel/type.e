@@ -327,8 +327,11 @@ feature -- Status report
 
 	is_special: BOOLEAN
 			-- Is current type a special type?
+		local
+			l_special: TYPE [SPECIAL [detachable ANY]]
 		do
-			Result := conforms_to ({SPECIAL [ANY]})
+			l_special ?= Current
+			Result := l_special /= Void
 		end
 
 feature -- Comparison
