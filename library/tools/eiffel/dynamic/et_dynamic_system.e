@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -240,6 +240,7 @@ feature -- Types
 					elseif l_type.next_type = Void then
 						Result := new_dynamic_type (a_type, a_context)
 						dynamic_types.force_last (Result)
+						Result.set_hash_code (dynamic_types.count)
 							-- `dynamic_type' is re-entrant (`new_dynamic_type' is
 							-- calling it). So at this stage 'l_type.next_type' is
 							-- not necessarily Void anymore. We have to take that
@@ -273,6 +274,7 @@ feature -- Types
 								-- is nothig else but 'Result').
 							if dynamic_types.last /= Result then
 								dynamic_types.force_last (Result)
+								Result.set_hash_code (dynamic_types.count)
 									-- `dynamic_type' is re-entrant (`new_dynamic_type' is
 									-- calling it). So at this stage 'l_type.next_type' is
 									-- not necessarily Void anymore. We have to take that
@@ -312,6 +314,7 @@ feature -- Types
 					-- is nothig else but 'Result').
 				if dynamic_types.is_empty or else dynamic_types.last /= Result then
 					dynamic_types.force_last (Result)
+					Result.set_hash_code (dynamic_types.count)
 						-- `dynamic_type' is re-entrant (`new_dynamic_type' is calling it).
 						-- So at this stage another type with the same base class may have
 						-- been inserted into `dynamic_types'. We have to take that possibility

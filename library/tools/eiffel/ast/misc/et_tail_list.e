@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST lists where insertions to and removals from the tail are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make_with_capacity (nb: INTEGER) is
 			-- Create a new empty list with capacity `nb'.
 		require
-			nb_positive: nb >= 0
+			nb_not_negative: nb >= 0
 		do
 			count := 0
 			if nb > 0 then
@@ -145,16 +145,9 @@ feature -- Element change
 			-- Resize list if necessary.
 		require
 			an_item_not_void: an_item /= Void
-		local
-			new_capacity: INTEGER
 		do
 			if count >= capacity then
-				new_capacity := (capacity + 1) * 2
-				if storage = Void then
-					storage := fixed_array.make (new_capacity + 1)
-				else
-					storage := fixed_array.resize (storage, new_capacity + 1)
-				end
+				resize (new_capacity (count + 1))
 			end
 			count := count + 1
 			storage.put (an_item, count)
@@ -170,18 +163,12 @@ feature -- Element change
 		require
 			other_not_void: other /= Void
 		local
-			new_capacity: INTEGER
 			i, nb: INTEGER
 			j: INTEGER
 		do
 			nb := other.count
 			if count + nb > capacity then
-				new_capacity := (capacity + nb) * 2
-				if storage = Void then
-					storage := fixed_array.make (new_capacity + 1)
-				else
-					storage := fixed_array.resize (storage, new_capacity + 1)
-				end
+				resize (new_capacity (count + nb))
 			end
 			j := count
 			from i := 1 until i > nb loop
@@ -261,9 +248,9 @@ feature -- Removal
 feature -- Resizing
 
 	resize (nb: INTEGER) is
-			-- Resize to accommodate at least `n' items.
+			-- Resize to accommodate at least `nb' items.
 		require
-			nb_positive: nb >= 0
+			nb_not_negative: nb >= 0
 		do
 			if nb > capacity then
 				if storage = Void then
@@ -350,6 +337,19 @@ feature -- Iteration
 			end
 		end
 
+feature {NONE} -- Configuration
+
+	new_capacity (n: INTEGER): INTEGER is
+			-- New capacity which could accommodate at least
+			-- `n' items (Used as argument of `resize'.)
+		require
+			n_large_enough: n > capacity
+		do
+			Result := 2 * n
+		ensure
+			definition: Result >= n
+		end
+
 feature {NONE} -- Implementation
 
 	storage: SPECIAL [like item]
@@ -364,8 +364,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	count_positive: count >= 0
+	count_not_negative: count >= 0
 	consistent_count: count <= capacity
-	storage_not_void: not is_empty implies storage /= Void
+	storage_not_void: capacity > 0 implies storage /= Void
 
 end

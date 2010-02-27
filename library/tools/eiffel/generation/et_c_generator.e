@@ -4858,8 +4858,8 @@ feature {NONE} -- Instruction generation
 			l_target: ET_WRITABLE
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type: ET_DYNAMIC_TYPE
-			l_conforming_types: ET_DYNAMIC_TYPE_LIST
-			l_non_conforming_types: ET_DYNAMIC_TYPE_LIST
+			l_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
+			l_non_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			l_can_be_void: BOOLEAN
 		do
 			l_source := an_instruction.source
@@ -10868,7 +10868,7 @@ feature {NONE} -- Equality generation
 			l_is_equal_feature: ET_DYNAMIC_FEATURE
 			l_formal_type: ET_DYNAMIC_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_common_expanded_types: ET_DYNAMIC_TYPE_LIST
+			l_common_expanded_types: ET_DYNAMIC_TYPE_HASH_LIST
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			j, nb: INTEGER
 			l_eif_false: STRING
@@ -11215,7 +11215,7 @@ feature {NONE} -- Equality generation
 			l_is_equal_feature: ET_DYNAMIC_FEATURE
 			l_formal_type: ET_DYNAMIC_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_common_types: ET_DYNAMIC_TYPE_LIST
+			l_common_types: ET_DYNAMIC_TYPE_HASH_LIST
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			j, nb: INTEGER
 			l_eif_false: STRING
@@ -11542,8 +11542,8 @@ feature {NONE} -- Object-test generation
 			l_source_type: ET_DYNAMIC_TYPE
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_type: ET_DYNAMIC_TYPE
-			l_conforming_types: ET_DYNAMIC_TYPE_LIST
-			l_non_conforming_types: ET_DYNAMIC_TYPE_LIST
+			l_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
+			l_non_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			l_target_argument: ET_IDENTIFIER
 			l_source_argument: ET_IDENTIFIER
 			l_can_be_void: BOOLEAN
@@ -15341,8 +15341,8 @@ feature {NONE} -- Built-in feature generation
 		local
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
-			l_conforming_types: ET_DYNAMIC_TYPE_LIST
-			l_non_conforming_types: ET_DYNAMIC_TYPE_LIST
+			l_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
+			l_non_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 		do
@@ -17614,7 +17614,7 @@ print ("ET_C_GENERATOR.print_builtin_any_is_deep_equal_body%N")
 			l_tuple_source_type_set: ET_DYNAMIC_TYPE_SET
 			l_tuple_conforming_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_conforming_types: ET_DYNAMIC_TYPE_LIST
+			l_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			l_has_non_conforming_types: BOOLEAN
 			i, nb: INTEGER
 			old_tuple_index: INTEGER
@@ -28040,13 +28040,13 @@ feature {NONE} -- Dynamic type sets
 			-- types to which the target of the current call to 'ANY.conforms_to' conform;
 			-- Also used for object-tests.
 
-	conforming_types: ET_DYNAMIC_TYPE_LIST
+	conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			-- Types conforming to the target of the current assignment attempt or
 			-- types to which the target of the current call to 'ANY.conforms_to' conform;
 			-- Also used for the arguments of PROCEDURE.call and FUNCTION.item to
 			-- detect CAT-calls
 
-	non_conforming_types: ET_DYNAMIC_TYPE_LIST
+	non_conforming_types: ET_DYNAMIC_TYPE_HASH_LIST
 			-- Types non-conforming to the target of the current assignment attempt or
 			-- types to which the target of the current call to 'ANY.conforms_to' do not conform
 
@@ -28064,7 +28064,7 @@ feature {NONE} -- Dynamic type sets
 			-- as part of an object-equality ('~' or '/~') or of an equality
 			-- ('=' or '/=') with expanded operands
 
-	equality_common_types: ET_DYNAMIC_TYPE_LIST
+	equality_common_types: ET_DYNAMIC_TYPE_HASH_LIST
 			-- List of types that are part of the dynamic type set of both
 			-- operands in an equality expression ('=', '/=', '~' or '/~')
 

@@ -59,7 +59,7 @@ feature -- Element change
 		require
 			a_type_not_void: a_type /= Void
 		local
-			l_dynamic_type_list: ET_DYNAMIC_TYPE_LIST
+			l_dynamic_type_list: ET_DYNAMIC_TYPE_HASH_LIST
 		do
 			if dynamic_types = Void then
 					-- The current set is made up of only one type.
@@ -113,7 +113,7 @@ feature -- Element change
 	put_type_from_type_set (a_type: ET_DYNAMIC_TYPE; a_type_set: ET_DYNAMIC_TYPE_SET; a_system: ET_DYNAMIC_SYSTEM) is
 			-- Add `a_type' coming from `a_type_set' to current target.
 		local
-			l_dynamic_type_list: ET_DYNAMIC_TYPE_LIST
+			l_dynamic_type_list: ET_DYNAMIC_TYPE_HASH_LIST
 			l_other_dynamic_types: ET_DYNAMIC_TYPES
 		do
 			if a_type.conforms_to_type (static_type) then

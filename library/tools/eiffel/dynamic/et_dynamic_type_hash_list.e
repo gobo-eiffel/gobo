@@ -2,24 +2,36 @@ indexing
 
 	description:
 
-		"Lists of Eiffel dynamic types"
+		"Lists of Eiffel dynamic types with hashing search"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_DYNAMIC_TYPE_LIST
+class ET_DYNAMIC_TYPE_HASH_LIST
 
 inherit
 
-	ET_DYNAMIC_TYPES
+	ET_DYNAMIC_TYPE_LIST
 		undefine
-			has_type, is_empty
+			make,
+			make_with_capacity,
+			has_type,
+			put_last,
+			force_last,
+			append_list_last,
+			put,
+			remove_last,
+			remove,
+			wipe_out,
+			resize
+		redefine
+			append_last
 		end
 
-	ET_TAIL_LIST [ET_DYNAMIC_TYPE]
+	ET_TAIL_HASH_LIST [ET_DYNAMIC_TYPE]
 		rename
 			has as has_type,
 			item as dynamic_type,
@@ -36,11 +48,10 @@ feature -- Element change
 			-- Add items of `other' to the end of list.
 			-- Keep items of `other' in the same order.
 			-- Resize list if necessary.
-		require
-			other_not_void: other /= Void
 		local
 			i, nb: INTEGER
-			j: INTEGER
+			j, h: INTEGER
+			l_item: like dynamic_type
 		do
 			nb := other.count
 			if count + nb > capacity then
@@ -49,20 +60,14 @@ feature -- Element change
 			j := count
 			from i := 1 until i > nb loop
 				j := j + 1
-				storage.put (other.dynamic_type (i), j)
+				l_item := other.dynamic_type (i)
+				h := hash_position (l_item)
+				clashes.put (slots.item (h), j)
+				slots.put (j, h)
+				storage.put (l_item, j)
 				i := i + 1
 			end
 			count := j
-		ensure
-			new_more: count = old (count + other.count)
-		end
-
-feature {NONE} -- Implementation
-
-	fixed_array: KL_SPECIAL_ROUTINES [ET_DYNAMIC_TYPE] is
-			-- Fixed array routines
-		once
-			create Result
 		end
 
 end

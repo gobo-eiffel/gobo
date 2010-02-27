@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 		do
 			base_type := a_type
 			base_class := a_class
+			hash_code := a_class.hash_code
 			queries := empty_features
 			procedures := empty_features
 			create conforming_dynamic_types.make_empty (Current)
@@ -222,11 +223,8 @@ feature -- Access
 			-- (Might be useful when retrieving Storable files or getting from
 			-- an external routine any other objects created outside of Eiffel.)
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
-		do
-			Result := base_class.hash_code
-		end
 
 	id: INTEGER
 			-- ID
@@ -257,6 +255,16 @@ feature -- Setting
 			id := i
 		ensure
 			id_set: id = i
+		end
+
+	set_hash_code (a_code: INTEGER) is
+			-- Set `hash_code' to `a_code'.
+		require
+			a_code_not_negative: a_code >= 0
+		do
+			hash_code := a_code
+		ensure
+			hash_code_set: hash_code = a_code
 		end
 
 feature -- Features

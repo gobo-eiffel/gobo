@@ -130,7 +130,7 @@ feature -- Element change
 
 feature {ET_DYNAMIC_TYPE_SET} -- Implementation
 
-	dynamic_types: ET_DYNAMIC_TYPE_LIST
+	dynamic_types: ET_DYNAMIC_TYPE_HASH_LIST
 			-- Dynamic types in current set;
 			-- Void if no type in the set
 
