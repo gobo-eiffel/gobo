@@ -76,12 +76,7 @@ feature -- Test
 			-- Test feature 'dynamic_type_from_string'.
 		local
 			internal: INTERNAL
-			arr: ARRAY [ANY]
-			s: STRING_8
-			i: INTEGER_16
 		do
-			create arr.make (1, 5)
-			s := "gobo"
 			create internal
 			assert_integers_equal ("type_of_array", ({ARRAY [ANY]}).type_id, internal.dynamic_type_from_string ("ARRAY [ANY]"))
 			assert_integers_equal ("type_of_string_8", ({STRING_8}).type_id, internal.dynamic_type_from_string ("STRING_8"))
@@ -276,18 +271,20 @@ feature -- Test
 		do
 			create internal
 			s := "gobo"
-			assert_strings_equal ("integer_8_1", "integer_8_1", internal.field_name (field_index ("integer_8_1", {like Current}), Current))
-			assert_strings_equal ("count", "count", internal.field_name (field_index ("count", {STRING_8}), s))
+			assert_strings_equal ("integer_8_1", "integer_8_1", internal.field_name (field_index ("integer_8_1", Current), Current))
+			assert_strings_equal ("count", "count", internal.field_name (field_index ("count", s), s))
 		end
 
 	test_field_name_of_type is
 			-- Test feature 'field_name_of_type'.
 		local
 			internal: INTERNAL
+			s: STRING_8
 		do
 			create internal
-			assert_strings_equal ("string_8_1", "string_8_1", internal.field_name_of_type (field_index ("string_8_1", {like Current}), ({like Current}).type_id))
-			assert_strings_equal ("count", "count", internal.field_name_of_type (field_index ("count", {STRING_8}), ({STRING_8}).type_id))
+			s := "gobo"
+			assert_strings_equal ("string_8_1", "string_8_1", internal.field_name_of_type (field_index ("string_8_1", Current), ({like Current}).type_id))
+			assert_strings_equal ("count", "count", internal.field_name_of_type (field_index ("count", s), ({STRING_8}).type_id))
 		end
 
 	test_field_type is
@@ -296,22 +293,22 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert_integers_equal ("boolean", {INTERNAL}.boolean_type, internal.field_type (field_index ("boolean_1", {like Current}), Current))
-			assert_integers_equal ("character_8", {INTERNAL}.character_8_type, internal.field_type (field_index ("character_8_1", {like Current}), Current))
-			assert_integers_equal ("character_32", {INTERNAL}.character_32_type, internal.field_type (field_index ("character_32_1", {like Current}), Current))
-			assert_integers_equal ("integer_8", {INTERNAL}.integer_8_type, internal.field_type (field_index ("integer_8_1", {like Current}), Current))
-			assert_integers_equal ("integer_16", {INTERNAL}.integer_16_type, internal.field_type (field_index ("integer_16_1", {like Current}), Current))
-			assert_integers_equal ("integer_32", {INTERNAL}.integer_32_type, internal.field_type (field_index ("integer_32_1", {like Current}), Current))
-			assert_integers_equal ("integer_64", {INTERNAL}.integer_64_type, internal.field_type (field_index ("integer_64_1", {like Current}), Current))
-			assert_integers_equal ("natural_8", {INTERNAL}.natural_8_type, internal.field_type (field_index ("natural_8_1", {like Current}), Current))
-			assert_integers_equal ("natural_16", {INTERNAL}.natural_16_type, internal.field_type (field_index ("natural_16_1", {like Current}), Current))
-			assert_integers_equal ("natural_32", {INTERNAL}.natural_32_type, internal.field_type (field_index ("natural_32_1", {like Current}), Current))
-			assert_integers_equal ("natural_64", {INTERNAL}.natural_64_type, internal.field_type (field_index ("natural_64_1", {like Current}), Current))
-			assert_integers_equal ("pointer", {INTERNAL}.pointer_type, internal.field_type (field_index ("pointer_1", {like Current}), Current))
-			assert_integers_equal ("real_32", {INTERNAL}.real_32_type, internal.field_type (field_index ("real_32_1", {like Current}), Current))
-			assert_integers_equal ("real_64", {INTERNAL}.real_64_type, internal.field_type (field_index ("real_64_1", {like Current}), Current))
-			assert_integers_equal ("string_8", {INTERNAL}.reference_type, internal.field_type (field_index ("string_8_1", {like Current}), Current))
-			assert_integers_equal ("any", {INTERNAL}.reference_type, internal.field_type (field_index ("any_1", {like Current}), Current))
+			assert_integers_equal ("boolean", {INTERNAL}.boolean_type, internal.field_type (field_index ("boolean_1", Current), Current))
+			assert_integers_equal ("character_8", {INTERNAL}.character_8_type, internal.field_type (field_index ("character_8_1", Current), Current))
+			assert_integers_equal ("character_32", {INTERNAL}.character_32_type, internal.field_type (field_index ("character_32_1", Current), Current))
+			assert_integers_equal ("integer_8", {INTERNAL}.integer_8_type, internal.field_type (field_index ("integer_8_1", Current), Current))
+			assert_integers_equal ("integer_16", {INTERNAL}.integer_16_type, internal.field_type (field_index ("integer_16_1", Current), Current))
+			assert_integers_equal ("integer_32", {INTERNAL}.integer_32_type, internal.field_type (field_index ("integer_32_1", Current), Current))
+			assert_integers_equal ("integer_64", {INTERNAL}.integer_64_type, internal.field_type (field_index ("integer_64_1", Current), Current))
+			assert_integers_equal ("natural_8", {INTERNAL}.natural_8_type, internal.field_type (field_index ("natural_8_1", Current), Current))
+			assert_integers_equal ("natural_16", {INTERNAL}.natural_16_type, internal.field_type (field_index ("natural_16_1", Current), Current))
+			assert_integers_equal ("natural_32", {INTERNAL}.natural_32_type, internal.field_type (field_index ("natural_32_1", Current), Current))
+			assert_integers_equal ("natural_64", {INTERNAL}.natural_64_type, internal.field_type (field_index ("natural_64_1", Current), Current))
+			assert_integers_equal ("pointer", {INTERNAL}.pointer_type, internal.field_type (field_index ("pointer_1", Current), Current))
+			assert_integers_equal ("real_32", {INTERNAL}.real_32_type, internal.field_type (field_index ("real_32_1", Current), Current))
+			assert_integers_equal ("real_64", {INTERNAL}.real_64_type, internal.field_type (field_index ("real_64_1", Current), Current))
+			assert_integers_equal ("string_8", {INTERNAL}.reference_type, internal.field_type (field_index ("string_8_1", Current), Current))
+			assert_integers_equal ("any", {INTERNAL}.reference_type, internal.field_type (field_index ("any_1", Current), Current))
 		end
 
 	test_field_type_of_type is
@@ -320,22 +317,22 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert_integers_equal ("boolean", {INTERNAL}.boolean_type, internal.field_type_of_type (field_index ("boolean_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("character_8", {INTERNAL}.character_8_type, internal.field_type_of_type (field_index ("character_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("character_32", {INTERNAL}.character_32_type, internal.field_type_of_type (field_index ("character_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_8", {INTERNAL}.integer_8_type, internal.field_type_of_type (field_index ("integer_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_16", {INTERNAL}.integer_16_type, internal.field_type_of_type (field_index ("integer_16_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_32", {INTERNAL}.integer_32_type, internal.field_type_of_type (field_index ("integer_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_64", {INTERNAL}.integer_64_type, internal.field_type_of_type (field_index ("integer_64_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_8", {INTERNAL}.natural_8_type, internal.field_type_of_type (field_index ("natural_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_16", {INTERNAL}.natural_16_type, internal.field_type_of_type (field_index ("natural_16_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_32", {INTERNAL}.natural_32_type, internal.field_type_of_type (field_index ("natural_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_64", {INTERNAL}.natural_64_type, internal.field_type_of_type (field_index ("natural_64_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("pointer", {INTERNAL}.pointer_type, internal.field_type_of_type (field_index ("pointer_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("real_32", {INTERNAL}.real_32_type, internal.field_type_of_type (field_index ("real_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("real_64", {INTERNAL}.real_64_type, internal.field_type_of_type (field_index ("real_64_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("string_8", {INTERNAL}.reference_type, internal.field_type_of_type (field_index ("string_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("any", {INTERNAL}.reference_type, internal.field_type_of_type (field_index ("any_1", {like Current}), ({like Current}).type_id))
+			assert_integers_equal ("boolean", {INTERNAL}.boolean_type, internal.field_type_of_type (field_index ("boolean_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("character_8", {INTERNAL}.character_8_type, internal.field_type_of_type (field_index ("character_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("character_32", {INTERNAL}.character_32_type, internal.field_type_of_type (field_index ("character_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_8", {INTERNAL}.integer_8_type, internal.field_type_of_type (field_index ("integer_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_16", {INTERNAL}.integer_16_type, internal.field_type_of_type (field_index ("integer_16_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_32", {INTERNAL}.integer_32_type, internal.field_type_of_type (field_index ("integer_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_64", {INTERNAL}.integer_64_type, internal.field_type_of_type (field_index ("integer_64_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_8", {INTERNAL}.natural_8_type, internal.field_type_of_type (field_index ("natural_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_16", {INTERNAL}.natural_16_type, internal.field_type_of_type (field_index ("natural_16_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_32", {INTERNAL}.natural_32_type, internal.field_type_of_type (field_index ("natural_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_64", {INTERNAL}.natural_64_type, internal.field_type_of_type (field_index ("natural_64_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("pointer", {INTERNAL}.pointer_type, internal.field_type_of_type (field_index ("pointer_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("real_32", {INTERNAL}.real_32_type, internal.field_type_of_type (field_index ("real_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("real_64", {INTERNAL}.real_64_type, internal.field_type_of_type (field_index ("real_64_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("string_8", {INTERNAL}.reference_type, internal.field_type_of_type (field_index ("string_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("any", {INTERNAL}.reference_type, internal.field_type_of_type (field_index ("any_1", Current), ({like Current}).type_id))
 		end
 
 	test_field_static_type_of_type is
@@ -344,22 +341,22 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			assert_integers_equal ("boolean", ({BOOLEAN}).type_id, internal.field_static_type_of_type (field_index ("boolean_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("character_8", ({CHARACTER_8}).type_id, internal.field_static_type_of_type (field_index ("character_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("character_32", ({CHARACTER_32}).type_id, internal.field_static_type_of_type (field_index ("character_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_8", ({INTEGER_8}).type_id, internal.field_static_type_of_type (field_index ("integer_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_16", ({INTEGER_16}).type_id, internal.field_static_type_of_type (field_index ("integer_16_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_32", ({INTEGER_32}).type_id, internal.field_static_type_of_type (field_index ("integer_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("integer_64", ({INTEGER_64}).type_id, internal.field_static_type_of_type (field_index ("integer_64_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_8", ({NATURAL_8}).type_id, internal.field_static_type_of_type (field_index ("natural_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_16", ({NATURAL_16}).type_id, internal.field_static_type_of_type (field_index ("natural_16_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_32", ({NATURAL_32}).type_id, internal.field_static_type_of_type (field_index ("natural_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("natural_64", ({NATURAL_64}).type_id, internal.field_static_type_of_type (field_index ("natural_64_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("pointer", ({POINTER}).type_id, internal.field_static_type_of_type (field_index ("pointer_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("real_32", ({REAL_32}).type_id, internal.field_static_type_of_type (field_index ("real_32_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("real_64", ({REAL_64}).type_id, internal.field_static_type_of_type (field_index ("real_64_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("string_8", ({STRING_8}).type_id, internal.field_static_type_of_type (field_index ("string_8_1", {like Current}), ({like Current}).type_id))
-			assert_integers_equal ("any", ({ANY}).type_id, internal.field_static_type_of_type (field_index ("any_1", {like Current}), ({like Current}).type_id))
+			assert_integers_equal ("boolean", ({BOOLEAN}).type_id, internal.field_static_type_of_type (field_index ("boolean_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("character_8", ({CHARACTER_8}).type_id, internal.field_static_type_of_type (field_index ("character_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("character_32", ({CHARACTER_32}).type_id, internal.field_static_type_of_type (field_index ("character_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_8", ({INTEGER_8}).type_id, internal.field_static_type_of_type (field_index ("integer_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_16", ({INTEGER_16}).type_id, internal.field_static_type_of_type (field_index ("integer_16_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_32", ({INTEGER_32}).type_id, internal.field_static_type_of_type (field_index ("integer_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("integer_64", ({INTEGER_64}).type_id, internal.field_static_type_of_type (field_index ("integer_64_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_8", ({NATURAL_8}).type_id, internal.field_static_type_of_type (field_index ("natural_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_16", ({NATURAL_16}).type_id, internal.field_static_type_of_type (field_index ("natural_16_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_32", ({NATURAL_32}).type_id, internal.field_static_type_of_type (field_index ("natural_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("natural_64", ({NATURAL_64}).type_id, internal.field_static_type_of_type (field_index ("natural_64_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("pointer", ({POINTER}).type_id, internal.field_static_type_of_type (field_index ("pointer_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("real_32", ({REAL_32}).type_id, internal.field_static_type_of_type (field_index ("real_32_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("real_64", ({REAL_64}).type_id, internal.field_static_type_of_type (field_index ("real_64_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("string_8", ({STRING_8}).type_id, internal.field_static_type_of_type (field_index ("string_8_1", Current), ({like Current}).type_id))
+			assert_integers_equal ("any", ({ANY}).type_id, internal.field_static_type_of_type (field_index ("any_1", Current), ({like Current}).type_id))
 		end
 
 	test_field is
@@ -374,44 +371,44 @@ feature -- Test
 		do
 			create internal
 			boolean_1 := True
-			assert_equal ("true", True, internal.field (field_index ("boolean_1", {like Current}), Current))
+			assert_equal ("true", True, internal.field (field_index ("boolean_1", Current), Current))
 			boolean_1 := False
-			assert_equal ("false", False, internal.field (field_index ("boolean_1", {like Current}), Current))
+			assert_equal ("false", False, internal.field (field_index ("boolean_1", Current), Current))
 			character_8_1 := 'g'
 			c8 := 'g'
-			assert_equal ("character_8", c8, internal.field (field_index ("character_8_1", {like Current}), Current))
+			assert_equal ("character_8", c8, internal.field (field_index ("character_8_1", Current), Current))
 			character_32_1 := 'o'
 			c32 := 'o'
-			assert_equal ("character_32", c32, internal.field (field_index ("character_32_1", {like Current}), Current))
+			assert_equal ("character_32", c32, internal.field (field_index ("character_32_1", Current), Current))
 			integer_8_1 := 8
-			assert_equal ("integer_8", {INTEGER_8} 8, internal.field (field_index ("integer_8_1", {like Current}), Current))
+			assert_equal ("integer_8", {INTEGER_8} 8, internal.field (field_index ("integer_8_1", Current), Current))
 			integer_16_1 := 16
-			assert_equal ("integer_16", {INTEGER_16} 16, internal.field (field_index ("integer_16_1", {like Current}), Current))
+			assert_equal ("integer_16", {INTEGER_16} 16, internal.field (field_index ("integer_16_1", Current), Current))
 			integer_32_1 := 32 
-			assert_equal ("integer_32", {INTEGER_32} 32, internal.field (field_index ("integer_32_1", {like Current}), Current))
+			assert_equal ("integer_32", {INTEGER_32} 32, internal.field (field_index ("integer_32_1", Current), Current))
 			integer_64_1 := 64 
-			assert_equal ("integer_64", {INTEGER_64} 64, internal.field (field_index ("integer_64_1", {like Current}), Current))
+			assert_equal ("integer_64", {INTEGER_64} 64, internal.field (field_index ("integer_64_1", Current), Current))
 			natural_8_1 := 8
-			assert_equal ("natural_8", {NATURAL_8} 8, internal.field (field_index ("natural_8_1", {like Current}), Current))
+			assert_equal ("natural_8", {NATURAL_8} 8, internal.field (field_index ("natural_8_1", Current), Current))
 			natural_16_1 := 16
-			assert_equal ("natural_16", {NATURAL_16} 16, internal.field (field_index ("natural_16_1", {like Current}), Current))
+			assert_equal ("natural_16", {NATURAL_16} 16, internal.field (field_index ("natural_16_1", Current), Current))
 			natural_32_1 := 32
-			assert_equal ("natural_32", {NATURAL_32} 32, internal.field (field_index ("natural_32_1", {like Current}), Current))
+			assert_equal ("natural_32", {NATURAL_32} 32, internal.field (field_index ("natural_32_1", Current), Current))
 			natural_64_1 := 64
-			assert_equal ("natural_64", {NATURAL_64} 64, internal.field (field_index ("natural_64_1", {like Current}), Current))
+			assert_equal ("natural_64", {NATURAL_64} 64, internal.field (field_index ("natural_64_1", Current), Current))
 			p := $test_field
 			pointer_1 := p
-			assert_equal ("pointer", p, internal.field (field_index ("pointer_1", {like Current}), Current))
+			assert_equal ("pointer", p, internal.field (field_index ("pointer_1", Current), Current))
 			real_32_1 := 32.0
-			assert_equal ("real_32", {REAL_32} 32.0, internal.field (field_index ("real_32_1", {like Current}), Current))
+			assert_equal ("real_32", {REAL_32} 32.0, internal.field (field_index ("real_32_1", Current), Current))
 			real_64_1 := 64.0
-			assert_equal ("real_64", {REAL_64} 64.0, internal.field (field_index ("real_64_1", {like Current}), Current))
+			assert_equal ("real_64", {REAL_64} 64.0, internal.field (field_index ("real_64_1", Current), Current))
 			s := "foo"
 			string_8_1 := s
-			assert_same ("string_8_1", s, internal.field (field_index ("string_8_1", {like Current}), Current))
+			assert_same ("string_8_1", s, internal.field (field_index ("string_8_1", Current), Current))
 			create arr.make (1, 4)
 			any_1 := arr
-			assert_same ("any_1", arr, internal.field (field_index ("any_1", {like Current}), Current))
+			assert_same ("any_1", arr, internal.field (field_index ("any_1", Current), Current))
 		end
 
 	test_boolean_field is
@@ -421,9 +418,9 @@ feature -- Test
 		do
 			create internal
 			boolean_1 := True
-			assert ("true", internal.boolean_field (field_index ("boolean_1", {like Current}), Current) = True)
+			assert ("true", internal.boolean_field (field_index ("boolean_1", Current), Current) = True)
 			boolean_1 := False
-			assert ("false", internal.boolean_field (field_index ("boolean_1", {like Current}), Current) = False)
+			assert ("false", internal.boolean_field (field_index ("boolean_1", Current), Current) = False)
 		end
 
 	test_character_8_field is
@@ -433,7 +430,7 @@ feature -- Test
 		do
 			create internal
 			character_8_1 := 'a'
-			assert ("character_8", internal.character_8_field (field_index ("character_8_1", {like Current}), Current) = 'a')
+			assert ("character_8", internal.character_8_field (field_index ("character_8_1", Current), Current) = 'a')
 		end
 
 	test_character_32_field is
@@ -443,7 +440,7 @@ feature -- Test
 		do
 			create internal
 			character_32_1 := 'b'
-			assert ("character_32", internal.character_32_field (field_index ("character_32_1", {like Current}), Current) = 'b')
+			assert ("character_32", internal.character_32_field (field_index ("character_32_1", Current), Current) = 'b')
 		end
 
 	test_integer_8_field is
@@ -453,7 +450,7 @@ feature -- Test
 		do
 			create internal
 			integer_8_1 := 9
-			assert ("integer_8", internal.integer_8_field (field_index ("integer_8_1", {like Current}), Current) = 9)
+			assert ("integer_8", internal.integer_8_field (field_index ("integer_8_1", Current), Current) = 9)
 		end
 
 	test_integer_16_field is
@@ -463,7 +460,7 @@ feature -- Test
 		do
 			create internal
 			integer_16_1 := 17
-			assert ("integer_16", internal.integer_16_field (field_index ("integer_16_1", {like Current}), Current) = 17)
+			assert ("integer_16", internal.integer_16_field (field_index ("integer_16_1", Current), Current) = 17)
 		end
 
 	test_integer_32_field is
@@ -473,7 +470,7 @@ feature -- Test
 		do
 			create internal
 			integer_32_1 := 33
-			assert ("integer_32", internal.integer_32_field (field_index ("integer_32_1", {like Current}), Current) = 33)
+			assert ("integer_32", internal.integer_32_field (field_index ("integer_32_1", Current), Current) = 33)
 		end
 
 	test_integer_64_field is
@@ -483,7 +480,7 @@ feature -- Test
 		do
 			create internal
 			integer_64_1 := 65
-			assert ("integer_64", internal.integer_64_field (field_index ("integer_64_1", {like Current}), Current) = 65)
+			assert ("integer_64", internal.integer_64_field (field_index ("integer_64_1", Current), Current) = 65)
 		end
 
 	test_natural_8_field is
@@ -493,7 +490,7 @@ feature -- Test
 		do
 			create internal
 			natural_8_1 := 9
-			assert ("natural_8", internal.natural_8_field (field_index ("natural_8_1", {like Current}), Current) = 9)
+			assert ("natural_8", internal.natural_8_field (field_index ("natural_8_1", Current), Current) = 9)
 		end
 
 	test_natural_16_field is
@@ -503,7 +500,7 @@ feature -- Test
 		do
 			create internal
 			natural_16_1 := 17
-			assert ("natural_16", internal.natural_16_field (field_index ("natural_16_1", {like Current}), Current) = 17)
+			assert ("natural_16", internal.natural_16_field (field_index ("natural_16_1", Current), Current) = 17)
 		end
 
 	test_natural_32_field is
@@ -513,7 +510,7 @@ feature -- Test
 		do
 			create internal
 			natural_32_1 := 33
-			assert ("natural_32", internal.natural_32_field (field_index ("natural_32_1", {like Current}), Current) = 33)
+			assert ("natural_32", internal.natural_32_field (field_index ("natural_32_1", Current), Current) = 33)
 		end
 
 	test_natural_64_field is
@@ -523,7 +520,7 @@ feature -- Test
 		do
 			create internal
 			natural_64_1 := 65
-			assert ("natural_64", internal.natural_64_field (field_index ("natural_64_1", {like Current}), Current) = 65)
+			assert ("natural_64", internal.natural_64_field (field_index ("natural_64_1", Current), Current) = 65)
 		end
 
 	test_pointer_field is
@@ -535,7 +532,7 @@ feature -- Test
 			create internal
 			p := $test_pointer_field
 			pointer_1 := p
-			assert ("pointer", internal.pointer_field (field_index ("pointer_1", {like Current}), Current) = p)
+			assert ("pointer", internal.pointer_field (field_index ("pointer_1", Current), Current) = p)
 		end
 
 	test_real_32_field is
@@ -545,7 +542,7 @@ feature -- Test
 		do
 			create internal
 			real_32_1 := 33.0
-			assert ("real_32", internal.real_32_field (field_index ("real_32_1", {like Current}), Current) = 33.0)
+			assert ("real_32", internal.real_32_field (field_index ("real_32_1", Current), Current) = 33.0)
 		end
 
 	test_real_64_field is
@@ -555,7 +552,7 @@ feature -- Test
 		do
 			create internal
 			real_64_1 := 65.0
-			assert ("real_64", internal.real_64_field (field_index ("real_64_1", {like Current}), Current) = 65.0)
+			assert ("real_64", internal.real_64_field (field_index ("real_64_1", Current), Current) = 65.0)
 		end
 
 	test_set_boolean_field is
@@ -564,9 +561,9 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_boolean_field (field_index ("boolean_1", {like Current}), Current, True)
+			internal.set_boolean_field (field_index ("boolean_1", Current), Current, True)
 			assert ("true", boolean_1 = True)
-			internal.set_boolean_field (field_index ("boolean_1", {like Current}), Current, False)
+			internal.set_boolean_field (field_index ("boolean_1", Current), Current, False)
 			assert ("false", boolean_1 = False)
 		end
 
@@ -576,7 +573,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_character_8_field (field_index ("character_8_1", {like Current}), Current, 'x')
+			internal.set_character_8_field (field_index ("character_8_1", Current), Current, 'x')
 			assert ("character_8", character_8_1 = 'x')
 		end
 
@@ -586,7 +583,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_character_32_field (field_index ("character_32_1", {like Current}), Current, 'y')
+			internal.set_character_32_field (field_index ("character_32_1", Current), Current, 'y')
 			assert ("character_32", character_32_1 = 'y')
 		end
 
@@ -596,7 +593,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_integer_8_field (field_index ("integer_8_1", {like Current}), Current, 10)
+			internal.set_integer_8_field (field_index ("integer_8_1", Current), Current, 10)
 			assert ("integer_8", integer_8_1 = 10)
 		end
 
@@ -606,7 +603,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_integer_16_field (field_index ("integer_16_1", {like Current}), Current, 18)
+			internal.set_integer_16_field (field_index ("integer_16_1", Current), Current, 18)
 			assert ("integer_16", integer_16_1 = 18)
 		end
 
@@ -616,7 +613,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_integer_32_field (field_index ("integer_32_1", {like Current}), Current, 34)
+			internal.set_integer_32_field (field_index ("integer_32_1", Current), Current, 34)
 			assert ("integer_32", integer_32_1 = 34)
 		end
 
@@ -626,7 +623,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_integer_64_field (field_index ("integer_64_1", {like Current}), Current, 66)
+			internal.set_integer_64_field (field_index ("integer_64_1", Current), Current, 66)
 			assert ("integer_64", integer_64_1 = 66)
 		end
 
@@ -636,7 +633,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_natural_8_field (field_index ("natural_8_1", {like Current}), Current, 10)
+			internal.set_natural_8_field (field_index ("natural_8_1", Current), Current, 10)
 			assert ("natural_8", natural_8_1 = 10)
 		end
 
@@ -646,7 +643,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_natural_16_field (field_index ("natural_16_1", {like Current}), Current, 18)
+			internal.set_natural_16_field (field_index ("natural_16_1", Current), Current, 18)
 			assert ("natural_16", natural_16_1 = 18)
 		end
 
@@ -656,7 +653,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_natural_32_field (field_index ("natural_32_1", {like Current}), Current, 34)
+			internal.set_natural_32_field (field_index ("natural_32_1", Current), Current, 34)
 			assert ("natural_32", natural_32_1 = 34)
 		end
 
@@ -666,7 +663,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_natural_64_field (field_index ("natural_64_1", {like Current}), Current, 66)
+			internal.set_natural_64_field (field_index ("natural_64_1", Current), Current, 66)
 			assert ("natural_64", natural_64_1 = 66)
 		end
 
@@ -678,7 +675,7 @@ feature -- Test
 		do
 			create internal
 			p := $test_set_pointer_field
-			internal.set_pointer_field (field_index ("pointer_1", {like Current}), Current, p)
+			internal.set_pointer_field (field_index ("pointer_1", Current), Current, p)
 			assert ("pointer", pointer_1 = p)
 		end
 
@@ -688,7 +685,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_real_32_field (field_index ("real_32_1", {like Current}), Current, 34.0)
+			internal.set_real_32_field (field_index ("real_32_1", Current), Current, 34.0)
 			assert ("real_32", real_32_1 = 34.0)
 		end
 
@@ -698,7 +695,7 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_real_64_field (field_index ("real_64_1", {like Current}), Current, 66.0)
+			internal.set_real_64_field (field_index ("real_64_1", Current), Current, 66.0)
 			assert ("real_64", real_64_1 = 66.0)
 		end
 
@@ -711,10 +708,10 @@ feature -- Test
 		do
 			create internal
 			s := "gobo"
-			internal.set_reference_field (field_index ("string_8_1", {like Current}), Current, s)
+			internal.set_reference_field (field_index ("string_8_1", Current), Current, s)
 			assert ("string_8_1", string_8_1 = s)
 			create arr.make (1, 3)
-			internal.set_reference_field (field_index ("any_1", {like Current}), Current, arr)
+			internal.set_reference_field (field_index ("any_1", Current), Current, arr)
 			assert ("any_1", any_1 = arr)
 		end
 
@@ -818,23 +815,24 @@ feature -- Attributes
 
 feature {NONE} -- Implementation
 
-	field_index (a_field_name: STRING; a_type: TYPE [ANY]): INTEGER is
-			-- Index of field `a_field_name' in direct instances of `a_type';
+	field_index (a_field_name: STRING; a_object: ANY): INTEGER is
+			-- Index of field `a_field_name' in `a_object';
 			-- 0 if not such field
 		require
 			a_field_name_not_void: a_field_name /= Void
-			a_type_not_void: a_type /= Void
+			a_object_not_void: a_object /= Void
 		local
 			internal: INTERNAL
 			i, nb: INTEGER
 		do
+			create internal
 			from
 				i := 1
-				nb := a_type.field_count
+				nb := internal.field_count (a_object)
 			until
 				i > nb
 			loop
-				if a_type.field_name (i).same_string (a_field_name) then
+				if internal.field_name (i, a_object).same_string (a_field_name) then
 					Result := i
 					i := nb + 1
 				end
@@ -842,7 +840,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			field_index_large_enough: Result >= 0
-			field_index_small_enough: Result <= a_type.field_count
+			field_index_small_enough: Result <= (create {INTERNAL}).field_count (a_object)
 		end
 
 end
