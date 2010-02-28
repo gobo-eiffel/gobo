@@ -5,7 +5,7 @@ indexing
 		"Xace option names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -102,6 +102,7 @@ feature -- Option names
 	storable_name: STRING is "storable"
 	storable_filename_name: STRING is "storable_filename"
 	strip_option_name: STRING is "strip"
+	syntax_name: STRING is "syntax"
 	target_name: STRING is "target"
 	trace_name: STRING is "trace"
 	use_cluster_name_as_namespace_name: STRING is "use_cluster_name_as_namespace"
@@ -198,20 +199,21 @@ feature -- Option codes
 	storable_code: INTEGER is 82
 	storable_filename_code: INTEGER is 83
 	strip_option_code: INTEGER is 84
-	target_code: INTEGER is 85
-	trace_code: INTEGER is 86
-	use_cluster_name_as_namespace_code: INTEGER is 87
-	use_full_cluster_name_as_namespace_code: INTEGER is 88
-	verbose_code: INTEGER is 89
-	version_code: INTEGER is 90
-	visible_filename_code: INTEGER is 91
-	warning_code: INTEGER is 92
-	wedit_code: INTEGER is 93
+	syntax_code: INTEGER is 85
+	target_code: INTEGER is 86
+	trace_code: INTEGER is 87
+	use_cluster_name_as_namespace_code: INTEGER is 88
+	use_full_cluster_name_as_namespace_code: INTEGER is 89
+	verbose_code: INTEGER is 90
+	version_code: INTEGER is 91
+	visible_filename_code: INTEGER is 92
+	warning_code: INTEGER is 93
+	wedit_code: INTEGER is 94
 
 	option_codes: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Mapping option names -> option codes
 		once
-			create Result.make_map (93)
+			create Result.make_map (94)
 			Result.set_key_equality_tester (string_equality_tester)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
@@ -297,6 +299,7 @@ feature -- Option codes
 			Result.put_new (storable_code, storable_name)
 			Result.put_new (storable_filename_code, storable_filename_name)
 			Result.put_new (strip_option_code, strip_option_name)
+			Result.put_new (syntax_code, syntax_name)
 			Result.put_new (target_code, target_name)
 			Result.put_new (trace_code, trace_name)
 			Result.put_new (use_cluster_name_as_namespace_code, use_cluster_name_as_namespace_name)
@@ -335,11 +338,14 @@ feature -- Option values
 	microsoft_value: STRING is "microsoft"
 	no_main_value: STRING is "no_main"
 	none_value: STRING is "none"
+	obsolete_value: STRING is "obsolete"
 	once_value: STRING is "once"
 	require_value: STRING is "require"
 	sequential_value: STRING is "sequential"
+	standard_value: STRING is "standard"
 	style_value: STRING is "style"
 	supplier_precondition_value: STRING is "supplier_precondition"
+	transitional_value: STRING is "transitional"
 	utf8_value: STRING is "utf8"
 	winapi_value: STRING is "winapi"
 

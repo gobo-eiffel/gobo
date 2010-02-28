@@ -1,0 +1,47 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+
+		"Xace Files"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2010, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="tools/xace">
+<chapterinfo>
+	<copyright>
+		<year>2010</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>28 Febrary 2010</date>
+</chapterinfo>
+
+<title>Xace Files</title>
+
+<para>
+Under construction
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="new_xace_option">Adding Xace option</link>
+		</term>
+		<listitem><para>
+			How to add a new Xace option.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</para>
+
+</chapter>

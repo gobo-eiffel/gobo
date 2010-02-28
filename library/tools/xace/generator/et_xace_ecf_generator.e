@@ -4,8 +4,9 @@ indexing
 
 		"ECF file generators from Xace files"
 
+	remark: "Generate ECF version 1.5"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -311,6 +312,17 @@ feature {NONE} -- Output
 				else
 					a_file.put_string (" full_class_checking=%"false%"")
 				end
+			end
+				-- syntax
+			if an_option.is_syntax_declared then
+				if not l_option_attribute_printed then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<option")
+					l_option_attribute_printed := True
+				end
+				a_file.put_string (" syntax=%"")
+				a_file.put_string (an_option.syntax)
+				a_file.put_character ('%"')
 			end
 				-- is_attached_by_default
 -- TODO: Not supported yet.
@@ -1198,6 +1210,19 @@ feature {NONE} -- Output
 					a_file.put_string (" full_class_checking=%"false%"")
 				end
 			end
+				-- syntax
+			if l_option.is_syntax_declared then
+				if not l_option_attribute_printed then
+					print_indentation (indent, a_file)
+					a_file.put_string ("<class_option class=%"")
+					print_quote_escaped_string (l_class_name, a_file)
+					a_file.put_character ('%"')
+					l_option_attribute_printed := True
+				end
+				a_file.put_string (" syntax=%"")
+				a_file.put_string (l_option.syntax)
+				a_file.put_character ('%"')
+			end
 				-- is_attached_by_default
 -- TODO: Not supported yet.
 				-- is_void_safe
@@ -1496,10 +1521,10 @@ feature {NONE} -- Output
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-1-3-0%" ")
+			a_file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-1-5-0%" ")
 			a_file.put_string ("xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%" ")
-			a_file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-1-3-0 ")
-			a_file.put_string ("http://www.eiffel.com/developers/xml/configuration-1-3-0.xsd%"")
+			a_file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-1-5-0 ")
+			a_file.put_string ("http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd%"")
 		end
 
 feature {NONE} -- Escaped

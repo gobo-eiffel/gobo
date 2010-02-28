@@ -5,7 +5,7 @@ indexing
 		"Xace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2010, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1327,6 +1327,12 @@ feature {NONE} -- Element change
 										an_option.set_strip_option (False)
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
+									end
+								when syntax_code then
+									if an_option.valid_syntax.has (a_value) then
+										an_option.set_syntax (a_value)
+									else
+										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_syntax, a_position_table.item (an_element))
 									end
 								when target_code then
 									if an_option.valid_target.has (a_value) then

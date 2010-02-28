@@ -5,7 +5,7 @@ indexing
 		"Xace option clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2010, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -706,6 +706,14 @@ feature -- Status report
 			Result := declared_strip_option /= Void and then not declared_strip_option.is_undefined
 		ensure
 			definition: Result = (declared_strip_option /= Void and then not declared_strip_option.is_undefined)
+		end
+
+	is_syntax_declared: BOOLEAN is
+			-- Has 'syntax' option been declared?
+		do
+			Result := declared_syntax /= Void
+		ensure
+			definition: Result = (declared_syntax /= Void)
 		end
 
 	is_target_declared: BOOLEAN is
@@ -1668,6 +1676,18 @@ feature -- Option values
 			else
 				Result := default_strip_option
 			end
+		end
+
+	syntax: STRING is
+			-- 'syntax' option
+		do
+			if is_syntax_declared then
+				Result := declared_syntax
+			else
+				Result := default_syntax
+			end
+		ensure
+			valid_syntax: valid_syntax.has (Result)
 		end
 
 	target: STRING is
@@ -2962,6 +2982,17 @@ feature -- Modification
 			strip_option_set: strip_option = b
 		end
 
+	set_syntax (a_value: STRING) is
+			-- Set `syntax' to `a_value'.
+		require
+			a_value_valid: valid_syntax.has (a_value)
+		do
+			declared_syntax := a_value
+		ensure
+			syntax_declared: is_syntax_declared
+			syntax_set: target = a_value
+		end
+
 	set_target (a_value: STRING) is
 			-- Set `target' to `a_value'.
 		require
@@ -3760,6 +3791,14 @@ feature -- Status setting
 			strip_option_not_declared: not is_strip_option_declared
 		end
 
+	unset_syntax is
+			-- Unset `syntax'.
+		do
+			declared_syntax := Void
+		ensure
+			syntax_not_declared: not is_syntax_declared
+		end
+
 	unset_target is
 			-- Unset `target'.
 		do
@@ -3942,6 +3981,21 @@ feature -- Valid values
 		ensure
 			valid_linker_not_void: Result /= Void
 			valid_linker_not_empty: not Result.is_empty
+			no_void_value: not Result.has_void
+			-- all_lower: forall v in Result, v.is_lower
+		end
+
+	valid_syntax: DS_HASH_SET [STRING] is
+			-- Valid values for 'syntax' option
+		once
+			create Result.make (3)
+			Result.set_equality_tester (string_equality_tester)
+			Result.put_last (options.obsolete_value)
+			Result.put_last (options.transitional_value)
+			Result.put_last (options.standard_value)
+		ensure
+			valid_syntax_not_void: Result /= Void
+			valid_syntax_not_empty: not Result.is_empty
 			no_void_value: not Result.has_void
 			-- all_lower: forall v in Result, v.is_lower
 		end
@@ -4245,6 +4299,9 @@ feature -- Declared values
 
 	declared_strip_option: UT_TRISTATE
 			-- Declared value for 'strip' option
+
+	declared_syntax: STRING
+			-- Declared value for 'syntax' option
 
 	declared_target: STRING
 			-- Declared value for 'target' option
@@ -4683,6 +4740,14 @@ feature -- Default values
 
 	default_strip_option: BOOLEAN is True
 			-- Default value for 'strip' option
+
+	default_syntax: STRING is
+			-- Default value for 'syntax' option
+		once
+			Result := options.transitional_value
+		ensure
+			valid_default_syntax: valid_syntax.has (Result)
+		end
 
 	default_target: STRING is
 			-- Default value for 'target' option

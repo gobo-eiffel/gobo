@@ -904,7 +904,7 @@ feature {NONE} -- AST factory
 					l_child ?= l_cursor.item
 					if l_child /= Void then
 						if STRING_.same_case_insensitive (l_child.name, xml_cluster) then
-							l_cluster := new_cluster (l_child, a_position_table, False,a_universe)
+							l_cluster := new_cluster (l_child, a_position_table, False, a_universe)
 							if l_cluster /= Void then
 								if l_clusters = Void then
 									l_clusters := ast_factory.new_clusters (l_cluster)

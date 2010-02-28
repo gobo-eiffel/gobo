@@ -6,7 +6,7 @@
 		"Gobo Eiffel Tools Library"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>5 March 2006</date>
+	<date>28 February 2010</date>
 </chapterinfo>
 
 <title>Gobo Eiffel Tools Library</title>
@@ -60,6 +60,14 @@ This documentation is structured as follows:
 		</term>
 		<listitem><para>
 			Purpose, syntax and semantics of ECF files.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<link linkend="xace">Xace Files</link>
+		</term>
+		<listitem><para>
+			Purpose, syntax and semantics of Xace files.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

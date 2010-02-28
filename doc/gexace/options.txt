@@ -3,20 +3,19 @@ SYSTEM OPTIONS
 Following is the list of system-level options supported by
 'gexace' (of the form <option name="..." value="..."/>),
 and how they are translated to the vendor dependent Ace or
-ESD files. "N/A" does not necessarily mean that the corresponding
+ECF files. "N/A" does not necessarily mean that the corresponding
 Eiffel compiler does not support this facility, it could just
 be that the facility is not parameterizable or is activated
-from the command-line or from a separate tool (such as VETuner
-for Visual Eiffel) rather than from the Ace or ESD file. When
-an entry is marked "N/A" the option will be silently ignored
-and nothing will be generated in the Ace or ESD file for this
-option. Likewise when the name of an option specified in
-an Xace file is not known by 'gexace'.
+from the command-line or from a separate tool rather than from
+the Ace or ECF file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the
+Ace or ECF file for this option. Likewise when the name of an
+option specified in an Xace file is not known by 'gexace'.
 
 The DEFAULT section shows 'gexace' default value when this
 option is not explicitely specified in the Xace file. It
 can be different from the default value used by the various
-Eiffel vendors in their Ace or ESD files.
+Eiffel vendors in their Ace or ECF files.
 
 For further details about each option, please refer to the
 documentation provided with the Eiffel compilers.
@@ -32,8 +31,6 @@ DESCRIPTION: Enable expressions of the form '$(s.to_c)' instead
   only if you have advanced knowledge of the garbage collector
   insides, since using this syntax illegally can lead to bugs
   very hard to trace.
-NOTE: This form of syntax is not supported in Visual Eiffel and
-  SmartEiffel.
 
 ISE Ace:
   true -> address_expression (yes)
@@ -41,10 +38,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="address_expression" value="true"/>
   false -> <setting name="address_expression" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: arguments
 
@@ -57,10 +50,6 @@ NOTE: There can be several of these options.
 ISE Ace:
   <arguments> -> arguments ("<arguments>")
 ISE ECF:
-  N/A
-VE:
-  N/A
-SE:
   N/A
 -------------------------------------------------------------
 NAME: array_optimization
@@ -80,10 +69,6 @@ ISE ECF:
   false -> <setting name="array_optimization" value="false"/>
   --
   Not used in ECF.
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: assertion
 
@@ -94,8 +79,8 @@ DESCRIPTION: Set default assertion level of the Eiffel system.
 NOTE: There can be several of these options.
 NOTE: The purpose of 'generate' is to generate the code of
   the assertions in the generated code even if these assertions
-  are turned off. VE can turn them on after the system has been
-  compiled.
+  are turned off. None of the currently supported Eiffel compilers
+  supports this option though.
 
 ISE Ace:
   none -> assertion (no)
@@ -119,102 +104,6 @@ ISE ECF:
   loop_variant -> <option><assertions loop="true"/></option>
   check -> <option><assertions check="true"/></option>
   all -> <option><assertions precondition="true" postcondition="true" invariant="true" loop="true" check="true"/></option>
-VE:
-  none ->
-       assertions off
-       require off
-       ensure off
-       class invariant off
-       loop invariant off
-       loop variant off
-       check off
-  generate ->
-       assertions on
-       require off
-       ensure off
-       class invariant off
-       loop invariant off
-       loop variant off
-       check off
-  require ->
-       assertions on
-       require on
-       ensure off
-       class invariant off
-       loop invariant off
-       loop variant off
-       check off
-  supplier_precondition ->
-       N/A
-  ensure ->
-       assertions on
-       require off
-       ensure on
-       class invariant off
-       loop invariant off
-       loop variant off
-       check off
-  invariant ->
-       assertions on
-       require off
-       ensure off
-       class invariant on
-       loop invariant off
-       loop variant off
-       check off
-  loop_invariant ->
-       assertions on
-       require off
-       ensure off
-       class invariant off
-       loop invariant on
-       loop variant off
-       check off
-  loop_variant ->
-       assertions on
-       require off
-       ensure off
-       class invariant off
-       loop invariant off
-       loop variant on
-       check off
-  check ->
-       assertions on
-       require off
-       ensure off
-       class invariant off
-       loop invariant off
-       loop variant off
-       check on
-  all ->
-       assertions on
-       require on
-       ensure on
-       class invariant on
-       loop invariant on
-       loop variant on
-       check on
-  --
-  If several occurrences of ESD options would need to be generated,
-  only one occurrence would actually be generated with value 'on'
-  if there is at least one 'on' and 'off' otherwise.
-SE:
-  none -> assertion (no)
-  generate -> assertion (no)
-  require -> assertion (require)
-  supplier_precondition -> N/A
-  ensure -> assertion (ensure)
-  invariant -> assertion (invariant)
-  loop_invariant -> assertion (loop)
-  loop_variant -> assertion (loop)
-  check -> assertion (check)
-  all -> assertion (all)
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with the value
-  which appears below all the others in the list above. However if
-  'boost' is specified in the option 'finalize', then values specified
-  in option 'assertion' are ignored.
 -------------------------------------------------------------
 NAME: automatic_backup
 
@@ -227,26 +116,20 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="automatic_backup" value="true"/>
   false -> <setting name="automatic_backup" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: case_insensitive
 
 VALUES: true | false
 DEFAULT: true
 DESCRIPTION: Enable Eiffel code to be case insensitive.
+NOTE: This option was supported in SmartEiffel which was
+  case-sensitive by default. All other Eiffel compilers
+  follow the standard and are case-insensitive.
 
 ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  true -> case_insensitive (yes)
-  false -> nothing (this is the default)
 -------------------------------------------------------------
 NAME: check_generic_creation_constraint
 
@@ -259,10 +142,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="check_generic_creation_constraint" value="true"/>
   false -> <setting name="check_generic_creation_constraint" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: check_vape
 
@@ -276,10 +155,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="check_vape" value="true"/>
   false -> <setting name="check_vape" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: clean
 
@@ -288,16 +163,13 @@ DEFAULT: false
 DESCRIPTION: Remove all generated C files, all generated object
   files and all other temporary files generated during the
   compilation process.
+NOTE: None of the currently supported Eiffel compilers supports
+  this option.
 
 ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  true -> clean (yes)
-  false -> clean (no)
 -------------------------------------------------------------
 NAME: cls_compliant
 
@@ -312,10 +184,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="cls_compliant" value="true"/>
   false -> <setting name="cls_compliant" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: console_application
 
@@ -334,11 +202,6 @@ ISE ECF:
   false -> <setting name="console_application" value="false"/>
   --
   The default is false in ECF.
-VE:
-  true -> target <target> console
-  false -> target <target> windows
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: create_keyword_extension
 
@@ -356,10 +219,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: c_compiler_options
 
@@ -376,10 +235,6 @@ ISE Ace:
   <options> -> include_path: "some123/fake432/path567 <options>"
 ISE ECF:
   <options> -> <external_include location="some123/fake432/path567 <options>"/>
-VE:
-  N/A
-SE:
-  <options> -> c_compiler_options: "<options>"
 -------------------------------------------------------------
 NAME: dead_code_removal
 
@@ -416,33 +271,6 @@ ISE ECF:
   If several occurrences of ECF options would need to be generated,
   only one occurrence would actually be generated with value 'true'
   if there is at least one 'true' and 'false' otherwise.
-VE:
-  none ->
-     optimize dead_code off
-     optimize calls off
-     optimize dyn_type off
-  low_level ->
-     optimize dead_code on
-     optimize calls off
-     optimize dyn_type off
-  feature ->
-     optimize dead_code off
-     optimize calls on
-     optimize dyn_type off
-  class ->
-     optimize dead_code off
-     optimize calls off
-     optimize dyn_type on
-  all ->
-     optimize dead_code on
-     optimize calls on
-     optimize dyn_type on
-  --
-  If several occurrences of ESD options would need to be generated,
-  only one occurrence would actually be generated with value 'on'
-  if there is at least one 'on' and 'off' otherwise.
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: debug
 
@@ -456,18 +284,6 @@ ISE Ace:
 ISE ECF:
   true -> <option debug="true"/>
   false -> <option debug="false"/>
-VE:
-  true -> debug instructions on
-  false -> debug instructions off
-  --
-  If option 'debug_tag' is also specified, then set to
-  'on' if at least one of the two 'debug instructions'
-  are 'on', 'off' otherwise.
-  The debug instructions are actually only executed if
-  so specified in the command-line of the application.
-SE:
-  true -> debug (yes)
-  false -> debug (no)
 -------------------------------------------------------------
 NAME: debug_tag
 
@@ -480,33 +296,20 @@ ISE Ace:
   <tag> -> debug ("<tag>")
 ISE ECF:
   <tag> -> <option> <debug name="<tag>" enabled="true"/> </option>
-VE:
-  <tag> -> debug instructions on
-  --
-  If option 'debug' is also specified, then set to 'on'
-  if at least one of the two 'debug instructions' are
-  'on', 'off' otherwise.
-  The debug instructions are actually only executed if
-  so specified in the command-line of the application.
-SE:
-  <tag> -> debug ("<tag>")
 -------------------------------------------------------------
 NAME: debugger
 
 VALUES: true | false
 DEFAULT: false
 DESCRIPTION: Specify whether debug information should be
-  generated. Debug information is required to use the
+  generated. Debug information was required to use the
   debugger with Visual Eiffel.
+NOTE: None of the currently supported Eiffel compilers
+  supports this option.
 
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  true -> debug on
-  false -> debug off
-SE:
   N/A
 -------------------------------------------------------------
 NAME: document
@@ -524,10 +327,6 @@ ISE Ace:
   <pathname> -> document ("<pathname>")
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: dotnet_naming_convention
 
@@ -543,10 +342,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="dotnet_naming_convention" value="true"/>
   false -> <setting name="dotnet_naming_convention" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: dynamic_runtime
 
@@ -561,11 +356,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="dynamic_runtime" value="true"/>
   false -> <setting name="dynamic_runtime" value="false"/>
-VE:
-  true -> run_time_in_dll on
-  false -> run_time_in_dll off
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: enforce_unique_class_names
 
@@ -578,10 +368,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="enforce_unique_class_names" value="true"/>
   false -> <setting name="enforce_unique_class_names" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: exception_trace
 
@@ -598,10 +384,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="exception_trace" value="true"/>
   false -> <setting name="exception_trace" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: external_runtime
 
@@ -613,10 +395,6 @@ ISE Ace:
   N/A
 ISE ECF:
   <pathname> -> <setting name="external_runtime" value="<pathname>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: finalize
 
@@ -630,18 +408,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  true -> finalize on
-  false -> finalize off
-  --  
-  Setting 'finalize on' automatically turns 'assertions off'.
-SE:
-  true -> assertion (boost)
-  false -> assertion (no)
-  --
-  If 'boost' is specified, then values specified in option 'assertion'
-  are ignored. Otherwise 'no' might be overriden by values specified
-  in option 'assertion'.
 -------------------------------------------------------------
 NAME: flat_fst_optimization
 
@@ -656,11 +422,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  true -> optimize flat_fsf on
-  false -> optimize flat_fsf off
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: force_32bits
 
@@ -673,10 +434,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="force_32bits" value="true"/>
   false -> <setting name="force_32bits" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: fst_expansion_factor
 
@@ -698,10 +455,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  <value> -> FST_expansion_factor <value>
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: fst_optimization
 
@@ -713,11 +466,6 @@ DESCRIPTION: Replace dynamic feature calls by static ones
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  true -> optimize FST on
-  false -> optimize FST off
-SE:
   N/A
 -------------------------------------------------------------
 NAME: full_class_checking
@@ -731,10 +479,6 @@ ISE Ace:
 ISE ECF:
   true -> <option full_class_checking="true"/>
   false -> <option full_class_checking="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: garbage_collector
 
@@ -746,12 +490,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  none -> collect (no)
-  internal -> collect (yes)
-  boehm -> collect (no)
 -------------------------------------------------------------
 NAME: gc_info
 
@@ -763,11 +501,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  true -> gc_info (yes)
-  false -> gc_info (no)
 -------------------------------------------------------------
 NAME: header
 
@@ -780,10 +513,6 @@ ISE Ace:
   <pathname> -> include_path: "<pathname>"
 ISE ECF:
   <pathname> -> <external_include location="<pathname>"/>
-VE:
-  N/A
-SE:
-  <pathname> -> external_header_path: "<pathname>"
 -------------------------------------------------------------
 NAME: heap_size
 
@@ -796,10 +525,6 @@ DESCRIPTION: Specify the dynamic heap size for the program.
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  <value> -> heap_size <value>
-SE:
   N/A
 -------------------------------------------------------------
 NAME: high_memory_compiler
@@ -814,11 +539,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  true -> high_memory_compiler (yes)
-  false -> high_memory_compiler (no)
 -------------------------------------------------------------
 NAME: il_verifiable
 
@@ -833,10 +553,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="il_verifiable" value="true"/>
   false -> <setting name="il_verifiable" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: inlining
 
@@ -871,33 +587,6 @@ ISE ECF:
   if there is at least one 'true' and 'false' otherwise.
   The option has effect only in finalized mode.
   Note that the default value in ECF is true.
-VE:
-  none ->
-       optimize inline off
-       optimize constants off
-       optimize once off
-  array ->
-       optimize inline on
-       optimize constants off
-       optimize once off
-  constant ->
-       optimize inline off
-       optimize constants on
-       optimize once off
-  once ->
-       optimize inline off
-       optimize constants off
-       optimize once on
-  all ->
-       optimize inline on
-       optimize constants on
-       optimize once on
-  --
-  If several occurrences of ESD options would need to be generated,
-  only one occurrence would actually be generated with value 'on'
-  if there is at least one 'on' and 'off' otherwise.
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: inlining_size
 
@@ -912,10 +601,6 @@ ISE Ace:
   The default value in Ace is 4.
 ISE ECF:
   <value> -> <setting name="inlining_size" value="<value>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: jumps_optimization
 
@@ -930,11 +615,6 @@ DESCRIPTION: Specify whether jumps optimization will be enabled.
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  true -> optimize jumps on
-  false -> optimize jumps off
-SE:
   N/A
 -------------------------------------------------------------
 NAME: layout_optimization
@@ -951,11 +631,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  true -> optimize layout on
-  false -> optimize layout off
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: leaves_optimization
 
@@ -970,11 +645,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  true -> optimize leaves on
-  false -> optimize leaves off
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: line_generation
 
@@ -988,10 +658,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="line_generation" value="true"/>
   false -> <setting name="line_generation" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: link
 
@@ -1005,10 +671,6 @@ ISE Ace:
   <pathname> -> object: "<pathname>"
 ISE ECF:
   <pathname> -> <external_library location="<pathname>"/>
-VE:
-  <pathname> -> link "<pathname>"
-SE:
-  <pathname> -> external_lib: "<pathname>"
 -------------------------------------------------------------
 NAME: linker
 
@@ -1022,11 +684,6 @@ DESCRIPTION: Specify which linker should be used. 'default'
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  default -> linker default
-  microsoft -> linker microsoft
-SE:
   N/A
 -------------------------------------------------------------
 NAME: linux_fpu_double_precision
@@ -1047,10 +704,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: manifest_string_trace
 
@@ -1063,11 +716,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  true -> manifest_string_trace (yes)
-  false -> manifest_string_trace (no)
 -------------------------------------------------------------
 NAME: map
 
@@ -1078,11 +726,6 @@ DESCRIPTION: Specify whether the map file is to be created.
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  true -> map on
-  false -> map off
-SE:
   N/A
 -------------------------------------------------------------
 NAME: metadata_cache_path
@@ -1098,10 +741,6 @@ ISE ECF:
   <pathname> -> <setting name="metadata_cache_path" value="<pathname>"/>
   --
   ISE's default: $ISE_EIFFEL\dotnet\assemblies
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: msil_assembly_compatibility
 
@@ -1115,10 +754,6 @@ ISE ECF:
   <value> -> <setting name="msil_assembly_compatibility" value="<value>"/>
   --
   Not used in ECF.
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: msil_classes_per_module
 
@@ -1133,10 +768,6 @@ ISE Ace:
   N/A
 ISE ECF:
   <value> -> <setting name="msil_classes_per_module" value="<value>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: msil_clr_version
 
@@ -1152,10 +783,6 @@ ISE ECF:
   <version> -> <setting name="msil_clr_version" value="<version>"/>
   --
   ISE's ECF default: highest installed .NET version.
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: msil_culture
 
@@ -1167,10 +794,6 @@ ISE Ace:
   N/A
 ISE ECF:
   <culture> -> <setting name="msil_culture" value="<culture>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: msil_generation
 
@@ -1184,10 +807,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="msil_generation" value="true"/>
   false -> <setting name="msil_generation" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: msil_generation_version
 
@@ -1200,10 +819,6 @@ DESCRIPTION: When compiling to the .NET framework. Specify version
 ISE Ace:
   <version> -> version ("<version>")
 ISE ECF:
-  N/A
-VE:
-  N/A
-SE:
   N/A
 -------------------------------------------------------------
 NAME: msil_key_file_name
@@ -1218,10 +833,6 @@ ISE Ace:
   N/A
 ISE ECF:
   <pathname> -> <setting name="msil_key_file_name" value="<pathname>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: msil_use_optimized_precompile
 
@@ -1235,10 +846,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="msil_use_optimized_precompile" value="true"/>
   false -> <setting name="msil_use_optimized_precompile" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: multithreaded
 
@@ -1271,10 +878,6 @@ ISE Ace:
   N/A
 ISE ECF:
   <namespace> -> <option namespace="<namespace>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: no_default_lib
 
@@ -1286,11 +889,6 @@ DESCRIPTION: Specify that default library should not be linked
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  true -> no_default_lib on
-  false -> no_default_lib off
-SE:
   N/A
 -------------------------------------------------------------
 NAME: old_verbatim_strings
@@ -1304,10 +902,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="old_verbatim_strings" value="true"/>
   false -> <setting name="old_verbatim_strings" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: override_cluster
 
@@ -1321,10 +915,6 @@ ISE Ace:
   <cluster_name> -> override_cluster (<cluster_name>)
 ISE ECF:
   <cluster_name> -> <override name="<cluster_name>" location="..."/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: portable_code_generation
 
@@ -1340,10 +930,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: precompiled
 
@@ -1357,10 +943,6 @@ ISE ECF:
   N/A
   --
   Note: see if we can do something with <precompile> group.
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: profile
 
@@ -1374,10 +956,6 @@ ISE Ace:
 ISE ECF:
   true -> <option profile="true"/>
   false -> <option profile="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: reloads_optimization
 
@@ -1392,11 +970,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  true -> optimize reloads on
-  false -> optimize reloads off
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: shared_library_definition
 
@@ -1410,10 +983,6 @@ ISE Ace:
   <filename.def> -> shared_library_definition ("<filename.def>")
 ISE ECF:
   <filename.def> -> <setting name="shared_library_definition" value="<filename.def>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: split
 
@@ -1426,11 +995,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE
-  true -> no_split (no)
-  false -> no_split (yes)
 -------------------------------------------------------------
 NAME: stack_size
 
@@ -1443,10 +1007,6 @@ DESCRIPTION: Specify the stack size for the program. <value>
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  <value> -> stack_size <value>
-SE:
   N/A
 -------------------------------------------------------------
 NAME: storable_filename
@@ -1466,10 +1026,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: strip
 
@@ -1481,11 +1037,22 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
+-------------------------------------------------------------
+NAME: syntax
+
+VALUES: obsolete | transitional | standard
+DEFAULT: transitional
+DESCRIPTION: Instruct the Eiffel parser to accept or reject some
+  syntax notations for some Eiffel constructs. This is typically
+  used during transitional periods.
+
+ISE Ace:
   N/A
-SE:
-  true -> no_strip (no)
-  false -> no_strip (yes)
+ISE ECF:
+  <value> -> <option syntax="<value>"/>
+  --
+  This is using the ECF 1.5 notation. In ECF 1.4, the option was
+  named 'syntax_level' and its possible values were integer codes.
 -------------------------------------------------------------
 NAME: target
 
@@ -1503,16 +1070,6 @@ ISE ECF:
   dll -> <setting name="msil_generation_type" value="dll"/>
   com -> <setting name="msil_generation_type" value="exe"/>
   no_main -> <setting name="msil_generation_type" value="exe"/>
-VE:
-  exe -> target exe <application>
-  dll -> target dll <application>
-  com -> target com <application>
-  no_main -> target dll <application>
-SE:
-  exe -> no_main (no)
-  dll -> no_main (yes)
-  com -> no_main (yes)
-  no_main -> no_main (yes)
 -------------------------------------------------------------
 NAME: trace
 
@@ -1526,11 +1083,6 @@ ISE Ace:
 ISE ECF:
   true -> <option trace="true"/>
   false -> <option trace="false"/>
-VE:
-  N/A
-SE:
-  true -> trace (yes)
-  false -> trace (no)
 -------------------------------------------------------------
 NAME: use_cluster_name_as_namespace
 
@@ -1545,10 +1097,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="use_cluster_name_as_namespace" value="true"/>
   false -> <setting name="use_cluster_name_as_namespace" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: use_full_cluster_name_as_namespace
 
@@ -1564,10 +1112,6 @@ ISE Ace:
 ISE ECF:
   true -> <setting name="use_all_cluster_name_as_namespace" value="true"/>
   false -> <setting name="use_all_cluster_name_as_namespace" value="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: verbose
 
@@ -1579,11 +1123,6 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  true -> verbose (yes)
-  false -> verbose (no)
 -------------------------------------------------------------
 NAME: visible_filename
 
@@ -1601,10 +1140,6 @@ NOTE: This option was for the Halstenbach compiler.
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  N/A
-SE:
   N/A
 -------------------------------------------------------------
 NAME: warning
@@ -1624,21 +1159,6 @@ ISE ECF:
   style -> <option warning="true"/>
   default -> <option warning="true"/>
   all -> <option warning="true"/>
-VE:
-  N/A
-SE:
-  none ->
-      no_style_warning (yes)
-      no_warning (yes)
-  style ->
-      no_style_warning (no)
-      no_warning (yes)
-  default ->
-      no_style_warning (yes)
-      no_warning (no)
-  all ->
-      no_style_warning (no)
-      no_warning (no)
 -------------------------------------------------------------
 NAME: wedit
 
@@ -1650,20 +1170,9 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  true -> wedit (yes)
-  false -> wedit (no)
 -------------------------------------------------------------
 
-NOTE: When precompiling with Visual Eiffel, only the
-following options are supported by the compiler:
-
-. assertions on/off
-. debug on/off
-
-NOTE2: the following ISE Eiffel options are not supported
+NOTE: the following ISE Eiffel options are not supported
 yet by 'gexace':
 
 . disabled_debug (...)
@@ -1675,20 +1184,19 @@ CLUSTER OPTIONS
 Following is the list of cluster-level options supported by
 'gexace' (of the form <option name="..." value="..."/>),
 and how they are translated to the vendor dependent Ace or
-ESD files. "N/A" does not necessarily mean that the corresponding
+ECF files. "N/A" does not necessarily mean that the corresponding
 Eiffel compiler does not support this facility, it could just
 be that the facility is not parameterizable or is activated
-from the command-line or from a separate tool (such as VETuner
-for Visual Eiffel) rather than from the Ace or ESD file. When
-an entry is marked "N/A" the option will be silently ignored
-and nothing will be generated in the Ace or ESD file for this
-option. Likewise when the name of an option specified in
-an Xace file is not known by 'gexace'.
+from the command-line or from a separate tool rather than from
+the Ace or ECF file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the
+Ace or ECF file for this option. Likewise when the name of an
+option specified in an Xace file is not known by 'gexace'.
 
 The DEFAULT section shows 'gexace' default value when this
 option is not explicitely specified in the Xace file. It
 can be different from the default value used by the various
-Eiffel vendors in their Ace or ESD files.
+Eiffel vendors in their Ace or ECF files.
 
 For further details about each option, please refer to the
 documentation provided with the Eiffel compilers.
@@ -1718,16 +1226,6 @@ ISE ECF:
           no output
   false ->
       <cluster name="..." location="..."/>
-VE:
-  true ->
-      no output
-  false ->
-      cluster_name: "pathname"
-SE:
-  true ->
-      no output
-  false ->
-      cluster_name: "pathname"
 -------------------------------------------------------------
 NAME: assembly
 
@@ -1744,10 +1242,6 @@ ISE ECF:
       <assembly name="<cluster_name>" location="<cluster_pathname>"
          assembly_name="<name>" assembly_version="<version>"
          assembly_cluster="<culture>" assembly_key="<public_key_token>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: assertion
 
@@ -1760,8 +1254,7 @@ DESCRIPTION: Set default assertion level for the classes of
 NOTE: There can be several of these options.
 NOTE: The purpose of 'generate' is to generate the code of
   the assertions in the generated code even if these assertions
-  are turned off. VE can turn them on after the system has been
-  compiled.
+  are turned off.
 
 ISE Ace:
   none -> assertion (no)
@@ -1785,23 +1278,6 @@ ISE ECF:
   loop_variant -> <option><assertions loop="true"/></option>
   check -> <option><assertions check="true"/></option>
   all -> <option><assertions precondition="true" postcondition="true" invariant="true" loop="true" check="true"/></option>
-VE:
-  N/A
-SE:
-  none -> assertion (no)
-  generate -> assertion (no)
-  require -> assertion (require)
-  supplier_precondition -> N/A
-  ensure -> assertion (ensure)
-  invariant -> assertion (invariant)
-  loop_invariant -> assertion (loop)
-  loop_variant -> assertion (loop)
-  check -> assertion (check)
-  all -> assertion (all)
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with the value
-  which appears below all the others in the list above.
 -------------------------------------------------------------
 NAME: component
 
@@ -1816,10 +1292,6 @@ NOTE: This option was for the Halstenbach compiler.
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  N/A
-SE:
   N/A
 -------------------------------------------------------------
 NAME: culture
@@ -1839,10 +1311,6 @@ ISE ECF:
       <assembly name="<cluster_name>" location="<cluster_pathname>"
          assembly_name="<name>" assembly_version="<version>"
          assembly_cluster="<culture>" assembly_key="<public_key_token>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: debug
 
@@ -1857,11 +1325,6 @@ ISE Ace:
 ISE ECF:
   true -> <option debug="true"/>
   false -> <option debug="false"/>
-VE:
-  N/A
-SE:
-  true -> debug (yes)
-  false -> debug (no)
 -------------------------------------------------------------
 NAME: debug_tag
 
@@ -1876,10 +1339,6 @@ ISE Ace:
   <tag> -> debug ("<tag>")
 ISE ECF:
   <tag> -> <option> <debug name="<tag>" enabled="true"/> </option>
-VE:
-  N/A
-SE:
-  <tag> -> debug ("<tag>")
 -------------------------------------------------------------
 NAME: document
 
@@ -1897,10 +1356,6 @@ ISE Ace:
   <pathname> -> document ("<pathname>")
 ISE ECF:
   N/A
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: ecf_library
 
@@ -1913,10 +1368,6 @@ ISE Ace:
   N/A
 ISE ECF
   <pathname> -> <library name="<cluster_name>" location="<pathname>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: exclude
 
@@ -1940,10 +1391,6 @@ ISE ECF:
             /<pathname>$
          </exclude>
       </file_rule>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: full_class_checking
 
@@ -1956,10 +1403,6 @@ ISE Ace:
 ISE ECF:
   true -> <option full_class_checking="true"/>
   false -> <option full_class_checking="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: header
 
@@ -1972,10 +1415,6 @@ ISE Ace:
   <pathname> -> include_path: "<pathname>"
 ISE ECF:
   <pathname> -> <external_include location="<pathname>"/>
-VE:
-  N/A
-SE:
-  <pathname> -> external_header_path: "<pathname>"
 -------------------------------------------------------------
 NAME: include
 
@@ -1999,10 +1438,6 @@ ISE ECF:
             /<pathname>$
          </include>
       </file_rule>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: link
 
@@ -2016,10 +1451,6 @@ ISE Ace:
   <pathname> -> object: "<pathname>"
 ISE ECF:
   <pathname> -> <external_library location="<pathname>"/>
-VE:
-  <pathname> -> link "<pathname>"
-SE:
-  <pathname> -> external_lib: "<pathname>"
 -------------------------------------------------------------
 NAME: namespace
 
@@ -2032,10 +1463,6 @@ ISE Ace:
   <namespace> -> namespace ("<namespace>")
 ISE ECF:
   <namespace> -> <option namespace="<namespace>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: prefix
 
@@ -2061,10 +1488,6 @@ ISE ECF:
          prefix="<assembly_prefix>"/>
   <cluster_prefix> ->
       <cluster name="<cluster_name>" location="<cluster_pathname>" prefix="<cluster_prefix>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: profile
 
@@ -2080,10 +1503,6 @@ ISE Ace:
 ISE ECF:
   true -> <option profile="true"/>
   false -> <option profile="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: public_key_token
 
@@ -2102,10 +1521,6 @@ ISE ECF:
       <assembly name="<cluster_name>" location="<cluster_pathname>"
          assembly_name="<name>" assembly_version="<version>"
          assembly_cluster="<culture>" assembly_key="<public_key_token>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: read_only
 
@@ -2126,10 +1541,6 @@ ISE Ace:
 ISE ECF:
   true -> <cluster readonly="true"/>
   false -> <cluster readonly="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: recursive
 
@@ -2147,10 +1558,6 @@ ISE Ace:
 ISE ECF:
   true -> <cluster recursive="true"/>
   false -> <cluster recursive="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: storable
 
@@ -2167,10 +1574,22 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
+-------------------------------------------------------------
+NAME: syntax
+
+VALUES: obsolete | transitional | standard
+DEFAULT: transitional
+DESCRIPTION: Instruct the Eiffel parser to accept or reject some
+  syntax notations for some Eiffel constructs. This is typically
+  used during transitional periods.
+
+ISE Ace:
   N/A
-SE:
-  N/A
+ISE ECF:
+  <value> -> <option syntax="<value>"/>
+  --
+  This is using the ECF 1.5 notation. In ECF 1.4, the option was
+  named 'syntax_level' and its possible values were integer codes.
 -------------------------------------------------------------
 NAME: trace
 
@@ -2185,11 +1604,6 @@ ISE Ace:
 ISE ECF:
   true -> <option trace="true"/>
   false -> <option trace="false"/>
-VE:
-  N/A
-SE:
-  true -> trace (yes)
-  false -> trace (no)
 -------------------------------------------------------------
 NAME: version
 
@@ -2208,10 +1622,6 @@ ISE ECF:
       <assembly name="<cluster_name>" location="<cluster_pathname>"
          assembly_name="<name>" assembly_version="<version>"
          assembly_cluster="<culture>" assembly_key="<public_key_token>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 
 =============================================================
@@ -2221,20 +1631,19 @@ CLASS OPTIONS
 Following is the list of class-level options supported by
 'gexace' (of the form <option name="..." value="..."/>),
 and how they are translated to the vendor dependent Ace or
-ESD files. "N/A" does not necessarily mean that the corresponding
+ECF files. "N/A" does not necessarily mean that the corresponding
 Eiffel compiler does not support this facility, it could just
 be that the facility is not parameterizable or is activated
-from the command-line or from a separate tool (such as VETuner
-for Visual Eiffel) rather than from the Ace or ESD file. When
-an entry is marked "N/A" the option will be silently ignored
-and nothing will be generated in the Ace or ESD file for this
-option. Likewise when the name of an option specified in
-an Xace file is not known by 'gexace'.
+from the command-line or from a separate tool rather than from
+the Ace or ECF file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the
+Ace or ECF file for this option. Likewise when the name of an
+option specified in an Xace file is not known by 'gexace'.
 
 The DEFAULT section shows 'gexace' default value when this
 option is not explicitely specified in the Xace file. It
 can be different from the default value used by the various
-Eiffel vendors in their Ace or ESD files.
+Eiffel vendors in their Ace or ECF files.
 
 For further details about each option, please refer to the
 documentation provided with the Eiffel compilers.
@@ -2251,8 +1660,7 @@ DESCRIPTION: Set default assertion level for this class.
 NOTE: There can be several of these options.
 NOTE: The purpose of 'generate' is to generate the code of
   the assertions in the generated code even if these assertions
-  are turned off. VE can turn them on after the system has been
-  compiled.
+  are turned off.
 
 ISE Ace:
   none -> assertion (no): CLASS_NAME
@@ -2276,23 +1684,6 @@ ISE ECF:
   loop_variant -> <class_option class="CLASS_NAME"><assertions loop="true"/></class_option>
   check -> <class_option class="CLASS_NAME"><assertions check="true"/></class_option>
   all -> <class_option class="CLASS_NAME"><assertions precondition="true" postcondition="true" invariant="true" loop="true" check="true"/></class_option>
-VE:
-  N/A
-SE:
-  none -> assertion (no): CLASS_NAME
-  generate -> assertion (no): CLASS_NAME
-  require -> assertion (require): CLASS_NAME
-  supplier_precondition -> N/A
-  ensure -> assertion (ensure): CLASS_NAME
-  invariant -> assertion (invariant): CLASS_NAME
-  loop_invariant -> assertion (loop): CLASS_NAME
-  loop_variant -> assertion (loop): CLASS_NAME
-  check -> assertion (check): CLASS_NAME
-  all -> assertion (all): CLASS_NAME
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with the value
-  which appears below all the others in the list above.
 -------------------------------------------------------------
 NAME: debug
 
@@ -2308,11 +1699,6 @@ ISE Ace:
 ISE ECF:
   true -> <class_option class="CLASS_NAME" debug="true"/>
   false -> <class_option class="CLASS_NAME" debug="false"/>
-VE:
-  N/A
-SE:
-  true -> debug (yes): CLASS_NAME
-  false -> debug (no): CLASS_NAME
 -------------------------------------------------------------
 NAME: debug_tag
 
@@ -2327,10 +1713,6 @@ ISE Ace:
   <tag> -> debug ("<tag>"): CLASS_NAME
 ISE ECF:
   <tag> -> <class_option class="CLASS_NAME"> <debug name="<tag>" enabled="true"/> </class_option>
-VE:
-  N/A
-SE:
-  <tag> -> debug ("<tag>"): CLASS_NAME
 -------------------------------------------------------------
 NAME: export
 
@@ -2349,10 +1731,6 @@ ISE Ace:
 ISE ECF:
   <external_name> ->
       <visible class="CLASS_NAME" class_rename="<external_name>"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: full_class_checking
 
@@ -2365,10 +1743,6 @@ ISE Ace:
 ISE ECF:
   true -> <class_option class="CLASS_NAME" full_class_checking="true"/>
   false -> <class_option class="CLASS_NAME" full_class_checking="false"/>
-VE:
-  N/A
-SE:
-  N/A
 -------------------------------------------------------------
 NAME: layout
 
@@ -2382,15 +1756,12 @@ DESCRIPTION: Specify the layout of an object when it is accessed
   out after the fields of parent classes. Inability to do so
   (because of repeated and multiple inheritance) results in a
   compilation error.
+NOTE: None of the currently supported Eiffel compilers supports
+  this option.
 
 ISE Ace:
   N/A
 ISE ECF:
-  N/A
-VE:
-  auto -> no output
-  sequential -> interface CLASS_NAME
-SE:
   N/A
 -------------------------------------------------------------
 NAME: storable
@@ -2408,10 +1779,22 @@ ISE Ace:
   N/A
 ISE ECF:
   N/A
-VE:
+-------------------------------------------------------------
+NAME: syntax
+
+VALUES: obsolete | transitional | standard
+DEFAULT: transitional
+DESCRIPTION: Instruct the Eiffel parser to accept or reject some
+  syntax notations for some Eiffel constructs. This is typically
+  used during transitional periods.
+
+ISE Ace:
   N/A
-SE:
-  N/A
+ISE ECF:
+  <value> -> <class_option class="CLASS_NAME" syntax="<value>"/>
+  --
+  This is using the ECF 1.5 notation. In ECF 1.4, the option was
+  named 'syntax_level' and its possible values were integer codes.
 -------------------------------------------------------------
 NAME: trace
 
@@ -2426,11 +1809,6 @@ ISE Ace:
 ISE ECF:
   true -> <class_option class="CLASS_NAME" trace="true"/>
   false -> <class_option class="CLASS_NAME" trace="false"/>
-VE:
-  N/A
-SE:
-  true -> trace: CLASS_NAME
-  false -> no output
 -------------------------------------------------------------
 
 =============================================================
@@ -2440,20 +1818,19 @@ FEATURE OPTIONS
 Following is the list of feature-level options supported by
 'gexace' (of the form <option name="..." value="..."/>),
 and how they are translated to the vendor dependent Ace or
-ESD files. "N/A" does not necessarily mean that the corresponding
+ECF files. "N/A" does not necessarily mean that the corresponding
 Eiffel compiler does not support this facility, it could just
 be that the facility is not parameterizable or is activated
-from the command-line or from a separate tool (such as VETuner
-for Visual Eiffel) rather than from the Ace or ESD file. When
-an entry is marked "N/A" the option will be silently ignored
-and nothing will be generated in the Ace or ESD file for this
-option. Likewise when the name of an option specified in
-an Xace file is not known by 'gexace'.
+from the command-line or from a separate tool rather than from
+the Ace or ECF file. When an entry is marked "N/A" the option
+will be silently ignored and nothing will be generated in the
+Ace or ECF file for this option. Likewise when the name of an
+option specified in an Xace file is not known by 'gexace'.
 
 The DEFAULT section shows 'gexace' default value when this
 option is not explicitely specified in the Xace file. It
 can be different from the default value used by the various
-Eiffel vendors in their Ace or ESD files.
+Eiffel vendors in their Ace or ECF files.
 
 For further details about each option, please refer to the
 documentation provided with the Eiffel compilers.
@@ -2467,17 +1844,12 @@ DESCRIPTION: Specify that this feature should get a wrapper
   when $ operator is applied; the result can be used as a pointer
   to the Windows API callback function if value of the option is
   "winapi".
+NOTE: None of the currently supported Eiffel compilers supports
+  this option.
+
 ISE Ace:
   N/A
 ISE EF:
-  N/A
-VE:
-  winapi ->
-    callback
-      class CLASS_NAME
-        feature_name
-      end
-SE:
   N/A
 -------------------------------------------------------------
 NAME: export
@@ -2499,13 +1871,5 @@ ISE Ace:
 ISE ECF:
   <external_name> ->
       <visible class="CLASS_NAME" feature="feature_name" feature_rename="<external_name>"/>
-VE:
-  N/A
-SE:
-  <external_name> ->
-     In Ace file:
-        external cecil ("cecil.se")
-     In 'cecil.se' file:
-        <external_name> CLASS_NAME feature_name
 -------------------------------------------------------------
 

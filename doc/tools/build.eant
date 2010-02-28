@@ -5,7 +5,7 @@
 	<description>
 		description: "Gobo Eiffel Tools Library documentation"
 		library: "Gobo Eiffel Tools Library"
-		copyright: "Copyright (c) 2006, Eric Bezault and others"
+		copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -30,6 +30,8 @@
 		<set name="current" value="index"/>
 		<geant target="xslt_and_shift" arguments="ace"/>
 		<geant target="xslt_and_shift" arguments="ecf"/>
+		<geant target="xslt_and_shift" arguments="xace"/>
+		<geant target="xslt_and_shift" arguments="new_xace_option"/>
 		<geant target="xslt_and_shift" arguments="applications"/>
 		<geant target="xslt_and_shift" arguments="limitations"/>
 		<geant target="xslt_and_shift" arguments="see_also"/>
@@ -50,6 +52,8 @@
 		<delete file="index.html"/>
 		<delete file="ace.html"/>
 		<delete file="ecf.html"/>
+		<delete file="xace.html"/>
+		<delete file="new_xace_option.html"/>
 		<delete file="applications.html"/>
 		<delete file="limitations.html"/>
 		<delete file="see_also.html"/>

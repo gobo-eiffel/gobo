@@ -11,6 +11,11 @@ Version 3.10 - ?
 	  "true" and "false". This can be useful when automatically generating
 	  geant build files. See bug#2657770.
 
+	gexace:
+
+	* Added option "syntax" to support the corresponding option in ECF.
+	* Added documentation explaining how to add a new option in Xace.
+
 	geyacc:
 
 	* When specifying Eiffel types in the %token and %type clauses, in addition
