@@ -22,6 +22,7 @@
 		http://www.hpl.hp.com/personal/Hans_Boehm/gc/
 */
 
+#define GC_IGNORE_WARN
 #include "gc.h"
 
 /*
