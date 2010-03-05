@@ -252,6 +252,38 @@ feature -- Access
 			ise_6_4_latest_not_void: Result /= Void
 		end
 
+	ise_6_5_0: UT_VERSION is
+			-- ISE 6.5.0
+		once
+			create Result.make (6, 5, 0, 0)
+		ensure
+			ise_6_5_0_not_void: Result /= Void
+		end
+
+	ise_6_5_latest: UT_VERSION is
+			-- After the last release ISE 6.5
+		once
+			create Result.make_major_minor (6, 5)
+		ensure
+			ise_6_5_latest_not_void: Result /= Void
+		end
+
+	ise_6_6_0: UT_VERSION is
+			-- ISE 6.6.0
+		once
+			create Result.make (6, 6, 0, 0)
+		ensure
+			ise_6_6_0_not_void: Result /= Void
+		end
+
+	ise_6_6_latest: UT_VERSION is
+			-- After the last release ISE 6.6
+		once
+			create Result.make_major_minor (6, 6)
+		ensure
+			ise_6_6_latest_not_void: Result /= Void
+		end
+
 	ise_latest: UT_VERSION is
 			-- After the latest release of ISE
 		once
