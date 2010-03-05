@@ -76,20 +76,27 @@ feature -- Initialization
 
 	reset_classes is
 			-- Reset classes (declared locally in current universe)
-			-- as they were just after they were last parsed.
+			-- as they were just after they were last parsed, or as
+			-- they were when they were last preparsed if there was
+			-- a syntax error (so that the syntax error will be
+			-- reported again if the class is processed again).
 			-- Overridden classes are also taken into account.
-			-- Do nothing if a class is not parsed yet.
+			-- Do nothing on classes which are not parsed yet.
 		do
-			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed))
+			master_classes_do_all (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed_and_errors))
 		end
 
 	reset_classes_recursive is
-			-- Reset classes (declared in current universe and recursively in universes it depends on)
-			-- as they were just after they were last parsed.
+			-- Reset classes (declared in current universe and
+			-- recursively in universes it depends on)
+			-- as they were just after they were last parsed, or as
+			-- they were when they were last preparsed if there was
+			-- a syntax error (so that the syntax error will be
+			-- reported again if the class is processed again).
 			-- Overridden classes are also taken into account.
-			-- Do nothing if a class is not parsed yet.
+			-- Do nothing on classes which are not parsed yet.
 		do
-			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed))
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_all (agent {ET_CLASS}.reset_after_parsed_and_errors))
 		end
 
 	reset_classes_incremental_recursive is
@@ -115,7 +122,9 @@ feature -- Initialization
 		do
 				-- Start by taking care of classes containing errors, and
 				-- also reset overridden classes as they were when last parsed.
-			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_unless_actual (agent {ET_CLASS}.reset_after_parsed))
+			master_classes_do_recursive (agent {ET_MASTER_CLASS}.local_classes_do_unless_actual (agent {ET_CLASS}.reset_after_parsed_and_errors))
+				-- Classes that had a syntax error need to be reparsed.
+			classes_do_if_recursive (agent {ET_CLASS}.reset_after_preparsed, agent {ET_CLASS}.has_syntax_error)
 				-- Classes that had an ancestor error need to be reprocessed.
 			classes_do_if_recursive (agent {ET_CLASS}.reset_after_parsed, agent {ET_CLASS}.has_ancestors_error)
 				-- We mark classes with an ancestor error here to indicate that

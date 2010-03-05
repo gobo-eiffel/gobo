@@ -278,6 +278,20 @@ feature -- Initialization
 			end
 		end
 
+	reset_after_parsed_and_errors is
+			-- Reset current class as it was just after it was last parsed, or
+			-- as it was when it was last preparsed if there was a syntax error
+			-- (so that the syntax error will be reported again if the current
+			-- class is processed again).
+			-- Do nothing if not parsed.
+		do
+			if has_syntax_error then
+				reset_after_preparsed
+			else
+				reset_after_parsed
+			end
+		end
+
 feature -- Status report
 
 	is_named_type: BOOLEAN is True

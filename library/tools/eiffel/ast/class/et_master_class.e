@@ -1430,7 +1430,7 @@ feature {NONE} -- Initialization
 			l_shallow_mode := current_system.preparse_shallow_mode
 			l_actual_class := actual_class
 			if a_class /= l_actual_class then
-				a_class.reset_after_parsed
+				a_class.reset_after_parsed_and_errors
 			end
 			if a_class.is_preparsed then
 				if a_class.is_in_cluster then
