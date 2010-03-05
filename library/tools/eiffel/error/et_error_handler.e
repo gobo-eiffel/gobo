@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/11/23 $"
+	revision: "$Revision: #35 $"
 
 class ET_ERROR_HANDLER
 
@@ -82,6 +82,40 @@ feature -- Status setting
 			benchmark_shown_set: benchmark_shown = b
 		end
 
+	set_has_error (b: BOOLEAN) is
+			-- Set `has_error' to `b'.
+		do
+			has_error := b
+			if not b then
+				has_eiffel_error := False
+				has_internal_error := False
+			end
+		ensure
+			has_error_set: has_error = b
+		end
+
+	set_has_eiffel_error (b: BOOLEAN) is
+			-- Set `has_eiffel_error' to `b'.
+		do
+			has_eiffel_error := b
+			if b then
+				has_error := True
+			end
+		ensure
+			has_eiffel_error_set: has_eiffel_error = b
+		end
+
+	set_has_internal_error (b: BOOLEAN) is
+			-- Set `has_internal_error' to `b'.
+		do
+			has_internal_error := b
+			if b then
+				has_error := True
+			end
+		ensure
+			has_internal_error_set: has_internal_error = b
+		end
+
 feature -- Compilation report
 
 	report_preparsing_status (a_group: ET_GROUP) is
@@ -146,7 +180,7 @@ feature -- Cluster errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			has_eiffel_error := True
+			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
@@ -293,7 +327,7 @@ feature -- Universe errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			has_eiffel_error := True
+			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
@@ -394,7 +428,7 @@ feature -- .NET assembly errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			has_eiffel_error := True
+			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
@@ -458,7 +492,7 @@ feature -- Syntax errors
 		local
 			an_error: ET_SYNTAX_ERROR
 		do
-			has_eiffel_error := True
+			set_has_eiffel_error (True)
 			create an_error.make (a_filename, p)
 			report_info (an_error)
 		end
@@ -674,7 +708,7 @@ feature -- System errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			has_eiffel_error := True
+			set_has_eiffel_error (True)
 			report_info (an_error)
 			if info_file = std.output then
 				info_file.put_line ("----")
@@ -686,7 +720,7 @@ feature -- System errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			has_eiffel_error := True
+			set_has_eiffel_error (True)
 			report_info_message (an_error)
 		end
 
@@ -837,7 +871,7 @@ feature -- Validity errors
 				(is_ise and an_error.ise_reported) or
 				(is_ge and an_error.ge_reported)
 			then
-				has_eiffel_error := True
+				set_has_eiffel_error (True)
 				report_info (an_error)
 				if info_file = std.output then
 					info_file.put_line ("----")
@@ -7734,7 +7768,7 @@ feature -- Internal errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			has_internal_error := True
+			set_has_internal_error (True)
 			report_error (an_error)
 			if error_file = std.error then
 				error_file.put_line ("----")
@@ -7756,7 +7790,14 @@ feature -- Reporting
 			-- Report `an_error'.
 		do
 			precursor (an_error)
-			has_error := True
+			set_has_error (True)
 		end
+
+invariant
+
+	has_eiffel_error: has_eiffel_error implies has_error
+	has_internal_error: has_internal_error implies has_error
+	not_has_eiffel_error: not has_error implies not has_eiffel_error
+	not_has_internal_error: not has_error implies not has_internal_error
 
 end
