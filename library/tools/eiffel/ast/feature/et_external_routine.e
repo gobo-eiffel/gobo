@@ -5,16 +5,19 @@ indexing
 		"Eiffel external routines"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008/12/01 $"
+	revision: "$Revision: #8 $"
 
 deferred class ET_EXTERNAL_ROUTINE
 
 inherit
 
 	ET_ROUTINE
+		redefine
+			is_external
+		end
 
 	ET_EXTERNAL_ROUTINE_CLOSURE
 		rename
@@ -22,6 +25,11 @@ inherit
 		undefine
 			implementation_feature
 		end
+
+feature -- Status report
+
+	is_external: BOOLEAN is True
+			-- Is feature external?
 
 feature -- Built-in
 

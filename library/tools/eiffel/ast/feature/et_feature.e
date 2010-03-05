@@ -5,10 +5,10 @@ indexing
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008/12/01 $"
+	revision: "$Revision: #16 $"
 
 deferred class ET_FEATURE
 
@@ -328,6 +328,12 @@ feature -- Status report
 
 	is_deferred: BOOLEAN is
 			-- Is feature deferred?
+		do
+			-- Result := False
+		end
+
+	is_external: BOOLEAN is
+			-- Is feature external?
 		do
 			-- Result := False
 		end

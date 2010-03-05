@@ -5,10 +5,10 @@ indexing
 		"Eiffel external-functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2008/12/01 $"
+	revision: "$Revision: #11 $"
 
 class ET_EXTERNAL_FUNCTION
 
@@ -17,6 +17,8 @@ inherit
 	ET_FUNCTION
 		rename
 			make as make_function
+		undefine
+			is_external
 		end
 
 	ET_EXTERNAL_ROUTINE
