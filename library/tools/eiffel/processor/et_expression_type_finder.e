@@ -5,10 +5,10 @@ indexing
 		"Eiffel expression type finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/10/25 $"
+	revision: "$Revision: #6 $"
 
 class ET_EXPRESSION_TYPE_FINDER
 
@@ -112,7 +112,8 @@ feature -- Basic operations
 			--
 			-- Note that it is assumed that `a_feature' has been successfully checked
 			-- in the context of `a_context.root_context' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			-- if `a_feature' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_expression_not_void: a_expression /= Void
 			a_feature_not_void: a_feature /= Void
@@ -164,7 +165,8 @@ feature -- Basic operations
 			--
 			-- Note that it is assumed that `a_feature' has been successfully checked
 			-- in the context of `a_context.root_context' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			-- if `a_feature' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_expression_not_void: a_expression /= Void
 			a_agent_not_void: a_agent /= Void
@@ -223,7 +225,9 @@ feature -- Basic operations
 			-- in the context of `a_context.root_context' as well as `a_feature_impl'
 			-- in the context of `a_feature_impl.implementation_class' (using
 			-- ET_FEATURE_CHECKER for example). Otherwise internal errors may be
-			-- reported (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- reported (using ET_ERROR_HANDLER.report_giaaa_error) if `a_feature' or
+			-- `a_feature_impl' has not been checked or if `internal_error_enabled'
+			-- has been set.
 		require
 			a_expression_not_void: a_expression /= Void
 			a_feature_impl_not_void: a_feature_impl /= Void
@@ -286,7 +290,9 @@ feature -- Basic operations
 			-- in the context of `a_context.root_context' as well as `a_feature_impl'
 			-- in the context of `a_feature_impl.implementation_class' (using
 			-- ET_FEATURE_CHECKER for example). Otherwise internal errors may be
-			-- reported (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- reported (using ET_ERROR_HANDLER.report_giaaa_error) if `a_feature' or
+			-- `a_feature_impl' has not been checked or if `internal_error_enabled'
+			-- has been set.
 		require
 			a_expression_not_void: a_expression /= Void
 			a_feature_impl_not_void: a_feature_impl /= Void
@@ -346,7 +352,8 @@ feature -- Basic operations
 			--
 			-- Note that it is assumed that `a_invariant' has been successfully checked
 			-- in the context of `a_context.root_context' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			--  if `a_invariant' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_expression_not_void: a_expression /= Void
 			a_invariant_not_void: a_invariant /= Void
@@ -394,6 +401,22 @@ feature -- Basic operations
 			current_class_impl := old_class_impl
 			current_feature := old_feature
 			current_feature_impl := old_feature_impl
+		end
+
+feature -- Status report
+
+	internal_error_enabled: BOOLEAN
+			-- Should an internal error be reported even when errors have already
+			-- been reported on the feature being processed?
+
+feature -- Status setting
+
+	set_internal_error_enabled (b: BOOLEAN) is
+			-- Set `internal_error_enabled' to `b'.
+		do
+			internal_error_enabled := b
+		ensure
+			internal_error_enabled_set: internal_error_enabled = b
 		end
 
 feature {NONE} -- Expression processing
@@ -707,7 +730,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif l_name.is_argument then
 					-- This is of the form '$argument'.
 				if current_inline_agent /= Void then
@@ -749,13 +774,17 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				elseif l_seed < 1 or l_seed > l_arguments.count then
 						-- Internal error.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					l_argument := l_arguments.formal_argument (l_seed)
 					l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
@@ -783,13 +812,17 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				elseif l_seed < 1 or l_seed > l_locals.count then
 						-- Internal error.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					l_local := l_locals.local_variable (l_seed)
 					l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
@@ -816,13 +849,17 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				elseif l_seed < 1 or l_seed > l_object_tests.count then
 						-- Internal error.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					l_object_test := l_object_tests.object_test (l_seed)
 					l_identifier ?= l_name
@@ -896,7 +933,9 @@ feature {NONE} -- Expression processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					end
 				end
 			end
@@ -958,13 +997,17 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif l_seed < 1 or l_seed > l_arguments.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_formal := l_arguments.formal_argument (l_seed)
 				l_type := resolved_formal_parameters (l_formal.type, l_class_impl, current_type)
@@ -1033,7 +1076,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_class := a_context.base_class
 				l_query := l_class.seeded_query (l_seed)
@@ -1042,7 +1087,9 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
@@ -1118,13 +1165,17 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif l_seed < 1 or l_seed > l_locals.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 					-- Contrary to the types appearing in the signatures, types of
 					-- local variables in the AST are those found in the implementation
@@ -1438,13 +1489,17 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif l_seed < 1 or l_seed > l_object_tests.count then
 					-- Internal error.
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_object_test := l_object_tests.object_test (l_seed)
 				l_type := l_object_test.type
@@ -1538,7 +1593,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_precursor_keyword := an_expression.precursor_keyword
 				l_class := l_parent_type.base_class
@@ -1549,7 +1606,9 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 -- TODO: like argument.
 					l_type := resolved_formal_parameters (l_query.type, l_class, current_type)
@@ -1605,7 +1664,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif l_name.is_tuple_label then
 				if l_seed > a_context.base_type_actual_count then
 						-- Internal error: the index of the labeled
@@ -1615,7 +1676,9 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					l_type := tokens.formal_parameter (l_seed)
 					a_context.force_last (l_type)
@@ -1628,7 +1691,9 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					l_type := l_query.type
 -- TODO: like argument (the following is just a workaround
@@ -1769,7 +1834,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_type := resolved_formal_parameters (l_type, l_class_impl, current_type)
 				if not has_fatal_error then
@@ -1832,7 +1899,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_typed_pointer_class := current_universe_impl.typed_pointer_any_type.named_base_class
 				if l_typed_pointer_class.actual_class.is_preparsed then
@@ -1889,7 +1958,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				a_context.force_last (l_type)
 				l_class := a_context.base_class
@@ -1899,7 +1970,9 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 -- TODO: check that `l_query' is a constant attribute or an external function.
 -- TODO: like argument.
@@ -1983,7 +2056,9 @@ feature {NONE} -- Expression processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_query := current_class.seeded_query (l_seed)
 				if l_query = Void then
@@ -1991,7 +2066,9 @@ feature {NONE} -- Expression processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					l_type := l_query.type
 -- TODO: like argument (the following is just a workaround
@@ -2107,7 +2184,9 @@ feature {NONE} -- Agent validity
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					end
 				end
 			end
@@ -2134,7 +2213,9 @@ feature {NONE} -- Agent validity
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif an_expression.is_procedure then
 				l_procedure := current_class.seeded_procedure (a_seed)
 				if l_procedure = Void then
@@ -2142,7 +2223,9 @@ feature {NONE} -- Agent validity
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					find_unqualified_procedure_call_agent_type (an_expression, l_procedure, a_context)
 				end
@@ -2154,7 +2237,9 @@ feature {NONE} -- Agent validity
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					find_unqualified_query_call_agent_type (an_expression, l_query, a_context)
 				end
@@ -2276,7 +2361,9 @@ feature {NONE} -- Agent validity
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif a_name.is_tuple_label then
 -- TODO: when `a_target' is an identifier, check whether it is either
 -- a local variable, a formal argument or the name of an attribute.
@@ -2291,7 +2378,9 @@ feature {NONE} -- Agent validity
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					find_qualified_procedure_call_agent_type (an_expression, a_target, l_procedure, a_context)
 				end
@@ -2305,7 +2394,9 @@ feature {NONE} -- Agent validity
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					find_qualified_query_call_agent_type (an_expression, a_target, l_query, a_context)
 				end
@@ -2485,7 +2576,9 @@ feature {NONE} -- Agent validity
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			elseif a_name.is_tuple_label then
 				a_context.force_last (a_target_type)
 				find_typed_tuple_label_call_agent_type (an_expression, a_target, a_context)
@@ -2498,7 +2591,9 @@ feature {NONE} -- Agent validity
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					find_typed_procedure_call_agent_type (an_expression, a_target, l_procedure, a_context)
 				end
@@ -2511,7 +2606,9 @@ feature {NONE} -- Agent validity
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					find_typed_query_call_agent_type (an_expression, a_target, l_query, a_context)
 				end
@@ -2878,14 +2975,18 @@ feature {NONE} -- Agent validity
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					end
 				elseif l_formals = Void or else l_formals.count /= l_actual_list.count then
 						-- Invalid number of actual arguments.
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					nb := l_actual_list.count
 					from i := nb until i < 1 loop

@@ -119,10 +119,10 @@ indexing
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/06/22 $"
+	revision: "$Revision: #4 $"
 
 class ET_SYSTEM_FEATURE_FUZZY_MARKER
 
@@ -187,7 +187,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -278,7 +279,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -316,7 +318,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
@@ -362,7 +365,8 @@ feature -- Processing
 			-- and ET_CLASS.implementation_checked) has been successfully
 			-- run on all these classes that have been marked as being part
 			-- of the system. Otherwise internal errors may be reported
-			-- (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
 		require
 			a_caller_feature_not_void: a_caller_feature /= Void
 			caller_implementation_class_preparsed: a_caller_feature.implementation_class.is_preparsed

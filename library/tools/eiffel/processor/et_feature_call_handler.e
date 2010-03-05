@@ -5,10 +5,10 @@ indexing
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009/12/22 $"
+	revision: "$Revision: #10 $"
 
 class ET_FEATURE_CALL_HANDLER
 
@@ -138,6 +138,7 @@ feature {NONE} -- Initialization
 		do
 			create type_checker.make
 			create expression_type_finder.make
+			expression_type_finder.set_internal_error_enabled (internal_error_enabled)
 			current_class := tokens.unknown_class
 			current_type := current_class
 			current_feature := dummy_feature
@@ -156,7 +157,8 @@ feature -- Processing
 			--
 			-- Note that it is assumed that `a_feature' has been successfully checked
 			-- in the context of `a_current_type' (using ET_FEATURE_CHECKER for example).
-			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error).
+			-- Otherwise internal errors may be reported (using ET_ERROR_HANDLER.report_giaaa_error)
+			-- if `a_feature' has not been checked or if `internal_error_enabled' has been set.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_current_type_not_void: a_current_type /= Void
@@ -179,7 +181,9 @@ feature -- Processing
 					-- somewhere stating that `l_class_impl' (which is supposed to
 					-- be an ancestor of `l_class') does not exist.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				old_feature_impl := current_feature_impl
 				current_feature_impl := l_feature_impl
@@ -215,6 +219,10 @@ feature -- Status report
 	anchored_types_enabled: BOOLEAN
 			-- Should feature appearing as anchor of an anchored type be reported?
 
+	internal_error_enabled: BOOLEAN
+			-- Should an internal error be reported even when errors have already
+			-- been reported on the feature being processed?
+
 feature -- Status setting
 
 	set_assertions_enabled (b: BOOLEAN) is
@@ -239,6 +247,15 @@ feature -- Status setting
 			anchored_types_enabled := b
 		ensure
 			anchored_types_enabled_set: anchored_types_enabled = b
+		end
+
+	set_internal_error_enabled (b: BOOLEAN) is
+			-- Set `internal_error_enabled' to `b'.
+		do
+			internal_error_enabled := b
+			expression_type_finder.set_internal_error_enabled (b)
+		ensure
+			internal_error_enabled_set: internal_error_enabled = b
 		end
 
 feature {NONE} -- Event handling
@@ -686,7 +703,9 @@ feature {ET_AST_NODE} -- Processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					report_bit_feature_type (a_type, l_query)
 				end
@@ -743,7 +762,9 @@ feature {ET_AST_NODE} -- Processing
 					else
 							-- Internal error: no other kind of targets.
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					end
 				end
 			end
@@ -931,7 +952,9 @@ feature {ET_AST_NODE} -- Processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					report_creation_expression (an_expression, l_context, l_procedure, l_arguments)
 				end
@@ -999,7 +1022,9 @@ feature {ET_AST_NODE} -- Processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					report_creation_instruction (an_instruction, l_context, l_procedure)
 				end
@@ -1406,7 +1431,9 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					end
 				end
 			end
@@ -1687,7 +1714,9 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					else
 						report_anchored_type (a_type, l_query)
 					end
@@ -1956,7 +1985,9 @@ feature {ET_AST_NODE} -- Processing
 					-- already have been resolved when flattening the
 					-- features of `current_class_impl'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_precursor_keyword := an_expression.precursor_keyword
 				l_class := l_parent_type.base_class
@@ -1966,7 +1997,9 @@ feature {ET_AST_NODE} -- Processing
 						-- already have been resolved when flattening the
 						-- features of `current_class_impl'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					if current_class /= current_class_impl and l_parent_type.is_generic then
 							-- Resolve generic parameters in the
@@ -1976,7 +2009,9 @@ feature {ET_AST_NODE} -- Processing
 								-- Internal error: `l_parent_type' is an ancestor
 								-- of `current_class_impl', and hence of `current_class'.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							if internal_error_enabled or not current_class.has_implementation_error then
+								error_handler.report_giaaa_error
+							end
 						else
 							l_parent_type := l_ancestor
 						end
@@ -2013,7 +2048,9 @@ feature {ET_AST_NODE} -- Processing
 					-- already have been resolved when flattening the
 					-- features of `l_class_impl'.
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				l_precursor_keyword := an_instruction.precursor_keyword
 				l_class := l_parent_type.base_class
@@ -2023,7 +2060,9 @@ feature {ET_AST_NODE} -- Processing
 						-- already have been resolved when flattening the
 						-- features of `current_class_impl'.
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					if current_class /= current_class_impl and l_parent_type.is_generic then
 							-- Resolve generic parameters in the context of `current_type'.
@@ -2032,7 +2071,9 @@ feature {ET_AST_NODE} -- Processing
 								-- Internal error: `l_parent_type' is an ancestor
 								-- of `current_class_impl', and hence of `current_class'.
 							set_fatal_error
-							error_handler.report_giaaa_error
+							if internal_error_enabled or not current_class.has_implementation_error then
+								error_handler.report_giaaa_error
+							end
 						else
 							l_parent_type := l_ancestor
 						end
@@ -2086,7 +2127,9 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					else
 						report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
 					end
@@ -2156,7 +2199,9 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					else
 						report_qualified_call_expression (a_call, l_context, l_query)
 					end
@@ -2203,7 +2248,9 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					else
 						report_qualified_call_instruction (a_call, l_context, l_procedure)
 					end
@@ -2245,7 +2292,9 @@ feature {ET_AST_NODE} -- Processing
 								-- This error should have already been reported when checking
 								-- `current_feature' (using ET_FEATURE_CHECKER for example).
 							set_fatal_error
-							error_handler.report_giaaa_error
+							if internal_error_enabled or not current_class.has_implementation_error then
+								error_handler.report_giaaa_error
+							end
 						else
 							report_qualified_anchored_type (a_type, l_context, l_query)
 						end
@@ -2336,7 +2385,9 @@ feature {ET_AST_NODE} -- Processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					report_static_call_expression (an_expression, l_type, l_query)
 				end
@@ -2375,7 +2426,9 @@ feature {ET_AST_NODE} -- Processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					report_static_call_instruction (an_instruction, l_type, l_procedure)
 				end
@@ -2496,7 +2549,9 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					else
 						report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
 					end
@@ -2513,7 +2568,9 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					else
 						report_qualified_query_call_agent (an_expression, l_context, l_query)
 					end
@@ -2579,7 +2636,9 @@ feature {ET_AST_NODE} -- Processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					report_unqualified_procedure_call_agent (an_expression, l_procedure)
 				end
@@ -2589,7 +2648,9 @@ feature {ET_AST_NODE} -- Processing
 						-- This error should have already been reported when checking
 						-- `current_feature' (using ET_FEATURE_CHECKER for example).
 					set_fatal_error
-					error_handler.report_giaaa_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
+					end
 				else
 					report_unqualified_query_call_agent (an_expression, l_query)
 				end
@@ -2627,7 +2688,9 @@ feature {ET_AST_NODE} -- Processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				report_unqualified_call_expression (a_call, l_query)
 				reset_fatal_error (had_error)
@@ -2658,7 +2721,9 @@ feature {ET_AST_NODE} -- Processing
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
-				error_handler.report_giaaa_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
+				end
 			else
 				report_unqualified_call_instruction (a_call, l_procedure)
 				reset_fatal_error (had_error)
@@ -2735,12 +2800,16 @@ feature {ET_AST_NODE} -- Processing
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					elseif not l_attribute.is_attribute then
 							-- This error should have already been reported when checking
 							-- `current_feature' (using ET_FEATURE_CHECKER for example).
 						set_fatal_error
-						error_handler.report_giaaa_error
+						if internal_error_enabled or not current_class.has_implementation_error then
+							error_handler.report_giaaa_error
+						end
 					else
 						report_attribute_assignment_target (a_writable, l_attribute)
 					end
