@@ -4,7 +4,7 @@
 		"C functions used to implement class MEMORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -120,12 +120,16 @@ void eif_mem_coalesc(void) {
 }
 
 int collect(void) {
-	/* TODO */
+#ifdef EIF_BOEHM_GC
+	GC_gcollect();
+#endif
 	return 0;
 }
 
 void plsc(void) {
-	/* TODO */
+#ifdef EIF_BOEHM_GC
+	GC_gcollect();
+#endif
 }
 
 void eif_gc_mon(char flag) {
