@@ -130,8 +130,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				an_index := 1
-			variant
-				s1.count - s2.count + 1 - an_index
 			until
 				found or else an_index > s1.count - s2.count
 			loop
@@ -145,9 +143,11 @@ feature {NONE} -- Implementation
 					end
 				end
 				an_index := an_index + 1
+			variant
+				s1.count - s2.count + 1 - an_index
 			end
 			if not found then Result := "" end
 		end
-	
+
 end
-	
+

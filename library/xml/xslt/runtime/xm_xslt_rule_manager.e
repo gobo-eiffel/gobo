@@ -148,11 +148,11 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
 	is_mode_registered (a_mode_name_code: INTEGER): BOOLEAN is
 			-- Is a mode registered for `a_mode_name_code'?
 		local
-			a_node_key: INTEGER		
+			a_node_key: INTEGER
 		do
 			if a_mode_name_code = Default_mode then
 				Result := True
@@ -222,7 +222,7 @@ feature -- Element change
 				set_handler (a_pattern, a_handler, a_mode, a_precedence, a_pattern.default_priority)
 			end
 		end
-				
+
 	set_handler (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_mode: XM_XSLT_MODE; a_precedence: INTEGER; a_priority: MA_DECIMAL) is
 			-- Set handler for `a_pattern'.
 		require
@@ -294,8 +294,6 @@ feature -- Element change
 		do
 			from
 				l_index := a_mode.rule_dictionary.lower
-			variant
-				a_mode.rule_dictionary.count + 1 - l_index
 			until
 				l_index > a_mode.rule_dictionary.upper
 			loop
@@ -318,6 +316,8 @@ feature -- Element change
 					l_rule := l_rule.next_rule
 				end
 				l_index := l_index + 1
+			variant
+				a_mode.rule_dictionary.count + 1 - l_index
 			end
 		end
 
@@ -332,8 +332,6 @@ feature -- Element change
 		do
 			from
 				a_cursor := priority_ranks.new_cursor; a_cursor.start
-			variant
-				priority_ranks.count + 1 - a_cursor.index
 			until
 				found or else a_cursor.after
 			loop
@@ -345,6 +343,8 @@ feature -- Element change
 					a_cursor.put_left (a_priority)
 				end
 				a_cursor.forth
+			variant
+				priority_ranks.count + 1 - a_cursor.index
 			end
 			if not found then
 				priority_ranks.put_last (a_priority)
@@ -375,4 +375,4 @@ invariant
 	priority_ranks_not_void: priority_ranks /= Void
 
 end
-	
+

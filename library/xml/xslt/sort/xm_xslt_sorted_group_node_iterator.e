@@ -62,13 +62,13 @@ feature {NONE} -- Initialization
 			from
 				create key_comparers.make (sort_keys.count)
 				a_cursor := sort_keys.new_cursor; a_cursor.start
-			variant
-				sort_keys.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				key_comparers.put_last (a_cursor.item.comparer)
 				a_cursor.forth
+			variant
+				sort_keys.count + 1 - a_cursor.index
 			end
 
 			-- Avoid doing the sort until the user wants the first item. This is because

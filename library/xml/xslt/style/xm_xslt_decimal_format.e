@@ -75,7 +75,7 @@ feature -- Element change
 			-- Set the attribute list for the element.
 		do
 			-- this has already been done in `preprepare_attributes'
-			attributes_prepared := True			
+			attributes_prepared := True
 		end
 
 	validate is
@@ -154,7 +154,7 @@ feature -- Element change
 		end
 
 feature -- Conversion
-	
+
 	as_decimal_format: XM_XSLT_DECIMAL_FORMAT is
 			-- `Current' seen as an xsl:decimal_format
 		do
@@ -173,8 +173,6 @@ feature {NONE} -- Implementation
 			from
 				l_cursor := attribute_collection.name_code_cursor
 				l_cursor.start
-			variant
-				attribute_collection.number_of_attributes + 1 - l_cursor.index
 			until
 				l_cursor.after or any_compile_errors
 			loop
@@ -189,23 +187,25 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (l_expanded_name, Infinity_attribute) then
 					infinity := attribute_value_by_index (l_cursor.index)
 				elseif STRING_.same_string (l_expanded_name, Minus_sign_attribute) then
-					minus_sign := attribute_value_by_index (l_cursor.index)					
+					minus_sign := attribute_value_by_index (l_cursor.index)
 				elseif STRING_.same_string (l_expanded_name, Nan_attribute) then
 					nan := attribute_value_by_index (l_cursor.index)
 				elseif STRING_.same_string (l_expanded_name, Percent_attribute) then
-					percent := attribute_value_by_index (l_cursor.index)										
+					percent := attribute_value_by_index (l_cursor.index)
 				elseif STRING_.same_string (l_expanded_name, Per_mille_attribute) then
-					per_mille := attribute_value_by_index (l_cursor.index)										
+					per_mille := attribute_value_by_index (l_cursor.index)
 				elseif STRING_.same_string (l_expanded_name, Zero_digit_attribute) then
-					zero_digit := attribute_value_by_index (l_cursor.index)										
+					zero_digit := attribute_value_by_index (l_cursor.index)
 				elseif STRING_.same_string (l_expanded_name, Digit_attribute) then
 					digit := attribute_value_by_index (l_cursor.index)
 				elseif STRING_.same_string (l_expanded_name, Pattern_separator_attribute) then
-					pattern_separator	:= attribute_value_by_index (l_cursor.index)					
+					pattern_separator	:= attribute_value_by_index (l_cursor.index)
 				else
 					check_unknown_attribute (l_name_code)
 				end
 				l_cursor.forth
+			variant
+				attribute_collection.number_of_attributes + 1 - l_cursor.index
 			end
 			if not any_compile_errors then
 				validate_decimal_separator
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	validate_digit is
 			-- Validate `digit'.
 		require
@@ -384,25 +384,25 @@ feature {NONE} -- Implementation
 			end
 			if percent /= Void then
 				Result.set_percent (percent)
-			end						
+			end
 			if per_mille /= Void then
 				Result.set_per_mille (per_mille)
-			end						
+			end
 			if minus_sign /= Void then
 				Result.set_minus_sign (minus_sign)
-			end						
+			end
 			if zero_digit /= Void then
 				Result.set_zero_digit (zero_digit)
-			end						
+			end
 			if digit /= Void then
 				Result.set_digit_sign (digit)
 			end
 			if infinity /= Void then
 				Result.set_infinity (infinity)
-			end						
+			end
 			if nan /= Void then
 				Result.set_nan (nan)
-			end						
+			end
 		ensure
 			created_decimal_format_not_void: Result /= Void
 		end

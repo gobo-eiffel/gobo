@@ -40,13 +40,11 @@ feature -- Access
 			a_depth: INTEGER
 			finished: BOOLEAN
 		do
-			
+
 			-- Remove any inlined variable references and replacements
-			
+
 			from
 				a_cursor := a_reference_list.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				a_cursor.before
 			loop
@@ -55,6 +53,8 @@ feature -- Access
 					a_cursor.remove
 				end
 				a_cursor.back
+			variant
+				a_cursor.index
 			end
 			Result := a_reference_list.count
 			if Result = 1 then
@@ -66,10 +66,10 @@ feature -- Access
 					finished or else a_container = Void
 				loop
 					if a_container.is_computed_expression then
-						
+
 						-- If the variable reference occurs in a subexpression that is evaluated repeatedly,
 						--  for example in the predicate of a filter expression, then return `Many_references'.
-						
+
 						a_computed_expression := a_container.as_computed_expression
 						if a_computed_expression.is_assignation and then a_computed_expression.as_assignation = a_binding then
 							finished := True; Result := 1
@@ -89,17 +89,17 @@ feature -- Access
 					elseif a_container.is_user_function then
 						finished := True;	Result := a_container.parameter_references (a_binding)
 					else
-						
+
 						-- we should have found the binding by now, but we haven't - so just skip the optimization
-						
+
 						finished := True;	Result := Many_references
 					end
 				end
 				if not finished then Result := Many_references end
 			elseif Result > 1 then
-				Result := Many_references 
+				Result := Many_references
 			end
 		end
 
 end
-	
+

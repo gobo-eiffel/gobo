@@ -20848,14 +20848,14 @@ feature {NONE} -- Implementation
 			invariant
 				 i >= j
 				 i >= k
-			variant
-				12090 - i
 			until
 				 i > 12089
 			loop
 				create l_pair.make (l_array_1.item (k).item_code (j), l_array_2.item (k).item_code (j))
 				Result.put_new (l_array_3.item (k).item_code (j), l_pair)
 				i := i + 1; j := j + 1; if j > l_array_2.item (k).count  then j := 1; k := k + 1 end
+			variant
+				12090 - i
 			end
 		end
 

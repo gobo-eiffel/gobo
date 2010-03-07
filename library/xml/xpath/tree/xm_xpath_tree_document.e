@@ -11,9 +11,9 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_DOCUMENT
-	
+
 inherit
-	
+
 	XM_XPATH_DOCUMENT
 		undefine
 			document_element, next_sibling, previous_sibling, has_child_nodes,
@@ -95,7 +95,7 @@ feature -- Access
 		do
 			Result := Void
 		end
-	
+
 	next_sibling: XM_XPATH_NODE is
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
@@ -156,7 +156,7 @@ feature -- Access
 		ensure then
 			all_elements_cached: element_list.has (a_fingerprint)
 		end
-		
+
 	unparsed_entity_system_id (an_entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		local
@@ -239,7 +239,7 @@ feature -- Access
 		do
 			Result := attribute_idref_table.new_iterator (some_idrefs)
 		end
-	
+
 feature -- Status report
 
 	is_line_numbering: BOOLEAN is
@@ -396,8 +396,6 @@ feature {NONE} -- Implementation
 						l_element := l_node.as_tree_element
 						from
 							l_index := 1
-						variant
-							l_element.number_of_attributes + 1 - l_index
 						until
 							l_index > l_element.number_of_attributes
 						loop
@@ -412,6 +410,8 @@ feature {NONE} -- Implementation
 								end
 							end
 							l_index := l_index + 1
+						variant
+							l_element.number_of_attributes + 1 - l_index
 						end
 					end
 					l_node := l_node.next_node_in_document_order (Current)
@@ -438,4 +438,4 @@ invariant
 	system_id_map: system_id_map /= Void
 
 end
-	
+

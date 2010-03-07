@@ -456,8 +456,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_start_index := 1;
-			variant
-				a_character_string.count + 2 - a_start_index
 			until
 				is_error or a_start_index > a_character_string.count
 			loop
@@ -498,6 +496,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				a_start_index := a_beyond_index + 1
+			variant
+				a_character_string.count + 2 - a_start_index
 			end
 		end
 

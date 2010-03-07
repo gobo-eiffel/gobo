@@ -507,12 +507,12 @@ feature -- Status report
 					fractional_count := -exponent
 					from
 						index := fractional_count.min (count)
-					variant
-						index
 					until
 						index <= 0 or else coefficient.item (index - 1) /= 0
 					loop
 						index := index - 1
+					variant
+						index
 					end
 					Result := index = 0
 				else
@@ -799,13 +799,13 @@ feature -- Conversion
 			from
 				index := temp.count - 1
 				Result := 0
-			variant
-				index + 1
 			until
 				index < 0
 			loop
 				Result := Result * 10 + temp.coefficient.item (index)
 				index := index - 1
+			variant
+				index + 1
 			end
 			if is_negative then
 				Result := -Result

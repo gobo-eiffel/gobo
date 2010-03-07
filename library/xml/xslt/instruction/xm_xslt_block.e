@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 		do
 			make_sequence (a_head, a_tail)
 			set_source_location (a_module_number, a_line_number)
-			executable := a_executable			
+			executable := a_executable
 		ensure
 			executable_set: executable = a_executable
 		end
@@ -71,8 +71,6 @@ feature -- Status report
 			if children.count > 0 then
 				from
 					a_cursor := children.new_cursor; a_cursor.start
-				variant
-					children.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -82,6 +80,8 @@ feature -- Status report
 					else
 						a_cursor.forth
 					end
+				variant
+					children.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -99,8 +99,6 @@ feature -- Optimization
 				create l_replacement.make (Void)
 				l_cursor := children.new_cursor
 				l_cursor.start
-			variant
-				children.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -112,7 +110,9 @@ feature -- Optimization
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
-			end	
+			variant
+				children.count + 1 - l_cursor.index
+			end
 		end
 
 feature -- Evaluation
@@ -130,8 +130,6 @@ feature -- Evaluation
 		do
 			from
 				l_cursor := children.new_cursor; l_cursor.start
-			variant
-				children.count + 1 - l_cursor.index
 			until
 				a_context.transformer.is_error or else l_cursor.after
 			loop
@@ -167,6 +165,8 @@ feature -- Evaluation
 					end
 				end
 				l_cursor.forth
+			variant
+				children.count + 1 - l_cursor.index
 			end
 		end
 
@@ -182,7 +182,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 feature {NONE} -- Implementation
-	
+
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
@@ -190,4 +190,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

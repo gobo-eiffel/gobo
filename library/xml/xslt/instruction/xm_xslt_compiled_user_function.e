@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			function_name_set: function_name = a_function_name
 			memo_status_set: is_memo_function = memo_function
 			result_type_set: result_type = a_result_type
-		end	
+		end
 
 feature -- Access
 
@@ -189,7 +189,7 @@ feature -- Evaluation
 		require
 			a_actual_arguments_not_void: a_actual_arguments /= Void
 			a_context_not_void: a_context /= Void
-			
+
 		do
 			a_context.set_stack_frame (create {XM_XPATH_STACK_FRAME}.make (slot_manager, a_actual_arguments))
 			body.generate_events (a_context)
@@ -287,8 +287,6 @@ feature {NONE} -- Implementation
 			a_key.put (l_key)
 			from
 				l_index := 1
-			variant
-				parameter_count + 1 - l_index
 			until
 				a_transformer.is_error or else l_index > parameter_count
 			loop
@@ -332,6 +330,8 @@ feature {NONE} -- Implementation
 					end
 					l_index := l_index + 1
 				end
+			variant
+				parameter_count + 1 - l_index
 			end
 		ensure
 			error_or_combined_key_set: not a_transformer.is_error implies a_key.item /= Void
@@ -360,6 +360,6 @@ invariant
 	result_type_not_void: result_type /= Void
 	evaluation_mode_large_enough: cached_evaluation_mode >= Evaluation_method_undecided
 	evaluation_mode_small_enough: cached_evaluation_mode <= Create_memo_closure
-			
+
 end
-	
+

@@ -6,7 +6,7 @@ indexing
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
-	license: "MIT License"	
+	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -98,7 +98,7 @@ feature -- Result
 	has_media_type: BOOLEAN is
 			-- Is the media type available.
 		do
-			Result := not has_error 
+			Result := not has_error
 		end
 
 	last_media_type: UT_MEDIA_TYPE
@@ -187,8 +187,6 @@ feature {NONE} -- Implementation
 					from
 						a_splitter.set_separators ("=")
 						a_cursor := some_parameters.new_cursor; a_cursor.start
-					variant
-						some_parameters.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
@@ -200,6 +198,8 @@ feature {NONE} -- Implementation
 							last_media_type.add_parameter (a_parameter_pair.item (1), a_parameter_pair.item (2))
 							a_cursor.forth
 						end
+					variant
+						some_parameters.count + 1 - a_cursor.index
 					end
 				end
 			end

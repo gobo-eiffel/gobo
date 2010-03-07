@@ -56,7 +56,7 @@ feature -- Test
 -- 			a_transformer.set_initial_template ("first")
 -- 			assert ("Initial template set", a_transformer.initial_template /= Void)
 -- 			create an_output
--- 			an_output.set_output_to_string 
+-- 			an_output.set_output_to_string
 -- 			create a_result.make (an_output, "string:")
 -- 			a_transformer.transform (Void, a_result)
 -- 			assert ("Transform successfull", not a_transformer.is_error)
@@ -85,7 +85,7 @@ feature -- Test
 -- 			a_transformer.set_initial_template ("first")
 -- 			assert ("Initial template set", a_transformer.initial_template /= Void)
 -- 			create an_output
--- 			an_output.set_output_to_string 
+-- 			an_output.set_output_to_string
 -- 			create a_result.make (an_output, "string:")
 -- 			a_transformer.transform (Void, a_result)
 -- 			assert ("Transform successfull", not a_transformer.is_error)
@@ -115,7 +115,7 @@ feature -- Test
 -- 			a_transformer.set_initial_template ("first")
 -- 			assert ("Initial template set", a_transformer.initial_template /= Void)
 -- 			create an_output
--- 			an_output.set_output_to_string 
+-- 			an_output.set_output_to_string
 -- 			create a_result.make (an_output, "string:")
 -- 			a_transformer.transform (Void, a_result)
 -- 			assert ("Transform unsuccessfull", a_transformer.is_error)
@@ -133,14 +133,14 @@ feature {NONE} -- Debug
 			from
 				Result := ""
 				an_index := 1
-			variant
-				a_string.count + 1 - an_index
 			until
 				an_index > a_string.count
 			loop
 				a_code := a_string.item_code (an_index)
 				Result.append_string (INTEGER_.to_hexadecimal (a_code, True))
 				an_index := an_index + 1
+			variant
+				a_string.count + 1 - an_index
 			end
 		ensure
 			result_not_void: Result /= Void

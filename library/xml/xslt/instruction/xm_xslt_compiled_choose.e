@@ -11,7 +11,7 @@ indexing
 class XM_XSLT_COMPILED_CHOOSE
 
 inherit
-	
+
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, creates_new_nodes, sub_expressions, evaluate_item, create_iterator,
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		local
@@ -81,7 +81,7 @@ feature -- Access
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
-			end			
+			end
 		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
@@ -92,7 +92,7 @@ feature -- Access
 			Result.extend_last (conditions)
 			Result.extend_last (actions)
 		end
-	
+
 feature -- Status report
 
 	creates_new_nodes: BOOLEAN is
@@ -107,7 +107,7 @@ feature -- Status report
 			loop
 				Result := not a_cursor.item.non_creating
 				a_cursor.forth
-			end	
+			end
 		end
 
 	display (a_level: INTEGER) is
@@ -118,8 +118,6 @@ feature -- Status report
 		do
 			from
 				a_cursor := conditions.new_cursor; a_cursor.start
-			variant
-				conditions.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -133,6 +131,8 @@ feature -- Status report
 				std.error.put_string (indentation (a_level)); std.error.put_string ("then"); std.error.put_new_line
 				actions.item (a_cursor.index).display (a_level + 1)
 				a_cursor.forth
+			variant
+				conditions.count + 1 - a_cursor.index
 			end
 		end
 
@@ -254,7 +254,7 @@ feature -- Optimization
 				end
 				l_replacement.put (Void)
 				l_cursor.forth
-			end	
+			end
 		ensure then
 			same_condition_count: conditions.count = old conditions.count
 		end
@@ -326,7 +326,7 @@ feature -- Optimization
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
-				end	
+				end
 			end
 			if conditions.is_empty then
 				conditions.put_last (create {XM_XPATH_BOOLEAN_VALUE}.make (True))
@@ -395,7 +395,7 @@ feature -- Optimization
 				end
 			end
 		ensure then
-			same_condition_count: conditions.count = old conditions.count			
+			same_condition_count: conditions.count = old conditions.count
 		end
 
 feature -- Evaluation
@@ -415,8 +415,6 @@ feature -- Evaluation
 			end
 			from
 				l_cursor := conditions.new_cursor; l_cursor.start
-			variant
-				conditions.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -438,6 +436,8 @@ feature -- Evaluation
 				else
 					l_cursor.forth
 				end
+			variant
+				conditions.count + 1 - l_cursor.index
 			end
 			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make end
 		end
@@ -457,8 +457,6 @@ feature -- Evaluation
 			end
 			from
 				l_cursor := conditions.new_cursor; l_cursor.start
-			variant
-				conditions.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -476,6 +474,8 @@ feature -- Evaluation
 				else
 					l_cursor.forth
 				end
+			variant
+				conditions.count + 1 - l_cursor.index
 			end
 		end
 
@@ -490,8 +490,6 @@ feature -- Evaluation
 		do
 			from
 				l_cursor := conditions.new_cursor; l_cursor.start
-			variant
-				conditions.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -516,11 +514,13 @@ feature -- Evaluation
 					l_cursor.forth
 				end
 				a_tail.put (l_tail_call)
+			variant
+				conditions.count + 1 - l_cursor.index
 			end
 		end
 
 feature {NONE} -- Implementation
-	
+
 	conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Conditions
 
@@ -538,6 +538,6 @@ invariant
 	conditions: initialized implies conditions /= Void
 	conditions: initialized implies not conditions.is_empty
 	actions: initialized implies actions /= Void and then actions.count = conditions.count
-	
+
 end
-	
+

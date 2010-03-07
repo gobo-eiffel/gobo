@@ -133,8 +133,6 @@ feature -- Access
 				some_collation_names := a_splitter.split (local_default_collation_name)
 				from
 					a_cursor := some_collation_names.new_cursor; a_cursor.start
-				variant
-					some_collation_names.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -145,6 +143,8 @@ feature -- Access
 					else
 						a_cursor.forth
 					end
+				variant
+					some_collation_names.count + 1 - a_cursor.index
 				end
 				if Result = Void then
 					Result := ""
@@ -493,8 +493,6 @@ feature -- Access
 			a_top_level_element_list := a_root.top_level_elements
 			from
 				a_cursor := a_top_level_element_list.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				a_cursor.before
 			loop
@@ -505,6 +503,8 @@ feature -- Access
 				else
 					a_cursor.back
 				end
+			variant
+				a_cursor.index
 			end
 		ensure
 			function_may_not_be_available: True
@@ -617,8 +617,6 @@ feature -- Status_report
 				from
 					a_cursor := children.new_cursor
 					a_cursor.start
-				variant
-					children.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -630,6 +628,8 @@ feature -- Status_report
 						end
 					end
 					if not a_cursor.after then a_cursor.forth end
+				variant
+					children.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1690,8 +1690,6 @@ feature -- Element change
 					from
 						a_cursor := an_extension_list.new_cursor
 						a_cursor.start
-					variant
-						an_extension_list.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
@@ -1708,6 +1706,8 @@ feature -- Element change
 							extension_namespaces.put_last (a_code)
 							a_cursor.forth
 						end
+					variant
+						an_extension_list.count + 1 - a_cursor.index
 					end
 				end
 			end
@@ -1747,8 +1747,6 @@ feature -- Element change
 						from
 							l_cursor := l_exclusion_list.new_cursor
 							l_cursor.start
-						variant
-							l_exclusion_list.count + 1 - l_cursor.index
 						until
 							l_cursor.after
 						loop
@@ -1776,6 +1774,8 @@ feature -- Element change
 								excluded_namespaces.put_last (l_code)
 								l_cursor.forth
 							end
+						variant
+							l_exclusion_list.count + 1 - l_cursor.index
 						end
 					end
 				end
@@ -2079,8 +2079,6 @@ feature -- Element change
 			l_attribute_set_list := l_splitter.split (a_sets)
 			from
 				l_cursor := l_attribute_set_list.new_cursor; l_cursor.start
-			variant
-				l_attribute_set_list.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -2096,8 +2094,6 @@ feature -- Element change
 						-- Search for the named attribute set, using all of them if there are several with the same name
 						from
 							l_second_cursor := l_top_level_elements.new_cursor; l_second_cursor.start
-						variant
-							l_top_level_elements.count + 1 - l_second_cursor.index
 						until
 							l_second_cursor.after
 						loop
@@ -2106,6 +2102,8 @@ feature -- Element change
 								l_list.force_last (l_second_cursor.item.as_attribute_set)
 							end
 							l_second_cursor.forth
+						variant
+							l_top_level_elements.count + 1 - l_second_cursor.index
 						end
 						if not found then
 							create l_error.make_from_string (STRING_.concat ("No attribute-set exists named ", l_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
@@ -2120,19 +2118,21 @@ feature -- Element change
 					report_compile_error (l_error)
 					l_cursor.go_after
 				end
+			variant
+				l_attribute_set_list.count + 1 - l_cursor.index
 			end
 			if not any_compile_errors then
 				create used_attribute_sets.make (l_list.count)
 				from
 					l_third_cursor := l_list.new_cursor; l_third_cursor.start
-				variant
-					l_list.count + 1 - l_third_cursor.index
 				until
 					l_third_cursor.after
 				loop
 					l_third_cursor.item.increment_reference_count
 					used_attribute_sets.put_last (l_third_cursor.item.attribute_set_name_code)
 					l_third_cursor.forth
+				variant
+					l_list.count + 1 - l_third_cursor.index
 				end
 			end
 		ensure
@@ -2278,8 +2278,6 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 				from
 					a_cursor := excluded_namespaces.new_cursor
 					a_cursor.start
-				variant
-					excluded_namespaces.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -2289,6 +2287,8 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 					else
 						a_cursor.forth
 					end
+				variant
+					excluded_namespaces.count + 1 - a_cursor.index
 				end
 			end
 		end

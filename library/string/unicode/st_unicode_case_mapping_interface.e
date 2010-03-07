@@ -34,8 +34,6 @@ feature -- Access
 					-- We don't know in advance how big the result will be.
 					-- So this is a best guess:
 				create Result.make (l_count)
-			variant
-				increasing_index: l_count - i + 1
 			until
 				i > l_count
 			loop
@@ -47,6 +45,8 @@ feature -- Access
 					Result.append_item_code (l_code)
 				end
 				i := i + 1
+			variant
+				increasing_index: l_count - i + 1
 			end
 		ensure
 			lower_unicode_string_not_void: Result /= Void
@@ -68,8 +68,6 @@ feature -- Access
 					-- We don't know in advance how big the result will be.
 					-- So this is a best guess:
 				create Result.make (l_count)
-			variant
-				increasing_index: l_count - i + 1
 			until
 				i > l_count
 			loop
@@ -81,6 +79,8 @@ feature -- Access
 					Result.append_item_code (l_code)
 				end
 				i := i + 1
+			variant
+				increasing_index: l_count - i + 1
 			end
 		ensure
 			upper_unicode_string_not_void: Result /= Void

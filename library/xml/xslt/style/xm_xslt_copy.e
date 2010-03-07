@@ -27,7 +27,7 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
@@ -61,8 +61,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -82,6 +80,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_copy_namespaces_attribute = Void then
@@ -107,7 +107,7 @@ feature -- Element change
 					create an_error.make_from_string ("Value of inherit-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
-			end			
+			end
 			if a_validation_attribute /= Void then
 				validation := validation_code (a_validation_attribute)
 				if validation /= Validation_strip then
@@ -157,7 +157,7 @@ feature -- Element change
 			l_content := last_generated_expression
 			if not used_attribute_sets.is_empty then
 				create l_attributes_usage.make (a_executable, used_attribute_sets)
-				
+
 				-- The use-attribute-sets is ignored unless the context item is an element node.
             -- So we will wrap the XM_XSLT_ATTRIBUTE_USAGE in a conditional to perform a run-time test
 				create l_context_item.make

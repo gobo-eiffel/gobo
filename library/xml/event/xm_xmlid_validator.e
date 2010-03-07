@@ -9,27 +9,27 @@ indexing
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class XM_XMLID_VALIDATOR
 
 inherit
-	
+
 	XM_CALLBACKS_FILTER
 		redefine
 			on_start,
 			on_finish,
 			on_attribute
 		end
-	
+
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
-	
+
 	XM_SHARED_UNICODE_CHARACTERS
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-	
+
 	KL_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
@@ -54,7 +54,7 @@ feature -- Events
 			ids := Void
 			Precursor
 		end
-		
+
 	on_attribute (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Normalize xml:id attribute and check it is unique.
 		local
@@ -72,7 +72,7 @@ feature -- Events
 				end
 				Precursor (a_namespace, a_prefix, a_local_part, an_id)
 			end
-		end 
+		end
 
 feature {NONE} -- Implementation
 
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	normalize (an_id: STRING): STRING is
-			-- Identifier attribute normalized 
+			-- Identifier attribute normalized
 			-- (duplicates spaces removed, head and trailing spaces removed)
 		require
 			an_id_not_void: an_id /= Void
@@ -95,8 +95,6 @@ feature {NONE} -- Implementation
 			from
 				last_start := 1
 				i := 2
-			variant
-				an_id.count - i + 1
 			until
 				i > an_id.count
 			loop
@@ -116,8 +114,10 @@ feature {NONE} -- Implementation
 					end
 				end
 				i := i + 1
+			variant
+				an_id.count - i + 1
 			end
-			
+
 			if last_start = 1 then
 					-- no duplicate spaces
 				Result := an_id
@@ -125,12 +125,12 @@ feature {NONE} -- Implementation
 					-- tail
 				Result := STRING_.appended_string (Result, an_id.substring (last_start, an_id.count))
 			else
-				check 
+				check
 					no_leftovers: last_start = 0
 					ends_with_space: is_space (an_id.item_code (an_id.count))
 				end
 			end
-			
+
 				-- Remove heading and trailing space
 			if not Result.is_empty and then is_space (Result.item_code (1)) then
 				Result := Result.substring (2, Result.count)
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 		do
 			Result := characters_1_0.is_space (a_char)
 		end
-		
+
 feature {NONE} -- Constants
 
 	Duplicate_id_error: STRING is "duplicate xml:id declaration"

@@ -85,13 +85,13 @@ feature -- Status report
 			a_cursor := arguments.new_cursor
 			from
 				a_cursor.start
-			variant
-				arguments.count + 1 - a_cursor.index				
 			until
 				a_cursor.after
 			loop
 				a_cursor.item.display (a_level + 1)
 				a_cursor.forth
+			variant
+				arguments.count + 1 - a_cursor.index
 			end
 		end
 
@@ -105,23 +105,23 @@ feature -- Status setting
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			arguments := args
-			arguments.set_equality_tester (expression_tester)											
+			arguments.set_equality_tester (expression_tester)
 			from
 				a_cursor := arguments.new_cursor; a_cursor.start
-			variant
-				arguments.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				adopt_child_expression (a_cursor.item)
 				a_cursor.forth
+			variant
+				arguments.count + 1 - a_cursor.index
 			end
 			compute_static_properties
 		ensure
 			arguments_set: arguments = args
 			static_properties_computed: are_static_properties_computed
 		end
-	
+
 feature -- Optimization
 
 	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
@@ -130,7 +130,7 @@ feature -- Optimization
 			simplify_arguments (a_replacement)
 			if a_replacement.item = Void then
 				a_replacement.put (Current)
-			end			
+			end
 		end
 
 	simplify_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
@@ -148,8 +148,6 @@ feature -- Optimization
 				l_cursor := arguments.new_cursor
 				l_cursor.start
 				create l_replacement.make (Void)
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				a_replacement.item /= Void or l_cursor.after
 			loop
@@ -163,6 +161,8 @@ feature -- Optimization
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
 		end
 
@@ -178,8 +178,6 @@ feature -- Optimization
 				l_cursor := arguments.new_cursor
 				l_cursor.start
 				create l_replacement.make (Void)
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				a_replacement.item /= Void or l_cursor.after
 			loop
@@ -200,8 +198,10 @@ feature -- Optimization
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
-			
+
 			if a_replacement.item = Void then
 				check_arguments (a_replacement, a_context)
 			end
@@ -211,7 +211,7 @@ feature -- Optimization
 				else
 					a_replacement.put (Current)
 				end
-			end			
+			end
 		end
 
 	optimize (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -226,8 +226,6 @@ feature -- Optimization
 				l_cursor := arguments.new_cursor
 				l_cursor.start
 				create l_replacement.make (Void)
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				a_replacement.item /= Void or l_cursor.after
 			loop
@@ -244,8 +242,10 @@ feature -- Optimization
 				end
 				l_cursor.forth
 				l_replacement.put (Void)
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
-	
+
 			if a_replacement.item = Void then
 				check_arguments (a_replacement, a_context)
 			end
@@ -255,7 +255,7 @@ feature -- Optimization
 				else
 					a_replacement.put (Current)
 				end
-			end		
+			end
 		end
 
 	promote (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_offer: XM_XPATH_PROMOTION_OFFER) is
@@ -274,8 +274,6 @@ feature -- Optimization
 				from
 					l_cursor.start
 					create l_replacement.make (Void)
-				variant
-					arguments.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -287,12 +285,14 @@ feature -- Optimization
 					end
 					l_replacement.put (Void)
 					l_cursor.forth
+				variant
+					arguments.count + 1 - l_cursor.index
 				end
 				a_replacement.put (Current)
 			else
 				a_replacement.put (Current)
 			end
-		end	
+		end
 
 feature -- Evaluation
 
@@ -317,9 +317,9 @@ feature -- Evaluation
 		ensure
 			replaced: a_replacement.item /= Void
 		end
-	
+
 feature {XM_XPATH_FUNCTION_CALL} -- Local
-	
+
 	check_arguments (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		require

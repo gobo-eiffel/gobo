@@ -29,7 +29,7 @@ inherit
 
 	XM_XPATH_PROMOTION_ACTIONS
 		export {NONE} all end
-	
+
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 		export {NONE} all end
 
@@ -43,7 +43,7 @@ inherit
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
 		export {NONE} all end
-	
+
 	XM_XPATH_SHARED_NO_NODE_TEST
 		export {NONE} all end
 
@@ -102,15 +102,15 @@ feature -- Access
 				else
 					a_node_kind_mask := a_base_type.as_node_test.node_kind_mask
 					if always_untyped then
-						
+
 						-- Some node-kinds always have a typed value that's a string
-						
+
 						if INTEGER_.bit_or (a_node_kind_mask, string_kinds) = string_kinds then
 							Result := type_factory.string_type
 							finished := True
-							
+
 							-- Some node-kinds are always untypedAtomic; some are conditionally so:
-							
+
 						elseif INTEGER_.bit_or (a_node_kind_mask, untyped_if_untyped_kinds) = untyped_if_untyped_kinds then
 							Result := type_factory.untyped_atomic_type
 							finished := True
@@ -250,13 +250,13 @@ feature -- Status report
 
 	last_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Result from last call to `create_iterator'
-	
+
 	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Result from last call to `create_node_iterator'
-	
+
 	last_slot_number: INTEGER
 			-- Last allocated variable slot number
-	
+
 	is_deferred_error: BOOLEAN is
 			-- Is `Current' a deferred error?
 		do
@@ -417,7 +417,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_string_length_function: BOOLEAN is
 			-- Is `Current' XPath an string-length() function?
 		do
@@ -435,7 +435,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_generate_id_function: BOOLEAN is
 			-- Is `Current' an XSLT generate-id() function?
 		do
@@ -465,13 +465,13 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_hex_binary: BOOLEAN is
 			-- Is `Current' a hexBinary value?
 		do
 			Result := False
 		end
-	
+
 	is_base64_binary: BOOLEAN is
 			-- Is `Current' a base64Binary value?
 		do
@@ -483,7 +483,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_integer_value: BOOLEAN is
 			-- Is `Current' an integer value?
 		do
@@ -495,13 +495,13 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_integer_range: BOOLEAN is
 			-- Is `Current' an integer range?
 		do
 			Result := False
 		end
-	
+
 	is_decimal_value: BOOLEAN is
 			-- Is `Current' a decimal value?
 		do
@@ -513,7 +513,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_date_value: BOOLEAN is
 			-- Is `Current' a date value?
 		do
@@ -591,7 +591,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_untyped_atomic: BOOLEAN is
 			-- Is `Current' an untyped atomic value?
 		do
@@ -633,7 +633,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_singleton_node: BOOLEAN is
 			-- Is `Current' a singleton node?
 		do
@@ -657,7 +657,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_computed_expression: BOOLEAN is
 			-- Is `Current' a computed expression?
 		do
@@ -741,13 +741,13 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_axis_expression: BOOLEAN is
 			-- Is `Current' an axis expression?
 		do
 			Result := False
 		end
-	
+
 	is_let_expression: BOOLEAN is
 			-- Is `Current' a let expression?
 		do
@@ -759,31 +759,31 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 	is_boolean_expression: BOOLEAN is
 			-- Is `Current' a boolean expression?
 		do
 			Result := False
 		end
-	
+
 	is_tail_expression: BOOLEAN is
 			-- Is `Current' a tail expression?
 		do
 			Result := False
 		end
-	
+
 	is_root_expression: BOOLEAN is
 			-- Is `Current' a root expression?
 		do
 			Result := False
 		end
-	
+
 	is_parent_node_expression: BOOLEAN is
 			-- Is `Current' a parent node expression?
 		do
 			Result := False
 		end
-	
+
 	is_path_expression: BOOLEAN is
 			-- Is `Current' a path expression?
 		do
@@ -841,7 +841,7 @@ feature -- Status setting
 	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
 			-- Set `error_value'.
 		require
-			not_in_error: not is_error		
+			not_in_error: not is_error
 			error_value_not_void: an_error_value /= Void
 		do
 			error_value := an_error_value
@@ -849,7 +849,7 @@ feature -- Status setting
 			set: error_value = an_error_value
 			in_error: is_error
 		end
-	
+
 	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
 			-- Set `error_value'.
 		require
@@ -857,7 +857,7 @@ feature -- Status setting
 			message_not_void: a_message /= Void and then a_message.count > 0
 			namespace_uri_not_void: a_namespace_uri /= Void
 			code_not_void: a_code /= Void
-			not_in_error: not is_error			
+			not_in_error: not is_error
 		do
 			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
 		ensure
@@ -1170,7 +1170,7 @@ feature -- Evaluation
 						end
 					end
 				end
-				if last_boolean_value = Void then create last_boolean_value.make (False) end			
+				if last_boolean_value = Void then create last_boolean_value.make (False) end
 			else
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (last_iterator.error_value)
@@ -1258,7 +1258,7 @@ feature -- Evaluation
 		end
 
 feature -- Element change
-	
+
 	allocate_slots (a_next_free_slot: INTEGER; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- Allocate slot numbers for all range variable in `Current' and it's sub-expresions.
 		require
@@ -1279,8 +1279,6 @@ feature -- Element change
 			from
 				l_cursor := sub_expressions.new_cursor
 				l_cursor.start
-			variant
-				sub_expressions.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -1293,6 +1291,8 @@ feature -- Element change
 					last_slot_number := l_cursor.item.last_slot_number
 				end
 				l_cursor.forth
+			variant
+				sub_expressions.count + 1 - l_cursor.index
 			end
 		ensure
 			last_slot_number_not_less: last_slot_number >= old last_slot_number
@@ -1433,7 +1433,7 @@ feature -- Conversion
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end	
+		end
 
 	as_assignation: XM_XPATH_ASSIGNATION is
 			-- `Current' seen as a assignation
@@ -1461,7 +1461,7 @@ feature -- Conversion
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
-	
+
 	as_lazy_expression: XM_XPATH_LAZY_EXPRESSION is
 			-- `Current' seen as a lazy expression
 		require
@@ -1541,7 +1541,7 @@ feature -- Conversion
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end	
+		end
 
 	as_closure: XM_XPATH_CLOSURE is
 			-- `Current' seen as a closure
@@ -1623,7 +1623,7 @@ feature -- Conversion
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
-	
+
 	as_duration_value: XM_XPATH_DURATION_VALUE is
 			-- `Current' seen as an xs:duration value
 		require
@@ -1967,7 +1967,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 
 	Supports_evaluate: INTEGER is 1
 			-- `Current' natively supports `evaluate'
-	
+
 	Supports_iterator: INTEGER is 2
 			-- `Current' natively supports `create_iterator'
 
@@ -1986,7 +1986,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 		require
 			not_in_error: not is_error
 			a_replacement_not_void: a_replacement /= Void
-			not_replaced: a_replacement.item = Void			
+			not_replaced: a_replacement.item = Void
 		local
 			l_offer: XM_XPATH_PROMOTION_OFFER
 		do
@@ -2015,7 +2015,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			end
 		ensure
 			replaced: a_replacement.item /= Void
-			not_in_error: not a_replacement.item.is_error			
+			not_in_error: not a_replacement.item.is_error
 		end
 
 	indentation (a_level: INTEGER): STRING is
@@ -2028,13 +2028,13 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			Result := ""
 			from
 				counter := 1
-			variant
-				a_level + 1 - counter
 			until
 				counter > a_level
 			loop
 				Result := STRING_.appended_string (Result, " ")
 				counter := counter + 1
+			variant
+				a_level + 1 - counter
 			end
 		end
 
@@ -2135,4 +2135,4 @@ invariant
 	value_or_computed_expression: BOOLEAN_.nxor (<<is_value, is_computed_expression, is_pattern_bridge>>)
 
 end
-	
+

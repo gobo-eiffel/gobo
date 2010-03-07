@@ -179,7 +179,7 @@ feature -- Status setting
 			a_offer_not_void: a_offer /= Void
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if filters /= Void then
 				from
@@ -214,7 +214,7 @@ feature -- Optimization
 			l_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			l_filter_expression: XM_XPATH_EXPRESSION
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
@@ -239,19 +239,19 @@ feature -- Optimization
 						l_cursor := l_result_pattern.filters.new_cursor
 						l_cursor.start
 						create l_replacement.make (Void)
-					variant
-						l_result_pattern.filters.count + 1 - l_cursor.index
 					until
 						l_cursor.after
 					loop
 						l_filter_expression := l_cursor.item
-						
+
 						l_filter_expression.simplify (l_replacement)
 						if l_filter_expression /= l_replacement.item then
 							l_cursor.replace (l_replacement.item)
 						end
 						l_replacement.put (Void)
 						l_cursor.forth
+					variant
+						l_result_pattern.filters.count + 1 - l_cursor.index
 					end
 				end
 				Result := l_result_pattern
@@ -267,14 +267,14 @@ feature -- Optimization
 			l_step: XM_XPATH_AXIS_EXPRESSION
 			l_filters: like filters
 			l_routines: XM_XSLT_PATTERN_ROUTINES
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			l_context ?= a_context
 			check
 				l_context_not_void: l_context /= Void
 				-- this is XSLT
 			end
-			
+
 			-- Analyze each component of the pattern
 
 			if parent_pattern /= Void then
@@ -308,13 +308,11 @@ feature -- Optimization
 
 			if not is_error and then filters /= Void then
 				create l_filters.make (filters.count)
-				l_filters.set_equality_tester (expression_tester)				
+				l_filters.set_equality_tester (expression_tester)
 				from
 					create l_replacement.make (Void)
 					l_cursor := filters.new_cursor
 					l_cursor.finish
-				variant
-					l_cursor.index
 				until
 					is_error or else l_cursor.before
 				loop
@@ -342,6 +340,8 @@ feature -- Optimization
 						end
 					end
 					l_cursor.back
+				variant
+					l_cursor.index
 				end
 				filters := l_filters
 			end
@@ -396,7 +396,7 @@ feature -- Optimization
 			-- Promote sub-expressions of `Current'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			if parent_pattern /= Void then
 				parent_pattern.promote (a_offer)
@@ -557,13 +557,13 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 				from
 					l_cursor := filters.new_cursor
 					l_cursor.start
-				variant
-					filters.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
 					create {XM_XPATH_FILTER_EXPRESSION} step.make (step, l_cursor.item)
 					l_cursor.forth
+				variant
+					filters.count + 1 - l_cursor.index
 				end
 			end
 			create parent_node.make
@@ -581,8 +581,6 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 				from
 					l_cursor := filters.new_cursor
 					l_cursor.start
-				variant
-					filters.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -597,6 +595,8 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 						Result := True
 					end
 					l_cursor.forth
+				variant
+					filters.count + 1 - l_cursor.index
 				end
 			end
 		end
@@ -709,15 +709,13 @@ feature {NONE} -- Implementation
 					create l_singleton_iterator.make (a_node)
 					l_singleton_iterator.start
 					l_new_context.set_current_iterator (l_singleton_iterator)
-					
+
 					-- as it's a non-positional filter, we can handle each node separately
-					
+
 					from
 						l_cursor := filters.new_cursor
 						l_cursor.start
 						internal_last_match_result := True
-					variant
-						filters.count + 1 - l_cursor.index
 					until
 						internal_last_match_result = False or l_cursor.after
 					loop
@@ -728,6 +726,8 @@ feature {NONE} -- Implementation
 							internal_last_match_result := l_cursor.item.last_boolean_value.value
 						end
 						l_cursor.forth
+					variant
+						filters.count + 1 - l_cursor.index
 					end
 				end
 			end

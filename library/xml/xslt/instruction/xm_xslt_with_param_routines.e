@@ -23,8 +23,6 @@ feature -- Access
 			from
 				create Result.make (a_parameters.count)
 				l_cursor := a_parameters.new_cursor;l_cursor.start
-			variant
-				a_parameters.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -33,6 +31,8 @@ feature -- Access
 					Result.put_last (l_expression)
 				end
 				l_cursor.forth
+			variant
+				a_parameters.count + 1 - l_cursor.index
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -78,7 +78,7 @@ feature -- Optimization
 		end
 
 feature -- Element change
-	
+
 	set_with_params_parent (a_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; l_expression_container: XM_XPATH_EXPRESSION_CONTAINER) is
 			-- Set `l_expression_container' to be parent of all in `a_parameters'.
 		require
@@ -89,13 +89,13 @@ feature -- Element change
 		do
 			from
 				l_cursor := a_parameters.new_cursor;l_cursor.start
-			variant
-				a_parameters.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
 				l_cursor.item.set_parent (l_expression_container)
 				l_cursor.forth
+			variant
+				a_parameters.count + 1 - l_cursor.index
 			end
 		end
 
@@ -110,7 +110,7 @@ feature {NONE} -- Agents
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)			
+			create l_replacement.make (Void)
 			l_expression.simplify (l_replacement)
 			a_parameter.set_selector (l_replacement.item)
 		end
@@ -125,7 +125,7 @@ feature {NONE} -- Agents
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)			
+			create l_replacement.make (Void)
 			l_expression.check_static_type (l_replacement, a_context, a_context_item_type)
 			a_parameter.set_selector (l_replacement.item)
 		end
@@ -140,7 +140,7 @@ feature {NONE} -- Agents
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)			
+			create l_replacement.make (Void)
 			l_expression.optimize (l_replacement, a_context, a_context_item_type)
 			a_parameter.set_selector (l_replacement.item)
 		end
@@ -155,10 +155,10 @@ feature {NONE} -- Agents
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			l_expression := a_parameter.select_expression
-			create l_replacement.make (Void)			
+			create l_replacement.make (Void)
 			l_expression.promote (l_replacement, a_offer)
 			a_parameter.set_selector (l_replacement.item)
 		end
-	
+
 end
-	
+

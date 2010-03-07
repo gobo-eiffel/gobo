@@ -66,8 +66,6 @@ feature -- Status report
 				Result := True
 				from
 					l_index := 1
-				variant
-					a_character_string.count + 1 - l_index
 				until
 					Result = False or else l_index > a_character_string.count
 				loop
@@ -76,6 +74,8 @@ feature -- Status report
 						Result := False
 					end
 					l_index := l_index + 1
+				variant
+					a_character_string.count + 1 - l_index
 				end
 
 			end

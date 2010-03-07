@@ -31,8 +31,6 @@ feature -- Status report
 			from
 				counter := 1
 				Result := True
-			variant
-				chars.count + 1 - counter
 			until
 				Result = False or else counter > chars.count
 			loop
@@ -40,6 +38,8 @@ feature -- Status report
 					Result := False
 				end
 				counter := counter + 1
+			variant
+				chars.count + 1 - counter
 			end
 		end
 
@@ -60,4 +60,4 @@ feature -- Status report
 		end
 
 end
-	
+

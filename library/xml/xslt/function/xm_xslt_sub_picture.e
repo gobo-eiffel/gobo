@@ -84,7 +84,7 @@ feature -- Access
 
 	fractional_part_positions: DS_ARRAYED_LIST [INTEGER]
 			-- Positions of grouping separators in fractional part
-	
+
 	fractional_grouping_separator_positions: ARRAY [INTEGER]
 			-- Positions of grouping separators
 
@@ -109,7 +109,7 @@ feature -- Access
 			else
 				a_multiplier := 1
 				if is_percent then
-					a_multiplier := 100 
+					a_multiplier := 100
 				elseif is_per_mille then
 					a_multiplier := 1000
 				end
@@ -165,7 +165,7 @@ feature -- Status report
 			-- `phase' = 3 -> zero-digit signs in fractional part;
 			-- `phase' = 4 -> digit signs in fractional part;
 			-- `phase' = 5 -> passive characters at end;
-	
+
 feature -- Status setting
 
 	set_last_error_from_string (a_message, a_namespace_uri, a_code: STRING; an_error_type: INTEGER) is
@@ -175,7 +175,7 @@ feature -- Status setting
 			message_not_void: a_message /= Void and then a_message.count > 0
 			valid_code: a_code /= Void
 			namespace_uri_not_void: a_namespace_uri /= Void
-			not_in_error: not is_error			
+			not_in_error: not is_error
 		do
 			create error_value.make_from_string (a_message, a_namespace_uri, a_code, an_error_type)
 			is_error := True
@@ -202,8 +202,6 @@ feature {NONE} -- Implementation
 			l_digit_sign := a_format.digit_sign.item_code (1); l_zero_digit_sign := a_format.zero_digit.item_code (1)
 			from
 				l_index := 1
-			variant
-				a_picture.count + 1 - l_index
 			until
 				is_error or l_index > a_picture.count
 			loop
@@ -281,12 +279,14 @@ feature {NONE} -- Implementation
 					inspect
 						phase
 					when 0 then
-						prefix_string := STRING_.appended_string (prefix_string, a_picture.substring (l_index, l_index))						
+						prefix_string := STRING_.appended_string (prefix_string, a_picture.substring (l_index, l_index))
 					when 1, 2, 3, 4, 5 then
 						phase := 5; suffix_string := STRING_.appended_string (suffix_string, a_picture.substring (l_index, l_index))
 					end
 				end
 				l_index := l_index + 1
+			variant
+				a_picture.count + 1 - l_index
 			end
 			if not is_error and not is_digit then
 				set_last_error_from_string ("Sub-picture must contain at least one digit sign or zero digit sign?",
@@ -308,21 +308,19 @@ feature {NONE} -- Implementation
 				from
 					create integral_grouping_separator_positions.make (1, a_count)
 					l_index := 1
-				variant
-					a_count + 1 - l_index
 				until
 					l_index > a_count
 				loop
 					integral_grouping_separator_positions.put (maximum_integral_part_size - integral_part_positions.item (a_count - l_index + 1), l_index)
 					l_index := l_index + 1
+				variant
+					a_count + 1 - l_index
 				end
 				if a_count > 1 then
 					is_regular := True
 					a_first_value := integral_grouping_separator_positions.item (1)
 					from
 						l_index := 2
-					variant
-						a_count + 1 - l_index
 					until
 						not is_regular or else l_index > a_count
 					loop
@@ -330,6 +328,8 @@ feature {NONE} -- Implementation
 							is_regular := False
 						end
 						l_index := l_index + 1
+					variant
+						a_count + 1 - l_index
 					end
 					if is_regular then
 						create integral_grouping_separator_positions.make (1, 1)
@@ -346,13 +346,13 @@ feature {NONE} -- Implementation
 				from
 					create fractional_grouping_separator_positions.make (1, a_count)
 					l_index := 1
-				variant
-					fractional_grouping_separator_positions.count + 1 - l_index
 				until
 					l_index > fractional_grouping_separator_positions.count
 				loop
 					fractional_grouping_separator_positions.put (fractional_part_positions.item (l_index), l_index)
 					l_index := l_index + 1
+				variant
+					fractional_grouping_separator_positions.count + 1 - l_index
 				end
 			end
 		end
@@ -514,9 +514,9 @@ feature {NONE} -- Implementation
 			end
 			if integral_grouping_separator_positions /= Void then
 				if integral_grouping_separator_positions.count = 1 then
-					
+
 					-- regular positions
-					
+
 					from
 						l_index := 1; l_grouping_index := integral_grouping_separator_positions.item (1)
 						l_string := ""
@@ -534,9 +534,9 @@ feature {NONE} -- Implementation
 					end
 					Result := l_string
 				else
-					
+
 					-- tabulated positions
-					
+
 					from
 						l_index := 1
 						l_grouping_index := integral_grouping_separator_positions.count
@@ -656,4 +656,4 @@ invariant
 	fractional_part_positions_not_void: fractional_part_positions /= Void
 
 end
-	
+

@@ -144,17 +144,17 @@ feature {NONE} -- Implementation
 			elseif l_ct_2 < l_ct_1 then
 				from
 					l_index := 1
-				variant
-					l_ct_1 - l_ct_2 + 2 - l_index
 				until
 					Result or else l_index > l_ct_1 - l_ct_2 + 1
 				loop
 					l_substring := s1.substring (l_index, l_index + l_ct_2 - 1)
 					Result := a_collator.three_way_comparison (l_substring, s2) = 0
 					l_index := l_index + 1
+				variant
+					l_ct_1 - l_ct_2 + 2 - l_index
 				end
 			end
 		end
-	
+
 end
-	
+

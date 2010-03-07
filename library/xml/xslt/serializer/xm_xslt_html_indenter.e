@@ -19,7 +19,7 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
-	
+
 	XM_XPATH_PROXY_RECEIVER
 		redefine
 			start_element, end_element, notify_characters, notify_comment
@@ -104,8 +104,6 @@ feature -- Events
 				from
 					a_last_newline := 1
 					an_index := 1
-				variant
-					a_chars.count + 1 - an_index
 				until
 					an_index > a_chars.count
 				loop
@@ -123,6 +121,8 @@ feature -- Events
 						end
 					end
 					an_index := an_index + 1
+				variant
+					a_chars.count + 1 - an_index
 				end
 				if a_last_newline <= a_chars.count then
 					Precursor (a_chars.substring (a_last_newline, a_chars.count), a_properties)
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 
 	Formatted_tag: INTEGER is 2
 			-- Formatted property for an element
-	
+
 	inline_tags: DS_HASH_SET [STRING] is
 			-- Tags to be treated as an inline elements;
 			-- List of inline tags is from the HTML 4.0 (loose) spec.
@@ -230,8 +230,8 @@ feature {NONE} -- Implementation
 			-- xmp is obsolete, but still encountered.
 			-- Note that the spec doesn not FORCE you to indent other tags,
 			--  so it is legitimate to include it here
-			
-			Result.put ("xmp") 
+
+			Result.put ("xmp")
 		ensure
 			formatted_tags_not_void: Result /= Void
 		end
@@ -294,4 +294,4 @@ invariant
 	property_stack_not_void: property_stack /= Void
 
 end
-	
+

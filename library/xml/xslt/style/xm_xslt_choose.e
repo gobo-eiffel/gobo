@@ -57,8 +57,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -66,6 +64,8 @@ feature -- Element change
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					check_unknown_attribute (a_name_code)
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			attributes_prepared := True
@@ -184,7 +184,7 @@ feature -- Element change
 					if compiled_conditions.item (1).as_boolean_value.value then
 
 						-- only one condition left, and it's known to be true: return the corresponding action
-						
+
 						last_generated_expression := compiled_actions.item (1)
 					else
 
@@ -199,7 +199,7 @@ feature -- Element change
 				create {XM_XSLT_COMPILED_CHOOSE} last_generated_expression.make (an_executable, compiled_conditions, compiled_actions)
 			end
 		end
-	
+
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 
 	compiled_conditions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			--	Conditions present in compiled instruction
-	
+
 	compiled_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Actions present in compiled instruction
 
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 				end
 
 				-- Optimize for constant conditions (true or false)
-				
+
 				if l_condition.is_boolean_value then
 					if l_condition.as_boolean_value.value then
 						compiled_actions_count := compiled_actions_count + 1
@@ -269,14 +269,14 @@ feature {NONE} -- Implementation
 						compiled_actions.put_last (l_action)
 						has_compile_loop_finished := True
 					else
-						
+
 						--  constant false: omit this test
-						
+
 					end
 				else
 					compiled_actions_count := compiled_actions_count + 1
 					compiled_conditions.put_last (l_condition)
-					compiled_actions.put_last (l_action)						
+					compiled_actions.put_last (l_action)
 				end
 			end
 		end

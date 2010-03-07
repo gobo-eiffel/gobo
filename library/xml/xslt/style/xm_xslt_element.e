@@ -24,7 +24,7 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
@@ -58,8 +58,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -84,15 +82,17 @@ feature -- Element change
 					elseif STRING_.same_string (an_expanded_name, Inherit_namespaces_attribute) then
 						an_inherit_namespaces_attribute := attribute_value_by_index (a_cursor.index)
 						STRING_.left_adjust (an_inherit_namespaces_attribute)
-						STRING_.right_adjust (an_inherit_namespaces_attribute)					
+						STRING_.right_adjust (an_inherit_namespaces_attribute)
 					elseif STRING_.same_string (an_expanded_name, Use_attribute_sets_attribute) then
 						use_attribute_sets := attribute_value_by_index (a_cursor.index)
 						STRING_.left_adjust (use_attribute_sets)
-						STRING_.right_adjust (use_attribute_sets)					
+						STRING_.right_adjust (use_attribute_sets)
 					else
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_name_attribute /= Void then
@@ -105,9 +105,9 @@ feature -- Element change
 						if not is_qname (element_name.as_string_value.string_value) then
 							create an_error.make_from_string ("Element name is not a valid QName", Xpath_errors_uri, "XTDE0820", Static_error)
 							report_compile_error (an_error)
-							
+
 							-- Prevent a duplicate error message.
-							
+
 							create {XM_XPATH_STRING_VALUE} element_name.make ("gexslt-error-element")
 						end
 					end
@@ -149,7 +149,7 @@ feature -- Element change
 			end
 			validated := True
 		end
-	
+
 	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
@@ -159,11 +159,11 @@ feature -- Element change
 			l_content: XM_XPATH_EXPRESSION
 			l_attributes_usage: XM_XSLT_ATTRIBUTE_USAGE
 		do
-			
+
 			last_generated_expression := Void
-			
+
 			-- Deal specially with the case where the element name is known statically.
-			
+
 			if element_name.is_string_value then
 				set_qname_parts (element_name.as_string_value)
 				if not any_compile_errors and then namespace_uri /= Void then
@@ -194,12 +194,12 @@ feature -- Element change
 					compile_fixed_element (a_executable, l_name_code)
 				end
 			end
-			
+
 			if last_generated_expression = Void and not any_compile_errors then
-				
+
 				-- If the namespace URI must be deduced at run-time from the element name prefix,
 				--  we need to save the namespace context of the instruction.
-				
+
 				if namespace = Void then
 					l_namespace_context := namespace_context
 				end
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 
 	is_inherit_namespaces: BOOLEAN
 		-- Do we inherit namespaces?
-	
+
 	prepare_attributes_2 (a_validation_attribute, a_type_attribute, an_inherit_namespaces_attribute: STRING) is
 			-- Continue prparing attributes.
 		local
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 					create an_error.make_from_string ("Value of inherit-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
-			end	
+			end
 			if a_validation_attribute /= Void then
 				validation_action := validation_code (a_validation_attribute)
 				if validation_action /= Validation_strip then

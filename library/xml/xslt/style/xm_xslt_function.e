@@ -31,7 +31,7 @@ create
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
@@ -127,7 +127,7 @@ feature -- Status report
 		do
 			Result := True
 		end
-	
+
 	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
 			-- Is `a_style_element' a permitted child of `Current'?
 		do
@@ -177,8 +177,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -193,14 +191,14 @@ feature -- Element change
 							report_compile_error (an_error)
 						elseif not is_qname (function_name) then
 							create an_error.make_from_string ("Xsl:function name must be a lexical QName", Xpath_errors_uri, "XTSE0020", Static_error)
-							report_compile_error (an_error)						
+							report_compile_error (an_error)
 						else
 							generate_name_code (function_name)
 							internal_function_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 							if internal_function_fingerprint = -1 then
 								-- Must be because the namespace is reserved
 								create an_error.make_from_string ("Xsl:function name may not use a reserved namespace", Xpath_errors_uri, "XTSE0080", Static_error)
-								report_compile_error (an_error)							
+								report_compile_error (an_error)
 							end
 						end
 					elseif STRING_.same_string (an_expanded_name, As_attribute) then
@@ -236,6 +234,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if function_name = Void then
@@ -268,8 +268,6 @@ feature -- Element change
 			from
 				a_root := principal_stylesheet
 				a_cursor := a_root.top_level_elements.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				a_cursor.before
 			loop
@@ -283,6 +281,8 @@ feature -- Element change
 				else
 					a_cursor.back
 				end
+			variant
+				a_cursor.index
 			end
 			validated := True
 		end
@@ -304,7 +304,7 @@ feature -- Element change
 			-- The XM_XSLT_COMPILED_USER_FUNCTION that is created will be linked from all calls to
 			--  this function, so nothing else needs to be done with the result. If there are
 			--  no calls to it, the compiled function will be garbage-collected away.
-  
+
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), False)
 			l_body := last_generated_expression
 			if l_body = Void then
@@ -405,8 +405,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				a_cursor := references.new_cursor; a_cursor.start
-			variant
-				references.count + 1 - a_cursor.index
 			until
 				any_compile_errors or else a_cursor.after
 			loop
@@ -415,6 +413,8 @@ feature {NONE} -- Implementation
 					report_compile_error (a_cursor.item.error_value)
 				end
 				a_cursor.forth
+			variant
+				references.count + 1 - a_cursor.index
 			end
 		end
 
@@ -445,10 +445,10 @@ feature {NONE} -- Implementation
 				an_iterator.forth
 			end
 		end
-			
+
 invariant
 
 	references_not_void: references /= Void
 
-end	
+end
 

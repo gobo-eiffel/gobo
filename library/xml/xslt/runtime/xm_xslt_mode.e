@@ -59,8 +59,6 @@ feature {NONE} -- Initialization
 			from
 				a_rule_dictionary := other.rule_dictionary
 				an_index := 1
-			variant
-				a_rule_dictionary.count + 1 - an_index
 			until
 				an_index > a_rule_dictionary.count
 			loop
@@ -69,7 +67,9 @@ feature {NONE} -- Initialization
 					create a_new_rule.make_with_copy (a_rule)
 					rule_dictionary.put (a_new_rule, an_index)
 				end
-				an_index := an_index +1
+				an_index := an_index + 1
+			variant
+				a_rule_dictionary.count + 1 - an_index
 			end
 			most_recent_rule := other.most_recent_rule
 		end
@@ -117,7 +117,7 @@ feature -- Access
 						if l_rule.pattern.is_error then
 							a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 						elseif l_rule.pattern.last_match_result then
-														
+
 							-- Is this a second match?
 
 							if l_specific_rule /= Void then
@@ -136,7 +136,7 @@ feature -- Access
 						l_rule := l_rule.next_rule
 					end
 				end
-			end	
+			end
 			-- Search the general list.
 			if not l_new_context.transformer.is_error then
 				match_general_rule (a_node, l_new_context, l_specific_rule, l_specific_precedence, l_specific_priority)
@@ -202,9 +202,9 @@ feature -- Access
 							l_finished := True
 						elseif l_rule.pattern.last_match_result then
 							a_general_rule := l_rule
-							
+
 							-- Find the first; they are in priority order.
-							
+
 							l_finished := True
 						else
 							l_rule := l_rule.next_rule
@@ -292,7 +292,7 @@ feature -- Access
 									l_specific_priority := l_rule.priority_rank
 									if a_context.transformer.recovery_policy = Recover_silently then
 										l_finished := True
-									end 
+									end
 								end
 							end
 						end
@@ -350,7 +350,7 @@ feature -- Access
 		ensure
 			Maybe_no_rule_matches: True
 		end
-			
+
 	name: STRING is
 			-- Name
 		do
@@ -407,7 +407,7 @@ feature -- Element change
 				-- Each list is sorted in precedence/priority order so we find the highest-priority rule first
 
 				l_key := rule_key (a_pattern.fingerprint, a_pattern.node_kind)
-				
+
 				-- This logic is designed to ensure that when a union pattern contains multiple branches
 				-- with the same priority, next-match doesn't select the same template twice (override20_047/_048)
 
@@ -456,7 +456,7 @@ feature -- Element change
 		end
 
 feature {XM_XSLT_MODE, XM_XSLT_RULE_MANAGER} -- Restricted
-	
+
 	rule_dictionary: ARRAY [XM_XSLT_RULE]
 			-- Rule dictionary
 
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 						a_context.transformer.report_recoverable_error (l_rule.pattern.error_value)
 						l_finished := True
 					elseif l_rule.pattern.last_match_result then
-						
+
 						-- Is it a second match?
 
 						if l_general_rule /= Void then
@@ -573,7 +573,7 @@ feature {NONE} -- Implementation
 							end
 						else
 							l_general_rule := l_rule
-							if a_context.transformer.recovery_policy = Recover_silently then l_finished := True end 
+							if a_context.transformer.recovery_policy = Recover_silently then l_finished := True end
 						end
 					end
 				end
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 		ensure
 			Maybe_no_rule_matches: True
 		end
-	
+
 	possible_new_context (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_EVALUATION_CONTEXT is
 			-- New context, if any pattern might use local variables
 		require
@@ -646,4 +646,4 @@ invariant
 	rule_dictionary_not_void: rule_dictionary /= Void
 
 end
-	
+

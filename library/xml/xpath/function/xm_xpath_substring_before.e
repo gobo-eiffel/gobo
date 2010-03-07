@@ -89,7 +89,7 @@ feature -- Evaluation
 					if a_result.item = Void or else not a_result.item.is_atomic_value then
 						create {XM_XPATH_STRING_VALUE} l_atomic_value.make ("")
 					else
-						l_atomic_value := a_result.item.as_atomic_value 
+						l_atomic_value := a_result.item.as_atomic_value
 					end
 					a_result.put (Void)
 					arguments.item (2).evaluate_item (a_result, a_context)
@@ -99,7 +99,7 @@ feature -- Evaluation
 						if a_result.item = Void or else not a_result.item.is_atomic_value then
 							create {XM_XPATH_STRING_VALUE} l_other_atomic_value.make ("")
 						else
-							l_other_atomic_value := a_result.item.as_atomic_value 
+							l_other_atomic_value := a_result.item.as_atomic_value
 						end
 						l_s1 := l_atomic_value.string_value
 						l_s2 := l_other_atomic_value.string_value
@@ -138,8 +138,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				an_index := 1
-			variant
-				s1.count - s2.count + 2 - an_index
 			until
 				found or else an_index > s1.count - s2.count + 1
 			loop
@@ -153,9 +151,11 @@ feature {NONE} -- Implementation
 					end
 				end
 				an_index := an_index + 1
+			variant
+				s1.count - s2.count + 2 - an_index
 			end
 			if not found then Result := "" end
 		end
-	
+
 end
-	
+

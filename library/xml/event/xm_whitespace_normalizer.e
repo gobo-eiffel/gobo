@@ -1,7 +1,7 @@
 indexing
-	
+
 	description:
-		
+
 		"Remove head and tail whitespace (as defined by XML) from content; accounting for xml:space"
 
 	library: "Gobo Eiffel XML Library"
@@ -48,7 +48,7 @@ feature -- Content
 			else
 				if in_content then
 					if is_space (last_content.item.item_code (last_content.item.count)) then
-							-- We don't know if we are at the end, so this could 
+							-- We don't know if we are at the end, so this could
 							-- be tail whitespace.
 						last_content.append_string (a_content)
 					else
@@ -61,13 +61,13 @@ feature -- Content
 					create last_content.make (a_content)
 					normalize_content_head
 						-- The content event is not processed further
-						-- because it is not known whether it needs 
-						-- tail normalisation (if it is the last 
+						-- because it is not known whether it needs
+						-- tail normalisation (if it is the last
 						-- content event of a sequence)
 				end
 			end
 		end
-		
+
 feature {NONE} -- Content
 
 	is_space_preserved: DS_ARRAYED_STACK [BOOLEAN]
@@ -75,13 +75,13 @@ feature {NONE} -- Content
 
 	last_content: ST_COPY_ON_WRITE_STRING
 			-- Last unprocessed content event.
-	
+
 	default_space_preserved: BOOLEAN is
 			-- Initial xml:space mode, can be redefined.
 			-- Default: False.
 		do
 		end
-		 
+
 feature {NONE} -- Content
 
 	in_content: BOOLEAN is
@@ -89,7 +89,7 @@ feature {NONE} -- Content
 		do
 			Result := last_content /= Void
 		end
-		
+
 	end_content is
 			-- New non-content event; process pending
 			-- content first.
@@ -123,14 +123,14 @@ feature {NONE} -- Content
 		do
 			from
 				i := 1
-			variant
-				last_content.item.count - i + 1
 			until
 				i > last_content.item.count or else not is_space (last_content.item.item_code (i))
 			loop
 				i := i + 1
+			variant
+				last_content.item.count - i + 1
 			end
-			
+
 			if i > last_content.item.count then
 					-- All content is whitespace
 				last_content := Void
@@ -143,7 +143,7 @@ feature {NONE} -- Content
 		ensure
 			no_whitespace_at_head: in_content implies not is_space (last_content.item.item_code (1))
 		end
-		
+
 	normalize_content_tail is
 			-- Remove whitespace at end of content.
 		require
@@ -153,21 +153,21 @@ feature {NONE} -- Content
 		do
 			from
 				i := last_content.item.count
-			variant
-				i
 			until
 				i = 0 or else not is_space (last_content.item.item_code (i))
 			loop
 				i := i - 1
+			variant
+				i
 			end
-			
+
 			if i = 0 then
 				last_content := Void
 			elseif i < last_content.item.count then
 				create last_content.make (last_content.item.substring (1, i))
 			end
 		end
-			
+
 feature -- Events
 
 	on_start is
@@ -178,14 +178,14 @@ feature -- Events
 			is_space_preserved.force (default_space_preserved)
 			Precursor
 		end
-		
+
 	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Clear content and forward.
 		do
 			end_content
 			Precursor (a_name, a_content)
 		end
-		
+
 	on_comment (a_comment: STRING) is
 			-- Clear content and forward.
 		do
@@ -214,7 +214,7 @@ feature -- Events
 			end
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
-		
+
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- Clear content and forward.
 		do

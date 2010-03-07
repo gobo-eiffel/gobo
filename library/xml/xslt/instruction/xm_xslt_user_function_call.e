@@ -98,13 +98,13 @@ feature -- Status report
 			a_cursor := arguments.new_cursor
 			from
 				a_cursor.start
-			variant
-				arguments.count + 1 - a_cursor.index				
 			until
 				a_cursor.after
 			loop
 				a_cursor.item.display (a_level + 1)
 				a_cursor.forth
+			variant
+				arguments.count + 1 - a_cursor.index
 			end
 		end
 
@@ -128,7 +128,7 @@ feature -- Status report
 		end
 
 feature -- Status setting
-	
+
 	mark_tail_function_calls is
 			-- Mark tail-recursive calls on stylesheet functions.
 		do
@@ -159,7 +159,7 @@ feature -- Optimization
 				compute_argument_evaluation_modes
 			end
 		end
-	
+
 feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
@@ -322,8 +322,6 @@ feature -- Element change
 			some_required_types := a_source_function.argument_types
 			from
 				an_argument_count := a_source_function.arity; an_index := 1
-			variant
-				an_argument_count + 1 - an_index
 			until
 				is_type_error or else an_index > an_argument_count
 			loop
@@ -337,6 +335,8 @@ feature -- Element change
 					 arguments.replace (a_type_checker.checked_expression, an_index)
 				end
 				an_index := an_index + 1
+			variant
+				an_argument_count + 1 - an_index
 			end
 			if not is_type_error and argument_evaluation_modes = Void then
 				compute_argument_evaluation_modes
@@ -372,13 +372,13 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			if static_type = Void then
 
 				-- actual type is not known yet, so we return an approximation
-				
+
 				set_cardinality_zero_or_more
 			else
 				set_cardinality (static_type.cardinality)
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	static_type: XM_XPATH_SEQUENCE_TYPE
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			argument_evaluation_modes_not_void: argument_evaluation_modes /= Void
 			correct_count: argument_evaluation_modes.count = arguments.count
 		end
-			
+
 	name: STRING is
 			-- Local name of function
 		do
@@ -514,13 +514,13 @@ feature {NONE} -- Implementation
 		local
 			l_reference_count: INTEGER
 		do
-			l_reference_count := function.parameter_definitions.item (a_index).reference_count 
+			l_reference_count := function.parameter_definitions.item (a_index).reference_count
 			a_argument.evaluate (a_return_value, argument_evaluation_modes.item (a_index),
 				l_reference_count, a_context)
 			if a_return_value.item = Void then
 				a_actual_arguments.put (create {XM_XPATH_EMPTY_SEQUENCE}.make, a_index)
 			elseif not a_return_value.item.is_error then
-				if l_reference_count > 1 and a_return_value.item.is_closure 
+				if l_reference_count > 1 and a_return_value.item.is_closure
 					and not a_return_value.item.is_memo_closure then
 					-- this shouldn't happen, but just in case:
 					a_return_value.item.reduce
@@ -538,4 +538,4 @@ invariant
 	arguments_not_void: initialized implies arguments /= Void
 
 end
-	
+

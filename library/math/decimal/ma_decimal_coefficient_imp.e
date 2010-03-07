@@ -130,8 +130,6 @@ feature -- Element change
 			from
 				i := coefficient_end
 				k := 0
-			variant
-				i
 			until
 				i < coefficient_begin
 			loop
@@ -144,6 +142,8 @@ feature -- Element change
 						-- Do nothing.
 				end
 				i := i - 1
+			variant
+				i
 			end
 			set_count (k)
 		end
@@ -298,12 +298,12 @@ feature -- Basic operations
 					index := count - 1
 					l_digits := digits
 					l_other_digits := other.digits
-				variant
-					index + 1
 				until
 					index < lower or else l_digits.item (index) /= l_other_digits.item (index)
 				loop
 					index := index - 1
+				variant
+					index + 1
 				end
 					-- found no equal item
 				Result := (index < lower)

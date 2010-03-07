@@ -40,8 +40,6 @@ feature {NONE} -- Implementation
 			create l_character_map_list.make (l_character_maps.count)
 			from
 				l_cursor := l_character_maps.new_cursor; l_cursor.start
-			variant
-				l_character_maps.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -60,6 +58,8 @@ feature {NONE} -- Implementation
 				end
 				l_character_map_list.put_last (l_character_map)
 				l_cursor.forth
+			variant
+				l_character_maps.count + 1 - l_cursor.index
 			end
 			create Result.make (a_receiver, l_character_map_list, a_null_characters_used)
 		ensure

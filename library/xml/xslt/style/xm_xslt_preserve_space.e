@@ -40,8 +40,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -55,6 +53,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if elements = Void then
@@ -91,14 +91,14 @@ feature -- Element change
 			an_element_list := a_splitter.split (elements)
 			from
 				a_cursor := an_element_list.new_cursor; a_cursor.start
-			variant
-				an_element_list.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				a_token := a_cursor.item
 				compile_stripper_rules (a_executable, a_token, is_preserving, stripper_rules)
 				a_cursor.forth
+			variant
+				an_element_list.count + 1 - a_cursor.index
 			end
 			last_generated_expression := Void
 		end

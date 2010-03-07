@@ -153,7 +153,7 @@ feature -- Events
 				base_receiver.notify_comment (a_content_string, properties)
 			end
 			mark_as_written
-		end	
+		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
@@ -180,7 +180,7 @@ feature -- Events
 			base_receiver.start_element (a_name_code, a_type_code, properties)
 			mark_as_written
 		ensure then
-			committed: committed			
+			committed: committed
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
@@ -241,7 +241,7 @@ feature -- Basic operations
 				base_emitter.suppress_late_open
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	committed: BOOLEAN
@@ -341,8 +341,6 @@ feature {NONE} -- Implementation
 			if pending_event_list /= Void then
 				from
 					l_cursor := pending_event_list.new_cursor l_cursor.start
-				variant
-					pending_event_list.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -356,7 +354,9 @@ feature {NONE} -- Implementation
 					when Text_node then
 						base_receiver.notify_characters (l_event.content, l_event.properties)
 					end
-					l_cursor.forth	
+					l_cursor.forth
+				variant
+					pending_event_list.count + 1 - l_cursor.index
 				end
 				pending_event_list := Void
 			end
@@ -374,4 +374,4 @@ invariant
 
 end
 
-				
+

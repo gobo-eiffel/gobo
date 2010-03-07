@@ -84,7 +84,7 @@ feature -- Access
 			-- Fingerprint of `a_qname'
 		local
 			l_parser: XM_XPATH_QNAME_PARSER
-			l_uri: STRING			
+			l_uri: STRING
 		do
 			create l_parser.make (a_qname)
 			l_uri := uri_for_defaulted_prefix (l_parser.optional_prefix, a_use_default_namespace)
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Events
 
-	
+
 	close is
 			-- Notify end of event stream.
 		do
@@ -121,7 +121,7 @@ feature -- Events
 			accepting_attributes := False
 		end
 
-	
+
 	end_document is
 			-- Notify the end of the document
 		do
@@ -164,7 +164,7 @@ feature -- Events
 			namespaces_stack_size := namespaces_stack_size - namespace_count_stack.item (nesting_depth)
 		end
 
-	
+
 	notify_namespace (a_namespace_code: INTEGER; a_properties: INTEGER) is
 			-- Notify a namespace.
 		local
@@ -178,13 +178,13 @@ feature -- Events
 			end
 			from
 				l_limit := namespace_count_stack.item (nesting_depth - 1)
-			variant
-				namespaces_stack_size - l_index
 			until
 				l_duplicates_found or l_index >= l_limit
 			loop
 				l_duplicates_found :=  namespaces_stack.item (namespaces_stack_size - l_index) = a_namespace_code
 				l_index := l_index + 1
+			variant
+				namespaces_stack_size - l_index
 			end
 			if not l_duplicates_found then
 				add_to_stack (a_namespace_code)
@@ -223,13 +223,13 @@ feature -- Events
 			invariant
 				stack_large_enough: namespaces_stack_size - namespace_count_stack.item (nesting_depth - 1) >= 0
 				strictly_positive_index: l_index > 0
-			variant
-				namespaces_stack_size - l_index + 1
 			until
 				l_index > namespaces_stack_size
 			loop
 				base_receiver.notify_namespace (namespaces_stack.item (l_index), 0)
 				l_index := l_index + 1
+			variant
+				namespaces_stack_size - l_index + 1
 			end
 			from
 				l_cursor := buffered_attributes.name_code_cursor
@@ -241,7 +241,7 @@ feature -- Events
 				if l_value /= Void then
 					base_receiver.notify_attribute (l_cursor.item,
 						buffered_attributes.attribute_type_code (l_cursor.index),
-						l_value, 
+						l_value,
 						INTEGER_.bit_or (buffered_attributes.attribute_properties (l_cursor.index), Namespace_ok))
 				end
 				l_cursor.forth
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			--	Namespaces to be declared at all levels
 
 feature {NONE} -- Contract support
-	
+
 	total_namespaces_stacked: INTEGER is
 			--	Total number of namespace declarations pending at all levels
 		local
@@ -291,13 +291,13 @@ feature {NONE} -- Contract support
 		do
 			from
 				l_index := 1
-			variant
-				nesting_depth - l_index
 			until
 				l_index > nesting_depth - 1
 			loop
 				Result := Result + namespace_count_stack.item (l_index)
 				l_index := l_index + 1
+			variant
+				nesting_depth - l_index
 			end
 		end
 

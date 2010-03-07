@@ -59,8 +59,6 @@ feature -- Element change
 				from
 					l_cursor := attribute_collection.name_code_cursor
 					l_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index				
 				until
 					l_cursor.after or any_compile_errors
 				loop
@@ -98,6 +96,8 @@ feature -- Element change
 						check_unknown_attribute (l_name_code)
 					end
 					l_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index	
 				end
 			end
 			prepare_attributes_2 (l_select_attribute, l_order_attribute, l_case_order_attribute,
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 
 	case_order: XM_XPATH_EXPRESSION
 			-- Case order
-	
+
 	data_type: XM_XPATH_EXPRESSION
 			-- Data type to which sort-key-values will be coerced
 
@@ -214,10 +214,10 @@ feature {NONE} -- Implementation
 				case_order := last_generated_expression
 				if case_order.is_error then
 					report_compile_error (case_order.error_value)
-				end				
+				end
 			else
 				create {XM_XPATH_STRING_VALUE} case_order.make ("#default")
-			end			
+			end
 			if a_data_type_attribute /= Void then
 				generate_attribute_value_template (a_data_type_attribute, static_context)
 				data_type := last_generated_expression
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 				if stable_attribute_value.is_error then
 					report_compile_error (stable_attribute_value.error_value)
 				end
-			end			
+			end
 			if select_expression /= Void then
 				create l_role.make (Instruction_role, "xsl:sort/select", 1, Xpath_errors_uri, "XPTY0004")
 				create l_type_checker

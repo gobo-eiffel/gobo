@@ -888,8 +888,6 @@ feature {NONE} -- String mode implementation
 			from
 				i := 1
 				cnt := a_string.count
-			variant
-				cnt - i + 1
 			until
 				i > cnt
 			loop
@@ -898,6 +896,8 @@ feature {NONE} -- String mode implementation
 					Result := a_code
 				end
 				i := i + 1
+			variant
+				cnt - i + 1
 			end
 		ensure
 			empty_zero: a_string.is_empty implies Result = 0

@@ -78,8 +78,6 @@ feature -- Basic operations
 			from
 				l_avt_length := avt.count
 				l_leading_character := 1
-			variant
-				avt.count + 1 - l_leading_character
 			until
 				l_leading_character > l_avt_length
 			loop
@@ -130,6 +128,8 @@ feature -- Basic operations
 					create error_value.make_from_string ("Logic error in XM_XSLT_AVT_PARSER", Gexslt_eiffel_type_uri, "AVT_LOGIC", Static_error)
 					l_leading_character := avt.count + 1
 				end
+			variant
+				avt.count + 1 - l_leading_character
 			end
 		end
 

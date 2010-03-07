@@ -33,7 +33,7 @@ inherit
 	XM_XPATH_ROLE
 
 	XM_XPATH_ERROR_TYPES
-	
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
@@ -76,14 +76,14 @@ feature -- Access
 			from
 				create Result.make_empty
 				a_cursor := a_parameter_list.new_cursor; a_cursor.start
-			variant
-				a_parameter_list.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				a_param := a_cursor.item
 				Result.put (a_param.select_value (a_context), a_param.variable_fingerprint)
 				a_cursor.forth
+			variant
+				a_parameter_list.count + 1 - a_cursor.index
 			end
 		ensure
 			assembled_parameters_not_void: Result /= Void
@@ -107,19 +107,19 @@ feature -- Access
 				if a_parameter_list.count > 0 then
 					from
 						a_cursor := a_parameter_list.new_cursor; a_cursor.start
-					variant
-						a_parameter_list.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
 						a_param := a_cursor.item
 						Result.put (a_param.select_value (a_context), a_param.variable_fingerprint)
 						a_cursor.forth
+					variant
+						a_parameter_list.count + 1 - a_cursor.index
 					end
 				end
 			end
 		end
-		
+
 feature -- Status report
 
 	creates_new_nodes: BOOLEAN is
@@ -333,16 +333,16 @@ feature {XM_XSLT_INSTRUCTION} -- local
 			Result := ""
 			from
 				counter := 1
-			variant
-				a_level + 1 - counter
 			until
 				counter > a_level
 			loop
 				Result := STRING_.appended_string (Result, " ")
 				counter := counter + 1
+			variant
+				a_level + 1 - counter
 			end
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	native_implementations: INTEGER is
@@ -371,4 +371,4 @@ invariant
 	executable_not_void: initialized implies executable /= Void
 
 end
-	
+

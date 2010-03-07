@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			from
 				l_other_counter := 1
 			until
-				l_other_counter = l_counter 
+				l_other_counter = l_counter
 			loop
 				put (l_value.item (l_other_counter), l_other_counter)
 				l_other_counter := l_other_counter + 1
@@ -160,8 +160,6 @@ feature -- Access
 					cached_item_type := item (1).item_type
 					from
 						l_counter := 2
-					variant
-						count + 1 - l_counter
 					until
 						l_counter > count
 					loop
@@ -171,6 +169,8 @@ feature -- Access
 							cached_item_type := common_super_type (cached_item_type, item (l_counter).item_type)
 							l_counter := l_counter + 1
 						end
+					variant
+						count + 1 - l_counter
 					end
 				end
 			end
@@ -204,8 +204,6 @@ feature -- Comparison
 					from
 						Result := True
 						l_counter := 1
-					variant
-						count + 1 - l_counter
 					until
 						Result = False or else l_counter > count
 					loop
@@ -229,6 +227,8 @@ feature -- Comparison
 						end
 
 						l_counter := l_counter + 1
+					variant
+						count + 1 - l_counter
 					end
 				end
 			end
@@ -368,8 +368,6 @@ feature -- Evaluation
 				create a_node_list.make (count)
 				from
 					a_cursor := new_cursor; a_cursor.start
-				variant
-					count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -379,6 +377,8 @@ feature -- Evaluation
 					end
 					a_node_list.put_last (a_cursor.item.as_node)
 					a_cursor.forth
+				variant
+					count + 1 - a_cursor.index
 				end
 				if in_reverse then
 					create {XM_XPATH_REVERSE_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
@@ -405,4 +405,4 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	
+

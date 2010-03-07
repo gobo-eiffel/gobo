@@ -1,7 +1,7 @@
 indexing
-	
+
 	description:
-	
+
 		"Objects that select a named xml-stylsheet"
 
 	library: "Gobo Eiffel XSLT Library"
@@ -52,10 +52,8 @@ feature -- Access
 				from
 					Result := 1
 					a_cursor := a_list.new_cursor; a_cursor.start
-				variant
-					a_list.count + 1 - a_cursor.index
 				until
-					selected or else a_cursor.after 
+					selected or else a_cursor.after
 				loop
 					if STRING_.same_string (a_cursor.item, name) then selected := True end
 					if selected then
@@ -64,6 +62,8 @@ feature -- Access
 					else
 						a_cursor.forth
 					end
+				variant
+					a_list.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -85,4 +85,4 @@ invariant
 	name_not_void: name /= Void
 
 end
-	
+

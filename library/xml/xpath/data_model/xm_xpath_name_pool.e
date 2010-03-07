@@ -189,8 +189,6 @@ feature -- Access
 			end
 			from
 				a_counter := 1
-			variant
-				uris_used - a_counter + 1
 			until
 				a_counter > uris_used or found = True
 			loop
@@ -199,6 +197,8 @@ feature -- Access
 					found := True
 				end
 				a_counter := a_counter + 1
+			variant
+				uris_used - a_counter + 1
 			end
 				check
 					code_found: found = True
@@ -225,8 +225,6 @@ feature -- Access
 			end
 			from
 				a_counter := 1
-			variant
-				prefixes_used - a_counter + 1
 			until
 				a_counter > prefixes_used or found = True
 			loop
@@ -240,6 +238,8 @@ feature -- Access
 					found := True
 				end
 				a_counter := a_counter + 1
+			variant
+				prefixes_used - a_counter + 1
 			end
 			check
 				prefix_found: found = True
@@ -317,8 +317,6 @@ feature -- Access
 					length_of_prefixes := the_prefixes.count
 				invariant
 					Result /= Void implies found = True and a_counter = an_index + 1
-				variant
-					an_index - a_counter + 1
 				until
 					found = True
 				loop
@@ -350,6 +348,8 @@ feature -- Access
 						end
 					end
 					a_counter := a_counter + 1
+				variant
+					an_index - a_counter + 1
 				end
 			end
 			debug ("XPath name pool")
@@ -411,8 +411,6 @@ feature -- Access
 				from
 					a_uri_code := -1
 					a_counter := 1
-				variant
-					uris_used - a_counter + 1
 				until
 					a_counter > uris_used or found = True
 				loop
@@ -421,6 +419,8 @@ feature -- Access
 						found := True
 					end
 					a_counter := a_counter + 1
+				variant
+					uris_used - a_counter + 1
 				end
 				if a_uri_code = -1 then
 					Result := -1
@@ -433,8 +433,6 @@ feature -- Access
 						an_entry :=	hash_slots.item (a_hash_code)
 						from
 							a_depth := 1
-						variant
-							Maximum_hash_chain_depth - 1 - a_depth
 						until
 							finished = True
 						loop
@@ -464,6 +462,8 @@ feature -- Access
 								end
 							end
 							a_depth := a_depth + 1
+						variant
+							Maximum_hash_chain_depth - 1 - a_depth
 						end
 						if Result /= -1 then
 							Result := ((a_depth - 1) * bits_11) + a_hash_code
@@ -571,8 +571,6 @@ feature -- Status report
 			else
 				from
 					a_counter := 1
-				variant
-					uris_used - a_counter + 1
 				until
 					a_counter > uris_used or Result = True
 				loop
@@ -585,6 +583,8 @@ feature -- Status report
 						Result := True
 					end
 					a_counter := a_counter + 1
+				variant
+					uris_used - a_counter + 1
 				end
 				debug ("XPath name pool allocation")
 					std.error.put_string ("Found uri? ")
@@ -603,8 +603,6 @@ feature -- Status report
 			do
 			from
 				a_counter := 1
-			variant
-				prefixes_used - a_counter + 1
 			until
 				a_counter > prefixes_used or Result = True
 			loop
@@ -617,6 +615,8 @@ feature -- Status report
 					Result := True
 				end
 				a_counter := a_counter + 1
+			variant
+				prefixes_used - a_counter + 1
 			end
 		end
 
@@ -718,8 +718,6 @@ feature -- Status report
 							Result := False
 						else
 							from
-							variant
-								Maximum_hash_chain_depth - 1 - a_depth
 							until
 								finished = True
 							loop
@@ -736,6 +734,8 @@ feature -- Status report
 										a_name_entry := next_entry
 									end
 								end
+							variant
+								Maximum_hash_chain_depth - 1 - a_depth
 							end
 						end
 					end
@@ -785,8 +785,6 @@ feature -- Status report
 					Result := True
 					a_depth := 1
 					a_hash_code := a_local_name.hash_code \\ Maximum_hash_chain_depth
-				variant
-					Maximum_hash_chain_depth - 1 - a_depth
 				until
 					finished
 				loop
@@ -806,6 +804,8 @@ feature -- Status report
 							a_name_entry := next_entry
 						end
 					end
+				variant
+					Maximum_hash_chain_depth - 1 - a_depth
 				end
 			end
 		end
@@ -840,8 +840,6 @@ feature -- Status report
 				from
 					a_counter := 1
 					last_blank := 1
-				variant
-					255 - a_counter
 				until
 					Result or else a_counter > 255
 				loop
@@ -859,6 +857,8 @@ feature -- Status report
 						end
 					end
 					last_blank := a_blank + 1 -- position AFTER the last blank
+				variant
+					255 - a_counter
 				end
 			end
 		end
@@ -886,16 +886,12 @@ feature -- Status report
 			std.error.put_new_line
 			from
 				a_hash_code := 0
-			variant
-				Maximum_hash_chain_depth - a_hash_code
 			until
 				a_hash_code = Maximum_hash_chain_depth
 			loop
 				an_entry := hash_slots.item (a_hash_code)
 				a_depth := 1
 				from
-				variant
-					Maximum_hash_chain_depth - 1 - a_depth
 				until
 					an_entry = Void
 				loop
@@ -912,13 +908,15 @@ feature -- Status report
 
 					an_entry := an_entry.next
 					a_depth := a_depth + 1
+				variant
+					Maximum_hash_chain_depth - 1 - a_depth
 				end
 				a_hash_code := a_hash_code + 1
+			variant
+				Maximum_hash_chain_depth - a_hash_code
 			end
 			from
 				prefix_count := 1
-			variant
-				prefixes_used - prefix_count + 1
 			until
 				prefix_count > prefixes_used
 			loop
@@ -929,11 +927,11 @@ feature -- Status report
 				std.error.put_new_line
 
 				prefix_count := prefix_count + 1
+			variant
+				prefixes_used - prefix_count + 1
 			end
 			from
 				a_uri_count := 1
-			variant
-				uris_used - a_uri_count + 1
 			until
 				a_uri_count > uris_used
 			loop
@@ -949,6 +947,8 @@ feature -- Status report
 				std.error.put_new_line
 
 				a_uri_count := a_uri_count + 1
+			variant
+				uris_used - a_uri_count + 1
 			end
 		end
 
@@ -1467,8 +1467,6 @@ feature {NONE} -- Implementation
 			an_entry := hash_slots.item (a_hash_code)
 			from
 				a_counter := 1
-			variant
-				a_depth - a_counter + 1
 			until
 				a_counter = a_depth or else end_of_chain
 			loop
@@ -1478,6 +1476,8 @@ feature {NONE} -- Implementation
 					an_entry := an_entry.next
 				end
 				a_counter := a_counter + 1
+			variant
+				a_depth - a_counter + 1
 			end
 			debug ("XPath name pool")
 				std.error.put_string ("Name_entry: name code is ")
@@ -1517,8 +1517,6 @@ feature {NONE} -- Implementation
 						a_counter := 1
 						Result := -1 -- Not found
 						last_blank := 1
-					variant
-						255 - a_counter
 					until
 						found = True
 					loop
@@ -1538,6 +1536,8 @@ feature {NONE} -- Implementation
 							end
 						end
 						last_blank := a_blank + 1 -- position AFTER the last blank
+					variant
+						255 - a_counter
 					end
 				end
 			end

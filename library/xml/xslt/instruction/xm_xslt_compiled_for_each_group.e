@@ -121,8 +121,6 @@ feature -- Access
 			from
 				an_index := 4
 				a_cursor := sort_keys.new_cursor; a_cursor.start
-			variant
-				sort_keys.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -132,6 +130,8 @@ feature -- Access
 				Result.put (a_cursor.item.data_type_expression, an_index); an_index := an_index + 1
 				Result.put (a_cursor.item.language_expression, an_index); an_index := an_index + 1
 				a_cursor.forth
+			variant
+				sort_keys.count + 1 - a_cursor.index
 			end
 			if collation_name /= Void then
 				Result.put_last (collation_name)
@@ -197,8 +197,6 @@ feature -- Status setting
 				l_cursor := sort_keys.new_cursor
 				l_cursor.start
 				l_focus := depends_upon_focus
-			variant
-				sort_keys.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -213,11 +211,11 @@ feature -- Status setting
 					end
 				end
 				l_cursor.forth
+			variant
+				sort_keys.count + 1 - l_cursor.index
 			end
 			from
 				l_cursor := sort_keys.new_cursor; l_cursor.start
-			variant
-				sort_keys.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -234,6 +232,8 @@ feature -- Status setting
 					merge_dependencies (l_computed_expression)
 				end
 				l_cursor.forth
+			variant
+				sort_keys.count + 1 - l_cursor.index
 			end
 			if collation_name /= Void then
 				merge_dependencies (collation_name)
@@ -343,7 +343,7 @@ feature -- Optimization
 		local
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			create l_replacement.make (Void)		
+			create l_replacement.make (Void)
 			select_expression.promote (l_replacement, a_offer)
 			set_select_expression (l_replacement.item)
 			l_replacement.put (Void)
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 		ensure
 			key_expression_set: key_expression = a_replacement
 		end
-	
+
 	algorithm_name: STRING is
 			-- Name of grouping algorithm
 		do
@@ -664,8 +664,6 @@ feature {NONE} -- Implementation
 			l_new_context := a_context.new_minor_context
 			from
 				l_cursor := sort_keys.new_cursor; l_cursor.start
-			variant
-				sort_keys.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -680,6 +678,8 @@ feature {NONE} -- Implementation
 					a_result.put_second (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (l_definition.collation_name, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error))
 					l_cursor.go_after
 				end
+			variant
+				sort_keys.count + 1 - l_cursor.index
 			end
 			if a_result.second = Void then
 				a_result.put_first (create {XM_XSLT_SORTED_GROUP_ITERATOR}.make (l_new_context, a_group_iterator, l_reduced_sort_keys))
@@ -705,8 +705,6 @@ feature {NONE} -- Implementation
 			l_new_context := a_context.new_minor_context
 			from
 				l_cursor := sort_keys.new_cursor; l_cursor.start
-			variant
-				sort_keys.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -721,6 +719,8 @@ feature {NONE} -- Implementation
 					a_result.put_second (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat (l_definition.collation_name, " is not a known collation"), Xpath_errors_uri, "XTDE1110", Dynamic_error))
 					l_cursor.go_after
 				end
+			variant
+				sort_keys.count + 1 - l_cursor.index
 			end
 			if a_result.second = Void then
 				a_result.put_first (create {XM_XSLT_SORTED_GROUP_NODE_ITERATOR}.make (l_new_context, a_result.first, l_reduced_sort_keys))

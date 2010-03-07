@@ -37,8 +37,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -56,10 +54,12 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index	
 				end
 			end
 			prepare_attributes_2 (a_select_attribute, a_copy_namespaces_attribute, a_validation_attribute, a_type_attribute)
-			
+
 			attributes_prepared := True
 		end
 
@@ -107,10 +107,10 @@ feature {NONE} -- Implementation
 			else
 				report_absence ("select")
 			end
-				
+
 			if a_copy_namespaces_attribute = Void then
 				copy_namespaces := True
-			else 
+			else
             if STRING_.same_string (a_copy_namespaces_attribute, "yes") then
 					copy_namespaces := True
 				elseif STRING_.same_string (a_copy_namespaces_attribute, "no") then

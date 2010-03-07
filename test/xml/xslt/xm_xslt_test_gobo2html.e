@@ -43,7 +43,7 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create l_configuration.make_with_defaults
 			create l_error_listener.make (l_configuration.recovery_policy)
-			l_configuration.set_error_listener (l_error_listener)			
+			l_configuration.set_error_listener (l_error_listener)
 			l_configuration.use_tiny_tree_model (False)
 			l_configuration.set_line_numbering (True)
 			create l_transformer_factory.make (l_configuration)
@@ -85,7 +85,7 @@ feature -- Test
 			l_transformer_factory.create_new_transformer (l_uri_source, dummy_uri)
 			assert ("Stylesheet compiled without errors", not l_transformer_factory.was_error)
 			l_transformer := l_transformer_factory.created_transformer
-			assert ("transformer", l_transformer /= Void)			
+			assert ("transformer", l_transformer /= Void)
 			create l_second_uri_source.make (structure_index_xml_uri.full_reference)
 			create l_output
 			l_output.set_output_to_string
@@ -142,14 +142,14 @@ feature {NONE} -- Debug
 			from
 				Result := ""
 				l_index := 1
-			variant
-				l_string.count + 1 - l_index
 			until
 				l_index > l_string.count
 			loop
 				l_code := l_string.item_code (l_index)
 				Result.append_string (INTEGER_.to_hexadecimal (l_code, True))
 				l_index := l_index + 1
+			variant
+				l_string.count + 1 - l_index
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Debug
 		ensure
 			dummy_uri_is_absolute: Result /= Void and then Result.is_absolute
 		end
-		
+
 	gobo2html_xsl_uri: UT_URI is
 			-- URI of file 'gobo2html.xsl'
 		local
@@ -193,7 +193,7 @@ feature {NONE} -- Debug
 			from_saxon_html_filename_not_void: Result /= Void
 			from_saxon_html_filename_not_empty: not Result.is_empty
 		end
-		
+
 	gobo2xml_xsl_uri: UT_URI is
 			-- URI of file 'gobo2xml.xsl'
 		local

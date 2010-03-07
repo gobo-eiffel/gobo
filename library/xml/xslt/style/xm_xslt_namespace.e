@@ -24,7 +24,7 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
@@ -58,8 +58,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -77,6 +75,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if a_name_attribute = Void then

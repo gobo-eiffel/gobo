@@ -27,7 +27,7 @@ inherit
 	XM_XPATH_ROLE
 
 	XM_XPATH_TYPE
-	
+
 	XM_XPATH_COMPARISON_ROUTINES
 		export {NONE} all end
 
@@ -86,7 +86,7 @@ feature -- Status report
 		do
 			Result := False
 		end
-	
+
 feature -- Optimization	
 
 	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
@@ -212,7 +212,7 @@ feature -- Evaluation
 			a_result.put (last_boolean_value)
 		end
 
-		
+
 	mapped_item (a_item: XM_XPATH_ITEM): XM_XPATH_ITEM is
 			-- Map `a_item' to another item
 		do
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 			a_replacement_not_void: a_replacement /= Void
 			not_replaced: a_replacement.item = Void
-			xpath_1_mode: a_context.is_backwards_compatible_mode	
+			xpath_1_mode: a_context.is_backwards_compatible_mode
 		local
 			l_type, l_other_type: XM_XPATH_ITEM_TYPE
 			l_maybe_first_operand_numeric, l_maybe_second_operand_numeric: BOOLEAN
@@ -305,10 +305,10 @@ feature {NONE} -- Implementation
 
 				if (l_is_first_operand_numeric and then l_is_second_operand_numeric)
 					or else (not l_maybe_first_operand_numeric and then not l_maybe_second_operand_numeric) then
-					
+
 					-- Use the XPath 2.0 route if we don't have to deal with the possibility of boolean values,
 					--  or the complications of converting values to numbers
-					
+
 					create l_general_comparison.make (first_operand, operator, second_operand, atomic_comparer.collator)
 					l_general_comparison.check_static_type (a_replacement, a_context, a_context_item_type)
 					if not a_replacement.item.is_error then
@@ -347,18 +347,18 @@ feature {NONE} -- Implementation
 			else
 				l_other_sequence := a_other_iterator
 			end
-			
+
 			-- If the operator is one of <, >, <=, >=, then convert both operands to sequences of xs:double
 			--  using the number() function
-			
+
 			if operator = Less_than_token or else operator = Less_equal_token or else
 				operator = Greater_than_token or else operator = Greater_equal_token then
 				create {XM_XPATH_ITEM_MAPPING_ITERATOR} l_sequence.make (l_sequence, Current)
 				create {XM_XPATH_ITEM_MAPPING_ITERATOR} l_other_sequence.make (l_other_sequence, Current)
 			end
-			
+
 			-- Compare all pairs of atomic values in the two atomized sequences
-			
+
 			from
 				create l_list.make_default
 				l_sequence.start
@@ -376,8 +376,6 @@ feature {NONE} -- Implementation
 							create l_comparison_checker
 							l_cursor := l_list.new_cursor
 							l_cursor.start
-						variant
-							l_list.count + 1 - l_cursor.index
 						until
 							l_cursor.after
 						loop
@@ -390,6 +388,8 @@ feature {NONE} -- Implementation
 							else
 								l_cursor.forth
 							end
+						variant
+							l_list.count + 1 - l_cursor.index
 						end
 					else
 						compare_value_with_sequence (l_atomic_value, l_other_sequence, l_list)
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			first_operand_maybe_boolean: maybe_first_operand_boolean
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER			
+			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.create_iterator (a_context)
 			l_iterator := first_operand.last_iterator
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			second_operand_maybe_boolean: maybe_second_operand_boolean
 		local
 			l_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER			
+			l_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			second_operand.create_iterator (a_context)
 			l_iterator := second_operand.last_iterator
@@ -538,10 +538,10 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	
+
 	general_comparison: is_general_comparison_operator (operator)
 	atomic_comparer_not_void: initialized implies atomic_comparer /= Void
 	value_comparison: initialized implies is_value_comparison_operator (singleton_operator)
 
 end
-	
+

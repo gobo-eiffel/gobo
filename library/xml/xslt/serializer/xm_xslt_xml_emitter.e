@@ -155,7 +155,7 @@ feature -- Events
 						l_public_id := output_properties.doctype_public
 						if l_system_id /= Void then
 							is_well_formed_document_required := True
-							
+
 							write_doctype (l_display_name, l_system_id, l_public_id)
 						end
 						is_empty := False
@@ -353,7 +353,7 @@ feature -- Events
 		local
 			l_bad_character_code: INTEGER
 			l_message: STRING
-			l_error: XM_XPATH_ERROR_VALUE		
+			l_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
 				if not is_output_open then
@@ -537,10 +537,10 @@ feature {NONE} -- Implementation
 						output (" standalone=%"" + output_properties.standalone + "%"")
 					end
 					output ("?>")
-					
+
 					-- Don't write a newline character: it's wrong if the output is an
 					--  external general parsed entity
-					
+
 				end
 			else
 				if not l_version.same_string ("1.0") and output_properties.doctype_system /= Void then
@@ -629,9 +629,7 @@ feature {NONE} -- Implementation
 				l_special_characters := specials_in_text
 			end
 			from
-				l_start_index := 1;
-			variant
-				a_character_string.count + 2 - l_start_index
+				l_start_index := 1
 			until
 				l_start_index > a_character_string.count
 			loop
@@ -669,6 +667,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				l_start_index := l_beyond_index + 1
+			variant
+				a_character_string.count + 2 - l_start_index
 			end
 		end
 
@@ -755,7 +755,7 @@ feature {NONE} -- Implementation
 				is_error := True
 			else
 				is_output_open := True
-				
+
 				if STRING_.same_string (output_properties.version, "1.1") then
 					allow_undeclare_prefixes := output_properties.undeclare_prefixes
 				end
@@ -816,8 +816,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_index := 1
-			variant
-				a_character_string.count + 1 - l_index
 			until
 				l_finished or else l_index > a_character_string.count
 			loop
@@ -829,6 +827,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				l_index := l_index + 1
+			variant
+				a_character_string.count + 1 - l_index
 			end
 		end
 

@@ -18,7 +18,7 @@ inherit
 		redefine
 			start_element, end_element, notify_characters, notify_processing_instruction, notify_comment
 		end
-	
+
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XSLT_NORMALIZATION_SETTER
@@ -192,8 +192,6 @@ feature {NONE} -- Initialization
 					end
 					from
 						l_index := 1; l_start_index := l_index
-					variant
-						l_buffer.count + 1 - l_index
 					until
 						l_index > l_buffer.count
 					loop
@@ -222,6 +220,8 @@ feature {NONE} -- Initialization
 						else
 							l_index := l_index + 1
 						end
+					variant
+						l_buffer.count + 1 - l_index
 					end
 					flush_cdata (l_buffer.substring (l_start_index, l_index - 1))
 				else
@@ -248,8 +248,6 @@ feature {NONE} -- Initialization
 				l_index := 1
 				l_start_index := 1
 				l_count := a_character_string.count
-			variant
-				l_count + 1 - l_index
 			until
 				l_index > l_count
 			loop
@@ -263,6 +261,8 @@ feature {NONE} -- Initialization
 					l_index := l_start_index - 1
 				end
 				l_index := l_index + 1
+			variant
+				l_count + 1 - l_index
 			end
 			base_receiver.notify_characters (a_character_string.substring (l_start_index, l_index - 1), Disable_escaping)
 			base_receiver.notify_characters ("]]>", Disable_escaping)
@@ -277,4 +277,4 @@ invariant
 	emitter_not_void: emitter /= Void
 
 end
-	
+

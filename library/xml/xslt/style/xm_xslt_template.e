@@ -35,7 +35,7 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-		
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
@@ -77,7 +77,7 @@ feature -- Status report
 		do
 			Result := True
 		end
-	
+
 	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
 			-- Is `a_style_element' a permitted child of `Current'?
 		do
@@ -110,7 +110,7 @@ feature -- Element change
 			a_expression.allocate_slots (1, a_slot_manager)
 			containing_stylesheet.allocate_pattern_slots (a_expression.last_slot_number)
 		end
-	
+
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
@@ -123,12 +123,11 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
-				loop a_name_code := a_cursor.item
-				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
+				loop
+					a_name_code := a_cursor.item
+					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					if STRING_.same_string (an_expanded_name, Name_attribute) then
 						a_name_attribute := attribute_value_by_index (a_cursor.index)
 						STRING_.left_adjust (a_name_attribute)
@@ -149,6 +148,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			prepare_mode_attribute (a_mode_attribute, a_match_attribute = Void)
@@ -239,7 +240,7 @@ feature -- Element change
 				 l_has_required_parameters := True
 				end
 				l_child_iterator.forth
-			end	
+			end
 			compiled_template.set_has_required_parameters (l_has_required_parameters)
 		end
 
@@ -280,7 +281,7 @@ feature -- Element change
 						report_compile_error (l_type_checker.static_type_check_error)
 					else
 						l_content := l_type_checker.checked_expression
-					end	
+					end
 				end
 			end
 			if not any_compile_errors then
@@ -315,8 +316,6 @@ feature -- Element change
 							from
 								l_cursor := mode_name_codes.new_cursor
 								l_cursor.start
-							variant
-								mode_name_codes.count + 1 - l_cursor.index
 							until
 								l_cursor.after
 							loop
@@ -332,6 +331,8 @@ feature -- Element change
 									l_rule_manager.set_handler_with_default_priority (match, l_rule_value, l_mode, precedence)
 								end
 								l_cursor.forth
+							variant
+								mode_name_codes.count + 1 - l_cursor.index
 							end
 						end
 						if is_explaining or else principal_stylesheet.is_all_explaining then
@@ -437,8 +438,6 @@ feature {NONE} -- Implementation
 						from
 							l_cursor := mode_tokens.new_cursor
 							l_cursor.start
-						variant
-							mode_tokens.count + 1 - l_cursor.index
 						until
 							l_cursor.after
 						loop
@@ -465,6 +464,8 @@ feature {NONE} -- Implementation
 								end
 							end
 							l_cursor.forth
+						variant
+							mode_tokens.count + 1 - l_cursor.index
 						end
 						if not any_compile_errors then
 							check_all_modes_distinct
@@ -535,8 +536,6 @@ feature {NONE} -- Implementation
 			create a_set.make (mode_name_codes.count)
 			from
 				l_cursor := mode_name_codes.new_cursor; l_cursor.start
-			variant
-				mode_name_codes.count + 1 - l_cursor.index
 			until
 				any_compile_errors or else l_cursor.after
 			loop
@@ -548,6 +547,8 @@ feature {NONE} -- Implementation
 					a_set.put (l_name_code)
 				end
 				l_cursor.forth
+			variant
+				mode_name_codes.count + 1 - l_cursor.index
 			end
 		end
 

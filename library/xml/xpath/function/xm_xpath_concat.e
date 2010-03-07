@@ -84,8 +84,6 @@ feature -- Evaluation
 			from
 				create l_string.make (0)
 				l_cursor := arguments.new_cursor; l_cursor.start
-			variant
-				arguments.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -100,6 +98,8 @@ feature -- Evaluation
 					end
 				end
 				l_cursor.forth
+			variant
+				arguments.count + 1 - l_cursor.index
 			end
 			create last_evaluated_string.make (l_string)
 		end
@@ -113,4 +113,4 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 end
-	
+

@@ -811,8 +811,6 @@ feature {NONE} -- URI parsing
 				start := 1
 				state := State_scheme
 				i := 1
-			variant
-				full_reference.count + 1 - i
 			until
 				i > full_reference.count
 			loop
@@ -896,6 +894,8 @@ feature {NONE} -- URI parsing
 					end
 				end
 				i := i + 1
+			variant
+				full_reference.count + 1 - i
 			end
 				-- Handle last part of string.
 			inspect state

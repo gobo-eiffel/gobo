@@ -46,8 +46,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -61,6 +59,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if not any_compile_errors then
@@ -238,8 +238,6 @@ feature {NONE} -- Implementation
 			from
 				l_cursor := l_element_list.new_cursor
 				l_cursor.finish
-			variant
-				l_cursor.index
 			until
 				l_cursor.before
 			loop
@@ -259,6 +257,8 @@ feature {NONE} -- Implementation
 				else
 					l_cursor.back
 				end
+			variant
+				l_cursor.index
 			end
 			if template = Void and not any_compile_errors then
 				report_compile_error (create {XM_XPATH_ERROR_VALUE}.make_from_string (STRING_.concat ("No template exists named ", called_template_name),

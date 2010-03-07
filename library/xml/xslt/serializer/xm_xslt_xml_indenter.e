@@ -117,8 +117,6 @@ feature -- Events
 		do
 			from
 				an_index := 1
-			variant
-				chars.count + 1 - an_index
 			until
 				an_index > chars.count
 			loop
@@ -132,6 +130,8 @@ feature -- Events
 				end
 				column := column + 1
 				an_index := an_index + 1
+			variant
+				chars.count + 1 - an_index
 			end
 			Precursor (chars, properties)
 			if not is_allwhite then is_after_tag := False end
@@ -204,4 +204,4 @@ invariant
 	emitter_is_base_receiver: emitter = base_receiver
 
 end
-	
+

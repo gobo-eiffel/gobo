@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -95,7 +95,7 @@ feature -- Access
 				Result := ""
 			end
 		end
-		
+
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -109,10 +109,10 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level + 1), "fixed name ")
 			a_string := STRING_.appended_string (a_string, shared_name_pool.display_name_from_name_code (fixed_name_code))
 			std.error.put_string (a_string)
-			std.error.put_new_line			
+			std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "content ")
 			std.error.put_string (a_string)
-			std.error.put_new_line			
+			std.error.put_new_line
 			content.display (a_level + 2)
 		end
 
@@ -125,7 +125,7 @@ feature -- Optimization
 			l_original_text: STRING
 			l_content_test: XM_XPATH_CONTENT_TYPE_TEST
 		do
-			
+
 			-- The following code will need modifying for a schema-aware processor:
 
 			l_original_text := STRING_.concat ("element(", shared_name_pool.display_name_from_name_code (fixed_name_code))
@@ -133,7 +133,7 @@ feature -- Optimization
 			create l_name_test.make (Element_node, fixed_name_code, l_original_text)
 			create l_content_test.make (Element_node, type_factory.untyped_type)
 			create {XM_XPATH_COMBINED_NODE_TEST} internal_item_type.make (l_name_test, Intersect_token, l_content_test)
-			
+
 			Precursor (a_replacement)
 		end
 
@@ -147,8 +147,6 @@ feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 			if namespace_code_list.count > 0 then
 				from
 					a_cursor := namespace_code_list.new_cursor; a_cursor.start
-				variant
-					namespace_code_list.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -158,19 +156,21 @@ feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 					else
 						a_cursor.remove
 					end
+				variant
+					namespace_code_list.count + 1 - a_cursor.index
 				end
 			end
 		end
-	
+
 feature {NONE} -- Implementation
-	
+
 	fixed_name_code: INTEGER
 			-- Name code
 
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes
 
-	internal_item_type: XM_XPATH_ITEM_TYPE 
+	internal_item_type: XM_XPATH_ITEM_TYPE
 			-- Data type of the expression, when known
 
 invariant
@@ -179,4 +179,4 @@ invariant
 	valid_name_code: shared_name_pool.is_valid_name_code (fixed_name_code)
 
 end
-	
+

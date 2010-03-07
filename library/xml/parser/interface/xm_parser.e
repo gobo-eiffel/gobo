@@ -48,7 +48,7 @@ feature -- Parsing
 			a_system_not_void: a_system /= Void
 		deferred
 		end
-	
+
 	parse_from_public (a_public: STRING; a_system: STRING) is
 			-- Parse from public/system identifier using resolver.
 		require
@@ -56,7 +56,7 @@ feature -- Parsing
 			a_system_not_void: a_system /= Void
 		deferred
 		end
-			
+
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
@@ -166,7 +166,7 @@ feature -- Access
 		end
 
 	positions: DS_LIST [XM_POSITION] is
-			-- Current position from the XML entity being parsed, and 
+			-- Current position from the XML entity being parsed, and
 			-- the position where it was included.
 		deferred
 		ensure
@@ -216,11 +216,11 @@ feature -- Error reporting
 		end
 
 	new_stop_on_error_filter: XM_PARSER_STOP_ON_ERROR_FILTER is
-			-- Create a stop on error filter that not only 
-			-- stops forwarding events but also stops the 
-			-- parser if the error comes from the preceding 
+			-- Create a stop on error filter that not only
+			-- stops forwarding events but also stops the
+			-- parser if the error comes from the preceding
 			-- event filters.
-			-- The result must be used only for processing events 
+			-- The result must be used only for processing events
 			-- coming from the current parser.
 		do
 			create Result.make (Current)
@@ -229,7 +229,7 @@ feature -- Error reporting
 		end
 
 	new_stop_on_error_filter_next (a_next: XM_CALLBACKS): XM_PARSER_STOP_ON_ERROR_FILTER is
-			-- Like 'new_stop_on_error_filter' with next 
+			-- Like 'new_stop_on_error_filter' with next
 			-- filter.
 		require
 			a_next_not_void: a_next /= Void
@@ -262,8 +262,6 @@ feature {NONE} -- Implementation
 				create Result.make_empty
 				from
 					i := 1
-				variant
-					a_string.count + 1 - i
 				until
 					i > a_string.count or i > Safe_error_component_maximum_size
 				loop
@@ -273,8 +271,10 @@ feature {NONE} -- Implementation
 						Result.append_character ('?')
 					end
 					i := i + 1
+				variant
+					a_string.count + 1 - i
 				end
-				
+
 				if i > Safe_error_component_maximum_size then
 					Result.append_string (Safe_error_component_too_big)
 					i := a_string.count + 1
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 	is_safe_error_character (a_char: CHARACTER): BOOLEAN is
 			-- Is character acceptable for error component display?
 		do
-			Result := (a_char >= '/' and a_char < '9') 
+			Result := (a_char >= '/' and a_char < '9')
 				or (a_char >= '@' and a_char < 'Z')
 				or (a_char >= 'a' and a_char < 'z')
 				-- (This covers a_char.code = 0 for UC_STRING unicode characters.)
@@ -297,10 +297,10 @@ feature {NONE} -- Implementation
 
 	Safe_error_component_maximum_size: INTEGER is 100
 			-- Safe error component maximum size
-			
+
 	Safe_error_component_too_big: STRING is "(TRUNCATED)"
 			-- Error component too big error
-	
+
 	Safe_error_component_undefined: STRING is "undefined"
 			-- Error component undefined
 

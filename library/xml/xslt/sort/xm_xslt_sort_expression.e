@@ -105,8 +105,6 @@ feature -- Access
 		do
 			from
 				a_cursor := sort_key_list.new_cursor; a_cursor.start
-			variant
-				sort_key_list.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -116,6 +114,8 @@ feature -- Access
 				else
 					a_cursor.forth
 				end
+			variant
+				sort_key_list.count + 1 - a_cursor.index
 			end
 		end
 
@@ -123,7 +123,7 @@ feature -- Access
 			-- Immediate sub-expressions of `Current'
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
-			l_sort_key: XM_XSLT_SORT_KEY_DEFINITION 
+			l_sort_key: XM_XSLT_SORT_KEY_DEFINITION
 		do
 			create Result.make (7)
 			Result.set_equality_tester (expression_tester)
@@ -149,7 +149,7 @@ feature -- Access
 				l_cursor.forth
 			end
 		end
-	
+
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -166,7 +166,7 @@ feature -- Optimization
 	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
 			-- Perform of context-independent static optimizations.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]		
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			select_expression.simplify (l_replacement)
@@ -180,7 +180,7 @@ feature -- Optimization
 	check_static_type (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]	
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 			l_sort_item_type: XM_XPATH_ITEM_TYPE
 		do
 			create l_replacement.make (Void)
@@ -235,15 +235,13 @@ feature -- Evaluation
 					evaluation_context_not_void: l_evaluation_context /= Void
 					-- as this is XSLT
 				end
-				
+
 				-- See creation procedure: if fixed_sort_key_list /= Void then
 				--	l_reduced_sort_keys := fixed_sort_key_list
 				--else
 					from
 						create l_reduced_sort_keys.make (sort_key_list.count)
 						l_cursor := sort_key_list.new_cursor; l_cursor.start
-					variant
-						sort_key_list.count + 1 - l_cursor.index
 					until
 						l_cursor.after
 					loop
@@ -264,6 +262,8 @@ feature -- Evaluation
 							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
 							l_cursor.go_after
 						end
+					variant
+						sort_key_list.count + 1 - l_cursor.index
 					end
 				--end
 				if last_iterator /= Void then
@@ -297,15 +297,13 @@ feature -- Evaluation
 					evaluation_context_not_void: l_evaluation_context /= Void
 					-- as this is XSLT
 				end
-				
+
 				-- See creation procedure:if fixed_sort_key_list /= Void then
 				--	l_reduced_sort_keys := fixed_sort_key_list
 				--else
 					from
 						create l_reduced_sort_keys.make (sort_key_list.count)
 						l_cursor := sort_key_list.new_cursor; l_cursor.start
-					variant
-						sort_key_list.count + 1 - l_cursor.index
 					until
 						l_cursor.after
 					loop
@@ -326,6 +324,8 @@ feature -- Evaluation
 							create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make_from_string (STRING_.concat ("Unknown collation ", l_sort_key.collation_name), Xpath_errors_uri, "XTDE1035", Dynamic_error)
 							l_cursor.go_after
 						end
+					variant
+						sort_key_list.count + 1 - l_cursor.index
 					end
 				--end
 				if last_node_iterator /= Void then
@@ -351,9 +351,9 @@ feature {XM_XSLT_SORT_EXPRESSION} -- Local
 		ensure
 			select_expression_set: select_expression = a_select_expression
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
-	
+
 	compute_cardinality is
 			-- Compute cardinality.
 		do

@@ -28,7 +28,7 @@ inherit
 		redefine
 			root, document_root, system_id, line_number, is_tiny_document, as_tiny_document
 		end
-	
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
@@ -173,8 +173,6 @@ feature -- Access
 			if Result = Void then
 				from
 					an_index := 1
-				variant
-					tree.number_of_nodes - an_index + 1
 				until
 					an_index > tree.number_of_nodes
 				loop
@@ -193,6 +191,8 @@ feature -- Access
 						a_list.put_last (a_node.as_tiny_element)
 					end
 					an_index := an_index + 1
+				variant
+					tree.number_of_nodes - an_index + 1
 				end
 				if element_list.is_full then
 					element_list.resize (element_list.count * 2)
@@ -300,7 +300,7 @@ feature -- Duplication
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			
+
 			-- output the children
 
 			from
@@ -320,7 +320,7 @@ feature {XM_XPATH_NODE} -- Restricted
 		do
 			Result := False
 		end
-	
+
 feature {NONE} -- Implementation
 
 	id_table: DS_HASH_TABLE [XM_XPATH_TINY_ELEMENT, STRING]

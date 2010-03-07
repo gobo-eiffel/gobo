@@ -178,8 +178,6 @@ feature -- Access
 			from
 				l_cursor := l_namespace_code_list.new_cursor
 				l_cursor.start
-			variant
-				l_namespace_code_list.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -187,6 +185,8 @@ feature -- Access
 				create l_string_value.make (l_xml_prefix)
 				l_prefix_list.put_last (l_string_value)
 				l_cursor.forth
+			variant
+				l_namespace_code_list.count + 1 - l_cursor.index
 			end
 			check
 				not_empty: not l_prefix_list.is_empty

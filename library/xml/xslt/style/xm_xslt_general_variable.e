@@ -44,7 +44,7 @@ feature -- Access
 			Result := True
 		end
 
-	allows_tunnel: BOOLEAN 
+	allows_tunnel: BOOLEAN
 			-- Is the "tunnel" attribute allowed to be "yes"?
 
 	variable_name: STRING
@@ -80,7 +80,7 @@ feature -- Access
 				Result := cached_variable_fingerprint
 			end
 		ensure
-			variable_fingerprint_nearly_positive: Result > -2	
+			variable_fingerprint_nearly_positive: Result > -2
 		end
 
 
@@ -100,7 +100,7 @@ feature -- Status report
 		do
 			Result := is_top_level
 		end
-	
+
 	is_required_parameter: BOOLEAN
 			-- Is this a required parameter?
 
@@ -111,7 +111,7 @@ feature -- Status report
 			-- Is this a tunnel parameter?
 
 feature -- Status setting
-	
+
 	set_redundant_variable is
 			-- Mark as a redundant variable
 		require
@@ -134,8 +134,6 @@ feature -- Status setting
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -146,7 +144,7 @@ feature -- Status setting
 						STRING_.left_adjust (variable_name)
 						STRING_.right_adjust (variable_name)
 					elseif STRING_.same_string (an_expanded_name, Select_attribute) then
-						a_select_attribute := attribute_value_by_index (a_cursor.index)					
+						a_select_attribute := attribute_value_by_index (a_cursor.index)
 					elseif STRING_.same_string (an_expanded_name, As_attribute) then
 						an_as_attribute := attribute_value_by_index (a_cursor.index)
 					elseif STRING_.same_string (an_expanded_name, Required_attribute) and then allows_required then
@@ -161,6 +159,8 @@ feature -- Status setting
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 
 				if variable_name = Void then
@@ -223,11 +223,11 @@ feature -- Status setting
 									if as_type.cardinality_allows_zero then
 										create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 									else
-										
+
 										-- The implicit default value () is not valid for the required type,
 										--  so we treat it as if there is no default
-										
-										is_implicitly_required_parameter := True 
+
+										is_implicitly_required_parameter := True
 									end
 								end
 							else -- not an xsl:param
@@ -242,19 +242,19 @@ feature -- Status setting
 							l_first_node := l_child_iterator.item
 							l_child_iterator.forth
 							if l_child_iterator.after then
-								
+
 								-- There is exactly one child node
 
 								if l_first_node.node_type = Text_node then
 									constant_text := l_first_node.string_value
 								end
 							end
-							
+
 							-- Determine if the temporary tree can only contain text nodes
 
 							is_text_only := common_child_item_type = text_node_kind_test
 						end
-					end	
+					end
 				end
 			end
 			if select_expression /= Void then
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			l_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
-			
+
 			if select_expression /= Void then
 				create l_replacement.make (Void)
 				select_expression.simplify (l_replacement)
@@ -447,5 +447,5 @@ feature {NONE} -- Implementation
 				as_type := last_generated_sequence_type
 			end
 		end
-	
+
 end

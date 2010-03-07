@@ -170,8 +170,6 @@ feature -- Creation
 					create selectable_candidates.make (some_candidate_stylesheets.count)
 					create selectable_candidate_indices.make (some_candidate_stylesheets.count)
 					a_cursor := some_candidate_stylesheets.new_cursor; a_cursor.start
-				variant
-					some_candidate_stylesheets.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -197,6 +195,8 @@ feature -- Creation
 						end
 					end
 					a_cursor.forth
+				variant
+					some_candidate_stylesheets.count + 1 - a_cursor.index
 				end
 				if selectable_candidates.count > 1 then
 					a_selected_index := a_chooser.selected_index (selectable_candidates)
@@ -257,8 +257,6 @@ feature {NONE} -- Implementation
 				a_text := STRING_.appended_string (a_text, "'>")
 				from
 					a_cursor := selected_stylesheets.new_cursor; a_cursor.start
-				variant
-					selected_stylesheets.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -266,6 +264,8 @@ feature {NONE} -- Implementation
 					a_text := STRING_.appended_string (a_text, a_cursor.item.uri)
 					a_text := STRING_.appended_string (a_text, "'/>")
 					a_cursor.forth
+				variant
+					selected_stylesheets.count + 1 - a_cursor.index
 				end
 				a_text := STRING_.appended_string (a_text, "</xsl:transform>")
 

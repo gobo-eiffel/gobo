@@ -11,9 +11,9 @@ indexing
 	revision: "$Revision$"
 
 class XM_XPATH_TREE_TEXT
-	
+
 inherit
-	
+
 	XM_XPATH_TEXT
 		undefine
 			document_element, next_sibling, previous_sibling, local_part, is_tree_node, as_tree_node
@@ -60,7 +60,7 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
 	is_all_whitespace: BOOLEAN is
 			-- Does `string_value' consist only of XML white-space characters?
 		local
@@ -69,8 +69,6 @@ feature -- Status report
 			from
 				l_counter := 1
 				Result := True
-			variant
-				string_value.count + 1 - l_counter
 			until
 				Result = False or else l_counter > string_value.count
 			loop
@@ -78,6 +76,8 @@ feature -- Status report
 					Result := False
 				end
 				l_counter := l_counter + 1
+			variant
+				string_value.count + 1 - l_counter
 			end
 		end
 
@@ -90,4 +90,4 @@ feature -- Duplication
 		end
 
 end
-	
+

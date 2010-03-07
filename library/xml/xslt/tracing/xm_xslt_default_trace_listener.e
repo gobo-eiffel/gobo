@@ -126,8 +126,6 @@ feature -- Events
 			end
 			from
 				a_cursor := some_trace_details.trace_properties.new_cursor; a_cursor.start
-			variant
-				some_trace_details.trace_properties.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -137,6 +135,8 @@ feature -- Events
 				reporter.info_file.put_string (some_trace_details.trace_property (a_property_name))
 				reporter.info_file.put_string ("%" ")
 				a_cursor.forth
+			variant
+				some_trace_details.trace_properties.count + 1 - a_cursor.index
 			end
 			reporter.info_file.put_string (" line=%"")
 			reporter.info_file.put_string (some_trace_details.line_number.out)
@@ -213,7 +213,7 @@ feature -- Events
 			-- Trace leaving current item.
 		local
 			a_duration: DT_TIME_DURATION
-			a_time: DT_TIME		
+			a_time: DT_TIME
 		do
 			reporter.info_file.put_string (spaces (indentation + 1))
 			if is_timing then
@@ -280,4 +280,4 @@ invariant
 	reporter_not_void: reporter /= Void
 
 end
-	
+

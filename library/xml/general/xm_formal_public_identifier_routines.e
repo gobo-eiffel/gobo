@@ -57,8 +57,6 @@ feature -- Conversion
 			Result := ""
 			from
 				an_index := 14
-			variant
-				a_publicid_urn.count + 1 - an_index
 			until
 				an_index > a_publicid_urn.count
 			loop
@@ -99,6 +97,8 @@ feature -- Conversion
 					Result.append_string (a_publicid_urn.substring (an_index, an_index))
 					an_index := an_index + 1
 				end
+			variant
+				a_publicid_urn.count + 1 - an_index
 			end
 		ensure
 			fpi_not_void: result /= Void

@@ -126,8 +126,6 @@ feature -- Evaluation
 			else
 				from
 					a_cursor := a_parser.scheme_sequence.new_cursor; a_cursor.start
-				variant
-					a_parser.scheme_sequence.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -151,6 +149,8 @@ feature -- Evaluation
 					else
 						a_cursor.forth
 					end
+				variant
+					a_parser.scheme_sequence.count + 1 - a_cursor.index
 				end
 				if value = Void then
 					create {XM_XPATH_EMPTY_SEQUENCE} value.make
@@ -172,14 +172,14 @@ feature -- Element change
 		ensure
 			scheme_registered: is_registered (a_scheme.expanded_name) and then registered_schemes.item (a_scheme.expanded_name) = a_scheme
 		end
-	
+
 feature {NONE} -- Implementation
 
 	registered_schemes: DS_HASH_TABLE [XM_XPATH_XPOINTER_SCHEME, STRING]
 			-- Registered scheme processors, indexed by expanded-name
 
 	namespace_bindings: XM_XPOINTER_NAMESPACE_CONTEXT
-	
+
 invariant
 
 	registered_schemes_not_void: registered_schemes /= Void

@@ -135,8 +135,6 @@ feature -- Access
 
 			from
 				l_index := 1
-			variant
-				namespace_alias_uri_codes.count + 1 - l_index
 			until
 				l_index > namespace_alias_uri_codes.count
 			loop
@@ -146,6 +144,8 @@ feature -- Access
 				else
 					l_index := l_index + 1
 				end
+			variant
+				namespace_alias_uri_codes.count + 1 - l_index
 			end
 		end
 
@@ -192,8 +192,6 @@ feature -- Access
 
 			from
 				l_cursor := top_level_elements.new_cursor; l_cursor.finish
-			variant
-				l_cursor.index
 			until
 				Result.is_error or l_cursor.before
 			loop
@@ -202,6 +200,8 @@ feature -- Access
 					l_cursor.item.as_output.gather_output_properties (Result)
 				end
 				l_cursor.back
+			variant
+				l_cursor.index
 			end
 			if Result.is_error then
 				if Result.is_duplication_error then
@@ -238,8 +238,6 @@ feature -- Access
 
 			from
 				a_cursor := top_level_elements.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				a_cursor.before
 			loop
@@ -249,6 +247,8 @@ feature -- Access
 				else
 					a_cursor.back
 				end
+			variant
+				a_cursor.index
 			end
 		end
 
@@ -293,8 +293,6 @@ feature -- Status report
 		do
 			from
 				a_cursor := top_level_elements.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				Result or else a_cursor.before
 			loop
@@ -302,6 +300,8 @@ feature -- Status report
 					Result := True
 				end
 				a_cursor.back
+			variant
+				a_cursor.index
 			end
 		end
 
@@ -327,8 +327,6 @@ feature -- Status report
 			if	namespace_alias_namespace_codes /= Void then
 				from
 					an_index := 1
-				variant
-					namespace_alias_namespace_codes.count + 1 - an_index
 				until
 					an_index > namespace_alias_namespace_codes.count
 				loop
@@ -338,6 +336,8 @@ feature -- Status report
 					else
 						an_index := an_index + 1
 					end
+				variant
+					namespace_alias_namespace_codes.count + 1 - an_index
 				end
 			end
 		end
@@ -602,13 +602,13 @@ feature -- Element change
 			function_library.add_function_library (a_function_library)
 			from
 				a_cursor := a_configuration.extension_functions.new_cursor; a_cursor.start
-			variant
-				a_configuration.extension_functions.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				function_library.add_function_library (a_cursor.item)
 				a_cursor.forth
+			variant
+				a_configuration.extension_functions.count + 1 - a_cursor.index
 			end
 			create {XM_XSLT_STYLESHEET_FUNCTION_LIBRARY} a_function_library.make (Current, False)
 			function_library.add_function_library (a_function_library)
@@ -655,14 +655,14 @@ feature -- Element change
 				from
 					a_cursor := top_level_elements.new_cursor
 					a_cursor.start
-				variant
-					top_level_elements.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
 					a_style_element := a_cursor.item
 					a_style_element.fixup_references
 					a_cursor.forth
+				variant
+					top_level_elements.count + 1 - a_cursor.index
 				end
 			end
 
@@ -673,14 +673,14 @@ feature -- Element change
 				from
 					a_cursor := top_level_elements.new_cursor
 					a_cursor.start
-				variant
-					top_level_elements.count + 1 - a_cursor.index
 				until
 					any_compile_errors or else a_cursor.after
 				loop
 					a_style_element := a_cursor.item
 					a_style_element.validate_subtree
 					a_cursor.forth
+				variant
+					top_level_elements.count + 1 - a_cursor.index
 				end
 				post_validated := True
 			end
@@ -788,14 +788,14 @@ feature -- Element change
 				from
 					a_cursor := top_level_elements.new_cursor
 					a_cursor.start
-				variant
-					top_level_elements.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
 					a_style_element := a_cursor.item
 					a_style_element.process_all_attributes
 					a_cursor.forth
+				variant
+					top_level_elements.count + 1 - a_cursor.index
 				end
 			else
 				-- then validation will fail later, and report the error
@@ -854,8 +854,6 @@ feature -- Element change
 			from
 				a_cursor := top_level_elements.new_cursor
 				a_cursor.start
-			variant
-				top_level_elements.count + 1 - a_cursor.index
 			until
 				any_compile_errors or else a_cursor.after
 			loop
@@ -885,6 +883,8 @@ feature -- Element change
 					a_cursor.item.last_generated_expression.display (a_level)
 				end
 				a_cursor.forth
+			variant
+				top_level_elements.count + 1 - a_cursor.index
 			end
 			if not any_compile_errors then
 				decimal_format_manager.fixup_default_default
@@ -921,8 +921,6 @@ feature -- Element change
 				from
 					a_cursor := top_level_elements.new_cursor
 					a_cursor.start
-				variant
-					top_level_elements.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -933,6 +931,8 @@ feature -- Element change
 						a_character_map_index.force (a_character_code_map, a_fingerprint)
 					end
 					a_cursor.forth
+				variant
+					top_level_elements.count + 1 - a_cursor.index
 				end
 
 				-- Build the run-time function library
@@ -946,21 +946,19 @@ feature -- Element change
 				function_library.add_function_library (overriding_runtime_library)
 				from
 					a_third_cursor := a_configuration.extension_functions.new_cursor; a_third_cursor.start
-				variant
-					a_configuration.extension_functions.count + 1 - a_third_cursor.index
 				until
 					a_third_cursor.after
 				loop
 					function_library.add_function_library (a_third_cursor.item)
 					a_third_cursor.forth
+				variant
+					a_configuration.extension_functions.count + 1 - a_third_cursor.index
 				end
 				create non_overriding_runtime_library.make
 				function_library.add_function_library (non_overriding_runtime_library)
 
 				from
 					a_cursor := top_level_elements.new_cursor; a_cursor.start
-				variant
-					top_level_elements.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -972,6 +970,8 @@ feature -- Element change
 						end
 					end
 					a_cursor.forth
+				variant
+					top_level_elements.count + 1 - a_cursor.index
 				end
 				executable.set_function_library (function_library)
 				if stripper_rules /= Void then
@@ -1211,8 +1211,6 @@ feature {NONE} -- Implementation
 				from
 					l_cursor := namespace_alias_list.new_cursor
 					l_cursor.start
-				variant
-					namespace_alias_list.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -1231,8 +1229,6 @@ feature {NONE} -- Implementation
 
 					from
 						l_index := l_precedence_boundary
-					variant
-						namespace_alias_list.count + 1 - l_index
 					until
 						l_index > namespace_alias_list.count
 					loop
@@ -1244,12 +1240,16 @@ feature {NONE} -- Implementation
 						end
 
 						l_index := l_index + 1
+					variant
+						namespace_alias_list.count + 1 - l_index
 					end
 
 					namespace_alias_uri_codes.put (l_uri_code, l_cursor.index)
 					namespace_alias_namespace_codes.put (l_namespace_code, l_cursor.index)
 
 					l_cursor.forth
+				variant
+					namespace_alias_list.count + 1 - l_cursor.index
 				end
 
 			end
@@ -1276,8 +1276,6 @@ feature {NONE} -- Implementation
 			a_top_level_list := an_included_stylesheet.top_level_elements
 			from
 				a_cursor := a_top_level_list.new_cursor; a_cursor.start
-			variant
-				a_top_level_list.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1287,16 +1285,18 @@ feature {NONE} -- Implementation
 					top_level_elements.force_last (a_style_element)
 				else
 					from
-					variant
-						a_count
 					until
 						a_count = 0 or else a_style_element.precedence >= top_level_elements.item (a_count).precedence
 					loop
 						a_count := a_count - 1
+					variant
+						a_count
 					end
 					top_level_elements.force (a_style_element, a_count + 1)
 				end
 				a_cursor.forth
+			variant
+				a_top_level_list.count + 1 - a_cursor.index
 			end
 		end
 
@@ -1316,8 +1316,6 @@ feature {NONE} -- Implementation
 			create a_set.make_default
 			from
 				a_cursor := top_level_elements.new_cursor; a_cursor.finish
-			variant
-				a_cursor.index
 			until
 				any_compile_errors or else a_cursor.before
 			loop
@@ -1326,6 +1324,8 @@ feature {NONE} -- Implementation
 					if a_fingerprint /= -1 then a_set.force (a_fingerprint) end
 				end
 				a_cursor.back
+			variant
+				a_cursor.index
 			end
 			if a_set.is_empty then
 				if needs_dynamic_output_properties then

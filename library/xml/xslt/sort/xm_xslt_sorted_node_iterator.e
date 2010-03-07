@@ -26,7 +26,7 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
-	
+
 	XM_XPATH_ERROR_TYPES
 		export {NONE} all end
 
@@ -54,13 +54,13 @@ feature {NONE} -- Initialization
 			from
 				create key_comparers.make (sort_keys.count)
 				a_cursor := sort_keys.new_cursor; a_cursor.start
-			variant
-				sort_keys.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				key_comparers.put_last (a_cursor.item.comparer)
 				a_cursor.forth
+			variant
+				sort_keys.count + 1 - a_cursor.index
 			end
 
 			-- Avoid doing the sort until the user wants the first item. This is because
@@ -181,15 +181,15 @@ feature -- Status report
 
 
 feature -- Cursor movement
-			
+
 	forth is
 			-- Move to next position
 		do
 			if not count_determined then perform_sorting end
 			index := index + 1
 		ensure then
-			not is_error implies count_determined			
-		end	
+			not is_error implies count_determined
+		end
 
 feature -- Duplication
 
@@ -209,7 +209,7 @@ feature -- Duplication
 			Result.set_count (count)
 			Result.set_node_keys (node_keys)
 		ensure then
-			not is_error implies count_determined			
+			not is_error implies count_determined
 		end
 
 
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Sequence to be sorted
-	
+
 	sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			-- Sort keys
 
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			l_item: DS_CELL [XM_XPATH_ITEM]
 		do
 			create node_keys.make_default
-			
+
 			-- Initialize the array with data.
 
 			if not base_iterator.is_error then
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 					end
 
 					-- Make the sort stable by adding the record number.
-					
+
 					count := count + 1
 					create l_sort_record.make (base_iterator.item, l_key_list, count)
 					node_keys.put_last (l_sort_record)
@@ -365,4 +365,4 @@ invariant
 	one_key_comparer_per_sort_key: key_comparers /= Void and then key_comparers.count = sort_keys.count
 
 end
-	
+

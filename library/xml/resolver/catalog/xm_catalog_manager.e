@@ -20,19 +20,19 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
-		
+
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-		
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-		
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
-		
+
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
-		
+
 	UT_URL_ENCODING
 
 create
@@ -135,7 +135,7 @@ feature -- Access
 			an_fpi: STRING
 		do
 			debug_message (3, "Resolving URI reference", a_uri_reference)
-			
+
 			-- At this level, there is no re-try from relative URI to absolute URI -
 			--  that is left to higher-level callers, such as XM_CATALOG_RESOLVER
 
@@ -323,7 +323,7 @@ feature {TS_TEST_CASE} -- initialization
 		end
 
 feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
-	
+
 	retrieved_catalog (a_catalog_name: STRING): XM_CATALOG is
 			-- Parsed catalog named `a_catalog_name'
 		require
@@ -362,20 +362,18 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 		do
 			an_fpi := normalized_fpi (a_public_id)
 			debug_message (8, "Fpi normalized to", an_fpi)
-			
+
 			-- first search the system catalogs
-			
-			debug_message (8, "Number of system catalogs", system_catalog_files.count.out)				
+
+			debug_message (8, "Number of system catalogs", system_catalog_files.count.out)
 			from
 				a_cursor := system_catalog_files.new_cursor; a_cursor.start
-			variant
-				system_catalog_files.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				a_catalog := retrieved_catalog (a_cursor.item)
 				if a_catalog /= Void then
-					debug_message (7, "Retrieved catalog is ", a_cursor.item)				
+					debug_message (7, "Retrieved catalog is ", a_cursor.item)
 					Result := a_catalog.resolved_fpi (an_fpi, prefer_public_required)
 					if Result = Void and then not search_chain_truncated then
 						a_cursor.forth
@@ -386,21 +384,21 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 					debug_message (7, "Retrieved catalog failed parsing", a_cursor.item)
 					a_cursor.forth -- WAS a_cursor.go_after
 				end
+			variant
+				system_catalog_files.count + 1 - a_cursor.index
 			end
-			
+
 			-- now check for catalogs specified by oasis-xml-catalog PIs
-			
+
 			if Result = Void and then are_processing_instructions_allowed and then not search_chain_truncated then
 				from
 					a_cursor_2 := pi_catalog_files.new_cursor; a_cursor_2.start
-				variant
-					pi_catalog_files.count + 1 - a_cursor_2.index
 				until
 					a_cursor_2.after
 				loop
 					a_catalog := retrieved_catalog (a_cursor_2.item)
 					if a_catalog /= Void then
-						debug_message (7, "Retrieved catalog is ", a_cursor_2.item)				
+						debug_message (7, "Retrieved catalog is ", a_cursor_2.item)
 						Result := a_catalog.resolved_fpi (an_fpi, prefer_public_required)
 						if Result = Void and then not search_chain_truncated then
 							a_cursor_2.forth
@@ -411,6 +409,8 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 						debug_message (7, "Retrieved catalog failed parsing", a_cursor_2.item)
 						a_cursor_2.forth
 					end
+				variant
+					pi_catalog_files.count + 1 - a_cursor_2.index
 				end
 			end
 			search_chain_truncated := False
@@ -430,20 +430,18 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 		do
 			an_fsi := escape_custom (utf8.to_utf8 (a_system_id), unescaped_uri_characters, False)
 			debug_message (8, "Fsi normalized to", an_fsi)
-			
+
 			-- first search the system catalogs
 
-			debug_message (8, "Number of system catalogs", system_catalog_files.count.out)				
+			debug_message (8, "Number of system catalogs", system_catalog_files.count.out)
 			from
 				a_cursor := system_catalog_files.new_cursor; a_cursor.start
-			variant
-				system_catalog_files.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				a_catalog := retrieved_catalog (a_cursor.item)
 				if a_catalog /= Void then
-					debug_message (7, "Retrieved catalog is ", a_cursor.item)				
+					debug_message (7, "Retrieved catalog is ", a_cursor.item)
 					Result := a_catalog.resolved_fsi (an_fsi)
 					if Result = Void and then not search_chain_truncated then
 						a_cursor.forth
@@ -454,6 +452,8 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 					debug_message (7, "Retrieved catalog failed parsing", a_cursor.item)
 					a_cursor.forth -- WAS: go_after
 				end
+			variant
+				system_catalog_files.count + 1 - a_cursor.index
 			end
 
 			-- now check for catalogs specified by oasis-xml-catalog PIs
@@ -461,8 +461,6 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			if Result = Void and then are_processing_instructions_allowed and then not search_chain_truncated then
 				from
 					a_cursor_2 := pi_catalog_files.new_cursor; a_cursor_2.start
-				variant
-					pi_catalog_files.count + 1 - a_cursor_2.index
 				until
 					a_cursor_2.after
 				loop
@@ -479,6 +477,8 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 						debug_message (7, "Retrieved catalog failed parsing", a_cursor_2.item)
 						a_cursor_2.forth
 					end
+				variant
+					pi_catalog_files.count + 1 - a_cursor_2.index
 				end
 			end
 			search_chain_truncated := False
@@ -498,20 +498,18 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 		do
 			a_uri := escape_custom (utf8.to_utf8 (a_uri_reference), unescaped_uri_characters, False)
 			debug_message (8, "URI normalized to", a_uri)
-			
+
 			-- first search the system catalogs
 
-			debug_message (8, "Number of system catalogs", system_catalog_files.count.out)				
+			debug_message (8, "Number of system catalogs", system_catalog_files.count.out)
 			from
 				a_cursor := system_catalog_files.new_cursor; a_cursor.start
-			variant
-				system_catalog_files.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				a_catalog := retrieved_catalog (a_cursor.item)
 				if a_catalog /= Void then
-					debug_message (7, "Retrieved catalog is ", a_cursor.item)				
+					debug_message (7, "Retrieved catalog is ", a_cursor.item)
 					Result := a_catalog.resolved_uri (a_uri)
 					if Result = Void and then not search_chain_truncated then
 						a_cursor.forth
@@ -522,6 +520,8 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 					debug_message (7, "Retrieved catalog failed parsing", a_cursor.item)
 					a_cursor.forth -- WAS: go_after
 				end
+			variant
+				system_catalog_files.count + 1 - a_cursor.index
 			end
 
 			-- now check for catalogs specified by oasis-xml-catalog PIs
@@ -529,8 +529,6 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 			if Result = Void and then are_processing_instructions_allowed and then not search_chain_truncated then
 				from
 					a_cursor_2 := pi_catalog_files.new_cursor; a_cursor_2.start
-				variant
-					pi_catalog_files.count + 1 - a_cursor_2.index
 				until
 					a_cursor_2.after
 				loop
@@ -547,13 +545,15 @@ feature {XM_CATALOG, TS_TEST_CASE} -- Implementation
 						debug_message (7, "Retrieved catalog failed parsing", a_cursor_2.item)
 						a_cursor_2.forth
 					end
+				variant
+					pi_catalog_files.count + 1 - a_cursor_2.index
 				end
 			end
 			search_chain_truncated := False
 		ensure
 			result_may_be_void_if_not_match: True
 		end
-			
+
 feature {NONE} -- Implementation
 
 	system_catalog_files: DS_LIST [STRING]
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 					l_separator := ":"
 				end
 				a_splitter.set_separators (l_separator)
-				a_list := a_splitter.split (xml_catalog_files) 
+				a_list := a_splitter.split (xml_catalog_files)
 			end
 			if a_list /= Void then
 				system_catalog_files := a_list
@@ -604,14 +604,14 @@ feature {NONE} -- Implementation
 
 				from
 					a_cursor := system_catalog_files.new_cursor; a_cursor.start
-				variant
-					system_catalog_files.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
 					create a_base_uri.make_resolve_uri (current_directory_base, File_uri.filename_to_uri (a_cursor.item))
 					a_cursor.replace (a_base_uri.full_reference)
 					a_cursor.forth
+				variant
+					system_catalog_files.count + 1 - a_cursor.index
 				end
 			end
 			if not is_system_default_catalog_suppressed and then system_catalog_files.count = 0 then
@@ -629,4 +629,4 @@ invariant
 	positive_debug_level: debug_level >= 0
 
 end
-	
+

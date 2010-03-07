@@ -79,7 +79,7 @@ feature -- Access
 
 	accepted_expression : XM_XPATH_EXPRESSION
 			-- Result from `accept'
-	
+
 feature -- Status report
 
 	may_promote_document_dependent: BOOLEAN
@@ -128,7 +128,7 @@ feature -- Optimization
 					promote (a_child_expression)
 					accepted_expression := promoted_expression
 				end
-			when Focus_independent then 
+			when Focus_independent then
 				if not may_promote_xslt_functions and then a_child_expression.depends_upon_xslt_context then
 					accepted_expression := Void
 				elseif not a_child_expression.depends_upon_focus and then a_child_expression.non_creating then
@@ -173,7 +173,7 @@ feature -- Optimization
 				else
 					accepted_expression := Void
 				end
-			end			
+			end
 		end
 
 feature -- Element change
@@ -257,8 +257,6 @@ feature {NONE} -- Implementation
 				from
 					children := a_child_expression.sub_expressions
 					an_index := 1
-				variant
-					children.count + 1 - an_index
 				until
 					Result or else an_index > children.count
 				loop
@@ -266,6 +264,8 @@ feature {NONE} -- Implementation
 						Result := True
 					end
 					an_index := an_index + 1
+				variant
+					children.count + 1 - an_index
 				end
 			end
 		end
@@ -279,6 +279,6 @@ invariant
 	binding_for_inline_variables: action = Inline_variable_references implies binding_list /= Void and then binding_list.count = 1
 	containing_expression: action /= Unordered implies containing_expression /= Void
 	replace_current: action = Replace_current implies containing_expression /= Void and then containing_expression.is_let_expression
-	
+
 end
-	
+

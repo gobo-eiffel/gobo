@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 		do
 			initialize_special_properties
 			initialize_dependencies
-			initialize_intrinsic_dependencies 
+			initialize_intrinsic_dependencies
 			set_cardinality_zero_or_more
 			set_non_creating
 		end
-	
+
 feature -- Access
-	
+
 	is_value: BOOLEAN is
 			-- Is `Current' a value?
 		do
@@ -250,10 +250,8 @@ feature {NONE} -- Implementation
 		do
 			from
 				counter := 1
-			variant
-				a_string.count + 1 - counter
 			until
-				counter > a_string.count 
+				counter > a_string.count
 			loop
 				if a_string.item_code (counter) < 33 then
 					if started then
@@ -265,6 +263,8 @@ feature {NONE} -- Implementation
 					start_position := counter
 				end
 				counter := counter + 1
+			variant
+				a_string.count + 1 - counter
 			end
 			if not finished then finish_position := counter - 1 end
 			if start_position > 0 then

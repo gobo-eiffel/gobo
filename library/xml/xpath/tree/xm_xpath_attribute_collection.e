@@ -13,7 +13,7 @@ indexing
 class XM_XPATH_ATTRIBUTE_COLLECTION
 
 inherit
-	
+
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -26,7 +26,7 @@ create
 
 	make
 
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -50,7 +50,7 @@ feature -- Access
 				Result := attribute_values.item (an_index)
 			end
 		end
-	
+
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute
 		local
@@ -128,7 +128,7 @@ feature -- Measurement
 		end
 
 feature -- Status report
-	
+
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is
 		do
 			Result := an_attribute_index > 0 and then an_attribute_index <= attribute_values.count
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 
 	attribute_ids: DS_ARRAYED_LIST [INTEGER]
 			-- Are these ID, IDREF or IDREFS attributes?
-	
+
 	attribute_name_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes of attributes
 
@@ -286,8 +286,6 @@ feature {NONE} -- Implementation
 			from
 				l_cursor := attribute_name_codes.new_cursor
 				l_cursor.start
-			variant
-				attribute_name_codes.count + 1 - l_cursor.index
 			until
 				found or else l_cursor.after
 			loop
@@ -296,6 +294,8 @@ feature {NONE} -- Implementation
 					Result := l_cursor.index
 				end
 				l_cursor.forth
+			variant
+				attribute_name_codes.count + 1 - l_cursor.index
 			end
 			if not found then Result := -1 end
 		ensure
@@ -314,4 +314,4 @@ invariant
 	ids: attribute_ids /= Void implies attribute_name_codes.count = attribute_ids.count
 
 end
-	
+

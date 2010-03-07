@@ -58,8 +58,6 @@ feature {NONE} -- Implementation
 			from
 				a_cursor := a_cdata_name_list.new_cursor; a_cursor.start
 				create cdata_section_expanded_names.make (a_cdata_name_list.count)
-			variant
-				a_cdata_name_list.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -78,6 +76,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				a_cursor.forth
+			variant
+				a_cdata_name_list.count + 1 - a_cursor.index
 			end
 		ensure
 			cdata_section_expanded_names_not_void: cdata_section_expanded_names /= Void
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 		ensure
 			definition: Result = not any_compile_errors
 		end
-	
+
 	report_compile_error (a_error: XM_XPATH_ERROR_VALUE) is
 			-- Report a compile error.
 		require
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 		ensure
 			compile_errors: any_compile_errors
 		end
-	
+
 	any_compile_errors: BOOLEAN is
 			-- Have any compile errors been reported?
 		deferred
@@ -196,5 +196,5 @@ feature {NONE} -- Implementation
 			-- Top-level stylesheet
 		deferred
 		end
-	
+
 end

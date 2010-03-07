@@ -22,7 +22,7 @@ inherit
 	XM_XPATH_ROLE
 
 feature -- Access
-	
+
 	namespace_uri, name: STRING
 			-- Qualified function name
 
@@ -87,7 +87,7 @@ feature -- Element change
 
 				-- This happens during expression reduction, when the extra argument is already present
 				-- do nothing
-			
+
 			else
 				check
 					correct_number_of_arguments: supplied_argument_count = a_position
@@ -165,8 +165,6 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			if not is_error then
 				from
 					l_counter := 1
-				variant
-					supplied_argument_count + 1 - l_counter
 				until
 					is_error or a_replacement.item /= Void or l_counter > supplied_argument_count
 				loop
@@ -176,6 +174,8 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 						check_argument (a_replacement, l_counter, a_context)
 					end
 					l_counter := l_counter + 1
+				variant
+					supplied_argument_count + 1 - l_counter
 				end
 			end
 		end

@@ -111,8 +111,6 @@ feature -- Status report
 				Result := True
 				a_count := a_string.count
 				an_index := 1
-			variant
-				a_count + 1 - an_index
 			until
 				Result = False or else an_index > a_count
 			loop
@@ -130,6 +128,8 @@ feature -- Status report
 					end
 					an_index := an_index + 1
 				end
+			variant
+				a_count + 1 - an_index
 			end
 		end
 

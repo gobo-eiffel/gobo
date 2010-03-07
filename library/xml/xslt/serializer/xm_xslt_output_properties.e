@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			create boolean_property_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create precedence_property_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create cdata_section_elements.make_default
-			cdata_section_elements.set_equality_tester (string_equality_tester)			
+			cdata_section_elements.set_equality_tester (string_equality_tester)
 			create used_character_maps.make_default
 			used_character_maps.set_equality_tester (string_equality_tester)
 			set_default_indent_spaces (3)           -- this is not specified in any way by the spec
@@ -188,7 +188,7 @@ feature -- Access
 		end
 
 	is_valid_character_representation (a_character_representation: STRING): BOOLEAN is
-			-- Is `a_character_representation' valid for `character_representation'? 
+			-- Is `a_character_representation' valid for `character_representation'?
 		require
 			character_representation_not_void: a_character_representation /= Void
 		local
@@ -337,7 +337,7 @@ feature -- Element change
 	set_html_defaults (a_import_precedence: INTEGER) is
 			-- Set defaults suitable for html method.
 		require
-			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
 		do
 			set_method ("html", a_import_precedence)
 		ensure
@@ -346,13 +346,13 @@ feature -- Element change
 			indentation: default_indent = True
 			version_4_01: STRING_.same_string (default_version, "4.01")
 			text_html: STRING_.same_string (default_media_type, "text/html")
-			character_representation: STRING_.same_string (default_character_representation, "entity;decimal")			
+			character_representation: STRING_.same_string (default_character_representation, "entity;decimal")
 		end
 
 	set_xhtml_defaults (a_import_precedence: INTEGER) is
 			-- Set defaults suitable for xhtml method.
 		require
-			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
 		do
 			set_method ("xhtml", a_import_precedence)
 		ensure
@@ -367,7 +367,7 @@ feature -- Element change
 	set_text_defaults (a_import_precedence: INTEGER) is
 			-- Set defaults suitable for text method.
 		require
-			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Method_attribute)
 		do
 			set_method ("text", a_import_precedence)
 		ensure
@@ -423,7 +423,7 @@ feature -- Element change
 	set_indent (a_indent_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `indent'.
 		require
-			higher_precedence: is_higher_precedence (a_import_precedence, Indent_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Indent_attribute)
 		do
 			precedence_property_map.force (a_import_precedence, Indent_attribute)
 			boolean_property_map.force (a_indent_value, Indent_attribute)
@@ -435,7 +435,7 @@ feature -- Element change
 	set_omit_xml_declaration (a_omit_xml_declaration_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `omit_xml_declaration'.
 		require
-			higher_precedence: is_higher_precedence (a_import_precedence, Omit_xml_declaration_attribute)	
+			higher_precedence: is_higher_precedence (a_import_precedence, Omit_xml_declaration_attribute)
 		do
 			precedence_property_map.force (a_import_precedence, Omit_xml_declaration_attribute)
 			omit_xml_declaration := a_omit_xml_declaration_value
@@ -580,8 +580,6 @@ feature -- Element change
 		do
 			from
 				l_cursor := a_cdata_section_expanded_names.new_cursor; l_cursor.start
-			variant
-				a_cdata_section_expanded_names.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -593,6 +591,8 @@ feature -- Element change
 					cdata_section_elements.force (l_expanded_name)
 				end
 				l_cursor.forth
+			variant
+				a_cdata_section_expanded_names.count + 1 - l_cursor.index
 			end
 		end
 
@@ -638,13 +638,13 @@ feature -- Element change
 			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Gexslt_character_representation_attribute) and then precedence_property_map.item (Gexslt_character_representation_attribute) = a_import_precedence
-			character_representation_set: STRING_.same_string (character_representation , a_character_representation)			
+			character_representation_set: STRING_.same_string (character_representation , a_character_representation)
 		end
 
 	set_include_content_type (a_include_content_type_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `include_content_type'.
 		require
-			higher_precedence: is_higher_precedence (a_import_precedence, Include_content_type_attribute)		
+			higher_precedence: is_higher_precedence (a_import_precedence, Include_content_type_attribute)
 		do
 			precedence_property_map.force (a_import_precedence, Include_content_type_attribute)
 			include_content_type := a_include_content_type_value
@@ -666,11 +666,11 @@ feature -- Element change
 			import_precedence_set: precedence_property_map.has (Escape_uri_attributes_attribute) and then precedence_property_map.item (Escape_uri_attributes_attribute) = a_import_precedence
 			escape_uri_attributes_set: escape_uri_attributes = a_escape_uri_attributes_value and is_escape_uri_attributes_set
 		end
-										
+
 	set_byte_order_mark_required (a_byte_order_mark_required_value: BOOLEAN; a_import_precedence: INTEGER) is
 			-- Set `byte_order_mark_required'.
 		require
-			higher_precedence: is_higher_precedence (a_import_precedence, Byte_order_mark_attribute)			
+			higher_precedence: is_higher_precedence (a_import_precedence, Byte_order_mark_attribute)
 		do
 			precedence_property_map.force (a_import_precedence, Byte_order_mark_attribute)
 			byte_order_mark_required := a_byte_order_mark_required_value
@@ -693,7 +693,7 @@ feature -- Element change
 				l_cursor.after
 			loop
 				extension_attributes.force (l_cursor.item, l_cursor.key)
-				l_cursor.forth	
+				l_cursor.forth
 			end
 		end
 
@@ -753,7 +753,7 @@ feature -- Duplication
 		end
 
 feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
-	
+
 	clone_cdata_section_elements (some_cdata_section_elements: like cdata_section_elements) is
 			-- Deeply clone `cdata_section_elements'.
 		require
@@ -820,7 +820,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 				l_cursor.forth
 			end
 		end
-	
+
 	clone_precedence_property_map (a_precedence_property_map: like precedence_property_map) is
 			-- Deeply clone `precedence_property_map'.
 		require
@@ -836,7 +836,7 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 				l_cursor.forth
 			end
 		end
-	
+
 	set_extension_property (a_uri, a_local_name, a_value: STRING) is
 			-- Set any property identified by `a_uri, a_local_name'.
 			-- This is used by xsl:result-document to override an output definition.
@@ -868,7 +868,7 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 		ensure
 			version_set: default_version = a_version
 		end
-	
+
 	set_default_media_type (a_media_type: STRING) is
 			-- Set `default_media_type'.
 		require
@@ -1011,7 +1011,7 @@ feature {NONE} -- Implementation
 				if not is_error then set_include_content_type (last_yes_no_value, Platform.Maximum_integer - 2) end
 			elseif STRING_.same_string (a_local_name, Escape_uri_attributes_attribute) then
 				set_yes_no_property (Escape_uri_attributes_attribute, a_value)
-				if not is_error then set_include_content_type (last_yes_no_value, Platform.Maximum_integer - 2) end					
+				if not is_error then set_include_content_type (last_yes_no_value, Platform.Maximum_integer - 2) end
 			end
 		ensure
 			error_message_set: is_error implies error_message /= Void
@@ -1041,7 +1041,7 @@ feature {NONE} -- Implementation
 
 	last_yes_no_value: BOOLEAN
 			-- Last value set by `set_yes_no_property'
-	
+
 	set_yes_no_property (a_name, a_value: STRING) is
 			-- Interpret `a_value' as a boolean then set `a_name'.
 		require
@@ -1071,7 +1071,7 @@ feature {NONE} -- Satisfying interface only
 		do
 			any_compile_errors := True
 		end
-	
+
 	any_compile_errors: BOOLEAN
 			-- Have any compile errors been reported?
 
@@ -1084,7 +1084,7 @@ feature {NONE} -- Satisfying interface only
 			-- Top-level stylesheet
 		do
 		end
-	
+
 invariant
 
 	extension_attributes_not_void: extension_attributes /= Void

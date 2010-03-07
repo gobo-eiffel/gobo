@@ -103,8 +103,6 @@ feature -- Access
 				shared_catalog_manager.debug_message (9, "Checking next catalogs for", a_public_id)
 				from
 					a_cursor := local_catalog_files.new_cursor; a_cursor.start
-				variant
-					local_catalog_files.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -117,6 +115,8 @@ feature -- Access
 					else
 						a_cursor.go_after
 					end
+				variant
+					local_catalog_files.count + 1 - a_cursor.index
 				end
 			end
 			delegated := False
@@ -148,8 +148,6 @@ feature -- Access
 				shared_catalog_manager.debug_message (9, "Checking for system rewrite rules for", a_system_id)
 				from
 					another_cursor := system_rewrite_rules.new_cursor; another_cursor.start
-				variant
-					system_rewrite_rules.count + 1 - another_cursor.index
 				until
 					another_cursor.after
 				loop
@@ -163,6 +161,8 @@ feature -- Access
 					else
 						another_cursor.forth
 					end
+				variant
+					system_rewrite_rules.count + 1 - another_cursor.index
 				end
 			end
 			if Result = Void then
@@ -177,8 +177,6 @@ feature -- Access
 				shared_catalog_manager.debug_message (9, "Checking next catalogs for", a_system_id)
 				from
 					a_cursor := local_catalog_files.new_cursor; a_cursor.start
-				variant
-					local_catalog_files.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -191,6 +189,8 @@ feature -- Access
 					else
 						a_cursor.go_after
 					end
+				variant
+					local_catalog_files.count + 1 - a_cursor.index
 				end
 			end
 			delegated := False
@@ -223,8 +223,6 @@ feature -- Access
 				shared_catalog_manager.debug_message (4, "Checking for uri rewrite rules for", a_uri_reference)
 				from
 					another_cursor := uri_rewrite_rules.new_cursor; another_cursor.start
-				variant
-					uri_rewrite_rules.count + 1 - another_cursor.index
 				until
 					another_cursor.after
 				loop
@@ -238,6 +236,8 @@ feature -- Access
 					else
 						another_cursor.forth
 					end
+				variant
+					uri_rewrite_rules.count + 1 - another_cursor.index
 				end
 			end
 			if Result = Void then
@@ -252,8 +252,6 @@ feature -- Access
 				shared_catalog_manager.debug_message (9, "Checking next catalogs for", a_uri_reference)
 				from
 					a_cursor := local_catalog_files.new_cursor; a_cursor.start
-				variant
-					local_catalog_files.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -261,11 +259,13 @@ feature -- Access
 					if a_catalog /= Void then
 						Result := a_catalog.resolved_uri (a_uri_reference)
 					end
-						if Result = Void then
-							a_cursor.forth
-						else
-							a_cursor.go_after
-						end
+					if Result = Void then
+						a_cursor.forth
+					else
+						a_cursor.go_after
+					end
+				variant
+					local_catalog_files.count + 1 - a_cursor.index
 				end
 			end
 			delegated := False
@@ -526,8 +526,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -564,6 +562,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition", a_local_part)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 		end
 
@@ -586,8 +586,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -607,6 +605,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition of 'system'", system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_system_id = Void then
 				is_error := True
@@ -655,8 +655,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -676,6 +674,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition of 'uri'", system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_uri = Void then
 				is_error := True
@@ -723,8 +723,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -744,6 +742,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition of 'public'", system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_public_id = Void then
 				is_error := True
@@ -805,8 +805,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -824,6 +822,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition of 'nextCatalog'", system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_catalog_name = Void then
 				is_error := True
@@ -856,8 +856,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -885,6 +883,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, STRING_.appended_string (a_message, "'"), system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_rewrite_prefix = Void then
 				is_error := True; write_missing_rewrite_prefix_attribute (is_system_rule)
@@ -923,8 +923,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -952,6 +950,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, STRING_.appended_string (a_message, "'"), system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_uri_reference = Void then
 				is_error := True; write_missing_suffix_reference_attribute (is_system_rule)
@@ -989,8 +989,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1010,6 +1008,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition of 'delagateSystem'", system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_catalog_name = Void then
 				is_error := True
@@ -1045,8 +1045,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1066,6 +1064,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition of 'delagateUri'", system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_catalog_name = Void then
 				is_error := True
@@ -1104,8 +1104,6 @@ feature {NONE} -- Implementation
 			end
 			from
 				a_cursor := attribute_local_parts.new_cursor; a_cursor.start
-			variant
-				attribute_local_parts.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1125,6 +1123,8 @@ feature {NONE} -- Implementation
 					shared_catalog_manager.debug_message (2, "Reserved attribute in the per-element-partition of 'delegateSystem'", system_id)
 				end
 				a_cursor.forth
+			variant
+				attribute_local_parts.count + 1 - a_cursor.index
 			end
 			if a_catalog_name = Void then
 				is_error := True
@@ -1160,8 +1160,6 @@ feature {NONE} -- Implementation
 				from
 					a_count := a_start_string.count
 					a_cursor := system_delegates.new_cursor; a_cursor.start
-				variant
-					system_delegates.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -1183,6 +1181,8 @@ feature {NONE} -- Implementation
 							shared_catalog_manager.debug_message (4, "System delegation catalog URI added is", a_target.full_reference)
 						end
 					end
+				variant
+					system_delegates.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1205,8 +1205,6 @@ feature {NONE} -- Implementation
 				from
 					a_count := a_start_string.count
 					a_cursor := uri_delegates.new_cursor; a_cursor.start
-				variant
-					uri_delegates.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -1228,6 +1226,8 @@ feature {NONE} -- Implementation
 							shared_catalog_manager.debug_message (4, "Uri delegation catalog URI added is", a_target.full_reference)
 						end
 					end
+				variant
+					uri_delegates.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1250,8 +1250,6 @@ feature {NONE} -- Implementation
 				from
 					a_count := a_start_string.count
 					a_cursor := public_delegates.new_cursor; a_cursor.start
-				variant
-					public_delegates.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -1286,6 +1284,8 @@ feature {NONE} -- Implementation
 							shared_catalog_manager.debug_message (4, "Public delegation catalog URI added is", a_target.full_reference)
 						end
 					end
+				variant
+					public_delegates.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1308,8 +1308,6 @@ feature {NONE} -- Implementation
 				from
 					a_count := a_start_string.count
 					a_cursor := system_rewrite_rules.new_cursor; a_cursor.start
-				variant
-					system_rewrite_rules.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -1331,6 +1329,8 @@ feature {NONE} -- Implementation
 							shared_catalog_manager.debug_message (4, "System rewrite rule added towards", a_target.full_reference)
 						end
 					end
+				variant
+					system_rewrite_rules.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1353,8 +1353,6 @@ feature {NONE} -- Implementation
 				from
 					a_count := a_start_string.count
 					a_cursor := uri_rewrite_rules.new_cursor; a_cursor.start
-				variant
-					uri_rewrite_rules.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -1376,6 +1374,8 @@ feature {NONE} -- Implementation
 							shared_catalog_manager.debug_message (4, "Uri rewrite rule added towards", a_target.full_reference)
 						end
 					end
+				variant
+					uri_rewrite_rules.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1398,8 +1398,6 @@ feature {NONE} -- Implementation
 				from
 					a_count := a_suffix_string.count
 					a_cursor := system_suffix_rules.new_cursor; a_cursor.start
-				variant
-					system_suffix_rules.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -1421,6 +1419,8 @@ feature {NONE} -- Implementation
 							shared_catalog_manager.debug_message (4, "System suffix rule added towards", a_target.full_reference)
 						end
 					end
+				variant
+					system_suffix_rules.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1444,8 +1444,6 @@ feature {NONE} -- Implementation
 				from
 					a_count := a_suffix_string.count
 					a_cursor := uri_suffix_rules.new_cursor; a_cursor.start
-				variant
-					uri_suffix_rules.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -1467,6 +1465,8 @@ feature {NONE} -- Implementation
 							shared_catalog_manager.debug_message (4, "URI suffix rule added towards", a_target.full_reference)
 						end
 					end
+				variant
+					uri_suffix_rules.count + 1 - a_cursor.index
 				end
 			end
 		end
@@ -1481,8 +1481,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				a_cursor := system_suffix_rules.new_cursor; a_cursor.start
-			variant
-				system_suffix_rules.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1496,6 +1494,8 @@ feature {NONE} -- Implementation
 				else
 					a_cursor.forth
 				end
+			variant
+				system_suffix_rules.count + 1 - a_cursor.index
 			end
 		end
 
@@ -1509,8 +1509,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				a_cursor := uri_suffix_rules.new_cursor; a_cursor.start
-			variant
-				uri_suffix_rules.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1524,6 +1522,8 @@ feature {NONE} -- Implementation
 				else
 					a_cursor.forth
 				end
+			variant
+				uri_suffix_rules.count + 1 - a_cursor.index
 			end
 		end
 
@@ -1539,8 +1539,6 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (8, "Number of system delegate catalogs is", system_delegates.count.out)
 			from
 				a_cursor := system_delegates.new_cursor; a_cursor.start
-			variant
-				system_delegates.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1564,6 +1562,8 @@ feature {NONE} -- Implementation
 				else
 					a_cursor.forth
 				end
+			variant
+				system_delegates.count + 1 - a_cursor.index
 			end
 		end
 
@@ -1579,8 +1579,6 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (8, "Number of uri delegate catalogs is", uri_delegates.count.out)
 			from
 				a_cursor := uri_delegates.new_cursor; a_cursor.start
-			variant
-				uri_delegates.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1604,6 +1602,8 @@ feature {NONE} -- Implementation
 				else
 					a_cursor.forth
 				end
+			variant
+				uri_delegates.count + 1 - a_cursor.index
 			end
 		end
 
@@ -1619,8 +1619,6 @@ feature {NONE} -- Implementation
 			shared_catalog_manager.debug_message (8, "Number of public delegate catalogs is", public_delegates.count.out)
 			from
 				a_cursor := public_delegates.new_cursor; a_cursor.start
-			variant
-				public_delegates.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -1647,6 +1645,8 @@ feature {NONE} -- Implementation
 				else
 					a_cursor.forth
 				end
+			variant
+				public_delegates.count + 1 - a_cursor.index
 			end
 		end
 

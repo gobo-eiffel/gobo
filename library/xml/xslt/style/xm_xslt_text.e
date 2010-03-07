@@ -45,8 +45,6 @@ feature -- Element change
 				from
 					l_cursor := attribute_collection.name_code_cursor
 					l_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index				
 				until
 					l_cursor.after or any_compile_errors
 				loop
@@ -56,6 +54,8 @@ feature -- Element change
 						l_doe_attribute := attribute_value_by_index (l_cursor.index)
 					end
 					l_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if l_doe_attribute /= Void then
@@ -91,7 +91,7 @@ feature -- Element change
 			end
 			Precursor
 		end
-			
+
 	compile (a_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do

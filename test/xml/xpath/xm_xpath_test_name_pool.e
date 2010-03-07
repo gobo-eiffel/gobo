@@ -44,8 +44,6 @@ feature -- Test
 			uri: STRING
 		do
 			from
-			variant
-				105 - counter
 			until
 				counter = 105
 			loop
@@ -60,6 +58,8 @@ feature -- Test
 				assert ("Same URI code", a_uri_code = another_uri_code)
 
 				counter:= counter + 1
+			variant
+				105 - counter
 			end
 
 			shared_name_pool.allocate_namespace_code ("test", testing_namespace)

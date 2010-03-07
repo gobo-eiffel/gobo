@@ -29,7 +29,7 @@ create {XM_XSLT_NODE_FACTORY}
 	make_style_element
 
 feature {NONE} -- Initialization
-	
+
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
@@ -61,8 +61,6 @@ feature -- Element change
 				from
 					l_cursor := attribute_collection.name_code_cursor
 					l_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index				
 				until
 					l_cursor.after or any_compile_errors
 				loop
@@ -80,6 +78,8 @@ feature -- Element change
 						check_unknown_attribute (l_name_code)
 					end
 					l_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index	
 				end
 			end
 			if l_select_attribute /= Void then
@@ -205,7 +205,7 @@ feature -- Element change
 		end
 
 feature -- Conversion
-	
+
 	is_apply_templates: BOOLEAN is
 			-- Is `Current' an xsl:apply-templates?
 		do

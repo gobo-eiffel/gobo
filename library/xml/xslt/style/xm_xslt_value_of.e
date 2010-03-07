@@ -45,8 +45,6 @@ feature -- Element change
 				from
 					l_cursor := attribute_collection.name_code_cursor
 					l_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - l_cursor.index				
 				until
 					l_cursor.after or any_compile_errors
 				loop
@@ -66,6 +64,8 @@ feature -- Element change
 						check_unknown_attribute (l_name_code)
 					end
 					l_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - l_cursor.index
 				end
 			end
 			if l_select_attribute /= Void then
@@ -115,7 +115,7 @@ feature -- Element change
 				create l_replacement.make (Void)
 				type_check_expression (l_replacement, "separator", separator_expression)
 				separator_expression := l_replacement.item
-			end			
+			end
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is

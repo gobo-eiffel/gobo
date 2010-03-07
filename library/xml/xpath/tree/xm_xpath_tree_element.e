@@ -13,7 +13,7 @@ indexing
 class XM_XPATH_TREE_ELEMENT
 
 inherit
-	
+
 	XM_XPATH_ELEMENT
 		undefine
 			document_element, next_sibling, previous_sibling, first_child, last_child, has_child_nodes, is_tree_node, as_tree_node
@@ -105,11 +105,11 @@ feature -- Access
 		do
 			Result := document.closing_line_number_for_node (sequence_number_high_word)
 		end
-	
+
 	name_code: INTEGER
 			-- Name code of this node - used in displaying names
 
-	
+
 	attribute_value (a_fingerprint: INTEGER): STRING is
 			-- Value of attribute identified by `a_fingerprint'
 		do
@@ -117,7 +117,7 @@ feature -- Access
 				Result := attribute_collection.attribute_value (a_fingerprint)
 			end
 		end
-	
+
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute
 		do
@@ -131,7 +131,7 @@ feature -- Access
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_code: INTEGER
-			a_composite: XM_XPATH_COMPOSITE_NODE 
+			a_composite: XM_XPATH_COMPOSITE_NODE
 		do
 			Result := -1 -- not found
 			if a_prefix_code = Xml_prefix_index - 1 then
@@ -140,8 +140,6 @@ feature -- Access
 				from
 					a_cursor := namespace_code_list.new_cursor
 					a_cursor.start
-				variant
-					namespace_code_list.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -152,18 +150,20 @@ feature -- Access
 					else
 						a_cursor.forth
 					end
+				variant
+					namespace_code_list.count + 1 - a_cursor.index
 				end
 			end
-			
+
 			-- If we have got so far, without finding `a_prefix_code',
 			--  then we must look at the parent element
-			
+
 			if Result = -1 then
 				a_composite := parent
 				if a_composite = Void or else not a_composite.is_element then
-					
+
 					-- Document node
-					
+
 					if a_prefix_code = 0 then
 						Result := Default_uri_code
 					end
@@ -218,7 +218,7 @@ feature -- Access
 				end
 			end
 		end
-	
+
 	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
 			-- Codes for namespaces declared on `Current'
 		do
@@ -273,7 +273,7 @@ feature -- Status setting
 		end
 
 feature -- Element change
-	
+
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local
@@ -292,7 +292,7 @@ feature -- Element change
 					end
 					l_cursor.forth
 				end
-				
+
 				-- Now add the namespaces defined on the ancestor nodes.
 				-- We rely on the receiver to eliminate multiple declarations of the same prefix.
 			end
@@ -346,16 +346,16 @@ feature -- Element change
 
 
 feature -- Duplication
-																																	
+
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
 				-- Copy `Current' to `a_receiver'.
-		local																													
+		local
 			a_type_code, an_index, child_namespaces: INTEGER
-			a_node: XM_XPATH_NODE																														
+			a_node: XM_XPATH_NODE
 		do
 			if copy_annotations then
 				a_type_code := type_annotation
-			end																													
+			end
 			a_receiver.start_element (name_code, a_type_code, 0)
 
 			-- output namespaces
@@ -376,17 +376,17 @@ feature -- Duplication
 					if copy_annotations then
 						a_type_code := type_annotation
 					else
-						a_type_code := 0																																	
-					end																																	
+						a_type_code := 0
+					end
 					a_receiver.notify_attribute (attribute_collection.attribute_name_code (an_index), a_type_code,attribute_collection.attribute_value_by_index (an_index), 0)
-					an_index := an_index + 1																																	
+					an_index := an_index + 1
 				end
 			end
-			
+
         	-- output children																																
 
 			if which_namespaces /= No_namespaces then
-            child_namespaces := Local_namespaces																																	
+            child_namespaces := Local_namespaces
 			else
             child_namespaces := No_namespaces
 			end
@@ -399,9 +399,9 @@ feature -- Duplication
             a_node := a_node.next_sibling
 			end
 
-         a_receiver.end_element																																	
+         a_receiver.end_element
 		end
-																																	
+
 feature {XM_XPATH_TREE_ELEMENT} -- Local
 
 	accumulate_namespace_codes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [INTEGER]; add_xml: BOOLEAN; some_excluded_prefixes: DS_HASH_SET [INTEGER]) is
@@ -420,8 +420,6 @@ feature {XM_XPATH_TREE_ELEMENT} -- Local
 				from
 					l_code_cursor := namespace_code_list.new_cursor
 					l_code_cursor.start
-				variant
-					namespace_code_list.count + 1 - l_code_cursor.index
 				until
 					l_code_cursor.after
 				loop
@@ -429,9 +427,9 @@ feature {XM_XPATH_TREE_ELEMENT} -- Local
 					l_prefix_code := prefix_code_from_namespace_code (l_namespace_code)
 					l_uri_code := uri_code_from_namespace_code (l_namespace_code)
 					if l_uri_code = Default_uri_code then
-						
+
 						-- A namespace undeclaration
-						
+
 					some_excluded_prefixes.force (l_prefix_code)
 					else
 						if not some_excluded_prefixes.has (l_prefix_code) then
@@ -440,9 +438,11 @@ feature {XM_XPATH_TREE_ELEMENT} -- Local
 						end
 					end
 					l_code_cursor.forth
+				variant
+					namespace_code_list.count + 1 - l_code_cursor.index
 				end
 			end
-			
+
 			-- Now add the namespaces defined on the ancestor nodes.
 
 			if parent.node_type /= Document_node then
@@ -458,7 +458,7 @@ feature {XM_XPATH_TREE_ELEMENT} -- Local
 				an_accumulation_list.force_last (l_namespace_code)
 			end
 		end
-	
+
 feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_TREE_DOCUMENT} -- Restricted
 
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is
@@ -505,4 +505,4 @@ feature {NONE} -- Implementation
 			-- (NOT all namespaces in scope - must scan up the parent chain for that)
 
 end
-	
+

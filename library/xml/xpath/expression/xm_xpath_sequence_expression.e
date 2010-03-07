@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			if not a_head.is_sequence_expression and not a_tail.is_sequence_expression then
 				create children.make (2)
 				children.put (a_head, 1)
-				children.put (a_tail, 2)				
+				children.put (a_tail, 2)
 			else
 				if not a_head.is_sequence_expression then
 					l_child_count := 1
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 					children.put_last (a_tail)
 				else
 					children.extend_last (a_tail.as_sequence_expression.children)
-				end	
+				end
 			end
 			children.set_equality_tester (expression_tester)
 			children.do_all (agent adopt_child_expression)
@@ -88,8 +88,6 @@ feature -- Access
 				from
 					l_cursor := children.new_cursor
 					l_cursor.start
-				variant
-					children.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -105,6 +103,8 @@ feature -- Access
 							l_cursor.forth
 						end
 					end
+				variant
+					children.count + 1 - l_cursor.index
 				end
 			end
 		end
@@ -159,7 +159,7 @@ feature -- Status report
 			children.do_all (agent {XM_XPATH_EXPRESSION}.display (a_level + 1))
 			l_string := STRING_.appended_string (indentation (a_level), ")")
 			std.error.put_string (l_string)
-			std.error.put_new_line			
+			std.error.put_new_line
 		end
 
 	contains_recursive_tail_function_calls (a_name_code, a_arity: INTEGER): UT_TRISTATE is
@@ -256,7 +256,7 @@ feature -- Optimization
 				children.do_all_with_index (agent promote_child (a_offer, ?, ?))
 				if a_replacement.item = Void then
 					a_replacement.put (Current)
-				end				
+				end
 			else
 				a_replacement.put (Current)
 			end
@@ -419,7 +419,7 @@ feature {NONE} -- Agents
 					set_replacement (a_replacement, l_replacement.item)
 				elseif a_child /= l_replacement.item then
 					children.replace (l_replacement.item, a_index)
-				end			
+				end
 			end
 		end
 
@@ -432,14 +432,14 @@ feature {NONE} -- Agents
 			a_index_large_enough: a_index > 0
 			a_index_small_enough: a_index <= children.count
 		local
-			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]			
+			l_replacement: DS_CELL [XM_XPATH_EXPRESSION]
 		do
 			create l_replacement.make (Void)
 			a_child.promote (l_replacement, a_offer)
 			if a_child /= l_replacement.item then
 				children.replace (l_replacement.item, a_index)
 				reset_static_properties
-			end			
+			end
 		end
 
 feature {XM_XPATH_SEQUENCE_EXPRESSION} -- Implementation
@@ -472,7 +472,7 @@ feature {XM_XPATH_SEQUENCE_EXPRESSION} -- Implementation
 				end
 				l_cursor.forth
 			end
-			
+
 		end
 
 	repopulate_children (a_list: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is

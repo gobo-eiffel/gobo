@@ -58,8 +58,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					a_cursor.after or any_compile_errors
 				loop
@@ -67,6 +65,8 @@ feature -- Element change
 					an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 					check_unknown_attribute (a_name_code)
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			attributes_prepared := True

@@ -89,7 +89,7 @@ feature -- Optimization
 				end
 			end
 		end
-		
+
 feature -- Evaluation
 
 	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
@@ -117,7 +117,7 @@ feature -- Evaluation
 					end
 					if a_result.item.is_error then
 						-- nothing to do
-					else	
+					else
 						check
 							atomic_pattern: a_result.item.is_atomic_value
 							-- Statically typed as a single string
@@ -195,8 +195,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_index := 1
-			variant
-				replacement_string.count + 1 - l_index
 			until
 				regexp_error_value /= Void or else l_index > replacement_string.count
 			loop
@@ -239,6 +237,8 @@ feature {NONE} -- Implementation
 				else
 				end
 				l_index := l_index + 1
+			variant
+				replacement_string.count + 1 - l_index
 			end
 			if a_result.item = Void and any_captures then
 				perform_replacement_string_substitution
@@ -257,8 +257,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_index := 1
-			variant
-				replacement_string.count + 1 - l_index
 			until
 				l_index > replacement_string.count
 			loop
@@ -278,9 +276,11 @@ feature {NONE} -- Implementation
 					l_substitution_just_performed := True
 					l_index := l_index + 1
 				end
+			variant
+				replacement_string.count + 1 - l_index
 			end
 		end
-			
+
 	evaluate_replacement (a_result: DS_CELL [XM_XPATH_ITEM]; a_input_string: STRING) is
 			-- Ensure subject and replacement strings are same type, then evaluate.
 		require
@@ -367,4 +367,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

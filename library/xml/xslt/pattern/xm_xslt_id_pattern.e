@@ -22,7 +22,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_static_context: XM_XPATH_STATIC_CONTEXT; an_id: XM_XPATH_EXPRESSION) is
@@ -58,7 +58,7 @@ feature -- Access
 		do
 			Result := Element_node
 		end
-	
+
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
@@ -94,7 +94,7 @@ feature -- Optimization
 			id_expression := l_replacement.item
 			if id_expression.is_error then
 				set_error_value (id_expression.error_value)
-			end			
+			end
 		end
 
 	promote (a_offer: XM_XPATH_PROMOTION_OFFER) is
@@ -142,8 +142,6 @@ feature -- Matching
 							from
 								l_cursor := l_strings.new_cursor
 								l_cursor.start
-							variant
-								l_strings.count + 1 - l_cursor.index
 							until
 								l_cursor.after
 							loop
@@ -155,6 +153,8 @@ feature -- Matching
 								else
 									l_cursor.forth
 								end
+							variant
+								l_strings.count + 1 - l_cursor.index
 							end
 						end
 					end
@@ -173,4 +173,4 @@ invariant
 	static_context_not_void: static_context /= Void
 
 end
-	
+

@@ -495,8 +495,6 @@ feature {NONE} -- Implementation
 					create a_local_order_comparer
 					from
 						a_cursor := a_node_list.new_cursor; a_cursor.start
-					variant
-						a_node_list.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
@@ -517,6 +515,8 @@ feature {NONE} -- Implementation
 						else
 							a_cursor.forth
 						end
+					variant
+						a_node_list.count + 1 - a_cursor.index
 					end
 
 					-- Otherwise add the new node at the end.

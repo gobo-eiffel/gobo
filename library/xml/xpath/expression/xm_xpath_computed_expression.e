@@ -41,7 +41,7 @@ inherit
 		export {NONE} all end
 
 feature -- Access
-	
+
 	is_computed_expression: BOOLEAN is
 			-- Is `Current' a computed expression?
 		do
@@ -115,11 +115,11 @@ feature -- Access
 
 			-- Default implementation returns an empty list;
 			-- Suitable for an expression without sub-expressions.
-			
+
 			create Result.make_default
 			Result.set_equality_tester (expression_tester)
 		end
-	
+
 	container: XM_XPATH_EXPRESSION_CONTAINER is
 			-- Containing parent
 		do
@@ -275,7 +275,7 @@ feature -- Status setting
 		ensure
 			computed: are_intrinsic_dependencies_computed
 		end
-			
+
 	compute_dependencies is
 			-- Compute dependencies on context.
 			-- This default implementation computes them as
@@ -294,13 +294,13 @@ feature -- Status setting
 			from
 				a_cursor := sub_expressions.new_cursor
 				a_cursor.start
-			variant
-				sub_expressions.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				merge_dependencies (a_cursor.item)
 				a_cursor.forth
+			variant
+				sub_expressions.count + 1 - a_cursor.index
 			end
 		ensure
 			intrinsic_computed: are_intrinsic_dependencies_computed
@@ -319,7 +319,7 @@ feature -- Status setting
 			intrinsic_computed: are_intrinsic_dependencies_computed
 			computed: are_dependencies_computed
 		end
- 
+
 	reset_static_properties is
 			-- Re-compute all static properties.
 		require
@@ -349,7 +349,7 @@ feature -- Status setting
 				error_value.set_location (l_id, line_number)
 			end
 		end
-			
+
 feature -- Optimization
 
 	simplify (a_replacement: DS_CELL [XM_XPATH_EXPRESSION]) is
@@ -365,7 +365,7 @@ feature -- Optimization
 			-- do nothing
 			a_replacement.put (Current)
 		end
-	
+
 feature -- Evaluation
 
 	evaluate_item (a_result: DS_CELL [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
@@ -411,7 +411,7 @@ feature -- Evaluation
 			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
-			
+
 			-- The value of every expression can be regarded as a sequence, s
 			--  so this routine is supported for all expressions.
 			-- This default implementation handles iteration for expressions that
@@ -427,19 +427,19 @@ feature -- Evaluation
 			elseif l_result.item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_result.item.error_value)
 			elseif l_result.item.is_node then
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_result.item.as_node) 
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (l_result.item.as_node)
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result.item) 
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (l_result.item)
 			end
 		end
-	
+
 	create_node_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Create an iterator over a node sequence.
 		local
 			l_result: DS_CELL [XM_XPATH_ITEM]
 		do
 			create l_result.make (Void)
-				
+
 			-- The value of every expression can be regarded as a sequence, s
 			--  so this routine is supported for all expressions.
 			-- This default implementation handles iteration for expressions that
@@ -455,8 +455,8 @@ feature -- Evaluation
 			elseif l_result.item.is_error then
 				create {XM_XPATH_INVALID_NODE_ITERATOR} last_node_iterator.make (l_result.item.error_value)
 			else
-				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (l_result.item.as_node) 
-			end		
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (l_result.item.as_node)
+			end
 		end
 
 	generate_events (a_context: XM_XPATH_CONTEXT) is
@@ -701,7 +701,7 @@ feature {XM_XPATH_CLOSURE} -- Restricted
 		end
 
 feature {NONE} -- Implementation
-	
+
 	parent: XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
 
@@ -723,4 +723,4 @@ invariant
 		parent_not_current: parent /= Void implies not (ANY_.same_objects (Current, parent))
 
 end
-	
+

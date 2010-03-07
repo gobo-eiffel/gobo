@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end
-		
+
 feature -- Events
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -130,13 +130,13 @@ feature -- Events
 					tokens := a_splitter.split (a_value)
 					from
 						a_cursor := tokens.new_cursor; a_cursor.start
-					variant
-						tokens.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
 						check_qname_prefix (a_cursor.item)
 						a_cursor.forth
+					variant
+						tokens.count + 1 - a_cursor.index
 					end
 				end
 				new_properties := properties - Prefix_check_needed
@@ -155,8 +155,6 @@ feature -- Events
 			if pending_undeclarations /= Void then
 				from
 					a_cursor := pending_undeclarations.new_cursor; a_cursor.start
-				variant
-					pending_undeclarations.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
@@ -165,6 +163,8 @@ feature -- Events
 						notify_namespace ((a_namespace_code // bits_16) * bits_16, 0)
 					end
 					a_cursor.forth
+				variant
+					pending_undeclarations.count + 1 - a_cursor.index
 				end
 			end
 			pending_undeclarations := Void
@@ -181,7 +181,7 @@ feature -- Events
 				strictly_positive_stack_depth: stack_depth > 0
 				-- element nesting logic
 			end
-			
+
 			-- Discard the namespaces declared on this element
 
 			a_namespace_count := count_stack.item (stack_depth)
@@ -214,8 +214,6 @@ feature {NONE} -- Implementation
 			if pending_undeclarations /= Void then
 				from
 					l_cursor := pending_undeclarations.new_cursor; l_cursor.start
-				variant
-					pending_undeclarations.count + 1 - l_cursor.index
 				until
 					l_cursor.after
 				loop
@@ -223,6 +221,8 @@ feature {NONE} -- Implementation
 						l_cursor.replace (-1)
 					end
 					l_cursor.forth
+				variant
+					pending_undeclarations.count + 1 - l_cursor.index
 				end
 			end
 		end
@@ -239,8 +239,6 @@ feature {NONE} -- Implementation
 
 				from
 					l_cursor := namespaces_in_scope.new_cursor; l_cursor.finish
-				variant
-					l_cursor.index
 				until
 					l_cursor.before
 				loop
@@ -261,6 +259,8 @@ feature {NONE} -- Implementation
 					else
 						l_cursor.back
 					end
+				variant
+					l_cursor.index
 				end
 
 				-- we need it unless it's a redundant xmlns=""
@@ -291,8 +291,6 @@ feature {NONE} -- Implementation
 				else
 					from
 						a_cursor := namespaces_in_scope.new_cursor; a_cursor.finish
-					variant
-						a_cursor.index
 					until
 						a_cursor.before
 					loop
@@ -302,6 +300,8 @@ feature {NONE} -- Implementation
 						else
 							a_cursor.back
 						end
+					variant
+						a_cursor.index
 					end
 					if not ok then
 						on_error (STRING_.concat ("namespace not declared for prefix in QName content: ", a_qname))
@@ -320,4 +320,4 @@ invariant
 		count_stack.capacity >= stack_depth and count_stack.count >= stack_depth - 1
 
 end
-	
+

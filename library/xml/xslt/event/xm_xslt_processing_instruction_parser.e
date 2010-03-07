@@ -332,8 +332,6 @@ feature {NONE} -- Initialization
 			applicable_media := a_splitter.split (a_value)
 			from
 				a_cursor := applicable_media.new_cursor;a_cursor.start
-			variant
-				applicable_media.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -356,6 +354,8 @@ feature {NONE} -- Initialization
 					a_cursor.replace (a_medium.substring (1, an_index - 1))
 				end
 				a_cursor.forth
+			variant
+				applicable_media.count + 1 - a_cursor.index
 			end
 		ensure
 			processed: applicable_media /= Void
@@ -409,8 +409,6 @@ feature {NONE} -- Initialization
 				Result := ""
 				from
 					an_index := 1; a_count := a_value.count
-				variant
-					a_count + 1 - an_index
 				until
 					Result = Void or else an_index > a_count
 				loop
@@ -433,6 +431,8 @@ feature {NONE} -- Initialization
 						Result := STRING_.appended_string (Result, a_value.substring (an_index, an_index))
 						an_index := an_index + 1
 					end
+				variant
+					a_count + 1 - an_index
 				end
 			end
 		ensure

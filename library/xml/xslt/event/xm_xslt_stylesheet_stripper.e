@@ -13,7 +13,7 @@ indexing
 class	XM_XSLT_STYLESHEET_STRIPPER
 
 inherit
-	
+
 	XM_XSLT_STRIPPER
 		rename
 			make as make_stripper
@@ -80,16 +80,16 @@ feature -- Access
 			else
 				from
 					counter := 1
-				variant
-					11 - counter
 				until
 					found or else counter > 10
 				loop
 					if specials.item (counter) = a_fingerprint then
 						found := True
 						found_space_preserving_mode := Always_strip
-					end	
+					end
 					counter := counter + 1
+				variant
+					11 - counter
 				end
 				if not found then
 					found_space_preserving_mode := Strip_default
@@ -125,4 +125,4 @@ invariant
 	no_stripper_mode: stripper_mode = Void
 
 end
-	
+

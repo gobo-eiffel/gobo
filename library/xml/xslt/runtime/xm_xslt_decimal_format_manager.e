@@ -132,13 +132,13 @@ feature -- Element change
 				end
 				from
 					a_list := an_entry.list; a_cursor := a_list.new_cursor; a_cursor.start
-				variant
-					a_list.count + 1 - a_cursor.index
 				until
 					a_cursor.after
 				loop
 					a_cursor.item.fixup (a_format)
 					a_cursor.forth
+				variant
+					a_list.count + 1 - a_cursor.index
 				end
 				format_map.remove (a_format.fingerprint)
 			end

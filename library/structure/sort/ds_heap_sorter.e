@@ -34,14 +34,14 @@ feature -- Sort
 			build_heap (a_container, a_comparator, lower, upper)
 			from
 				i := count
-			variant
-				i
 			until
 				i <= lower
 			loop
 				a_container.swap (lower, i)
 				add_root (a_container, a_comparator, lower, i - 1)
 				i := i - 1
+			variant
+				i
 			end
 		end
 

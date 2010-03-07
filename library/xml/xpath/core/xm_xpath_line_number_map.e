@@ -40,8 +40,6 @@ feature -- Access
 			from
 				a_cursor := sequence_numbers.new_cursor
 				a_cursor.start
-			variant
-				sequence_numbers.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
@@ -51,6 +49,8 @@ feature -- Access
 					Result := line_numbers.item (a_cursor.index)
 					a_cursor.forth
 				end
+			variant
+				sequence_numbers.count + 1 - a_cursor.index
 			end
 		end
 
@@ -90,7 +90,7 @@ feature -- Element change
 			set: line_number (a_node_number) = a_line_number
 			one_more: line_numbers.count = old line_numbers.count + 1
 		end
-	
+
 feature {NONE} -- Implementation
 
 	sequence_numbers: DS_ARRAYED_LIST [INTEGER]

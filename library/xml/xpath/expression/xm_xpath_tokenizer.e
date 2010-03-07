@@ -383,8 +383,6 @@ feature {NONE} -- Status setting
 				next_token_value := ""
 				next_token_start_index := input_index
 				internal_last_lexical_error := ""
-			variant
-				input_length + 3 - input_index  -- + 3 to allow for setting the EOF token
 			until
 				finished
 			loop
@@ -450,8 +448,6 @@ feature {NONE} -- Status setting
 							input_index := input_index + 1
 							from
 								nesting_depth := 1
-							variant
-								input_length - input_index
 							until
 								nesting_depth = 0 or else input_index > input_length - 1
 							loop
@@ -465,6 +461,8 @@ feature {NONE} -- Status setting
 									input_index := input_index + 1
 								end
 								input_index := input_index + 1
+							variant
+								input_length - input_index
 							end
 							if nesting_depth > 0 then
 								is_lexical_error := True
@@ -701,8 +699,6 @@ feature {NONE} -- Status setting
 						if next_token_value.index_of ('%N', 1) > 0 then
 							from
 								i := 1
-							variant
-								next_token_value.count + 1 - i
 							until
 								i > next_token_value.count
 							loop
@@ -710,6 +706,8 @@ feature {NONE} -- Status setting
 									line_number := line_number + 1
 								end
 								i := i + 1
+							variant
+								next_token_value.count + 1 - i
 							end
 						end
 						next_token_value := STRING_.cloned_string (next_token_value)
@@ -784,6 +782,8 @@ feature {NONE} -- Status setting
 						end
 					end
 				end
+			variant
+				input_length + 3 - input_index  -- + 3 to allow for setting the EOF token
 			end
 			debug ("XPath tokens")
 				std.error.put_string ("Next token on exit from look-ahead is set to ")

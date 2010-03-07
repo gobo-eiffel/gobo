@@ -71,8 +71,6 @@ feature -- Element change
 			if not is_error then
 				from
 					an_index := 1
-				variant
-					components.count + 1 - an_index
 				until
 					is_error or else an_index > components.count
 				loop
@@ -107,6 +105,8 @@ feature -- Element change
 						end
 					end
 					an_index := an_index + 1
+				variant
+					components.count + 1 - an_index
 				end
 				if an_element /= Void then
 					were_resources_found := True
@@ -148,8 +148,6 @@ feature {NONE} -- Implementation
 			else
 				from
 					an_index := 1
-				variant
-					components.count + 1 - an_index
 				until
 					is_error or else an_index > components.count
 				loop
@@ -161,6 +159,8 @@ feature {NONE} -- Implementation
 						end
 					end
 					an_index := an_index + 1
+				variant
+					components.count + 1 - an_index
 				end
 			end
 		ensure
@@ -168,4 +168,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+

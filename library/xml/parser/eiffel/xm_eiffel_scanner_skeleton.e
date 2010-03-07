@@ -85,7 +85,7 @@ feature -- Input
 
 	set_input_from_resolver (a_resolver: XM_EXTERNAL_RESOLVER) is
 			-- Set input buffer from a resolver's last resolved
-			-- stream and remember resolver to close it. 
+			-- stream and remember resolver to close it.
 		require
 			a_resolver_not_void: a_resolver /= Void
 			a_resolver_resolved: not a_resolver.has_error
@@ -93,10 +93,10 @@ feature -- Input
 			set_input_stream (a_resolver.last_stream)
 			input_resolver := a_resolver
 		ensure
-			input_stream_set: input_stream = a_resolver.last_stream			
+			input_stream_set: input_stream = a_resolver.last_stream
 			input_resolver_reset: input_resolver = a_resolver
 		end
-			
+
 	close_input is
 			-- Close input buffer if needed.
 		do
@@ -119,7 +119,7 @@ feature {NONE} -- Input
 
 	input_stream: KI_CHARACTER_INPUT_STREAM
 			-- Saved stream for closing on end of stream
-	
+
 	input_resolver: XM_EXTERNAL_RESOLVER
 			-- Saved resolver for closure.
 
@@ -176,7 +176,7 @@ feature -- Error reporting
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature -- Access
 
 	input_name: STRING
@@ -232,12 +232,12 @@ feature {NONE} -- System literal
 				i := text_count - 1
 			invariant
 				i >= 0
-			variant
-				i
 			until
 				text_item (i) = a_quote
 			loop
 				i := i - 1
+			variant
+				i
 			end
 			Result := text_substring (i + 1, text_count - 1)
 		end

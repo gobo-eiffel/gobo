@@ -112,8 +112,6 @@ feature {NONE} -- Implementation
 			-- TODO regexp.set_unicode
 			from
 				an_index := 1
-			variant
-				a_flags_string.count + 1 - an_index
 			until
 				an_index > a_flags_string.count
 			loop
@@ -129,6 +127,8 @@ feature {NONE} -- Implementation
 					regexp.set_extended (True)
 				end
 				an_index := an_index + 1
+			variant
+				a_flags_string.count + 1 - an_index
 			end
 		end
 

@@ -26,8 +26,6 @@ feature {NONE} -- Implementation
 		do
 			from
 				l_cursor := a_set.new_cursor; l_cursor.start
-			variant
-				a_set.count + 1 - l_cursor.index
 			until
 				l_cursor.after
 			loop
@@ -45,6 +43,8 @@ feature {NONE} -- Implementation
 					l_cursor_2.forth
 				end
 				l_cursor.forth
+			variant
+				a_set.count + 1 - l_cursor.index
 			end
 		end
 

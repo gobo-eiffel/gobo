@@ -144,7 +144,7 @@ feature -- Element change
 		ensure
 			static_context_created: static_context /= Void
 		end
-	
+
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
@@ -157,8 +157,6 @@ feature -- Element change
 				from
 					a_cursor := attribute_collection.name_code_cursor
 					a_cursor.start
-				variant
-					attribute_collection.number_of_attributes + 1 - a_cursor.index				
 				until
 					any_compile_errors or a_cursor.after
 				loop
@@ -172,6 +170,8 @@ feature -- Element change
 						check_unknown_attribute (a_name_code)
 					end
 					a_cursor.forth
+				variant
+					attribute_collection.number_of_attributes + 1 - a_cursor.index
 				end
 			end
 			if any_compile_errors then
@@ -184,8 +184,8 @@ feature -- Element change
 			end
 			attributes_prepared := True
 		end
-	
-	
+
+
 	validate is
 			-- Check that the stylesheet element is valid.
 		do
@@ -270,4 +270,4 @@ feature {NONE} -- Implementation
 		end
 
 end
-	
+
