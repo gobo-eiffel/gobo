@@ -15,14 +15,6 @@ class KL_STRING
 inherit
 
 	STRING
-		rename
-			infix "<" as is_less alias "<",
-			infix "<=" as is_less_equal alias "<=",
-			infix ">" as is_greater alias ">",
-			infix ">=" as is_greater_equal alias ">=",
-			infix "@" as at alias "@",
-			infix "+" as plus alias "+"
-		end
 
 create
 

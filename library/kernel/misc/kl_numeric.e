@@ -15,13 +15,5 @@ deferred class KL_NUMERIC
 inherit
 
 	NUMERIC
-		rename
-			infix "+" as plus alias "+",
-			infix "-" as minus alias "-",
-			infix "*" as product alias "*",
-			infix "/" as quotient alias "/",
-			prefix "+" as identity alias "+",
-			prefix "-" as opposite alias "-"
-		end
 
 end
