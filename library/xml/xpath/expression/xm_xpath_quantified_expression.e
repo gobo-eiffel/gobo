@@ -189,7 +189,7 @@ feature -- Evaluation
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_value: XM_XPATH_VALUE
 			l_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			some: BOOLEAN
+			l_some: BOOLEAN
 			found_a_match, finished: BOOLEAN
 			an_item: XM_XPATH_ITEM
 		do
@@ -202,12 +202,12 @@ feature -- Evaluation
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (a_base_iterator.error_value)
 			else
-			
+
 				-- Now test to see if some or all of the tests are true. The same
 				-- logic is used for the SOME and EVERY operators
-				
-				some := operator = Some_token
-				
+
+				l_some := operator = Some_token
+
 				from
 					a_base_iterator.start
 				until
@@ -229,11 +229,11 @@ feature -- Evaluation
 							last_boolean_value := l_boolean_value
 							finished := True
 						else
-							if some = l_boolean_value.value then
-								create last_boolean_value.make (some); found_a_match := True
+							if l_some = l_boolean_value.value then
+								create last_boolean_value.make (l_some); found_a_match := True
 							end
 						end
-						
+
 						a_base_iterator.forth
 					end
 				end
@@ -241,7 +241,7 @@ feature -- Evaluation
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (a_base_iterator.error_value)
 				elseif not (finished or else found_a_match) then
-					create last_boolean_value.make (not some)
+					create last_boolean_value.make (not l_some)
 				end
 			end
 		end
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			replaced: a_replacement.item /= Void			
+			replaced: a_replacement.item /= Void
 		end
 
 invariant
