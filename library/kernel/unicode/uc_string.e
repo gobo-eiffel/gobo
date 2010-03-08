@@ -384,7 +384,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		local
-			l_uc_string: ?UC_STRING
+			l_uc_string: detachable UC_STRING
 		do
 				-- Note that we do nothing if `a_string' is `Current'.
 				-- This is what the following tries to determine. In
@@ -436,7 +436,7 @@ feature {NONE} -- Initialization
 		local
 			nb: INTEGER
 			str: STRING_GENERAL
-			l_uc_string: ?UC_STRING
+			l_uc_string: detachable UC_STRING
 		do
 				-- Note that we do nothing if `a_string' is `Current'.
 				-- This is what the following tries to determine. In
@@ -682,7 +682,7 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code, a_code2: INTEGER
-			other_unicode: ?UC_STRING
+			other_unicode: detachable UC_STRING
 			k, z, end_index: INTEGER
 			found: BOOLEAN
 			other_count: INTEGER
@@ -854,7 +854,7 @@ feature -- Access
 		local
 			i, j, nb: INTEGER
 			a_code, a_code2: INTEGER
-			other_unicode: ?UC_STRING
+			other_unicode: detachable UC_STRING
 			k, z, end_index: INTEGER
 			found: BOOLEAN
 			other_count: INTEGER
@@ -1602,7 +1602,7 @@ feature -- Comparison
 		require
 			other_not_void: other /= Void
 		local
-			uc_string: ?UC_STRING
+			uc_string: detachable UC_STRING
 			i, nb, nb1, nb2: INTEGER
 			b1, b2: CHARACTER
 			c1, c2: INTEGER
@@ -1791,7 +1791,7 @@ feature -- Element change
 			insert_string (s, 1)
 		end
 
-	prepend_string (s: ?STRING) is
+	prepend_string (s: detachable STRING) is
 			-- Prepend a copy of `s', if not void, at front.
 		do
 			if s /= Void then
@@ -1880,7 +1880,7 @@ feature -- Element change
 			unicode_appended: item_code (count) = c.code
 		end
 
-	append_string (s: ?READABLE_STRING_8) is
+	append_string (s: detachable READABLE_STRING_8) is
 			-- Append a copy of `s' at end.
 		do
 			if s /= Void then
@@ -1888,7 +1888,7 @@ feature -- Element change
 			end
 		end
 
-	
+
 	put_string (a_string: STRING) is
 			-- Write `a_string' to output stream.
 		do
@@ -1904,8 +1904,8 @@ feature -- Element change
 			old_a_string_count: INTEGER
 			new_byte_count: INTEGER
 			new_count: INTEGER
-			a_utf8_string: ?UC_UTF8_STRING
-			a_uc_string: ?UC_STRING
+			a_utf8_string: detachable UC_UTF8_STRING
+			a_uc_string: detachable UC_STRING
 			b: BOOLEAN
 		do
 			if ANY_.same_types (a_string, dummy_string) then
@@ -3480,9 +3480,9 @@ feature {NONE} -- Implementation
 			k, z: INTEGER
 			c: CHARACTER
 			a_code: INTEGER
-			a_utf8_string: ?UC_UTF8_STRING
-			a_uc_string: ?UC_STRING
-			l_string_8: ?STRING
+			a_utf8_string: detachable UC_UTF8_STRING
+			a_uc_string: detachable UC_STRING
+			l_string_8: detachable STRING
 		do
 			check
 				valid_utf8: b = utf8.substring_byte_count (a_string, start_index, end_index)

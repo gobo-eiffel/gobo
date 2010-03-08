@@ -19,7 +19,7 @@ feature -- Access
 		require
 			an_any_not_void: an_any /= Void
 		local
-			hashable: ?HASHABLE
+			hashable: detachable HASHABLE
 		do
 			hashable ?= an_any
 			if hashable /= Void then

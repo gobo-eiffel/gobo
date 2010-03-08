@@ -36,7 +36,7 @@ feature -- Conversion
 			a_string_not_void: a_string /= Void
 		local
 			l_name: STRING
-			l_value: ?STRING
+			l_value: detachable STRING
 			i, nb: INTEGER
 			c: CHARACTER
 			stop: BOOLEAN

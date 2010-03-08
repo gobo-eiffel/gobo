@@ -15,7 +15,7 @@ class XM_XSLT_DOCUMENT_INFORMATION
 inherit
 
 	ANY
-	
+
 	XM_XPATH_NODE_MAPPING_FUNCTION
 		export {NONE} all end
 
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
 	base_uri, stylesheet_base_uri: UT_URI
 			-- Base URIs
 
@@ -55,7 +55,7 @@ feature -- Access
 			-- Result from `map_nodes'
 
 feature -- Evaluation
-	
+
 	map_nodes (a_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `a_item' to a sequence
 		local
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			transformer_not_void: transformer /= Void
 		local
 			l_media_type: UT_MEDIA_TYPE
-			l_fragment_id: ?STRING
+			l_fragment_id: detachable STRING
 			l_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
 			l_node: XM_XPATH_NODE
 			l_error: BOOLEAN
@@ -232,5 +232,5 @@ invariant
 	transformer_not_void: transformer /= Void
 
 end
-	
+
 

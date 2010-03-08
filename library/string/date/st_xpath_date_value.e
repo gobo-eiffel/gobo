@@ -63,30 +63,30 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	zoned_date: ?DT_FIXED_OFFSET_ZONED_DATE
+	zoned_date: detachable DT_FIXED_OFFSET_ZONED_DATE
 			-- Zoned date value
 
-	local_date: ?DT_DATE
+	local_date: detachable DT_DATE
 			-- Date value without zone
 
 	date: DT_DATE is
 			-- Date component
 		local
-			l_date: ?DT_DATE
+			l_date: detachable DT_DATE
 			l_zoned_date: like zoned_date
 		do
 			if zoned then
 				l_zoned_date := zoned_date
-				check 
+				check
 						-- condition `zoned'
-					zoned: l_zoned_date /= Void 
+					zoned: l_zoned_date /= Void
 				end
 				l_date := l_zoned_date.date
 			else
 				l_date := local_date
-				check 
+				check
 						-- condition `not zoned'
-					not_zoned: l_date /= Void 
+					not_zoned: l_date /= Void
 				end
 			end
 			Result := l_date

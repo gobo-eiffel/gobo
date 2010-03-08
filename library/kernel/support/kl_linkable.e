@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	right: ?like Current
+	right: detachable like Current
 			-- Right neighbor
 
 feature -- Element change

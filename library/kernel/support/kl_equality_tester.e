@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: ?G): BOOLEAN is
+	test (v, u: detachable G): BOOLEAN is
 			-- Are `v' and `u' considered equal?
 			-- (Use '~' by default.)
 		do

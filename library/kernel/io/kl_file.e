@@ -149,7 +149,7 @@ feature -- Status report
 			absolute_name1, absolute_name2: STRING
 			canonical_name1, canonical_name2: STRING
 			a_name: STRING
-			saved_string_name: ?STRING
+			saved_string_name: detachable STRING
 			string_other_name: STRING
 			i: INTEGER
 			rescued: BOOLEAN
@@ -261,7 +261,7 @@ feature -- Basic operations
 		local
 			rescued: BOOLEAN
 			string_new_name: STRING
-			saved_string_name: ?STRING
+			saved_string_name: detachable STRING
 		do
 			if not rescued then
 				saved_string_name := string_name

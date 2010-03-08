@@ -61,7 +61,7 @@ feature -- Escape/unescape data characters
 			unescaped_string_cannot_be_larger: Result.count <= a_string.count
 		end
 
-	unescape_utf8 (a_string: STRING): ?STRING is
+	unescape_utf8 (a_string: STRING): detachable STRING is
 			-- Unescaped version of `a_string';
 			-- It is assumed that non-ASCII characters are represented by
 			--  percent-encoding their UTF-8 byte sequence.
@@ -342,7 +342,7 @@ feature -- Valid characters
 			end
 		end
 
-	is_valid_scheme (a_scheme: ?STRING): BOOLEAN is
+	is_valid_scheme (a_scheme: detachable STRING): BOOLEAN is
 			-- Is `a_scheme' a valid scheme?
 		local
 			i, nb: INTEGER

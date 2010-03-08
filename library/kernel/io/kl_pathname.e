@@ -65,7 +65,7 @@ feature -- Access
 	item (i: INTEGER): STRING is
 			-- Pathname component at `i'-th position
 		local
-			s: ?STRING
+			s: detachable STRING
 		do
 			s := components.item (i)
 			check
@@ -75,16 +75,16 @@ feature -- Access
 			Result := s
 		end
 
-	drive: ?STRING
+	drive: detachable STRING
 			-- Drive of pathname if present,
 			-- Void otherwise
 
-	hostname: ?STRING
+	hostname: detachable STRING
 			-- Hostname of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
 
-	sharename: ?STRING
+	sharename: detachable STRING
 			-- Sharename of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
@@ -246,7 +246,7 @@ feature -- Duplication
 
 feature {KL_PATHNAME} -- Implementation
 
-	components: ARRAY [?STRING]
+	components: ARRAY [detachable STRING]
 			-- Components in pathname
 
 feature {NONE} -- Constants

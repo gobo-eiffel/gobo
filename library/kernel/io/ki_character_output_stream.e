@@ -276,7 +276,7 @@ feature -- Output
 			-- of input is reached, and write these items to
 			-- current output stream.
 		local
-			a_character_input: ?KI_CHARACTER_INPUT_STREAM
+			a_character_input: detachable KI_CHARACTER_INPUT_STREAM
 		do
 			a_character_input ?= an_input_stream
 			if a_character_input /= Void then

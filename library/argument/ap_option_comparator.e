@@ -24,11 +24,11 @@ feature -- Status report
 			-- Is `u' considered less than `v'?
 		local
 			u_string, v_string: STRING
-			l_long_form: ?STRING
+			l_long_form: detachable STRING
 		do
 			if u.has_long_form then
 				l_long_form := u.long_form
-				check 
+				check
 					u_has_long_form : l_long_form /= Void
 				end
 				u_string := l_long_form
@@ -37,7 +37,7 @@ feature -- Status report
 			end
 			if v.has_long_form then
 				l_long_form := v.long_form
-				check 
+				check
 					v_has_long_form: l_long_form /= Void
 				end
 				v_string := l_long_form

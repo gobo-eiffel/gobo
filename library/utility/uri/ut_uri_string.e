@@ -87,7 +87,7 @@ feature -- Access
 			decoded_not_void: Result /= Void
 		end
 
-	decoded_utf8: ?STRING is
+	decoded_utf8: detachable STRING is
 			-- Decoded string where the percent-encoded characters
 			-- are in the UTF-8 character set
 			-- (This may return a STRING object of another type than STRING)
@@ -100,10 +100,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	decoded_impl: ?STRING
+	decoded_impl: detachable STRING
 			-- Cache for `decoded'
 
-	decoded_utf8_impl: ?STRING
+	decoded_utf8_impl: detachable STRING
 			-- Cache for `decoded_utf8'
 
 invariant

@@ -218,29 +218,29 @@ feature -- Access
 			zoned_value: zoned
 		local
 			l_time_zone: DT_FIXED_OFFSET_TIME_ZONE
-			l_zoned_time: ?DT_FIXED_OFFSET_ZONED_TIME
-			l_zoned_date: ?DT_FIXED_OFFSET_ZONED_DATE
-			l_zoned_date_time: ?DT_FIXED_OFFSET_ZONED_DATE_TIME
+			l_zoned_time: detachable DT_FIXED_OFFSET_ZONED_TIME
+			l_zoned_date: detachable DT_FIXED_OFFSET_ZONED_DATE
+			l_zoned_date_time: detachable DT_FIXED_OFFSET_ZONED_DATE_TIME
 		do
 			if is_xpath_time then
 				l_zoned_time := as_xpath_time.zoned_time
-				check 
+				check
 						-- precondition `zoned_value'
-					zoned_value: l_zoned_time /= Void 
+					zoned_value: l_zoned_time /= Void
 				end
 				l_time_zone := l_zoned_time.time_zone
 			elseif is_xpath_date then
 				l_zoned_date := as_xpath_date.zoned_date
-				check 
+				check
 						-- precondition `zoned_value'
-					zoned_value: l_zoned_date /= Void 
+					zoned_value: l_zoned_date /= Void
 				end
 				l_time_zone := l_zoned_date.time_zone
 			else
 				l_zoned_date_time := as_xpath_date_time.zoned_date_time
-				check 
+				check
 						-- precondition `zoned_value'
-					zoned_value: l_zoned_date_time /= Void 
+					zoned_value: l_zoned_date_time /= Void
 				end
 				l_time_zone := l_zoned_date_time.time_zone
 			end
@@ -291,11 +291,11 @@ feature -- Conversion
 		require
 			is_xpath_time_value: is_xpath_time
 		local
-			v: ?ST_XPATH_TIME_VALUE
+			v: detachable ST_XPATH_TIME_VALUE
 		do
-			check 
+			check
 					-- Fool the compiler for void-safety purpose
-				should_not_occur: v /= Void 
+				should_not_occur: v /= Void
 			end
 			Result := v
 		ensure
@@ -307,11 +307,11 @@ feature -- Conversion
 		require
 			is_xpath_date_value: is_xpath_date
 		local
-			v: ?ST_XPATH_DATE_VALUE
+			v: detachable ST_XPATH_DATE_VALUE
 		do
-			check 
+			check
 					-- Fool the compiler for void-safety purpose
-				should_not_occur: v /= Void 
+				should_not_occur: v /= Void
 			end
 			Result := v
 		ensure
@@ -323,11 +323,11 @@ feature -- Conversion
 		require
 			is_xpath_date_time_value: is_xpath_date_time
 		local
-			v: ?ST_XPATH_DATE_TIME_VALUE
+			v: detachable ST_XPATH_DATE_TIME_VALUE
 		do
-			check 
+			check
 					-- Fool the compiler for void-safety purpose
-				should_not_occur: v /= Void 
+				should_not_occur: v /= Void
 			end
 			Result := v
 		ensure

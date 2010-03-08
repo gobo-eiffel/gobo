@@ -14,7 +14,7 @@ deferred class KI_EXCEPTIONS
 
 feature -- Status report
 
-	exception_trace: ?STRING is
+	exception_trace: detachable STRING is
 			-- String representation of the exception trace;
 			-- Note that the string may be Void or always return
 			-- the same object depending on the implementation.
@@ -32,13 +32,13 @@ feature -- Status report
 		deferred
 		end
 
-	is_developer_exception_of_name (name: ?STRING): BOOLEAN is
+	is_developer_exception_of_name (name: detachable STRING): BOOLEAN is
 			-- Is the last exception originally due to a developer
 			-- exception of name `name'?
 		deferred
 		end
 
-	developer_exception_name: ?STRING is
+	developer_exception_name: detachable STRING is
 			-- Name of last developer-raised exception
 		require
 			applicable: is_developer_exception
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	raise (a_name: ?STRING) is
+	raise (a_name: detachable STRING) is
 			-- Raise a developer exception of name `a_name'.
 		deferred
 		end

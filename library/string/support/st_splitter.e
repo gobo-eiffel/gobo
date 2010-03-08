@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			last_escaped: INTEGER
 			escape_code: INTEGER
 			a_code: INTEGER
-			an_item: ?STRING
+			an_item: detachable STRING
 		do
 			create {DS_LINKED_LIST [STRING]} Result.make
 			nb := a_string.count

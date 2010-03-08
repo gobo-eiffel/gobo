@@ -23,7 +23,7 @@ inherit
 
 feature -- Status report
 
-	test (v, u: ?UT_URI): BOOLEAN is
+	test (v, u: detachable UT_URI): BOOLEAN is
 			-- Are `v' and `u' considered equal?
 			-- (Comparison of UT_URIs based on `full_reference')
 		do

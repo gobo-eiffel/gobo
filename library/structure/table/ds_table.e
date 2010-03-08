@@ -52,8 +52,8 @@ feature -- Status report
 	valid_void_key: BOOLEAN is
 			-- Is Void a valid key?
 		local
-			k: ?K
-			l_current: ?DS_TABLE [G, ?K]
+			k: detachable K
+			l_current: detachable DS_TABLE [G, detachable K]
 		do
 			l_current ?= Current
 			if l_current /= Void and k = Void then
@@ -71,8 +71,8 @@ feature -- Status report
 	has_void: BOOLEAN is
 			-- Is there an item associated with Void?
 		local
-			k: ?K
-			l_current: ?DS_TABLE [G, ?K]
+			k: detachable K
+			l_current: detachable DS_TABLE [G, detachable K]
 		do
 			l_current ?= Current
 			if l_current /= Void and k = Void then

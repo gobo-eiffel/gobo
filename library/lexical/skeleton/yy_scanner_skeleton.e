@@ -612,7 +612,7 @@ feature {NONE} -- Implementation
 	yy_content: KI_CHARACTER_BUFFER
 			-- Characters in `input_buffer'
 
-	yy_content_area: ?SPECIAL [CHARACTER]
+	yy_content_area: detachable SPECIAL [CHARACTER]
 			-- Characters in `input_buffer';
 			-- More efficient than `yy_content' when not void;
 			-- Characters are indexed starting at 1

@@ -303,7 +303,7 @@ feature -- Access
 			no_fragment_is_reference: not has_fragment implies STRING_.same_string (Result, full_reference)
 		end
 
-	scheme: ?STRING
+	scheme: detachable STRING
 			-- Scheme used, like "http" or "ftp", anything before the ':'
 
 	scheme_specific_part: STRING is
@@ -439,20 +439,20 @@ feature -- Components
 			not_separator: not Result.has ('#')
 		end
 
-	authority_item: ?UT_URI_STRING
+	authority_item: detachable UT_URI_STRING
 			-- Authority if present
 
 	path_items: DS_ARRAYED_LIST [UT_URI_STRING]
 			-- Path in `scheme_specific_part'
 
-	path_base_item: ?UT_URI_STRING
+	path_base_item: detachable UT_URI_STRING
 			-- Last segment, if any, of path
 			-- (See `path_has_base'.)
 
-	query_item: ?UT_URI_STRING
+	query_item: detachable UT_URI_STRING
 			-- Query string if present
 
-	fragment_item: ?UT_URI_STRING
+	fragment_item: detachable UT_URI_STRING
 			-- Fragment string if present
 
 	has_absolute_path: BOOLEAN
@@ -460,12 +460,12 @@ feature -- Components
 
 feature -- If authority is <userinfo>@<host>:<port>
 
-	user_info: ?STRING
+	user_info: detachable STRING
 			-- Optional user info part of a authority
 --		require
 --			has_parsed_authority: has_parsed_authority
 
-	host_port: ?UT_HOST_PORT
+	host_port: detachable UT_HOST_PORT
 			-- Hostname and port number
 --		require
 --			has_parsed_authority: has_parsed_authority

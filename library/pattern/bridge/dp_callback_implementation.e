@@ -45,7 +45,7 @@ feature {DP_INTERFACE} -- Setting
 
 feature {DP_INTERFACE} -- Implementation
 
-	interface: ?DP_INTERFACE
+	interface: detachable DP_INTERFACE
 			-- Interface
 
 invariant

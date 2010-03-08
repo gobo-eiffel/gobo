@@ -283,8 +283,8 @@ feature {NONE} -- Status report
 			-- Is there an item associated with Void?
 			-- (Performance: O(height).)
 		local
-			k: ?K
-			l_current: ?DS_BINARY_SEARCH_TREE_CONTAINER [G, ?K]
+			k: detachable K
+			l_current: detachable DS_BINARY_SEARCH_TREE_CONTAINER [G, detachable K]
 		do
 			l_current ?= Current
 			if l_current /= Void and k = Void then

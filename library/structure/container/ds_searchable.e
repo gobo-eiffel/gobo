@@ -30,8 +30,8 @@ feature -- Status report
 	has_void: BOOLEAN is
 			-- Does container include Void?
 		local
-			v: ?G
-			l_current: ?DS_SEARCHABLE [?G]
+			v: detachable G
+			l_current: detachable DS_SEARCHABLE [detachable G]
 		do
 			l_current ?= Current
 			if l_current /= Void and v = Void then

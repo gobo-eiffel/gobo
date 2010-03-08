@@ -57,12 +57,12 @@ feature -- Access
 	system_id: STRING
 			-- System-id of source
 
-	fragment_identifier: ?STRING
+	fragment_identifier: detachable STRING
 			-- Possible decoded fragment identifier
-	
+
 	default_media_type: UT_MEDIA_TYPE
 			-- Default media type for stylesheet processing
-	
+
 	media_type: UT_MEDIA_TYPE
 			-- Media type of document entity
 
@@ -143,10 +143,10 @@ feature {NONE} -- Implementation
 
 	content: XM_CONTENT_CONCATENATOR
 			-- Content concatenator
-		
+
 	error: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector
-	
+
 invariant
 
 	system_id_not_void: system_id /= Void
@@ -154,4 +154,4 @@ invariant
 	default_media_type_not_void: default_media_type /= Void
 
 end
-	
+

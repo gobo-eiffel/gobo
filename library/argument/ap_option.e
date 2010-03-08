@@ -98,7 +98,7 @@ feature -- Access
 			example_not_void: Result /= Void
 		end
 
-	long_form: ?STRING
+	long_form: detachable STRING
 			-- Long form
 
 	name: STRING is
@@ -122,7 +122,7 @@ feature -- Access
 	names: STRING is
 			-- Names of the option (short and long)
 		local
-			s: ?STRING
+			s: detachable STRING
 			l_long_form: like long_form
 		do
 			if has_short_form then

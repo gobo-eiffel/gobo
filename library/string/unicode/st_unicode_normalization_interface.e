@@ -110,7 +110,7 @@ feature -- Access
 		local
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
-			l_result: ?UC_UTF8_STRING
+			l_result: detachable UC_UTF8_STRING
 		do
 			l_result ?= a_source
 			if l_result = Void or else not l_result.is_empty then
@@ -153,7 +153,7 @@ feature -- Access
 		local
 			changed: DS_CELL [BOOLEAN]
 			a_decomposition: DS_ARRAYED_LIST [INTEGER]
-			l_result: ?UC_UTF8_STRING
+			l_result: detachable UC_UTF8_STRING
 		do
 			l_result ?= a_source
 			if l_result = Void or else not l_result.is_empty then

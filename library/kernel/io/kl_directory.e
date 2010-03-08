@@ -73,7 +73,7 @@ feature -- Access
 			-- (Note: this query returns the new object after
 			-- each call to `read_entry'.)
 
-	filenames: ?ARRAY [STRING] is
+	filenames: detachable ARRAY [STRING] is
 			-- Names of readable files in current directory;
 			-- Void if current directory could not be searched
 		local
@@ -120,7 +120,7 @@ feature -- Access
 			end
 		end
 
-	directory_names: ?ARRAY [STRING] is
+	directory_names: detachable ARRAY [STRING] is
 			-- Names of readable subdirectories in current directory;
 			-- Void if current directory could not be searched
 			-- (Do not include parent and current directory names.)
@@ -574,7 +574,7 @@ feature -- Input
 			-- Read next entry in directory.
 			-- Make result available in `last_entry'.
 		local
-			l_last_entry: ?STRING
+			l_last_entry: detachable STRING
 			l_entry_buffer: like entry_buffer
 		do
 			l_entry_buffer := entry_buffer
@@ -615,7 +615,7 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	entry_buffer: ?KL_LINKABLE [STRING]
+	entry_buffer: detachable KL_LINKABLE [STRING]
 			-- Unread entries
 
 	valid_entry_buffer (a_buffer: like entry_buffer): BOOLEAN is

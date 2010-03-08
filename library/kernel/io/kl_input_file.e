@@ -197,7 +197,7 @@ feature -- Input
 			-- in the input file, there is no guarantee that they
 			-- will all be read.)
 		local
-			char_buffer: ?KL_CHARACTER_BUFFER
+			char_buffer: detachable KL_CHARACTER_BUFFER
 		do
 			char_buffer ?= a_buffer
 			if char_buffer /= Void then
@@ -252,7 +252,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	character_buffer: ?KL_LINKABLE [CHARACTER]
+	character_buffer: detachable KL_LINKABLE [CHARACTER]
 			-- Unread characters
 
 	file_readable: BOOLEAN is

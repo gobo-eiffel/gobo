@@ -24,15 +24,15 @@ inherit
 
 feature -- Filename
 
-	uri_to_filename (a_uri: UT_URI): ?STRING is
+	uri_to_filename (a_uri: UT_URI): detachable STRING is
 			-- Convert URI to filename and then to string using the
 			-- current filesystem rules.
 		require
 			a_uri_not_void: a_uri /= Void
 		local
-			l_path_base_item: ?UT_URI_STRING
-			l_pathname: ?KL_PATHNAME
-			l_path: ?STRING
+			l_path_base_item: detachable UT_URI_STRING
+			l_pathname: detachable KL_PATHNAME
+			l_path: detachable STRING
 		do
 			l_pathname := uri_to_pathname (a_uri)
 			if l_pathname /= Void then
@@ -85,7 +85,7 @@ feature -- Filename
 
 feature -- Pathname
 
-	uri_to_pathname (a_uri: UT_URI): ?KL_PATHNAME is
+	uri_to_pathname (a_uri: UT_URI): detachable KL_PATHNAME is
 			-- Convert `a_uri' to a pathname.
 		require
 			a_uri_not_void: a_uri /= Void
@@ -93,7 +93,7 @@ feature -- Pathname
 			a_cursor: DS_ARRAYED_LIST_CURSOR [UT_URI_STRING]
 			a_possible_drive: STRING
 			a_segment: STRING
-			a_uri_authority_item: ?UT_URI_STRING
+			a_uri_authority_item: detachable UT_URI_STRING
 		do
 			if not a_uri.has_valid_scheme or else a_uri.scheme.same_string (File_scheme) then
 				create Result.make
@@ -156,7 +156,7 @@ feature -- Pathname
 		local
 			a_path: DS_ARRAYED_LIST [UT_URI_STRING]
 			i, nb: INTEGER
-			s: ?STRING
+			s: detachable STRING
 		do
 			if a_pathname.is_relative then
 				create Result.make_relative
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			uri_component_not_void: Result /= Void
 		end
 
-	uri_component_to_pathname (a_uri_string: UT_URI_STRING): ?STRING is
+	uri_component_to_pathname (a_uri_string: UT_URI_STRING): detachable STRING is
 			-- Convert string used in URI component to pathname string
 		require
 			a_uri_string_not_void: a_uri_string /= Void

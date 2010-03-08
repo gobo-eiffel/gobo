@@ -106,13 +106,13 @@ feature {AP_PARSER} -- Parser Interface
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR
-			l_last_option_parameter: ?STRING
+			l_last_option_parameter: detachable STRING
 		do
 			l_last_option_parameter := a_parser.last_option_parameter
-			check 
+			check
 					-- Implied by inherited precondition `parameter_if_needed' and Current's value of `needs_parameter'
-				parameter_needed: l_last_option_parameter /= Void 
-			end 
+				parameter_needed: l_last_option_parameter /= Void
+			end
 			if true_strings.has (l_last_option_parameter) then
 				parameters.force_last (True)
 			elseif false_strings.has (l_last_option_parameter) then

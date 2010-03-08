@@ -21,9 +21,9 @@ inherit
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
-		
+
 	KL_IMPORTED_STRING_ROUTINES
-		
+
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
@@ -53,7 +53,7 @@ feature -- Access
 	system_id: STRING
 			-- System-id of source
 
-	fragment_identifier: ?STRING
+	fragment_identifier: detachable STRING
 			-- Possible decoded fragment identifier
 
 	default_media_type: UT_MEDIA_TYPE
@@ -155,7 +155,7 @@ feature -- Events
 				else
 					xpointer_filter.allow_generic_xml_types (True)
 					xpointer_filter.add_standard_media_types
-				end				
+				end
 			end
 			create start.set_next (xpointer_filter)
 			create l_locator.make (a_parser)
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 
 	content: XM_CONTENT_CONCATENATOR
 			-- Content concatenator
-		
+
 	error: XM_PARSER_STOP_ON_ERROR_FILTER
 			-- Error collector
 
@@ -212,4 +212,4 @@ invariant
 	default_media_type_not_void: default_media_type /= Void
 
 end
-	
+

@@ -1587,19 +1587,19 @@ feature {NONE} -- Implementation
 	last_cached_date_string: STRING
 			-- Last string validated by `is_date'
 
-	last_cached_date: ?DT_DATE
+	last_cached_date: detachable DT_DATE
 			-- Last date validated by `is_date'
 
 	last_cached_zoned_date_string: STRING
 			-- Last string validated by `is_zoned_date'
 
-	last_cached_zoned_date: ?DT_FIXED_OFFSET_ZONED_DATE
+	last_cached_zoned_date: detachable DT_FIXED_OFFSET_ZONED_DATE
 			-- Last date validated by `is_zoned_date'
 
 	last_cached_time_string: STRING
 			-- Last string validated by `is_time'
 
-	last_cached_time: ?DT_TIME
+	last_cached_time: detachable DT_TIME
 			-- Last date validated by `is_time'
 
 	last_time_carry: BOOLEAN
@@ -1608,19 +1608,19 @@ feature {NONE} -- Implementation
 	last_cached_zoned_time_string: STRING
 			-- Last string validated by `is_zoned_time'
 
-	last_cached_zoned_time: ?DT_FIXED_OFFSET_ZONED_TIME
+	last_cached_zoned_time: detachable DT_FIXED_OFFSET_ZONED_TIME
 			-- Last time validated by `is_zoned_time'
 
 	last_cached_date_time_string: STRING
 			-- Last string validated by `is_date_time'
 
-	last_cached_date_time: ?DT_DATE_TIME
+	last_cached_date_time: detachable DT_DATE_TIME
 			-- Last time validated by `is_date_time'
 
 	last_cached_zoned_date_time_string: STRING
 			-- Last string validated by `is_zoned_date_time'
 
-	last_cached_zoned_date_time: ?DT_FIXED_OFFSET_ZONED_DATE_TIME
+	last_cached_zoned_date_time: detachable DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Last time validated by `is_zoned_date_time'
 
 	year_ok (a_year: STRING; is_negative: BOOLEAN): DS_PAIR [BOOLEAN, INTEGER] is

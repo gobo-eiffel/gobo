@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: ?STRING
+	value: detachable STRING
 			-- Formatted value
 
-	message: ?STRING
+	message: detachable STRING
 			-- Error message
 
-	code: ?STRING
+	code: detachable STRING
 			-- XSLT error code
 
 feature -- Status report

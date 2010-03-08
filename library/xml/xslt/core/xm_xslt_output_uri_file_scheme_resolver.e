@@ -49,7 +49,7 @@ feature -- Action
 		local
 			l_output: XM_OUTPUT
 			l_stream: KL_TEXT_OUTPUT_FILE
-			l_filename: ?STRING
+			l_filename: detachable STRING
 		do
 			last_result := Void
 			check
@@ -71,4 +71,4 @@ feature -- Action
 		end
 
 end
-	
+

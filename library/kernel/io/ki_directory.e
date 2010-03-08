@@ -50,7 +50,7 @@ feature -- Access
 			last_entry_not_void: Result /= Void
 		end
 
-	filenames: ?ARRAY [STRING] is
+	filenames: detachable ARRAY [STRING] is
 			-- Names of readable files in current directory;
 			-- Void if current directory could not be searched
 		deferred
@@ -59,7 +59,7 @@ feature -- Access
 --			no_empty_filename: Result /= Void implies forall s in Result, s.count > 0
 		end
 
-	directory_names: ?ARRAY [STRING] is
+	directory_names: detachable ARRAY [STRING] is
 			-- Names of readable subdirectories in current directory;
 			-- Void if current directory could not be searched
 			-- (Do not include parent and current directory names.)

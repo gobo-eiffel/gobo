@@ -82,7 +82,7 @@ feature -- Conversion
 			same_count: Result.count = count
 		end
 
-	as_special: ?SPECIAL [CHARACTER] is
+	as_special: detachable SPECIAL [CHARACTER] is
 			-- 'SPECIAL [CHARACTER]' version of current character buffer;
 			-- Characters are indexed starting at 1;
 			-- Note that the result may share the internal data with `Current'.

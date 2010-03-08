@@ -25,7 +25,7 @@ feature -- Status report
 	valid_parameter (a_parameter: ANY): BOOLEAN is
 			-- Is `a_parameter' a valid parameter for current formatter?
 		local
-			a_cell: ?DS_CELL [INTEGER]
+			a_cell: detachable DS_CELL [INTEGER]
 		do
 			a_cell ?= a_parameter
 			Result := a_cell /= Void and then a_cell.item >= 0

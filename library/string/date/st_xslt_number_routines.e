@@ -39,7 +39,7 @@ feature -- Access
 	Simple_numbering: INTEGER is 4
 			-- Level-numbering value from xsl:number
 
-	selected_numberer (a_language: STRING): ?ST_XSLT_NUMBERER is
+	selected_numberer (a_language: STRING): detachable ST_XSLT_NUMBERER is
 			-- Numberer corresponding to `a_language'
 		require
 			language_not_void: a_language /= Void

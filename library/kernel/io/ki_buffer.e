@@ -20,7 +20,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		local
-			r: ?G
+			r: detachable G
 		do
 				-- TODO: This routine should be deferred, but there is
 				-- a bug with ISE Eiffel 5.1.5 up to 6.3 in the generated

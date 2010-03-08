@@ -656,7 +656,7 @@ feature -- Debugging
 			a_min, a_max: INTEGER
 			a_set: INTEGER
 			a_position: INTEGER
-			a_position_map: ?like new_position_map
+			a_position_map: detachable like new_position_map
 		do
 			if not a_native_code then
 				a_position_map := new_position_map
@@ -1257,7 +1257,7 @@ feature {NONE} -- Access
 	internal_start_bits: RX_CHARACTER_SET
 			-- To avoid repeated allocations of the `start_bits' character set
 
-	start_bits: ?RX_CHARACTER_SET
+	start_bits: detachable RX_CHARACTER_SET
 			-- A set of starting characters. This will be filled in by the optimizer
 
 	first_character: INTEGER

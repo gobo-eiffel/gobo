@@ -309,7 +309,7 @@ feature -- Input
 			-- in standard input file, there is no guarantee that they
 			-- will all be read.)
 		local
-			char_buffer: ?KL_CHARACTER_BUFFER
+			char_buffer: detachable KL_CHARACTER_BUFFER
 		do
 			char_buffer ?= a_buffer
 			if char_buffer /= Void then
@@ -329,7 +329,7 @@ feature {CONSOLE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	character_buffer: ?KL_LINKABLE [CHARACTER]
+	character_buffer: detachable KL_LINKABLE [CHARACTER]
 			-- Unread characters
 
 	dummy_string: STRING is ""

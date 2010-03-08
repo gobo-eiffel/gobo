@@ -214,7 +214,7 @@ feature -- Element change
 			-- Should current scanner terminate when end of file is reached?
 			-- True unless an include file was being processed.
 		local
-			old_buffer: ?YY_FILE_BUFFER
+			old_buffer: detachable YY_FILE_BUFFER
 			a_file: KI_CHARACTER_INPUT_STREAM
 		do
 			if not include_stack.is_empty then

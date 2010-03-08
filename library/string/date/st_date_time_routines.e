@@ -17,7 +17,7 @@ class ST_DATE_TIME_ROUTINES
 
 feature -- Access
 
-	xslt_formatted_date (a_date: DT_DATE; a_zone: ?DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: ?STRING): ST_FORMAT_DATE_TIME_RESULT is
+	xslt_formatted_date (a_date: DT_DATE; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT is
 			-- `a_date' formatted according to XSLT's format-date() function;
 			-- Passing `Void' for `a_language' defaults to "en".
 			-- Passing `Void' for `a_calendar' defaults to "CE".
@@ -30,8 +30,8 @@ feature -- Access
 			l_zone: DT_FIXED_OFFSET_ZONED_DATE
 			l_language, l_calendar, l_country: STRING
 			l_formatter: ST_XSLT_FORMAT_DATE_TIME
-			l_result_cell: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]
-			l_result: ?ST_FORMAT_DATE_TIME_RESULT
+			l_result_cell: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]
+			l_result: detachable ST_FORMAT_DATE_TIME_RESULT
 		do
 			if a_zone = Void then
 				create l_value.make_from_date (a_date)
@@ -58,16 +58,16 @@ feature -- Access
 			create l_result_cell.make (Void)
 			l_formatter.format_date_time (l_result_cell, l_value, a_picture, l_language, l_calendar, l_country)
 			l_result := l_result_cell.item
-			check 
+			check
 					-- postcondition of `format_date_time' ensures l_result_cell.item is not Void
-				result_cell_item_not_void: l_result /= Void 
+				result_cell_item_not_void: l_result /= Void
 			end
 			Result := l_result
 		ensure
 			xslt_formatted_date_not_void: Result /= Void
 		end
 
-	xslt_formatted_time (a_time: DT_TIME; a_zone: ?DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: ?STRING): ST_FORMAT_DATE_TIME_RESULT is
+	xslt_formatted_time (a_time: DT_TIME; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE; a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT is
 			-- `a_time' formatted according to XSLT's format-time() function;
 			-- Passing `Void' for `a_language' defaults to "en".
 			-- Passing `Void' for `a_calendar' defaults to "CE".
@@ -80,8 +80,8 @@ feature -- Access
 			l_zone: DT_FIXED_OFFSET_ZONED_TIME
 			l_language, l_calendar, l_country: STRING
 			l_formatter: ST_XSLT_FORMAT_DATE_TIME
-			l_result_cell: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]
-			l_result: ?ST_FORMAT_DATE_TIME_RESULT
+			l_result_cell: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]
+			l_result: detachable ST_FORMAT_DATE_TIME_RESULT
 		do
 			if a_zone = Void then
 				create l_value.make_from_time (a_time)
@@ -108,17 +108,17 @@ feature -- Access
 			create l_result_cell.make (Void)
 			l_formatter.format_date_time (l_result_cell, l_value, a_picture, l_language, l_calendar, l_country)
 			l_result := l_result_cell.item
-			check 
+			check
 					-- postcondition of `format_date_time' ensures l_result_cell.item is not Void
-				result_cell_item_not_void: l_result /= Void 
+				result_cell_item_not_void: l_result /= Void
 			end
 			Result := l_result
 		ensure
 			xslt_formatted_time_not_void: Result /= Void
 		end
 
-	xslt_formatted_date_time (a_date_time: DT_DATE_TIME; a_zone: ?DT_FIXED_OFFSET_TIME_ZONE;
-		a_picture: STRING; a_language, a_calendar, a_country: ?STRING): ST_FORMAT_DATE_TIME_RESULT is
+	xslt_formatted_date_time (a_date_time: DT_DATE_TIME; a_zone: detachable DT_FIXED_OFFSET_TIME_ZONE;
+		a_picture: STRING; a_language, a_calendar, a_country: detachable STRING): ST_FORMAT_DATE_TIME_RESULT is
 			-- `a_date_time' formatted according to XSLT's format-date-time() function;
 			-- Passing `Void' for `a_language' defaults to "en".
 			-- Passing `Void' for `a_calendar' defaults to "CE".
@@ -131,8 +131,8 @@ feature -- Access
 			l_zone: DT_FIXED_OFFSET_ZONED_DATE_TIME
 			l_language, l_calendar, l_country: STRING
 			l_formatter: ST_XSLT_FORMAT_DATE_TIME
-			l_result_cell: DS_CELL [?ST_FORMAT_DATE_TIME_RESULT]
-			l_result: ?ST_FORMAT_DATE_TIME_RESULT
+			l_result_cell: DS_CELL [detachable ST_FORMAT_DATE_TIME_RESULT]
+			l_result: detachable ST_FORMAT_DATE_TIME_RESULT
 		do
 			if a_zone = Void then
 				create l_value.make_from_date_time (a_date_time)
@@ -159,9 +159,9 @@ feature -- Access
 			create l_result_cell.make (Void)
 			l_formatter.format_date_time (l_result_cell, l_value, a_picture, l_language, l_calendar, l_country)
 			l_result := l_result_cell.item
-			check 
+			check
 					-- postcondition of `format_date_time' ensures l_result_cell.item is not Void
-				result_cell_item_not_void: l_result /= Void 
+				result_cell_item_not_void: l_result /= Void
 			end
 			Result := l_result
 		ensure

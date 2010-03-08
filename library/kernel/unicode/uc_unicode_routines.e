@@ -54,7 +54,7 @@ feature -- Status report
 		require
 			a_string_not_void: a_string /= Void
 		local
-			a_unicode: ?UC_STRING
+			a_unicode: detachable UC_STRING
 			i, nb: INTEGER
 		do
 			a_unicode ?= a_string

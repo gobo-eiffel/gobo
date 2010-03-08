@@ -123,7 +123,7 @@ feature -- Parameter formatters
 
 feature {NONE} -- Parameter formatters
 
-	internal_parameter_formatter (a_typechar: CHARACTER): ?ST_PARAMETER_FORMATTER is
+	internal_parameter_formatter (a_typechar: CHARACTER): detachable ST_PARAMETER_FORMATTER is
 			-- Formatter for parameter of type `a_typechar';
 			-- Void if no such parameter formatter
 		do

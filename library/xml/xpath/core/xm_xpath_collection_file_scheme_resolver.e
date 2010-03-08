@@ -57,7 +57,7 @@ feature -- Element change
 		local
 			l_directory_name: STRING
 			l_directory: KL_DIRECTORY
-			l_pathname: ?KL_PATHNAME
+			l_pathname: detachable KL_PATHNAME
 		do
 			if a_uri.has_fragment then
 				create last_error.make_from_string ("Fragment identifiers are not allowed on file URIs for fn:collection()", Xpath_errors_uri, "FODC0004", Dynamic_error)

@@ -43,7 +43,7 @@ feature -- Action(s)
 	resolve (a_uri: UT_URI) is
 			-- Resolve file URI.
 		local
-			l_path: ?STRING
+			l_path: detachable STRING
 		do
 			last_stream := Void
 			l_path := File_uri.uri_to_filename (a_uri)
@@ -60,7 +60,7 @@ feature -- Action(s)
 
 feature -- Result
 
-	last_stream: ?KI_BINARY_INPUT_FILE
+	last_stream: detachable KI_BINARY_INPUT_FILE
 			-- File matching stream
 
 	last_error: STRING

@@ -98,10 +98,10 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	start_time: ?DT_DATE_TIME
+	start_time: detachable DT_DATE_TIME
 			-- Time when stopwatch was started
 
-	stop_time: ?DT_DATE_TIME
+	stop_time: detachable DT_DATE_TIME
 			-- Time when stopwatch was stopped
 
 end

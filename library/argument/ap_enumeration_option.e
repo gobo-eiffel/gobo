@@ -94,7 +94,7 @@ feature {AP_PARSER} -- Parser Interface
 			-- This option was found during parsing by `a_parser'.
 		local
 			error: AP_ERROR
-			l_last_option_parameter: ?STRING
+			l_last_option_parameter: detachable STRING
 		do
 			Precursor (a_parser)
 			l_last_option_parameter := a_parser.last_option_parameter

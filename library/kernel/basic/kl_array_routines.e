@@ -69,7 +69,7 @@ feature -- Status report
 			a_array_not_void: a_array /= Void
 		local
 			i, nb: INTEGER
-			l_array: ?ARRAY [?G]
+			l_array: detachable ARRAY [detachable G]
 		do
 			l_array ?= a_array
 			if l_array /= Void then

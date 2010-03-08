@@ -128,20 +128,20 @@ feature -- Access
 			item_not_empty: not Result.is_empty
 		end
 
-	drive: ?STRING is
+	drive: detachable STRING is
 			-- Drive of pathname if present,
 			-- Void otherwise
 		deferred
 		end
 
-	hostname: ?STRING is
+	hostname: detachable STRING is
 			-- Hostname of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
 		deferred
 		end
 
-	sharename: ?STRING is
+	sharename: detachable STRING is
 			-- Sharename of pathname if present,
 			-- Void otherwise
 			-- (for example, with UNC we can have: \\hostname\sharename)
