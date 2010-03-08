@@ -1802,7 +1802,7 @@ feature -- Element change
 	append_string_general (s: READABLE_STRING_GENERAL) is
 			-- Append a copy of `s' at end.
 		do
-			if {ls: STRING} s then
+			if attached {STRING} s as ls then
 				append (ls)
 			else
 				precursor (s)

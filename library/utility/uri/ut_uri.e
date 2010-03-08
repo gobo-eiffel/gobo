@@ -254,8 +254,8 @@ feature -- Status report
 			Result := l_scheme /= Void and then (not l_scheme.is_empty and Url_encoding.is_valid_scheme (l_scheme))
 		ensure
 			valid_scheme_not_void: Result implies scheme /= Void
-			valid_scheme_not_empty: Result implies {el_scheme: like scheme} scheme and then not el_scheme.is_empty
-			valid_scheme_characters: Result implies {el_scheme2: like scheme} scheme and then Url_encoding.is_valid_scheme (el_scheme2)
+			valid_scheme_not_empty: Result implies attached scheme as el_scheme and then not el_scheme.is_empty
+			valid_scheme_characters: Result implies attached scheme as el_scheme2 and then Url_encoding.is_valid_scheme (el_scheme2)
 		end
 
 	has_authority: BOOLEAN is
@@ -344,7 +344,7 @@ feature -- Components
 			Result := l_authority_item.encoded
 		ensure
 			authority_not_void: Result /= Void
-			definition: {el_authority_item: like authority_item} authority_item and then STRING_.same_string (Result, el_authority_item.encoded)
+			definition: attached authority_item as el_authority_item and then STRING_.same_string (Result, el_authority_item.encoded)
 			not_next_path_separator: not Result.has ('/')
 			not_next_query_separator: not Result.has ('?')
 			not_next_fragment_separator: not Result.has ('#')
@@ -416,7 +416,7 @@ feature -- Components
 			Result := l_query_item.encoded
 		ensure
 			query_not_void: Result /= Void
-			definition: {el_query_item: like query_item} query_item and then STRING_.same_string (Result, el_query_item.encoded)
+			definition: attached query_item as el_query_item and then STRING_.same_string (Result, el_query_item.encoded)
 			not_next_separator: not Result.has ('#')
 		end
 
@@ -435,7 +435,7 @@ feature -- Components
 			Result := l_fragment_item.encoded
 		ensure
 			fragment_not_void: Result /= Void
-			definition: {el_fragment_item: like fragment_item} fragment_item and then STRING_.same_string (Result, el_fragment_item.encoded)
+			definition: attached fragment_item as el_fragment_item and then STRING_.same_string (Result, el_fragment_item.encoded)
 			not_separator: not Result.has ('#')
 		end
 
@@ -536,7 +536,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			end
 		ensure
 			has_parsed_authority: has_parsed_authority
-			user_info_occurs_in_authority: {el_user_info: like user_info} user_info implies STRING_.substring_index (authority, el_user_info, 1) = 1
+			user_info_occurs_in_authority: attached user_info as el_user_info implies STRING_.substring_index (authority, el_user_info, 1) = 1
 			host_occurs_in_authority: STRING_.substring_index (authority, host, 1) /= 0
 		end
 
@@ -555,7 +555,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			Result := l_host_port.host
 		ensure
 			host_not_void: Result /= Void
-			definition: {el_host_port: like host_port} host_port and then host = el_host_port.host
+			definition: attached host_port as el_host_port and then host = el_host_port.host
 		end
 
 	port: INTEGER is
@@ -572,7 +572,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			end
 			Result := l_host_port.port
 		ensure
-			definition: {el_host_port: like host_port} host_port and then port = el_host_port.port
+			definition: attached host_port as el_host_port and then port = el_host_port.port
 		end
 
 feature {NONE} -- Parsed authority
@@ -1119,7 +1119,7 @@ invariant
 	no_void_path_item: not path_items.has_void
 	-- no_empty_path_item: not path_items.has ("")
 		-- Contraints on parsed `authority'.
-	user_info_occurs_in_authority: {l_user_info: like user_info} user_info implies STRING_.substring_index (authority, l_user_info, 1) /= 0
-	host_occurs_in_authority: has_parsed_authority implies {l_host_port: like host_port} host_port and then STRING_.substring_index (authority, l_host_port.host, 1) /= 0
+	user_info_occurs_in_authority: attached user_info as l_user_info implies STRING_.substring_index (authority, l_user_info, 1) /= 0
+	host_occurs_in_authority: has_parsed_authority implies attached host_port as l_host_port and then STRING_.substring_index (authority, l_host_port.host, 1) /= 0
 
 end

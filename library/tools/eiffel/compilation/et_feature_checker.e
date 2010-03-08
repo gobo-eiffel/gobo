@@ -3074,7 +3074,7 @@ feature {NONE} -- Instruction validity
 							elseif not had_value_error then
 								if l_choice_context.same_named_type (l_value_type, l_value_context) then
 									-- OK.
-								elseif {l_integer_constant: ET_INTEGER_CONSTANT} l_constant then
+								elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant then
 									l_cast_type := l_integer_constant.cast_type
 									l_integer_constant.set_cast_type (Void)
 									l_choice_context.wipe_out
@@ -3091,7 +3091,7 @@ feature {NONE} -- Instruction validity
 										l_choice_named_type := l_choice_context.named_type
 										error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 									end
-								elseif {l_character_constant: ET_CHARACTER_CONSTANT} l_constant then
+								elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant then
 									l_cast_type := l_character_constant.cast_type
 									l_character_constant.set_cast_type (Void)
 									l_choice_context.wipe_out
@@ -3132,7 +3132,7 @@ feature {NONE} -- Instruction validity
 								elseif not had_value_error then
 									if l_choice_context.same_named_type (l_value_type, l_value_context) then
 										-- OK.
-									elseif {l_integer_constant2: ET_INTEGER_CONSTANT} l_constant then
+									elseif attached {ET_INTEGER_CONSTANT} l_constant as l_integer_constant2 then
 										l_cast_type := l_integer_constant2.cast_type
 										l_integer_constant2.set_cast_type (Void)
 										l_choice_context.wipe_out
@@ -3149,7 +3149,7 @@ feature {NONE} -- Instruction validity
 											l_choice_named_type := l_choice_context.named_type
 											error_handler.report_vomb2a_error (current_class, current_class_impl, l_choice_constant, l_choice_named_type, l_value_named_type)
 										end
-									elseif {l_character_constant2: ET_CHARACTER_CONSTANT} l_constant then
+									elseif attached {ET_CHARACTER_CONSTANT} l_constant as l_character_constant2 then
 										l_cast_type := l_character_constant2.cast_type
 										l_character_constant2.set_cast_type (Void)
 										l_choice_context.wipe_out

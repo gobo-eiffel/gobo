@@ -1234,7 +1234,7 @@ feature {NONE} -- Implementation
 				primary_modifier := a_default
 			end
 		ensure
-			primary_modifier_set: a_result.item = Void implies {el_primary_modifier: like primary_modifier} primary_modifier and then not el_primary_modifier.is_empty
+			primary_modifier_set: a_result.item = Void implies attached primary_modifier as el_primary_modifier and then not el_primary_modifier.is_empty
 		end
 
 	set_primary_modifier (a_modifier: STRING; use_names: BOOLEAN) is

@@ -50,6 +50,6 @@ feature {DP_INTERFACE} -- Implementation
 
 invariant
 
-	bidirectional: {l_interface: DP_INTERFACE} interface implies l_interface.implementation = Current
+	bidirectional: attached interface as l_interface implies l_interface.implementation = Current
 
 end
