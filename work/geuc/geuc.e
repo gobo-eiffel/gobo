@@ -1815,8 +1815,6 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T%T%Tinvariant%N")
 			a_output_file.put_string ("%T%T%T%T i >= j%N")
 			a_output_file.put_string ("%T%T%T%T i >= k%N")
-			a_output_file.put_string ("%T%T%Tvariant%N")
-			a_output_file.put_string ("%T%T%T%T" + (compositions.count + 1).out + " - i%N")
 			a_output_file.put_string ("%T%T%Tuntil%N")
 			a_output_file.put_string ("%T%T%T%T i > " + (compositions.count).out + "%N")
 			a_output_file.put_string ("%T%T%Tloop%N")
@@ -1824,6 +1822,8 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T%T%T%TResult.put_new (l_array_3.item (k).item_code (j)")
 			a_output_file.put_string (", l_pair)%N")
 			a_output_file.put_string ("%T%T%T%Ti := i + 1; j := j + 1; if j > l_array_2.item (k).count  then j := 1; k := k + 1 end%N")
+			a_output_file.put_string ("%T%T%Tvariant%N")
+			a_output_file.put_string ("%T%T%T%T" + (compositions.count + 1).out + " - i%N")
 			a_output_file.put_string ("%T%T%Tend%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
