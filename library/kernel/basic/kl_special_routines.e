@@ -21,10 +21,9 @@ feature -- Initialization
 		require
 			non_negative_n: n >= 0
 		local
-			special_maker: TO_SPECIAL [G]
+			l_default: G
 		do
-			create special_maker.make_area (n)
-			Result := special_maker.area
+			create Result.make_filled (l_default, n)
 		ensure
 			special_not_void: Result /= Void
 			count_set: Result.count = n

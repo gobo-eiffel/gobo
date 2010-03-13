@@ -71,7 +71,7 @@ feature -- Test
 			assert_equal ("value5", "CC", l_generator)
 			assert ("new_object5", l_generator /= cc.generator)
 				-- SPECIAL [BOOLEAN].
-			create sp.make (2)
+			create sp.make_filled (True, 2)
 			l_generator := sp.generator
 			assert ("not_void6", l_generator /= Void )
 			assert ("type6", l_generator.same_type (""))
@@ -126,7 +126,7 @@ feature -- Test
 			assert_equal ("value5", "CC [STRING_32, CHARACTER_32]", l_type)
 			assert ("new_object5", l_type /= cc.generating_type)
 				-- SPECIAL [BOOLEAN].
-			create sp.make (2)
+			create sp.make_filled (True, 2)
 			l_type := sp.generating_type
 			assert ("not_void6", l_type /= Void )
 			assert ("type6", l_type.same_type (""))
@@ -165,12 +165,12 @@ feature -- Test
 			assert ("same10", bb3.same_type (bb3))
 			assert ("not_same2", not bb3.same_type (bb1))
 			assert ("not_same3", not bb3.same_type (s1))
-			create sp1.make (2)
-			create sp2.make (2)
+			create sp1.make_filled ("gobo", 2)
+			create sp2.make_filled ("eiffel", 2)
 			assert ("same11", sp1.same_type (sp2))
 			assert ("same12", sp2.same_type (sp1))
 			assert ("same13", sp1.same_type (sp1))
-			create sp3.make (2)
+			create sp3.make_filled (0, 2)
 			assert ("same14", sp3.same_type (sp3))
 			assert ("not_same4", not sp3.same_type (sp1))
 			assert ("not_same5", not sp3.same_type (s1))
@@ -209,17 +209,17 @@ feature -- Test
 			assert ("conforms11", bb1.conforms_to (bb3))
 			assert ("not_conforms2", not bb3.conforms_to (bb1))
 			assert ("not_conforms3", not bb3.conforms_to (s1))
-			create sp1.make (2)
-			create sp2.make (2)
+			create sp1.make_filled ("gobo", 2)
+			create sp2.make_filled ("eiffel", 2)
 			assert ("conforms12", sp1.conforms_to (sp2))
 			assert ("conforms13", sp2.conforms_to (sp1))
 			assert ("conforms14", sp1.conforms_to (sp1))
-			create sp3.make (2)
+			create sp3.make_filled (5, 2)
 			assert ("conforms15", sp3.conforms_to (sp3))
 			assert ("not_conforms4", not sp1.conforms_to (sp3))
 			assert ("not_conforms5", not sp3.conforms_to (sp1))
 			assert ("not_conforms6", not sp3.conforms_to (s1))
-			create sp4.make (2)
+			create sp4.make_filled ("foo", 2)
 			assert ("conforms16", sp4.conforms_to (sp4))
 			assert ("conforms17", sp1.conforms_to (sp4))
 			assert ("not_conforms7", not sp4.conforms_to (sp1))
@@ -250,8 +250,8 @@ feature -- Test
 			assert ("equal6", i1.is_equal (i1))
 			assert ("not_equal3", not i1.is_equal (i3))
 			assert ("not_equal4", not i3.is_equal (i1))
-			create sp1.make (2)
-			create sp2.make (2)
+			create sp1.make_filled (0, 2)
+			create sp2.make_filled (0, 2)
 			assert ("equal7", sp1.is_equal (sp1))
 			assert ("equal8", sp1.is_equal (sp2))
 			assert ("equal9", sp2.is_equal (sp1))
@@ -286,8 +286,8 @@ feature -- Test
 			assert ("not_equal2", not s1.equal (s3, s1))
 			assert ("equal4", equal (Void, Void))
 			assert ("not_equal3", not s1.equal (s1, Void))
-			create sp1.make (2)
-			create sp2.make (2)
+			create sp1.make_filled (0, 2)
+			create sp2.make_filled (0, 2)
 			create bbsi
 			assert ("equal5", bbsi.equal (sp1, sp1))
 			assert ("equal6", bbsi.equal (sp1, sp2))
@@ -320,8 +320,8 @@ feature -- Test
 			assert ("not_equal2", not s1.standard_is_equal (s2))
 			assert ("not_equal3", not s1.standard_is_equal (s3))
 			assert ("not_equal4", not s3.standard_is_equal (s1))
-			create sp1.make (2)
-			create sp2.make (2)
+			create sp1.make_filled (0, 2)
+			create sp2.make_filled (0, 2)
 			assert ("equal5", sp1.standard_is_equal (sp1))
 			assert ("equal6", sp1.standard_is_equal (sp2))
 			assert ("equal7", sp2.standard_is_equal (sp1))
@@ -373,8 +373,8 @@ feature -- Test
 			assert ("not_equal4", not s1.standard_equal (s3, s1))
 			assert ("equal2", standard_equal (Void, Void))
 			assert ("not_equal5", not s1.standard_equal (s1, Void))
-			create sp1.make (2)
-			create sp2.make (2)
+			create sp1.make_filled (0, 2)
+			create sp2.make_filled (0, 2)
 			assert ("equal3", sp1.standard_equal (sp1, sp1))
 			assert ("equal4", sp1.standard_equal (sp1, sp2))
 			assert ("equal5", sp1.standard_equal (sp2, sp1))
@@ -408,7 +408,7 @@ feature -- Test
 			i1 := 5
 			i2 := i1.twin
 			assert ("value2", i2 = 5)
-			create sp1.make (2)
+			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
 			sp2 := sp1.twin
@@ -442,10 +442,10 @@ feature -- Test
 			assert_equal ("value2", "gobo", s2)
 			assert ("not_same_area2", s2.area /= s1.area)
 				-- Copy specials of the same size.
-			create sp1.make (2)
+			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
-			create sp2.make (2)
+			create sp2.make_filled (0, 2)
 			sp2.copy (sp1)
 			assert_integers_equal ("sp_count4", 2, sp2.count)
 			assert_integers_equal ("sp_item0_4", 2, sp2.item (0))
@@ -469,10 +469,10 @@ feature -- Test
 				i2.copy (i1)
 				assert ("value3", i2 = 5)
 					-- Copy a special to a bigger one.
-				create sp1.make (2)
+				create sp1.make_filled (0, 2)
 				sp1.put (2, 0)
 				sp1.put (5, 1)
-				create sp2.make (5)
+				create sp2.make_filled (0, 5)
 				sp2.copy (sp1)
 				assert_integers_equal ("sp_count5", 2, sp2.count)
 				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
@@ -488,10 +488,10 @@ feature -- Test
 		do
 			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
 					-- Copy a special to a smaller one.
-				create sp1.make (2)
+				create sp1.make_filled (0, 2)
 				sp1.put (2, 0)
 				sp1.put (5, 1)
-				create sp2.make (1)
+				create sp2.make_filled (0, 1)
 				sp2.copy (sp1)
 				assert_integers_equal ("sp_count6", 2, sp2.count)
 				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
@@ -518,7 +518,7 @@ feature -- Test
 			i2 := i1.standard_twin
 			assert_integers_equal ("value2", 5, i2)
 			--
-			create sp1.make (2)
+			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
 			sp2 := sp1.standard_twin
@@ -553,10 +553,10 @@ feature -- Test
 			assert_equal ("value2", "gobo", s2)
 			assert ("same_area2", s2.area = s1.area)
 				-- Copy specials of the same size.
-			create sp1.make (2)
+			create sp1.make_filled (0, 2)
 			sp1.put (2, 0)
 			sp1.put (5, 1)
-			create sp2.make (2)
+			create sp2.make_filled (0, 2)
 			sp2.standard_copy (sp1)
 			assert_integers_equal ("sp_count4", 2, sp2.count)
 			assert_integers_equal ("sp_item0_4", 2, sp2.item (0))
@@ -580,10 +580,10 @@ feature -- Test
 				i2.copy (i1)
 				assert ("value3", i2 = 5)
 					-- Copy a special to a bigger one.
-				create sp1.make (2)
+				create sp1.make_filled (0, 2)
 				sp1.put (2, 0)
 				sp1.put (5, 1)
-				create sp2.make (5)
+				create sp2.make_filled (0, 5)
 				sp2.standard_copy (sp1)
 				assert_integers_equal ("sp_count5", 2, sp2.count)
 				assert_integers_equal ("sp_item0_5", 2, sp2.item (0))
@@ -599,10 +599,10 @@ feature -- Test
 		do
 			if not eiffel_compiler.is_ise and not eiffel_compiler.is_ge then
 					-- Copy a special to a smaller one.
-				create sp1.make (2)
+				create sp1.make_filled (0, 2)
 				sp1.put (2, 0)
 				sp1.put (5, 1)
-				create sp2.make (1)
+				create sp2.make_filled (0, 1)
 				sp2.standard_copy (sp1)
 				assert_integers_equal ("sp_count6", 2, sp2.count)
 				assert_integers_equal ("sp_item0_6", 2, sp2.item (0))
@@ -637,7 +637,7 @@ feature -- Test
 			assert ("type2", l_out.same_type (""))
 			assert_equal ("value2", "15", l_out)
 			assert ("new_object2", l_out /= i1.out)
-			create sp1.make (2)
+			create sp1.make_filled (0, 2)
 			sp1.put (5, 0)
 			sp1.put (6, 1)
 			l_out := sp1.out
@@ -647,7 +647,7 @@ feature -- Test
 --				assert_equal ("value3", "SPECIAL [INTEGER] [0x5]%N  0: INTEGER_32 = 5%N  1: INTEGER_32 = 6%N", normalized_addresses (l_out))
 --			end
 			assert ("new_object3", l_out /= sp1.out)
-			create sp2.make (2)
+			create sp2.make_filled ("foo", 2)
 			sp2.put ("gobo", 0)
 			sp2.put ("bar", 1)
 			l_out := sp2.out
@@ -657,9 +657,7 @@ feature -- Test
 --				assert_equal ("value4", "SPECIAL [STRING] [0x5]%N  0: STRING [0x5]%N  1: STRING [0x5]%N", normalized_addresses (l_out))
 --			end
 			assert ("new_object4", l_out /= sp2.out)
-			create sp3.make (2)
-			sp3.put (sp1, 0)
-			sp3.put (sp1, 1)
+			create sp3.make_filled (sp1, 2)
 			l_out := sp3.out
 			assert ("not_void5", l_out /= Void )
 			assert ("type5", l_out.same_type (""))
@@ -744,7 +742,7 @@ feature -- Test
 --				assert_equal ("value2", "INTEGER_REF [0x5]%N  item: INTEGER_32 = 15%N", normalized_addresses (l_out))
 --			end
 			assert ("new_object2", l_out /= i1.tagged_out)
-			create sp1.make (2)
+			create sp1.make_filled (0, 2)
 			sp1.put (5, 0)
 			sp1.put (6, 1)
 			l_out := sp1.tagged_out
@@ -754,7 +752,7 @@ feature -- Test
 --				assert_equal ("value3", "SPECIAL [INTEGER] [0x5]%N  0: INTEGER_32 = 5%N  1: INTEGER_32 = 6%N", normalized_addresses (l_out))
 --			end
 			assert ("new_object3", l_out /= sp1.tagged_out)
-			create sp2.make (2)
+			create sp2.make_filled ("foo", 2)
 			sp2.put ("gobo", 0)
 			sp2.put ("bar", 1)
 			l_out := sp2.tagged_out
@@ -764,9 +762,7 @@ feature -- Test
 --				assert_equal ("value4", "SPECIAL [STRING] [0x5]%N  0: STRING [0x5]%N  1: STRING [0x5]%N", normalized_addresses (l_out))
 --			end
 			assert ("new_object4", l_out /= sp2.tagged_out)
-			create sp3.make (2)
-			sp3.put (sp1, 0)
-			sp3.put (sp1, 1)
+			create sp3.make_filled (sp1, 2)
 			l_out := sp3.tagged_out
 			assert ("not_void5", l_out /= Void )
 			assert ("type5", l_out.same_type (""))
@@ -836,7 +832,7 @@ feature -- Test
 			assert ("defaut2", s.default = Void)
 			i := 5
 			assert_integers_equal ("defaut3", 0, i.default)
-			create sp.make (2)
+			create sp.make_filled (0, 2)
 			assert ("defaut4", sp.default = Void)
 			create aa
 			assert ("defaut5", aa.default = Void)

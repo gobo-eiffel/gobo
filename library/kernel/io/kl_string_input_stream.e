@@ -113,7 +113,7 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			from
 				i := 1
 			until
@@ -142,7 +142,7 @@ feature -- Input
 			c: CHARACTER
 			is_eof: BOOLEAN
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			is_eof := True
 			a_target := last_string
 			from
@@ -173,7 +173,7 @@ feature -- Input
 			-- input stream unchanged if no line separator
 			-- was found.
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			read_character
 			if not end_of_input then
 				if last_character = '%N' then

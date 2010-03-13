@@ -109,7 +109,7 @@ feature -- Input
 			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			is_eof := True
 			a_target := last_string
 			from until done loop
@@ -148,7 +148,7 @@ feature -- Input
 			-- Line separators recognized by current file are:
 			-- '%N', '%R%N and '%R'.
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			read_character
 			if not end_of_file then
 				inspect last_character

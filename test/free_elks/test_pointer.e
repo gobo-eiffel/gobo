@@ -100,8 +100,8 @@ feature -- Test
 		local
 			sp1, sp2: SPECIAL [INTEGER_8]
 		do
-			create sp1.make (2)
-			create sp2.make (2)
+			create sp1.make_filled (0, 2)
+			create sp2.make_filled (0, 2)
 			assert ("sp1_item1", sp1.item (0) = 0)
 			assert ("sp1_item2", sp1.item (1) = 0)
 			assert ("sp2_item1", sp2.item (0) = 0)

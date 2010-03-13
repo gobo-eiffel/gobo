@@ -53,7 +53,7 @@ feature -- Input
 			has_carriage: BOOLEAN
 			is_eof: BOOLEAN
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			is_eof := True
 			a_target := last_string
 			from
@@ -102,7 +102,7 @@ feature -- Input
 			-- input file unchanged if no line separator
 			-- was found.
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			read_character
 			if not end_of_file then
 				if last_character = '%R' then

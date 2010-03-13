@@ -77,7 +77,7 @@ feature -- Test
 			p3: PROCEDURE [ANY, TUPLE]
 			p4: PROCEDURE [ANY, TUPLE]
 		do
-			create a.make (2)
+			create a.make_filled ('%U', 2)
 				-- 1 open, 1 closed.
 			p1 := agent a.put (?, 1)
 			p1.call (['g'])
@@ -241,7 +241,7 @@ feature -- Test
 			p3: PROCEDURE [ANY, TUPLE [SPECIAL [CHARACTER]]]
 			p4: PROCEDURE [ANY, TUPLE]
 		do
-			create a.make (2)
+			create a.make_filled ('%U', 2)
 				-- 2 open, 1 closed.
 			p1 := agent {SPECIAL [CHARACTER]}.put (?, 1)
 			p1.call ([a, 'g'])

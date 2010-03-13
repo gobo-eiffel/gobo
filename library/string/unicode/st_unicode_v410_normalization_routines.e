@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 	canonical_combining_class_plane_0: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_zero_canonical_combining_class_segment, 0)
 			Result.put (all_zero_canonical_combining_class_segment, 1)
 			Result.put (all_zero_canonical_combining_class_segment, 2)
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 	canonical_combining_class_plane_1: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_zero_canonical_combining_class_segment, 0)
 			Result.put (all_zero_canonical_combining_class_segment, 1)
 			Result.put (all_zero_canonical_combining_class_segment, 2)
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 	all_zero_canonical_combining_class_plane: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_zero_canonical_combining_class_segment, 0)
 			Result.put (all_zero_canonical_combining_class_segment, 1)
 			Result.put (all_zero_canonical_combining_class_segment, 2)
@@ -1063,7 +1063,7 @@ feature {NONE} -- Implementation
 	canonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 			-- Canonical combining class for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (canonical_combining_class_plane_0, 0)
 			Result.put (canonical_combining_class_plane_1, 1)
 			Result.put (all_zero_canonical_combining_class_plane, 2)
@@ -1326,7 +1326,7 @@ feature {NONE} -- Implementation
 	decomposition_type_plane_0: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (decomposition_type_plane_0_segment_0, 0)
 			Result.put (decomposition_type_plane_0_segment_1, 1)
 			Result.put (decomposition_type_plane_0_segment_2, 2)
@@ -1623,7 +1623,7 @@ feature {NONE} -- Implementation
 	decomposition_type_plane_1: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_zero_decomposition_type_segment, 0)
 			Result.put (all_zero_decomposition_type_segment, 1)
 			Result.put (all_zero_decomposition_type_segment, 2)
@@ -1888,7 +1888,7 @@ feature {NONE} -- Implementation
 	all_zero_decomposition_type_plane: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_zero_decomposition_type_segment, 0)
 			Result.put (all_zero_decomposition_type_segment, 1)
 			Result.put (all_zero_decomposition_type_segment, 2)
@@ -2153,7 +2153,7 @@ feature {NONE} -- Implementation
 	decomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 			-- Decomposition type for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (decomposition_type_plane_0, 0)
 			Result.put (decomposition_type_plane_1, 1)
 			Result.put (all_zero_decomposition_type_plane, 2)
@@ -17935,7 +17935,7 @@ feature {NONE} -- Implementation
 	decomposition_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (decomposition_mapping_plane_0_segment_0, 0)
 			Result.put (decomposition_mapping_plane_0_segment_1, 1)
 			Result.put (decomposition_mapping_plane_0_segment_2, 2)
@@ -19252,7 +19252,7 @@ feature {NONE} -- Implementation
 	decomposition_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_decomposition_mapping_segment, 0)
 			Result.put (all_empty_decomposition_mapping_segment, 1)
 			Result.put (all_empty_decomposition_mapping_segment, 2)
@@ -20086,7 +20086,7 @@ feature {NONE} -- Implementation
 	decomposition_mapping_plane_2: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_decomposition_mapping_segment, 0)
 			Result.put (all_empty_decomposition_mapping_segment, 1)
 			Result.put (all_empty_decomposition_mapping_segment, 2)
@@ -20351,7 +20351,7 @@ feature {NONE} -- Implementation
 	all_empty_decomposition_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_decomposition_mapping_segment, 0)
 			Result.put (all_empty_decomposition_mapping_segment, 1)
 			Result.put (all_empty_decomposition_mapping_segment, 2)
@@ -20616,7 +20616,7 @@ feature {NONE} -- Implementation
 	decomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
 			-- Decomposition mapping for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (decomposition_mapping_plane_0, 0)
 			Result.put (decomposition_mapping_plane_1, 1)
 			Result.put (decomposition_mapping_plane_2, 2)
@@ -21142,7 +21142,7 @@ feature {NONE} -- Implementation
 	expands_on_nfc_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_expands_on_nfc_property_segment, 0)
 			Result.put (all_false_expands_on_nfc_property_segment, 1)
 			Result.put (all_false_expands_on_nfc_property_segment, 2)
@@ -21442,7 +21442,7 @@ feature {NONE} -- Implementation
 	expands_on_nfc_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_expands_on_nfc_property_segment, 0)
 			Result.put (all_false_expands_on_nfc_property_segment, 1)
 			Result.put (all_false_expands_on_nfc_property_segment, 2)
@@ -21707,7 +21707,7 @@ feature {NONE} -- Implementation
 	all_false_expands_on_nfc_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -21972,7 +21972,7 @@ feature {NONE} -- Implementation
 	expands_on_nfc_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Expands_On_NFC property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (expands_on_nfc_property_plane_0, 0)
 			Result.put (expands_on_nfc_property_plane_1, 1)
 			Result.put (all_false_expands_on_nfc_property_plane, 2)
@@ -22800,7 +22800,7 @@ feature {NONE} -- Implementation
 	expands_on_nfd_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (expands_on_nfd_property_plane_0_segment_0, 0)
 			Result.put (expands_on_nfd_property_plane_0_segment_1, 1)
 			Result.put (expands_on_nfd_property_plane_0_segment_2, 2)
@@ -23100,7 +23100,7 @@ feature {NONE} -- Implementation
 	expands_on_nfd_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_expands_on_nfd_property_segment, 0)
 			Result.put (all_false_expands_on_nfd_property_segment, 1)
 			Result.put (all_false_expands_on_nfd_property_segment, 2)
@@ -23365,7 +23365,7 @@ feature {NONE} -- Implementation
 	all_false_expands_on_nfd_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -23630,7 +23630,7 @@ feature {NONE} -- Implementation
 	expands_on_nfd_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Expands_On_NFD property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (expands_on_nfd_property_plane_0, 0)
 			Result.put (expands_on_nfd_property_plane_1, 1)
 			Result.put (all_false_expands_on_nfd_property_plane, 2)
@@ -24563,7 +24563,7 @@ feature {NONE} -- Implementation
 	expands_on_nfkc_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (expands_on_nfkc_property_plane_0_segment_0, 0)
 			Result.put (expands_on_nfkc_property_plane_0_segment_1, 1)
 			Result.put (expands_on_nfkc_property_plane_0_segment_2, 2)
@@ -24863,7 +24863,7 @@ feature {NONE} -- Implementation
 	expands_on_nfkc_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_expands_on_nfkc_property_segment, 0)
 			Result.put (all_false_expands_on_nfkc_property_segment, 1)
 			Result.put (all_false_expands_on_nfkc_property_segment, 2)
@@ -25128,7 +25128,7 @@ feature {NONE} -- Implementation
 	all_false_expands_on_nfkc_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -25393,7 +25393,7 @@ feature {NONE} -- Implementation
 	expands_on_nfkc_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Expands_On_NFKC property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (expands_on_nfkc_property_plane_0, 0)
 			Result.put (expands_on_nfkc_property_plane_1, 1)
 			Result.put (all_false_expands_on_nfkc_property_plane, 2)
@@ -26501,7 +26501,7 @@ feature {NONE} -- Implementation
 	expands_on_nfkd_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (expands_on_nfkd_property_plane_0_segment_0, 0)
 			Result.put (expands_on_nfkd_property_plane_0_segment_1, 1)
 			Result.put (expands_on_nfkd_property_plane_0_segment_2, 2)
@@ -26801,7 +26801,7 @@ feature {NONE} -- Implementation
 	expands_on_nfkd_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_expands_on_nfkd_property_segment, 0)
 			Result.put (all_false_expands_on_nfkd_property_segment, 1)
 			Result.put (all_false_expands_on_nfkd_property_segment, 2)
@@ -27066,7 +27066,7 @@ feature {NONE} -- Implementation
 	all_false_expands_on_nfkd_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -27331,7 +27331,7 @@ feature {NONE} -- Implementation
 	expands_on_nfkd_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Expands_On_NFKD property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (expands_on_nfkd_property_plane_0, 0)
 			Result.put (expands_on_nfkd_property_plane_1, 1)
 			Result.put (all_false_expands_on_nfkd_property_plane, 2)
@@ -28054,7 +28054,7 @@ feature {NONE} -- Implementation
 	nfc_quick_check_plane_0: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfc_quick_check_segment, 0)
 			Result.put (all_true_nfc_quick_check_segment, 1)
 			Result.put (all_true_nfc_quick_check_segment, 2)
@@ -28354,7 +28354,7 @@ feature {NONE} -- Implementation
 	nfc_quick_check_plane_1: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfc_quick_check_segment, 0)
 			Result.put (all_true_nfc_quick_check_segment, 1)
 			Result.put (all_true_nfc_quick_check_segment, 2)
@@ -28654,7 +28654,7 @@ feature {NONE} -- Implementation
 	nfc_quick_check_plane_2: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfc_quick_check_segment, 0)
 			Result.put (all_true_nfc_quick_check_segment, 1)
 			Result.put (all_true_nfc_quick_check_segment, 2)
@@ -28919,7 +28919,7 @@ feature {NONE} -- Implementation
 	all_true_nfc_quick_check_plane: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfc_quick_check_segment, 0)
 			Result.put (all_true_nfc_quick_check_segment, 1)
 			Result.put (all_true_nfc_quick_check_segment, 2)
@@ -29184,7 +29184,7 @@ feature {NONE} -- Implementation
 	nfc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFC_Quick_Check values for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (nfc_quick_check_plane_0, 0)
 			Result.put (nfc_quick_check_plane_1, 1)
 			Result.put (nfc_quick_check_plane_2, 2)
@@ -30117,7 +30117,7 @@ feature {NONE} -- Implementation
 	nfd_quick_check_plane_0: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (nfd_quick_check_plane_0_segment_0, 0)
 			Result.put (nfd_quick_check_plane_0_segment_1, 1)
 			Result.put (nfd_quick_check_plane_0_segment_2, 2)
@@ -30417,7 +30417,7 @@ feature {NONE} -- Implementation
 	nfd_quick_check_plane_1: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfd_quick_check_segment, 0)
 			Result.put (all_true_nfd_quick_check_segment, 1)
 			Result.put (all_true_nfd_quick_check_segment, 2)
@@ -30717,7 +30717,7 @@ feature {NONE} -- Implementation
 	nfd_quick_check_plane_2: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfd_quick_check_segment, 0)
 			Result.put (all_true_nfd_quick_check_segment, 1)
 			Result.put (all_true_nfd_quick_check_segment, 2)
@@ -30982,7 +30982,7 @@ feature {NONE} -- Implementation
 	all_true_nfd_quick_check_plane: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfd_quick_check_segment, 0)
 			Result.put (all_true_nfd_quick_check_segment, 1)
 			Result.put (all_true_nfd_quick_check_segment, 2)
@@ -31247,7 +31247,7 @@ feature {NONE} -- Implementation
 	nfd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFD_Quick_Check values for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (nfd_quick_check_plane_0, 0)
 			Result.put (nfd_quick_check_plane_1, 1)
 			Result.put (nfd_quick_check_plane_2, 2)
@@ -32565,7 +32565,7 @@ feature {NONE} -- Implementation
 	nfkc_quick_check_plane_0: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (nfkc_quick_check_plane_0_segment_0, 0)
 			Result.put (nfkc_quick_check_plane_0_segment_1, 1)
 			Result.put (nfkc_quick_check_plane_0_segment_2, 2)
@@ -33005,7 +33005,7 @@ feature {NONE} -- Implementation
 	nfkc_quick_check_plane_1: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfkc_quick_check_segment, 0)
 			Result.put (all_true_nfkc_quick_check_segment, 1)
 			Result.put (all_true_nfkc_quick_check_segment, 2)
@@ -33305,7 +33305,7 @@ feature {NONE} -- Implementation
 	nfkc_quick_check_plane_2: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfkc_quick_check_segment, 0)
 			Result.put (all_true_nfkc_quick_check_segment, 1)
 			Result.put (all_true_nfkc_quick_check_segment, 2)
@@ -33570,7 +33570,7 @@ feature {NONE} -- Implementation
 	all_true_nfkc_quick_check_plane: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfkc_quick_check_segment, 0)
 			Result.put (all_true_nfkc_quick_check_segment, 1)
 			Result.put (all_true_nfkc_quick_check_segment, 2)
@@ -33835,7 +33835,7 @@ feature {NONE} -- Implementation
 	nfkc_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFKC_Quick_Check values for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (nfkc_quick_check_plane_0, 0)
 			Result.put (nfkc_quick_check_plane_1, 1)
 			Result.put (nfkc_quick_check_plane_2, 2)
@@ -35188,7 +35188,7 @@ feature {NONE} -- Implementation
 	nfkd_quick_check_plane_0: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (nfkd_quick_check_plane_0_segment_0, 0)
 			Result.put (nfkd_quick_check_plane_0_segment_1, 1)
 			Result.put (nfkd_quick_check_plane_0_segment_2, 2)
@@ -35628,7 +35628,7 @@ feature {NONE} -- Implementation
 	nfkd_quick_check_plane_1: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfkd_quick_check_segment, 0)
 			Result.put (all_true_nfkd_quick_check_segment, 1)
 			Result.put (all_true_nfkd_quick_check_segment, 2)
@@ -35928,7 +35928,7 @@ feature {NONE} -- Implementation
 	nfkd_quick_check_plane_2: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfkd_quick_check_segment, 0)
 			Result.put (all_true_nfkd_quick_check_segment, 1)
 			Result.put (all_true_nfkd_quick_check_segment, 2)
@@ -36193,7 +36193,7 @@ feature {NONE} -- Implementation
 	all_true_nfkd_quick_check_plane: SPECIAL [ARRAY [CHARACTER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_nfkd_quick_check_segment, 0)
 			Result.put (all_true_nfkd_quick_check_segment, 1)
 			Result.put (all_true_nfkd_quick_check_segment, 2)
@@ -36458,7 +36458,7 @@ feature {NONE} -- Implementation
 	nfkd_quick_check_array: SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is
 			-- NFKD_Quick_Check values for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (nfkd_quick_check_plane_0, 0)
 			Result.put (nfkd_quick_check_plane_1, 1)
 			Result.put (nfkd_quick_check_plane_2, 2)

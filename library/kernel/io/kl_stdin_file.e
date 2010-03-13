@@ -30,7 +30,7 @@ inherit
 	KL_OPERATING_SYSTEM
 		export {NONE} all end
 
-	KL_IMPORTED_ANY_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 	CONSOLE
@@ -181,7 +181,7 @@ feature -- Input
 			is_eof: BOOLEAN
 			has_carriage: BOOLEAN
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			is_eof := True
 			from
 			until
@@ -222,7 +222,7 @@ feature -- Input
 			-- Line separators recognized by current standard
 			-- input file are: '%N', '%R%N and '%R'.
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			read_character
 			if not end_of_file then
 				inspect last_character

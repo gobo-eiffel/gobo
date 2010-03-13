@@ -53,7 +53,7 @@ feature -- Input
 		local
 			i: INTEGER
 		do
-			last_string.clear_all
+			STRING_.wipe_out (last_string)
 			from i := 1 until i > nb loop
 				read_character
 				if not end_of_input then

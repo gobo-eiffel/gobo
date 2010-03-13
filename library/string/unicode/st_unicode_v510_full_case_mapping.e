@@ -1282,7 +1282,7 @@ feature {NONE} -- Implementation
 	lower_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (lower_case_mapping_plane_0_segment_0, 0)
 			Result.put (lower_case_mapping_plane_0_segment_1, 1)
 			Result.put (lower_case_mapping_plane_0_segment_2, 2)
@@ -1596,7 +1596,7 @@ feature {NONE} -- Implementation
 	lower_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_lower_case_mapping_segment, 0)
 			Result.put (all_empty_lower_case_mapping_segment, 1)
 			Result.put (all_empty_lower_case_mapping_segment, 2)
@@ -1861,7 +1861,7 @@ feature {NONE} -- Implementation
 	all_empty_lower_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_lower_case_mapping_segment, 0)
 			Result.put (all_empty_lower_case_mapping_segment, 1)
 			Result.put (all_empty_lower_case_mapping_segment, 2)
@@ -2126,7 +2126,7 @@ feature {NONE} -- Implementation
 	lower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
 			-- Full lower case mapping for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (lower_case_mapping_plane_0, 0)
 			Result.put (lower_case_mapping_plane_1, 1)
 			Result.put (all_empty_lower_case_mapping_plane, 2)
@@ -3654,7 +3654,7 @@ feature {NONE} -- Implementation
 	title_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (title_case_mapping_plane_0_segment_0, 0)
 			Result.put (title_case_mapping_plane_0_segment_1, 1)
 			Result.put (title_case_mapping_plane_0_segment_2, 2)
@@ -3968,7 +3968,7 @@ feature {NONE} -- Implementation
 	title_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_title_case_mapping_segment, 0)
 			Result.put (all_empty_title_case_mapping_segment, 1)
 			Result.put (all_empty_title_case_mapping_segment, 2)
@@ -4233,7 +4233,7 @@ feature {NONE} -- Implementation
 	all_empty_title_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_title_case_mapping_segment, 0)
 			Result.put (all_empty_title_case_mapping_segment, 1)
 			Result.put (all_empty_title_case_mapping_segment, 2)
@@ -4498,7 +4498,7 @@ feature {NONE} -- Implementation
 	title_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
 			-- Full title case mapping for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (title_case_mapping_plane_0, 0)
 			Result.put (title_case_mapping_plane_1, 1)
 			Result.put (all_empty_title_case_mapping_plane, 2)
@@ -6022,7 +6022,7 @@ feature {NONE} -- Implementation
 	upper_case_mapping_plane_0: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (upper_case_mapping_plane_0_segment_0, 0)
 			Result.put (upper_case_mapping_plane_0_segment_1, 1)
 			Result.put (upper_case_mapping_plane_0_segment_2, 2)
@@ -6336,7 +6336,7 @@ feature {NONE} -- Implementation
 	upper_case_mapping_plane_1: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_upper_case_mapping_segment, 0)
 			Result.put (all_empty_upper_case_mapping_segment, 1)
 			Result.put (all_empty_upper_case_mapping_segment, 2)
@@ -6601,7 +6601,7 @@ feature {NONE} -- Implementation
 	all_empty_upper_case_mapping_plane: SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_empty_upper_case_mapping_segment, 0)
 			Result.put (all_empty_upper_case_mapping_segment, 1)
 			Result.put (all_empty_upper_case_mapping_segment, 2)
@@ -6866,7 +6866,7 @@ feature {NONE} -- Implementation
 	upper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is
 			-- Full upper case mapping for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (upper_case_mapping_plane_0, 0)
 			Result.put (upper_case_mapping_plane_1, 1)
 			Result.put (all_empty_upper_case_mapping_plane, 2)

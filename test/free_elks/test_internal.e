@@ -149,8 +149,8 @@ feature -- Test
 			i: INTEGER_16
 		do
 			create internal
-			create sp_string_8.make (0)
-			create sp_integer_16.make (0)
+			create sp_string_8.make_filled ("gobo", 0)
+			create sp_integer_16.make_filled (17, 0)
 			s := "gobo"
 			assert ("special_string_8", internal.is_special (sp_string_8))
 			assert ("special_integer_16", internal.is_special (sp_integer_16))
@@ -384,9 +384,9 @@ feature -- Test
 			assert_equal ("integer_8", {INTEGER_8} 8, internal.field (field_index ("integer_8_1", Current), Current))
 			integer_16_1 := 16
 			assert_equal ("integer_16", {INTEGER_16} 16, internal.field (field_index ("integer_16_1", Current), Current))
-			integer_32_1 := 32 
+			integer_32_1 := 32
 			assert_equal ("integer_32", {INTEGER_32} 32, internal.field (field_index ("integer_32_1", Current), Current))
-			integer_64_1 := 64 
+			integer_64_1 := 64
 			assert_equal ("integer_64", {INTEGER_64} 64, internal.field (field_index ("integer_64_1", Current), Current))
 			natural_8_1 := 8
 			assert_equal ("natural_8", {NATURAL_8} 8, internal.field (field_index ("natural_8_1", Current), Current))
@@ -399,7 +399,7 @@ feature -- Test
 			p := $test_field
 			pointer_1 := p
 			assert_equal ("pointer", p, internal.field (field_index ("pointer_1", Current), Current))
-			real_32_1 := 32.0
+			real_32_1 := {REAL_32} 32.0
 			assert_equal ("real_32", {REAL_32} 32.0, internal.field (field_index ("real_32_1", Current), Current))
 			real_64_1 := 64.0
 			assert_equal ("real_64", {REAL_64} 64.0, internal.field (field_index ("real_64_1", Current), Current))
@@ -541,8 +541,8 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			real_32_1 := 33.0
-			assert ("real_32", internal.real_32_field (field_index ("real_32_1", Current), Current) = 33.0)
+			real_32_1 := {REAL_32} 33.0
+			assert ("real_32", internal.real_32_field (field_index ("real_32_1", Current), Current) = {REAL_32} 33.0)
 		end
 
 	test_real_64_field is
@@ -685,8 +685,8 @@ feature -- Test
 			internal: INTERNAL
 		do
 			create internal
-			internal.set_real_32_field (field_index ("real_32_1", Current), Current, 34.0)
-			assert ("real_32", real_32_1 = 34.0)
+			internal.set_real_32_field (field_index ("real_32_1", Current), Current, {REAL_32} 34.0)
+			assert ("real_32", real_32_1 = {REAL_32} 34.0)
 		end
 
 	test_set_real_64_field is

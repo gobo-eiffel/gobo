@@ -944,7 +944,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tcharacter_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Character class for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1027,7 +1027,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tdecimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Decimal value for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1258,7 +1258,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T" + an_array_name + ": SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is%N")
 			a_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1337,7 +1337,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tcanonical_combining_class_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Canonical combining class for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1416,7 +1416,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tdecomposition_type_properties: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Decomposition type for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1501,7 +1501,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tdecomposition_mapping_properties: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Decomposition mapping for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1579,7 +1579,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tlower_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Full lower case mapping for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1657,7 +1657,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Ttitle_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Full title case mapping for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1735,7 +1735,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tupper_case_mappings: SPECIAL [SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Full upper case mapping for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -1952,7 +1952,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T" + a_array_name + ": SPECIAL [SPECIAL [ARRAY [CHARACTER]]] is%N")
 			a_output_file.put_string ("%T%T%T-- " + a_title + " for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -2076,7 +2076,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from  until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_names.item (i))
@@ -2110,7 +2110,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [CHARACTER]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_name)
@@ -2191,7 +2191,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tlower_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Lower case code points for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -2270,7 +2270,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Tupper_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Upper case code points for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -2349,7 +2349,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%Ttitle_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Title case code points for each code point%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (17)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 17)%N")
 			from i := 0 until i > 16 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (l_plane_names.item (i))
@@ -2379,7 +2379,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from  until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_names.item (i))
@@ -2413,7 +2413,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER_8]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated character class array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_name)
@@ -2475,7 +2475,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_names.item (i))
@@ -2509,7 +2509,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [INTEGER]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_name)
@@ -2583,7 +2583,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_name)
@@ -2616,7 +2616,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [DS_ARRAYED_LIST [INTEGER]]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_names.item (i))
@@ -2831,7 +2831,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (")
 				a_output_file.put_string (a_segment_names.item (i))
@@ -2865,7 +2865,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (": SPECIAL [ARRAY [BOOLEAN]] is%N")
 			a_output_file.put_string ("%T%T%T-- Generated array plane%N")
 			a_output_file.put_string ("%T%Tonce%N")
-			a_output_file.put_string ("%T%T%Tcreate Result.make (256)%N")
+			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (Void, 256)%N")
 			from  until i > 255 loop
 				a_output_file.put_string ("%T%T%TResult.put (create {ARRAY [BOOLEAN]}.make (1, 256), ")
 				a_output_file.put_string (i.out)

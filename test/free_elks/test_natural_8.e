@@ -308,10 +308,10 @@ feature -- Test
 			-- Test feature 'to_real_32'.
 		local
 			i: NATURAL_8
-			r: REAL
+			r: REAL_32
 		do
 			i := 2
-			r := 2.0
+			r := {REAL_32} 2.0
 			assert ("to_real_32_1", i.to_real_32 = r)
 		end
 
@@ -319,7 +319,7 @@ feature -- Test
 			-- Test feature 'to_real_64'.
 		local
 			i: NATURAL_8
-			d: DOUBLE
+			d: REAL_64
 		do
 			i := 2
 			d := 2.0

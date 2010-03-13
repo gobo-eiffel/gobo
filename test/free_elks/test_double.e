@@ -293,17 +293,18 @@ feature -- Test
 			-- Test feature 'truncated_to_real'.
 		local
 			r: DOUBLE
-			r2: REAL
+			r2: REAL_32
 		do
 			r := 97.5
-			r2 := 97.5
+			r2 := {REAL_32} 97.5
 			assert ("truncated_to_real_1", r.truncated_to_real = r2)
 		end
 
 	test_ceiling_real_64 is
 			-- Test feature 'ceiling_real_64'.
 		local
-			r1, r2: DOUBLE
+			r1: DOUBLE
+			r2: REAL_64
 		do
 			r1 := 7.8
 			r2 := 8.0

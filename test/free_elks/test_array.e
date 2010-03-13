@@ -223,8 +223,8 @@ feature -- Test
 			l_array: ARRAY [REAL_32]
 			r1, r2: REAL_32
 		do
-			r1 := 1.45
-			r2 := -4.2E+7
+			r1 := {REAL_32} 1.45
+			r2 := {REAL_32} -4.2E+7
 			l_array := <<r1, r2>>
 			assert ("item1", l_array.item (1) = r1)
 			assert ("item2", l_array.item (2) = r2)

@@ -607,7 +607,7 @@ feature {NONE} -- Implementation
 	lower_code_plane_0: SPECIAL [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (lower_code_plane_0_segment_0, 0)
 			Result.put (lower_code_plane_0_segment_1, 1)
 			Result.put (lower_code_plane_0_segment_2, 2)
@@ -907,7 +907,7 @@ feature {NONE} -- Implementation
 	lower_code_plane_1: SPECIAL [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (empty_lower_code_segment, 0)
 			Result.put (empty_lower_code_segment, 1)
 			Result.put (empty_lower_code_segment, 2)
@@ -1172,7 +1172,7 @@ feature {NONE} -- Implementation
 	empty_lower_code_plane: SPECIAL [ARRAY [INTEGER]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (empty_lower_code_segment, 0)
 			Result.put (empty_lower_code_segment, 1)
 			Result.put (empty_lower_code_segment, 2)
@@ -1437,7 +1437,7 @@ feature {NONE} -- Implementation
 	lower_codes: SPECIAL [SPECIAL [ARRAY [INTEGER]]] is
 			-- Lower case code points for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (lower_code_plane_0, 0)
 			Result.put (lower_code_plane_1, 1)
 			Result.put (empty_lower_code_plane, 2)

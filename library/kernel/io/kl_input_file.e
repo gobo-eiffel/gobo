@@ -31,8 +31,6 @@ inherit
 
 	STRING_HANDLER
 
-	KL_IMPORTED_ANY_ROUTINES
-
 feature {NONE} -- Initialization
 
 	make (a_name: like name) is

@@ -334,10 +334,10 @@ feature -- Test
 			-- Test feature 'to_real'.
 		local
 			i: INTEGER
-			r: REAL
+			r: REAL_32
 		do
 			i := 2
-			r := 2.0
+			r := {REAL_32} 2.0
 			assert ("to_real1", i.to_real = r)
 		end
 
@@ -345,7 +345,7 @@ feature -- Test
 			-- Test feature 'to_double'.
 		local
 			i: INTEGER
-			d: DOUBLE
+			d: REAL_64
 		do
 			i := 2
 			d := 2.0

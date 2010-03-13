@@ -2036,7 +2036,7 @@ feature {NONE} -- Implementation
 	character_class_plane_0: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (character_class_plane_0_segment_0, 0)
 			Result.put (character_class_plane_0_segment_1, 1)
 			Result.put (character_class_plane_0_segment_2, 2)
@@ -2413,7 +2413,7 @@ feature {NONE} -- Implementation
 	character_class_plane_1: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (character_class_plane_1_segment_0, 0)
 			Result.put (character_class_plane_1_segment_1, 1)
 			Result.put (empty_character_class_segment, 2)
@@ -4038,7 +4038,7 @@ feature {NONE} -- Implementation
 	character_class_plane_2: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (character_class_plane_2_segment_0, 0)
 			Result.put (character_class_plane_2_segment_1, 1)
 			Result.put (character_class_plane_2_segment_2, 2)
@@ -4303,7 +4303,7 @@ feature {NONE} -- Implementation
 	empty_character_class_plane: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (empty_character_class_segment, 0)
 			Result.put (empty_character_class_segment, 1)
 			Result.put (empty_character_class_segment, 2)
@@ -4584,7 +4584,7 @@ feature {NONE} -- Implementation
 	character_class_plane_14: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (character_class_plane_14_segment_0, 0)
 			Result.put (character_class_plane_14_segment_1, 1)
 			Result.put (empty_character_class_segment, 2)
@@ -6897,7 +6897,7 @@ feature {NONE} -- Implementation
 	character_class_plane_15: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (character_class_plane_15_segment_0, 0)
 			Result.put (character_class_plane_15_segment_1, 1)
 			Result.put (character_class_plane_15_segment_2, 2)
@@ -9210,7 +9210,7 @@ feature {NONE} -- Implementation
 	character_class_plane_16: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (character_class_plane_16_segment_0, 0)
 			Result.put (character_class_plane_16_segment_1, 1)
 			Result.put (character_class_plane_16_segment_2, 2)
@@ -9475,7 +9475,7 @@ feature {NONE} -- Implementation
 	character_classes: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 			-- Character class for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (character_class_plane_0, 0)
 			Result.put (character_class_plane_1, 1)
 			Result.put (character_class_plane_2, 2)
@@ -9618,7 +9618,7 @@ feature {NONE} -- Implementation
 	decimal_value_plane_0: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (decimal_value_plane_0_segment_0, 0)
 			Result.put (empty_decimal_value_segment, 1)
 			Result.put (empty_decimal_value_segment, 2)
@@ -9899,7 +9899,7 @@ feature {NONE} -- Implementation
 	decimal_value_plane_1: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (empty_decimal_value_segment, 0)
 			Result.put (empty_decimal_value_segment, 1)
 			Result.put (empty_decimal_value_segment, 2)
@@ -10164,7 +10164,7 @@ feature {NONE} -- Implementation
 	empty_decimal_value_plane: SPECIAL [ARRAY [INTEGER_8]] is
 			-- Generated character class array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (empty_decimal_value_segment, 0)
 			Result.put (empty_decimal_value_segment, 1)
 			Result.put (empty_decimal_value_segment, 2)
@@ -10429,7 +10429,7 @@ feature {NONE} -- Implementation
 	decimal_values: SPECIAL [SPECIAL [ARRAY [INTEGER_8]]] is
 			-- Decimal value for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (decimal_value_plane_0, 0)
 			Result.put (decimal_value_plane_1, 1)
 			Result.put (empty_decimal_value_plane, 2)
@@ -10942,7 +10942,7 @@ feature {NONE} -- Implementation
 	upper_case_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (upper_case_property_plane_0_segment_0, 0)
 			Result.put (upper_case_property_plane_0_segment_1, 1)
 			Result.put (upper_case_property_plane_0_segment_2, 2)
@@ -11382,7 +11382,7 @@ feature {NONE} -- Implementation
 	upper_case_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_upper_case_property_segment, 0)
 			Result.put (all_false_upper_case_property_segment, 1)
 			Result.put (all_false_upper_case_property_segment, 2)
@@ -11647,7 +11647,7 @@ feature {NONE} -- Implementation
 	all_false_upper_case_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -11912,7 +11912,7 @@ feature {NONE} -- Implementation
 	upper_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Uppercase property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (upper_case_property_plane_0, 0)
 			Result.put (upper_case_property_plane_1, 1)
 			Result.put (all_false_upper_case_property_plane, 2)
@@ -12530,7 +12530,7 @@ feature {NONE} -- Implementation
 	lower_case_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (lower_case_property_plane_0_segment_0, 0)
 			Result.put (lower_case_property_plane_0_segment_1, 1)
 			Result.put (lower_case_property_plane_0_segment_2, 2)
@@ -12970,7 +12970,7 @@ feature {NONE} -- Implementation
 	lower_case_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_lower_case_property_segment, 0)
 			Result.put (all_false_lower_case_property_segment, 1)
 			Result.put (all_false_lower_case_property_segment, 2)
@@ -13235,7 +13235,7 @@ feature {NONE} -- Implementation
 	all_false_lower_case_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -13500,7 +13500,7 @@ feature {NONE} -- Implementation
 	lower_case_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Lowercase property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (lower_case_property_plane_0, 0)
 			Result.put (lower_case_property_plane_1, 1)
 			Result.put (all_false_lower_case_property_plane, 2)
@@ -15133,7 +15133,7 @@ feature {NONE} -- Implementation
 	alphabetic_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (alphabetic_property_plane_0_segment_0, 0)
 			Result.put (all_true_alphabetic_property_segment, 1)
 			Result.put (alphabetic_property_plane_0_segment_2, 2)
@@ -15748,7 +15748,7 @@ feature {NONE} -- Implementation
 	alphabetic_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (alphabetic_property_plane_1_segment_0, 0)
 			Result.put (alphabetic_property_plane_1_segment_1, 1)
 			Result.put (all_false_alphabetic_property_segment, 2)
@@ -16083,7 +16083,7 @@ feature {NONE} -- Implementation
 	alphabetic_property_plane_2: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_true_alphabetic_property_segment, 0)
 			Result.put (all_true_alphabetic_property_segment, 1)
 			Result.put (all_true_alphabetic_property_segment, 2)
@@ -16348,7 +16348,7 @@ feature {NONE} -- Implementation
 	all_false_alphabetic_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -16613,7 +16613,7 @@ feature {NONE} -- Implementation
 	alphabetic_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Alphabetic property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (alphabetic_property_plane_0, 0)
 			Result.put (alphabetic_property_plane_1, 1)
 			Result.put (alphabetic_property_plane_2, 2)
@@ -17091,7 +17091,7 @@ feature {NONE} -- Implementation
 	math_property_plane_0: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (math_property_plane_0_segment_0, 0)
 			Result.put (all_false_math_property_segment, 1)
 			Result.put (all_false_math_property_segment, 2)
@@ -17496,7 +17496,7 @@ feature {NONE} -- Implementation
 	math_property_plane_1: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (all_false_math_property_segment, 0)
 			Result.put (all_false_math_property_segment, 1)
 			Result.put (all_false_math_property_segment, 2)
@@ -17761,7 +17761,7 @@ feature {NONE} -- Implementation
 	all_false_math_property_plane: SPECIAL [ARRAY [BOOLEAN]] is
 			-- Generated array plane
 		once
-			create Result.make (256)
+			create Result.make_filled (Void, 256)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 0)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 1)
 			Result.put (create {ARRAY [BOOLEAN]}.make (1, 256), 2)
@@ -18026,7 +18026,7 @@ feature {NONE} -- Implementation
 	math_properties: SPECIAL [SPECIAL [ARRAY [BOOLEAN]]] is
 			-- Math property for each code point
 		once
-			create Result.make (17)
+			create Result.make_filled (Void, 17)
 			Result.put (math_property_plane_0, 0)
 			Result.put (math_property_plane_1, 1)
 			Result.put (all_false_math_property_plane, 2)

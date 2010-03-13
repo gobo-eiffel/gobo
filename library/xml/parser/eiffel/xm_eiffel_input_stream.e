@@ -189,7 +189,7 @@ feature -- Input
 				-- remain the same object. It would also require
 				-- to duplicate some of the detection handling.
 			from
-				last_string.clear_all
+				STRING_.wipe_out (last_string)
 				read_character
 				i := nb
 			until
