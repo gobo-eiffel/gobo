@@ -24003,17 +24003,16 @@ feature {NONE} -- Memory allocation
 				l_special_type ?= current_type
 				if l_special_type /= Void then
 					l_arguments := a_feature.arguments
-					if l_arguments = Void or else l_arguments.count /= 1 then
-							-- Internal error: the creation procedure of class SPECIAL
-							-- should have one argument of type INTEGER.
-						set_fatal_error
-						error_handler.report_giaaa_error
+					if l_arguments = Void or else l_arguments.is_empty then
+						current_file.put_character ('0')
+					elseif not l_arguments.formal_argument (l_arguments.count).type.same_syntactical_type (current_universe.integer_type, current_type.base_type, current_type.base_type) then
+						current_file.put_character ('0')
 					else
-						l_argument_name := l_arguments.formal_argument (1).name
+						l_argument_name := l_arguments.formal_argument (l_arguments.count).name
 						print_argument_name (l_argument_name, current_file)
-						current_file.put_character (',')
-						current_file.put_character (' ')
 					end
+					current_file.put_character (',')
+					current_file.put_character (' ')
 				end
 				current_file.put_string (c_eif_true)
 				current_file.put_character (')')
