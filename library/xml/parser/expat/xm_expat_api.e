@@ -1006,14 +1006,12 @@ feature -- Conversion
 			a_storage: SPECIAL [POINTER]
 			ptr_size: INTEGER
 			ptr2: POINTER
-			to_special: TO_SPECIAL [POINTER]
 			ptr1: POINTER
 		do
 			create Result.make
 			from
 				ptr_size := Platform.Pointer_bytes
-				create to_special.make_area (1)
-				a_storage := to_special.area
+				create a_storage.make_filled (default_pointer, 1)
 				ptr2 := attr_spec_ptr
 				ptr1 := c_rtid ($a_storage)
 				ptr1.memory_copy (ptr2, ptr_size)
