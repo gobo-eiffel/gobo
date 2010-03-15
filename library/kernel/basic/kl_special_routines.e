@@ -91,9 +91,11 @@ feature -- Resizing
 		require
 			an_array_not_void: an_array /= Void
 			n_large_enough: n >= an_array.count
+		local
+			l_default: G
 		do
 			if n > an_array.count then
-				Result := an_array.aliased_resized_area (n)
+				Result := an_array.aliased_resized_area_with_default (l_default, n)
 			else
 				Result := an_array
 			end
