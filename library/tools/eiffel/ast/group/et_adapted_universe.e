@@ -106,8 +106,10 @@ feature -- Exporting classes
 			l_cursor := universe.master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
 				l_class := l_cursor.item
-				if l_class.actual_intrinsic_class.universe = universe then
--- TODO: what to do with aliased classes?
+				if l_class.is_mapped then
+						-- Do not export mapped classes.
+						-- They will be exported under their actual name.
+				elseif l_class.actual_intrinsic_class.universe = universe then
 						-- Take into account class renaming and classname prefix.
 					l_class_name := l_cursor.key
 					l_old_class_name := l_class_name.upper_name

@@ -286,6 +286,15 @@ feature -- Status report
 			definition: Result = (intrinsic_class.universe = universe)
 		end
 
+	is_mapped: BOOLEAN is
+			-- Is current class the mapping of another class in `universe'?
+			-- For example class "CHARACTER" can actually be mapped to "CHARACTER_8".
+		do
+			Result := mapped_class /= Void
+		ensure
+			definition: Result = (mapped_class /= Void)
+		end
+
 	is_in_universe (a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current class belong to `a_universe'?
 		require

@@ -257,7 +257,7 @@ feature -- Status report
 			master_classes.search (a_name)
 			if master_classes.found then
 				l_class := master_classes.found_item
-				if l_class.actual_class.universe = Current then
+				if not l_class.is_mapped and l_class.actual_class.universe = Current then
 					Result := True
 				end
 			end
@@ -360,7 +360,7 @@ feature -- Access
 			l_class: ET_CLASS
 		do
 			l_master_class := master_class_by_name (a_name)
-			if l_master_class /= Void then
+			if l_master_class /= Void and then not l_master_class.is_mapped then
 				l_class := l_master_class.actual_class
 				if l_class.universe = Current then
 					Result := l_class
@@ -1603,13 +1603,17 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_master_class: ET_MASTER_CLASS
 			l_class: ET_CLASS
 		do
 			l_cursor := master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				l_class := l_cursor.item.actual_class
-				if l_class.universe = Current then
-					an_action.call ([l_class])
+				l_master_class := l_cursor.item
+				if not l_master_class.is_mapped then
+					l_class := l_master_class.actual_class
+					if l_class.universe = Current then
+						an_action.call ([l_class])
+					end
 				end
 				l_cursor.forth
 			end
@@ -1626,6 +1630,7 @@ feature -- Iteration
 			an_action_not_void: an_action /= Void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_master_class: ET_MASTER_CLASS
 			l_class: ET_CLASS
 		do
 			if a_stop_request = Void then
@@ -1636,9 +1641,12 @@ feature -- Iteration
 					if a_stop_request.item ([]) then
 						l_cursor.go_after
 					else
-						l_class := l_cursor.item.actual_class
-						if l_class.universe = Current then
-							an_action.call ([l_class])
+						l_master_class := l_cursor.item
+						if not l_master_class.is_mapped then
+							l_class := l_master_class.actual_class
+							if l_class.universe = Current then
+								an_action.call ([l_class])
+							end
 						end
 						l_cursor.forth
 					end
@@ -1655,14 +1663,18 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_master_class: ET_MASTER_CLASS
 			l_class: ET_CLASS
 		do
 			l_cursor := master_classes.new_cursor
 			from l_cursor.start until l_cursor.after loop
-				l_class := l_cursor.item.actual_class
-				if l_class.universe = Current then
-					if a_test.item ([l_class]) then
-						an_action.call ([l_class])
+				l_master_class := l_cursor.item
+				if not l_master_class.is_mapped then
+					l_class := l_master_class.actual_class
+					if l_class.universe = Current then
+						if a_test.item ([l_class]) then
+							an_action.call ([l_class])
+						end
 					end
 				end
 				l_cursor.forth
@@ -1682,6 +1694,7 @@ feature -- Iteration
 			a_test_not_void: a_test /= Void
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_MASTER_CLASS, ET_CLASS_NAME]
+			l_master_class: ET_MASTER_CLASS
 			l_class: ET_CLASS
 		do
 			if a_stop_request = Void then
@@ -1692,10 +1705,13 @@ feature -- Iteration
 					if a_stop_request.item ([]) then
 						l_cursor.go_after
 					else
-						l_class := l_cursor.item.actual_class
-						if l_class.universe = Current then
-							if a_test.item ([l_class]) then
-								an_action.call ([l_class])
+						l_master_class := l_cursor.item
+						if not l_master_class.is_mapped then
+							l_class := l_master_class.actual_class
+							if l_class.universe = Current then
+								if a_test.item ([l_class]) then
+									an_action.call ([l_class])
+								end
 							end
 						end
 						l_cursor.forth
