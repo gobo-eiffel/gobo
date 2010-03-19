@@ -17,8 +17,10 @@ inherit
 	ET_DYNAMIC_TYPE_SET
 		redefine
 			dynamic_type,
+			index_of,
 			is_expanded,
-			put_target
+			put_target,
+			has_type
 		end
 
 	HASHABLE
@@ -132,6 +134,16 @@ feature -- Status report
 			has_meta_type: (meta_type /= Void and then meta_type.is_used) implies Result
 		end
 
+	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
+			-- Do current dynamic types contain `a_type'?
+		do
+			if count = 1 then
+				Result := a_type = Current
+			end
+		ensure then
+			definition: Result = (a_type = Current)
+		end
+
 feature -- Status setting
 
 	set_never_void is
@@ -212,6 +224,14 @@ feature -- Access
 			-- Dynamic type at index `i'
 		do
 			Result := Current
+		end
+
+	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER is
+			-- Index of first occurrence of `a_type'?
+		do
+			if has_type (a_type) then
+				Result := 1
+			end
 		end
 
 	conforming_dynamic_types: ET_DYNAMIC_STANDALONE_TYPE_SET

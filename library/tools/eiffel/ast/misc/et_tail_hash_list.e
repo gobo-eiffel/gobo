@@ -19,6 +19,7 @@ inherit
 		redefine
 			make,
 			make_with_capacity,
+			index_of,
 			has,
 			put_last,
 			force_last,
@@ -59,6 +60,31 @@ feature {NONE} -- Initialization
 				storage := Void
 				slots := Void
 				clashes := Void
+			end
+		end
+
+feature -- Access
+
+	index_of (an_item: like item): INTEGER is
+			-- Index of first occurrence of `an_item' if any, 0 otherwise
+			-- (Use `=' as comparison criterion.)
+		local
+			i, h: INTEGER
+		do
+			if count > 0 then
+				from
+					h := hash_position (an_item)
+					i := slots.item (h)
+				until
+					i = No_position
+				loop
+					if an_item = storage.item (i) then
+						if Result = 0 or Result > i then
+							Result := i
+						end
+					end
+					i := clashes.item (i)
+				end
 			end
 		end
 

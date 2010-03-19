@@ -16,6 +16,7 @@ inherit
 
 	ET_DYNAMIC_TYPES
 		undefine
+			index_of,
 			has_type, is_empty
 		end
 

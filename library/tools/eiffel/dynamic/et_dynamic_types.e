@@ -43,6 +43,27 @@ feature -- Access
 			end
 		end
 
+	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER is
+			-- Index of first occurrence of `a_type'?
+		require
+			a_type_not_void: a_type /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if dynamic_type (i) = a_type then
+					Result := i
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= count
+		end
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -66,18 +87,8 @@ feature -- Status report
 			-- Do current dynamic types contain `a_type'?
 		require
 			a_type_not_void: a_type /= Void
-		local
-			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if dynamic_type (i) = a_type then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
+			Result := index_of (a_type) /= 0
 		end
 
 	has_special: BOOLEAN is

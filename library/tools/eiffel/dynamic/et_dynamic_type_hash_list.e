@@ -18,6 +18,7 @@ inherit
 		undefine
 			make,
 			make_with_capacity,
+			index_of,
 			has_type,
 			put_last,
 			force_last,

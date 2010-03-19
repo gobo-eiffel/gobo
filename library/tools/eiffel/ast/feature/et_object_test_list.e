@@ -33,7 +33,7 @@ feature -- Access
 			object_test_not_void: Result /= Void
 		end
 
-	index_of (a_name: ET_IDENTIFIER): INTEGER is
+	index_of_name (a_name: ET_IDENTIFIER): INTEGER is
 			-- Index of object-test with local named `a_name';
 			-- 0 if it does not exist
 		require

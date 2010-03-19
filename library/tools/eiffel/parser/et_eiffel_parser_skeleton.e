@@ -965,7 +965,7 @@ feature {NONE} -- AST factory
 					end
 				end
 				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of (an_identifier)
+					a_seed := last_object_tests.index_of_name (an_identifier)
 					if a_seed /= 0 then
 						an_identifier.set_object_test_local (True)
 					end
@@ -1090,7 +1090,7 @@ feature {NONE} -- AST factory
 					end
 				end
 				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of (a_name)
+					a_seed := last_object_tests.index_of_name (a_name)
 					if a_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end
@@ -1179,7 +1179,7 @@ feature {NONE} -- AST factory
 					end
 				end
 				if l_seed = 0 and then last_object_tests /= Void then
-					l_seed := last_object_tests.index_of (l_identifier)
+					l_seed := last_object_tests.index_of_name (l_identifier)
 					if l_seed /= 0 then
 						l_identifier.set_object_test_local (True)
 					end
@@ -1542,7 +1542,7 @@ feature {NONE} -- AST factory
 					end
 				end
 				if a_seed = 0 and then last_object_tests /= Void then
-					a_seed := last_object_tests.index_of (a_name)
+					a_seed := last_object_tests.index_of_name (a_name)
 					if a_seed /= 0 then
 						a_name.set_object_test_local (True)
 					end

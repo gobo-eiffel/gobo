@@ -16,7 +16,8 @@ inherit
 
 	ET_DYNAMIC_TYPE_SET
 		redefine
-			propagate_can_be_void
+			propagate_can_be_void,
+			has_type, index_of
 		end
 
 feature -- Status report
@@ -26,6 +27,25 @@ feature -- Status report
 			-- (Note that in order to be truly true, the current dynamic type
 			-- set should also be non-empty. Therefore it is recommended to
 			-- use 'not can_be_void'.)
+
+	has_type (a_type: ET_DYNAMIC_TYPE): BOOLEAN is
+			-- Do current dynamic types contain `a_type'?
+		local
+			i: INTEGER
+		do
+			if dynamic_types = Void then
+				Result := False
+			elseif dynamic_types.count = count  then
+				Result := dynamic_types.has_type (a_type)
+			elseif attached {ET_DYNAMIC_TYPE_HASH_LIST} dynamic_types as l_hash_list then
+				i := l_hash_list.index_of (a_type)
+				if i > 0 and i <= count then
+					Result := True
+				end
+			else
+				Result := precursor (a_type)
+			end
+		end
 
 feature -- Status setting
 
@@ -44,6 +64,25 @@ feature -- Access
 			-- Dynamic type at index `i'
 		do
 			Result := dynamic_types.dynamic_type (i)
+		end
+
+	index_of (a_type: ET_DYNAMIC_TYPE): INTEGER is
+			-- Index of first occurrence of `a_type'?
+		local
+			i: INTEGER
+		do
+			if dynamic_types = Void then
+				Result := 0
+			elseif dynamic_types.count = count  then
+				Result := dynamic_types.index_of (a_type)
+			elseif attached {ET_DYNAMIC_TYPE_HASH_LIST} dynamic_types as l_hash_list then
+				i := l_hash_list.index_of (a_type)
+				if i <= count then
+					Result := i
+				end
+			else
+				Result := precursor (a_type)
+			end
 		end
 
 feature -- Measurement

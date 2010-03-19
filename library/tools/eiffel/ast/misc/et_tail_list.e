@@ -75,6 +75,28 @@ feature -- Access
 			definition: Result = item (count)
 		end
 
+	index_of (an_item: like item): INTEGER is
+			-- Index of first occurrence of `an_item' if any, 0 otherwise
+			-- (Use `=' as comparison criterion.)
+		require
+			an_item_not_void: an_item /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if storage.item (i) = an_item then
+					Result := i
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			index_large_enough: Result >= 0
+			index_small_enough: Result <= count
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -103,18 +125,8 @@ feature -- Status report
 			-- (Use `=' as comparison criterion.)
 		require
 			an_item_not_void: an_item /= Void
-		local
-			i, nb: INTEGER
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				if storage.item (i) = an_item then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
+			Result := index_of (an_item) /= 0
 		end
 
 	valid_index (i: INTEGER): BOOLEAN is
