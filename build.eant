@@ -145,6 +145,7 @@
 		</copy>
 		<delete>
 			<directoryset directory="." include="@(**/.svn)"/>
+			<directoryset directory="." include="@(**/.git)"/>
 		</delete>
 		<delete directory="work"/>
 		<delete directory="doc/structure/visio"/>

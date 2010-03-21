@@ -89,7 +89,7 @@ Replace <quote>Lexical</quote> in the <quote>library</quote> field by the name
 of your library. Replace <quote>Eric Bezault</quote> by your name in the 
 <quote>author</quote> and <quote>copyright</quote> fields and put your e-mail 
 address in the <quote>author</quote> field. The fields <quote>date</quote> and 
-<quote>revision</quote> are automatically expanded by <link linkend="svn">SVN</link>.
+<quote>revision</quote> are automatically expanded by <link linkend="git">Git</link>.
 </para>
 
 </section>
