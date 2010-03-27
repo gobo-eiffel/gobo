@@ -5,7 +5,7 @@ indexing
 		"Eiffel standalone closures, e.g. features or invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +22,8 @@ inherit
 		redefine
 			implementation_feature
 		end
+
+	HASHABLE
 
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
