@@ -5,7 +5,7 @@ indexing
 		"Eiffel constrained formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,20 +28,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_constraint: like constraint; a_creation: like creation_procedures) is
+	make (a_name: like name; a_constraint: like constraint; a_creation: like creation_procedures; a_class: ET_CLASS) is
 			-- Create a new constrained formal generic parameter.
 		require
 			a_name_not_void: a_name /= Void
 			a_constraint_not_void: a_constraint /= Void
+			a_class_not_void: a_class /= Void
 		do
 			arrow_symbol := tokens.arrow_symbol
 			constraint := a_constraint
 			creation_procedures := a_creation
-			make_unconstrained (a_name)
+			make_unconstrained (a_name, a_class)
 		ensure
 			name_set: name = a_name
 			constraint_set: constraint = a_constraint
 			creation_procedures_set: creation_procedures = a_creation
+			implementation_class_set: implementation_class = a_class
 		end
 
 feature -- Initialization

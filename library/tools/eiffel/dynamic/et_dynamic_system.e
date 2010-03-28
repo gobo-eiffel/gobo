@@ -1397,7 +1397,7 @@ feature {NONE} -- Compilation
 							set_fatal_error
 							error_handler.report_gvkfe2a_error (l_class, array_area_feature)
 							array_area_feature := Void
-						elseif not array_area_feature.type.same_named_type (current_system.special_any_type.base_class, l_class, l_class) then
+						elseif not array_area_feature.type.same_named_type (current_system.special_any_type.base_class, current_system.special_any_type.base_class, l_class) then
 							set_fatal_error
 							error_handler.report_gvkfe3a_error (l_class, array_area_feature, current_system.special_any_type.base_class)
 							array_area_feature := Void

@@ -1044,6 +1044,49 @@ feature -- Genericity
 			same_name: Result /= Void implies Result.name.same_identifier (a_name)
 		end
 
+	formal_parameter_type (i: INTEGER): ET_FORMAL_PARAMETER_TYPE is
+			-- `i'-th formal parameter type
+		require
+			i_large_enough: i >= 1
+		local
+			nb: INTEGER
+			l_name: ET_IDENTIFIER
+		do
+			if formal_parameters /= Void and then i <= formal_parameters.count then
+				Result := formal_parameters.formal_parameter (i)
+			else
+				if formal_parameter_types = Void then
+					create formal_parameter_types.make (10)
+				end
+				nb := formal_parameter_types.count
+				if i > nb then
+					if i > formal_parameter_types.capacity then
+						formal_parameter_types.resize (i)
+					end
+					from until i = nb loop
+						formal_parameter_types.put_last (Void)
+						nb := nb + 1
+					end
+				end
+				Result := formal_parameter_types.item (i)
+				if Result = Void then
+					create l_name.make ("G" + i.out)
+					create Result.make (Void, l_name, i, Current)
+					formal_parameter_types.replace (Result, i)
+				end
+			end
+		ensure
+			formal_parameter_type_not_void: Result /= Void
+		end
+
+feature {NONE} -- Genericity
+
+	formal_parameter_types: DS_ARRAYED_LIST [ET_FORMAL_PARAMETER_TYPE]
+			-- Shared formal parameter types, indexed by index.
+			-- Note that some entries in the list may be Void if
+			-- the corresponding formal parameter type has not
+			-- been requested yet.
+
 feature -- Ancestors
 
 	has_ancestor (a_class: ET_CLASS): BOOLEAN is

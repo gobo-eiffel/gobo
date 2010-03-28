@@ -5,7 +5,7 @@ indexing
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #41 $"
@@ -499,7 +499,7 @@ feature {NONE} -- Basic operations
 						if a_constrained_formal /= Void then
 							a_constraint := constraints.item (i)
 							if a_constraint /= Void then
-								a_type := a_constraint.resolved_syntactical_constraint (a_parameters, Current)
+								a_type := a_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
 								if a_type /= Void then
 									a_constrained_formal.set_constraint (a_type)
 								else
@@ -758,15 +758,16 @@ feature {NONE} -- Basic operations
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
 
 	resolved_constraint_named_type (a_constraint: ET_CONSTRAINT_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST): ET_TYPE is
-			-- Version of `a_constraint', appearing in the constraint of
-			-- one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE is
+			-- Version of `a_constraint', appearing in the constraint of one
+			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
+			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
 			a_formal: ET_FORMAL_PARAMETER
@@ -782,9 +783,9 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 						-- It cannot be prefixed by 'expanded' or 'reference'.
 						-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
 					report_syntax_error (a_type_mark.position)
-					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index)
+					Result := ast_factory.new_formal_parameter_type (Void, a_name, a_formal.index, a_class)
 				else
-					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index)
+					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_class)
 				end
 			else
 				a_base_class := current_universe.master_class (a_name)
@@ -809,15 +810,16 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_generic_named_type (a_constraint: ET_CONSTRAINT_GENERIC_NAMED_TYPE;
-		a_formals: ET_FORMAL_PARAMETER_LIST): ET_TYPE is
-			-- Version `a_constraint', appearing in the constraint of
-			-- one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_TYPE is
+			-- Version `a_constraint', appearing in the constraint of one
+			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
+			a_class_not_void: a_class /= Void
 		local
 			a_name: ET_IDENTIFIER
 			a_type_mark: ET_TYPE_MARK
@@ -837,10 +839,10 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				end
 					-- A formal parameter cannot have actual generic parameters.
 				report_syntax_error (a_constraint.actual_parameters.position)
-				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index)
+				Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_formal.index, a_class)
 			else
 				a_base_class := current_universe.master_class (a_name)
-				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, Current)
+				a_parameters := a_constraint.actual_parameters.resolved_syntactical_constraint (a_formals, a_class, Current)
 				if a_parameters /= Void then
 					if providers_enabled then
 						providers.force_last (a_base_class)
@@ -864,15 +866,16 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 		end
 
 	resolved_constraint_actual_parameter_list (a_constraint: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST;
-		a_formals: ET_FORMAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_LIST is
-			-- Version of `a_constraint', appearing in the constraint of
-			-- one of the formal generic parameters in `a_formals', where
-			-- class names and formal generic parameter names have been
+		a_formals: ET_FORMAL_PARAMETER_LIST; a_class: ET_CLASS): ET_ACTUAL_PARAMETER_LIST is
+			-- Version of `a_constraint', appearing in the constraint of one
+			-- of the formal generic parameters in `a_formals' of `a_class',
+			-- where class names and formal generic parameter names have been
 			-- resolved (i.e. replaced by the corresponding Class_type,
 			-- Tuple_type and Formal_parameter_type)
 		require
 			a_constraint_not_void: a_constraint /= Void
 			a_formals_not_void: a_formals /= Void
+			a_class_not_void: a_class /= Void
 		local
 			i, nb: INTEGER
 			l_type, l_other_type: ET_CONSTRAINT_TYPE
@@ -887,7 +890,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					l_actual := a_constraint.item (i)
 					l_type := l_actual.type
 					if l_type /= l_other_type then
-						l_resolved_type := l_type.resolved_syntactical_constraint (a_formals, Current)
+						l_resolved_type := l_type.resolved_syntactical_constraint (a_formals, a_class, Current)
 						l_other_type := l_type
 					end
 					l_parameter := l_actual.resolved_syntactical_constraint_with_type (l_resolved_type, Current)
@@ -1322,7 +1325,7 @@ feature {NONE} -- AST factory
 					if a_type_mark /= Void and then a_type_mark.is_keyword then
 						-- TODO: Error
 					end
-					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_parameter.index)
+					Result := ast_factory.new_formal_parameter_type (a_type_mark, a_name, a_parameter.index, a_last_class)
 				else
 					l_class := current_universe.master_class (a_name)
 					if providers_enabled then

@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,15 +34,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name; a_class: ET_CLASS) is
 			-- Create a new formal generic parameter.
 		require
 			a_name_not_void: a_name /= Void
+			a_class_not_void: a_class /= Void
 		do
 			name := a_name
 			index := 1
+			implementation_class := a_class
 		ensure
 			name_set: name = a_name
+			implementation_class_set: implementation_class = a_class
 		end
 
 feature -- Access

@@ -5,7 +5,7 @@ indexing
 		"Eiffel decorated Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1939,11 +1939,11 @@ feature -- AST nodes
 		end
 
 	new_constrained_formal_parameter (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; an_arrow: ET_SYMBOL; a_constraint: ET_TYPE;
-		a_creation: ET_CONSTRAINT_CREATOR): ET_CONSTRAINED_FORMAL_PARAMETER is
+		a_creation: ET_CONSTRAINT_CREATOR; a_class: ET_CLASS): ET_CONSTRAINED_FORMAL_PARAMETER is
 			-- New constrained formal generic parameter
 		do
-			if a_name /= Void and a_constraint /= Void then
-				create Result.make (a_name, a_constraint, a_creation)
+			if a_name /= Void and a_constraint /= Void and a_class /= Void then
+				create Result.make (a_name, a_constraint, a_creation, a_class)
 				if a_type_mark /= Void then
 					Result.set_type_mark (a_type_mark)
 				end

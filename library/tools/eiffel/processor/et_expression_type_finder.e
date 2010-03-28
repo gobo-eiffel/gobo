@@ -1680,7 +1680,8 @@ feature {NONE} -- Expression processing
 						error_handler.report_giaaa_error
 					end
 				else
-					l_type := tokens.formal_parameter (l_seed)
+					l_class := a_context.base_class
+					l_type := l_class.formal_parameter_type (l_seed)
 					a_context.force_last (l_type)
 				end
 			else
@@ -2528,7 +2529,7 @@ feature {NONE} -- Agent validity
 			reset_fatal_error (False)
 			l_name := an_expression.name
 			l_index := l_name.seed
-			l_type := tokens.formal_parameter (l_index)
+			l_type := a_context.base_class.formal_parameter_type (l_index)
 			l_target_type := tokens.like_current
 			if l_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
 				l_agent_class := current_universe_impl.predicate_type.named_base_class
@@ -2750,7 +2751,7 @@ feature {NONE} -- Agent validity
 			reset_fatal_error (False)
 			l_name := an_expression.name
 			l_index := l_name.seed
-			l_type := tokens.formal_parameter (l_index)
+			l_type := a_context.base_class.formal_parameter_type (l_index)
 			l_target_type := a_target.type
 			create l_open_operands.make_with_capacity (1)
 			l_open_operands.put_first (l_target_type)

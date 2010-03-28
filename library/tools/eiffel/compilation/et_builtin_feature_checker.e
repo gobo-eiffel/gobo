@@ -381,6 +381,7 @@ feature {NONE} -- Built-in validity
 			l_formals: ET_FORMAL_ARGUMENT_LIST
 			l_type_type_any: ET_GENERIC_CLASS_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.base_class_name_feature_name) then
@@ -397,83 +398,87 @@ feature {NONE} -- Built-in validity
 				end
 			elseif a_feature.name.same_feature_name (tokens.boolean_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_boolean_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'boolean_field (i: INTEGER; object: G): BOOLEAN'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.boolean_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.boolean_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'boolean_field (i: INTEGER; object: G): BOOLEAN'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.boolean_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.boolean_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'boolean_field (i: INTEGER; object: G): BOOLEAN'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.boolean_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.boolean_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
 						-- The signature should be 'boolean_field (i: INTEGER; object: G): BOOLEAN'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.boolean_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.boolean_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.character_8_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_character_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'character_8_field (i: INTEGER; object: G): CHARACTER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_8_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'character_8_field (i: INTEGER; object: G): CHARACTER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_8_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_8_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'character_8_field (i: INTEGER; object: G): CHARACTER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_8_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.character_8_type, current_class, current_class) then
 						-- The signature should be 'character_8_field (i: INTEGER; object: G): CHARACTER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_8_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.character_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_character_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'character_32_field (i: INTEGER; object: G): CHARACTER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_32_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'character_32_field (i: INTEGER; object: G): CHARACTER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_32_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_32_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'character_32_field (i: INTEGER; object: G): CHARACTER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.character_32_type, current_class, current_class) then
 						-- The signature should be 'character_32_field (i: INTEGER; object: G): CHARACTER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_32_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.any_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.any_type, current_class, current_class) then
 						-- The signature should be 'field (i: INTEGER; object: G): ANY'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.any_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.field_count_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_count))
@@ -580,83 +585,87 @@ feature {NONE} -- Built-in validity
 				end
 			elseif a_feature.name.same_feature_name (tokens.integer_8_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'integer_8_field (i: INTEGER; object: G): INTEGER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_8_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'integer_8_field (i: INTEGER; object: G): INTEGER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_8_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_8_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'integer_8_field (i: INTEGER; object: G): INTEGER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_8_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_8_type, current_class, current_class) then
 						-- The signature should be 'integer_8_field (i: INTEGER; object: G): INTEGER_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_8_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.integer_16_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'integer_16_field (i: INTEGER; object: G): INTEGER_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_16_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_16_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'integer_16_field (i: INTEGER; object: G): INTEGER_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_16_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_16_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'integer_16_field (i: INTEGER; object: G): INTEGER_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_16_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_16_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_16_type, current_class, current_class) then
 						-- The signature should be 'integer_16_field (i: INTEGER; object: G): INTEGER_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_16_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_16_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.integer_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'integer_32_field (i: INTEGER; object: G): INTEGER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_32_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'integer_32_field (i: INTEGER; object: G): INTEGER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_32_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_32_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'integer_32_field (i: INTEGER; object: G): INTEGER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
 						-- The signature should be 'integer_32_field (i: INTEGER; object: G): INTEGER_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_32_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.integer_64_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'integer_64_field (i: INTEGER; object: G): INTEGER_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_64_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'integer_64_field (i: INTEGER; object: G): INTEGER_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_64_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_64_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'integer_64_field (i: INTEGER; object: G): INTEGER_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_64_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.integer_64_type, current_class, current_class) then
 						-- The signature should be 'integer_64_field (i: INTEGER; object: G): INTEGER_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_64_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.is_expanded_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_is_expanded))
@@ -684,143 +693,150 @@ feature {NONE} -- Built-in validity
 				end
 			elseif a_feature.name.same_feature_name (tokens.natural_8_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'natural_8_field (i: INTEGER; object: G): NATURAL_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_8_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'natural_8_field (i: INTEGER; object: G): NATURAL_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_8_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_8_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'natural_8_field (i: INTEGER; object: G): NATURAL_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_8_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.natural_8_type, current_class, current_class) then
 						-- The signature should be 'natural_8_field (i: INTEGER; object: G): NATURAL_8'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_8_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_8_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.natural_16_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'natural_16_field (i: INTEGER; object: G): NATURAL_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_16_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_16_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'natural_16_field (i: INTEGER; object: G): NATURAL_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_16_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_16_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'natural_16_field (i: INTEGER; object: G): NATURAL_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_16_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_16_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.natural_16_type, current_class, current_class) then
 						-- The signature should be 'natural_16_field (i: INTEGER; object: G): NATURAL_16'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_16_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_16_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.natural_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'natural_32_field (i: INTEGER; object: G): NATURAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_32_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'natural_32_field (i: INTEGER; object: G): NATURAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_32_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_32_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'natural_32_field (i: INTEGER; object: G): NATURAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.natural_32_type, current_class, current_class) then
 						-- The signature should be 'natural_32_field (i: INTEGER; object: G): NATURAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_32_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.natural_64_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'natural_64_field (i: INTEGER; object: G): NATURAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_64_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'natural_64_field (i: INTEGER; object: G): NATURAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_64_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_64_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'natural_64_field (i: INTEGER; object: G): NATURAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_64_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.natural_64_type, current_class, current_class) then
 						-- The signature should be 'natural_64_field (i: INTEGER; object: G): NATURAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_64_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.pointer_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_pointer_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'pointer_field (i: INTEGER; object: G): POINTER'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.pointer_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.pointer_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'pointer_field (i: INTEGER; object: G): POINTER'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.pointer_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.pointer_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'pointer_field (i: INTEGER; object: G): POINTER'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.pointer_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.pointer_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
 						-- The signature should be 'pointer_field (i: INTEGER; object: G): POINTER'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.pointer_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.pointer_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.real_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_real_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'real_32_field (i: INTEGER; object: G): REAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_32_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'real_32_field (i: INTEGER; object: G): REAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_32_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_32_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'real_32_field (i: INTEGER; object: G): REAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_32_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_32_type, current_class, current_class) then
 						-- The signature should be 'real_32_field (i: INTEGER; object: G): REAL_32'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_32_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_32_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.real_64_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_real_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'real_64_field (i: INTEGER; object: G): REAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_64_type)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'real_64_field (i: INTEGER; object: G): REAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_64_type)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_64_type)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'real_64_field (i: INTEGER; object: G): REAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_64_type)
 				elseif not a_feature.type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
 						-- The signature should be 'real_64_field (i: INTEGER; object: G): REAL_64'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_64_type)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_64_type)
 				end
 			elseif a_feature.name.same_feature_name (tokens.runtime_name_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_runtime_name))
@@ -849,78 +865,93 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.set_boolean_field_feature_name) then
 					-- 'TYPE.set_boolean_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_boolean_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.boolean_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.boolean_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_character_8_field_feature_name) then
 					-- 'TYPE.set_character_8_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_character_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_8_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_8_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_character_32_field_feature_name) then
 					-- 'TYPE.set_character_32_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_character_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_32_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_32_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_integer_8_field_feature_name) then
 					-- 'TYPE.set_integer_8_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_8_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_8_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_integer_16_field_feature_name) then
 					-- 'TYPE.set_integer_16_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_16_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_16_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_integer_32_field_feature_name) then
 					-- 'TYPE.set_integer_32_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_32_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_32_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_integer_64_field_feature_name) then
 					-- 'TYPE.set_integer_64_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_64_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_64_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_natural_8_field_feature_name) then
 					-- 'TYPE.set_natural_8_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_8_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_8_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_natural_16_field_feature_name) then
 					-- 'TYPE.set_natural_16_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_16_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_16_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_natural_32_field_feature_name) then
 					-- 'TYPE.set_natural_32_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_32_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_32_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_natural_64_field_feature_name) then
 					-- 'TYPE.set_natural_64_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_64_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_64_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_pointer_field_feature_name) then
 					-- 'TYPE.set_pointer_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_pointer_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.pointer_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.pointer_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_real_32_field_feature_name) then
 					-- 'TYPE.set_real_32_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_real_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_32_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_32_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_real_64_field_feature_name) then
 					-- 'TYPE.set_real_64_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_real_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_64_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_64_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.set_reference_field_feature_name) then
 					-- 'TYPE.set_reference_field' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_reference_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.any_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
 			else
 					-- Unknown built-in routine.
 				a_feature.set_builtin_code (tokens.builtin_unknown)
@@ -938,23 +969,25 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_item))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
 						-- The signature should be 'item (i: INTEGER): G'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.formal_parameter_1)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'item (i: INTEGER): G'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.formal_parameter_1)
-				elseif not a_feature.type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter)
+				elseif not a_feature.type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'item (i: INTEGER): G'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.formal_parameter_1)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter)
 				end
 			elseif a_feature.name.same_feature_name (tokens.capacity_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_capacity))
@@ -1028,8 +1061,9 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
 					-- 'SPECIAL.put' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.formal_parameter_1.type, current_universe.integer_type.type>>, Void)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
 			elseif a_feature.name.same_feature_name (tokens.put_default_feature_name) then
 					-- 'SPECIAL.put_default' should be a procedure.
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put_default))
@@ -1824,13 +1858,11 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
-			l_name: ET_IDENTIFIER
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.call_feature_name) then
 					-- 'call' should be a procedure.
-				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (Void, l_name, 2)
+				l_open_args := current_class.formal_parameter_type (2)
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, Void)
@@ -1853,25 +1885,22 @@ feature {NONE} -- Built-in validity
 			l_formals: ET_FORMAL_ARGUMENT_LIST
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
 			l_result_type: ET_FORMAL_PARAMETER_TYPE
-			l_name: ET_IDENTIFIER
 		do
 				-- List function names first, then procedure names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
-				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (Void, l_name, 2)
-				create l_name.make ("RESULT_TYPE")
-				create l_result_type.make (Void, l_name, 3)
+				l_open_args := current_class.formal_parameter_type (2)
+				l_result_type := current_class.formal_parameter_type (3)
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
 						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.formal_parameter_2, current_class, current_class) then
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_open_args, current_class, current_class) then
 						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)
-				elseif not a_feature.type.same_syntactical_type (tokens.formal_parameter_3, current_class, current_class) then
+				elseif not a_feature.type.same_syntactical_type (l_result_type, current_class, current_class) then
 						-- The signature should be 'item (args: OPEN_ARGS): RESULT_TYPE'.
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)
@@ -3327,307 +3356,323 @@ feature {NONE} -- Built-in validity
 			l_type_type_any: ET_GENERIC_CLASS_TYPE
 			l_parameters: ET_ACTUAL_PARAMETER_LIST
 			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.set_boolean_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_boolean_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_boolean_field (i: INTEGER; object: G; value: BOOLEAN)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.boolean_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.boolean_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_boolean_field (i: INTEGER; object: G; value: BOOLEAN)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.boolean_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.boolean_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_boolean_field (i: INTEGER; object: G; value: BOOLEAN)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.boolean_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.boolean_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.boolean_type, current_class, current_class) then
 						-- The signature should be 'set_boolean_field (i: INTEGER; object: G; value: BOOLEAN)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.boolean_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.boolean_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_character_8_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_character_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_character_8_field (i: INTEGER; object: G; value: CHARACTER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_8_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_character_8_field (i: INTEGER; object: G; value: CHARACTER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_8_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_8_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_character_8_field (i: INTEGER; object: G; value: CHARACTER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_8_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.character_8_type, current_class, current_class) then
 						-- The signature should be 'set_character_8_field (i: INTEGER; object: G; value: CHARACTER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_8_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_character_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_character_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_character_32_field (i: INTEGER; object: G; value: CHARACTER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_character_32_field (i: INTEGER; object: G; value: CHARACTER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_32_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_32_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_character_32_field (i: INTEGER; object: G; value: CHARACTER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.character_32_type, current_class, current_class) then
 						-- The signature should be 'set_character_32_field (i: INTEGER; object: G; value: CHARACTER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.character_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.character_32_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_integer_8_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_integer_8_field (i: INTEGER; object: G; value: INTEGER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_8_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_integer_8_field (i: INTEGER; object: G; value: INTEGER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_8_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_8_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_integer_8_field (i: INTEGER; object: G; value: INTEGER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_8_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.integer_8_type, current_class, current_class) then
 						-- The signature should be 'set_integer_8_field (i: INTEGER; object: G; value: INTEGER_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_8_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_integer_16_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_integer_16_field (i: INTEGER; object: G; value: INTEGER_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_16_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_16_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_integer_16_field (i: INTEGER; object: G; value: INTEGER_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_16_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_16_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_integer_16_field (i: INTEGER; object: G; value: INTEGER_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_16_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_16_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.integer_16_type, current_class, current_class) then
 						-- The signature should be 'set_integer_16_field (i: INTEGER; object: G; value: INTEGER_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_16_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_16_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_integer_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_integer_32_field (i: INTEGER; object: G; value: INTEGER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_integer_32_field (i: INTEGER; object: G; value: INTEGER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_32_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_32_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_integer_32_field (i: INTEGER; object: G; value: INTEGER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.integer_32_type, current_class, current_class) then
 						-- The signature should be 'set_integer_32_field (i: INTEGER; object: G; value: INTEGER_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_32_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_integer_64_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_integer_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_integer_64_field (i: INTEGER; object: G; value: INTEGER_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_64_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_integer_64_field (i: INTEGER; object: G; value: INTEGER_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_64_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_64_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_integer_64_field (i: INTEGER; object: G; value: INTEGER_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_64_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.integer_64_type, current_class, current_class) then
 						-- The signature should be 'set_integer_64_field (i: INTEGER; object: G; value: INTEGER_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.integer_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.integer_64_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_natural_8_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_natural_8_field (i: INTEGER; object: G; value: NATURAL_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_8_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_natural_8_field (i: INTEGER; object: G; value: NATURAL_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_8_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_8_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_natural_8_field (i: INTEGER; object: G; value: NATURAL_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_8_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.natural_8_type, current_class, current_class) then
 						-- The signature should be 'set_natural_8_field (i: INTEGER; object: G; value: NATURAL_8)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_8_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_8_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_natural_16_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_natural_16_field (i: INTEGER; object: G; value: NATURAL_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_16_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_16_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_natural_16_field (i: INTEGER; object: G; value: NATURAL_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_16_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_16_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_natural_16_field (i: INTEGER; object: G; value: NATURAL_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_16_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_16_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.natural_16_type, current_class, current_class) then
 						-- The signature should be 'set_natural_16_field (i: INTEGER; object: G; value: NATURAL_16)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_16_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_16_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_natural_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_natural_32_field (i: INTEGER; object: G; value: NATURAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_natural_32_field (i: INTEGER; object: G; value: NATURAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_32_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_32_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_natural_32_field (i: INTEGER; object: G; value: NATURAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.natural_32_type, current_class, current_class) then
 						-- The signature should be 'set_natural_32_field (i: INTEGER; object: G; value: NATURAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_32_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_natural_64_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_natural_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_natural_64_field (i: INTEGER; object: G; value: NATURAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_64_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_natural_64_field (i: INTEGER; object: G; value: NATURAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_64_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_64_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_natural_64_field (i: INTEGER; object: G; value: NATURAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_64_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.natural_64_type, current_class, current_class) then
 						-- The signature should be 'set_natural_64_field (i: INTEGER; object: G; value: NATURAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.natural_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.natural_64_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_pointer_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_pointer_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_pointer_field (i: INTEGER; object: G; value: POINTER)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.pointer_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.pointer_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_pointer_field (i: INTEGER; object: G; value: POINTER)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.pointer_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.pointer_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_pointer_field (i: INTEGER; object: G; value: POINTER)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.pointer_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.pointer_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.pointer_type, current_class, current_class) then
 						-- The signature should be 'set_pointer_field (i: INTEGER; object: G; value: POINTER)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.pointer_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.pointer_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_real_32_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_real_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_real_32_field (i: INTEGER; object: G; value: REAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_real_32_field (i: INTEGER; object: G; value: REAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_32_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_32_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_real_32_field (i: INTEGER; object: G; value: REAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_32_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.real_32_type, current_class, current_class) then
 						-- The signature should be 'set_real_32_field (i: INTEGER; object: G; value: REAL_32)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_32_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_32_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_real_64_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_real_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_real_64_field (i: INTEGER; object: G; value: REAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_64_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_real_64_field (i: INTEGER; object: G; value: REAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_64_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_64_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_real_64_field (i: INTEGER; object: G; value: REAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_64_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.real_64_type, current_class, current_class) then
 						-- The signature should be 'set_real_64_field (i: INTEGER; object: G; value: REAL_64)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.real_64_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.real_64_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.set_reference_field_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_set_reference_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 3 then
 						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.any_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
 				elseif not l_formals.formal_argument (1).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.any_type.type>>, Void)
-				elseif not l_formals.formal_argument (2).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
+				elseif not l_formals.formal_argument (2).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.any_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
 				elseif not l_formals.formal_argument (3).type.same_syntactical_type (current_universe.any_type, current_class, current_class) then
 						-- The signature should be 'set_reference_field (i: INTEGER; object: G; value: ANY)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1, current_universe.any_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter, current_universe.any_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.base_class_name_feature_name) then
 					-- 'TYPE.base_class_name' should be a function.
@@ -3637,23 +3682,27 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.boolean_field_feature_name) then
 					-- 'TYPE.boolean_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_boolean_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.boolean_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.boolean_type)
 			elseif a_feature.name.same_feature_name (tokens.character_8_field_feature_name) then
 					-- 'TYPE.character_8_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_character_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_8_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_8_type)
 			elseif a_feature.name.same_feature_name (tokens.character_32_field_feature_name) then
 					-- 'TYPE.character_32_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_character_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.character_32_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.character_32_type)
 			elseif a_feature.name.same_feature_name (tokens.field_feature_name) then
 					-- 'TYPE.field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.any_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.any_type)
 			elseif a_feature.name.same_feature_name (tokens.field_count_feature_name) then
 					-- 'TYPE.field_count' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_field_count))
@@ -3690,23 +3739,27 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.integer_8_field_feature_name) then
 					-- 'TYPE.integer_8_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_8_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_8_type)
 			elseif a_feature.name.same_feature_name (tokens.integer_16_field_feature_name) then
 					-- 'TYPE.integer_16_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_16_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_16_type)
 			elseif a_feature.name.same_feature_name (tokens.integer_32_field_feature_name) then
 					-- 'TYPE.integer_32_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_32_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_32_type)
 			elseif a_feature.name.same_feature_name (tokens.integer_64_field_feature_name) then
 					-- 'TYPE.integer_64_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_integer_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.integer_64_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.integer_64_type)
 			elseif a_feature.name.same_feature_name (tokens.is_expanded_feature_name) then
 					-- 'TYPE.is_expanded' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_is_expanded))
@@ -3720,38 +3773,45 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.natural_8_field_feature_name) then
 					-- 'TYPE.natural_8_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_8_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_8_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_8_type)
 			elseif a_feature.name.same_feature_name (tokens.natural_16_field_feature_name) then
 					-- 'TYPE.natural_16_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_16_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_16_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_16_type)
 			elseif a_feature.name.same_feature_name (tokens.natural_32_field_feature_name) then
 					-- 'TYPE.natural_32_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_32_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_32_type)
 			elseif a_feature.name.same_feature_name (tokens.natural_64_field_feature_name) then
 					-- 'TYPE.natural_64_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_natural_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.natural_64_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.natural_64_type)
 			elseif a_feature.name.same_feature_name (tokens.pointer_field_feature_name) then
 					-- 'TYPE.pointer_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_pointer_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.pointer_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.pointer_type)
 			elseif a_feature.name.same_feature_name (tokens.real_32_field_feature_name) then
 					-- 'TYPE.real_32_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_real_32_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_32_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_32_type)
 			elseif a_feature.name.same_feature_name (tokens.real_64_field_feature_name) then
 					-- 'TYPE.real_64_field' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_real_64_field))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, tokens.formal_parameter_1>>, current_universe.real_64_type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type, l_formal_parameter>>, current_universe.real_64_type)
 			elseif a_feature.name.same_feature_name (tokens.runtime_name_feature_name) then
 					-- 'TYPE.runtime_name' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_type_feature (tokens.builtin_type_runtime_name))
@@ -3779,6 +3839,7 @@ feature {NONE} -- Built-in validity
 			a_feature_not_void: a_feature /= Void
 		local
 			l_formals: ET_FORMAL_ARGUMENT_LIST
+			l_formal_parameter: ET_FORMAL_PARAMETER_TYPE
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.make_feature_name) then
@@ -3795,19 +3856,20 @@ feature {NONE} -- Built-in validity
 				end
 			elseif a_feature.name.same_feature_name (tokens.put_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 2 then
 						-- The signature should be 'put (v: G; i: INTEGER)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.formal_parameter_1.type, current_universe.integer_type.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.formal_parameter_1, current_class, current_class) then
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_formal_parameter, current_class, current_class) then
 						-- The signature should be 'put (v: G; i: INTEGER)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.formal_parameter_1.type, current_universe.integer_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
 				elseif not l_formals.formal_argument (2).type.same_syntactical_type (current_universe.integer_type, current_class, current_class) then
 						-- The signature should be 'put (v: G; i: INTEGER)'.
 					set_fatal_error
-					error_handler.report_gvkbs0a_error (current_class, a_feature, <<tokens.formal_parameter_1.type, current_universe.integer_type.type>>, Void)
+					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_formal_parameter.type, current_universe.integer_type.type>>, Void)
 				end
 			elseif a_feature.name.same_feature_name (tokens.put_default_feature_name) then
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_put_default))
@@ -3824,8 +3886,9 @@ feature {NONE} -- Built-in validity
 			elseif a_feature.name.same_feature_name (tokens.item_feature_name) then
 					-- 'SPECIAL.item' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_item))
+				l_formal_parameter := current_class.formal_parameter_type (1)
 				set_fatal_error
-				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, tokens.formal_parameter_1.type)
+				error_handler.report_gvkbs0a_error (current_class, a_feature, <<current_universe.integer_type.type>>, l_formal_parameter.type)
 			elseif a_feature.name.same_feature_name (tokens.capacity_feature_name) then
 					-- 'SPECIAL.capacity' should be a function.
 				a_feature.set_builtin_code (tokens.builtin_special_feature (tokens.builtin_special_capacity))
@@ -4324,19 +4387,17 @@ feature {NONE} -- Built-in validity
 		local
 			l_formals: ET_FORMAL_ARGUMENT_LIST
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
-			l_name: ET_IDENTIFIER
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.call_feature_name) then
-				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (Void, l_name, 2)
+				l_open_args := current_class.formal_parameter_type (2)
 				a_feature.set_builtin_code (tokens.builtin_procedure_feature (tokens.builtin_procedure_call))
 				l_formals := a_feature.arguments
 				if l_formals = Void or else l_formals.count /= 1 then
 						-- The signature should be 'call (args: OPEN_ARGS)'.
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, Void)
-				elseif not l_formals.formal_argument (1).type.same_syntactical_type (tokens.formal_parameter_2, current_class, current_class) then
+				elseif not l_formals.formal_argument (1).type.same_syntactical_type (l_open_args, current_class, current_class) then
 						-- The signature should be 'call (args: OPEN_ARGS)'.
 					set_fatal_error
 					error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, Void)
@@ -4360,15 +4421,12 @@ feature {NONE} -- Built-in validity
 		local
 			l_open_args: ET_FORMAL_PARAMETER_TYPE
 			l_result_type: ET_FORMAL_PARAMETER_TYPE
-			l_name: ET_IDENTIFIER
 		do
 				-- List procedure names first, then function names.
 			if a_feature.name.same_feature_name (tokens.item_feature_name) then
 					-- 'item' should be a function.
-				create l_name.make ("OPEN_ARGS")
-				create l_open_args.make (Void, l_name, 2)
-				create l_name.make ("RESULT_TYPE")
-				create l_result_type.make (Void, l_name, 3)
+				l_open_args := current_class.formal_parameter_type (2)
+				l_result_type := current_class.formal_parameter_type (3)
 				a_feature.set_builtin_code (tokens.builtin_function_feature (tokens.builtin_function_item))
 				set_fatal_error
 				error_handler.report_gvkbs0a_error (current_class, a_feature, <<l_open_args.type>>, l_result_type)

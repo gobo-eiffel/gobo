@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,19 +54,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_name: like name; an_index: INTEGER) is
-			-- Create a new formal generic type.
+	make (a_type_mark: like type_mark; a_name: like name; an_index: INTEGER; a_class: ET_CLASS) is
+			-- Create a new formal generic parameter type.
 		require
 			a_name_not_void: a_name /= Void
 			an_index_positive: an_index >= 1
+			a_class_not_void: a_class /= Void
 		do
 			type_mark := a_type_mark
 			name := a_name
 			index := an_index
+			implementation_class := a_class
 		ensure
 			type_mark_set: type_mark = a_type_mark
 			name_set: name = a_name
 			index_set: index = an_index
+			implementation_class_set: implementation_class = a_class
 		end
 
 feature -- Access
@@ -79,6 +82,9 @@ feature -- Access
 
 	index: INTEGER
 			-- Position in list of generic parameters
+
+	implementation_class: ET_CLASS
+			-- Class where the current formal generic parameter appears
 
 	named_base_class (a_context: ET_TYPE_CONTEXT): ET_NAMED_CLASS is
 			-- Same as `base_class' except that it returns information about this
@@ -94,8 +100,24 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := tokens.unknown_class
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				else
+					Result := l_ancestor.actual_parameters.type (index).named_base_class (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -149,9 +171,25 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
 -- TODO: take `type_mark' into account.
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := tokens.unknown_class
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				else
+					Result := l_ancestor.actual_parameters.type (index).base_type (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -209,9 +247,25 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
 -- TODO: take `type_mark' into account.
-			if index <= a_context.actual_parameter_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := tokens.unknown_class
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				else
+					Result := l_ancestor.actual_parameters.type (index).shallow_base_type (a_context)
+				end
+			elseif index <= a_context.actual_parameter_count then
 				an_actual := a_context.actual_parameters.type (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -266,8 +320,24 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := tokens.unknown_class
+				elseif an_index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				else
+					Result := l_ancestor.actual_parameters.type (index).base_type_actual (i, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -310,8 +380,24 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := tokens.unknown_class
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				else
+					Result := l_ancestor.actual_parameters.type (index).base_type_actual_parameter (i, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -355,8 +441,24 @@ feature -- Access
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := 0
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := 0
+				else
+					Result := l_ancestor.actual_parameters.type (index).base_type_index_of_label (a_label, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -394,9 +496,26 @@ feature -- Access
 			-- by its actual counterpart in `a_context'. Return this
 			-- new formal type in that case instead of the base
 			-- type of its constraint.
+		local
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
 -- TODO: take `type_mark' into account.
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := tokens.unknown_class
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				else
+					Result := l_ancestor.actual_parameters.type (index).named_type (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				Result := a_context.base_type_actual (index)
 			else
 					-- Internal error: formal parameter not matched.
@@ -410,9 +529,26 @@ feature -- Access
 			-- by its actual counterpart in `a_context'. Return this
 			-- new formal type in that case instead of the base
 			-- type of its constraint.
+		local
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
 -- TODO: take `type_mark' into account.
-			if index <= a_context.actual_parameter_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := tokens.unknown_class
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := tokens.unknown_class
+				else
+					Result := l_ancestor.actual_parameters.type (index).shallow_named_type (a_context)
+				end
+			elseif index <= a_context.actual_parameter_count then
 				Result ?= a_context.actual_parameters.type (index)
 				if Result = Void then
 						 -- Should never happen: `a_context' is a valid context,
@@ -472,8 +608,24 @@ feature -- Measurement
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := 0
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := 0
+				else
+					Result := l_ancestor.actual_parameters.type (index).base_type_actual_count (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -523,8 +675,24 @@ feature -- Status report
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_formal_index: INTEGER
 			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).is_type_expanded (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -555,8 +723,24 @@ feature -- Status report
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			a_formal_index: INTEGER
 			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).is_type_reference (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -586,8 +770,24 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).named_type_has_formal_type (i, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -609,8 +809,24 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).has_formal_types (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -632,8 +848,24 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).named_type_has_formal_types (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -656,8 +888,24 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).named_type_is_formal_type (a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -684,8 +932,24 @@ feature -- Status report
 			a_formal: ET_FORMAL_PARAMETER
 			a_base_type: ET_BASE_TYPE
 			an_index: INTEGER
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := a_class.is_unknown
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := a_class.is_unknown
+				else
+					Result := l_ancestor.actual_parameters.type (index).base_type_has_class (a_class, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -729,8 +993,24 @@ feature -- Status report
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := a_class.is_unknown
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := a_class.is_unknown
+				else
+					Result := l_ancestor.actual_parameters.type (index).named_type_has_class (a_class, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -757,8 +1037,24 @@ feature -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -780,8 +1076,24 @@ feature -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_named_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -803,8 +1115,24 @@ feature -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_base_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -833,8 +1161,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_bit_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -862,8 +1206,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_class_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -890,8 +1250,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_formal_parameter_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -918,8 +1294,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_like_current (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -946,8 +1338,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_like_feature (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -974,8 +1382,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_qualified_like_identifier (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1003,8 +1427,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_syntactical_tuple_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1026,8 +1466,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_named_bit_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1049,8 +1505,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_named_class_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1072,8 +1544,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_named_formal_parameter_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1095,8 +1583,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_named_tuple_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1118,8 +1622,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_base_bit_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1141,8 +1661,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_base_class_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1164,8 +1700,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_base_formal_parameter_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1187,8 +1739,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).same_base_tuple_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1215,8 +1783,24 @@ feature -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).conforms_to_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1243,8 +1827,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_bit_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1268,8 +1868,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_class_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1302,8 +1918,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			a_constraint: ET_TYPE
 			a_base_type: ET_BASE_TYPE
 			visited: ARRAY [BOOLEAN]
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_formal_parameter_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1399,8 +2031,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			an_actual: ET_NAMED_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			l_context_base_class: ET_CLASS
+			l_ancestor: ET_BASE_TYPE
 		do
-			if index <= a_context.base_type_actual_count then
+			l_context_base_class := a_context.base_class
+			if l_context_base_class /= implementation_class then
+				l_ancestor := l_context_base_class.ancestor (implementation_class)
+				if l_ancestor = Void then
+						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
+					Result := False
+				elseif index > l_ancestor.actual_parameter_count then
+						-- Internal error: `implementation_class' is the base class of
+						-- `l_ancestor'. So there is a mismatch between the number of
+						-- actual and formal generic parameters in `l_ancestor'.
+					Result := False
+				else
+					Result := l_ancestor.actual_parameters.type (index).conforms_from_tuple_type (other, other_context, a_context)
+				end
+			elseif index <= a_context.base_type_actual_count then
 				an_actual := a_context.base_type_actual (index)
 				a_formal_type ?= an_actual
 				if a_formal_type /= Void then
@@ -1422,17 +2070,18 @@ feature -- Type processing
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
 		local
-			a_type: ET_TYPE
-			a_formal: ET_FORMAL_PARAMETER_TYPE
+			l_formal: ET_FORMAL_PARAMETER_TYPE
 		do
 -- TODO: take `type_mark' into account.
-			Result := Current
 			if index <= a_parameters.count then
-				a_type := a_parameters.type (index)
-				a_formal ?= a_type
-				if a_formal = Void or else a_formal.index /= index then
-					Result := a_type
+				Result := a_parameters.type (index)
+				l_formal ?= Result
+				if l_formal /= Void and then l_formal.index = index and then l_formal.implementation_class = implementation_class then
+					Result := Current
 				end
+			else
+					-- Internal error: formal parameter not matched.
+				Result := tokens.unknown_class
 			end
 		end
 
@@ -1450,7 +2099,7 @@ feature -- Type context
 			a_parameters := a_root_context.actual_parameters
 			if a_parameters /= Void and then index <= a_parameters.count then
 				a_formal ?= a_parameters.type (index)
-				Result := a_formal /= Void and then a_formal.index = index
+				Result := a_formal /= Void and then a_formal.index = index and a_root_context.base_class = implementation_class
 			end
 		end
 
@@ -1474,5 +2123,6 @@ feature -- Processing
 invariant
 
 	index_positive: index >= 1
+	implementation_class_not_void: implementation_class /= Void
 
 end

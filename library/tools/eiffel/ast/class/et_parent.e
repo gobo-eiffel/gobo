@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			if a_parameters /= Void and then a_parameters.has_derived_parameters then
 				actual_parameters := a_parameters
 			end
+			actual_parameters := a_parameters
 			renames := a_renames
 			exports := an_exports
 			undefines := an_undefines

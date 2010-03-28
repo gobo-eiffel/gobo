@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2135,15 +2135,19 @@ feature {NONE} -- Instruction validity
 							-- processing `current_feature_impl' in `current_class_impl'.
 						error_handler.report_giaaa_error
 					end
-				elseif l_seed > l_target_context.base_type_actual_count then
-						-- Internal error: the index of the labeled
-						-- actual parameter cannot be out of bound because
-						-- for a Tuple type to conform to another Tuple type
-						-- it needs to have more actual parameters.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_type := tokens.formal_parameter (l_seed)
+				end
+				if not has_fatal_error then
+					check l_class_not_void: l_class /= Void end
+					if l_seed > l_target_context.base_type_actual_count then
+							-- Internal error: the index of the labeled
+							-- actual parameter cannot be out of bound because
+							-- for a Tuple type to conform to another Tuple type
+							-- it needs to have more actual parameters.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_type := l_class.formal_parameter_type (l_seed)
+					end
 				end
 			else
 					-- It's either:
@@ -7264,17 +7268,21 @@ feature {NONE} -- Expression validity
 							-- processing the implementation of `current_feature_impl'.
 						error_handler.report_giaaa_error
 					end
-				elseif l_seed > a_context.base_type_actual_count then
-						-- Report internal error: the index of the labeled
-						-- actual parameter cannot be out of bound because
-						-- for a Tuple type to conform to another Tuple type
-						-- it needs to have more actual parameters.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					l_type := tokens.formal_parameter (l_seed)
-					report_tuple_label_expression (a_call, a_context)
-					a_context.force_last (l_type)
+				end
+				if not has_fatal_error then
+					check l_class_not_void: l_class /= Void end
+					if l_seed > a_context.base_type_actual_count then
+							-- Report internal error: the index of the labeled
+							-- actual parameter cannot be out of bound because
+							-- for a Tuple type to conform to another Tuple type
+							-- it needs to have more actual parameters.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_type := l_class.formal_parameter_type (l_seed)
+						report_tuple_label_expression (a_call, a_context)
+						a_context.force_last (l_type)
+					end
 				end
 			else
 				if l_query = Void then
@@ -9063,7 +9071,7 @@ feature {NONE} -- Agent validity
 													l_label.set_tuple_label (True)
 													l_label.set_seed (a_seed)
 													an_expression.set_procedure (False)
-													check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_context)
+													check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
 												end
 											end
 										end
@@ -9094,7 +9102,7 @@ feature {NONE} -- Agent validity
 												l_label.set_tuple_label (True)
 												l_label.set_seed (a_seed)
 												an_expression.set_procedure (False)
-												check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_context)
+												check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
 											end
 										end
 									end
@@ -9135,7 +9143,7 @@ feature {NONE} -- Agent validity
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
-						check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_context)
+						check_qualified_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
 					end
 				end
 			elseif an_expression.is_procedure then
@@ -9313,7 +9321,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of qualified tuple label call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9321,6 +9329,8 @@ feature {NONE} -- Agent validity
 			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
+			a_target_class_not_void: a_target_class /= Void
+			a_target_class_is_tuple: a_target_class.is_tuple_class
 			query_call: not an_expression.is_procedure
 			tuple_label: an_expression.name.is_tuple_label
 			indexed: an_expression.name.seed /= 0
@@ -9357,7 +9367,7 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_type := tokens.formal_parameter (l_index)
+				l_type := a_target_class.formal_parameter_type (l_index)
 				l_target_type := tokens.like_current
 				if l_type.same_named_type (current_universe_impl.boolean_type, current_type, a_context) then
 					l_agent_class := current_universe_impl.predicate_type.named_base_class
@@ -9452,7 +9462,7 @@ feature {NONE} -- Agent validity
 													l_label.set_tuple_label (True)
 													l_label.set_seed (a_seed)
 													an_expression.set_procedure (False)
-													check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_context)
+													check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
 												end
 											end
 										end
@@ -9483,7 +9493,7 @@ feature {NONE} -- Agent validity
 												l_label.set_tuple_label (True)
 												l_label.set_seed (a_seed)
 												an_expression.set_procedure (False)
-												check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_context)
+												check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
 											end
 										end
 									end
@@ -9522,7 +9532,7 @@ feature {NONE} -- Agent validity
 							set_fatal_error
 							error_handler.report_giaaa_error
 						else
-							check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_context)
+							check_typed_tuple_label_call_agent_validity (an_expression, a_target, a_class, a_context)
 						end
 					end
 				elseif an_expression.is_procedure then
@@ -9706,7 +9716,7 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_tuple_label_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_target_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of typed tuple label call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
@@ -9714,6 +9724,8 @@ feature {NONE} -- Agent validity
 			qualified_call_agent: an_expression.is_qualified_call
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
+			a_target_class_not_void: a_target_class /= Void
+			a_target_class_is_tuple: a_target_class.is_tuple_class
 			query_call: not an_expression.is_procedure
 			tuple_label: an_expression.name.is_tuple_label
 			indexed: an_expression.name.seed /= 0
@@ -9752,7 +9764,7 @@ feature {NONE} -- Agent validity
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
-				l_type := tokens.formal_parameter (l_index)
+				l_type := a_target_class.formal_parameter_type (l_index)
 				l_target_type := a_target.type
 				create l_open_operands.make_with_capacity (1)
 				l_open_operands.put_first (l_target_type)

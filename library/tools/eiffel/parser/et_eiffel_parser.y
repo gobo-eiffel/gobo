@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -638,63 +638,63 @@ Formal_parameter_comma: Formal_parameter ','
 
 Formal_parameter: Identifier
 		{
-			$$ := ast_factory.new_formal_parameter (Void, $1)
+			$$ := ast_factory.new_formal_parameter (Void, $1, last_class)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| E_EXPANDED Identifier
 		{
-			$$ := ast_factory.new_formal_parameter ($1, $2)
+			$$ := ast_factory.new_formal_parameter ($1, $2, last_class)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| E_REFERENCE Identifier
 		{
-			$$ := ast_factory.new_formal_parameter ($1, $2)
+			$$ := ast_factory.new_formal_parameter ($1, $2, last_class)
 			if $$ /= Void then
 				register_constraint (Void)
 			end
 		}
 	| Identifier E_ARROW Constraint_type
 		{
-			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), Void)
+			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), Void, last_class)
 			if $$ /= Void then
 				register_constraint ($3)
 			end
 		}
 	| E_EXPANDED Identifier E_ARROW Constraint_type
 		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void, last_class)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
 		}
 	| E_REFERENCE Identifier E_ARROW Constraint_type
 		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), Void, last_class)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
 		}
 	| Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), $4)
+			$$ := ast_factory.new_constrained_formal_parameter (Void, $1, $2, dummy_constraint ($3), $4, last_class)
 			if $$ /= Void then
 				register_constraint ($3)
 			end
 		}
 	| E_EXPANDED Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5, last_class)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
 		}
 	| E_REFERENCE Identifier E_ARROW Constraint_type Constraint_create
 		{
-			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5)
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, dummy_constraint ($4), $5, last_class)
 			if $$ /= Void then
 				register_constraint ($4)
 			end
