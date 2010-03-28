@@ -5,7 +5,7 @@
 
 		"Gobo Eiffel Developer Guidelines"
 
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/index">
 <chapterinfo>
 	<copyright>
-		<year>2001-2005</year>
+		<year>2001-2010</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
@@ -120,10 +120,10 @@ This document is structured as follows:
 	
 	<varlistentry>
 		<term>
-			<link linkend="svn">SVN Repository</link>
+			<link linkend="git">Git Repository</link>
 		</term>
 		<listitem><para>
-			How to use the SVN Repository.
+			How to use the Git Repository.
 		</para></listitem>
 	</varlistentry>
 	

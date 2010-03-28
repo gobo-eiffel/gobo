@@ -104,6 +104,12 @@ feature -- Access
 			definition: Result = Current
 		end
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := 1
+		end
+
 	header_break: ET_BREAK is
 			-- Break which appears where the header comment is expected
 		do

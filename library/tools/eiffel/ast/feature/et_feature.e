@@ -37,8 +37,6 @@ inherit
 			as_feature
 		end
 
-	HASHABLE
-
 	DEBUG_OUTPUT
 
 feature -- Initialization
