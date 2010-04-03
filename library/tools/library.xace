@@ -55,5 +55,6 @@
 			<cluster name="parser"/>
 			<cluster name="support"/>
 		</cluster>
+		<cluster name="support"/>
 	</cluster>
 </library>

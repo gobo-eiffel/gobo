@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Lint"
 
-	copyright: "Copyright (c) 1999-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,9 @@ inherit
 		export {NONE} all end
 
 	UT_SHARED_ISE_VERSIONS
+		export {NONE} all end
+
+	ET_SHARED_ISE_VARIABLES
 		export {NONE} all end
 
 	UT_SHARED_ECMA_VERSIONS
@@ -46,6 +49,9 @@ feature -- Execution
 			a_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			Arguments.set_program_name ("gelint")
+				-- For compatibility with ISE's tools, define the environment
+				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
+			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
 			is_flat_dbc := True
 			nb := Arguments.argument_count
