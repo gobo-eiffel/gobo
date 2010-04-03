@@ -5,7 +5,7 @@ indexing
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/11/01 $"
 	revision: "$Revision: #18 $"
@@ -460,7 +460,7 @@ feature -- Parser status report
 			-- Should cluster dependence constraints be checked?
 
 	use_cluster_dependence_pathnames: BOOLEAN
-			-- Shold cluster dependence constraints specified in 'providers.txt'
+			-- Should cluster dependence constraints specified in 'providers.txt'
 			-- and 'dependants.txt' files be considered as group pathnames
 			-- (possibly with wildcards)? Otherwise they are considered as
 			-- group names.

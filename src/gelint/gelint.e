@@ -300,6 +300,7 @@ feature {NONE} -- Processing
 			else
 				a_system.set_providers_enabled (True)
 				a_system.set_cluster_dependence_enabled (True)
+				a_system.set_use_cluster_dependence_pathnames (True)
 				a_system.compile
 			end
 		end
