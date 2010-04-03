@@ -5,7 +5,7 @@ indexing
 		"Eiffel client/supplier relationship builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 		do
 			current_class := tokens.unknown_class
 			supplier_classes := dummy_suppliers
-			create type_checker.make
 		end
 
 feature -- Initialization
@@ -120,18 +119,10 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
-		local
-			a_type: ET_TYPE
+			-- the context of `a_client'.)
 		do
 			if a_client.base_class = current_class then
-				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
-				if not type_checker.has_fatal_error then
-					add_supplier (a_type.named_base_class (a_client))
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -139,18 +130,10 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of a formal argument
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
-		local
-			a_type: ET_TYPE
+			-- the context of `a_client'.)
 		do
 			if a_client.base_class = current_class then
-				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
-				if not type_checker.has_fatal_error then
-					add_supplier (a_type.named_base_class (a_client))
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -158,18 +141,10 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
-		local
-			a_type: ET_TYPE
+			-- the context of `a_client'.)
 		do
 			if a_client.base_class = current_class then
-				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
-				if not type_checker.has_fatal_error then
-					add_supplier (a_type.named_base_class (a_client))
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -177,18 +152,10 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of the result of
 			-- an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
-		local
-			a_type: ET_TYPE
+			-- the context of `a_client'.)
 		do
 			if a_client.base_class = current_class then
-				a_type := type_checker.resolved_formal_parameters (a_supplier, a_feature.implementation_class, current_class)
-				if not type_checker.has_fatal_error then
-					add_supplier (a_type.named_base_class (a_client))
-				end
+				add_supplier (a_supplier.named_base_class (a_client))
 			end
 		end
 
@@ -217,9 +184,6 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation
 
-	type_checker: ET_TYPE_CHECKER
-			-- Type checker
-
 	dummy_suppliers: DS_HASH_SET [ET_NAMED_CLASS] is
 			-- Dummy suppliers
 		once
@@ -234,6 +198,5 @@ invariant
 	current_class_not_void: current_class /= Void
 	supplier_classes_not_void: supplier_classes /= Void
 	no_void_supplier_class: not supplier_classes.has_void
-	type_checker_not_void: type_checker /= Void
 
 end

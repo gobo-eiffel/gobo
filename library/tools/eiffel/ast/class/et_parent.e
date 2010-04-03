@@ -27,17 +27,8 @@ feature {NONE} -- Initialization
 			-- Create a new parent clause.
 		require
 			a_type_not_void: a_type /= Void
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			type := a_type
-				-- Find out whether formal parameters have
-				-- been given actual derivations.
-			a_parameters := a_type.actual_parameters
-			if a_parameters /= Void and then a_parameters.has_derived_parameters then
-				actual_parameters := a_parameters
-			end
-			actual_parameters := a_parameters
 			renames := a_renames
 			exports := an_exports
 			undefines := an_undefines
@@ -61,9 +52,6 @@ feature -- Initialization
 			-- Reset parent as it was when it was last parsed.
 		do
 			type.reset
-			if actual_parameters /= Void then
-				actual_parameters.reset
-			end
 			if renames /= Void then
 				renames.reset
 			end
@@ -85,12 +73,6 @@ feature -- Access
 
 	type: ET_BASE_TYPE
 			-- Parent type
-
-	actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			-- Actual generic parameters;
-			-- Void if `type' is not generic or if its
-			-- actual parameters are not different from
-			-- their corresponding formal parameters
 
 	renames: ET_RENAME_LIST
 			-- Rename clause

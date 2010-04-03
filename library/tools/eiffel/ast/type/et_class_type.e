@@ -5,7 +5,7 @@ indexing
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2009, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,7 +78,6 @@ feature -- Access
 					a_named_parameters := an_actual_parameters.named_types (a_context)
 					if a_named_parameters /= an_actual_parameters then
 						create a_generic_class_type.make (type_mark, name, a_named_parameters, named_base_class)
-						a_generic_class_type.set_unresolved_type (Current)
 						Result := a_generic_class_type
 					end
 				end
@@ -372,6 +371,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			other_base_class: ET_CLASS
 			an_ancestor: ET_BASE_TYPE
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
+			l_ancestor_context: ET_NESTED_TYPE_CONTEXT
 		do
 			other_base_class := other.base_class
 			if base_class.is_unknown then
@@ -430,11 +430,14 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						-- when building the ancestors, but this is OK.
 					an_ancestor := other_base_class.ancestor (Current)
 					if an_ancestor /= Void then
-						other_parameters := other.actual_parameters
-						if other_parameters /= Void then
-							an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
+						if not an_ancestor.is_generic then
+							Result := an_ancestor.conforms_to_type (Current, a_context, other_context)
+						else
+							l_ancestor_context := other_context.as_nested_type_context
+							l_ancestor_context.force_last (other)
+							Result := an_ancestor.conforms_to_type (Current, a_context, l_ancestor_context)
+							l_ancestor_context.remove_last
 						end
-						Result := an_ancestor.conforms_to_type (Current, a_context, other_context)
 					elseif base_class.is_system_object_class and then base_class.is_dotnet then
 							-- Under .NET all types are considered to conform to "SYSTEM_OBJECT".
 						Result := True
@@ -460,16 +463,9 @@ feature -- Type processing
 				a_resolved_parameters := an_actual_parameters.resolved_formal_parameters (a_parameters)
 				if a_resolved_parameters /= an_actual_parameters then
 					create a_generic_class_type.make (type_mark, name, a_resolved_parameters, named_base_class)
-					a_generic_class_type.set_unresolved_type (Current)
 					Result := a_generic_class_type
 				end
 			end
-		end
-
-	unresolved_type: ET_CLASS_TYPE is
-			-- Type from which current type is a resolved version
-		do
-			-- Result := Void
 		end
 
 feature -- Output

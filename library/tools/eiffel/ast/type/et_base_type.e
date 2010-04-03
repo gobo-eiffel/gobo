@@ -5,7 +5,7 @@ indexing
 		"Eiffel types directly based on a class"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,9 +25,7 @@ inherit
 			is_base_type,
 			has_anchored_type,
 			has_identifier_anchored_type,
-			named_type_has_formal_type,
 			has_formal_types,
-			named_type_has_formal_types,
 			conforms_from_bit_type,
 			conforms_from_formal_parameter_type,
 			conforms_from_tuple_type,
@@ -60,8 +58,6 @@ inherit
 			conforms_from_class_type as context_conforms_from_class_type,
 			conforms_from_formal_parameter_type as context_conforms_from_formal_parameter_type,
 			conforms_from_tuple_type as context_conforms_from_tuple_type,
-			named_type_has_formal_type as context_named_type_has_formal_type,
-			named_type_has_formal_types as context_named_type_has_formal_types,
 			base_type_has_class as context_base_type_has_class,
 			named_type_has_class as context_named_type_has_class
 		redefine
@@ -302,18 +298,6 @@ feature -- Status report
 			end
 		end
 
-	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain the formal generic parameter
-			-- with index `i' when viewed from `a_context'?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.named_types_have_formal_type (i, a_context)
-			end
-		end
-
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context'?
@@ -323,18 +307,6 @@ feature -- Status report
 			a_parameters := actual_parameters
 			if a_parameters /= Void then
 				Result := a_parameters.has_formal_types (a_context)
-			end
-		end
-
-	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain a formal generic parameter
-			-- when viewed from `a_context'?
-		local
-			a_parameters: like actual_parameters
-		do
-			a_parameters := actual_parameters
-			if a_parameters /= Void then
-				Result := a_parameters.named_types_have_formal_types (a_context)
 			end
 		end
 
@@ -586,20 +558,6 @@ feature -- Type context
 			Result := is_type_reference (Current)
 		end
 
-	context_named_type_has_formal_type (i: INTEGER): BOOLEAN is
-			-- Does the named type of current context contain the
-			-- formal generic parameter with index `i'?
-		do
-			Result := named_type_has_formal_type (i, Current)
-		end
-
-	context_named_type_has_formal_types: BOOLEAN is
-			-- Does the named type of current context
-			-- contain a formal generic parameter?
-		do
-			Result := named_type_has_formal_types (Current)
-		end
-
 	context_base_type_has_class (a_class: ET_CLASS): BOOLEAN is
 			-- Does the base type of current context contain `a_class'?
 		do
@@ -632,6 +590,13 @@ feature -- Type context
 			-- whose ancestors need to be built in order to check for conformance.)
 		do
 			Result := conforms_to_type (other, other_context, Current)
+		end
+
+	to_nested_type_context: ET_NESTED_TYPE_CONTEXT is
+			-- Nested type context corresponding to the same type as current;
+			-- Return a new object at each call.
+		do
+			create Result.make_with_capacity (Current, 1)
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Type context

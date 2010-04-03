@@ -5,7 +5,7 @@ indexing
 		"Eiffel qualified anchored types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,8 +22,6 @@ inherit
 			shallow_named_type,
 			named_type_has_class,
 			named_type_is_formal_type,
-			named_type_has_formal_types,
-			named_type_has_formal_type,
 			has_formal_types,
 			same_syntactical_qualified_like_identifier,
 			same_named_bit_type,
@@ -438,67 +436,11 @@ feature -- Status report
 			end
 		end
 
-	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain the formal generic parameter
-			-- with index `i' when viewed from `a_context'?
-		local
-			l_class: ET_CLASS
-			l_query: ET_QUERY
-			l_target_type: ET_TYPE
-			l_target_context: ET_NESTED_TYPE_CONTEXT
-		do
-			if seed = 0 then
-					-- Qualified anchored type not resolved yet.
-				Result := False
-			else
-				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
-					l_target_context := a_context.new_type_context (l_target_type)
-					Result := l_query.type.named_type_has_formal_type (i, l_target_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current qualified anchored type.
-					Result := False
-				end
-			end
-		end
-
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		do
 			Result := target_type.has_formal_types (a_context)
-		end
-
-	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain a formal generic parameter
-			-- when viewed from `a_context'?
-		local
-			l_class: ET_CLASS
-			l_query: ET_QUERY
-			l_target_type: ET_TYPE
-			l_target_context: ET_NESTED_TYPE_CONTEXT
-		do
-			if seed = 0 then
-					-- Qualified anchored type not resolved yet.
-				Result := False
-			else
-				l_target_type := target_type
-				l_class := l_target_type.base_class (a_context)
-				l_query := l_class.seeded_query (seed)
-				if l_query /= Void then
-					l_target_context := a_context.new_type_context (l_target_type)
-					Result := l_query.type.named_type_has_formal_types (l_target_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current qualified anchored type.
-					Result := False
-				end
-			end
 		end
 
 	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is

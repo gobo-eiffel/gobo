@@ -5,7 +5,7 @@ indexing
 		"Eiffel procedures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2008/12/01 $"
 	revision: "$Revision: #10 $"
@@ -77,25 +77,6 @@ feature -- Access
 					Result := l_synonym.header_break
 				else
 					Result := extended_name.break
-				end
-			end
-		end
-
-feature -- Type processing
-
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			a_parameters := a_parent.actual_parameters
-			if a_parameters /= Void then
-				if arguments /= Void then
-					arguments := arguments.resolved_formal_parameters (a_parameters)
 				end
 			end
 		end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel qualified anchored types of the form 'like {A}.b'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,19 +25,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_type: like braced_type; a_name: like qualified_name) is
+	make (a_type_mark: like type_mark; a_type: like target_type; a_name: like qualified_name) is
 			-- Create a new 'like {A}.b' type.
 		require
 			a_type_not_void: a_type /= Void
 			a_name_not_void: a_name /= Void
 		do
 			type_mark := a_type_mark
-			braced_type := a_type
+			target_type := a_type
 			qualified_name := a_name
 			like_keyword := tokens.like_keyword
+			left_brace := tokens.left_brace_symbol
+			right_brace := tokens.right_brace_symbol
 		ensure
 			type_mark_set: type_mark = a_type_mark
-			braced_type_set: target_type = a_type
+			target_type_set: target_type = a_type
 			qualified_name_set: qualified_name = a_name
 		end
 
@@ -50,14 +52,14 @@ feature -- Access
 	like_keyword: ET_KEYWORD
 			-- 'like' keyword
 
-	target_type: ET_TYPE is
+	target_type: ET_TYPE
 			-- Target anchored type
-		do
-			Result := braced_type.type
-		end
 
-	braced_type: ET_TARGET_TYPE
-			-- Target anchored type surrounded by braces
+	left_brace: ET_SYMBOL
+			-- '{' symbol
+
+	right_brace: ET_SYMBOL
+			-- '}' symbol
 
 feature -- Setting
 
@@ -71,6 +73,26 @@ feature -- Setting
 			like_keyword_set: like_keyword = a_like
 		end
 
+	set_left_brace (a_left: like left_brace) is
+			-- Set `left_brace' to `a_left'.
+		require
+			a_left_not_void: a_left /= Void
+		do
+			left_brace := a_left
+		ensure
+			left_brace_set: left_brace = a_left
+		end
+
+	set_right_brace (a_right: like right_brace) is
+			-- Set `right_brace' to `a_right'.
+		require
+			a_right_not_void: a_right /= Void
+		do
+			right_brace := a_right
+		ensure
+			right_brace_set: right_brace = a_right
+		end
+
 feature -- Type processing
 
 	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_QUALIFIED_LIKE_BRACED_TYPE is
@@ -78,14 +100,16 @@ feature -- Type processing
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
 		local
-			l_braced_type: like braced_type
-			l_resolved_braced_type: like braced_type
+			l_target_type: like target_type
+			l_resolved_target_type: like target_type
 		do
 			Result := Current
-			l_braced_type := braced_type
-			l_resolved_braced_type := l_braced_type.resolved_formal_parameters (a_parameters)
-			if l_braced_type /= l_resolved_braced_type then
-				create Result.make (type_mark, l_resolved_braced_type, qualified_name)
+			l_target_type := target_type
+			l_resolved_target_type := l_target_type.resolved_formal_parameters (a_parameters)
+			if l_target_type /= l_target_type then
+				create Result.make (type_mark, l_resolved_target_type, qualified_name)
+				Result.set_left_brace (left_brace)
+				Result.set_right_brace (right_brace)
 			end
 		end
 
@@ -113,6 +137,7 @@ feature -- Processing
 
 invariant
 
-	braced_type_not_void: braced_type /= Void
+	left_brace_not_void: left_brace /= Void
+	right_brace_not_void: right_brace /= Void
 
 end

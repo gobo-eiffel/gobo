@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -2741,7 +2741,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		do
 			a_type.like_keyword.process (Current)
-			a_type.braced_type.process (Current)
+			a_type.left_brace.process (Current)
+			a_type.target_type.process (Current)
+			a_type.right_brace.process (Current)
 			a_type.qualified_name.process (Current)
 		end
 

@@ -5,7 +5,7 @@ indexing
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			current_type := tokens.unknown_class
 			current_class_impl := tokens.unknown_class
 			current_feature_impl := dummy_feature
+			create constraint_context.make_with_capacity (current_class, 1)
 		end
 
 feature -- Validity checking
@@ -75,7 +76,6 @@ feature -- Validity checking
 			old_type: ET_BASE_TYPE
 			old_class: ET_CLASS
 			old_class_impl: ET_CLASS
-			l_type: ET_TYPE
 		do
 			has_fatal_error := False
 			old_feature_impl := current_feature_impl
@@ -86,10 +86,7 @@ feature -- Validity checking
 			current_class := current_type.base_class
 			old_class_impl := current_class_impl
 			current_class_impl := a_current_class_impl
-			l_type := resolved_formal_parameters (a_type, current_class_impl, current_type)
-			if not has_fatal_error then
-				l_type.process (Current)
-			end
+			a_type.process (Current)
 			current_class_impl := old_class_impl
 			current_class := old_class
 			current_type := old_type
@@ -310,97 +307,6 @@ feature -- Validity checking
 			current_class_impl := old_class_impl
 			current_class := old_class
 			current_type := old_type
-		end
-
-	resolved_formal_parameters (a_type: ET_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE): ET_TYPE is
-			-- Replace formal generic parameters in `a_type' (when
-			-- written in class `a_current_class_impl') by their
-			-- corresponding actual parameters in `a_current_type'.
-			-- Set `has_fatal_error' if an error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_current_class_impl_not_void: a_current_class_impl /= Void
-			a_current_type_not_void: a_current_type /= Void
-			a_current_type_valid: a_current_type.is_valid_context
-			a_current_class_preparsed: a_current_type.base_class.is_preparsed
-		local
-			an_ancestor: ET_BASE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			old_type: ET_BASE_TYPE
-			old_class: ET_CLASS
-			old_class_impl: ET_CLASS
-		do
-			has_fatal_error := False
-			old_type := current_type
-			current_type := a_current_type
-			old_class := current_class
-			current_class := current_type.base_class
-			old_class_impl := current_class_impl
-			current_class_impl := a_current_class_impl
-			if current_class_impl = current_type then
-				Result := a_type
-			elseif not current_class_impl.is_generic then
-				Result := a_type
-			else
-					-- We need to replace formal generic parameters in
-					-- `a_type' by their corresponding actual parameters.
-				if current_class_impl /= current_class then
-						-- We need first to get the ancestor of `current_class'
-						-- corresponding to `current_class_impl' in order to find
-						-- the various generic derivations which occurred on the
-						-- parent clauses between `current_class' and
-						-- `current_class_impl' where `a_type' was actually written.
-					current_class.process (current_system.ancestor_builder)
-					if not current_class.ancestors_built or else current_class.has_ancestors_error then
-						set_fatal_error
-							-- Return the input type despite the error.
-						Result := a_type
-					else
-						an_ancestor := current_class.ancestor (current_class_impl)
-						if an_ancestor = Void then
-								-- Internal error: `current_class' is a descendant of `current_class_impl'.
-							set_fatal_error
-							error_handler.report_giaaa_error
-								-- Return the input type despite the error.
-							Result := a_type
-						else
-							a_parameters := an_ancestor.actual_parameters
-							if a_parameters = Void then
-									-- Internal error: we said that `a_current_class_impl' was generic.
-								set_fatal_error
-								error_handler.report_giaaa_error
-									-- Return the input type despite the error.
-								Result := a_type
-							else
-								Result := a_type.resolved_formal_parameters (a_parameters)
-							end
-						end
-					end
-				else
-					Result := a_type
-				end
-				if not has_fatal_error then
-					if current_class.is_generic and current_type /= current_class then
-							-- We need to replace the formal generic parameters of
-							-- `current_class' by their corresponding actual
-							-- parameters in `current_type'.
-						a_parameters := current_type.actual_parameters
-						if a_parameters = Void then
-								-- Internal error: we said that `current_class' was generic.
-								-- Therefore `current_type' is generic as well.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						else
-							Result := Result.resolved_formal_parameters (a_parameters)
-						end
-					end
-				end
-			end
-			current_class_impl := old_class_impl
-			current_class := old_class
-			current_type := old_type
-		ensure
-			resolved_type_not_void: Result /= Void
 		end
 
 feature -- Type conversion
@@ -656,27 +562,25 @@ feature {NONE} -- Validity checking
 							an_actual.process (Current)
 							reset_fatal_error (has_fatal_error or had_error)
 							a_constraint := a_formal.constraint
-							if a_constraint /= Void then
-									-- If we have:
-									--
-									--   class A [G, H -> LIST [G]] ...
-									--   class X feature foo: A [ANY, LIST [STRING]] ...
-									--
-									-- we need to check that "LIST[STRING]" conforms to
-									-- "LIST[ANY]", not just "LIST[G]".
-									-- Likewise if we have:
-									--
-									--   class A [G -> LIST [G]] ...
-									--   class X feature foo: A [LIST [FOO]] ...
-									--
-									-- we need to check that "LIST[FOO]" conforms to
-									-- "LIST[LIST[FOO]]", not just "LIST[G]".
-									-- Hence the necessary resolving of formal parameters in the constraint.
-								a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
-							else
+							if a_constraint = Void then
 								a_constraint := current_system.any_type
 							end
-							if not an_actual.conforms_to_type (a_constraint, current_type, current_type) then
+								-- If we have:
+								--
+								--   class A [G, H -> LIST [G]] ...
+								--   class X feature foo: A [ANY, LIST [STRING]] ...
+								--
+								-- we need to check that "LIST [STRING]" conforms to
+								-- "LIST [ANY]", not just "LIST [G]".
+								-- Likewise if we have:
+								--
+								--   class A [G -> LIST [G]] ...
+								--   class X feature foo: A [LIST [FOO]] ...
+								--
+								-- we need to check that "LIST [FOO]" conforms to
+								-- "LIST [LIST [FOO]]", not just "LIST [G]".
+							constraint_context.set (a_type, current_type)
+							if not an_actual.conforms_to_type (a_constraint, constraint_context, current_type) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
 									--
@@ -1093,6 +997,9 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
+	constraint_context: ET_NESTED_TYPE_CONTEXT
+			-- Constraint context for type conformance checking
+
 	dummy_feature: ET_FEATURE is
 			-- Dummy feature
 		local
@@ -1111,5 +1018,6 @@ invariant
 	valid_current_type: current_type.is_valid_context
 	current_class_definition: current_class = current_type.base_class
 	current_feature_impl_not_void: current_feature_impl /= Void
+	constraint_context_not_void: constraint_context /= Void
 
 end

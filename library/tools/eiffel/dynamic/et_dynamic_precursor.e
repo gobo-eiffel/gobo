@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature precursors equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +19,7 @@ inherit
 			make as make_feature
 		redefine
 			is_precursor,
-			dynamic_precursor,
-			resolved_formal_parameters
+			dynamic_precursor
 		end
 
 create
@@ -67,24 +66,6 @@ feature -- Access
 			-- `a_feature' is the precursor of `current_feaure' in `a_parent_type'
 		do
 			Result := current_feature.dynamic_precursor (a_feature, a_parent_type, a_system)
-		end
-
-feature {NONE} -- Implementation
-
-	resolved_formal_parameters (a_type: ET_TYPE): ET_TYPE is
-			-- Replace formal generic parameters in `a_type' (appearing
-			-- in the signature of `static_feature')  by their
-			-- corresponding actual parameters in `target_type'.
-		do
-			Result := type_checker.resolved_formal_parameters (a_type, parent_type.base_class, target_type.base_type)
-		end
-
-	type_checker: ET_TYPE_CHECKER is
-			-- Type checker
-		once
-			create Result.make
-		ensure
-			type_checker_not_void: Result /= Void
 		end
 
 invariant

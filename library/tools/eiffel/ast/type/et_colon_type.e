@@ -5,7 +5,7 @@ indexing
 		"Eiffel types preceded by a colon"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -66,23 +66,6 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := type.break
-		end
-
-feature -- Type processing
-
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_COLON_TYPE is
-			-- Version of current type where the formal generic
-			-- parameter types have been replaced by their actual
-			-- counterparts in `a_parameters'
-		local
-			a_type: ET_TYPE
-		do
-			a_type := type.resolved_formal_parameters (a_parameters)
-			if a_type /= type then
-				create Result.make (colon, a_type)
-			else
-				Result := Current
-			end
 		end
 
 feature -- Processing

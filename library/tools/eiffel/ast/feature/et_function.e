@@ -5,7 +5,7 @@ indexing
 		"Eiffel functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,8 +25,7 @@ inherit
 		redefine
 			is_function,
 			is_prefixable, is_infixable,
-			is_bracketable, undefined_feature,
-			resolve_inherited_signature
+			is_bracketable, undefined_feature
 		end
 
 	ET_ROUTINE
@@ -138,26 +137,6 @@ feature -- Conversion
 			Result.set_object_tests (object_tests)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
-		end
-
-feature -- Type processing
-
-	resolve_inherited_signature (a_parent: ET_PARENT) is
-			-- Resolve arguments and type inherited from `a_parent'.
-			-- Resolve any formal generic parameters of declared types
-			-- with the corresponding actual parameters in `a_parent',
-			-- and duplicate identifier anchored types (and clear their
-			-- base types).
-		local
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-		do
-			a_parameters := a_parent.actual_parameters
-			if a_parameters /= Void then
-				declared_type := declared_type.resolved_formal_parameters (a_parameters)
-				if arguments /= Void then
-					arguments := arguments.resolved_formal_parameters (a_parameters)
-				end
-			end
 		end
 
 end

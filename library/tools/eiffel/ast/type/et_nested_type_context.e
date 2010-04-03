@@ -5,7 +5,7 @@ indexing
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_NESTED_TYPE_CONTEXT
 inherit
 
 	ET_TYPE_CONTEXT
+		redefine
+			as_nested_type_context
+		end
 
 	ET_TAIL_LIST [ET_TYPE]
 		rename
@@ -290,44 +293,6 @@ feature -- Status report
 				l_type := last
 				remove_last
 				Result := l_type.is_type_reference (Current)
-				put_last (l_type)
-			end
-		end
-
-	named_type_has_formal_type (i: INTEGER): BOOLEAN is
-			-- Does the named type of current context contain the
-			-- formal generic parameter with index `i'?
-		local
-			l_type: ET_TYPE
-		do
-			inspect count
-			when 0 then
-				Result := root_context.context_named_type_has_formal_type (i)
-			when 1 then
-				Result := last.named_type_has_formal_type (i, root_context)
-			else
-				l_type := last
-				remove_last
-				Result := l_type.named_type_has_formal_type (i, Current)
-				put_last (l_type)
-			end
-		end
-
-	named_type_has_formal_types: BOOLEAN is
-			-- Does the named type of current context
-			-- contain a formal generic parameter?
-		local
-			l_type: ET_TYPE
-		do
-			inspect count
-			when 0 then
-				Result := root_context.context_named_type_has_formal_types
-			when 1 then
-				Result := last.named_type_has_formal_types (root_context)
-			else
-				l_type := last
-				remove_last
-				Result := l_type.named_type_has_formal_types (Current)
 				put_last (l_type)
 			end
 		end
@@ -784,6 +749,24 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 					Result := l_type.conforms_from_tuple_type (other, other_context, a_context)
 				end
 			end
+		end
+
+feature -- Conversion
+
+	as_nested_type_context: ET_NESTED_TYPE_CONTEXT is
+			-- Nested type context corresponding to the same type as current;
+			-- Return `Current' is already a nested type context.
+		do
+			Result := Current
+		ensure then
+			same_object: Result = Current
+		end
+
+	to_nested_type_context: ET_NESTED_TYPE_CONTEXT is
+			-- Nested type context corresponding to the same type as current;
+			-- Return a new object at each call.
+		do
+			Result := cloned_type_context
 		end
 
 feature -- Link

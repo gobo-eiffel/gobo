@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,8 +21,6 @@ inherit
 			shallow_named_type,
 			named_type_has_class,
 			named_type_is_formal_type,
-			named_type_has_formal_type,
-			named_type_has_formal_types,
 			same_syntactical_like_feature,
 			same_named_bit_type,
 			same_named_class_type,
@@ -699,108 +697,6 @@ feature -- Status report
 				l_query := a_class.seeded_query (seed)
 				if l_query /= Void then
 					Result := l_query.type.is_type_expanded (a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain the formal generic parameter
-			-- with index `i' when viewed from `a_context'?
-		local
-			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.named_type_has_formal_type (i, a_context)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
-					Result := l_query.type.named_type_has_formal_type (i, a_context)
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			end
-		end
-
-	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain a formal generic parameter
-			-- when viewed from `a_context'?
-		local
-			a_class: ET_CLASS
-			l_feature: ET_FEATURE
-			l_query: ET_QUERY
-			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-		do
-			if seed = 0 then
-					-- Anchored type not resolved yet.
-				Result := False
-			elseif is_like_argument then
-				a_class := a_context.base_class
-				if is_procedure then
-					l_feature := a_class.seeded_procedure (seed)
-				else
-					l_feature := a_class.seeded_query (seed)
-				end
-				if l_feature /= Void then
-					args := l_feature.arguments
-					an_index := index
-					if args = Void or else an_index > args.count then
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					else
-						Result := args.item (an_index).type.named_type_has_formal_types (a_context)
-					end
-				else
-						-- Internal error: an inconsistency has been
-						-- introduced in the AST since we relsolved
-						-- current anchored type.
-					Result := False
-				end
-			else
-				a_class := a_context.base_class
-				l_query := a_class.seeded_query (seed)
-				if l_query /= Void then
-					Result := l_query.type.named_type_has_formal_types (a_context)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved

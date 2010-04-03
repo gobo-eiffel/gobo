@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,6 @@ inherit
 	ET_ACTUAL_PARAMETER_LIST
 		redefine
 			item, put_first, process,
-			has_derived_parameters,
 			resolved_formal_parameters,
 			named_types, fixed_array
 		end
@@ -110,14 +109,6 @@ feature -- Element change
 		end
 
 feature -- Type processing
-
-	has_derived_parameters: BOOLEAN is
-			-- Are there actual parameters which are different
-			-- from their corresponding formal parameters because
-			-- of the generic derivation?
-		do
-			Result := False
-		end
 
 	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_FORMAL_PARAMETER_LIST is
 			-- Version of current types where the formal generic

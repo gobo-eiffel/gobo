@@ -5,7 +5,7 @@ indexing
 		"Eiffel client/supplier relationship handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,10 +85,7 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
+			-- the context of `a_client'.)
 		require
 			a_supplier_not_void: a_supplier /= Void
 			a_client_not_void: a_client /= Void
@@ -101,10 +98,7 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of a formal argument
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
+			-- the context of `a_client'.)
 		require
 			a_supplier_not_void: a_supplier /= Void
 			a_client_not_void: a_client /= Void
@@ -117,10 +111,7 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of a local variable
 			-- of an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
+			-- the context of `a_client'.)
 		require
 			a_supplier_not_void: a_supplier /= Void
 			a_client_not_void: a_client /= Void
@@ -133,10 +124,7 @@ feature -- Reporting
 			-- Report the fact that `a_supplier' is the type of the result of
 			-- an inline agent in `a_feature' in type `a_client'.
 			-- (Note that `a_supplier' is assumed to be interpreted in
-			-- the context of `a_feature.implementation_class'. Its
-			-- formal generic parameters should be resolved in the
-			-- base class of `a_client' first before using `a_client'
-			-- as its context.)
+			-- the context of `a_client'.)
 		require
 			a_supplier_not_void: a_supplier /= Void
 			a_client_not_void: a_client /= Void

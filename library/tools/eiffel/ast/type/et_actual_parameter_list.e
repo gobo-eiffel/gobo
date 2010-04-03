@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -236,27 +236,6 @@ feature -- Status report
 			end
 		end
 
-	named_types_have_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of one of current types contain the formal generic
-			-- parameter with index `i' when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		local
-			j, nb: INTEGER
-		do
-			nb := count - 1
-			from j := 0 until j > nb loop
-				if storage.item (j).type.named_type_has_formal_type (i, a_context) then
-					Result := True
-					j := nb + 1 -- Jump out of the loop.
-				else
-					j := j + 1
-				end
-			end
-		end
-
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does one of the current types contain a formal generic
 			-- parameter when viewed from `a_context'?
@@ -270,27 +249,6 @@ feature -- Status report
 			nb := count - 1
 			from i := 0 until i > nb loop
 				if storage.item (i).type.has_formal_types (a_context) then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
-		end
-
-	named_types_have_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of one of the current types contain a formal generic
-			-- parameter when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		local
-			i, nb: INTEGER
-		do
-			nb := count - 1
-			from i := 0 until i > nb loop
-				if storage.item (i).type.named_type_has_formal_types (a_context) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -519,28 +477,6 @@ feature -- Conformance
 		end
 
 feature -- Type processing
-
-	has_derived_parameters: BOOLEAN is
-			-- Are there actual parameters which are different
-			-- from their corresponding formal parameters because
-			-- of the generic derivation?
-		local
-			i, j, nb: INTEGER
-			a_formal: ET_FORMAL_PARAMETER_TYPE
-		do
-			nb := count - 1
-			j := count
-			from i := 0 until i > nb loop
-				a_formal ?= storage.item (i).type
-				if a_formal = Void or else a_formal.index /= j then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-					j := j - 1
-				end
-			end
-		end
 
 	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_LIST is
 			-- Version of current types where the formal generic

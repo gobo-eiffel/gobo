@@ -1426,59 +1426,38 @@ feature {NONE} -- Event handling
 	report_inline_agent_formal_argument_declaration (a_formal: ET_FORMAL_ARGUMENT) is
 			-- Report that the declaration of the formal argument `a_formal'
 			-- of an inline agent has been processed.
-			-- Note: The type of the formal argument is still viewed from
-			-- the implementation class of `current_feature'. Its formal
-			-- generic parameters need to be resolved in `current_class'
-			-- before using it.
 		local
-			l_resolved_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_resolved_type := resolved_formal_parameters (a_formal.type, current_class_impl, current_type)
-				if not has_fatal_error then
-					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
-					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-						-- Unless proven otherwise after possible attachments,
-						-- a formal actual argument is assumed to be never Void.
-					l_dynamic_type_set.set_never_void
-					set_dynamic_type_set (l_dynamic_type_set, a_formal.name)
-				end
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_formal.type, current_type)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+					-- Unless proven otherwise after possible attachments,
+					-- a formal actual argument is assumed to be never Void.
+				l_dynamic_type_set.set_never_void
+				set_dynamic_type_set (l_dynamic_type_set, a_formal.name)
 			end
 		end
 
 	report_inline_agent_local_variable_declaration (a_local: ET_LOCAL_VARIABLE) is
 			-- Report that the declaration of the local variable `a_local'
 			-- of an inline agent has been processed.
-			-- Note: The type of the local variable is still viewed from
-			-- the implementation class of `current_feature'. Its formal
-			-- generic parameters need to be resolved in `current_class'
-			-- before using it.
 		local
-			l_resolved_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_resolved_type := resolved_formal_parameters (a_local.type, current_class_impl, current_type)
-				if not has_fatal_error then
-					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
-					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-					set_dynamic_type_set (l_dynamic_type_set, a_local.name)
-				end
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_local.type, current_type)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
 			end
 		end
 
 	report_inline_agent_result_declaration (a_type: ET_TYPE) is
 			-- Report that the declaration of the "Result" entity,
 			-- of type `a_type', of an inline agent has been processed.
-			-- Note: The type of the "Result" entity is still viewed from
-			-- the implementation class of `current_feature'. Its formal
-			-- generic parameters need to be resolved in `current_class'
-			-- before using it.
 		local
-			l_resolved_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -1489,12 +1468,9 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					l_resolved_type := resolved_formal_parameters (a_type, current_class_impl, current_type)
-					if not has_fatal_error then
-						l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
-						l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-						set_dynamic_type_set (l_dynamic_type_set, current_inline_agent.implicit_result)
-					end
+					l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
+					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+					set_dynamic_type_set (l_dynamic_type_set, current_inline_agent.implicit_result)
 				end
 			end
 		end
@@ -1547,22 +1523,14 @@ feature {NONE} -- Event handling
 	report_local_variable_declaration (a_local: ET_LOCAL_VARIABLE) is
 			-- Report that the declaration of the local variable `a_local'
 			-- of a feature has been processed.
-			-- Note: The type of the local variable is still viewed from
-			-- the implementation class of `current_feature'. Its formal
-			-- generic parameters need to be resolved in `current_class'
-			-- before using it.
 		local
-			l_resolved_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_resolved_type := resolved_formal_parameters (a_local.type, current_class_impl, current_type)
-				if not has_fatal_error then
-					l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type)
-					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-					set_dynamic_type_set (l_dynamic_type_set, a_local.name)
-				end
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_local.type, current_type)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
 			end
 		end
 

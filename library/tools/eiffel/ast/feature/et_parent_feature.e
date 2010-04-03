@@ -101,15 +101,6 @@ feature -- Status report
 			definition: Result = (select_name /= Void)
 		end
 
-	signature_has_formal_types: BOOLEAN is
-			-- Does at least one type in the signature of `precursor_feature'
-			-- contain a formal generic parameter when viewed from the parent class?
-		do
-			if parent.actual_parameters /= Void then
-				Result := precursor_feature.signature_has_formal_types (parent.type.base_class)
-			end
-		end
-
 feature -- Access
 
 	extended_name: ET_EXTENDED_FEATURE_NAME is

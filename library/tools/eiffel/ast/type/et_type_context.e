@@ -5,7 +5,7 @@ indexing
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -185,25 +185,6 @@ feature -- Status report
 	is_type_reference: BOOLEAN is
 			-- Is `base_type' a reference type?
 		require
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
-	named_type_has_formal_type (i: INTEGER): BOOLEAN is
-			-- Does the named type of current context contain the
-			-- formal generic parameter with index `i'?
-		require
-			valid_context: is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-			i_large_enough: i >= 1
-		deferred
-		end
-
-	named_type_has_formal_types: BOOLEAN is
-			-- Does the named type of current context
-			-- contain a formal generic parameter?
-		require
-			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
@@ -449,6 +430,29 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			other_context_valid: other_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
+		end
+
+feature -- Conversion
+
+	as_nested_type_context: ET_NESTED_TYPE_CONTEXT is
+			-- Nested type context corresponding to the same type as current;
+			-- Return `Current' is already a nested type context.
+		do
+			Result := to_nested_type_context
+		ensure
+			new_type_context_not_void: Result /= Void
+			valid_context: is_valid_context implies Result.is_valid_context
+			same_root_context: Result.same_root_context (Current)
+		end
+
+	to_nested_type_context: ET_NESTED_TYPE_CONTEXT is
+			-- Nested type context corresponding to the same type as current;
+			-- Return a new object at each call.
+		deferred
+		ensure
+			new_type_context_not_void: Result /= Void
+			valid_context: is_valid_context implies Result.is_valid_context
+			same_root_context: Result.same_root_context (Current)
 		end
 
 end

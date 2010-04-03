@@ -376,7 +376,7 @@ feature {NONE} -- Ancestors
 					error_handler.report_gvagp0a_error (current_class, l_ancestor_type, a_parent_type)
 				end
 			else
-				a_parameters := a_parent.actual_parameters
+				a_parameters := a_parent.type.actual_parameters
 				ancestors.force_new (a_parent_type, a_class)
 					-- Add proper ancestors of current parent
 					-- to the ancestors of `an_heir'.

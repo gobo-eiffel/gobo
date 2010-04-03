@@ -286,31 +286,8 @@ feature -- Status report
 			-- Result := False
 		end
 
-	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain the formal generic parameter
-			-- with index `i' when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-			i_large_enough: i >= 1
-		do
-			-- Result := False
-		end
-
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type contain a formal generic parameter
-			-- when viewed from `a_context'?
-		require
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			-- Result := False
-		end
-
-	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain a formal generic parameter
 			-- when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
@@ -753,8 +730,12 @@ feature -- Type processing
 			-- Version of current type where the formal generic
 			-- parameter types have been replaced by their actual
 			-- counterparts in `a_parameters'
+		require
+			a_parameters_not_void: a_parameters /= Void
 		do
 			Result := Current
+		ensure
+			resolved_type_not_void: Result /= Void
 		end
 
 	resolved_formal_parameters_with_type (a_type: ET_TYPE): ET_TYPE is

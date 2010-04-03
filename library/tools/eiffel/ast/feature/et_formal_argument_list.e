@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of formal arguments"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -191,54 +191,6 @@ feature -- Setting
 			right_parenthesis := a_right
 		ensure
 			right_parenthesis_set: right_parenthesis = a_right
-		end
-
-feature -- Type processing
-
-	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): like Current is
-			-- Version of current arguments where the formal generic
-			-- parameter types of the declared types have been replaced
-			-- by their actual counterparts in `a_parameters'
-		require
-			a_parameters_not_void: a_parameters /= Void
-		local
-			i, j, nb: INTEGER
-			arg, new_arg: ET_FORMAL_ARGUMENT
-			a_type, new_type: ET_DECLARED_TYPE
-		do
-			Result := Current
-			nb := count - 1
-			from i := 0 until i > nb loop
-				arg := storage.item (i).formal_argument
-				if arg.declared_type = a_type then
-						-- This argument shares the same
-						-- type as the previous argument.
-				else
-					a_type := arg.declared_type
-					new_type := a_type.resolved_formal_parameters (a_parameters)
-				end
-				if a_type /= new_type then
-					new_arg := arg.cloned_argument
-					new_arg.set_declared_type (new_type)
-				else
-					new_arg := arg
-				end
-				if Result /= Current then
-					Result.put_first (new_arg)
-				elseif arg /= new_arg then
-					create Result.make_with_capacity (count)
-					Result.set_left_parenthesis (left_parenthesis)
-					Result.set_right_parenthesis (right_parenthesis)
-					from j := 0 until j >= i loop
-						Result.put_first (storage.item (j))
-						j := j + 1
-					end
-					Result.put_first (new_arg)
-				end
-				i := i + 1
-			end
-		ensure
-			inherited_arguments_not_void: Result /= Void
 		end
 
 feature -- Processing

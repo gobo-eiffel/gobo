@@ -20,10 +20,8 @@ inherit
 			shallow_named_type,
 			named_type_has_class,
 			named_type_is_formal_type,
-			named_type_has_formal_types,
 			name,
 			is_type_reference,
-			named_type_has_formal_type,
 			has_formal_types,
 			same_syntactical_bit_type,
 			same_syntactical_class_type,
@@ -764,45 +762,6 @@ feature -- Status report
 			end
 		end
 
-	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain the formal generic parameter
-			-- with index `i' when viewed from `a_context'?
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-			l_context_base_class: ET_CLASS
-			l_ancestor: ET_BASE_TYPE
-		do
-			l_context_base_class := a_context.base_class
-			if l_context_base_class /= implementation_class then
-				l_ancestor := l_context_base_class.ancestor (implementation_class)
-				if l_ancestor = Void then
-						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
-					Result := False
-				elseif index > l_ancestor.actual_parameter_count then
-						-- Internal error: `implementation_class' is the base class of
-						-- `l_ancestor'. So there is a mismatch between the number of
-						-- actual and formal generic parameters in `l_ancestor'.
-					Result := False
-				else
-					Result := l_ancestor.actual_parameters.type (index).named_type_has_formal_type (i, a_context)
-				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := a_formal_type.index = i
-				else
-					Result := an_actual.named_type_has_formal_type (i, a_context.root_context)
-				end
-			else
-					-- Internal error: does current type really appear in `a_context'?
-				Result := False
-			end
-		end
-
 	has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
 			-- Does current type contain a formal generic parameter
 			-- when viewed from `a_context'?
@@ -835,45 +794,6 @@ feature -- Status report
 					Result := True
 				else
 					Result := an_actual.has_formal_types (a_context.root_context)
-				end
-			else
-					-- Internal error: does current type really appear in `a_context'?
-				Result := False
-			end
-		end
-
-	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain a formal generic parameter
-			-- when viewed from `a_context'?
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-			l_context_base_class: ET_CLASS
-			l_ancestor: ET_BASE_TYPE
-		do
-			l_context_base_class := a_context.base_class
-			if l_context_base_class /= implementation_class then
-				l_ancestor := l_context_base_class.ancestor (implementation_class)
-				if l_ancestor = Void then
-						-- Internal error: `l_context_base_class' is a descendant of `implementation_class'.
-					Result := False
-				elseif index > l_ancestor.actual_parameter_count then
-						-- Internal error: `implementation_class' is the base class of
-						-- `l_ancestor'. So there is a mismatch between the number of
-						-- actual and formal generic parameters in `l_ancestor'.
-					Result := False
-				else
-					Result := l_ancestor.actual_parameters.type (index).named_type_has_formal_types (a_context)
-				end
-			elseif index <= a_context.base_type_actual_count then
-				an_actual := a_context.base_type_actual (index)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := True
-				else
-					Result := an_actual.named_type_has_formal_types (a_context.root_context)
 				end
 			else
 					-- Internal error: does current type really appear in `a_context'?

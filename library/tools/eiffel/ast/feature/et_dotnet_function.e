@@ -5,7 +5,7 @@ indexing
 		"Functions implemented in .NET"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,6 @@ inherit
 			is_function,
 			is_prefixable, is_infixable,
 			is_bracketable, undefined_feature,
-			resolve_inherited_signature,
 			is_deferred
 		end
 

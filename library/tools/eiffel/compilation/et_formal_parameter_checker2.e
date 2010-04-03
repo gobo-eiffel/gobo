@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal parameter validity checkers, second pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_FORMAL_PARAMETER_CHECKER2
 inherit
 
 	ET_CLASS_SUBPROCESSOR
+		redefine
+			make
+		end
 
 	ET_AST_NULL_PROCESSOR
 		undefine
@@ -29,6 +32,15 @@ inherit
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new signature checker for features of given classes.
+		do
+			precursor {ET_CLASS_SUBPROCESSOR}
+			create constraint_context.make_with_capacity (current_class, 1)
+		end
 
 feature -- Validity checking
 
@@ -120,18 +132,17 @@ feature {NONE} -- Constraint validity
 						an_actual.process (Current)
 						a_formal := a_formals.formal_parameter (i)
 						a_constraint := a_formal.constraint
-						if a_constraint /= Void then
-								-- If we have:
-								--    class A [G, H -> LIST [G]] ...
-								--    class X [G -> A [ANY, LIST [STRING]] ...
-								-- we need to check that "LIST[STRING]" conforms to
-								-- "LIST[ANY]", not just "LIST[G]". Hence the necessary
-								-- resolving of formal parameters in the constraint.
-							a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
-						else
+						if a_constraint = Void then
 							a_constraint := current_universe.any_type
 						end
-						if not an_actual.conforms_to_type (a_constraint, current_class, current_class) then
+							-- If we have:
+							--    class A [G, H -> LIST [G]] ...
+							--    class X [G -> A [ANY, LIST [STRING]] ...
+							-- we need to check that "LIST [STRING]" conforms to
+							-- "LIST [ANY]", not just "LIST [G]". So, the constraint
+							-- needs to be handled in the correct type context.
+						constraint_context.set (a_type, current_class)
+						if not an_actual.conforms_to_type (a_constraint, constraint_context, current_class) then
 								-- The actual parameter does not conform to the
 								-- constraint of its corresponding formal parameter.
 							set_fatal_error
@@ -193,5 +204,14 @@ feature {ET_AST_NODE} -- Type dispatcher
 		do
 			check_tuple_type_constraint (a_type)
 		end
+
+feature {NONE} -- Implementation
+
+	constraint_context: ET_NESTED_TYPE_CONTEXT
+			-- Constraint context for type conformance checking
+
+invariant
+
+	constraint_context_not_void: constraint_context /= Void
 
 end

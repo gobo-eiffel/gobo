@@ -537,10 +537,8 @@ feature {NONE} -- Expression processing
 			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			l_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
-			if not has_fatal_error then
-				a_context.force_last (l_type)
-			end
+			l_type := an_expression.type
+			a_context.force_last (l_type)
 		end
 
 	find_convert_from_expression_type (an_expression: ET_CONVERT_FROM_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -587,10 +585,8 @@ feature {NONE} -- Expression processing
 			l_creation_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			l_creation_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
-			if not has_fatal_error then
-				a_context.force_last (l_creation_type)
-			end
+			l_creation_type := an_expression.type
+			a_context.force_last (l_creation_type)
 		end
 
 	find_current_type (an_expression: ET_CURRENT; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -713,7 +709,6 @@ feature {NONE} -- Expression processing
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_argument: ET_FORMAL_ARGUMENT
 			l_type: ET_TYPE
-			l_resolved_type: ET_TYPE
 			l_locals: ET_LOCAL_VARIABLE_LIST
 			l_local: ET_LOCAL_VARIABLE
 			l_typed_pointer_class: ET_NAMED_CLASS
@@ -792,13 +787,10 @@ feature {NONE} -- Expression processing
 							-- Class TYPED_POINTER has been found in the universe.
 							-- Use ISE's implementation: the type of '$argument' is 'TYPED_POINTER [<type-of-argument>]'.
 						l_type := l_argument.type
-						l_resolved_type := resolved_formal_parameters (l_type, l_class_impl, current_type)
-						if not has_fatal_error then
-							create l_actuals.make_with_capacity (1)
-							l_actuals.put_first (l_resolved_type)
-							create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-							a_context.force_last (l_typed_pointer_type)
-						end
+						create l_actuals.make_with_capacity (1)
+						l_actuals.put_first (l_type)
+						create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+						a_context.force_last (l_typed_pointer_type)
 					else
 							-- Use the ETL2 implementation: the type of '$argument' is POINTER.
 						a_context.force_last (current_universe_impl.pointer_type)
@@ -830,13 +822,10 @@ feature {NONE} -- Expression processing
 							-- Class TYPED_POINTER has been found in the universe.
 							-- Use ISE's implementation: the type of '$local' is 'TYPED_POINTER [<type-of-local>]'.
 						l_type := l_local.type
-						l_resolved_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-						if not has_fatal_error then
-							create l_actuals.make_with_capacity (1)
-							l_actuals.put_first (l_resolved_type)
-							create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-							a_context.force_last (l_typed_pointer_type)
-						end
+						create l_actuals.make_with_capacity (1)
+						l_actuals.put_first (l_type)
+						create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+						a_context.force_last (l_typed_pointer_type)
 					else
 							-- Use the ETL2 implementation: the type of '$local' is POINTER.
 						a_context.force_last (current_universe_impl.pointer_type)
@@ -871,17 +860,10 @@ feature {NONE} -- Expression processing
 							-- 'TYPED_POINTER [<type-of-object_test_local>]'.
 						l_type := l_object_test.type
 						if l_type /= Void then
-								-- Contrary to the types appearing in the signatures, types of
-								-- object-test locals in the AST are those found in the implementation
-								-- class of `current_feature', and hence need to be resolved in
-								-- `current_type'.
-							l_resolved_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-							if not has_fatal_error then
-								create l_actuals.make_with_capacity (1)
-								l_actuals.put_first (l_resolved_type)
-								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-								a_context.force_last (l_typed_pointer_type)
-							end
+							create l_actuals.make_with_capacity (1)
+							l_actuals.put_first (l_type)
+							create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+							a_context.force_last (l_typed_pointer_type)
 						else
 							find_expression_type (l_object_test.expression, a_context, current_system.any_type)
 							if not has_fatal_error then
@@ -912,13 +894,10 @@ feature {NONE} -- Expression processing
 									-- Class TYPED_POINTER has been found in the universe.
 									-- Use ISE's implementation: the type of '$attribute' is 'TYPED_POINTER [<type-of-attribute>]'.
 								l_type := l_query.type
-								l_resolved_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-								if not has_fatal_error then
-									create l_actuals.make_with_capacity (1)
-									l_actuals.put_first (l_resolved_type)
-									create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-									a_context.force_last (l_typed_pointer_type)
-								end
+								create l_actuals.make_with_capacity (1)
+								l_actuals.put_first (l_type)
+								create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+								a_context.force_last (l_typed_pointer_type)
 							else
 									-- Use the ETL2 implementation: the type of '$attribute' is POINTER.
 								a_context.force_last (current_universe_impl.pointer_type)
@@ -954,12 +933,10 @@ feature {NONE} -- Expression processing
 			l_arguments: ET_FORMAL_ARGUMENT_LIST
 			l_formal: ET_FORMAL_ARGUMENT
 			l_type: ET_TYPE
-			l_class_impl: ET_CLASS
 		do
 			reset_fatal_error (False)
 			if current_inline_agent /= Void then
 				l_arguments := current_inline_agent.formal_arguments
-				l_class_impl := current_class_impl
 			else
 					-- Use arguments of `current_feature' instead of `current_feature_impl'
 					-- because when processing inherited assertions the types of signature
@@ -983,13 +960,7 @@ feature {NONE} -- Expression processing
 					--    end
 					-- `a' in the inherited precondition "pre" should be considered
 					-- of type STRING (and not ANY) is class B.
-					--
-					-- Use arguments of implementation feature because the types
-					-- of the signature of `current_feature' might not have been
-					-- resolved for `current_class' (when processing precursors
-					-- in the context of current class).
-				l_arguments := current_feature.implementation_feature.arguments
-				l_class_impl := current_feature.implementation_class
+				l_arguments := current_feature.arguments
 			end
 			l_seed := a_name.seed
 			if l_arguments = Void then
@@ -1010,10 +981,8 @@ feature {NONE} -- Expression processing
 				end
 			else
 				l_formal := l_arguments.formal_argument (l_seed)
-				l_type := resolved_formal_parameters (l_formal.type, l_class_impl, current_type)
-				if not has_fatal_error then
-					a_context.force_last (l_type)
-				end
+				l_type := l_formal.type
+				a_context.force_last (l_type)
 			end
 		end
 
@@ -1039,10 +1008,8 @@ feature {NONE} -- Expression processing
 			l_type: ET_TYPE
 		do
 			reset_fatal_error (False)
-			l_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
-			if not has_fatal_error then
-				a_context.force_last (l_type)
-			end
+			l_type := an_expression.type
+			a_context.force_last (l_type)
 		end
 
 	find_infix_expression_type (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -1177,15 +1144,9 @@ feature {NONE} -- Expression processing
 					error_handler.report_giaaa_error
 				end
 			else
-					-- Contrary to the types appearing in the signatures, types of
-					-- local variables in the AST are those found in the implementation
-					-- class of `current_feature', and hence need to be resolved in
-					-- `current_type'.
 				l_local := l_locals.local_variable (l_seed)
-				l_type := resolved_formal_parameters (l_local.type, current_class_impl, current_type)
-				if not has_fatal_error then
-					a_context.force_last (l_type)
-				end
+				l_type := l_local.type
+				a_context.force_last (l_type)
 			end
 		end
 
@@ -1316,7 +1277,6 @@ feature {NONE} -- Expression processing
 				create l_actuals.make_with_capacity (1)
 				l_actuals.put_first (l_item_type)
 				create l_generic_class_type.make (Void, array_class.name, l_actuals, array_class)
-				l_generic_class_type.set_unresolved_type (current_system.array_any_type)
 				a_context.force_last (l_generic_class_type)
 			end
 		end
@@ -1504,14 +1464,7 @@ feature {NONE} -- Expression processing
 				l_object_test := l_object_tests.object_test (l_seed)
 				l_type := l_object_test.type
 				if l_type /= Void then
-						-- Contrary to the types appearing in the signatures, types of
-						-- object-test locals in the AST are those found in the implementation
-						-- class of `current_feature', and hence need to be resolved in
-						-- `current_type'.
-					l_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-					if not has_fatal_error then
-						a_context.force_last (l_type)
-					end
+					a_context.force_last (l_type)
 				else
 					find_expression_type (l_object_test.expression, a_context, current_system.any_type)
 				end
@@ -1611,10 +1564,8 @@ feature {NONE} -- Expression processing
 					end
 				else
 -- TODO: like argument.
-					l_type := resolved_formal_parameters (l_query.type, l_class, current_type)
-					if not has_fatal_error then
-						a_context.force_last (l_type)
-					end
+					l_type := l_query.type
+					a_context.force_last (l_type)
 				end
 			end
 		end
@@ -1794,12 +1745,10 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_type: ET_TYPE
-			l_class_impl: ET_CLASS
 		do
 			reset_fatal_error (False)
 			if current_inline_agent /= Void then
 				l_type := current_inline_agent.type
-				l_class_impl := current_class_impl
 			else
 					-- Use type of `current_feature' instead of `current_feature_impl'
 					-- because when processing inherited assertions the types of signature
@@ -1823,12 +1772,7 @@ feature {NONE} -- Expression processing
 					--    end
 					-- 'Result' in the inherited postcondition "post" should be considered
 					-- of type STRING (and not ANY) is class B.
-					--
-					-- Use type of implementation feature because the types of the signature
-					-- of `current_feature' might not have been resolved for `current_class'
-					-- (when processing precursors in the context of current class).
-				l_type := current_feature.implementation_feature.type
-				l_class_impl := current_feature.implementation_class
+				l_type := current_feature.type
 			end
 			if l_type = Void then
 					-- The entity 'Result' has to appear in a query.
@@ -1839,10 +1783,7 @@ feature {NONE} -- Expression processing
 					error_handler.report_giaaa_error
 				end
 			else
-				l_type := resolved_formal_parameters (l_type, l_class_impl, current_type)
-				if not has_fatal_error then
-					a_context.force_last (l_type)
-				end
+				a_context.force_last (l_type)
 			end
 		end
 
@@ -1855,16 +1796,13 @@ feature {NONE} -- Expression processing
 			a_context_not_void: a_context /= Void
 		local
 			l_type: ET_TYPE
-			l_resolved_type: ET_TYPE
 			l_typed_pointer_class: ET_NAMED_CLASS
 			l_typed_pointer_type: ET_GENERIC_CLASS_TYPE
-			l_class_impl: ET_CLASS
 			l_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
 			reset_fatal_error (False)
 			if current_inline_agent /= Void then
 				l_type := current_inline_agent.type
-				l_class_impl := current_class_impl
 			else
 					-- Use type of `current_feature' instead of `current_feature_impl'
 					-- because when processing inherited assertions the types of signature
@@ -1888,12 +1826,7 @@ feature {NONE} -- Expression processing
 					--    end
 					-- 'Result' in the inherited postcondition "post" should be considered
 					-- of type STRING (and not ANY) is class B.
-					--
-					-- Use type of implementation feature because the types of the signature
-					-- of `current_feature' might not have been resolved for `current_class'
-					-- (when processing precursors in the context of current class).
-				l_type := current_feature.implementation_feature.type
-				l_class_impl := current_feature.implementation_class
+				l_type := current_feature.type
 			end
 			if l_type = Void then
 					-- The entity 'Result' has to appear in a query.
@@ -1908,13 +1841,10 @@ feature {NONE} -- Expression processing
 				if l_typed_pointer_class.actual_class.is_preparsed then
 						-- Class TYPED_POINTER has been found in the universe.
 						-- Use ISE's implementation: the type of '$Result' is 'TYPED_POINTER [<type-of-result>]'.
-					l_resolved_type := resolved_formal_parameters (l_type, l_class_impl, current_type)
-					if not has_fatal_error then
-						create l_actuals.make_with_capacity (1)
-						l_actuals.put_first (l_resolved_type)
-						create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
-						a_context.force_last (l_typed_pointer_type)
-					end
+					create l_actuals.make_with_capacity (1)
+					l_actuals.put_first (l_type)
+					create l_typed_pointer_type.make (Void, l_typed_pointer_class.name, l_actuals, l_typed_pointer_class)
+					a_context.force_last (l_typed_pointer_type)
 				else
 						-- Use the ETL2 implementation: the type of '$argument' is POINTER.
 					a_context.force_last (current_universe_impl.pointer_type)
@@ -1952,10 +1882,7 @@ feature {NONE} -- Expression processing
 			l_type := an_expression.type
 			l_name := an_expression.name
 			l_seed := l_name.seed
-			l_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-			if has_fatal_error then
-				-- Do nothing.
-			elseif l_seed <= 0 then
+			if l_seed <= 0 then
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
@@ -2570,10 +2497,7 @@ feature {NONE} -- Agent validity
 			a_name := an_expression.name
 			a_target_type := a_target.type
 			a_seed := a_name.seed
-			a_target_type := resolved_formal_parameters (a_target_type, current_class_impl, current_type)
-			if has_fatal_error then
-				-- Do nothing.
-			elseif a_seed <= 0 then
+			if a_seed <= 0 then
 					-- This error should have already been reported when checking
 					-- `current_feature' (using ET_FEATURE_CHECKER for example).
 				set_fatal_error
@@ -2863,29 +2787,23 @@ feature {NONE} -- Agent validity
 			end
 			if not has_fatal_error then
 				create a_tuple_type.make (Void, an_open_operands, current_universe_impl.tuple_type.named_base_class)
-					-- Contrary to the types appearing in the signatures of features, types
-					-- in signatures of inline agents in the AST are those found in the
-					-- implementation class of `current_feature', and hence need to be
-					-- resolved in `current_type'.
-				a_type := resolved_formal_parameters (an_expression.type, current_class_impl, current_type)
+				a_type := an_expression.type
 -- TODO: like argument
-				if not has_fatal_error then
-					if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
-						an_agent_class := current_universe_impl.predicate_type.named_base_class
-						create a_parameters.make_with_capacity (2)
-						a_parameters.put_first (a_tuple_type)
-						a_parameters.put_first (current_type)
-						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
-					else
-						an_agent_class := current_universe_impl.function_type.named_base_class
-						create a_parameters.make_with_capacity (3)
-						a_parameters.put_first (a_type)
-						a_parameters.put_first (a_tuple_type)
-						a_parameters.put_first (current_type)
-						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
-					end
-					a_context.force_last (an_agent_type)
+				if a_type.same_named_type (current_universe_impl.boolean_type, current_type, current_type) then
+					an_agent_class := current_universe_impl.predicate_type.named_base_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (current_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+				else
+					an_agent_class := current_universe_impl.function_type.named_base_class
+					create a_parameters.make_with_capacity (3)
+					a_parameters.put_first (a_type)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (current_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
 				end
+				a_context.force_last (an_agent_type)
 			end
 		end
 
@@ -2956,15 +2874,6 @@ feature {NONE} -- Agent validity
 					nb := l_formals.count
 					from i := nb until i < 1 loop
 						l_formal_type := l_formals.formal_argument (i).type
-						if an_agent.is_inline_agent then
-								-- Contrary to the types appearing in the signatures of features, types
-								-- in signatures of inline agents in the AST are those found in the
-								-- implementation class of `current_feature', and hence need to be
-								-- resolved in `current_type'.
-							had_error := has_fatal_error
-							l_formal_type := resolved_formal_parameters (l_formal_type, current_class_impl, current_type)
-							has_fatal_error := has_fatal_error or had_error
-						end
 						an_open_operands.force_first (l_formal_type)
 						i := i - 1
 					end
@@ -3001,23 +2910,11 @@ feature {NONE} -- Agent validity
 							l_agent_type ?= l_agent_actual
 							if l_agent_type /= Void then
 								l_actual_type := l_agent_type.type
-								l_actual_type := resolved_formal_parameters (l_actual_type, current_class_impl, current_type)
-								if has_fatal_error then
-									-- Do nothing.
-								else
-									an_open_operands.force_first (l_actual_type)
-								end
+								an_open_operands.force_first (l_actual_type)
 							else
 								l_question_mark ?= l_agent_actual
 								if l_question_mark /= Void then
 									l_formal_type := l_formal.type
-									if an_agent.is_inline_agent then
-											-- Contrary to the types appearing in the signatures of features, types
-											-- in signatures of inline agents in the AST are those found in the
-											-- implementation class of `current_feature', and hence need to be
-											-- resolved in `current_type'.
-										l_formal_type := resolved_formal_parameters (l_formal_type, current_class_impl, current_type)
-									end
 									an_open_operands.force_first (l_formal_type)
 								else
 										-- Internal error: no other kind of agent actual arguments.
@@ -3472,24 +3369,6 @@ feature {NONE} -- Status report
 			-- Are we processing an invariant?
 
 feature {NONE} -- Type checking
-
-	resolved_formal_parameters (a_type: ET_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE): ET_TYPE is
-			-- Replace formal generic parameters in `a_type' (when
-			-- written in class `a_current_class_impl') by their
-			-- corresponding actual parameters in `a_current_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_current_class_impl_not_void: a_current_class_impl /= Void
-			a_current_type_not_void: a_current_type /= Void
-			a_current_class_preparsed: a_current_type.base_class.is_preparsed
-		do
-			reset_fatal_error (False)
-			Result := type_checker.resolved_formal_parameters (a_type, a_current_class_impl, a_current_type)
-			reset_fatal_error (type_checker.has_fatal_error)
-		ensure
-			resolved_type_not_void: Result /= Void
-		end
 
 	type_checker: ET_TYPE_CHECKER
 			-- Type checker

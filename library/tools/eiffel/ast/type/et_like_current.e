@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +19,6 @@ inherit
 			named_type,
 			named_type_has_class,
 			is_like_current,
-			named_type_has_formal_type,
-			named_type_has_formal_types,
 			same_syntactical_like_current,
 			same_named_bit_type,
 			same_named_class_type,
@@ -212,20 +210,6 @@ feature -- Status report
 			-- Is current type expanded when viewed from `a_context'?
 		do
 			Result := a_context.base_class.is_expanded
-		end
-
-	named_type_has_formal_type (i: INTEGER; a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain the formal generic parameter
-			-- with index `i' when viewed from `a_context'?
-		do
-			Result := a_context.named_type_has_formal_type (i)
-		end
-
-	named_type_has_formal_types (a_context: ET_TYPE_CONTEXT): BOOLEAN is
-			-- Does the named type of current type contain a formal generic parameter
-			-- when viewed from `a_context'?
-		do
-			Result := a_context.named_type_has_formal_types
 		end
 
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN is

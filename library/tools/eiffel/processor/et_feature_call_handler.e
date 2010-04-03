@@ -136,7 +136,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new feature call handler.
 		do
-			create type_checker.make
 			create expression_type_finder.make
 			expression_type_finder.set_internal_error_enabled (internal_error_enabled)
 			current_class := tokens.unknown_class
@@ -944,7 +943,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 			l_context := current_context
 			l_context.reset (current_type)
-			l_context.force_last (resolved_formal_parameters (l_type, current_class_impl, current_type))
+			l_context.force_last (l_type)
 			if not has_fatal_error then
 				l_class := l_context.base_class
 				l_procedure := l_class.seeded_procedure (l_seed)
@@ -1011,7 +1010,7 @@ feature {ET_AST_NODE} -- Processing
 			l_context.reset (current_type)
 			if l_type /= Void then
 				reset_fatal_error (False)
-				l_context.force_last (resolved_formal_parameters (l_type, current_class_impl, current_type))
+				l_context.force_last (l_type)
 			else
 				find_expression_type (l_target, l_context)
 			end
@@ -2284,7 +2283,7 @@ feature {ET_AST_NODE} -- Processing
 				if not has_fatal_error then
 					l_context := current_context
 					l_context.reset (current_type)
-					l_context.force_last (resolved_formal_parameters (l_target_type, current_class_impl, current_type))
+					l_context.force_last (l_target_type)
 					if not has_fatal_error then
 						l_class := l_context.base_class
 						l_query := l_class.seeded_query (a_type.seed)
@@ -2376,21 +2375,18 @@ feature {ET_AST_NODE} -- Processing
 				process_actual_arguments (l_arguments)
 				had_error := had_error or has_fatal_error
 			end
-			l_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-			if not has_fatal_error then
-				l_class := l_type.base_class (current_type)
-				l_seed := an_expression.name.seed
-				l_query := l_class.seeded_query (l_seed)
-				if l_query = Void then
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
-					report_static_call_expression (an_expression, l_type, l_query)
+			l_class := l_type.base_class (current_type)
+			l_seed := an_expression.name.seed
+			l_query := l_class.seeded_query (l_seed)
+			if l_query = Void then
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
 				end
+			else
+				report_static_call_expression (an_expression, l_type, l_query)
 			end
 			reset_fatal_error (had_error or has_fatal_error)
 		end
@@ -2417,21 +2413,18 @@ feature {ET_AST_NODE} -- Processing
 				process_actual_arguments (l_arguments)
 				had_error := had_error or has_fatal_error
 			end
-			l_type := resolved_formal_parameters (l_type, current_class_impl, current_type)
-			if not has_fatal_error then
-				l_class := l_type.base_class (current_type)
-				l_seed := an_instruction.name.seed
-				l_procedure := l_class.seeded_procedure (l_seed)
-				if l_procedure = Void then
-						-- This error should have already been reported when checking
-						-- `current_feature' (using ET_FEATURE_CHECKER for example).
-					set_fatal_error
-					if internal_error_enabled or not current_class.has_implementation_error then
-						error_handler.report_giaaa_error
-					end
-				else
-					report_static_call_instruction (an_instruction, l_type, l_procedure)
+			l_class := l_type.base_class (current_type)
+			l_seed := an_instruction.name.seed
+			l_procedure := l_class.seeded_procedure (l_seed)
+			if l_procedure = Void then
+					-- This error should have already been reported when checking
+					-- `current_feature' (using ET_FEATURE_CHECKER for example).
+				set_fatal_error
+				if internal_error_enabled or not current_class.has_implementation_error then
+					error_handler.report_giaaa_error
 				end
+			else
+				report_static_call_instruction (an_instruction, l_type, l_procedure)
 			end
 			reset_fatal_error (had_error or has_fatal_error)
 		end
@@ -2538,42 +2531,36 @@ feature {ET_AST_NODE} -- Processing
 			if l_name.is_tuple_label then
 				-- Do nothing
 			elseif an_expression.is_procedure then
-				l_target_type := resolved_formal_parameters (l_target_type, current_class_impl, current_type)
-				if not has_fatal_error then
-					l_context := current_context
-					l_context.reset (current_type)
-					l_context.force_last (l_target_type)
-					l_class := l_context.base_class
-					l_procedure := l_class.seeded_procedure (l_seed)
-					if l_procedure = Void then
-							-- This error should have already been reported when checking
-							-- `current_feature' (using ET_FEATURE_CHECKER for example).
-						set_fatal_error
-						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
-						end
-					else
-						report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
+				l_context := current_context
+				l_context.reset (current_type)
+				l_context.force_last (l_target_type)
+				l_class := l_context.base_class
+				l_procedure := l_class.seeded_procedure (l_seed)
+				if l_procedure = Void then
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
 					end
+				else
+					report_qualified_procedure_call_agent (an_expression, l_context, l_procedure)
 				end
 			else
-				l_target_type := resolved_formal_parameters (l_target_type, current_class_impl, current_type)
-				if not has_fatal_error then
-					l_context := current_context
-					l_context.reset (current_type)
-					l_context.force_last (l_target_type)
-					l_class := l_context.base_class
-					l_query := l_class.seeded_query (l_seed)
-					if l_query = Void then
-							-- This error should have already been reported when checking
-							-- `current_feature' (using ET_FEATURE_CHECKER for example).
-						set_fatal_error
-						if internal_error_enabled or not current_class.has_implementation_error then
-							error_handler.report_giaaa_error
-						end
-					else
-						report_qualified_query_call_agent (an_expression, l_context, l_query)
+				l_context := current_context
+				l_context.reset (current_type)
+				l_context.force_last (l_target_type)
+				l_class := l_context.base_class
+				l_query := l_class.seeded_query (l_seed)
+				if l_query = Void then
+						-- This error should have already been reported when checking
+						-- `current_feature' (using ET_FEATURE_CHECKER for example).
+					set_fatal_error
+					if internal_error_enabled or not current_class.has_implementation_error then
+						error_handler.report_giaaa_error
 					end
+				else
+					report_qualified_query_call_agent (an_expression, l_context, l_query)
 				end
 			end
 			had_error := has_fatal_error
@@ -2921,29 +2908,6 @@ feature {NONE} -- Expression types
 	expression_type_finder: ET_EXPRESSION_TYPE_FINDER
 			-- Expression type finder
 
-feature {NONE} -- Type checking
-
-	resolved_formal_parameters (a_type: ET_TYPE; a_current_class_impl: ET_CLASS; a_current_type: ET_BASE_TYPE): ET_TYPE is
-			-- Replace formal generic parameters in `a_type' (when
-			-- written in class `a_current_class_impl') by their
-			-- corresponding actual parameters in `a_current_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			a_current_class_impl_not_void: a_current_class_impl /= Void
-			a_current_type_not_void: a_current_type /= Void
-			a_current_class_preparsed: a_current_type.base_class.is_preparsed
-		do
-			reset_fatal_error (False)
-			Result := type_checker.resolved_formal_parameters (a_type, a_current_class_impl, a_current_type)
-			reset_fatal_error (type_checker.has_fatal_error)
-		ensure
-			resolved_type_not_void: Result /= Void
-		end
-
-	type_checker: ET_TYPE_CHECKER
-			-- Type checker
-
 feature {NONE} -- Implementation
 
 	dummy_feature: ET_FEATURE is
@@ -2970,7 +2934,6 @@ invariant
 	current_class_impl_not_void: current_class_impl /= Void
 	current_class_impl_definition: current_class_impl = current_feature_impl.implementation_class
 	expression_type_finder_not_void: expression_type_finder /= Void
-	type_checker_not_void: type_checker /= Void
 	current_context_not_void: current_context /= Void
 
 end

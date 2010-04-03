@@ -778,7 +778,6 @@ feature {NONE} -- Feature processing
 									not l_effective.has_rename and then
 									l_effective.first_seed = l_first_seed and then
 									l_effective.other_seeds = l_other_seeds and then
-									not l_effective.signature_has_formal_types and then
 									l_effective.clients.same_clients (l_clients)
 								then
 									l_feature_found := True
@@ -809,7 +808,6 @@ feature {NONE} -- Feature processing
 								not l_deferred.has_undefine and then
 								l_deferred.first_seed = l_first_seed and then
 								l_deferred.other_seeds = l_other_seeds and then
-								not l_deferred.signature_has_formal_types and then
 								l_deferred.clients.same_clients (l_clients)
 							then
 								l_feature_found := True
@@ -921,7 +919,6 @@ feature {NONE} -- Feature processing
 						process_replicated_seeds (a_feature, l_flattened_feature.id)
 					end
 				end
-				l_flattened_feature.resolve_inherited_signature (l_parent_feature.parent)
 				l_flattened_feature.set_clients (l_clients)
 				l_flattened_feature.set_first_seed (a_feature.first_seed)
 				l_flattened_feature.set_other_seeds (a_feature.other_seeds)

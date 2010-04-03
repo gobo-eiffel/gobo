@@ -3216,7 +3216,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_qualified_like_braced_type (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_BRACED_TYPE is
+	new_qualified_like_braced_type (a_type_mark: ET_TYPE_MARK; a_like: ET_KEYWORD; a_left_brace: ET_SYMBOL; a_type: ET_TYPE; a_right_brace: ET_SYMBOL; a_name: ET_QUALIFIED_FEATURE_NAME): ET_QUALIFIED_LIKE_BRACED_TYPE is
 			-- New qualified anchored type of the form 'like {A}.b'
 		do
 			if a_type /= Void and a_name /= Void then

@@ -154,7 +154,6 @@ feature {NONE} -- Initialization
 			split_threshold := default_split_threshold
 			use_boehm_gc := current_system.use_boehm_gc
 			system_name := "unknown"
-			create type_checker.make
 			current_file := null_output_stream
 			header_file := null_output_stream
 			current_type := a_system.unknown_type
@@ -5164,7 +5163,6 @@ feature {NONE} -- Instruction generation
 		local
 			l_target: ET_WRITABLE
 			l_type: ET_TYPE
-			l_resolved_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_call: ET_QUALIFIED_CALL
@@ -5175,16 +5173,12 @@ feature {NONE} -- Instruction generation
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_comma: BOOLEAN
-			had_error: BOOLEAN
 		do
 				-- Look for the dynamic type of the creation type.
 			l_target := an_instruction.target
 			l_type := an_instruction.type
 			if l_type /= Void then
-				had_error := has_fatal_error
-				l_resolved_type := resolved_formal_parameters (l_type)
-				has_fatal_error := has_fatal_error or had_error
-				l_dynamic_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type.base_type)
+				l_dynamic_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
 			else
 					-- Look for the dynamic type of the target.
 				l_dynamic_type_set := dynamic_type_set (l_target)
@@ -5958,7 +5952,6 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			an_instruction_not_void: an_instruction /= Void
 		local
 			l_type: ET_TYPE
-			l_resolved_type: ET_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
@@ -5967,61 +5960,55 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			l_comma: BOOLEAN
-			had_error: BOOLEAN
 		do
 			l_type := an_instruction.type
-			had_error := has_fatal_error
-			l_resolved_type := resolved_formal_parameters (l_type)
-			if not has_fatal_error then
-				has_fatal_error := had_error
-				l_actuals := an_instruction.arguments
-				if l_actuals /= Void then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						print_operand (l_actuals.actual_argument (i))
-						i := i + 1
-					end
+			l_actuals := an_instruction.arguments
+			if l_actuals /= Void then
+				nb := l_actuals.count
+				from i := 1 until i > nb loop
+					print_operand (l_actuals.actual_argument (i))
+					i := i + 1
 				end
-				fill_call_operands (nb)
-				l_target_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type.base_type)
-				l_seed := an_instruction.name.seed
-				l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
-				if l_dynamic_procedure = Void then
-						-- Internal error: there should be a procedure with `l_seed'.
-						-- It has been computed in ET_FEATURE_CHECKER or else an
-						-- error should have already been reported.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					if not l_dynamic_procedure.is_generated then
-						l_dynamic_procedure.set_generated (True)
-						called_features.force_last (l_dynamic_procedure)
-					end
-					print_indentation
-					print_static_routine_name (l_dynamic_procedure, l_target_type, current_file)
-					current_file.put_character ('(')
-					if exception_trace_mode then
-						current_file.put_string (current_call_info)
+			end
+			fill_call_operands (nb)
+			l_target_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
+			l_seed := an_instruction.name.seed
+			l_dynamic_procedure := l_target_type.seeded_dynamic_procedure (l_seed, current_dynamic_system)
+			if l_dynamic_procedure = Void then
+					-- Internal error: there should be a procedure with `l_seed'.
+					-- It has been computed in ET_FEATURE_CHECKER or else an
+					-- error should have already been reported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				if not l_dynamic_procedure.is_generated then
+					l_dynamic_procedure.set_generated (True)
+					called_features.force_last (l_dynamic_procedure)
+				end
+				print_indentation
+				print_static_routine_name (l_dynamic_procedure, l_target_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					l_comma := True
+				end
+				from i := 1 until i > nb loop
+					if l_comma then
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					else
 						l_comma := True
 					end
-					from i := 1 until i > nb loop
-						if l_comma then
-							current_file.put_character (',')
-							current_file.put_character (' ')
-						else
-							l_comma := True
-						end
-						l_actual_type_set := dynamic_type_set (call_operands.item (i))
-						l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
-						print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-						i := i + 1
-					end
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
+					l_actual_type_set := dynamic_type_set (call_operands.item (i))
+					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_procedure)
+					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+					i := i + 1
 				end
-				call_operands.wipe_out
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
 			end
+			call_operands.wipe_out
 		end
 
 	print_unqualified_call_instruction (a_call: ET_FEATURE_CALL_INSTRUCTION) is
@@ -9029,8 +9016,6 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 			l_can_be_void: BOOLEAN
 			l_name: ET_IDENTIFIER
 			l_type: ET_TYPE
-			l_resolved_type: ET_TYPE
-			had_error: BOOLEAN
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
@@ -9043,10 +9028,7 @@ print ("ET_C_GENERATOR.print_expression_address%N")
 				l_target_type_set := dynamic_type_set (l_name)
 				l_target_type := l_target_type_set.static_type
 			elseif l_type /= Void then
-				had_error := has_fatal_error
-				l_resolved_type := resolved_formal_parameters (l_type)
-				has_fatal_error := has_fatal_error or had_error
-				l_target_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type.base_type)
+				l_target_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
 			else
 				l_target_type := l_source_type
 			end
@@ -9986,7 +9968,6 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			an_expression_not_void: an_expression /= Void
 		local
 			l_type: ET_TYPE
-			l_resolved_type: ET_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
 			l_query: ET_QUERY
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
@@ -10002,124 +9983,118 @@ print ("ET_C_GENERATOR.print_old_expression%N")
 			l_actual_type_set: ET_DYNAMIC_TYPE_SET
 			l_formal_type_set: ET_DYNAMIC_TYPE_SET
 			l_comma: BOOLEAN
-			had_error: BOOLEAN
 			old_index: INTEGER
 			l_constant: ET_CONSTANT
 		do
 			l_assignment_target := assignment_target
 			assignment_target := Void
 			l_type := an_expression.type
-			had_error := has_fatal_error
-			l_resolved_type := resolved_formal_parameters (l_type)
-			if not has_fatal_error then
-				has_fatal_error := had_error
-				l_actuals := an_expression.arguments
-				if l_actuals /= Void then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						print_operand (l_actuals.actual_argument (i))
-						i := i + 1
-					end
+			l_actuals := an_expression.arguments
+			if l_actuals /= Void then
+				nb := l_actuals.count
+				from i := 1 until i > nb loop
+					print_operand (l_actuals.actual_argument (i))
+					i := i + 1
 				end
-				fill_call_operands (nb)
-				if in_operand then
-					if l_assignment_target /= Void then
-						operand_stack.force (l_assignment_target)
-						print_indentation
-						print_writable (l_assignment_target)
-					else
-						l_dynamic_type_set := dynamic_type_set (an_expression)
-						l_dynamic_type := l_dynamic_type_set.static_type
-						l_temp := new_temp_variable (l_dynamic_type)
-							-- We will set the index of `l_temp' later because
-							-- it could still be used in `call_operands'.
-						l_temp_index := an_expression.index
-						operand_stack.force (l_temp)
-						print_indentation
-						print_temp_name (l_temp, current_file)
-					end
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-				end
-				l_target_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type.base_type)
-				l_seed := an_expression.name.seed
-				l_query := l_target_type.base_class.seeded_query (l_seed)
-				if l_query = Void then
-						-- Internal error: there should be a query with `l_seed'.
-						-- It has been computed in ET_FEATURE_CHECKER or else an
-						-- error should have already been reported.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_query.is_attribute then
-						-- Internal error: no object available.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				elseif l_query.is_constant_attribute then
--- TODO: make the difference between expanded and reference "constants".
-					l_constant_attribute ?= l_query
-					if l_constant_attribute = Void then
-							-- Internal error.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_constant := l_constant_attribute.constant
-						old_index := l_constant.index
-						l_constant.set_index (an_expression.index)
-						print_expression (l_constant)
-						l_constant.set_index (old_index)
-					end
-				elseif l_query.is_unique_attribute then
+			end
+			fill_call_operands (nb)
+			if in_operand then
+				if l_assignment_target /= Void then
+					operand_stack.force (l_assignment_target)
+					print_indentation
+					print_writable (l_assignment_target)
+				else
 					l_dynamic_type_set := dynamic_type_set (an_expression)
 					l_dynamic_type := l_dynamic_type_set.static_type
-					print_type_cast (l_dynamic_type, current_file)
-					current_file.put_character ('(')
-						-- In the current implementation unique values is based on
-						-- the id of the implementation feature (the feature in the
-						-- class where this unique attribute has been written). For
-						-- synonyms the fetaure id is in the reverse order, hence the
-						-- arithmetic below.
-					current_file.put_integer (current_system.registered_feature_count - l_query.implementation_feature.id + 1)
-					current_file.put_character (')')
+					l_temp := new_temp_variable (l_dynamic_type)
+						-- We will set the index of `l_temp' later because
+						-- it could still be used in `call_operands'.
+					l_temp_index := an_expression.index
+					operand_stack.force (l_temp)
+					print_indentation
+					print_temp_name (l_temp, current_file)
+				end
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+			end
+			l_target_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
+			l_seed := an_expression.name.seed
+			l_query := l_target_type.base_class.seeded_query (l_seed)
+			if l_query = Void then
+					-- Internal error: there should be a query with `l_seed'.
+					-- It has been computed in ET_FEATURE_CHECKER or else an
+					-- error should have already been reported.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_query.is_attribute then
+					-- Internal error: no object available.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			elseif l_query.is_constant_attribute then
+-- TODO: make the difference between expanded and reference "constants".
+				l_constant_attribute ?= l_query
+				if l_constant_attribute = Void then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
-					l_dynamic_feature := l_target_type.dynamic_query (l_query, current_dynamic_system)
-					if not l_dynamic_feature.is_generated then
-						l_dynamic_feature.set_generated (True)
-						called_features.force_last (l_dynamic_feature)
-					end
-					print_static_routine_name (l_dynamic_feature, l_target_type, current_file)
-					current_file.put_character ('(')
-					if exception_trace_mode then
-						current_file.put_string (current_call_info)
+					l_constant := l_constant_attribute.constant
+					old_index := l_constant.index
+					l_constant.set_index (an_expression.index)
+					print_expression (l_constant)
+					l_constant.set_index (old_index)
+				end
+			elseif l_query.is_unique_attribute then
+				l_dynamic_type_set := dynamic_type_set (an_expression)
+				l_dynamic_type := l_dynamic_type_set.static_type
+				print_type_cast (l_dynamic_type, current_file)
+				current_file.put_character ('(')
+					-- In the current implementation unique values is based on
+					-- the id of the implementation feature (the feature in the
+					-- class where this unique attribute has been written). For
+					-- synonyms the fetaure id is in the reverse order, hence the
+					-- arithmetic below.
+				current_file.put_integer (current_system.registered_feature_count - l_query.implementation_feature.id + 1)
+				current_file.put_character (')')
+			else
+				l_dynamic_feature := l_target_type.dynamic_query (l_query, current_dynamic_system)
+				if not l_dynamic_feature.is_generated then
+					l_dynamic_feature.set_generated (True)
+					called_features.force_last (l_dynamic_feature)
+				end
+				print_static_routine_name (l_dynamic_feature, l_target_type, current_file)
+				current_file.put_character ('(')
+				if exception_trace_mode then
+					current_file.put_string (current_call_info)
+					l_comma := True
+				end
+				from i := 1 until i > nb loop
+					if l_comma then
+						current_file.put_character (',')
+						current_file.put_character (' ')
+					else
 						l_comma := True
 					end
-					from i := 1 until i > nb loop
-						if l_comma then
-							current_file.put_character (',')
-							current_file.put_character (' ')
-						else
-							l_comma := True
-						end
-						l_actual_type_set := dynamic_type_set (call_operands.item (i))
-						l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_feature)
-						print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
-						i := i + 1
-					end
-					current_file.put_character (')')
+					l_actual_type_set := dynamic_type_set (call_operands.item (i))
+					l_formal_type_set := argument_type_set_in_feature (i, l_dynamic_feature)
+					print_attachment_expression (call_operands.item (i), l_actual_type_set, l_formal_type_set.static_type)
+					i := i + 1
 				end
-				if in_operand then
-					current_file.put_character (')')
-					current_file.put_character (';')
-					current_file.put_new_line
-				end
-				call_operands.wipe_out
-				if l_temp_index /= 0 then
-						-- We had to wait until this stage to set the index of `l_temp'
-						-- because it could have still been used in `call_operands'.
-					check l_temp_not_void: l_temp /= Void end
-					l_temp.set_index (l_temp_index)
-				end
+				current_file.put_character (')')
+			end
+			if in_operand then
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+			call_operands.wipe_out
+			if l_temp_index /= 0 then
+					-- We had to wait until this stage to set the index of `l_temp'
+					-- because it could have still been used in `call_operands'.
+				check l_temp_not_void: l_temp /= Void end
+				l_temp.set_index (l_temp_index)
 			end
 		end
 
@@ -11549,8 +11524,6 @@ feature {NONE} -- Object-test generation
 			l_can_be_void: BOOLEAN
 			l_name: ET_IDENTIFIER
 			l_type: ET_TYPE
-			l_resolved_type: ET_TYPE
-			had_error: BOOLEAN
 		do
 			l_name := a_object_test.name
 			l_type := a_object_test.type
@@ -11560,10 +11533,7 @@ feature {NONE} -- Object-test generation
 				l_target_type_set := dynamic_type_set (l_name)
 				l_target_type := l_target_type_set.static_type
 			elseif l_type /= Void then
-				had_error := has_fatal_error
-				l_resolved_type := resolved_formal_parameters (l_type)
-				has_fatal_error := has_fatal_error or had_error
-				l_target_type := current_dynamic_system.dynamic_type (l_resolved_type, current_type.base_type)
+				l_target_type := current_dynamic_system.dynamic_type (l_type, current_type.base_type)
 			else
 				l_target_type := l_source_type
 			end
@@ -27816,32 +27786,6 @@ feature {NONE} -- Error handling
 			error_handler.report_error (an_error)
 		end
 
-feature {NONE} -- Type resolving
-
-	resolved_formal_parameters (a_type: ET_TYPE): ET_TYPE is
-			-- Replace formal generic parameters in `a_type' (when WRITTEN
-			-- in class `current_feature.static_feature.implementation_class')
-			-- by their corresponding actual parameters in `current_type.base_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-		do
-			has_fatal_error := False
-			if not current_type.base_class.is_preparsed then
-				set_fatal_error
-			else
-				Result := type_checker.resolved_formal_parameters (a_type, current_feature.static_feature.implementation_class, current_type.base_type)
-				if type_checker.has_fatal_error then
-					set_fatal_error
-				end
-			end
-		ensure
-			resolved_type_not_void: Result /= Void
-		end
-
-	type_checker: ET_TYPE_CHECKER
-			-- Type checker
-
 feature {NONE} -- Access
 
 	system_name: STRING
@@ -28931,7 +28875,6 @@ invariant
 	current_function_body_buffer_not_void: current_function_body_buffer /= Void
 	current_feature_not_void: current_feature /= Void
 	current_type_not_void: current_type /= Void
-	type_checker_not_void: type_checker /= Void
 	operand_stack_not_void: operand_stack /= Void
 	no_void_operand: not operand_stack.has_void
 	call_operands_not_void: call_operands /= Void

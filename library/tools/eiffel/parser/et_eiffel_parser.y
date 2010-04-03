@@ -2937,7 +2937,7 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6))
+				$$ := ast_factory.new_qualified_like_braced_type (Void, $1, $2, $3, $4, ast_factory.new_dot_feature_name ($5, $6))
 			end
 		}
 	| E_ATTACHED E_LIKE '{' Type '}' '.' Identifier
@@ -2945,7 +2945,7 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
 	| E_DETACHABLE E_LIKE '{' Type '}' '.' Identifier
@@ -2953,7 +2953,7 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 			if not current_system.qualified_anchored_types_enabled then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
@@ -2963,7 +2963,7 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
 	| '?' E_LIKE '{' Type '}' '.' Identifier
@@ -2973,7 +2973,7 @@ Qualified_anchored_type: E_LIKE '{' Type '}' '.' Identifier
 			elseif current_system.is_ise and then current_system.ise_version < ise_6_1_0 then
 				raise_error
 			else
-				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_dot_feature_name ($6, $7))
+				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, ast_factory.new_dot_feature_name ($6, $7))
 			end
 		}
 	| Anchored_type '.' Identifier
