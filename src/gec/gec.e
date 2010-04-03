@@ -4,7 +4,7 @@ indexing
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,9 @@ inherit
 	UT_SHARED_ISE_VERSIONS
 		export {NONE} all end
 
+	ET_SHARED_ISE_VARIABLES
+		export {NONE} all end
+
 	ET_SHARED_ERROR_HANDLERS
 		export {NONE} all end
 
@@ -49,6 +52,9 @@ feature -- Execution
 			nb: INTEGER
 		do
 			Arguments.set_program_name ("gec")
+				-- For compatibility with ISE's tools, define the environment
+				-- variable "$ISE_LIBRARY" to $ISE_EIFFEL" if not set yet.
+			ise_variables.set_ise_library_variable
 			create error_handler.make_standard
 			parse_arguments
 			a_filename := ace_filename

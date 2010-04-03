@@ -338,6 +338,15 @@ feature -- Search
 			found_position := position
 		end
 
+	unset_found_item is
+			-- Get rid of `found_item'.
+		do
+			found_position := No_position
+		ensure
+			not_found: not found
+			found_position_unset: found_position = No_position
+		end
+
 feature -- Duplication
 
 	copy (other: like Current) is
@@ -878,15 +887,6 @@ feature {NONE} -- Implementation
 	found_position: INTEGER
 			-- Position of the last item found by `search';
 			-- `No_position' if not found
-
-	unset_found_item is
-			-- Get rig of `found_item'.
-		do
-			found_position := No_position
-		ensure
-			not_found: not found
-			found_position_unset: found_position = No_position
-		end
 
 feature {NONE} -- Constants
 
