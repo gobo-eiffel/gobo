@@ -38,8 +38,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new signature checker for features of  given classes.
 		do
-			create constraint_context.make_with_capacity (current_class, 1)
 			precursor {ET_CLASS_SUBPROCESSOR}
+			create constraint_context.make_with_capacity (current_class, 1)
 		end
 
 feature -- Validity checking
