@@ -5,7 +5,7 @@ indexing
 		"Cluster dependence constraints"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date: 2009/06/22 $"
 	revision: "$Revision: #4 $"
@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			group_names := a_names
 			create group_pathnames.make_map (0)
 			group_pathnames.set_key_equality_tester (string_equality_tester)
+			create pathname_buffer.make (pathname_buffer_initial_capacity)
 		ensure
 			current_cluster_set: current_cluster = a_cluster
 			group_names_set: group_names = a_names
@@ -73,6 +74,7 @@ feature {NONE} -- Initialization
 			l_trailing_slash: BOOLEAN
 		do
 			current_cluster := a_cluster
+			create pathname_buffer.make (pathname_buffer_initial_capacity)
 			l_is_windows := operating_system.is_windows
 			nb := a_pathnames.count
 			create group_names.make (0)
@@ -109,23 +111,23 @@ feature -- Status report
 			l_parent: ET_GROUP
 			l_library: ET_LIBRARY
 			l_library_name: STRING
-			l_pathname: STRING
 		do
-			l_pathname := a_group.absolute_pathname.twin
-			replace_backslashes (l_pathname)
+				-- Note that we check first whether `group_pathnames' and `group_names' are
+				-- empty to avoid spending to too much time and creating too much unnecessary
+				-- memory garbage getting the pathname and full name of `a_group'.
 			if a_group = current_cluster then
 				Result := True
-			elseif group_pathnames.there_exists (agent matches_pathname (a_group, l_pathname, ?)) then
+			elseif not group_pathnames.is_empty and then group_pathnames.there_exists (agent matches_pathname (a_group, group_pathname (a_group), ?)) then
 				Result := True
-			elseif group_names.there_exists (agent STRING_.same_case_insensitive (?, a_group.full_name ('/'))) then
+			elseif not group_names.is_empty and then group_names.there_exists (agent STRING_.same_case_insensitive (?, a_group.full_name ('/'))) then
 				Result := True
-			elseif group_names.there_exists (agent STRING_.same_case_insensitive (?, a_group.full_name ('.'))) then
+			elseif not group_names.is_empty and then group_names.there_exists (agent STRING_.same_case_insensitive (?, a_group.full_name ('.'))) then
 				Result := True
 			else
 				l_parent := a_group.parent
 				if l_parent /= Void then
 					Result := has_group (l_parent)
-				else
+				elseif not group_names.is_empty then
 					l_library ?= a_group.universe
 					if l_library /= Void then
 						l_library_name := l_library.name
@@ -167,6 +169,7 @@ feature {NONE} -- Implementation
 		local
 			l_pattern: STRING
 			l_pathname: STRING
+			l_slash_added: BOOLEAN
 		do
 			if a_wildcard.is_compiled then
 				l_pathname := a_pathname
@@ -174,16 +177,24 @@ feature {NONE} -- Implementation
 				if l_pattern /= Void and then not l_pattern.is_empty and then l_pattern.item (l_pattern.count) = '/' then
 					if not l_pathname.is_empty and then l_pathname.item (l_pathname.count) /= '/' then
 						if a_group.is_cluster then
-							l_pathname := l_pathname + "/"
+							if l_pathname = pathname_buffer then
+								l_pathname.append_character ('/')
+								l_slash_added := True
+							else
+								l_pathname := l_pathname + "/"
+							end
 						end
 					end
 				end
 				Result := a_wildcard.recognizes (l_pathname)
+				if l_slash_added then
+					l_pathname.remove_tail (1)
+				end
 			end
 		end
 
 	replace_backslashes (a_string: STRING) is
-			-- Replace all `\' characters in `a_string' by `/' characters.
+			-- Replace all '\' characters in `a_string' by '/' characters.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -198,6 +209,31 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	group_pathname (a_group: ET_GROUP): STRING is
+			-- Absolute pathname of `a_group' where all '\' characters have been replaced by '/'
+			--
+			-- Note: Always return the same object, only its characters are changed
+			-- to represent the new result.
+		require
+			a_group_not_void: a_group /= Void
+		do
+			STRING_.wipe_out (pathname_buffer)
+			Result := pathname_buffer
+			Result.append_string (a_group.absolute_pathname)
+			replace_backslashes (Result)
+		ensure
+			group_pathname_not_void: Result /= Void
+			shared_object: Result = pathname_buffer
+		end
+
+	pathname_buffer: STRING
+			-- Buffer used to handle pathnames
+
+feature {NONE} -- Constants
+
+	pathname_buffer_initial_capacity: INTEGER is 512
+			-- Initial capacity for `pathname_buffer'
+
 invariant
 
 	current_cluster_not_void: current_cluster /= Void
@@ -206,5 +242,6 @@ invariant
 	group_pathnames_not_void: group_pathnames /= Void
 	no_void_group_pathname: not group_pathnames.has_void
 	no_void_wildcard: not group_pathnames.has_void_item
+	pathname_buffer_not_void: pathname_buffer /= Void
 
 end

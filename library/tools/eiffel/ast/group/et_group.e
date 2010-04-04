@@ -5,7 +5,7 @@ indexing
 		"Groups of Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,21 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_FILE_SYSTEM
+
+feature -- Initialization
+
+	reset_absolute_pathname: STRING is
+			-- Force the computation of `absolute_pathname' next time
+			-- it will be called. This is useful when the values of the
+			-- environment variables have changed or when the cluster
+			-- hierarchy has changed. Otherwise the result of
+			-- `absolute_pathname' is cached to avoid having to 
+			-- compute its value at each call (like a once-per-object).
+		do
+			cached_absolute_pathname := Void
+		ensure
+			absolute_pathname_reset: cached_absolute_pathname = Void
+		end
 
 feature -- Status report
 
@@ -269,13 +284,24 @@ feature -- Access
 	absolute_pathname: STRING is
 			-- Canonical absolute pathname of current group where
 			-- environment variables have been resolved
+			--
+			-- Note that the result is cached to avoid having to 
+			-- compute its value at each call (like a once-per-object).
+			-- Call `reset_absolute_pathname' first to force the
+			-- computation again, for example when the values of the
+			-- environment variables have changed and when the cluster
+			-- hierarchy has changed.
 		do
-			Result := Execution_environment.interpreted_string (full_pathname)
-			if Result.is_empty then
-				Result := name
+			Result := cached_absolute_pathname
+			if Result = Void then
+				Result := Execution_environment.interpreted_string (full_pathname)
+				if Result.is_empty then
+					Result := name
+				end
+				Result := file_system.absolute_pathname (Result)
+				Result := file_system.canonical_pathname (Result)
+				cached_absolute_pathname := Result
 			end
-			Result := file_system.absolute_pathname (Result)
-			Result := file_system.canonical_pathname (Result)
 		ensure
 			aboslute_pathname_not_void: Result /= Void
 			aboslute_pathname_not_empty: Result.count > 0
@@ -352,5 +378,10 @@ feature -- Output
 		do
 			Result := full_name ('/')
 		end
+
+feature {NONE} -- Implementation
+
+	cached_absolute_pathname: STRING
+			-- Cached value of `absolute_pathname'
 
 end
