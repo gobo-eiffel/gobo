@@ -40,7 +40,7 @@ indexing
 		      class A feature f do ... end end
 		      class B inherit A end
 		      class C inherit A redefine f end feature f do ... end end
-		  feature C.f will marked even though C is not a descendant of B.
+		  feature C.f will be marked even though C is not a descendant of B.
 		  Also replication might produce false positives because even through
 		  there might be redeclaration, this is not necessarily the version
 		  that has been selected in the inheritance clause.
@@ -62,7 +62,7 @@ indexing
 		* ET_DYNAMIC_SYSTEM_FEATURE_MARKER: uses the dynamic type set mechanism
 		  implemented in the Gobo Eiffel compiler to determine which features
 		  are to be part of the resulting executable should the given feature
-		  be used as root creation procedure. This algorithm in the most accurate
+		  be used as root creation procedure. This algorithm is the most accurate
 		  of the four, but is slower.
 
 		  Note that assertions and debug instructions are not traversed, and
