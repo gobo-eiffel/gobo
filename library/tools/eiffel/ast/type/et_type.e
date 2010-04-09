@@ -373,7 +373,7 @@ feature -- Comparison
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
-			definition: Result = named_type (a_context).same_syntactical_type (other.named_type (other_context), other_context, a_context)
+			definition: Result = named_type (a_context).same_syntactical_type (other.named_type (other_context), other_context.root_context, a_context.root_context)
 			symmetric: Result = other.same_named_type (Current, a_context, other_context)
 		end
 
@@ -389,7 +389,7 @@ feature -- Comparison
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
-			definition: Result = base_type (a_context).same_syntactical_type (other.base_type (other_context), other_context, a_context)
+			definition: Result = base_type (a_context).same_syntactical_type (other.base_type (other_context), other_context.root_context, a_context.root_context)
 			symmetric: Result = other.same_base_type (Current, a_context, other_context)
 		end
 
