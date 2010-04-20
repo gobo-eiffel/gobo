@@ -7,8 +7,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2009/12/22 $"
-	revision: "$Revision: #10 $"
+	date: "$Date: 2010/04/06 $"
+	revision: "$Revision: #12 $"
 
 class ET_FEATURE_CALL_HANDLER
 
@@ -233,7 +233,7 @@ feature -- Status setting
 		end
 
 	set_debug_instructions_enabled (b: BOOLEAN) is
-			-- Set `debug_instructions' to `b'.
+			-- Set `debug_instructions_enabled' to `b'.
 		do
 			debug_instructions_enabled := b
 		ensure
@@ -259,6 +259,24 @@ feature -- Status setting
 
 feature {NONE} -- Event handling
 
+	report_polymorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+			-- Report a call to `a_feature' where its versions in descendants of
+			-- `a_target_class' should be taken into account.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+		do
+		end
+
+	report_monomorphic_feature_call (a_feature: ET_FEATURE; a_target_class: ET_CLASS) is
+			-- Report a call to `a_feature' where its versions in descendants of
+			-- `a_target_class' should not be taken into account.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_target_class_not_void: a_target_class /= Void
+		do
+		end
+
 	report_anchored_type (a_type: ET_LIKE_FEATURE; a_query: ET_QUERY) is
 			-- Report that the anchored type `a_type' has been processed
 			-- with `a_query' as its anchor.
@@ -279,6 +297,7 @@ feature {NONE} -- Event handling
 			an_attribute_not_void: an_attribute /= Void
 			is_attribute: an_attribute.is_attribute
 		do
+			report_polymorphic_feature_call (an_attribute, current_class)
 		end
 
 	report_attribute_assignment_target (a_writable: ET_WRITABLE; an_attribute: ET_QUERY) is
@@ -290,6 +309,7 @@ feature {NONE} -- Event handling
 			an_attribute_not_void: an_attribute /= Void
 			is_attribute: an_attribute.is_attribute
 		do
+			report_polymorphic_feature_call (an_attribute, current_class)
 		end
 
 	report_attribute_not_stripped (an_expression: ET_STRIP_EXPRESSION; an_attribute: ET_QUERY) is
@@ -323,7 +343,11 @@ feature {NONE} -- Event handling
 			a_creation_type_not_void: a_creation_type /= Void
 			a_creation_type_valid: a_creation_type.is_valid_context
 			a_procedure_not_void: a_procedure /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_creation_type.base_class
+			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
 	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
@@ -335,7 +359,11 @@ feature {NONE} -- Event handling
 			a_creation_type_not_void: a_creation_type /= Void
 			a_creation_type_valid: a_creation_type.is_valid_context
 			a_procedure_not_void: a_procedure /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_creation_type.base_class
+			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
 	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY) is
@@ -346,6 +374,12 @@ feature {NONE} -- Event handling
 			an_expression_not_void: an_expression /= Void
 			a_query_not_void: a_query /= Void
 		do
+			if a_query = current_feature then
+					-- Recursive use.
+				report_monomorphic_feature_call (a_query, current_class)
+			else
+				report_polymorphic_feature_call (a_query, current_class)
+			end
 		end
 
 	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
@@ -357,7 +391,11 @@ feature {NONE} -- Event handling
 			an_expression_not_void: an_expression /= Void
 			a_parent_type_not_void: a_parent_type /= Void
 			a_query_not_void: a_query /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_parent_type.base_class
+			report_monomorphic_feature_call (a_query, l_base_class)
 		end
 
 	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
@@ -369,7 +407,11 @@ feature {NONE} -- Event handling
 			an_instruction_not_void: an_instruction /= Void
 			a_parent_type_not_void: a_parent_type /= Void
 			a_procedure_not_void: a_procedure /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_parent_type.base_class
+			report_monomorphic_feature_call (a_procedure, l_base_class)
 		end
 
 	report_procedure_address (an_expression: ET_FEATURE_ADDRESS; a_procedure: ET_PROCEDURE) is
@@ -380,6 +422,12 @@ feature {NONE} -- Event handling
 			an_expression_not_void: an_expression /= Void
 			a_procedure_not_void: a_procedure /= Void
 		do
+			if current_feature = a_procedure then
+					-- Recursive use.
+				report_monomorphic_feature_call (a_procedure, current_class)
+			else
+				report_polymorphic_feature_call (a_procedure, current_class)
+			end
 		end
 
 	report_qualified_anchored_type (a_type: ET_QUALIFIED_LIKE_IDENTIFIER; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
@@ -405,7 +453,11 @@ feature {NONE} -- Event handling
 			a_target_type_not_void: a_target_type /= Void
 			a_target_type_valid: a_target_type.is_valid_context
 			a_query_not_void: a_query /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_target_type.base_class
+			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
 	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
@@ -419,7 +471,11 @@ feature {NONE} -- Event handling
 			a_target_type_not_void: a_target_type /= Void
 			a_target_type_valid: a_target_type.is_valid_context
 			a_procedure_not_void: a_procedure /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_target_type.base_class
+			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
 	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
@@ -434,7 +490,11 @@ feature {NONE} -- Event handling
 			a_target_type_not_void: a_target_type /= Void
 			a_target_type_valid: a_target_type.is_valid_context
 			a_procedure_not_void: a_procedure /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_target_type.base_class
+			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
 	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
@@ -449,7 +509,11 @@ feature {NONE} -- Event handling
 			a_target_type_not_void: a_target_type /= Void
 			a_target_type_valid: a_target_type.is_valid_context
 			a_query_not_void: a_query /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_target_type.base_class
+			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
 	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
@@ -461,7 +525,11 @@ feature {NONE} -- Event handling
 			an_expression_not_void: an_expression /= Void
 			a_type_not_void: a_type /= Void
 			a_query_not_void: a_query /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_type.base_class (current_class)
+			report_polymorphic_feature_call (a_query, l_base_class)
 		end
 
 	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
@@ -473,7 +541,11 @@ feature {NONE} -- Event handling
 			an_instruction_not_void: an_instruction /= Void
 			a_type_not_void: a_type /= Void
 			a_procedure_not_void: a_procedure /= Void
+		local
+			l_base_class: ET_CLASS
 		do
+			l_base_class := a_type.base_class (current_class)
+			report_polymorphic_feature_call (a_procedure, l_base_class)
 		end
 
 	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
@@ -485,6 +557,12 @@ feature {NONE} -- Event handling
 			unqualified_call: not an_expression.is_qualified_call
 			a_query_not_void: a_query /= Void
 		do
+			if current_feature = a_query then
+					-- Recursive call.
+				report_monomorphic_feature_call (a_query, current_class)
+			else
+				report_polymorphic_feature_call (a_query, current_class)
+			end
 		end
 
 	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
@@ -496,6 +574,12 @@ feature {NONE} -- Event handling
 			unqualified_call: not an_instruction.is_qualified_call
 			a_procedure_not_void: a_procedure /= Void
 		do
+			if current_feature = a_procedure then
+					-- Recursive call.
+				report_monomorphic_feature_call (a_procedure, current_class)
+			else
+				report_polymorphic_feature_call (a_procedure, current_class)
+			end
 		end
 
 	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE) is
@@ -508,6 +592,12 @@ feature {NONE} -- Event handling
 			procedure_call: an_expression.is_procedure
 			a_procedure_not_void: a_procedure /= Void
 		do
+			if current_feature = a_procedure then
+					-- Recursive use.
+				report_monomorphic_feature_call (a_procedure, current_class)
+			else
+				report_polymorphic_feature_call (a_procedure, current_class)
+			end
 		end
 
 	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY) is
@@ -520,6 +610,12 @@ feature {NONE} -- Event handling
 			query_call: not an_expression.is_procedure
 			a_query_not_void: a_query /= Void
 		do
+			if current_feature = a_query then
+					-- Recursive use.
+				report_monomorphic_feature_call (a_query, current_class)
+			else
+				report_polymorphic_feature_call (a_query, current_class)
+			end
 		end
 
 feature {ET_AST_NODE} -- Processing
