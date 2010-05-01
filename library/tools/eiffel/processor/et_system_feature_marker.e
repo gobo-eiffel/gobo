@@ -121,8 +121,8 @@ indexing
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2008-2010, Eric Bezault and others"
 	license: "MIT License"
-	date: "$Date: 2010/03/07 $"
-	revision: "$Revision: #6 $"
+	date: "$Date: 2010/04/20 $"
+	revision: "$Revision: #7 $"
 
 class ET_SYSTEM_FEATURE_MARKER
 
@@ -182,6 +182,41 @@ feature -- Processing
 		require
 			a_feature_not_void: a_feature /= Void
 			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
+		do
+			mark_system_until (a_feature, Void)
+		ensure
+			a_feature_used: a_feature.implementation_feature.is_used
+		end
+
+	mark_system_until (a_feature: ET_FEATURE; a_stop_request: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+			-- Identify the features that `a_feature' (when viewed from
+			-- the class it has been written in -- its 'implementation_class')
+			-- recursively depends on (i.e. they might be executed if
+			-- `a_feature' is itself executed) and mark them as being part
+			-- of the system. Mark `a_feature' as well.
+			--
+			-- Note that marking a feature means that the query 'is_used'
+			-- of its 'implementation_feature' (i.e. feature in the class
+			-- it has been written) will be set to True.
+			--
+			-- The processing will be interrupted if a stop request is received
+			-- i.e. `a_stop_request' starts returning True. No interruption if
+			-- `a_stop_request' is Void.
+			--
+			-- It is assumed that the classes that the 'implementation_class'
+			-- of `a_feature' recursively depends on have already been
+			-- marked as being part of the system. Use feature 'mark_system'
+			-- from class ET_SYSTEM_MARKER for that.
+			-- It is also assumed that the implementation checker (equivalent
+			-- of ISE's Degree 3 -- see ET_SYSTEM.implementation_checker
+			-- and ET_CLASS.implementation_checked) has been successfully
+			-- run on all these classes that have been marked as being part
+			-- of the system. Otherwise internal errors may be reported
+			-- (using ET_ERROR_HANDLER.report_giaaa_error) if the class has
+			-- not been checked or if `internal_error_enabled' has been set.
+		require
+			a_feature_not_void: a_feature /= Void
+			implementation_class_preparsed: a_feature.implementation_class.is_preparsed
 		local
 			l_feature: ET_FEATURE
 			l_class: ET_CLASS
@@ -197,7 +232,11 @@ feature -- Processing
 			l_feature := a_feature.implementation_feature
 			l_feature.set_used (True)
 			used_features.force (l_feature)
-			from until used_features.is_empty loop
+			from
+			until
+				used_features.is_empty or else
+				(a_stop_request /= Void and then a_stop_request.item ([]))
+			loop
 				l_feature := used_features.item
 				used_features.remove
 				l_feature := l_feature.implementation_feature
@@ -206,6 +245,7 @@ feature -- Processing
 					process_feature (l_feature, l_class)
 				end
 			end
+			used_features.wipe_out
 			marked_polymorphic_calls.wipe_out
 			precursor_features.unmark_all
 			descendant_classes.reset
