@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -124,7 +124,7 @@ feature -- Generation
 			create a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				a_file.put_line ("indexing")
+				a_file.put_line ("note")
 				a_file.put_new_line
 				a_file.put_string ("%Tdescription: %"Executable test case derived from class")
 				a_file.put_string (a_class_name)
@@ -194,7 +194,7 @@ feature -- Generation
 			a_file.open_write
 			if a_file.is_open_write then
 				upper_class_name := class_name.as_upper
-				a_file.put_line ("indexing")
+				a_file.put_line ("note")
 				a_file.put_new_line
 				a_file.put_line ("%Tdescription: %"Test harness root class%"")
 				a_file.put_string ("%Tgenerator: %"getest version ")

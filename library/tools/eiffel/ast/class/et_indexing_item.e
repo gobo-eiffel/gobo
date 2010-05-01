@@ -1,8 +1,8 @@
-indexing
+note
 
 	description:
 
-		"Eiffel indexing clauses which appear in a semicolon-separated list of indexing clauses"
+		"Eiffel note clauses which appear in a semicolon-separated list of note clauses"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -19,7 +19,7 @@ inherit
 feature -- Access
 
 	indexing_clause: ET_INDEXING is
-			-- Indexing clause in semicolon-separated list
+			-- Note clause in semicolon-separated list
 		deferred
 		ensure
 			indexing_clause_not_void: Result /= Void

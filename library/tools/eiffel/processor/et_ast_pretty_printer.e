@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -3524,7 +3524,7 @@ feature {ET_AST_NODE} -- Processing
 			l_tagged_indexing: ET_TAGGED_INDEXING
 		do
 			if a_list.is_empty then
-					-- Do not print empty indexing, but keep the comments if any.
+					-- Do not print empty note clause, but keep the comments if any.
 				comment_finder.find_comments (a_list, comment_list)
 			else
 				a_list.indexing_keyword.process (Current)
@@ -5213,7 +5213,7 @@ feature {ET_AST_NODE} -- Processing
 
 	process_tagged_indexing_indented (an_indexing: ET_TAGGED_INDEXING) is
 			-- Process `an_indexing'.
-			-- Print the tag, then the indexing terms indented two lines below.
+			-- Print the tag, then the note terms indented two lines below.
 		require
 			an_indexing_not_void: an_indexing /= Void
 		local

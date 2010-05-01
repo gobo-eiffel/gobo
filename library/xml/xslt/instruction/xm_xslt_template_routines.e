@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Routines to support template execution,"
 

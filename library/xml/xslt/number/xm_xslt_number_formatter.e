@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that format a list of integers as a character string under the control of a format string"
 

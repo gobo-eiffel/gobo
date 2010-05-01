@@ -52,32 +52,32 @@ color="#008080"><em>output</em> (&quot;<em>bar</em>&quot;)</font>
 <font color="#008080"><em><strong>end</strong></em></font></pre>
 </blockquote>
 
-<p>This description file is made up of three sections separated by 
-<font color="#0000FF"><tt>%%</tt></font> marks. The text enclosed 
-within the two signs <font color="#0000FF"><tt>%{</tt></font> and 
-<font color="#0000FF"><tt>%}</tt></font> in the first section is 
-Eiffel text which is copied verbatim to <em>gelex</em> output class 
-file. It specifies that the name of the generated class is 
-<font color="#008080"><em><tt>FOOBAR</tt></em></font> and that its 
-creation procedure is <font color="#008080"><em><tt>make</tt></em></font>, 
-a routine inherited from class 
-<font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>. 
-This class contains the pattern-matching engine <font face="Symbol">-</font> 
+<p>This description file is made up of three sections separated by
+<font color="#0000FF"><tt>%%</tt></font> marks. The text enclosed
+within the two signs <font color="#0000FF"><tt>%{</tt></font> and
+<font color="#0000FF"><tt>%}</tt></font> in the first section is
+Eiffel text which is copied verbatim to <em>gelex</em> output class
+file. It specifies that the name of the generated class is
+<font color="#008080"><em><tt>FOOBAR</tt></em></font> and that its
+creation procedure is <font color="#008080"><em><tt>make</tt></em></font>,
+a routine inherited from class
+<font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>.
+This class contains the pattern-matching engine <font face="Symbol">-</font>
 a Deterministic Finite Automaton (or <font size="2">DFA</font> for short) </font>
-<font face="Symbol">-</font> which is optimized in terms of memory space, 
-hence the name of the class. It also provides numerous facilities 
-such as routine <font color="#008080"><em><tt>scan</tt></em></font> 
-for analyzing a given input text. The second section, enclosed within 
+<font face="Symbol">-</font> which is optimized in terms of memory space,
+hence the name of the class. It also provides numerous facilities
+such as routine <font color="#008080"><em><tt>scan</tt></em></font>
+for analyzing a given input text. The second section, enclosed within
 the two<font color="#0000FF" size="2" face="Courier New"> </font>
-<font color="#0000FF"><tt>%%</tt></font> marks, contains the only 
+<font color="#0000FF"><tt>%%</tt></font> marks, contains the only
 rule of this description file. <font color="#FF0000"><tt>foo</tt></font>
 is the pattern of this rule and the <font color="#008080"><em><tt>output
-</tt></em></font>instruction is the action. By default, any text not 
-matched by a <em>gelex</em> scanner is copied to the standard output, 
-so the net effect of this scanner is to copy its input file to the 
+</tt></em></font>instruction is the action. By default, any text not
+matched by a <em>gelex</em> scanner is copied to the standard output,
+so the net effect of this scanner is to copy its input file to the
 standard output with each occurrence of &quot;<tt>foo</tt>&quot;
-replaced with &quot;<tt>bar</tt>&quot;. The third section of the file, 
-after the second <font color="#0000FF"><tt>%%</tt></font> mark, is 
+replaced with &quot;<tt>bar</tt>&quot;. The third section of the file,
+after the second <font color="#0000FF"><tt>%%</tt></font> mark, is
 Eiffel text which is copied verbatim at the end of the generated class.
 In this example, it just contains the end of the class keyword.</p>
 
@@ -130,23 +130,23 @@ feature</strong></em> -- Access
 <font color="#008080"><em><strong>end</strong></em></font></pre>
 </blockquote>
 
-<p>This scanner counts the number of characters and the number of 
-lines in its input (it produces no output other than the final 
-report on the counts). The first section of the scanner description 
-is similar to the one described in the first example. The generated 
-class is named after the Unix command <em>wc</em> which counts the 
-number of characters, words and lines in given files. There are two 
-rules, one which matches a newline (<font color="#FF0000"><tt>\n</tt></font>) 
-and increments both the line count and the character count, and one 
-which matches any character other than a newline (indicated by the 
-<font color="#FF0000"><strong><tt>.</tt></strong></font> regular 
+<p>This scanner counts the number of characters and the number of
+lines in its input (it produces no output other than the final
+report on the counts). The first section of the scanner description
+is similar to the one described in the first example. The generated
+class is named after the Unix command <em>wc</em> which counts the
+number of characters, words and lines in given files. There are two
+rules, one which matches a newline (<font color="#FF0000"><tt>\n</tt></font>)
+and increments both the line count and the character count, and one
+which matches any character other than a newline (indicated by the
+<font color="#FF0000"><strong><tt>.</tt></strong></font> regular
 expression).</p>
 
 <p>A somewhat more complicated example:</p>
 
 <blockquote>
     <pre><font color="#0000FF">%{
-</font><font color="#008080"><em><strong>indexing</strong></em>
+</font><font color="#008080"><em><strong>note</strong></em>
 
     <em>description</em>: &quot;<em>Scanner for a toy Eiffel-like language</em>&quot;
 
@@ -260,9 +260,9 @@ be explained in the rest of the <a href="index.html">documentation</a>.</p>
             <strong>Last Updated:</strong> 15 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

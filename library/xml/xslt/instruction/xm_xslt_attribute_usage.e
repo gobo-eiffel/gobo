@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that represent xsl:use-attribute-sets,"
 

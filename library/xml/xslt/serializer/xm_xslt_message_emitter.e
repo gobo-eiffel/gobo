@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 	"Emitters that write xsl:messages."

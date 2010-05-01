@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -179,7 +179,7 @@ feature -- Access
 		end
 
 	first_indexing: ET_INDEXING_LIST
-			-- Indexing clause at the beginning of the feature
+			-- Note clause at the beginning of the feature
 
 	id: INTEGER
 			-- Feature ID

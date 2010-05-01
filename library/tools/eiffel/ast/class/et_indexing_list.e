@@ -1,8 +1,8 @@
-indexing
+note
 
 	description:
 
-		"Eiffel lists of indexing clauses"
+		"Eiffel lists of note clauses"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -28,14 +28,14 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a new indexing clause
+			-- Create a new note clause
 		do
 			indexing_keyword := tokens.indexing_keyword
 			precursor
 		end
 
 	make_with_capacity (nb: INTEGER) is
-			-- Create a new indexing clause with capacity `nb'.
+			-- Create a new note clause with capacity `nb'.
 		do
 			indexing_keyword := tokens.indexing_keyword
 			precursor (nb)

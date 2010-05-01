@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -411,10 +411,10 @@ feature -- Access
 			-- Obsolete message
 
 	first_indexing: ET_INDEXING_LIST
-			-- Indexing clause at the beginning of the class
+			-- Note clause at the beginning of the class
 
 	second_indexing: ET_INDEXING_LIST
-			-- Indexing clause at the end of the class
+			-- Note clause at the end of the class
 
 	class_keyword: ET_KEYWORD
 			-- 'class' keyword

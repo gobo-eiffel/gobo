@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Callbacks filter producing standard trees"

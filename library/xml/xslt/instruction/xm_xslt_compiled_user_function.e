@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Objects that represent xsl:functions compiled as a single expression"

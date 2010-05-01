@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -166,7 +166,7 @@ feature -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
-			a_file.put_string ("indexing%N%N%
+			a_file.put_string ("note%N%N%
 				%%Tdescription: %"Parser token codes%"%N%
 				%%Tgenerator: %"geyacc version ")
 			a_file.put_string (version)

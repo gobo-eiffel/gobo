@@ -1,5 +1,5 @@
 %{
-indexing
+note
 
 	description:
 

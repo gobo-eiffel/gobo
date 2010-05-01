@@ -1,8 +1,8 @@
-indexing
+note
 
 	description:
 
-		"Eiffel indexing terms which appear in a comma-separated list of indexing terms"
+		"Eiffel note terms which appear in a comma-separated list of note terms"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -19,7 +19,7 @@ inherit
 feature -- Access
 
 	indexing_term: ET_INDEXING_TERM is
-			-- Indexing term in comma-separated list
+			-- Note term in comma-separated list
 		deferred
 		ensure
 			indexing_term_not_void: Result /= Void

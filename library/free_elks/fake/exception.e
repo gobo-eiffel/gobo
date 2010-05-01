@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Ancestor of all exception classes.
 		]"

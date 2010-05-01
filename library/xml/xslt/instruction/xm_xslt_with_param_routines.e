@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Routines that support passing of xsl:with-param"
 

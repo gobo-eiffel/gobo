@@ -1,5 +1,5 @@
 
-indexing
+note
 
 	description:
 
@@ -402,7 +402,7 @@ feature -- Code generation
 		do
 			create l_output_file.make (file_name_prefix + "character_class_routines.e")
 			l_output_file.open_write
-			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("note%N%N")
 			l_output_file.put_string ("%Tdescription:%N%N")
 			l_output_file.put_string ("%T%T%"Routines for determining class of Unicode characters%"%N%N")
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
@@ -438,7 +438,7 @@ feature -- Code generation
 		do
 			create l_output_file.make (kernel_file_name_prefix + "ctype_lowercase.e")
 			l_output_file.open_write
-			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("note%N%N")
 			l_output_file.put_string ("%Tdescription:%N%N")
 			l_output_file.put_string ("%T%T%"Database for simple mapping to lower case%"%N%N")
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
@@ -469,7 +469,7 @@ feature -- Code generation
 		do
 			create l_output_file.make (kernel_file_name_prefix + "ctype_uppercase.e")
 			l_output_file.open_write
-			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("note%N%N")
 			l_output_file.put_string ("%Tdescription:%N%N")
 			l_output_file.put_string ("%T%T%"Database for simple mapping to upper case%"%N%N")
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
@@ -500,7 +500,7 @@ feature -- Code generation
 		do
 			create l_output_file.make (kernel_file_name_prefix + "ctype_titlecase.e")
 			l_output_file.open_write
-			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("note%N%N")
 			l_output_file.put_string ("%Tdescription:%N%N")
 			l_output_file.put_string ("%T%T%"Database for simple mapping to title case%"%N%N")
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
@@ -531,7 +531,7 @@ feature -- Code generation
 		do
 			create l_output_file.make (file_name_prefix + "normalization_routines.e")
 			l_output_file.open_write
-			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("note%N%N")
 			l_output_file.put_string ("%Tdescription:%N%N")
 			l_output_file.put_string ("%T%T%"Routines for normalizing strings%"%N%N")
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")
@@ -575,7 +575,7 @@ feature -- Code generation
 		do
 			create l_output_file.make (file_name_prefix + "full_case_mapping.e")
 			l_output_file.open_write
-			l_output_file.put_string ("indexing%N%N")
+			l_output_file.put_string ("note%N%N")
 			l_output_file.put_string ("%Tdescription:%N%N")
 			l_output_file.put_string ("%T%T%"Database for full case mapping%"%N%N")
 			l_output_file.put_string ("%Tgenerator: %"geuc%"%N%N")

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a date at C level"
 	date: "$Date$"
 	revision: "$Revision$"

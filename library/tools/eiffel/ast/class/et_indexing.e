@@ -1,8 +1,8 @@
-indexing
+note
 
 	description:
 
-		"Eiffel indexing clauses"
+		"Eiffel note clauses"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_terms: like terms) is
-			-- Create a new indexing clause.
+			-- Create a new note clause.
 		require
 			a_terms_not_void: a_terms /= Void
 		do
@@ -40,10 +40,10 @@ feature -- Access
 		end
 
 	terms: ET_INDEXING_TERM_LIST
-			-- Indexing terms
+			-- Note terms
 
 	indexing_clause: ET_INDEXING is
-			-- Indexing clause in semicolon-separated list
+			-- Note clause in semicolon-separated list
 		do
 			Result := Current
 		end

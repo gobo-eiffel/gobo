@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Elements whose name is known at compile time"

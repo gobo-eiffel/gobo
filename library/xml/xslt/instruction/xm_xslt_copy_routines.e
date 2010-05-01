@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Routines common to xsl:copy and xsl:copy_of,"
 

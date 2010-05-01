@@ -1,11 +1,11 @@
 %{
-indexing
+note
 
 	description:
 
 		"Scanners for Eiffel parsers"
 
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2010, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -137,6 +137,7 @@ create
 [lL][oO][cC][aA][lL]					last_token := E_LOCAL
 [lL][oO][oO][pP]						last_token := E_LOOP
 [nN][oO][tT]							last_token := E_NOT
+[nN][oO][tT][eE]						last_token := E_NOTE
 [oO][bB][sS][oO][lL][eE][tT][eE]		last_token := E_OBSOLETE
 [oO][lL][dD]							last_token := E_OLD
 [oO][nN][cC][eE]						last_token := E_ONCE

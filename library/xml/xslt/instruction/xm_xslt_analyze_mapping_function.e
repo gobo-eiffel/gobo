@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that map sequences of matching and non-matching strings to the results of xsl:matching-substring and xsl:non-matching-substring children of xsl:analyze-string"
 

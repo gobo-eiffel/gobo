@@ -95,14 +95,14 @@ bit faster than only looking ahead when necessary. But scanners
 that always look ahead give dreadful interactive performance; for
 example, when one types a newline, it is not recognized as a
 newline token until one enters another token, which often means
-typing in another whole line. <font color="#008080"><em><tt>YY_INTERACTIVE_SCANNER_SKELETON</tt></em></font> 
+typing in another whole line. <font color="#008080"><em><tt>YY_INTERACTIVE_SCANNER_SKELETON</tt></em></font>
 is an heir of <font color="#008080"><em><tt>YY_COMPRESSED_SCANNER_SKELETON</tt></em></font>
 and only requires from <em>gelex</em> to generated compressed
 tables. Because of the performance penalty already implied by
 this more intuitive interactive behavior, this facility is not
 available in conjunction with full table scanners.</p>
 
-<p><em>Gelex</em> does not automatically generate the indexing,
+<p><em>Gelex</em> does not automatically generate the note,
 class header, formal generics, obsolete, inheritance, creation
 and invariant clauses. These have to be specified in <a
 href="description.html#eiffel_declarations">Eiffel declarations</a>
@@ -208,7 +208,7 @@ interactive scanner:</p>
 
 <font color="#0000FF">%%</font>
 
-<font color="#FF0000">...patterns...</font>   </font><font 
+<font color="#FF0000">...patterns...</font>   </font><font
 color="#008080"><em>...actions</em>...</font>
 
 <font color="#0000FF">%%</font><font
@@ -263,9 +263,9 @@ color="#008080"><em>
             <strong>Last Updated:</strong> 15 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
-$Date$ 
+$Date$
 $Revision$"
-            --> 
+            -->
         </address>
         </td>
         <td align="right" valign="top"><a

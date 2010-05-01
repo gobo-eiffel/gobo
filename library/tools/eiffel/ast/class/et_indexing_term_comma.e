@@ -1,8 +1,8 @@
-indexing
+note
 
 	description:
 
-		"Eiffel indexing terms followed by a comma"
+		"Eiffel note terms followed by a comma"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -23,7 +23,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_term: like indexing_term; a_comma: like comma) is
-			-- Create a new indexing_term-comma.
+			-- Create a new note_term-comma.
 		require
 			a_term_not_void: a_term /= Void
 			a_comma_not_void: a_comma /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	indexing_term: ET_INDEXING_TERM
-			-- Indexing term in comma-separated list
+			-- Note term in comma-separated list
 
 	comma: ET_SYMBOL
 			-- Comma separator

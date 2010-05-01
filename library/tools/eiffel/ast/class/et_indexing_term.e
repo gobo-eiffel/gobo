@@ -1,8 +1,8 @@
-indexing
+note
 
 	description:
 
-		"Eiffel indexing terms"
+		"Eiffel note terms"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -19,7 +19,7 @@ inherit
 feature -- Access
 
 	indexing_term: ET_INDEXING_TERM is
-			-- Indexing term in comma-separated list
+			-- Note term in comma-separated list
 		do
 			Result := Current
 		end

@@ -59,16 +59,16 @@ is a good way to avoid such possible confusion.
 
 </section>
 
-<section id="indexing_clause"><title>Indexing Clause</title>
+<section id="note_clause"><title>Note Clause</title>
 
 <para>
-Each class should have an indexing clause at the top of the file which looks like 
+Each class should have a note clause at the top of the file which looks like 
 that:
 </para>
 
 <para>
 <programlisting>
-indexing
+note
 <text>
 _   </text>description:
 <text>

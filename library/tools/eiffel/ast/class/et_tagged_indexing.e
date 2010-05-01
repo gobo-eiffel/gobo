@@ -1,8 +1,8 @@
-indexing
+note
 
 	description:
 
-		"Eiffel tagged indexing clauses"
+		"Eiffel tagged note clauses"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_tag: like tag; a_terms: like terms) is
-			-- Create a new tagged indexing clause.
+			-- Create a new tagged note clause.
 		require
 			a_tag_not_void: a_tag /= Void
 			a_terms_not_void: a_terms /= Void
